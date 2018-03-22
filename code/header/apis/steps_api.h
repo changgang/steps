@@ -14,6 +14,7 @@ extern "C" {
 
 void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func);
 void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func);
+void show_parameter_not_supported_with_api(string par_name, string api_func);
 void show_device_not_exist_with_api(DEVICE_ID did, string api_func);
 
 void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, size_t no, string api_func);
@@ -43,6 +44,51 @@ void api_add_equivalent_device(size_t bus_number, char* identifier);
 void api_add_area(size_t area_number, char* area_name);
 void api_add_zone(size_t zone_number, char* zone_name);
 void api_add_owner(size_t owner_number, char* owner_name);
+
+size_t api_get_device_capacity(const char* device_type);
+size_t api_get_bus_capacity();
+size_t api_get_source_capacity();
+size_t api_get_generator_capacity();
+size_t api_get_pe_source_capacity();
+size_t api_get_load_capacity();
+size_t api_get_fixed_shunt_capacity();
+size_t api_get_line_capacity();
+size_t api_get_transformer_capacity();
+size_t api_get_hvdc_capacity();
+size_t api_get_equivalent_device_capacity();
+size_t api_get_area_capacity();
+size_t api_get_zone_capacity();
+size_t api_get_owner_capacity();
+
+void api_set_device_capacity(const char* device_type, size_t cap);
+void api_set_bus_capacity(size_t cap);
+void api_set_source_capacity(size_t cap);
+void api_set_generator_capacity(size_t cap);
+void api_set_pe_source_capacity(size_t cap);
+void api_set_load_capacity(size_t cap);
+void api_set_fixed_shunt_capacity(size_t cap);
+void api_set_line_capacity(size_t cap);
+void api_set_transformer_capacity(size_t cap);
+void api_set_hvdc_capacity(size_t cap);
+void api_set_equivalent_device_capacity(size_t cap);
+void api_set_area_capacity(size_t cap);
+void api_set_zone_capacity(size_t cap);
+void api_set_owner_capacity(size_t cap);
+
+size_t api_get_device_count(const char* device_type);
+size_t api_get_bus_count();
+size_t api_get_source_count();
+size_t api_get_generator_count();
+size_t api_get_pe_source_count();
+size_t api_get_load_count();
+size_t api_get_fixed_shunt_count();
+size_t api_get_line_count();
+size_t api_get_transformer_count();
+size_t api_get_hvdc_count();
+size_t api_get_equivalent_device_count();
+size_t api_get_area_count();
+size_t api_get_zone_count();
+size_t api_get_owner_count();
 
 int api_get_bus_integer_data(size_t bus, char* parameter_name);
 void api_set_bus_integer_data(size_t bus, char* parameter_name, int value);
