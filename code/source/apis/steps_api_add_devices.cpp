@@ -23,7 +23,7 @@ void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV)
     }
 }
 
-void api_add_generaotr(size_t bus_number, char* identifier)
+void api_add_generator(size_t bus_number, char* identifier)
 {
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 

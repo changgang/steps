@@ -721,19 +721,23 @@ void TRANSFORMER::report() const
         sstream<<"Two winding transformer '"<<get_identifier()<<"' connecting to bus "
           <<get_winding_bus(PRIMARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(PRIMARY_SIDE)<<" kV) and "
           <<get_winding_bus(SECONDARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(SECONDARY_SIDE)<<" kV): "
-          <<((get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==true)?"in service":"out of service")<<", "
-          <<"R+jXl = "<<setw(6)<<setprecision(4)<<fixed<<get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)<<" pu, "
-          <<"Gm+jBm = "<<setw(6)<<setprecision(4)<<fixed<<get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu()<<" pu";
+          <<((get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==true)?"in service":"out of service")<<", "<<endl
+          <<"R+jXl = "<<setw(6)<<setprecision(4)<<fixed<<get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)<<" pu, "<<endl
+          <<"Gm+jBm = "<<setw(6)<<setprecision(4)<<fixed<<get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu()<<" pu"<<endl
+          <<"Primary-Secondary capacity = "<<setw(6)<<setprecision(4)<<fixed<<get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<" MVA";
     else
         sstream<<"Three winding transformer '"<<get_identifier()<<"' connecting to bus "
           <<get_winding_bus(PRIMARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(PRIMARY_SIDE)<<" kV), "
           <<get_winding_bus(SECONDARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(SECONDARY_SIDE)<<" kV) and "
           <<get_winding_bus(TERTIARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(TERTIARY_SIDE)<<" kV): "
-          <<((get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==true and get_winding_breaker_status(TERTIARY_SIDE)==true)?"in service":"out of service")<<", "
-          <<"Primary to secondary R+jXl = "<<setw(6)<<setprecision(4)<<fixed<<get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)<<" pu, "
-          <<"Secondary to tertiary R+jXl = "<<setw(6)<<setprecision(4)<<fixed<<get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE)<<" pu, "
-          <<"Primary to secondary R+jXl = "<<setw(6)<<setprecision(4)<<fixed<<get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, SECONDARY_SIDE)<<" pu, "
-          <<"Gm+jBm = "<<setw(6)<<setprecision(4)<<fixed<<get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu()<<" pu";
+          <<((get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==true and get_winding_breaker_status(TERTIARY_SIDE)==true)?"in service":"out of service")<<", "<<endl
+          <<"Primary to secondary R+jXl = "<<setw(6)<<setprecision(4)<<fixed<<get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)<<" pu, "<<endl
+          <<"Secondary to tertiary R+jXl = "<<setw(6)<<setprecision(4)<<fixed<<get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE)<<" pu, "<<endl
+          <<"Primary to secondary R+jXl = "<<setw(6)<<setprecision(4)<<fixed<<get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, SECONDARY_SIDE)<<" pu, "<<endl
+          <<"Gm+jBm = "<<setw(6)<<setprecision(4)<<fixed<<get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu()<<" pu"<<endl
+          <<"Primary-Secondary capacity = "<<setw(6)<<setprecision(4)<<fixed<<get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<" MVA"<<endl
+          <<"Secondary-Tertiary capacity = "<<setw(6)<<setprecision(4)<<fixed<<get_winding_nominal_capacity_in_MVA(SECONDARY_SIDE, TERTIARY_SIDE)<<" MVA"<<endl
+          <<"Tertiary-Primary capacity = "<<setw(6)<<setprecision(4)<<fixed<<get_winding_nominal_capacity_in_MVA(TERTIARY_SIDE, PRIMARY_SIDE)<<" MVA"<<endl;
     show_information_with_leading_time_stamp(sstream);
 }
 

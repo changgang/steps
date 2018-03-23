@@ -55,13 +55,13 @@ double api_get_powerflow_solver_float_parameter(char* parameter_name)
     POWER_SYSTEM_DATABASE* psdb = solver->get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="MAX ACTIVE POEWR IMBALANCE IN MW")
+    if(PARAMETER_NAME=="MAX ACTIVE POWER IMBALANCE IN MW")
         return solver->get_allowed_max_active_power_imbalance_in_MW();
-    if(PARAMETER_NAME=="MAX ACTIVE POEWR IMBALANCE IN PU")
+    if(PARAMETER_NAME=="MAX ACTIVE POWER IMBALANCE IN PU")
         return solver->get_allowed_max_active_power_imbalance_in_MW()/psdb->get_system_base_power_in_MVA();
-    if(PARAMETER_NAME=="MAX REACTIVE POEWR IMBALANCE IN MVAR")
+    if(PARAMETER_NAME=="MAX REACTIVE POWER IMBALANCE IN MVAR")
         return solver->get_allowed_max_reactive_power_imbalance_in_MVar();
-    if(PARAMETER_NAME=="MAX REACTIVE POEWR IMBALANCE IN PU")
+    if(PARAMETER_NAME=="MAX REACTIVE POWER IMBALANCE IN PU")
         return solver->get_allowed_max_reactive_power_imbalance_in_MVar()/psdb->get_system_base_power_in_MVA();
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         return solver->get_iteration_accelerator();
@@ -79,22 +79,22 @@ void api_set_powerflow_solver_float_parameter(char* parameter_name, double value
     POWER_SYSTEM_DATABASE* psdb = solver->get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="MAX ACTIVE POEWR IMBALANCE IN MW")
+    if(PARAMETER_NAME=="MAX ACTIVE POWER IMBALANCE IN MW")
     {
         solver->set_allowed_max_active_power_imbalance_in_MW(value);
         return;
     }
-    if(PARAMETER_NAME=="MAX ACTIVE POEWR IMBALANCE IN PU")
+    if(PARAMETER_NAME=="MAX ACTIVE POWER IMBALANCE IN PU")
     {
         solver->set_allowed_max_active_power_imbalance_in_MW(value*psdb->get_system_base_power_in_MVA());
         return;
     }
-    if(PARAMETER_NAME=="MAX REACTIVE POEWR IMBALANCE IN MVAR")
+    if(PARAMETER_NAME=="MAX REACTIVE POWER IMBALANCE IN MVAR")
     {
         solver->set_allowed_max_reactive_power_imbalance_in_MVar(value);
         return;
     }
-    if(PARAMETER_NAME=="MAX REACTIVE POEWR IMBALANCE IN PU")
+    if(PARAMETER_NAME=="MAX REACTIVE POWER IMBALANCE IN PU")
     {
         solver->set_allowed_max_reactive_power_imbalance_in_MVar(value*psdb->get_system_base_power_in_MVA());
         return;

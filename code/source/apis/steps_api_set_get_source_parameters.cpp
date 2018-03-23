@@ -8,7 +8,7 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
 {
     DEVICE_ID generator_did, pe_source_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_generator_device_id(bus, identifier);
+    pe_source_did = get_pe_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 
@@ -22,10 +22,10 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
             return sourceptr->get_source_bus();
-        
+
         if(PARAMETER_NAME=="BUS_REG" or PARAMETER_NAME=="BUS TO REGULATE")
             return sourceptr->get_bus_to_regulate();
-        
+
         if(PARAMETER_NAME=="MODE" or PARAMETER_NAME=="REGULATING MODE")
         {
             SOURCE_REGULATING_MODE mode = sourceptr->get_regulating_mode();
@@ -57,7 +57,7 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
 {
     DEVICE_ID generator_did, pe_source_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_generator_device_id(bus, identifier);
+    pe_source_did = get_pe_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 
@@ -74,7 +74,7 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
 
         if(PARAMETER_NAME=="BUS_REG" or PARAMETER_NAME=="BUS TO REGULATE")
             return sourceptr->set_bus_to_regulate(value);
-            
+
         if(PARAMETER_NAME=="MODE" or PARAMETER_NAME=="REGULATING MODE")
         {
             if(value==1)
@@ -114,7 +114,7 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
 {
     DEVICE_ID generator_did, pe_source_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_generator_device_id(bus, identifier);
+    pe_source_did = get_pe_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 
@@ -128,31 +128,31 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="MBASE_MVA" or PARAMETER_NAME=="MBASE IN MVA")
             return sourceptr->get_mbase_in_MVA();
-        
+
         if(PARAMETER_NAME=="PGEN_MW" or PARAMETER_NAME=="ACTIVE POWER GENERATION IN MW")
             return sourceptr->get_p_generation_in_MW();
-        
+
         if(PARAMETER_NAME=="QGEN_MVAR" or PARAMETER_NAME=="REACTIVE POWER GENERATION IN MVAR")
             return sourceptr->get_q_generation_in_MVar();
-        
+
         if(PARAMETER_NAME=="PMAX_MW" or PARAMETER_NAME=="MAX ACTIVE POWER GENERATION IN MW")
             return sourceptr->get_p_max_in_MW();
-        
+
         if(PARAMETER_NAME=="PMIN_MW" or PARAMETER_NAME=="MIN ACTIVE POWER GENERATION IN MW")
             return sourceptr->get_p_min_in_MW();
-        
+
         if(PARAMETER_NAME=="QMAX_MVAR" or PARAMETER_NAME=="MAX REACTIVE POWER GENERATION IN MVAR")
             return sourceptr->get_q_max_in_MVar();
-        
+
         if(PARAMETER_NAME=="QMIN_MVAR" or PARAMETER_NAME=="MIN REACTIVE POWER GENERATION IN MVAR")
             return sourceptr->get_q_min_in_MVar();
-        
+
         if(PARAMETER_NAME=="VREG_PU" or PARAMETER_NAME=="VOLTAGE TO REGULATE IN PU")
             return sourceptr->get_voltage_to_regulate_in_pu();
-        
+
         if(PARAMETER_NAME=="RSOURCR_PU" or PARAMETER_NAME=="SOURCE RESISTANCE IN PU")
             return sourceptr->get_source_impedance_in_pu().real();
-        
+
         if(PARAMETER_NAME=="XSOURCE_PU" or PARAMETER_NAME=="SOURCE REACTANCE IN PU")
             return sourceptr->get_source_impedance_in_pu().imag();
 
@@ -173,7 +173,7 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
 {
     DEVICE_ID generator_did, pe_source_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_generator_device_id(bus, identifier);
+    pe_source_did = get_pe_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 
@@ -188,25 +188,25 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
 
         if(PARAMETER_NAME=="MBASE_MVA" or PARAMETER_NAME=="MBASE IN MVA")
             return sourceptr->set_mbase_in_MVA(value);
- 
+
         if(PARAMETER_NAME=="PGEN_MW" or PARAMETER_NAME=="ACTIVE POWER GENERATION IN MW")
             return sourceptr->set_p_generation_in_MW(value);
-            
+
         if(PARAMETER_NAME=="QGEN_MVAR" or PARAMETER_NAME=="REACTIVE POWER GENERATION IN MVAR")
             return sourceptr->set_q_generation_in_MVar(value);
-            
+
         if(PARAMETER_NAME=="PMAX_MW" or PARAMETER_NAME=="MAX ACTIVE POWER GENERATION IN MW")
             return sourceptr->set_p_max_in_MW(value);
-        
+
         if(PARAMETER_NAME=="PMIN_MW" or PARAMETER_NAME=="MIN ACTIVE POWER GENERATION IN MW")
             return sourceptr->set_p_min_in_MW(value);
-        
+
         if(PARAMETER_NAME=="QMAX_MVAR" or PARAMETER_NAME=="MAX REACTIVE POWER GENERATION IN MVAR")
             return sourceptr->set_q_max_in_MVar(value);
-        
+
         if(PARAMETER_NAME=="QMIN_MVAR" or PARAMETER_NAME=="MIN REACTIVE POWER GENERATION IN MVAR")
             return sourceptr->set_q_min_in_MVar(value);
-        
+
         if(PARAMETER_NAME=="VREG_PU" or PARAMETER_NAME=="VOLTAGE TO REGULATE IN PU")
             return sourceptr->set_voltage_to_regulate_in_pu(value);
 
@@ -235,7 +235,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
 {
     DEVICE_ID generator_did, pe_source_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_generator_device_id(bus, identifier);
+    pe_source_did = get_pe_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 
@@ -270,7 +270,7 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
 {
     DEVICE_ID generator_did, pe_source_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_generator_device_id(bus, identifier);
+    pe_source_did = get_pe_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 
@@ -301,7 +301,7 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
 {
     DEVICE_ID generator_did, pe_source_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_generator_device_id(bus, identifier);
+    pe_source_did = get_pe_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 
@@ -335,7 +335,7 @@ void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_n
 {
     DEVICE_ID generator_did, pe_source_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_generator_device_id(bus, identifier);
+    pe_source_did = get_pe_source_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
 

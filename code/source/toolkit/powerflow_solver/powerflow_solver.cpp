@@ -190,6 +190,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
     jacobian_builder.set_network_database(network_db);
 
     network_db->build_network_matrix();
+    //network_db->report_network_matrix();
 
     update_P_and_Q_equation_internal_buses();
     jacobian_builder.build_seprate_jacobians();
@@ -298,8 +299,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
     jacobian_builder.set_network_database(network_db);
 
     network_db->build_network_matrix();
-    const SPARSE_MATRIX& Y = network_db->get_network_matrix();
-    Y.report_brief();
+    //const SPARSE_MATRIX& Y = network_db->get_network_matrix();
+    //Y.report_brief();
 
     network_db->build_decoupled_network_matrix();
 
