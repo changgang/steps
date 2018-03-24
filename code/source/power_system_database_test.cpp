@@ -126,6 +126,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_buses);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_with_constraints);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_generators);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_pe_sources);
@@ -141,6 +142,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_owners);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_buses_number);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_number_with_constraints);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses_number);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_generators_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_pe_sources_device_id);
@@ -299,6 +301,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         bus.set_bus_type(SLACK_TYPE);
         bus.set_area_number(1);
         bus.set_zone_number(1);
+        bus.set_owner_number(1);
         db->append_bus(bus);
 
         bus.set_bus_number(2);
@@ -307,6 +310,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         bus.set_bus_type(PQ_TYPE);
         bus.set_area_number(2);
         bus.set_zone_number(2);
+        bus.set_owner_number(2);
         db->append_bus(bus);
 
         bus.set_bus_number(3);
@@ -315,6 +319,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         bus.set_bus_type(PV_TYPE);
         bus.set_area_number(3);
         bus.set_zone_number(3);
+        bus.set_owner_number(3);
         db->append_bus(bus);
     }
 
@@ -3433,6 +3438,55 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_buses()
     TEST_ASSERT(device[2]->get_bus_number()==3);
 }
 
+void POWER_SYSTEM_DATABASE_TEST::test_get_buses_with_constraints()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<BUS*> device = db->get_buses_with_constraints(100.0, 400.0, 0.9, 1.1, 0, 0, 0);
+
+    TEST_ASSERT(device.size()==3);
+    TEST_ASSERT(device[0]->get_bus_number()==1);
+    TEST_ASSERT(device[1]->get_bus_number()==2);
+    TEST_ASSERT(device[2]->get_bus_number()==3);
+
+    device = db->get_buses_with_constraints(200.0, 400.0, 0.9, 1.1, 0, 0, 0);
+
+    TEST_ASSERT(device.size()==2);
+    TEST_ASSERT(device[0]->get_bus_number()==2);
+    TEST_ASSERT(device[1]->get_bus_number()==3);
+
+    device = db->get_buses_with_constraints(300.0, 400.0, 0.9, 1.1, 0, 0, 0);
+
+    TEST_ASSERT(device.size()==1);
+    TEST_ASSERT(device[0]->get_bus_number()==3);
+
+    for(size_t area=1; area!=4; ++area)
+    {
+        size_t bus = area;
+        device = db->get_buses_with_constraints(100.0, 400.0, 0.9, 1.1, area, 0, 0);
+
+        TEST_ASSERT(device.size()==1);
+        TEST_ASSERT(device[0]->get_bus_number()==bus);
+
+        size_t zone = area;
+        device = db->get_buses_with_constraints(100.0, 400.0, 0.9, 1.1, area, zone, 0);
+
+        TEST_ASSERT(device.size()==1);
+        TEST_ASSERT(device[0]->get_bus_number()==bus);
+
+        size_t owner = area;
+        device = db->get_buses_with_constraints(100.0, 400.0, 0.9, 1.1, area, zone, owner);
+
+        TEST_ASSERT(device.size()==1);
+        TEST_ASSERT(device[0]->get_bus_number()==bus);
+    }
+    device = db->get_buses_with_constraints(100.0, 400.0, 0.9, 1.1, 1, 2, 0);
+
+    TEST_ASSERT(device.size()==0);
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -3775,6 +3829,57 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_buses_number()
     TEST_ASSERT(buses[0]==1);
     TEST_ASSERT(buses[1]==2);
     TEST_ASSERT(buses[2]==3);
+}
+
+
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_buses_number_with_constraints()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<size_t> buses = db->get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, 0, 0, 0);
+
+    TEST_ASSERT(buses.size()==3);
+    TEST_ASSERT(buses[0]==1);
+    TEST_ASSERT(buses[1]==2);
+    TEST_ASSERT(buses[2]==3);
+
+    buses = db->get_buses_number_with_constraints(200.0, 400.0, 0.9, 1.1, 0, 0, 0);
+
+    TEST_ASSERT(buses.size()==2);
+    TEST_ASSERT(buses[0]==2);
+    TEST_ASSERT(buses[1]==3);
+
+    buses = db->get_buses_number_with_constraints(300.0, 400.0, 0.9, 1.1, 0, 0, 0);
+
+    TEST_ASSERT(buses.size()==1);
+    TEST_ASSERT(buses[0]==3);
+
+    for(size_t area=1; area!=4; ++area)
+    {
+        size_t bus = area;
+        buses = db->get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, area, 0, 0);
+
+        TEST_ASSERT(buses.size()==1);
+        TEST_ASSERT(buses[0]==bus);
+
+        size_t zone = area;
+        buses = db->get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, area, zone, 0);
+
+        TEST_ASSERT(buses.size()==1);
+        TEST_ASSERT(buses[0]==bus);
+
+        size_t owner = area;
+        buses = db->get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, area, zone, owner);
+
+        TEST_ASSERT(buses.size()==1);
+        TEST_ASSERT(buses[0]==bus);
+    }
+    buses = db->get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, 1, 2, 0);
+
+    TEST_ASSERT(buses.size()==0);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses_number()

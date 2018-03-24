@@ -151,6 +151,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_equivalent_devices_device_id_in_zone();
 
         void test_get_all_buses();
+        void test_get_buses_with_constraints();
         void test_get_all_in_service_buses();
         void test_get_all_generators();
         void test_get_all_pe_sources();
@@ -166,6 +167,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_all_owners();
 
         void test_get_all_buses_number();
+        void test_get_buses_number_with_constraints();
         void test_get_all_in_service_buses_number();
         void test_get_all_generators_device_id();
         void test_get_all_pe_sources_device_id();

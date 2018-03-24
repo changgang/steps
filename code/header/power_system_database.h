@@ -197,6 +197,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_equivalent_devices_device_id_in_zone(const size_t zone);
 
         vector<BUS*> get_all_buses();
+        vector<BUS*> get_buses_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
         vector<BUS*> get_all_in_service_buses();
         vector<GENERATOR*> get_all_generators();
         vector<PE_SOURCE*> get_all_pe_sources();
@@ -212,6 +213,7 @@ class POWER_SYSTEM_DATABASE
         vector<OWNER*> get_all_owners();
 
         vector<size_t> get_all_buses_number();
+        vector<size_t> get_buses_number_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
         vector<size_t> get_all_in_service_buses_number();
         vector<DEVICE_ID> get_all_generators_device_id();
         vector<DEVICE_ID> get_all_pe_sources_device_id();

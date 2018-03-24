@@ -2463,6 +2463,33 @@ vector<BUS*> POWER_SYSTEM_DATABASE::get_all_buses()
     return device;
 }
 
+vector<BUS*> POWER_SYSTEM_DATABASE::get_buses_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner)
+{
+    vector<BUS*> device;
+    size_t n = get_bus_count();
+    device.reserve(n);
+    double vbase=0.0, v=0.0;
+    size_t this_area=0, this_zone=0, this_owner=0;
+    for(size_t i=0; i!=n; ++i)
+    {
+        vbase = Bus[i].get_base_voltage_in_kV();
+        v = Bus[i].get_voltage_in_pu();
+        this_area = Bus[i].get_area_number();
+        this_zone = Bus[i].get_zone_number();
+        this_owner = Bus[i].get_owner_number();
+
+        if(area!=0 and this_area!=area)
+            continue;
+        if(zone!=0 and this_zone!=zone)
+            continue;
+        if(owner!=0 and this_owner!=owner)
+            continue;
+        if(vbase>=vbase_kV_min and vbase<=vbase_kV_max and v>=v_pu_min and v<=v_pu_max)
+            device.push_back(&(Bus[i]));
+    }
+    return device;
+}
+
 vector<BUS*> POWER_SYSTEM_DATABASE::get_all_in_service_buses()
 {
     vector<BUS*> device;
@@ -2619,6 +2646,33 @@ vector<size_t> POWER_SYSTEM_DATABASE::get_all_buses_number()
     buses_number.reserve(n);
     for(size_t i=0; i!=n; ++i)
         buses_number.push_back(Bus[i].get_bus_number());
+    return buses_number;
+}
+
+vector<size_t> POWER_SYSTEM_DATABASE::get_buses_number_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner)
+{
+    vector<size_t> buses_number;
+    size_t n = get_bus_count();
+    buses_number.reserve(n);
+    double vbase=0.0, v=0.0;
+    size_t this_area=0, this_zone=0, this_owner=0;
+    for(size_t i=0; i!=n; ++i)
+    {
+        vbase = Bus[i].get_base_voltage_in_kV();
+        v = Bus[i].get_voltage_in_pu();
+        this_area = Bus[i].get_area_number();
+        this_zone = Bus[i].get_zone_number();
+        this_owner = Bus[i].get_owner_number();
+
+        if(area!=0 and this_area!=area)
+            continue;
+        if(zone!=0 and this_zone!=zone)
+            continue;
+        if(owner!=0 and this_owner!=owner)
+            continue;
+        if(vbase>=vbase_kV_min and vbase<=vbase_kV_max and v>=v_pu_min and v<=v_pu_max)
+            buses_number.push_back(Bus[i].get_bus_number());
+    }
     return buses_number;
 }
 
