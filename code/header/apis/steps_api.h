@@ -8,6 +8,23 @@
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 
+class STEPS_SEARCH_BUFFER
+{
+    public:
+        vector<BUS*> buses;                size_t bus_pointer;
+        vector<GENERATOR*> generators;     size_t generator_pointer;
+        vector<PE_SOURCE*> pe_sources;     size_t pe_source_pointer;
+        vector<LOAD*> loads;               size_t load_pointer;
+        vector<FIXED_SHUNT*> fixed_shunts; size_t fixed_shunt_pointer;
+        vector<LINE*> lines;               size_t line_pointer;
+        vector<TRANSFORMER*> transformers; size_t transformer_pointer;
+        vector<HVDC*> hvdcs;               size_t hvdc_pointer;
+        vector<EQUIVALENT_DEVICE*> equivalent_devices; size_t equivalent_device_pointer;
+        vector<AREA*> areas; size_t area_pointer;
+        vector<ZONE*> zones; size_t zone_pointer;
+        vector<OWNER*> owners; size_t owner_pointer;
+};
+
 #ifdef  __cplusplus
 extern "C" {
 #endif
@@ -49,12 +66,18 @@ void api_add_zone(size_t zone_number, char* zone_name);
 void api_add_owner(size_t owner_number, char* owner_name);
 
 size_t api_get_device_capacity(const char* device_type);
-
 void api_set_device_capacity(const char* device_type, size_t cap);
-
 size_t api_get_device_count(const char* device_type);
-
 void api_show_device_data(const char* device_type);
+
+void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
+size_t api_get_current_bus_number();
+void api_goto_next_bus();
+
+void api_initialize_device_search(const char* device_type, size_t bus);
+size_t api_get_current_device_bus_number(const char* device_type, const char* side);
+const char* api_get_current_device_identifier(const char* device_type);
+void api_goto_next_device(const char* device_type);
 
 int api_get_bus_integer_data(size_t bus, char* parameter_name);
 void api_set_bus_integer_data(size_t bus, char* parameter_name, int value);
