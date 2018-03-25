@@ -9,7 +9,7 @@ int api_get_bus_integer_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     BUS* busptr = psdb->get_bus(did);
     if(busptr!=NULL)
@@ -63,7 +63,7 @@ void api_set_bus_integer_data(size_t bus, char* parameter_name, int value)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     BUS* busptr = psdb->get_bus(bus);
     if(busptr!=NULL)
@@ -124,7 +124,7 @@ double api_get_bus_float_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     BUS* busptr = psdb->get_bus(bus);
     if(busptr!=NULL)
@@ -171,7 +171,7 @@ void api_set_bus_float_data(size_t bus, char* parameter_name, double value)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     BUS* busptr = psdb->get_bus(bus);
     if(busptr!=NULL)
@@ -214,7 +214,7 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     string BLANK = "";
 
@@ -240,7 +240,7 @@ void api_set_bus_string_data(size_t bus, char* parameter_name, char* value)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     BUS* busptr = psdb->get_bus(bus);
     if(busptr!=NULL)
@@ -259,7 +259,7 @@ bool api_get_bus_boolean_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     BUS* busptr = psdb->get_bus(bus);
     if(busptr!=NULL)
@@ -281,7 +281,7 @@ void api_set_bus_boolean_data(size_t bus, char* parameter_name, bool value)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     BUS* busptr = psdb->get_bus(bus);
     if(busptr!=NULL)

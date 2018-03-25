@@ -10,7 +10,7 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
     generator_did = get_generator_device_id(bus, identifier);
     pe_source_did = get_pe_source_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
@@ -59,7 +59,7 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
     generator_did = get_generator_device_id(bus, identifier);
     pe_source_did = get_pe_source_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
@@ -116,7 +116,7 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
     generator_did = get_generator_device_id(bus, identifier);
     pe_source_did = get_pe_source_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
@@ -175,7 +175,7 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
     generator_did = get_generator_device_id(bus, identifier);
     pe_source_did = get_pe_source_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
@@ -237,7 +237,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     generator_did = get_generator_device_id(bus, identifier);
     pe_source_did = get_pe_source_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     string BLANK = "";
 
@@ -272,7 +272,7 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
     generator_did = get_generator_device_id(bus, identifier);
     pe_source_did = get_pe_source_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
@@ -303,7 +303,7 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     generator_did = get_generator_device_id(bus, identifier);
     pe_source_did = get_pe_source_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
@@ -337,7 +337,7 @@ void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     generator_did = get_generator_device_id(bus, identifier);
     pe_source_did = get_pe_source_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);

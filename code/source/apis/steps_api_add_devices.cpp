@@ -6,7 +6,7 @@
 
 void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -25,7 +25,7 @@ void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV)
 
 void api_add_generator(size_t bus_number, char* identifier)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -50,7 +50,7 @@ void api_add_generator(size_t bus_number, char* identifier)
 
 void api_add_pe_source(size_t bus_number, char* identifier)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -75,7 +75,7 @@ void api_add_pe_source(size_t bus_number, char* identifier)
 
 void api_add_load(size_t bus_number, char* identifier)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -100,7 +100,7 @@ void api_add_load(size_t bus_number, char* identifier)
 
 void api_add_fixed_shunt(size_t bus_number, char* identifier)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -125,7 +125,7 @@ void api_add_fixed_shunt(size_t bus_number, char* identifier)
 
 void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_number, char* identifier)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -152,7 +152,7 @@ void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_numb
 
 void api_add_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char* identifier)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -179,7 +179,7 @@ void api_add_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char*
 
 void api_add_transformer(size_t primary_side_bus_number, size_t secondary_side_bus_number, size_t tertiary_side_bus_number, char* identifier)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -208,7 +208,7 @@ void api_add_transformer(size_t primary_side_bus_number, size_t secondary_side_b
 
 void api_add_equivalent_device(size_t bus_number, char* identifier)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -233,7 +233,7 @@ void api_add_equivalent_device(size_t bus_number, char* identifier)
 
 void api_add_area(size_t area_number, char* area_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -251,7 +251,7 @@ void api_add_area(size_t area_number, char* area_name)
 
 void api_add_zone(size_t zone_number, char* zone_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -269,7 +269,7 @@ void api_add_zone(size_t zone_number, char* zone_name)
 
 void api_add_owner(size_t owner_number, char* owner_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {

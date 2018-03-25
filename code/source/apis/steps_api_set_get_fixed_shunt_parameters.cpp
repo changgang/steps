@@ -8,7 +8,7 @@ int api_get_fixed_shunt_integer_data(size_t bus, char* identifier, char* paramet
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -31,7 +31,7 @@ void api_set_fixed_shunt_integer_data(size_t bus, char* identifier, char* parame
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -51,7 +51,7 @@ double api_get_fixed_shunt_float_data(size_t bus, char* identifier, char* parame
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -89,7 +89,7 @@ void api_set_fixed_shunt_float_data(size_t bus, char* identifier, char* paramete
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
     double sbase = psdb->get_system_base_power_in_MVA();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
@@ -101,13 +101,13 @@ void api_set_fixed_shunt_float_data(size_t bus, char* identifier, char* paramete
             complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
             return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(value, S.imag()));
         }
-        
+
         if(PARAMETER_NAME=="Q0_MVAR" or PARAMETER_NAME=="NOMINAL REACTANCE SHUNT IN MVAR")
         {
             complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
             return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(S.real(), value));
         }
-        
+
         if(PARAMETER_NAME=="R_PU" or PARAMETER_NAME=="NOMINAL RESISTANCE SHUNT IN PU")
         {
             complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
@@ -116,7 +116,7 @@ void api_set_fixed_shunt_float_data(size_t bus, char* identifier, char* paramete
             else
                 return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(1.0/value*sbase, S.imag()));
         }
-        
+
         if(PARAMETER_NAME=="X_PU" or PARAMETER_NAME=="NOMINAL REACTANCE SHUNT IN PU")
         {
             complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
@@ -125,13 +125,13 @@ void api_set_fixed_shunt_float_data(size_t bus, char* identifier, char* paramete
             else
                 return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(S.real(), 1.0/value*sbase));
         }
-        
+
         if(PARAMETER_NAME=="G_PU" or PARAMETER_NAME=="NOMINAL CONDUCTANCE SHUNT IN PU")
         {
             complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
             return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(value*sbase, S.imag()));
         }
-        
+
         if(PARAMETER_NAME=="B_PU" or PARAMETER_NAME=="NOMINAL SUSCEPTANCE SHUNT IN PU")
         {
             complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
@@ -149,7 +149,7 @@ const char* api_get_fixed_shunt_string_data(size_t bus, char* identifier, char* 
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     string BLANK = "";
 
@@ -175,7 +175,7 @@ void api_set_fixed_shunt_string_data(size_t bus, char* identifier, char* paramet
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -194,7 +194,7 @@ bool api_get_fixed_shunt_boolean_data(size_t bus, char* identifier, char* parame
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -219,7 +219,7 @@ void api_set_fixed_shunt_boolean_data(size_t bus, char* identifier, char* parame
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)

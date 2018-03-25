@@ -875,8 +875,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_allowed_max_bus_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    db->set_allowed_max_bus_number(100);
-    TEST_ASSERT(db->get_allowed_max_bus_number()==100);
+    db->set_allowed_max_bus_number(1000);
+    TEST_ASSERT(db->get_allowed_max_bus_number()==1000);
     db->set_allowed_max_bus_number(10000);
     TEST_ASSERT(db->get_allowed_max_bus_number()==10000);
 }

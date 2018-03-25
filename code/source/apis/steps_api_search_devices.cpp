@@ -4,11 +4,11 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-STEPS_SEARCH_BUFFER api_search_buffer;
+STEPS_API_SEARCH_BUFFER api_search_buffer;
 
 void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     api_search_buffer.buses = psdb->get_buses_with_constraints(vbase_kV_min, vbase_kV_max, v_pu_min, v_pu_max, area, zone, owner);
     api_search_buffer.bus_pointer = 0;
@@ -35,7 +35,7 @@ void api_goto_next_bus()
 
 void api_initialize_device_search(const char* device_type, size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     string DEVICE_TYPE = string2upper(device_type);
     if(DEVICE_TYPE=="GENERATOR")
@@ -108,24 +108,6 @@ void api_initialize_device_search(const char* device_type, size_t bus)
         else
             api_search_buffer.equivalent_devices = psdb->get_equivalent_devices_connecting_to_bus(bus);
         api_search_buffer.equivalent_device_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="AREA")
-    {
-        api_search_buffer.areas = psdb->get_all_areas();
-        api_search_buffer.area_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="ZONE")
-    {
-        api_search_buffer.zones = psdb->get_all_zones();
-        api_search_buffer.zone_pointer = 0;
-    }
-
-    if(DEVICE_TYPE=="OWNER")
-    {
-        api_search_buffer.owners = psdb->get_all_owners();
-        api_search_buffer.owner_pointer = 0;
     }
 }
 
@@ -229,36 +211,6 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.equivalent_devices.size();
         if(index<n)
             return api_search_buffer.equivalent_devices[index]->get_equivalent_device_bus();
-        else
-            return 0;
-    }
-
-    if(DEVICE_TYPE=="AREA")
-    {
-        size_t index = api_search_buffer.area_pointer;
-        size_t n = api_search_buffer.areas.size();
-        if(index<n)
-            return api_search_buffer.areas[index]->get_area_number();
-        else
-            return 0;
-    }
-
-    if(DEVICE_TYPE=="ZONE")
-    {
-        size_t index = api_search_buffer.zone_pointer;
-        size_t n = api_search_buffer.zones.size();
-        if(index<n)
-            return api_search_buffer.zones[index]->get_zone_number();
-        else
-            return 0;
-    }
-
-    if(DEVICE_TYPE=="OWNER")
-    {
-        size_t index = api_search_buffer.owner_pointer;
-        size_t n = api_search_buffer.owners.size();
-        if(index<n)
-            return api_search_buffer.owners[index]->get_owner_number();
         else
             return 0;
     }
@@ -430,32 +382,84 @@ void api_goto_next_device(const char* device_type)
         return;
     }
 
-    if(DEVICE_TYPE=="AREA")
-    {
-        size_t index = api_search_buffer.area_pointer;
-        size_t n = api_search_buffer.areas.size();
-        if(index<n)
-            api_search_buffer.area_pointer ++;
-        return;
-    }
-
-    if(DEVICE_TYPE=="ZONE")
-    {
-        size_t index = api_search_buffer.zone_pointer;
-        size_t n = api_search_buffer.zones.size();
-        if(index<n)
-            api_search_buffer.zone_pointer ++;
-        return;
-    }
-
-    if(DEVICE_TYPE=="OWNER")
-    {
-        size_t index = api_search_buffer.owner_pointer;
-        size_t n = api_search_buffer.owners.size();
-        if(index<n)
-            api_search_buffer.owner_pointer ++;
-        return;
-    }
-
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
+}
+
+
+void api_initialize_area_search()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+
+    api_search_buffer.areas = psdb->get_all_areas();
+    api_search_buffer.area_pointer = 0;
+}
+
+size_t api_get_current_area_number()
+{
+    size_t index = api_search_buffer.area_pointer;
+    size_t n = api_search_buffer.areas.size();
+    if(index<n)
+        return api_search_buffer.areas[index]->get_area_number();
+    else
+        return 0;
+}
+
+void api_goto_next_area()
+{
+    size_t index = api_search_buffer.area_pointer;
+    size_t n = api_search_buffer.areas.size();
+    if(index<n)
+        api_search_buffer.area_pointer ++;
+}
+
+void api_initialize_zone_search()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+
+    api_search_buffer.zones = psdb->get_all_zones();
+    api_search_buffer.zone_pointer = 0;
+}
+
+size_t api_get_current_zone_number()
+{
+    size_t index = api_search_buffer.zone_pointer;
+    size_t n = api_search_buffer.zones.size();
+    if(index<n)
+        return api_search_buffer.zones[index]->get_zone_number();
+    else
+        return 0;
+}
+
+void api_goto_next_zone()
+{
+    size_t index = api_search_buffer.zone_pointer;
+    size_t n = api_search_buffer.zones.size();
+    if(index<n)
+        api_search_buffer.zone_pointer ++;
+}
+
+void api_initialize_owner_search()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+
+    api_search_buffer.owners = psdb->get_all_owners();
+    api_search_buffer.owner_pointer = 0;
+}
+
+size_t api_get_current_owner_number()
+{
+    size_t index = api_search_buffer.owner_pointer;
+    size_t n = api_search_buffer.owners.size();
+    if(index<n)
+        return api_search_buffer.owners[index]->get_owner_number();
+    else
+        return 0;
+}
+
+void api_goto_next_owner()
+{
+    size_t index = api_search_buffer.owner_pointer;
+    size_t n = api_search_buffer.owners.size();
+    if(index<n)
+        api_search_buffer.owner_pointer ++;
 }

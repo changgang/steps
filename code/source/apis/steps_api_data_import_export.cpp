@@ -6,7 +6,7 @@
 
 void api_load_powerflow_data_from_file(char* file, char* file_type)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -31,7 +31,7 @@ void api_load_powerflow_data_from_file(char* file, char* file_type)
 
 void api_save_powerflow_data_to_file(char* file, char* file_type)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -57,7 +57,7 @@ void api_save_powerflow_data_to_file(char* file, char* file_type)
 
 void api_load_dynamic_data_from_file(char* file, char* file_type)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
@@ -82,7 +82,7 @@ void api_load_dynamic_data_from_file(char* file, char* file_type)
 
 void api_save_dynamic_data_to_file(char* file, char* file_type)
 {
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {

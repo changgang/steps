@@ -8,7 +8,7 @@ int api_get_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     TRANSFORMER* transptr = psdb->get_transformer(did);
     if(transptr!=NULL)
@@ -79,7 +79,7 @@ void api_set_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, cha
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     TRANSFORMER* transptr = psdb->get_transformer(did);
     if(transptr!=NULL)
@@ -148,7 +148,7 @@ double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, cha
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     TRANSFORMER* transptr = psdb->get_transformer(did);
     if(transptr!=NULL)
@@ -279,7 +279,7 @@ void api_set_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char*
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     TRANSFORMER* transptr = psdb->get_transformer(did);
     if(transptr!=NULL)
@@ -445,7 +445,7 @@ const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbu
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     string BLANK = "";
 
@@ -481,7 +481,7 @@ void api_set_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     TRANSFORMER* transptr = psdb->get_transformer(did);
     if(transptr!=NULL)
@@ -516,7 +516,7 @@ bool api_get_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, cha
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     TRANSFORMER* transptr = psdb->get_transformer(did);
     if(transptr!=NULL)
@@ -560,7 +560,7 @@ void api_set_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, cha
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = api_get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     TRANSFORMER* transptr = psdb->get_transformer(did);
     if(transptr!=NULL)

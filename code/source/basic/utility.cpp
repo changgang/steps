@@ -363,6 +363,13 @@ POWER_SYSTEM_DATABASE* get_built_in_power_system_database_of_number(size_t i)
         return NULL;
 }
 
+
+POWER_SYSTEM_DATABASE* get_default_power_system_database()
+{
+    return &(STEPS::default_power_system_db);
+}
+
+
 void reset_power_system_database(size_t i)
 {
     POWER_SYSTEM_DATABASE* db = get_built_in_power_system_database_of_number(i);

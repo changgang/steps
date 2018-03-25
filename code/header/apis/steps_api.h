@@ -8,21 +8,21 @@
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 
-class STEPS_SEARCH_BUFFER
+class STEPS_API_SEARCH_BUFFER
 {
     public:
-        vector<BUS*> buses;                size_t bus_pointer;
-        vector<GENERATOR*> generators;     size_t generator_pointer;
-        vector<PE_SOURCE*> pe_sources;     size_t pe_source_pointer;
-        vector<LOAD*> loads;               size_t load_pointer;
-        vector<FIXED_SHUNT*> fixed_shunts; size_t fixed_shunt_pointer;
-        vector<LINE*> lines;               size_t line_pointer;
-        vector<TRANSFORMER*> transformers; size_t transformer_pointer;
-        vector<HVDC*> hvdcs;               size_t hvdc_pointer;
+        vector<BUS*> buses;                            size_t bus_pointer;
+        vector<GENERATOR*> generators;                 size_t generator_pointer;
+        vector<PE_SOURCE*> pe_sources;                 size_t pe_source_pointer;
+        vector<LOAD*> loads;                           size_t load_pointer;
+        vector<FIXED_SHUNT*> fixed_shunts;             size_t fixed_shunt_pointer;
+        vector<LINE*> lines;                           size_t line_pointer;
+        vector<TRANSFORMER*> transformers;             size_t transformer_pointer;
+        vector<HVDC*> hvdcs;                           size_t hvdc_pointer;
         vector<EQUIVALENT_DEVICE*> equivalent_devices; size_t equivalent_device_pointer;
-        vector<AREA*> areas; size_t area_pointer;
-        vector<ZONE*> zones; size_t zone_pointer;
-        vector<OWNER*> owners; size_t owner_pointer;
+        vector<AREA*> areas;                           size_t area_pointer;
+        vector<ZONE*> zones;                           size_t zone_pointer;
+        vector<OWNER*> owners;                         size_t owner_pointer;
 };
 
 #ifdef  __cplusplus
@@ -39,12 +39,22 @@ void show_area_zone_owner_not_exist_with_api(size_t no, string api_func);
 
 
 void api_initialize_package();
+size_t api_get_allowed_maximum_bus_number();
+void api_set_allowed_maximum_bus_number(size_t max_bus);
+size_t api_get_device_capacity(const char* device_type);
+size_t api_get_area_capacity();
+size_t api_get_zone_capacity();
+size_t api_get_owner_capacity();
+void api_set_device_capacity(const char* device_type, size_t cap);
+void api_set_area_capacity(size_t cap);
+void api_set_zone_capacity(size_t cap);
+void api_set_owner_capacity(size_t cap);
+
 void api_clear_package();
 void api_terminate_package();
 double api_get_package_float_data(char* parameter_name);
 void api_set_package_float_data(char* parameter_name, double value);
 
-extern POWER_SYSTEM_DATABASE* api_get_default_power_system_database();
 
 void api_load_powerflow_data_from_file(char* file, char* file_type);
 void api_save_powerflow_data_to_file(char* file, char* file_type);
@@ -65,8 +75,6 @@ void api_add_area(size_t area_number, char* area_name);
 void api_add_zone(size_t zone_number, char* zone_name);
 void api_add_owner(size_t owner_number, char* owner_name);
 
-size_t api_get_device_capacity(const char* device_type);
-void api_set_device_capacity(const char* device_type, size_t cap);
 size_t api_get_device_count(const char* device_type);
 void api_show_device_data(const char* device_type);
 
@@ -78,6 +86,18 @@ void api_initialize_device_search(const char* device_type, size_t bus);
 size_t api_get_current_device_bus_number(const char* device_type, const char* side);
 const char* api_get_current_device_identifier(const char* device_type);
 void api_goto_next_device(const char* device_type);
+
+void api_initialize_area_search();
+size_t api_get_current_area_number();
+void api_goto_next_area();
+
+void api_initialize_zone_search();
+size_t api_get_current_zone_number();
+void api_goto_next_zone();
+
+void api_initialize_owner_search();
+size_t api_get_current_owner_number();
+void api_goto_next_owner();
 
 int api_get_bus_integer_data(size_t bus, char* parameter_name);
 void api_set_bus_integer_data(size_t bus, char* parameter_name, int value);

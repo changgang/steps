@@ -16,7 +16,7 @@ POWER_SYSTEM_DATABASE::POWER_SYSTEM_DATABASE()
     set_system_base_power_in_MVA(100.0);
     set_system_base_frequency_in_Hz(50.0);
 
-    set_allowed_max_bus_number(100);
+    set_allowed_max_bus_number(1000);
 
     set_database_capacity();
 

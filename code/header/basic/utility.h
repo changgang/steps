@@ -47,6 +47,8 @@ bool is_file_exist(const string file);
 
 POWER_SYSTEM_DATABASE* get_built_in_power_system_database_of_number(size_t i);
 
+POWER_SYSTEM_DATABASE* get_default_power_system_database();
+
 void reset_power_system_database(size_t i=0);
 
 void set_dynamic_simulation_time_step_in_s(double delt);
