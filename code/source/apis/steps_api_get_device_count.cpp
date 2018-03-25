@@ -27,13 +27,26 @@ size_t api_get_device_count(const char* device_type)
         return psdb->get_hvdc_count();
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
         return psdb->get_equivalent_device_count();
-    if(DEVICE_TYPE=="AREA")
-        return psdb->get_area_count();
-    if(DEVICE_TYPE=="ZONE")
-        return psdb->get_zone_count();
-    if(DEVICE_TYPE=="OWNER")
-        return psdb->get_owner_count();
 
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
     return 0;
 }
+
+size_t api_get_area_count()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    return psdb->get_area_count();
+}
+
+size_t api_get_zone_count()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    return psdb->get_zone_count();
+}
+
+size_t api_get_owner_count()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    return psdb->get_owner_count();
+}
+

@@ -76,6 +76,9 @@ void api_add_zone(size_t zone_number, char* zone_name);
 void api_add_owner(size_t owner_number, char* owner_name);
 
 size_t api_get_device_count(const char* device_type);
+size_t api_get_area_count();
+size_t api_get_zone_count();
+size_t api_get_owner_count();
 void api_show_device_data(const char* device_type);
 
 void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
