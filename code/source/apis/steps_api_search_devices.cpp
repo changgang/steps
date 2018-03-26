@@ -14,6 +14,14 @@ void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double 
     api_search_buffer.bus_pointer = 0;
 }
 
+void api_initialize_all_bus_search()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+
+    api_search_buffer.buses = psdb->get_all_buses();
+    api_search_buffer.bus_pointer = 0;
+}
+
 size_t api_get_current_bus_number()
 {
     size_t index = api_search_buffer.bus_pointer;

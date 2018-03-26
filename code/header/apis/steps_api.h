@@ -82,6 +82,7 @@ size_t api_get_owner_count();
 void api_show_device_data(const char* device_type);
 
 void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
+void api_initialize_all_bus_search();
 size_t api_get_current_bus_number();
 void api_goto_next_bus();
 
@@ -211,7 +212,7 @@ const char* api_get_generator_related_model_name(size_t bus, char* identifier, c
 
 
 void api_initialize_powerflow_solver();
-POWERFLOW_SOLVER* api_get_default_powerflow_solver();
+
 
 size_t api_get_powerflow_solver_integer_parameter(char* parameter_name);
 void api_set_powerflow_solver_integer_parameter(char* parameter_name, int value);
@@ -224,8 +225,9 @@ void api_solve_powerflow(char* method);
 bool api_is_powerflow_converged();
 void api_show_powerflow_result();
 void api_save_powerflow_result(char* file);
+void api_save_network_matrix(char* file);
 
-DYNAMICS_SIMULATOR* api_get_default_dynamic_simulator();
+
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name);
 void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value);

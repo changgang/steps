@@ -6,10 +6,6 @@
 
 
 
-DYNAMICS_SIMULATOR* api_get_default_dynamic_simulator()
-{
-    return &STEPS::default_dynamic_simulator;
-}
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name)
 {

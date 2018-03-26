@@ -3,6 +3,8 @@
 
 #include "header/power_system_database.h"
 #include "header/network_database.h"
+#include "header/toolkit/powerflow_solver/powerflow_solver.h"
+#include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 #include <complex>
 
 string num2str(int number);
@@ -48,6 +50,8 @@ bool is_file_exist(const string file);
 POWER_SYSTEM_DATABASE* get_built_in_power_system_database_of_number(size_t i);
 
 POWER_SYSTEM_DATABASE* get_default_power_system_database();
+POWERFLOW_SOLVER* api_get_default_powerflow_solver();
+DYNAMICS_SIMULATOR* api_get_default_dynamic_simulator();
 
 void reset_power_system_database(size_t i=0);
 
