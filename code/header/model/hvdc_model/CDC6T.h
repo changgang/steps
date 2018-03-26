@@ -17,6 +17,10 @@ class CDC6T: public HVDC_MODEL
         virtual CDC6T& operator=(const CDC6T& model);
     public: // specific exciter
         virtual string get_model_name() const;
+        virtual double get_double_data_with_index(size_t index) const;
+        virtual double get_double_data_with_name(string par_name) const;
+        virtual void set_double_data_with_index(size_t index, double value);
+        virtual void set_double_data_with_name(string par_name, double value);
 
         void set_inverter_dc_voltage_sensor_T_in_s(double t);
         void set_rectifier_dc_voltage_sensor_T_in_s(double t);

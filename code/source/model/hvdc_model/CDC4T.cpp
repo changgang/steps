@@ -8,7 +8,7 @@ using namespace std;
 
 static vector<string> MODEL_VARIABLE_TABLE{ "EXCITATION VOLTAGE",      //0
                                             "VOLTAGE REFERENCE",      //1
-                                            "COMPENSATED VOLTAGE",      //2
+                                            "CDC4TENSATED VOLTAGE",      //2
                                             "STABILIZING SIGNAL",      //3
                                             "STATE@SENSOR",     //4
                                             "STATE@REGULATOR",     //5
@@ -77,6 +77,32 @@ string CDC4T::get_model_name() const
     return "CDC4T";
 }
 
+double CDC4T::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double CDC4T::get_double_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return 0.0;
+
+    return 0.0;
+}
+
+void CDC4T::set_double_data_with_index(size_t index, double value)
+{
+    if(index==0)
+        return;
+}
+
+void CDC4T::set_double_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return;
+}
 
 void CDC4T::set_inverter_dc_voltage_sensor_T_in_s(double t)
 {
@@ -504,7 +530,7 @@ double CDC4T::get_variable_with_name(string var_name)
     if(var_name == "VOLTAGE REFERENCE")
         return get_voltage_reference_in_pu();
 
-    if(var_name == "COMPENSATED VOLTAGE")
+    if(var_name == "CDC4TENSATED VOLTAGE")
         return get_compensated_voltage_in_pu();
 
     if(var_name == "STABILIZING SIGNAL")

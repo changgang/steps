@@ -12,6 +12,10 @@ class COMP: public COMPENSATOR_MODEL
         virtual COMP& operator=(const COMP& model);
     public:
         virtual string get_model_name() const;
+        virtual double get_double_data_with_index(size_t index) const;
+        virtual double get_double_data_with_name(string par_name) const;
+        virtual void set_double_data_with_index(size_t index, double value);
+        virtual void set_double_data_with_name(string par_name, double value);
         void set_Xe(double Xe);
         double get_Xe() const;
     public:

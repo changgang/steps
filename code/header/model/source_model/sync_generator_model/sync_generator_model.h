@@ -89,6 +89,11 @@ class SYNC_GENERATOR_MODEL : public SOURCE_MODEL
     public: // specific sync generator model
         virtual string get_model_name() const = 0;
 
+        virtual double get_double_data_with_index(size_t index) const = 0;
+        virtual double get_double_data_with_name(string par_name) const = 0;
+        virtual void set_double_data_with_index(size_t index, double value) = 0;
+        virtual void set_double_data_with_name(string par_name, double value) = 0;
+
         virtual void update_source_impedance() = 0;
 
         virtual bool setup_model_with_steps_string(string data) = 0;

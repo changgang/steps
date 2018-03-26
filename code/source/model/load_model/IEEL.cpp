@@ -70,6 +70,33 @@ string IEEL::get_model_name() const
     return "IEEL";
 }
 
+double IEEL::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double IEEL::get_double_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return 0.0;
+
+    return 0.0;
+}
+
+void IEEL::set_double_data_with_index(size_t index, double value)
+{
+    if(index==0)
+        return;
+}
+
+void IEEL::set_double_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return;
+}
+
 void IEEL::set_P_alpha_1(double alpha)
 {
     P_alpha_1 = alpha;

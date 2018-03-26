@@ -15,6 +15,10 @@ class IEEET1: public EXCITER_MODEL
         virtual IEEET1& operator=(const IEEET1& model);
     public: // specific exciter
         virtual string get_model_name() const;
+        virtual double get_double_data_with_index(size_t index) const;
+        virtual double get_double_data_with_name(string par_name) const;
+        virtual void set_double_data_with_index(size_t index, double value);
+        virtual void set_double_data_with_name(string par_name, double value);
 
         void set_TR_in_s(double T);
         void set_KA(double K);

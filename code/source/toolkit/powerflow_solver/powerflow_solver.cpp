@@ -1680,6 +1680,26 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_receiving_side_in_MVA().real()<<","
             <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_receiving_side_in_MVA().imag()<<endl;
     }
+
+    file<<"% Transformer"<<endl;
+    file<<"IBUS,JBUS,KBUS,ID,KI,KJ,KK,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,PK/MW,QK/MVAR"<<endl;
+    vector<TRANSFORMER*> transformers = db->get_all_transformers();
+    size_t ntrans = transformers.size();
+    for(size_t i=0; i!=ntrans; ++i)
+    {
+        file<<transformers[i]->get_winding_bus(PRIMARY_SIDE)<<","
+            <<transformers[i]->get_winding_bus(SECONDARY_SIDE)<<","
+            <<transformers[i]->get_winding_bus(TERTIARY_SIDE)<<",\""<<transformers[i]->get_identifier()<<"\","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE)<<","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE)<<","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE)<<","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE).real()<<","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE).imag()<<","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE).real()<<","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE).imag()<<","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE).real()<<","
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE).imag()<<endl;
+    }
     file.close();
 }
 void POWERFLOW_SOLVER::save_network_matrix_to_file(string filename) const

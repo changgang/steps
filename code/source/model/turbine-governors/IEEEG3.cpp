@@ -73,6 +73,32 @@ string IEEEG3::get_model_name() const
     return "IEEEG3";
 }
 
+double IEEEG3::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double IEEEG3::get_double_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return 0.0;
+
+    return 0.0;
+}
+
+void IEEEG3::set_double_data_with_index(size_t index, double value)
+{
+    if(index==0)
+        return;
+}
+
+void IEEEG3::set_double_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return;
+}
 
 void IEEEG3::set_TG_in_s(double T)
 {

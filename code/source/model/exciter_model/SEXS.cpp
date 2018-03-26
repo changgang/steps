@@ -7,7 +7,7 @@ using namespace std;
 
 static vector<string> MODEL_VARIABLE_TABLE{ "EXCITATION VOLTAGE",      //0
                                             "VOLTAGE REFERENCE",      //1
-                                            "COMPENSATED VOLTAGE",      //2
+                                            "SEXSENSATED VOLTAGE",      //2
                                             "STABILIZING SIGNAL",      //3
                                             "STATE@PHASE TUNER",     //4
                                             "STATE@EXCITER"     //5
@@ -61,6 +61,33 @@ SEXS& SEXS::operator=(const SEXS& model)
 string SEXS::get_model_name() const
 {
     return "SEXS";
+}
+
+double SEXS::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double SEXS::get_double_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return 0.0;
+
+    return 0.0;
+}
+
+void SEXS::set_double_data_with_index(size_t index, double value)
+{
+    if(index==0)
+        return;
+}
+
+void SEXS::set_double_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return;
 }
 
 void SEXS::set_TA_in_s(double T)
@@ -311,7 +338,7 @@ double SEXS::get_variable_with_name(string var_name)
     if(var_name == "VOLTAGE REFERENCE")
         return get_voltage_reference_in_pu();
 
-    if(var_name == "COMPENSATED VOLTAGE")
+    if(var_name == "SEXSENSATED VOLTAGE")
         return get_compensated_voltage_in_pu();
 
     if(var_name == "STABILIZING SIGNAL")

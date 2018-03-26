@@ -15,6 +15,10 @@ class IEE2ST : public STABILIZER_MODEL
         virtual IEE2ST& operator=(const IEE2ST& model);
 
         virtual string get_model_name() const;
+        virtual double get_double_data_with_index(size_t index) const;
+        virtual double get_double_data_with_name(string par_name) const;
+        virtual void set_double_data_with_index(size_t index, double value);
+        virtual void set_double_data_with_name(string par_name, double value);
     public:
         void set_K1(double K);
         void set_T1_in_s(double T);

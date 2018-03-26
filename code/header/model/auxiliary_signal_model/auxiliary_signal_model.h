@@ -25,6 +25,11 @@ class AUXILIARY_SIGNAL_MODEL : public MODEL
     public: // specific exciter
         virtual string get_model_name() const = 0;
 
+        virtual double get_double_data_with_index(size_t index) const = 0;
+        virtual double get_double_data_with_name(string par_name) const = 0;
+        virtual void set_double_data_with_index(size_t index, double value) = 0;
+        virtual void set_double_data_with_name(string par_name, double value) = 0;
+
         virtual bool setup_model_with_steps_string(string data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;

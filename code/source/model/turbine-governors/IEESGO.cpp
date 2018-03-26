@@ -70,6 +70,33 @@ string IEESGO::get_model_name() const
     return "IEESGO";
 }
 
+double IEESGO::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double IEESGO::get_double_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return 0.0;
+
+    return 0.0;
+}
+
+void IEESGO::set_double_data_with_index(size_t index, double value)
+{
+    if(index==0)
+        return;
+}
+
+void IEESGO::set_double_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return;
+}
+
 void IEESGO::set_K1(double K)
 {
     governor.set_K(K);

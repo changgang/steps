@@ -26,6 +26,11 @@ class MODEL : public BASE
         DEVICE_ID get_device_id() const;
         string get_device_name() const;
 
+        virtual double get_double_data_with_index(size_t index) const = 0;
+        virtual double get_double_data_with_name(string par_name) const = 0;
+        virtual void set_double_data_with_index(size_t index, double value) = 0;
+        virtual void set_double_data_with_name(string par_name, double value) = 0;
+
         void set_flag_model_initialized_as_false();
         void set_flag_model_initialized_as_true();
         bool is_model_initialized() const;

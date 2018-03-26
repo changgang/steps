@@ -13,6 +13,10 @@ class IEEL : public LOAD_MODEL
         virtual IEEL& operator=(const IEEL& model);
 
         virtual string get_model_name() const;
+        virtual double get_double_data_with_index(size_t index) const;
+        virtual double get_double_data_with_name(string par_name) const;
+        virtual void set_double_data_with_index(size_t index, double value);
+        virtual void set_double_data_with_name(string par_name, double value);
 
         void set_P_alpha_1(double alpha);
         void set_P_alpha_2(double alpha);

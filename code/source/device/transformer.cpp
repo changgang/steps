@@ -1652,6 +1652,9 @@ double TRANSFORMER::get_secondary_winding_off_nominal_turn_ratio_in_pu() const
 
 double TRANSFORMER::get_tertiary_winding_off_nominal_turn_ratio_in_pu() const
 {
+    if(is_two_winding_transformer())
+        return 0.0;
+
     ostringstream sstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)

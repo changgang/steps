@@ -7,7 +7,7 @@ using namespace std;
 
 static vector<string> MODEL_VARIABLE_TABLE{ "EXCITATION VOLTAGE",      //0
                                             "VOLTAGE REFERENCE",      //1
-                                            "COMPENSATED VOLTAGE",      //2
+                                            "CSEET1ENSATED VOLTAGE",      //2
                                             "STABILIZING SIGNAL",      //3
                                             "STATE@SENSOR",     //4
                                             "STATE@TUNER1",     //5
@@ -150,6 +150,33 @@ void CSEET1::copy_from_const_model(const CSEET1& model)
 string CSEET1::get_model_name() const
 {
     return "CSEET1";
+}
+
+double CSEET1::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double CSEET1::get_double_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return 0.0;
+
+    return 0.0;
+}
+
+void CSEET1::set_double_data_with_index(size_t index, double value)
+{
+    if(index==0)
+        return;
+}
+
+void CSEET1::set_double_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return;
 }
 
 void CSEET1::set_excitation_source(AVR_EXCITATION_SOURCE source)
@@ -1215,7 +1242,7 @@ double CSEET1::get_variable_with_name(string var_name)
     if(var_name == "VOLTAGE REFERENCE")
         return get_voltage_reference_in_pu();
 
-    if(var_name == "COMPENSATED VOLTAGE")
+    if(var_name == "CSEET1ENSATED VOLTAGE")
         return get_compensated_voltage_in_pu();
 
     if(var_name == "STABILIZING SIGNAL")

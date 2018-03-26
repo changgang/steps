@@ -202,11 +202,9 @@ void api_set_owner_string_data(size_t owner, char* parameter_name, char* value);
 bool api_get_owner_boolean_data(size_t owner, char* parameter_name);
 void api_set_owner_boolean_data(size_t owner, char* parameter_name, bool value);
 
-int api_get_generator_related_model_integer_parameter(size_t bus, char* identifier, char* model_type, char* model_name, char* parameter_name);
-void api_set_generator_related_model_integer_parameter(size_t bus, char* identifier, char* model_type, char* model_name, char* parameter_name, int value);
-double api_get_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* model_name, char* parameter_name);
-void api_set_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* model_name, char* parameter_name, double value);
 const char* api_get_generator_related_model_name(size_t bus, char* identifier, char* model_type);
+double api_get_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);
+void api_set_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
 
 
 

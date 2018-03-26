@@ -207,6 +207,33 @@ string WT3G2::get_model_name() const
     return "WT3G2";
 }
 
+double WT3G2::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double WT3G2::get_double_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return 0.0;
+
+    return 0.0;
+}
+
+void WT3G2::set_double_data_with_index(size_t index, double value)
+{
+    if(index==0)
+        return;
+}
+
+void WT3G2::set_double_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return;
+}
+
 bool WT3G2::setup_model_with_steps_string(string data)
 {
     return false;
