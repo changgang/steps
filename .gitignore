@@ -2,3 +2,5 @@
 *.depend
 *.layout
 build/
+python/*.pyc
+python/*.pyd
