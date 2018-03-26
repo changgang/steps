@@ -201,7 +201,7 @@ void api_save_powerflow_result(char* file)
 {
     POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
 
-    solver->save_bus_powerflow_result_to_file(file);
+    solver->save_powerflow_result_to_file(file);
 }
 
 void api_save_network_matrix(char* file)
@@ -209,4 +209,10 @@ void api_save_network_matrix(char* file)
     POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->save_network_matrix_to_file(file);
+}
+
+void api_save_jacobian_matrix(char* file)
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    solver->save_jacobian_matrix_to_file(file);
 }

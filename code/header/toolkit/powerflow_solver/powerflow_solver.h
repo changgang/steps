@@ -47,6 +47,7 @@ class POWERFLOW_SOLVER
         double get_maximum_reactive_power_mismatch_in_MVar() const;
 
         void show_powerflow_result() const;
+        void save_powerflow_result_to_file(string filename) const;
         void save_network_matrix_to_file(string filename) const;
         void save_jacobian_matrix_to_file(string filename) const;
         void save_bus_powerflow_result_to_file(string filename) const;

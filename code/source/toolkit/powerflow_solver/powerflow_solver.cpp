@@ -1628,7 +1628,60 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
         show_information_with_leading_time_stamp(sstream);
     }
 }
+void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
+{
+    if(not is_power_system_database_set())
+        return;
 
+    ostringstream sstream;
+
+    ofstream file(filename);
+    if(not file.is_open())
+    {
+        sstream<<"File '"<<filename<<"' cannot be opened for saving powerflow result to file."<<endl
+          <<"No powerflow result will be exported.";
+        show_information_with_leading_time_stamp(sstream);
+        return;
+    }
+
+    file<<"% Bus"<<endl;
+    file<<"BUS,VOLTAGE,ANGLE"<<endl;
+    vector<BUS*> buses = db->get_all_buses();
+    size_t nbus = buses.size();
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        file<<buses[i]->get_bus_number()<<","
+            <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
+            <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<endl;
+    }
+
+    file<<"% Generator"<<endl;
+    file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE"<<endl;
+    vector<GENERATOR*> generators = db->get_all_generators();
+    size_t ngen = generators.size();
+    for(size_t i=0; i!=ngen; ++i)
+    {
+        size_t bus = generators[i]->get_generator_bus();
+        file<<bus<<",\""<<generators[i]->get_identifier()<<"\","
+            <<setprecision(6)<<fixed<<generators[i]->get_p_generation_in_MW()<<","
+            <<setprecision(6)<<fixed<<generators[i]->get_q_generation_in_MVar()<<","
+            <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;
+    }
+
+    file<<"% Line"<<endl;
+    file<<"IBUS,JBUS,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR"<<endl;
+    vector<LINE*> lines = db->get_all_lines();
+    size_t nline = lines.size();
+    for(size_t i=0; i!=nline; ++i)
+    {
+        file<<lines[i]->get_sending_side_bus()<<","<<lines[i]->get_receiving_side_bus()<<",\""<<lines[i]->get_identifier()<<"\","
+            <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_sending_side_in_MVA().real()<<","
+            <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_sending_side_in_MVA().imag()<<","
+            <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_receiving_side_in_MVA().real()<<","
+            <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_receiving_side_in_MVA().imag()<<endl;
+    }
+    file.close();
+}
 void POWERFLOW_SOLVER::save_network_matrix_to_file(string filename) const
 {
     if(network_db!=NULL)

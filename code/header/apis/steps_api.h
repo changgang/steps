@@ -226,6 +226,7 @@ bool api_is_powerflow_converged();
 void api_show_powerflow_result();
 void api_save_powerflow_result(char* file);
 void api_save_network_matrix(char* file);
+void api_save_jacobian_matrix(char* file);
 
 
 
