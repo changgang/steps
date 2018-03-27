@@ -78,8 +78,10 @@ double IEESGO::get_double_data_with_index(size_t index) const
 double IEESGO::get_double_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
+    if(par_name=="PMAX")
+        return get_Pmax_in_pu();
+    if(par_name=="PMIN")
+        return get_Pmin_in_pu();
 
     return 0.0;
 }
@@ -93,8 +95,10 @@ void IEESGO::set_double_data_with_index(size_t index, double value)
 void IEESGO::set_double_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="")
-        return;
+    if(par_name=="PMAX")
+        return set_Pmax_in_pu(value);
+    if(par_name=="PMIN")
+        return set_Pmin_in_pu(value);
 }
 
 void IEESGO::set_K1(double K)
