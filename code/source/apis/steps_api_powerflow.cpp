@@ -2,17 +2,6 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-
-void api_initialize_powerflow_solver()
-{
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
-    solver->set_power_system_database(psdb);
-    solver->initialize_powerflow_solver();
-}
-
-
 size_t api_get_powerflow_solver_integer_parameter(char* parameter_name)
 {
     POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();

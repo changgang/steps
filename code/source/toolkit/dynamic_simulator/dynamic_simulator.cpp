@@ -702,17 +702,20 @@ void DYNAMICS_SIMULATOR::start()
 
 void DYNAMICS_SIMULATOR::stop()
 {
-    ostringstream sstream;
-    sstream<<"Dynamics simulation stops.";
-    show_information_with_leading_time_stamp(sstream);
+    if(TIME >= -2.0*get_dynamic_simulation_time_step_in_s() or csv_output_file.is_open())
+    {
+        ostringstream sstream;
+        sstream<<"Dynamics simulation stops.";
+        show_information_with_leading_time_stamp(sstream);
 
-    if(json_output_file.is_open())
-        json_output_file<<endl
-                        <<"                    ]"<<endl
-                        <<"}";
-    close_meter_output_files();
+        if(json_output_file.is_open())
+            json_output_file<<endl
+                            <<"                    ]"<<endl
+                            <<"}";
+        close_meter_output_files();
 
-    TIME = -2.0*get_dynamic_simulation_time_step_in_s();
+        TIME = -2.0*get_dynamic_simulation_time_step_in_s();
+    }
 }
 
 

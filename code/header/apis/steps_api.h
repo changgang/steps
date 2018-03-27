@@ -39,8 +39,11 @@ void show_area_zone_owner_not_exist_with_api(size_t no, string api_func);
 
 
 void api_initialize_package();
+void api_initialize_powerflow_solver();
+
 size_t api_get_allowed_maximum_bus_number();
 void api_set_allowed_maximum_bus_number(size_t max_bus);
+
 size_t api_get_device_capacity(const char* device_type);
 size_t api_get_area_capacity();
 size_t api_get_zone_capacity();
@@ -209,7 +212,6 @@ void api_set_generator_related_model_float_parameter(size_t bus, char* identifie
 
 
 
-void api_initialize_powerflow_solver();
 
 
 size_t api_get_powerflow_solver_integer_parameter(char* parameter_name);
@@ -225,7 +227,6 @@ void api_show_powerflow_result();
 void api_save_powerflow_result(char* file);
 void api_save_network_matrix(char* file);
 void api_save_jacobian_matrix(char* file);
-
 
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name);

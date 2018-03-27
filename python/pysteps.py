@@ -600,9 +600,6 @@ def set_owner_data(owner, par_type, par_name, value):
         return libsteps.api_set_owner_string_data(owner, par_name, value)
     return None
 
-def initialize_powerflow_solver():
-    libsteps.api_initialize_powerflow_solver()
-
 def get_powerflow_solver_parameter(par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
