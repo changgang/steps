@@ -191,10 +191,10 @@ void UTILITY_TEST::test_get_built_in_power_system_database_of_number()
 
     POWER_SYSTEM_DATABASE* psdb = get_built_in_power_system_database_of_number(0);
 
-    TEST_ASSERT(psdb->get_allowed_max_bus_number()==100);
-
-    psdb->set_allowed_max_bus_number(1000);
     TEST_ASSERT(psdb->get_allowed_max_bus_number()==1000);
+
+    psdb->set_allowed_max_bus_number(10000);
+    TEST_ASSERT(psdb->get_allowed_max_bus_number()==10000);
 }
 
 void UTILITY_TEST::test_reset_power_system_database()
