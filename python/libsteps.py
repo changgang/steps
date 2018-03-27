@@ -1,5 +1,5 @@
 from ctypes import *
-libsteps = CDLL("STEPS_core.dll")
+libsteps = CDLL("steps_core.dll")
 
 libsteps.api_load_powerflow_data_from_file.restype = None
 libsteps.api_load_powerflow_data_from_file.argtypes = (c_char_p, c_char_p)

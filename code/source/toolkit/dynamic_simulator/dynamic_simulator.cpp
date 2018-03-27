@@ -702,7 +702,7 @@ void DYNAMICS_SIMULATOR::start()
 
 void DYNAMICS_SIMULATOR::stop()
 {
-    if(TIME >= -2.0*get_dynamic_simulation_time_step_in_s() or csv_output_file.is_open())
+    if(TIME >0.0 or csv_output_file.is_open())
     {
         ostringstream sstream;
         sstream<<"Dynamics simulation stops.";
