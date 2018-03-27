@@ -20,27 +20,42 @@ const char* api_get_generator_related_model_name(size_t bus, char* identifier, c
     if(MODEL_TYPE=="GEN" or MODEL_TYPE=="SYNC GENERATOR")
     {
         SYNC_GENERATOR_MODEL* model = generator->get_sync_generator_model();
-        return model->get_model_name().c_str();
+        if(model!=NULL)
+            return model->get_model_name().c_str();
+        else
+            return BLANK.c_str();
     }
     if(MODEL_TYPE=="AVR" or MODEL_TYPE=="EXCITER")
     {
         EXCITER_MODEL* model = generator->get_exciter_model();
-        return model->get_model_name().c_str();
+        if(model!=NULL)
+            return model->get_model_name().c_str();
+        else
+            return BLANK.c_str();
     }
     if(MODEL_TYPE=="PSS" or MODEL_TYPE=="STABILIZER")
     {
         STABILIZER_MODEL* model = generator->get_stabilizer_model();
-        return model->get_model_name().c_str();
+        if(model!=NULL)
+            return model->get_model_name().c_str();
+        else
+            return BLANK.c_str();
     }
     if(MODEL_TYPE=="GOV" or MODEL_TYPE=="TURBINE GOVERNOR")
     {
         TURBINE_GOVERNOR_MODEL* model = generator->get_turbine_governor_model();
-        return model->get_model_name().c_str();
+        if(model!=NULL)
+            return model->get_model_name().c_str();
+        else
+            return BLANK.c_str();
     }
     if(MODEL_TYPE=="COMP" or MODEL_TYPE=="COMPENSATOR")
     {
         COMPENSATOR_MODEL* model = generator->get_compensator_model();
-        return model->get_model_name().c_str();
+        if(model!=NULL)
+            return model->get_model_name().c_str();
+        else
+            return BLANK.c_str();
     }
     show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
     return BLANK.c_str();
@@ -61,28 +76,43 @@ double api_get_generator_related_model_float_parameter(size_t bus, char* identif
     if(MODEL_TYPE=="GEN" or MODEL_TYPE=="SYNC GENERATOR")
     {
         SYNC_GENERATOR_MODEL* model = generator->get_sync_generator_model();
-        return model->get_double_data_with_name(PARAMETER_NAME);
+        if(model!=NULL)
+            return model->get_double_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
     }
 
     if(MODEL_TYPE=="AVR" or MODEL_TYPE=="EXCITER")
     {
         EXCITER_MODEL* model = generator->get_exciter_model();
-        return model->get_double_data_with_name(PARAMETER_NAME);
+        if(model!=NULL)
+            return model->get_double_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
     }
     if(MODEL_TYPE=="PSS" or MODEL_TYPE=="STABILIZER")
     {
         STABILIZER_MODEL* model = generator->get_stabilizer_model();
-        return model->get_double_data_with_name(PARAMETER_NAME);
+        if(model!=NULL)
+            return model->get_double_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
     }
     if(MODEL_TYPE=="GOV" or MODEL_TYPE=="TURBINE GOVERNOR")
     {
         TURBINE_GOVERNOR_MODEL* model = generator->get_turbine_governor_model();
-        return model->get_double_data_with_name(PARAMETER_NAME);
+        if(model!=NULL)
+            return model->get_double_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
     }
     if(MODEL_TYPE=="COMP" or MODEL_TYPE=="COMPENSATOR")
     {
         COMPENSATOR_MODEL* model = generator->get_compensator_model();
-        return model->get_double_data_with_name(PARAMETER_NAME);
+        if(model!=NULL)
+            return model->get_double_data_with_name(PARAMETER_NAME);
+        else
+            return 0.0;
     }
     show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
     return 0.0;
@@ -103,28 +133,43 @@ void api_set_generator_related_model_float_parameter(size_t bus, char* identifie
     if(MODEL_TYPE=="GEN" or MODEL_TYPE=="SYNC GENERATOR")
     {
         SYNC_GENERATOR_MODEL* model = generator->get_sync_generator_model();
-        return model->set_double_data_with_name(PARAMETER_NAME, value);
+        if(model!=NULL)
+            return model->set_double_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
     }
 
     if(MODEL_TYPE=="AVR" or MODEL_TYPE=="EXCITER")
     {
         EXCITER_MODEL* model = generator->get_exciter_model();
-        return model->set_double_data_with_name(PARAMETER_NAME, value);
+        if(model!=NULL)
+            return model->set_double_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
     }
     if(MODEL_TYPE=="PSS" or MODEL_TYPE=="STABILIZER")
     {
         STABILIZER_MODEL* model = generator->get_stabilizer_model();
-        return model->set_double_data_with_name(PARAMETER_NAME, value);
+        if(model!=NULL)
+            return model->set_double_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
     }
     if(MODEL_TYPE=="GOV" or MODEL_TYPE=="TURBINE GOVERNOR")
     {
         TURBINE_GOVERNOR_MODEL* model = generator->get_turbine_governor_model();
-        return model->set_double_data_with_name(PARAMETER_NAME, value);
+        if(model!=NULL)
+            return model->set_double_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
     }
     if(MODEL_TYPE=="COMP" or MODEL_TYPE=="COMPENSATOR")
     {
         COMPENSATOR_MODEL* model = generator->get_compensator_model();
-        return model->set_double_data_with_name(PARAMETER_NAME, value);
+        if(model!=NULL)
+            return model->set_double_data_with_name(PARAMETER_NAME, value);
+        else
+            return;
     }
     show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }

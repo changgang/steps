@@ -271,8 +271,13 @@ libsteps.api_set_owner_integer_data.argtypes = (c_uint, c_char_p, c_int)
 libsteps.api_set_owner_string_data.restype = None
 libsteps.api_set_owner_string_data.argtypes = (c_uint, c_char_p, c_char_p)
 
-libsteps.api_initialize_powerflow_solver.restype = None
-libsteps.api_initialize_powerflow_solver.argtypes = None
+libsteps.api_get_generator_related_model_name.restype = c_char_p
+libsteps.api_get_generator_related_model_name.argtypes = (c_uint, c_char_p, c_char_p)
+libsteps.api_get_generator_related_model_float_parameter.restype = c_double
+libsteps.api_get_generator_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p)
+libsteps.api_set_generator_related_model_float_parameter.restype = None
+libsteps.api_set_generator_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_double)
+
 
 libsteps.api_get_powerflow_solver_integer_parameter.restype = (c_uint)
 libsteps.api_get_powerflow_solver_integer_parameter.argtypes = (c_char_p, )

@@ -269,38 +269,47 @@ def get_bus_data(bus, par_type, par_name):
         return libsteps.api_get_bus_string_data(bus, par_name)
     return None
 
-def get_generator_data(bus, id, par_type, par_name):
+def get_generator_data(generator, par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = generator[0]
+    id = generator[1]
     if par_type in ['I', 'INT', 'INTEGER']:
-        return libsteps.api_get_generator_integer_data(bus, id, par_name)
+        return libsteps.api_get_source_integer_data(bus, id, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-        return libsteps.api_get_generator_float_data(bus, id, par_name)
+        return libsteps.api_get_source_float_data(bus, id, par_name)
     if par_type in ['B', 'BOOL', 'BOOLEAN']:
-        return libsteps.api_get_generator_boolean_data(bus, id, par_name)
+        return libsteps.api_get_source_boolean_data(bus, id, par_name)
     if par_type in ['S', 'STRING']:
-        return libsteps.api_get_generator_string_data(bus, id, par_name)
+        return libsteps.api_get_source_string_data(bus, id, par_name)
     return None
 
-def get_pe_source_data(bus, id, par_type, par_name):
+def get_pe_source_data(pe_source, par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = pe_source[0]
+    id = pe_source[1]
     if par_type in ['I', 'INT', 'INTEGER']:
-        return libsteps.api_get_pe_source_integer_data(bus, id, par_name)
+        return libsteps.api_get_source_integer_data(bus, id, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-        return libsteps.api_get_pe_source_float_data(bus, id, par_name)
+        return libsteps.api_get_source_float_data(bus, id, par_name)
     if par_type in ['B', 'BOOL', 'BOOLEAN']:
-        return libsteps.api_get_pe_source_boolean_data(bus, id, par_name)
+        return libsteps.api_get_source_boolean_data(bus, id, par_name)
     if par_type in ['S', 'STRING']:
-        return libsteps.api_get_pe_source_string_data(bus, id, par_name)
+        return libsteps.api_get_source_string_data(bus, id, par_name)
     return None
 
-def get_load_data(bus, id, par_type, par_name):
+def get_load_data(load, par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = load[0]
+    id = load[1]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_get_load_integer_data(bus, id, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -311,10 +320,13 @@ def get_load_data(bus, id, par_type, par_name):
         return libsteps.api_get_load_string_data(bus, id, par_name)
     return None
 
-def get_fixed_shunt_data(bus, id, par_type, par_name):
+def get_fixed_shunt_data(fixed_shunt, par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = fixed_shunt[0]
+    id = fixed_shunt[1]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_get_fixed_shunt_integer_data(bus, id, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -325,10 +337,13 @@ def get_fixed_shunt_data(bus, id, par_type, par_name):
         return libsteps.api_get_fixed_shunt_string_data(bus, id, par_name)
     return None
 
-def get_equivalent_device_data(bus, id, par_type, par_name):
+def get_equivalent_device_data(equivalent_device, par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = equivalent_device[0]
+    id = equivalent_device[1]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_get_equivalent_device_integer_data(bus, id, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -339,10 +354,14 @@ def get_equivalent_device_data(bus, id, par_type, par_name):
         return libsteps.api_get_equivalent_device_string_data(bus, id, par_name)
     return None
 
-def get_line_data(ibus, jbus, id, par_type, par_name):
+def get_line_data(line, par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    ibus = line[0]
+    jbus = line[1]
+    id = line[2]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_get_line_integer_data(ibus, jbus, id, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -353,7 +372,7 @@ def get_line_data(ibus, jbus, id, par_type, par_name):
         return libsteps.api_get_line_string_data(ibus, jbus, id, par_name)
     return None
 
-def get_transformer_data(ibus, jbus, kbus, id, par_type, side, par_name):
+def get_transformer_data(transformer, par_type, side, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
@@ -361,6 +380,10 @@ def get_transformer_data(ibus, jbus, kbus, id, par_type, side, par_name):
     if side not in ['PRIMARY', 'SECONDARY', 'TERTIARY', 'TRANSFORMER']:
         return None
 
+    ibus = transformer[0]
+    jbus = transformer[1]
+    kbus = transformer[2]
+    id = transformer[3]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_get_transformer_integer_data(ibus, jbus, kbus, id, side, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -371,13 +394,17 @@ def get_transformer_data(ibus, jbus, kbus, id, par_type, side, par_name):
         return libsteps.api_get_transformer_string_data(ibus, jbus, kbus, id, side, par_name)
     return None
 
-def get_hvdc_data(ibus, jbus, id, par_type, side, par_name):
+def get_hvdc_data(hvdc, par_type, side, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
     side = side.upper()
     if side not in ['RECTIFIER', 'INVERTER', 'HVDC']:
         return None
+    
+    ibus = hvdc[0]
+    jbus = hvdc[1]
+    id = hvdc[2]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_get_hvdc_integer_data(ibus, jbus, id, side, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -446,38 +473,47 @@ def set_bus_data(bus, par_type, par_name, value):
         return libsteps.api_set_bus_string_data(bus, par_name, value)
     return None
 
-def set_generator_data(bus, id, par_type, par_name, value):
+def set_generator_data(generator, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = generator[0]
+    id = generator[1]
     if par_type in ['I', 'INT', 'INTEGER']:
-        return libsteps.api_set_generator_integer_data(bus, id, par_name, value)
+        return libsteps.api_set_source_integer_data(bus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-        return libsteps.api_set_generator_float_data(bus, id, par_name, value)
+        return libsteps.api_set_source_float_data(bus, id, par_name, value)
     if par_type in ['B', 'BOOL', 'BOOLEAN']:
-        return libsteps.api_set_generator_boolean_data(bus, id, par_name, value)
+        return libsteps.api_set_source_boolean_data(bus, id, par_name, value)
     if par_type in ['S', 'STRING']:
-        return libsteps.api_set_generator_string_data(bus, id, par_name, value)
+        return libsteps.api_set_source_string_data(bus, id, par_name, value)
     return None
 
-def set_pe_source_data(bus, id, par_type, par_name, value):
+def set_pe_source_data(pe_source, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = pe_source[0]
+    id = pe_source[1]
     if par_type in ['I', 'INT', 'INTEGER']:
-        return libsteps.api_set_pe_source_integer_data(bus, id, par_name, value)
+        return libsteps.api_set_source_integer_data(bus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-        return libsteps.api_set_pe_source_float_data(bus, id, par_name, value)
+        return libsteps.api_set_source_float_data(bus, id, par_name, value)
     if par_type in ['B', 'BOOL', 'BOOLEAN']:
-        return libsteps.api_set_pe_source_boolean_data(bus, id, par_name, value)
+        return libsteps.api_set_source_boolean_data(bus, id, par_name, value)
     if par_type in ['S', 'STRING']:
-        return libsteps.api_set_pe_source_string_data(bus, id, par_name, value)
+        return libsteps.api_set_source_string_data(bus, id, par_name, value)
     return None
 
-def set_load_data(bus, id, par_type, par_name, value):
+def set_load_data(load, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = load[0]
+    id = load[1]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_set_load_integer_data(bus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -488,10 +524,13 @@ def set_load_data(bus, id, par_type, par_name, value):
         return libsteps.api_set_load_string_data(bus, id, par_name, value)
     return None
 
-def set_fixed_shunt_data(bus, id, par_type, par_name, value):
+def set_fixed_shunt_data(fixed_shunt, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = fixed_shunt[0]
+    id = fixed_shunt[1]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_set_fixed_shunt_integer_data(bus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -502,10 +541,13 @@ def set_fixed_shunt_data(bus, id, par_type, par_name, value):
         return libsteps.api_set_fixed_shunt_string_data(bus, id, par_name, value)
     return None
 
-def set_equivalent_device_data(bus, id, par_type, par_name, value):
+def set_equivalent_device_data(equivalent_device, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    bus = equivalent_device[0]
+    id = equivalent_device[1]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_set_equivalent_device_integer_data(bus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -516,10 +558,14 @@ def set_equivalent_device_data(bus, id, par_type, par_name, value):
         return libsteps.api_set_equivalent_device_string_data(bus, id, par_name, value)
     return None
 
-def set_line_data(ibus, jbus, id, par_type, par_name, value):
+def set_line_data(line, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    ibus = line[0]
+    jbus = line[1]
+    id = line[2]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_set_line_integer_data(ibus, jbus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -530,10 +576,15 @@ def set_line_data(ibus, jbus, id, par_type, par_name, value):
         return libsteps.api_set_line_string_data(ibus, jbus, id, par_name, value)
     return None
 
-def set_transformer_data(ibus, jbus, kbus, id, par_type, par_name, value):
+def set_transformer_data(transformer, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    ibus = transformer[0]
+    jbus = transformer[1]
+    kbus = transformer[2]
+    id = transformer[3]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_set_transformer_integer_data(ibus, jbus, kbus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -544,10 +595,14 @@ def set_transformer_data(ibus, jbus, kbus, id, par_type, par_name, value):
         return libsteps.api_set_transformer_string_data(ibus, jbus, kbus, id, par_name, value)
     return None
 
-def set_hvdc_data(ibus, jbus, id, par_type, par_name, value):
+def set_hvdc_data(hvdc, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
+    
+    ibus = hvdc[0]
+    jbus = hvdc[1]
+    id = hvdc[2]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_set_hvdc_integer_data(ibus, jbus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -600,6 +655,33 @@ def set_owner_data(owner, par_type, par_name, value):
         return libsteps.api_set_owner_string_data(owner, par_name, value)
     return None
 
+def get_generator_related_model_name(generator, model_type):
+    return libsteps.api_get_generator_related_model_name(generator[0], generator[1], model_type)
+
+def get_generator_related_model_data(generator, model_type, par_type, par_name):
+    par_type = par_type.upper()
+    if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+        return None
+    if par_type in ['I', 'INT', 'INTEGER']:
+        return 0
+    if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+        return libsteps.api_get_generator_related_model_float_parameter(generator[0], generator[1], model_type, par_name)
+    if par_type in ['B', 'BOOL', 'BOOLEAN']:
+        return False
+    return None
+    
+def set_generator_related_model_data(generator, model_type, par_type, par_name, value):
+    par_type = par_type.upper()
+    if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+        return
+    if par_type in ['I', 'INT', 'INTEGER']:
+        return
+    if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+        return libsteps.api_set_generator_related_model_float_parameter(generator[0], generator[1], model_type, par_name, value)
+    if par_type in ['B', 'BOOL', 'BOOLEAN']:
+        return
+    return
+    
 def get_powerflow_solver_parameter(par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
@@ -642,6 +724,7 @@ def save_network_matrix(file):
 def save_jacobian_matrix(file):
     libsteps.api_save_jacobian_matrix(file)
     return
+    
     
 def get_dynamic_simulator_parameter(par_type, par_name):
     par_type = par_type.upper()

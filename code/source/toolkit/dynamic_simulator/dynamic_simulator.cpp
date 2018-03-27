@@ -749,6 +749,7 @@ double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 
 void DYNAMICS_SIMULATOR::run_to(double time)
 {
+    update_with_event();
     while(TIME<=time-FLOAT_EPSILON)
         run_a_step();
 }
