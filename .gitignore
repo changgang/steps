@@ -5,3 +5,4 @@ build/
 test/
 python/*.pyc
 python/*.pyd
+python/*.xlsx
