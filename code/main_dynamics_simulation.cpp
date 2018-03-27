@@ -90,13 +90,10 @@ int main()
     did.set_device_identifier("1");
 
     simulator->set_line_fault(did, 82, 0.0, complex<double>(0.0, -1e4));
-    simulator->update_with_event();
 
     simulator->run_to(1.35);
 
     simulator->clear_line_fault(did, 82, 0.0);
-    simulator->update_with_event();
-
 /*
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
@@ -106,7 +103,6 @@ int main()
     did.set_device_identifier("1");
 
     simulator->trip_generator(did);
-    simulator->update_with_event();
 */
 
     simulator->run_to(5.0);

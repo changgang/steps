@@ -102,8 +102,6 @@ int main()
     did.set_device_terminal(terminal);
     simulator.trip_generator(did);
 */
-    simulator.update_with_event();
-
     simulator.run_to(20);
 
 

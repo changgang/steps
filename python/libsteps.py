@@ -354,8 +354,6 @@ libsteps.api_run_simulation_to_time.restype = None
 libsteps.api_run_simulation_to_time.argtypes = (c_double, )
 libsteps.api_run_a_step.restype = None
 libsteps.api_run_a_step.argtypes = None
-libsteps.api_update_with_event.restype = None
-libsteps.api_update_with_event.argtypes = None
 
 libsteps.api_set_bus_fault.restype = None
 libsteps.api_set_bus_fault.argtypes = (c_uint, c_char_p, c_double, c_double)

@@ -475,13 +475,9 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
 
     //simulator->scale_load(load_did, 0.1);
 
-    simulator->update_with_event();
-
     simulator->run_to(1.1);
 
     simulator->clear_line_fault(did, 3, 0.0);
-
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 }
@@ -625,7 +621,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus()
     simulator->run_to(0.0);
 
     simulator->trip_bus(5);
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 
@@ -684,14 +679,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
 
     simulator->set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e10));
 
-    simulator->update_with_event();
-
     simulator->run_to(0.08333);
 
     simulator->clear_line_fault(did, 7, 0.0);
     simulator->trip_line(did);
-
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 
@@ -746,14 +737,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU()
 
     simulator->set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
 
-    simulator->update_with_event();
-
     simulator->run_to(0.5);
 
     simulator->clear_line_fault(did, 17, 0.0);
     simulator->trip_line(did);
-
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 
@@ -807,14 +794,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL()
 
     simulator->set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
 
-    simulator->update_with_event();
-
     simulator->run_to(0.5);
 
     simulator->clear_line_fault(did, 17, 0.0);
     simulator->trip_line(did);
-
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 
@@ -870,14 +853,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1()
 
     simulator->set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
 
-    simulator->update_with_event();
-
     simulator->run_to(0.5);
 
     simulator->clear_line_fault(did, 17, 0.0);
     simulator->trip_line(did);
-
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 
@@ -932,14 +911,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1()
 
     simulator->set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
 
-    simulator->update_with_event();
-
     simulator->run_to(0.5);
 
     simulator->clear_line_fault(did, 17, 0.0);
     simulator->trip_line(did);
-
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 
@@ -994,14 +969,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1()
 
     simulator->set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
 
-    simulator->update_with_event();
-
     simulator->run_to(0.5);
 
     simulator->clear_line_fault(did, 17, 0.0);
     simulator->trip_line(did);
-
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 
@@ -1055,14 +1026,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
 
     simulator->set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
 
-    simulator->update_with_event();
-
     simulator->run_to(0.5);
 
     simulator->clear_line_fault(did, 17, 0.0);
     simulator->trip_line(did);
-
-    simulator->update_with_event();
 
     simulator->run_to(5.0);
 
@@ -1125,9 +1092,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_with
     did.set_device_terminal(terminal);
     simulator->trip_generator(did);
 
-
-    simulator->update_with_event();
-
     simulator->run_to(20);
 
     recover_stdout();
@@ -1187,9 +1151,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS
     terminal.append_bus(37);
     did.set_device_terminal(terminal);
     simulator->trip_generator(did);
-
-
-    simulator->update_with_event();
 
     simulator->run_to(20);
 
@@ -1252,8 +1213,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFL
     did.set_device_terminal(terminal);
     simulator->trip_generator(did);
 
-    simulator->update_with_event();
-
     simulator->run_to(20);
 
     recover_stdout();
@@ -1315,13 +1274,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENC
     did.set_device_identifier("1");
 
     simulator->set_line_fault(did, 60, 0.0, complex<double>(0.0, -1e6));
-    simulator->update_with_event();
 
     simulator->run_to(1.1);
 
     simulator->clear_line_fault(did, 60, 0.0);
     simulator->trip_line(did);
-    simulator->update_with_event();
 
     simulator->run_to(10.0);
 

@@ -809,10 +809,6 @@ def run_a_step():
     libsteps.api_run_a_step()
     return
 
-def update_with_event():
-    libsteps.api_update_with_event()
-    return
-
 def set_bus_fault(bus, fault_type, fault_shunt):
     libsteps.api_set_bus_fault(bus, fault_type, fault_shunt[0], fault_shunt[1])
     return

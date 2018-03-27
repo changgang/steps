@@ -406,18 +406,14 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
 
     double tend = get_simulation_time_span_in_s();
     double delt = get_dynamic_simulation_time_step_in_s();
-    double TIME = simulator.get_current_simulation_time_in_s();
 
-    while(TIME<tend-1.0)
-    {
-        simulator.run_to(TIME+delt);
-        TIME = simulator.get_current_simulation_time_in_s();
-    }
+    simulator.run_to(tend-1.0);
 
     bool is_stable = true;
+    double TIME = simulator.get_current_simulation_time_in_s();
     while(TIME<tend)
     {
-        simulator.run_to(TIME+delt);
+        simulator.run_a_step();
         TIME = simulator.get_current_simulation_time_in_s();
         is_stable = check_if_system_is_stable(simulator);
         if(not is_stable)
@@ -469,7 +465,6 @@ void CONTINGENCY_SCREENER::apply_fault(DYNAMICS_SIMULATOR& simulator)
     double location = get_fault_location_to_fault_side_bus_in_pu();
     complex<double> shunt = get_fault_shunt_in_pu();
     simulator.set_line_fault(did, bus, location, shunt);
-    simulator.update_with_event();
 }
 
 void CONTINGENCY_SCREENER::clear_fault(DYNAMICS_SIMULATOR& simulator)
@@ -482,8 +477,6 @@ void CONTINGENCY_SCREENER::clear_fault(DYNAMICS_SIMULATOR& simulator)
     double flag_trip = get_flag_trip_line_after_clearing_fault();
     if(flag_trip)
         simulator.trip_line(did);
-
-    simulator.update_with_event();
 }
 
 bool CONTINGENCY_SCREENER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const

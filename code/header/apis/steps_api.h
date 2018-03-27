@@ -255,7 +255,6 @@ void api_start_dynamic_simulation();
 void api_stop_dynamic_simulation();
 void api_run_simulation_to_time(double t_end);
 void api_run_a_step();
-void api_update_with_event();
 
 void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double fault_B);
 void api_clear_bus_fault(size_t bus, char* fault_type);

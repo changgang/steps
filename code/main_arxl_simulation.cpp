@@ -59,8 +59,6 @@ void prepare_training_load_scale_case()
 
     simulator->scale_load(did, -0.1);
 
-    simulator->update_with_event();
-
     simulator->run_to(20.0);
 
     delete simulator;
@@ -118,8 +116,6 @@ void prepare_training_generation_shed_case()
     did.set_device_identifier("1");
 
     simulator->shed_generator(did, 0.1);
-
-    simulator->update_with_event();
 
     simulator->run_to(20.0);
 
@@ -194,8 +190,6 @@ int main()
 
     simulator->scale_load(did, -0.1);
 
-    simulator->update_with_event();
-
     simulator->run_to(1.1);
 
     simulator->switch_on_equivalent_device();
@@ -211,7 +205,6 @@ int main()
     buses_to_clear.push_back(35);
     buses_to_clear.push_back(36);
     simulator->trip_buses(buses_to_clear);
-    //simulator->update_with_event();
 
     simulator->run_to(5.0);
 

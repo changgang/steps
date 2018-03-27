@@ -324,17 +324,6 @@ void api_run_a_step()
     }
 }
 
-void api_update_with_event()
-{
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
-
-    if(ds!=NULL)
-    {
-        ds->update_with_event();
-    }
-}
-
-
 void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double fault_B)
 {
     DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
