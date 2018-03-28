@@ -1644,19 +1644,32 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
         return;
     }
 
+    time_t tt = time(NULL);
+    tm* local_time= localtime(&tt);
+
+    char time_stamp[40];
+    sprintf(time_stamp,"%d-%02d-%02d %02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
+            local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+
+    file<<"% Powerflow result exported at "<<time_stamp<<endl;
+    file<<"% "<<db->get_case_title_1()<<endl;
+    file<<"% "<<db->get_case_title_2()<<endl;
     file<<"% Bus"<<endl;
-    file<<"BUS,VOLTAGE,ANGLE"<<endl;
+    file<<"BUS,VBASE/KV,VOLTAGE/PU,ANGLE/DEG,VOLTAGE/KV,ANGLE/RAD"<<endl;
     vector<BUS*> buses = db->get_all_buses();
     size_t nbus = buses.size();
     for(size_t i=0; i!=nbus; ++i)
     {
         file<<buses[i]->get_bus_number()<<","
+            <<setprecision(6)<<fixed<<buses[i]->get_base_voltage_in_kV()<<","
             <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
-            <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<endl;
+            <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<","
+            <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_kV()<<","
+            <<setprecision(6)<<fixed<<buses[i]->get_angle_in_rad()<<endl;
     }
 
     file<<"% Generator"<<endl;
-    file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE"<<endl;
+    file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
     vector<GENERATOR*> generators = db->get_all_generators();
     size_t ngen = generators.size();
     for(size_t i=0; i!=ngen; ++i)
@@ -1668,38 +1681,98 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;
     }
 
+    file<<"% PE Source"<<endl;
+    file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+    vector<PE_SOURCE*> pe_sources = db->get_all_pe_sources();
+    size_t nsource = pe_sources.size();
+    for(size_t i=0; i!=nsource; ++i)
+    {
+        size_t bus = pe_sources[i]->get_source_bus();
+        file<<bus<<",\""<<pe_sources[i]->get_identifier()<<"\","
+            <<setprecision(6)<<fixed<<pe_sources[i]->get_p_generation_in_MW()<<","
+            <<setprecision(6)<<fixed<<pe_sources[i]->get_q_generation_in_MVar()<<","
+            <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;
+    }
+
+    file<<"% Load"<<endl;
+    file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+    vector<LOAD*> loads = db->get_all_loads();
+    size_t nload = loads.size();
+    for(size_t i=0; i!=nload; ++i)
+    {
+        size_t bus = loads[i]->get_load_bus();
+        complex<double> s = loads[i]->get_actual_total_load_in_MVA();
+        file<<bus<<",\""<<loads[i]->get_identifier()<<"\","
+            <<setprecision(6)<<fixed<<s.real()<<","
+            <<setprecision(6)<<fixed<<s.imag()<<","
+            <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;
+    }
+
     file<<"% Line"<<endl;
-    file<<"IBUS,JBUS,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR"<<endl;
+    file<<"IBUS,JBUS,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,II/KA,IJ/KA"<<endl;
     vector<LINE*> lines = db->get_all_lines();
     size_t nline = lines.size();
     for(size_t i=0; i!=nline; ++i)
     {
+        complex<double> si = lines[i]->get_line_complex_power_at_sending_side_in_MVA();
+        complex<double> sj = lines[i]->get_line_complex_power_at_receiving_side_in_MVA();
         file<<lines[i]->get_sending_side_bus()<<","<<lines[i]->get_receiving_side_bus()<<",\""<<lines[i]->get_identifier()<<"\","
-            <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_sending_side_in_MVA().real()<<","
-            <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_sending_side_in_MVA().imag()<<","
-            <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_receiving_side_in_MVA().real()<<","
-            <<setprecision(6)<<fixed<<lines[i]->get_line_complex_power_at_receiving_side_in_MVA().imag()<<endl;
+            <<setprecision(6)<<fixed<<si.real()<<","
+            <<setprecision(6)<<fixed<<si.imag()<<","
+            <<setprecision(6)<<fixed<<sj.real()<<","
+            <<setprecision(6)<<fixed<<sj.imag()<<","
+            <<setprecision(6)<<fixed<<abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
+            <<setprecision(6)<<fixed<<abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;
     }
 
     file<<"% Transformer"<<endl;
-    file<<"IBUS,JBUS,KBUS,ID,KI,KJ,KK,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,PK/MW,QK/MVAR"<<endl;
+    file<<"IBUS,JBUS,KBUS,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,PK/MW,QK/MVAR,KI/PU,KJ/PU,KK/PU"<<endl;
     vector<TRANSFORMER*> transformers = db->get_all_transformers();
     size_t ntrans = transformers.size();
     for(size_t i=0; i!=ntrans; ++i)
     {
+        complex<double> sp = transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE);
+        complex<double> ss = transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE);
+        complex<double> st = transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE);
+
         file<<transformers[i]->get_winding_bus(PRIMARY_SIDE)<<","
             <<transformers[i]->get_winding_bus(SECONDARY_SIDE)<<","
             <<transformers[i]->get_winding_bus(TERTIARY_SIDE)<<",\""<<transformers[i]->get_identifier()<<"\","
+            <<setprecision(6)<<fixed<<sp.real()<<","
+            <<setprecision(6)<<fixed<<sp.imag()<<","
+            <<setprecision(6)<<fixed<<ss.real()<<","
+            <<setprecision(6)<<fixed<<ss.imag()<<","
+            <<setprecision(6)<<fixed<<st.real()<<","
+            <<setprecision(6)<<fixed<<st.imag()<<","
             <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE)<<","
             <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE)<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE)<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE).real()<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE).imag()<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE).real()<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE).imag()<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE).real()<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE).imag()<<endl;
+            <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE)<<endl;
     }
+
+    file<<"% Hvdc"<<endl;
+    file<<"IBUS,JBUS,ID,PR/MW,QR/MVAR,PI/MW,QI/MVAR,ALPHA/DEG,GAMMA/DEG,VDCR/KV,VDCI/KV,IDC/KA,VACR/PU,VACI/PU,KR/PU,KI/PU"<<endl;
+    vector<HVDC*> hvdcs = db->get_all_hvdcs();
+    size_t nhvdc = hvdcs.size();
+    for(size_t i=0; i!=nhvdc; ++i)
+    {
+        size_t busr = hvdcs[i]->get_converter_bus(RECTIFIER);
+        size_t busi = hvdcs[i]->get_converter_bus(INVERTER);
+        file<<busr<<","<<busi<<",\""<<hvdcs[i]->get_identifier()<<"\","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER)<<","
+            <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busr)<<","
+            <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busi)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER)<<","
+            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER)<<endl;
+    }
+
     file.close();
 }
 void POWERFLOW_SOLVER::save_network_matrix_to_file(string filename) const

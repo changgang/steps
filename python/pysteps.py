@@ -710,8 +710,8 @@ def solve_powerflow(method):
     libsteps.api_solve_powerflow(method)
     return
 
-def is_powerflow_solved():
-    return libsteps.api_is_powerflow_solved()
+def is_powerflow_converged():
+    return libsteps.api_is_powerflow_converged()
     
 def save_powerflow_result(file):
     libsteps.api_save_powerflow_result(file)
