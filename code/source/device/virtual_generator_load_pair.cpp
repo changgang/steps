@@ -1,5 +1,5 @@
 #include "header/device/virtual_generator_load_pair.h"
-#include "header/device/GENERATOR.h"
+#include "header/device/generator.h"
 #include "header/steps_namespace.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"

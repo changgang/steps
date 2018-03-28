@@ -11,7 +11,7 @@
 
 #include "thirdparty/cpptest/cpptest.h"
 
-#include "header/device/BUS.h"
+#include "header/device/bus.h"
 #include "header/power_system_database.h"
 
 using namespace std;
