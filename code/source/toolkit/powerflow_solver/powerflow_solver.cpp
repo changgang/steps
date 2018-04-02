@@ -421,6 +421,7 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     sstream<<"Initializing powerflow solver.";
     show_information_with_leading_time_stamp(sstream);
 
+    initialize_generator_regulating_mode_with_bus_type();
     initialize_bus_type_and_voltage_to_regulate();
     initialize_bus_voltage();
     optimize_bus_numbers();
@@ -456,6 +457,38 @@ void POWERFLOW_SOLVER::initialize_bus_type_and_voltage_to_regulate()
     for(size_t i=0; i!=npesource; ++i)
         set_bus_type_and_voltage_to_regulate_with_source(*(pesources[i]));
     */
+}
+
+void POWERFLOW_SOLVER::initialize_generator_regulating_mode_with_bus_type()
+{
+    vector<GENERATOR*> generators = db->get_all_generators();
+    size_t n = generators.size();
+    GENERATOR* gen;
+    for(size_t i=0; i!=n; ++i)
+    {
+        gen = generators[i];
+        size_t bus = gen->get_generator_bus();
+
+        BUS* busptr = db->get_bus(bus);
+
+        BUS_TYPE bustype = busptr->get_bus_type();
+
+        switch(bustype)
+        {
+            case PQ_TYPE:
+                gen->set_regulating_mode(REGULATING_PQ);
+                break;
+            case PV_TYPE:
+                gen->set_regulating_mode(REGULATING_PV);
+                break;
+            case SLACK_TYPE:
+                gen->set_regulating_mode(REGULATING_VA);
+                break;
+            default:
+                gen->set_regulating_mode(REGULATING_PQ);
+                break;
+        }
+    }
 }
 
 void POWERFLOW_SOLVER::set_bus_type_and_voltage_to_regulate_with_source(SOURCE& source)

@@ -54,6 +54,7 @@ class POWERFLOW_SOLVER
         size_t get_iteration_count() const;
     private:
         void initialize_bus_type_and_voltage_to_regulate();
+        void initialize_generator_regulating_mode_with_bus_type();
         void set_bus_type_and_voltage_to_regulate_with_source(SOURCE& source);
         void initialize_bus_voltage();
 
