@@ -102,32 +102,21 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
     if(dat_data_in_ram.size()==0)
     {
         sstream<<"No data in the given BPA file: "<<file<<endl
-          <<"Please check if the file exist or not.";
+          <<"Please check if the file exists or not.";
         show_information_with_leading_time_stamp(sstream);
 
         return;
     }
 
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
-    load_zone_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
-    load_owner_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
-    load_bus_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
     load_area_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
-    load_line_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
+    load_zone_data();
+    load_owner_data();
+    load_bus_data();
     load_generator_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
     load_load_and_fixed_shunt_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
+    load_line_data();
     load_transformer_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
-
     load_hvdc_data();
-    cout<<__LINE__<<" in file "<<__FILE__<<endl;
     /*
     load_case_data();
     */
@@ -451,10 +440,46 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
 
         string bus_name = data[0];
         size_t bus_number = str2int(data[1]);
-
     }
 }
 
+
+void BPA_IMEXPORTER::load_area_data()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    size_t n = dat_data_in_ram.size();
+    string data, card_type;
+    for(size_t i=0; i<n; i++)
+    {
+        data = dat_data_in_ram[i];
+        card_type = get_powerflow_card_type(data);
+
+        if(card_type=="A" or card_type == "AC")
+        {
+            data = grow_string_to_at_least_size(data, 95);
+
+            string area_name = data.substr(3,10);
+
+            size_t area_number = psdb->area_name2area_number(area_name);
+            if(area_number == 0)
+            {
+                AREA area(psdb);
+                area.set_area_name(area_name);
+
+                size_t area_count = psdb->get_area_count();
+                area.set_area_number(area_count+1);
+
+                string area_schedule_str = data.substr(26, 8);
+                area_schedule_str = format_bpa_data_to_readable_data(area_schedule_str, "F8.0");
+                double area_schedule = get_double_data(area_schedule_str, "0.0");
+
+                area.set_expected_power_leaving_area_in_MW(area_schedule);
+
+                psdb->append_area(area);
+            }
+        }
+    }
+}
 
 void BPA_IMEXPORTER::load_zone_data()
 {
@@ -489,6 +514,7 @@ void BPA_IMEXPORTER::load_zone_data()
         }
     }
 }
+
 void BPA_IMEXPORTER::load_owner_data()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -542,45 +568,49 @@ void BPA_IMEXPORTER::load_bus_data()
            card_type == "BL" or // PV
            card_type=="BS")
         {
-            data = grow_string_to_at_least_size(data, 80);
-
-            string owner_name = data.substr(3,3);
-            string bus_name = data.substr(6, 8);
-
-            string base_voltage_str = data.substr(14, 4);
-            base_voltage_str = format_bpa_data_to_readable_data(base_voltage_str, "F4.0");
-            double base_voltage = get_double_data(base_voltage_str, "1.0");
-
-            string voltage_str = data.substr(57, 4);
-            voltage_str = format_bpa_data_to_readable_data(voltage_str, "F4.3");
-            double voltage = get_double_data(voltage_str, "1.0");
-
             BUS bus(psdb);
 
             size_t bus_count = psdb->get_bus_count();
             bus.set_bus_number(bus_count+1);
+
+            data = grow_string_to_at_least_size(data, 80);
+
+            string bus_name = data.substr(6, 8);
             bus.set_bus_name(bus_name);
+
+            string base_voltage_str = data.substr(14, 4);
+            base_voltage_str = format_bpa_data_to_readable_data(base_voltage_str, "F4.0");
+            double base_voltage = get_double_data(base_voltage_str, "1.0");
             bus.set_base_voltage_in_kV(base_voltage);
+
+            string owner_name = data.substr(3,3);
+            size_t owner_number = psdb->owner_name2owner_number(owner_name);
+            bus.set_owner_number(owner_number);
+
+            string zone_name = data.substr(18,2);
+            size_t zone_number = psdb->zone_name2zone_number(zone_name);
+            bus.set_zone_number(zone_number);
+
+            string voltage_str = data.substr(57, 4);
+            voltage_str = format_bpa_data_to_readable_data(voltage_str, "F4.3");
+            double voltage = get_double_data(voltage_str, "1.0");
             bus.set_voltage_in_pu(voltage);
 
+            BUS_TYPE bus_type;
             if(card_type=="B" or card_type == "BT" or card_type == "BC" or card_type == "BV" or
                card_type == "BF" or card_type == "BJ" or card_type == "BX")// PQ
-                bus.set_bus_type(PQ_TYPE);
-
-            if(card_type=="BE" or card_type == "BQ" or card_type == "BG" or card_type == "BK" or
-               card_type == "BL") // PV
-                bus.set_bus_type(PV_TYPE);
-
-            if(card_type=="BS")
+               bus_type = PQ_TYPE;
+            else
             {
-                bus.set_bus_type(SLACK_TYPE);
-                string angle_str = data.substr(61, 4);
-                angle_str = format_bpa_data_to_readable_data(angle_str, "F4.1");
-                double angle = get_double_data(angle_str, "0.0");
-                bus.set_angle_in_deg(angle);
+                if(card_type=="BE" or card_type == "BQ" or card_type == "BG" or card_type == "BK" or
+                   card_type == "BL") // PV
+                    bus_type = PV_TYPE;
+                else
+                    bus_type = SLACK_TYPE;
             }
 
-            if(card_type=="B" or card_type=="BC" or card_type=="BT" or card_type=="BV")
+            bus.set_bus_type(bus_type);
+            if(bus_type==PQ_TYPE or bus_type==PV_TYPE)
             {
                 string vmax_str = data.substr(57, 4);
                 string vmin_str = data.substr(61, 4);
@@ -594,13 +624,62 @@ void BPA_IMEXPORTER::load_bus_data()
                 bus.set_voltage_upper_limit_in_pu(vmax);
                 bus.set_voltage_lower_limit_in_pu(vmin);
             }
+            else
+            {
+                string angle_str = data.substr(61, 4);
+                angle_str = format_bpa_data_to_readable_data(angle_str, "F4.1");
+                double angle = get_double_data(angle_str, "0.0");
+                bus.set_angle_in_deg(angle);
+            }
             psdb->append_bus(bus);
+        }
+    }
+    set_bus_area();
+    set_area_swing_bus();
+}
+
+void BPA_IMEXPORTER::set_bus_area()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    size_t n = dat_data_in_ram.size();
+    string data, card_type;
+
+    vector<BUS*> buses = psdb->get_all_buses();
+
+    for(size_t i=0; i<n; i++)
+    {
+        data = dat_data_in_ram[i];
+        card_type = get_powerflow_card_type(data);
+
+        if(card_type=="A" or card_type == "AC" or card_type == "AC+")
+        {
+            data = grow_string_to_at_least_size(data, 95);
+
+            string area_name = data.substr(3,10);
+
+            size_t area_number = psdb->area_name2area_number(area_name);
+            if(area_number == 0)
+                continue;
+
+            for(size_t j=0; j<20; j++)
+            {
+                string zone_name = data.substr(35+j*3, 2);
+                size_t zone_number = psdb->zone_name2zone_number(zone_name);
+                if(zone_number == 0)
+                    continue;
+
+                size_t bus_count = psdb->get_bus_count();
+                for(size_t k=0; k<bus_count; k++)
+                {
+                    if(buses[k]->get_zone_number() == zone_number)
+                        buses[k]->set_area_number(area_number);
+                }
+            }
         }
     }
 }
 
-
-void BPA_IMEXPORTER::load_area_data()
+void BPA_IMEXPORTER::set_area_swing_bus()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     size_t n = dat_data_in_ram.size();
@@ -617,27 +696,13 @@ void BPA_IMEXPORTER::load_area_data()
             string area_name = data.substr(3,10);
 
             size_t area_number = psdb->area_name2area_number(area_name);
-            if(area_number == 0)
+            AREA* area = psdb->get_area(area_number);
+            if(area !=NULL)
             {
-                AREA area(psdb);
-                area.set_area_name(area_name);
-
-                size_t area_count = psdb->get_area_count();
-                area.set_area_number(area_count+1);
-
-                string area_schedule_str = data.substr(26, 8);
-                area_schedule_str = format_bpa_data_to_readable_data(area_schedule_str, "F8.0");
-                double area_schedule = get_double_data(area_schedule_str, "0.0");
-
-                area.set_expected_power_leaving_area_in_MW(area_schedule);
-
                 string slack_bus_name = data.substr(13, 8);
                 size_t slack_bus_number = psdb->bus_name2bus_number(slack_bus_name);
-                if(slack_bus_number==0)
-                    continue;
 
-                area.set_area_swing_bus(slack_bus_number);
-                psdb->append_area(area);
+                area->set_area_swing_bus(slack_bus_number);
             }
         }
     }
@@ -694,21 +759,21 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
            card_type == "BL" or // PV
            card_type=="BS")
         {
+            LOAD load(psdb);
+
             data = grow_string_to_at_least_size(data, 80);
 
-            string owner_name = data.substr(3,3);
             string bus_name = data.substr(6, 8);
             size_t bus_number = psdb->bus_name2bus_number(bus_name);
             if(bus_number==0)
                 continue;
-
-            size_t owner_number = psdb->owner_name2owner_number(owner_name);
-
-
-            LOAD load(psdb);
             load.set_load_bus(bus_number);
+
             load.set_identifier("1");
             load.set_status(true);
+
+            string owner_name = data.substr(3,3);
+            size_t owner_number = psdb->owner_name2owner_number(owner_name);
             load.set_owner_number(owner_number);
 
             BUS* bus = psdb->get_bus(bus_number);
@@ -785,21 +850,17 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             double Q2 = get_double_data(Q_str2, "0.0");
 
             if(load_code=="*I" or load_code=="01")
-            {
                 load->set_nominal_constant_current_load_in_MVA(complex<double>(P1, Q1));
-                load->set_nominal_constant_impedance_load_in_MVA(complex<double>(P2, -Q2)+
-                                                                 load->get_nominal_constant_impedance_load_in_MVA());
-            }
             else
             {
                 if(load_code=="*P" or load_code=="02")
                 {
-                    load->set_nominal_constant_power_load_in_MVA(complex<double>(P1, Q1)+
-                                                                     load->get_nominal_constant_power_load_in_MVA());
-                    load->set_nominal_constant_impedance_load_in_MVA(complex<double>(P2, -Q2)+
-                                                                     load->get_nominal_constant_impedance_load_in_MVA());
+                    complex<double> S = complex<double>(P1, Q1)+ load->get_nominal_constant_power_load_in_MVA();
+                    load->set_nominal_constant_power_load_in_MVA(S);
                 }
             }
+            complex<double> S = complex<double>(P2, -Q2)+ load->get_nominal_constant_impedance_load_in_MVA();
+            load->set_nominal_constant_impedance_load_in_MVA(S);
         }
     }
     while(true)

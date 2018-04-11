@@ -181,7 +181,7 @@ double AREA::get_area_power_mismatch_tolerance_in_MW() const
 
 bool AREA::is_valid() const
 {
-    if(get_area_number()>0 and get_area_swing_bus()>=0)
+    if(get_area_number()>0)
         return true;
     else
         return false;

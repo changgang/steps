@@ -51,13 +51,15 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         string grow_string_to_at_least_size(string data, size_t least_size);
 
         void load_case_data();
+        void load_area_data();
         void load_zone_data();
         void load_owner_data();
         void load_bus_data();
-        void load_area_data();
-        void load_line_data();
-        void load_generator_data();
+        void set_bus_area();
+        void set_area_swing_bus();
         void load_load_and_fixed_shunt_data();
+        void load_generator_data();
+        void load_line_data();
         void load_fixed_shunt_data();
         void load_source_data();
         void load_pe_source_data();
