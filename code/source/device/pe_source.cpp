@@ -31,6 +31,7 @@ PE_SOURCE::~PE_SOURCE()
 void PE_SOURCE::clear()
 {
     SOURCE::clear();
+    set_source_type("");
 }
 
 DEVICE_ID PE_SOURCE::get_device_id() const
@@ -86,6 +87,21 @@ void PE_SOURCE::report() const
 void PE_SOURCE::save() const
 {
     ;
+}
+
+void PE_SOURCE::set_source_type(string type)
+{
+    if(get_source_type()=="")
+    {
+        type = string2upper(type);
+        if(type=="WIND SOURCE" or type=="PV SOURCE" or type=="BATTERY SOURCE")
+            source_type = type;
+    }
+}
+
+string PE_SOURCE::get_source_type() const
+{
+    return source_type;
 }
 
 void PE_SOURCE::set_model(const MODEL* model)

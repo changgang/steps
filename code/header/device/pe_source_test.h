@@ -28,6 +28,7 @@ class PE_SOURCE_TEST : public Test::Suite
         void test_set_get_source_impedance();
         void test_copy_with_operator_equal();
         void test_get_device_id();
+        void test_set_get_source_type();
 
     private:
         POWER_SYSTEM_DATABASE* db;

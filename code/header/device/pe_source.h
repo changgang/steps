@@ -24,6 +24,9 @@ class PE_SOURCE : public SOURCE
         virtual void report() const;
         virtual void save() const;
 
+        void set_source_type(string type);
+        string get_source_type() const;
+
         void set_model(const MODEL* model);
         void set_pe_source_model(const PE_SOURCE_MODEL* model);
 
@@ -36,6 +39,7 @@ class PE_SOURCE : public SOURCE
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
     private:
+        string source_type;
         PE_SOURCE_MODEL* pe_source_model;
 
 };

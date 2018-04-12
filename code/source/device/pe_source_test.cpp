@@ -22,6 +22,7 @@ PE_SOURCE_TEST::PE_SOURCE_TEST()
     TEST_ADD(PE_SOURCE_TEST::test_set_get_source_impedance);
     TEST_ADD(PE_SOURCE_TEST::test_copy_with_operator_equal);
     TEST_ADD(PE_SOURCE_TEST::test_get_device_id);
+    TEST_ADD(PE_SOURCE_TEST::test_set_get_source_type);
 }
 
 void PE_SOURCE_TEST::setup()
@@ -117,6 +118,36 @@ void PE_SOURCE_TEST::test_copy_with_operator_equal()
 void PE_SOURCE_TEST::test_get_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PE_SOURCE_TEST");
+
+    pesource->set_source_bus(1);
+    pesource->set_identifier("1#");
+
+    DEVICE_ID did = pesource->get_device_id();
+
+    DEVICE_ID did2;
+    did2.set_device_type("PE SOURCE");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    did2.set_device_terminal(terminal);
+    did2.set_device_identifier("1#");
+
+    TEST_ASSERT(did==did2);
+
+    terminal.clear();
+    terminal.append_bus(2);
+    did2.set_device_terminal(terminal);
+
+    TEST_ASSERT(did!=did2);
+}
+
+
+void PE_SOURCE_TEST::test_set_get_source_type()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"PE_SOURCE_TEST");
+
+    TEST_ASSERT(pesource->get_source_type()=="");
+
+    pesource
 
     pesource->set_source_bus(1);
     pesource->set_identifier("1#");
