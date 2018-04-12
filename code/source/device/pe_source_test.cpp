@@ -147,8 +147,6 @@ void PE_SOURCE_TEST::test_set_get_source_type()
 
     TEST_ASSERT(pesource->get_source_type()=="");
 
-    pesource
-
     pesource->set_source_bus(1);
     pesource->set_identifier("1#");
 
