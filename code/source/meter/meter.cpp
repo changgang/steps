@@ -81,14 +81,14 @@ vector<string> generator_meters{    "GENERATOR ROTOR ANGLE IN DEG",
                                     "GENERATOR STABILIZER MODEL INTERNAL VARIABLE",
                                     "GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE"};
 
-vector<string> pe_source_meters{  "PE SOURCE ROTOR SPEED DEVIATION IN PU", "PE SOURCE ROTOR SPEED DEVIATION IN HZ",
-                                  "PE SOURCE ROTOR SPEED IN PU",           "PE SOURCE ROTOR SPEED IN HZ",
-                                  "PE SOURCE TERMINAL CURRENT IN KA",
-                                  "PE SOURCE TERMINAL ACTIVE POWER IN MW",
-                                  "PE SOURCE TERMINAL REACTIVE POWER IN MVAR",
-                                  "PE SOURCE MECHANICAL POWER IN MW",
+vector<string> wt_generator_meters{  "WT GENERATOR ROTOR SPEED DEVIATION IN PU", "WT GENERATOR ROTOR SPEED DEVIATION IN HZ",
+                                  "WT GENERATOR ROTOR SPEED IN PU",           "WT GENERATOR ROTOR SPEED IN HZ",
+                                  "WT GENERATOR TERMINAL CURRENT IN KA",
+                                  "WT GENERATOR TERMINAL ACTIVE POWER IN MW",
+                                  "WT GENERATOR TERMINAL REACTIVE POWER IN MVAR",
+                                  "WT GENERATOR MECHANICAL POWER IN MW",
                                   "WIND TURBINE PITCH ANGLE IN DEG",
-                                  "PE SOURCE MODEL INTERNAL VARIABLE",
+                                  "WT GENERATOR MODEL INTERNAL VARIABLE",
                                   "WIND TURBINE ELECTRICAL CONTROL MODEL INTERNAL VARIABLE",
                                   "WIND TURBINE MECHANICAL MODEL INTERNAL VARIABLE",
                                   "WIND TURBINE PITCH CONTROL MODEL INTERNAL VARIABLE"};
@@ -139,7 +139,7 @@ map<string, vector<string>> SUPPORTED_METERS{   {"BUS",         bus_meters},
                                                 {"TRANSFORMER", transformer_meters},
                                                 {"LOAD",        load_meters},
                                                 {"GENERATOR",   generator_meters},
-                                                {"PE SOURCE",    pe_source_meters},
+                                                {"WT GENERATOR",    wt_generator_meters},
                                                 {"HVDC", hvdc_meters},
                                                 {"EQUIVALENT DEVICE", equivalent_device_meters}};
 
@@ -451,8 +451,8 @@ void METER::set_device_pointer()
     if(device_type=="GENERATOR")
         deviceptr = (DEVICE*) psdb->get_generator(device_id);
 
-    if(device_type=="PE SOURCE")
-        deviceptr = (DEVICE*) psdb->get_pe_source(device_id);
+    if(device_type=="WT GENERATOR")
+        deviceptr = (DEVICE*) psdb->get_wt_generator(device_id);
 
     if(device_type=="HVDC")
         deviceptr = (DEVICE*) psdb->get_hvdc(device_id);

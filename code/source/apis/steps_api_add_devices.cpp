@@ -48,25 +48,25 @@ void api_add_generator(size_t bus_number, char* identifier)
     }
 }
 
-void api_add_pe_source(size_t bus_number, char* identifier)
+void api_add_wt_generator(size_t bus_number, char* identifier)
 {
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
         DEVICE_ID did;
-        did.set_device_type("PE SOURCE");
+        did.set_device_type("WT GENERATOR");
         TERMINAL terminal;
         terminal.append_bus(bus_number);
         did.set_device_terminal(terminal);
         did.set_device_identifier(identifier);
 
-        if(not psdb->is_pe_source_exist(did))
+        if(not psdb->is_wt_generator_exist(did))
         {
-            PE_SOURCE newpesource(psdb);
-            newpesource.set_source_bus(bus_number);
-            newpesource.set_identifier(identifier);
-            psdb->append_pe_source(newpesource);
+            WT_GENERATOR newwt_generator(psdb);
+            newwt_generator.set_source_bus(bus_number);
+            newwt_generator.set_identifier(identifier);
+            psdb->append_wt_generator(newwt_generator);
         }
         else
             return;

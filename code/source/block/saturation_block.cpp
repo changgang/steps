@@ -129,17 +129,30 @@ double SATURATION_BLOCK::get_saturation(double V) const
 
             break;
         }
-        default:
+        case EXPONENTIAL_SATURATION_TYPE_INPUT_AS_BASE:
         {
-            //S=A*V^X
-            //S1=A*V1^X
-            //S2=A*V2^X
+            //S=A*V^B
+            //S1=A*V1^B
+            //S2=A*V2^B
             // division
-            // S1/S2 = (V1/V2)^X
-            double X = log(S1/S2)/log(V1/V2);
-            double A = S1/pow(V1,X);
+            // S1/S2 = (V1/V2)^B
+            double B = log(S1/S2)/log(V1/V2);
+            double A = S1/pow(V1,B);
 
-            S=A*pow(V,X);
+            S=A*pow(V,B);
+            break;
+        }
+        case EXPONENTIAL_SATURATION_TYPE_INPUT_AS_EXPONETIAL:
+        {
+            //S=A*B^V
+            //S1=A*B^V1
+            //S2=A*B^V2
+            // division
+            // S1/S2 = B^(V1-V2)
+            double B = pow(S1/S2, 1.0/(V1-V2));
+            double A = S1/pow(B,V1);
+
+            S=A*pow(B,V);
             break;
         }
     }

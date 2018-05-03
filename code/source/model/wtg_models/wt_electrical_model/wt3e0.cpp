@@ -1,0 +1,1134 @@
+#include "header/model/wtg_models/wt_electrical_model/WT3E0.h"
+#include "header/device/wt_generator.h"
+#include "header/power_system_database.h"
+#include "header/basic/utility.h"
+
+WT3E0::WT3E0()
+{
+    clear();
+}
+
+WT3E0::WT3E0(const WT3E0& model)
+{
+    copy_from_const_model(model);
+}
+
+WT3E0::~WT3E0()
+{
+    ;
+}
+
+WT3E0& WT3E0::operator=(const WT3E0& model)
+{
+    if(this==(&model)) return *this;
+
+    copy_from_const_model(model);
+
+    return *this;
+}
+
+void WT3E0::copy_from_const_model(const WT3E0& model)
+{
+    set_bus_to_regulate(model.get_bus_to_regulate());
+    set_var_control_mode(model.get_var_control_mode());
+    set_wind_turbine_power_speed_lookup_table(model.get_wind_turbine_power_speed_lookup_table());
+
+    set_Xcomp_in_pu(model.get_Xcomp_in_pu());
+    set_TRV_in_s(model.get_TRV_in_s());
+    set_Fn(model.get_Fn());
+    set_KIV(model.get_KIV());
+    set_Qmax_in_pu(model.get_Qmax_in_pu());
+    set_Qmin_in_pu(model.get_Qmin_in_pu());
+    set_KPV(model.get_KPV());
+    set_TV_in_s(model.get_TV_in_s());
+    set_TFV_in_s(model.get_TFV_in_s());
+    set_TP_in_s(model.get_TP_in_s());
+    set_KQI(model.get_KQI());
+    set_Vmax_in_pu(model.get_Vmax_in_pu());
+    set_Vmin_in_pu(model.get_Vmin_in_pu());
+    set_voltage_flag(model.get_voltage_flag());
+    set_KQV(model.get_KQV());
+    set_EQmax_in_pu(model.get_EQmax_in_pu());
+    set_EQmin_in_pu(model.get_EQmin_in_pu());
+    set_Tspeed_in_s(model.get_Tspeed_in_s());
+    set_KPP(model.get_KPP());
+    set_KIP(model.get_KIP());
+    set_Kvi(model.get_Kvi());
+    set_Tvi_in_s(model.get_Tvi_in_s());
+    set_Kdroop(model.get_Kdroop());
+    set_Tdroop_in_s(model.get_Tdroop_in_s());
+    set_rPmax_in_pu(model.get_rPmax_in_pu());
+    set_rPmin_in_pu(model.get_rPmin_in_pu());
+    set_TFP_in_s(model.get_TFP_in_s());
+    set_Pmax_in_pu(model.get_Pmax_in_pu());
+    set_Pmin_in_pu(model.get_Pmin_in_pu());
+    set_IPmax_in_pu(model.get_IPmax_in_pu());
+}
+
+string WT3E0::get_model_name() const
+{
+    return "WT3E0";
+}
+
+double WT3E0::get_active_power_current_command_in_pu()
+{
+    WT_GENERATOR* source = (WT_GENERATOR*) get_device_pointer();
+    if(source==NULL)
+        return 0.0;
+
+    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
+    if(psdb==NULL)
+        return 0.0;
+
+    size_t bus = source->get_source_bus();
+    double vterm = psdb->get_bus_voltage_in_pu(bus);
+
+    double IPcmd = power_order_integrator.get_output()/vterm;
+
+    double IPmax = get_IPmax_in_pu();
+    if(IPcmd>IPmax)
+        IPcmd = IPmax;
+    return IPcmd;
+}
+
+double WT3E0::get_reactive_power_current_command_in_pu()
+{
+    WT_GENERATOR* source = (WT_GENERATOR*) get_device_pointer();
+    if(source==NULL)
+        return 0.0;
+
+    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
+    if(psdb==NULL)
+        return 0.0;
+
+    double EQcmd = 0.0;
+    if(get_voltage_flag()==0)
+    {
+        size_t bus = source->get_source_bus();
+        double vterm = psdb->get_bus_voltage_in_pu(bus);
+
+        EQcmd = Q_error_integrator.get_output()-vterm;
+    }
+    else
+    {
+        EQcmd = V_error_integrator.get_output();
+    }
+
+    double Xsource = source->get_source_impedance_in_pu().imag();
+
+    double IQcmd = -EQcmd/Xsource;
+    return IQcmd;
+}
+
+double WT3E0::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double WT3E0::get_double_data_with_name(string par_name) const
+{
+    return 0.0;
+}
+
+void WT3E0::set_double_data_with_index(size_t index, double value)
+{
+    ;
+}
+
+void WT3E0::set_double_data_with_name(string par_name, double value)
+{
+    ;
+}
+
+void WT3E0::set_transformer_from_bus(size_t bus)
+{
+    transformer_from_bus = bus;
+}
+
+void WT3E0::set_transformer_to_bus(size_t bus)
+{
+    transformer_to_bus = bus;
+}
+
+void WT3E0::set_transformer_id(string id)
+{
+    transformer_id = id;
+}
+
+void WT3E0::set_Xcomp_in_pu(double Xc)
+{
+    Xcomp = Xc;
+}
+
+void WT3E0::set_TRV_in_s(double T)
+{
+    voltage_sensor.set_T_in_s(T);
+}
+
+void WT3E0::set_Fn(double Fn)
+{
+    this->Fn = Fn;
+}
+
+void WT3E0::set_KIV(double K)
+{
+    if(K!=0.0)
+        voltage_regulator_integrator.set_T_in_s(1.0/K);
+}
+
+void WT3E0::set_Qmax_in_pu(double q)
+{
+    voltage_regulator_integrator.set_upper_limit(q);
+}
+
+void WT3E0::set_Qmin_in_pu(double q)
+{
+    voltage_regulator_integrator.set_lower_limit(q);
+}
+
+void WT3E0::set_KPV(double K)
+{
+    voltage_regulator_first_order_block.set_K(K);
+}
+
+void WT3E0::set_TV_in_s(double T)
+{
+    voltage_regulator_first_order_block.set_T_in_s(T);
+}
+
+void WT3E0::set_TFV_in_s(double T)
+{
+    voltage_regulator_filter.set_T_in_s(T);
+}
+
+void WT3E0::set_TP_in_s(double T)
+{
+    active_power_sensor.set_T_in_s(T);
+}
+
+void WT3E0::set_KQI(double K)
+{
+    if(K!=0.0)
+        Q_error_integrator.set_T_in_s(1.0/K);
+}
+
+void WT3E0::set_Vmax_in_pu(double v)
+{
+    Q_error_integrator.set_upper_limit(v);
+}
+
+void WT3E0::set_Vmin_in_pu(double v)
+{
+    Q_error_integrator.set_lower_limit(v);
+}
+
+void WT3E0::set_voltage_flag(size_t flag)
+{
+    if(flag<3)
+        Voltage_Flag = flag;
+    else
+    {
+        ostringstream sstream;
+        sstream<<"Error. "<<flag<<" is not allowed to set up voltage flag for "<<get_model_name()<<" model. 0, 1, or 2 is allowed.";
+        show_information_with_leading_time_stamp(sstream);
+    }
+}
+
+void WT3E0::set_KQV(double K)
+{
+    if(K!=0.0)
+        V_error_integrator.set_T_in_s(1.0/K);
+}
+
+void WT3E0::set_EQmax_in_pu(double I)
+{
+    EQmax = I;
+}
+
+void WT3E0::set_EQmin_in_pu(double I)
+{
+    EQmin = I;
+}
+
+void WT3E0::set_Tspeed_in_s(double T)
+{
+    wind_turbine_speed_reference_sensor.set_T_in_s(T);
+}
+
+void WT3E0::set_KPP(double K)
+{
+    torque_PI_regulator.set_Kp(K);
+}
+
+void WT3E0::set_KIP(double K)
+{
+    torque_PI_regulator.set_Ki(K);
+}
+
+void WT3E0::set_Kvi(double K)
+{
+    virtual_inertia_emulator.set_K(K);
+}
+
+void WT3E0::set_Tvi_in_s(double T)
+{
+    virtual_inertia_emulator.set_T_in_s(T);
+}
+
+void WT3E0::set_Kdroop(double K)
+{
+    frequency_droop_controller.set_K(K);
+}
+
+void WT3E0::set_Tdroop_in_s(double T)
+{
+    frequency_droop_controller.set_T_in_s(T);
+}
+
+void WT3E0::set_rPmax_in_pu(double r)
+{
+    max_torque_rate = r;
+}
+
+void WT3E0::set_rPmin_in_pu(double r)
+{
+    min_torque_rate = r;
+}
+
+void WT3E0::set_TFP_in_s(double T)
+{
+    power_order_integrator.set_T_in_s(T);
+}
+
+void WT3E0::set_Pmax_in_pu(double p)
+{
+    power_order_integrator.set_upper_limit(p);
+}
+
+void WT3E0::set_Pmin_in_pu(double p)
+{
+    power_order_integrator.set_lower_limit(p);
+}
+
+void WT3E0::set_IPmax_in_pu(double I)
+{
+    IPmax = I;
+}
+
+size_t WT3E0::get_transformer_from_bus() const
+{
+    return transformer_from_bus;
+}
+
+size_t WT3E0::get_transformer_to_bus() const
+{
+    return transformer_to_bus;
+}
+
+string WT3E0::get_transformer_id() const
+{
+    return transformer_id;
+}
+double WT3E0::get_Xcomp_in_pu() const
+{
+    return Xcomp;
+}
+
+double WT3E0::get_TRV_in_s() const
+{
+    return voltage_sensor.get_T_in_s();
+}
+
+double WT3E0::get_Fn() const
+{
+    return Fn;
+}
+
+double WT3E0::get_KIV() const
+{
+    return 1.0/voltage_regulator_integrator.get_T_in_s();
+}
+
+double WT3E0::get_Qmax_in_pu() const
+{
+    return voltage_regulator_integrator.get_upper_limit();
+}
+
+double WT3E0::get_Qmin_in_pu() const
+{
+    return voltage_regulator_integrator.get_lower_limit();
+}
+
+double WT3E0::get_KPV() const
+{
+    return voltage_regulator_first_order_block.get_K();
+}
+
+double WT3E0::get_TV_in_s() const
+{
+    return voltage_regulator_first_order_block.get_T_in_s();
+}
+
+double WT3E0::get_TFV_in_s() const
+{
+    return voltage_regulator_filter.get_T_in_s();
+}
+
+double WT3E0::get_TP_in_s() const
+{
+    return active_power_sensor.get_T_in_s();
+}
+
+double WT3E0::get_KQI() const
+{
+    return 1.0/Q_error_integrator.get_T_in_s();
+}
+
+double WT3E0::get_Vmax_in_pu() const
+{
+    return Q_error_integrator.get_upper_limit();
+}
+
+double WT3E0::get_Vmin_in_pu() const
+{
+    return Q_error_integrator.get_lower_limit();
+}
+
+size_t WT3E0::get_voltage_flag() const
+{
+    return Voltage_Flag;
+}
+
+double WT3E0::get_KQV() const
+{
+    return 1.0/V_error_integrator.get_T_in_s();
+}
+
+double WT3E0::get_EQmax_in_pu() const
+{
+    return EQmax;
+}
+
+double WT3E0::get_EQmin_in_pu() const
+{
+    return EQmin;
+}
+
+double WT3E0::get_Tspeed_in_s() const
+{
+    return wind_turbine_speed_reference_sensor.get_T_in_s();
+}
+
+double WT3E0::get_KPP() const
+{
+    return torque_PI_regulator.get_Kp();
+}
+
+double WT3E0::get_KIP() const
+{
+    return torque_PI_regulator.get_Ki();
+}
+
+double WT3E0::get_Kvi() const
+{
+    return virtual_inertia_emulator.get_K();
+}
+
+double WT3E0::get_Tvi_in_s() const
+{
+    return virtual_inertia_emulator.get_T_in_s();
+}
+
+double WT3E0::get_Kdroop() const
+{
+    return frequency_droop_controller.get_K();
+}
+
+double WT3E0::get_Tdroop_in_s() const
+{
+    return frequency_droop_controller.get_T_in_s();
+}
+
+double WT3E0::get_rPmax_in_pu() const
+{
+    return max_torque_rate;
+}
+
+double WT3E0::get_rPmin_in_pu() const
+{
+    return min_torque_rate;
+}
+
+double WT3E0::get_TFP_in_s() const
+{
+    return power_order_integrator.get_T_in_s();
+}
+
+double WT3E0::get_Pmax_in_pu() const
+{
+    return power_order_integrator.get_upper_limit();
+}
+
+double WT3E0::get_Pmin_in_pu() const
+{
+    return power_order_integrator.get_lower_limit();
+}
+
+double WT3E0::get_IPmax_in_pu() const
+{
+    return IPmax;
+}
+
+bool WT3E0::setup_model_with_steps_string(string data)
+{
+    return false;
+}
+
+bool WT3E0::setup_model_with_psse_string(string data)
+{
+    bool is_successful = false;
+    vector<string> dyrdata = split_string(data,",");
+    if(dyrdata.size()<40)
+        return is_successful;
+
+    string model_name = get_string_data(dyrdata[1],"");
+    if(model_name!=get_model_name())
+        return is_successful;
+
+    size_t bus, var_control_flag, voltage_flag, trans_from_bus, trans_to_bus;
+    string trans_id;
+
+    double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
+           ipmax, trv, rpmax, rpmin, tspeed, kqi, vmax, vmin,
+           kqv, eqmax, eqmin, tv, tp, fn,
+           kvi, tvi, kdroop, tdroop;
+
+    size_t i=3;
+    bus = get_integer_data(dyrdata[i],"0"); i++;
+    var_control_flag = get_integer_data(dyrdata[i],"0"); i++;
+    voltage_flag = get_integer_data(dyrdata[i],"0"); i++;
+    trans_from_bus = get_integer_data(dyrdata[i],"0"); i++;
+    trans_to_bus = get_integer_data(dyrdata[i],"0"); i++;
+    trans_id = get_string_data(dyrdata[i],""); i++;
+    tfv = get_double_data(dyrdata[i],"0.0"); i++;
+    kpv = get_double_data(dyrdata[i],"0.0"); i++;
+    kiv = get_double_data(dyrdata[i],"0.0"); i++;
+    xc = get_double_data(dyrdata[i],"0.0"); i++;
+    tfp = get_double_data(dyrdata[i],"0.0"); i++;
+    kpp = get_double_data(dyrdata[i],"0.0"); i++;
+    kip = get_double_data(dyrdata[i],"0.0"); i++;
+    pmax = get_double_data(dyrdata[i],"0.0"); i++;
+    pmin = get_double_data(dyrdata[i],"0.0"); i++;
+    qmax = get_double_data(dyrdata[i],"0.0"); i++;
+    qmin = get_double_data(dyrdata[i],"0.0"); i++;
+    ipmax = get_double_data(dyrdata[i],"0.0"); i++;
+    trv = get_double_data(dyrdata[i],"0.0"); i++;
+    rpmax = get_double_data(dyrdata[i],"0.0"); i++;
+    rpmin = get_double_data(dyrdata[i],"0.0"); i++;
+    tspeed = get_double_data(dyrdata[i],"0.0"); i++;
+    kqi = get_double_data(dyrdata[i],"0.0"); i++;
+    vmax = get_double_data(dyrdata[i],"0.0"); i++;
+    vmin = get_double_data(dyrdata[i],"0.0"); i++;
+    kqv = get_double_data(dyrdata[i],"0.0"); i++;
+    eqmin = get_double_data(dyrdata[i],"0.0"); i++;
+    eqmax = get_double_data(dyrdata[i],"0.0"); i++;
+    tv = get_double_data(dyrdata[i],"0.0"); i++;
+    tp = get_double_data(dyrdata[i],"0.0"); i++;
+    fn = get_double_data(dyrdata[i],"0.0"); i++;
+    kvi = get_double_data(dyrdata[i],"0.0"); i++;
+    tvi = get_double_data(dyrdata[i],"0.0"); i++;
+    kdroop = get_double_data(dyrdata[i],"0.0"); i++;
+    tdroop = get_double_data(dyrdata[i],"0.0"); i++;
+
+    set_bus_to_regulate(bus);
+    PE_VAR_CONTROL_MODE mode;
+    switch(var_control_flag)
+    {
+        case 0:
+        {
+            mode = CONSTANT_VAR_MODE;
+            break;
+        }
+        case 1:
+        {
+            mode = CONSTANT_POWER_FACTOR_MODE;
+            break;
+        }
+        case 2:
+        {
+            mode = CONSTANT_VOLTAGE_MODE;
+            break;
+        }
+        default:
+        {
+            mode = CONSTANT_VAR_MODE;
+            break;
+        }
+    }
+
+    set_var_control_mode(mode);
+    set_transformer_from_bus(trans_from_bus);
+    set_transformer_to_bus(trans_to_bus);
+    set_transformer_id(trans_id);
+    set_Xcomp_in_pu(xc);
+    set_TRV_in_s(trv);
+    set_Fn(fn);
+    set_KIV(kiv);
+    set_Qmax_in_pu(qmax);
+    set_Qmin_in_pu(qmin);
+    set_KPV(kpv);
+    set_TV_in_s(tv);
+    set_TFV_in_s(tfv);
+    set_TP_in_s(tp);
+    set_KQI(kqi);
+    set_Vmax_in_pu(vmax);
+    set_Vmin_in_pu(vmin);
+
+    if(voltage_flag>2)
+        voltage_flag = 2;
+    set_voltage_flag(voltage_flag);
+    set_KQV(kqv);
+    set_EQmax_in_pu(eqmax);
+    set_EQmin_in_pu(eqmin);
+    set_Tspeed_in_s(tspeed);
+    set_KPP(kpp);
+    set_KIP(kip);
+    set_rPmax_in_pu(rpmax);
+    set_rPmin_in_pu(rpmin);
+    set_TFP_in_s(tfp);
+    set_Pmax_in_pu(pmax);
+    set_Pmin_in_pu(pmin);
+    set_IPmax_in_pu(ipmax);
+
+    set_Kvi(kvi);
+    set_Tvi_in_s(tvi);
+    set_Kdroop(kdroop);
+    set_Tdroop_in_s(tdroop);
+
+    is_successful = true;
+
+    return is_successful;
+}
+
+bool WT3E0::setup_model_with_bpa_string(string data)
+{
+    return false;
+}
+
+void WT3E0::initialize()
+{
+    ostringstream sstream;
+    if(is_model_initialized())
+        return;
+
+    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    if(wt_generator==NULL)
+        return;
+
+    WT_GENERATOR_MODEL* source_model = wt_generator->get_wt_generator_model();
+    if(source_model==NULL)
+        return;
+
+    if(not source_model->is_model_initialized())
+        source_model->initialize();
+
+    WT_TURBINE_MODEL* turbine_model = wt_generator->get_wt_turbine_model();
+    if(turbine_model==NULL)
+        return;
+
+    if(not turbine_model->is_model_initialized())
+        turbine_model->initialize();
+
+    double vterm = get_source_bus_voltage_in_pu();
+    double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
+    double freq = get_source_bus_frequency_deviation_in_pu();
+    double mbase = wt_generator->get_mbase_in_MVA();
+    complex<double> selec = get_source_generation_in_MVA()/mbase;
+    double pelec = selec.real();
+    double qelec = selec.imag();
+    double speed = get_wind_turbine_generator_speed_in_pu();
+
+    double ipcmd = source_model->get_active_current_command_in_pu_based_on_mbase();
+    double ipmax = get_IPmax_in_pu();
+    if(ipcmd>ipmax)
+    {
+        sstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+          <<"IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
+        show_information_with_leading_time_stamp(sstream);
+    }
+    double porder = ipcmd*vterm;
+    double pmax = get_Pmax_in_pu();
+    double pmin = get_Pmin_in_pu();
+    power_order_integrator.set_output(porder);
+    if(ipcmd>ipmax)
+    {
+        sstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+          <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
+        show_information_with_leading_time_stamp(sstream);
+    }
+    power_order_integrator.initialize();
+
+    double torque =  porder/(1.0+speed);
+    torque_PI_regulator.set_output(torque);
+    torque_PI_regulator.initialize();
+
+    virtual_inertia_emulator.set_input(0.0);
+    virtual_inertia_emulator.initialize();
+
+    frequency_droop_controller.set_output(freq);
+    frequency_droop_controller.initialize();
+
+    set_frequency_reference_in_pu(freq);
+
+    wind_turbine_speed_reference_sensor.set_output(speed);
+    wind_turbine_speed_reference_sensor.initialize();
+
+    set_wind_turbine_reference_speed_in_pu(speed);
+
+    double iqcmd = source_model->get_reactive_current_command_in_pu_based_on_mbase();
+    double xsource = wt_generator->get_source_impedance_in_pu().imag();
+    double eqcmd = iqcmd*(-xsource);
+
+    double verror = 0.0;
+    size_t vflag = get_voltage_flag();
+    if(vflag = 0)
+    {
+        V_error_integrator.set_output(0.0);
+        V_error_integrator.initialize();
+
+        verror = eqcmd;
+    }
+    else
+    {
+        if(vflag == 1)
+        {
+            V_error_integrator.set_upper_limit(vterm+get_EQmax_in_pu());
+            V_error_integrator.set_lower_limit(vterm+get_EQmin_in_pu());
+        }
+        else
+        {
+            V_error_integrator.set_upper_limit(get_EQmax_in_pu());
+            V_error_integrator.set_lower_limit(get_EQmin_in_pu());
+        }
+        double vmax = V_error_integrator.get_upper_limit();
+        double vmin = V_error_integrator.get_lower_limit();
+
+        V_error_integrator.set_output(eqcmd);
+        if(eqcmd>vmax)
+        {
+            sstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+              <<"Eqcmd is "<<eqcmd<<", and Vmax is "<<vmax<<".";
+            show_information_with_leading_time_stamp(sstream);
+        }
+        if(eqcmd<vmin)
+        {
+            sstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+              <<"Eqcmd is "<<eqcmd<<", and Vmin is "<<vmin<<".";
+            show_information_with_leading_time_stamp(sstream);
+        }
+        V_error_integrator.initialize();
+        verror = 0.0;
+    }
+
+    double vcmd = verror+vterm;
+    double vmax = get_Vmax_in_pu();
+    double vmin = get_Vmin_in_pu();
+    Q_error_integrator.set_output(vcmd);
+    if(vcmd>vmax)
+    {
+        sstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+          <<"Vcmd is "<<vcmd<<", and Vmax is "<<vmax<<".";
+        show_information_with_leading_time_stamp(sstream);
+    }
+    if(vcmd<vmin)
+    {
+        sstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+          <<"Vcmd is "<<vcmd<<", and Vmin is "<<vmin<<".";
+        show_information_with_leading_time_stamp(sstream);
+    }
+    Q_error_integrator.initialize();
+
+    double qcmd = qelec;
+    double qmax = get_Qmax_in_pu();
+    double qmin = get_Qmin_in_pu();
+    if(qcmd>qmax)
+    {
+        sstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+          <<"Qcmd is "<<qcmd<<", and Qmax is "<<qmax<<".";
+        show_information_with_leading_time_stamp(sstream);
+    }
+    if(qcmd<qmin)
+    {
+        sstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+          <<"Qcmd is "<<qcmd<<", and Qmin is "<<qmin<<".";
+        show_information_with_leading_time_stamp(sstream);
+    }
+
+    set_reactive_power_reference_in_pu(qcmd);
+
+    active_power_sensor.set_output(pelec);
+    active_power_sensor.initialize();
+
+    double pf = fabs(pelec)/abs(selec);
+    pf = (qelec/pelec>0? pf:-pf);
+    set_power_factor_reference_in_pu(pf);
+
+    voltage_regulator_filter.set_output(qcmd);
+    voltage_regulator_filter.initialize();
+
+    voltage_regulator_integrator.set_output(qcmd);
+    voltage_regulator_integrator.initialize();
+
+    voltage_regulator_first_order_block.set_output(0.0);
+    voltage_regulator_first_order_block.initialize();
+
+    double xcomp = get_Xcomp_in_pu();
+    double vref = vterm+iterm*xcomp;
+
+    voltage_sensor.set_output(vref);
+    voltage_sensor.initialize();
+
+    set_voltage_reference_in_pu(vref);
+
+    set_flag_model_initialized_as_true();
+}
+
+void WT3E0::run(DYNAMIC_MODE mode)
+{
+    ostringstream sstream;
+    if(is_model_initialized())
+        return;
+
+    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    if(wt_generator==NULL)
+        return;
+
+    WT_GENERATOR_MODEL* source_model = wt_generator->get_wt_generator_model();
+    if(source_model==NULL)
+        return;
+
+    double vterm = get_source_bus_voltage_in_pu();
+    double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
+    double freq = get_source_bus_frequency_deviation_in_pu();
+    double mbase = wt_generator->get_mbase_in_MVA();
+    complex<double> selec = get_source_generation_in_MVA()/mbase;
+    double pelec = selec.real();
+    double qelec = selec.imag();
+
+    double speed     = get_wind_turbine_generator_speed_in_pu();
+    double speed_ref = get_wind_turbine_generator_speed_referance_in_pu();
+
+    wind_turbine_speed_reference_sensor.set_input(speed_ref);
+    wind_turbine_speed_reference_sensor.run(mode);
+
+    double input = speed - wind_turbine_speed_reference_sensor.get_output();
+
+    torque_PI_regulator.set_input(input);
+    torque_PI_regulator.run(mode);
+
+    virtual_inertia_emulator.set_input(freq);
+    virtual_inertia_emulator.run(mode);
+
+    frequency_droop_controller.set_input(freq);
+    frequency_droop_controller.run(mode);
+
+    input = torque_PI_regulator.get_output()*(1.0+speed)
+            +virtual_inertia_emulator.get_output()
+            +frequency_droop_controller.get_output()
+            -power_order_integrator.get_output();
+    if(input>get_rPmax_in_pu())
+        input = get_rPmax_in_pu();
+    if(input<get_rPmin_in_pu())
+        input = get_rPmin_in_pu();
+
+    power_order_integrator.set_input(input);
+    power_order_integrator.run(mode);
+
+    active_power_sensor.set_input(pelec);
+    active_power_sensor.run(mode);
+
+    double xcomp = get_Xcomp_in_pu();
+    input = vterm+iterm*xcomp;
+    voltage_sensor.set_input(input);
+    voltage_sensor.run(mode);
+
+    input = get_voltage_reference_in_pu()-voltage_sensor.get_output();
+    input /= get_Fn();
+
+    voltage_regulator_integrator.set_input(input);
+    voltage_regulator_integrator.run(mode);
+
+    voltage_regulator_first_order_block.set_input(input);
+    voltage_regulator_first_order_block.run(mode);
+
+    input = voltage_regulator_integrator.get_output() + voltage_regulator_first_order_block.get_output();
+    voltage_regulator_filter.set_input(input);
+    voltage_regulator_filter.run(mode);
+
+    PE_VAR_CONTROL_MODE var_mode = get_var_control_mode();
+    double qcmd = 0.0;
+    if(var_mode==CONSTANT_VAR_MODE)
+        qcmd = get_reactive_power_reference_in_pu();
+    else
+    {
+        if(var_mode==CONSTANT_POWER_FACTOR_MODE)
+        {
+            double pf = get_power_factor_reference_in_pu();
+            qcmd = sqrt(1.0-pf*pf)/pf*active_power_sensor.get_output();
+        }
+        else
+            qcmd = voltage_regulator_filter.get_output();
+    }
+    if(qcmd>get_Qmax_in_pu())
+        qcmd = get_Qmax_in_pu();
+    if(qcmd<get_Qmin_in_pu())
+        qcmd = get_Qmin_in_pu();
+
+    input = qcmd - qelec;
+    Q_error_integrator.set_input(input);
+    Q_error_integrator.run(mode);
+
+    size_t vflag = get_voltage_flag();
+    if(vflag == 1 or vflag == 2)
+    {
+        if(vflag == 1)
+        {
+            V_error_integrator.set_upper_limit(vterm+get_EQmax_in_pu());
+            V_error_integrator.set_lower_limit(vterm+get_EQmin_in_pu());
+        }
+        else
+        {
+            if(vflag == 2)
+            {
+                V_error_integrator.set_upper_limit(get_EQmax_in_pu());
+                V_error_integrator.set_lower_limit(get_EQmin_in_pu());
+            }
+        }
+        input = Q_error_integrator.get_output()-vterm;
+        V_error_integrator.set_input(input);
+        V_error_integrator.run(mode);
+    }
+
+    if(mode == UPDATE_MODE)
+        set_flag_model_updated_as_true();
+}
+
+
+double WT3E0::get_active_current_command_in_pu_based_on_mbase() const
+{
+    double vterm = abs(get_complex_voltage_in_pu());
+    if(vterm==0.0)
+        return 0.0;
+
+    double pcmd = get_active_power_command_in_pu_based_on_mbase();
+    double ipcmd = pcmd/vterm;
+    double ipmax = get_IPmax_in_pu();
+    if(ipcmd>ipmax)
+        ipcmd = ipmax;
+    return ipcmd;
+}
+
+double WT3E0::get_active_power_command_in_pu_based_on_mbase() const
+{
+    return power_order_integrator.get_output();
+}
+
+double WT3E0::get_reactive_current_command_in_pu_based_on_mbase() const
+{
+    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    if(gen==NULL)
+        return 0.0;
+
+    double xeq = gen->get_source_impedance_in_pu().imag();
+
+    double eqcmd = get_reactive_voltage_command_in_pu_based_on_mbase();
+
+    return eqcmd/(-xeq);
+}
+
+double WT3E0::get_reactive_power_command_in_pu_based_on_mbase() const
+{
+    PE_VAR_CONTROL_MODE mode = get_var_control_mode();
+    switch(mode)
+    {
+        case CONSTANT_VAR_MODE:
+        {
+            return get_reactive_power_reference_in_pu();
+        }
+        case CONSTANT_POWER_FACTOR_MODE:
+        {
+            double pf = get_power_factor_reference_in_pu();
+            double p = active_power_sensor.get_output();
+
+            return p*sqrt(1.0-pf*pf)/pf;
+        }
+        case CONSTANT_VOLTAGE_MODE:
+        {
+            return voltage_regulator_filter.get_output();
+        }
+        default:
+            return 0.0;
+    }
+}
+
+double WT3E0::get_reactive_voltage_command_in_pu_based_on_mbase() const
+{
+    size_t voltage_flag = get_voltage_flag();
+    if(voltage_flag==0)
+    {
+        double vterm = abs(get_complex_voltage_in_pu());
+        if(vterm == 0.0)
+            return 0.0;
+        else
+            return Q_error_integrator.get_output()/vterm;
+    }
+    else
+        return V_error_integrator.get_output();
+}
+
+void WT3E0::check()
+{
+    ;
+}
+
+void WT3E0::clear()
+{
+    voltage_regulator_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    Q_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+
+    power_order_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+}
+
+void WT3E0::report()
+{
+    ostringstream sstream;
+    sstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(sstream);
+}
+
+void WT3E0::save()
+{
+    ;
+}
+
+string WT3E0::get_standard_model_string() const
+{
+    ostringstream sstream;
+    WT_GENERATOR* source = (WT_GENERATOR*) get_device_pointer();
+    size_t bus = source->get_source_bus();
+    string identifier= source->get_identifier();
+
+    size_t bus_reg = get_bus_to_regulate();
+    PE_VAR_CONTROL_MODE mode = get_var_control_mode();
+    int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
+    size_t voltage_flag = get_voltage_flag();
+    size_t trans_from_bus = get_transformer_from_bus();
+    size_t trans_to_bus = get_transformer_to_bus();
+    string trans_id = get_transformer_id();
+    double tfv = get_TFV_in_s();
+    double kpv = get_KPV();
+    double kiv = get_KIV();
+    double xc = get_Xcomp_in_pu();
+    double tfp = get_TFP_in_s();
+    double kpp = get_KPP();
+    double kip = get_KIP();
+    double pmax = get_Pmax_in_pu();
+    double pmin = get_Pmin_in_pu();
+    double qmax = get_Qmax_in_pu();
+    double qmin = get_Qmin_in_pu();
+    double ipmax = get_IPmax_in_pu();
+    double trv = get_TRV_in_s();
+    double rpmax = get_rPmax_in_pu();
+    double rpmin = get_rPmin_in_pu();
+    double tspeed = get_Tspeed_in_s();
+    double kqi = get_KQI();
+    double vmax = get_Vmax_in_pu();
+    double vmin = get_Vmin_in_pu();
+    double kqv = get_KQV();
+    double eqmin = get_EQmin_in_pu();
+    double eqmax = get_EQmax_in_pu();
+    double tv = get_TV_in_s();
+    double tp = get_TP_in_s();
+    double fn = get_Fn();
+    double kvi = get_Kvi();
+    double tvi = get_Tvi_in_s();
+    double kdroop = get_Kdroop();
+    double tdroop = get_Tdroop_in_s();
+
+    sstream<<setw(8)<<bus<<", "
+      <<"'"<<get_model_name()<<"', "
+      <<"'"<<identifier<<"', "
+      <<setw(8)<<bus_reg<<", "
+      <<setw(8)<<var_mode<<", "
+      <<setw(8)<<voltage_flag<<", "
+      <<trans_from_bus<<", "
+      <<trans_to_bus<<", "
+      <<"'"<<trans_id<<"', "
+      <<setw(8)<<setprecision(6)<<tfv<<", "
+      <<setw(8)<<setprecision(6)<<kpv<<", "
+      <<setw(8)<<setprecision(6)<<kiv<<", "
+      <<setw(8)<<setprecision(6)<<xc<<", "
+      <<setw(8)<<setprecision(6)<<tfp<<", "
+      <<setw(8)<<setprecision(6)<<kpp<<", "
+      <<setw(8)<<setprecision(6)<<kip<<", "
+      <<setw(8)<<setprecision(6)<<pmax<<", "
+      <<setw(8)<<setprecision(6)<<pmin<<", 0, "
+      <<setw(8)<<setprecision(6)<<qmax<<", "
+      <<setw(8)<<setprecision(6)<<qmin<<", "
+      <<setw(8)<<setprecision(6)<<ipmax<<", "
+      <<setw(8)<<setprecision(6)<<trv<<", "
+      <<setw(8)<<setprecision(6)<<rpmax<<", "
+      <<setw(8)<<setprecision(6)<<rpmin<<", "
+      <<setw(8)<<setprecision(6)<<tspeed<<", "
+      <<setw(8)<<setprecision(6)<<kqi<<", "
+      <<setw(8)<<setprecision(6)<<vmax<<", "
+      <<setw(8)<<setprecision(6)<<vmin<<", "
+      <<setw(8)<<setprecision(6)<<kqv<<", "
+      <<setw(8)<<setprecision(6)<<eqmin<<", "
+      <<setw(8)<<setprecision(6)<<eqmax<<", "
+      <<setw(8)<<setprecision(6)<<tv<<", "
+      <<setw(8)<<setprecision(6)<<tp<<", "
+      <<setw(8)<<setprecision(6)<<fn<<", "
+      <<setw(8)<<setprecision(6)<<kvi<<", "
+      <<setw(8)<<setprecision(6)<<tvi<<", "
+      <<setw(8)<<setprecision(6)<<kdroop<<", "
+      <<setw(8)<<setprecision(6)<<tdroop<<"  /";
+
+    return sstream.str();
+}
+
+size_t WT3E0::get_variable_index_from_variable_name(string var_name)
+{
+    return 0;
+}
+
+string WT3E0::get_variable_name_from_variable_index(size_t var_index)
+{
+    return "";
+}
+
+double WT3E0::get_variable_with_index(size_t var_index)
+{
+    return 0.0;
+}
+
+double WT3E0::get_variable_with_name(string var_name)
+{
+    return 0.0;
+}
+
+string WT3E0::get_dynamic_data_in_psse_format() const
+{
+    return get_standard_model_string();
+}
+
+string WT3E0::get_dynamic_data_in_bpa_format() const
+{
+    return get_dynamic_data_in_psse_format();
+}
+
+string WT3E0::get_dynamic_data_in_steps_format() const
+{
+    return get_dynamic_data_in_psse_format();
+}

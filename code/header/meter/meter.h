@@ -60,7 +60,7 @@ class METER : public BASE
         double get_meter_value_as_a_transformer() const;
         double get_meter_value_as_a_load() const;
         double get_meter_value_as_a_generator() const;
-        double get_meter_value_as_a_pe_source() const;
+        double get_meter_value_as_a_wt_generator() const;
         double get_meter_value_as_an_hvdc() const;
         double get_meter_value_as_an_equivalent_device() const;
 
@@ -81,7 +81,7 @@ extern vector<string> line_meters;
 extern vector<string> transformer_meters;
 extern vector<string> generator_meters;
 extern vector<string> load_meters;
-extern vector<string> pe_source_meters;
+extern vector<string> wt_generator_meters;
 extern vector<string> hvdc_meters;
 extern vector<string> equivalent_device_meters;
 extern map<string, vector<string>> SUPPORTED_METERS;

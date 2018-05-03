@@ -603,6 +603,7 @@ void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* i
         TERMINAL terminal;
         terminal.append_bus(ibus);
         terminal.append_bus(jbus);
+        terminal.append_bus(kbus);
         did.set_device_terminal(terminal);
         did.set_device_identifier(identifier);
 
@@ -659,6 +660,7 @@ void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* 
         TERMINAL terminal;
         terminal.append_bus(ibus);
         terminal.append_bus(jbus);
+        terminal.append_bus(kbus);
         did.set_device_terminal(terminal);
         did.set_device_identifier(identifier);
 
@@ -954,6 +956,8 @@ double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier)
         else
             return 0.0;
     }
+    else
+        return 0.0;
 }
 
 double api_get_generator_power_reference_in_MW(size_t bus, char* identifier)
@@ -986,6 +990,8 @@ double api_get_generator_power_reference_in_MW(size_t bus, char* identifier)
         else
             return 0.0;
     }
+    else
+        return 0.0;
 }
 
 void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, double value)

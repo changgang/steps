@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <functional>
 #include "terminal.h"
 using namespace std;
 
@@ -48,7 +49,9 @@ class DEVICE_ID
 
 DEVICE_ID get_bus_device_id(size_t bus_number);
 DEVICE_ID get_generator_device_id(size_t bus, string identifier);
-DEVICE_ID get_pe_source_device_id(size_t bus, string identifier);
+DEVICE_ID get_wt_generator_device_id(size_t bus, string identifier);
+DEVICE_ID get_pv_source_device_id(size_t bus, string identifier);
+DEVICE_ID get_battery_device_id(size_t bus, string identifier);
 DEVICE_ID get_load_device_id(size_t bus, string identifier);
 DEVICE_ID get_fixed_shunt_device_id(size_t bus, string identifier);
 DEVICE_ID get_line_device_id(size_t ibus, size_t jbus, string identifier);
@@ -56,4 +59,36 @@ DEVICE_ID get_hvdc_device_id(size_t ibus, size_t jbus, string identifier);
 DEVICE_ID get_transformer_device_id(size_t ibus, size_t jbus, size_t kbus, string identifier);
 DEVICE_ID get_equivalent_device_id(size_t bus, string identifier);
 
+namespace std
+{
+    template<> class hash<DEVICE_ID>
+    {
+        public:
+        size_t operator()(const DEVICE_ID& did) const
+        {
+            TERMINAL terminal  = did.get_device_terminal();
+            vector<size_t> buses = terminal.get_buses();
+            size_t n = buses.size();
+
+            size_t seed = 0;
+            for(size_t i=0; i!=n; ++i)
+            {
+                size_t bus = buses[i];
+                if(bus!=0)
+                {
+                    size_t hash_value = std::hash<std::size_t>{}(bus);
+                    seed ^= hash_value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                }
+            }
+            string id = did.get_device_identifier();
+            if(id!="")
+            {
+                size_t hash_value = std::hash<std::string>{}(id);
+                seed ^= hash_value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            }
+
+            return seed;
+        }
+    };
+}
 #endif // DEVICE_ID_H

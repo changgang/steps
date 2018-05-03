@@ -55,13 +55,13 @@ void api_initialize_device_search(const char* device_type, size_t bus)
         api_search_buffer.generator_pointer = 0;
     }
 
-    if(DEVICE_TYPE=="PE SOURCE")
+    if(DEVICE_TYPE=="WT GENERATOR")
     {
         if(bus==0)
-            api_search_buffer.pe_sources = psdb->get_all_pe_sources();
+            api_search_buffer.wt_generators = psdb->get_all_wt_generators();
         else
-            api_search_buffer.pe_sources = psdb->get_pe_sources_connecting_to_bus(bus);
-        api_search_buffer.pe_source_pointer = 0;
+            api_search_buffer.wt_generators = psdb->get_wt_generators_connecting_to_bus(bus);
+        api_search_buffer.wt_generator_pointer = 0;
     }
 
     if(DEVICE_TYPE=="LOAD")
@@ -133,12 +133,12 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
             return 0;
     }
 
-    if(DEVICE_TYPE=="PE SOURCE")
+    if(DEVICE_TYPE=="WT GENERATOR")
     {
-        size_t index = api_search_buffer.pe_source_pointer;
-        size_t n = api_search_buffer.pe_sources.size();
+        size_t index = api_search_buffer.wt_generator_pointer;
+        size_t n = api_search_buffer.wt_generators.size();
         if(index<n)
-            return api_search_buffer.pe_sources[index]->get_source_bus();
+            return api_search_buffer.wt_generators[index]->get_source_bus();
         else
             return 0;
     }
@@ -241,12 +241,12 @@ const char* api_get_current_device_identifier(const char* device_type)
             return BLANK.c_str();
     }
 
-    if(DEVICE_TYPE=="PE SOURCE")
+    if(DEVICE_TYPE=="WT GENERATOR")
     {
-        size_t index = api_search_buffer.pe_source_pointer;
-        size_t n = api_search_buffer.pe_sources.size();
+        size_t index = api_search_buffer.wt_generator_pointer;
+        size_t n = api_search_buffer.wt_generators.size();
         if(index<n)
-            return api_search_buffer.pe_sources[index]->get_identifier().c_str();
+            return api_search_buffer.wt_generators[index]->get_identifier().c_str();
         else
             return BLANK.c_str();
     }
@@ -327,12 +327,12 @@ void api_goto_next_device(const char* device_type)
         return;
     }
 
-    if(DEVICE_TYPE=="PE SOURCE")
+    if(DEVICE_TYPE=="WT GENERATOR")
     {
-        size_t index = api_search_buffer.pe_source_pointer;
-        size_t n = api_search_buffer.pe_sources.size();
+        size_t index = api_search_buffer.wt_generator_pointer;
+        size_t n = api_search_buffer.wt_generators.size();
         if(index<n)
-            api_search_buffer.pe_source_pointer ++;
+            api_search_buffer.wt_generator_pointer ++;
         return;
     }
 

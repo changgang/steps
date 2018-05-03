@@ -62,7 +62,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         void load_line_data();
         void load_fixed_shunt_data();
         void load_source_data();
-        void load_pe_source_data();
+        void load_wt_generator_data();
         void load_source_common_data();
         void load_transformer_data();
         void load_hvdc_data();

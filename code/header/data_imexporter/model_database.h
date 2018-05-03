@@ -3,15 +3,15 @@
 
 #include "header/model/model.h"
 #include "header/device/generator.h"
-#include "header/device/pe_source.h"
+#include "header/device/wt_generator.h"
 #include "header/device/load.h"
 #include "header/device/hvdc.h"
 
-#include "header/model/source_model/sync_generator_model/sync_generator_model.h"
+#include "header/model/sg_models/sync_generator_model/sync_generator_model.h"
 #include "header/model/compensator_model/compensator_model.h"
-#include "header/model/exciter_model/exciter_model.h"
-#include "header/model/stabilizer_model/stabilizer_model.h"
-#include "header/model/turbine_governor_model/turbine_governor_model.h"
+#include "header/model/sg_models/exciter_model/exciter_model.h"
+#include "header/model/sg_models/stabilizer_model/stabilizer_model.h"
+#include "header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 #include "header/model/load_model/load_model.h"
 #include "header/model/load_relay_model/load_frequency_relay_model.h"
 #include "header/model/load_relay_model/load_voltage_relay_model.h"
@@ -46,7 +46,7 @@ class MODEL_DATABASE
         void run_all_models(DYNAMIC_MODE mode);
     private:
         void set_generator_related_model_index(GENERATOR* device, string model_type, size_t model_index);
-        void set_pe_source_related_model_index(PE_SOURCE* device, string model_type, size_t model_index);
+        void set_wt_generator_related_model_index(WT_GENERATOR* device, string model_type, size_t model_index);
         void set_load_related_model_index(LOAD* device, string model_type, size_t model_index);
         void set_hvdc_related_model_index(HVDC* device, string model_type, size_t model_index);
 
@@ -58,7 +58,7 @@ class MODEL_DATABASE
         void append_turbine_governor_model(const TURBINE_GOVERNOR_MODEL& model);
 
 
-        void append_pe_source_related_model(const MODEL& model);
+        void append_wt_generator_related_model(const MODEL& model);
 
         void append_load_related_model(const MODEL& model);
         void append_load_model(const LOAD_MODEL& model);

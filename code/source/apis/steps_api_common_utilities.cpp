@@ -93,8 +93,8 @@ size_t api_get_device_capacity(const char* device_type)
         return psdb->get_bus_capacity();
     if(DEVICE_TYPE=="GENERATOR")
         return psdb->get_generator_capacity();
-    if(DEVICE_TYPE=="PE SOURCE")
-        return psdb->get_pe_source_capacity();
+    if(DEVICE_TYPE=="WT GENERATOR")
+        return psdb->get_wt_generator_capacity();
     if(DEVICE_TYPE=="LOAD")
         return psdb->get_load_capacity();
     if(DEVICE_TYPE=="FIXED SHUNT")
@@ -141,8 +141,8 @@ void api_set_device_capacity(const char* device_type, size_t cap)
         return psdb->set_bus_capacity(cap);
     if(DEVICE_TYPE=="GENERATOR")
         return psdb->set_generator_capacity(cap);
-    if(DEVICE_TYPE=="PE SOURCE")
-        return psdb->set_pe_source_capacity(cap);
+    if(DEVICE_TYPE=="WT GENERATOR")
+        return psdb->set_wt_generator_capacity(cap);
     if(DEVICE_TYPE=="LOAD")
         return psdb->set_load_capacity(cap);
     if(DEVICE_TYPE=="FIXED SHUNT")

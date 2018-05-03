@@ -33,7 +33,7 @@ class METER_TEST : public Test::Suite
         void test_set_get_generator_meter_type();
         void test_set_get_load_meter_type();
         void test_set_get_hvdc_meter_type();
-        void test_set_get_pe_source_meter_type();
+        void test_set_get_wt_generator_meter_type();
         void test_set_get_equivalent_device_meter_type();
         void test_set_get_meter_internal_variable_index();
         void test_set_get_device_pointer();
@@ -46,7 +46,7 @@ class METER_TEST : public Test::Suite
         void test_get_transformer_meter_value();
         void test_get_load_meter_value();
         void test_get_generator_meter_value();
-        void test_get_pe_source_meter_value();
+        void test_get_wt_generator_meter_value();
         void test_get_hvdc_meter_value();
         void test_get_equivalent_device_meter_value();
 

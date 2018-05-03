@@ -15,7 +15,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 {
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_bus_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_generator_capacity);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_pe_source_capacity);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_wt_generator_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_load_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_fixed_shunt_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_line_capacity);
@@ -36,7 +36,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_bus_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pe_source);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer);
@@ -48,7 +48,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_owner);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_generator_exist);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_pe_source_exist);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_wt_generator_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_load_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_line_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_transformer_exist);
@@ -62,7 +62,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_change_bus_number);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_connecting_to_bus);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_connecting_to_bus);
@@ -72,7 +72,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_connecting_to_bus);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_connecting_to_bus);
@@ -83,7 +83,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_area);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_area);
@@ -94,7 +94,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_area);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_area);
@@ -105,7 +105,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_zone);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_zone);
@@ -116,7 +116,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_zone);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_zone);
@@ -129,7 +129,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_with_constraints);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_generators);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_pe_sources);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_sources);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_loads);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_lines);
@@ -145,7 +145,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_number_with_constraints);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses_number);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_generators_device_id);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_pe_sources_device_id);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_loads_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_lines_device_id);
@@ -160,7 +160,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_in_service_bus_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generator_count);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pe_source_count);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_source_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_load_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_line_count);
@@ -174,7 +174,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generator_index);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pe_source_index);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_load_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_line_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformer_index);
@@ -210,11 +210,11 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_zone);
 
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_all_pe_source_power);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power_at_bus);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power_in_area);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_all_wt_generator_power);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_at_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_zone);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_database);
     //TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_bus);
@@ -222,9 +222,9 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_generator);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_generators_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_generators);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_pe_source);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_pe_sources_connecting_to_bus);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_pe_sources);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generator);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generators_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_wt_generators);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_sources_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_sources);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_load);
@@ -281,7 +281,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     // all devices in the test database are:
     // Bus: 1, 2, 3
     // Generator: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
-    // PE Source: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // WT generator: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // Load: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // Fixed shunt: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // Line: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2,
@@ -393,72 +393,72 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
-        PE_SOURCE pesource(db);
-        pesource.set_source_bus(1);
-        pesource.set_identifier("#1");
-        pesource.set_status(true);
-        pesource.set_p_generation_in_MW(10.0);
-        pesource.set_q_generation_in_MVar(10.0);
-        pesource.set_p_max_in_MW(101.0);
-        pesource.set_p_min_in_MW(-101.0);
-        pesource.set_q_max_in_MVar(101.0);
-        pesource.set_q_min_in_MVar(-101.0);
-        pesource.set_regulating_mode(REGULATING_VA);
-        db->append_pe_source(pesource);
+        WT_GENERATOR wt_generator(db);
+        wt_generator.set_source_bus(1);
+        wt_generator.set_identifier("#1");
+        wt_generator.set_status(true);
+        wt_generator.set_p_generation_in_MW(10.0);
+        wt_generator.set_q_generation_in_MVar(10.0);
+        wt_generator.set_p_max_in_MW(101.0);
+        wt_generator.set_p_min_in_MW(-101.0);
+        wt_generator.set_q_max_in_MVar(101.0);
+        wt_generator.set_q_min_in_MVar(-101.0);
+        wt_generator.set_regulating_mode(REGULATING_VA);
+        db->append_wt_generator(wt_generator);
 
-        pesource.set_identifier("#2");
-        pesource.set_status(true);
-        pesource.set_p_generation_in_MW(10.0);
-        pesource.set_q_generation_in_MVar(20.0);
-        pesource.set_p_max_in_MW(102.0);
-        pesource.set_p_min_in_MW(-102.0);
-        pesource.set_q_max_in_MVar(102.0);
-        pesource.set_q_min_in_MVar(-102.0);
-        db->append_pe_source(pesource);
+        wt_generator.set_identifier("#2");
+        wt_generator.set_status(true);
+        wt_generator.set_p_generation_in_MW(10.0);
+        wt_generator.set_q_generation_in_MVar(20.0);
+        wt_generator.set_p_max_in_MW(102.0);
+        wt_generator.set_p_min_in_MW(-102.0);
+        wt_generator.set_q_max_in_MVar(102.0);
+        wt_generator.set_q_min_in_MVar(-102.0);
+        db->append_wt_generator(wt_generator);
 
-        pesource.set_source_bus(2);
-        pesource.set_identifier("#1");
-        pesource.set_status(true);
-        pesource.set_p_generation_in_MW(20.0);
-        pesource.set_q_generation_in_MVar(10.0);
-        pesource.set_p_max_in_MW(201.0);
-        pesource.set_p_min_in_MW(-201.0);
-        pesource.set_q_max_in_MVar(201.0);
-        pesource.set_q_min_in_MVar(-201.0);
-        pesource.set_regulating_mode(REGULATING_PV);
-        db->append_pe_source(pesource);
+        wt_generator.set_source_bus(2);
+        wt_generator.set_identifier("#1");
+        wt_generator.set_status(true);
+        wt_generator.set_p_generation_in_MW(20.0);
+        wt_generator.set_q_generation_in_MVar(10.0);
+        wt_generator.set_p_max_in_MW(201.0);
+        wt_generator.set_p_min_in_MW(-201.0);
+        wt_generator.set_q_max_in_MVar(201.0);
+        wt_generator.set_q_min_in_MVar(-201.0);
+        wt_generator.set_regulating_mode(REGULATING_PV);
+        db->append_wt_generator(wt_generator);
 
-        pesource.set_identifier("#2");
-        pesource.set_status(true);
-        pesource.set_p_generation_in_MW(20.0);
-        pesource.set_q_generation_in_MVar(20.0);
-        pesource.set_p_max_in_MW(202.0);
-        pesource.set_p_min_in_MW(-202.0);
-        pesource.set_q_max_in_MVar(202.0);
-        pesource.set_q_min_in_MVar(-202.0);
-        db->append_pe_source(pesource);
+        wt_generator.set_identifier("#2");
+        wt_generator.set_status(true);
+        wt_generator.set_p_generation_in_MW(20.0);
+        wt_generator.set_q_generation_in_MVar(20.0);
+        wt_generator.set_p_max_in_MW(202.0);
+        wt_generator.set_p_min_in_MW(-202.0);
+        wt_generator.set_q_max_in_MVar(202.0);
+        wt_generator.set_q_min_in_MVar(-202.0);
+        db->append_wt_generator(wt_generator);
 
-        pesource.set_source_bus(3);
-        pesource.set_identifier("#1");
-        pesource.set_status(true);
-        pesource.set_p_generation_in_MW(30.0);
-        pesource.set_q_generation_in_MVar(10.0);
-        pesource.set_p_max_in_MW(301.0);
-        pesource.set_p_min_in_MW(-301.0);
-        pesource.set_q_max_in_MVar(301.0);
-        pesource.set_q_min_in_MVar(-301.0);
-        pesource.set_regulating_mode(REGULATING_PQ);
-        db->append_pe_source(pesource);
+        wt_generator.set_source_bus(3);
+        wt_generator.set_identifier("#1");
+        wt_generator.set_status(true);
+        wt_generator.set_p_generation_in_MW(30.0);
+        wt_generator.set_q_generation_in_MVar(10.0);
+        wt_generator.set_p_max_in_MW(301.0);
+        wt_generator.set_p_min_in_MW(-301.0);
+        wt_generator.set_q_max_in_MVar(301.0);
+        wt_generator.set_q_min_in_MVar(-301.0);
+        wt_generator.set_regulating_mode(REGULATING_PQ);
+        db->append_wt_generator(wt_generator);
 
-        pesource.set_identifier("#2");
-        pesource.set_status(true);
-        pesource.set_p_generation_in_MW(30.0);
-        pesource.set_q_generation_in_MVar(20.0);
-        pesource.set_p_max_in_MW(302.0);
-        pesource.set_p_min_in_MW(-302.0);
-        pesource.set_q_max_in_MVar(302.0);
-        pesource.set_q_min_in_MVar(-302.0);
-        db->append_pe_source(pesource);
+        wt_generator.set_identifier("#2");
+        wt_generator.set_status(true);
+        wt_generator.set_p_generation_in_MW(30.0);
+        wt_generator.set_q_generation_in_MVar(20.0);
+        wt_generator.set_p_max_in_MW(302.0);
+        wt_generator.set_p_min_in_MW(-302.0);
+        wt_generator.set_q_max_in_MVar(302.0);
+        wt_generator.set_q_min_in_MVar(-302.0);
+        db->append_wt_generator(wt_generator);
     }
 
     {
@@ -722,18 +722,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_generator_capacity()
     TEST_ASSERT(db->get_generator_capacity()==20000);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_set_get_pe_source_capacity()
+void POWER_SYSTEM_DATABASE_TEST::test_set_get_wt_generator_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    db->set_pe_source_capacity(10000);
-    TEST_ASSERT(db->get_pe_source_capacity()==10000);
+    db->set_wt_generator_capacity(10000);
+    TEST_ASSERT(db->get_wt_generator_capacity()==10000);
 
-    db->set_pe_source_capacity(1000);
-    TEST_ASSERT(db->get_pe_source_capacity()==10000);
+    db->set_wt_generator_capacity(1000);
+    TEST_ASSERT(db->get_wt_generator_capacity()==10000);
 
-    db->set_pe_source_capacity(20000);
-    TEST_ASSERT(db->get_pe_source_capacity()==20000);
+    db->set_wt_generator_capacity(20000);
+    TEST_ASSERT(db->get_wt_generator_capacity()==20000);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_set_get_load_capacity()
@@ -1030,7 +1030,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
     TEST_ASSERT(pgenerator->get_status()==false);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pe_source()
+void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -1042,44 +1042,44 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pe_source()
     bus.set_voltage_in_pu(1.0);
     db->append_bus(bus);
 
-    PE_SOURCE pesource(db);
-    pesource.set_source_bus(1);
-    pesource.set_identifier("#1");
-    pesource.set_status(true);
+    WT_GENERATOR wt_generator(db);
+    wt_generator.set_source_bus(1);
+    wt_generator.set_identifier("#1");
+    wt_generator.set_status(true);
 
-    db->append_pe_source(pesource);
+    db->append_wt_generator(wt_generator);
 
-    pesource.set_source_bus(1);
-    pesource.set_identifier("#2");
-    pesource.set_status(false);
+    wt_generator.set_source_bus(1);
+    wt_generator.set_identifier("#2");
+    wt_generator.set_status(false);
 
-    db->append_pe_source(pesource);
+    db->append_wt_generator(wt_generator);
 
-    TEST_ASSERT(db->get_pe_source_count()==2);
+    TEST_ASSERT(db->get_wt_generator_count()==2);
 
-    PE_SOURCE* ppesource;
+    WT_GENERATOR* pwt_generator;
     DEVICE_ID did;
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    ppesource = db->get_pe_source(did);
+    pwt_generator = db->get_wt_generator(did);
 
-    TEST_ASSERT(ppesource!=NULL);
-    TEST_ASSERT(ppesource->get_source_bus()==1);
-    TEST_ASSERT(ppesource->get_identifier()=="#1");
-    TEST_ASSERT(ppesource->get_status()==true);
+    TEST_ASSERT(pwt_generator!=NULL);
+    TEST_ASSERT(pwt_generator->get_source_bus()==1);
+    TEST_ASSERT(pwt_generator->get_identifier()=="#1");
+    TEST_ASSERT(pwt_generator->get_status()==true);
 
     did.set_device_identifier("#2");
 
-    ppesource = db->get_pe_source(did);
+    pwt_generator = db->get_wt_generator(did);
 
-    TEST_ASSERT(ppesource!=NULL);
-    TEST_ASSERT(ppesource->get_source_bus()==1);
-    TEST_ASSERT(ppesource->get_identifier()=="#2");
-    TEST_ASSERT(ppesource->get_status()==false);
+    TEST_ASSERT(pwt_generator!=NULL);
+    TEST_ASSERT(pwt_generator->get_source_bus()==1);
+    TEST_ASSERT(pwt_generator->get_identifier()=="#2");
+    TEST_ASSERT(pwt_generator->get_status()==false);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
@@ -1602,14 +1602,14 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_generator_exist()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_is_pe_source_exist()
+void POWER_SYSTEM_DATABASE_TEST::test_is_wt_generator_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
     for(size_t i=1; i!=4; ++i)
     {
@@ -1617,13 +1617,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_pe_source_exist()
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
         did.set_device_identifier("#1");
-        TEST_ASSERT(db->is_pe_source_exist(did)==true);
+        TEST_ASSERT(db->is_wt_generator_exist(did)==true);
 
         did.set_device_identifier("#2");
-        TEST_ASSERT(db->is_pe_source_exist(did)==true);
+        TEST_ASSERT(db->is_wt_generator_exist(did)==true);
 
         did.set_device_identifier("#3");
-        TEST_ASSERT(db->is_pe_source_exist(did)==false);
+        TEST_ASSERT(db->is_wt_generator_exist(did)==false);
     }
 }
 
@@ -2096,16 +2096,16 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_connecting_to_bus()
     TEST_ASSERT(device.size()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_connecting_to_bus()
+void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<PE_SOURCE*> device;
+    vector<WT_GENERATOR*> device;
     for(size_t i=1; i!=4; ++i)
     {
-        device = db->get_pe_sources_connecting_to_bus(i);
+        device = db->get_wt_generators_connecting_to_bus(i);
 
         TEST_ASSERT(device.size()==2);
 
@@ -2115,7 +2115,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_connecting_to_bus()
         TEST_ASSERT(device[1]->get_identifier()=="#2");
     }
 
-    device = db->get_pe_sources_connecting_to_bus(4);
+    device = db->get_wt_generators_connecting_to_bus(4);
     TEST_ASSERT(device.size()==0);
 }
 
@@ -2461,7 +2461,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_connecting_to_bus()
+void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -2471,12 +2471,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_connecting_to_bus
 
     for(size_t i=1; i!=4; ++i)
     {
-        dids = db->get_pe_sources_device_id_connecting_to_bus(i);
+        dids = db->get_wt_generators_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==2);
         for(size_t j=0; j!=2; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="PE SOURCE");
-            TEST_ASSERT(db->get_pe_source(dids[j])->is_connected_to_bus(i)==true);
+            TEST_ASSERT(dids[j].get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(db->get_wt_generator(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -2495,7 +2495,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus()
         TEST_ASSERT(dids.size()==4);
         for(size_t j=0; j!=4; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="GENERATOR" or dids[j].get_device_type()=="PE SOURCE" );
+            TEST_ASSERT(dids[j].get_device_type()=="GENERATOR" or dids[j].get_device_type()=="WT GENERATOR" );
             TEST_ASSERT(db->get_source(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -2662,21 +2662,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_area()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_in_area()
+void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<PE_SOURCE*> devices;
+    vector<WT_GENERATOR*> devices;
 
     for(size_t i=1; i!=3; ++i)
     {
-        devices = db->get_pe_sources_in_area(i);
+        devices = db->get_wt_generators_in_area(i);
         TEST_ASSERT(devices.size()==2);
         for(size_t j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="PE SOURCE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -2696,7 +2696,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_area()
         TEST_ASSERT(devices.size()==4);
         for(size_t j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR" or devices[j]->get_device_id().get_device_type()=="PE SOURCE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR" or devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -2863,7 +2863,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_area()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_in_area()
+void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -2873,12 +2873,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_in_area()
 
     for(size_t i=1; i!=3; ++i)
     {
-        devices = db->get_pe_sources_device_id_in_area(i);
+        devices = db->get_wt_generators_device_id_in_area(i);
         TEST_ASSERT(devices.size()==2);
         for(size_t j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="PE SOURCE");
-            TEST_ASSERT(db->get_pe_source(devices[j])->is_in_area(i)==true);
+            TEST_ASSERT(devices[j].get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(db->get_wt_generator(devices[j])->is_in_area(i)==true);
         }
     }
 }
@@ -2897,7 +2897,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area()
         TEST_ASSERT(devices.size()==4);
         for(size_t j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR" or devices[j].get_device_type()=="PE SOURCE");
+            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR" or devices[j].get_device_type()=="WT GENERATOR");
             TEST_ASSERT(db->get_source(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3063,21 +3063,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_zone()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_in_zone()
+void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<PE_SOURCE*> devices;
+    vector<WT_GENERATOR*> devices;
 
     for(size_t i=1; i!=3; ++i)
     {
-        devices = db->get_pe_sources_in_zone(i);
+        devices = db->get_wt_generators_in_zone(i);
         TEST_ASSERT(devices.size()==2);
         for(size_t j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="PE SOURCE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3097,7 +3097,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_zone()
         TEST_ASSERT(devices.size()==4);
         for(size_t j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR" or devices[j]->get_device_id().get_device_type()=="PE SOURCE");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR" or devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3264,7 +3264,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_zone()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_in_zone()
+void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -3274,12 +3274,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pe_sources_device_id_in_zone()
 
     for(size_t i=1; i!=3; ++i)
     {
-        devices = db->get_pe_sources_device_id_in_zone(i);
+        devices = db->get_wt_generators_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==2);
         for(size_t j=0; j!=2; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="PE SOURCE");
-            TEST_ASSERT(db->get_pe_source(devices[j])->is_in_zone(i)==true);
+            TEST_ASSERT(devices[j].get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(db->get_wt_generator(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -3298,7 +3298,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone()
         TEST_ASSERT(devices.size()==4);
         for(size_t j=0; j!=4; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR" or devices[j].get_device_type()=="PE SOURCE");
+            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR" or devices[j].get_device_type()=="WT GENERATOR");
             TEST_ASSERT(db->get_source(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -3534,13 +3534,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_generators()
     TEST_ASSERT(device[5]->get_identifier()=="#2");
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_all_pe_sources()
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<PE_SOURCE*> device = db->get_all_pe_sources();
+    vector<WT_GENERATOR*> device = db->get_all_wt_generators();
 
     TEST_ASSERT(device.size()==6);
 
@@ -3932,18 +3932,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_generators_device_id()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_all_pe_sources_device_id()
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<DEVICE_ID> device = db->get_all_pe_sources_device_id();
+    vector<DEVICE_ID> device = db->get_all_wt_generators_device_id();
 
     TEST_ASSERT(device.size()==6);
 
     DEVICE_ID did;
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
     for(size_t i=1; i!=4; ++i)
     {
@@ -3984,7 +3984,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id()
         did.set_device_identifier("#2");
         TEST_ASSERT(device[2*(i-1)+1]==did);
 
-        did.set_device_type("PE SOURCE");
+        did.set_device_type("WT GENERATOR");
         terminal.clear();
         terminal.append_bus(i);
         did.set_device_terminal(terminal);
@@ -4286,13 +4286,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generator_count()
     TEST_ASSERT(db->get_generator_count()==6);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_pe_source_count()
+void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    TEST_ASSERT(db->get_pe_source_count()==6);
+    TEST_ASSERT(db->get_wt_generator_count()==6);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_source_count()
@@ -4440,43 +4440,43 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generator_index()
     TEST_ASSERT(db->get_generator_index(did)==INDEX_NOT_EXIST);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_get_pe_source_index()
+void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
     DEVICE_ID did;
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    TEST_ASSERT(db->get_pe_source_index(did)==0);
+    TEST_ASSERT(db->get_wt_generator_index(did)==0);
 
     did.set_device_identifier("#2");
-    TEST_ASSERT(db->get_pe_source_index(did)==1);
+    TEST_ASSERT(db->get_wt_generator_index(did)==1);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    TEST_ASSERT(db->get_pe_source_index(did)==2);
+    TEST_ASSERT(db->get_wt_generator_index(did)==2);
 
     did.set_device_identifier("#2");
-    TEST_ASSERT(db->get_pe_source_index(did)==3);
+    TEST_ASSERT(db->get_wt_generator_index(did)==3);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    TEST_ASSERT(db->get_pe_source_index(did)==4);
+    TEST_ASSERT(db->get_wt_generator_index(did)==4);
 
     did.set_device_identifier("#2");
-    TEST_ASSERT(db->get_pe_source_index(did)==5);
+    TEST_ASSERT(db->get_wt_generator_index(did)==5);
 
     did.set_device_identifier("#3");
-    TEST_ASSERT(db->get_pe_source_index(did)==INDEX_NOT_EXIST);
+    TEST_ASSERT(db->get_wt_generator_index(did)==INDEX_NOT_EXIST);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_load_index()
@@ -5073,13 +5073,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
 
     TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0+0.1))<FLOAT_EPSILON);
 
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#2");
 
-    source = db->get_pe_source(did);
+    source = db->get_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
 
     db->scale_source_power(did, -0.1);
@@ -5370,17 +5370,17 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_zone()
 }
 
 
-void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power()
+void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    PE_SOURCE* source;
+    WT_GENERATOR* source;
     complex<double> S;
 
     DEVICE_ID did;
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
 
     terminal.clear();
@@ -5388,7 +5388,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    source = db->get_pe_source(did);
+    source = db->get_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
 
     db->scale_generator_power(did, 0.1);
@@ -5400,7 +5400,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#2");
 
-    source = db->get_pe_source(did);
+    source = db->get_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
 
     db->scale_generator_power(did, -0.1);
@@ -5408,23 +5408,23 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power()
     TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0-0.1))<FLOAT_EPSILON);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_scale_all_pe_source_power()
+void POWER_SYSTEM_DATABASE_TEST::test_scale_all_wt_generator_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<PE_SOURCE*> sources = db->get_all_pe_sources();
+    vector<WT_GENERATOR*> sources = db->get_all_wt_generators();
     vector< complex<double> > S0;
     size_t n=sources.size();
-    PE_SOURCE* source;
+    WT_GENERATOR* source;
     for(size_t i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
     }
 
-    db->scale_all_pe_sources_power(0.1);
+    db->scale_all_wt_generators_power(0.1);
 
     for(size_t i=0; i!=n; ++i)
     {
@@ -5433,23 +5433,23 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_pe_source_power()
     }
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power_at_bus()
+void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_at_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<PE_SOURCE*> sources = db->get_all_pe_sources();
+    vector<WT_GENERATOR*> sources = db->get_all_wt_generators();
     vector< complex<double> > S0;
     size_t n=sources.size();
-    PE_SOURCE* source;
+    WT_GENERATOR* source;
     for(size_t i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
     }
 
-    db->scale_pe_sources_power_at_bus(1, 0.1);
+    db->scale_wt_generators_power_at_bus(1, 0.1);
 
     for(size_t i=0; i!=n; ++i)
     {
@@ -5466,23 +5466,23 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power_at_bus()
 
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power_in_area()
+void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<PE_SOURCE*> sources = db->get_all_pe_sources();
+    vector<WT_GENERATOR*> sources = db->get_all_wt_generators();
     vector< complex<double> > S0;
     size_t n=sources.size();
-    PE_SOURCE* source;
+    WT_GENERATOR* source;
     for(size_t i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
     }
 
-    db->scale_pe_sources_power_in_area(1, 0.1);
+    db->scale_wt_generators_power_in_area(1, 0.1);
 
     for(size_t i=0; i!=n; ++i)
     {
@@ -5499,23 +5499,23 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power_in_area()
 
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_scale_pe_source_power_in_zone()
+void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    vector<PE_SOURCE*> sources = db->get_all_pe_sources();
+    vector<WT_GENERATOR*> sources = db->get_all_wt_generators();
     vector< complex<double> > S0;
     size_t n=sources.size();
-    PE_SOURCE* source;
+    WT_GENERATOR* source;
     for(size_t i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
     }
 
-    db->scale_pe_sources_power_in_zone(1, 0.1);
+    db->scale_wt_generators_power_in_zone(1, 0.1);
 
     for(size_t i=0; i!=n; ++i)
     {
@@ -5544,9 +5544,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(db->get_generators_connecting_to_bus(1).size()==2);
     TEST_ASSERT(db->get_generators_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_generators_connecting_to_bus(3).size()==2);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(1).size()==2);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(2).size()==2);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(3).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(1).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(3).size()==2);
@@ -5575,9 +5575,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(db->get_generators_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_generators_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_generators_connecting_to_bus(3).size()==2);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(2).size()==2);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(3).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(3).size()==2);
@@ -5606,9 +5606,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(db->get_generators_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_generators_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_generators_connecting_to_bus(3).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(2).size()==2);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(3).size()==0);
@@ -5636,9 +5636,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(db->get_generators_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_generators_connecting_to_bus(2).size()==0);
     TEST_ASSERT(db->get_generators_connecting_to_bus(3).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(2).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(2).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(3).size()==0);
@@ -5669,7 +5669,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_database()
 
     TEST_ASSERT(db->get_bus_count()==0);
     TEST_ASSERT(db->get_generator_count()==0);
-    TEST_ASSERT(db->get_pe_source_count()==0);
+    TEST_ASSERT(db->get_wt_generator_count()==0);
     TEST_ASSERT(db->get_load_count()==0);
     TEST_ASSERT(db->get_line_count()==0);
     TEST_ASSERT(db->get_transformer_count()==0);
@@ -5692,7 +5692,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_buses()
 
     TEST_ASSERT(db->get_bus_count()==0);
     TEST_ASSERT(db->get_generator_count()==0);
-    TEST_ASSERT(db->get_pe_source_count()==0);
+    TEST_ASSERT(db->get_wt_generator_count()==0);
     TEST_ASSERT(db->get_load_count()==0);
     TEST_ASSERT(db->get_line_count()==0);
     TEST_ASSERT(db->get_transformer_count()==0);
@@ -5796,98 +5796,98 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_generators()
     TEST_ASSERT(db->get_generator_count()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_clear_pe_source()
+void POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    TEST_ASSERT(db->get_pe_source_count()==6);
+    TEST_ASSERT(db->get_wt_generator_count()==6);
 
-    vector<PE_SOURCE*> pesources;
+    vector<WT_GENERATOR*> wt_generators;
 
     DEVICE_ID did;
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    db->clear_pe_source(did);
-    TEST_ASSERT(db->is_pe_source_exist(did)==false);
-    TEST_ASSERT(db->get_pe_source_count()==5);
+    db->clear_wt_generator(did);
+    TEST_ASSERT(db->is_wt_generator_exist(did)==false);
+    TEST_ASSERT(db->get_wt_generator_count()==5);
 
     did.set_device_identifier("#2");
 
-    db->clear_pe_source(did);
-    TEST_ASSERT(db->is_pe_source_exist(did)==false);
-    TEST_ASSERT(db->get_pe_source_count()==4);
+    db->clear_wt_generator(did);
+    TEST_ASSERT(db->is_wt_generator_exist(did)==false);
+    TEST_ASSERT(db->get_wt_generator_count()==4);
 
     terminal.clear();
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    db->clear_pe_source(did);
-    TEST_ASSERT(db->is_pe_source_exist(did)==false);
-    TEST_ASSERT(db->get_pe_source_count()==3);
+    db->clear_wt_generator(did);
+    TEST_ASSERT(db->is_wt_generator_exist(did)==false);
+    TEST_ASSERT(db->get_wt_generator_count()==3);
 
     did.set_device_identifier("#2");
 
-    db->clear_pe_source(did);
-    TEST_ASSERT(db->is_pe_source_exist(did)==false);
-    TEST_ASSERT(db->get_pe_source_count()==2);
+    db->clear_wt_generator(did);
+    TEST_ASSERT(db->is_wt_generator_exist(did)==false);
+    TEST_ASSERT(db->get_wt_generator_count()==2);
 
     terminal.clear();
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    db->clear_pe_source(did);
-    TEST_ASSERT(db->is_pe_source_exist(did)==false);
-    TEST_ASSERT(db->get_pe_source_count()==1);
+    db->clear_wt_generator(did);
+    TEST_ASSERT(db->is_wt_generator_exist(did)==false);
+    TEST_ASSERT(db->get_wt_generator_count()==1);
 
     did.set_device_identifier("#2");
 
-    db->clear_pe_source(did);
-    TEST_ASSERT(db->is_pe_source_exist(did)==false);
-    TEST_ASSERT(db->get_pe_source_count()==0);
+    db->clear_wt_generator(did);
+    TEST_ASSERT(db->is_wt_generator_exist(did)==false);
+    TEST_ASSERT(db->get_wt_generator_count()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_clear_pe_sources_connecting_to_bus()
+void POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generators_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    db->clear_pe_sources_connecting_to_bus(1);
+    db->clear_wt_generators_connecting_to_bus(1);
 
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(2).size()==2);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(3).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==2);
 
-    db->clear_pe_sources_connecting_to_bus(3);
+    db->clear_wt_generators_connecting_to_bus(3);
 
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(2).size()==2);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==0);
 
-    db->clear_pe_sources_connecting_to_bus(2);
+    db->clear_wt_generators_connecting_to_bus(2);
 
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(2).size()==0);
-    TEST_ASSERT(db->get_pe_sources_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_clear_all_pe_sources()
+void POWER_SYSTEM_DATABASE_TEST::test_clear_all_wt_generators()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    db->clear_all_pe_sources();
+    db->clear_all_wt_generators();
 
-    TEST_ASSERT(db->get_pe_source_count()==0);
+    TEST_ASSERT(db->get_wt_generator_count()==0);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_clear_sources_connecting_to_bus()

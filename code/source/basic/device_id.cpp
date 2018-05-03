@@ -51,7 +51,9 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
     device_type = string2upper(device_type);
     if(device_type=="BUS"         ||
        device_type=="GENERATOR"   ||
-       device_type=="PE SOURCE"   ||
+       device_type=="WT GENERATOR" ||
+       device_type=="PV SOURCE"   ||
+       device_type=="BATTERY"     ||
        device_type=="LOAD"        ||
        device_type=="FIXED SHUNT" ||
        device_type=="SWITCHED SHUNT" ||
@@ -103,7 +105,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
     ostringstream sstream;
     sstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
       <<"Allowed device types are: "<<endl
-      <<"GENERATOR/PE SOURCE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
+      <<"GENERATOR, WT GENERATOR, PV SOURCE, BATTERY, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
       <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, MULTI DC, and EQUIVALENT DEVICE."<<endl
       <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp(sstream);
@@ -212,7 +214,8 @@ string DEVICE_ID::get_device_name() const
         return device_name;
     }
 
-    if(name=="GENERATOR" or name=="PE SOURCE" or name=="LOAD" or name=="FIXED SHUNT" or name=="SWITCHED SHUNT" or name=="EQUIVALENT DEVICE")
+    if(name=="GENERATOR" or name=="WT GENERATOR" or name=="PV SOURCE" or name=="BATTERY" or
+       name=="LOAD" or name=="FIXED SHUNT" or name=="SWITCHED SHUNT" or name=="EQUIVALENT DEVICE")
     {
         if(ident=="")
             device_name = name + " ";
@@ -359,10 +362,40 @@ DEVICE_ID get_generator_device_id(size_t bus, string identifier)
     return did;
 }
 
-DEVICE_ID get_pe_source_device_id(size_t bus, string identifier)
+DEVICE_ID get_wt_generator_device_id(size_t bus, string identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
+
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+
+    did.set_device_terminal(terminal);
+
+    did.set_device_identifier(identifier);
+
+    return did;
+}
+
+DEVICE_ID get_pv_source_device_id(size_t bus, string identifier)
+{
+    DEVICE_ID did;
+    did.set_device_type("PV SOURCE");
+
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+
+    did.set_device_terminal(terminal);
+
+    did.set_device_identifier(identifier);
+
+    return did;
+}
+
+DEVICE_ID get_battery_device_id(size_t bus, string identifier)
+{
+    DEVICE_ID did;
+    did.set_device_type("BATTERY");
 
     TERMINAL terminal;
     terminal.append_bus(bus);
@@ -468,3 +501,39 @@ DEVICE_ID get_equivalent_device_id(size_t bus, string identifier)
     return did;
 }
 
+
+
+/*
+std::hash(const DEVICE_ID& did) const
+{
+    TERMINAL terminal  = did.get_device_terminal();
+    vector<size_t> buses = terminal.get_buses();
+    size_t n = buses.size();
+
+    size_t seed = 0;
+    for(size_t i=0; i!=n; ++i)
+        seed += std::hash<std::size_t>{}(buses[i]);
+    seed += std::hash<std::string>{}(did.get_device_identifier());
+
+    return seed;
+}
+namespace std
+{
+    template<> class hash<DEVICE_ID>
+    {
+        size_t operator()(const DEVICE_ID& did) const
+        {
+            TERMINAL terminal  = did.get_device_terminal();
+            vector<size_t> buses = terminal.get_buses();
+            size_t n = buses.size();
+
+            size_t seed = 0;
+            for(size_t i=0; i!=n; ++i)
+                seed += std::hash<std::size_t>{}(buses[i]);
+            seed += std::hash<std::string>{}(did.get_device_identifier());
+
+            return seed;
+        }
+    }
+}
+*/

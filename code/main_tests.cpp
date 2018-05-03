@@ -27,7 +27,7 @@
 #include "header/device/bus_test.h"
 #include "header/device/source_test.h"
 #include "header/device/generator_test.h"
-#include "header/device/pe_source_test.h"
+#include "header/device/wt_generator_test.h"
 #include "header/device/load_test.h"
 #include "header/device/line_test.h"
 #include "header/device/transformer_test.h"
@@ -66,29 +66,29 @@
 
 #include "header/model/model_test.h"
 #include "header/model/source_model/source_model_test.h"
-#include "header/model/source_model/sync_generator_model/sync_generator_model_test.h"
-#include "header/model/source_model/sync_generator_model/gencls_test.h"
-#include "header/model/source_model/sync_generator_model/genrou_test.h"
-#include "header/model/source_model/sync_generator_model/gensal_test.h"
+#include "header/model/sg_models/sync_generator_model/sync_generator_model_test.h"
+#include "header/model/sg_models/sync_generator_model/gencls_test.h"
+#include "header/model/sg_models/sync_generator_model/genrou_test.h"
+#include "header/model/sg_models/sync_generator_model/gensal_test.h"
 
 #include "header/model/compensator_model/COMP_test.h"
 
-#include "header/model/exciter_model/SEXS_test.h"
-#include "header/model/exciter_model/IEEET1_test.h"
-#include "header/model/exciter_model/PSASPE1_test.h"
-#include "header/model/exciter_model/PSASPE2_test.h"
-#include "header/model/exciter_model/CSEET1_test.h"
-#include "header/model/exciter_model/CSEET2_test.h"
-#include "header/model/exciter_model/PSASPE13_test.h"
+#include "header/model/sg_models/exciter_model/SEXS_test.h"
+#include "header/model/sg_models/exciter_model/IEEET1_test.h"
+#include "header/model/sg_models/exciter_model/PSASPE1_test.h"
+#include "header/model/sg_models/exciter_model/PSASPE2_test.h"
+#include "header/model/sg_models/exciter_model/CSEET1_test.h"
+#include "header/model/sg_models/exciter_model/CSEET2_test.h"
+#include "header/model/sg_models/exciter_model/PSASPE13_test.h"
 
-#include "header/model/stabilizer_model/stabilizer_model_test.h"
-#include "header/model/stabilizer_model/IEE2ST_test.h"
+#include "header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
+#include "header/model/sg_models/stabilizer_model/IEE2ST_test.h"
 
-#include "header/model/turbine_governor_model/TGOV1_test.h"
-#include "header/model/turbine_governor_model/IEEEG1_test.h"
-#include "header/model/turbine_governor_model/IEEEG2_test.h"
-#include "header/model/turbine_governor_model/IEEEG3_test.h"
-#include "header/model/turbine_governor_model/IEESGO_test.h"
+#include "header/model/sg_models/turbine_governor_model/TGOV1_test.h"
+#include "header/model/sg_models/turbine_governor_model/IEEEG1_test.h"
+#include "header/model/sg_models/turbine_governor_model/IEEEG2_test.h"
+#include "header/model/sg_models/turbine_governor_model/IEEEG3_test.h"
+#include "header/model/sg_models/turbine_governor_model/IEESGO_test.h"
 
 #include "header/model/load_model/load_model_test.h"
 #include "header/model/load_model/IEEL_test.h"
@@ -101,7 +101,7 @@
 #include "header/model/hvdc_model/CDC6T_test.h"
 
 
-#include "header/model/source_model/pe_source_model/wt3g2_test.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g2_test.h"
 
 #include "header/toolkit/cct_searcher/cct_searcher_test.h"
 
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new BUS_TEST));
         ts.add(unique_ptr<Test::Suite>(new SOURCE_TEST));
         ts.add(unique_ptr<Test::Suite>(new GENERATOR_TEST));
-        ts.add(unique_ptr<Test::Suite>(new PE_SOURCE_TEST));
+        ts.add(unique_ptr<Test::Suite>(new WT_GENERATOR_TEST));
         ts.add(unique_ptr<Test::Suite>(new LOAD_TEST));
         ts.add(unique_ptr<Test::Suite>(new LINE_TEST));
         ts.add(unique_ptr<Test::Suite>(new TRANSFORMER_TEST));

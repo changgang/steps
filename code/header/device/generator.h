@@ -4,11 +4,11 @@
 #include<string>
 #include<complex>
 #include "header/device/source.h"
-#include "header/model/source_model/sync_generator_model/sync_generator_model.h"
+#include "header/model/sg_models/sync_generator_model/sync_generator_model.h"
 #include "header/model/compensator_model/compensator_model.h"
-#include "header/model/exciter_model/exciter_model.h"
-#include "header/model/stabilizer_model/stabilizer_model.h"
-#include "header/model/turbine_governor_model/turbine_governor_model.h"
+#include "header/model/sg_models/exciter_model/exciter_model.h"
+#include "header/model/sg_models/stabilizer_model/stabilizer_model.h"
+#include "header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 
 using namespace std;
 

@@ -30,7 +30,7 @@ class METER_SETTER_TEST : public Test::Suite
         void test_prepare_transformer_related_meters();
         void test_prepare_load_related_meters();
         void test_prepare_generator_related_meters();
-        void test_prepare_pe_source_related_meters();
+        void test_prepare_wt_generator_related_meters();
         void test_prepare_hvdc_related_meters();
         void test_prepare_equivalent_device_related_meters();
 

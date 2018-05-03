@@ -37,7 +37,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
 {
     size_t bus_capacity = 1000;
     size_t generator_capacity = size_t(round(bus_capacity*0.5));
-    size_t pesource_capacity = size_t(round(bus_capacity*0.5));
+    size_t wt_generator_capacity = size_t(round(bus_capacity*0.5));
     size_t load_capacity = size_t(round(bus_capacity*0.5));
     size_t fixedshunt_capacity = size_t(round(bus_capacity*0.5));
     size_t line_capacity = size_t(round(bus_capacity*3.0));
@@ -65,8 +65,8 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
         if(document.HasMember("generator") and document["generator"].IsInt())
             generator_capacity = size_t(document["generator"].GetInt());
 
-        if(document.HasMember("peSource") and document["peSource"].IsInt())
-            pesource_capacity = size_t(document["peSource"].GetInt());
+        if(document.HasMember("wtGenerator") and document["wtGenerator"].IsInt())
+            wt_generator_capacity = size_t(document["wtGenerator"].GetInt());
 
         if(document.HasMember("load") and document["load"].IsInt())
             load_capacity = size_t(document["load"].GetInt());
@@ -104,7 +104,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
 
     set_bus_capacity(bus_capacity);
     set_generator_capacity(generator_capacity);
-    set_pe_source_capacity(pesource_capacity);
+    set_wt_generator_capacity(wt_generator_capacity);
     set_load_capacity(load_capacity);
     set_fixed_shunt_capacity(fixedshunt_capacity);
     set_line_capacity(line_capacity);
@@ -126,9 +126,9 @@ size_t POWER_SYSTEM_DATABASE::get_generator_capacity() const
     return Generator.capacity();
 }
 
-size_t POWER_SYSTEM_DATABASE::get_pe_source_capacity() const
+size_t POWER_SYSTEM_DATABASE::get_wt_generator_capacity() const
 {
-    return PE_Source.capacity();
+    return WT_Generator.capacity();
 }
 
 size_t POWER_SYSTEM_DATABASE::get_load_capacity() const
@@ -186,9 +186,9 @@ void POWER_SYSTEM_DATABASE::set_generator_capacity(size_t n)
     Generator.reserve(n);
 }
 
-void POWER_SYSTEM_DATABASE::set_pe_source_capacity(size_t n)
+void POWER_SYSTEM_DATABASE::set_wt_generator_capacity(size_t n)
 {
-    PE_Source.reserve(n);
+    WT_Generator.reserve(n);
 }
 
 void POWER_SYSTEM_DATABASE::set_load_capacity(size_t n)
@@ -242,7 +242,7 @@ void POWER_SYSTEM_DATABASE::clear_database()
     set_case_title_2("");
     clear_all_buses();
     clear_all_generators();
-    clear_all_pe_sources();
+    clear_all_wt_generators();
     clear_all_loads();
     clear_all_lines();
     clear_all_transformers();
@@ -470,69 +470,69 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
     generator_index.set_device_index(device_id, generator_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_pe_source(PE_SOURCE& pesource)
+void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 {
     ostringstream sstream;
 
-    if(pesource.get_power_system_database()==NULL)
+    if(wt_generator.get_power_system_database()==NULL)
     {
-        pesource.set_power_system_database(this);
+        wt_generator.set_power_system_database(this);
     }
 
-    if(this != pesource.get_power_system_database())
+    if(this != wt_generator.get_power_system_database())
     {
-        POWER_SYSTEM_DATABASE* db = pesource.get_power_system_database();
-        sstream<<"Warning. "<<pesource.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        POWER_SYSTEM_DATABASE* db = wt_generator.get_power_system_database();
+        sstream<<"Warning. "<<wt_generator.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
         show_information_with_leading_time_stamp(sstream);
         return;
     }
 
-    if(not pesource.is_valid())
+    if(not wt_generator.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid wind-turbine genertor to power system database '"<<get_system_name()<<"'.";
+        sstream<<"Warning. Failed to append invalid wt generator to power system database '"<<get_system_name()<<"'.";
         show_information_with_leading_time_stamp(sstream);
         return;
     }
 
 
-    size_t pesource_bus = pesource.get_source_bus();
+    size_t wt_generator_bus = wt_generator.get_source_bus();
 
-    if(not this->is_bus_in_allowed_range(pesource_bus))
+    if(not this->is_bus_in_allowed_range(wt_generator_bus))
     {
-        sstream<<"Warning. Bus "<<pesource_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<pesource.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
-          <<"PE source will not be appended into the database.";
+        sstream<<"Warning. Bus "<<wt_generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<wt_generator.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+          <<"WT generator will not be appended into the database.";
         show_information_with_leading_time_stamp(sstream);
         return;
     }
 
-    string identifier = pesource.get_identifier();
+    string identifier = wt_generator.get_identifier();
     DEVICE_ID device_id;
-    device_id.set_device_type("PE SOURCE");
+    device_id.set_device_type("WT GENERATOR");
     TERMINAL terminal;
-    terminal.append_bus(pesource_bus);
+    terminal.append_bus(wt_generator_bus);
     device_id.set_device_terminal(terminal);
     device_id.set_device_identifier(identifier);
 
-    if(this->is_pe_source_exist(device_id))
+    if(this->is_wt_generator_exist(device_id))
     {
-        sstream<<"Warning. "<<pesource.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': PE_Source."<<endl
+        sstream<<"Warning. "<<wt_generator.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': WT_Generator."<<endl
           <<"Duplicate copy is not allowed.";
         show_information_with_leading_time_stamp(sstream);
         return;
     }
 
-    if(PE_Source.capacity()==PE_Source.size())
+    if(WT_Generator.capacity()==WT_Generator.size())
     {
-        sstream<<"Warning. Capacity limit ("<<PE_Source.capacity()<<") reached when appending pe source to power system database "<<get_system_name()<<"."<<endl
+        sstream<<"Warning. Capacity limit ("<<WT_Generator.capacity()<<") reached when appending WT generator to power system database "<<get_system_name()<<"."<<endl
           <<"Increase capacity by modified steps_config.json.";
         show_information_with_leading_time_stamp(sstream);
         return;
     }
 
-    size_t pesource_count = get_pe_source_count();
-    PE_Source.push_back(pesource);
-    pe_source_index.set_device_index(device_id, pesource_count);
+    size_t wt_generator_count = get_wt_generator_count();
+    WT_Generator.push_back(wt_generator);
+    wt_generator_index.set_device_index(device_id, wt_generator_count);
 }
 
 void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
@@ -1106,9 +1106,9 @@ bool POWER_SYSTEM_DATABASE::is_generator_exist(const DEVICE_ID& device_id) const
     else return true;
 }
 
-bool POWER_SYSTEM_DATABASE::is_pe_source_exist(const DEVICE_ID& device_id) const
+bool POWER_SYSTEM_DATABASE::is_wt_generator_exist(const DEVICE_ID& device_id) const
 {
-    size_t index = get_pe_source_index(device_id);
+    size_t index = get_wt_generator_index(device_id);
     if(index==INDEX_NOT_EXIST) return false;
     else return true;
 }
@@ -1220,18 +1220,18 @@ void POWER_SYSTEM_DATABASE::change_bus_number(size_t original_bus_number, size_t
         generator_index.set_device_index(new_did, index);
     }
 
-    vector<PE_SOURCE*> pesources = get_pe_sources_connecting_to_bus(original_bus_number);
-    size_t npesource = pesources.size();
-    for(size_t i=0; i!=npesource; ++i)
+    vector<WT_GENERATOR*> wt_generators = get_wt_generators_connecting_to_bus(original_bus_number);
+    size_t nwt_generator = wt_generators.size();
+    for(size_t i=0; i!=nwt_generator; ++i)
     {
-        PE_SOURCE* pesource = pesources[i];
-        DEVICE_ID old_did = pesource->get_device_id();
-        size_t index = get_pe_source_index(old_did);
-        pe_source_index.set_device_index(old_did, INDEX_NOT_EXIST);
+        WT_GENERATOR* wt_generator = wt_generators[i];
+        DEVICE_ID old_did = wt_generator->get_device_id();
+        size_t index = get_wt_generator_index(old_did);
+        wt_generator_index.set_device_index(old_did, INDEX_NOT_EXIST);
 
-        pesource->set_source_bus(new_bus_number);
-        DEVICE_ID new_did = pesource->get_device_id();
-        pe_source_index.set_device_index(new_did, index);
+        wt_generator->set_source_bus(new_bus_number);
+        DEVICE_ID new_did = wt_generator->get_device_id();
+        wt_generator_index.set_device_index(new_did, index);
     }
 
     vector<LOAD*> loads = get_loads_connecting_to_bus(original_bus_number);
@@ -1336,8 +1336,8 @@ DEVICE* POWER_SYSTEM_DATABASE::get_device(DEVICE_ID& device_id)
     if(dtype=="GENERATOR")
         return (DEVICE*) get_generator(device_id);
 
-    if(dtype=="PE SOURCE")
-        return (DEVICE*) get_pe_source(device_id);
+    if(dtype=="WT GENERATOR")
+        return (DEVICE*) get_wt_generator(device_id);
 
     if(dtype=="LOAD")
         return (DEVICE*) get_load(device_id);
@@ -1395,11 +1395,11 @@ GENERATOR* POWER_SYSTEM_DATABASE::get_generator(const DEVICE_ID & device_id)
         return NULL;
 }
 
-PE_SOURCE* POWER_SYSTEM_DATABASE::get_pe_source(const DEVICE_ID & device_id)
+WT_GENERATOR* POWER_SYSTEM_DATABASE::get_wt_generator(const DEVICE_ID & device_id)
 {
-    size_t index = pe_source_index.get_index_of_device(device_id);
+    size_t index = wt_generator_index.get_index_of_device(device_id);
     if(index!=INDEX_NOT_EXIST)
-        return &(PE_Source[index]);
+        return &(WT_Generator[index]);
     else
         return NULL;
 }
@@ -1412,7 +1412,7 @@ SOURCE* POWER_SYSTEM_DATABASE::get_source(const DEVICE_ID & device_id)
         return source;
     else
     {
-        source = (SOURCE*) get_pe_source(device_id);
+        source = (SOURCE*) get_wt_generator(device_id);
         return source;
     }
 }
@@ -1555,16 +1555,16 @@ vector<GENERATOR*> POWER_SYSTEM_DATABASE::get_generators_connecting_to_bus(const
     return device;
 }
 
-vector<PE_SOURCE*> POWER_SYSTEM_DATABASE::get_pe_sources_connecting_to_bus(const size_t bus)
+vector<WT_GENERATOR*> POWER_SYSTEM_DATABASE::get_wt_generators_connecting_to_bus(const size_t bus)
 {
-    vector<PE_SOURCE*> device;
+    vector<WT_GENERATOR*> device;
     device.reserve(8);
 
-    size_t n = get_pe_source_count();
+    size_t n = get_wt_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(PE_Source[i].is_connected_to_bus(bus))
-            device.push_back(&(PE_Source[i]));
+        if(WT_Generator[i].is_connected_to_bus(bus))
+            device.push_back(&(WT_Generator[i]));
     }
     return device;
 }
@@ -1573,7 +1573,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_connecting_to_bus(const size_
 {
     vector<SOURCE*> device;
     vector<GENERATOR*> gen_device;
-    vector<PE_SOURCE*> pesource_device;
+    vector<WT_GENERATOR*> wt_generator_device;
     device.reserve(8);
 
     gen_device = get_generators_connecting_to_bus(bus);
@@ -1581,10 +1581,10 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_connecting_to_bus(const size_
     for(size_t i=0; i!=ngens; ++i)
         device.push_back(gen_device[i]);
 
-    pesource_device = get_pe_sources_connecting_to_bus(bus);
-    size_t npesource = pesource_device.size();
-    for(size_t i=0; i!=npesource; ++i)
-        device.push_back(pesource_device[i]);
+    wt_generator_device = get_wt_generators_connecting_to_bus(bus);
+    size_t nwt_generator = wt_generator_device.size();
+    for(size_t i=0; i!=nwt_generator; ++i)
+        device.push_back(wt_generator_device[i]);
 
     return device;
 }
@@ -1699,9 +1699,9 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_generators_device_id_connecting_to_
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_pe_sources_device_id_connecting_to_bus(const size_t bus)
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_wt_generators_device_id_connecting_to_bus(const size_t bus)
 {
-    vector<PE_SOURCE*> devices = get_pe_sources_connecting_to_bus(bus);
+    vector<WT_GENERATOR*> devices = get_wt_generators_connecting_to_bus(bus);
     size_t n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -1872,16 +1872,16 @@ vector<GENERATOR*> POWER_SYSTEM_DATABASE::get_generators_in_area(const size_t ar
     return device;
 }
 
-vector<PE_SOURCE*> POWER_SYSTEM_DATABASE::get_pe_sources_in_area(const size_t area)
+vector<WT_GENERATOR*> POWER_SYSTEM_DATABASE::get_wt_generators_in_area(const size_t area)
 {
-    vector<PE_SOURCE*> device;
+    vector<WT_GENERATOR*> device;
     device.reserve(8);
 
-    size_t n = get_pe_source_count();
+    size_t n = get_wt_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(PE_Source[i].is_in_area(area))
-            device.push_back(&(PE_Source[i]));
+        if(WT_Generator[i].is_in_area(area))
+            device.push_back(&(WT_Generator[i]));
     }
     return device;
 }
@@ -1890,7 +1890,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_area(const size_t area)
 {
     vector<SOURCE*> device;
     vector<GENERATOR*> gen_device;
-    vector<PE_SOURCE*> pesource_device;
+    vector<WT_GENERATOR*> wt_generator_device;
     device.reserve(8);
 
     gen_device = get_generators_in_area(area);
@@ -1898,10 +1898,10 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_area(const size_t area)
     for(size_t i=0; i!=ngens; ++i)
         device.push_back(gen_device[i]);
 
-    pesource_device = get_pe_sources_in_area(area);
-    size_t npesource = pesource_device.size();
-    for(size_t i=0; i!=npesource; ++i)
-        device.push_back(pesource_device[i]);
+    wt_generator_device = get_wt_generators_in_area(area);
+    size_t nwt_generator = wt_generator_device.size();
+    for(size_t i=0; i!=nwt_generator; ++i)
+        device.push_back(wt_generator_device[i]);
 
     return device;
 }
@@ -2028,9 +2028,9 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_generators_device_id_in_area(const 
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_pe_sources_device_id_in_area(const size_t area)
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_wt_generators_device_id_in_area(const size_t area)
 {
-    vector<PE_SOURCE*> devices = get_pe_sources_in_area(area);
+    vector<WT_GENERATOR*> devices = get_wt_generators_in_area(area);
     size_t n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -2200,16 +2200,16 @@ vector<GENERATOR*> POWER_SYSTEM_DATABASE::get_generators_in_zone(const size_t zo
     return device;
 }
 
-vector<PE_SOURCE*> POWER_SYSTEM_DATABASE::get_pe_sources_in_zone(const size_t zone)
+vector<WT_GENERATOR*> POWER_SYSTEM_DATABASE::get_wt_generators_in_zone(const size_t zone)
 {
-    vector<PE_SOURCE*> device;
+    vector<WT_GENERATOR*> device;
     device.reserve(8);
 
-    size_t n = get_pe_source_count();
+    size_t n = get_wt_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(PE_Source[i].is_in_zone(zone))
-            device.push_back(&(PE_Source[i]));
+        if(WT_Generator[i].is_in_zone(zone))
+            device.push_back(&(WT_Generator[i]));
     }
     return device;
 }
@@ -2218,7 +2218,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_zone(const size_t zone)
 {
     vector<SOURCE*> device;
     vector<GENERATOR*> gen_device;
-    vector<PE_SOURCE*> pesource_device;
+    vector<WT_GENERATOR*> wt_generator_device;
     device.reserve(8);
 
     gen_device = get_generators_in_zone(zone);
@@ -2226,10 +2226,10 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_zone(const size_t zone)
     for(size_t i=0; i!=ngens; ++i)
         device.push_back(gen_device[i]);
 
-    pesource_device = get_pe_sources_in_zone(zone);
-    size_t npesource = pesource_device.size();
-    for(size_t i=0; i!=npesource; ++i)
-        device.push_back(pesource_device[i]);
+    wt_generator_device = get_wt_generators_in_zone(zone);
+    size_t nwt_generator = wt_generator_device.size();
+    for(size_t i=0; i!=nwt_generator; ++i)
+        device.push_back(wt_generator_device[i]);
 
     return device;
 }
@@ -2356,9 +2356,9 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_generators_device_id_in_zone(const 
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_pe_sources_device_id_in_zone(const size_t zone)
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_wt_generators_device_id_in_zone(const size_t zone)
 {
-    vector<PE_SOURCE*> devices = get_pe_sources_in_zone(zone);
+    vector<WT_GENERATOR*> devices = get_wt_generators_in_zone(zone);
     size_t n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -2514,13 +2514,13 @@ vector<GENERATOR*> POWER_SYSTEM_DATABASE::get_all_generators()
     return device;
 }
 
-vector<PE_SOURCE*> POWER_SYSTEM_DATABASE::get_all_pe_sources()
+vector<WT_GENERATOR*> POWER_SYSTEM_DATABASE::get_all_wt_generators()
 {
-    vector<PE_SOURCE*> device;
-    size_t n = get_pe_source_count();
+    vector<WT_GENERATOR*> device;
+    size_t n = get_wt_generator_count();
     device.reserve(n);
     for(size_t i=0; i!=n; ++i)
-        device.push_back(&(PE_Source[i]));
+        device.push_back(&(WT_Generator[i]));
     return device;
 }
 
@@ -2528,7 +2528,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_all_sources()
 {
     vector<SOURCE*> device;
     vector<GENERATOR*> gen_device;
-    vector<PE_SOURCE*> pesource_device;
+    vector<WT_GENERATOR*> wt_generator_device;
     device.reserve(get_source_count());
 
     gen_device = get_all_generators();
@@ -2536,10 +2536,10 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_all_sources()
     for(size_t i=0; i!=ngens; ++i)
         device.push_back(gen_device[i]);
 
-    pesource_device = get_all_pe_sources();
-    size_t npesource = pesource_device.size();
-    for(size_t i=0; i!=npesource; ++i)
-        device.push_back(pesource_device[i]);
+    wt_generator_device = get_all_wt_generators();
+    size_t nwt_generator = wt_generator_device.size();
+    for(size_t i=0; i!=nwt_generator; ++i)
+        device.push_back(wt_generator_device[i]);
 
     return device;
 }
@@ -2699,13 +2699,13 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_generators_device_id()
     return dids;
 }
 
-vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_pe_sources_device_id()
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_wt_generators_device_id()
 {
     vector<DEVICE_ID> dids;
-    size_t n=get_pe_source_count();
+    size_t n=get_wt_generator_count();
     dids.reserve(n);
     for(size_t i=0; i!=n; ++i)
-        dids.push_back(PE_Source[i].get_device_id());
+        dids.push_back(WT_Generator[i].get_device_id());
     return dids;
 }
 
@@ -2717,9 +2717,9 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_sources_device_id()
     size_t ngens = get_generator_count();
     for(size_t i=0; i!=ngens; ++i)
         dids.push_back(Generator[i].get_device_id());
-    size_t npesource = get_pe_source_count();
-    for(size_t i=0; i!=npesource; ++i)
-        dids.push_back(PE_Source[i].get_device_id());
+    size_t nwt_generator = get_wt_generator_count();
+    for(size_t i=0; i!=nwt_generator; ++i)
+        dids.push_back(WT_Generator[i].get_device_id());
     return dids;
 }
 
@@ -2841,14 +2841,14 @@ size_t POWER_SYSTEM_DATABASE::get_generator_count() const
     return Generator.size();
 }
 
-size_t POWER_SYSTEM_DATABASE::get_pe_source_count() const
+size_t POWER_SYSTEM_DATABASE::get_wt_generator_count() const
 {
-    return PE_Source.size();
+    return WT_Generator.size();
 }
 
 size_t POWER_SYSTEM_DATABASE::get_source_count() const
 {
-    return get_generator_count()+get_pe_source_count();
+    return get_generator_count()+get_wt_generator_count();
 }
 
 size_t POWER_SYSTEM_DATABASE::get_load_count() const
@@ -2906,9 +2906,9 @@ size_t POWER_SYSTEM_DATABASE::get_generator_index(const DEVICE_ID & device_id) c
     return generator_index.get_index_of_device(device_id);
 }
 
-size_t POWER_SYSTEM_DATABASE::get_pe_source_index(const DEVICE_ID & device_id) const
+size_t POWER_SYSTEM_DATABASE::get_wt_generator_index(const DEVICE_ID & device_id) const
 {
-    return pe_source_index.get_index_of_device(device_id);
+    return wt_generator_index.get_index_of_device(device_id);
 }
 
 size_t POWER_SYSTEM_DATABASE::get_load_index(const DEVICE_ID & device_id) const
@@ -3210,41 +3210,41 @@ void POWER_SYSTEM_DATABASE::scale_generators_power_in_zone(size_t zone_number, d
         scale_source_power(generators[i], scale);
 }
 
-void POWER_SYSTEM_DATABASE::scale_pe_source_power(DEVICE_ID did, double scale)
+void POWER_SYSTEM_DATABASE::scale_wt_generator_power(DEVICE_ID did, double scale)
 {
     scale_source_power(did, scale);
 }
 
-void POWER_SYSTEM_DATABASE::scale_all_pe_sources_power(double scale)
+void POWER_SYSTEM_DATABASE::scale_all_wt_generators_power(double scale)
 {
-    vector<DEVICE_ID> pe_sources = get_all_pe_sources_device_id();
-    size_t n = pe_sources.size();
+    vector<DEVICE_ID> wt_generators = get_all_wt_generators_device_id();
+    size_t n = wt_generators.size();
     for(size_t i=0; i!=n; ++i)
-        scale_pe_source_power(pe_sources[i], scale);
+        scale_wt_generator_power(wt_generators[i], scale);
 }
 
-void POWER_SYSTEM_DATABASE::scale_pe_sources_power_at_bus(size_t bus, double scale)
+void POWER_SYSTEM_DATABASE::scale_wt_generators_power_at_bus(size_t bus, double scale)
 {
-    vector<DEVICE_ID> pe_sources = get_pe_sources_device_id_connecting_to_bus(bus);
-    size_t n = pe_sources.size();
+    vector<DEVICE_ID> wt_generators = get_wt_generators_device_id_connecting_to_bus(bus);
+    size_t n = wt_generators.size();
     for(size_t i=0; i!=n; ++i)
-        scale_source_power(pe_sources[i], scale);
+        scale_source_power(wt_generators[i], scale);
 }
 
-void POWER_SYSTEM_DATABASE::scale_pe_sources_power_in_area(size_t area_number, double scale)
+void POWER_SYSTEM_DATABASE::scale_wt_generators_power_in_area(size_t area_number, double scale)
 {
-    vector<DEVICE_ID> pe_sources = get_pe_sources_device_id_in_area(area_number);
-    size_t n = pe_sources.size();
+    vector<DEVICE_ID> wt_generators = get_wt_generators_device_id_in_area(area_number);
+    size_t n = wt_generators.size();
     for(size_t i=0; i!=n; ++i)
-        scale_source_power(pe_sources[i], scale);
+        scale_source_power(wt_generators[i], scale);
 }
 
-void POWER_SYSTEM_DATABASE::scale_pe_sources_power_in_zone(size_t zone_number, double scale)
+void POWER_SYSTEM_DATABASE::scale_wt_generators_power_in_zone(size_t zone_number, double scale)
 {
-    vector<DEVICE_ID> pe_sources = get_pe_sources_device_id_in_zone(zone_number);
-    size_t n = pe_sources.size();
+    vector<DEVICE_ID> wt_generators = get_wt_generators_device_id_in_zone(zone_number);
+    size_t n = wt_generators.size();
     for(size_t i=0; i!=n; ++i)
-        scale_source_power(pe_sources[i], scale);
+        scale_source_power(wt_generators[i], scale);
 }
 
 void POWER_SYSTEM_DATABASE::clear_bus(size_t bus)
@@ -3252,7 +3252,7 @@ void POWER_SYSTEM_DATABASE::clear_bus(size_t bus)
     if(not is_bus_exist(bus)) return;
 
     clear_generators_connecting_to_bus(bus);
-    clear_pe_sources_connecting_to_bus(bus);
+    clear_wt_generators_connecting_to_bus(bus);
     clear_loads_connecting_to_bus(bus);
     clear_lines_connecting_to_bus(bus);
     clear_transformers_connecting_to_bus(bus);
@@ -3285,7 +3285,7 @@ void POWER_SYSTEM_DATABASE::clear_all_buses()
     bus_index.clear();
 
     clear_all_generators();
-    clear_all_pe_sources();
+    clear_all_wt_generators();
     clear_all_loads();
     clear_all_lines();
     clear_all_transformers();
@@ -3340,57 +3340,57 @@ void POWER_SYSTEM_DATABASE::clear_all_generators()
 }
 
 
-void POWER_SYSTEM_DATABASE::clear_pe_source(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_wt_generator(DEVICE_ID& device_id)
 {
-    if(not is_pe_source_exist(device_id)) return;
+    if(not is_wt_generator_exist(device_id)) return;
 
-    size_t current_index = get_pe_source_index(device_id);
+    size_t current_index = get_wt_generator_index(device_id);
 
-    vector<PE_SOURCE>::iterator iter_pesource = PE_Source.begin();
+    vector<WT_GENERATOR>::iterator iter_wt_generator = WT_Generator.begin();
 
-    std::advance(iter_pesource, current_index);
-    PE_Source.erase(iter_pesource);
-    pe_source_index.set_device_index(device_id, INDEX_NOT_EXIST);
+    std::advance(iter_wt_generator, current_index);
+    WT_Generator.erase(iter_wt_generator);
+    wt_generator_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    pe_source_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    wt_generator_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
 }
 
 
-void POWER_SYSTEM_DATABASE::clear_pe_sources_connecting_to_bus(const size_t bus)
+void POWER_SYSTEM_DATABASE::clear_wt_generators_connecting_to_bus(const size_t bus)
 {
     DEVICE_ID device_id;
     TERMINAL terminal;
-    device_id.set_device_type("PE SOURCE");
+    device_id.set_device_type("WT GENERATOR");
     while(true)
     {
-        vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-        if(pesource.size()==0)
+        vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+        if(wt_generator.size()==0)
             break;
         terminal.clear();
         terminal.append_bus(bus);
         device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(pesource[0]->get_identifier());
-        clear_pe_source(device_id);
+        device_id.set_device_identifier(wt_generator[0]->get_identifier());
+        clear_wt_generator(device_id);
     }
 }
 
-void POWER_SYSTEM_DATABASE::clear_all_pe_sources()
+void POWER_SYSTEM_DATABASE::clear_all_wt_generators()
 {
-    PE_Source.clear();
-    pe_source_index.clear();
+    WT_Generator.clear();
+    wt_generator_index.clear();
 }
 
 
 void POWER_SYSTEM_DATABASE::clear_sources_connecting_to_bus(const size_t bus)
 {
     clear_generators_connecting_to_bus(bus);
-    clear_pe_sources_connecting_to_bus(bus);
+    clear_wt_generators_connecting_to_bus(bus);
 }
 
 void POWER_SYSTEM_DATABASE::clear_all_sources()
 {
     clear_all_generators();
-    clear_all_pe_sources();
+    clear_all_wt_generators();
 }
 
 void POWER_SYSTEM_DATABASE::clear_load(DEVICE_ID& device_id)
@@ -3695,7 +3695,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         }
     }
 
-    vector<PE_SOURCE*> pes = get_pe_sources_connecting_to_bus(bus);
+    vector<WT_GENERATOR*> pes = get_wt_generators_connecting_to_bus(bus);
     n=pes.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -4031,6 +4031,11 @@ double POWER_SYSTEM_DATABASE::get_bus_frequency_in_Hz(size_t bus)
     return get_bus_frequency_deviation_in_Hz(bus)+fbase;
 }
 
+double POWER_SYSTEM_DATABASE::get_bus_frequency_in_pu(size_t bus)
+{
+    return get_bus_frequency_deviation_in_pu(bus)+1.0;
+}
+
 double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(size_t bus)
 {
     BUS* busptr = get_bus(bus);
@@ -4074,21 +4079,21 @@ double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(size
             }
         }
     }
-    index = get_index_of_all_pe_sources_connecting_to_bus(bus);
+    index = get_index_of_all_wt_generators_connecting_to_bus(bus);
     if(not index.empty())
     {
         size_t n = index.size();
         for(size_t i=0; i!=n; ++i)
         {
             size_t j= index[i];
-            if(PE_Source[j].get_status() == false)
+            if(WT_Generator[j].get_status() == false)
                 continue;
 
-            mode = PE_Source[j].get_regulating_mode();
+            mode = WT_Generator[j].get_regulating_mode();
             if(mode != REGULATING_PV and mode != REGULATING_VA)
                 continue;
 
-            voltage = PE_Source[j].get_voltage_to_regulate_in_pu();
+            voltage = WT_Generator[j].get_voltage_to_regulate_in_pu();
             if(v_schedule == 0.0)
                 v_schedule = voltage;
             else
@@ -4096,7 +4101,7 @@ double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(size
                 if(v_schedule != voltage)
                 {
                     ostringstream sstream;
-                    sstream<<"Warning. PE sources at bus %u are regulating different voltages.\n"
+                    sstream<<"Warning. WT generator at bus %u are regulating different voltages.\n"
                                  "The regulating voltage of the first source is returned.", bus);
                     show_information_with_leading_time_stamp(sstream);
                     break;
@@ -4142,15 +4147,15 @@ double POWER_SYSTEM_DATABASE::get_regulatable_p_max_at_physical_bus_in_MW(size_t
     }
 
 
-    vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-    n = pesource.size();
+    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+    n = wt_generator.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(pesource[i]->get_status() == false)
+        if(wt_generator[i]->get_status() == false)
             continue;
 
-        if(pesource[i]->get_regulating_mode()==REGULATING_VA)
-            total_p_max_in_MW += pesource[i]->get_p_max_in_MW();
+        if(wt_generator[i]->get_regulating_mode()==REGULATING_VA)
+            total_p_max_in_MW += wt_generator[i]->get_p_max_in_MW();
     }
     return total_p_max_in_MW;*/
 }
@@ -4187,15 +4192,15 @@ double POWER_SYSTEM_DATABASE::get_regulatable_p_min_at_physical_bus_in_MW(size_t
     }
 
 
-    vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-    n = pesource.size();
+    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+    n = wt_generator.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(pesource[i]->get_status() == false)
+        if(wt_generator[i]->get_status() == false)
             continue;
 
-        if(pesource[i]->get_regulating_mode()==REGULATING_VA)
-            total_p_min_in_MW += pesource[i]->get_p_min_in_MW();
+        if(wt_generator[i]->get_regulating_mode()==REGULATING_VA)
+            total_p_min_in_MW += wt_generator[i]->get_p_min_in_MW();
     }
     return total_p_min_in_MW;*/
 }
@@ -4236,15 +4241,15 @@ double POWER_SYSTEM_DATABASE::get_regulatable_q_max_at_physical_bus_in_MVar(size
             total_q_max_in_MVar += generator[i]->get_q_max_in_MVar();
     }
 
-    vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-    n = pesource.size();
+    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+    n = wt_generator.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(pesource[i]->get_status() == false)
+        if(wt_generator[i]->get_status() == false)
             continue;
-        mode = pesource[i]->get_regulating_mode();
+        mode = wt_generator[i]->get_regulating_mode();
         if(mode==REGULATING_PV or mode==REGULATING_VA)
-            total_q_max_in_MVar += pesource[i]->get_q_max_in_MVar();
+            total_q_max_in_MVar += wt_generator[i]->get_q_max_in_MVar();
     }
     return total_q_max_in_MVar;*/
 }
@@ -4284,15 +4289,15 @@ double POWER_SYSTEM_DATABASE::get_regulatable_q_min_at_physical_bus_in_MVar(size
             total_q_min_in_MVar += generator[i]->get_q_min_in_MVar();
     }
 
-    vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-    n = pesource.size();
+    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+    n = wt_generator.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(pesource[i]->get_status() == false)
+        if(wt_generator[i]->get_status() == false)
             continue;
-        mode = pesource[i]->get_regulating_mode();
+        mode = wt_generator[i]->get_regulating_mode();
         if(mode==REGULATING_PV or mode==REGULATING_VA)
-            total_q_min_in_MVar += pesource[i]->get_q_min_in_MVar();
+            total_q_min_in_MVar += wt_generator[i]->get_q_min_in_MVar();
     }
     return total_q_min_in_MVar;*/
 }
@@ -4335,17 +4340,17 @@ double POWER_SYSTEM_DATABASE::get_total_regulating_p_generation_at_physical_bus_
             total_p_in_MW += generator[i]->get_p_generation_in_MW();
     }
 
-    vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-    n = pesource.size();
+    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+    n = wt_generator.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(pesource[i]->get_status() == false)
+        if(wt_generator[i]->get_status() == false)
             continue;
 
-        mode = pesource[i]->get_regulating_mode();
+        mode = wt_generator[i]->get_regulating_mode();
 
         if(mode == REGULATING_VA)
-            total_p_in_MW += pesource[i]->get_p_generation_in_MW();
+            total_p_in_MW += wt_generator[i]->get_p_generation_in_MW();
     }
     return total_p_in_MW;*/
 }
@@ -4387,15 +4392,15 @@ double POWER_SYSTEM_DATABASE::get_total_regulating_q_generation_at_physical_bus_
             total_q_in_MVar += generator[i]->get_q_generation_in_MVar();
     }
 
-    vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-    n = pesource.size();
+    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+    n = wt_generator.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(pesource[i]->get_status() == false)
+        if(wt_generator[i]->get_status() == false)
             continue;
         mode = generator[i]->get_regulating_mode();
         if(mode==REGULATING_PV or mode == REGULATING_VA)
-            total_q_in_MVar += pesource[i]->get_q_generation_in_MVar();
+            total_q_in_MVar += wt_generator[i]->get_q_generation_in_MVar();
     }
     return total_q_in_MVar;*/
 }
@@ -4429,14 +4434,14 @@ double POWER_SYSTEM_DATABASE::get_total_p_generation_at_physical_bus_in_MW(size_
             total_p_in_MW += generator[i]->get_p_generation_in_MW();
     }
 
-    vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-    n = pesource.size();
+    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+    n = wt_generator.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(pesource[i]->get_status() == false)
+        if(wt_generator[i]->get_status() == false)
             continue;
         else
-            total_p_in_MW += pesource[i]->get_p_generation_in_MW();
+            total_p_in_MW += wt_generator[i]->get_p_generation_in_MW();
     }
     return total_p_in_MW;*/
 }
@@ -4470,14 +4475,14 @@ double POWER_SYSTEM_DATABASE::get_total_q_generation_at_physical_bus_in_MVar(siz
             total_q_in_MVar += generator[i]->get_q_generation_in_MVar();
     }
 
-    vector<PE_SOURCE*> pesource = get_pe_sources_connecting_to_bus(bus);
-    n = pesource.size();
+    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
+    n = wt_generator.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(pesource[i]->get_status() == false)
+        if(wt_generator[i]->get_status() == false)
             continue;
         else
-            total_q_in_MVar += pesource[i]->get_q_generation_in_MVar();
+            total_q_in_MVar += wt_generator[i]->get_q_generation_in_MVar();
     }
     return total_q_in_MVar;*/
 }
@@ -4504,11 +4509,11 @@ complex<double> POWER_SYSTEM_DATABASE::get_total_generation_power_in_MVA()
         if(Generator[i].get_status()==true)
             S += Generator[i].get_complex_generation_in_MVA();
     }
-    n = get_pe_source_count();
+    n = get_wt_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(PE_Source[i].get_status()==true)
-            S += PE_Source[i].get_complex_generation_in_MVA();
+        if(WT_Generator[i].get_status()==true)
+            S += WT_Generator[i].get_complex_generation_in_MVA();
     }
     return S;
 }

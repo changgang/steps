@@ -30,8 +30,9 @@ class SATURATION_BLOCK_TEST : public Test::Suite
         void test_set_get_S1();
         void test_set_get_S2();
         void test_is_saturation_considered();
-        void test_get_saturation_quadratic();
-        void test_get_saturation_exponential();
+        void test_get_saturation_quadratic_type();
+        void test_get_saturation_exponential_type_input_as_base();
+        void test_get_saturation_exponential_type_input_as_exponential();
     private:
         SATURATION_BLOCK* block;
 };

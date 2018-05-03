@@ -13,7 +13,7 @@ class STEPS_API_SEARCH_BUFFER
     public:
         vector<BUS*> buses;                            size_t bus_pointer;
         vector<GENERATOR*> generators;                 size_t generator_pointer;
-        vector<PE_SOURCE*> pe_sources;                 size_t pe_source_pointer;
+        vector<WT_GENERATOR*> wt_generators;                 size_t wt_generator_pointer;
         vector<LOAD*> loads;                           size_t load_pointer;
         vector<FIXED_SHUNT*> fixed_shunts;             size_t fixed_shunt_pointer;
         vector<LINE*> lines;                           size_t line_pointer;
@@ -67,7 +67,7 @@ void api_save_dynamic_data_to_file(char* file, char* file_type);
 
 void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV);
 void api_add_generator(size_t bus_number, char* identifier);
-void api_add_pe_source(size_t bus_number, char* identifier);
+void api_add_wt_generator(size_t bus_number, char* identifier);
 void api_add_load(size_t bus_number, char* identifier);
 void api_add_fixed_shunt(size_t bus_number, char* identifier);
 void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_number, char* identifier);

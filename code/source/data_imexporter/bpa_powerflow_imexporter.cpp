@@ -4,7 +4,7 @@
 #include "header/device/load.h"
 #include "header/device/fixed_shunt.h"
 #include "header/device/generator.h"
-#include "header/device/pe_source.h"
+#include "header/device/wt_generator.h"
 #include "header/device/line.h"
 #include "header/device/transformer.h"
 #include "header/steps_namespace.h"
@@ -58,7 +58,7 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
         {
             char tempc;
             size_t total_bits, decimal_bits;
-            sscanf(format.c_str(),"%c%u.%u",&tempc, &total_bits, &decimal_bits);
+            sscanf(format.c_str(),"%c%llu.%llu",&tempc, &total_bits, &decimal_bits);
 
             data = original_data.substr(0, total_bits-decimal_bits)+"."+ original_data.substr(total_bits-decimal_bits, decimal_bits);
             return data;
@@ -427,7 +427,7 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
     }
     char buffer[1024];
     string sbuffer;
-    map<string, size_t> bus_name_number_pair;
+    unordered_map<string, size_t> bus_name_number_pair;
     vector<string> data;
     while(true)
     {
@@ -440,6 +440,7 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
 
         string bus_name = data[0];
         size_t bus_number = str2int(data[1]);
+        bus_name_number_pair.insert(pair<string, size_t>(bus_name, bus_number));
     }
 }
 
@@ -1004,7 +1005,7 @@ void BPA_IMEXPORTER::load_generator_data()
     }
 }
 
-void BPA_IMEXPORTER::load_pe_source_data()
+void BPA_IMEXPORTER::load_wt_generator_data()
 {
     ;
 }
@@ -1591,7 +1592,7 @@ void BPA_IMEXPORTER::load_transformer_data()
                 max_active_power_into_winding_in_MW_str=format_bpa_data_to_readable_data(max_active_power_into_winding_in_MW_str,"F5.0");
                 double max_active_power_into_winding_in_MW=get_double_data(max_active_power_into_winding_in_MW_str,"0.0");
 
-                double min_active_power_into_winding_in_MW;
+                double min_active_power_into_winding_in_MW = 0.0;
                 if(card_type=="RP")
                     min_active_power_into_winding_in_MW=max_active_power_into_winding_in_MW;
                 if(card_type=="RM")
@@ -1601,8 +1602,8 @@ void BPA_IMEXPORTER::load_transformer_data()
                     min_active_power_into_winding_in_MW=get_double_data(max_active_power_into_winding_in_MW_str,"0.0");
                 }
 
-                TRANSFORMER_WINDING_SIDE winding;
-                double winding_nominal_voltage;
+                TRANSFORMER_WINDING_SIDE winding = PRIMARY_SIDE;
+                double winding_nominal_voltage = 0.0;
                 if(adjustable_end_flag=="1")
                 {
                     winding = PRIMARY_SIDE;
@@ -3143,7 +3144,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         //double rectifier_grid_bus_base_voltage=rectifier_grid_bus->get_base_voltage_in_kV();
         //double inverter_grid_bus_base_voltage=inverter_grid_bus->get_base_voltage_in_kV();
 
-        size_t pole_number;
+        size_t pole_number = 1;
 
         if (hvdc->get_number_of_poles()==SINGLE_POLE) pole_number=1;
         else if (hvdc->get_number_of_poles()==DOUBLE_POLE) pole_number=2;
@@ -3225,7 +3226,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         double rectifier_transformer_min_tap_in_kv=inverter_transformer_min_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
 
         //imexporter inverter data
-        for (int j=0;j<pole_number;j++)
+        for (size_t j=0; j!=pole_number; j++)
         {
             string rectifier_valve_bus_name;
             string inverter_valve_bus_name;
@@ -3266,7 +3267,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             sstream<<endl;
         }
 
-        for (int j=0;j<pole_number;j++)
+        for (size_t j=0; j!=pole_number; j++)
         {
             string inverter_valve_side_bus_name;
 
@@ -3294,7 +3295,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             sstream<<endl;
         }
 
-        for (int j=0;j<pole_number;j++)
+        for (size_t j=0; j != pole_number; j++)
         {
             string inverter_valve_side_bus_name;
 
@@ -3323,7 +3324,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             sstream<<endl;
         }
 
-        for (int j=0;j<pole_number;j++)
+        for (size_t j=0; j!=pole_number; j++)
         {
             string inverter_valve_side_bus_name;
 
@@ -3350,7 +3351,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         }
 
        //imeporter rectifier data
-        for (int j=0;j<pole_number;j++)
+        for (size_t j=0; j!=pole_number; j++)
         {
             string rectifier_valve_side_bus_name;
 
@@ -3378,7 +3379,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             sstream<<endl;
         }
 
-        for (int j=0;j<pole_number;j++)
+        for (size_t j=0; j<pole_number; j++)
         {
             string rectifier_valve_side_bus_name;
 
@@ -3407,7 +3408,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             sstream<<endl;
         }
 
-        for (int j=0;j<pole_number;j++)
+        for (size_t j=0; j!=pole_number; j++)
         {
             string rectifier_valve_side_bus_name;
 

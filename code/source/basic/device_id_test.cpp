@@ -9,7 +9,9 @@ using namespace std;
 DEVICE_ID_TEST::DEVICE_ID_TEST()
 {
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_generator);
-    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_pe_source);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_wt_generator);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_source);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_battery);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_load);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_fixedshunt);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_switchedshunt);
@@ -80,12 +82,42 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_generator()
     TEST_ASSERT(terminal.get_bus_count()==1);
 }
 
-void DEVICE_ID_TEST::test_constructor_and_get_device_type_pe_source()
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_wt_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id->set_device_type("pe source");
-    TEST_ASSERT(device_id->get_device_type()=="PE SOURCE");
+    device_id->set_device_type("wt generator");
+    TEST_ASSERT(device_id->get_device_type()=="WT GENERATOR");
+
+    TEST_ASSERT(device_id->get_minimum_allowed_terminal_count()==1);
+    TEST_ASSERT(device_id->get_maximum_allowed_terminal_count()==1);
+
+    device_id->set_device_terminal(terminal_1_bus);
+    TERMINAL terminal = device_id->get_device_terminal();
+    TEST_ASSERT(terminal.get_bus_count()==1);
+}
+
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_source()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
+
+    device_id->set_device_type("pv source");
+    TEST_ASSERT(device_id->get_device_type()=="PV SOURCE");
+
+    TEST_ASSERT(device_id->get_minimum_allowed_terminal_count()==1);
+    TEST_ASSERT(device_id->get_maximum_allowed_terminal_count()==1);
+
+    device_id->set_device_terminal(terminal_1_bus);
+    TERMINAL terminal = device_id->get_device_terminal();
+    TEST_ASSERT(terminal.get_bus_count()==1);
+}
+
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_battery()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
+
+    device_id->set_device_type("battery");
+    TEST_ASSERT(device_id->get_device_type()=="BATTERY");
 
     TEST_ASSERT(device_id->get_minimum_allowed_terminal_count()==1);
     TEST_ASSERT(device_id->get_maximum_allowed_terminal_count()==1);
@@ -351,11 +383,11 @@ void DEVICE_ID_TEST::test_get_device_name()
 
     device_id->clear();
     terminal.clear();
-    device_id->set_device_type("PE SOURCE");
+    device_id->set_device_type("WT GENERATOR");
     terminal.append_bus(1);
     device_id->set_device_terminal(terminal);
     device_id->set_device_identifier("#1");
-    TEST_ASSERT(device_id->get_device_name()=="PE SOURCE #1 AT BUS 1");
+    TEST_ASSERT(device_id->get_device_name()=="WT GENERATOR #1 AT BUS 1");
 
     device_id->clear();
     terminal.clear();

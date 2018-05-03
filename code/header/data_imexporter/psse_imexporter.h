@@ -34,7 +34,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void load_fixed_shunt_data();
         void load_source_data();
         void load_generator_data(vector<string>& data);
-        void load_pe_source_data(vector<string>& data);
+        void load_wt_generator_data(vector<string>& data);
         void load_source_common_data(vector<string>& data, SOURCE* source);
         void load_line_data();
         void load_transformer_data();
@@ -63,7 +63,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         string export_fixed_shunt_data() const;
         string export_source_data() const;
         string export_generator_data() const;
-        string export_pe_source_data() const;
+        string export_wt_generator_data() const;
         string export_source_common_data() const;
         string export_line_data() const;
         string export_transformer_data() const;
@@ -121,6 +121,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void add_CDC6T_model(string data);
 
         DEVICE_ID get_generator_device_id_from_string(string data);
+        DEVICE_ID get_wt_generator_device_id_from_string(string data);
         DEVICE_ID get_load_device_id_from_string(string data);
         DEVICE_ID get_line_device_id_from_string(string data);
         DEVICE_ID get_hvdc_device_id_from_string(string data);

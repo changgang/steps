@@ -76,7 +76,7 @@ void prepare_basic_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_identifier("3#");
     db->append_generator(generator);
 }
-void prepare_basic_pe_sources(POWER_SYSTEM_DATABASE* db)
+void prepare_basic_wt_generators(POWER_SYSTEM_DATABASE* db)
 {
     ostringstream sstream;
     if(db==NULL)
@@ -89,33 +89,33 @@ void prepare_basic_pe_sources(POWER_SYSTEM_DATABASE* db)
     if(db->get_bus_count()==0)
         prepare_basic_buses(db);
 
-    PE_SOURCE pesource(db);
+    WT_GENERATOR wt_generator(db);
 
-    pesource.set_source_bus(1);
-    pesource.set_identifier("1#");
+    wt_generator.set_source_bus(1);
+    wt_generator.set_identifier("1#");
 
-    pesource.set_status(true);
-    pesource.set_p_generation_in_MW(100.0);
-    pesource.set_q_generation_in_MVar(50.0);
-    pesource.set_p_max_in_MW(200.0);
-    pesource.set_p_min_in_MW(50.0);
-    pesource.set_q_max_in_MVar(100.0);
-    pesource.set_q_min_in_MVar(-100.0);
+    wt_generator.set_status(true);
+    wt_generator.set_p_generation_in_MW(100.0);
+    wt_generator.set_q_generation_in_MVar(50.0);
+    wt_generator.set_p_max_in_MW(200.0);
+    wt_generator.set_p_min_in_MW(50.0);
+    wt_generator.set_q_max_in_MVar(100.0);
+    wt_generator.set_q_min_in_MVar(-100.0);
 
-    db->append_pe_source(pesource);
+    db->append_wt_generator(wt_generator);
 
-    pesource.set_source_bus(2);
-    db->append_pe_source(pesource);
+    wt_generator.set_source_bus(2);
+    db->append_wt_generator(wt_generator);
 
-    pesource.set_source_bus(3);
-    db->append_pe_source(pesource);
+    wt_generator.set_source_bus(3);
+    db->append_wt_generator(wt_generator);
 
-    pesource.set_source_bus(1);
-    pesource.set_identifier("2#");
-    db->append_pe_source(pesource);
+    wt_generator.set_source_bus(1);
+    wt_generator.set_identifier("2#");
+    db->append_wt_generator(wt_generator);
 
-    pesource.set_identifier("3#");
-    db->append_pe_source(pesource);
+    wt_generator.set_identifier("3#");
+    db->append_wt_generator(wt_generator);
 }
 
 void prepare_basic_loads(POWER_SYSTEM_DATABASE* db)

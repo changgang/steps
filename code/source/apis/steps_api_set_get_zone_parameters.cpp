@@ -65,17 +65,7 @@ double api_get_zone_float_data(size_t zone, char* parameter_name)
 
 void api_set_zone_float_data(size_t zone, char* parameter_name, double value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
-
-    ZONE* zoneptr = psdb->get_zone(zone);
-    if(zoneptr!=NULL)
-    {
-        string PARAMETER_NAME = string2upper(parameter_name);
-
-        show_parameter_not_supported_for_area_zone_owner_with_api(PARAMETER_NAME, zone, __FUNCTION__);
-    }
-    else
-        show_area_zone_owner_not_exist_with_api(zone, __FUNCTION__);
+    return;
 }
 
 const char* api_get_zone_string_data(size_t zone, char* parameter_name)
@@ -141,19 +131,5 @@ bool api_get_zone_boolean_data(size_t zone, char* parameter_name)
 
 void api_set_zone_boolean_data(size_t zone, char* parameter_name, bool value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
-
-    ZONE* zoneptr = psdb->get_zone(zone);
-    if(zoneptr!=NULL)
-    {
-        string PARAMETER_NAME = string2upper(parameter_name);
-
-        show_parameter_not_supported_for_area_zone_owner_with_api(PARAMETER_NAME, zone, __FUNCTION__);
-        return;
-    }
-    else
-    {
-        show_area_zone_owner_not_exist_with_api(zone, __FUNCTION__);
-        return;
-    }
+    return;
 }

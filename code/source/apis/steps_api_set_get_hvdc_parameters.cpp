@@ -92,7 +92,7 @@ void api_set_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char*
             }
 
             if(PARAMETER_NAME=="BUS_METER" or PARAMETER_NAME=="METER END BUS NUMBER")
-                return hvdcptr->set_meter_end((value==hvdcptr->get_converter_bus(RECTIFIER)?RECTIFIER:INVERTER));
+                return hvdcptr->set_meter_end((size_t(value)==hvdcptr->get_converter_bus(RECTIFIER)?RECTIFIER:INVERTER));
 
             if(PARAMETER_NAME=="PSIDE" or PARAMETER_NAME=="SIDE TO HOLD POWER")
                 return hvdcptr->set_side_to_hold_power(value==0?RECTIFIER:INVERTER);

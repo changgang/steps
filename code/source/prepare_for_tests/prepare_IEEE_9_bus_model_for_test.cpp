@@ -1,7 +1,7 @@
 #include "header/prepare_for_tests/prepare_models_for_test.h"
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
-#include "header/model/source_model/sync_generator_model/gencls.h"
+#include "header/model/sg_models/sync_generator_model/gencls.h"
 #include "header/model/load_model/IEEL.h"
 
 #include "header/data_imexporter/psse_imexporter.h"

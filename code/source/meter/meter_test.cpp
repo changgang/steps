@@ -22,7 +22,7 @@ METER_TEST::METER_TEST()
     TEST_ADD(METER_TEST::test_set_get_generator_meter_type);
     TEST_ADD(METER_TEST::test_set_get_load_meter_type);
     TEST_ADD(METER_TEST::test_set_get_hvdc_meter_type);
-    TEST_ADD(METER_TEST::test_set_get_pe_source_meter_type);
+    TEST_ADD(METER_TEST::test_set_get_wt_generator_meter_type);
     TEST_ADD(METER_TEST::test_set_get_equivalent_device_meter_type);
     TEST_ADD(METER_TEST::test_set_get_meter_internal_variable_index);
     TEST_ADD(METER_TEST::test_set_get_device_pointer);
@@ -76,10 +76,10 @@ void METER_TEST::setup()
     load.set_identifier("#1");
     db->append_load(load);
 
-    PE_SOURCE pesource(db);
-    pesource.set_source_bus(1);
-    pesource.set_identifier("#1");
-    db->append_pe_source(pesource);
+    WT_GENERATOR wt_generator(db);
+    wt_generator.set_source_bus(1);
+    wt_generator.set_identifier("#1");
+    db->append_wt_generator(wt_generator);
 
     HVDC hvdc(db);
     hvdc.set_converter_bus(RECTIFIER, 1);
@@ -164,13 +164,13 @@ void METER_TEST::test_set_get_device_id_and_type()
     meter->set_device_id(did);
     TEST_ASSERT(meter->get_device_type()=="GENERATOR");
 
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
     meter->set_device_id(did);
-    TEST_ASSERT(meter->get_device_type()=="PE SOURCE");
+    TEST_ASSERT(meter->get_device_type()=="WT GENERATOR");
 
     did.set_device_type("HVDC");
     terminal.clear();
@@ -351,7 +351,7 @@ void METER_TEST::test_set_get_hvdc_meter_type()
 }
 
 
-void METER_TEST::test_set_get_pe_source_meter_type()
+void METER_TEST::test_set_get_wt_generator_meter_type()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
@@ -359,17 +359,17 @@ void METER_TEST::test_set_get_pe_source_meter_type()
     TERMINAL terminal;
     string meter_type;
 
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
     meter->set_device_id(did);
 
-    size_t n = pe_source_meters.size();
+    size_t n = wt_generator_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
-        meter_type = pe_source_meters[i];
+        meter_type = wt_generator_meters[i];
         meter->set_meter_type(meter_type);
         TEST_ASSERT(meter->get_meter_type()==meter_type);
     }
@@ -488,7 +488,7 @@ void METER_TEST::test_set_get_device_pointer()
     TEST_ASSERT(meter->get_device_pointer()->get_device_id()==did);
 
     meter->clear();
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
@@ -653,7 +653,7 @@ void METER_TEST::test_get_generator_meter_value()
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 }
 
-void METER_TEST::test_get_pe_source_meter_value()
+void METER_TEST::test_get_wt_generator_meter_value()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 }

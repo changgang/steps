@@ -169,6 +169,30 @@ DEVICE_ID PSSE_IMEXPORTER::get_generator_device_id_from_string(string data)
     return did;
 }
 
+DEVICE_ID PSSE_IMEXPORTER::get_wt_generator_device_id_from_string(string data)
+{
+    DEVICE_ID did;
+    did.set_device_type("WT GENERATOR");
+
+    vector<string> dyrdata = split_string(data,",");
+    if(dyrdata.size()<3)
+        return did;
+
+    size_t bus;
+    string identifier;
+
+    size_t i=0;
+    bus = get_integer_data(dyrdata[i], "0"); i++; i++;
+    identifier = get_string_data(dyrdata[i],"");
+
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier(identifier);
+
+    return did;
+}
+
 DEVICE_ID PSSE_IMEXPORTER::get_load_device_id_from_string(string data)
 {
     DEVICE_ID did;
@@ -978,5 +1002,6 @@ void PSSE_IMEXPORTER::add_CDC6T_model(string data)
 
 void PSSE_IMEXPORTER::export_dynamic_data(string file)
 {
+    file;
     return;
 }

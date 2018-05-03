@@ -5,7 +5,7 @@
 #include "header/basic/utility.h"
 #include "header/device/generator.h"
 #include "header/device/load.h"
-#include "header/model/source_model/sync_generator_model/gencls.h"
+#include "header/model/sg_models/sync_generator_model/gencls.h"
 
 #include <cstdio>
 #include <iostream>

@@ -6,7 +6,7 @@
 
 void prepare_basic_buses(POWER_SYSTEM_DATABASE* db);
 void prepare_basic_generators(POWER_SYSTEM_DATABASE* db);
-void prepare_basic_pe_sources(POWER_SYSTEM_DATABASE* db);
+void prepare_basic_wt_generators(POWER_SYSTEM_DATABASE* db);
 void prepare_basic_loads(POWER_SYSTEM_DATABASE* db);
 void prepare_basic_lines(POWER_SYSTEM_DATABASE* db);
 void prepare_basic_transformers(POWER_SYSTEM_DATABASE* db);

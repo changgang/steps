@@ -33,7 +33,7 @@ BPA_IMEXPORTER_TEST::BPA_IMEXPORTER_TEST()
     TEST_ADD(BPA_IMEXPORTER_TEST::test_export_powerflow_data);
     /*TEST_ADD(BPA_IMEXPORTER_TEST::test_load_case_data);
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_fixed_shunt_data);
-    TEST_ADD(BPA_IMEXPORTER_TEST::test_load_pe_source_data);
+    TEST_ADD(BPA_IMEXPORTER_TEST::test_load_wt_generator_data);
 
     TEST_ADD(BPA_IMEXPORTER_TEST::test_load_dynamic_data);
     */
@@ -287,52 +287,52 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
     TEST_ASSERT(fabs(gen->get_q_min_in_MVar()-(-75.0))<FLOAT_EPSILON);
 }
 
-void BPA_IMEXPORTER_TEST::test_load_pe_source_data()
+void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
     ostringstream sstream;
 
-    vector<PE_SOURCE*> pesources = db->get_all_pe_sources();
-    size_t n = pesources.size();
+    vector<WT_GENERATOR*> wt_generators = db->get_all_wt_generators();
+    size_t n = wt_generators.size();
 
     TEST_ASSERT(n==3);
 
     DEVICE_ID did;
-    did.set_device_type("PE SOURCE");
+    did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
     terminal.append_bus(9154);
 
     did.set_device_terminal(terminal);
     did.set_device_identifier("W1");
 
-    PE_SOURCE* pesource = db->get_pe_source(did);
-    TEST_ASSERT(pesource->get_source_bus()==9154);
-    TEST_ASSERT(pesource->get_identifier()=="W1");
-    TEST_ASSERT(pesource->get_status()==true);
-    TEST_ASSERT(pesource->get_mbase_in_MVA()==12.0);
-    TEST_ASSERT(fabs(pesource->get_p_generation_in_MW()-10.8)<FLOAT_EPSILON);
+    WT_GENERATOR* wt_generator = db->get_wt_generator(did);
+    TEST_ASSERT(wt_generator->get_source_bus()==9154);
+    TEST_ASSERT(wt_generator->get_identifier()=="W1");
+    TEST_ASSERT(wt_generator->get_status()==true);
+    TEST_ASSERT(wt_generator->get_mbase_in_MVA()==12.0);
+    TEST_ASSERT(fabs(wt_generator->get_p_generation_in_MW()-10.8)<FLOAT_EPSILON);
     //TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-2.193034)<FLOAT_EPSILON); // this one is the constant pf Q
-    TEST_ASSERT(fabs(pesource->get_p_max_in_MW()-10.8)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pesource->get_p_min_in_MW()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pesource->get_q_max_in_MVar()-2.193)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pesource->get_q_min_in_MVar()-(-2.193))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_p_max_in_MW()-10.8)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_p_min_in_MW()-0.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_q_max_in_MVar()-2.193)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_q_min_in_MVar()-(-2.193))<FLOAT_EPSILON);
 
     terminal.clear();
     terminal.append_bus(93002);
     did.set_device_terminal(terminal);
     did.set_device_identifier("W3");
-    pesource = db->get_pe_source(did);
-    TEST_ASSERT(pesource->get_source_bus()==93002);
-    TEST_ASSERT(pesource->get_identifier()=="W3");
-    TEST_ASSERT(pesource->get_status()==true);
-    TEST_ASSERT(pesource->get_mbase_in_MVA()==4.0);
-    TEST_ASSERT(fabs(pesource->get_p_generation_in_MW()-3.24)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pesource->get_q_generation_in_MVar()-(-1.475))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pesource->get_p_max_in_MW()-3.6)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pesource->get_p_min_in_MW()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pesource->get_q_max_in_MVar()-(-1.475))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pesource->get_q_min_in_MVar()-(-1.475))<FLOAT_EPSILON);
+    wt_generator = db->get_wt_generator(did);
+    TEST_ASSERT(wt_generator->get_source_bus()==93002);
+    TEST_ASSERT(wt_generator->get_identifier()=="W3");
+    TEST_ASSERT(wt_generator->get_status()==true);
+    TEST_ASSERT(wt_generator->get_mbase_in_MVA()==4.0);
+    TEST_ASSERT(fabs(wt_generator->get_p_generation_in_MW()-3.24)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_q_generation_in_MVar()-(-1.475))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_p_max_in_MW()-3.6)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_p_min_in_MW()-0.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_q_max_in_MVar()-(-1.475))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_q_min_in_MVar()-(-1.475))<FLOAT_EPSILON);
 }
 
 void BPA_IMEXPORTER_TEST::test_load_line_data()

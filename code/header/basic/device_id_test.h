@@ -23,7 +23,9 @@ class DEVICE_ID_TEST : public Test::Suite
     private:
         void test_constructor_and_get_device_type_generator();
 
-        void test_constructor_and_get_device_type_pe_source();
+        void test_constructor_and_get_device_type_wt_generator();
+        void test_constructor_and_get_device_type_pv_source();
+        void test_constructor_and_get_device_type_battery();
 
         void test_constructor_and_get_device_type_load();
 

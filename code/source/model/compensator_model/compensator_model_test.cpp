@@ -1,5 +1,5 @@
 #include "header/model/compensator_model/compensator_model_test.h"
-#include "header/model/source_model/sync_generator_model/genrou.h"
+#include "header/model/sg_models/sync_generator_model/genrou.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 

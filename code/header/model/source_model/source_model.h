@@ -3,7 +3,7 @@
 
 #include "header/model/model.h"
 #include <complex>
-class SOURCE_MODEL : public MODEL
+class SOURCE_MODEL : virtual public MODEL
 {
     public:
         SOURCE_MODEL();

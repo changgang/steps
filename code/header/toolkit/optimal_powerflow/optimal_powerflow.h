@@ -89,7 +89,7 @@ class OPTIMAL_POWERFLOW
         void add_load_to_bus_power_mismatch();
         void add_hvdc_to_bus_power_mismatch();
         void add_generator_to_bus_power_mismatch();
-        void add_pe_source_to_bus_power_mismatch();
+        void add_wt_generator_to_bus_power_mismatch();
 
         void extract_bus_power_mismatch_for_solution();
 

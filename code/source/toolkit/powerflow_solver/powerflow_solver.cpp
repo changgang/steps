@@ -453,9 +453,9 @@ void POWERFLOW_SOLVER::initialize_bus_type_and_voltage_to_regulate()
         set_bus_type_and_voltage_to_regulate_with_source(*(generators[i]));
 
     vector<
-    size_t npesource = get_pe_source_count();
-    for(size_t i=0; i!=npesource; ++i)
-        set_bus_type_and_voltage_to_regulate_with_source(*(pesources[i]));
+    size_t nwt_generator = get_wt_generator_count();
+    for(size_t i=0; i!=nwt_generator; ++i)
+        set_bus_type_and_voltage_to_regulate_with_source(*(wt_generators[i]));
     */
 }
 
@@ -1714,16 +1714,16 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;
     }
 
-    file<<"% PE Source"<<endl;
+    file<<"% WT generator"<<endl;
     file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
-    vector<PE_SOURCE*> pe_sources = db->get_all_pe_sources();
-    size_t nsource = pe_sources.size();
+    vector<WT_GENERATOR*> wt_generators = db->get_all_wt_generators();
+    size_t nsource = wt_generators.size();
     for(size_t i=0; i!=nsource; ++i)
     {
-        size_t bus = pe_sources[i]->get_source_bus();
-        file<<bus<<",\""<<pe_sources[i]->get_identifier()<<"\","
-            <<setprecision(6)<<fixed<<pe_sources[i]->get_p_generation_in_MW()<<","
-            <<setprecision(6)<<fixed<<pe_sources[i]->get_q_generation_in_MVar()<<","
+        size_t bus = wt_generators[i]->get_source_bus();
+        file<<bus<<",\""<<wt_generators[i]->get_identifier()<<"\","
+            <<setprecision(6)<<fixed<<wt_generators[i]->get_p_generation_in_MW()<<","
+            <<setprecision(6)<<fixed<<wt_generators[i]->get_q_generation_in_MVar()<<","
             <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;
     }
 

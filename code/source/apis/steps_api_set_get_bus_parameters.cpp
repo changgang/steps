@@ -279,18 +279,5 @@ bool api_get_bus_boolean_data(size_t bus, char* parameter_name)
 
 void api_set_bus_boolean_data(size_t bus, char* parameter_name, bool value)
 {
-    DEVICE_ID did = get_bus_device_id(bus);
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
-
-    BUS* busptr = psdb->get_bus(bus);
-    if(busptr!=NULL)
-    {
-        string PARAMETER_NAME = string2upper(parameter_name);
-
-        show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
-        return;
-    }
-    else
-        show_device_not_exist_with_api(did, __FUNCTION__);
+    return;
 }

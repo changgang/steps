@@ -6,16 +6,16 @@
 
 int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_name)
 {
-    DEVICE_ID generator_did, pe_source_did;
+    DEVICE_ID generator_did, wt_generator_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_pe_source_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
-        sourceptr = psdb->get_source(pe_source_did);
+        sourceptr = psdb->get_source(wt_generator_did);
 
     if(sourceptr!=NULL)
     {
@@ -46,7 +46,7 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
     else
     {
         ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<pe_source_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
+        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"0 will be returned.";
         show_information_with_leading_time_stamp(sstream);
         return 0;
@@ -55,16 +55,16 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
 
 void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_name, int value)
 {
-    DEVICE_ID generator_did, pe_source_did;
+    DEVICE_ID generator_did, wt_generator_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_pe_source_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
-        sourceptr = psdb->get_source(pe_source_did);
+        sourceptr = psdb->get_source(wt_generator_did);
 
     if(sourceptr!=NULL)
     {
@@ -103,7 +103,7 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
     else
     {
         ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<pe_source_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
+        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
                <<"Nothing will be set.";
         show_information_with_leading_time_stamp(sstream);
     }
@@ -112,16 +112,16 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
 
 double api_get_source_float_data(size_t bus, char* identifier, char* parameter_name)
 {
-    DEVICE_ID generator_did, pe_source_did;
+    DEVICE_ID generator_did, wt_generator_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_pe_source_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
-        sourceptr = psdb->get_source(pe_source_did);
+        sourceptr = psdb->get_source(wt_generator_did);
 
     if(sourceptr!=NULL)
     {
@@ -162,7 +162,7 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
     else
     {
         ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<pe_source_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
+        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"0.0 will be returned.";
         show_information_with_leading_time_stamp(sstream);
         return 0.0;
@@ -171,16 +171,16 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
 
 void api_set_source_float_data(size_t bus, char* identifier, char* parameter_name, double value)
 {
-    DEVICE_ID generator_did, pe_source_did;
+    DEVICE_ID generator_did, wt_generator_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_pe_source_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
-        sourceptr = psdb->get_source(pe_source_did);
+        sourceptr = psdb->get_source(wt_generator_did);
 
     if(sourceptr!=NULL)
     {
@@ -225,7 +225,7 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
     else
     {
         ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<pe_source_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
+        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
                <<"Nothing will be set.";
         show_information_with_leading_time_stamp(sstream);
     }
@@ -233,9 +233,9 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
 
 const char* api_get_source_string_data(size_t bus, char* identifier, char* parameter_name)
 {
-    DEVICE_ID generator_did, pe_source_did;
+    DEVICE_ID generator_did, wt_generator_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_pe_source_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -244,7 +244,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
-        sourceptr = psdb->get_source(pe_source_did);
+        sourceptr = psdb->get_source(wt_generator_did);
 
     if(sourceptr!=NULL)
     {
@@ -258,7 +258,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     else
     {
         ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<pe_source_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
+        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"EMPTY STRING will be returned.";
         show_information_with_leading_time_stamp(sstream);
         return BLANK.c_str();
@@ -268,16 +268,16 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
 
 void api_set_source_string_data(size_t bus, char* identifier, char* parameter_name, char* value)
 {
-    DEVICE_ID generator_did, pe_source_did;
+    DEVICE_ID generator_did, wt_generator_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_pe_source_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
-        sourceptr = psdb->get_source(pe_source_did);
+        sourceptr = psdb->get_source(wt_generator_did);
 
     if(sourceptr!=NULL)
     {
@@ -291,7 +291,7 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
     else
     {
         ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<pe_source_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
+        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
                <<"Nothing will be set.";
         show_information_with_leading_time_stamp(sstream);
     }
@@ -299,16 +299,16 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
 
 bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_name)
 {
-    DEVICE_ID generator_did, pe_source_did;
+    DEVICE_ID generator_did, wt_generator_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_pe_source_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
-        sourceptr = psdb->get_source(pe_source_did);
+        sourceptr = psdb->get_source(wt_generator_did);
 
     if(sourceptr!=NULL)
     {
@@ -323,7 +323,7 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     else
     {
         ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<pe_source_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
+        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"False will be returned.";
         show_information_with_leading_time_stamp(sstream);
         return false;
@@ -333,16 +333,16 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
 
 void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value)
 {
-    DEVICE_ID generator_did, pe_source_did;
+    DEVICE_ID generator_did, wt_generator_did;
     generator_did = get_generator_device_id(bus, identifier);
-    pe_source_did = get_pe_source_device_id(bus, identifier);
+    wt_generator_did = get_wt_generator_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
-        sourceptr = psdb->get_source(pe_source_did);
+        sourceptr = psdb->get_source(wt_generator_did);
 
     if(sourceptr!=NULL)
     {
@@ -357,7 +357,7 @@ void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     else
     {
         ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<pe_source_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
+        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
                <<"Nothing will be set.";
         show_information_with_leading_time_stamp(sstream);
     }

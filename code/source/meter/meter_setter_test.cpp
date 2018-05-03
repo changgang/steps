@@ -602,7 +602,7 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     TEST_ASSERT(meter.get_internal_variable_index()==5);
 }
 
-void METER_SETTER_TEST::test_prepare_pe_source_related_meters()
+void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
 }

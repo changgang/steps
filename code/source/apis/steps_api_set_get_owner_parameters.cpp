@@ -65,17 +65,7 @@ double api_get_owner_float_data(size_t owner, char* parameter_name)
 
 void api_set_owner_float_data(size_t owner, char* parameter_name, double value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
-
-    OWNER* ownerptr = psdb->get_owner(owner);
-    if(ownerptr!=NULL)
-    {
-        string PARAMETER_NAME = string2upper(parameter_name);
-
-        show_parameter_not_supported_for_area_zone_owner_with_api(PARAMETER_NAME, owner, __FUNCTION__);
-    }
-    else
-        show_area_zone_owner_not_exist_with_api(owner, __FUNCTION__);
+    return;
 }
 
 const char* api_get_owner_string_data(size_t owner, char* parameter_name)
@@ -141,19 +131,5 @@ bool api_get_owner_boolean_data(size_t owner, char* parameter_name)
 
 void api_set_owner_boolean_data(size_t owner, char* parameter_name, bool value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
-
-    OWNER* ownerptr = psdb->get_owner(owner);
-    if(ownerptr!=NULL)
-    {
-        string PARAMETER_NAME = string2upper(parameter_name);
-
-        show_parameter_not_supported_for_area_zone_owner_with_api(PARAMETER_NAME, owner, __FUNCTION__);
-        return;
-    }
-    else
-    {
-        show_area_zone_owner_not_exist_with_api(owner, __FUNCTION__);
-        return;
-    }
+    return;
 }

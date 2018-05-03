@@ -33,7 +33,7 @@ class BPA_IMEXPORTER_TEST : public Test::Suite
         void test_load_load_and_fixed_shunt_data();
         void test_load_fixed_shunt_data();
         void test_load_generator_data();
-        void test_load_pe_source_data();
+        void test_load_wt_generator_data();
         void test_load_line_data();
         void test_load_transformer_data();
         void test_load_hvdc_data();

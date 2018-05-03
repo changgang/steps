@@ -144,7 +144,7 @@ class METER_SETTER
         bool prepare_transformer_meter(METER& meter, const DEVICE_ID& device_id, size_t side_bus);
         bool prepare_load_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_generator_meter(METER& meter, const DEVICE_ID& device_id);
-        bool prepare_pe_source_meter(METER& meter, const DEVICE_ID& device_id);
+        bool prepare_wt_generator_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_equivalent_device_meter(METER& meter, const DEVICE_ID& device_id);
 

@@ -4,7 +4,7 @@
 #include "header/device/load.h"
 #include "header/device/fixed_shunt.h"
 #include "header/device/generator.h"
-#include "header/device/pe_source.h"
+#include "header/device/wt_generator.h"
 #include "header/device/line.h"
 #include "header/device/transformer.h"
 #include "header/steps_namespace.h"
@@ -447,7 +447,7 @@ void PSSE_IMEXPORTER::load_source_data()
             if(var_control_mode == 0)
                 load_generator_data(data);
             else
-                load_pe_source_data(data);
+                load_wt_generator_data(data);
         }
     }
 }
@@ -473,13 +473,13 @@ void PSSE_IMEXPORTER::load_generator_data(vector<string>& data)
     psdb->append_generator(generator);
 }
 
-void PSSE_IMEXPORTER::load_pe_source_data(vector<string>& data)
+void PSSE_IMEXPORTER::load_wt_generator_data(vector<string>& data)
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
-    PE_SOURCE pesource(psdb);
+    WT_GENERATOR wt_generator(psdb);
 
-    load_source_common_data(data, &pesource);
+    load_source_common_data(data, &wt_generator);
 
     int var_control_mode = 1;
     double pf;
@@ -487,9 +487,9 @@ void PSSE_IMEXPORTER::load_pe_source_data(vector<string>& data)
     {
         var_control_mode = get_integer_data(data.front(),"1");
         if(var_control_mode == 1)
-            pesource.set_regulating_mode(REGULATING_PV);
+            wt_generator.set_regulating_mode(REGULATING_PV);
         if(var_control_mode == 2 or var_control_mode == 3)
-            pesource.set_regulating_mode(REGULATING_PQ);
+            wt_generator.set_regulating_mode(REGULATING_PQ);
         data.erase(data.begin());
     }
     if(data.size()>0)
@@ -497,13 +497,13 @@ void PSSE_IMEXPORTER::load_pe_source_data(vector<string>& data)
         pf = get_double_data(data.front(),"1.0");
         if(var_control_mode==2)
         {
-            double p = pesource.get_p_generation_in_MW();
+            double p = wt_generator.get_p_generation_in_MW();
             double q = p/pf*sqrt(1.0-pf*pf);
-            pesource.set_q_generation_in_MVar(q);
+            wt_generator.set_q_generation_in_MVar(q);
         }
         data.erase(data.begin());
     }
-    psdb->append_pe_source(pesource);
+    psdb->append_wt_generator(wt_generator);
 }
 
 void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* source)
@@ -650,7 +650,6 @@ void PSSE_IMEXPORTER::load_line_data()
     vector<string> data;
 
     size_t ndata = DATA.size();
-    size_t ncount;
     size_t n=0;
     double r = 0.0, x = 0.0, g = 0.0, b = 0.0;
     int status;
@@ -662,7 +661,6 @@ void PSSE_IMEXPORTER::load_line_data()
         LINE line(psdb);
 
         data = split_string(str,",");
-        ncount = data.size();
 
         if(data.size()>0)
         {
@@ -1978,7 +1976,7 @@ string PSSE_IMEXPORTER::export_source_data() const
 {
     ostringstream sstream;
     sstream<<export_generator_data();
-    sstream<<export_pe_source_data();
+    sstream<<export_wt_generator_data();
 
     return sstream.str();
 }
@@ -2034,57 +2032,57 @@ string PSSE_IMEXPORTER::export_generator_data() const
     return sstream.str();
 }
 
-string PSSE_IMEXPORTER::export_pe_source_data() const
+string PSSE_IMEXPORTER::export_wt_generator_data() const
 {
     ostringstream sstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No pe source data will be exported.";
+        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No WT generator data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
 
-    vector<PE_SOURCE*> pesources = psdb->get_all_pe_sources();
-    size_t n = pesources.size();
+    vector<WT_GENERATOR*> wt_generators = psdb->get_all_wt_generators();
+    size_t n = wt_generators.size();
     for(size_t i=0; i!=n; ++i)
     {
-        PE_SOURCE* pesource = pesources[i];
+        WT_GENERATOR* wt_generator = wt_generators[i];
 
-        double p = pesource->get_p_generation_in_MW();
-        double q = pesource->get_q_generation_in_MVar();
+        double p = wt_generator->get_p_generation_in_MW();
+        double q = wt_generator->get_q_generation_in_MVar();
         double pf = p/sqrt(p*p+q*q);
 
 
         sstream<<right
-               <<setw(8)<<pesource->get_source_bus()<<", "
+               <<setw(8)<<wt_generator->get_source_bus()<<", "
                <<"\""<<left
-               <<setw(2)<<pesource->get_identifier()<<"\""<<", "
+               <<setw(2)<<wt_generator->get_identifier()<<"\""<<", "
                <<right
-               <<setw(12)<<setprecision(6)<<fixed<<pesource->get_p_generation_in_MW()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<pesource->get_q_generation_in_MVar()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<pesource->get_q_max_in_MVar()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<pesource->get_q_min_in_MVar()<<", "
-               <<setw(8)<<setprecision(6)<<fixed<<pesource->get_voltage_to_regulate_in_pu()<<", ";
-        if(pesource->get_bus_to_regulate()==pesource->get_source_bus())
+               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_generation_in_MW()<<", "
+               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_q_generation_in_MVar()<<", "
+               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_q_max_in_MVar()<<", "
+               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_q_min_in_MVar()<<", "
+               <<setw(8)<<setprecision(6)<<fixed<<wt_generator->get_voltage_to_regulate_in_pu()<<", ";
+        if(wt_generator->get_bus_to_regulate()==wt_generator->get_source_bus())
             sstream<<setw(8)<<0<<", ";
         else
-            sstream<<setw(8)<<pesource->get_bus_to_regulate()<<", ";
-        sstream<<setw(10)<<setprecision(4)<<fixed<<pesource->get_mbase_in_MVA()<<", "
-               <<setw(9)<<setprecision(6)<<fixed<<pesource->get_source_impedance_in_pu().real()<<", "
-               <<setw(9)<<setprecision(6)<<fixed<<pesource->get_source_impedance_in_pu().imag()<<", "
+            sstream<<setw(8)<<wt_generator->get_bus_to_regulate()<<", ";
+        sstream<<setw(10)<<setprecision(4)<<fixed<<wt_generator->get_mbase_in_MVA()<<", "
+               <<setw(9)<<setprecision(6)<<fixed<<wt_generator->get_source_impedance_in_pu().real()<<", "
+               <<setw(9)<<setprecision(6)<<fixed<<wt_generator->get_source_impedance_in_pu().imag()<<", "
                <<setprecision(2)<<0.0<<", "<<0.0<<", "<<1.0<<", "
-               <<pesource->get_status()<<","
+               <<wt_generator->get_status()<<","
                <<setprecision(2)<<100.0<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<pesource->get_p_max_in_MW()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<pesource->get_p_min_in_MW()<<", ";
-        if(pesource->get_owner_count()==0)
+               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_max_in_MW()<<", "
+               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_min_in_MW()<<", ";
+        if(wt_generator->get_owner_count()==0)
             sstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
         else
-            sstream<<setprecision(0)<<pesource->get_owner_of_index(0)<<", "<<setprecision(6)<<pesource->get_fraction_of_owner_of_index(0)<<", "
-              <<setprecision(0)<<pesource->get_owner_of_index(1)<<", "<<setprecision(6)<<pesource->get_fraction_of_owner_of_index(1)<<", "
-              <<setprecision(0)<<pesource->get_owner_of_index(2)<<", "<<setprecision(6)<<pesource->get_fraction_of_owner_of_index(2)<<", "
-              <<setprecision(0)<<pesource->get_owner_of_index(3)<<", "<<setprecision(6)<<pesource->get_fraction_of_owner_of_index(3)<<", ";
+            sstream<<setprecision(0)<<wt_generator->get_owner_of_index(0)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(0)<<", "
+              <<setprecision(0)<<wt_generator->get_owner_of_index(1)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(1)<<", "
+              <<setprecision(0)<<wt_generator->get_owner_of_index(2)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(2)<<", "
+              <<setprecision(0)<<wt_generator->get_owner_of_index(3)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(3)<<", ";
 
         sstream<<"1, "<<setprecision(6)<<pf<<endl;
     }

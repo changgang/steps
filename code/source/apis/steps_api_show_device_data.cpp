@@ -33,14 +33,14 @@ void api_show_device_data(const char* device_type)
         }
     }
 
-    if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="PE SOURCE")
+    if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="WT GENERATOR")
     {
-        vector<PE_SOURCE*> sources = psdb->get_all_pe_sources();
+        vector<WT_GENERATOR*> sources = psdb->get_all_wt_generators();
         size_t n = sources.size();
 
         for(size_t i=0; i!=n; ++i)
         {
-            PE_SOURCE* sourceptr = sources[i];
+            WT_GENERATOR* sourceptr = sources[i];
             sourceptr->report();
         }
     }

@@ -3,7 +3,7 @@
 
 #include "header/device/bus.h"
 #include "header/device/generator.h"
-#include "header/device/pe_source.h"
+#include "header/device/wt_generator.h"
 #include "header/device/load.h"
 #include "header/device/line.h"
 #include "header/device/transformer.h"
@@ -17,10 +17,10 @@
 #include "header/basic/bus_index.h"
 #include "header/basic/device_index_map.h"
 
-#include "header/model/source_model/sync_generator_model/sync_generator_model.h"
-#include "header/model/exciter_model/exciter_model.h"
-#include "header/model/stabilizer_model/stabilizer_model.h"
-#include "header/model/turbine_governor_model/turbine_governor_model.h"
+#include "header/model/sg_models/sync_generator_model/sync_generator_model.h"
+#include "header/model/sg_models/exciter_model/exciter_model.h"
+#include "header/model/sg_models/stabilizer_model/stabilizer_model.h"
+#include "header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 
 #include <string>
 
@@ -37,7 +37,7 @@ class POWER_SYSTEM_DATABASE
 
         size_t get_bus_capacity() const;
         size_t get_generator_capacity() const;
-        size_t get_pe_source_capacity() const;
+        size_t get_wt_generator_capacity() const;
         size_t get_load_capacity() const;
         size_t get_fixed_shunt_capacity() const;
         size_t get_line_capacity() const;
@@ -50,7 +50,7 @@ class POWER_SYSTEM_DATABASE
 
         void set_bus_capacity(size_t n);
         void set_generator_capacity(size_t n);
-        void set_pe_source_capacity(size_t n);
+        void set_wt_generator_capacity(size_t n);
         void set_load_capacity(size_t n);
         void set_fixed_shunt_capacity(size_t n);
         void set_line_capacity(size_t n);
@@ -84,7 +84,7 @@ class POWER_SYSTEM_DATABASE
 
         void append_bus(BUS& bus);
         void append_generator(GENERATOR& generator);
-        void append_pe_source(PE_SOURCE& pesource);
+        void append_wt_generator(WT_GENERATOR& wt_generator);
         void append_load(LOAD& load);
         void append_line(LINE& line);
         void append_transformer(TRANSFORMER& transformer);
@@ -97,7 +97,7 @@ class POWER_SYSTEM_DATABASE
 
         bool is_bus_exist(size_t bus) const;
         bool is_generator_exist(const DEVICE_ID& device_id) const;
-        bool is_pe_source_exist(const DEVICE_ID& device_id) const;
+        bool is_wt_generator_exist(const DEVICE_ID& device_id) const;
         bool is_load_exist(const DEVICE_ID& device_id) const;
         bool is_line_exist(const DEVICE_ID& device_id) const;
         bool is_transformer_exist(const DEVICE_ID& device_id) const;
@@ -114,7 +114,7 @@ class POWER_SYSTEM_DATABASE
         BUS* get_bus(size_t bus);
         BUS* get_bus(const DEVICE_ID & device_id);
         GENERATOR* get_generator(const DEVICE_ID & device_id);
-        PE_SOURCE* get_pe_source(const DEVICE_ID & device_id);
+        WT_GENERATOR* get_wt_generator(const DEVICE_ID & device_id);
         SOURCE* get_source(const DEVICE_ID & device_id);
         LOAD* get_load(const DEVICE_ID & device_id);
         LINE* get_line(const DEVICE_ID & device_id);
@@ -128,7 +128,7 @@ class POWER_SYSTEM_DATABASE
 
         vector<DEVICE*> get_all_devices_connecting_to_bus(const size_t bus);
         vector<GENERATOR*> get_generators_connecting_to_bus(const size_t bus);
-        vector<PE_SOURCE*> get_pe_sources_connecting_to_bus(const size_t bus);
+        vector<WT_GENERATOR*> get_wt_generators_connecting_to_bus(const size_t bus);
         vector<SOURCE*> get_sources_connecting_to_bus(const size_t bus);
         vector<LOAD*> get_loads_connecting_to_bus(const size_t bus);
         vector<LINE*> get_lines_connecting_to_bus(const size_t bus);
@@ -139,7 +139,7 @@ class POWER_SYSTEM_DATABASE
 
         vector<DEVICE_ID> get_all_devices_device_id_connecting_to_bus(const size_t bus);
         vector<DEVICE_ID> get_generators_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_pe_sources_device_id_connecting_to_bus(const size_t bus);
+        vector<DEVICE_ID> get_wt_generators_device_id_connecting_to_bus(const size_t bus);
         vector<DEVICE_ID> get_sources_device_id_connecting_to_bus(const size_t bus);
         vector<DEVICE_ID> get_loads_device_id_connecting_to_bus(const size_t bus);
         vector<DEVICE_ID> get_lines_device_id_connecting_to_bus(const size_t bus);
@@ -151,7 +151,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE*> get_all_devices_in_area(const size_t area);
         vector<BUS*> get_buses_in_area(const size_t area);
         vector<GENERATOR*> get_generators_in_area(const size_t area);
-        vector<PE_SOURCE*> get_pe_sources_in_area(const size_t area);
+        vector<WT_GENERATOR*> get_wt_generators_in_area(const size_t area);
         vector<SOURCE*> get_sources_in_area(const size_t area);
         vector<LOAD*> get_loads_in_area(const size_t area);
         vector<LINE*> get_lines_in_area(const size_t area);
@@ -163,7 +163,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_all_devices_device_id_in_area(const size_t area);
         vector<DEVICE_ID> get_buses_device_id_in_area(const size_t area);
         vector<DEVICE_ID> get_generators_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_pe_sources_device_id_in_area(const size_t area);
+        vector<DEVICE_ID> get_wt_generators_device_id_in_area(const size_t area);
         vector<DEVICE_ID> get_sources_device_id_in_area(const size_t area);
         vector<DEVICE_ID> get_loads_device_id_in_area(const size_t area);
         vector<DEVICE_ID> get_lines_device_id_in_area(const size_t area);
@@ -175,7 +175,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE*> get_all_devices_in_zone(const size_t zone);
         vector<BUS*> get_buses_in_zone(const size_t zone);
         vector<GENERATOR*> get_generators_in_zone(const size_t zone);
-        vector<PE_SOURCE*> get_pe_sources_in_zone(const size_t zone);
+        vector<WT_GENERATOR*> get_wt_generators_in_zone(const size_t zone);
         vector<SOURCE*> get_sources_in_zone(const size_t zone);
         vector<LOAD*> get_loads_in_zone(const size_t zone);
         vector<LINE*> get_lines_in_zone(const size_t zone);
@@ -187,7 +187,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_all_devices_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_buses_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_generators_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_pe_sources_device_id_in_zone(const size_t zone);
+        vector<DEVICE_ID> get_wt_generators_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_sources_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_loads_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_lines_device_id_in_zone(const size_t zone);
@@ -200,7 +200,7 @@ class POWER_SYSTEM_DATABASE
         vector<BUS*> get_buses_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
         vector<BUS*> get_all_in_service_buses();
         vector<GENERATOR*> get_all_generators();
-        vector<PE_SOURCE*> get_all_pe_sources();
+        vector<WT_GENERATOR*> get_all_wt_generators();
         vector<SOURCE*> get_all_sources();
         vector<LOAD*> get_all_loads();
         vector<LINE*> get_all_lines();
@@ -216,7 +216,7 @@ class POWER_SYSTEM_DATABASE
         vector<size_t> get_buses_number_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
         vector<size_t> get_all_in_service_buses_number();
         vector<DEVICE_ID> get_all_generators_device_id();
-        vector<DEVICE_ID> get_all_pe_sources_device_id();
+        vector<DEVICE_ID> get_all_wt_generators_device_id();
         vector<DEVICE_ID> get_all_sources_device_id();
         vector<DEVICE_ID> get_all_loads_device_id();
         vector<DEVICE_ID> get_all_lines_device_id();
@@ -231,7 +231,7 @@ class POWER_SYSTEM_DATABASE
         size_t get_bus_count() const;
         size_t get_in_service_bus_count() const;
         size_t get_generator_count() const;
-        size_t get_pe_source_count() const;
+        size_t get_wt_generator_count() const;
         size_t get_source_count() const;
         size_t get_load_count() const;
         size_t get_line_count() const;
@@ -246,7 +246,7 @@ class POWER_SYSTEM_DATABASE
 
         size_t get_bus_index(size_t bus) const;
         size_t get_generator_index(const DEVICE_ID & device_id) const;
-        size_t get_pe_source_index(const DEVICE_ID & device_id) const;
+        size_t get_wt_generator_index(const DEVICE_ID & device_id) const;
         size_t get_load_index(const DEVICE_ID & device_id) const;
         size_t get_line_index(const DEVICE_ID & device_id) const;
         size_t get_transformer_index(const DEVICE_ID & device_id) const;
@@ -284,11 +284,11 @@ class POWER_SYSTEM_DATABASE
         void scale_generators_power_in_area(size_t area_number, double scale);
         void scale_generators_power_in_zone(size_t zone_number, double scale);
 
-        void scale_pe_source_power(DEVICE_ID did, double scale);
-        void scale_all_pe_sources_power(double scale);
-        void scale_pe_sources_power_at_bus(size_t bus, double scale);
-        void scale_pe_sources_power_in_area(size_t area_number, double scale);
-        void scale_pe_sources_power_in_zone(size_t zone_number, double scale);
+        void scale_wt_generator_power(DEVICE_ID did, double scale);
+        void scale_all_wt_generators_power(double scale);
+        void scale_wt_generators_power_at_bus(size_t bus, double scale);
+        void scale_wt_generators_power_in_area(size_t area_number, double scale);
+        void scale_wt_generators_power_in_zone(size_t zone_number, double scale);
 
         void clear_bus(size_t bus);
         void clear_all_buses();
@@ -297,9 +297,9 @@ class POWER_SYSTEM_DATABASE
         void clear_generators_connecting_to_bus(const size_t bus);
         void clear_all_generators();
 
-        void clear_pe_source(DEVICE_ID& device_id);
-        void clear_pe_sources_connecting_to_bus(const size_t bus);
-        void clear_all_pe_sources();
+        void clear_wt_generator(DEVICE_ID& device_id);
+        void clear_wt_generators_connecting_to_bus(const size_t bus);
+        void clear_all_wt_generators();
 
         void clear_sources_connecting_to_bus(const size_t bus);
         void clear_all_sources();
@@ -350,6 +350,7 @@ class POWER_SYSTEM_DATABASE
         double get_bus_frequency_deviation_in_pu(size_t bus);
         double get_bus_frequency_deviation_in_Hz(size_t bus);
         double get_bus_frequency_in_Hz(size_t bus);
+        double get_bus_frequency_in_pu(size_t bus);
 
         double get_voltage_to_regulate_of_physical_bus_in_pu(size_t bus);
         double get_regulatable_p_max_at_physical_bus_in_MW(size_t bus);
@@ -383,7 +384,7 @@ class POWER_SYSTEM_DATABASE
 
         vector<BUS> Bus;
         vector<GENERATOR> Generator;
-        vector<PE_SOURCE> PE_Source;
+        vector<WT_GENERATOR> WT_Generator;
         vector<LOAD> Load;
         vector<LINE> Line;
         vector<TRANSFORMER> Transformer;
@@ -397,7 +398,7 @@ class POWER_SYSTEM_DATABASE
         size_t in_service_bus_count;
 
         BUS_INDEX bus_index;
-        DEVICE_INDEX_MAP generator_index, pe_source_index, load_index, fixed_shunt_index, switched_shunt_index,
+        DEVICE_INDEX_MAP generator_index, wt_generator_index, load_index, fixed_shunt_index, switched_shunt_index,
                             line_index, transformer_index, hvdc_index, equivalent_device_index;
         map<size_t,  size_t> area_index, zone_index, owner_index;
 

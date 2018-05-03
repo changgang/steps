@@ -157,19 +157,5 @@ bool api_get_area_boolean_data(size_t area, char* parameter_name)
 
 void api_set_area_boolean_data(size_t area, char* parameter_name, bool value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
-
-    AREA* areaptr = psdb->get_area(area);
-    if(areaptr!=NULL)
-    {
-        string PARAMETER_NAME = string2upper(parameter_name);
-
-        show_parameter_not_supported_for_area_zone_owner_with_api(PARAMETER_NAME, area, __FUNCTION__);
-        return;
-    }
-    else
-    {
-        show_area_zone_owner_not_exist_with_api(area, __FUNCTION__);
-        return;
-    }
+    return;
 }

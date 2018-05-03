@@ -298,7 +298,7 @@ bool CDC6T::setup_model_with_psse_string(string data)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
-    if(model_name!="CDC6T")
+    if(model_name!=get_model_name())
         return is_successful;
 
 

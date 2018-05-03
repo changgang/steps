@@ -12,7 +12,7 @@
 
 #include "thirdparty/cpptest/cpptest.h"
 
-#include "header/model/source_model/sync_generator_model/gencls.h"
+#include "header/model/sg_models/sync_generator_model/gencls.h"
 #include "header/power_system_database.h"
 using namespace std;
 
