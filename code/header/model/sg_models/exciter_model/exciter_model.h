@@ -1,9 +1,9 @@
 #ifndef EXCITER_MODEL_H
 #define EXCITER_MODEL_H
 
-#include "header/model/model.h"
+#include "header/model/sg_models/sg_model.h"
 #include "header/block/integral_block.h"
-class EXCITER_MODEL : public MODEL
+class EXCITER_MODEL : public SG_MODEL
 {
     /*
     Exciter model

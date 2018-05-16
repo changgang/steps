@@ -1,14 +1,14 @@
 #ifndef STABILIZER_MODEL_H
 #define STABILIZER_MODEL_H
 
-#include "header/model/model.h"
+#include "header/model/sg_models/sg_model.h"
 #include "header/block/integral_block.h"
 #include "header/basic/constants.h"
 #include "header/meter/meter.h"
 
 typedef METER SIGNAL;
 
-class STABILIZER_MODEL : public MODEL
+class STABILIZER_MODEL : public SG_MODEL
 {
     /*
     Model of power system stabilizer

@@ -10,7 +10,7 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "header/model/sg_models/sg_model_test.h"
 
 #include "header/model/sg_models/stabilizer_model/IEE2ST.h"
 #include "header/model/sg_models/exciter_model/SEXS.h"
@@ -29,9 +29,10 @@ class STABILIZER_MODEL_TEST : public Test::Suite
         void test_set_get_input_signal();
         void test_get_stabilizing_signal();
     private:
+        EXCITER_MODEL* get_exciter_model();
+        STABILIZER_MODEL* get_stabilizer_model();
         IEE2ST* model;
         SEXS* exciter_model;
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//STABILIZER_TEST_H

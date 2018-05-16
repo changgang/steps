@@ -10,7 +10,7 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "header/model/sg_models/sg_model_test.h"
 
 //#include "header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 #include "header/power_system_database.h"

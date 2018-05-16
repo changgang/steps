@@ -1,11 +1,11 @@
 #ifndef COMPENSATOR_MODEL_H
 #define COMPENSATOR_MODEL_H
 
-#include "header/model/model.h"
+#include "header/model/sg_models/sg_model.h"
 #include "header/block/integral_block.h"
 #include <complex>
 
-class COMPENSATOR_MODEL : public MODEL
+class COMPENSATOR_MODEL : public SG_MODEL
 {
     /*
     Compensator model

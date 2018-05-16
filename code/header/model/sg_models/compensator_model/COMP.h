@@ -1,7 +1,7 @@
 #ifndef COMP_H
 #define COMP_H
 
-#include "header/model/compensator_model/compensator_model.h"
+#include "header/model/sg_models/compensator_model/compensator_model.h"
 #include "header/block/integral_block.h"
 class COMP: public COMPENSATOR_MODEL
 {

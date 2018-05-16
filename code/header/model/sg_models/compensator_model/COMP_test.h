@@ -12,8 +12,8 @@
 
 #include "thirdparty/cpptest/cpptest.h"
 
-#include "header/model/compensator_model/COMP.h"
-#include "header/model/compensator_model/compensator_model_test.h"
+#include "header/model/sg_models/compensator_model/COMP.h"
+#include "header/model/sg_models/compensator_model/compensator_model_test.h"
 #include "header/power_system_database.h"
 using namespace std;
 

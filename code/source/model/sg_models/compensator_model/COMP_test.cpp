@@ -1,4 +1,4 @@
-#include "header/model/compensator_model/COMP_test.h"
+#include "header/model/sg_models/compensator_model/COMP_test.h"
 #include "header/basic/utility.h"
 
 using namespace std;

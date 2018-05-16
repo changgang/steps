@@ -10,14 +10,14 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "header/model/sg_models/sg_model_test.h"
 
 #include "header/model/sg_models/sync_generator_model/gencls.h"
 #include "header/power_system_database.h"
 
 using namespace std;
 
-class SYNC_GENERATOR_MODEL_TEST : public Test::Suite
+class SYNC_GENERATOR_MODEL_TEST : public SG_MODEL_TEST
 {
     public:
         SYNC_GENERATOR_MODEL_TEST();
@@ -25,8 +25,6 @@ class SYNC_GENERATOR_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     protected:
-        GENERATOR* get_generator();
-
         void test_get_model_type();
         void test_set_get_parameters();
         void test_is_saturation_considered();
@@ -46,8 +44,6 @@ class SYNC_GENERATOR_MODEL_TEST : public Test::Suite
     private:
         void export_meter_title();
         void export_meter_values(double time);
-        GENERATOR* genptr;
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//SYNC_GENERATOR_MODEL_TEST_H

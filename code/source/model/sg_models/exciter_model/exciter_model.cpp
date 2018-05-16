@@ -1,7 +1,7 @@
 #include "header/model/sg_models/exciter_model/exciter_model.h"
 #include "header/device/generator.h"
 #include "header/steps_namespace.h"
-#include "header/model/compensator_model/compensator_model.h"
+#include "header/model/sg_models/compensator_model/compensator_model.h"
 #include "header/basic/utility.h"
 #include <cstdio>
 #include <iostream>

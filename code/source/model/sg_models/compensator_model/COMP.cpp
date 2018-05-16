@@ -1,4 +1,4 @@
-#include "header/model/compensator_model/COMP.h"
+#include "header/model/sg_models/compensator_model/COMP.h"
 #include "header/basic/utility.h"
 #include <iostream>
 

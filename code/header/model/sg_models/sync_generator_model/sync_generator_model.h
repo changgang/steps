@@ -1,12 +1,12 @@
 #ifndef SYNC_GENERATOR_MODEL_H
 #define SYNC_GENERATOR_MODEL_H
 
-#include "header/model/source_model/source_model.h"
+#include "header/model/sg_models/sg_model.h"
 #include "header/block/integral_block.h"
 #include "header/block/saturation_block.h"
 
 
-class SYNC_GENERATOR_MODEL : public SOURCE_MODEL
+class SYNC_GENERATOR_MODEL : public SG_MODEL
 {
     /*
     Model of sync generator

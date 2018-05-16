@@ -41,25 +41,6 @@ string SYNC_GENERATOR_MODEL::get_model_type() const
     return "SYNC GENERATOR";
 }
 
-double SYNC_GENERATOR_MODEL::get_mbase_in_MVA() const
-{
-    SOURCE* source = (SOURCE*) get_device_pointer();
-    if(source!=NULL)
-        return source->get_mbase_in_MVA();
-    else
-        return 0.0;
-}
-
-complex<double> SYNC_GENERATOR_MODEL::get_terminal_complex_voltage_in_pu() const
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    SOURCE* source = (SOURCE*) get_device_pointer();
-    size_t bus = source->get_source_bus();
-
-    complex<double> Vxy = psdb->get_bus_complex_voltage_in_pu(bus);
-    return Vxy;
-}
-
 void SYNC_GENERATOR_MODEL::set_Rs(double rs)
 {
     this->Rs = rs;

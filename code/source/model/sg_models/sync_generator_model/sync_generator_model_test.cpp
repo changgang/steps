@@ -52,7 +52,15 @@ void SYNC_GENERATOR_MODEL_TEST::setup()
     generator.set_q_generation_in_MVar(30.0);
 
     db->append_generator(generator);
+}
 
+void SYNC_GENERATOR_MODEL_TEST::tear_down()
+{
+    delete db;
+}
+
+GENERATOR* SYNC_GENERATOR_MODEL_TEST::get_generator()
+{
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
     TERMINAL terminal;
@@ -60,22 +68,12 @@ void SYNC_GENERATOR_MODEL_TEST::setup()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    genptr = db->get_generator(did);
-}
-
-void SYNC_GENERATOR_MODEL_TEST::tear_down()
-{
-    delete db;
-    genptr = NULL;
-}
-
-GENERATOR* SYNC_GENERATOR_MODEL_TEST::get_generator()
-{
-    return genptr;
+    return db->get_generator(did);
 }
 
 void SYNC_GENERATOR_MODEL_TEST::test_get_model_type()
 {
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -87,6 +85,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_get_model_type()
 }
 void SYNC_GENERATOR_MODEL_TEST::test_set_get_parameters()
 {
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -147,6 +146,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_set_get_parameters()
 
 void SYNC_GENERATOR_MODEL_TEST::test_is_saturation_considered()
 {
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -173,6 +173,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_is_saturation_considered()
 
 void SYNC_GENERATOR_MODEL_TEST::test_set_get_initial_excitation_voltage()
 {
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -189,6 +190,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_set_get_initial_excitation_voltage()
 
 void SYNC_GENERATOR_MODEL_TEST::test_set_get_initial_mechanical_power()
 {
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -205,6 +207,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_set_get_initial_mechanical_power()
 
 void SYNC_GENERATOR_MODEL_TEST::run_a_step()
 {
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     double speed = model->get_rotor_speed_deviation_in_pu();
     while(true)
@@ -231,6 +234,7 @@ void SYNC_GENERATOR_MODEL_TEST::export_meter_values(double time)
 {
     ostringstream sstream;
 
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
 
     double angle = model->get_rotor_angle_in_deg();
@@ -259,6 +263,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_pmech_step_response_of_sync_generator_model
 {
     ostringstream sstream;
 
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -320,6 +325,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_efd_step_response_of_sync_generator_model()
 {
     ostringstream sstream;
 
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -381,6 +387,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
 {
     ostringstream sstream;
 
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -445,6 +452,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
 {
     ostringstream sstream;
 
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
@@ -545,6 +553,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
 
 void SYNC_GENERATOR_MODEL_TEST::test_get_standard_model_string()
 {
+    GENERATOR* genptr = get_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     if(model!=NULL)
     {
