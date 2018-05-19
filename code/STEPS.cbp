@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="STEPS" />
+		<Option makefile="makefile" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../build/bin/Debug/STEPS" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../build/obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="--compiler " />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-Wnon-virtual-dtor" />
+					<Add option="-Winit-self" />
+					<Add option="-Wredundant-decls" />
+					<Add option="-Wcast-align" />
+					<Add option="-Winline" />
+					<Add option="-Wunreachable-code" />
+					<Add option="-Wmissing-declarations" />
+					<Add option="-Wmissing-include-dirs" />
+					<Add option="-pedantic-errors" />
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-std=c++11" />
+					<Add directory="C:/Users/charles/steps/code/" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="../build/bin/Release/STEPS" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../build/obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="--compiler " />
+				<Compiler>
+					<Add option="-march=corei7-avx" />
+					<Add option="-O3" />
+					<Add option="-Wnon-virtual-dtor" />
+					<Add option="-Winit-self" />
+					<Add option="-Wredundant-decls" />
+					<Add option="-Wcast-align" />
+					<Add option="-Winline" />
+					<Add option="-Wunreachable-code" />
+					<Add option="-Wmissing-declarations" />
+					<Add option="-Wmissing-include-dirs" />
+					<Add option="-pedantic-errors" />
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-std=c++14" />
+					<Add directory="C:/Users/charles/steps/code/" />
+				</Compiler>
+			</Target>
+			<Target title="Release_core">
+				<Option output="../build/bin/Release/steps_core" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../build/obj/Release/" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option parameters="--compiler " />
+				<Compiler>
+					<Add option="-march=corei7-avx" />
+					<Add option="-O3" />
+					<Add option="-Wnon-virtual-dtor" />
+					<Add option="-Winit-self" />
+					<Add option="-Wredundant-decls" />
+					<Add option="-Wcast-align" />
+					<Add option="-Winline" />
+					<Add option="-Wunreachable-code" />
+					<Add option="-Wmissing-declarations" />
+					<Add option="-Wmissing-include-dirs" />
+					<Add option="-pedantic-errors" />
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-std=c++14" />
+					<Add option="-m32" />
+					<Add directory="C:/Users/charles/steps/code/" />
+				</Compiler>
+				<Linker>
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions -fopenmp" />
+		</Compiler>
+		<Linker>
+			<Add option="-fopenmp" />
+		</Linker>
+		<Unit filename="header/apis/steps_api.h" />
+		<Unit filename="header/basic/area.h" />
+		<Unit filename="header/basic/area_test.h" />
+		<Unit filename="header/basic/base.h" />
+		<Unit filename="header/basic/bus_index.h" />
+		<Unit filename="header/basic/bus_index_test.h" />
+		<Unit filename="header/basic/complex.h" />
+		<Unit filename="header/basic/constants.h" />
+		<Unit filename="header/basic/device_id.h" />
+		<Unit filename="header/basic/device_id_test.h" />
+		<Unit filename="header/basic/device_index_map.h" />
+		<Unit filename="header/basic/device_index_map_test.h" />
+		<Unit filename="header/basic/exception.h" />
+		<Unit filename="header/basic/fault.h" />
+		<Unit filename="header/basic/fault_test.h" />
+		<Unit filename="header/basic/inphno.h" />
+		<Unit filename="header/basic/inphno_test.h" />
+		<Unit filename="header/basic/model_index.h" />
+		<Unit filename="header/basic/model_index_test.h" />
+		<Unit filename="header/basic/owner.h" />
+		<Unit filename="header/basic/owner_test.h" />
+		<Unit filename="header/basic/ownership.h" />
+		<Unit filename="header/basic/ownership_test.h" />
+		<Unit filename="header/basic/rating.h" />
+		<Unit filename="header/basic/rating_test.h" />
+		<Unit filename="header/basic/sparse_matrix.h" />
+		<Unit filename="header/basic/sparse_matrix_test.h" />
+		<Unit filename="header/basic/steps_enum.h" />
+		<Unit filename="header/basic/terminal.h" />
+		<Unit filename="header/basic/terminal_test.h" />
+		<Unit filename="header/basic/timer.h" />
+		<Unit filename="header/basic/timer_test.h" />
+		<Unit filename="header/basic/utility.h" />
+		<Unit filename="header/basic/utility_test.h" />
+		<Unit filename="header/basic/zone.h" />
+		<Unit filename="header/basic/zone_test.h" />
+		<Unit filename="header/block/block.h" />
+		<Unit filename="header/block/differential_block.h" />
+		<Unit filename="header/block/differential_block_test.h" />
+		<Unit filename="header/block/first_order_block.h" />
+		<Unit filename="header/block/first_order_block_test.h" />
+		<Unit filename="header/block/integral_block.h" />
+		<Unit filename="header/block/integral_block_test.h" />
+		<Unit filename="header/block/lead_lag_block.h" />
+		<Unit filename="header/block/lead_lag_block_test.h" />
+		<Unit filename="header/block/limiter_block.h" />
+		<Unit filename="header/block/nonlinear_block.h" />
+		<Unit filename="header/block/pd_block.h" />
+		<Unit filename="header/block/pd_block_test.h" />
+		<Unit filename="header/block/pi_block.h" />
+		<Unit filename="header/block/pi_block_test.h" />
+		<Unit filename="header/block/pid_block.h" />
+		<Unit filename="header/block/pid_block_test.h" />
+		<Unit filename="header/block/proportional_block.h" />
+		<Unit filename="header/block/proportional_block_test.h" />
+		<Unit filename="header/block/saturation_block.h" />
+		<Unit filename="header/block/saturation_block_test.h" />
+		<Unit filename="header/block/second_order_block.h" />
+		<Unit filename="header/data_imexporter/bpa_imexporter.h" />
+		<Unit filename="header/data_imexporter/bpa_imexporter_test.h" />
+		<Unit filename="header/data_imexporter/data_imexporter.h" />
+		<Unit filename="header/data_imexporter/equivalent_model_imexporter.h" />
+		<Unit filename="header/data_imexporter/equivalent_model_imexporter_test.h" />
+		<Unit filename="header/data_imexporter/load_dynamic_data.h" />
+		<Unit filename="header/data_imexporter/load_network_data.h" />
+		<Unit filename="header/data_imexporter/model_database.h" />
+		<Unit filename="header/data_imexporter/psse_imexporter.h" />
+		<Unit filename="header/data_imexporter/psse_imexporter_test.h" />
+		<Unit filename="header/device/bus.h" />
+		<Unit filename="header/device/bus_test.h" />
+		<Unit filename="header/device/device.h" />
+		<Unit filename="header/device/equivalent_device.h" />
+		<Unit filename="header/device/equivalent_device_test.h" />
+		<Unit filename="header/device/fixed_shunt.h" />
+		<Unit filename="header/device/fixed_shunt_test.h" />
+		<Unit filename="header/device/generator.h" />
+		<Unit filename="header/device/generator_test.h" />
+		<Unit filename="header/device/hvdc.h" />
+		<Unit filename="header/device/hvdc_test.h" />
+		<Unit filename="header/device/line.h" />
+		<Unit filename="header/device/line_test.h" />
+		<Unit filename="header/device/load.h" />
+		<Unit filename="header/device/load_test.h" />
+		<Unit filename="header/device/pe_source.h" />
+		<Unit filename="header/device/pv_source.h" />
+		<Unit filename="header/device/source.h" />
+		<Unit filename="header/device/source_test.h" />
+		<Unit filename="header/device/transformer.h" />
+		<Unit filename="header/device/transformer_test.h" />
+		<Unit filename="header/device/virtual_generator_load_pair.h" />
+		<Unit filename="header/device/virtual_generator_load_pair_test.h" />
+		<Unit filename="header/device/wt_generator.h" />
+		<Unit filename="header/device/wt_generator_test.h" />
+		<Unit filename="header/meter/continuous_buffer.h" />
+		<Unit filename="header/meter/continuous_buffer_test.h" />
+		<Unit filename="header/meter/meter.h" />
+		<Unit filename="header/meter/meter_setter.h" />
+		<Unit filename="header/meter/meter_setter_test.h" />
+		<Unit filename="header/meter/meter_test.h" />
+		<Unit filename="header/model/all_supported_models.h" />
+		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_model.h" />
+		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_model_test.h" />
+		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_models.h" />
+		<Unit filename="header/model/bus_frequency_model/bus_frequency_model.h" />
+		<Unit filename="header/model/equivalent_model/ARXL.h" />
+		<Unit filename="header/model/equivalent_model/equivalent_model.h" />
+		<Unit filename="header/model/equivalent_model/equivalent_models.h" />
+		<Unit filename="header/model/hvdc_model/CDC4T.h" />
+		<Unit filename="header/model/hvdc_model/CDC4T_test.h" />
+		<Unit filename="header/model/hvdc_model/CDC6T.h" />
+		<Unit filename="header/model/hvdc_model/CDC6T_test.h" />
+		<Unit filename="header/model/hvdc_model/hvdc_model.h" />
+		<Unit filename="header/model/hvdc_model/hvdc_model_test.h" />
+		<Unit filename="header/model/hvdc_model/hvdc_models.h" />
+		<Unit filename="header/model/hvdc_model/vdcol.h" />
+		<Unit filename="header/model/hvdc_model/vdcol_test.h" />
+		<Unit filename="header/model/load_model/IEEL.h" />
+		<Unit filename="header/model/load_model/IEEL_test.h" />
+		<Unit filename="header/model/load_model/MOTOR.h" />
+		<Unit filename="header/model/load_model/load_model.h" />
+		<Unit filename="header/model/load_model/load_model_test.h" />
+		<Unit filename="header/model/load_model/load_models.h" />
+		<Unit filename="header/model/load_relay_model/PUFLS.h" />
+		<Unit filename="header/model/load_relay_model/PUFLS_test.h" />
+		<Unit filename="header/model/load_relay_model/UFLS.h" />
+		<Unit filename="header/model/load_relay_model/UFLS_test.h" />
+		<Unit filename="header/model/load_relay_model/UVLS.h" />
+		<Unit filename="header/model/load_relay_model/load_frequency_relay_model.h" />
+		<Unit filename="header/model/load_relay_model/load_frequency_relay_model_test.h" />
+		<Unit filename="header/model/load_relay_model/load_frequency_relay_models.h" />
+		<Unit filename="header/model/load_relay_model/load_relay_model.h" />
+		<Unit filename="header/model/load_relay_model/load_relay_model_test.h" />
+		<Unit filename="header/model/load_relay_model/load_voltage_relay_model.h" />
+		<Unit filename="header/model/model.h" />
+		<Unit filename="header/model/model_test.h" />
+		<Unit filename="header/model/sg_models/compensator_model/COMP.h" />
+		<Unit filename="header/model/sg_models/compensator_model/COMP_test.h" />
+		<Unit filename="header/model/sg_models/compensator_model/compensator_model.h" />
+		<Unit filename="header/model/sg_models/compensator_model/compensator_model_test.h" />
+		<Unit filename="header/model/sg_models/compensator_model/compensator_models.h" />
+		<Unit filename="header/model/sg_models/exciter_model/CSEET1.h" />
+		<Unit filename="header/model/sg_models/exciter_model/CSEET1_test.h" />
+		<Unit filename="header/model/sg_models/exciter_model/CSEET2.h" />
+		<Unit filename="header/model/sg_models/exciter_model/CSEET2_test.h" />
+		<Unit filename="header/model/sg_models/exciter_model/IEEET1.h" />
+		<Unit filename="header/model/sg_models/exciter_model/IEEET1_test.h" />
+		<Unit filename="header/model/sg_models/exciter_model/PSASPE1.h" />
+		<Unit filename="header/model/sg_models/exciter_model/PSASPE13.h" />
+		<Unit filename="header/model/sg_models/exciter_model/PSASPE13_test.h" />
+		<Unit filename="header/model/sg_models/exciter_model/PSASPE1_test.h" />
+		<Unit filename="header/model/sg_models/exciter_model/PSASPE2.h" />
+		<Unit filename="header/model/sg_models/exciter_model/PSASPE2_test.h" />
+		<Unit filename="header/model/sg_models/exciter_model/SEXS.h" />
+		<Unit filename="header/model/sg_models/exciter_model/SEXS_test.h" />
+		<Unit filename="header/model/sg_models/exciter_model/exciter_model.h" />
+		<Unit filename="header/model/sg_models/exciter_model/exciter_model_test.h" />
+		<Unit filename="header/model/sg_models/exciter_model/exciter_models.h" />
+		<Unit filename="header/model/sg_models/sg_model.h" />
+		<Unit filename="header/model/sg_models/sg_model_test.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/IEE2ST.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/IEE2ST_test.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model_test.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_models.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/gencls.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/gencls_test.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/genrou.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/genrou_test.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/gensal.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/gensal_test.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/sync_generator_model.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/sync_generator_model_test.h" />
+		<Unit filename="header/model/sg_models/sync_generator_model/sync_generator_models.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1_test.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG2.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG2_test.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG3.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG3_test.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEESGO.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEESGO_test.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/TGOV1.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/TGOV1_test.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/turbine_governor_model.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/turbine_governor_models.h" />
+		<Unit filename="header/model/wtg_models/wind_speed_model/filewind.h" />
+		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model.h" />
+		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model_test.h" />
+		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_models.h" />
+		<Unit filename="header/model/wtg_models/wind_speed_model/wind_test.h" />
+		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/aerd0.h" />
+		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h" />
+		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e0.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e1.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e1_test.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt4e1.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt4e1_test.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_models.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/lvpl.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g2.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g2_test.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model_test.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_models.h" />
+		<Unit filename="header/model/wtg_models/wt_pitch_model/wt3p0.h" />
+		<Unit filename="header/model/wtg_models/wt_pitch_model/wt3p1.h" />
+		<Unit filename="header/model/wtg_models/wt_pitch_model/wt3p1_test.h" />
+		<Unit filename="header/model/wtg_models/wt_pitch_model/wt_pitch_model.h" />
+		<Unit filename="header/model/wtg_models/wt_pitch_model/wt_pitch_model_test.h" />
+		<Unit filename="header/model/wtg_models/wt_pitch_model/wt_pitch_models.h" />
+		<Unit filename="header/model/wtg_models/wt_turbine_model/wt3t0.h" />
+		<Unit filename="header/model/wtg_models/wt_turbine_model/wt3t1.h" />
+		<Unit filename="header/model/wtg_models/wt_turbine_model/wt3t1_test.h" />
+		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_model.h" />
+		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_model_test.h" />
+		<Unit filename="header/model/wtg_models/wt_turbine_model/wt_turbine_models.h" />
+		<Unit filename="header/model/wtg_models/wtg_model.h" />
+		<Unit filename="header/model/wtg_models/wtg_model_test.h" />
+		<Unit filename="header/network/jacobian_builder.h" />
+		<Unit filename="header/network/jacobian_builder_test.h" />
+		<Unit filename="header/network_database.h" />
+		<Unit filename="header/network_database_test.h" />
+		<Unit filename="header/power_system_database.h" />
+		<Unit filename="header/power_system_database_test.h" />
+		<Unit filename="header/prepare_for_tests/prepare_models_for_test.h" />
+		<Unit filename="header/steps_namespace.h" />
+		<Unit filename="header/toolkit/cct_searcher/cct_searcher.h" />
+		<Unit filename="header/toolkit/cct_searcher/cct_searcher_test.h" />
+		<Unit filename="header/toolkit/contingency_screener/contingency_screener.h" />
+		<Unit filename="header/toolkit/contingency_screener/contingency_screener_test.h" />
+		<Unit filename="header/toolkit/dynamic_simulator/dynamic_simulator.h" />
+		<Unit filename="header/toolkit/dynamic_simulator/dynamic_simulator_test.h" />
+		<Unit filename="header/toolkit/dynamic_simulator/event_setter.h" />
+		<Unit filename="header/toolkit/optimal_powerflow/optimal_powerflow.h" />
+		<Unit filename="header/toolkit/powerflow_case_generator/powerflow_case_generator.h" />
+		<Unit filename="header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h" />
+		<Unit filename="header/toolkit/powerflow_solver/powerflow_solver.h" />
+		<Unit filename="header/toolkit/powerflow_solver/powerflow_solver_test.h" />
+		<Unit filename="main_arxl_simulation.cpp">
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main_cct_search_screening.cpp">
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main_dynamics_simulation.cpp">
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main_powerflow.cpp">
+			<Option link="0" />
+		</Unit>
+		<Unit filename="main_tests.cpp" />
+		<Unit filename="main_ufls_simulation.cpp">
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/apis/steps_api_add_devices.cpp" />
+		<Unit filename="source/apis/steps_api_common_utilities.cpp" />
+		<Unit filename="source/apis/steps_api_data_import_export.cpp" />
+		<Unit filename="source/apis/steps_api_dynamic_simulation.cpp" />
+		<Unit filename="source/apis/steps_api_get_device_count.cpp" />
+		<Unit filename="source/apis/steps_api_powerflow.cpp" />
+		<Unit filename="source/apis/steps_api_search_devices.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_area_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_bus_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_fixed_shunt_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_generator_related_model_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_hvdc_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_line_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_load_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_owner_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_source_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_transformer_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_set_get_zone_parameters.cpp" />
+		<Unit filename="source/apis/steps_api_show_device_data.cpp" />
+		<Unit filename="source/basic/area.cpp" />
+		<Unit filename="source/basic/area_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/base.cpp" />
+		<Unit filename="source/basic/bus_index.cpp" />
+		<Unit filename="source/basic/bus_index_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/device_id.cpp" />
+		<Unit filename="source/basic/device_id_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/device_index_map.cpp" />
+		<Unit filename="source/basic/device_index_map_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/fault.cpp" />
+		<Unit filename="source/basic/fault_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/inphno.cpp" />
+		<Unit filename="source/basic/inphno_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/model_index.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/basic/model_index_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/owner.cpp" />
+		<Unit filename="source/basic/owner_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/ownership.cpp" />
+		<Unit filename="source/basic/ownership_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/rating.cpp" />
+		<Unit filename="source/basic/rating_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/sparse_matrix.cpp" />
+		<Unit filename="source/basic/sparse_matrix_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/terminal.cpp" />
+		<Unit filename="source/basic/terminal_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/timer.cpp" />
+		<Unit filename="source/basic/timer_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/utility.cpp" />
+		<Unit filename="source/basic/utility_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/basic/zone.cpp" />
+		<Unit filename="source/basic/zone_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/block.cpp" />
+		<Unit filename="source/block/differential_block.cpp" />
+		<Unit filename="source/block/differential_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/first_order_block.cpp" />
+		<Unit filename="source/block/first_order_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/integral_block.cpp" />
+		<Unit filename="source/block/integral_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/lead_lag_block.cpp" />
+		<Unit filename="source/block/lead_lag_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/pd_block.cpp" />
+		<Unit filename="source/block/pd_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/pi_block.cpp" />
+		<Unit filename="source/block/pi_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/pid_block.cpp" />
+		<Unit filename="source/block/pid_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/proportional_block.cpp" />
+		<Unit filename="source/block/proportional_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/block/saturation_block.cpp" />
+		<Unit filename="source/block/saturation_block_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/data_imexporter/bpa_dynamics_imexporter.cpp" />
+		<Unit filename="source/data_imexporter/bpa_imexporter_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/data_imexporter/bpa_powerflow_imexporter.cpp" />
+		<Unit filename="source/data_imexporter/data_imexporter.cpp" />
+		<Unit filename="source/data_imexporter/equivalent_model_imexporter.cpp" />
+		<Unit filename="source/data_imexporter/equivalent_model_imexporter_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/data_imexporter/psse_dynamics_imexporter.cpp" />
+		<Unit filename="source/data_imexporter/psse_imexporter_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/data_imexporter/psse_powerflow_imexporter.cpp" />
+		<Unit filename="source/device/bus.cpp" />
+		<Unit filename="source/device/bus_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/device.cpp" />
+		<Unit filename="source/device/equivalent_device.cpp" />
+		<Unit filename="source/device/equivalent_device_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/fixed_shunt.cpp" />
+		<Unit filename="source/device/fixed_shunt_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/generator.cpp" />
+		<Unit filename="source/device/generator_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/hvdc.cpp" />
+		<Unit filename="source/device/hvdc_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/line.cpp" />
+		<Unit filename="source/device/line_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/load.cpp" />
+		<Unit filename="source/device/load_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/source.cpp" />
+		<Unit filename="source/device/source_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/transformer.cpp" />
+		<Unit filename="source/device/transformer_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/virtual_generator_load_pair.cpp" />
+		<Unit filename="source/device/virtual_generator_load_pair_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/device/wt_generator.cpp" />
+		<Unit filename="source/device/wt_generator_test.cpp" />
+		<Unit filename="source/meter/continuous_buffer.cpp" />
+		<Unit filename="source/meter/continuous_buffer_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/meter/meter.cpp" />
+		<Unit filename="source/meter/meter_setter.cpp" />
+		<Unit filename="source/meter/meter_setter_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/meter/meter_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/bus_frequency_model/bus_frequency_model.cpp" />
+		<Unit filename="source/model/equivalent_model/ARXL.cpp" />
+		<Unit filename="source/model/equivalent_model/equivalent_model.cpp" />
+		<Unit filename="source/model/hvdc_model/CDC4T.cpp" />
+		<Unit filename="source/model/hvdc_model/CDC4T_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/hvdc_model/CDC6T.cpp" />
+		<Unit filename="source/model/hvdc_model/CDC6T_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/hvdc_model/hvdc_model.cpp" />
+		<Unit filename="source/model/hvdc_model/hvdc_model_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/hvdc_model/vdcol.cpp" />
+		<Unit filename="source/model/hvdc_model/vdcol_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/load_model/IEEL.cpp" />
+		<Unit filename="source/model/load_model/IEEL_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/load_model/MOTOR.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/load_model/load_model.cpp" />
+		<Unit filename="source/model/load_model/load_model_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/load_relay_model/PUFLS.cpp" />
+		<Unit filename="source/model/load_relay_model/PUFLS_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/load_relay_model/UFLS.cpp" />
+		<Unit filename="source/model/load_relay_model/UFLS_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/load_relay_model/load_frequency_relay_model.cpp" />
+		<Unit filename="source/model/load_relay_model/load_frequency_relay_model_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/load_relay_model/load_relay_model.cpp" />
+		<Unit filename="source/model/load_relay_model/load_relay_model_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/load_relay_model/load_voltage_relay_model.cpp" />
+		<Unit filename="source/model/model.cpp" />
+		<Unit filename="source/model/model_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/model/sg_models/compensator_model/COMP.cpp" />
+		<Unit filename="source/model/sg_models/compensator_model/COMP_test.cpp" />
+		<Unit filename="source/model/sg_models/compensator_model/compensator_model.cpp" />
+		<Unit filename="source/model/sg_models/compensator_model/compensator_model_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/CSEET1.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/CSEET1_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/CSEET2.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/CSEET2_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/IEEET1.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/IEEET1_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/PSASPE1.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/PSASPE13.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/PSASPE13_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/PSASPE1_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/PSASPE2.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/PSASPE2_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/SEXS.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/SEXS_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/ac_exciters.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/dc_exciters.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/exciter_model.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/exciter_model_test.cpp" />
+		<Unit filename="source/model/sg_models/exciter_model/static_exciters.cpp" />
+		<Unit filename="source/model/sg_models/sg_model.cpp" />
+		<Unit filename="source/model/sg_models/sg_model_test.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/IEE2ST.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/IEE2ST_test.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/multi_input_stabilizers.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/single_input_stabilizers.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model_test.cpp" />
+		<Unit filename="source/model/sg_models/sync_generator_model/gencls.cpp" />
+		<Unit filename="source/model/sg_models/sync_generator_model/gencls_test.cpp" />
+		<Unit filename="source/model/sg_models/sync_generator_model/genrou.cpp" />
+		<Unit filename="source/model/sg_models/sync_generator_model/genrou_test.cpp" />
+		<Unit filename="source/model/sg_models/sync_generator_model/gensal.cpp" />
+		<Unit filename="source/model/sg_models/sync_generator_model/gensal_test.cpp" />
+		<Unit filename="source/model/sg_models/sync_generator_model/sync_generator_model.cpp" />
+		<Unit filename="source/model/sg_models/sync_generator_model/sync_generator_model_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEEEG2.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEEEG2_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEEEG3.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEEEG3_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEESGO.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEESGO_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/TGOV1.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/TGOV1_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/turbine_governor_model.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/turbine_governor_model_test.cpp" />
+		<Unit filename="source/model/wtg_models/wind_speed_model/filewind.cpp" />
+		<Unit filename="source/model/wtg_models/wind_speed_model/wind_speed_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/aerd0.cpp" />
+		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e0.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt4e1.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt4e1_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/lvpl.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g2.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g2_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p0.cpp" />
+		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p1.cpp" />
+		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0.cpp" />
+		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t1.cpp" />
+		<Unit filename="source/model/wtg_models/wt_turbine_model/wt_turbine_model.cpp" />
+		<Unit filename="source/model/wtg_models/wtg_model.cpp" />
+		<Unit filename="source/model/wtg_models/wtg_model_test.cpp" />
+		<Unit filename="source/network/jacobian_builder.cpp" />
+		<Unit filename="source/network/jacobian_builder_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/network_database.cpp" />
+		<Unit filename="source/network_database_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/power_system_database.cpp" />
+		<Unit filename="source/power_system_database_test.cpp" />
+		<Unit filename="source/prepare_for_tests/prepare_Arthur_R_Bergen_3_bus_model_for_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/prepare_for_tests/prepare_IEEE_9_bus_model_for_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/prepare_for_tests/prepare_ISO_New_England_39_bus_model_for_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/prepare_for_tests/prepare_PSSE_sample_model_for_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/prepare_for_tests/prepare_basic_devices.cpp" />
+		<Unit filename="source/steps_namespace.cpp" />
+		<Unit filename="source/toolkit/cct_searcher/cct_searcher.cpp" />
+		<Unit filename="source/toolkit/cct_searcher/cct_searcher_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/toolkit/contingency_screener/contingency_screener.cpp" />
+		<Unit filename="source/toolkit/contingency_screener/contingency_screener_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator.cpp" />
+		<Unit filename="source/toolkit/dynamic_simulator/dynamic_simulator_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator.cpp" />
+		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver.cpp" />
+		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver_test.cpp">
+			<Option target="Debug" />
+			<Option target="Release" />
+		</Unit>
+		<Unit filename="thirdparty/cpptest/collectoroutput.cpp" />
+		<Unit filename="thirdparty/cpptest/compileroutput.cpp" />
+		<Unit filename="thirdparty/cpptest/cpptest-assert.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-collectoroutput.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-compileroutput.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-htmloutput.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-output.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-source.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-suite.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-textoutput.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-time.h" />
+		<Unit filename="thirdparty/cpptest/cpptest.h" />
+		<Unit filename="thirdparty/cpptest/htmloutput.cpp" />
+		<Unit filename="thirdparty/cpptest/missing.cpp" />
+		<Unit filename="thirdparty/cpptest/missing.h" />
+		<Unit filename="thirdparty/cpptest/source.cpp" />
+		<Unit filename="thirdparty/cpptest/suite.cpp" />
+		<Unit filename="thirdparty/cpptest/textoutput.cpp" />
+		<Unit filename="thirdparty/cpptest/time.cpp" />
+		<Unit filename="thirdparty/cpptest/utils.cpp" />
+		<Unit filename="thirdparty/cpptest/utils.h" />
+		<Unit filename="thirdparty/csparse/CSparse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/csparse/CSparse.h" />
+		<Unit filename="thirdparty/rapidjson/allocators.h" />
+		<Unit filename="thirdparty/rapidjson/cursorstreamwrapper.h" />
+		<Unit filename="thirdparty/rapidjson/document.h" />
+		<Unit filename="thirdparty/rapidjson/encodedstream.h" />
+		<Unit filename="thirdparty/rapidjson/encodings.h" />
+		<Unit filename="thirdparty/rapidjson/error/en.h" />
+		<Unit filename="thirdparty/rapidjson/error/error.h" />
+		<Unit filename="thirdparty/rapidjson/filereadstream.h" />
+		<Unit filename="thirdparty/rapidjson/filewritestream.h" />
+		<Unit filename="thirdparty/rapidjson/fwd.h" />
+		<Unit filename="thirdparty/rapidjson/internal/biginteger.h" />
+		<Unit filename="thirdparty/rapidjson/internal/diyfp.h" />
+		<Unit filename="thirdparty/rapidjson/internal/dtoa.h" />
+		<Unit filename="thirdparty/rapidjson/internal/ieee754.h" />
+		<Unit filename="thirdparty/rapidjson/internal/itoa.h" />
+		<Unit filename="thirdparty/rapidjson/internal/meta.h" />
+		<Unit filename="thirdparty/rapidjson/internal/pow10.h" />
+		<Unit filename="thirdparty/rapidjson/internal/regex.h" />
+		<Unit filename="thirdparty/rapidjson/internal/stack.h" />
+		<Unit filename="thirdparty/rapidjson/internal/strfunc.h" />
+		<Unit filename="thirdparty/rapidjson/internal/strtod.h" />
+		<Unit filename="thirdparty/rapidjson/internal/swap.h" />
+		<Unit filename="thirdparty/rapidjson/istreamwrapper.h" />
+		<Unit filename="thirdparty/rapidjson/memorybuffer.h" />
+		<Unit filename="thirdparty/rapidjson/memorystream.h" />
+		<Unit filename="thirdparty/rapidjson/msinttypes/inttypes.h" />
+		<Unit filename="thirdparty/rapidjson/msinttypes/stdint.h" />
+		<Unit filename="thirdparty/rapidjson/ostreamwrapper.h" />
+		<Unit filename="thirdparty/rapidjson/pointer.h" />
+		<Unit filename="thirdparty/rapidjson/prettywriter.h" />
+		<Unit filename="thirdparty/rapidjson/rapidjson.h" />
+		<Unit filename="thirdparty/rapidjson/reader.h" />
+		<Unit filename="thirdparty/rapidjson/schema.h" />
+		<Unit filename="thirdparty/rapidjson/stream.h" />
+		<Unit filename="thirdparty/rapidjson/stringbuffer.h" />
+		<Unit filename="thirdparty/rapidjson/writer.h" />
+		<Unit filename="version.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" use_define="0" update_manifest="0" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="./" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
