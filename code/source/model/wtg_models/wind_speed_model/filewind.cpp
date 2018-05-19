@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wind_speed_model/wbline.h"
+#include "header/model/wtg_models/wind_speed_model/filewind.h"
 #include "header/basic/utility.h"
 
 static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR MECHANICAL POWER IN PU", //0
@@ -21,28 +21,14 @@ FILEWIND::~FILEWIND()
 
 void FILEWIND::clear()
 {
-    governor.set_limiter_type(WINDUP_LIMITER);
-    turbine.set_K(1.0);
 }
 
 void FILEWIND::copy_from_const_model(const FILEWIND& model)
 {
     clear();
-
-    //this->set_power_system_database(model.get_power_system_database());
-    //this->set_device_id(model.get_device_id());
-
-    this->governor.set_limiter_type(WINDUP_LIMITER);
-    this->set_R(model.get_R());
-    this->set_T1_in_s(model.get_T1_in_s());
-    this->set_T2_in_s(model.get_T2_in_s());
-    this->set_T3_in_s(model.get_T3_in_s());
-    this->set_Valvemax_in_pu(model.get_Valvemax_in_pu());
-    this->set_Valvemin_in_pu(model.get_Valvemin_in_pu());
-    this->set_D(model.get_D());
 }
 
-FILEWIND::FILEWIND(const FILEWIND&model) : FILEWIND()
+FILEWIND::FILEWIND(const FILEWIND& model)
 {
     copy_from_const_model(model);
 }
@@ -74,16 +60,45 @@ string FILEWIND::get_wind_speed_serial_file() const
 }
 
 
-double FILEWIND::get_double_data_with_index(size_t index) const;
-double FILEWIND::get_double_data_with_name(string par_name) const;
-void FILEWIND::set_double_data_with_index(size_t index, double value);
-void FILEWIND::set_double_data_with_name(string par_name, double value);
+double FILEWIND::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
 
-bool FILEWIND::setup_model_with_steps_string(string data);
-bool FILEWIND::setup_model_with_psse_string(string data);
-bool FILEWIND::setup_model_with_bpa_string(string data);
+double FILEWIND::get_double_data_with_name(string par_name) const
+{
+    return 0.0;
+}
 
-void FILEWIND::initialize();
+void FILEWIND::set_double_data_with_index(size_t index, double value)
+{
+}
+
+void FILEWIND::set_double_data_with_name(string par_name, double value)
+{
+}
+
+bool FILEWIND::setup_model_with_steps_string(string data)
+{
+    return false;
+}
+
+bool FILEWIND::setup_model_with_psse_string(string data)
+{
+    return false;
+}
+
+bool FILEWIND::setup_model_with_bpa_string(string data)
+{
+    return false;
+}
+
+
+void FILEWIND::initialize()
+{
+    return;
+}
+
 
 void FILEWIND::load_wind_speed_from_file()
 {
@@ -107,7 +122,7 @@ void FILEWIND::load_wind_speed_from_file()
             break;
         data = trim_string(data);
         data = string2csv(data);
-        datavec = split_string(case_str,",");
+        datavec = split_string(data,",");
         if(datavec.size()<2)
             break;
 
@@ -139,14 +154,17 @@ void FILEWIND::load_wind_speed_from_file()
     current_time_pointer = 0;
 }
 
-void FILEWIND::run(DYNAMIC_MODE mode);
+void FILEWIND::run(DYNAMIC_MODE mode)
+{
+    ;
+}
+
 double FILEWIND::get_wind_speed_in_mps() const
 {
     if(time.size()==0)
         return 0.0;
 
-    vector<double>::iterator it;
-    it = time.begin();
+    vector<double>::iterator it = time.begin();
     double time_min = *it;
     it = time.end(); it--;
     double time_max = *it;

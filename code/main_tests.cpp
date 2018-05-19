@@ -71,7 +71,7 @@
 #include "header/model/sg_models/sync_generator_model/genrou_test.h"
 #include "header/model/sg_models/sync_generator_model/gensal_test.h"
 
-#include "header/model/compensator_model/COMP_test.h"
+#include "header/model/sg_models/compensator_model/COMP_test.h"
 
 #include "header/model/sg_models/exciter_model/SEXS_test.h"
 #include "header/model/sg_models/exciter_model/IEEET1_test.h"

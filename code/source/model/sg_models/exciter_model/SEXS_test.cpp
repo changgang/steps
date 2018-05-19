@@ -18,7 +18,7 @@ void SEXS_TEST::setup()
 
     SEXS model;
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     model.set_power_system_database(genptr->get_power_system_database());
     model.set_device_id(genptr->get_device_id());
 
@@ -42,7 +42,7 @@ void SEXS_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SEXS_TEST");
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     EXCITER_MODEL* model = genptr->get_exciter_model();
 
     TEST_ASSERT(model->get_model_name()=="SEXS");
@@ -52,7 +52,7 @@ void SEXS_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SEXS_TEST");
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     SEXS* model = (SEXS*) genptr->get_exciter_model();
 
     TEST_ASSERT(fabs(model->get_TA_in_s()-1.0)<FLOAT_EPSILON);
@@ -67,7 +67,7 @@ void SEXS_TEST::test_initialize()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SEXS_TEST");
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
     genmodel->initialize();
 

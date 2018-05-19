@@ -20,12 +20,13 @@ class WTG_MODEL_TEST : public Test::Suite
 {
     public:
         WTG_MODEL_TEST();
-        WT_GENERATOR* get_wt_generator();
+        POWER_SYSTEM_DATABASE* get_test_power_system_database();
+        WT_GENERATOR* get_test_wt_generator();
     protected:
         virtual void setup();
         virtual void tear_down();
     private:
-        POWER_SYSTEM_DATABASE* db;
+        POWER_SYSTEM_DATABASE* psdb;
 };
 
 #endif//WTG_MODEL_TEST_H

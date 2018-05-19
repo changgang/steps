@@ -46,14 +46,14 @@ void WT_GENERATOR_MODEL_TEST::tear_down()
 
 void WT_GENERATOR_MODEL_TEST::test_get_mbase_in_MVA()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     TEST_ASSERT(fabs(model->get_mbase_in_MVA()-wt_gen->get_mbase_in_MVA())<FLOAT_EPSILON);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_get_terminal_complex_voltage_in_pu()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     POWER_SYSTEM_DATABASE* psdb = wt_gen->get_power_system_database();
     size_t bus = wt_gen->get_generator_bus();
@@ -62,21 +62,21 @@ void WT_GENERATOR_MODEL_TEST::test_get_terminal_complex_voltage_in_pu()
 
 void WT_GENERATOR_MODEL_TEST::test_get_number_of_lumped_wt_generators()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     TEST_ASSERT(fabs(model->get_number_of_lumped_wt_generators()-wt_gen->get_number_of_lumped_wt_generators())<FLOAT_EPSILON);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_get_rated_power_per_wt_generator_in_MW()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     TEST_ASSERT(fabs(model->get_rated_power_per_wt_generator_in_MW()-wt_gen->get_rated_power_per_wt_generator_in_MW())<FLOAT_EPSILON);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_get_nominal_frequency_in_Hz()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     POWER_SYSTEM_DATABASE* psdb = wt_gen->get_power_system_database();
     TEST_ASSERT(fabs(model->get_nominal_frequency_in_Hz()-psdb->get_system_base_frequency_in_Hz())<FLOAT_EPSILON);
@@ -84,14 +84,14 @@ void WT_GENERATOR_MODEL_TEST::test_get_nominal_frequency_in_Hz()
 
 void WT_GENERATOR_MODEL_TEST::test_get_source_impedance_in_pu_based_on_mbase()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     TEST_ASSERT(fabs(model->get_source_impedance_in_pu_based_on_mbase()-wt_gen->get_source_impedance_in_pu())<FLOAT_EPSILON);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_get_model_type()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     if(model!=NULL)
     {
@@ -104,7 +104,7 @@ void WT_GENERATOR_MODEL_TEST::test_get_model_type()
 
 void WT_GENERATOR_MODEL_TEST::test_set_get_initial_active_current_command()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     if(model!=NULL)
     {
@@ -121,7 +121,7 @@ void WT_GENERATOR_MODEL_TEST::test_set_get_initial_active_current_command()
 
 void WT_GENERATOR_MODEL_TEST::test_set_get_initial_reactive_current_command()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     if(model!=NULL)
     {
@@ -138,7 +138,7 @@ void WT_GENERATOR_MODEL_TEST::test_set_get_initial_reactive_current_command()
 
 void WT_GENERATOR_MODEL_TEST::run_a_step()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     double pelec = model->get_terminal_active_power_in_MW();
     while(true)
@@ -164,7 +164,7 @@ void WT_GENERATOR_MODEL_TEST::export_meter_values(double time)
 {
     ostringstream sstream;
 
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
 
     complex<double> Vxy = model->get_terminal_complex_voltage_in_pu();
@@ -193,7 +193,7 @@ void WT_GENERATOR_MODEL_TEST::export_meter_values(double time)
 
 void WT_GENERATOR_MODEL_TEST::test_active_current_step_response_of_wt_generator_model()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     ostringstream sstream;
     if(model!=NULL)
@@ -254,7 +254,7 @@ void WT_GENERATOR_MODEL_TEST::test_active_current_step_response_of_wt_generator_
 
 void WT_GENERATOR_MODEL_TEST::test_reactive_current_step_response_of_wt_generator_model()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     ostringstream sstream;
     if(model!=NULL)
@@ -315,7 +315,7 @@ void WT_GENERATOR_MODEL_TEST::test_reactive_current_step_response_of_wt_generato
 
 void WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_model()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     ostringstream sstream;
     if(model!=NULL)
@@ -378,7 +378,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_m
 
 void WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     ostringstream sstream;
     if(model!=NULL)
@@ -442,7 +442,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model
 
 void WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_step_response()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     ostringstream sstream;
     if(model!=NULL)
@@ -544,7 +544,7 @@ void WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_
 
 void WT_GENERATOR_MODEL_TEST::test_get_standard_model_string()
 {
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
     if(model!=NULL)
     {

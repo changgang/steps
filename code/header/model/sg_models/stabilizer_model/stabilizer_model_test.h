@@ -17,7 +17,7 @@
 #include "header/power_system_database.h"
 using namespace std;
 
-class STABILIZER_MODEL_TEST : public Test::Suite
+class STABILIZER_MODEL_TEST : public SG_MODEL_TEST
 {
     public:
         STABILIZER_MODEL_TEST();
@@ -29,10 +29,8 @@ class STABILIZER_MODEL_TEST : public Test::Suite
         void test_set_get_input_signal();
         void test_get_stabilizing_signal();
     private:
-        EXCITER_MODEL* get_exciter_model();
-        STABILIZER_MODEL* get_stabilizer_model();
-        IEE2ST* model;
-        SEXS* exciter_model;
+        EXCITER_MODEL* get_test_exciter_model();
+        STABILIZER_MODEL* get_test_stabilizer_model();
 };
 
 #endif//STABILIZER_TEST_H

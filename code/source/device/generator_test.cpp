@@ -10,7 +10,7 @@
 #include "header/steps_namespace.h"
 
 #include "header/model/sg_models/sync_generator_model/gencls.h"
-#include "header/model/compensator_model/COMP.h"
+#include "header/model/sg_models/compensator_model/COMP.h"
 #include "header/model/sg_models/exciter_model/SEXS.h"
 #include "header/model/sg_models/stabilizer_model/IEE2ST.h"
 #include "header/model/sg_models/turbine_governor_model/TGOV1.h"

@@ -24,7 +24,7 @@ void GENCLS_TEST::setup()
 {
     SYNC_GENERATOR_MODEL_TEST::setup();
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
 
     GENCLS model;
     model.set_H_in_s(3.0);
@@ -46,7 +46,7 @@ void GENCLS_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
 
     TEST_ASSERT(model->get_model_name()=="GENCLS");
@@ -57,7 +57,7 @@ void GENCLS_TEST::test_update_source_impedance()
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
     model->update_source_impedance();
 
@@ -71,7 +71,7 @@ void GENCLS_TEST::test_initialize_and_get_initialized_inputs()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     POWER_SYSTEM_DATABASE* db = genptr->get_power_system_database();
 
     complex<double> V=db->get_bus_complex_voltage_in_pu(1);
@@ -106,7 +106,7 @@ void GENCLS_TEST::test_set_get_rotor_angle()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     GENCLS* model = (GENCLS*) genptr->get_sync_generator_model();
 
     model->set_rotor_angle_in_deg(10.0);
@@ -117,7 +117,7 @@ void GENCLS_TEST::test_set_get_rotor_speed()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     GENCLS* model = (GENCLS*) genptr->get_sync_generator_model();
 
     model->set_rotor_speed_deviation_in_pu(0.1);

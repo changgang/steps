@@ -175,7 +175,7 @@ void WT3T0::initialize()
     if(not aero_model->is_model_initialized())
         aero_model->initialize();
 
-    double speed = aero_model->get_initial_speed_in_pu;
+    //double speed = aero_model->get_initial_speed_in_pu();
 
 
     size_t bus = gen->get_generator_bus();
@@ -193,7 +193,6 @@ void WT3T0::initialize()
     if(htfrac<=0.0)
     {
         generator_inertia.set_T_in_s(2.0*htotal);
-
     }
     else
     {

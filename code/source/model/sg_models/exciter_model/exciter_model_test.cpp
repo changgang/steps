@@ -3,7 +3,7 @@
 #include "header/steps_namespace.h"
 
 #include "header/model/sg_models/exciter_model/SEXS.h"
-#include "header/model/compensator_model/COMP.h"
+#include "header/model/sg_models/compensator_model/COMP.h"
 #include "header/model/sg_models/stabilizer_model/IEE2ST.h"
 #include "header/model/sg_models/sync_generator_model/gencls.h"
 
@@ -22,6 +22,8 @@ EXCITER_MODEL_TEST::EXCITER_MODEL_TEST()
 void EXCITER_MODEL_TEST::setup()
 {
     SG_MODEL_TEST::setup();
+
+    GENERATOR* genptr = get_test_generator();
 
     GENCLS gen_model;
     gen_model.set_Tj_in_s(6.0);
@@ -58,7 +60,7 @@ void EXCITER_MODEL_TEST::tear_down()
 
 void EXCITER_MODEL_TEST::test_get_model_type()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     EXCITER_MODEL* model = genptr->get_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -67,7 +69,7 @@ void EXCITER_MODEL_TEST::test_get_model_type()
 
 void EXCITER_MODEL_TEST::test_set_get_voltage_reference()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     EXCITER_MODEL* model = genptr->get_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -77,7 +79,7 @@ void EXCITER_MODEL_TEST::test_set_get_voltage_reference()
 
 void EXCITER_MODEL_TEST::test_get_compensated_voltage()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     EXCITER_MODEL* model = genptr->get_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -90,7 +92,7 @@ void EXCITER_MODEL_TEST::test_get_compensated_voltage()
 
 void EXCITER_MODEL_TEST::test_step_response()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     EXCITER_MODEL* model = genptr->get_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -110,9 +112,10 @@ void EXCITER_MODEL_TEST::export_meter_title()
 
 void EXCITER_MODEL_TEST::export_meter_values(double time)
 {
-    BUS* bus = db->get_bus(1);
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    BUS* bus = psdb->get_bus(1);
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     EXCITER_MODEL* model = genptr->get_exciter_model();
 
     double voltage = bus->get_voltage_in_pu();
@@ -126,7 +129,8 @@ void EXCITER_MODEL_TEST::export_meter_values(double time)
 
 void EXCITER_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
-    BUS* bus = db->get_bus(1);
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    BUS* bus = psdb->get_bus(1);
 
     bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
 }
@@ -134,7 +138,7 @@ void EXCITER_MODEL_TEST::apply_voltage_drop_of_10_percent()
 void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
 {
     ostringstream sstream;
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     genptr->clear_compensator_model();
 
     SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
@@ -208,7 +212,7 @@ void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
 
 void EXCITER_MODEL_TEST::test_get_standard_model_string()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     EXCITER_MODEL* model = genptr->get_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 

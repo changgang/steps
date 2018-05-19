@@ -20,7 +20,8 @@ class SG_MODEL_TEST : public Test::Suite
 {
     public:
         SG_MODEL_TEST();
-        GENERATOR* get_generator();
+        POWER_SYSTEM_DATABASE* get_test_power_system_database();
+        GENERATOR* get_test_generator();
         SYNC_GENERATOR_MODEL* get_sync_generator_model();
         EXCITER_MODEL* get_exciter_model();
         STABILIZER_MODEL* get_stabilizer_model();

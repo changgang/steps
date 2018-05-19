@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_electrical_model/WT3E1.h"
+#include "header/model/wtg_models/wt_electrical_model/wt3e1.h"
 #include "header/device/wt_generator.h"
 #include "header/power_system_database.h"
 #include "header/basic/utility.h"

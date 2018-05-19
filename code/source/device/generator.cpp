@@ -2,7 +2,7 @@
 #include "header/basic/utility.h"
 
 #include "header/model/sg_models/sync_generator_model/sync_generator_models.h"
-#include "header/model/compensator_model/compensator_models.h"
+#include "header/model/sg_models/compensator_model/compensator_models.h"
 #include "header/model/sg_models/exciter_model/exciter_models.h"
 #include "header/model/sg_models/stabilizer_model/stabilizer_models.h"
 #include "header/model/sg_models/turbine_governor_model/turbine_governor_models.h"

@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_turbine_model/wt3t1.h"
+#include "header/model/wtg_models/wt_turbine_model/wt3t1.h"
 #include "header/basic/utility.h"
 
 static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR MECHANICAL POWER IN PU", //0
@@ -21,8 +21,6 @@ WT3T1::~WT3T1()
 
 void WT3T1::clear()
 {
-    governor.set_limiter_type(WINDUP_LIMITER);
-    turbine.set_K(1.0);
 }
 
 void WT3T1::copy_from_const_model(const WT3T1& model)
@@ -32,14 +30,6 @@ void WT3T1::copy_from_const_model(const WT3T1& model)
     //this->set_power_system_database(model.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
-    this->governor.set_limiter_type(WINDUP_LIMITER);
-    this->set_R(model.get_R());
-    this->set_T1_in_s(model.get_T1_in_s());
-    this->set_T2_in_s(model.get_T2_in_s());
-    this->set_T3_in_s(model.get_T3_in_s());
-    this->set_Valvemax_in_pu(model.get_Valvemax_in_pu());
-    this->set_Valvemin_in_pu(model.get_Valvemin_in_pu());
-    this->set_D(model.get_D());
 }
 
 WT3T1::WT3T1(const WT3T1&model) : WT_TURBINE_MODEL()
@@ -71,9 +61,7 @@ double WT3T1::get_double_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="VMAX")
-        return get_Valvemax_in_pu();
-    if(par_name=="VMIN")
-        return get_Valvemin_in_pu();
+        return 0.0;
 
     return 0.0;
 }
@@ -88,9 +76,7 @@ void WT3T1::set_double_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
     if(par_name=="VMAX")
-        return set_Valvemax_in_pu(value);
-    if(par_name=="VMIN")
-        return set_Valvemin_in_pu(value);
+        return;
 }
 
 void WT3T1::set_Htotal_in_s(double H)
@@ -213,8 +199,6 @@ bool WT3T1::setup_model_with_bpa_string(string data)
 
 void WT3T1::initialize()
 {
-    calculate_wt_turbine_nominal_wind_speed();
-
     WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
     if(gen==NULL)
         return;
@@ -255,16 +239,6 @@ void WT3T1::initialize()
         shaft_twist.set_T_in_s(1.0/kshaft);
     }
 
-
-
-    double pmech0 = 0.0;
-    turbine.set_output(pmech0);
-    turbine.initialize();
-
-    governor.set_output(pmech0);
-    governor.initialize();
-
-    set_mechanical_power_reference_in_pu_based_on_mbase(pmech0*get_R());
 
     set_flag_model_initialized_as_true();
 }

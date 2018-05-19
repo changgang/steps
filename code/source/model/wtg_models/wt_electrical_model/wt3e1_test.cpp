@@ -12,8 +12,8 @@
 
 #include "thirdparty/cpptest/cpptest.h"
 
-#include "header/model/wt_electrical_model/wt3e1.h"
-#include "header/model/wt_electrical_model/wt_electrical_model_test.h"
+#include "header/model/wtg_models/wt_electrical_model/wt3e1.h"
+#include "header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h"
 using namespace std;
 
 class WT3E1_TEST : public WT_ELECTRICAL_MODEL_TEST

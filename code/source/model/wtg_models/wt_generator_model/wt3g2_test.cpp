@@ -19,7 +19,7 @@ void WT3G2_TEST::setup()
 {
     WT_GENERATOR_MODEL_TEST::setup();
 
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     WT3G2 model;
     wt_gen->set_number_of_lumped_wt_generators(50);
@@ -54,7 +54,7 @@ void WT3G2_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
 
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = wt_gen->get_wt_generator_model();
 
     TEST_ASSERT(model->get_model_name()=="WT3G2");
@@ -64,7 +64,7 @@ void WT3G2_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
 
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT3G2* model = (WT3G2*) wt_gen->get_wt_generator_model();
 
     wt_gen->set_number_of_lumped_wt_generators(5);
@@ -107,7 +107,7 @@ void WT3G2_TEST::test_initialize_and_get_initialized_inputs()
 
     ostringstream sstream;
 
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     //complex<double> V=db->get_bus_complex_voltage_in_pu(1);
 
@@ -133,7 +133,7 @@ void WT3G2_TEST::test_set_get_pll_angle()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
 
-    WT_GENERATOR* wt_gen = get_wt_generator();
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT3G2* model = (WT3G2*) wt_gen->get_wt_generator_model();
 
     model->set_pll_angle_in_deg(10.0);

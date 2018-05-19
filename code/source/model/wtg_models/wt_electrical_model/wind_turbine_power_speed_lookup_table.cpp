@@ -1,4 +1,4 @@
-#include "header/model/wt_electrical_model/wind_turbine_power_speed_lookup_table.h"
+#include "header/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.h"
 #include "header/basic/utility.h"
 WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE()
 {

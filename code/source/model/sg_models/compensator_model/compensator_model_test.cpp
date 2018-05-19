@@ -1,4 +1,4 @@
-#include "header/model/compensator_model/compensator_model_test.h"
+#include "header/model/sg_models/compensator_model/compensator_model_test.h"
 #include "header/model/sg_models/sync_generator_model/genrou.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -14,6 +14,8 @@ COMPENSATOR_MODEL_TEST::COMPENSATOR_MODEL_TEST()
 void COMPENSATOR_MODEL_TEST::setup()
 {
     SG_MODEL_TEST::setup();
+
+    GENERATOR* genptr = get_test_generator();
 
     GENROU genmodel;
     genmodel.set_Rs(0.01);
@@ -44,7 +46,9 @@ void COMPENSATOR_MODEL_TEST::tear_down()
 
 void COMPENSATOR_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
-    BUS* bus = db->get_bus(1);
+    GENERATOR* genptr = get_test_generator();
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    BUS* bus = psdb->get_bus(1);
     bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
 }
 
@@ -60,7 +64,7 @@ void COMPENSATOR_MODEL_TEST::export_meter_values(double time)
 {
     ostringstream sstream;
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     COMPENSATOR_MODEL* model = genptr->get_compensator_model();
 
     double voltage = abs(model->get_generator_terminal_voltage_in_pu());
@@ -77,7 +81,7 @@ void COMPENSATOR_MODEL_TEST::run_step_response_of_compensator_model()
 {
     ostringstream sstream;
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     COMPENSATOR_MODEL* model = genptr->get_compensator_model();
 
     sstream<<"Model:"<<model->get_standard_model_string()<<endl;
@@ -156,8 +160,10 @@ void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_voltage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"COMPENSATOR_MODEL_TEST");
 
+    GENERATOR* genptr = get_test_generator();
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     COMP model;
-    model.set_power_system_database(db);
+    model.set_power_system_database(psdb);
     model.set_device_id(genptr->get_device_id());
     TEST_ASSERT(model.get_generator_terminal_voltage_in_pu()==1.0);
 }
@@ -167,10 +173,13 @@ void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_current()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"COMPENSATOR_MODEL_TEST");
 
+    GENERATOR* genptr = get_test_generator();
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+
     (genptr->get_sync_generator_model())->initialize();
 
     COMP model;
-    model.set_power_system_database(db);
+    model.set_power_system_database(psdb);
     model.set_device_id(genptr->get_device_id());
 
     TEST_ASSERT(abs(model.get_generator_terminal_current_in_pu()-complex<double>(1.0,-0.3)*0.5)<FLOAT_EPSILON);

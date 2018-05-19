@@ -47,8 +47,12 @@ void SG_MODEL_TEST::tear_down()
 {
     delete db;
 }
+POWER_SYSTEM_DATABASE* SG_MODEL_TEST::get_test_power_system_database()
+{
+    return db;
+}
 
-GENERATOR* SG_MODEL_TEST::get_generator()
+GENERATOR* SG_MODEL_TEST::get_test_generator()
 {
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
@@ -62,7 +66,7 @@ GENERATOR* SG_MODEL_TEST::get_generator()
 
 SYNC_GENERATOR_MODEL* SG_MODEL_TEST::get_sync_generator_model()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
         return genptr->get_sync_generator_model();
     else
@@ -71,7 +75,7 @@ SYNC_GENERATOR_MODEL* SG_MODEL_TEST::get_sync_generator_model()
 
 EXCITER_MODEL* SG_MODEL_TEST::get_exciter_model()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
         return genptr->get_exciter_model();
     else
@@ -80,7 +84,7 @@ EXCITER_MODEL* SG_MODEL_TEST::get_exciter_model()
 
 STABILIZER_MODEL* SG_MODEL_TEST::get_stabilizer_model()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
         return genptr->get_stabilizer_model();
     else
@@ -89,7 +93,7 @@ STABILIZER_MODEL* SG_MODEL_TEST::get_stabilizer_model()
 
 COMPENSATOR_MODEL* SG_MODEL_TEST::get_compensator_model()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
         return genptr->get_compensator_model();
     else
@@ -98,7 +102,7 @@ COMPENSATOR_MODEL* SG_MODEL_TEST::get_compensator_model()
 
 TURBINE_GOVERNOR_MODEL* SG_MODEL_TEST::get_turbine_governor_model()
 {
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
         return genptr->get_turbine_governor_model();
     else

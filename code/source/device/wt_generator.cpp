@@ -2,10 +2,10 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include "header/model/wtg_models/wt_generator_model/wt_generator_models.h"
-#include "header/model/wt_electrical_model/wt_electrical_models.h"
-#include "header/model/wt_turbine_model/wt_turbine_models.h"
-#include "header/model/wt_pitch_model/wt_pitch_models.h"
-#include "header/model/wind_speed_model/wind_speed_models.h"
+#include "header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
+#include "header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
+#include "header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
+#include "header/model/wtg_models/wind_speed_model/wind_speed_models.h"
 
 #include <iostream>
 
@@ -498,11 +498,11 @@ void WT_GENERATOR::set_wind_speed_model(const WIND_SPEED_MODEL* model)
 
     WIND_SPEED_MODEL *new_model = NULL;
     string model_name = model->get_model_name();
-    if(model_name=="WBLINE")
+    /*if(model_name=="WBLINE")
     {
         WBLINE* smodel = (WBLINE*) (model);
         new_model = (WIND_SPEED_MODEL*) new WBLINE(*smodel);
-    }
+    }*/
 
     if(new_model!=NULL)
     {

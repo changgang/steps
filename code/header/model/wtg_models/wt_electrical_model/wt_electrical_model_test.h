@@ -10,12 +10,12 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "header/model/wtg_models/wtg_model_test.h"
 
 #include "header/power_system_database.h"
 using namespace std;
 
-class EXCITER_MODEL_TEST : public Test::Suite
+class WT_ELECTRICAL_MODEL_TEST : public WTG_MODEL_TEST
 {
     public:
         WT_ELECTRICAL_MODEL_TEST();
