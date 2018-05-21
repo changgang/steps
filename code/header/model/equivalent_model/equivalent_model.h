@@ -4,12 +4,14 @@
 #include "header/model/model.h"
 #include <complex>
 
+class EQUIVALENT_DEVICE;
 
 class EQUIVALENT_MODEL : public MODEL
 {
     public:
         EQUIVALENT_MODEL();
         virtual ~EQUIVALENT_MODEL();
+        EQUIVALENT_DEVICE* get_equivalent_device_pointer() const;
         // common equivalent model
         virtual string get_model_type() const;
 

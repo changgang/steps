@@ -60,7 +60,7 @@ string WT_AERODYNAMIC_MODEL::get_model_type() const
 
 double WT_AERODYNAMIC_MODEL::get_damping_in_pu() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
@@ -177,6 +177,10 @@ void WT_AERODYNAMIC_MODEL::set_initial_turbine_speed_in_rad_per_s(double w)
     initial_turbine_speed_in_rad_per_s = w;
 }
 
+double WT_AERODYNAMIC_MODEL::get_initial_pitch_angle_in_deg() const
+{
+    return initial_pitch_angle_in_deg;
+}
 
 void WT_AERODYNAMIC_MODEL::set_air_density_in_kgpm3(double rou)
 {
@@ -192,7 +196,7 @@ void WT_AERODYNAMIC_MODEL::set_overspeed_mode_flag(bool flag)
 
 double WT_AERODYNAMIC_MODEL::get_wind_speed_in_mps() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
@@ -210,7 +214,7 @@ double WT_AERODYNAMIC_MODEL::get_air_density_in_kgpm3() const
 
 double WT_AERODYNAMIC_MODEL::get_pitch_angle_in_deg() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
@@ -228,7 +232,7 @@ double WT_AERODYNAMIC_MODEL::get_turbine_frequency_in_Hz() const
 
 double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 

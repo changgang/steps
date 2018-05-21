@@ -34,7 +34,7 @@ class WT_PITCH_MODEL : public WTG_MODEL
         double get_frequency_reference_in_pu() const;
         double get_power_reference_in_pu() const;
 
-        double get_initial_pitch_angle_in_deg_from_wt_turbine_model() const;
+        double get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
 

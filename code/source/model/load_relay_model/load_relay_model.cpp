@@ -11,6 +11,11 @@ LOAD_RELAY_MODEL::~LOAD_RELAY_MODEL()
     ;
 }
 
+LOAD* LOAD_RELAY_MODEL::get_load_pointer() const
+{
+    return (LOAD*) get_device_pointer();
+}
+
 void LOAD_RELAY_MODEL::set_subsystem_type(SUBSYSTEM_TYPE subtype)
 {
     subsystem_type = subtype;

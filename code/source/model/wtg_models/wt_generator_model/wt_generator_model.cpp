@@ -44,7 +44,7 @@ double WT_GENERATOR_MODEL::get_initial_reactive_current_command_in_pu_based_on_m
 
 double WT_GENERATOR_MODEL::get_active_current_command_in_pu_based_on_mbase() const
 {
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return 0.0;
 
@@ -57,7 +57,7 @@ double WT_GENERATOR_MODEL::get_active_current_command_in_pu_based_on_mbase() con
 
 double WT_GENERATOR_MODEL::get_reactive_current_command_in_pu_based_on_mbase() const
 {
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return 0.0;
 

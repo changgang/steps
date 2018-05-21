@@ -11,9 +11,14 @@ SG_MODEL::~SG_MODEL()
     ;
 }
 
+GENERATOR* SG_MODEL::get_generator_pointer() const
+{
+    return (GENERATOR*) get_device_pointer();
+}
+
 double SG_MODEL::get_mbase_in_MVA() const
 {
-    GENERATOR* gen = (GENERATOR*) get_device_pointer();
+    GENERATOR* gen = get_generator_pointer();
     if(gen!=NULL)
         return gen->get_mbase_in_MVA();
     else
@@ -22,7 +27,7 @@ double SG_MODEL::get_mbase_in_MVA() const
 
 complex<double> SG_MODEL::get_terminal_complex_voltage_in_pu() const
 {
-    GENERATOR* gen = (GENERATOR*) get_device_pointer();
+    GENERATOR* gen = get_generator_pointer();
     if(gen==NULL)
         return 0.0;
 

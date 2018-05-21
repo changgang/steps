@@ -24,7 +24,7 @@ string COMPENSATOR_MODEL::get_model_type() const
 
 complex<double> COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
     else
@@ -37,7 +37,7 @@ complex<double> COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
 
 complex<double> COMPENSATOR_MODEL::get_generator_terminal_current_in_pu() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
     else

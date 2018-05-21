@@ -199,7 +199,7 @@ bool WT3T1::setup_model_with_bpa_string(string data)
 
 void WT3T1::initialize()
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return;
 
@@ -343,7 +343,7 @@ double WT3T1::get_variable_with_name(string var_name)
 
     if(var_name == "GENERATOR MECHANICAL POWER IN MW")
     {
-        GENERATOR* generator = (GENERATOR*) get_device_pointer();
+        WT_GENERATOR* generator = get_wt_generator_pointer();
         return get_mechanical_power_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
     }
 

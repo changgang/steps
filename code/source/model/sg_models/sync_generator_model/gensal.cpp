@@ -106,7 +106,7 @@ void GENSAL::set_double_data_with_name(string par_name, double value)
 
 void GENSAL::update_source_impedance()
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
     {
         complex<double> Z(get_Rs(),get_Xpp());
@@ -200,7 +200,7 @@ void GENSAL::initialize()
     INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
 
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     double mbase = get_mbase_in_MVA();
 
     complex<double> Zsource(get_Rs(), get_Xpp());
@@ -262,7 +262,7 @@ void GENSAL::initialize_rotor_angle()
 {
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
 
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     double mbase = get_mbase_in_MVA();
 
     complex<double> Zsource(get_Rs(), get_Xpp());
@@ -547,7 +547,7 @@ double GENSAL::get_variable_with_name(string var_name)
     if(var_name == "GENERATOR TERMINAL CURRENT IN KA")
     {
         POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-        GENERATOR* generator = (GENERATOR*) get_device_pointer();
+        GENERATOR* generator = get_generator_pointer();
         size_t bus = generator->get_generator_bus();
         double vbase = psdb->get_bus_base_voltage_in_kV(bus);
         double mbase = generator->get_mbase_in_MVA();

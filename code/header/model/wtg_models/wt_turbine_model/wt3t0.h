@@ -8,7 +8,7 @@ class WT3T0 : public WT_TURBINE_MODEL
 {
     public:
         WT3T0();
-        WT3T0(const WT3T0&model);
+        WT3T0(const WT3T0& model);
         virtual ~WT3T0();
         virtual WT3T0& operator=(const WT3T0& model);
     public: // specific model level
@@ -36,8 +36,6 @@ class WT3T0 : public WT_TURBINE_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_wind_turbine_mechanical_power_in_pu_based_on_mbase() const;
-        virtual double get_wind_turbine_generator_speed_reference_in_pu() const;
         virtual double get_wind_turbine_generator_speed_in_pu() const;
         virtual double get_wind_turbine_generator_rotor_angle_in_deg() const;
         virtual double get_wind_turbine_generator_rotor_angle_in_rad() const;
@@ -58,10 +56,10 @@ class WT3T0 : public WT_TURBINE_MODEL
     private:
         void copy_from_const_model(const WT3T0& model);
 
-        INTEGRAL_BLOCK shaft_twist;
-        INTEGRAL_BLOCK turbine_inertia;
-        INTEGRAL_BLOCK generator_inertia;
-        INTEGRAL_BLOCK generator_rotor_angle;
+        INTEGRAL_BLOCK shaft_twist_block;
+        INTEGRAL_BLOCK turbine_inertia_block;
+        INTEGRAL_BLOCK generator_inertia_block;
+        INTEGRAL_BLOCK generator_rotor_angle_block;
 
         double Dshaft;
 };

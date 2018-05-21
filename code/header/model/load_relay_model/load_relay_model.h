@@ -4,11 +4,15 @@
 #include "header/model/model.h"
 #include "header/basic/steps_enum.h"
 
+class LOAD;
+
 class LOAD_RELAY_MODEL : public MODEL
 {
     public:
         LOAD_RELAY_MODEL();
         virtual ~LOAD_RELAY_MODEL();
+
+        LOAD* get_load_pointer() const;
 
         void set_subsystem_type(SUBSYSTEM_TYPE subtype);
         SUBSYSTEM_TYPE get_subsystem_type() const;

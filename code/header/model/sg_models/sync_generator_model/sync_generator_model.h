@@ -24,9 +24,6 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
     public: // sync generator common
         virtual string get_model_type() const;
 
-        double get_mbase_in_MVA() const;
-        complex<double> get_terminal_complex_voltage_in_pu() const;
-
         void set_Rs(double Rs);
         void set_Xd(double Xd);
         void set_Xq(double Xq);

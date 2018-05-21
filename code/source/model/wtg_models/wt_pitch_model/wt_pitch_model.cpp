@@ -30,7 +30,7 @@ string WT_PITCH_MODEL::get_model_type() const
 
 double WT_PITCH_MODEL::get_wt_generator_speed_in_pu() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
@@ -43,7 +43,7 @@ double WT_PITCH_MODEL::get_wt_generator_speed_in_pu() const
 
 double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 1.0;
 
@@ -57,7 +57,7 @@ double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
 
 double WT_PITCH_MODEL::get_wt_active_power_command_in_pu() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
@@ -99,15 +99,15 @@ double WT_PITCH_MODEL::get_power_reference_in_pu() const
     return power_reference_in_pu;
 }
 
-double WT_PITCH_MODEL::get_initial_pitch_angle_in_deg_from_wt_turbine_model() const
+double WT_PITCH_MODEL::get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
-    WT_TURBINE_MODEL* turbine = gen->get_wt_turbine_model();
-    if(turbine!=NULL and turbine->is_model_initialized())
-        return turbine->get_initial_pitch_angle_in_deg();
+    WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
+    if(aero_model!=NULL)
+        return aero_model->get_initial_pitch_angle_in_deg();
     else
         return 0.0;
 }

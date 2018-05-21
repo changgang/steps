@@ -25,7 +25,7 @@ string EXCITER_MODEL::get_model_type() const
 
 double EXCITER_MODEL::get_initial_excitation_voltage_in_pu_from_sync_generator_model() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
     {
         SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
@@ -42,7 +42,7 @@ double EXCITER_MODEL::get_initial_excitation_voltage_in_pu_from_sync_generator_m
 double EXCITER_MODEL::get_compensated_voltage_in_pu() const
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
     COMPENSATOR_MODEL* comp_model = generator->get_compensator_model();
@@ -59,7 +59,7 @@ double EXCITER_MODEL::get_compensated_voltage_in_pu() const
 
 double EXCITER_MODEL::get_stabilizing_signal_in_pu() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
     {
         STABILIZER_MODEL* pss = generator->get_stabilizer_model();

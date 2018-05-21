@@ -19,7 +19,7 @@ string LOAD_FREQUENCY_RELAY_MODEL::get_model_type() const
 
 double LOAD_FREQUENCY_RELAY_MODEL::get_bus_frequency_in_Hz() const
 {
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     if(load==NULL)
         return 0.0;
 

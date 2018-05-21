@@ -11,9 +11,14 @@ WTG_MODEL::~WTG_MODEL()
     ;
 }
 
+WT_GENERATOR* WTG_MODEL::get_wt_generator_pointer() const
+{
+    return (WT_GENERATOR*) get_device_pointer();
+}
+
 double WTG_MODEL::get_mbase_in_MVA() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen!=NULL)
         return gen->get_mbase_in_MVA();
     else
@@ -22,7 +27,7 @@ double WTG_MODEL::get_mbase_in_MVA() const
 
 complex<double> WTG_MODEL::get_terminal_complex_voltage_in_pu() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
@@ -37,7 +42,7 @@ complex<double> WTG_MODEL::get_terminal_complex_voltage_in_pu() const
 
 size_t WTG_MODEL::get_number_of_lumped_wt_generators() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
     return gen->get_number_of_lumped_wt_generators();
@@ -45,7 +50,7 @@ size_t WTG_MODEL::get_number_of_lumped_wt_generators() const
 
 double WTG_MODEL::get_rated_power_per_wt_generator_in_MW() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
     return gen->get_rated_power_per_wt_generator_in_MW();
@@ -53,7 +58,7 @@ double WTG_MODEL::get_rated_power_per_wt_generator_in_MW() const
 
 double WTG_MODEL::get_nominal_frequency_in_Hz() const
 {
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
@@ -66,7 +71,7 @@ double WTG_MODEL::get_nominal_frequency_in_Hz() const
 
 complex<double> WTG_MODEL::get_source_impedance_in_pu_based_on_mbase() const
 {
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return 0.0;
     else

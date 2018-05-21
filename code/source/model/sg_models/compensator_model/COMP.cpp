@@ -162,7 +162,7 @@ void COMP::save()
 string COMP::get_standard_model_string() const
 {
     ostringstream sstream;
-    GENERATOR* gen = (GENERATOR*) get_device_pointer();
+    GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
     sstream<<setw(8)<<bus<<", "

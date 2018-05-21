@@ -65,7 +65,6 @@
 #include "header/toolkit/dynamic_simulator/dynamic_simulator_test.h"
 
 #include "header/model/model_test.h"
-#include "header/model/source_model/source_model_test.h"
 #include "header/model/sg_models/sync_generator_model/sync_generator_model_test.h"
 #include "header/model/sg_models/sync_generator_model/gencls_test.h"
 #include "header/model/sg_models/sync_generator_model/genrou_test.h"
@@ -240,7 +239,6 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new METER_SETTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new MODEL_TEST));
-        ts.add(unique_ptr<Test::Suite>(new SOURCE_MODEL_TEST));
         //ts.add(unique_ptr<Test::Suite>(new SYNC_GENERATOR_MODEL_TEST));
         ts.add(unique_ptr<Test::Suite>(new GENCLS_TEST));
         ts.add(unique_ptr<Test::Suite>(new GENROU_TEST));

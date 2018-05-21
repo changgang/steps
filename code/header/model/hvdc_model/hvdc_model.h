@@ -8,6 +8,8 @@
 #include "header/block/integral_block.h"
 #include <complex>
 
+class HVDC;
+
 class HVDC_MODEL : public MODEL
 {
     /*
@@ -21,6 +23,7 @@ class HVDC_MODEL : public MODEL
     public:
         HVDC_MODEL();
         virtual ~HVDC_MODEL();
+        HVDC* get_hvdc_pointer() const;
     public: // exciter common
         virtual string get_model_type() const;
         // get input for initialization

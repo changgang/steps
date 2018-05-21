@@ -22,7 +22,7 @@ string TURBINE_GOVERNOR_MODEL::get_model_type() const
 
 double TURBINE_GOVERNOR_MODEL::get_rotor_speed_deviation_in_pu_from_sync_generator_model() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
 
@@ -36,7 +36,7 @@ double TURBINE_GOVERNOR_MODEL::get_rotor_speed_deviation_in_pu_from_sync_generat
 }
 double TURBINE_GOVERNOR_MODEL::get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
     else

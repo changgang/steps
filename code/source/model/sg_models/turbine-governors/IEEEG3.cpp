@@ -311,7 +311,7 @@ void IEEEG3::initialize()
     if(is_model_initialized())
         return;
 
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return;
 
@@ -494,7 +494,7 @@ double IEEEG3::get_variable_with_name(string var_name)
 
     if(var_name == "GENERATOR MECHANICAL POWER IN MW")
     {
-        GENERATOR* generator = (GENERATOR*) get_device_pointer();
+        GENERATOR* generator = get_generator_pointer();
         return get_mechanical_power_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
     }
 

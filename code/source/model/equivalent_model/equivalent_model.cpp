@@ -13,6 +13,11 @@ EQUIVALENT_MODEL::~EQUIVALENT_MODEL()
     ;
 }
 
+EQUIVALENT_DEVICE* EQUIVALENT_MODEL::get_equivalent_device_pointer() const
+{
+    return (EQUIVALENT_DEVICE*) get_device_pointer();
+}
+
 string EQUIVALENT_MODEL::get_model_type() const
 {
     return "EQUIVALENT MODEL";

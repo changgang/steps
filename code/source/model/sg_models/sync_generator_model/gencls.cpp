@@ -98,7 +98,7 @@ void GENCLS::set_double_data_with_name(string par_name, double value)
 
 void GENCLS::update_source_impedance()
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
     {
         complex<double> Zs = generator->get_source_impedance_in_pu();
@@ -159,7 +159,7 @@ void GENCLS::initialize()
     rotor_speed_block->set_output(speed);
     rotor_speed_block->initialize();
 
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     double mbase = get_mbase_in_MVA();
 
     double rs = get_Rs();
@@ -191,7 +191,7 @@ void GENCLS::initialize_rotor_angle()
     double xdp = get_Xdp();
     complex<double> Z(rs, xdp);
 
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     double P = generator->get_p_generation_in_MW();
     double Q = generator->get_q_generation_in_MVar();
     double mbase = get_mbase_in_MVA();
@@ -389,7 +389,7 @@ double GENCLS::get_variable_with_name(string var_name)
     if(var_name == "GENERATOR TERMINAL CURRENT IN KA")
     {
         POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-        GENERATOR* generator = (GENERATOR*) get_device_pointer();
+        GENERATOR* generator = get_generator_pointer();
         size_t bus = generator->get_generator_bus();
         double vbase = psdb->get_bus_base_voltage_in_kV(bus);
         double mbase = generator->get_mbase_in_MVA();

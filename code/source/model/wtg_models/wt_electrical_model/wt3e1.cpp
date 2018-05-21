@@ -68,7 +68,7 @@ string WT3E1::get_model_name() const
 
 double WT3E1::get_active_power_current_command_in_pu()
 {
-    WT_GENERATOR* source = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* source = get_wt_generator_pointer();
     if(source==NULL)
         return 0.0;
 
@@ -89,7 +89,7 @@ double WT3E1::get_active_power_current_command_in_pu()
 
 double WT3E1::get_reactive_power_current_command_in_pu()
 {
-    WT_GENERATOR* source = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* source = get_wt_generator_pointer();
     if(source==NULL)
         return 0.0;
 
@@ -582,7 +582,7 @@ void WT3E1::initialize()
     if(is_model_initialized())
         return;
 
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return;
 
@@ -744,7 +744,7 @@ void WT3E1::run(DYNAMIC_MODE mode)
     if(is_model_initialized())
         return;
 
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return;
 
@@ -883,7 +883,7 @@ void WT3E1::save()
 string WT3E1::get_standard_model_string() const
 {
     ostringstream sstream;
-    WT_GENERATOR* source = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* source = get_wt_generator_pointer();
     size_t bus = source->get_source_bus();
     string identifier= source->get_identifier();
 

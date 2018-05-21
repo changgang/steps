@@ -47,6 +47,11 @@ HVDC_MODEL::~HVDC_MODEL()
     ;
 }
 
+HVDC* HVDC_MODEL::get_hvdc_pointer() const
+{
+    return (HVDC*) get_device_pointer();
+}
+
 string HVDC_MODEL::get_model_type() const
 {
     return "HVDC";
@@ -55,7 +60,7 @@ string HVDC_MODEL::get_model_type() const
 double HVDC_MODEL::get_initial_alpha_in_deg() const
 {
     ostringstream sstream;
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
     {
         sstream<<"Waring. HVDC dynamic model is not connected to any HVDC device. Initial alpha will be returned as 0.0.";
@@ -68,7 +73,7 @@ double HVDC_MODEL::get_initial_alpha_in_deg() const
 double HVDC_MODEL::get_initial_gamma_in_deg() const
 {
     ostringstream sstream;
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
     {
         sstream<<"Waring. HVDC dynamic model is not connected to any HVDC device. Initial gamma will be returned as 0.0.";
@@ -80,7 +85,7 @@ double HVDC_MODEL::get_initial_gamma_in_deg() const
 
 double HVDC_MODEL::get_auxiliary_signal_in_MW() const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -238,15 +243,15 @@ VDCOL HVDC_MODEL::get_VDCOL() const
 
 void HVDC_MODEL::set_attached_device_of_common_meters()
 {
-    DEVICE* device = get_device_pointer();
-    block_timer.set_attached_device(device);
-    bypass_timer.set_attached_device(device);
-    mode_switch_timer.set_attached_device(device);
+    HVDC* hvdc = get_hvdc_pointer();
+    block_timer.set_attached_device(hvdc);
+    bypass_timer.set_attached_device(hvdc);
+    mode_switch_timer.set_attached_device(hvdc);
 }
 
 double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, double Idc_measured)
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -320,7 +325,7 @@ double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, 
 
 double HVDC_MODEL::get_inverter_dc_voltage_command_in_kV(double Icommand)
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -382,7 +387,7 @@ double HVDC_MODEL::get_inverter_dc_voltage_command_in_kV(double Icommand)
 
 void HVDC_MODEL::block_hvdc()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -419,7 +424,7 @@ void HVDC_MODEL::block_hvdc()
 
 void HVDC_MODEL::unblock_hvdc()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -444,7 +449,7 @@ void HVDC_MODEL::unblock_hvdc()
 
 void HVDC_MODEL::manual_block_hvdc()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -466,7 +471,7 @@ void HVDC_MODEL::manual_block_hvdc()
 
 void HVDC_MODEL::manual_unblock_hvdc()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -492,7 +497,7 @@ bool HVDC_MODEL::is_manual_blocked() const
 
 bool HVDC_MODEL::is_blocked() const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return false;
 
@@ -501,7 +506,7 @@ bool HVDC_MODEL::is_blocked() const
 
 bool HVDC_MODEL::is_unblocking() const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return false;
 
@@ -525,7 +530,7 @@ double HVDC_MODEL::get_unblocking_time() const
 
 void HVDC_MODEL::clear_unblocking_time(HVDC_CONVERTER_SIDE converter)
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -564,7 +569,7 @@ bool HVDC_MODEL::is_block_timer_timed_out() const
 void HVDC_MODEL::bypass_hvdc()
 {
     ostringstream sstream;
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -603,7 +608,7 @@ void HVDC_MODEL::bypass_hvdc()
 
 void HVDC_MODEL::unbypass_hvdc()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -627,7 +632,7 @@ void HVDC_MODEL::unbypass_hvdc()
 
 void HVDC_MODEL::manual_bypass_hvdc()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -646,7 +651,7 @@ void HVDC_MODEL::manual_bypass_hvdc()
 
 void HVDC_MODEL::manual_unbypass_hvdc()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -672,7 +677,7 @@ bool HVDC_MODEL::is_manual_bypassed() const
 
 bool HVDC_MODEL::is_bypassed() const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return false;
 
@@ -681,7 +686,7 @@ bool HVDC_MODEL::is_bypassed() const
 
 bool HVDC_MODEL::is_unbypassing() const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return false;
 
@@ -715,7 +720,7 @@ bool HVDC_MODEL::is_bypass_timer_timed_out() const
 
 void HVDC_MODEL::switch_hvdc_mode()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -737,7 +742,7 @@ void HVDC_MODEL::switch_hvdc_mode()
 
 void HVDC_MODEL::switch_hvdc_mode_back()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -759,7 +764,7 @@ void HVDC_MODEL::switch_hvdc_mode_back()
 
 bool HVDC_MODEL::is_mode_switched() const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return false;
 
@@ -768,7 +773,7 @@ bool HVDC_MODEL::is_mode_switched() const
 
 double HVDC_MODEL::get_mode_switched_time() const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return INFINITE_THRESHOLD;
 
@@ -786,7 +791,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 
     ostringstream sstream;
 
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -1028,7 +1033,7 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
 {
     ostringstream sstream;
 
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -1134,7 +1139,7 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
 }
 void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset_kV, double Vdc_medium_kV)
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -1276,7 +1281,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
 
 double HVDC_MODEL::get_converter_dc_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1292,7 +1297,7 @@ double HVDC_MODEL::get_converter_dc_voltage_in_kV(HVDC_CONVERTER_SIDE converter)
 
 double HVDC_MODEL::get_converter_dc_current_in_kA(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1307,7 +1312,7 @@ double HVDC_MODEL::get_converter_dc_current_in_kA(HVDC_CONVERTER_SIDE converter)
 
 double HVDC_MODEL::get_converter_dc_power_in_MW(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1318,7 +1323,7 @@ double HVDC_MODEL::get_converter_dc_power_in_MW(HVDC_CONVERTER_SIDE converter) c
 
 double HVDC_MODEL::get_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1333,7 +1338,7 @@ double HVDC_MODEL::get_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE conve
 
 double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1362,7 +1367,7 @@ double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER
 
 complex<double> HVDC_MODEL::get_converter_ac_complex_power_in_MVA(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1395,7 +1400,7 @@ complex<double> HVDC_MODEL::get_converter_ac_complex_power_in_MVA(HVDC_CONVERTER
 
 double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1440,7 +1445,7 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
 
 complex<double> HVDC_MODEL::get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1462,7 +1467,7 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE c
 
 complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 
@@ -1485,7 +1490,7 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE c
 
 double HVDC_MODEL::get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter) const
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return 0.0;
 

@@ -347,7 +347,7 @@ double SYNC_GENERATOR_MODEL::get_initial_excitation_voltage_in_pu() const
 
 double SYNC_GENERATOR_MODEL::get_mechanical_power_in_pu_based_on_mbase() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator != NULL)
     {
         TURBINE_GOVERNOR_MODEL* turbine_governor = generator->get_turbine_governor_model();
@@ -372,7 +372,7 @@ double SYNC_GENERATOR_MODEL::get_mechanical_power_in_MW() const
 
 double SYNC_GENERATOR_MODEL::get_excitation_voltage_in_pu() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator != NULL)
     {
         EXCITER_MODEL* exciter = generator->get_exciter_model();

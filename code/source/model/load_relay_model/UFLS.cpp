@@ -235,7 +235,7 @@ bool UFLS::setup_model_with_bpa_string(string data)
 
 void UFLS::initialize()
 {
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
     double fbase = psdb->get_system_base_frequency_in_Hz();
 
@@ -260,7 +260,7 @@ void UFLS::run(DYNAMIC_MODE mode)
 {
     ostringstream sstream;
 
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     double current_time = load->get_dynamic_simulator_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
@@ -434,7 +434,7 @@ void UFLS::save()
 string UFLS::get_standard_model_string() const
 {
     ostringstream sstream;
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
     string identifier = load->get_identifier();
     sstream<<bus<<", "

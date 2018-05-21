@@ -330,7 +330,7 @@ void PSASPE2::initialize()
     if(is_model_initialized())
         return;
 
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return;
 
@@ -377,7 +377,7 @@ void PSASPE2::initialize()
 
 void PSASPE2::run(DYNAMIC_MODE mode)
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return;
 
@@ -418,7 +418,7 @@ void PSASPE2::run(DYNAMIC_MODE mode)
 
 double PSASPE2::get_excitation_voltage_in_pu() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
 
@@ -472,7 +472,7 @@ void PSASPE2::save()
 string PSASPE2::get_standard_model_string() const
 {
     ostringstream sstream;
-    GENERATOR* gen = (GENERATOR*) get_device_pointer();
+    GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
     double KR = get_KR();

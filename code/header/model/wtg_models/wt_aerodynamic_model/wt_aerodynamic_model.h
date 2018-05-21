@@ -42,6 +42,8 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         void set_initial_pitch_angle_in_deg(double p);
         void set_initial_turbine_speed_in_rad_per_s(double w);
 
+        double get_initial_pitch_angle_in_deg() const;
+
         void set_air_density_in_kgpm3(double rou);
         void set_overspeed_mode_flag(bool flag);
 
@@ -66,6 +68,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual double get_turbine_mechanical_power_in_MW() const = 0;
+        virtual double get_turbine_reference_speed_in_rad_per_s() const = 0;
 
         virtual void check() = 0;
         virtual void clear() = 0;

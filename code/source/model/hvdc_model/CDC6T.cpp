@@ -401,7 +401,7 @@ void CDC6T::initialize()
     if(is_model_initialized())
         return;
 
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -428,7 +428,7 @@ void CDC6T::run(DYNAMIC_MODE mode)
 {
     ostringstream sstream;
 
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -459,7 +459,7 @@ void CDC6T::solve_hvdc_model_without_integration()
 {
     ostringstream sstream;
 
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -479,7 +479,7 @@ void CDC6T::solve_hvdc_model_without_integration()
 
 void CDC6T::check_blocking_logic()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -677,7 +677,7 @@ void CDC6T::check_blocking_logic()
 
 void CDC6T::check_bypassing_logic()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -804,7 +804,7 @@ void CDC6T::check_bypassing_logic()
 
 void CDC6T::check_mode_switching_logic()
 {
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
 
@@ -870,7 +870,7 @@ string CDC6T::get_standard_model_string() const
 {
     ostringstream sstream;
 
-    HVDC* hvdc = (HVDC*) get_device_pointer();
+    HVDC* hvdc = get_hvdc_pointer();
     size_t rbus = hvdc->get_converter_bus(RECTIFIER);
     size_t ibus = hvdc->get_converter_bus(INVERTER);
     string dcname = hvdc->get_name();

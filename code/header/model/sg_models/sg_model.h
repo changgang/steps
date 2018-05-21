@@ -4,12 +4,15 @@
 #include "header/model/model.h"
 #include<complex>
 
+class GENERATOR;
+
 class SG_MODEL : public MODEL
 {
 public:
         SG_MODEL();
         virtual ~SG_MODEL();
 
+        GENERATOR* get_generator_pointer() const;
         double get_mbase_in_MVA() const;
         complex<double> get_terminal_complex_voltage_in_pu() const;
     public: // specific model level

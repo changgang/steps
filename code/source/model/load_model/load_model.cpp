@@ -15,6 +15,11 @@ LOAD_MODEL::~LOAD_MODEL()
     ;
 }
 
+LOAD* LOAD_MODEL::get_load_pointer() const
+{
+    return (LOAD*) get_device_pointer();
+}
+
 string LOAD_MODEL::get_model_type() const
 {
     return "LOAD CHARACTERISTICS";
@@ -24,7 +29,7 @@ double LOAD_MODEL::get_bus_voltage_in_pu() const
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
 
     return psdb->get_bus_voltage_in_pu(bus);
@@ -33,7 +38,7 @@ double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
 
     return psdb->get_bus_frequency_deviation_in_pu(bus);

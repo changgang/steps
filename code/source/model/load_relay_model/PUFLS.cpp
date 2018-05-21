@@ -298,7 +298,7 @@ bool PUFLS::setup_model_with_bpa_string(string data)
 
 void PUFLS::initialize()
 {
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     if(load==NULL)
         return;
 
@@ -334,7 +334,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
 {
     ostringstream sstream;
 
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     double TIME = load->get_dynamic_simulator_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
@@ -381,7 +381,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
 
 void PUFLS::append_new_minimum_frequency()
 {
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     double current_time = load->get_dynamic_simulator_time_in_s();
 
     double current_freq = frequency_sensor.get_output();
@@ -396,7 +396,7 @@ void PUFLS::append_new_minimum_frequency()
 
 double PUFLS::get_continuous_shed_command_in_pu() const
 {
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     double current_time = load->get_dynamic_simulator_time_in_s();
 
     //double current_freq = frequency_sensor.get_output();
@@ -558,7 +558,7 @@ void PUFLS::trip_additional_stage()
     if(is_additional_stage_tripped())
         return;
 
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     double current_time = load->get_dynamic_simulator_time_in_s();
 
     ostringstream sstream;
@@ -575,7 +575,7 @@ void PUFLS::try_to_start_additional_stage_timer()
     if(is_additional_stage_timer_started())
         return;
 
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     double current_time = load->get_dynamic_simulator_time_in_s();
 
     ostringstream sstream;
@@ -636,7 +636,7 @@ void PUFLS::try_to_reset_additional_stage_timer()
     if(not is_additional_stage_timer_started())
         return;
 
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     double current_time = load->get_dynamic_simulator_time_in_s();
 
     ostringstream sstream;
@@ -737,7 +737,7 @@ void PUFLS::save()
 string PUFLS::get_standard_model_string() const
 {
     ostringstream sstream;
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
     string identifier = load->get_identifier();
     sstream<<bus<<", "

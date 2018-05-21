@@ -319,7 +319,7 @@ double TGOV1::get_variable_with_name(string var_name)
 
     if(var_name == "GENERATOR MECHANICAL POWER IN MW")
     {
-        GENERATOR* generator = (GENERATOR*) get_device_pointer();
+        GENERATOR* generator = get_generator_pointer();
         return get_mechanical_power_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
     }
 

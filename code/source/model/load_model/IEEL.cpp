@@ -320,7 +320,7 @@ bool IEEL::setup_model_with_bpa_string(string data)
 
 void IEEL::initialize()
 {
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     complex<double> S = load->get_actual_total_load_in_MVA();
     double V = get_bus_voltage_in_pu();
 
@@ -397,7 +397,7 @@ void IEEL::save()
 string IEEL::get_standard_model_string() const
 {
     ostringstream sstream;
-    LOAD* load = (LOAD*) get_device_pointer();
+    LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
     string identifier = load->get_identifier();
 

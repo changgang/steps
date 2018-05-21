@@ -583,7 +583,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
 {
     ostringstream sstream;
 
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
 
@@ -812,7 +812,7 @@ void CSEET1::initialize()
     if(is_model_initialized())
         return;
 
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return;
 
@@ -914,7 +914,7 @@ void CSEET1::initialize()
 
 void CSEET1::run(DYNAMIC_MODE mode)
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return;
 
@@ -1029,7 +1029,7 @@ void CSEET1::run(DYNAMIC_MODE mode)
 
 double CSEET1::get_excitation_voltage_in_pu() const
 {
-    GENERATOR* generator = (GENERATOR*) get_device_pointer();
+    GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
 
@@ -1072,7 +1072,7 @@ void CSEET1::save()
 string CSEET1::get_standard_model_string() const
 {
     ostringstream sstream;
-    GENERATOR* gen = (GENERATOR*) get_device_pointer();
+    GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
 

@@ -255,7 +255,7 @@ void AERD0::initialize_turbine_speed()
 {
     ostringstream sstream;
 
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return;
 
@@ -513,7 +513,7 @@ void AERD0::initialize()
 {
     ostringstream sstream;
 
-    WT_GENERATOR* gen = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return;
 
@@ -565,6 +565,10 @@ double AERD0::get_turbine_mechanical_power_in_MW() const
     return pmech*eta;
 }
 
+double AERD0::get_turbine_reference_speed_in_rad_per_s() const
+{
+    return 0.0;
+}
 
 void AERD0::check()
 {

@@ -302,7 +302,7 @@ bool WT3G2::setup_model_with_bpa_string(string data)
 
 void WT3G2::initialize()
 {
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return;
 
@@ -372,7 +372,7 @@ void WT3G2::initialize()
 
 void WT3G2::run(DYNAMIC_MODE mode)
 {
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return;
 
@@ -644,7 +644,7 @@ double WT3G2::get_variable_with_name(string var_name)
     if(var_name == "TERMINAL CURRENT IN KA")
     {
         POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-        GENERATOR* generator = (GENERATOR*) get_device_pointer();
+        WT_GENERATOR* generator = get_wt_generator_pointer();
         size_t bus = generator->get_generator_bus();
         double vbase = psdb->get_bus_base_voltage_in_kV(bus);
         double mbase = generator->get_mbase_in_MVA();
@@ -720,7 +720,7 @@ double WT3G2::get_pll_angle_in_deg()
 
 double WT3G2::get_pll_frequency_deviation_in_pu()
 {
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     POWER_SYSTEM_DATABASE* psdb = wt_generator->get_power_system_database();
     if(psdb==NULL)
         return 0.0;
@@ -752,7 +752,7 @@ double WT3G2::get_pll_frequency_deviation_in_pu()
 
 double WT3G2::get_pll_frequency_deviation_in_Hz()
 {
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     POWER_SYSTEM_DATABASE* psdb = wt_generator->get_power_system_database();
     if(psdb==NULL)
         return 0.0;
@@ -769,7 +769,7 @@ double WT3G2::get_pll_frequency_in_pu()
 
 double WT3G2::get_pll_frequency_in_Hz()
 {
-    WT_GENERATOR* wt_generator = (WT_GENERATOR*) get_device_pointer();
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     POWER_SYSTEM_DATABASE* psdb = wt_generator->get_power_system_database();
     if(psdb==NULL)
         return 0.0;

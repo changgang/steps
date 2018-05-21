@@ -5,12 +5,14 @@
 #include "header/basic/steps_enum.h"
 #include <complex>
 
+class LOAD;
 
 class LOAD_MODEL : public MODEL
 {
     public:
         LOAD_MODEL();
         virtual ~LOAD_MODEL();
+        LOAD* get_load_pointer() const;
         // common load model
         virtual string get_model_type() const;
         // common inputs

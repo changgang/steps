@@ -4,12 +4,15 @@
 #include "header/model/model.h"
 #include<complex>
 
+class WT_GENERATOR;
+
 class WTG_MODEL : public MODEL
 {
 public:
         WTG_MODEL();
         virtual ~WTG_MODEL();
 
+        WT_GENERATOR* get_wt_generator_pointer() const;
         double get_mbase_in_MVA() const;
         complex<double> get_terminal_complex_voltage_in_pu() const;
 

@@ -411,7 +411,7 @@ void ARXL::update_equivalent_constant_power_load()
 
     equivalent_load_constant_power = complex<double>(P, Q);
 
-    EQUIVALENT_DEVICE* device = (EQUIVALENT_DEVICE*)get_device_pointer();
+    EQUIVALENT_DEVICE* device =get_equivalent_device_pointer();
     device->set_equivalent_nominal_constant_power_load_in_MVA(equivalent_load_constant_power);
 }
 
@@ -443,7 +443,7 @@ complex<double> ARXL::get_equivalent_nominal_constant_impedance_load_in_MVA() co
 complex<double> ARXL::get_total_load_power_in_MVA() const
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) get_device_pointer();
+    EQUIVALENT_DEVICE* edevice = get_equivalent_device_pointer();
     double vbus = psdb->get_bus_voltage_in_pu(edevice->get_equivalent_device_bus());
 
     return (get_equivalent_nominal_constant_power_load_in_MVA()+
