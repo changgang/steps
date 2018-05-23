@@ -693,7 +693,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_fast_de
     db->set_allowed_max_bus_number(200);
     PSSE_IMEXPORTER importer;
     importer.set_power_system_database(db);
-    importer.load_powerflow_data("ieee39.raw");
+    importer.load_powerflow_data("IEEE39.raw");
 
     powerflow_solver->set_max_iteration(3);
     powerflow_solver->set_allowed_max_active_power_imbalance_in_MW(0.001);
