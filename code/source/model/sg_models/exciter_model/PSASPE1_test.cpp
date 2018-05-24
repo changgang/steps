@@ -44,8 +44,7 @@ void PSASPE1_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSASPE1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    EXCITER_MODEL* model = genptr->get_exciter_model();
+    EXCITER_MODEL* model = get_test_exciter_model();
 
     TEST_ASSERT(model->get_model_name()=="PSASPE1");
 }
@@ -54,8 +53,7 @@ void PSASPE1_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSASPE1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    PSASPE1* model = (PSASPE1*) genptr->get_exciter_model();
+    PSASPE1* model = (PSASPE1*) get_test_exciter_model();
 
     TEST_ASSERT(fabs(model->get_KR()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_TR_in_s()-0.03)<FLOAT_EPSILON);
@@ -73,7 +71,7 @@ void PSASPE1_TEST::test_initialize()
     show_test_information_for_function_of_class(__FUNCTION__,"PSASPE1_TEST");
 
     GENERATOR* genptr = get_test_generator();
-    PSASPE1* model = (PSASPE1*) genptr->get_exciter_model();
+    PSASPE1* model = (PSASPE1*) get_test_exciter_model();
 
     SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
     genmodel->initialize();

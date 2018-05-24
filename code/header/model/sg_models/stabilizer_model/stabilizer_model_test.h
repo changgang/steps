@@ -29,8 +29,6 @@ class STABILIZER_MODEL_TEST : public SG_MODEL_TEST
         void test_set_get_input_signal();
         void test_get_stabilizing_signal();
     private:
-        EXCITER_MODEL* get_test_exciter_model();
-        STABILIZER_MODEL* get_test_stabilizer_model();
 };
 
 #endif//STABILIZER_TEST_H

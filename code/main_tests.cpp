@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new METER_SETTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new MODEL_TEST));
-        //ts.add(unique_ptr<Test::Suite>(new SYNC_GENERATOR_MODEL_TEST));
+
         ts.add(unique_ptr<Test::Suite>(new GENCLS_TEST));
         ts.add(unique_ptr<Test::Suite>(new GENROU_TEST));
         ts.add(unique_ptr<Test::Suite>(new GENSAL_TEST));
@@ -255,7 +255,6 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new CSEET2_TEST));
         //ts.add(unique_ptr<Test::Suite>(new PSASPE13_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new STABILIZER_MODEL_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEE2ST_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new TGOV1_TEST));

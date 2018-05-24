@@ -37,8 +37,7 @@ void COMP_TEST::test_get_model_type()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"COMP_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    COMPENSATOR_MODEL* model = genptr->get_compensator_model();
+    COMPENSATOR_MODEL* model = get_test_compensator_model();
 
     TEST_ASSERT(model->get_model_type()=="COMPENSATOR");
 }
@@ -46,8 +45,7 @@ void COMP_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"COMP_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    COMPENSATOR_MODEL* model = genptr->get_compensator_model();
+    COMPENSATOR_MODEL* model = get_test_compensator_model();
 
     TEST_ASSERT(model->get_model_name()=="COMP");
 }
@@ -58,8 +56,7 @@ void COMP_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"COMP_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    COMP* model = (COMP*) genptr->get_compensator_model();
+    COMP* model = (COMP*) get_test_compensator_model();
 
     model->set_Xe(0.1);
     TEST_ASSERT(fabs(model->get_Xe()-0.1)<FLOAT_EPSILON);
@@ -70,12 +67,11 @@ void COMP_TEST::test_initialize()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"COMP_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    COMP* model = (COMP*) genptr->get_compensator_model();
+    COMP* model = (COMP*) get_test_compensator_model();
 
     model->set_Xe(0.1);
 
-    SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
+    SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
     genmodel->initialize();
 
     model->initialize();

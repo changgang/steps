@@ -31,19 +31,6 @@ void STABILIZER_MODEL_TEST::tear_down()
     show_test_end_information();
 }
 
-
-EXCITER_MODEL* STABILIZER_MODEL_TEST::get_test_exciter_model()
-{
-    GENERATOR* genptr = get_test_generator();
-    return genptr->get_exciter_model();
-}
-
-STABILIZER_MODEL* STABILIZER_MODEL_TEST::get_test_stabilizer_model()
-{
-    GENERATOR* genptr = get_test_generator();
-    return genptr->get_stabilizer_model();
-}
-
 void STABILIZER_MODEL_TEST::test_get_model_type()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STABILIZER_MODEL_TEST");

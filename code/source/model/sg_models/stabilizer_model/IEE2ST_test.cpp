@@ -2,58 +2,35 @@
 #include "header/basic/utility.h"
 using namespace std;
 
-IEE2ST_TEST::IEE2ST_TEST()
+IEE2ST_TEST::IEE2ST_TEST() : STABILIZER_MODEL_TEST()
 {
     TEST_ADD(IEE2ST_TEST::test_get_model_name);
     TEST_ADD(IEE2ST_TEST::test_set_get_parameters);
 
 }
 
-
-
 void IEE2ST_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
-    db->set_system_name("TEST SYSTEM");
-    db->set_allowed_max_bus_number(10);
-    db->set_system_base_frequency_in_Hz(50.0);
-    db->set_system_base_power_in_MVA(100.0);
+    STABILIZER_MODEL_TEST::setup();
 
-    BUS bus(db);
-    bus.set_bus_number(1);
-    bus.set_base_voltage_in_kV(21.0);
-    bus.set_bus_type(PV_TYPE);
-
-    db->append_bus(bus);
-
-    GENERATOR generator(db);
-    generator.set_generator_bus(1);
-    generator.set_identifier("#1");
-    generator.set_status(true);
-
-    db->append_generator(generator);
-
-    DEVICE_ID did;
-    did.set_device_type("GENERATOR");
-    TERMINAL terminal;
-    terminal.append_bus(1);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
-
-    model = new IEE2ST();
-    model->set_power_system_database(db);
-    model->set_device_id(did);
+    GENERATOR* genptr = get_test_generator();
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    IEE2ST model;
+    model.set_power_system_database(psdb);
+    genptr->set_model(&model);
 }
 
 void IEE2ST_TEST::tear_down()
 {
-    delete model;
+    STABILIZER_MODEL_TEST::tear_down();
 }
+
 
 void IEE2ST_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"IEE2ST_TEST");
 
+    IEE2ST* model = (IEE2ST*) get_test_stabilizer_model();
     TEST_ASSERT(model->get_model_name()=="IEE2ST");
 }
 
@@ -61,6 +38,7 @@ void IEE2ST_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"IEE2ST_TEST");
 
+    IEE2ST* model = (IEE2ST*) get_test_stabilizer_model();
     model->set_K1(1.0);
     TEST_ASSERT(fabs(model->get_K1()-1.0)<FLOAT_EPSILON);
 

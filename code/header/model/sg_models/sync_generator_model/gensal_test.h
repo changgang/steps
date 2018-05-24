@@ -29,7 +29,6 @@ class GENSAL_TEST : public SYNC_GENERATOR_MODEL_TEST
         void test_update_source_impedance();
 
         void test_initialize_and_get_initialized_inputs();
-    private:
 };
 
 #endif//GENSAL_TEST_H

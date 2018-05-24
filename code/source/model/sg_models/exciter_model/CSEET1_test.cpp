@@ -76,8 +76,7 @@ void CSEET1_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    EXCITER_MODEL* model = genptr->get_exciter_model();
+    EXCITER_MODEL* model = get_test_exciter_model();
 
     TEST_ASSERT(model->get_model_name()=="CSEET1");
 }
@@ -86,8 +85,7 @@ void CSEET1_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     TEST_ASSERT(model->get_excitation_source()==SELF_EXCITATION);
     TEST_ASSERT(model->get_exciter_brush()==WITHOUT_BRUSH);
@@ -129,7 +127,7 @@ void CSEET1_TEST::test_initialize()
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
     GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_SE75_in_pu(0.0);
     model->set_SE100_in_pu(0.0);
@@ -152,8 +150,7 @@ void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITH_BRUSH_and_feedb
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_excitation_source(SEPARATE_EXCITATION);
     model->set_exciter_brush(WITH_BRUSH);
@@ -169,8 +166,7 @@ void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITH_BRUSH_and_feedb
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_excitation_source(SEPARATE_EXCITATION);
     model->set_exciter_brush(WITH_BRUSH);
@@ -186,8 +182,7 @@ void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITHOUT_BRUSH_and_fe
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_excitation_source(SEPARATE_EXCITATION);
     model->set_exciter_brush(WITHOUT_BRUSH);
@@ -203,8 +198,7 @@ void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITHOUT_BRUSH_and_fe
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_excitation_source(SEPARATE_EXCITATION);
     model->set_exciter_brush(WITHOUT_BRUSH);
@@ -220,8 +214,7 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITH_BRUSH_and_feedbacke
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_excitation_source(SELF_EXCITATION);
     model->set_exciter_brush(WITH_BRUSH);
@@ -237,8 +230,7 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITH_BRUSH_and_feedbacke
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_excitation_source(SELF_EXCITATION);
     model->set_exciter_brush(WITH_BRUSH);
@@ -254,8 +246,7 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITHOUT_BRUSH_and_feedba
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_excitation_source(SELF_EXCITATION);
     model->set_exciter_brush(WITHOUT_BRUSH);
@@ -271,8 +262,7 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITHOUT_BRUSH_and_feedba
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET1_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET1* model = (CSEET1*) genptr->get_exciter_model();
+    CSEET1* model = (CSEET1*) get_test_exciter_model();
 
     model->set_excitation_source(SELF_EXCITATION);
     model->set_exciter_brush(WITHOUT_BRUSH);

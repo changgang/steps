@@ -46,8 +46,7 @@ void GENCLS_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
+    SYNC_GENERATOR_MODEL* model = (GENCLS*) get_test_generator_model();
 
     TEST_ASSERT(model->get_model_name()=="GENCLS");
 }
@@ -58,7 +57,7 @@ void GENCLS_TEST::test_update_source_impedance()
 
 
     GENERATOR* genptr = get_test_generator();
-    SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
+    SYNC_GENERATOR_MODEL* model = (GENCLS*) get_test_generator_model();
     model->update_source_impedance();
 
     complex<double> Z = genptr->get_source_impedance_in_pu();
@@ -76,7 +75,7 @@ void GENCLS_TEST::test_initialize_and_get_initialized_inputs()
 
     complex<double> V=db->get_bus_complex_voltage_in_pu(1);
 
-    SYNC_GENERATOR_MODEL* model = genptr->get_sync_generator_model();
+    SYNC_GENERATOR_MODEL* model = (GENCLS*) get_test_generator_model();
 
     complex<double> Z=genptr->get_source_impedance_in_pu();
     complex<double> S(genptr->get_p_generation_in_MW(), genptr->get_q_generation_in_MVar());
@@ -106,8 +105,7 @@ void GENCLS_TEST::test_set_get_rotor_angle()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    GENCLS* model = (GENCLS*) genptr->get_sync_generator_model();
+    GENCLS* model = (GENCLS*) get_test_generator_model();
 
     model->set_rotor_angle_in_deg(10.0);
     TEST_ASSERT(fabs(model->get_rotor_angle_in_deg()-10.0)<FLOAT_EPSILON);
@@ -117,8 +115,7 @@ void GENCLS_TEST::test_set_get_rotor_speed()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    GENCLS* model = (GENCLS*) genptr->get_sync_generator_model();
+    GENCLS* model = (GENCLS*) get_test_generator_model();
 
     model->set_rotor_speed_deviation_in_pu(0.1);
     TEST_ASSERT(fabs(model->get_rotor_speed_deviation_in_pu()-0.1)<FLOAT_EPSILON);

@@ -22,11 +22,11 @@ class SG_MODEL_TEST : public Test::Suite
         SG_MODEL_TEST();
         POWER_SYSTEM_DATABASE* get_test_power_system_database();
         GENERATOR* get_test_generator();
-        SYNC_GENERATOR_MODEL* get_sync_generator_model();
-        EXCITER_MODEL* get_exciter_model();
-        STABILIZER_MODEL* get_stabilizer_model();
-        COMPENSATOR_MODEL* get_compensator_model();
-        TURBINE_GOVERNOR_MODEL* get_turbine_governor_model();
+        SYNC_GENERATOR_MODEL* get_test_sync_generator_model();
+        EXCITER_MODEL* get_test_exciter_model();
+        STABILIZER_MODEL* get_test_stabilizer_model();
+        COMPENSATOR_MODEL* get_test_compensator_model();
+        TURBINE_GOVERNOR_MODEL* get_test_turbine_governor_model();
     protected:
         virtual void setup();
         virtual void tear_down();

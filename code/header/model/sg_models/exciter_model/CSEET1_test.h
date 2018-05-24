@@ -10,8 +10,6 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
-
 #include "header/model/sg_models/exciter_model/CSEET1.h"
 #include "header/model/sg_models/exciter_model/exciter_model_test.h"
 using namespace std;

@@ -61,8 +61,7 @@ void CSEET2_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET2_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    EXCITER_MODEL* model = genptr->get_exciter_model();
+    EXCITER_MODEL* model = get_test_exciter_model();
 
     TEST_ASSERT(model->get_model_name()=="CSEET2");
 }
@@ -71,8 +70,7 @@ void CSEET2_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET2_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET2* model = (CSEET2*) genptr->get_exciter_model();
+    CSEET2* model = (CSEET2*) get_test_exciter_model();
 
     TEST_ASSERT(model->get_excitation_source()==SELF_EXCITATION);
     TEST_ASSERT(model->get_stabilizer_slot()==AT_VOLTAGE_ERROR);
@@ -106,7 +104,7 @@ void CSEET2_TEST::test_initialize()
     SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
     genmodel->initialize();
 
-    CSEET2* model = (CSEET2*) genptr->get_exciter_model();
+    CSEET2* model = (CSEET2*) get_test_exciter_model();
 
     double Efd0 = genmodel->get_initial_excitation_voltage_in_pu();
     double Ecomp = model->get_compensated_voltage_in_pu();
@@ -135,8 +133,7 @@ void CSEET2_TEST::test_step_response_SEPARATE_EXCIATION_and_stabilizer_AT_VOLTAG
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET2_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET2* model = (CSEET2*) genptr->get_exciter_model();
+    CSEET2* model = (CSEET2*) get_test_exciter_model();
 
     model->set_excitation_source(SEPARATE_EXCITATION);
     model->set_stabilizer_slot(AT_VOLTAGE_ERROR);
@@ -151,8 +148,7 @@ void CSEET2_TEST::test_step_response_SEPARATE_EXCIATION_and_stabilizer_AT_REGULA
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET2_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET2* model = (CSEET2*) genptr->get_exciter_model();
+    CSEET2* model = (CSEET2*) get_test_exciter_model();
 
     model->set_excitation_source(SEPARATE_EXCITATION);
     model->set_stabilizer_slot(AT_REGULATOR);
@@ -167,8 +163,7 @@ void CSEET2_TEST::test_step_response_SELF_EXCIATION_and_stabilizer_AT_VOLTAGE_ER
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET2_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET2* model = (CSEET2*) genptr->get_exciter_model();
+    CSEET2* model = (CSEET2*) get_test_exciter_model();
 
     model->set_excitation_source(SELF_EXCITATION);
     model->set_stabilizer_slot(AT_VOLTAGE_ERROR);
@@ -183,8 +178,7 @@ void CSEET2_TEST::test_step_response_SELF_EXCIATION_and_stabilizer_AT_REGULATOR(
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CSEET2_TEST");
 
-    GENERATOR* genptr = get_test_generator();
-    CSEET2* model = (CSEET2*) genptr->get_exciter_model();
+    CSEET2* model = (CSEET2*) get_test_exciter_model();
 
     model->set_excitation_source(SELF_EXCITATION);
     model->set_stabilizer_slot(AT_REGULATOR);

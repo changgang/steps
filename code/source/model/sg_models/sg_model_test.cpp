@@ -64,7 +64,7 @@ GENERATOR* SG_MODEL_TEST::get_test_generator()
     return db->get_generator(did);
 }
 
-SYNC_GENERATOR_MODEL* SG_MODEL_TEST::get_sync_generator_model()
+SYNC_GENERATOR_MODEL* SG_MODEL_TEST::get_test_sync_generator_model()
 {
     GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
@@ -73,7 +73,7 @@ SYNC_GENERATOR_MODEL* SG_MODEL_TEST::get_sync_generator_model()
         return NULL;
 }
 
-EXCITER_MODEL* SG_MODEL_TEST::get_exciter_model()
+EXCITER_MODEL* SG_MODEL_TEST::get_test_exciter_model()
 {
     GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
@@ -82,7 +82,7 @@ EXCITER_MODEL* SG_MODEL_TEST::get_exciter_model()
         return NULL;
 }
 
-STABILIZER_MODEL* SG_MODEL_TEST::get_stabilizer_model()
+STABILIZER_MODEL* SG_MODEL_TEST::get_test_stabilizer_model()
 {
     GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
@@ -91,7 +91,7 @@ STABILIZER_MODEL* SG_MODEL_TEST::get_stabilizer_model()
         return NULL;
 }
 
-COMPENSATOR_MODEL* SG_MODEL_TEST::get_compensator_model()
+COMPENSATOR_MODEL* SG_MODEL_TEST::get_test_compensator_model()
 {
     GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)
@@ -100,7 +100,7 @@ COMPENSATOR_MODEL* SG_MODEL_TEST::get_compensator_model()
         return NULL;
 }
 
-TURBINE_GOVERNOR_MODEL* SG_MODEL_TEST::get_turbine_governor_model()
+TURBINE_GOVERNOR_MODEL* SG_MODEL_TEST::get_test_turbine_governor_model()
 {
     GENERATOR* genptr = get_test_generator();
     if(genptr!=NULL)

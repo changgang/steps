@@ -46,7 +46,6 @@ void COMPENSATOR_MODEL_TEST::tear_down()
 
 void COMPENSATOR_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
-    GENERATOR* genptr = get_test_generator();
     POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     BUS* bus = psdb->get_bus(1);
     bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
@@ -64,8 +63,7 @@ void COMPENSATOR_MODEL_TEST::export_meter_values(double time)
 {
     ostringstream sstream;
 
-    GENERATOR* genptr = get_test_generator();
-    COMPENSATOR_MODEL* model = genptr->get_compensator_model();
+    COMPENSATOR_MODEL* model = get_test_compensator_model();
 
     double voltage = abs(model->get_generator_terminal_voltage_in_pu());
     double current = abs(model->get_generator_terminal_current_in_pu());
@@ -82,7 +80,7 @@ void COMPENSATOR_MODEL_TEST::run_step_response_of_compensator_model()
     ostringstream sstream;
 
     GENERATOR* genptr = get_test_generator();
-    COMPENSATOR_MODEL* model = genptr->get_compensator_model();
+    COMPENSATOR_MODEL* model = get_test_compensator_model();
 
     sstream<<"Model:"<<model->get_standard_model_string()<<endl;
     show_information_with_leading_time_stamp(sstream);
