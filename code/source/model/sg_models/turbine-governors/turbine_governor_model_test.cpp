@@ -15,39 +15,9 @@ TURBINE_GOVERNOR_MODEL_TEST::TURBINE_GOVERNOR_MODEL_TEST()
 
 void TURBINE_GOVERNOR_MODEL_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
-    db->set_allowed_max_bus_number(100);
-    db->set_system_base_frequency_in_Hz(50.0);
-    db->set_system_base_power_in_MVA(100.0);
+    SG_MODEL_TEST::setup();
 
-    BUS bus(db);
-    bus.set_bus_number(1);
-    bus.set_bus_type(PV_TYPE);
-    bus.set_base_voltage_in_kV(21.0);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_rad(0.0);
-
-    db->append_bus(bus);
-
-    GENERATOR generator(db);
-    generator.set_generator_bus(1);
-    generator.set_identifier("#1");
-    generator.set_status(true);
-    generator.set_mbase_in_MVA(200.0);
-    generator.set_source_impedance_in_pu(complex<double>(0.0, 0.1));
-    generator.set_p_generation_in_MW(100.0);
-    generator.set_q_generation_in_MVar(30.0);
-
-    db->append_generator(generator);
-
-    DEVICE_ID did;
-    did.set_device_type("GENERATOR");
-    TERMINAL terminal;
-    terminal.append_bus(1);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("#1");
-
-    genptr = db->get_generator(did);
+    GENERATOR* genptr = get_test_generator();
 
     GENCLS gen_model;
     gen_model.set_Tj_in_s(6.0);
@@ -57,21 +27,15 @@ void TURBINE_GOVERNOR_MODEL_TEST::setup()
 
 void TURBINE_GOVERNOR_MODEL_TEST::tear_down()
 {
-    delete db;
+    SG_MODEL_TEST::tear_down();
 
     show_test_end_information();
 }
 
-GENERATOR* TURBINE_GOVERNOR_MODEL_TEST::get_generator()
-{
-    return genptr;
-}
 
 void TURBINE_GOVERNOR_MODEL_TEST::apply_speed_drop_of_1_percent()
 {
-    GENERATOR* genptr = get_generator();
-
-    GENCLS* genmodel = (GENCLS*) genptr->get_sync_generator_model();
+    GENCLS* genmodel = (GENCLS*) get_test_sync_generator_model();
     genmodel->set_rotor_speed_deviation_in_pu(-0.01);
 }
 
@@ -87,7 +51,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::export_meter_values(double time)
 {
     ostringstream sstream;
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     TURBINE_GOVERNOR_MODEL* model = genptr->get_turbine_governor_model();
 
     double speed = model->get_rotor_speed_deviation_in_pu_from_sync_generator_model();
@@ -103,7 +67,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::run_step_response_of_turbine_govnernor_model()
 {
     ostringstream sstream;
 
-    GENERATOR* genptr = get_generator();
+    GENERATOR* genptr = get_test_generator();
     TURBINE_GOVERNOR_MODEL* model = genptr->get_turbine_governor_model();
     sstream<<"Model:"<<model->get_standard_model_string()<<endl;
     show_information_with_leading_time_stamp(sstream);
@@ -111,7 +75,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::run_step_response_of_turbine_govnernor_model()
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
-    SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
+    SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
 
     genmodel->initialize();
     //genmodel->set_initial_mechanical_power_in_pu_based_on_mbase(0.5);
@@ -179,11 +143,12 @@ void TURBINE_GOVERNOR_MODEL_TEST::test_get_rotor_speed()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"TURBINE_GOVERNOR_MODEL_TEST");
 
-    GENERATOR* genptr = get_generator();
-    SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    GENERATOR* genptr = get_test_generator();
+    SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
 
     TGOV1 model;
-    model.set_power_system_database(db);
+    model.set_power_system_database(psdb);
     model.set_device_id(genptr->get_device_id());
 
     TEST_ASSERT(fabs(model.get_rotor_speed_deviation_in_pu_from_sync_generator_model()-genmodel->get_rotor_speed_deviation_in_pu())<FLOAT_EPSILON);

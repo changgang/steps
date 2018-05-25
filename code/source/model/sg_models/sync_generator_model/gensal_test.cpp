@@ -49,7 +49,7 @@ void GENSAL_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENSAL_TEST");
 
-    SYNC_GENERATOR_MODEL* model = (GENSAL*) get_test_generator_model();
+    SYNC_GENERATOR_MODEL* model = (GENSAL*) get_test_sync_generator_model();
 
     TEST_ASSERT(model->get_model_name()=="GENSAL");
 }
@@ -60,7 +60,7 @@ void GENSAL_TEST::test_update_source_impedance()
     show_test_information_for_function_of_class(__FUNCTION__,"GENSAL_TEST");
 
     GENERATOR* genptr = get_test_generator();
-    SYNC_GENERATOR_MODEL* model = (GENSAL*) get_test_generator_model();
+    SYNC_GENERATOR_MODEL* model = (GENSAL*) get_test_sync_generator_model();
 
     model->update_source_impedance();
 
@@ -78,7 +78,7 @@ void GENSAL_TEST::test_initialize_and_get_initialized_inputs()
 
     POWER_SYSTEM_DATABASE* db = genptr->get_power_system_database();
 
-    SYNC_GENERATOR_MODEL* model = (GENSAL*) get_test_generator_model();
+    SYNC_GENERATOR_MODEL* model = (GENSAL*) get_test_sync_generator_model();
 
     complex<double> V=db->get_bus_complex_voltage_in_pu(1);
 

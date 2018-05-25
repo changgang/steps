@@ -11,12 +11,10 @@
 #endif
 
 #include "header/model/sg_models/sg_model_test.h"
-
-//#include "header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 #include "header/power_system_database.h"
 using namespace std;
 
-class TURBINE_GOVERNOR_MODEL_TEST : public Test::Suite
+class TURBINE_GOVERNOR_MODEL_TEST : public SG_MODEL_TEST
 {
     public:
         TURBINE_GOVERNOR_MODEL_TEST();
@@ -24,7 +22,6 @@ class TURBINE_GOVERNOR_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     protected:
-        GENERATOR* get_generator();
         void apply_speed_drop_of_1_percent();
         void run_step_response_of_turbine_govnernor_model();
 
@@ -41,8 +38,6 @@ class TURBINE_GOVERNOR_MODEL_TEST : public Test::Suite
     private:
         void export_meter_title();
         void export_meter_values(double time);
-        GENERATOR* genptr;
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//TURBINE_GOVERNOR_TEST_H
