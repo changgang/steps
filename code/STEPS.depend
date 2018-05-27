@@ -10281,7 +10281,7 @@
 	"header/model/wtg_models/wt_generator_model/wt_generator_model_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 
-1526723747 /home/changgang/steps/code//header/model/wtg_models/wt_generator_model/wt_generator_model_test.h
+1527401026 /home/changgang/steps/code//header/model/wtg_models/wt_generator_model/wt_generator_model_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -10289,7 +10289,7 @@
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/power_system_database.h"
 
-1526726944 /home/changgang/steps/code//header/model/wtg_models/wtg_model_test.h
+1527221239 /home/changgang/steps/code//header/model/wtg_models/wtg_model_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -10353,7 +10353,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/model/all_supported_models.h"
 
-1526724182 /home/changgang/steps/code/header/model/all_supported_models.h
+1527220641 /home/changgang/steps/code/header/model/all_supported_models.h
 	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
 	"header/model/sg_models/compensator_model/compensator_models.h"
 	"header/model/sg_models/exciter_model/exciter_models.h"
@@ -10363,6 +10363,11 @@
 	"header/model/load_relay_model/load_frequency_relay_models.h"
 	"header/model/hvdc_model/hvdc_models.h"
 	"header/model/wtg_models/wt_generator_model/wt_generator_models.h"
+	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
+	"header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
+	"header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
+	"header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
+	"header/model/wtg_models/wind_speed_model/wind_speed_models.h"
 	"header/model/equivalent_model/ARXL.h"
 
 1526723747 /home/changgang/steps/code//header/model/sg_models/sync_generator_model/sync_generator_models.h
@@ -11090,7 +11095,7 @@
 	<iostream>
 	<fstream>
 
-1526724182 /home/changgang/steps/code//header/model/all_supported_models.h
+1527220641 /home/changgang/steps/code//header/model/all_supported_models.h
 	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
 	"header/model/sg_models/compensator_model/compensator_models.h"
 	"header/model/sg_models/exciter_model/exciter_models.h"
@@ -11100,6 +11105,11 @@
 	"header/model/load_relay_model/load_frequency_relay_models.h"
 	"header/model/hvdc_model/hvdc_models.h"
 	"header/model/wtg_models/wt_generator_model/wt_generator_models.h"
+	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
+	"header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
+	"header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
+	"header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
+	"header/model/wtg_models/wind_speed_model/wind_speed_models.h"
 	"header/model/equivalent_model/ARXL.h"
 
 1526723747 source:/home/changgang/steps/code/source/data_imexporter/bpa_imexporter_test.cpp
@@ -12215,7 +12225,7 @@
 	"header/model/sg_models/turbine_governor_model/TGOV1.h"
 	"header/model/sg_models/sync_generator_model/gencls.h"
 
-1527087189 source:/home/changgang/steps/code/source/model/sg_models/sync_generator_model/sync_generator_model_test.cpp
+1527220261 source:/home/changgang/steps/code/source/model/sg_models/sync_generator_model/sync_generator_model_test.cpp
 	"header/model/sg_models/sync_generator_model/sync_generator_model_test.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -12280,13 +12290,13 @@
 	"header/model/wtg_models/wt_generator_model/lvpl.h"
 	"header/basic/constants.h"
 
-1526870555 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g2.cpp
+1527402663 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g2.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/basic/utility.h"
 	<cstdio>
 	<iostream>
 
-1526727784 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g2_test.cpp
+1527400429 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g2_test.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g2_test.h"
 	"header/basic/utility.h"
 	<cstdlib>
@@ -12344,7 +12354,7 @@
 	"header/basic/utility.h"
 	<cstdio>
 
-1526727795 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp
+1527400485 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -12357,7 +12367,7 @@
 	"header/model/wtg_models/wtg_model.h"
 	"header/power_system_database.h"
 
-1526726962 source:/home/changgang/steps/code/source/model/wtg_models/wtg_model_test.cpp
+1527221355 source:/home/changgang/steps/code/source/model/wtg_models/wtg_model_test.cpp
 	"header/model/wtg_models/wtg_model_test.h"
 	"header/basic/utility.h"
 	<cstdlib>
@@ -12583,7 +12593,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/power_system_database.h"
 
-1526727853 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp
+1527401272 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp
 	"header/model/wtg_models/wt_generator_model/wt_generator_model_test.h"
 	"header/basic/utility.h"
 	<cstdlib>

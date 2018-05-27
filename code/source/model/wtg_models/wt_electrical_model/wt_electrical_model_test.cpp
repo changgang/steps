@@ -95,8 +95,6 @@ void WT_ELECTRICAL_MODEL_TEST::apply_voltage_drop_of_10_percent()
 void WT_ELECTRICAL_MODEL_TEST::run_step_response_of_exciter_model()
 {
     ostringstream sstream;
-    WT_GENERATOR* genptr = get_test_wt_generator();
-
 }
 
 void WT_ELECTRICAL_MODEL_TEST::test_get_standard_model_string()

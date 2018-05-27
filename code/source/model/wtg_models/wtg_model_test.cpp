@@ -67,3 +67,58 @@ WT_GENERATOR* WTG_MODEL_TEST::get_test_wt_generator()
     return psdb->get_wt_generator(did);
 }
 
+
+WT_GENERATOR_MODEL* WTG_MODEL_TEST::get_test_wt_generator_model()
+{
+    WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        return NULL;
+    else
+        return genptr->get_wt_generator_model();
+}
+
+WT_AERODYNAMIC_MODEL* WTG_MODEL_TEST::get_test_wt_aerodynamic_model()
+{
+    WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        return NULL;
+    else
+        return genptr->get_wt_aerodynamic_model();
+}
+
+WT_ELECTRICAL_MODEL* WTG_MODEL_TEST::get_test_wt_electrical_model()
+{
+    WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        return NULL;
+    else
+        return genptr->get_wt_electrical_model();
+}
+
+WT_TURBINE_MODEL* WTG_MODEL_TEST::get_test_wt_turbine_model()
+{
+    WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        return NULL;
+    else
+        return genptr->get_wt_turbine_model();
+}
+
+WT_PITCH_MODEL* WTG_MODEL_TEST::get_test_wt_pitch_model()
+{
+    WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        return NULL;
+    else
+        return genptr->get_wt_pitch_model();
+}
+
+WIND_SPEED_MODEL* WTG_MODEL_TEST::get_test_wind_speed_model()
+{
+    WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        return NULL;
+    else
+        return genptr->get_wind_speed_model();
+}
+

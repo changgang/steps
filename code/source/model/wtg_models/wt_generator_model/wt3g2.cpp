@@ -492,20 +492,15 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     if(Iq<-hvrc_i)
         Iq = hvrc_i;
 
-    size_t n_lumped = get_number_of_lumped_wt_generators();
-    Ip *= n_lumped;
-    Iq *= n_lumped;
-    // convert to system base
-    double Ix = Ip*mbase/sbase;
-    double Iy = Iq*mbase/sbase;
-
     double pll_angle = get_pll_angle_in_rad();
-    double Isorcex = Ix*cos(pll_angle) - Iy*sin(pll_angle);
-    double Isorcey = Ix*sin(pll_angle) + Iy*cos(pll_angle);
 
-    complex<double> Isource(Isorcex, Isorcey);
+    double Ix = Ip*cos(pll_angle) - Iq*sin(pll_angle);
+    double Iy = Ip*sin(pll_angle) + Iq*cos(pll_angle);
 
-    return Isource;
+    Ix *= double(get_number_of_lumped_wt_generators());
+    Iy *= double(get_number_of_lumped_wt_generators());
+
+    return complex<double>(Ix, Iy)*mbase/sbase;
 }
 
 complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
@@ -513,9 +508,7 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     double sbase = psdb->get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
-
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-
     return Ixy*sbase/mbase;
 }
 
@@ -525,16 +518,13 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sb
     double sbase = psdb->get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    Zsource = Zsource/mbase*sbase;
+    Zsource /= mbase;
+    Zsource *= sbase;
 
     complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-
-    Ixy -= (Vxy/Zsource);
-
-    return Ixy;
+    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+    return Ixy - Vxy/Zsource;
 }
 
 double WT3G2::get_terminal_current_in_pu_based_on_mbase()

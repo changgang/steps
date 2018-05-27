@@ -22,6 +22,12 @@ class WTG_MODEL_TEST : public Test::Suite
         WTG_MODEL_TEST();
         POWER_SYSTEM_DATABASE* get_test_power_system_database();
         WT_GENERATOR* get_test_wt_generator();
+        WT_GENERATOR_MODEL* get_test_wt_generator_model();
+        WT_AERODYNAMIC_MODEL* get_test_wt_aerodynamic_model();
+        WT_ELECTRICAL_MODEL* get_test_wt_electrical_model();
+        WT_TURBINE_MODEL* get_test_wt_turbine_model();
+        WT_PITCH_MODEL* get_test_wt_pitch_model();
+        WIND_SPEED_MODEL* get_test_wind_speed_model();
     protected:
         virtual void setup();
         virtual void tear_down();

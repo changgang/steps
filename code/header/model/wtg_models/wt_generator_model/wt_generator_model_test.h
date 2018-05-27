@@ -50,8 +50,6 @@ class WT_GENERATOR_MODEL_TEST : public WTG_MODEL_TEST
         virtual void test_get_model_name() = 0;
         virtual void test_set_get_parameters() = 0;
         virtual void test_initialize_and_get_initialized_inputs() = 0;
-    private:
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//WT_GENERATOR_MODEL_TEST_H

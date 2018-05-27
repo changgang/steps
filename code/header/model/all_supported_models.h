@@ -20,6 +20,16 @@
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_models.h"
 
+#include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
+
+#include "header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
+
+#include "header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
+
+#include "header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
+
+#include "header/model/wtg_models/wind_speed_model/wind_speed_models.h"
+
 #include "header/model/equivalent_model/ARXL.h"
 
 #endif // ALL_SUPPORTED_MODELS_H
