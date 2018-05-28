@@ -51,7 +51,7 @@
 					<Add option="-pedantic" />
 					<Add option="-Wextra" />
 					<Add option="-std=c++14" />
-					<Add directory="/home/changgang/steps/code/" />
+					<Add directory="C:/Users/charles/steps/code/" />
 				</Compiler>
 			</Target>
 			<Target title="Release_core">
@@ -282,7 +282,9 @@
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_models.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_test.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/aerd0.h" />
+		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h" />
+		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e0.h" />
@@ -698,7 +700,9 @@
 		<Unit filename="source/model/wtg_models/wind_speed_model/filewind.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/wind_speed_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/aerd0.cpp" />
+		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/aerd0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e0.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1.cpp" />

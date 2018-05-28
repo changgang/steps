@@ -326,25 +326,27 @@ void WT3G2::initialize()
     PLL_angle_integrator.set_T_in_s(1.0/wbase);
 
     double mbase = get_mbase_in_MVA();
+    mbase /= n_lumped;
 
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
     double xeq = Zsource.imag();
 
-    double P = wt_generator->get_p_generation_in_MW();
-    double Q = wt_generator->get_q_generation_in_MVar();
+    double P = wt_generator->get_p_generation_in_MW()/n_lumped;
+    double Q = wt_generator->get_q_generation_in_MVar()/n_lumped;
     complex<double> S(P/mbase,Q/mbase);
 
-    S /= n_lumped;
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     double V = abs(Vxy);
     double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
     // ignore voltage angle
-    complex<double> Ixy = conj(S/V);
-    complex<double> Isource = Ixy + V/(complex<double>(0.0, xeq));
+    complex<double> Ixy = conj(S/Vxy);
+    complex<double> Isource = Ixy + Vxy/(complex<double>(0.0, xeq));
 
-    double IP = Isource.real();
-    double IQ = Isource.imag();
+    complex<double> IPQ = xy2dq_with_angle_in_rad(Isource, angle_in_rad);
+
+    double IP = IPQ.real();
+    double IQ = IPQ.imag();
 
     double EQ = IQ*(-xeq);
 
@@ -494,11 +496,13 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
     double pll_angle = get_pll_angle_in_rad();
 
-    double Ix = Ip*cos(pll_angle) - Iq*sin(pll_angle);
-    double Iy = Ip*sin(pll_angle) + Iq*cos(pll_angle);
+    complex<double> Ipq(Ip, Iq);
+    complex<double> Ixy = dq2xy_with_angle_in_rad(Ipq, pll_angle);
 
-    Ix *= double(get_number_of_lumped_wt_generators());
-    Iy *= double(get_number_of_lumped_wt_generators());
+    double Ix = Ixy.real();
+    double Iy = Ixy.imag();
+    //double Ix = Ip*cos(pll_angle) - Iq*sin(pll_angle);
+    //double Iy = Ip*sin(pll_angle) + Iq*cos(pll_angle);
 
     return complex<double>(Ix, Iy)*mbase/sbase;
 }
