@@ -23,7 +23,9 @@ class HVDC_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     protected:
-        HVDC* get_hvdc();
+        POWER_SYSTEM_DATABASE* get_test_power_system_database();
+        HVDC* get_test_hvdc();
+        HVDC_MODEL* get_test_hvdc_model();
         void test_initialize();
         void test_rectifier_voltage_ramp_response();
         void test_inverter_voltage_ramp_response();
@@ -39,7 +41,6 @@ class HVDC_MODEL_TEST : public Test::Suite
     private:
         void export_meter_titles();
         void export_meter_values(double time);
-        HVDC* hvdcptr;
         POWER_SYSTEM_DATABASE* db;
 };
 

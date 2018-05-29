@@ -18,7 +18,7 @@ void CDC4T_TEST::setup()
 
     CDC4T model;
 
-    HVDC* hvdcptr = get_hvdc();
+    HVDC* hvdcptr = get_test_hvdc();
 
     model.set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, 5.0);
     model.set_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER, 5.0);
@@ -54,8 +54,7 @@ void CDC4T_TEST::test_get_model_type()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CDC4T_TEST");
 
-    HVDC* hvdc = get_hvdc();
-    HVDC_MODEL* model = hvdc->get_hvdc_model();
+    HVDC_MODEL* model = get_test_hvdc_model();
 
     TEST_ASSERT(model->get_model_type()=="HVDC");
 }
@@ -64,8 +63,7 @@ void CDC4T_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CDC4T_TEST");
 
-    HVDC* hvdc = get_hvdc();
-    HVDC_MODEL* model = hvdc->get_hvdc_model();
+    HVDC_MODEL* model = get_test_hvdc_model();
 
     TEST_ASSERT(model->get_model_name()=="CDC4T");
 }
@@ -74,8 +72,7 @@ void CDC4T_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CDC4T_TEST");
 
-    HVDC* hvdc = get_hvdc();
-    CDC4T* model = (CDC4T*) hvdc->get_hvdc_model();
+    CDC4T* model = (CDC4T*) get_test_hvdc_model();
 
     TEST_ASSERT(fabs(model->get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER)-5.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER) -5.0)<FLOAT_EPSILON);

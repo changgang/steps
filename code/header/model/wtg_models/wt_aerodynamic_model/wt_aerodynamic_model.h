@@ -42,7 +42,9 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         void set_initial_pitch_angle_in_deg(double p);
         void set_initial_turbine_speed_in_rad_per_s(double w);
 
+        double get_initial_wind_speed_in_mps() const;
         double get_initial_pitch_angle_in_deg() const;
+        double get_initial_turbine_speed_in_rad_per_s() const;
 
         void set_air_density_in_kgpm3(double rou);
         void set_overspeed_mode_flag(bool flag);

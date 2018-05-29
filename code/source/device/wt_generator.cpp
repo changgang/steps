@@ -213,12 +213,7 @@ void WT_GENERATOR::set_model(const MODEL* model)
     if(model == NULL)
         return;
 
-    if(model->get_allowed_device_type()!="WT GENERATOR" and
-       model->get_allowed_device_type()!="WT AERODYNAMIC" and
-       model->get_allowed_device_type()!="WT TURBINE" and
-       model->get_allowed_device_type()!="WT ELECTRICAL" and
-       model->get_allowed_device_type()!="WT PITCH" and
-       model->get_allowed_device_type()!="WIND SPEED")
+    if(model->get_allowed_device_type()!="WT GENERATOR")
         return;
 
     if(model->get_model_type()=="WT GENERATOR")

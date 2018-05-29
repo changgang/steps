@@ -80,15 +80,7 @@ void HVDC_MODEL_TEST::setup()
 
     db->append_hvdc(hvdc);
 
-    DEVICE_ID did;
-    did.set_device_type("HVDC");
-    TERMINAL terminal;
-    terminal.append_bus(1);
-    terminal.append_bus(2);
-    did.set_device_terminal(terminal);
-    did.set_device_identifier("DC");
-
-    hvdcptr = db->get_hvdc(did);
+    HVDC* hvdcptr = get_test_hvdc();
     hvdcptr->solve_steady_state();
     hvdcptr->show_solved_hvdc_steady_state();
 }
@@ -100,9 +92,33 @@ void HVDC_MODEL_TEST::tear_down()
     show_test_end_information();
 }
 
-HVDC* HVDC_MODEL_TEST::get_hvdc()
+POWER_SYSTEM_DATABASE* HVDC_MODEL_TEST::get_test_power_system_database()
 {
-    return hvdcptr;
+    return db;
+}
+
+HVDC* HVDC_MODEL_TEST::get_test_hvdc()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+
+    DEVICE_ID did;
+    did.set_device_type("HVDC");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("DC");
+
+    return psdb->get_hvdc(did);
+}
+
+HVDC_MODEL* HVDC_MODEL_TEST::get_test_hvdc_model()
+{
+    HVDC* hvdc = get_test_hvdc();
+    if(hvdc==NULL)
+        return NULL;
+    else
+        return hvdc->get_hvdc_model();
 }
 
 void HVDC_MODEL_TEST::export_meter_titles()
@@ -116,15 +132,16 @@ void HVDC_MODEL_TEST::export_meter_values(double time)
 {
     ostringstream sstream;
 
-    HVDC* hvdc = get_hvdc();
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    HVDC* hvdc = get_test_hvdc();
     HVDC_MODEL* model = hvdc->get_hvdc_model();
 
     double volt_rec, volt_inv;
     double p_rec, q_rec, alpha, mu_rec, p_inv, q_inv, gamma, mu_inv;
     double vdcr, vdci, idcr, idci;
 
-    volt_rec = db->get_bus_voltage_in_pu(1);
-    volt_inv = db->get_bus_voltage_in_pu(2);
+    volt_rec = psdb->get_bus_voltage_in_pu(1);
+    volt_inv = psdb->get_bus_voltage_in_pu(2);
 
     HVDC_CONVERTER_SIDE converter;
 
@@ -168,8 +185,8 @@ void HVDC_MODEL_TEST::test_initialize()
 
     ostringstream sstream;
 
-    HVDC* hvdcptr = get_hvdc();
-    HVDC_MODEL* model = hvdcptr->get_hvdc_model();
+    HVDC* hvdcptr = get_test_hvdc();
+    HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     redirect_stdout_to_file("test_log/test_initialize_"+model->get_model_name());
@@ -192,8 +209,9 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
 {
     ostringstream sstream;
 
-    HVDC* hvdcptr = get_hvdc();
-    HVDC_MODEL* model = hvdcptr->get_hvdc_model();
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    HVDC* hvdcptr = get_test_hvdc();
+    HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     redirect_stdout_to_file("test_log/test_rectifier_voltage_ramp_response_"+model->get_model_name());
@@ -240,8 +258,8 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
         export_meter_values(TIME);
     }
 
-    double Vac_rec = db->get_bus_voltage_in_pu(1);
-    BUS* bus = db->get_bus(1);
+    double Vac_rec = psdb->get_bus_voltage_in_pu(1);
+    BUS* bus = psdb->get_bus(1);
     double rate = 0.2;
 
     while(true)
@@ -358,8 +376,9 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
 {
     ostringstream sstream;
 
-    HVDC* hvdcptr = get_hvdc();
-    HVDC_MODEL* model = hvdcptr->get_hvdc_model();
+    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    HVDC* hvdcptr = get_test_hvdc();
+    HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     redirect_stdout_to_file("test_log/test_inverter_voltage_ramp_response_"+model->get_model_name());
@@ -405,8 +424,8 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
         export_meter_values(TIME);
     }
 
-    double Vac_inv = db->get_bus_voltage_in_pu(2);
-    BUS* bus = db->get_bus(2);
+    double Vac_inv = psdb->get_bus_voltage_in_pu(2);
+    BUS* bus = psdb->get_bus(2);
     double rate = 0.2;
 
     while(true)
@@ -523,8 +542,8 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
 {
     ostringstream sstream;
 
-    HVDC* hvdcptr = get_hvdc();
-    HVDC_MODEL* model = hvdcptr->get_hvdc_model();
+    HVDC* hvdcptr = get_test_hvdc();
+    HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     redirect_stdout_to_file("test_log/test_manual_block_and_unblock_"+model->get_model_name());
@@ -570,7 +589,9 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
         export_meter_values(TIME);
     }
 
+    cout<<"now go blocking HVDC manually"<<endl;
     model->manual_block_hvdc();
+    cout<<"now successfully blocked HVDC manually"<<endl;
     model->run(UPDATE_MODE);
     export_meter_values(TIME);
 
@@ -636,8 +657,8 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
 {
     ostringstream sstream;
 
-    HVDC* hvdcptr = get_hvdc();
-    HVDC_MODEL* model = hvdcptr->get_hvdc_model();
+    HVDC* hvdcptr = get_test_hvdc();
+    HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     redirect_stdout_to_file("test_log/test_manual_bypass_and_unbypass_"+model->get_model_name());
@@ -749,8 +770,7 @@ void HVDC_MODEL_TEST::test_get_standard_model_string()
 {
     ostringstream sstream;
 
-    HVDC* hvdcptr = get_hvdc();
-    HVDC_MODEL* model = hvdcptr->get_hvdc_model();
+    HVDC_MODEL* model = get_test_hvdc_model();
 
     redirect_stdout_to_file("test_log/test_get_standard_model_string_"+model->get_model_name());
 

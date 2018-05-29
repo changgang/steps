@@ -3,7 +3,7 @@
 #include "header/power_system_database.h"
 WTG_MODEL::WTG_MODEL()
 {
-    ;
+    set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("WT GENERATOR");
 }
 
 WTG_MODEL::~WTG_MODEL()

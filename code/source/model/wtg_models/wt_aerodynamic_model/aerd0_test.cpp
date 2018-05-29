@@ -12,7 +12,9 @@ AERD0_TEST::AERD0_TEST() : WT_AERODYNAMIC_MODEL_TEST()
 {
     TEST_ADD(AERD0_TEST::test_get_model_name);
     TEST_ADD(AERD0_TEST::test_set_get_parameters);
-    TEST_ADD(AERD0_TEST::test_set_get_pll_angle);
+    //TEST_ADD(AERD0_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag);
+    //TEST_ADD(AERD0_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_flag);
+    TEST_ADD(AERD0_TEST::test_set_as_typical_wt_generator);
 }
 
 void AERD0_TEST::setup()
@@ -20,24 +22,29 @@ void AERD0_TEST::setup()
     WT_AERODYNAMIC_MODEL_TEST::setup();
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
+    wt_gen->set_p_generation_in_MW(20.0);
+    wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
+    wt_gen->set_number_of_lumped_wt_generators(20.0);
 
-    WT3G2 model;
-    wt_gen->set_number_of_lumped_wt_generators(50);
-    model.set_converter_activer_current_command_T_in_s(0.2);
-    model.set_converter_reactiver_voltage_command_T_in_s(0.2);
-    model.set_KPLL(20.0);
-    model.set_KIPLL(10.0);
-    model.set_PLLmax(0.1);
-    wt_gen->set_rated_power_per_wt_generator_in_MW(2.0);
-    LVPL lvpl;
-    lvpl.set_low_voltage_in_pu(0.5);
-    lvpl.set_high_voltage_in_pu(0.8);
-    lvpl.set_gain_at_high_voltage(20.0);
-    model.set_LVPL(lvpl);
-    model.set_HVRC_voltage_in_pu(0.8);
-    model.set_HVRC_current_in_pu(20.0);
-    model.set_LVPL_max_rate_of_active_current_change(0.2);
-    model.set_LVPL_voltage_sensor_T_in_s(0.1);
+    AERD0 model;
+    model.set_number_of_pole_pairs(2);
+    model.set_generator_to_turbine_gear_ratio(100.0);
+    model.set_gear_efficiency(1.0);
+    model.set_turbine_blade_radius_in_m(25.0);
+    model.set_nominal_wind_speed_in_mps(13.0);
+    model.set_nominal_air_density_in_kgpm3(1.2);
+    model.set_initial_wind_speed_in_mps(13.0);
+    model.set_initial_pitch_angle_in_deg(0.0);
+    model.set_initial_turbine_speed_in_rad_per_s(0.0);
+    model.set_air_density_in_kgpm3(1.2);
+    model.set_overspeed_mode_flag(false);
+
+    model.set_C1(0.22);
+    model.set_C2(116.0);
+    model.set_C3(0.4);
+    model.set_C4(5.0);
+    model.set_C5(-12.5);
+    model.set_C6(0.0);
 
     wt_gen->set_model(&model);
 }
@@ -54,86 +61,67 @@ void AERD0_TEST::test_get_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
 
-    WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-
-    TEST_ASSERT(model->get_model_name()=="WT3G2");
+    WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
+    if(model!=NULL)
+    {
+        TEST_ASSERT(model->get_model_name()=="AERD0");
+    }
+    else
+        TEST_ASSERT(false);
 }
 
 void AERD0_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
 
-    WT_GENERATOR* wt_gen = get_test_wt_generator();
-    WT3G2* model = (WT3G2*) get_test_wt_generator_model();
+    AERD0* model = (AERD0*) get_test_wt_aerodynamic_model();
 
-    wt_gen->set_number_of_lumped_wt_generators(5);
-    model->set_converter_activer_current_command_T_in_s(0.1);
-    model->set_converter_reactiver_voltage_command_T_in_s(0.2);
-    model->set_KPLL(20.0);
-    model->set_KIPLL(10.0);
-    model->set_PLLmax(0.1);
-    wt_gen->set_rated_power_per_wt_generator_in_MW(2.0);
-    LVPL lvpl;
-    lvpl.set_low_voltage_in_pu(0.5);
-    lvpl.set_high_voltage_in_pu(0.8);
-    lvpl.set_gain_at_high_voltage(20.0);
-    model->set_LVPL(lvpl);
-    model->set_HVRC_voltage_in_pu(0.8);
-    model->set_HVRC_current_in_pu(0.6);
-    model->set_LVPL_max_rate_of_active_current_change(0.2);
-    model->set_LVPL_voltage_sensor_T_in_s(0.1);
+    model->set_C1(1.1);
+    model->set_C2(2.2);
+    model->set_C3(3.3);
+    model->set_C4(4.4);
+    model->set_C5(5.5);
+    model->set_C6(6.6);
 
-    TEST_ASSERT(model->get_number_of_lumped_wt_generators()==5);
-    TEST_ASSERT(fabs(model->get_converter_activer_current_command_T_in_s()-0.1)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_converter_reactiver_voltage_command_T_in_s()-0.2)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_KPLL()-20.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_KIPLL()-10.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_PLLmax()-0.1)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_rated_power_per_wt_generator_in_MW()-2.0)<FLOAT_EPSILON);
-    LVPL lvpl2 = model->get_LVPL();
-    TEST_ASSERT(fabs(lvpl2.get_low_voltage_in_pu()-0.5)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(lvpl2.get_high_voltage_in_pu()-0.8)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(lvpl2.get_gain_at_hig_voltage()-20.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_HVRC_voltage_in_pu()-0.8)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_HVRC_current_in_pu()-0.6)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_LVPL_max_rate_of_active_current_change()-0.2)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_LVPL_voltage_sensor_T_in_s()-0.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_C1()-1.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_C2()-2.2)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_C3()-3.3)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_C4()-4.4)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_C5()-5.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_C6()-6.6)<FLOAT_EPSILON);
 }
 
-void AERD0_TEST::test_initialize_and_get_initialized_inputs()
+void AERD0_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
 
     ostringstream sstream;
 
-    WT_GENERATOR* wt_gen = get_test_wt_generator();
-
-    //complex<double> V=db->get_bus_complex_voltage_in_pu(1);
-
-    WT3G2* model = (WT3G2*) get_test_wt_generator_model();
-
-    //complex<double> Z=wt_generator->get_source_impedance_in_pu();
-    complex<double> S(wt_gen->get_p_generation_in_MW(), wt_gen->get_q_generation_in_MVar());
-    double mbase = wt_gen->get_mbase_in_MVA();
-    S = S/mbase;
-
-    //model->set_Tj_in_s(6.0);
-    //model->set_D(1.0);
+    AERD0* model = (AERD0*) get_test_wt_aerodynamic_model();
+    model->set_overspeed_mode_flag(true);
 
     model->initialize();
-    sstream<<"WT3G2 model after initialized:"<<endl;
-    sstream<<"PLL angle = "<<model->get_pll_angle_in_deg()<<" deg, PLL frequency = "<<model->get_pll_frequency_in_Hz()<<endl;
-    sstream<<"Terminal P = "<<model->get_terminal_active_power_in_MW()<<" MW, Q = "<<model->get_terminal_reactive_power_in_MVar()<<" MVar"<<endl;
+    sstream<<"AERD0 model after initialized:"<<endl;
+    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, turbine speed = "<<model->get_turbine_speed_in_rad_per_s()<<endl;
     show_information_with_leading_time_stamp(sstream);
 }
 
-
-void AERD0_TEST::test_set_get_pll_angle()
+void AERD0_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_flag()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
 
-    WT3G2* model = (WT3G2*) get_test_wt_generator_model();
+    ostringstream sstream;
 
-    model->set_pll_angle_in_deg(10.0);
-    TEST_ASSERT(fabs(model->get_pll_angle_in_deg()-10.0)<FLOAT_EPSILON);
+    AERD0* model = (AERD0*) get_test_wt_aerodynamic_model();
+    model->set_overspeed_mode_flag(false);
+
+    model->initialize();
+    sstream<<"AERD0 model after initialized:"<<endl;
+    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, turbine speed = "<<model->get_turbine_speed_in_rad_per_s()<<endl;
+    show_information_with_leading_time_stamp(sstream);
+}
+
+void AERD0_TEST::test_set_as_typical_wt_generator()
+{
+    ;
 }

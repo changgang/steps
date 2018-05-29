@@ -51,7 +51,7 @@
 					<Add option="-pedantic" />
 					<Add option="-Wextra" />
 					<Add option="-std=c++14" />
-					<Add directory="C:/Users/charles/steps/code/" />
+					<Add directory="/home/changgang/steps/code/" />
 				</Compiler>
 			</Target>
 			<Target title="Release_core">

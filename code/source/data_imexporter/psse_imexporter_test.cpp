@@ -446,6 +446,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_expected_power_leaving_area_in_MW()-(-2800.0))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="CENTRAL");
+    cout<<"Area 1 name is :'"<<area->get_area_name()<<"'"<<endl;
 
     area = db->get_area(2);
     TEST_ASSERT(area!=NULL);
