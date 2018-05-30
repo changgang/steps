@@ -147,11 +147,11 @@ double WT_AERODYNAMIC_MODEL::get_nominal_air_density_in_kgpm3() const
 
 double WT_AERODYNAMIC_MODEL::get_nominal_turbine_speed_in_rad_per_s() const
 {
-    double fbase = get_nominal_frequency_in_Hz();
+    double fbase = get_power_system_base_frequency_in_Hz();
     size_t npair = get_number_of_pole_pairs();
     double tratio = get_generator_to_turbine_gear_ratio();
     double fn = fbase/npair/tratio;
-    return 2.0*PI*fn;
+    return hz2radps(fn);
 }
 
 void WT_AERODYNAMIC_MODEL::set_initial_wind_speed_in_mps(double v)
@@ -238,7 +238,7 @@ double WT_AERODYNAMIC_MODEL::get_pitch_angle_in_deg() const
 
 double WT_AERODYNAMIC_MODEL::get_turbine_frequency_in_Hz() const
 {
-    return get_turbine_speed_in_rad_per_s()/(2.0*PI);
+    return radps2hz(get_turbine_speed_in_rad_per_s());
 }
 
 double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s() const
@@ -259,4 +259,13 @@ bool WT_AERODYNAMIC_MODEL::get_overspeed_mode_flag() const
     return overspeed_mode_flag;
 }
 
+
+double WT_AERODYNAMIC_MODEL::get_total_wind_power_in_MW(double vwind) const
+{
+    double rou = get_air_density_in_kgpm3();
+    double r = get_turbine_blade_radius_in_m();
+    double r2 = r*r;
+    double v3 = vwind*vwind*vwind;
+    return 0.5*rou*PI*r2*v3*1e-6;
+}
 

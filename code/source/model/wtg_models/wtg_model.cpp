@@ -56,7 +56,7 @@ double WTG_MODEL::get_rated_power_per_wt_generator_in_MW() const
     return gen->get_rated_power_per_wt_generator_in_MW();
 }
 
-double WTG_MODEL::get_nominal_frequency_in_Hz() const
+double WTG_MODEL::get_power_system_base_frequency_in_Hz() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)

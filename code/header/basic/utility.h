@@ -22,6 +22,9 @@ string string2upper(string str);
 double rad2deg(double angle);
 double deg2rad(double angle);
 
+double radps2hz(double w);
+double hz2radps(double f);
+
 string trim_string(string str);
 string replace_string_contents(string str, string source, string destination);
 string shrink_sucessive_blanks(string str);

@@ -55,6 +55,8 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_turbine_frequency_in_Hz() const;
         double get_turbine_speed_in_rad_per_s() const;
         bool get_overspeed_mode_flag() const;
+
+        double get_total_wind_power_in_MW(double vwind) const;
     public:
         virtual string get_model_name() const = 0;
 

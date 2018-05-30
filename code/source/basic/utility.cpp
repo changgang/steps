@@ -92,6 +92,16 @@ double deg2rad(double angle)
     return angle*PI/180.0;
 }
 
+double radps2hz(double w)
+{
+    return w/(2.0*PI);
+}
+
+double hz2radps(double f)
+{
+    return 2.0*PI*f;
+}
+
 string trim_string(string str)
 {
     if(str.empty())

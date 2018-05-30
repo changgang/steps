@@ -22,6 +22,8 @@ UTILITY_TEST::UTILITY_TEST()
 
     TEST_ADD(UTILITY_TEST::test_rad2deg);
     TEST_ADD(UTILITY_TEST::test_deg2rad);
+    TEST_ADD(UTILITY_TEST::test_radps2hz);
+    TEST_ADD(UTILITY_TEST::test_hz2radps);
 
     TEST_ADD(UTILITY_TEST::test_trim_string);
     TEST_ADD(UTILITY_TEST::test_replace_string_contents);
@@ -130,6 +132,24 @@ void UTILITY_TEST::test_deg2rad()
     double angle = 23.45;
     double angle2 = angle/180.0*PI;
     TEST_ASSERT(fabs(deg2rad(angle)-angle2)<FLOAT_EPSILON);
+}
+
+void UTILITY_TEST::test_radps2hz()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
+
+    double w = 1.0;
+    double f = w/(2.0*PI);
+    TEST_ASSERT(fabs(radps2hz(w)-f)<FLOAT_EPSILON);
+}
+
+void UTILITY_TEST::test_hz2radps()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
+
+    double f = 1.0;
+    double w = f*(2.0*PI);
+    TEST_ASSERT(fabs(hz2radps(f)-w)<FLOAT_EPSILON);
 }
 
 void UTILITY_TEST::test_trim_string()

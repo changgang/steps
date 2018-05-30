@@ -12,8 +12,8 @@ AERD0_TEST::AERD0_TEST() : WT_AERODYNAMIC_MODEL_TEST()
 {
     TEST_ADD(AERD0_TEST::test_get_model_name);
     TEST_ADD(AERD0_TEST::test_set_get_parameters);
-    TEST_ADD(AERD0_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag);
     TEST_ADD(AERD0_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_flag);
+    TEST_ADD(AERD0_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag);
     TEST_ADD(AERD0_TEST::test_set_as_typical_wt_generator);
 }
 
@@ -22,18 +22,18 @@ void AERD0_TEST::setup()
     WT_AERODYNAMIC_MODEL_TEST::setup();
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
-    wt_gen->set_p_generation_in_MW(70.0);
-    wt_gen->set_rated_power_per_wt_generator_in_MW(4.5);
+    wt_gen->set_p_generation_in_MW(20.0);
+    wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
     wt_gen->set_number_of_lumped_wt_generators(20);
 
     AERD0 model;
     model.set_number_of_pole_pairs(2);
-    model.set_generator_to_turbine_gear_ratio(60.0);
+    model.set_generator_to_turbine_gear_ratio(100.0);
     model.set_gear_efficiency(1.0);
     model.set_turbine_blade_radius_in_m(25.0);
     model.set_nominal_wind_speed_in_mps(13.0);
     model.set_nominal_air_density_in_kgpm3(1.22);
-    model.set_initial_wind_speed_in_mps(13.0);
+    model.set_initial_wind_speed_in_mps(11.5);
     model.set_initial_pitch_angle_in_deg(0.0);
     model.set_initial_turbine_speed_in_rad_per_s(0.0);
     model.set_air_density_in_kgpm3(1.22);
@@ -110,7 +110,9 @@ void AERD0_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag(
 
     model->initialize();
     sstream<<"AERD0 model after initialized:"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, turbine speed = "<<model->get_turbine_speed_in_rad_per_s()<<" rad/s."<<endl;
+    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()
+           <<", turbine speed = "<<model->get_turbine_speed_in_rad_per_s()<<" rad/s ("
+           <<model->get_turbine_frequency_in_Hz()<<" Hz)"<<endl;
     show_information_with_leading_time_stamp(sstream);
 }
 
@@ -125,7 +127,9 @@ void AERD0_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_fl
 
     model->initialize();
     sstream<<"AERD0 model after initialized:"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, turbine speed = "<<model->get_turbine_speed_in_rad_per_s()<<" rad/s."<<endl;
+    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()
+           <<", turbine speed = "<<model->get_turbine_speed_in_rad_per_s()<<" rad/s ("
+           <<model->get_turbine_frequency_in_Hz()<<" Hz)"<<endl;
     show_information_with_leading_time_stamp(sstream);
 }
 

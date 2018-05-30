@@ -126,7 +126,7 @@ void AERD0::setup_turbine_blade_radius_with_nominal_parameters()
         show_information_with_leading_time_stamp(sstream);
     }
 
-    if(get_nominal_frequency_in_Hz()<=0.0)
+    if(get_power_system_base_frequency_in_Hz()<=0.0)
     {
         sstream<<"Error. Wind turbine nominal frequency is not properly set before setup turbine blade radius.";
         show_information_with_leading_time_stamp(sstream);
@@ -162,89 +162,35 @@ void AERD0::setup_turbine_blade_radius_with_nominal_parameters()
         show_information_with_leading_time_stamp(sstream);
     }
 
-
-    double temp_air_density = get_air_density_in_kgpm3(); // save temps
-    double temp_rotor_speed = get_turbine_speed_in_rad_per_s();
-    double temp_wind_speed = get_wind_speed_in_mps();
-    double temp_pitch_angle = get_pitch_angle_in_deg();
-
-    double pn = get_rated_power_per_wt_generator_in_MW();
+    double pn = get_rated_power_per_wt_generator_in_MW()*1e6;
     double eta = get_gear_efficiency();
     pn /= eta;
 
-    double wn = get_nominal_turbine_speed_in_rad_per_s();
+    double v = get_nominal_wind_speed_in_mps();
+    double v3 =  v*v*v;
+    double rou = get_nominal_air_density_in_kgpm3();
+    double lambda_max = get_lambda_at_Cpmax(0.0);
+    double cp_max = get_Cp(lambda_max, 0.0);
+    double blade_area = 2.0*pn/(cp_max*rou*v3);
+    double blade_radius = sqrt(blade_area/PI);
+    set_turbine_blade_radius_in_m(blade_radius);
+    return;
+}
 
-    set_initial_pitch_angle_in_deg(0.0);
-    set_initial_turbine_speed_in_rad_per_s(wn);
-    set_air_density_in_kgpm3(get_nominal_air_density_in_kgpm3());
-    set_initial_wind_speed_in_mps(get_nominal_wind_speed_in_mps());
+void AERD0::setup_generator_to_turbine_gear_ratio()
+{
+    double lambda_max = get_lambda_at_Cpmax(0.0);
+    double vwind = get_nominal_wind_speed_in_mps();
+    double radius = get_turbine_blade_radius_in_m();
 
-    double rlow=30.0, rhigh=40.0;
-    double plow, phigh;
+    double wt = lambda_max*vwind/radius;
 
-    while(true)
-    {
-        set_turbine_blade_radius_in_m(rlow);
-        plow = get_extracted_power_from_wind_per_wt_generatorin_MW();
-        if(plow<pn)
-            break;
-        else
-            rlow *= 0.5;
-    }
-
-    while(true)
-    {
-        set_turbine_blade_radius_in_m(rhigh);
-        phigh = get_extracted_power_from_wind_per_wt_generatorin_MW();
-        if(phigh>pn)
-            break;
-        else
-            rhigh *= 2.0;
-    }
-
-    double radius = 0.0;
-    size_t iter_count = 0;
-    size_t iter_max = 50;
-    while(true)
-    {
-        double rnew = 0.5*(rlow+rhigh);
-        set_turbine_blade_radius_in_m(rnew);
-        double pnew = get_extracted_power_from_wind_per_wt_generatorin_MW();
-        if(fabs(pnew-pn)<1e-3)
-        {
-            radius = rnew;
-            break;
-        }
-        if(pnew>pn)
-        {
-            rhigh = rnew;
-            phigh = pnew;
-        }
-        else
-        {
-            rlow = rnew;
-            plow = pnew;
-        }
-        iter_count++;
-        if(iter_count>iter_max)
-        {
-            radius = rnew;
-            sstream<<"Warning. Failed to setup wt turbine blade radius in "<<iter_max<<" iterations."<<endl
-                   <<"Turbine blade radius is set as "<<radius<<"m."<<endl
-                   <<"Check "<<get_model_name()<<" model of "<<get_device_name();
-            show_information_with_leading_time_stamp(sstream);
-            break;
-        }
-    }
-
-    set_turbine_blade_radius_in_m(radius);
-    //sstream<<"Turbine blade radius of "<<get_device_name()<<" is initialized to "<<radius<<" m.";
-    //show_information_with_leading_time_stamp(sstream);
-
-    set_air_density_in_kgpm3(temp_air_density); // recover temps
-    set_initial_turbine_speed_in_rad_per_s(temp_rotor_speed);
-    set_initial_wind_speed_in_mps(temp_wind_speed);
-    set_initial_pitch_angle_in_deg(temp_pitch_angle);
+    size_t n = get_number_of_pole_pairs();
+    double fbase = get_power_system_base_frequency_in_Hz();
+    double wg = 2.0*PI*fbase/n;
+    double turnratio = wg/wt;
+    set_generator_to_turbine_gear_ratio(turnratio);
+    return;
 }
 
 void AERD0::initialize_pitch_angle()
@@ -296,7 +242,6 @@ void AERD0::initialize_turbine_speed()
     double pdamp = 0.0;
 
     double lambdamax = get_lambda_at_Cpmax(get_pitch_angle_in_deg());
-    cout<<"lambda at cpmax is :"<<lambdamax<<endl;
 
     double v = get_wind_speed_in_mps();
     double r = get_turbine_blade_radius_in_m();
@@ -538,34 +483,24 @@ void AERD0::initialize()
     if(psdb==NULL)
         return;
 
-    double pelec = gen->get_p_generation_in_MW();
-    size_t n = get_number_of_lumped_wt_generators();
-    pelec /= n;
-
     setup_turbine_blade_radius_with_nominal_parameters();
+    setup_generator_to_turbine_gear_ratio();
 
-    initialize_pitch_angle();
-
-    double rou = get_air_density_in_kgpm3();
-    double r = get_turbine_blade_radius_in_m();
-    double v = get_wind_speed_in_mps();
-    double r2 = r*r;
-    double v3 = v*v*v;
-
-    double cpmax = get_Cpmax(get_pitch_angle_in_deg());
-
-    double pmax = 0.5*rou*PI*r2*v3*cpmax;
-    if(pelec>pmax*get_gear_efficiency())
+    double pmax = get_total_wind_power_in_MW(get_initial_wind_speed_in_mps());
+    double cp_max = get_Cpmax(0.0);
+    double pmech = gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()/get_gear_efficiency();
+    if(pmax*cp_max<pmech)
     {
-        sstream<<"Error when initializing "<<get_model_name()<<" model of "<<get_device_name()<<". "
-               <<"Initial power exceeds WT maximum power at optimal lambda "<<cpmax<<" with pitch angel "
-               <<get_pitch_angle_in_deg()<<"deg."<<endl
-               <<"Check pitch angle initialization codes.";
+        sstream<<"Initialization error. Initial wind speed "<<get_initial_wind_speed_in_mps()<<" m/s is not enough to generate power for "<<get_device_name()
+               <<endl
+               <<"Maximum power in wind is "<<pmax<<" MW, Cpmax is "<<cp_max<<" with best lambda "<<get_lambda_at_Cpmax(0.0)<<" at 0.0 pitch angle.";
         show_information_with_leading_time_stamp(sstream);
-        return;
     }
-
-    initialize_turbine_speed();
+    else
+    {
+        initialize_pitch_angle();
+        initialize_turbine_speed();
+    }
 
     set_flag_model_initialized_as_true();
 }

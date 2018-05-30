@@ -28,6 +28,7 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
     public:
         void setup_as_typical_wt_generator();
         void setup_turbine_blade_radius_with_nominal_parameters();
+        void setup_generator_to_turbine_gear_ratio();
         void initialize_pitch_angle();
         void initialize_turbine_speed();
         double get_extracted_power_from_wind_per_wt_generatorin_MW() const;
