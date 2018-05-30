@@ -47,9 +47,9 @@ void WT_AERODYNAMIC_MODEL::copy_from_const_model(const WT_AERODYNAMIC_MODEL& mod
     set_nominal_air_density_in_kgpm3(model.get_nominal_air_density_in_kgpm3());
 
     set_air_density_in_kgpm3(model.get_air_density_in_kgpm3());
-    set_initial_wind_speed_in_mps(model.get_wind_speed_in_mps());
-    set_initial_pitch_angle_in_deg(model.get_pitch_angle_in_deg());
-    set_initial_turbine_speed_in_rad_per_s(model.get_turbine_speed_in_rad_per_s());
+    set_initial_wind_speed_in_mps(model.get_initial_wind_speed_in_mps());
+    set_initial_pitch_angle_in_deg(model.get_initial_pitch_angle_in_deg());
+    set_initial_turbine_speed_in_rad_per_s(model.get_initial_turbine_speed_in_rad_per_s());
     set_overspeed_mode_flag(model.get_overspeed_mode_flag());
 }
 

@@ -185,7 +185,7 @@ void AERD0::setup_turbine_blade_radius_with_nominal_parameters()
     while(true)
     {
         set_turbine_blade_radius_in_m(rlow);
-        plow = get_extracted_power_from_wind_in_MW();
+        plow = get_extracted_power_from_wind_per_wt_generatorin_MW();
         if(plow<pn)
             break;
         else
@@ -195,7 +195,7 @@ void AERD0::setup_turbine_blade_radius_with_nominal_parameters()
     while(true)
     {
         set_turbine_blade_radius_in_m(rhigh);
-        phigh = get_extracted_power_from_wind_in_MW();
+        phigh = get_extracted_power_from_wind_per_wt_generatorin_MW();
         if(phigh>pn)
             break;
         else
@@ -204,13 +204,13 @@ void AERD0::setup_turbine_blade_radius_with_nominal_parameters()
 
     double radius = 0.0;
     size_t iter_count = 0;
-    size_t iter_max = 20;
+    size_t iter_max = 50;
     while(true)
     {
         double rnew = 0.5*(rlow+rhigh);
         set_turbine_blade_radius_in_m(rnew);
-        double pnew = get_extracted_power_from_wind_in_MW();
-        if(fabs(pnew-pn)<1e-6)
+        double pnew = get_extracted_power_from_wind_per_wt_generatorin_MW();
+        if(fabs(pnew-pn)<1e-3)
         {
             radius = rnew;
             break;
@@ -238,6 +238,8 @@ void AERD0::setup_turbine_blade_radius_with_nominal_parameters()
     }
 
     set_turbine_blade_radius_in_m(radius);
+    //sstream<<"Turbine blade radius of "<<get_device_name()<<" is initialized to "<<radius<<" m.";
+    //show_information_with_leading_time_stamp(sstream);
 
     set_air_density_in_kgpm3(temp_air_density); // recover temps
     set_initial_turbine_speed_in_rad_per_s(temp_rotor_speed);
@@ -294,6 +296,8 @@ void AERD0::initialize_turbine_speed()
     double pdamp = 0.0;
 
     double lambdamax = get_lambda_at_Cpmax(get_pitch_angle_in_deg());
+    cout<<"lambda at cpmax is :"<<lambdamax<<endl;
+
     double v = get_wind_speed_in_mps();
     double r = get_turbine_blade_radius_in_m();
     double wn = get_nominal_turbine_speed_in_rad_per_s();
@@ -313,12 +317,12 @@ void AERD0::initialize_turbine_speed()
     }
 
     double w = 0.0;
-    size_t iter_count = 0, iter_max = 20;
+    size_t iter_count = 0, iter_max = 50;
     while(true)
     {
         double wnew = 0.5*(wlow+whigh);
         set_initial_turbine_speed_in_rad_per_s(wnew);
-        double pnew = get_extracted_power_from_wind_in_MW();
+        double pnew = get_extracted_power_from_wind_per_wt_generatorin_MW();
         double dspeed = (wnew-wn)/wn;
         pdamp = D*dspeed*mbase/n;
         pmech = (pelec+pdamp)/eta;
@@ -327,10 +331,20 @@ void AERD0::initialize_turbine_speed()
             w = wnew;
             break;
         }
-        if(pnew>pmech)
-            whigh = wnew;
+        if(get_overspeed_mode_flag()==false)
+        {
+            if(pnew>pmech)
+                whigh = wnew;
+            else
+                wlow = wnew;
+        }
         else
-            wlow = wnew;
+        {
+            if(pnew>pmech)
+                wlow = wnew;
+            else
+                whigh = wnew;
+        }
         iter_count++;
         if(iter_count>iter_max)
         {
@@ -343,9 +357,11 @@ void AERD0::initialize_turbine_speed()
         }
     }
     set_initial_turbine_speed_in_rad_per_s(w);
+    //sstream<<"Turbine speed of "<<get_device_name()<<" is initialized to "<<w<<" rad/s ("<<w/(2.0*PI)<<" Hz).";
+    //show_information_with_leading_time_stamp(sstream);
 }
 
-double AERD0::get_extracted_power_from_wind_in_MW() const
+double AERD0::get_extracted_power_from_wind_per_wt_generatorin_MW() const
 {
     double w = get_turbine_speed_in_rad_per_s();
     double r = get_turbine_blade_radius_in_m();
@@ -361,15 +377,16 @@ double AERD0::get_extracted_power_from_wind_in_MW() const
     double r2 = r*r;
     double v3 = v*v*v;
 
-    size_t n = get_number_of_lumped_wt_generators();
+    //size_t n = get_number_of_lumped_wt_generators();
 
-    return 0.5*rou*PI*r2*v3*Cp*1e-6*n;
+    return 0.5*rou*PI*r2*v3*Cp*1e-6;
 }
 
 double AERD0::get_Cp(double lambda, double pitch_deg) const
 {
-    double pitch_rad = deg2rad(pitch_deg);
-    double lambdai = 1.0/(lambda+0.08*pitch_rad)-0.035/(pitch_rad*pitch_rad*pitch_rad+1.0);
+    //double pitch_angle = deg2rad(pitch_deg);
+    double pitch_angle = pitch_deg;
+    double lambdai = 1.0/(lambda+0.08*pitch_angle)-0.035/(pitch_angle*pitch_angle*pitch_angle+1.0);
     double L = 1.0/lambdai;
 
     double C1 = get_C1();
@@ -379,7 +396,7 @@ double AERD0::get_Cp(double lambda, double pitch_deg) const
     double C5 = get_C5();
     double C6 = get_C6();
 
-    return C1*(C2/L-C3*pitch_rad-C4)*exp(C5/L)+C6*lambda;
+    return C1*(C2/L-C3*pitch_angle-C4)*exp(C5/L)+C6*lambda;
 }
 
 double AERD0::get_Cpmax(double pitch_deg) const
@@ -394,7 +411,7 @@ double AERD0::get_lambda_at_Cpmax(double pitch_deg) const
 
     double wn = get_nominal_turbine_speed_in_rad_per_s();
     double r = get_turbine_blade_radius_in_m();
-    double v = get_wind_speed_in_mps();
+    double v = get_nominal_wind_speed_in_mps();
 
     double lambdalow = 0.5*wn*r/v;
     double lambdahigh = 2.0*wn*r/v;
@@ -418,10 +435,10 @@ double AERD0::get_lambda_at_Cpmax(double pitch_deg) const
     double derlow =  get_derivative_of_Cp_over_lambda(lambdalow, pitch_deg);
     double derhigh =  get_derivative_of_Cp_over_lambda(lambdahigh, pitch_deg);
     double newlambda = 0.0;
-    size_t iter_count = 0, iter_max = 20;
+    size_t iter_count = 0, iter_max = 50;
     while(true)
     {
-        newlambda = lambdalow*(fabs(derhigh/(derlow+derhigh)))+lambdahigh*(fabs(derlow/(derlow+derhigh)));
+        newlambda = lambdalow*(derhigh/(derhigh-derlow))-lambdahigh*(derlow/(derhigh-derlow));
         double dernew =  get_derivative_of_Cp_over_lambda(newlambda, pitch_deg);
 
         if(fabs(dernew)<1e-6)
@@ -448,7 +465,7 @@ double AERD0::get_lambda_at_Cpmax(double pitch_deg) const
         {
             newlambda = 0.5*(lambdalow+lambdahigh);
             sstream<<"Warning. Failed to get lambda at Cpmax in "<<iter_max<<" iterations."<<endl
-                   <<"Lambda is returned as "<<newlambda<<"m."<<endl
+                   <<"Lambda is returned as "<<newlambda<<"."<<endl
                    <<"Check "<<get_model_name()<<" model of "<<get_device_name();
             show_information_with_leading_time_stamp(sstream);
             break;
@@ -560,7 +577,7 @@ void AERD0::run(DYNAMIC_MODE mode)
 
 double AERD0::get_turbine_mechanical_power_in_MW() const
 {
-    double pmech = get_extracted_power_from_wind_in_MW();
+    double pmech = get_extracted_power_from_wind_per_wt_generatorin_MW();
     double eta = get_gear_efficiency();
     return pmech*eta;
 }

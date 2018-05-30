@@ -30,7 +30,7 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         void setup_turbine_blade_radius_with_nominal_parameters();
         void initialize_pitch_angle();
         void initialize_turbine_speed();
-        double get_extracted_power_from_wind_in_MW() const;
+        double get_extracted_power_from_wind_per_wt_generatorin_MW() const;
         double get_Cp(double lambda, double pitch_deg) const;
         double get_Cpmax(double pitch_deg) const;
         double get_lambda_at_Cpmax(double pitch_deg) const;
