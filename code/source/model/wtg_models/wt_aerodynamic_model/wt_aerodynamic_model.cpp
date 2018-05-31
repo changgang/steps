@@ -47,9 +47,6 @@ void WT_AERODYNAMIC_MODEL::copy_from_const_model(const WT_AERODYNAMIC_MODEL& mod
     set_nominal_air_density_in_kgpm3(model.get_nominal_air_density_in_kgpm3());
 
     set_air_density_in_kgpm3(model.get_air_density_in_kgpm3());
-    set_initial_wind_speed_in_mps(model.get_initial_wind_speed_in_mps());
-    set_initial_pitch_angle_in_deg(model.get_initial_pitch_angle_in_deg());
-    set_initial_turbine_speed_in_rad_per_s(model.get_initial_turbine_speed_in_rad_per_s());
     set_overspeed_mode_flag(model.get_overspeed_mode_flag());
 }
 
@@ -150,42 +147,8 @@ double WT_AERODYNAMIC_MODEL::get_nominal_turbine_speed_in_rad_per_s() const
     double fbase = get_power_system_base_frequency_in_Hz();
     size_t npair = get_number_of_pole_pairs();
     double tratio = get_generator_to_turbine_gear_ratio();
-    double fn = fbase/npair/tratio;
+    double fn = fbase/(npair*tratio);
     return hz2radps(fn);
-}
-
-void WT_AERODYNAMIC_MODEL::set_initial_wind_speed_in_mps(double v)
-{
-    if(v<FLOAT_EPSILON)
-        v = FLOAT_EPSILON;
-    initial_wind_speed_in_mps = v;
-}
-
-void WT_AERODYNAMIC_MODEL::set_initial_pitch_angle_in_deg(double p)
-{
-    if(p>90.0)
-        p = 90.0;
-    if(p<0.0)
-        p = 0.0;
-    initial_pitch_angle_in_deg = p;
-}
-
-void WT_AERODYNAMIC_MODEL::set_initial_turbine_speed_in_rad_per_s(double w)
-{
-    if(w<0.0)
-        w = 0.0;
-    initial_turbine_speed_in_rad_per_s = w;
-}
-
-
-double WT_AERODYNAMIC_MODEL::get_initial_wind_speed_in_mps() const
-{
-    return initial_wind_speed_in_mps;
-}
-
-double WT_AERODYNAMIC_MODEL::get_initial_pitch_angle_in_deg() const
-{
-    return initial_pitch_angle_in_deg;
 }
 
 double WT_AERODYNAMIC_MODEL::get_initial_turbine_speed_in_rad_per_s() const
@@ -205,6 +168,17 @@ void WT_AERODYNAMIC_MODEL::set_overspeed_mode_flag(bool flag)
     overspeed_mode_flag = flag;
 }
 
+double WT_AERODYNAMIC_MODEL::get_air_density_in_kgpm3() const
+{
+    return air_density_in_kgpm3;
+}
+
+bool WT_AERODYNAMIC_MODEL::get_overspeed_mode_flag() const
+{
+    return overspeed_mode_flag;
+}
+
+
 double WT_AERODYNAMIC_MODEL::get_wind_speed_in_mps() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
@@ -215,13 +189,9 @@ double WT_AERODYNAMIC_MODEL::get_wind_speed_in_mps() const
     if(model!=NULL and model->is_model_initialized())
         return model->get_wind_speed_in_mps();
     else
-        return get_initial_wind_speed_in_mps();
+        return get_nominal_wind_speed_in_mps();
 }
 
-double WT_AERODYNAMIC_MODEL::get_air_density_in_kgpm3() const
-{
-    return air_density_in_kgpm3;
-}
 
 double WT_AERODYNAMIC_MODEL::get_pitch_angle_in_deg() const
 {
@@ -233,12 +203,7 @@ double WT_AERODYNAMIC_MODEL::get_pitch_angle_in_deg() const
     if(model!=NULL and model->is_model_initialized())
         return model->get_pitch_angle_in_deg();
     else
-        return get_initial_pitch_angle_in_deg();
-}
-
-double WT_AERODYNAMIC_MODEL::get_turbine_frequency_in_Hz() const
-{
-    return radps2hz(get_turbine_speed_in_rad_per_s());
+        return 0.0;
 }
 
 double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s() const
@@ -254,13 +219,12 @@ double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s() const
         return get_initial_turbine_speed_in_rad_per_s();
 }
 
-bool WT_AERODYNAMIC_MODEL::get_overspeed_mode_flag() const
+double WT_AERODYNAMIC_MODEL::get_turbine_frequency_in_Hz() const
 {
-    return overspeed_mode_flag;
+    return radps2hz(get_turbine_speed_in_rad_per_s());
 }
 
-
-double WT_AERODYNAMIC_MODEL::get_total_wind_power_in_MW(double vwind) const
+double WT_AERODYNAMIC_MODEL::get_total_wind_power_per_wt_generator_in_MW(double vwind) const
 {
     double rou = get_air_density_in_kgpm3();
     double r = get_turbine_blade_radius_in_m();

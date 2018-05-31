@@ -106,110 +106,18 @@ double AERD0::get_C6() const
     return Cp_Coefficients[5];
 }
 
-void AERD0::setup_as_typical_wt_generator()
-{
-    set_number_of_pole_pairs(2);
-    set_generator_to_turbine_gear_ratio(100.0);
-    set_gear_efficiency(1.0);
-    set_nominal_wind_speed_in_mps(13.0);
-    set_nominal_air_density_in_kgpm3(1.22);
 
-    setup_turbine_blade_radius_with_nominal_parameters();
-}
-
-void AERD0::setup_turbine_blade_radius_with_nominal_parameters()
-{
-    ostringstream sstream;
-    if(get_rated_power_per_wt_generator_in_MW()<=0.0)
-    {
-        sstream<<"Error. Wind turbine nominal power is not properly set before setup turbine blade radius.";
-        show_information_with_leading_time_stamp(sstream);
-    }
-
-    if(get_power_system_base_frequency_in_Hz()<=0.0)
-    {
-        sstream<<"Error. Wind turbine nominal frequency is not properly set before setup turbine blade radius.";
-        show_information_with_leading_time_stamp(sstream);
-    }
-
-    if(get_number_of_pole_pairs()==0)
-    {
-        sstream<<"Error. Wind turbine number of pole pairs is not properly set before setup turbine blade radius.";
-        show_information_with_leading_time_stamp(sstream);
-    }
-
-    if(get_generator_to_turbine_gear_ratio()<=0.0)
-    {
-        sstream<<"Error. Wind turbine gear ratio is not properly set before setup turbine blade radius.";
-        show_information_with_leading_time_stamp(sstream);
-    }
-
-    if(get_nominal_air_density_in_kgpm3()<=0.0)
-    {
-        sstream<<"Error. Wind turbine nominal air density is not properly set before setup turbine blade radius.";
-        show_information_with_leading_time_stamp(sstream);
-    }
-
-    if(get_nominal_wind_speed_in_mps()<=0.0)
-    {
-        sstream<<"Error. Wind turbine nominal wind speed is not properly set before setup turbine blade radius.";
-        show_information_with_leading_time_stamp(sstream);
-    }
-
-    if(get_gear_efficiency()<=0.0)
-    {
-        sstream<<"Error. Gear efficiency is not properly set before setup turbine blade radius.";
-        show_information_with_leading_time_stamp(sstream);
-    }
-
-    double pn = get_rated_power_per_wt_generator_in_MW()*1e6;
-    double eta = get_gear_efficiency();
-    pn /= eta;
-
-    double v = get_nominal_wind_speed_in_mps();
-    double v3 =  v*v*v;
-    double rou = get_nominal_air_density_in_kgpm3();
-    double lambda_max = get_lambda_at_Cpmax(0.0);
-    double cp_max = get_Cp(lambda_max, 0.0);
-    double blade_area = 2.0*pn/(cp_max*rou*v3);
-    double blade_radius = sqrt(blade_area/PI);
-    set_turbine_blade_radius_in_m(blade_radius);
-    return;
-}
-
-void AERD0::setup_generator_to_turbine_gear_ratio()
-{
-    double lambda_max = get_lambda_at_Cpmax(0.0);
-    double vwind = get_nominal_wind_speed_in_mps();
-    double radius = get_turbine_blade_radius_in_m();
-
-    double wt = lambda_max*vwind/radius;
-
-    size_t n = get_number_of_pole_pairs();
-    double fbase = get_power_system_base_frequency_in_Hz();
-    double wg = 2.0*PI*fbase/n;
-    double turnratio = wg/wt;
-    set_generator_to_turbine_gear_ratio(turnratio);
-    return;
-}
-
-void AERD0::initialize_pitch_angle()
-{
-    set_initial_pitch_angle_in_deg(0.0);
-    return;
-}
-
-void AERD0::initialize_turbine_speed()
+double AERD0::get_initial_turbine_speed_in_rad_per_s() const
 {
     ostringstream sstream;
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
-        return;
+        return 0.0;
 
     POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
     if(psdb==NULL)
-        return;
+        return 0.0;
 
     double D = get_damping_in_pu();
     double mbase = get_mbase_in_MVA();
@@ -232,9 +140,9 @@ void AERD0::initialize_turbine_speed()
 
     if(pelec>pn)
     {
-        sstream<<"Error when initializing "<<get_model_name()<<" model of "<<get_device_name()<<". Initial power exceeds WT nominal power.";
+        sstream<<"Error when getting initial turbine speed of "<<get_model_name()<<" model of "<<get_device_name()<<". Initial power exceeds WT nominal power.";
         show_information_with_leading_time_stamp(sstream);
-        return;
+        return 0.0;
     }
 
     double eta = get_gear_efficiency();
@@ -266,8 +174,7 @@ void AERD0::initialize_turbine_speed()
     while(true)
     {
         double wnew = 0.5*(wlow+whigh);
-        set_initial_turbine_speed_in_rad_per_s(wnew);
-        double pnew = get_extracted_power_from_wind_per_wt_generatorin_MW();
+        double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
         double dspeed = (wnew-wn)/wn;
         pdamp = D*dspeed*mbase/n;
         pmech = (pelec+pdamp)/eta;
@@ -294,21 +201,20 @@ void AERD0::initialize_turbine_speed()
         if(iter_count>iter_max)
         {
             w = wnew;
-            sstream<<"Warning. Failed to initialize wt turbine speed in "<<iter_max<<" iterations."<<endl
-                   <<"Turbine speed is set as "<<w<<" rad/s."<<endl
+            sstream<<"Warning. Failed to get initial wt turbine speed in "<<iter_max<<" iterations."<<endl
+                   <<"Turbine speed is returned as "<<w<<" rad/s."<<endl
                    <<"Check "<<get_model_name()<<" model of "<<get_device_name();
             show_information_with_leading_time_stamp(sstream);
             break;
         }
     }
-    set_initial_turbine_speed_in_rad_per_s(w);
-    //sstream<<"Turbine speed of "<<get_device_name()<<" is initialized to "<<w<<" rad/s ("<<w/(2.0*PI)<<" Hz).";
-    //show_information_with_leading_time_stamp(sstream);
+    return w;
 }
 
-double AERD0::get_extracted_power_from_wind_per_wt_generatorin_MW() const
+double AERD0::get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(double speed_rad_per_s) const
 {
-    double w = get_turbine_speed_in_rad_per_s();
+    double w = speed_rad_per_s;
+
     double r = get_turbine_blade_radius_in_m();
     double v = get_wind_speed_in_mps();
     double lambda = w*r/v;
@@ -483,26 +389,102 @@ void AERD0::initialize()
     if(psdb==NULL)
         return;
 
-    setup_turbine_blade_radius_with_nominal_parameters();
-    setup_generator_to_turbine_gear_ratio();
+    initialize_wind_turbine_blade_radius_and_gear_ratio();
 
-    double pmax = get_total_wind_power_in_MW(get_initial_wind_speed_in_mps());
+    double pmax = get_total_wind_power_per_wt_generator_in_MW(get_wind_speed_in_mps());
     double cp_max = get_Cpmax(0.0);
     double pmech = gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()/get_gear_efficiency();
     if(pmax*cp_max<pmech)
     {
-        sstream<<"Initialization error. Initial wind speed "<<get_initial_wind_speed_in_mps()<<" m/s is not enough to generate power for "<<get_device_name()
+        sstream<<"Initialization error. Wind speed "<<get_wind_speed_in_mps()<<" m/s is not enough to generate power for "<<get_device_name()
                <<endl
                <<"Maximum power in wind is "<<pmax<<" MW, Cpmax is "<<cp_max<<" with best lambda "<<get_lambda_at_Cpmax(0.0)<<" at 0.0 pitch angle.";
         show_information_with_leading_time_stamp(sstream);
     }
-    else
-    {
-        initialize_pitch_angle();
-        initialize_turbine_speed();
-    }
 
     set_flag_model_initialized_as_true();
+}
+
+void AERD0::initialize_wind_turbine_blade_radius_and_gear_ratio()
+{
+    initialize_turbine_blade_radius_with_nominal_parameters();
+    initialize_generator_to_turbine_gear_ratio();
+}
+
+void AERD0::initialize_turbine_blade_radius_with_nominal_parameters()
+{
+    ostringstream sstream;
+    if(get_rated_power_per_wt_generator_in_MW()<=0.0)
+    {
+        sstream<<"Error. Wind turbine nominal power is not properly set before setup turbine blade radius.";
+        show_information_with_leading_time_stamp(sstream);
+    }
+
+    if(get_power_system_base_frequency_in_Hz()<=0.0)
+    {
+        sstream<<"Error. Wind turbine nominal frequency is not properly set before setup turbine blade radius.";
+        show_information_with_leading_time_stamp(sstream);
+    }
+
+    if(get_number_of_pole_pairs()==0)
+    {
+        sstream<<"Error. Wind turbine number of pole pairs is not properly set before setup turbine blade radius.";
+        show_information_with_leading_time_stamp(sstream);
+    }
+
+    if(get_generator_to_turbine_gear_ratio()<=0.0)
+    {
+        sstream<<"Error. Wind turbine gear ratio is not properly set before setup turbine blade radius.";
+        show_information_with_leading_time_stamp(sstream);
+    }
+
+    if(get_nominal_air_density_in_kgpm3()<=0.0)
+    {
+        sstream<<"Error. Wind turbine nominal air density is not properly set before setup turbine blade radius.";
+        show_information_with_leading_time_stamp(sstream);
+    }
+
+    if(get_nominal_wind_speed_in_mps()<=0.0)
+    {
+        sstream<<"Error. Wind turbine nominal wind speed is not properly set before setup turbine blade radius.";
+        show_information_with_leading_time_stamp(sstream);
+    }
+
+    if(get_gear_efficiency()<=0.0)
+    {
+        sstream<<"Error. Gear efficiency is not properly set before setup turbine blade radius.";
+        show_information_with_leading_time_stamp(sstream);
+    }
+
+    double pn = get_rated_power_per_wt_generator_in_MW()*1e6;
+    double eta = get_gear_efficiency();
+    pn /= eta;
+
+    double v = get_nominal_wind_speed_in_mps();
+    double v3 =  v*v*v;
+    double rou = get_nominal_air_density_in_kgpm3();
+    double lambda_mppt = get_lambda_at_Cpmax(0.0);
+    double cp_max = get_Cp(lambda_mppt, 0.0);
+    double blade_area = 2.0*pn/(cp_max*rou*v3);
+    double blade_radius = sqrt(blade_area/PI);
+    set_turbine_blade_radius_in_m(blade_radius);
+    return;
+}
+
+void AERD0::initialize_generator_to_turbine_gear_ratio()
+{
+    double lambda_max = get_lambda_at_Cpmax(0.0);
+    double vwind = get_nominal_wind_speed_in_mps();
+    double radius = get_turbine_blade_radius_in_m();
+
+    double wt = lambda_max*vwind/radius;
+
+    size_t n = get_number_of_pole_pairs();
+    double fbase = get_power_system_base_frequency_in_Hz();
+    double wg = 2.0*PI*fbase/n;
+    double turnratio = wg/wt;
+    set_generator_to_turbine_gear_ratio(turnratio);
+    return;
 }
 
 void AERD0::run(DYNAMIC_MODE mode)
@@ -510,11 +492,17 @@ void AERD0::run(DYNAMIC_MODE mode)
     ;
 }
 
-double AERD0::get_turbine_mechanical_power_in_MW() const
+double AERD0::get_turbine_mechanical_power_per_wt_generator_in_MW() const
 {
-    double pmech = get_extracted_power_from_wind_per_wt_generatorin_MW();
+    double w = get_turbine_speed_in_rad_per_s();
+    double pmech = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
     double eta = get_gear_efficiency();
     return pmech*eta;
+}
+
+double AERD0::get_turbine_mechanical_power_in_MW() const
+{
+    return get_turbine_mechanical_power_per_wt_generator_in_MW()*get_number_of_lumped_wt_generators();
 }
 
 double AERD0::get_turbine_reference_speed_in_rad_per_s() const

@@ -38,25 +38,18 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_nominal_air_density_in_kgpm3() const;
         double get_nominal_turbine_speed_in_rad_per_s() const;
 
-        void set_initial_wind_speed_in_mps(double v);
-        void set_initial_pitch_angle_in_deg(double p);
-        void set_initial_turbine_speed_in_rad_per_s(double w);
-
-        double get_initial_wind_speed_in_mps() const;
-        double get_initial_pitch_angle_in_deg() const;
-        double get_initial_turbine_speed_in_rad_per_s() const;
-
         void set_air_density_in_kgpm3(double rou);
         void set_overspeed_mode_flag(bool flag);
 
-        double get_wind_speed_in_mps() const;
         double get_air_density_in_kgpm3() const;
-        double get_pitch_angle_in_deg() const;
-        double get_turbine_frequency_in_Hz() const;
-        double get_turbine_speed_in_rad_per_s() const;
         bool get_overspeed_mode_flag() const;
 
-        double get_total_wind_power_in_MW(double vwind) const;
+        double get_wind_speed_in_mps() const;
+        double get_pitch_angle_in_deg() const;
+        double get_turbine_speed_in_rad_per_s() const;
+        double get_turbine_frequency_in_Hz() const;
+
+        double get_total_wind_power_per_wt_generator_in_MW(double vwind) const;
     public:
         virtual string get_model_name() const = 0;
 
@@ -71,6 +64,8 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual double get_initial_turbine_speed_in_rad_per_s() const = 0;
+        virtual double get_turbine_mechanical_power_per_wt_generator_in_MW() const = 0;
         virtual double get_turbine_mechanical_power_in_MW() const = 0;
         virtual double get_turbine_reference_speed_in_rad_per_s() const = 0;
 

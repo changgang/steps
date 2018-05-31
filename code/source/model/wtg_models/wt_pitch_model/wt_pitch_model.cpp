@@ -98,16 +98,3 @@ double WT_PITCH_MODEL::get_power_reference_in_pu() const
 {
     return power_reference_in_pu;
 }
-
-double WT_PITCH_MODEL::get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model() const
-{
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return 0.0;
-
-    WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
-    if(aero_model!=NULL)
-        return aero_model->get_initial_pitch_angle_in_deg();
-    else
-        return 0.0;
-}

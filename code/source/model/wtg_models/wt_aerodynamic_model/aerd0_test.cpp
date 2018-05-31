@@ -15,6 +15,7 @@ AERD0_TEST::AERD0_TEST() : WT_AERODYNAMIC_MODEL_TEST()
     TEST_ADD(AERD0_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_flag);
     TEST_ADD(AERD0_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag);
     TEST_ADD(AERD0_TEST::test_set_as_typical_wt_generator);
+    TEST_ADD(AERD0_TEST::test_list_Cp_and_mechanical_power_data_of_different_wind_speed);
 }
 
 void AERD0_TEST::setup()
@@ -32,10 +33,7 @@ void AERD0_TEST::setup()
     model.set_gear_efficiency(1.0);
     model.set_turbine_blade_radius_in_m(25.0);
     model.set_nominal_wind_speed_in_mps(13.0);
-    model.set_nominal_air_density_in_kgpm3(1.22);
-    model.set_initial_wind_speed_in_mps(11.5);
-    model.set_initial_pitch_angle_in_deg(0.0);
-    model.set_initial_turbine_speed_in_rad_per_s(0.0);
+    model.set_nominal_air_density_in_kgpm3(1.25);
     model.set_air_density_in_kgpm3(1.22);
     model.set_overspeed_mode_flag(false);
 
@@ -131,6 +129,44 @@ void AERD0_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_fl
            <<", turbine speed = "<<model->get_turbine_speed_in_rad_per_s()<<" rad/s ("
            <<model->get_turbine_frequency_in_Hz()<<" Hz)"<<endl;
     show_information_with_leading_time_stamp(sstream);
+}
+
+void AERD0_TEST::test_list_Cp_and_mechanical_power_data_of_different_wind_speed()
+{
+    ostringstream sstream;
+
+    AERD0* model = (AERD0*) get_test_wt_aerodynamic_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        model->initialize();
+        string file =  "test_log/test_"+model->get_model_name()+"_"+__FUNCTION__+".txt";
+        redirect_stdout_to_file(file);
+
+        double r = model->get_turbine_blade_radius_in_m();
+        sstream<<"Power curve when pitch = 0.0 deg, and wind speed = "<<model->get_nominal_wind_speed_in_mps()<<" m/s, blade radius = "<<r<<" m";
+        show_information_with_leading_time_stamp(sstream);
+        sstream<<"Speed(rad/s)\tLambda\tCP\tPmech(MW)";
+        show_information_with_leading_time_stamp(sstream);
+
+        /*for(double w=0.1; w<4.0*PI; w+=0.1)
+        {
+            double lambda = w*r/vwind;
+            double cp = model->get_Cp(lambda, pitch);
+            if(cp<0.0)
+                break;
+            double pmech = model->get_turbine_mechanical_power_per_wt_generator_in_MW();
+            sstream<<setw(10)<<setprecision(6)<<w<<"\t"
+                   <<setw(10)<<setprecision(6)<<lambda<<"\t"
+                   <<setw(10)<<setprecision(6)<<cp<<"\t"
+                   <<setw(10)<<setprecision(6)<<pmech;
+            show_information_with_leading_time_stamp(sstream);
+        }*/
+        recover_stdout();
+    }
+    else
+        TEST_ASSERT(false);
 }
 
 void AERD0_TEST::test_set_as_typical_wt_generator()

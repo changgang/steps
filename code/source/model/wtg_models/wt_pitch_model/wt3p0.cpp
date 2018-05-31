@@ -264,7 +264,7 @@ bool WT3P0::setup_model_with_bpa_string(string data)
 void WT3P0::initialize()
 {
     ostringstream sstream;
-    double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
+    double pitch0 = 0.0;
 
     pitch_integrator.set_output(pitch0);
     pitch_integrator.initialize();

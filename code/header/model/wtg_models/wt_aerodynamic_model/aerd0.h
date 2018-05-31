@@ -26,12 +26,7 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         double get_C5() const;
         double get_C6() const;
     public:
-        void setup_as_typical_wt_generator();
-        void setup_turbine_blade_radius_with_nominal_parameters();
-        void setup_generator_to_turbine_gear_ratio();
-        void initialize_pitch_angle();
-        void initialize_turbine_speed();
-        double get_extracted_power_from_wind_per_wt_generatorin_MW() const;
+        double get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(double speed_rad_per_s) const;
         double get_Cp(double lambda, double pitch_deg) const;
         double get_Cpmax(double pitch_deg) const;
         double get_lambda_at_Cpmax(double pitch_deg) const;
@@ -50,6 +45,8 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual double get_initial_turbine_speed_in_rad_per_s() const;
+        virtual double get_turbine_mechanical_power_per_wt_generator_in_MW() const;
         virtual double get_turbine_mechanical_power_in_MW() const;
         virtual double get_turbine_reference_speed_in_rad_per_s() const;
 
@@ -69,6 +66,9 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const AERD0& model);
+        void initialize_wind_turbine_blade_radius_and_gear_ratio();
+        void initialize_turbine_blade_radius_with_nominal_parameters();
+        void initialize_generator_to_turbine_gear_ratio();
         // Cp function parameters
         double Cp_Coefficients[6];
 };
