@@ -106,111 +106,6 @@ double AERD0::get_C6() const
     return Cp_Coefficients[5];
 }
 
-
-double AERD0::get_initial_turbine_speed_in_rad_per_s() const
-{
-    ostringstream sstream;
-
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return 0.0;
-
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
-
-    double D = get_damping_in_pu();
-    double mbase = get_mbase_in_MVA();
-    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
-
-    complex<double> selec = gen->get_complex_generation_in_MVA();
-    complex<double> vterm = get_terminal_complex_voltage_in_pu();
-
-    selec /= mbase;
-    double iterm = abs(selec)/abs(vterm);
-    selec += (iterm*iterm*zsource);
-
-    selec *= mbase;
-
-    double pelec = selec.real();
-    size_t n = get_number_of_lumped_wt_generators();
-    pelec /= n;
-
-    double pn = get_rated_power_per_wt_generator_in_MW();
-
-    if(pelec>pn)
-    {
-        sstream<<"Error when getting initial turbine speed of "<<get_model_name()<<" model of "<<get_device_name()<<". Initial power exceeds WT nominal power.";
-        show_information_with_leading_time_stamp(sstream);
-        return 0.0;
-    }
-
-    double eta = get_gear_efficiency();
-    double pmech = pelec/eta;
-    double pdamp = 0.0;
-
-    double lambdamax = get_lambda_at_Cpmax(get_pitch_angle_in_deg());
-
-    double v = get_wind_speed_in_mps();
-    double r = get_turbine_blade_radius_in_m();
-    double wn = get_nominal_turbine_speed_in_rad_per_s();
-
-    double wmax = lambdamax*v/r;
-
-    double wlow, whigh;
-    if(get_overspeed_mode_flag()==false)
-    {
-        wlow = wmax*0.5;
-        whigh = wmax;
-    }
-    else
-    {
-        wlow = wmax;
-        whigh = wmax*2.0;
-    }
-
-    double w = 0.0;
-    size_t iter_count = 0, iter_max = 50;
-    while(true)
-    {
-        double wnew = 0.5*(wlow+whigh);
-        double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
-        double dspeed = (wnew-wn)/wn;
-        pdamp = D*dspeed*mbase/n;
-        pmech = (pelec+pdamp)/eta;
-        if(fabs(pnew-pmech)<1e-6)
-        {
-            w = wnew;
-            break;
-        }
-        if(get_overspeed_mode_flag()==false)
-        {
-            if(pnew>pmech)
-                whigh = wnew;
-            else
-                wlow = wnew;
-        }
-        else
-        {
-            if(pnew>pmech)
-                wlow = wnew;
-            else
-                whigh = wnew;
-        }
-        iter_count++;
-        if(iter_count>iter_max)
-        {
-            w = wnew;
-            sstream<<"Warning. Failed to get initial wt turbine speed in "<<iter_max<<" iterations."<<endl
-                   <<"Turbine speed is returned as "<<w<<" rad/s."<<endl
-                   <<"Check "<<get_model_name()<<" model of "<<get_device_name();
-            show_information_with_leading_time_stamp(sstream);
-            break;
-        }
-    }
-    return w;
-}
-
 double AERD0::get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(double speed_rad_per_s) const
 {
     double w = speed_rad_per_s;
@@ -402,6 +297,8 @@ void AERD0::initialize()
         show_information_with_leading_time_stamp(sstream);
     }
 
+    initialize_pitch_angle_and_turbine_speed();
+
     set_flag_model_initialized_as_true();
 }
 
@@ -485,6 +382,242 @@ void AERD0::initialize_generator_to_turbine_gear_ratio()
     double turnratio = wg/wt;
     set_generator_to_turbine_gear_ratio(turnratio);
     return;
+}
+
+
+void AERD0::initialize_pitch_angle_and_turbine_speed()
+{
+    ostringstream sstream;
+
+    set_initial_pitch_angle_in_deg(0.0);
+    initialize_turbine_speed();
+
+    double wn = get_nominal_turbine_speed_in_rad_per_s();
+    double w = get_initial_turbine_speed_in_rad_per_s();
+    //cout<<"initialized with 0.0 pitch, w = "<<w<<" rad/s, wn = "<<wn<<" rad/s"<<endl;
+
+    double wmax = get_max_steady_state_turbine_speed_in_pu()*wn;
+    double wmin = get_min_steady_state_turbine_speed_in_pu()*wn;
+    if(w >= wmin and w <= wmax)
+        return;
+
+    if(w>wmax)
+        set_initial_turbine_speed_in_rad_per_s(wmax);
+    else
+        set_initial_turbine_speed_in_rad_per_s(wmin);
+
+    initialize_pitch_angle();
+}
+
+void AERD0::initialize_pitch_angle()
+{
+    ostringstream sstream;
+
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
+        return;
+
+    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
+    if(psdb==NULL)
+        return;
+
+    double D = get_damping_in_pu();
+    double mbase = get_mbase_in_MVA();
+    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
+
+    complex<double> selec = gen->get_complex_generation_in_MVA();
+    complex<double> vterm = get_terminal_complex_voltage_in_pu();
+
+    selec /= mbase;
+    double iterm = abs(selec)/abs(vterm);
+    selec += (iterm*iterm*zsource);
+
+    selec *= mbase;
+
+    double pelec = selec.real();
+    size_t n = get_number_of_lumped_wt_generators();
+    pelec /= n;
+
+    double pn = get_rated_power_per_wt_generator_in_MW();
+
+    if(pelec>pn)
+    {
+        sstream<<"Error when getting initial turbine speed of "<<get_model_name()<<" model of "<<get_device_name()<<". Initial power exceeds WT nominal power.";
+        show_information_with_leading_time_stamp(sstream);
+        return;
+    }
+
+    double v = get_wind_speed_in_mps();
+    double r = get_turbine_blade_radius_in_m();
+    double wn = get_nominal_turbine_speed_in_rad_per_s();
+    double w = get_initial_turbine_speed_in_rad_per_s();
+    double dspeed = (w-wn)/wn;
+    double pdamp = D*dspeed*mbase/n;
+    double eta = get_gear_efficiency();
+    double pmech = (pelec+pdamp)/eta;
+
+    double pitchlow, pitchhigh;
+    pitchlow = 0.0;
+    pitchhigh = 10.0;
+
+    double pwind;
+    while(true)
+    {
+        set_initial_pitch_angle_in_deg(pitchhigh);
+        pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        if(pwind<=pmech)
+            break;
+        else
+        {
+            pitchhigh *=2.0;
+            if(pitchhigh>90.0)
+                pitchhigh = 90.0;
+        }
+    }
+
+    set_initial_pitch_angle_in_deg(pitchlow);
+    double pwindlow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+    set_initial_pitch_angle_in_deg(pitchhigh);
+    double pwindhigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+
+    //cout<<"pmech = "<<pmech<<" MW, rotor speed = "<<w<<" rad/s, wn = "<<wn<<" rad/s"<<endl;
+    //cout<<pitchlow<<" deg, "<<pwindlow<<" MW"<<endl;
+    //cout<<pitchhigh<<" deg, "<<pwindhigh<<" MW"<<endl;
+    size_t iter_count = 0, iter_max = 50;
+
+    while(true)
+    {
+        double pitchnew = 0.5*(pitchlow+pitchhigh);
+        set_initial_pitch_angle_in_deg(pitchnew);
+        double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        //cout<<pitchnew<<" deg, "<<pnew<<" MW"<<endl;
+        if(fabs(pnew-pmech)<FLOAT_EPSILON)
+            break;
+        if(pnew>pmech)
+            pitchlow = pitchnew;
+        if(pnew<pmech)
+            pitchhigh = pitchnew;
+
+        iter_count++;
+        if(iter_count>iter_max)
+        {
+            sstream<<"Warning. Failed to get initial pitch angle in "<<iter_max<<" iterations."<<endl
+                   <<"Pitch angle is initialized as "<<pnew<<" deg."<<endl
+                   <<"Check "<<get_model_name()<<" model of "<<get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+            break;
+        }
+    }
+}
+
+void AERD0::initialize_turbine_speed()
+{
+    ostringstream sstream;
+
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
+        return;
+
+    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
+    if(psdb==NULL)
+        return;
+
+    double D = get_damping_in_pu();
+    double mbase = get_mbase_in_MVA();
+    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
+
+    complex<double> selec = gen->get_complex_generation_in_MVA();
+    complex<double> vterm = get_terminal_complex_voltage_in_pu();
+
+    selec /= mbase;
+    double iterm = abs(selec)/abs(vterm);
+    selec += (iterm*iterm*zsource);
+
+    selec *= mbase;
+
+    double pelec = selec.real();
+    size_t n = get_number_of_lumped_wt_generators();
+    pelec /= n;
+
+    double pn = get_rated_power_per_wt_generator_in_MW();
+
+    if(pelec>pn)
+    {
+        sstream<<"Error when getting initial turbine speed of "<<get_model_name()<<" model of "<<get_device_name()<<". Initial power exceeds WT nominal power.";
+        show_information_with_leading_time_stamp(sstream);
+        return;
+    }
+
+    double eta = get_gear_efficiency();
+    double pmech = pelec/eta;
+    double pdamp = 0.0;
+
+    double lambdamax = get_lambda_at_Cpmax(get_pitch_angle_in_deg());
+
+    double v = get_wind_speed_in_mps();
+    double r = get_turbine_blade_radius_in_m();
+    double wn = get_nominal_turbine_speed_in_rad_per_s();
+
+    double wmax = lambdamax*v/r;
+
+    double wlow, whigh;
+    if(get_overspeed_mode_flag()==false)
+    {
+        wlow = wmax*0.5;
+        whigh = wmax;
+    }
+    else
+    {
+        wlow = wmax;
+        whigh = wmax*2.0;
+    }
+
+    double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
+    double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
+    //cout<<"wlow = "<<wlow<<" rad/s, plow = "<<plow<<" MW"<<endl;
+    //cout<<"whigh = "<<whigh<<" rad/s, phigh = "<<phigh<<" MW"<<endl;
+
+    double w = 0.0;
+    size_t iter_count = 0, iter_max = 100;
+    while(true)
+    {
+        double wnew = 0.5*(wlow+whigh);
+        double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
+        //cout<<"wnew = "<<wnew<<" rad/s, pnew = "<<pnew<<" MW"<<endl;
+        double dspeed = (wnew-wn)/wn;
+        pdamp = D*dspeed*mbase/n;
+        pmech = (pelec+pdamp)/eta;
+        if(fabs(pnew-pmech)<1e-6)
+        {
+            w = wnew;
+            break;
+        }
+        if(get_overspeed_mode_flag()==false)
+        {
+            if(pnew>pmech)
+                whigh = wnew;
+            else
+                wlow = wnew;
+        }
+        else
+        {
+            if(pnew>pmech)
+                wlow = wnew;
+            else
+                whigh = wnew;
+        }
+        iter_count++;
+        if(iter_count>iter_max)
+        {
+            w = wnew;
+            sstream<<"Warning. Failed to get initial wt turbine speed in "<<iter_max<<" iterations."<<endl
+                   <<"Turbine speed is initialized as "<<w<<" rad/s."<<endl
+                   <<"Check "<<get_model_name()<<" model of "<<get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+            break;
+        }
+    }
+    set_initial_turbine_speed_in_rad_per_s(w);
 }
 
 void AERD0::run(DYNAMIC_MODE mode)

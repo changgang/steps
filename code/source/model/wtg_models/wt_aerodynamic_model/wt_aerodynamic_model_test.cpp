@@ -23,8 +23,13 @@ WT_AERODYNAMIC_MODEL_TEST::WT_AERODYNAMIC_MODEL_TEST()
 
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_get_nominal_turbine_speed);
 
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_initial_pitch_angle);
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_initial_turbine_speed);
+
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_air_density);
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_overspeed_mode_flag);
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_max_steady_state_turbine_speed);
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_min_steady_state_turbine_speed);
 
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_get_wind_speed);
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_get_pitch_angle);
@@ -196,6 +201,38 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_nominal_turbine_speed()
         TEST_ASSERT(false);
 }
 
+void WT_AERODYNAMIC_MODEL_TEST::test_set_get_initial_pitch_angle()
+{
+    WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        model->set_initial_pitch_angle_in_deg(0.0);
+        TEST_ASSERT(fabs(model->get_initial_pitch_angle_in_deg()-0.0)<FLOAT_EPSILON);
+        model->set_initial_pitch_angle_in_deg(1.0);
+        TEST_ASSERT(fabs(model->get_initial_pitch_angle_in_deg()-1.0)<FLOAT_EPSILON);
+    }
+    else
+        TEST_ASSERT(false);
+}
+
+void WT_AERODYNAMIC_MODEL_TEST::test_set_get_initial_turbine_speed()
+{
+    WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        model->set_initial_turbine_speed_in_rad_per_s(2.0);
+        TEST_ASSERT(fabs(model->get_initial_turbine_speed_in_rad_per_s()-2.0)<FLOAT_EPSILON);
+        model->set_initial_turbine_speed_in_rad_per_s(0.0);
+        TEST_ASSERT(fabs(model->get_initial_turbine_speed_in_rad_per_s()-0.0)<FLOAT_EPSILON);
+    }
+    else
+        TEST_ASSERT(false);
+}
+
 void WT_AERODYNAMIC_MODEL_TEST::test_set_get_air_density()
 {
     WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
@@ -223,6 +260,38 @@ void WT_AERODYNAMIC_MODEL_TEST::test_set_get_overspeed_mode_flag()
         TEST_ASSERT(model->get_overspeed_mode_flag()==false);
         model->set_overspeed_mode_flag(true);
         TEST_ASSERT(model->get_overspeed_mode_flag()==true);
+    }
+    else
+        TEST_ASSERT(false);
+}
+
+void WT_AERODYNAMIC_MODEL_TEST::test_set_get_max_steady_state_turbine_speed()
+{
+    WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        model->set_max_steady_state_turbine_speed_in_pu(1.2);
+        TEST_ASSERT(fabs(model->get_max_steady_state_turbine_speed_in_pu()-1.2)<FLOAT_EPSILON);
+        model->set_max_steady_state_turbine_speed_in_pu(1.5);
+        TEST_ASSERT(fabs(model->get_max_steady_state_turbine_speed_in_pu()-1.5)<FLOAT_EPSILON);
+    }
+    else
+        TEST_ASSERT(false);
+}
+
+void WT_AERODYNAMIC_MODEL_TEST::test_set_get_min_steady_state_turbine_speed()
+{
+    WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        model->set_min_steady_state_turbine_speed_in_pu(0.6);
+        TEST_ASSERT(fabs(model->get_min_steady_state_turbine_speed_in_pu()-0.6)<FLOAT_EPSILON);
+        model->set_min_steady_state_turbine_speed_in_pu(0.5);
+        TEST_ASSERT(fabs(model->get_min_steady_state_turbine_speed_in_pu()-0.5)<FLOAT_EPSILON);
     }
     else
         TEST_ASSERT(false);

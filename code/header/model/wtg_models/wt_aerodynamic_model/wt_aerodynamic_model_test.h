@@ -44,6 +44,8 @@ class WT_AERODYNAMIC_MODEL_TEST : public WTG_MODEL_TEST
 
         void test_set_get_air_density();
         void test_set_get_overspeed_mode_flag();
+        void test_set_get_max_steady_state_turbine_speed();
+        void test_set_get_min_steady_state_turbine_speed();
 
         void test_get_wind_speed();
         void test_get_pitch_angle();

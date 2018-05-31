@@ -45,7 +45,6 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_initial_turbine_speed_in_rad_per_s() const;
         virtual double get_turbine_mechanical_power_per_wt_generator_in_MW() const;
         virtual double get_turbine_mechanical_power_in_MW() const;
         virtual double get_turbine_reference_speed_in_rad_per_s() const;
@@ -69,8 +68,14 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         void initialize_wind_turbine_blade_radius_and_gear_ratio();
         void initialize_turbine_blade_radius_with_nominal_parameters();
         void initialize_generator_to_turbine_gear_ratio();
+        void initialize_pitch_angle_and_turbine_speed();
+        void initialize_pitch_angle();
+        void initialize_turbine_speed();
         // Cp function parameters
         double Cp_Coefficients[6];
+
+        double initial_pitch_angle_in_deg;
+        double initial_turbine_speed_in_rad_per_s;
 };
 
 #endif // AERD0_H

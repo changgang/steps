@@ -12,6 +12,9 @@ WT_AERODYNAMIC_MODEL::WT_AERODYNAMIC_MODEL()
     set_nominal_wind_speed_in_mps(13.0);
     set_nominal_air_density_in_kgpm3(1.22);
 
+    set_max_steady_state_turbine_speed_in_pu(1.2);
+    set_min_steady_state_turbine_speed_in_pu(0.6);
+
     //set_air_density_in_kgpm3(get_nominal_air_density_in_kgpm3());
     //set_initial_pitch_angle_in_deg(0.0);
     //set_initial_wind_speed_in_mps(get_nominal_wind_speed_in_mps());
@@ -48,6 +51,9 @@ void WT_AERODYNAMIC_MODEL::copy_from_const_model(const WT_AERODYNAMIC_MODEL& mod
 
     set_air_density_in_kgpm3(model.get_air_density_in_kgpm3());
     set_overspeed_mode_flag(model.get_overspeed_mode_flag());
+
+    set_max_steady_state_turbine_speed_in_pu(model.get_max_steady_state_turbine_speed_in_pu());
+    set_min_steady_state_turbine_speed_in_pu(model.get_min_steady_state_turbine_speed_in_pu());
 }
 
 string WT_AERODYNAMIC_MODEL::get_model_type() const
@@ -151,6 +157,22 @@ double WT_AERODYNAMIC_MODEL::get_nominal_turbine_speed_in_rad_per_s() const
     return hz2radps(fn);
 }
 
+
+void WT_AERODYNAMIC_MODEL::set_initial_pitch_angle_in_deg(double pitch)
+{
+    initial_pitch_angle_in_deg = pitch;
+}
+
+void WT_AERODYNAMIC_MODEL::set_initial_turbine_speed_in_rad_per_s(double w)
+{
+    initial_turbine_speed_in_rad_per_s = w;
+}
+
+double WT_AERODYNAMIC_MODEL::get_initial_pitch_angle_in_deg() const
+{
+    return initial_pitch_angle_in_deg;
+}
+
 double WT_AERODYNAMIC_MODEL::get_initial_turbine_speed_in_rad_per_s() const
 {
     return initial_turbine_speed_in_rad_per_s;
@@ -168,6 +190,16 @@ void WT_AERODYNAMIC_MODEL::set_overspeed_mode_flag(bool flag)
     overspeed_mode_flag = flag;
 }
 
+void WT_AERODYNAMIC_MODEL::set_max_steady_state_turbine_speed_in_pu(double w)
+{
+    max_steady_state_turbine_speed_in_pu = w;
+}
+
+void WT_AERODYNAMIC_MODEL::set_min_steady_state_turbine_speed_in_pu(double w)
+{
+    min_steady_state_turbine_speed_in_pu = w;
+}
+
 double WT_AERODYNAMIC_MODEL::get_air_density_in_kgpm3() const
 {
     return air_density_in_kgpm3;
@@ -178,6 +210,15 @@ bool WT_AERODYNAMIC_MODEL::get_overspeed_mode_flag() const
     return overspeed_mode_flag;
 }
 
+double WT_AERODYNAMIC_MODEL::get_max_steady_state_turbine_speed_in_pu() const
+{
+    return max_steady_state_turbine_speed_in_pu;
+}
+
+double WT_AERODYNAMIC_MODEL::get_min_steady_state_turbine_speed_in_pu() const
+{
+    return min_steady_state_turbine_speed_in_pu;
+}
 
 double WT_AERODYNAMIC_MODEL::get_wind_speed_in_mps() const
 {
@@ -203,7 +244,7 @@ double WT_AERODYNAMIC_MODEL::get_pitch_angle_in_deg() const
     if(model!=NULL and model->is_model_initialized())
         return model->get_pitch_angle_in_deg();
     else
-        return 0.0;
+        return get_initial_pitch_angle_in_deg();
 }
 
 double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s() const
