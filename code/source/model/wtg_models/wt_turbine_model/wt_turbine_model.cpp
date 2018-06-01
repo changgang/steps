@@ -64,5 +64,24 @@ double WT_TURBINE_MODEL::get_initial_wind_turbine_speed_in_pu_from_wt_areodynami
     if(not aero_model->is_model_initialized())
         aero_model->initialize();
 
-    return aero_model->get_turbine_reference_speed_in_rad_per_s();
+    double w = aero_model->get_turbine_reference_speed_in_rad_per_s();
+    double wn = aero_model->get_nominal_turbine_speed_in_rad_per_s();
+
+    return w/wn;
+}
+
+double WT_TURBINE_MODEL::get_mechanical_power_in_pu_from_wt_aerodynamic_model() const
+{
+    WT_GENERATOR* generator = get_wt_generator_pointer();
+    if(generator==NULL)
+        return 0.0;
+    WT_AERODYNAMIC_MODEL* aero_model = generator->get_wt_aerodynamic_model();
+    if(aero_model==NULL)
+        return 0.0;
+
+    if(not aero_model->is_model_initialized())
+        aero_model->initialize();
+
+    double mbase = get_mbase_in_MVA();
+    return aero_model->get_turbine_mechanical_power_in_MW()/mbase;
 }

@@ -168,25 +168,28 @@ void WT3T0::initialize()
     if(psdb==NULL)
         return;
 
+    WT_GENERATOR_MODEL* gen_model = gen->get_wt_generator_model();
+    if(gen_model==NULL)
+        return;
+    if(not gen_model->is_model_initialized())
+        gen_model->initialize();
+
     WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
     if(aero_model==NULL)
         return;
-
     if(not aero_model->is_model_initialized())
         aero_model->initialize();
 
-    //double speed = aero_model->get_initial_speed_in_pu();
-
-
     size_t bus = gen->get_generator_bus();
 
-    double wbase = 2.0*PI*psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_power_system_base_frequency_in_Hz();
+    double wbase = 2.0*PI*fbase;
 
     generator_rotor_angle_block.set_T_in_s(1.0/wbase);
     generator_rotor_angle_block.set_output(psdb->get_bus_angle_in_rad(bus));
     generator_rotor_angle_block.initialize();
 
-    double speed = aero_model->get_turbine_reference_speed_in_rad_per_s();
+    double speed = get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model();
     double slip = speed-1.0;
 
     generator_inertia_block.set_output(slip);
@@ -210,23 +213,77 @@ void WT3T0::initialize()
 
 void WT3T0::run(DYNAMIC_MODE mode)
 {
-    ;
+    WT_GENERATOR* wtgen = (WT_GENERATOR*) get_device_pointer();
+    size_t n = get_number_of_lumped_wt_generators();
+    double mbase = get_mbase_in_MVA();
+
+    double dshaft = get_Dshaft_in_pu();
+    double damp = get_damping_in_pu();
+
+    double pmech = get_mechanical_power_in_pu_from_wt_aerodynamic_model();
+
+    WT_GENERATOR_MODEL* wtgenmodel = wtgen->get_wt_generator_model();
+
+    double pelec = get_wt_generator_active_power_generation_in_MW()/mbase;
+    complex<double> iterm = wtgenmodel->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
+    pelec += (abs(iterm)*abs(iterm)*zsource.real());
+    double gslip = generator_inertia_block.get_output();
+    double gspeed = gslip+1.0;
+    double telec = pelec/gspeed;
+
+    if(fabs(get_Hturbine_in_s())>FLOAT_EPSILON)
+    {
+        double tslip = turbine_inertia_block.get_output();
+        double ttwist = shaft_twist_block.get_output();
+
+        double tmech = pmech/(1.0+tslip);
+        double input = tmech -(ttwist + dshaft*(tslip-gslip));
+        turbine_inertia_block.set_input(input);
+        turbine_inertia_block.run(mode);
+
+        input = (dshaft*(tslip-gslip) + ttwist) - telec - damp*gslip;
+        generator_inertia_block.set_input(input);
+        generator_inertia_block.run(mode);
+
+        double fbase = get_power_system_base_frequency_in_Hz();
+        double wbase = 2.0*PI*fbase;
+
+        input = (turbine_inertia_block.get_output()-generator_inertia_block.get_output())*wbase;
+        shaft_twist_block.set_input(input);
+        shaft_twist_block.run(mode);
+    }
+    else
+    {
+        double tmech = pmech/(1.0+gslip);
+        double input = tmech - telec - damp*gslip;
+        generator_inertia_block.set_input(input);
+        generator_inertia_block.run(mode);
+    }
 
     if(mode==UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
 
-double WT3T0::get_wind_turbine_generator_speed_in_pu() const
+double WT3T0::get_turbine_speed_in_pu() const
 {
-    return generator_inertia_block.get_output();
+    if(fabs(get_Hturbine_in_s())>FLOAT_EPSILON)
+        return turbine_inertia_block.get_output()+1.0;
+    else
+        return get_generator_speed_in_pu();
 }
 
-double WT3T0::get_wind_turbine_generator_rotor_angle_in_deg() const
+double WT3T0::get_generator_speed_in_pu() const
 {
-    return rad2deg(get_wind_turbine_generator_rotor_angle_in_rad());
+    return generator_inertia_block.get_output()+1.0;
 }
 
-double WT3T0::get_wind_turbine_generator_rotor_angle_in_rad() const
+double WT3T0::get_rotor_angle_in_deg() const
+{
+    return rad2deg(get_rotor_angle_in_rad());
+}
+
+double WT3T0::get_rotor_angle_in_rad() const
 {
     return generator_rotor_angle_block.get_output();
 }
@@ -249,17 +306,13 @@ void WT3T0::save()
 }
 string WT3T0::get_standard_model_string() const
 {
-    return "";
+    ostringstream sstream;
 
-    /*ostringstream sstream;
-
-    double R = get_R();
-    double T1 = get_T1_in_s();
-    double Vmax = get_Valvemax_in_pu();
-    double Vmin = get_Valvemin_in_pu();
-    double T2 = get_T2_in_s();
-    double T3 = get_T3_in_s();
-    double D = get_D();
+    double ht = get_Hturbine_in_s();
+    double hg = get_Hgenerator_in_s();
+    double kshaft = get_Kshaft_in_pu();
+    double damp = get_damping_in_pu();
+    double dshaft = get_Dshaft_in_pu();
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
@@ -268,15 +321,12 @@ string WT3T0::get_standard_model_string() const
     sstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<R<<", "
-      <<setw(8)<<setprecision(6)<<T1<<", "
-      <<setw(8)<<setprecision(6)<<Vmax<<", "
-      <<setw(8)<<setprecision(6)<<Vmin<<", "
-      <<setw(8)<<setprecision(6)<<T2<<", "
-      <<setw(8)<<setprecision(6)<<T3<<", "
-      <<setw(8)<<setprecision(6)<<D<<"  /";
+      <<setw(8)<<setprecision(6)<<ht<<", "
+      <<setw(8)<<setprecision(6)<<hg<<", "
+      <<setw(8)<<setprecision(6)<<kshaft<<", "
+      <<setw(8)<<setprecision(6)<<damp<<", "
+      <<setw(8)<<setprecision(6)<<dshaft<<"  /";
     return sstream.str();
-    */
 }
 
 size_t WT3T0::get_variable_index_from_variable_name(string var_name)

@@ -29,6 +29,7 @@ class WT_TURBINE_MODEL : public WTG_MODEL
         // inputs
         double get_wt_generator_active_power_generation_in_MW() const;
         double get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model() const;
+        double get_mechanical_power_in_pu_from_wt_aerodynamic_model() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
 
@@ -43,9 +44,10 @@ class WT_TURBINE_MODEL : public WTG_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
-        virtual double get_wind_turbine_generator_speed_in_pu() const = 0;
-        virtual double get_wind_turbine_generator_rotor_angle_in_deg() const = 0;
-        virtual double get_wind_turbine_generator_rotor_angle_in_rad() const = 0;
+        virtual double get_turbine_speed_in_pu() const = 0;
+        virtual double get_generator_speed_in_pu() const = 0;
+        virtual double get_rotor_angle_in_deg() const = 0;
+        virtual double get_rotor_angle_in_rad() const = 0;
 
         virtual void check() = 0;
         virtual void clear() = 0;

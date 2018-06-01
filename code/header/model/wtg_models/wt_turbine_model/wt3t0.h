@@ -36,9 +36,10 @@ class WT3T0 : public WT_TURBINE_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_wind_turbine_generator_speed_in_pu() const;
-        virtual double get_wind_turbine_generator_rotor_angle_in_deg() const;
-        virtual double get_wind_turbine_generator_rotor_angle_in_rad() const;
+        virtual double get_turbine_speed_in_pu() const;
+        virtual double get_generator_speed_in_pu() const;
+        virtual double get_rotor_angle_in_deg() const;
+        virtual double get_rotor_angle_in_rad() const;
         virtual void check();
         virtual void clear();
         virtual void report();
