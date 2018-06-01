@@ -640,7 +640,100 @@ double AERD0::get_turbine_mechanical_power_in_MW() const
 
 double AERD0::get_turbine_reference_speed_in_rad_per_s() const
 {
-    return 0.0;
+    ostringstream sstream;
+
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
+        return 0.0;
+
+    WT_GENERATOR_MODEL* wtgenmodel = gen->get_wt_generator_model();
+    if(wtgenmodel==NULL)
+        return 0.0;
+
+    complex<double> selec = wtgenmodel->get_terminal_complex_power_in_MVA();
+    double iterm = wtgenmodel->get_terminal_current_in_pu_based_on_mbase();
+    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
+    double mbase = get_mbase_in_MVA();
+    selec += (iterm*iterm*zsource)*mbase;
+
+    size_t n = get_number_of_lumped_wt_generators();
+    selec /= n;
+
+    double pelec = selec.real();
+
+    double pitch = get_pitch_angle_in_deg();
+    double lambda = get_lambda_at_Cpmax(pitch);
+    double vwind = get_wind_speed_in_mps();
+    double r = get_turbine_blade_radius_in_m();
+    double w_mppt = lambda*vwind/r;
+
+    double cpmax = get_Cpmax(pitch);
+    double pwind = get_total_wind_power_per_wt_generator_in_MW(vwind);
+    if(pelec>pwind*cpmax)
+    {
+        sstream<<"Warning. Current electrical power generation of "<<get_device_name()<<" exceeds the maximum available wind power:"<<endl
+               <<"Current electrical power generation = "<<pelec*n<<"MW. Maximum available wind power = "<<pwind*cpmax*n<<" MW"<<endl
+               <<"Current wind speed = "<<vwind<<" m, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
+               <<"MPPT speed will be returned as speed reference: "<<w_mppt<<" rad/s.";
+        show_information_with_leading_time_stamp(sstream);
+        return w_mppt;
+    }
+
+    double wlow, whigh;
+    if(get_overspeed_mode_flag()==false)
+    {
+        wlow = w_mppt*0.5;
+        whigh = w_mppt;
+    }
+    else
+    {
+        wlow = w_mppt;
+        whigh = w_mppt*2.0;
+    }
+
+    double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
+    double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
+
+    double w = 0.0;
+    size_t iter_count = 0, iter_max = 100;
+    while(true)
+    {
+        double wnew = 0.5*(wlow+whigh);
+        double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
+
+        if(fabs(pnew-pelec)<1e-6)
+        {
+            w = wnew;
+            break;
+        }
+        if(get_overspeed_mode_flag()==false)
+        {
+            if(pnew>pelec)
+                whigh = wnew;
+            else
+                wlow = wnew;
+        }
+        else
+        {
+            if(pnew>pelec)
+                wlow = wnew;
+            else
+                whigh = wnew;
+        }
+        iter_count++;
+        if(iter_count>iter_max)
+        {
+            w = wnew;
+            sstream<<"Warning. Failed to get reference wt turbine speed in "<<iter_max<<" iterations."<<endl
+                   <<"Current electrical power generation = "<<pelec*n<<"MW. Maximum available wind power = "<<pwind*cpmax*n<<" MW"<<endl
+                   <<"Current wind speed = "<<vwind<<" m, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
+                   <<"Reference turbine speed is returned as "<<w<<" rad/s."<<endl
+                   <<"Check "<<get_model_name()<<" model of "<<get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+            break;
+        }
+    }
+    return w;
 }
 
 void AERD0::check()

@@ -231,3 +231,8 @@ void AERD0_TEST::test_set_as_typical_wt_generator()
 {
     ;
 }
+
+void AERD0_TEST::test_get_turbine_speed_reference()
+{
+
+}

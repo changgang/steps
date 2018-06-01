@@ -59,6 +59,7 @@ class WT_AERODYNAMIC_MODEL_TEST : public WTG_MODEL_TEST
         virtual void test_set_get_parameters() = 0;
         virtual void test_initialize_and_get_initialized_inputs_with_overspeed_flag() = 0;
         virtual void test_initialize_and_get_initialized_inputs_without_overspeed_flag() = 0;
+        virtual void test_get_turbine_speed_reference() = 0;
 
 };
 
