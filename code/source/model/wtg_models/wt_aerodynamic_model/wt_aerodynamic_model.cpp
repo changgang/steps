@@ -255,7 +255,7 @@ double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s() const
 
     WT_TURBINE_MODEL* model = gen->get_wt_turbine_model();
     if(model!=NULL and model->is_model_initialized())
-        return model->get_wind_turbine_generator_speed_in_pu();
+        return model->get_turbine_speed_in_pu()*get_nominal_turbine_speed_in_rad_per_s();
     else
         return get_initial_turbine_speed_in_rad_per_s();
 }

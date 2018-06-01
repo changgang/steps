@@ -565,25 +565,39 @@ void AERD0::initialize_turbine_speed()
     {
         wlow = wmax*0.5;
         whigh = wmax;
+        while(true)
+        {
+            if(get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow)>pmech)
+                wlow *=0.5;
+            else
+                break;
+        }
     }
     else
     {
         wlow = wmax;
         whigh = wmax*2.0;
+        while(true)
+        {
+            if(get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh)>pmech)
+                whigh *=2.0;
+            else
+                break;
+        }
     }
 
     double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
     double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
-    //cout<<"wlow = "<<wlow<<" rad/s, plow = "<<plow<<" MW"<<endl;
-    //cout<<"whigh = "<<whigh<<" rad/s, phigh = "<<phigh<<" MW"<<endl;
+    cout<<"wlow = "<<wlow<<" rad/s, plow = "<<plow<<" MW"<<endl;
+    cout<<"whigh = "<<whigh<<" rad/s, phigh = "<<phigh<<" MW"<<endl;
 
     double w = 0.0;
-    size_t iter_count = 0, iter_max = 100;
+    size_t iter_count = 0, iter_max = 200;
     while(true)
     {
         double wnew = 0.5*(wlow+whigh);
         double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
-        //cout<<"wnew = "<<wnew<<" rad/s, pnew = "<<pnew<<" MW"<<endl;
+        cout<<"wnew = "<<wnew<<" rad/s, pnew = "<<pnew<<" MW, pmech = "<<pmech<<endl;
         double dspeed = (wnew-wn)/wn;
         pdamp = D*dspeed*mbase/n;
         pmech = (pelec+pdamp)/eta;

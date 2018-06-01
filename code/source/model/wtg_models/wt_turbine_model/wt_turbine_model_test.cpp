@@ -1,6 +1,8 @@
 #include "header/model/wtg_models/wt_turbine_model/wt_turbine_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g2.h"
+#include "header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -19,6 +21,55 @@ WT_TURBINE_MODEL_TEST::WT_TURBINE_MODEL_TEST()
 void WT_TURBINE_MODEL_TEST::setup()
 {
     WTG_MODEL_TEST::setup();
+
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
+    wt_gen->set_p_generation_in_MW(28.0);
+    wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
+    wt_gen->set_number_of_lumped_wt_generators(20);
+
+    WT3G2 genmodel;
+    genmodel.set_converter_activer_current_command_T_in_s(0.2);
+    genmodel.set_converter_reactiver_voltage_command_T_in_s(0.2);
+    genmodel.set_KPLL(20.0);
+    genmodel.set_KIPLL(10.0);
+    genmodel.set_PLLmax(0.1);
+    LVPL lvpl;
+    lvpl.set_low_voltage_in_pu(0.5);
+    lvpl.set_high_voltage_in_pu(0.8);
+    lvpl.set_gain_at_high_voltage(20.0);
+    genmodel.set_LVPL(lvpl);
+    genmodel.set_HVRC_voltage_in_pu(0.8);
+    genmodel.set_HVRC_current_in_pu(20.0);
+    genmodel.set_LVPL_max_rate_of_active_current_change(0.2);
+    genmodel.set_LVPL_voltage_sensor_T_in_s(0.1);
+
+    wt_gen->set_model(&genmodel);
+
+    AERD0 aeromodel;
+    aeromodel.set_number_of_pole_pairs(2);
+    aeromodel.set_generator_to_turbine_gear_ratio(100.0);
+    aeromodel.set_gear_efficiency(1.0);
+    aeromodel.set_turbine_blade_radius_in_m(25.0);
+    aeromodel.set_nominal_wind_speed_in_mps(13.0);
+    aeromodel.set_nominal_air_density_in_kgpm3(1.25);
+    aeromodel.set_air_density_in_kgpm3(1.25);
+    aeromodel.set_overspeed_mode_flag(false);
+
+    aeromodel.set_C1(0.22);
+    aeromodel.set_C2(116.0);
+    aeromodel.set_C3(0.4);
+    aeromodel.set_C4(5.0);
+    aeromodel.set_C5(-12.5);
+    aeromodel.set_C6(0.0);
+
+    aeromodel.set_C1(0.5176);
+    aeromodel.set_C2(116.0);
+    aeromodel.set_C3(0.4);
+    aeromodel.set_C4(5.0);
+    aeromodel.set_C5(-21.0);
+    aeromodel.set_C6(0.0068);
+
+    wt_gen->set_model(&aeromodel);
 }
 
 void WT_TURBINE_MODEL_TEST::tear_down()

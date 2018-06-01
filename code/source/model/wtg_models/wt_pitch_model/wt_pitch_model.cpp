@@ -36,7 +36,7 @@ double WT_PITCH_MODEL::get_wt_generator_speed_in_pu() const
 
     WT_TURBINE_MODEL* turbine = gen->get_wt_turbine_model();
     if(turbine!=NULL and turbine->is_model_initialized())
-        return turbine->get_wind_turbine_generator_speed_in_pu();
+        return turbine->get_turbine_speed_in_pu();
     else
         return 0.0;
 }

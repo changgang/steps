@@ -353,7 +353,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_turbine_frequency()
         WT_TURBINE_MODEL* turbinemodel = get_test_wt_turbine_model();
         if(turbinemodel!=NULL)
         {
-            double speed = turbinemodel->get_wind_turbine_generator_speed_in_pu();
+            double speed = turbinemodel->get_turbine_speed_in_pu();
             speed *= model->get_nominal_turbine_speed_in_rad_per_s();
             speed /=(2.0*PI);
             TEST_ASSERT(fabs(model->get_turbine_frequency_in_Hz()-speed)<FLOAT_EPSILON);
@@ -377,7 +377,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_turbine_speed()
         WT_TURBINE_MODEL* turbinemodel = get_test_wt_turbine_model();
         if(turbinemodel!=NULL)
         {
-            double speed = turbinemodel->get_wind_turbine_generator_speed_in_pu();
+            double speed = turbinemodel->get_turbine_speed_in_pu();
             speed *= model->get_nominal_turbine_speed_in_rad_per_s();
             TEST_ASSERT(fabs(model->get_turbine_speed_in_rad_per_s()-speed)<FLOAT_EPSILON);
         }

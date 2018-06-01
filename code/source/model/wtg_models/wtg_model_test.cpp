@@ -35,7 +35,7 @@ void WTG_MODEL_TEST::setup()
     wt_generator.set_generator_bus(1);
     wt_generator.set_identifier("#1");
     wt_generator.set_status(true);
-    wt_generator.set_mbase_in_MVA(100.0);
+    wt_generator.set_mbase_in_MVA(30.0);
     wt_generator.set_source_impedance_in_pu(complex<double>(0.0, 0.1));
     wt_generator.set_p_generation_in_MW(70.0);
     wt_generator.set_q_generation_in_MVar(30.0);

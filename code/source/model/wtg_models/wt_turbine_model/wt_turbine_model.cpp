@@ -23,7 +23,7 @@ void WT_TURBINE_MODEL::common_constructor()
 
 string WT_TURBINE_MODEL::get_model_type() const
 {
-    return "WIND TURBINE";
+    return "WT TURBINE";
 }
 
 void WT_TURBINE_MODEL::set_damping_in_pu(double D)

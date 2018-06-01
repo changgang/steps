@@ -261,6 +261,9 @@ void WT3T0::run(DYNAMIC_MODE mode)
         generator_inertia_block.run(mode);
     }
 
+    generator_rotor_angle_block.set_input(generator_inertia_block.get_output()+1.0-get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model());
+    generator_rotor_angle_block.run(mode);
+
     if(mode==UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
