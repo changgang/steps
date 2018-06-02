@@ -394,7 +394,7 @@ void AERD0::initialize_pitch_angle_and_turbine_speed()
 
     double wn = get_nominal_turbine_speed_in_rad_per_s();
     double w = get_initial_turbine_speed_in_rad_per_s();
-    //cout<<"initialized with 0.0 pitch, w = "<<w<<" rad/s, wn = "<<wn<<" rad/s"<<endl;
+    cout<<"initialized with 0.0 pitch, w = "<<w<<" rad/s, wn = "<<wn<<" rad/s"<<endl;
 
     double wmax = get_max_steady_state_turbine_speed_in_pu()*wn;
     double wmin = get_min_steady_state_turbine_speed_in_pu()*wn;
@@ -600,6 +600,7 @@ void AERD0::initialize_turbine_speed()
         cout<<"wnew = "<<wnew<<" rad/s, pnew = "<<pnew<<" MW, pmech = "<<pmech<<endl;
         double dspeed = (wnew-wn)/wn;
         pdamp = D*dspeed*mbase/n;
+        cout<<"pdamp = "<<pdamp<<" MW"<<endl;
         pmech = (pelec+pdamp)/eta;
         if(fabs(pnew-pmech)<1e-6)
         {

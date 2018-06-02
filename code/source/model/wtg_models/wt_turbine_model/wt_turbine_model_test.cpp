@@ -16,6 +16,8 @@ WT_TURBINE_MODEL_TEST::WT_TURBINE_MODEL_TEST()
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_get_model_type);
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_set_get_damping);
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase);
+    TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop);
 }
 
 void WT_TURBINE_MODEL_TEST::setup()

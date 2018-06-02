@@ -78,12 +78,12 @@ void WT3T0::set_Dshaft_in_pu(double D)
 
 double WT3T0::get_Hturbine_in_s() const
 {
-    return 2.0*turbine_inertia_block.get_T_in_s();
+    return 0.5*turbine_inertia_block.get_T_in_s();
 }
 
 double WT3T0::get_Hgenerator_in_s() const
 {
-    return 2.0*generator_inertia_block.get_T_in_s();
+    return 0.5*generator_inertia_block.get_T_in_s();
 }
 
 double WT3T0::get_Kshaft_in_pu() const
