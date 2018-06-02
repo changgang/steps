@@ -1,5 +1,6 @@
 #include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model_test.h"
 #include "header/basic/utility.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g2.h"
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -42,6 +43,29 @@ WT_AERODYNAMIC_MODEL_TEST::WT_AERODYNAMIC_MODEL_TEST()
 void WT_AERODYNAMIC_MODEL_TEST::setup()
 {
     WTG_MODEL_TEST::setup();
+
+    WT_GENERATOR* wt_gen = get_test_wt_generator();
+    wt_gen->set_p_generation_in_MW(28.0);
+    wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
+    wt_gen->set_number_of_lumped_wt_generators(20);
+
+    WT3G2 genmodel;
+    genmodel.set_converter_activer_current_command_T_in_s(0.2);
+    genmodel.set_converter_reactiver_voltage_command_T_in_s(0.2);
+    genmodel.set_KPLL(20.0);
+    genmodel.set_KIPLL(10.0);
+    genmodel.set_PLLmax(0.1);
+    LVPL lvpl;
+    lvpl.set_low_voltage_in_pu(0.5);
+    lvpl.set_high_voltage_in_pu(0.8);
+    lvpl.set_gain_at_high_voltage(20.0);
+    genmodel.set_LVPL(lvpl);
+    genmodel.set_HVRC_voltage_in_pu(0.8);
+    genmodel.set_HVRC_current_in_pu(20.0);
+    genmodel.set_LVPL_max_rate_of_active_current_change(0.2);
+    genmodel.set_LVPL_voltage_sensor_T_in_s(0.1);
+
+    wt_gen->set_model(&genmodel);
 }
 
 void WT_AERODYNAMIC_MODEL_TEST::tear_down()
@@ -336,7 +360,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_pitch_angle()
         }
         else
         {
-            TEST_ASSERT(fabs(model->get_pitch_angle_in_deg()-0.0)<FLOAT_EPSILON);
+            TEST_ASSERT(fabs(model->get_pitch_angle_in_deg()-model->get_initial_pitch_angle_in_deg())<FLOAT_EPSILON);
         }
     }
     else

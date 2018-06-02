@@ -16,8 +16,10 @@ WT_TURBINE_MODEL_TEST::WT_TURBINE_MODEL_TEST()
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_get_model_type);
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_set_get_damping);
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_get_standard_model_string);
-    TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase);
-    TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop);
+    TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode);
+    TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode);
+    TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode);
+    TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_overspeed_mode);
 }
 
 void WT_TURBINE_MODEL_TEST::setup()
@@ -121,28 +123,56 @@ void WT_TURBINE_MODEL_TEST::test_get_standard_model_string()
         TEST_ASSERT(false);
 }
 
-void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase()
+void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode()
 {
     WT_TURBINE_MODEL* model = get_test_wt_turbine_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
         redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
-        run_step_response_of_wt_turbine_model_with_pitch_angle_increase();
+        run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode();
         recover_stdout();
     }
     else
         TEST_ASSERT(false);
 }
 
-void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop()
+void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode()
 {
     WT_TURBINE_MODEL* model = get_test_wt_turbine_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
         redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
-        run_step_response_of_wt_turbine_model_with_generator_power_order_drop();
+        run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode();
+        recover_stdout();
+    }
+    else
+        TEST_ASSERT(false);
+}
+
+void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode()
+{
+    WT_TURBINE_MODEL* model = get_test_wt_turbine_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode();
+        recover_stdout();
+    }
+    else
+        TEST_ASSERT(false);
+}
+
+void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_overspeed_mode()
+{
+    WT_TURBINE_MODEL* model = get_test_wt_turbine_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_overspeed_mode();
         recover_stdout();
     }
     else
@@ -150,24 +180,111 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generato
 }
 
 
-void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle_increase()
+void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode()
 {
     ostringstream sstream;
+    double delt = 0.001;
+    set_dynamic_simulation_time_step_in_s(delt);
+
     WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        cout<<"Fatal error. No WT_GENERATOR is found in "<<__FUNCTION__<<endl;
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
+    if(genmodel==NULL)
+        cout<<"Fatal error. No WT_GENERATOR_MODEL is found in "<<__FUNCTION__<<endl;
     genmodel->initialize();
 
-    WT_ELECTRICAL_MODEL* elecmodel = get_test_wt_electrical_model();
-    elecmodel->initialize();
+    WT_AERODYNAMIC_MODEL* aeromodel = get_test_wt_aerodynamic_model();
+    aeromodel->set_overspeed_mode_flag(false);
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
     sstream<<"Model:"<<model->get_standard_model_string()<<endl;
     show_information_with_leading_time_stamp(sstream);
 
+
+    STEPS::TIME = -delt*2.0;
+    double generator_speed, turbine_speed;
+
+    model->initialize();
+    generator_speed = model->get_generator_speed_in_pu();
+
+    export_meter_title();
+    export_meter_values();
+    while(true)
+    {
+        STEPS::TIME += delt;
+        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        {
+            STEPS::TIME -=delt;
+            break;
+        }
+        generator_speed =  model->get_generator_speed_in_pu();
+        while(true)
+        {
+            model->run(INTEGRATE_MODE);
+            if(fabs(generator_speed-model->get_generator_speed_in_pu())>1e-6)
+                generator_speed = model->get_generator_speed_in_pu();
+            else
+                break;
+        }
+        model->run(UPDATE_MODE);
+
+        export_meter_values();
+    }
+
+    apply_1deg_pitch_angle_increase();
+    model->run(UPDATE_MODE);
+    export_meter_values();
+
+    while(true)
+    {
+        STEPS::TIME += delt;
+
+        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        {
+            STEPS::TIME -=delt;
+            break;
+        }
+        generator_speed =  model->get_generator_speed_in_pu();
+        while(true)
+        {
+            model->run(INTEGRATE_MODE);
+            if(fabs(generator_speed-model->get_generator_speed_in_pu())>1e-6)
+                generator_speed = model->get_generator_speed_in_pu();
+            else
+                break;
+        }
+        model->run(UPDATE_MODE);
+
+        export_meter_values();
+    }
+}
+
+void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode()
+{
+    ostringstream sstream;
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
+
+    WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        cout<<"Fatal error. No WT_GENERATOR is found in "<<__FUNCTION__<<endl;
+
+    WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
+    if(genmodel==NULL)
+        cout<<"Fatal error. No WT_GENERATOR_MODEL is found in "<<__FUNCTION__<<endl;
+    genmodel->initialize();
+
+    WT_AERODYNAMIC_MODEL* aeromodel = get_test_wt_aerodynamic_model();
+    aeromodel->set_overspeed_mode_flag(true);
+
+    WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
+
+    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(sstream);
+
 
     STEPS::TIME = -delt*2.0;
     double generator_speed, turbine_speed;
@@ -230,27 +347,30 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 void WT_TURBINE_MODEL_TEST::apply_1deg_pitch_angle_increase()
 {
     WT_AERODYNAMIC_MODEL* aero_model = get_test_wt_aerodynamic_model();
+    if(aero_model==NULL)
+        cout<<"Fatal error. No WT_AERODYNAMIC_MODEL is found in "<<__FUNCTION__<<endl;
     aero_model->set_initial_pitch_angle_in_deg(aero_model->get_initial_pitch_angle_in_deg()+1.0);
 }
 
-void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_power_order_drop()
+void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode()
 {
     ostringstream sstream;
+
+    double delt = 0.001;
+    set_dynamic_simulation_time_step_in_s(delt);
+
     WT_GENERATOR* genptr = get_test_wt_generator();
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
 
-    WT_ELECTRICAL_MODEL* elecmodel = get_test_wt_electrical_model();
-    elecmodel->initialize();
+    WT_AERODYNAMIC_MODEL* aeromodel = get_test_wt_aerodynamic_model();
+    aeromodel->set_overspeed_mode_flag(false);
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
     sstream<<"Model:"<<model->get_standard_model_string()<<endl;
     show_information_with_leading_time_stamp(sstream);
-
-    double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
 
     STEPS::TIME = -delt*2.0;
     double generator_speed, turbine_speed;
@@ -271,18 +391,21 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
         generator_speed =  model->get_generator_speed_in_pu();
         while(true)
         {
+            genmodel->run(INTEGRATE_MODE);
             model->run(INTEGRATE_MODE);
             if(fabs(generator_speed-model->get_generator_speed_in_pu())>1e-6)
                 generator_speed = model->get_generator_speed_in_pu();
             else
                 break;
         }
+        genmodel->run(UPDATE_MODE);
         model->run(UPDATE_MODE);
 
         export_meter_values();
     }
 
     apply_10_percent_power_order_drop();
+    genmodel->run(UPDATE_MODE);
     model->run(UPDATE_MODE);
     export_meter_values();
 
@@ -298,12 +421,97 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
         generator_speed =  model->get_generator_speed_in_pu();
         while(true)
         {
+            genmodel->run(INTEGRATE_MODE);
             model->run(INTEGRATE_MODE);
             if(fabs(generator_speed-model->get_generator_speed_in_pu())>1e-6)
                 generator_speed = model->get_generator_speed_in_pu();
             else
                 break;
         }
+        genmodel->run(UPDATE_MODE);
+        model->run(UPDATE_MODE);
+
+        export_meter_values();
+    }
+}
+
+void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_overspeed_mode()
+{
+    ostringstream sstream;
+
+    double delt = 0.001;
+    set_dynamic_simulation_time_step_in_s(delt);
+
+    WT_GENERATOR* genptr = get_test_wt_generator();
+
+    WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
+    genmodel->initialize();
+
+    WT_AERODYNAMIC_MODEL* aeromodel = get_test_wt_aerodynamic_model();
+    aeromodel->set_overspeed_mode_flag(true);
+
+    WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
+
+    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(sstream);
+
+    STEPS::TIME = -delt*2.0;
+    double generator_speed, turbine_speed;
+
+    model->initialize();
+    generator_speed = model->get_generator_speed_in_pu();
+
+    export_meter_title();
+    export_meter_values();
+    while(true)
+    {
+        STEPS::TIME += delt;
+        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        {
+            STEPS::TIME -=delt;
+            break;
+        }
+        generator_speed =  model->get_generator_speed_in_pu();
+        while(true)
+        {
+            genmodel->run(INTEGRATE_MODE);
+            model->run(INTEGRATE_MODE);
+            if(fabs(generator_speed-model->get_generator_speed_in_pu())>1e-6)
+                generator_speed = model->get_generator_speed_in_pu();
+            else
+                break;
+        }
+        genmodel->run(UPDATE_MODE);
+        model->run(UPDATE_MODE);
+
+        export_meter_values();
+    }
+
+    apply_10_percent_power_order_drop();
+    genmodel->run(UPDATE_MODE);
+    model->run(UPDATE_MODE);
+    export_meter_values();
+
+    while(true)
+    {
+        STEPS::TIME += delt;
+
+        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        {
+            STEPS::TIME -=delt;
+            break;
+        }
+        generator_speed =  model->get_generator_speed_in_pu();
+        while(true)
+        {
+            genmodel->run(INTEGRATE_MODE);
+            model->run(INTEGRATE_MODE);
+            if(fabs(generator_speed-model->get_generator_speed_in_pu())>1e-6)
+                generator_speed = model->get_generator_speed_in_pu();
+            else
+                break;
+        }
+        genmodel->run(UPDATE_MODE);
         model->run(UPDATE_MODE);
 
         export_meter_values();
@@ -313,7 +521,8 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 void WT_TURBINE_MODEL_TEST::apply_10_percent_power_order_drop()
 {
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
-    genmodel->set_initial_active_current_command_in_pu_based_on_mbase(genmodel->get_initial_active_current_command_in_pu_based_on_mbase()*0.9);
+    double ipcmd = genmodel->get_initial_active_current_command_in_pu_based_on_mbase();
+    genmodel->set_initial_active_current_command_in_pu_based_on_mbase(ipcmd*0.9);
 }
 
 
@@ -330,12 +539,12 @@ void WT_TURBINE_MODEL_TEST::export_meter_values()
 
     WT_TURBINE_MODEL* model = get_test_wt_turbine_model();
 
-    sstream<<setw(10)<<setprecision(6)<<STEPS::TIME<<"\t"
-           <<setw(10)<<setprecision(6)<<model->get_wt_generator_active_power_generation_in_MW()<<"\t"
-           <<setw(10)<<setprecision(6)<<model->get_mechanical_power_in_pu_from_wt_aerodynamic_model()*model->get_mbase_in_MVA()<<"\t"
-           <<setw(10)<<setprecision(6)<<model->get_turbine_speed_in_pu()<<"\t"
-           <<setw(10)<<setprecision(6)<<model->get_generator_speed_in_pu()<<"\t"
-           <<setw(10)<<setprecision(6)<<model->get_rotor_angle_in_deg();
+    sstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
+           <<setw(10)<<setprecision(6)<<fixed<<model->get_wt_generator_active_power_generation_in_MW()<<"\t"
+           <<setw(10)<<setprecision(6)<<fixed<<model->get_mechanical_power_in_pu_from_wt_aerodynamic_model()*model->get_mbase_in_MVA()<<"\t"
+           <<setw(10)<<setprecision(6)<<fixed<<model->get_turbine_speed_in_pu()<<"\t"
+           <<setw(10)<<setprecision(6)<<fixed<<model->get_generator_speed_in_pu()<<"\t"
+           <<setw(10)<<setprecision(6)<<fixed<<model->get_rotor_angle_in_deg();
     show_information_with_leading_time_stamp(sstream);
 }
 

@@ -178,6 +178,11 @@ double WT_AERODYNAMIC_MODEL::get_initial_turbine_speed_in_rad_per_s() const
     return initial_turbine_speed_in_rad_per_s;
 }
 
+double WT_AERODYNAMIC_MODEL::get_initial_turbine_speed_in_pu() const
+{
+    return get_initial_turbine_speed_in_rad_per_s()/get_nominal_turbine_speed_in_rad_per_s();
+}
+
 void WT_AERODYNAMIC_MODEL::set_air_density_in_kgpm3(double rou)
 {
     if(rou<FLOAT_EPSILON)

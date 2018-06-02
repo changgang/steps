@@ -57,6 +57,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         void set_initial_turbine_speed_in_rad_per_s(double w);
         double get_initial_pitch_angle_in_deg() const;
         double get_initial_turbine_speed_in_rad_per_s() const;
+        double get_initial_turbine_speed_in_pu() const;
         double get_total_wind_power_per_wt_generator_in_MW(double vwind) const;
     public:
         virtual string get_model_name() const = 0;

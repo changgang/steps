@@ -20,9 +20,6 @@ void WT3T0_TEST::setup()
     WT_TURBINE_MODEL_TEST::setup();
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
-    wt_gen->set_p_generation_in_MW(20.0);
-    wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
-    wt_gen->set_number_of_lumped_wt_generators(20);
 
     WT3T0 model;
     model.set_Hturbine_in_s(5.0);

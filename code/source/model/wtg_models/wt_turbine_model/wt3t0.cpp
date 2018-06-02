@@ -190,20 +190,19 @@ void WT3T0::initialize()
     generator_rotor_angle_block.initialize();
 
     double speed = get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model();
-    double slip = speed-1.0;
+    double dspeed = speed-1.0;
 
-    generator_inertia_block.set_output(slip);
+    generator_inertia_block.set_output(dspeed);
     generator_inertia_block.initialize();
 
-    turbine_inertia_block.set_output(slip);
+    turbine_inertia_block.set_output(dspeed);
     double hturbine = get_Hturbine_in_s();
     if(fabs(hturbine)>FLOAT_EPSILON)
         turbine_inertia_block.initialize();
 
-    WT_GENERATOR* generator = get_wt_generator_pointer();
-    double pelec = generator->get_p_generation_in_MW()/get_mbase_in_MVA();
+    double pelec = gen_model->get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
     double telec = pelec/speed;
-    double tmech = get_damping_in_pu()*slip+telec;
+    double tmech = get_damping_in_pu()*dspeed+telec;
 
     shaft_twist_block.set_output(tmech);
     shaft_twist_block.initialize();
@@ -224,25 +223,23 @@ void WT3T0::run(DYNAMIC_MODE mode)
 
     WT_GENERATOR_MODEL* wtgenmodel = wtgen->get_wt_generator_model();
 
-    double pelec = get_wt_generator_active_power_generation_in_MW()/mbase;
-    complex<double> iterm = wtgenmodel->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
-    pelec += (abs(iterm)*abs(iterm)*zsource.real());
-    double gslip = generator_inertia_block.get_output();
-    double gspeed = gslip+1.0;
+    double pelec = wtgenmodel->get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
+    double gdspeed = generator_inertia_block.get_output();
+    double gspeed = gdspeed+1.0;
     double telec = pelec/gspeed;
 
     if(fabs(get_Hturbine_in_s())>FLOAT_EPSILON)
     {
-        double tslip = turbine_inertia_block.get_output();
-        double ttwist = shaft_twist_block.get_output();
+        double tdspeed = turbine_inertia_block.get_output();
+        double tspeed = 1.0+tdspeed;
+        double tmech = pmech/tspeed;
 
-        double tmech = pmech/(1.0+tslip);
-        double input = tmech -(ttwist + dshaft*(tslip-gslip));
+        double ttwist = shaft_twist_block.get_output();
+        double input = tmech -(ttwist + dshaft*(tdspeed-gdspeed));
         turbine_inertia_block.set_input(input);
         turbine_inertia_block.run(mode);
 
-        input = (dshaft*(tslip-gslip) + ttwist) - telec - damp*gslip;
+        input = (dshaft*(tdspeed-gdspeed) + ttwist) - telec - damp*gdspeed;
         generator_inertia_block.set_input(input);
         generator_inertia_block.run(mode);
 
@@ -255,8 +252,8 @@ void WT3T0::run(DYNAMIC_MODE mode)
     }
     else
     {
-        double tmech = pmech/(1.0+gslip);
-        double input = tmech - telec - damp*gslip;
+        double tmech = pmech/(1.0+gdspeed);
+        double input = tmech - telec - damp*gdspeed;
         generator_inertia_block.set_input(input);
         generator_inertia_block.run(mode);
     }

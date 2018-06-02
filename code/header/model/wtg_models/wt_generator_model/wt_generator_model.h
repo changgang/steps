@@ -70,6 +70,8 @@ class WT_GENERATOR_MODEL : public WTG_MODEL
         virtual double get_terminal_active_power_in_MW() = 0;
         virtual double get_terminal_reactive_power_in_pu_based_on_mbase() = 0;
         virtual double get_terminal_reactive_power_in_MVar() = 0;
+        virtual double get_active_power_generation_including_stator_loss_in_pu_based_on_mbase() = 0;
+        virtual double get_active_power_generation_including_stator_loss_in_MW() = 0;
 
         virtual double get_pll_angle_in_rad() = 0;
         virtual double get_pll_angle_in_deg() = 0;

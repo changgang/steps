@@ -394,7 +394,7 @@ void AERD0::initialize_pitch_angle_and_turbine_speed()
 
     double wn = get_nominal_turbine_speed_in_rad_per_s();
     double w = get_initial_turbine_speed_in_rad_per_s();
-    cout<<"initialized with 0.0 pitch, w = "<<w<<" rad/s, wn = "<<wn<<" rad/s"<<endl;
+    //cout<<"initialized with 0.0 pitch, w = "<<w<<" rad/s, wn = "<<wn<<" rad/s"<<endl;
 
     double wmax = get_max_steady_state_turbine_speed_in_pu()*wn;
     double wmin = get_min_steady_state_turbine_speed_in_pu()*wn;
@@ -522,20 +522,23 @@ void AERD0::initialize_turbine_speed()
     if(psdb==NULL)
         return;
 
+    WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
+    if(genmodel==NULL)
+        return;
+    if(not genmodel->is_model_initialized())
+        genmodel->initialize();
+
     double D = get_damping_in_pu();
     double mbase = get_mbase_in_MVA();
     complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
 
-    complex<double> selec = gen->get_complex_generation_in_MVA();
-    complex<double> vterm = get_terminal_complex_voltage_in_pu();
+    double pelec = genmodel->get_terminal_active_power_in_MW()/mbase;
+    complex<double> iterm = genmodel->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
 
-    selec /= mbase;
-    double iterm = abs(selec)/abs(vterm);
-    selec += (iterm*iterm*zsource);
+    pelec += (abs(iterm)*abs(iterm)*zsource.real());
 
-    selec *= mbase;
+    pelec *= mbase;
 
-    double pelec = selec.real();
     size_t n = get_number_of_lumped_wt_generators();
     pelec /= n;
 
@@ -550,7 +553,7 @@ void AERD0::initialize_turbine_speed()
 
     double eta = get_gear_efficiency();
     double pmech = pelec/eta;
-    double pdamp = 0.0;
+    double tmech, telec, tdamp = 0.0;
 
     double lambdamax = get_lambda_at_Cpmax(get_pitch_angle_in_deg());
 
@@ -588,8 +591,8 @@ void AERD0::initialize_turbine_speed()
 
     double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
     double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
-    cout<<"wlow = "<<wlow<<" rad/s, plow = "<<plow<<" MW"<<endl;
-    cout<<"whigh = "<<whigh<<" rad/s, phigh = "<<phigh<<" MW"<<endl;
+    //cout<<"wlow = "<<wlow<<" rad/s, plow = "<<plow<<" MW"<<endl;
+    //cout<<"whigh = "<<whigh<<" rad/s, phigh = "<<phigh<<" MW"<<endl;
 
     double w = 0.0;
     size_t iter_count = 0, iter_max = 200;
@@ -597,11 +600,14 @@ void AERD0::initialize_turbine_speed()
     {
         double wnew = 0.5*(wlow+whigh);
         double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
-        cout<<"wnew = "<<wnew<<" rad/s, pnew = "<<pnew<<" MW, pmech = "<<pmech<<endl;
+        //cout<<"wnew = "<<wnew<<" rad/s, pnew = "<<pnew<<" MW, pmech = "<<pmech<<" MW"<<endl;
         double dspeed = (wnew-wn)/wn;
-        pdamp = D*dspeed*mbase/n;
-        cout<<"pdamp = "<<pdamp<<" MW"<<endl;
-        pmech = (pelec+pdamp)/eta;
+        tdamp = D*dspeed*(mbase/wn)/n;
+        //cout<<"tdamp = "<<tdamp<<" N.m"<<endl;
+        telec = pelec/wnew;
+        tmech = telec+tdamp;
+        pmech = tmech * wnew;
+        pmech /= eta;
         if(fabs(pnew-pmech)<1e-6)
         {
             w = wnew;

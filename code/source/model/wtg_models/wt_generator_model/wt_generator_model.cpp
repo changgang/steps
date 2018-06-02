@@ -3,6 +3,9 @@
 #include "header/basic/constants.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
+#include <iostream>
+
+using namespace std;
 
 WT_GENERATOR_MODEL::WT_GENERATOR_MODEL()
 {

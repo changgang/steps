@@ -72,6 +72,8 @@ class WT3G2 : public WT_GENERATOR_MODEL
         virtual double get_terminal_active_power_in_MW();
         virtual double get_terminal_reactive_power_in_pu_based_on_mbase();
         virtual double get_terminal_reactive_power_in_MVar();
+        virtual double get_active_power_generation_including_stator_loss_in_pu_based_on_mbase();
+        virtual double get_active_power_generation_including_stator_loss_in_MW();
 
         virtual double get_pll_angle_in_rad();
         virtual double get_pll_angle_in_deg();

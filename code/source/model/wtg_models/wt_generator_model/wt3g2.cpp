@@ -302,6 +302,9 @@ bool WT3G2::setup_model_with_bpa_string(string data)
 
 void WT3G2::initialize()
 {
+    if(is_model_initialized())
+        return;
+
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return;
@@ -341,12 +344,16 @@ void WT3G2::initialize()
     double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
     // ignore voltage angle
     complex<double> Ixy = conj(S/Vxy);
-    complex<double> Isource = Ixy + Vxy/(complex<double>(0.0, xeq));
+    complex<double> Isource = Ixy + Vxy/Zsource;
 
-    complex<double> IPQ = xy2dq_with_angle_in_rad(Isource, angle_in_rad);
+    double Ix = Isource.real();
+    double Iy = Isource.imag();
 
-    double IP = IPQ.real();
-    double IQ = IPQ.imag();
+    double IP = Ix*cos(angle_in_rad) + Iy*sin(angle_in_rad);
+    double IQ =-Ix*sin(angle_in_rad) + Iy*cos(angle_in_rad);
+    //complex<double> IPQ = xy2dq_with_angle_in_rad(Isource, angle_in_rad);
+    //double IP = IPQ.real();
+    //double IQ = IPQ.imag();
 
     double EQ = IQ*(-xeq);
 
@@ -370,6 +377,8 @@ void WT3G2::initialize()
 
     set_initial_active_current_command_in_pu_based_on_mbase(IP);
     set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
+
+    set_flag_model_initialized_as_true();
 }
 
 void WT3G2::run(DYNAMIC_MODE mode)
@@ -449,6 +458,7 @@ void WT3G2::run(DYNAMIC_MODE mode)
         PLL_angle_integrator.set_input(input);
         PLL_angle_integrator.run(mode);
     }
+    IP = get_active_current_command_in_pu_based_on_mbase();
 
     if(mode==UPDATE_MODE)
         set_flag_model_updated_as_true();
@@ -475,6 +485,7 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
         V_LVACR_high = 0.8;
 
     double Ip = active_current_commander.get_output();
+
     double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
     if(Ip>lvpl_order)
         Ip =lvpl_order;
@@ -496,15 +507,15 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
     double pll_angle = get_pll_angle_in_rad();
 
-    complex<double> Ipq(Ip, Iq);
-    complex<double> Ixy = dq2xy_with_angle_in_rad(Ipq, pll_angle);
+    //complex<double> Ipq(Ip, Iq);
+    //complex<double> Ixy = dq2xy_with_angle_in_rad(Ipq, pll_angle);
 
-    double Ix = Ixy.real();
-    double Iy = Ixy.imag();
-    //double Ix = Ip*cos(pll_angle) - Iq*sin(pll_angle);
-    //double Iy = Ip*sin(pll_angle) + Iq*cos(pll_angle);
+    double Ix = Ip*cos(pll_angle) - Iq*sin(pll_angle);
+    double Iy = Ip*sin(pll_angle) + Iq*cos(pll_angle);
 
-    return complex<double>(Ix, Iy)*mbase/sbase;
+    complex<double> Ixy(Ix, Iy);
+
+    return Ixy*mbase/sbase;
 }
 
 complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
@@ -526,9 +537,10 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sb
     Zsource /= mbase;
     Zsource *= sbase;
 
-    complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+    complex<double> Ixy_norton = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    return Ixy - Vxy/Zsource;
+    complex<double> Ixy_term = Ixy_norton - Vxy/Zsource;
+    return Ixy_term;
 }
 
 double WT3G2::get_terminal_current_in_pu_based_on_mbase()
@@ -691,6 +703,21 @@ double WT3G2::get_terminal_reactive_power_in_pu_based_on_mbase()
 double WT3G2::get_terminal_reactive_power_in_MVar()
 {
     return get_terminal_complex_power_in_MVA().imag();
+}
+
+double WT3G2::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
+{
+    return get_active_power_generation_including_stator_loss_in_MW()/get_mbase_in_MVA();
+}
+
+double WT3G2::get_active_power_generation_including_stator_loss_in_MW()
+{
+    double pterm = get_terminal_active_power_in_MW();
+    double rsource = get_source_impedance_in_pu_based_on_mbase().real();
+    double iterm = abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+    double mbase = get_mbase_in_MVA();
+
+    return pterm+rsource*iterm*iterm*mbase;
 }
 
 double WT3G2::get_pll_angle_in_rad()

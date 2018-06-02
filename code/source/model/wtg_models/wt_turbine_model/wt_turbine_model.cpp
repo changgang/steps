@@ -64,10 +64,7 @@ double WT_TURBINE_MODEL::get_initial_wind_turbine_speed_in_pu_from_wt_areodynami
     if(not aero_model->is_model_initialized())
         aero_model->initialize();
 
-    double w = aero_model->get_turbine_reference_speed_in_rad_per_s();
-    double wn = aero_model->get_nominal_turbine_speed_in_rad_per_s();
-
-    return w/wn;
+    return aero_model->get_initial_turbine_speed_in_pu();
 }
 
 double WT_TURBINE_MODEL::get_mechanical_power_in_pu_from_wt_aerodynamic_model() const
