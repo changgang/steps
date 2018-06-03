@@ -26,10 +26,15 @@ class WT_ELECTRICAL_MODEL : public WTG_MODEL
     public: // pe elctricla control common
         virtual string get_model_type() const;
         // get input
-        complex<double> get_source_generation_in_MVA() const;
-        double get_source_bus_voltage_in_pu() const;
-        double get_source_bus_frequency_in_pu() const;
-        double get_source_bus_frequency_deviation_in_pu() const;
+        complex<double> get_wt_generator_terminal_generation_in_MVA() const;
+        complex<double> get_wt_generator_terminal_generation_in_pu_based_on_mbase() const;
+        complex<double> get_terminal_bus_complex_voltage_in_pu() const;
+        double get_terminal_bus_voltage_in_pu() const;
+        complex<double> get_wt_generator_terminal_complex_current_in_pu() const;
+        double get_wt_generator_terminal_current_in_pu() const;
+
+        double get_terminal_bus_frequency_in_pu() const;
+        double get_terminal_bus_frequency_deviation_in_pu() const;
         // reference
         void set_bus_to_regulate(size_t bus);
         size_t get_bus_to_regulate()  const;
@@ -47,15 +52,9 @@ class WT_ELECTRICAL_MODEL : public WTG_MODEL
         double get_power_factor_reference_in_pu() const;
         void set_var_control_mode(PE_VAR_CONTROL_MODE mode);
         PE_VAR_CONTROL_MODE get_var_control_mode() const;
-        void set_wind_turbine_reference_speed_in_pu(double speed);
 
-
-        complex<double> get_complex_voltage_in_pu() const;
-        complex<double> get_complex_terminal_current_in_pu() const;
-        complex<double> get_complex_generation_in_pu() const;
-
-        double get_wind_turbine_generator_speed_in_pu() const;
-        double get_wind_turbine_generator_speed_referance_in_pu() const;
+        double get_wt_generator_speed_in_pu() const;
+        double get_wt_generator_speed_referance_in_pu() const;
 
         void set_wind_turbine_power_speed_lookup_table(WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table);
         WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE get_wind_turbine_power_speed_lookup_table() const;
@@ -103,7 +102,6 @@ class WT_ELECTRICAL_MODEL : public WTG_MODEL
         double active_power_reference_in_pu;
         double reactive_power_reference_in_pu;
         double power_factor_reference_in_pu;
-        double turbine_speed_reference_in_pu;
         PE_VAR_CONTROL_MODE pe_var_control_mode;
         WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE power_speed_table;
 };

@@ -84,7 +84,8 @@ void FIRST_ORDER_BLOCK::initialize()
     if(t!=0.0)
     {
         s = y;
-        z = y-(1.0-2.0*t/h)*s;
+        //z = y-(1.0-2.0*t/h)*s;
+        z =2.0*t*s/h;
     }
     else
     {
@@ -160,7 +161,8 @@ void FIRST_ORDER_BLOCK::integrate()
     if(t!=0.0)
     {
         z = get_store();
-        s = (z+k*x)/(1.0+2.0*t/h);
+        //s = (z+k*x)/(1.0+2.0*t/h);
+        s = h*(z+k*x)/(h+2.0*t);
         y = s;
         if(limiter_type != NO_LIMITER)
         {
@@ -252,7 +254,8 @@ void FIRST_ORDER_BLOCK::update()
                 }
             }
         }
-        z = k*x-(1.0-2.0*t/h)*s;
+        //z = k*x-(1.0-2.0*t/h)*s;
+        z = k*x-(h-2.0*t)*s/h;
         set_dstate(ds);
         set_store(z);
     }

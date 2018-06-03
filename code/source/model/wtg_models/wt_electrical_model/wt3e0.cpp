@@ -2,6 +2,7 @@
 #include "header/device/wt_generator.h"
 #include "header/power_system_database.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 
 WT3E0::WT3E0()
 {
@@ -29,6 +30,8 @@ WT3E0& WT3E0::operator=(const WT3E0& model)
 
 void WT3E0::copy_from_const_model(const WT3E0& model)
 {
+    clear();
+
     set_bus_to_regulate(model.get_bus_to_regulate());
     set_var_control_mode(model.get_var_control_mode());
     set_wind_turbine_power_speed_lookup_table(model.get_wind_turbine_power_speed_lookup_table());
@@ -68,91 +71,6 @@ void WT3E0::copy_from_const_model(const WT3E0& model)
 string WT3E0::get_model_name() const
 {
     return "WT3E0";
-}
-
-double WT3E0::get_active_power_current_command_in_pu()
-{
-    WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source==NULL)
-        return 0.0;
-
-    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
-
-    size_t bus = source->get_source_bus();
-    double vterm = psdb->get_bus_voltage_in_pu(bus);
-
-    double IPcmd = power_order_integrator.get_output()/vterm;
-
-    double IPmax = get_IPmax_in_pu();
-    if(IPcmd>IPmax)
-        IPcmd = IPmax;
-    return IPcmd;
-}
-
-double WT3E0::get_reactive_power_current_command_in_pu()
-{
-    WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source==NULL)
-        return 0.0;
-
-    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
-
-    double EQcmd = 0.0;
-    if(get_voltage_flag()==0)
-    {
-        size_t bus = source->get_source_bus();
-        double vterm = psdb->get_bus_voltage_in_pu(bus);
-
-        EQcmd = Q_error_integrator.get_output()-vterm;
-    }
-    else
-    {
-        EQcmd = V_error_integrator.get_output();
-    }
-
-    double Xsource = source->get_source_impedance_in_pu().imag();
-
-    double IQcmd = -EQcmd/Xsource;
-    return IQcmd;
-}
-
-double WT3E0::get_double_data_with_index(size_t index) const
-{
-    return 0.0;
-}
-
-double WT3E0::get_double_data_with_name(string par_name) const
-{
-    return 0.0;
-}
-
-void WT3E0::set_double_data_with_index(size_t index, double value)
-{
-    ;
-}
-
-void WT3E0::set_double_data_with_name(string par_name, double value)
-{
-    ;
-}
-
-void WT3E0::set_transformer_from_bus(size_t bus)
-{
-    transformer_from_bus = bus;
-}
-
-void WT3E0::set_transformer_to_bus(size_t bus)
-{
-    transformer_to_bus = bus;
-}
-
-void WT3E0::set_transformer_id(string id)
-{
-    transformer_id = id;
 }
 
 void WT3E0::set_Xcomp_in_pu(double Xc)
@@ -228,9 +146,9 @@ void WT3E0::set_voltage_flag(size_t flag)
         Voltage_Flag = flag;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. "<<flag<<" is not allowed to set up voltage flag for "<<get_model_name()<<" model. 0, 1, or 2 is allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. "<<flag<<" is not allowed to set up voltage flag for "<<get_model_name()<<" model. 0, 1, or 2 is allowed.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -315,20 +233,6 @@ void WT3E0::set_IPmax_in_pu(double I)
     IPmax = I;
 }
 
-size_t WT3E0::get_transformer_from_bus() const
-{
-    return transformer_from_bus;
-}
-
-size_t WT3E0::get_transformer_to_bus() const
-{
-    return transformer_to_bus;
-}
-
-string WT3E0::get_transformer_id() const
-{
-    return transformer_id;
-}
 double WT3E0::get_Xcomp_in_pu() const
 {
     return Xcomp;
@@ -479,6 +383,26 @@ double WT3E0::get_IPmax_in_pu() const
     return IPmax;
 }
 
+double WT3E0::get_double_data_with_index(size_t index) const
+{
+    return 0.0;
+}
+
+double WT3E0::get_double_data_with_name(string par_name) const
+{
+    return 0.0;
+}
+
+void WT3E0::set_double_data_with_index(size_t index, double value)
+{
+    ;
+}
+
+void WT3E0::set_double_data_with_name(string par_name, double value)
+{
+    ;
+}
+
 bool WT3E0::setup_model_with_steps_string(string data)
 {
     return false;
@@ -488,15 +412,14 @@ bool WT3E0::setup_model_with_psse_string(string data)
 {
     bool is_successful = false;
     vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<40)
+    if(dyrdata.size()<37)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
     if(model_name!=get_model_name())
         return is_successful;
 
-    size_t bus, var_control_flag, voltage_flag, trans_from_bus, trans_to_bus;
-    string trans_id;
+    size_t bus, var_control_flag, voltage_flag;
 
     double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
            ipmax, trv, rpmax, rpmin, tspeed, kqi, vmax, vmin,
@@ -507,9 +430,6 @@ bool WT3E0::setup_model_with_psse_string(string data)
     bus = get_integer_data(dyrdata[i],"0"); i++;
     var_control_flag = get_integer_data(dyrdata[i],"0"); i++;
     voltage_flag = get_integer_data(dyrdata[i],"0"); i++;
-    trans_from_bus = get_integer_data(dyrdata[i],"0"); i++;
-    trans_to_bus = get_integer_data(dyrdata[i],"0"); i++;
-    trans_id = get_string_data(dyrdata[i],""); i++;
     tfv = get_double_data(dyrdata[i],"0.0"); i++;
     kpv = get_double_data(dyrdata[i],"0.0"); i++;
     kiv = get_double_data(dyrdata[i],"0.0"); i++;
@@ -567,9 +487,6 @@ bool WT3E0::setup_model_with_psse_string(string data)
     }
 
     set_var_control_mode(mode);
-    set_transformer_from_bus(trans_from_bus);
-    set_transformer_to_bus(trans_to_bus);
-    set_transformer_id(trans_id);
     set_Xcomp_in_pu(xc);
     set_TRV_in_s(trv);
     set_Fn(fn);
@@ -617,7 +534,7 @@ bool WT3E0::setup_model_with_bpa_string(string data)
 
 void WT3E0::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_model_initialized())
         return;
 
@@ -625,12 +542,12 @@ void WT3E0::initialize()
     if(wt_generator==NULL)
         return;
 
-    WT_GENERATOR_MODEL* source_model = wt_generator->get_wt_generator_model();
-    if(source_model==NULL)
+    WT_GENERATOR_MODEL* wtgenmodel = wt_generator->get_wt_generator_model();
+    if(wtgenmodel==NULL)
         return;
 
-    if(not source_model->is_model_initialized())
-        source_model->initialize();
+    if(not wtgenmodel->is_model_initialized())
+        wtgenmodel->initialize();
 
     WT_TURBINE_MODEL* turbine_model = wt_generator->get_wt_turbine_model();
     if(turbine_model==NULL)
@@ -639,22 +556,22 @@ void WT3E0::initialize()
     if(not turbine_model->is_model_initialized())
         turbine_model->initialize();
 
-    double vterm = get_source_bus_voltage_in_pu();
-    double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
-    double freq = get_source_bus_frequency_deviation_in_pu();
-    double mbase = wt_generator->get_mbase_in_MVA();
-    complex<double> selec = get_source_generation_in_MVA()/mbase;
+    double vterm = get_terminal_bus_voltage_in_pu();
+    double iterm = get_wt_generator_terminal_current_in_pu();
+    double freq = get_terminal_bus_frequency_deviation_in_pu();
+    double mbase = get_mbase_in_MVA();
+    complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
-    double speed = get_wind_turbine_generator_speed_in_pu();
+    double speed = get_wt_generator_speed_in_pu();
 
-    double ipcmd = source_model->get_active_current_command_in_pu_based_on_mbase();
+    double ipcmd = wtgenmodel->get_initial_active_current_command_in_pu_based_on_mbase();
     double ipmax = get_IPmax_in_pu();
     if(ipcmd>ipmax)
     {
-        sstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     double porder = ipcmd*vterm;
     double pmax = get_Pmax_in_pu();
@@ -662,9 +579,9 @@ void WT3E0::initialize()
     power_order_integrator.set_output(porder);
     if(ipcmd>ipmax)
     {
-        sstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     power_order_integrator.initialize();
 
@@ -683,15 +600,13 @@ void WT3E0::initialize()
     wind_turbine_speed_reference_sensor.set_output(speed);
     wind_turbine_speed_reference_sensor.initialize();
 
-    set_wind_turbine_reference_speed_in_pu(speed);
-
-    double iqcmd = source_model->get_reactive_current_command_in_pu_based_on_mbase();
-    double xsource = wt_generator->get_source_impedance_in_pu().imag();
+    double iqcmd = wtgenmodel->get_initial_reactive_current_command_in_pu_based_on_mbase();
+    double xsource = get_source_impedance_in_pu_based_on_mbase().imag();
     double eqcmd = iqcmd*(-xsource);
 
     double verror = 0.0;
     size_t vflag = get_voltage_flag();
-    if(vflag = 0)
+    if(vflag == 0)
     {
         V_error_integrator.set_output(0.0);
         V_error_integrator.initialize();
@@ -716,15 +631,15 @@ void WT3E0::initialize()
         V_error_integrator.set_output(eqcmd);
         if(eqcmd>vmax)
         {
-            sstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-              <<"Eqcmd is "<<eqcmd<<", and Vmax is "<<vmax<<".";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+              <<"Eqcmd is "<<eqcmd<<", and Vmax is "<<vmax<<" for voltage flag = "<<vflag;
+            show_information_with_leading_time_stamp(osstream);
         }
         if(eqcmd<vmin)
         {
-            sstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-              <<"Eqcmd is "<<eqcmd<<", and Vmin is "<<vmin<<".";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+              <<"Eqcmd is "<<eqcmd<<", and Vmin is "<<vmin<<" for voltage flag = "<<vflag;
+            show_information_with_leading_time_stamp(osstream);
         }
         V_error_integrator.initialize();
         verror = 0.0;
@@ -736,15 +651,15 @@ void WT3E0::initialize()
     Q_error_integrator.set_output(vcmd);
     if(vcmd>vmax)
     {
-        sstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Vcmd is "<<vcmd<<", and Vmax is "<<vmax<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(vcmd<vmin)
     {
-        sstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Vcmd is "<<vcmd<<", and Vmin is "<<vmin<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     Q_error_integrator.initialize();
 
@@ -753,15 +668,15 @@ void WT3E0::initialize()
     double qmin = get_Qmin_in_pu();
     if(qcmd>qmax)
     {
-        sstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"Qcmd is "<<qcmd<<", and Qmax is "<<qmax<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                <<"Qcmd is "<<qcmd<<", and Qmax is "<<qmax<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
     if(qcmd<qmin)
     {
-        sstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-          <<"Qcmd is "<<qcmd<<", and Qmin is "<<qmin<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                <<"Qcmd is "<<qcmd<<", and Qmin is "<<qmin<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 
     set_reactive_power_reference_in_pu(qcmd);
@@ -789,48 +704,57 @@ void WT3E0::initialize()
     voltage_sensor.initialize();
 
     set_voltage_reference_in_pu(vref);
+    osstream<<"After initialized: voltage reference is "<<setw(20)<<setprecision(19)<<fixed<<vref<<endl
+            <<"                 : voltage reference is "<<setw(20)<<setprecision(19)<<fixed<<get_voltage_reference_in_pu()<<endl
+            <<"                 : sensor output     is "<<setw(20)<<setprecision(19)<<fixed<<voltage_sensor.get_output()<<endl;
+    osstream<<"                 voltage regulator integrator input = "<<voltage_regulator_first_order_block.get_input()<<", output = "<<voltage_regulator_integrator.get_output()<<endl;
+    osstream<<"                 voltage regulator first order block input = "<<voltage_regulator_first_order_block.get_input()<<", output = "<<voltage_regulator_first_order_block.get_output()<<endl;
+    osstream<<"                 voltage_regulator_filter input = "<<voltage_regulator_filter.get_input()<<", output = "<<voltage_regulator_filter.get_output()<<endl;
+    //show_information_with_leading_time_stamp(osstream);
 
     set_flag_model_initialized_as_true();
 }
 
 void WT3E0::run(DYNAMIC_MODE mode)
 {
-    ostringstream sstream;
-    if(is_model_initialized())
-        return;
+    ostringstream osstream;
 
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return;
 
-    WT_GENERATOR_MODEL* source_model = wt_generator->get_wt_generator_model();
-    if(source_model==NULL)
+    WT_GENERATOR_MODEL* wtgenmodel = wt_generator->get_wt_generator_model();
+    if(wtgenmodel==NULL)
         return;
 
-    double vterm = get_source_bus_voltage_in_pu();
-    double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
-    double freq = get_source_bus_frequency_deviation_in_pu();
-    double mbase = wt_generator->get_mbase_in_MVA();
-    complex<double> selec = get_source_generation_in_MVA()/mbase;
+    double vterm = get_terminal_bus_voltage_in_pu();
+    double iterm = get_wt_generator_terminal_current_in_pu();
+    double freq = get_terminal_bus_frequency_deviation_in_pu();
+    double mbase = get_mbase_in_MVA();
+    complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
 
-    double speed     = get_wind_turbine_generator_speed_in_pu();
-    double speed_ref = get_wind_turbine_generator_speed_referance_in_pu();
+    double speed     = get_wt_generator_speed_in_pu();
+    double speed_ref = get_wt_generator_speed_referance_in_pu();
 
     wind_turbine_speed_reference_sensor.set_input(speed_ref);
     wind_turbine_speed_reference_sensor.run(mode);
+    osstream<<"wind_turbine_speed_reference_sensor input = "<<speed_ref<<", output = "<<wind_turbine_speed_reference_sensor.get_output()<<endl;
 
     double input = speed - wind_turbine_speed_reference_sensor.get_output();
 
     torque_PI_regulator.set_input(input);
     torque_PI_regulator.run(mode);
+    osstream<<"torque_PI_regulator input = "<<input<<", output = "<<torque_PI_regulator.get_output()<<endl;
 
     virtual_inertia_emulator.set_input(freq);
     virtual_inertia_emulator.run(mode);
+    osstream<<"virtual_inertia_emulator input = "<<input<<", output = "<<virtual_inertia_emulator.get_output()<<endl;
 
     frequency_droop_controller.set_input(freq);
     frequency_droop_controller.run(mode);
+    osstream<<"frequency_droop_controller input = "<<input<<", output = "<<frequency_droop_controller.get_output()<<endl;
 
     input = torque_PI_regulator.get_output()*(1.0+speed)
             +virtual_inertia_emulator.get_output()
@@ -843,27 +767,36 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
     power_order_integrator.set_input(input);
     power_order_integrator.run(mode);
+    osstream<<"power_order_integrator input = "<<input<<", output = "<<power_order_integrator.get_output()<<endl;
 
     active_power_sensor.set_input(pelec);
     active_power_sensor.run(mode);
+    osstream<<"active_power_sensor input = "<<pelec<<", output = "<<active_power_sensor.get_output()<<endl;
 
     double xcomp = get_Xcomp_in_pu();
     input = vterm+iterm*xcomp;
     voltage_sensor.set_input(input);
     voltage_sensor.run(mode);
+    osstream<<"At time "<<STEPS::TIME<<" s"<<endl;
+    osstream<<"voltage_sensor input = "<<setw(20)<<setprecision(19)<<fixed<<input<<", output = "<<voltage_sensor.get_output()<<endl;
 
     input = get_voltage_reference_in_pu()-voltage_sensor.get_output();
+    osstream<<"input = "<<input<<endl;
     input /= get_Fn();
 
     voltage_regulator_integrator.set_input(input);
     voltage_regulator_integrator.run(mode);
+    osstream<<"voltage regulator integrator input = "<<input<<", output = "<<voltage_regulator_integrator.get_output()<<endl;
 
     voltage_regulator_first_order_block.set_input(input);
     voltage_regulator_first_order_block.run(mode);
+    osstream<<"voltage regulator first order block input = "<<input<<", output = "<<voltage_regulator_first_order_block.get_output()<<endl;
 
     input = voltage_regulator_integrator.get_output() + voltage_regulator_first_order_block.get_output();
+    osstream<<"voltage_regulator_filter input = "<<input<<", output = "<<voltage_regulator_filter.get_output()<<endl;
     voltage_regulator_filter.set_input(input);
     voltage_regulator_filter.run(mode);
+    osstream<<"voltage_regulator_filter input = "<<input<<", output = "<<voltage_regulator_filter.get_output()<<endl;
 
     PE_VAR_CONTROL_MODE var_mode = get_var_control_mode();
     double qcmd = 0.0;
@@ -883,10 +816,12 @@ void WT3E0::run(DYNAMIC_MODE mode)
         qcmd = get_Qmax_in_pu();
     if(qcmd<get_Qmin_in_pu())
         qcmd = get_Qmin_in_pu();
+    osstream<<"Q command = "<<qcmd<<endl;
 
     input = qcmd - qelec;
     Q_error_integrator.set_input(input);
     Q_error_integrator.run(mode);
+    osstream<<"Q_error_integrator input = "<<input<<", output = "<<Q_error_integrator.get_output()<<endl;
 
     size_t vflag = get_voltage_flag();
     if(vflag == 1 or vflag == 2)
@@ -907,7 +842,9 @@ void WT3E0::run(DYNAMIC_MODE mode)
         input = Q_error_integrator.get_output()-vterm;
         V_error_integrator.set_input(input);
         V_error_integrator.run(mode);
+        osstream<<"V_error_integrator input = "<<input<<", output = "<<V_error_integrator.get_output()<<endl;
     }
+    //show_information_with_leading_time_stamp(osstream);
 
     if(mode == UPDATE_MODE)
         set_flag_model_updated_as_true();
@@ -916,7 +853,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
 double WT3E0::get_active_current_command_in_pu_based_on_mbase() const
 {
-    double vterm = abs(get_complex_voltage_in_pu());
+    double vterm = get_terminal_bus_voltage_in_pu();
     if(vterm==0.0)
         return 0.0;
 
@@ -976,11 +913,8 @@ double WT3E0::get_reactive_voltage_command_in_pu_based_on_mbase() const
     size_t voltage_flag = get_voltage_flag();
     if(voltage_flag==0)
     {
-        double vterm = abs(get_complex_voltage_in_pu());
-        if(vterm == 0.0)
-            return 0.0;
-        else
-            return Q_error_integrator.get_output()/vterm;
+        double vterm = get_terminal_bus_voltage_in_pu();
+        return Q_error_integrator.get_output()-vterm;
     }
     else
         return V_error_integrator.get_output();
@@ -1002,9 +936,9 @@ void WT3E0::clear()
 
 void WT3E0::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3E0::save()
@@ -1014,7 +948,7 @@ void WT3E0::save()
 
 string WT3E0::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
     size_t bus = source->get_source_bus();
     string identifier= source->get_identifier();
@@ -1023,9 +957,6 @@ string WT3E0::get_standard_model_string() const
     PE_VAR_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
     size_t voltage_flag = get_voltage_flag();
-    size_t trans_from_bus = get_transformer_from_bus();
-    size_t trans_to_bus = get_transformer_to_bus();
-    string trans_id = get_transformer_id();
     double tfv = get_TFV_in_s();
     double kpv = get_KPV();
     double kiv = get_KIV();
@@ -1056,15 +987,12 @@ string WT3E0::get_standard_model_string() const
     double kdroop = get_Kdroop();
     double tdroop = get_Tdroop_in_s();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<bus_reg<<", "
       <<setw(8)<<var_mode<<", "
       <<setw(8)<<voltage_flag<<", "
-      <<trans_from_bus<<", "
-      <<trans_to_bus<<", "
-      <<"'"<<trans_id<<"', "
       <<setw(8)<<setprecision(6)<<tfv<<", "
       <<setw(8)<<setprecision(6)<<kpv<<", "
       <<setw(8)<<setprecision(6)<<kiv<<", "
@@ -1095,7 +1023,7 @@ string WT3E0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<kdroop<<", "
       <<setw(8)<<setprecision(6)<<tdroop<<"  /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t WT3E0::get_variable_index_from_variable_name(string var_name)

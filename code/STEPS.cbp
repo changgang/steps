@@ -288,6 +288,7 @@
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e0.h" />
+		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e0_test.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e1.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt3e1_test.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt4e1.h" />
@@ -706,6 +707,7 @@
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e0.cpp" />
+		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt3e1_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt4e1.cpp" />

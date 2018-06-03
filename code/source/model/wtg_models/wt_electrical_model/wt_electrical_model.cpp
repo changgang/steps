@@ -15,51 +15,83 @@ WT_ELECTRICAL_MODEL::~WT_ELECTRICAL_MODEL()
 
 string WT_ELECTRICAL_MODEL::get_model_type() const
 {
-    return "WIND ELECTRICAL CONTROL";
+    return "WT ELECTRICAL";
 }
 
-complex<double> WT_ELECTRICAL_MODEL::get_source_generation_in_MVA() const
+complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_generation_in_MVA() const
 {
-    WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source==NULL)
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
         return 0.0;
+    WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
+    if(genmodel==NULL)
+        return 0.0;
+    if(not genmodel->is_model_initialized())
+        genmodel->initialize();
 
-    return source->get_complex_generation_in_MVA();
+    return genmodel->get_terminal_complex_power_in_MVA();
 }
 
-double WT_ELECTRICAL_MODEL::get_source_bus_voltage_in_pu() const
+complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_generation_in_pu_based_on_mbase() const
 {
-    WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source==NULL)
+    return get_wt_generator_terminal_generation_in_MVA()/get_mbase_in_MVA();
+}
+
+complex<double> WT_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() const
+{
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
     if(psdb==NULL)
         return 0.0;
 
-    size_t bus = source->get_source_bus();
-    return psdb->get_bus_voltage_in_pu(bus);
+    size_t bus = gen->get_generator_bus();
+    return psdb->get_bus_complex_voltage_in_pu(bus);
 }
 
-double WT_ELECTRICAL_MODEL::get_source_bus_frequency_in_pu() const
+double WT_ELECTRICAL_MODEL::get_terminal_bus_voltage_in_pu() const
 {
-    return get_source_bus_frequency_deviation_in_pu()+1.0;
+    return abs(get_terminal_bus_complex_voltage_in_pu());
 }
 
-double WT_ELECTRICAL_MODEL::get_source_bus_frequency_deviation_in_pu() const
+double WT_ELECTRICAL_MODEL::get_terminal_bus_frequency_in_pu() const
 {
-    WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source==NULL)
+    return get_terminal_bus_frequency_deviation_in_pu()+1.0;
+}
+
+double WT_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
+{
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
     if(psdb==NULL)
         return 0.0;
 
-    size_t bus = source->get_source_bus();
+    size_t bus = gen->get_generator_bus();
     return psdb->get_bus_frequency_deviation_in_pu(bus);
 }
 
+complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_complex_current_in_pu() const
+{
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
+        return 0.0;
+
+    WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    else
+        return 0.0;
+}
+
+double WT_ELECTRICAL_MODEL::get_wt_generator_terminal_current_in_pu() const
+{
+    return abs(get_wt_generator_terminal_complex_current_in_pu());
+}
 // reference
 
 void WT_ELECTRICAL_MODEL::set_bus_to_regulate(size_t bus)
@@ -149,56 +181,7 @@ PE_VAR_CONTROL_MODE WT_ELECTRICAL_MODEL::get_var_control_mode() const
     return pe_var_control_mode;
 }
 
-void WT_ELECTRICAL_MODEL::set_wind_turbine_reference_speed_in_pu(double speed)
-{
-    turbine_speed_reference_in_pu = speed;
-}
-
-
-complex<double> WT_ELECTRICAL_MODEL::get_complex_voltage_in_pu() const
-{
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return 0.0;
-
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
-
-    size_t bus = gen->get_generator_bus();
-    return psdb->get_bus_complex_voltage_in_pu(bus);
-}
-
-complex<double> WT_ELECTRICAL_MODEL::get_complex_terminal_current_in_pu() const
-{
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return 0.0;
-
-    WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
-    if(model!=NULL and model->is_model_initialized())
-        return model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-    else
-        return 0.0;
-}
-
-complex<double> WT_ELECTRICAL_MODEL::get_complex_generation_in_pu() const
-{
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return 0.0;
-
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
-
-    size_t bus = gen->get_generator_bus();
-    return psdb->get_bus_complex_voltage_in_pu(bus);
-}
-
-
-
-double WT_ELECTRICAL_MODEL::get_wind_turbine_generator_speed_in_pu() const
+double WT_ELECTRICAL_MODEL::get_wt_generator_speed_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen == NULL)
@@ -206,12 +189,12 @@ double WT_ELECTRICAL_MODEL::get_wind_turbine_generator_speed_in_pu() const
 
     WT_TURBINE_MODEL* turbinemodel = gen->get_wt_turbine_model();
     if(turbinemodel != NULL and turbinemodel->is_model_initialized())
-        return turbinemodel->get_turbine_speed_in_pu();
+        return turbinemodel->get_generator_speed_in_pu();
     else
         return 1.0;
 }
 
-double WT_ELECTRICAL_MODEL::get_wind_turbine_generator_speed_referance_in_pu() const
+double WT_ELECTRICAL_MODEL::get_wt_generator_speed_referance_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen == NULL)
@@ -222,11 +205,10 @@ double WT_ELECTRICAL_MODEL::get_wind_turbine_generator_speed_referance_in_pu() c
     {
         if(not aero_model->is_model_initialized())
             aero_model->initialize();
-        return aero_model->get_turbine_reference_speed_in_rad_per_s();
+        return aero_model->get_turbine_reference_speed_in_pu();
     }
     else
         return 0.0;
-
 }
 
 void WT_ELECTRICAL_MODEL::set_wind_turbine_power_speed_lookup_table(WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table)

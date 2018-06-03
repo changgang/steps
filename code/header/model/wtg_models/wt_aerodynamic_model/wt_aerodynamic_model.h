@@ -73,9 +73,11 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind) const = 0;
         virtual double get_turbine_mechanical_power_per_wt_generator_in_MW() const = 0;
         virtual double get_turbine_mechanical_power_in_MW() const = 0;
         virtual double get_turbine_reference_speed_in_rad_per_s() const = 0;
+        virtual double get_turbine_reference_speed_in_pu() const = 0;
 
         virtual void check() = 0;
         virtual void clear() = 0;

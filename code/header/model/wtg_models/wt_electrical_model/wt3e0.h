@@ -15,17 +15,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         virtual WT3E0& operator=(const WT3E0& model);
     public: // specific exciter
         virtual string get_model_name() const;
-        virtual double get_active_power_current_command_in_pu();
-        virtual double get_reactive_power_current_command_in_pu();
 
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
-
-        void set_transformer_from_bus(size_t bus);
-        void set_transformer_to_bus(size_t bus);
-        void set_transformer_id(string id);
         void set_Xcomp_in_pu(double Xc);
         void set_TRV_in_s(double T);
         void set_Fn(double Fn);
@@ -57,9 +47,6 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         void set_Pmin_in_pu(double p);
         void set_IPmax_in_pu(double I);
 
-        size_t get_transformer_from_bus() const;
-        size_t get_transformer_to_bus() const;
-        string get_transformer_id() const;
         double get_Xcomp_in_pu() const;
         double get_TRV_in_s() const;
         double get_Fn() const;
@@ -90,7 +77,13 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double get_Pmax_in_pu() const;
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
+
+        virtual double get_double_data_with_index(size_t index) const;
+        virtual double get_double_data_with_name(string par_name) const;
+        virtual void set_double_data_with_index(size_t index, double value);
+        virtual void set_double_data_with_name(string par_name, double value);
     public:
+
         virtual bool setup_model_with_steps_string(string data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
@@ -102,6 +95,8 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         virtual double get_reactive_current_command_in_pu_based_on_mbase() const;
         virtual double get_reactive_power_command_in_pu_based_on_mbase() const;
         virtual double get_reactive_voltage_command_in_pu_based_on_mbase() const;
+
+
         virtual void check();
         virtual void clear();
         virtual void report();
@@ -118,9 +113,6 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const WT3E0& model);
-
-        size_t transformer_from_bus, transformer_to_bus;
-        string transformer_id;
 
         double Xcomp;
         FIRST_ORDER_BLOCK voltage_sensor;

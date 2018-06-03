@@ -31,7 +31,7 @@ void AERD0_TEST::setup()
     model.set_turbine_blade_radius_in_m(25.0);
     model.set_nominal_wind_speed_in_mps(13.0);
     model.set_nominal_air_density_in_kgpm3(1.25);
-    model.set_air_density_in_kgpm3(1.22);
+    model.set_air_density_in_kgpm3(1.25);
     model.set_overspeed_mode_flag(false);
 
     model.set_C1(0.22);
@@ -94,111 +94,67 @@ void AERD0_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_C6()-6.6)<FLOAT_EPSILON);
 }
 
-void AERD0_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
-
-    ostringstream sstream;
-
-    AERD0* model = (AERD0*) get_test_wt_aerodynamic_model();
-    model->set_overspeed_mode_flag(true);
-
-    WT_GENERATOR* gen = get_test_wt_generator();
-    gen->set_p_generation_in_MW(5);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
-
-    gen->set_p_generation_in_MW(10);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
-
-    gen->set_p_generation_in_MW(20);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
-
-    gen->set_p_generation_in_MW(25);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
-
-    gen->set_p_generation_in_MW(29);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
-}
-
 void AERD0_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_flag()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
+    set_dynamic_simulation_time_step_in_s(0.001);
+    ostringstream osstream;
 
-    ostringstream sstream;
-
+    WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
     AERD0* model = (AERD0*) get_test_wt_aerodynamic_model();
     model->set_overspeed_mode_flag(false);
 
     WT_GENERATOR* gen = get_test_wt_generator();
-    gen->set_p_generation_in_MW(5);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
 
-    gen->set_p_generation_in_MW(10);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
+    for(double p=5.0; p<=31.0; p+=5.0)
+    {
+        if(p>=30.0)
+            p = 29.0;
+        gen->set_p_generation_in_MW(p);
+        wtgenmodel->set_flag_model_initialized_as_false();
+        model->set_flag_model_initialized_as_false();
+        wtgenmodel->initialize();
+        model->initialize();
+        osstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
+        osstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
+               <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
+               <<model->get_initial_turbine_speed_in_pu()<<" pu)";
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
 
-    gen->set_p_generation_in_MW(20);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
+void AERD0_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
+    set_dynamic_simulation_time_step_in_s(0.001);
+    ostringstream osstream;
 
-    gen->set_p_generation_in_MW(25);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
+    WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
+    AERD0* model = (AERD0*) get_test_wt_aerodynamic_model();
+    model->set_overspeed_mode_flag(true);
 
-    gen->set_p_generation_in_MW(29);
-    model->initialize();
-    sstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
-    sstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
-           <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
-           <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(sstream);
+    WT_GENERATOR* gen = get_test_wt_generator();
+
+    for(double p=5.0; p<31.0; p+=5.0)
+    {
+        if(p>=30.0)
+            p = 29.0;
+        gen->set_p_generation_in_MW(p);
+        wtgenmodel->set_flag_model_initialized_as_false();
+        model->set_flag_model_initialized_as_false();
+        wtgenmodel->initialize();
+        model->initialize();
+        osstream<<"AERD0 model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
+        osstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
+               <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
+               <<model->get_initial_turbine_speed_in_pu()<<" pu)";
+        show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 void AERD0_TEST::test_list_Cp_and_mechanical_power_data_of_different_wind_speed()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     AERD0* model = (AERD0*) get_test_wt_aerodynamic_model();
     if(model!=NULL)
@@ -210,10 +166,10 @@ void AERD0_TEST::test_list_Cp_and_mechanical_power_data_of_different_wind_speed(
         redirect_stdout_to_file(file);
 
         double r = model->get_turbine_blade_radius_in_m();
-        sstream<<"Power curve when pitch = 0.0 deg, and wind speed = "<<model->get_nominal_wind_speed_in_mps()<<" m/s, blade radius = "<<r<<" m";
-        show_information_with_leading_time_stamp(sstream);
-        sstream<<"Speed(rad/s)\tLambda\tCP\tPmech(MW)";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Power curve when pitch = 0.0 deg, and wind speed = "<<model->get_nominal_wind_speed_in_mps()<<" m/s, blade radius = "<<r<<" m";
+        show_information_with_leading_time_stamp(osstream);
+        osstream<<"Speed(rad/s)\tLambda\tCP\tPmech(MW)";
+        show_information_with_leading_time_stamp(osstream);
 
         /*for(double w=0.1; w<4.0*PI; w+=0.1)
         {
@@ -222,11 +178,11 @@ void AERD0_TEST::test_list_Cp_and_mechanical_power_data_of_different_wind_speed(
             if(cp<0.0)
                 break;
             double pmech = model->get_turbine_mechanical_power_per_wt_generator_in_MW();
-            sstream<<setw(10)<<setprecision(6)<<w<<"\t"
+            osstream<<setw(10)<<setprecision(6)<<w<<"\t"
                    <<setw(10)<<setprecision(6)<<lambda<<"\t"
                    <<setw(10)<<setprecision(6)<<cp<<"\t"
                    <<setw(10)<<setprecision(6)<<pmech;
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }*/
         recover_stdout();
     }

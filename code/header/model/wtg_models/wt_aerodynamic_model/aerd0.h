@@ -45,9 +45,11 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind) const;
         virtual double get_turbine_mechanical_power_per_wt_generator_in_MW() const;
         virtual double get_turbine_mechanical_power_in_MW() const;
         virtual double get_turbine_reference_speed_in_rad_per_s() const;
+        virtual double get_turbine_reference_speed_in_pu() const;
 
         virtual void check();
         virtual void clear();

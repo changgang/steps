@@ -593,11 +593,11 @@ void WT3E1::initialize()
     if(not source_model->is_model_initialized())
         source_model->initialize();
 
-    double vterm = get_source_bus_voltage_in_pu();
+    double vterm = get_terminal_bus_voltage_in_pu();
     double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
-    double freq = get_source_bus_frequency_deviation_in_pu();
+    double freq = get_terminal_bus_frequency_deviation_in_pu();
     double mbase = wt_generator->get_mbase_in_MVA();
-    complex<double> selec = get_source_generation_in_MVA()/mbase;
+    complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
     double speed = get_wind_turbine_reference_speed_with_power_in_pu(pelec);
@@ -753,11 +753,11 @@ void WT3E1::run(DYNAMIC_MODE mode)
         return;
 
 
-    double vterm = get_source_bus_voltage_in_pu();
+    double vterm = get_terminal_bus_voltage_in_pu();
     double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
-    double freq = get_source_bus_frequency_deviation_in_pu();
+    double freq = get_terminal_bus_frequency_deviation_in_pu();
     double mbase = wt_generator->get_mbase_in_MVA();
-    complex<double> selec = get_source_generation_in_MVA()/mbase;
+    complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
 

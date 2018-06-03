@@ -25,7 +25,7 @@ void WT3T0_TEST::setup()
     model.set_Hturbine_in_s(5.0);
     model.set_Hgenerator_in_s(3.0);
     model.set_Kshaft_in_pu(20.0);
-    model.set_damping_in_pu(0.01);
+    model.set_damping_in_pu(1.0);
     model.set_Dshaft_in_pu(1.0);
 
     wt_gen->set_model(&model);
