@@ -383,6 +383,16 @@ double WT3E0::get_IPmax_in_pu() const
     return IPmax;
 }
 
+void WT3E0::set_speed_reference_bias_in_pu(double bias)
+{
+    speedref_bias =  bias;
+}
+
+double WT3E0::get_speed_reference_bias_in_pu() const
+{
+    return speedref_bias;
+}
+
 double WT3E0::get_double_data_with_index(size_t index) const
 {
     return 0.0;
@@ -597,8 +607,11 @@ void WT3E0::initialize()
 
     set_frequency_reference_in_pu(freq);
 
-    wind_turbine_speed_reference_sensor.set_output(speed);
+    double speedref = get_wt_generator_speed_referance_in_pu();
+    set_speed_reference_bias_in_pu(speedref-speed);
+    wind_turbine_speed_reference_sensor.set_output(speedref);
     wind_turbine_speed_reference_sensor.initialize();
+
 
     double iqcmd = wtgenmodel->get_initial_reactive_current_command_in_pu_based_on_mbase();
     double xsource = get_source_impedance_in_pu_based_on_mbase().imag();
@@ -737,12 +750,13 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
     double speed     = get_wt_generator_speed_in_pu();
     double speed_ref = get_wt_generator_speed_referance_in_pu();
+    double speedref_bias = get_speed_reference_bias_in_pu();
 
     wind_turbine_speed_reference_sensor.set_input(speed_ref);
     wind_turbine_speed_reference_sensor.run(mode);
     osstream<<"wind_turbine_speed_reference_sensor input = "<<speed_ref<<", output = "<<wind_turbine_speed_reference_sensor.get_output()<<endl;
 
-    double input = speed - wind_turbine_speed_reference_sensor.get_output();
+    double input = speed + speedref_bias - wind_turbine_speed_reference_sensor.get_output();
 
     torque_PI_regulator.set_input(input);
     torque_PI_regulator.run(mode);

@@ -78,6 +78,9 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
 
+        void set_speed_reference_bias_in_pu(double bias);
+        double get_speed_reference_bias_in_pu() const;
+
         virtual double get_double_data_with_index(size_t index) const;
         virtual double get_double_data_with_name(string par_name) const;
         virtual void set_double_data_with_index(size_t index, double value);
@@ -133,6 +136,8 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double max_torque_rate, min_torque_rate;
         INTEGRAL_BLOCK power_order_integrator;
         double IPmax;
+
+        double speedref_bias;
 };
 
 #endif // EXCITER_MODEL_H
