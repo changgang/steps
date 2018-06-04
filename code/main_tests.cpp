@@ -108,6 +108,8 @@
 
 #include "header/model/wtg_models/wt_electrical_model/wt3e0_test.h"
 
+#include "header/model/wtg_models/wt_pitch_model/wt3p0_test.h"
+
 #include "header/toolkit/cct_searcher/cct_searcher_test.h"
 
 #include "header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h"
@@ -281,6 +283,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new AERD0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3T0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3E0_TEST));
+        ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
 
 //        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
 

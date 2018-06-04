@@ -22,8 +22,6 @@ class WT3P0 : public WT_PITCH_MODEL
         void set_Tp_in_s(double T);
         void set_Kp_speed_controller(double K);
         void set_Ki_speed_controller(double K);
-        void set_Kp_power_controller(double K);
-        void set_Ki_power_controller(double K);
         void set_Kp_frequency_controller(double K);
         void set_Ki_frequency_controller(double K);
         void set_Pitchmax_in_deg(double P);
@@ -33,8 +31,6 @@ class WT3P0 : public WT_PITCH_MODEL
         double get_Tp_in_s() const;
         double get_Kp_speed_controller() const;
         double get_Ki_speed_controller() const;
-        double get_Kp_power_controller() const;
-        double get_Ki_power_controller() const;
         double get_Kp_frequency_controller() const;
         double get_Ki_frequency_controller() const;
         double get_Pitchmax_in_deg() const;
@@ -65,7 +61,6 @@ class WT3P0 : public WT_PITCH_MODEL
     private:
         void copy_from_const_model(const WT3P0& model);
         PI_BLOCK speed_controller;
-        PI_BLOCK power_controller;
         PI_BLOCK frequency_controller;
         INTEGRAL_BLOCK pitch_integrator;
         double ratePitchmax;

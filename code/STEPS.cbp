@@ -303,6 +303,7 @@
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_models.h" />
 		<Unit filename="header/model/wtg_models/wt_pitch_model/wt3p0.h" />
+		<Unit filename="header/model/wtg_models/wt_pitch_model/wt3p0_test.h" />
 		<Unit filename="header/model/wtg_models/wt_pitch_model/wt3p1.h" />
 		<Unit filename="header/model/wtg_models/wt_pitch_model/wt3p1_test.h" />
 		<Unit filename="header/model/wtg_models/wt_pitch_model/wt_pitch_model.h" />
@@ -720,8 +721,13 @@
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p0.cpp" />
-		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p1.cpp" />
+		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p0_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p1.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model.cpp" />
+		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t1.cpp">

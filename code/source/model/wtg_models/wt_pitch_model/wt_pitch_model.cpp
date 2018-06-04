@@ -17,9 +17,8 @@ WT_PITCH_MODEL::~WT_PITCH_MODEL()
 void WT_PITCH_MODEL::common_constructor()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("WT GENERATOR");
-    set_speed_reference_in_pu(1.0);
-    set_frequency_reference_in_pu(1.0);
-    set_power_reference_in_pu(1.0);
+    set_frequency_upper_deadband_in_pu(1.0);
+    set_frequency_lower_deadband_in_pu(1.0);
 }
 
 string WT_PITCH_MODEL::get_model_type() const
@@ -41,6 +40,19 @@ double WT_PITCH_MODEL::get_wt_generator_speed_in_pu() const
         return 0.0;
 }
 
+double WT_PITCH_MODEL::get_wt_generator_reference_speed_in_pu() const
+{
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
+        return 0.0;
+
+    WT_AERODYNAMIC_MODEL* aerd = gen->get_wt_aerodynamic_model();
+    if(aerd!=NULL and aerd->is_model_initialized())
+        return aerd->get_turbine_reference_speed_in_pu();
+    else
+        return 0.0;
+}
+
 double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
@@ -51,50 +63,43 @@ double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
     if(psdb==NULL)
         return 1.0;
 
-    size_t bus = gen->get_source_bus();
+    size_t bus = gen->get_generator_bus();
     return psdb->get_bus_frequency_in_pu(bus);
 }
 
-double WT_PITCH_MODEL::get_wt_active_power_command_in_pu() const
+double WT_PITCH_MODEL::get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;
 
-    WT_ELECTRICAL_MODEL* electrical = gen->get_wt_electrical_model();
-    if(electrical!=NULL and electrical->is_model_initialized())
-        return electrical->get_active_current_command_in_pu_based_on_mbase();
+    WT_AERODYNAMIC_MODEL* aerd = gen->get_wt_aerodynamic_model();
+    if(aerd!=NULL)
+    {
+        if(not aerd->is_model_initialized())
+            aerd->initialize();
+        return aerd->get_initial_pitch_angle_in_deg();
+    }
     else
         return 0.0;
 }
 
-
-void WT_PITCH_MODEL::set_speed_reference_in_pu(double speed)
+void WT_PITCH_MODEL::set_frequency_upper_deadband_in_pu(double freq)
 {
-    speed_reference_in_pu = speed;
+    frequency_deadband_upper_in_pu = freq;
 }
 
-void WT_PITCH_MODEL::set_frequency_reference_in_pu(double freq)
+void WT_PITCH_MODEL::set_frequency_lower_deadband_in_pu(double freq)
 {
-    frequency_reference_in_pu = freq;
+    frequency_deadband_lower_in_pu = freq;
 }
 
-void WT_PITCH_MODEL::set_power_reference_in_pu(double power)
+double WT_PITCH_MODEL::get_frequency_upper_deadband_in_pu() const
 {
-    power_reference_in_pu = power;
+    return frequency_deadband_upper_in_pu;
 }
 
-double WT_PITCH_MODEL::get_speed_reference_in_pu() const
+double WT_PITCH_MODEL::get_frequency_lower_deadband_in_pu() const
 {
-    return speed_reference_in_pu;
-}
-
-double WT_PITCH_MODEL::get_frequency_reference_in_pu() const
-{
-    return frequency_reference_in_pu;
-}
-
-double WT_PITCH_MODEL::get_power_reference_in_pu() const
-{
-    return power_reference_in_pu;
+    return frequency_deadband_lower_in_pu;
 }

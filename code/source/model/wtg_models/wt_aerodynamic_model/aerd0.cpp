@@ -586,132 +586,7 @@ void AERD0::initialize_pitch_angle()
 
 void AERD0::initialize_turbine_speed()
 {
-    ostringstream osstream;
-
-    WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return;
-
-    WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
-    if(genmodel==NULL)
-        return;
-    if(not genmodel->is_model_initialized())
-        genmodel->initialize();
-
-    double D = get_damping_in_pu();
-    double mbase = get_mbase_in_MVA();
-    complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
-
-    double pelec = genmodel->get_terminal_active_power_in_MW()/mbase;
-    complex<double> iterm = genmodel->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-
-    pelec += (abs(iterm)*abs(iterm)*zsource.real());
-
-    pelec *= mbase;
-
-    size_t n = get_number_of_lumped_wt_generators();
-    pelec /= n;
-
-    double pn = get_rated_power_per_wt_generator_in_MW();
-
-    if(pelec>pn)
-    {
-        osstream<<"Error when getting initial turbine speed of "<<get_model_name()<<" model of "<<get_device_name()<<". Initial power exceeds WT nominal power.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    double eta = get_gear_efficiency();
-    double pmech = pelec/eta;
-    double tmech, telec, tdamp = 0.0;
-
-    double lambdamax = get_lambda_at_Cpmax(get_pitch_angle_in_deg());
-
-    double v = get_wind_speed_in_mps();
-    double r = get_turbine_blade_radius_in_m();
-    double wn = get_nominal_turbine_speed_in_rad_per_s();
-
-    double wmax = lambdamax*v/r;
-
-    double wlow, whigh;
-    if(get_overspeed_mode_flag()==false)
-    {
-        wlow = wmax*0.5;
-        whigh = wmax;
-        while(true)
-        {
-            if(get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow)>pmech)
-                wlow *=0.5;
-            else
-                break;
-        }
-    }
-    else
-    {
-        wlow = wmax;
-        whigh = wmax*2.0;
-        while(true)
-        {
-            if(get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh)>pmech)
-                whigh *=2.0;
-            else
-                break;
-        }
-    }
-
-    double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
-    double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
-    //cout<<"wlow = "<<wlow<<" rad/s, plow = "<<plow<<" MW"<<endl;
-    //cout<<"whigh = "<<whigh<<" rad/s, phigh = "<<phigh<<" MW"<<endl;
-
-    double w = 0.0;
-    size_t iter_count = 0, iter_max = 200;
-    while(true)
-    {
-        double wnew = 0.5*(wlow+whigh);
-        double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
-        //cout<<"wnew = "<<wnew<<" rad/s, pnew = "<<pnew<<" MW, pmech = "<<pmech<<" MW"<<endl;
-        double dspeed = (wnew-wn)/wn;
-        tdamp = D*dspeed*(mbase/wn)/n;
-        //cout<<"tdamp = "<<tdamp<<" N.m"<<endl;
-        telec = pelec/wnew;
-        tmech = telec+tdamp;
-        pmech = tmech * wnew;
-        pmech /= eta;
-        if(fabs(pnew-pmech)<1e-6)
-        {
-            w = wnew;
-            break;
-        }
-        if(get_overspeed_mode_flag()==false)
-        {
-            if(pnew>pmech)
-                whigh = wnew;
-            else
-                wlow = wnew;
-        }
-        else
-        {
-            if(pnew>pmech)
-                wlow = wnew;
-            else
-                whigh = wnew;
-        }
-        iter_count++;
-        if(iter_count>iter_max)
-        {
-            w = wnew;
-            osstream<<"Warning. Failed to get initial wt turbine speed in "<<iter_max<<" iterations."<<endl
-                   <<"Turbine speed is initialized as "<<w<<" rad/s."<<endl
-                   <<"Check "<<get_model_name()<<" model of "<<get_device_name();
-            show_information_with_leading_time_stamp(osstream);
-            break;
-        }
-    }
+    double w = get_turbine_reference_speed_in_rad_per_s();
     set_initial_turbine_speed_in_rad_per_s(w);
 }
 
@@ -752,6 +627,10 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
     if(wtgenmodel==NULL)
         return 0.0;
 
+    double damping = get_damping_in_pu();
+    double wn = get_nominal_turbine_speed_in_rad_per_s();
+    double eta = get_gear_efficiency();
+
     complex<double> selec = wtgenmodel->get_terminal_complex_power_in_MVA();
     double iterm = wtgenmodel->get_terminal_current_in_pu_based_on_mbase();
     complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
@@ -762,6 +641,7 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
     selec /= n;
 
     double pelec = selec.real();
+    double pmech = pelec;
 
     double pitch = get_pitch_angle_in_deg();
     double lambda = get_lambda_at_Cpmax(pitch);
@@ -771,13 +651,20 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
 
     double cpmax = get_Cpmax(pitch);
     double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
-    if(pelec>pmax)
+    if(pmech>pmax)
     {
         osstream<<"Warning. Current electrical power generation of "<<get_device_name()<<" exceeds the maximum available wind power:"<<endl
-               <<"Current electrical power generation = "<<pelec*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW"<<endl
+               <<"Current electrical power generation = "<<pmech*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW"<<endl
                <<"Current wind speed = "<<vwind<<" m, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
                <<"MPPT speed will be returned as speed reference: "<<w_mppt<<" rad/s.";
         show_information_with_leading_time_stamp(osstream);
+
+        if(w_mppt>get_max_steady_state_turbine_speed_in_pu()*wn)
+            return get_max_steady_state_turbine_speed_in_pu()*wn;
+
+        if(w_mppt<get_min_steady_state_turbine_speed_in_pu()*wn)
+            return get_min_steady_state_turbine_speed_in_pu()*wn;
+
         return w_mppt;
     }
 
@@ -803,21 +690,26 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
         double wnew = 0.5*(wlow+whigh);
         double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
 
-        if(fabs(pnew-pelec)<1e-6)
+        double telec = pelec/wnew;
+        double tdamp = damping*(wnew/wn-1.0)*(mbase/wn)/n;
+        double tmech = telec+tdamp;
+        pmech = tmech*wnew;
+        pmech /= eta;
+        if(fabs(pnew-pmech)<1e-6)
         {
             w = wnew;
             break;
         }
         if(get_overspeed_mode_flag()==false)
         {
-            if(pnew>pelec)
+            if(pnew>pmech)
                 whigh = wnew;
             else
                 wlow = wnew;
         }
         else
         {
-            if(pnew>pelec)
+            if(pnew>pmech)
                 wlow = wnew;
             else
                 whigh = wnew;
@@ -827,7 +719,7 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
         {
             w = wnew;
             osstream<<"Warning. Failed to get reference wt turbine speed in "<<iter_max<<" iterations."<<endl
-                   <<"Current electrical power generation = "<<pelec*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW"<<endl
+                   <<"Current electrical power generation = "<<pmech*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW"<<endl
                    <<"Current wind speed = "<<vwind<<" m, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
                    <<"Reference turbine speed is returned as "<<w<<" rad/s."<<endl
                    <<"Check "<<get_model_name()<<" model of "<<get_device_name();
@@ -835,6 +727,13 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
             break;
         }
     }
+
+    if(w>get_max_steady_state_turbine_speed_in_pu()*wn)
+        w = get_max_steady_state_turbine_speed_in_pu()*wn;
+
+    if(w<get_min_steady_state_turbine_speed_in_pu()*wn)
+        w = get_min_steady_state_turbine_speed_in_pu()*wn;
+
     return w;
 }
 

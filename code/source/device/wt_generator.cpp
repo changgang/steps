@@ -451,10 +451,10 @@ void WT_GENERATOR::set_wt_pitch_model(const WT_PITCH_MODEL* model)
 
     WT_PITCH_MODEL *new_model = NULL;
     string model_name = model->get_model_name();
-    if(model_name=="WT3P1")
+    if(model_name=="WT3P0")
     {
-        WT3P1* smodel = (WT3P1*) (model);
-        new_model = (WT_PITCH_MODEL*) new WT3P1(*smodel);
+        WT3P0* smodel = (WT3P0*) (model);
+        new_model = (WT_PITCH_MODEL*) new WT3P0(*smodel);
     }
 
     if(new_model!=NULL)

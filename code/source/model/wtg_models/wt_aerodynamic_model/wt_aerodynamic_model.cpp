@@ -13,7 +13,7 @@ WT_AERODYNAMIC_MODEL::WT_AERODYNAMIC_MODEL()
     set_nominal_air_density_in_kgpm3(1.22);
 
     set_max_steady_state_turbine_speed_in_pu(1.2);
-    set_min_steady_state_turbine_speed_in_pu(0.6);
+    set_min_steady_state_turbine_speed_in_pu(0.7);
 
     //set_air_density_in_kgpm3(get_nominal_air_density_in_kgpm3());
     //set_initial_pitch_angle_in_deg(0.0);

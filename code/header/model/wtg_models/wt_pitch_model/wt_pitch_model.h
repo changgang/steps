@@ -7,14 +7,11 @@ class WT_PITCH_MODEL : public WTG_MODEL
     /*
     wind turbine mechanical model:
     inputs:
-        vwind: wind speed
-        pitch: pitch angle
-        pelec: electrical power generation
+        speed: wt generator speed
+        freq: terminal bus frequency
+        pelec: wt active power command
     output:
-        pmech: mechanical power
-        speed: turbine generator speed
-        speedRef: speed reference
-        angle: turbine generator angle
+        pitch: pitch angle in deg
     */
     public:
         WT_PITCH_MODEL();
@@ -23,16 +20,14 @@ class WT_PITCH_MODEL : public WTG_MODEL
         virtual string get_model_type() const;
         // inputs
         double get_wt_generator_speed_in_pu() const;
+        double get_wt_generator_reference_speed_in_pu() const;
         double get_bus_frequency_in_pu() const;
-        double get_wt_active_power_command_in_pu() const;
-        //reference
-        void set_speed_reference_in_pu(double speed);
-        void set_frequency_reference_in_pu(double freq);
-        void set_power_reference_in_pu(double power);
+        double get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model() const;
 
-        double get_speed_reference_in_pu() const;
-        double get_frequency_reference_in_pu() const;
-        double get_power_reference_in_pu() const;
+        void set_frequency_upper_deadband_in_pu(double freq);
+        void set_frequency_lower_deadband_in_pu(double freq);
+        double get_frequency_upper_deadband_in_pu() const;
+        double get_frequency_lower_deadband_in_pu() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
 
@@ -66,9 +61,7 @@ class WT_PITCH_MODEL : public WTG_MODEL
     private:
         void common_constructor();
 
-        double speed_reference_in_pu;
-        double frequency_reference_in_pu;
-        double power_reference_in_pu;
+        double frequency_deadband_upper_in_pu, frequency_deadband_lower_in_pu;
 };
 
 #endif // WT_PITCH_MODEL_H
