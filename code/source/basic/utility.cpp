@@ -411,3 +411,13 @@ double get_dynamic_simulation_time_step_in_s()
 {
     return STEPS::DELT;
 }
+
+void set_dynamic_simulation_time_in_s(double time)
+{
+    STEPS::TIME = time;
+}
+
+double get_dynamic_simulation_time_in_s()
+{
+    return STEPS::TIME;
+}

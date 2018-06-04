@@ -315,7 +315,7 @@ void PUFLS::initialize()
     frequency_sensor.set_output(fbase);
     frequency_sensor.initialize();
 
-    double current_time = load->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     history_minimum_frequency_buffer.set_buffer_size(2*(size_t)(t_delay/delt));
     history_minimum_frequency_buffer.initialize_buffer(current_time, fbase);
@@ -335,7 +335,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
     ostringstream sstream;
 
     LOAD* load = get_load_pointer();
-    double TIME = load->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
 
@@ -382,7 +382,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
 void PUFLS::append_new_minimum_frequency()
 {
     LOAD* load = get_load_pointer();
-    double current_time = load->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     double current_freq = frequency_sensor.get_output();
     double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
@@ -397,7 +397,7 @@ void PUFLS::append_new_minimum_frequency()
 double PUFLS::get_continuous_shed_command_in_pu() const
 {
     LOAD* load = get_load_pointer();
-    double current_time = load->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     //double current_freq = frequency_sensor.get_output();
     //double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
@@ -559,7 +559,7 @@ void PUFLS::trip_additional_stage()
         return;
 
     LOAD* load = get_load_pointer();
-    double current_time = load->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     sstream<<"PUFLS additional stage of "<<get_device_name()<<" is timed out at time "
@@ -576,7 +576,7 @@ void PUFLS::try_to_start_additional_stage_timer()
         return;
 
     LOAD* load = get_load_pointer();
-    double current_time = load->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     double current_freq = frequency_sensor.get_output();
@@ -637,7 +637,7 @@ void PUFLS::try_to_reset_additional_stage_timer()
         return;
 
     LOAD* load = get_load_pointer();
-    double current_time = load->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     double current_freq = frequency_sensor.get_output();

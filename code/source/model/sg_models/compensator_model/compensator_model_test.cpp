@@ -59,7 +59,7 @@ void COMPENSATOR_MODEL_TEST::export_meter_title()
     show_information_with_leading_time_stamp(sstream);
 }
 
-void COMPENSATOR_MODEL_TEST::export_meter_values(double time)
+void COMPENSATOR_MODEL_TEST::export_meter_values()
 {
     ostringstream sstream;
 
@@ -68,73 +68,56 @@ void COMPENSATOR_MODEL_TEST::export_meter_values(double time)
     double voltage = abs(model->get_generator_terminal_voltage_in_pu());
     double current = abs(model->get_generator_terminal_current_in_pu());
     double ecomp = model->get_compensated_voltage_in_pu();
-    sstream<<setw(6)<<setprecision(3)<<fixed<<time<<"\t"
+    sstream<<setw(6)<<setprecision(3)<<fixed<<STEPS::TIME<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<voltage<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<current<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<ecomp;
     show_information_with_leading_time_stamp(sstream);
 }
 
-void COMPENSATOR_MODEL_TEST::run_step_response_of_compensator_model()
+void COMPENSATOR_MODEL_TEST::initialize_models()
 {
-    ostringstream sstream;
+    ostringstream osstream;
+    double delt = 0.001;
+    set_dynamic_simulation_time_step_in_s(delt);
 
     GENERATOR* genptr = get_test_generator();
     COMPENSATOR_MODEL* model = get_test_compensator_model();
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
-
-    double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
     genmodel->initialize();
 
-    double TIME = -delt*2.0;
-    double ecomp;
+    STEPS::TIME = -delt*2.0;
 
     model->initialize();
 
     export_meter_title();
-    export_meter_values(TIME);
-
-    while(true)
-    {
-        TIME += delt;
-        if(TIME>1.0+FLOAT_EPSILON)
-        {
-            TIME -=delt;
-            break;
-        }
-        ecomp = model->get_compensated_voltage_in_pu();
-        while(true)
-        {
-            genmodel->run(INTEGRATE_MODE);
-            model->run(INTEGRATE_MODE);
-            if(fabs(ecomp-model->get_compensated_voltage_in_pu())>1e-6)
-                ecomp = model->get_compensated_voltage_in_pu();
-            else
-                break;
-        }
-        genmodel->run(UPDATE_MODE);
-        model->run(UPDATE_MODE);
-
-        export_meter_values(TIME);
-    }
-
-    apply_voltage_drop_of_10_percent();
+    export_meter_values();
+}
+void COMPENSATOR_MODEL_TEST::update_models()
+{
+    COMPENSATOR_MODEL* model = get_test_compensator_model();
+    SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
     genmodel->run(UPDATE_MODE);
     model->run(UPDATE_MODE);
+}
 
-    export_meter_values(TIME);
+void COMPENSATOR_MODEL_TEST::run_to_time(double tend)
+{
+    double delt = get_dynamic_simulation_time_step_in_s();
 
+    COMPENSATOR_MODEL* model = get_test_compensator_model();
+    SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
+    double ecomp;
     while(true)
     {
-        TIME += delt;
-        if(TIME>6.0+FLOAT_EPSILON)
+        STEPS::TIME += delt;
+        if(STEPS::TIME>tend+FLOAT_EPSILON)
         {
-            TIME -=delt;
+            STEPS::TIME -=delt;
             break;
         }
         ecomp = model->get_compensated_voltage_in_pu();
@@ -150,8 +133,18 @@ void COMPENSATOR_MODEL_TEST::run_step_response_of_compensator_model()
         genmodel->run(UPDATE_MODE);
         model->run(UPDATE_MODE);
 
-        export_meter_values(TIME);
+        export_meter_values();
     }
+}
+
+
+void COMPENSATOR_MODEL_TEST::run_step_response_of_compensator_model()
+{
+    initialize_models();
+    run_to_time(1.0);
+    apply_voltage_drop_of_10_percent();
+    update_models();
+    run_to_time(6.0);
 }
 
 void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_voltage()

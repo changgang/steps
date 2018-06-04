@@ -34,7 +34,6 @@ class FILEWIND : public WIND_SPEED_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_wind_speed_in_mps();
         virtual double get_wind_speed_in_pu();
         virtual double get_wind_direction_in_deg();
 
@@ -56,10 +55,12 @@ class FILEWIND : public WIND_SPEED_MODEL
         void load_wind_speed_from_file();
         void copy_from_const_model(const FILEWIND& model);
         void search_wind_data_at_simulation_time();
+        void set_previous_position(size_t pos);
+        size_t get_previous_position() const;
         string wind_speed_file;
         vector<double> time, wind_speed, wind_direction;
         double current_time, current_wind_speed, current_wind_direction;
-
+        size_t previous_position;
 };
 
 #endif // FILEWIND_H

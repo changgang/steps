@@ -18,7 +18,7 @@ class DEVICE : public BASE
         DEVICE();
         virtual ~DEVICE();
 
-        double get_dynamic_simulator_time_in_s() const;
+        //double get_dynamic_simulator_time_in_s() const;
 
         void set_ownership(const OWNERSHIP& ownership);
         size_t get_owner_count() const;

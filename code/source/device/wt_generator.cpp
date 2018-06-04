@@ -493,11 +493,11 @@ void WT_GENERATOR::set_wind_speed_model(const WIND_SPEED_MODEL* model)
 
     WIND_SPEED_MODEL *new_model = NULL;
     string model_name = model->get_model_name();
-    /*if(model_name=="WBLINE")
+    if(model_name=="FILEWIND")
     {
-        WBLINE* smodel = (WBLINE*) (model);
-        new_model = (WIND_SPEED_MODEL*) new WBLINE(*smodel);
-    }*/
+        FILEWIND* smodel = (FILEWIND*) (model);
+        new_model = (WIND_SPEED_MODEL*) new FILEWIND(*smodel);
+    }
 
     if(new_model!=NULL)
     {

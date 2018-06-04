@@ -110,6 +110,8 @@
 
 #include "header/model/wtg_models/wt_pitch_model/wt3p0_test.h"
 
+#include "header/model/wtg_models/wind_speed_model/filewind_test.h"
+
 #include "header/toolkit/cct_searcher/cct_searcher_test.h"
 
 #include "header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h"
@@ -151,6 +153,7 @@ static unique_ptr<Test::Output> cmdline(int argc, char* argv[])
 	Test::Output* output = 0;
 
 	if (argc == 1)
+        //output =  new Test::HtmlOutput; // only used for gdb
         output = new Test::TextOutput(Test::TextOutput::Verbose);
 	else
 	{
@@ -183,7 +186,7 @@ int main(int argc, char* argv[])
 	try
 	{
         Test::Suite ts;
-/*
+
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
         ts.add(unique_ptr<Test::Suite>(new AREA_TEST));
@@ -254,14 +257,13 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new COMP_TEST));
 
-
         ts.add(unique_ptr<Test::Suite>(new SEXS_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEEET1_TEST));
         ts.add(unique_ptr<Test::Suite>(new PSASPE1_TEST));
         //ts.add(unique_ptr<Test::Suite>(new PSASPE2_TEST));
         ts.add(unique_ptr<Test::Suite>(new CSEET1_TEST));
         ts.add(unique_ptr<Test::Suite>(new CSEET2_TEST));
-        //ts.add(unique_ptr<Test::Suite>(new PSASPE13_TEST));
+        ts.add(unique_ptr<Test::Suite>(new PSASPE13_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new IEE2ST_TEST));
 
@@ -277,18 +279,18 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new VDCOL_TEST));
         ts.add(unique_ptr<Test::Suite>(new CDC4T_TEST));
-        //ts.add(unique_ptr<Test::Suite>(new CDC6T_TEST));
-*/
+        ts.add(unique_ptr<Test::Suite>(new CDC6T_TEST));
+
         ts.add(unique_ptr<Test::Suite>(new WT3G2_TEST));
         ts.add(unique_ptr<Test::Suite>(new AERD0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3T0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3E0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
+        ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
-//        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
-
-//        ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
-//        ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
+        //ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
+        //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
+        ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
 
         // Run the tests
         unique_ptr<Test::Output> output(cmdline(argc, argv));

@@ -486,7 +486,7 @@ void CDC6T::check_blocking_logic()
     if(is_manual_blocked())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
 
@@ -687,7 +687,7 @@ void CDC6T::check_bypassing_logic()
     if(is_manual_bypassed())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
     ostringstream sstream;
@@ -811,7 +811,7 @@ void CDC6T::check_mode_switching_logic()
     if(is_blocked() or is_bypassed())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     double t_unblock = get_unblocking_time();
     double t_unbypass = get_unbypassing_time();

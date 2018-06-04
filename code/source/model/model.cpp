@@ -22,14 +22,14 @@ MODEL::~MODEL()
 }
 
 
-double MODEL::get_dynamic_simulator_time_in_s() const
+/*double MODEL::get_dynamic_simulator_time_in_s() const
 {
     DEVICE* device = get_device_pointer();
     if(device!=NULL)
         return device->get_dynamic_simulator_time_in_s();
     else
         return 0.0;
-}
+}*/
 
 void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type)
 {

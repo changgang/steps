@@ -36,8 +36,12 @@ class COMPENSATOR_MODEL_TEST : public SG_MODEL_TEST
         virtual void test_step_response() = 0;
         virtual void test_get_standard_model_string() = 0;
     private:
+        void initialize_models();
+        void update_models();
+        void run_to_time(double tend);
+
         void export_meter_title();
-        void export_meter_values(double time);
+        void export_meter_values();
 };
 
 #endif//COMPENSATOR_MODEL_TEST_H

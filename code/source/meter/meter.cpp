@@ -484,7 +484,7 @@ void METER::initialize_meter_buffer()
     if(get_device_pointer()==NULL)
         set_device_pointer();
 
-    double current_time = get_device_pointer()->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     double value = get_meter_value();
     buffer.initialize_buffer(current_time, value);
@@ -495,7 +495,7 @@ void METER::update_meter_buffer()
     if(get_device_pointer()==NULL)
         set_device_pointer();
 
-    double current_time = get_device_pointer()->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     buffer.append_data(current_time, get_meter_value());
 }

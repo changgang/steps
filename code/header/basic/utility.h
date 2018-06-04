@@ -60,4 +60,6 @@ void reset_power_system_database(size_t i=0);
 
 void set_dynamic_simulation_time_step_in_s(double delt);
 double get_dynamic_simulation_time_step_in_s();
+void set_dynamic_simulation_time_in_s(double time);
+double get_dynamic_simulation_time_in_s();
 #endif // UTILITY_H

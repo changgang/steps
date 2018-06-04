@@ -1,5 +1,9 @@
 #include "header/model/wtg_models/wind_speed_model/filewind.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
+#include <iostream>
+
+using namespace std;
 
 static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR MECHANICAL POWER IN PU", //0
                                             "GENERATOR MECHANICAL POWER IN MW",      //1
@@ -25,14 +29,17 @@ void FILEWIND::clear()
     wind_speed.clear();
     wind_direction.clear();
 
-    current_time = INFINITE_THRESHOLD;
+    current_time = -INFINITE_THRESHOLD;
     current_wind_speed = 0.0;
     current_wind_direction = 0.0;
+
+    set_previous_position(0);
 }
 
 void FILEWIND::copy_from_const_model(const FILEWIND& model)
 {
     clear();
+    set_wind_speed_serial_file(model.get_wind_speed_serial_file());
 }
 
 FILEWIND::FILEWIND(const FILEWIND& model)
@@ -118,16 +125,34 @@ bool FILEWIND::setup_model_with_bpa_string(string data)
 
 void FILEWIND::initialize()
 {
-    return;
+    load_wind_speed_from_file();
+
+    current_time = -INFINITE_THRESHOLD;
+    current_wind_speed = 0.0;
+    current_wind_direction = 0.0;
+    set_previous_position(0);
+
+    set_flag_model_initialized_as_true();
 }
 
 
 void FILEWIND::load_wind_speed_from_file()
 {
+    ostringstream osstream;
     string file = get_wind_speed_serial_file();
+    if(file.size()<1)
+    {
+        osstream<<"Initialization error. No file is provided for loading wind speed data. Check model "<<get_model_name()<<" of "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
     ifstream fid(file);
     if(not fid.is_open())
+    {
+        osstream<<"Initialization error. Fail to load wind speed data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
         return;
+    }
 
     time.clear();
     wind_speed.clear();
@@ -135,10 +160,10 @@ void FILEWIND::load_wind_speed_from_file()
 
     string data;
     vector<string> datavec;
-    fid>>data; // skip the head line
+    getline(fid, data); // skip the head line
     while(true)
     {
-        fid>>data;
+        getline(fid, data);
         if(data.size()<3)
             break;
         data = trim_string(data);
@@ -172,13 +197,13 @@ void FILEWIND::run(DYNAMIC_MODE mode)
     ;
 }
 
-double FILEWIND::get_wind_speed_in_mps()
+double FILEWIND::get_wind_speed_in_pu()
 {
     if(time.size()==0)
         return 0.0;
 
     WT_GENERATOR* generator = get_wt_generator_pointer();
-    double simulation_time = generator->get_dynamic_simulator_time_in_s();
+    double simulation_time = STEPS::TIME;
 
     if(fabs(simulation_time-current_time)<FLOAT_EPSILON)
         return current_wind_speed;
@@ -194,7 +219,7 @@ double FILEWIND::get_wind_direction_in_deg()
         return 0.0;
 
     WT_GENERATOR* generator = get_wt_generator_pointer();
-    double simulation_time = generator->get_dynamic_simulator_time_in_s();
+    double simulation_time = STEPS::TIME;
 
     if(fabs(simulation_time-current_time)<FLOAT_EPSILON)
         return current_wind_direction;
@@ -204,6 +229,7 @@ double FILEWIND::get_wind_direction_in_deg()
     return current_wind_direction;
 }
 
+/*
 double FILEWIND::get_wind_speed_in_pu()
 {
     WT_GENERATOR* generator = get_wt_generator_pointer();
@@ -217,11 +243,23 @@ double FILEWIND::get_wind_speed_in_pu()
     double vwind = get_wind_speed_in_mps();
     return vwind/aero_model->get_nominal_wind_speed_in_mps();
 }
+*/
+void FILEWIND::set_previous_position(size_t pos)
+{
+    if(pos<=time.size()-1)
+        previous_position = pos;
+    else
+        previous_position = time.size()-1;
+}
 
+size_t FILEWIND::get_previous_position() const
+{
+    return previous_position;
+}
 void FILEWIND::search_wind_data_at_simulation_time()
 {
     WT_GENERATOR* generator = get_wt_generator_pointer();
-    double simulation_time = generator->get_dynamic_simulator_time_in_s();
+    double simulation_time = STEPS::TIME;
 
     current_time = simulation_time;
 
@@ -267,6 +305,7 @@ void FILEWIND::search_wind_data_at_simulation_time()
                         previous_index = temp_index;
                         previous_time = time[previous_index];
                     }
+
                     if(next_index-previous_index==1)
                     {
                         double slope;

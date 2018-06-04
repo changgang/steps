@@ -358,7 +358,7 @@ void ARXL::update_equivalent_outputs()
 
 void ARXL::update_equivalent_constant_power_load()
 {
-    double time = get_power_system_database()->get_dynamic_simulator_time_in_s();
+    double time = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
 
@@ -467,7 +467,7 @@ void ARXL::switch_output_to_equivalent_device()
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
-    double current_time = psdb->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     DEVICE_ID did = p_meters[0].get_device_id();
 

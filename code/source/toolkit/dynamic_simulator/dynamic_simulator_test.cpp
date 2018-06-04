@@ -23,7 +23,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_csv_file_export_enable_flag);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_json_file_export_enable_flag);
 
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_current_simulation_time);
+    //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_current_simulation_time);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_DAE_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration);
@@ -129,6 +129,7 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_json_file_export_enable_flag()
     TEST_ASSERT(simulator->is_json_file_export_enabled()==false);
 }
 
+/*
 void DYNAMICS_SIMULATOR_TEST::test_set_get_current_simulation_time()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
@@ -138,7 +139,7 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_current_simulation_time()
     simulator->set_current_simulation_time_in_s(3.0);
     TEST_ASSERT(fabs(simulator->get_current_simulation_time_in_s()-3.0)<FLOAT_EPSILON);
 }
-
+*/
 void DYNAMICS_SIMULATOR_TEST::test_set_get_max_DAE_iteration()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
@@ -377,7 +378,7 @@ void DYNAMICS_SIMULATOR_TEST::test_start()
 
     simulator->start();
 
-    TEST_ASSERT(fabs(simulator->get_current_simulation_time_in_s()-(-2.0)*get_dynamic_simulation_time_step_in_s())<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(get_dynamic_simulation_time_in_s()-(-2.0)*get_dynamic_simulation_time_step_in_s())<FLOAT_EPSILON);
 
     size_t n = db->get_generator_count();
     vector<GENERATOR*> generators = db->get_all_generators();

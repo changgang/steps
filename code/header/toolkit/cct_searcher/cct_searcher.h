@@ -71,7 +71,8 @@ class CCT_SEARCHER
 
         void apply_fault(DYNAMICS_SIMULATOR& simulator);
         void clear_fault(DYNAMICS_SIMULATOR& simulator);
-        bool check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const;
+        bool check_if_system_is_stable() const;
+        //bool check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const;
 
         string search_title;
         string powerflow_data_filename, dynamic_data_filename;

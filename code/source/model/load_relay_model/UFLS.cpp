@@ -261,7 +261,7 @@ void UFLS::run(DYNAMIC_MODE mode)
     ostringstream sstream;
 
     LOAD* load = get_load_pointer();
-    double current_time = load->get_dynamic_simulator_time_in_s();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
 

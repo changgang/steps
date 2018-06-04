@@ -258,7 +258,7 @@ double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, 
     if(is_blocked())// blocked
         return 0.0;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     double Vset = hvdc->get_inverter_nominal_dc_voltage_command_in_kV();
     double Iset = hvdc->get_rectifier_nominal_dc_current_command_in_kA();
@@ -336,7 +336,7 @@ double HVDC_MODEL::get_inverter_dc_voltage_command_in_kV(double Icommand)
     if(is_blocked() or is_bypassed())// blocked or bypassed
         return 0.0;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     double t_unblock =  get_unblocking_time();
     if(is_unblocking())
@@ -391,7 +391,7 @@ void HVDC_MODEL::block_hvdc()
     if(hvdc==NULL)
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     if(not is_blocked())
@@ -431,7 +431,7 @@ void HVDC_MODEL::unblock_hvdc()
     if(is_manual_blocked())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     if(is_blocked() and is_block_timer_timed_out())
@@ -456,7 +456,7 @@ void HVDC_MODEL::manual_block_hvdc()
     if(is_manual_blocked())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     sstream<<get_device_name()<<" is manually blocked at time "<<TIME<<" s.";
@@ -478,7 +478,7 @@ void HVDC_MODEL::manual_unblock_hvdc()
     if(not is_blocked())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     sstream<<get_device_name()<<" is manually unblocked at time "<<TIME<<" s.";
@@ -534,7 +534,7 @@ void HVDC_MODEL::clear_unblocking_time(HVDC_CONVERTER_SIDE converter)
     if(hvdc==NULL)
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     if(converter==RECTIFIER)
@@ -576,7 +576,7 @@ void HVDC_MODEL::bypass_hvdc()
     if(is_blocked())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     if(not is_bypassed())
     {
@@ -615,7 +615,7 @@ void HVDC_MODEL::unbypass_hvdc()
     if(is_manual_bypassed())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     if(not is_blocked() and is_bypassed() and is_bypass_timer_timed_out())
@@ -639,7 +639,7 @@ void HVDC_MODEL::manual_bypass_hvdc()
     if(is_blocked() or is_bypassed())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     sstream<<get_device_name()<<" is manually bypassed at time "<<TIME<<" s.";
@@ -658,7 +658,7 @@ void HVDC_MODEL::manual_unbypass_hvdc()
     if(is_blocked())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     sstream<<get_device_name()<<" is manually unbypassed at time "<<TIME<<" s.";
@@ -727,7 +727,7 @@ void HVDC_MODEL::switch_hvdc_mode()
     if(hvdc->get_converter_operation_mode(RECTIFIER)!=RECTIFIER_CONSTANT_POWER)
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     if((not is_blocked()) and (not is_bypassed()) and (not is_mode_switched()))
@@ -749,7 +749,7 @@ void HVDC_MODEL::switch_hvdc_mode_back()
     if(hvdc->get_converter_operation_mode(RECTIFIER)!=RECTIFIER_CONSTANT_POWER)
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     ostringstream sstream;
     if((not is_blocked()) and (not is_bypassed()) and is_mode_switched() and is_mode_switch_timer_timed_out())
@@ -798,7 +798,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
     if(is_blocked())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     //sstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
     //show_information_with_leading_time_stamp(sstream);
@@ -1043,7 +1043,7 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
     if(not is_bypassed())
         return;
 
-    double TIME = hvdc->get_dynamic_simulator_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
 
     //sstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
     //show_information_with_leading_time_stamp(sstream);

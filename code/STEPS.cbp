@@ -277,6 +277,7 @@
 		<Unit filename="header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/turbine_governor_models.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind.h" />
+		<Unit filename="header/model/wtg_models/wind_speed_model/filewind_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_models.h" />
@@ -701,7 +702,9 @@
 		<Unit filename="source/model/sg_models/turbine-governors/turbine_governor_model.cpp" />
 		<Unit filename="source/model/sg_models/turbine-governors/turbine_governor_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/filewind.cpp" />
+		<Unit filename="source/model/wtg_models/wind_speed_model/filewind_test.cpp" />
 		<Unit filename="source/model/wtg_models/wind_speed_model/wind_speed_model.cpp" />
+		<Unit filename="source/model/wtg_models/wind_speed_model/wind_speed_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/aerd0.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/aerd0_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.cpp" />

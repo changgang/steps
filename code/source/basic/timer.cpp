@@ -1,6 +1,6 @@
 #include "header/basic/timer.h"
 #include "header/steps_namespace.h"
-
+#include "header/basic/utility.h"
 #include <iostream>
 #include <cstdio>
 
@@ -47,9 +47,7 @@ void TIMER::start()
     if(device==NULL)
         return;
 
-    double TIME = device->get_dynamic_simulator_time_in_s();
-
-    time_when_timer_is_started_in_s = TIME;
+    time_when_timer_is_started_in_s = get_dynamic_simulation_time_in_s();
 }
 
 void TIMER::reset()
@@ -71,8 +69,7 @@ bool TIMER::is_timed_out() const
         return false;
     else
     {
-        DEVICE* device = get_attached_device();
-        double TIME = device->get_dynamic_simulator_time_in_s();
+        double TIME = get_dynamic_simulation_time_in_s();
 
         if(TIME>(time_when_timer_is_started_in_s+time_interval_in_s-FLOAT_EPSILON))
             return true;

@@ -16,6 +16,7 @@ class WIND_SPEED_MODEL : public WTG_MODEL
         virtual ~WIND_SPEED_MODEL();
 
         virtual string get_model_type() const;
+        double get_nominal_wind_speed_in_mps() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
 
@@ -30,9 +31,9 @@ class WIND_SPEED_MODEL : public WTG_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
-        virtual double get_wind_speed_in_mps() const = 0;
-        virtual double get_wind_speed_in_pu() const = 0;
-        virtual double get_wind_direction_in_deg() const = 0;
+        double get_wind_speed_in_mps();
+        virtual double get_wind_speed_in_pu() = 0;
+        virtual double get_wind_direction_in_deg() = 0;
 
         virtual void check() = 0;
         virtual void clear() = 0;

@@ -62,7 +62,7 @@ class POWER_SYSTEM_DATABASE
         void set_owner_capacity(size_t n);
 
         void set_dynamic_simulator(DYNAMICS_SIMULATOR* simulator);
-        double get_dynamic_simulator_time_in_s() const;
+        //double get_dynamic_simulator_time_in_s() const;
 
         void set_system_name(const string name);
         string get_system_name() const;

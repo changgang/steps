@@ -76,12 +76,13 @@ void TIMER_TEST::test_start_reset_timer()
 
     TEST_ASSERT(timer->is_started()==false);
 
-    simulator->set_current_simulation_time_in_s(1.0);
+    set_dynamic_simulation_time_in_s(1.0);
+
     timer->start();
     TEST_ASSERT(timer->is_started()==true);
     TEST_ASSERT(fabs(timer->get_time_when_started_in_s()-1.0)<FLOAT_EPSILON);
 
-    simulator->set_current_simulation_time_in_s(4.0);
+    set_dynamic_simulation_time_in_s(4.0);
     timer->reset();
     TEST_ASSERT(timer->is_started()==false);
     TEST_ASSERT(fabs(timer->get_time_when_started_in_s()-INFINITE_THRESHOLD)<FLOAT_EPSILON);
@@ -93,21 +94,21 @@ void TIMER_TEST::test_is_timed_out()
 
     timer->set_timer_interval_in_s(2.0);
 
-    simulator->set_current_simulation_time_in_s(1.0);
+    set_dynamic_simulation_time_in_s(1.0);
     timer->start();
 
     TEST_ASSERT(timer->is_timed_out()==false);
 
-    simulator->set_current_simulation_time_in_s(1.5);
+    set_dynamic_simulation_time_in_s(1.5);
     TEST_ASSERT(timer->is_timed_out()==false);
 
-    simulator->set_current_simulation_time_in_s(2.5);
+    set_dynamic_simulation_time_in_s(2.5);
     TEST_ASSERT(timer->is_timed_out()==false);
 
-    simulator->set_current_simulation_time_in_s(3.0);
+    set_dynamic_simulation_time_in_s(3.0);
     TEST_ASSERT(timer->is_timed_out()==true);
 
-    simulator->set_current_simulation_time_in_s(3.5);
+    set_dynamic_simulation_time_in_s(3.5);
     TEST_ASSERT(timer->is_timed_out()==true);
 }
 

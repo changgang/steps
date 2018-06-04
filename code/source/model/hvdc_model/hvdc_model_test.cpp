@@ -123,14 +123,14 @@ HVDC_MODEL* HVDC_MODEL_TEST::get_test_hvdc_model()
 
 void HVDC_MODEL_TEST::export_meter_titles()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tVOLT_REC\tVOLT_INV\tP_REC\tQ_REC\tALPHA\tMU_REC\tP_INV\tQ_INV\tGAMMA\tMU_INV\tVDCR\tVDCI\tIDCR\tIDCR"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tVOLT_REC\tVOLT_INV\tP_REC\tQ_REC\tALPHA\tMU_REC\tP_INV\tQ_INV\tGAMMA\tMU_INV\tVDCR\tVDCI\tIDCR\tIDCR"<<endl;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void HVDC_MODEL_TEST::export_meter_values(double time)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     HVDC* hvdc = get_test_hvdc();
@@ -161,7 +161,7 @@ void HVDC_MODEL_TEST::export_meter_values(double time)
     vdci = model->get_converter_dc_voltage_in_kV(converter);
     idci = model->get_converter_dc_current_in_kA(converter);
 
-    sstream<<setprecision(6)<<fixed<<time<<"\t"
+    osstream<<setprecision(6)<<fixed<<time<<"\t"
       <<setprecision(6)<<fixed<<volt_rec<<"\t"
       <<setprecision(6)<<fixed<<volt_inv<<"\t"
       <<setprecision(6)<<fixed<<p_rec<<"\t"
@@ -176,14 +176,14 @@ void HVDC_MODEL_TEST::export_meter_values(double time)
       <<setprecision(6)<<fixed<<vdci<<"\t"
       <<setprecision(6)<<fixed<<idcr<<"\t"
       <<setprecision(6)<<fixed<<idci<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 
 void HVDC_MODEL_TEST::test_initialize()
 {
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     HVDC* hvdcptr = get_test_hvdc();
     HVDC_MODEL* model = get_test_hvdc_model();
@@ -191,15 +191,15 @@ void HVDC_MODEL_TEST::test_initialize()
 
     redirect_stdout_to_file("test_log/test_initialize_"+model->get_model_name());
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
     model->initialize();
-    sstream<<"hvdc info when initialized:"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"hvdc info when initialized:"<<endl;
+    show_information_with_leading_time_stamp(osstream);
     hvdcptr->show_solved_hvdc_steady_state();
 
     recover_stdout();
@@ -207,7 +207,7 @@ void HVDC_MODEL_TEST::test_initialize()
 
 void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     HVDC* hvdcptr = get_test_hvdc();
@@ -216,15 +216,15 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
 
     redirect_stdout_to_file("test_log/test_rectifier_voltage_ramp_response_"+model->get_model_name());
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
     model->initialize();
-    sstream<<"hvdc info when initialized:"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"hvdc info when initialized:"<<endl;
+    show_information_with_leading_time_stamp(osstream);
     hvdcptr->show_solved_hvdc_steady_state();
 
     double TIME = -delt*2.0;
@@ -374,7 +374,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
 
 void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     HVDC* hvdcptr = get_test_hvdc();
@@ -383,15 +383,15 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
 
     redirect_stdout_to_file("test_log/test_inverter_voltage_ramp_response_"+model->get_model_name());
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
     model->initialize();
-    sstream<<"hvdc info when initialized:"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"hvdc info when initialized:"<<endl;
+    show_information_with_leading_time_stamp(osstream);
     hvdcptr->show_solved_hvdc_steady_state();
 
     double TIME = -delt*2.0;
@@ -540,7 +540,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
 
 void HVDC_MODEL_TEST::test_manual_block_and_unblock()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     HVDC* hvdcptr = get_test_hvdc();
     HVDC_MODEL* model = get_test_hvdc_model();
@@ -548,15 +548,15 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
 
     redirect_stdout_to_file("test_log/test_manual_block_and_unblock_"+model->get_model_name());
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
     model->initialize();
-    sstream<<"hvdc info when initialized:"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"hvdc info when initialized:"<<endl;
+    show_information_with_leading_time_stamp(osstream);
     hvdcptr->show_solved_hvdc_steady_state();
 
     double TIME = -delt*2.0;
@@ -589,9 +589,9 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
         export_meter_values(TIME);
     }
 
-    cout<<"now go blocking HVDC manually"<<endl;
+    //cout<<"now go blocking HVDC manually"<<endl;
     model->manual_block_hvdc();
-    cout<<"now successfully blocked HVDC manually"<<endl;
+    //cout<<"now successfully blocked HVDC manually"<<endl;
     model->run(UPDATE_MODE);
     export_meter_values(TIME);
 
@@ -655,7 +655,7 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
 
 void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     HVDC* hvdcptr = get_test_hvdc();
     HVDC_MODEL* model = get_test_hvdc_model();
@@ -663,15 +663,15 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
 
     redirect_stdout_to_file("test_log/test_manual_bypass_and_unbypass_"+model->get_model_name());
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
     model->initialize();
-    sstream<<"hvdc info when initialized:"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"hvdc info when initialized:"<<endl;
+    show_information_with_leading_time_stamp(osstream);
     hvdcptr->show_solved_hvdc_steady_state();
 
     double TIME = -delt*2.0;
@@ -768,14 +768,14 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
 
 void HVDC_MODEL_TEST::test_get_standard_model_string()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     HVDC_MODEL* model = get_test_hvdc_model();
 
     redirect_stdout_to_file("test_log/test_get_standard_model_string_"+model->get_model_name());
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     recover_stdout();
 }

@@ -38,6 +38,7 @@ UTILITY_TEST::UTILITY_TEST()
 
     TEST_ADD(UTILITY_TEST::test_is_file_exist);
     TEST_ADD(UTILITY_TEST::test_set_get_dynamic_simulation_time_step);
+    TEST_ADD(UTILITY_TEST::test_set_get_dynamic_simulation_time);
 }
 
 void UTILITY_TEST::setup()
@@ -247,4 +248,15 @@ void UTILITY_TEST::test_set_get_dynamic_simulation_time_step()
 
     set_dynamic_simulation_time_step_in_s(0.02);
     TEST_ASSERT(fabs(get_dynamic_simulation_time_step_in_s()-0.02)<FLOAT_EPSILON);
+}
+
+void UTILITY_TEST::test_set_get_dynamic_simulation_time()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
+
+    set_dynamic_simulation_time_in_s(0.01);
+    TEST_ASSERT(fabs(get_dynamic_simulation_time_in_s()-0.01)<FLOAT_EPSILON);
+
+    set_dynamic_simulation_time_in_s(0.02);
+    TEST_ASSERT(fabs(get_dynamic_simulation_time_in_s()-0.02)<FLOAT_EPSILON);
 }

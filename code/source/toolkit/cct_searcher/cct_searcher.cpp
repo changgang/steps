@@ -424,15 +424,20 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
     simulator.run_to(tend-1.0);
 
     bool is_stable = true;
-    double TIME = simulator.get_current_simulation_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
     while(TIME<tend)
     {
         simulator.run_to(TIME+delt);
-        is_stable = check_if_system_is_stable(simulator);
+        cout<<__FUNCTION__<<", line "<<__LINE__<<endl;
+        is_stable = check_if_system_is_stable();
+        cout<<__FUNCTION__<<", line "<<__LINE__<<endl;
         if(not is_stable)
             break;
-        TIME = simulator.get_current_simulation_time_in_s();
+        TIME = get_dynamic_simulation_time_in_s();
     }
+
+    simulator.clear();
+    psdb.clear_database();
 
     return is_stable;
 }
@@ -494,12 +499,15 @@ void CCT_SEARCHER::clear_fault(DYNAMICS_SIMULATOR& simulator)
         simulator.trip_line(did);
 }
 
-bool CCT_SEARCHER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const
+//bool CCT_SEARCHER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) const
+bool CCT_SEARCHER::check_if_system_is_stable() const
 {
+    cout<<__FUNCTION__<<", line "<<__LINE__<<endl;
     ostringstream sstream;
-    double TIME = simulator.get_current_simulation_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
     bool system_is_stable = true;
     size_t n = generators_in_islands.size();
+    cout<<__FUNCTION__<<", line "<<__LINE__<<endl;
     for(size_t island=0; island!=n; island++)
     {
         vector<GENERATOR*> generators_in_island = generators_in_islands[island];
@@ -514,7 +522,7 @@ bool CCT_SEARCHER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulator) cons
                 angles.push_back(genmodel->get_rotor_angle_in_deg());
             }
         }
-
+        cout<<__FUNCTION__<<", line "<<__LINE__<<endl;
         double angle_max=0.0, angle_min = 0.0;
         size_t nangle = angles.size();
         if(nangle>0)

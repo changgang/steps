@@ -262,13 +262,13 @@ void POWER_SYSTEM_DATABASE::set_dynamic_simulator(DYNAMICS_SIMULATOR* simulator)
         this->simulator = simulator;
 }
 
-double POWER_SYSTEM_DATABASE::get_dynamic_simulator_time_in_s() const
+/*double POWER_SYSTEM_DATABASE::get_dynamic_simulator_time_in_s() const
 {
     if(simulator!=NULL)
         return simulator->get_current_simulation_time_in_s();
     else
         return 0.0;
-}
+}*/
 
 void POWER_SYSTEM_DATABASE::set_system_name(const string name)
 {

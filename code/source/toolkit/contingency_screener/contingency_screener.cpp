@@ -410,11 +410,11 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
     simulator.run_to(tend-1.0);
 
     bool is_stable = true;
-    double TIME = simulator.get_current_simulation_time_in_s();
+    double TIME = get_dynamic_simulation_time_in_s();
     while(TIME<tend)
     {
         simulator.run_a_step();
-        TIME = simulator.get_current_simulation_time_in_s();
+        TIME = get_dynamic_simulation_time_in_s();
         is_stable = check_if_system_is_stable(simulator);
         if(not is_stable)
             break;

@@ -18,3 +18,22 @@ string WIND_SPEED_MODEL::get_model_type() const
 {
     return "WIND SPEED";
 }
+
+double WIND_SPEED_MODEL::get_nominal_wind_speed_in_mps() const
+{
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
+        return 0.0;
+    WT_AERODYNAMIC_MODEL* aerd = gen->get_wt_aerodynamic_model();
+    if(aerd==NULL)
+        return 0.0;
+
+    return aerd->get_nominal_wind_speed_in_mps();
+}
+
+double WIND_SPEED_MODEL::get_wind_speed_in_mps()
+{
+    double vwind0 = get_nominal_wind_speed_in_mps();
+    double vwind = get_wind_speed_in_pu();
+    return vwind*vwind0;
+}

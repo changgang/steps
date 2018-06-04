@@ -31,7 +31,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_set_get_csv_file_export_enable_flag();
         void test_set_get_json_file_export_enable_flag();
 
-        void test_set_get_current_simulation_time();
+        //void test_set_get_current_simulation_time();
 
         void test_set_get_max_DAE_iteration();
         void test_set_get_max_network_iteration();
