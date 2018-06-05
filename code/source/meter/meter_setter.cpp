@@ -784,6 +784,45 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
     return successful;
 }
 
+bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& device_id)
+{
+    bool successful = false;
+
+    ostringstream sstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(psdb==NULL)
+    {
+        sstream<<"No power system database is set for METER_SETTER."<<endl
+          <<"WT generator meter cannot be prepared.";
+        show_information_with_leading_time_stamp(sstream);
+        return successful;
+    }
+
+    string device_type = device_id.get_device_type();
+    if(device_type!="WT GENERATOR")
+    {
+        sstream<<"Warning. This device given ("<<device_type<<") is not a wt generator when trying to set up a wt generator meter. "
+          <<"No wt generator meter will be added.";
+        show_information_with_leading_time_stamp(sstream);
+        return successful;
+    }
+
+    if(not psdb->is_wt_generator_exist(device_id))
+    {
+        sstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+          <<"No wt generator meter will be added.";
+        show_information_with_leading_time_stamp(sstream);
+        return successful;
+    }
+
+    meter.set_device_id(device_id);
+
+    successful = true;
+
+    return successful;
+}
+
 METER METER_SETTER::prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
 
@@ -1234,6 +1273,456 @@ METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_m
 
     return meter;
 }
+
+
+METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR TERMINAL CURRENT IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR TERMINAL CURRENT IN KA");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR TERMINAL ACTIVE POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR TERMINAL REACTIVE POWER IN MVAR");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR MECHANICAL POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_max_available_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR MAX AVAILABLE MECHANICAL POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_speed_reference_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR SPEED REFERENCE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_speed_reference_in_rad_per_s_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR SPEED REFERENCE IN RAD/S");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR TURBINE SPEED DEVIATION IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR TURBINE SPEED DEVIATION IN HZ");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_turbine_speed_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR TURBINE SPEED IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_turbine_speed_in_Hz_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR TURBINE SPEED IN HZ");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR ROTOR SPEED DEVIATION IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR ROTOR SPEED DEVIATION IN HZ");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR ROTOR SPEED IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR ROTOR SPEED IN HZ");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR ROTOR ANGLE IN DEG");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_rotor_angle_in_rad_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR ROTOR ANGLE IN RAD");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_active_current_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR ACTIVE CURRENT COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_reactive_current_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR REACTIVE CURRENT COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_active_power_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR ACTIVE POWER COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR REACTIVE POWER COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR REACTIVE VOLTAGE COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_pitch_angle_in_deg_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR PITCH ANGLE IN DEG");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_wind_speed_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR WIND SPEED IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_wind_speed_in_mps_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR WIND SPEED IN MPS");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT GENERATOR MODEL INTERNAL VARIABLE", index);
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_aerodynamic_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT AERODYNAMIC MODEL INTERNAL VARIABLE", index);
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_turbine_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT TURBINE MODEL INTERNAL VARIABLE", index);
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT ELECTRICAL MODEL INTERNAL VARIABLE", index);
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_pitch_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WT PITCH MODEL INTERNAL VARIABLE", index);
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wind_speed_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("WIND SPEED MODEL INTERNAL VARIABLE", index);
+
+    return meter;
+}
+
 
 bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 {

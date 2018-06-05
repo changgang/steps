@@ -18,6 +18,7 @@ METER_SETTER_TEST::METER_SETTER_TEST()
     TEST_ADD(METER_SETTER_TEST::test_prepare_transformer_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_load_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_generator_related_meters);
+    TEST_ADD(METER_SETTER_TEST::test_prepare_wt_generator_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_hvdc_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_equivalent_device_related_meters);
 }
@@ -604,7 +605,154 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
 
 void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");prepare_basic_generators(db);
+    prepare_basic_wt_generators(db);
+
+    METER meter(db);
+    DEVICE_ID did;
+    TERMINAL terminal;
+
+    did.set_device_type("WT GENERATOR");
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1#");
+
+    meter = setter->prepare_wt_generator_terminal_current_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR TERMINAL CURRENT IN PU");
+
+    meter = setter->prepare_wt_generator_terminal_current_in_kA_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR TERMINAL CURRENT IN KA");
+
+    meter = setter->prepare_wt_generator_terminal_active_power_in_MW_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR TERMINAL ACTIVE POWER IN MW");
+
+    meter = setter->prepare_wt_generator_terminal_reactive_power_in_MVar_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR TERMINAL REACTIVE POWER IN MVAR");
+
+    meter = setter->prepare_wt_generator_mechanical_power_in_MW_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR MECHANICAL POWER IN MW");
+
+    meter = setter->prepare_wt_generator_max_available_mechanical_power_in_MW_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR MAX AVAILABLE MECHANICAL POWER IN MW");
+
+    meter = setter->prepare_wt_generator_speed_reference_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR SPEED REFERENCE IN PU");
+
+    meter = setter->prepare_wt_generator_speed_reference_in_rad_per_s_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR SPEED REFERENCE IN RAD/S");
+
+    meter = setter->prepare_wt_generator_turbine_speed_deviation_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR TURBINE SPEED DEVIATION IN PU");
+
+    meter = setter->prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR TURBINE SPEED DEVIATION IN HZ");
+
+    meter = setter->prepare_wt_generator_turbine_speed_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR TURBINE SPEED IN PU");
+
+    meter = setter->prepare_wt_generator_turbine_speed_in_Hz_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR TURBINE SPEED IN HZ");
+
+    meter = setter->prepare_wt_generator_rotor_speed_deviation_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR ROTOR SPEED DEVIATION IN PU");
+
+    meter = setter->prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR ROTOR SPEED DEVIATION IN HZ");
+
+    meter = setter->prepare_wt_generator_rotor_speed_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR ROTOR SPEED IN PU");
+
+    meter = setter->prepare_wt_generator_rotor_speed_in_Hz_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR ROTOR SPEED IN HZ");
+
+    meter = setter->prepare_wt_generator_rotor_angle_in_deg_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR ROTOR ANGLE IN DEG");
+
+    meter = setter->prepare_wt_generator_rotor_angle_in_rad_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR ROTOR ANGLE IN RAD");
+
+    meter = setter->prepare_wt_generator_active_current_command_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR ACTIVE CURRENT COMMAND IN PU");
+
+    meter = setter->prepare_wt_generator_reactive_current_command_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR REACTIVE CURRENT COMMAND IN PU");
+
+    meter = setter->prepare_wt_generator_active_power_command_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR ACTIVE POWER COMMAND IN PU");
+
+    meter = setter->prepare_wt_generator_reactive_power_command_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR REACTIVE POWER COMMAND IN PU");
+
+    meter = setter->prepare_wt_generator_reactive_voltage_command_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR REACTIVE VOLTAGE COMMAND IN PU");
+
+    meter = setter->prepare_wt_generator_pitch_angle_in_deg_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR PITCH ANGLE IN DEG");
+
+    meter = setter->prepare_wt_generator_wind_speed_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR WIND SPEED IN PU");
+
+    meter = setter->prepare_wt_generator_wind_speed_in_mps_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR WIND SPEED IN MPS");
+
+    meter = setter->prepare_wt_generator_model_internal_variable_meter(did, 1);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT GENERATOR MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_internal_variable_index()==1);
+
+    meter = setter->prepare_wt_aerodynamic_model_internal_variable_meter(did, 2);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT AERODYNAMIC MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_internal_variable_index()==2);
+
+    meter = setter->prepare_wt_turbine_model_internal_variable_meter(did, 3);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT TURBINE MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_internal_variable_index()==3);
+
+    meter = setter->prepare_wt_electrical_model_internal_variable_meter(did, 4);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT ELECTRICAL MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_internal_variable_index()==4);
+
+    meter = setter->prepare_wt_pitch_model_internal_variable_meter(did, 5);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WT PITCH MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_internal_variable_index()==5);
+
+    meter = setter->prepare_wind_speed_model_internal_variable_meter(did, 6);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="WIND SPEED MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_internal_variable_index()==6);
+
+
+
 }
 
 void METER_SETTER_TEST::test_prepare_hvdc_related_meters()

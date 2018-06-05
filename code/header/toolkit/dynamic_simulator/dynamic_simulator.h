@@ -42,6 +42,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void prepare_meters();
         void prepare_bus_related_meters();
         void prepare_generator_related_meters();
+        void prepare_wt_generator_related_meters();
         void prepare_load_related_meters();
         void prepare_line_related_meters();
         void prepare_hvdc_related_meters();

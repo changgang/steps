@@ -104,13 +104,13 @@ void prepare_basic_wt_generators(POWER_SYSTEM_DATABASE* db)
 
     db->append_wt_generator(wt_generator);
 
-    wt_generator.set_source_bus(2);
+    wt_generator.set_generator_bus(2);
     db->append_wt_generator(wt_generator);
 
-    wt_generator.set_source_bus(3);
+    wt_generator.set_generator_bus(3);
     db->append_wt_generator(wt_generator);
 
-    wt_generator.set_source_bus(1);
+    wt_generator.set_generator_bus(1);
     wt_generator.set_identifier("2#");
     db->append_wt_generator(wt_generator);
 

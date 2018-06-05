@@ -81,17 +81,29 @@ vector<string> generator_meters{    "GENERATOR ROTOR ANGLE IN DEG",
                                     "GENERATOR STABILIZER MODEL INTERNAL VARIABLE",
                                     "GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE"};
 
-vector<string> wt_generator_meters{  "WT GENERATOR ROTOR SPEED DEVIATION IN PU", "WT GENERATOR ROTOR SPEED DEVIATION IN HZ",
-                                  "WT GENERATOR ROTOR SPEED IN PU",           "WT GENERATOR ROTOR SPEED IN HZ",
-                                  "WT GENERATOR TERMINAL CURRENT IN KA",
-                                  "WT GENERATOR TERMINAL ACTIVE POWER IN MW",
-                                  "WT GENERATOR TERMINAL REACTIVE POWER IN MVAR",
-                                  "WT GENERATOR MECHANICAL POWER IN MW",
-                                  "WIND TURBINE PITCH ANGLE IN DEG",
-                                  "WT GENERATOR MODEL INTERNAL VARIABLE",
-                                  "WIND TURBINE ELECTRICAL CONTROL MODEL INTERNAL VARIABLE",
-                                  "WIND TURBINE MECHANICAL MODEL INTERNAL VARIABLE",
-                                  "WIND TURBINE PITCH CONTROL MODEL INTERNAL VARIABLE"};
+vector<string> wt_generator_meters{ "WT GENERATOR TERMINAL CURRENT IN PU", "WT GENERATOR TERMINAL CURRENT IN KA",
+                                    "WT GENERATOR TERMINAL ACTIVE POWER IN MW",
+                                    "WT GENERATOR TERMINAL REACTIVE POWER IN MVAR",
+                                    "WT GENERATOR MECHANICAL POWER IN MW", "WT GENERATOR MAX AVAILABLE MECHANICAL POWER IN MW",
+                                    "WT GENERATOR SPEED REFERENCE IN PU", "WT GENERATOR SPEED REFERENCE IN RAD/S",
+                                    "WT GENERATOR TURBINE SPEED DEVIATION IN PU", "WT GENERATOR TURBINE SPEED DEVIATION IN HZ",
+                                    "WT GENERATOR TURBINE SPEED IN PU",           "WT GENERATOR TURBINE SPEED IN HZ",
+                                    "WT GENERATOR ROTOR SPEED DEVIATION IN PU", "WT GENERATOR ROTOR SPEED DEVIATION IN HZ",
+                                    "WT GENERATOR ROTOR SPEED IN PU",           "WT GENERATOR ROTOR SPEED IN HZ",
+                                    "WT GENERATOR ROTOR ANGLE IN DEG",           "WT GENERATOR ROTOR ANGLE IN RAD",
+                                    "WT GENERATOR ACTIVE CURRENT COMMAND IN PU",
+                                    "WT GENERATOR REACTIVE CURRENT COMMAND IN PU",
+                                    "WT GENERATOR ACTIVE POWER COMMAND IN PU",
+                                    "WT GENERATOR REACTIVE POWER COMMAND IN PU",
+                                    "WT GENERATOR REACTIVE VOLTAGE COMMAND IN PU",
+                                    "WT GENERATOR PITCH ANGLE IN DEG",
+                                    "WT GENERATOR WIND SPEED IN PU", "WT GENERATOR WIND SPEED IN MPS",
+                                    "WT GENERATOR MODEL INTERNAL VARIABLE",
+                                    "WT AERODYNAMIC MODEL INTERNAL VARIABLE",
+                                    "WT TURBINE MODEL INTERNAL VARIABLE",
+                                    "WT ELECTRICAL MODEL INTERNAL VARIABLE",
+                                    "WT PITCH MODEL INTERNAL VARIABLE",
+                                    "WIND SPEED MODEL INTERNAL VARIABLE"};
 
 vector<string> hvdc_meters{ "HVDC DC CURRENT IN KA",
                             "HVDC RECTIFIER DC CURRENT IN KA",   "HVDC INVERTER DC CURRENT IN KA",
@@ -1157,6 +1169,278 @@ double METER::get_meter_value_as_a_generator() const
 
     return 0.0;
 }
+
+double METER::get_meter_value_as_a_wt_generator() const
+{
+    WT_GENERATOR* generator = (WT_GENERATOR*) get_device_pointer();
+    if(generator == NULL)
+        return 0.0;
+
+    if(generator->get_status()==false)
+        return 0.0;
+
+    size_t bus = generator->get_generator_bus();
+    POWER_SYSTEM_DATABASE* psdb = generator->get_power_system_database();
+    double fbase = psdb->get_system_base_frequency_in_Hz();
+    //double sbase = psdb->get_system_base_power_in_MVA();
+    double mbase = generator->get_mbase_in_MVA();
+
+    WT_GENERATOR_MODEL* gen_model = generator->get_wt_generator_model();
+    WT_AERODYNAMIC_MODEL* aerd_model = generator->get_wt_aerodynamic_model();
+    WT_TURBINE_MODEL* turbine_model = generator->get_wt_turbine_model();
+    WT_ELECTRICAL_MODEL* electrical_model = generator->get_wt_electrical_model();
+    WT_PITCH_MODEL* pitch_model = generator->get_wt_pitch_model();
+    WIND_SPEED_MODEL* windspeed_model = generator->get_wind_speed_model();
+
+    if(meter_type=="WT GENERATOR TERMINAL CURRENT IN PU")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+            return gen_model->get_terminal_current_in_pu_based_on_mbase();
+    }
+
+    if(meter_type=="WT GENERATOR TERMINAL CURRENT IN KA")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+        {
+            double vbase = psdb->get_bus_base_voltage_in_kV(bus);
+            double ibase = mbase/(sqrt(3.0)*vbase);
+            return gen_model->get_terminal_current_in_pu_based_on_mbase()*ibase;
+        }
+    }
+    if(meter_type=="WT GENERATOR TERMINAL ACTIVE POWER IN MW")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+            return gen_model->get_terminal_active_power_in_MW();
+    }
+    if(meter_type=="WT GENERATOR TERMINAL REACTIVE POWER IN MVAR")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+            return gen_model->get_terminal_reactive_power_in_MVar();
+    }
+    if(meter_type=="WT GENERATOR MECHANICAL POWER IN MW")
+    {
+        if(aerd_model == NULL)
+            return 0.0;
+        else
+            return aerd_model->get_turbine_mechanical_power_in_MW();
+    }
+    if(meter_type=="WT GENERATOR MAX AVAILABLE MECHANICAL POWER IN MW")
+    {
+        if(aerd_model == NULL)
+            return 0.0;
+        else
+        {
+            double vwind = aerd_model->get_wind_speed_in_mps();
+            double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
+            size_t n = generator->get_number_of_lumped_wt_generators();
+            return pmax*n;
+        }
+    }
+    if(meter_type=="WT GENERATOR SPEED REFERENCE IN PU")
+    {
+        if(aerd_model == NULL)
+            return 0.0;
+        else
+            return aerd_model->get_turbine_reference_speed_in_pu();
+    }
+    if(meter_type=="WT GENERATOR SPEED REFERENCE IN RAD/S")
+    {
+        if(aerd_model == NULL)
+            return 0.0;
+        else
+            return aerd_model->get_turbine_reference_speed_in_rad_per_s();
+    }
+    if(meter_type=="WT GENERATOR TURBINE SPEED DEVIATION IN PU")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+            return turbine_model->get_turbine_speed_in_pu()-1.0;
+    }
+    if(meter_type=="WT GENERATOR TURBINE SPEED DEVIATION IN HZ")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+        {
+            double fn = aerd_model->get_nominal_turbine_speed_in_rad_per_s()/(2.0*PI);
+            return (turbine_model->get_turbine_speed_in_pu()-1.0)*fn;
+        }
+    }
+    if(meter_type=="WT GENERATOR TURBINE SPEED IN PU")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+            return turbine_model->get_turbine_speed_in_pu();
+    }
+    if(meter_type=="WT GENERATOR TURBINE SPEED IN HZ")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+        {
+            double wn = aerd_model->get_nominal_turbine_speed_in_rad_per_s()/(2.0*PI);
+            return turbine_model->get_turbine_speed_in_pu()*wn;
+        }
+    }
+    if(meter_type=="WT GENERATOR ROTOR SPEED DEVIATION IN PU")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+            return turbine_model->get_generator_speed_in_pu()-1.0;
+    }
+    if(meter_type=="WT GENERATOR ROTOR SPEED DEVIATION IN HZ")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+        {
+            double fn = fbase/aerd_model->get_number_of_pole_pairs();
+            return (turbine_model->get_generator_speed_in_pu()-1.0)*fn;
+        }
+    }
+    if(meter_type=="WT GENERATOR ROTOR SPEED IN PU")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+            return turbine_model->get_generator_speed_in_pu();
+    }
+    if(meter_type=="WT GENERATOR ROTOR SPEED IN HZ")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+        {
+            double fn = fbase/aerd_model->get_number_of_pole_pairs();
+            return turbine_model->get_generator_speed_in_pu()*fn;
+        }
+    }
+    if(meter_type=="WT GENERATOR ROTOR ANGLE IN DEG")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+            return turbine_model->get_rotor_angle_in_deg();
+    }
+    if(meter_type=="WT GENERATOR ROTOR ANGLE IN RAD")
+    {
+        if(turbine_model == NULL)
+            return 0.0;
+        else
+            return turbine_model->get_rotor_angle_in_rad();
+    }
+    if(meter_type=="WT GENERATOR ACTIVE CURRENT COMMAND IN PU")
+    {
+        if(electrical_model == NULL)
+            return 0.0;
+        else
+            return electrical_model->get_active_current_command_in_pu_based_on_mbase();
+    }
+    if(meter_type=="WT GENERATOR REACTIVE CURRENT COMMAND IN PU")
+    {
+        if(electrical_model == NULL)
+            return 0.0;
+        else
+            return electrical_model->get_reactive_current_command_in_pu_based_on_mbase();
+    }
+    if(meter_type=="WT GENERATOR ACTIVE POWER COMMAND IN PU")
+    {
+        if(electrical_model == NULL)
+            return 0.0;
+        else
+            return electrical_model->get_active_power_command_in_pu_based_on_mbase();
+    }
+    if(meter_type=="WT GENERATOR REACTIVE POWER COMMAND IN PU")
+    {
+        if(electrical_model == NULL)
+            return 0.0;
+        else
+            return electrical_model->get_reactive_power_command_in_pu_based_on_mbase();
+    }
+    if(meter_type=="WT GENERATOR REACTIVE VOLTAGE COMMAND IN PU")
+    {
+        if(electrical_model == NULL)
+            return 0.0;
+        else
+            return electrical_model->get_reactive_voltage_command_in_pu_based_on_mbase();
+    }
+    if(meter_type=="WT GENERATOR PITCH ANGLE IN DEG")
+    {
+        if(pitch_model == NULL)
+            return 0.0;
+        else
+            return pitch_model->get_pitch_angle_in_deg();
+    }
+    if(meter_type=="WT GENERATOR WIND SPEED IN PU")
+    {
+        if(windspeed_model == NULL)
+            return 0.0;
+        else
+            return windspeed_model->get_wind_speed_in_pu();
+    }
+    if(meter_type=="WT GENERATOR WIND SPEED IN MPS")
+    {
+        if(windspeed_model == NULL)
+            return 0.0;
+        else
+            return windspeed_model->get_wind_speed_in_mps();
+    }
+    if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
+    {
+        if(gen_model==NULL)
+            return 0.0;
+        else
+            return gen_model->get_variable_with_index(internal_variable_index);
+    }
+    if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
+    {
+        if(aerd_model==NULL)
+            return 0.0;
+        else
+            return aerd_model->get_variable_with_index(internal_variable_index);
+    }
+    if(meter_type=="WT TURBINE MODEL INTERNAL VARIABLE")
+    {
+        if(turbine_model==NULL)
+            return 0.0;
+        else
+            return turbine_model->get_variable_with_index(internal_variable_index);
+    }
+    if(meter_type=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
+    {
+        if(electrical_model==NULL)
+            return 0.0;
+        else
+            return electrical_model->get_variable_with_index(internal_variable_index);
+    }
+    if(meter_type=="WT PITCH MODEL INTERNAL VARIABLE")
+    {
+        if(pitch_model==NULL)
+            return 0.0;
+        else
+            return pitch_model->get_variable_with_index(internal_variable_index);
+    }
+    if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
+    {
+        if(windspeed_model==NULL)
+            return 0.0;
+        else
+            return windspeed_model->get_variable_with_index(internal_variable_index);
+    }
+    return 0.0;
+}
+
 double METER::get_meter_value_as_an_hvdc() const
 {
     HVDC* hvdc = (HVDC*) get_device_pointer();
