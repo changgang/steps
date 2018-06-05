@@ -73,6 +73,7 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         void initialize_pitch_angle_and_turbine_speed();
         void initialize_pitch_angle();
         void initialize_turbine_speed();
+        double get_turbine_reference_speed_in_rad_per_s_without_speed_limit() const;
         // Cp function parameters
         double Cp_Coefficients[6];
 

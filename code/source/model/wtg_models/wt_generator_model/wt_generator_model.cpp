@@ -11,6 +11,7 @@ WT_GENERATOR_MODEL::WT_GENERATOR_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("WT GENERATOR");
 
+    set_current_source_flag(true);
     set_initial_active_current_command_in_pu_based_on_mbase(0.0);
     set_initial_reactive_current_command_in_pu_based_on_mbase(0.0);
 }
@@ -23,6 +24,17 @@ WT_GENERATOR_MODEL::~WT_GENERATOR_MODEL()
 string WT_GENERATOR_MODEL::get_model_type() const
 {
     return "WT GENERATOR";
+}
+
+
+void WT_GENERATOR_MODEL::set_current_source_flag(bool flag)
+{
+    current_source_flag = flag;
+}
+
+bool WT_GENERATOR_MODEL::get_current_source_flag() const
+{
+    return current_source_flag;
 }
 
 void WT_GENERATOR_MODEL::set_initial_active_current_command_in_pu_based_on_mbase(double ip_command)

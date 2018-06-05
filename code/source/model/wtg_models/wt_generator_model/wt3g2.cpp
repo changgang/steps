@@ -1,26 +1,29 @@
 #include "header/model/wtg_models/wt_generator_model/wt3g2.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdio>
 #include <iostream>
 using namespace std;
 
 static vector<string> MODEL_VARIABLE_TABLE{ "PLL ANGLE IN DEG",      //0
-                                            "TERMINAL P IN PU ON MBASE",      //4
-                                            "TERMINAL P IN MW",      //5
-                                            "TERMINAL Q IN PU ON MBASE",      //6
-                                            "TERMINAL Q IN MVAR",      //7
-                                            "TERMINAL S IN PU ON MBASE",      //8
-                                            "TERMINAL S IN MVA",      //9
-                                            "INTERNAL VOLTAGE IN PU",      //13
-                                            "TERMINAL CURRENT IN PU",      //14
-                                            "TERMINAL CURRENT IN KA",      //15
-                                            "ACTIVE CURRENT COMMAND IN PU",      //15
-                                            "REACTIVE CURRENT COMMAND IN PU",      //15
-                                            "REACTIVE VOLTAGE COMMAND IN PU",      //15
-                                            "STATE@ROTOR ANGLE BLOCK",     //16
-                                            "STATE@ROTOR SPEED BLOCK"    //17
+                                            "TERMINAL P IN PU ON MBASE",      //1
+                                            "TERMINAL P IN MW",      //2
+                                            "TERMINAL Q IN PU ON MBASE",      //3
+                                            "TERMINAL Q IN MVAR",      //4
+                                            "TERMINAL S IN PU ON MBASE",      //5
+                                            "TERMINAL S IN MVA",      //6
+                                            "INTERNAL VOLTAGE IN PU",      //7
+                                            "TERMINAL CURRENT IN PU",      //8
+                                            "TERMINAL CURRENT IN KA",      //9
+                                            "ACTIVE CURRENT COMMAND IN PU",      //10
+                                            "REACTIVE CURRENT COMMAND IN PU",      //11
+                                            "REACTIVE VOLTAGE COMMAND IN PU",      //12
+                                            "STATE@ACTIVE CURRENT COMMAND BLOCK",     //13
+                                            "STATE@REACTIVE VOLTAGE COMMAND BLOCK",    //14
+                                            "STATE@PLL FREQUENCY BLOCK",    //15
+                                            "STATE@PLL ANGLE BLOCK",    //16
+                                            "STATE@LVPL VOLTAGE SENSOR"    //17
                                             };
-
 
 WT3G2::WT3G2()
 {
@@ -34,6 +37,8 @@ WT3G2::~WT3G2()
 
 void WT3G2::clear()
 {
+    set_current_source_flag(true);
+
     active_current_commander.set_limiter_type(NO_LIMITER);
 
     reactive_voltage_commander.set_limiter_type(NO_LIMITER);
@@ -50,7 +55,7 @@ void WT3G2::clear()
 void WT3G2::copy_from_const_model(const WT3G2& model)
 {
     clear();
-
+    set_current_source_flag(model.get_current_source_flag());
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
     set_converter_reactiver_voltage_command_T_in_s(model.get_converter_reactiver_voltage_command_T_in_s());
     set_KPLL(model.get_KPLL());
@@ -302,6 +307,7 @@ bool WT3G2::setup_model_with_bpa_string(string data)
 
 void WT3G2::initialize()
 {
+    ostringstream osstream;
     if(is_model_initialized())
         return;
 
@@ -379,6 +385,19 @@ void WT3G2::initialize()
     set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
 
     set_flag_model_initialized_as_true();
+
+    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            <<"Ip0 = "<<get_initial_active_current_command_in_pu_based_on_mbase()
+            <<", Iq0 = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
+            <<"active_current_commander block state: "<<active_current_commander.get_state()<<endl
+            <<"reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
+            <<"PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
+            <<"PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
+            <<"LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
+            <<"active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
+            <<"reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
+            <<"terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu"<<endl;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3G2::run(DYNAMIC_MODE mode)
@@ -503,7 +522,7 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     double Iq = -reactive_voltage_commander.get_output()/Xeq;
     double hvrc_i = get_HVRC_current_in_pu();
     if(Iq<-hvrc_i)
-        Iq = hvrc_i;
+        Iq = -hvrc_i;
 
     double pll_angle = get_pll_angle_in_rad();
 
@@ -514,6 +533,7 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     double Iy = Ip*sin(pll_angle) + Iq*cos(pll_angle);
 
     complex<double> Ixy(Ix, Iy);
+    //cout<<"Norton Ixy based on mbase = "<<Ixy<<endl;
 
     return Ixy*mbase/sbase;
 }
@@ -540,6 +560,7 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sb
     complex<double> Ixy_norton = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     complex<double> Ixy_term = Ixy_norton - Vxy/Zsource;
+    //cout<<"based on MBASE, Ixy norton = "<<Ixy_norton<<", Ishunt = "<<Vxy/Zsource<<", Iterminal = "<<Ixy_term<<endl;
     return Ixy_term;
 }
 
@@ -665,6 +686,8 @@ double WT3G2::get_variable_with_name(string var_name)
         return PLL_frequency_integrator.get_state();
     if(var_name == "STATE@PLL ANGLE BLOCK")
         return PLL_angle_integrator.get_state();
+    if(var_name == "STATE@LVPL VOLTAGE SENSOR")
+        return LVPL_voltage_sensor.get_state();
 
 
     return 0.0;
@@ -675,6 +698,7 @@ complex<double> WT3G2::get_terminal_complex_power_in_pu_based_on_mbase()
 {
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    //cout<<"at time "<<STEPS::TIME<<" terminal Ixy  based on mbase = "<<Ixy<<", Vxy = "<<Vxy<<", S = "<<Vxy*conj(Ixy)*get_mbase_in_MVA()<<endl;
 
     complex<double> S = Vxy*conj(Ixy);
     return S;

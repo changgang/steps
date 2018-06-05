@@ -63,8 +63,8 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
 
     sstream<<"Done loading powerflow data.";
     show_information_with_leading_time_stamp(sstream);
-
 }
+
 void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
 {
     if(not is_power_system_database_set())
@@ -1779,7 +1779,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file)
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No powerflow data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No powerflow data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return;
     }
@@ -1842,7 +1842,7 @@ string PSSE_IMEXPORTER::export_case_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No case data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No case data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -1859,7 +1859,7 @@ string PSSE_IMEXPORTER::export_bus_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No bus data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No bus data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -1908,7 +1908,7 @@ string PSSE_IMEXPORTER::export_load_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No load data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No load data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -1947,7 +1947,7 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No fixed shunt data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No fixed shunt data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -1987,7 +1987,7 @@ string PSSE_IMEXPORTER::export_generator_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No generator data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No generator data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2038,7 +2038,7 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No WT generator data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No WT generator data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2095,7 +2095,7 @@ string PSSE_IMEXPORTER::export_line_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No line data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No line data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2143,7 +2143,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No transformer data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No transformer data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2412,7 +2412,7 @@ string PSSE_IMEXPORTER::export_area_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No area data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2438,7 +2438,7 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No area data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2540,7 +2540,7 @@ string PSSE_IMEXPORTER::export_zone_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No zone data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No zone data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2569,7 +2569,7 @@ string PSSE_IMEXPORTER::export_owner_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. PSSE imexporter is not connected to any power system database. No area data will be exported.";
+        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }

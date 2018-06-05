@@ -123,7 +123,8 @@ class DYNAMICS_SIMULATOR: public BASE
 
         vector< complex<double> > get_bus_current_mismatch() const;
         vector< complex<double> > get_bus_currnet_into_network() const;
-        void add_sources_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
+        void add_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
+        void add_wt_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
         void add_loads_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
         void add_hvdcs_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
         void add_equivalent_devices_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;

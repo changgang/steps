@@ -422,15 +422,15 @@ bool WT3E0::setup_model_with_psse_string(string data)
 {
     bool is_successful = false;
     vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<37)
+    if(dyrdata.size()<35)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
     if(model_name!=get_model_name())
         return is_successful;
 
-    size_t bus, var_control_flag, voltage_flag;
-
+    size_t bus, voltage_flag;
+    int var_control_flag;
     double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
            ipmax, trv, rpmax, rpmin, tspeed, kqi, vmax, vmin,
            kqv, eqmax, eqmin, tv, tp, fn,
@@ -439,36 +439,36 @@ bool WT3E0::setup_model_with_psse_string(string data)
     size_t i=3;
     bus = get_integer_data(dyrdata[i],"0"); i++;
     var_control_flag = get_integer_data(dyrdata[i],"0"); i++;
-    voltage_flag = get_integer_data(dyrdata[i],"0"); i++;
-    tfv = get_double_data(dyrdata[i],"0.0"); i++;
-    kpv = get_double_data(dyrdata[i],"0.0"); i++;
-    kiv = get_double_data(dyrdata[i],"0.0"); i++;
+    voltage_flag = size_t(get_integer_data(dyrdata[i],"0")); i++;
     xc = get_double_data(dyrdata[i],"0.0"); i++;
-    tfp = get_double_data(dyrdata[i],"0.0"); i++;
-    kpp = get_double_data(dyrdata[i],"0.0"); i++;
-    kip = get_double_data(dyrdata[i],"0.0"); i++;
-    pmax = get_double_data(dyrdata[i],"0.0"); i++;
-    pmin = get_double_data(dyrdata[i],"0.0"); i++;
-    qmax = get_double_data(dyrdata[i],"0.0"); i++;
-    qmin = get_double_data(dyrdata[i],"0.0"); i++;
-    ipmax = get_double_data(dyrdata[i],"0.0"); i++;
     trv = get_double_data(dyrdata[i],"0.0"); i++;
-    rpmax = get_double_data(dyrdata[i],"0.0"); i++;
-    rpmin = get_double_data(dyrdata[i],"0.0"); i++;
-    tspeed = get_double_data(dyrdata[i],"0.0"); i++;
+    fn = get_double_data(dyrdata[i],"0.0"); i++;
+    kpv = get_double_data(dyrdata[i],"0.0"); i++;
+    tv = get_double_data(dyrdata[i],"0.0"); i++;
+    kiv = get_double_data(dyrdata[i],"0.0"); i++;
+    qmin = get_double_data(dyrdata[i],"0.0"); i++;
+    qmax = get_double_data(dyrdata[i],"0.0"); i++;
+    tfv = get_double_data(dyrdata[i],"0.0"); i++;
+    tp = get_double_data(dyrdata[i],"0.0"); i++;
     kqi = get_double_data(dyrdata[i],"0.0"); i++;
-    vmax = get_double_data(dyrdata[i],"0.0"); i++;
     vmin = get_double_data(dyrdata[i],"0.0"); i++;
+    vmax = get_double_data(dyrdata[i],"0.0"); i++;
     kqv = get_double_data(dyrdata[i],"0.0"); i++;
     eqmin = get_double_data(dyrdata[i],"0.0"); i++;
     eqmax = get_double_data(dyrdata[i],"0.0"); i++;
-    tv = get_double_data(dyrdata[i],"0.0"); i++;
-    tp = get_double_data(dyrdata[i],"0.0"); i++;
-    fn = get_double_data(dyrdata[i],"0.0"); i++;
+    tspeed = get_double_data(dyrdata[i],"0.0"); i++;
+    kpp = get_double_data(dyrdata[i],"0.0"); i++;
+    kip = get_double_data(dyrdata[i],"0.0"); i++;
     kvi = get_double_data(dyrdata[i],"0.0"); i++;
     tvi = get_double_data(dyrdata[i],"0.0"); i++;
     kdroop = get_double_data(dyrdata[i],"0.0"); i++;
     tdroop = get_double_data(dyrdata[i],"0.0"); i++;
+    rpmin = get_double_data(dyrdata[i],"0.0"); i++;
+    rpmax = get_double_data(dyrdata[i],"0.0"); i++;
+    tfp = get_double_data(dyrdata[i],"0.0"); i++;
+    pmin = get_double_data(dyrdata[i],"0.0"); i++;
+    pmax = get_double_data(dyrdata[i],"0.0"); i++;
+    ipmax = get_double_data(dyrdata[i],"0.0");
 
     set_bus_to_regulate(bus);
     PE_VAR_CONTROL_MODE mode;
@@ -481,12 +481,12 @@ bool WT3E0::setup_model_with_psse_string(string data)
         }
         case 1:
         {
-            mode = CONSTANT_POWER_FACTOR_MODE;
+            mode = CONSTANT_VOLTAGE_MODE;
             break;
         }
-        case 2:
+        case -1:
         {
-            mode = CONSTANT_VOLTAGE_MODE;
+            mode = CONSTANT_POWER_FACTOR_MODE;
             break;
         }
         default:
@@ -500,37 +500,36 @@ bool WT3E0::setup_model_with_psse_string(string data)
     set_Xcomp_in_pu(xc);
     set_TRV_in_s(trv);
     set_Fn(fn);
-    set_KIV(kiv);
-    set_Qmax_in_pu(qmax);
-    set_Qmin_in_pu(qmin);
     set_KPV(kpv);
     set_TV_in_s(tv);
+    set_KIV(kiv);
+    set_Qmin_in_pu(qmin);
+    set_Qmax_in_pu(qmax);
     set_TFV_in_s(tfv);
     set_TP_in_s(tp);
     set_KQI(kqi);
-    set_Vmax_in_pu(vmax);
     set_Vmin_in_pu(vmin);
+    set_Vmax_in_pu(vmax);
 
     if(voltage_flag>2)
         voltage_flag = 2;
     set_voltage_flag(voltage_flag);
     set_KQV(kqv);
-    set_EQmax_in_pu(eqmax);
     set_EQmin_in_pu(eqmin);
+    set_EQmax_in_pu(eqmax);
     set_Tspeed_in_s(tspeed);
     set_KPP(kpp);
     set_KIP(kip);
-    set_rPmax_in_pu(rpmax);
-    set_rPmin_in_pu(rpmin);
-    set_TFP_in_s(tfp);
-    set_Pmax_in_pu(pmax);
-    set_Pmin_in_pu(pmin);
-    set_IPmax_in_pu(ipmax);
-
     set_Kvi(kvi);
     set_Tvi_in_s(tvi);
     set_Kdroop(kdroop);
     set_Tdroop_in_s(tdroop);
+    set_rPmin_in_pu(rpmin);
+    set_rPmax_in_pu(rpmax);
+    set_TFP_in_s(tfp);
+    set_Pmin_in_pu(pmin);
+    set_Pmax_in_pu(pmax);
+    set_IPmax_in_pu(ipmax);
 
     is_successful = true;
 
@@ -726,6 +725,8 @@ void WT3E0::initialize()
     //show_information_with_leading_time_stamp(osstream);
 
     set_flag_model_initialized_as_true();
+    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3E0::run(DYNAMIC_MODE mode)
@@ -972,35 +973,35 @@ string WT3E0::get_standard_model_string() const
     PE_VAR_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
     size_t voltage_flag = get_voltage_flag();
-    double tfv = get_TFV_in_s();
-    double kpv = get_KPV();
-    double kiv = get_KIV();
     double xc = get_Xcomp_in_pu();
-    double tfp = get_TFP_in_s();
-    double kpp = get_KPP();
-    double kip = get_KIP();
-    double pmax = get_Pmax_in_pu();
-    double pmin = get_Pmin_in_pu();
+    double trv = get_TRV_in_s();
+    double fn = get_Fn();
+    double kpv = get_KPV();
+    double tv = get_TV_in_s();
+    double kiv = get_KIV();
     double qmax = get_Qmax_in_pu();
     double qmin = get_Qmin_in_pu();
-    double ipmax = get_IPmax_in_pu();
-    double trv = get_TRV_in_s();
-    double rpmax = get_rPmax_in_pu();
-    double rpmin = get_rPmin_in_pu();
-    double tspeed = get_Tspeed_in_s();
+    double tfv = get_TFV_in_s();
+    double tp = get_TP_in_s();
     double kqi = get_KQI();
-    double vmax = get_Vmax_in_pu();
     double vmin = get_Vmin_in_pu();
+    double vmax = get_Vmax_in_pu();
     double kqv = get_KQV();
     double eqmin = get_EQmin_in_pu();
     double eqmax = get_EQmax_in_pu();
-    double tv = get_TV_in_s();
-    double tp = get_TP_in_s();
-    double fn = get_Fn();
+    double tspeed = get_Tspeed_in_s();
+    double kpp = get_KPP();
+    double kip = get_KIP();
     double kvi = get_Kvi();
     double tvi = get_Tvi_in_s();
     double kdroop = get_Kdroop();
     double tdroop = get_Tdroop_in_s();
+    double rpmin = get_rPmin_in_pu();
+    double rpmax = get_rPmax_in_pu();
+    double tfp = get_TFP_in_s();
+    double pmin = get_Pmin_in_pu();
+    double pmax = get_Pmax_in_pu();
+    double ipmax = get_IPmax_in_pu();
 
     osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
@@ -1008,35 +1009,35 @@ string WT3E0::get_standard_model_string() const
       <<setw(8)<<bus_reg<<", "
       <<setw(8)<<var_mode<<", "
       <<setw(8)<<voltage_flag<<", "
-      <<setw(8)<<setprecision(6)<<tfv<<", "
-      <<setw(8)<<setprecision(6)<<kpv<<", "
-      <<setw(8)<<setprecision(6)<<kiv<<", "
       <<setw(8)<<setprecision(6)<<xc<<", "
-      <<setw(8)<<setprecision(6)<<tfp<<", "
-      <<setw(8)<<setprecision(6)<<kpp<<", "
-      <<setw(8)<<setprecision(6)<<kip<<", "
-      <<setw(8)<<setprecision(6)<<pmax<<", "
-      <<setw(8)<<setprecision(6)<<pmin<<", 0, "
-      <<setw(8)<<setprecision(6)<<qmax<<", "
-      <<setw(8)<<setprecision(6)<<qmin<<", "
-      <<setw(8)<<setprecision(6)<<ipmax<<", "
       <<setw(8)<<setprecision(6)<<trv<<", "
-      <<setw(8)<<setprecision(6)<<rpmax<<", "
-      <<setw(8)<<setprecision(6)<<rpmin<<", "
-      <<setw(8)<<setprecision(6)<<tspeed<<", "
+      <<setw(8)<<setprecision(6)<<fn<<", "
+      <<setw(8)<<setprecision(6)<<kpv<<", "
+      <<setw(8)<<setprecision(6)<<tv<<", "
+      <<setw(8)<<setprecision(6)<<kiv<<", "
+      <<setw(8)<<setprecision(6)<<qmin<<", "
+      <<setw(8)<<setprecision(6)<<qmax<<", "
+      <<setw(8)<<setprecision(6)<<tfv<<", "
+      <<setw(8)<<setprecision(6)<<tp<<", "
       <<setw(8)<<setprecision(6)<<kqi<<", "
-      <<setw(8)<<setprecision(6)<<vmax<<", "
       <<setw(8)<<setprecision(6)<<vmin<<", "
+      <<setw(8)<<setprecision(6)<<vmax<<", "
       <<setw(8)<<setprecision(6)<<kqv<<", "
       <<setw(8)<<setprecision(6)<<eqmin<<", "
       <<setw(8)<<setprecision(6)<<eqmax<<", "
-      <<setw(8)<<setprecision(6)<<tv<<", "
-      <<setw(8)<<setprecision(6)<<tp<<", "
-      <<setw(8)<<setprecision(6)<<fn<<", "
+      <<setw(8)<<setprecision(6)<<tspeed<<", "
+      <<setw(8)<<setprecision(6)<<kpp<<", "
+      <<setw(8)<<setprecision(6)<<kip<<", "
       <<setw(8)<<setprecision(6)<<kvi<<", "
       <<setw(8)<<setprecision(6)<<tvi<<", "
       <<setw(8)<<setprecision(6)<<kdroop<<", "
-      <<setw(8)<<setprecision(6)<<tdroop<<"  /";
+      <<setw(8)<<setprecision(6)<<tdroop<<", "
+      <<setw(8)<<setprecision(6)<<rpmin<<", "
+      <<setw(8)<<setprecision(6)<<rpmax<<", "
+      <<setw(8)<<setprecision(6)<<tfp<<", "
+      <<setw(8)<<setprecision(6)<<pmin<<", "
+      <<setw(8)<<setprecision(6)<<pmax<<", "
+      <<setw(8)<<setprecision(6)<<ipmax<<" / ";
 
     return osstream.str();
 }

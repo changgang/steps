@@ -22,25 +22,25 @@ void WT3E0_TEST::setup()
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     WT3E0 model;
-    model.set_bus_to_regulate(1);
+    model.set_bus_to_regulate(0);
     model.set_voltage_flag(1);
     model.set_var_control_mode(CONSTANT_VOLTAGE_MODE);
     model.set_Xcomp_in_pu(0.1);
     model.set_TRV_in_s(0.1);
     model.set_Fn(1.0);
-    model.set_KIV(20.0);
-    model.set_Qmax_in_pu(1.5);
-    model.set_Qmin_in_pu(-0.5);
     model.set_KPV(10.0);
     model.set_TV_in_s(0.2);
+    model.set_KIV(20.0);
+    model.set_Qmin_in_pu(-0.5);
+    model.set_Qmax_in_pu(1.5);
     model.set_TFV_in_s(0.5);
     model.set_TP_in_s(0.3);
     model.set_KQI(5.0);
-    model.set_Vmax_in_pu(1.3);
     model.set_Vmin_in_pu(0.9);
+    model.set_Vmax_in_pu(1.3);
     model.set_KQV(1.5);
-    model.set_EQmax_in_pu(1.5);
     model.set_EQmin_in_pu(-1.0);
+    model.set_EQmax_in_pu(1.5);
     model.set_Tspeed_in_s(0.5);
     model.set_KPP(2.0);
     model.set_KIP(3.0);
@@ -48,11 +48,11 @@ void WT3E0_TEST::setup()
     model.set_Tvi_in_s(0.2);
     model.set_Kdroop(10.0);
     model.set_Tdroop_in_s(0.2);
-    model.set_rPmax_in_pu(0.1);
     model.set_rPmin_in_pu(-0.1);
+    model.set_rPmax_in_pu(0.1);
     model.set_TFP_in_s(0.4);
-    model.set_Pmax_in_pu(1.2);
     model.set_Pmin_in_pu(0.3);
+    model.set_Pmax_in_pu(1.2);
     model.set_IPmax_in_pu(1.5);
 
     wt_gen->set_model(&model);

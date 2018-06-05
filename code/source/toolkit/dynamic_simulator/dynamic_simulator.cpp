@@ -980,6 +980,18 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         generator->run(mode);
     }
 
+    n = db->get_wt_generator_count();
+    vector<WT_GENERATOR*> wtgens = db->get_all_wt_generators();
+    WT_GENERATOR* wtgen;
+    //#pragma omp parallel for
+    for(size_t i=0; i!=n; ++i)
+    {
+        wtgen = wtgens[i];
+        if(wtgen->get_status()==false)
+            continue;
+        wtgen->run(mode);
+    }
+
     n = db->get_load_count();
     vector<LOAD*> loads = db->get_all_loads();
     LOAD* load;
@@ -1208,7 +1220,8 @@ vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_current_mismatch() const
     for(size_t i = 0; i!=n; ++i)
         I_mismatch[i] = -I_mismatch[i];
 
-    add_sources_to_bus_current_mismatch(I_mismatch);
+    add_generators_to_bus_current_mismatch(I_mismatch);
+    add_wt_generators_to_bus_current_mismatch(I_mismatch);
     add_loads_to_bus_current_mismatch(I_mismatch);
     add_hvdcs_to_bus_current_mismatch(I_mismatch);
     add_equivalent_devices_to_bus_current_mismatch(I_mismatch);
@@ -1268,7 +1281,7 @@ vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_currnet_into_network() con
     return bus_current;
 }
 
-void DYNAMICS_SIMULATOR::add_sources_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
+void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
 {
     ostringstream sstream;
 
@@ -1300,6 +1313,56 @@ void DYNAMICS_SIMULATOR::add_sources_to_bus_current_mismatch(vector< complex<dou
         internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
 
         gen_model = generator->get_sync_generator_model();
+        if(gen_model==NULL)
+            continue;
+
+        //I = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+        I = gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+
+        I_mismatch[internal_bus] += I;
+
+        /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
+        show_information_with_leading_time_stamp(sstream);
+        complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
+        complex<double> Exy = gen_model->get_internal_voltage_in_pu_in_xy_axis();
+        sstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
+        show_information_with_leading_time_stamp(sstream);*/
+
+    }
+}
+
+void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
+{
+    ostringstream sstream;
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    size_t physical_bus, internal_bus;
+
+    bool status;
+
+    vector<WT_GENERATOR*> generators = psdb->get_all_wt_generators();
+
+    WT_GENERATOR* generator;
+    WT_GENERATOR_MODEL* gen_model;
+
+    size_t ngen = generators.size();
+
+    complex<double> E, V, Z, I;
+
+    for(size_t i=0; i!=ngen; ++i)
+    {
+        generator = generators[i];
+
+        status = generator->get_status();
+        if(status == false)
+            continue;
+
+        physical_bus = generator->get_generator_bus();
+
+        internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
+
+        gen_model = generator->get_wt_generator_model();
         if(gen_model==NULL)
             continue;
 

@@ -120,6 +120,13 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void add_CDC4T_model(string data);
         void add_CDC6T_model(string data);
 
+        void add_WT3G2_model(string data);
+        void add_AERD0_model(string data);
+        void add_WT3T0_model(string data);
+        void add_WT3E0_model(string data);
+        void add_WT3P0_model(string data);
+        void add_FILEWIND_model(string data);
+
         DEVICE_ID get_generator_device_id_from_string(string data);
         DEVICE_ID get_wt_generator_device_id_from_string(string data);
         DEVICE_ID get_load_device_id_from_string(string data);

@@ -2103,7 +2103,7 @@ void BPA_IMEXPORTER::export_powerflow_data(string file)
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. BPA imexporter is not connected to any power system database. No powerflow data will be exported.";
+        sstream<<"Warning. BPA imexporter is not connected to any power system database. No powerflow data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return;
     }
@@ -2381,7 +2381,7 @@ string BPA_IMEXPORTER::export_bus_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. BPA imexporter is not connected to any power system database. No bus data will be exported.";
+        sstream<<"Warning. BPA imexporter is not connected to any power system database. No bus data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2578,7 +2578,7 @@ string BPA_IMEXPORTER::export_line_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. BPA imexporter is not connected to any power system database. No line data will be exported.";
+        sstream<<"Warning. BPA imexporter is not connected to any power system database. No line data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -2689,7 +2689,7 @@ string BPA_IMEXPORTER::export_transformer_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. BPA imexporter is not connected to any power system database. No transformer data will be exported.";
+        sstream<<"Warning. BPA imexporter is not connected to any power system database. No transformer data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }
@@ -3114,7 +3114,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Waring. BPA imexporter is not connected to any power system database. No hvdc data will be exported.";
+        sstream<<"Warning. BPA imexporter is not connected to any power system database. No hvdc data will be exported.";
         show_information_with_leading_time_stamp(sstream);
         return "";
     }

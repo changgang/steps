@@ -24,7 +24,9 @@ class WT_GENERATOR_MODEL : public WTG_MODEL
     public: // sync generator common
         virtual string get_model_type() const;
     public:
-        // set initial efd and pmech for initialization
+        void set_current_source_flag(bool flag);
+        bool get_current_source_flag() const;
+        // set initial active and reactive current commands
         void set_initial_active_current_command_in_pu_based_on_mbase(double ip_command);
         double get_initial_active_current_command_in_pu_based_on_mbase() const;
 
@@ -86,6 +88,7 @@ class WT_GENERATOR_MODEL : public WTG_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
 
     private:
+        bool current_source_flag;
         double IP_command0, IQ_command0;
 };
 

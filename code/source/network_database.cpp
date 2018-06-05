@@ -144,6 +144,7 @@ void NETWORK_DATABASE::build_dynamic_network_matrix()
     add_transformers_to_network();
     add_fixed_shunts_to_network();
     add_generators_to_dynamic_network();
+    add_wt_generators_to_dynamic_network();
 
     network_Y_matrix.compress_and_merge_duplicate_entries();
 }
@@ -1971,6 +1972,33 @@ void NETWORK_DATABASE::add_generators_to_dynamic_network()
 }
 
 void NETWORK_DATABASE::add_generator_to_dynamic_network(const GENERATOR& gen)
+{
+    if(gen.get_status()==false)
+        return;
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    complex<double> Z = gen.get_source_impedance_in_pu();
+    double mbase = gen.get_mbase_in_MVA();
+    double mvabase = psdb->get_system_base_power_in_MVA();
+    Z = Z/mbase*mvabase;
+
+    size_t bus = gen.get_generator_bus();
+    size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+    network_Y_matrix.add_entry(i,i,1.0/Z);
+}
+
+void NETWORK_DATABASE::add_wt_generators_to_dynamic_network()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    vector<WT_GENERATOR*> generators = psdb->get_all_wt_generators();
+
+    size_t n= generators.size();
+
+    for(size_t i=0; i!=n; ++i)
+        add_wt_generator_to_dynamic_network(*(generators[i]));
+}
+
+void NETWORK_DATABASE::add_wt_generator_to_dynamic_network(const WT_GENERATOR& gen)
 {
     if(gen.get_status()==false)
         return;

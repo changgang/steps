@@ -137,9 +137,9 @@ bool WT3T0::setup_model_with_psse_string(string data)
     size_t i=3;
     ht = get_double_data(dyrdata[i],"0.0"); i++;
     hg = get_double_data(dyrdata[i],"0.0"); i++;
-    damp = get_double_data(dyrdata[i],"0.0"); i++;
     kshaft = get_double_data(dyrdata[i],"0.0"); i++;
-    dshaft = get_double_data(dyrdata[i],"0.0");
+    dshaft = get_double_data(dyrdata[i],"0.0"); i++;
+    damp = get_double_data(dyrdata[i],"0.0");
 
     set_Hturbine_in_s(ht);
     set_Hgenerator_in_s(hg);
@@ -208,6 +208,10 @@ void WT3T0::initialize()
     shaft_twist_block.initialize();
 
     set_flag_model_initialized_as_true();
+
+    ostringstream osstream;
+    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3T0::run(DYNAMIC_MODE mode)
@@ -324,8 +328,8 @@ string WT3T0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<ht<<", "
       <<setw(8)<<setprecision(6)<<hg<<", "
       <<setw(8)<<setprecision(6)<<kshaft<<", "
-      <<setw(8)<<setprecision(6)<<damp<<", "
-      <<setw(8)<<setprecision(6)<<dshaft<<"  /";
+      <<setw(8)<<setprecision(6)<<dshaft<<", "
+      <<setw(8)<<setprecision(6)<<damp<<" /";
     return sstream.str();
 }
 

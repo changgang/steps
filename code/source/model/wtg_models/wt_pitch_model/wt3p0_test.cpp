@@ -25,13 +25,13 @@ void WT3P0_TEST::setup()
     model.set_Tp_in_s(0.5);
     model.set_Kp_speed_controller(1.0);
     model.set_Ki_speed_controller(2.0);
+    model.set_frequency_lower_deadband_in_pu(0.995);
+    model.set_frequency_upper_deadband_in_pu(1.005);
     model.set_Kp_frequency_controller(1.0);
     model.set_Ki_frequency_controller(2.0);
-    model.set_frequency_upper_deadband_in_pu(1.005);
-    model.set_frequency_lower_deadband_in_pu(0.995);
-    model.set_Pitchmax_in_deg(30.0);
-    model.set_Pitchmin_in_deg(0.0);
     model.set_ratePitchmax_in_deg_per_s(3.0);
+    model.set_Pitchmin_in_deg(0.0);
+    model.set_Pitchmax_in_deg(30.0);
 
     wt_gen->set_model(&model);
 }

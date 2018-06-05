@@ -1,5 +1,6 @@
 #include "header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <iostream>
 
 using namespace std;
@@ -145,12 +146,8 @@ double AERD0::get_lambda_at_Cpmax(double pitch_deg) const
 {
     ostringstream osstream;
 
-    double wn = get_nominal_turbine_speed_in_rad_per_s();
-    double r = get_turbine_blade_radius_in_m();
-    double v = get_nominal_wind_speed_in_mps();
-
-    double lambdalow = 0.5*wn*r/v;
-    double lambdahigh = 2.0*wn*r/v;
+    double lambdalow = 6.0;
+    double lambdahigh = 6.0;
     while(true)
     {
         double der = get_derivative_of_Cp_over_lambda(lambdalow, pitch_deg);
@@ -336,6 +333,13 @@ void AERD0::initialize()
     initialize_pitch_angle_and_turbine_speed();
 
     set_flag_model_initialized_as_true();
+
+    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            <<"Initial turbine speed is "<<get_initial_turbine_speed_in_pu()<<" pu"<<endl
+            <<"Initial pitch angle is "<<get_initial_pitch_angle_in_deg()<<" deg"<<endl
+            <<"Turbine radius is "<<get_turbine_blade_radius_in_m()<<" m"<<endl
+            <<"Gear turn ratio is "<<get_generator_to_turbine_gear_ratio();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void AERD0::initialize_wind_turbine_blade_radius_and_gear_ratio()
@@ -396,11 +400,13 @@ void AERD0::initialize_turbine_blade_radius_with_nominal_parameters()
     double v = get_nominal_wind_speed_in_mps();
     double v3 =  v*v*v;
     double rou = get_nominal_air_density_in_kgpm3();
-    double lambda_mppt = get_lambda_at_Cpmax(0.0);
-    double cp_max = get_Cp(lambda_mppt, 0.0);
+
+    double cp_max = get_Cpmax(0.0);
+
     double blade_area = 2.0*pn/(cp_max*rou*v3);
     double blade_radius = sqrt(blade_area/PI);
     set_turbine_blade_radius_in_m(blade_radius);
+
     return;
 }
 
@@ -521,7 +527,7 @@ void AERD0::initialize_pitch_angle()
     double wn = get_nominal_turbine_speed_in_rad_per_s();
     double w = get_initial_turbine_speed_in_rad_per_s();
     double dspeed = (w-wn)/wn;
-    double pdamp = D*dspeed*mbase/n;
+    double pdamp = D*dspeed*(mbase/wn)*w/n;
     double eta = get_gear_efficiency();
     double pmech = (pelec+pdamp)/eta;
 
@@ -552,7 +558,7 @@ void AERD0::initialize_pitch_angle()
     osstream<<"Desired pmech = "<<pmech<<" MW (per wind turbine)"<<endl
             <<"Initial pitch angle: low pitch = "<<pitchlow<<" deg, pmech = "<<pwindlow<<" MW"<<endl
             <<"                     high pitch = "<<pitchhigh<<" deg, pmech = "<<pwindhigh<<" MW"<<endl;
-    size_t iter_count = 0, iter_max = 50;
+    size_t iter_count = 0, iter_max = 100;
 
     while(true)
     {
@@ -586,7 +592,7 @@ void AERD0::initialize_pitch_angle()
 
 void AERD0::initialize_turbine_speed()
 {
-    double w = get_turbine_reference_speed_in_rad_per_s();
+    double w = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
     set_initial_turbine_speed_in_rad_per_s(w);
 }
 
@@ -616,6 +622,32 @@ double AERD0::get_turbine_mechanical_power_in_MW() const
 }
 
 double AERD0::get_turbine_reference_speed_in_rad_per_s() const
+{
+    ostringstream osstream;
+
+    double wn = get_nominal_turbine_speed_in_rad_per_s();
+    double w = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
+
+    osstream<<"At time "<<STEPS::TIME<<", turbine speed reference is :"<<w<<", "<<w/wn;
+    show_information_with_leading_time_stamp(osstream);
+
+    double wmax = get_max_steady_state_turbine_speed_in_pu()*wn;
+    double wmin = get_min_steady_state_turbine_speed_in_pu()*wn;
+    if(w>wmax)
+        w = wmax;
+
+    if(w<wmin)
+        w = wmin;
+
+    return w;
+}
+
+double AERD0::get_turbine_reference_speed_in_pu() const
+{
+    return get_turbine_reference_speed_in_rad_per_s()/get_nominal_turbine_speed_in_rad_per_s();
+}
+
+double AERD0::get_turbine_reference_speed_in_rad_per_s_without_speed_limit() const
 {
     ostringstream osstream;
 
@@ -689,10 +721,12 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
     {
         double wnew = 0.5*(wlow+whigh);
         double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wnew);
-
+        //cout<<"when w = "<<wnew<<" rad/s ("<<wnew/wn<<" pu), extracted mechanical power = "<<pnew<<"MW"<<endl;
         double telec = pelec/wnew;
         double tdamp = damping*(wnew/wn-1.0)*(mbase/wn)/n;
         double tmech = telec+tdamp;
+        //cout<<"telec = "<<telec<<", tdamp = "<<tdamp<<", tmech = "<<tmech<<endl;
+        //cout<<"pelec = "<<telec*wnew<<", pdamp = "<<tdamp*wnew<<", pmech = "<<tmech*wnew<<endl;
         pmech = tmech*wnew;
         pmech /= eta;
         if(fabs(pnew-pmech)<1e-6)
@@ -728,19 +762,9 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
         }
     }
 
-    if(w>get_max_steady_state_turbine_speed_in_pu()*wn)
-        w = get_max_steady_state_turbine_speed_in_pu()*wn;
-
-    if(w<get_min_steady_state_turbine_speed_in_pu()*wn)
-        w = get_min_steady_state_turbine_speed_in_pu()*wn;
-
     return w;
 }
 
-double AERD0::get_turbine_reference_speed_in_pu() const
-{
-    return get_turbine_reference_speed_in_rad_per_s()/get_nominal_turbine_speed_in_rad_per_s();
-}
 
 void AERD0::check()
 {
@@ -764,7 +788,33 @@ void AERD0::save()
 
 string AERD0::get_standard_model_string() const
 {
-    return "";
+    ostringstream sstream;
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    size_t bus = gen->get_generator_bus();
+    string identifier= gen->get_identifier();
+
+    size_t overspeed_flag = (get_overspeed_mode_flag()==false? 0: 1);
+    size_t n = get_number_of_pole_pairs();
+
+    sstream<<setw(8)<<bus<<", "
+      <<"'"<<get_model_name()<<"', "
+      <<"'"<<identifier<<"', "
+      <<setw(4)<<overspeed_flag<<", "
+      <<setw(4)<<n<<", "
+      <<setw(6)<<setprecision(4)<<get_nominal_wind_speed_in_mps()<<", "
+      <<setw(6)<<setprecision(4)<<get_gear_efficiency()<<", "
+      <<setw(6)<<setprecision(4)<<get_nominal_air_density_in_kgpm3()<<", "
+      <<setw(6)<<setprecision(4)<<get_min_steady_state_turbine_speed_in_pu()<<", "
+      <<setw(6)<<setprecision(4)<<get_max_steady_state_turbine_speed_in_pu()<<", "
+      <<setw(6)<<setprecision(4)<<get_air_density_in_kgpm3()<<", "
+      <<setw(6)<<setprecision(4)<<get_C1()<<", "
+      <<setw(6)<<setprecision(4)<<get_C2()<<", "
+      <<setw(6)<<setprecision(4)<<get_C3()<<", "
+      <<setw(6)<<setprecision(4)<<get_C4()<<", "
+      <<setw(6)<<setprecision(4)<<get_C5()<<", "
+      <<setw(6)<<setprecision(4)<<get_C6()<<" /";
+
+    return sstream.str();
 }
 
 size_t AERD0::get_variable_index_from_variable_name(string var_name)

@@ -544,6 +544,8 @@ double METER::get_meter_value() const
         return get_meter_value_as_a_load();
     if(device_type=="GENERATOR")
         return get_meter_value_as_a_generator();
+    if(device_type=="WT GENERATOR")
+        return get_meter_value_as_a_wt_generator();
     if(device_type=="HVDC")
         return get_meter_value_as_an_hvdc();
     if(device_type=="EQUIVALENT DEVICE")
@@ -1343,14 +1345,14 @@ double METER::get_meter_value_as_a_wt_generator() const
     if(meter_type=="WT GENERATOR ACTIVE CURRENT COMMAND IN PU")
     {
         if(electrical_model == NULL)
-            return 0.0;
+            return gen_model->get_active_current_command_in_pu_based_on_mbase();
         else
             return electrical_model->get_active_current_command_in_pu_based_on_mbase();
     }
     if(meter_type=="WT GENERATOR REACTIVE CURRENT COMMAND IN PU")
     {
         if(electrical_model == NULL)
-            return 0.0;
+            return gen_model->get_reactive_current_command_in_pu_based_on_mbase();
         else
             return electrical_model->get_reactive_current_command_in_pu_based_on_mbase();
     }
@@ -1378,21 +1380,21 @@ double METER::get_meter_value_as_a_wt_generator() const
     if(meter_type=="WT GENERATOR PITCH ANGLE IN DEG")
     {
         if(pitch_model == NULL)
-            return 0.0;
+            return aerd_model->get_initial_pitch_angle_in_deg();
         else
             return pitch_model->get_pitch_angle_in_deg();
     }
     if(meter_type=="WT GENERATOR WIND SPEED IN PU")
     {
         if(windspeed_model == NULL)
-            return 0.0;
+            return aerd_model->get_wind_speed_in_mps()/aerd_model->get_nominal_wind_speed_in_mps();
         else
             return windspeed_model->get_wind_speed_in_pu();
     }
     if(meter_type=="WT GENERATOR WIND SPEED IN MPS")
     {
         if(windspeed_model == NULL)
-            return 0.0;
+            return aerd_model->get_wind_speed_in_mps();
         else
             return windspeed_model->get_wind_speed_in_mps();
     }

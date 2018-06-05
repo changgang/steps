@@ -15,7 +15,7 @@ void PSSE_IMEXPORTER::load_dynamic_data(string file)
     sstream<<"Loading dynamic data from PSS/E file: "<<file;
     show_information_with_leading_time_stamp(sstream);
 
-    file = string2upper(file);
+    //file = string2upper(file);
     load_dynamic_data_into_ram(file);
     load_all_models();
 
@@ -126,6 +126,13 @@ void PSSE_IMEXPORTER::load_one_model(string data)
 
     if(model_name=="CDC4T") { add_CDC4T_model(data); return;}
     if(model_name=="CDC6T") { add_CDC6T_model(data); return;}
+
+    if(model_name=="WT3G2") { add_WT3G2_model(data); return;}
+    if(model_name=="AERD0") { add_AERD0_model(data); return;}
+    if(model_name=="WT3T0") { add_WT3T0_model(data); return;}
+    if(model_name=="WT3E0") { add_WT3E0_model(data); return;}
+    if(model_name=="WT3P0") { add_WT3P0_model(data); return;}
+    if(model_name=="FILEWIND") { add_FILEWIND_model(data); return;}
 
 
     sstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__;
@@ -325,7 +332,7 @@ void PSSE_IMEXPORTER::add_GENCLS_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid GENCLS model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid GENCLS model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -353,7 +360,7 @@ void PSSE_IMEXPORTER::add_GENROU_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid GENROU model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid GENROU model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -381,7 +388,7 @@ void PSSE_IMEXPORTER::add_GENSAL_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid GENSAL model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid GENSAL model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -409,7 +416,7 @@ void PSSE_IMEXPORTER::add_COMP_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid COMP model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid COMP model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -438,7 +445,7 @@ void PSSE_IMEXPORTER::add_IEE2ST_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid IEE2ST model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid IEE2ST model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -466,7 +473,7 @@ void PSSE_IMEXPORTER::add_SEXS_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid SEXS model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid SEXS model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -494,7 +501,7 @@ void PSSE_IMEXPORTER::add_IEEET1_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid IEEET1 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid IEEET1 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -522,7 +529,7 @@ void PSSE_IMEXPORTER::add_PSASPE1_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid PSASPE1 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid PSASPE1 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -550,7 +557,7 @@ void PSSE_IMEXPORTER::add_PSASPE2_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid PSASPE2 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid PSASPE2 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -578,7 +585,7 @@ void PSSE_IMEXPORTER::add_CSEET1_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid CSEET1 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid CSEET1 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -606,7 +613,7 @@ void PSSE_IMEXPORTER::add_CSEET2_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid CSEET2 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid CSEET2 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -634,7 +641,7 @@ void PSSE_IMEXPORTER::add_PSASPE13_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid PSASPE13 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid PSASPE13 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -662,7 +669,7 @@ void PSSE_IMEXPORTER::add_TGOV1_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid TGOV1 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid TGOV1 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -690,7 +697,7 @@ void PSSE_IMEXPORTER::add_IEEEG1_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid IEEEG1 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid IEEEG1 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -718,7 +725,7 @@ void PSSE_IMEXPORTER::add_IEEEG2_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid IEEEG2 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid IEEEG2 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -746,7 +753,7 @@ void PSSE_IMEXPORTER::add_IEEEG3_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid IEEEG3 model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid IEEEG3 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -775,7 +782,7 @@ void PSSE_IMEXPORTER::add_IEESGO_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid IEESGO model is built, but will not be set for "<<generator->get_device_name();
+            sstream<<"Warning. Invalid IEESGO model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -962,7 +969,7 @@ void PSSE_IMEXPORTER::add_CDC4T_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid CDC4T model is built, but will not be set for "<<hvdc->get_device_name();
+            sstream<<"Warning. Invalid CDC4T model is built, but will not be set for "<<hvdc->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
@@ -992,11 +999,167 @@ void PSSE_IMEXPORTER::add_CDC6T_model(string data)
         else
         {
             ostringstream sstream;
-            sstream<<"Waring. Invalid CDC6T model is built, but will not be set for "<<hvdc->get_device_name();
+            sstream<<"Warning. Invalid CDC6T model is built, but will not be set for "<<hvdc->get_device_name();
             show_information_with_leading_time_stamp(sstream);
         }
     }
+}
 
+void PSSE_IMEXPORTER::add_WT3G2_model(string data)
+{
+    if(get_dynamic_model_name(data) != "WT3G2")
+        return;
+
+    vector<string> dyrdata = split_string(data,",");
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+
+    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    if(gen != NULL)
+    {
+        WT3G2 model;
+        model.set_power_system_database(psdb);
+        bool successful = model.setup_model_with_psse_string(data);
+        if(successful)
+            gen->set_model(&model);
+        else
+        {
+            ostringstream sstream;
+            sstream<<"Warning. Invalid WT3G2 model is built, but will not be set for "<<gen->get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+        }
+    }
+}
+
+void PSSE_IMEXPORTER::add_AERD0_model(string data)
+{
+    if(get_dynamic_model_name(data) != "AERD0")
+        return;
+
+    vector<string> dyrdata = split_string(data,",");
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+
+    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    if(gen != NULL)
+    {
+        AERD0 model;
+        bool successful = model.setup_model_with_psse_string(data);
+        if(successful)
+            gen->set_model(&model);
+        else
+        {
+            ostringstream sstream;
+            sstream<<"Warning. Invalid AERD0 model is built, but will not be set for "<<gen->get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+        }
+    }
+}
+
+void PSSE_IMEXPORTER::add_WT3T0_model(string data)
+{
+    if(get_dynamic_model_name(data) != "WT3T0")
+        return;
+
+    vector<string> dyrdata = split_string(data,",");
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+
+    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    if(gen != NULL)
+    {
+        WT3T0 model;
+        bool successful = model.setup_model_with_psse_string(data);
+        if(successful)
+            gen->set_model(&model);
+        else
+        {
+            ostringstream sstream;
+            sstream<<"Warning. Invalid WT3T0 model is built, but will not be set for "<<gen->get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+        }
+    }
+}
+
+void PSSE_IMEXPORTER::add_WT3E0_model(string data)
+{
+    if(get_dynamic_model_name(data) != "WT3E0")
+        return;
+
+    vector<string> dyrdata = split_string(data,",");
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+
+    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    if(gen != NULL)
+    {
+        WT3E0 model;
+        bool successful = model.setup_model_with_psse_string(data);
+        if(successful)
+            gen->set_model(&model);
+        else
+        {
+            ostringstream sstream;
+            sstream<<"Warning. Invalid WT3E0 model is built, but will not be set for "<<gen->get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+        }
+    }
+}
+
+void PSSE_IMEXPORTER::add_WT3P0_model(string data)
+{
+    if(get_dynamic_model_name(data) != "WT3P0")
+        return;
+
+    vector<string> dyrdata = split_string(data,",");
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+
+    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    if(gen != NULL)
+    {
+        WT3P0 model;
+        bool successful = model.setup_model_with_psse_string(data);
+        if(successful)
+            gen->set_model(&model);
+        else
+        {
+            ostringstream sstream;
+            sstream<<"Warning. Invalid WT3P0 model is built, but will not be set for "<<gen->get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+        }
+    }
+}
+
+void PSSE_IMEXPORTER::add_FILEWIND_model(string data)
+{
+    if(get_dynamic_model_name(data) != "FILEWIND")
+        return;
+
+    vector<string> dyrdata = split_string(data,",");
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+
+    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    if(gen != NULL)
+    {
+        FILEWIND model;
+        bool successful = model.setup_model_with_psse_string(data);
+        if(successful)
+            gen->set_model(&model);
+        else
+        {
+            ostringstream sstream;
+            sstream<<"Warning. Invalid FILEWIND model is built, but will not be set for "<<gen->get_device_name();
+            show_information_with_leading_time_stamp(sstream);
+        }
+    }
 }
 
 

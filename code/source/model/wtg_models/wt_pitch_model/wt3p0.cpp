@@ -209,13 +209,13 @@ bool WT3P0::setup_model_with_psse_string(string data)
     tp = get_double_data(dyrdata[i],"0.0"); i++;
     kps = get_double_data(dyrdata[i],"0.0"); i++;
     kis = get_double_data(dyrdata[i],"0.0"); i++;
-    fup = get_double_data(dyrdata[i],"1.0"); i++;
     flow = get_double_data(dyrdata[i],"1.0"); i++;
+    fup = get_double_data(dyrdata[i],"1.0"); i++;
     kpf = get_double_data(dyrdata[i],"0.0"); i++;
     kif = get_double_data(dyrdata[i],"0.0"); i++;
-    pmax = get_double_data(dyrdata[i],"0.0"); i++;
+    rpmax = get_double_data(dyrdata[i],"0.0"); i++;
     pmin = get_double_data(dyrdata[i],"0.0"); i++;
-    rpmax = get_double_data(dyrdata[i],"0.0");
+    pmax = get_double_data(dyrdata[i],"0.0");
 
     set_Tp_in_s(tp);
     set_Kp_speed_controller(kps);
@@ -224,9 +224,9 @@ bool WT3P0::setup_model_with_psse_string(string data)
     set_frequency_lower_deadband_in_pu(flow);
     set_Kp_frequency_controller(kpf);
     set_Ki_frequency_controller(kif);
-    set_Pitchmax_in_deg(pmax);
-    set_Pitchmin_in_deg(pmin);
     set_ratePitchmax_in_deg_per_s(rpmax);
+    set_Pitchmin_in_deg(pmin);
+    set_Pitchmax_in_deg(pmax);
     is_successful = true;
 
     return is_successful;
@@ -355,13 +355,13 @@ string WT3P0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<tp<<", "
       <<setw(8)<<setprecision(6)<<kps<<", "
       <<setw(8)<<setprecision(6)<<kis<<", "
-      <<setw(8)<<setprecision(6)<<fup<<", "
       <<setw(8)<<setprecision(6)<<flow<<", "
+      <<setw(8)<<setprecision(6)<<fup<<", "
       <<setw(8)<<setprecision(6)<<kpf<<", "
       <<setw(8)<<setprecision(6)<<kif<<", "
-      <<setw(8)<<setprecision(6)<<pmax<<", "
+      <<setw(8)<<setprecision(6)<<rpmax<<", "
       <<setw(8)<<setprecision(6)<<pmin<<", "
-      <<setw(8)<<setprecision(6)<<rpmax<<" /";
+      <<setw(8)<<setprecision(6)<<pmax<<" /";
     return sstream.str();
 }
 
