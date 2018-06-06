@@ -33,6 +33,11 @@ double PROPORTIONAL_BLOCK::get_K() const
 void PROPORTIONAL_BLOCK::initialize()
 {
     double k = get_K();
+    if(fabs(k)<FLOAT_EPSILON)
+    {
+        set_input(0.0);
+        return;
+    }
 
     double y = get_output();
     double x;
@@ -82,7 +87,7 @@ void PROPORTIONAL_BLOCK::run(DYNAMIC_MODE mode)
 void PROPORTIONAL_BLOCK::integrate()
 {
     double k = get_K();
-    if(k==0.0)
+    if(fabs(k)<FLOAT_EPSILON)
         return;
 
     LIMITER_TYPE limiter = get_limiter_type();
@@ -109,7 +114,7 @@ void PROPORTIONAL_BLOCK::integrate()
 void PROPORTIONAL_BLOCK::update()
 {
     double k = get_K();
-    if(k==0.0)
+    if(fabs(k)<FLOAT_EPSILON)
         return;
 
     LIMITER_TYPE limiter = get_limiter_type();

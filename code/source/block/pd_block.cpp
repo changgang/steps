@@ -18,13 +18,13 @@ PD_BLOCK::~PD_BLOCK()
 
 void PD_BLOCK::set_Kp(double K)
 {
-    if(K==0)
+    /*if(K==0)
     {
         ostringstream sstream;
         sstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PD_BLOCK.";
         show_information_with_leading_time_stamp(sstream);
         return;
-    }
+    }*/
     p_block.set_K(K);
 }
 

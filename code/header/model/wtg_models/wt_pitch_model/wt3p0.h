@@ -4,6 +4,7 @@
 #include "header/model/wtg_models/wt_pitch_model/wt_pitch_model.h"
 #include "header/block/pi_block.h"
 #include "header/block/integral_block.h"
+#include "header/block/first_order_block.h"
 
 class WT3P0 : public WT_PITCH_MODEL
 {
@@ -27,6 +28,7 @@ class WT3P0 : public WT_PITCH_MODEL
         void set_Pitchmax_in_deg(double P);
         void set_Pitchmin_in_deg(double P);
         void set_ratePitchmax_in_deg_per_s(double rP);
+        void set_Tspeed_in_s(double T);
 
         double get_Tp_in_s() const;
         double get_Kp_speed_controller() const;
@@ -36,6 +38,7 @@ class WT3P0 : public WT_PITCH_MODEL
         double get_Pitchmax_in_deg() const;
         double get_Pitchmin_in_deg() const;
         double get_ratePitchmax_in_deg_per_s() const;
+        double get_Tspeed_in_s() const;
     public:
         virtual bool setup_model_with_steps_string(string data);
         virtual bool setup_model_with_psse_string(string data);
@@ -60,6 +63,7 @@ class WT3P0 : public WT_PITCH_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const WT3P0& model);
+        FIRST_ORDER_BLOCK speed_reference_sensor;
         PI_BLOCK speed_controller;
         PI_BLOCK frequency_controller;
         INTEGRAL_BLOCK pitch_integrator;

@@ -20,13 +20,13 @@ PI_BLOCK::~PI_BLOCK()
 
 void PI_BLOCK::set_Kp(double K)
 {
-    if(K==0)
+    /*if(K==0)
     {
         ostringstream sstream;
         sstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PI_BLOCK.";
         show_information_with_leading_time_stamp(sstream);
         return;
-    }
+    }*/
     pid_block.set_Kp(K);
 }
 
@@ -37,13 +37,13 @@ double PI_BLOCK::get_Kp() const
 
 void PI_BLOCK::set_Ki(double K)
 {
-    if(K==0)
+    /*if(K==0)
     {
         ostringstream sstream;
         sstream<<"Error. Zero amplifier Ki of INTEGRAL_BLOCK part is not allowed for PI_BLOCK.";
         show_information_with_leading_time_stamp(sstream);
         return;
-    }
+    }*/
     pid_block.set_Ki(K);
 }
 

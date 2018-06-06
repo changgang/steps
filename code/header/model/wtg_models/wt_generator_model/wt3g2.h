@@ -19,6 +19,7 @@ class WT3G2 : public WT_GENERATOR_MODEL
         void set_KPLL(double K);
         void set_KIPLL(double K);
         void set_PLLmax(double pmax);
+        void set_PLLmin(double pmax);
         void set_LVPL(const LVPL& lvpl);
         void set_HVRC_voltage_in_pu(double v);
         void set_HVRC_current_in_pu(double i);
@@ -30,6 +31,7 @@ class WT3G2 : public WT_GENERATOR_MODEL
         double get_KPLL() const;
         double get_KIPLL() const;
         double get_PLLmax() const;
+        double get_PLLmin() const;
         LVPL get_LVPL() const;
         double get_HVRC_voltage_in_pu() const;
         double get_HVRC_current_in_pu() const;
@@ -92,16 +94,16 @@ class WT3G2 : public WT_GENERATOR_MODEL
     private:
         void copy_from_const_model(const WT3G2& model);
 
-        double KPLL, KIPLL, PLLmax;
-        LVPL lvpl;
+        INTEGRAL_BLOCK active_current_commander;
         double LVPL_active_power_change_rate;
+        FIRST_ORDER_BLOCK LVPL_voltage_sensor;
+        LVPL lvpl;
+
+        FIRST_ORDER_BLOCK reactive_voltage_commander;
         double HVRCR_voltage, HVRCR_current;
 
-        INTEGRAL_BLOCK active_current_commander;
-        FIRST_ORDER_BLOCK reactive_voltage_commander;
+        double KPLL;
         INTEGRAL_BLOCK PLL_frequency_integrator, PLL_angle_integrator;
-        FIRST_ORDER_BLOCK LVPL_voltage_sensor;
-
 };
 
 #endif // GENERATOR_MODEL_H

@@ -116,6 +116,9 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             }
             gen->initialize();
 
+            if(wind!=NULL)
+                wind->initialize();
+
             if(aero==NULL)
             {
                 sstream<<"Error. No WT_AERO_DYNAMIC_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
@@ -138,9 +141,6 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
 
             if(pitch!=NULL)
                 pitch->initialize();
-
-            if(wind!=NULL)
-                wind->initialize();
 
             break;
         }

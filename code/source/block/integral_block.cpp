@@ -31,19 +31,22 @@ void INTEGRAL_BLOCK::initialize()
     ostringstream sstream;
 
     double t = get_T_in_s();
-    if(t==0.0)
+    double y = get_output();
+
+    if(fabs(t)<FLOAT_EPSILON or fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)
     {
-        //os<< "Initialization Error. T should not be zero for INTEGRAL_BLOCK.");
-        //show_information_with_leading_time_stamp(sstream);
+        set_state(y);
+        set_store(0.0);
+        set_dstate(0.0);
+        set_input(0.0);
         return;
     }
+
     LIMITER_TYPE limiter = get_limiter_type();
     double vmax = get_upper_limit();
     double vmin = get_lower_limit();
 
     double h = get_dynamic_simulation_time_step_in_s();
-
-    double y = get_output();
 
     double s = y;
     double ds = 0.0;
@@ -74,12 +77,8 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 {
     ostringstream sstream;
     double t = get_T_in_s();
-    if(t==0.0)
-    {
-        //os<< "Run Error. T should not be zero for INTEGRAL_BLOCK.");
-        //show_information_with_leading_time_stamp(sstream);
+    if(fabs(t)<FLOAT_EPSILON or fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)
         return;
-    }
 
     if(mode==INTEGRATE_MODE)
         integrate();
@@ -92,12 +91,9 @@ void INTEGRAL_BLOCK::integrate()
     double h = get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();
-    if(t==0.0)
-    {
-        //os<< "Run Error. T should not be zero for INTEGRAL_BLOCK.");
-        //show_information_with_leading_time_stamp(sstream);
+    if(fabs(t)<FLOAT_EPSILON or fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)
         return;
-    }
+
     LIMITER_TYPE limiter = get_limiter_type();
     double vmax = get_upper_limit();
     double vmin = get_lower_limit();
@@ -147,6 +143,9 @@ void INTEGRAL_BLOCK::update()
     double h = get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();
+    if(fabs(t)<FLOAT_EPSILON or fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)
+        return;
+
     LIMITER_TYPE limiter = get_limiter_type();
     double vmax = get_upper_limit();
     double vmin = get_lower_limit();

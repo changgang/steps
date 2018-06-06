@@ -594,7 +594,7 @@ void WT3E0::initialize()
     }
     power_order_integrator.initialize();
 
-    double torque =  porder/(1.0+speed);
+    double torque =  porder/speed;
     torque_PI_regulator.set_output(torque);
     torque_PI_regulator.initialize();
 
@@ -716,16 +716,25 @@ void WT3E0::initialize()
     voltage_sensor.initialize();
 
     set_voltage_reference_in_pu(vref);
-    osstream<<"After initialized: voltage reference is "<<setw(20)<<setprecision(19)<<fixed<<vref<<endl
-            <<"                 : voltage reference is "<<setw(20)<<setprecision(19)<<fixed<<get_voltage_reference_in_pu()<<endl
-            <<"                 : sensor output     is "<<setw(20)<<setprecision(19)<<fixed<<voltage_sensor.get_output()<<endl;
-    osstream<<"                 voltage regulator integrator input = "<<voltage_regulator_first_order_block.get_input()<<", output = "<<voltage_regulator_integrator.get_output()<<endl;
-    osstream<<"                 voltage regulator first order block input = "<<voltage_regulator_first_order_block.get_input()<<", output = "<<voltage_regulator_first_order_block.get_output()<<endl;
-    osstream<<"                 voltage_regulator_filter input = "<<voltage_regulator_filter.get_input()<<", output = "<<voltage_regulator_filter.get_output()<<endl;
     //show_information_with_leading_time_stamp(osstream);
 
     set_flag_model_initialized_as_true();
-    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl;
+    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            <<"(1) voltage sensor state: "<<voltage_sensor.get_state()<<endl
+            <<"(2) voltage reference: "<< get_voltage_reference_in_pu()<<endl
+            <<"(3) voltage regulator integrator state: "<<voltage_regulator_integrator.get_state()<<endl
+            <<"(4) voltage regulator first order block state: "<<voltage_regulator_first_order_block.get_state()<<endl
+            <<"(5) voltage regulator filter state: "<<voltage_regulator_filter.get_state()<<endl
+            <<"(6) active power sensor state: "<<active_power_sensor.get_state()<<endl
+            <<"(7) reactive power error integrator state: "<<Q_error_integrator.get_state()<<endl
+            <<"(8) voltage error integrator state: "<<V_error_integrator.get_state()<<endl
+            <<"(9) reference speed sensor state: "<<wind_turbine_speed_reference_sensor.get_state()<<endl
+            <<"(10) torque PI regulator state: "<<torque_PI_regulator.get_state()<<endl
+            <<"(11) virtual inertia regulator state: "<<virtual_inertia_emulator.get_state()<<endl
+            <<"(12) frequency droop regulator state: "<<frequency_droop_controller.get_state()<<endl
+            <<"(13) reactive voltage command: "<<get_reactive_voltage_command_in_pu_based_on_mbase()<<endl
+            <<"(14) active current command: "<<get_active_current_command_in_pu_based_on_mbase()<<endl
+            <<"(15) reactive current command: "<<get_reactive_current_command_in_pu_based_on_mbase();
     show_information_with_leading_time_stamp(osstream);
 }
 
@@ -772,7 +781,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
     frequency_droop_controller.run(mode);
     osstream<<"frequency_droop_controller input = "<<input<<", output = "<<frequency_droop_controller.get_output()<<endl;
 
-    input = torque_PI_regulator.get_output()*(1.0+speed)
+    input = torque_PI_regulator.get_output()*speed
             +virtual_inertia_emulator.get_output()
             +frequency_droop_controller.get_output()
             -power_order_integrator.get_output();

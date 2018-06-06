@@ -23,12 +23,13 @@ void WT3G2_TEST::setup()
 
     WT3G2 model;
     wt_gen->set_number_of_lumped_wt_generators(50);
+    wt_gen->set_rated_power_per_wt_generator_in_MW(2.0);
     model.set_converter_activer_current_command_T_in_s(0.2);
     model.set_converter_reactiver_voltage_command_T_in_s(0.2);
     model.set_KPLL(20.0);
     model.set_KIPLL(10.0);
     model.set_PLLmax(0.1);
-    wt_gen->set_rated_power_per_wt_generator_in_MW(2.0);
+    model.set_PLLmin(-0.1);
     LVPL lvpl;
     lvpl.set_low_voltage_in_pu(0.5);
     lvpl.set_high_voltage_in_pu(0.8);
@@ -72,6 +73,7 @@ void WT3G2_TEST::test_set_get_parameters()
     model->set_KPLL(20.0);
     model->set_KIPLL(10.0);
     model->set_PLLmax(0.1);
+    model->set_PLLmin(-0.1);
     wt_gen->set_rated_power_per_wt_generator_in_MW(2.0);
     LVPL lvpl;
     lvpl.set_low_voltage_in_pu(0.5);
@@ -89,6 +91,7 @@ void WT3G2_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_KPLL()-20.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_KIPLL()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_PLLmax()-0.1)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_PLLmin()+0.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_rated_power_per_wt_generator_in_MW()-2.0)<FLOAT_EPSILON);
     LVPL lvpl2 = model->get_LVPL();
     TEST_ASSERT(fabs(lvpl2.get_low_voltage_in_pu()-0.5)<FLOAT_EPSILON);

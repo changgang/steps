@@ -57,15 +57,18 @@ void WT3G2::copy_from_const_model(const WT3G2& model)
     clear();
     set_current_source_flag(model.get_current_source_flag());
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
+    set_LVPL_max_rate_of_active_current_change(model.get_LVPL_max_rate_of_active_current_change());
+    set_LVPL_voltage_sensor_T_in_s(model.get_LVPL_voltage_sensor_T_in_s());
+    set_LVPL(model.get_LVPL());
+
     set_converter_reactiver_voltage_command_T_in_s(model.get_converter_reactiver_voltage_command_T_in_s());
+    set_HVRC_voltage_in_pu(model.get_HVRC_voltage_in_pu());
+    set_HVRC_current_in_pu(model.get_HVRC_current_in_pu());
+
     set_KPLL(model.get_KPLL());
     set_KIPLL(model.get_KIPLL());
     set_PLLmax(model.get_PLLmax());
-    set_LVPL(model.get_LVPL());
-    set_HVRC_voltage_in_pu(model.get_HVRC_voltage_in_pu());
-    set_HVRC_current_in_pu(model.get_HVRC_current_in_pu());
-    set_LVPL_max_rate_of_active_current_change(model.get_LVPL_max_rate_of_active_current_change());
-    set_LVPL_voltage_sensor_T_in_s(model.get_LVPL_voltage_sensor_T_in_s());
+    set_PLLmin(model.get_PLLmin());
 }
 
 WT3G2::WT3G2(const WT3G2& model):WT_GENERATOR_MODEL()
@@ -100,12 +103,17 @@ void WT3G2::set_KPLL(double K)
 
 void WT3G2::set_KIPLL(double K)
 {
-    KIPLL = K;
+    PLL_frequency_integrator.set_T_in_s(1.0/K);
 }
 
 void WT3G2::set_PLLmax(double pmax)
 {
-    PLLmax = pmax;
+    PLL_frequency_integrator.set_upper_limit(pmax);
+}
+
+void WT3G2::set_PLLmin(double pmin)
+{
+    PLL_frequency_integrator.set_lower_limit(pmin);
 }
 
 void WT3G2::set_LVPL(const LVPL& lvpl)
@@ -150,12 +158,17 @@ double WT3G2::get_KPLL() const
 
 double WT3G2::get_KIPLL() const
 {
-    return KIPLL;
+    return 1.0/PLL_frequency_integrator.get_T_in_s();
 }
 
 double WT3G2::get_PLLmax() const
 {
-    return PLLmax;
+    return PLL_frequency_integrator.get_upper_limit();
+}
+
+double WT3G2::get_PLLmin() const
+{
+    return PLL_frequency_integrator.get_lower_limit();
 }
 
 LVPL WT3G2::get_LVPL() const
@@ -228,7 +241,7 @@ bool WT3G2::setup_model_with_psse_string(string data)
     bool is_successful = false;
     vector<string> dyrdata = split_string(data,",");
 
-    if(dyrdata.size()<17)
+    if(dyrdata.size()<18)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
@@ -238,7 +251,7 @@ bool WT3G2::setup_model_with_psse_string(string data)
     size_t ibus;
     string id;
     size_t n_lumped_turbine;
-    double t_EQcmd, t_IPcmd, kpll, kipll, pllmax, prate, lvpl_v1, lvpl_v2, lvpl_g,
+    double t_EQcmd, t_IPcmd, kpll, kipll, pllmax, pllmin, prate, lvpl_v1, lvpl_v2, lvpl_g,
            hvrc_v, hvrc_i, lvpl_rate, t_lvpl;
 
     ibus = size_t(get_integer_data(dyrdata[0],"0"));
@@ -246,19 +259,20 @@ bool WT3G2::setup_model_with_psse_string(string data)
 
     size_t i=3;
     n_lumped_turbine = size_t(get_integer_data(dyrdata[i],"1")); i++;
-    t_EQcmd = get_double_data(dyrdata[i],"0.0"); i++;
-    t_IPcmd = get_double_data(dyrdata[i],"0.0"); i++;
-    kpll = get_double_data(dyrdata[i],"0.0"); i++;
-    kipll = get_double_data(dyrdata[i],"0.0"); i++;
-    pllmax = get_double_data(dyrdata[i],"0.0"); i++;
     prate = get_double_data(dyrdata[i],"0.0"); i++;
+    t_IPcmd = get_double_data(dyrdata[i],"0.0"); i++;
+    lvpl_rate = get_double_data(dyrdata[i],"0.0"); i++;
+    t_lvpl = get_double_data(dyrdata[i],"0.0"); i++;
     lvpl_v1 = get_double_data(dyrdata[i],"0.0"); i++;
     lvpl_v2 = get_double_data(dyrdata[i],"0.0"); i++;
     lvpl_g = get_double_data(dyrdata[i],"0.0"); i++;
+    t_EQcmd = get_double_data(dyrdata[i],"0.0"); i++;
     hvrc_v = get_double_data(dyrdata[i],"0.0"); i++;
     hvrc_i = get_double_data(dyrdata[i],"0.0"); i++;
-    lvpl_rate = get_double_data(dyrdata[i],"0.0"); i++;
-    t_lvpl = get_double_data(dyrdata[i],"0.0");
+    kpll = get_double_data(dyrdata[i],"0.0"); i++;
+    kipll = get_double_data(dyrdata[i],"0.0"); i++;
+    pllmax = get_double_data(dyrdata[i],"0.0"); i++;
+    pllmin = get_double_data(dyrdata[i],"0.0");
 
     DEVICE_ID did = get_wt_generator_device_id(ibus, id);
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -279,21 +293,24 @@ bool WT3G2::setup_model_with_psse_string(string data)
     }
 
     gen->set_number_of_lumped_wt_generators(n_lumped_turbine);
-    set_converter_activer_current_command_T_in_s(t_IPcmd);
-    set_converter_reactiver_voltage_command_T_in_s(t_EQcmd);
-    set_KPLL(kpll);
-    set_KIPLL(kipll);
-    set_PLLmax(pllmax);
     gen->set_rated_power_per_wt_generator_in_MW(prate);
+
+    set_converter_activer_current_command_T_in_s(t_IPcmd);
+    set_LVPL_max_rate_of_active_current_change(lvpl_rate);
+    set_LVPL_voltage_sensor_T_in_s(t_lvpl);
     LVPL lvpl;
     lvpl.set_low_voltage_in_pu(lvpl_v1);
     lvpl.set_high_voltage_in_pu(lvpl_v2);
     lvpl.set_gain_at_high_voltage(lvpl_g);
     set_LVPL(lvpl);
+
+    set_converter_reactiver_voltage_command_T_in_s(t_EQcmd);
     set_HVRC_voltage_in_pu(hvrc_v);
     set_HVRC_current_in_pu(hvrc_i);
-    set_LVPL_max_rate_of_active_current_change(lvpl_rate);
-    set_LVPL_voltage_sensor_T_in_s(t_lvpl);
+    set_KPLL(kpll);
+    set_KIPLL(kipll);
+    set_PLLmax(pllmax);
+    set_PLLmin(pllmin);
 
     is_successful = true;
 
@@ -387,16 +404,17 @@ void WT3G2::initialize()
     set_flag_model_initialized_as_true();
 
     osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-            <<"Ip0 = "<<get_initial_active_current_command_in_pu_based_on_mbase()
-            <<", Iq0 = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
-            <<"active_current_commander block state: "<<active_current_commander.get_state()<<endl
-            <<"reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-            <<"PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
-            <<"PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
-            <<"LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
-            <<"active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
-            <<"reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
-            <<"terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu"<<endl;
+            <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
+            <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
+            <<"(3) States of blocks"<<endl
+            <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
+            <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
+            <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
+            <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
+            <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
+            <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
+            <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
+            <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
     show_information_with_leading_time_stamp(osstream);
 }
 
@@ -605,19 +623,20 @@ string WT3G2::get_standard_model_string() const
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(4)<<get_number_of_lumped_wt_generators()<<", "
-      <<setw(8)<<setprecision(6)<<get_converter_reactiver_voltage_command_T_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_converter_activer_current_command_T_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_KPLL()<<", "
-      <<setw(8)<<setprecision(6)<<get_KIPLL()<<", "
-      <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
       <<setw(8)<<setprecision(6)<<get_rated_power_per_wt_generator_in_MW()<<", "
+      <<setw(8)<<setprecision(6)<<get_converter_activer_current_command_T_in_s()<<", "
+      <<setw(8)<<setprecision(6)<<get_LVPL_max_rate_of_active_current_change()<<", "
+      <<setw(8)<<setprecision(6)<<get_LVPL_voltage_sensor_T_in_s()<<", "
       <<setw(8)<<setprecision(6)<<lvpl.get_low_voltage_in_pu()<<", "
       <<setw(8)<<setprecision(6)<<lvpl.get_high_voltage_in_pu()<<", "
       <<setw(8)<<setprecision(6)<<lvpl.get_gain_at_hig_voltage()<<", "
+      <<setw(8)<<setprecision(6)<<get_converter_reactiver_voltage_command_T_in_s()<<", "
       <<setw(8)<<setprecision(6)<<get_HVRC_voltage_in_pu()<<", "
       <<setw(8)<<setprecision(6)<<get_HVRC_current_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_LVPL_max_rate_of_active_current_change()<<", "
-      <<setw(8)<<setprecision(6)<<get_LVPL_voltage_sensor_T_in_s()<<"  /";
+      <<setw(8)<<setprecision(6)<<get_KPLL()<<", "
+      <<setw(8)<<setprecision(6)<<get_KIPLL()<<", "
+      <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
+      <<setw(8)<<setprecision(6)<<get_PLLmin()<<" /";
 
     return sstream.str();
 }

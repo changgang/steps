@@ -133,7 +133,10 @@ double AERD0::get_Cp(double lambda, double pitch_deg) const
     double C5 = get_C5();
     double C6 = get_C6();
 
-    return C1*(C2/L-C3*pitch_angle-C4)*exp(C5/L)+C6*lambda;
+    double cp = C1*(C2/L-C3*pitch_angle-C4)*exp(C5/L)+C6*lambda;
+    if(cp<0.0)
+        cp = 0.0;
+    return cp;
 }
 
 double AERD0::get_Cpmax(double pitch_deg) const
@@ -335,10 +338,10 @@ void AERD0::initialize()
     set_flag_model_initialized_as_true();
 
     osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-            <<"Initial turbine speed is "<<get_initial_turbine_speed_in_pu()<<" pu"<<endl
-            <<"Initial pitch angle is "<<get_initial_pitch_angle_in_deg()<<" deg"<<endl
-            <<"Turbine radius is "<<get_turbine_blade_radius_in_m()<<" m"<<endl
-            <<"Gear turn ratio is "<<get_generator_to_turbine_gear_ratio();
+            <<"(1) Turbine radius is "<<get_turbine_blade_radius_in_m()<<" m"<<endl
+            <<"(2) Gear turn ratio is "<<get_generator_to_turbine_gear_ratio()<<endl
+            <<"(3) Initial turbine speed is "<<get_initial_turbine_speed_in_pu()<<" pu"<<endl
+            <<"(4) Initial pitch angle is "<<get_initial_pitch_angle_in_deg()<<" deg";
     show_information_with_leading_time_stamp(osstream);
 }
 
@@ -439,7 +442,8 @@ void AERD0::initialize_pitch_angle_and_turbine_speed()
     WT_GENERATOR* genptr = get_wt_generator_pointer();
     WT_GENERATOR_MODEL* wtgenmodel = genptr->get_wt_generator_model();
     double pelec = wtgenmodel->get_terminal_active_power_in_MW()/get_number_of_lumped_wt_generators();
-    osstream<<"Maximum available power per WT generator is "<<pmax<<" MW, and set generation is "<<pelec<<" MW"<<endl;
+    osstream<<"Maximum available power per WT generator is "<<pmax<<" MW, and set generation is "<<pelec<<" MW"<<endl
+            <<"Current wind speed is "<<get_wind_speed_in_mps()<<" m/s";
     show_information_with_leading_time_stamp(osstream);
 
     set_initial_pitch_angle_in_deg(0.0);
@@ -628,8 +632,10 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
     double wn = get_nominal_turbine_speed_in_rad_per_s();
     double w = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
 
-    osstream<<"At time "<<STEPS::TIME<<", turbine speed reference is :"<<w<<", "<<w/wn;
-    show_information_with_leading_time_stamp(osstream);
+    double lambda = get_lambda_at_Cpmax(get_pitch_angle_in_deg());
+    double wopt = lambda*get_wind_speed_in_mps()/get_turbine_blade_radius_in_m();
+    //osstream<<"At time "<<STEPS::TIME<<", turbine speed reference is :"<<w<<" rad/s, "<<w/wn<<" pu, wopt = "<<wopt<<" rad/s, "<<wopt/wn<<" pu";
+    //show_information_with_leading_time_stamp(osstream);
 
     double wmax = get_max_steady_state_turbine_speed_in_pu()*wn;
     double wmin = get_min_steady_state_turbine_speed_in_pu()*wn;
@@ -691,12 +697,6 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s_without_speed_limit() con
                <<"MPPT speed will be returned as speed reference: "<<w_mppt<<" rad/s.";
         show_information_with_leading_time_stamp(osstream);
 
-        if(w_mppt>get_max_steady_state_turbine_speed_in_pu()*wn)
-            return get_max_steady_state_turbine_speed_in_pu()*wn;
-
-        if(w_mppt<get_min_steady_state_turbine_speed_in_pu()*wn)
-            return get_min_steady_state_turbine_speed_in_pu()*wn;
-
         return w_mppt;
     }
 
@@ -752,12 +752,13 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s_without_speed_limit() con
         if(iter_count>iter_max)
         {
             w = wnew;
-            osstream<<"Warning. Failed to get reference wt turbine speed in "<<iter_max<<" iterations."<<endl
-                   <<"Current electrical power generation = "<<pmech*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW"<<endl
-                   <<"Current wind speed = "<<vwind<<" m, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
+            /*osstream<<"Warning. Failed to get reference wt turbine speed in "<<iter_max<<" iterations."<<endl
+                   <<"Current electrical power generation = "<<pmech*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW at 0.0 pitch ange"<<endl
+                   <<"Maximum available wind power = "<<get_total_wind_power_per_wt_generator_in_MW(vwind)*cpmax*n<<" MW at current pitch ange"<<endl
+                   <<"Current wind speed = "<<vwind<<" m/s, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
                    <<"Reference turbine speed is returned as "<<w<<" rad/s."<<endl
                    <<"Check "<<get_model_name()<<" model of "<<get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            show_information_with_leading_time_stamp(osstream);*/
             break;
         }
     }

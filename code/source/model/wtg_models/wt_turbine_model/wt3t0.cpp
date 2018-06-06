@@ -143,9 +143,9 @@ bool WT3T0::setup_model_with_psse_string(string data)
 
     set_Hturbine_in_s(ht);
     set_Hgenerator_in_s(hg);
-    set_damping_in_pu(damp);
     set_Kshaft_in_pu(kshaft);
     set_Dshaft_in_pu(dshaft);
+    set_damping_in_pu(damp);
 
     is_successful = true;
 
@@ -210,7 +210,11 @@ void WT3T0::initialize()
     set_flag_model_initialized_as_true();
 
     ostringstream osstream;
-    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized.";
+    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            <<"(1) Turbine speed is "<<get_turbine_speed_in_pu()<<" pu"<<endl
+            <<"(2) Generator speed is "<<get_generator_speed_in_pu()<<" pu"<<endl
+            <<"(3) Generator rotor angle is "<<get_rotor_angle_in_deg()<<" deg"<<endl
+            <<"(4) Shaft block state is "<<shaft_twist_block.get_state();
     show_information_with_leading_time_stamp(osstream);
 }
 

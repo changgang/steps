@@ -19,13 +19,13 @@ PID_BLOCK::~PID_BLOCK()
 
 void PID_BLOCK::set_Kp(double K)
 {
-    if(K==0)
+    /*if(K==0)
     {
         ostringstream sstream;
         sstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PID_BLOCK.";
         show_information_with_leading_time_stamp(sstream);
         return;
-    }
+    }*/
     p_block.set_K(K);
 }
 
@@ -36,19 +36,25 @@ double PID_BLOCK::get_Kp() const
 
 void PID_BLOCK::set_Ki(double K)
 {
-    if(K==0)
+    /*if(K==0)
     {
         ostringstream sstream;
         sstream<<"Error. Zero amplifier Ki of INTEGRAL_BLOCK part is not allowed for PID_BLOCK.";
         show_information_with_leading_time_stamp(sstream);
         return;
-    }
-    i_block.set_T_in_s(1.0/K);
+    }*/
+    if(K==0.0)
+        i_block.set_T_in_s(INFINITE_THRESHOLD);
+    else
+        i_block.set_T_in_s(1.0/K);
 }
 
 double PID_BLOCK::get_Ki() const
 {
-    return 1.0/i_block.get_T_in_s();
+    if(fabs(i_block.get_T_in_s()-INFINITE_THRESHOLD)<FLOAT_EPSILON)
+        return 0.0;
+    else
+        return 1.0/i_block.get_T_in_s();
 }
 
 void PID_BLOCK::set_Kd(double K)
