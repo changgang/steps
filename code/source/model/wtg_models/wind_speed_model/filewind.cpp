@@ -138,19 +138,19 @@ void FILEWIND::initialize()
 
 void FILEWIND::load_wind_speed_from_file()
 {
-    ostringstream osstream;
+    ostringstream oosstream;
     string file = get_wind_speed_serial_file();
     if(file.size()<1)
     {
-        osstream<<"Initialization error. No file is provided for loading wind speed data. Check model "<<get_model_name()<<" of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        oosstream<<"Initialization error. No file is provided for loading wind speed data. Check model "<<get_model_name()<<" of "<<get_device_name();
+        show_information_with_leading_time_stamp(oosstream);
         return;
     }
     ifstream fid(file);
     if(not fid.is_open())
     {
-        osstream<<"Initialization error. Fail to load wind speed data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        oosstream<<"Initialization error. Fail to load wind speed data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
+        show_information_with_leading_time_stamp(oosstream);
         return;
     }
 
@@ -341,18 +341,18 @@ void FILEWIND::save()
 
 string FILEWIND::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     WT_GENERATOR* gen = get_wt_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
     string file = get_wind_speed_serial_file();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<"'"<<file<<"'"
       <<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 

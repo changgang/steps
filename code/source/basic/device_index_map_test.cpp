@@ -605,9 +605,9 @@ void DEVICE_INDEX_MAP_TEST::test_index_performance_with_many_buses()
         device_index_map->set_device_index(device_id, i-1);
     }
 
-    ostringstream sstream;
-    sstream<<"now performing indexing";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"now performing indexing";
+    show_information_with_leading_time_stamp(osstream);
     for(size_t i=1; i<=MAX_TRANSFORMERS; ++i)
     {
         terminal = prepare_terminal(i,i+1,i+2);

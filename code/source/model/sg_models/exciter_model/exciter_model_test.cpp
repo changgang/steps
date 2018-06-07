@@ -101,9 +101,9 @@ void EXCITER_MODEL_TEST::test_step_response()
 
 void EXCITER_MODEL_TEST::export_meter_title()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tVOLT\tEFD";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tVOLT\tEFD";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void EXCITER_MODEL_TEST::export_meter_values(double time)
@@ -115,11 +115,11 @@ void EXCITER_MODEL_TEST::export_meter_values(double time)
 
     double voltage = bus->get_voltage_in_pu();
     double efd = model->get_excitation_voltage_in_pu();
-    ostringstream sstream;
-    sstream<<setw(6)<<setprecision(3)<<time<<"\t"
+    ostringstream osstream;
+    osstream<<setw(6)<<setprecision(3)<<time<<"\t"
       <<setw(10)<<setprecision(6)<<voltage<<"\t"
       <<setw(10)<<setprecision(6)<<efd;
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void EXCITER_MODEL_TEST::apply_voltage_drop_of_10_percent()
@@ -132,7 +132,7 @@ void EXCITER_MODEL_TEST::apply_voltage_drop_of_10_percent()
 
 void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     GENERATOR* genptr = get_test_generator();
     genptr->clear_compensator_model();
 
@@ -142,8 +142,8 @@ void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
 
     EXCITER_MODEL* model = get_test_exciter_model();
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);

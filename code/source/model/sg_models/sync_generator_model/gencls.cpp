@@ -309,9 +309,9 @@ void GENCLS::check()
 
 void GENCLS::report()
 {
-    ostringstream sstream;
-    sstream<< get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<< get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void GENCLS::save()
@@ -321,17 +321,17 @@ void GENCLS::save()
 
 string GENCLS::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<get_H_in_s()<<", "
       <<setw(8)<<setprecision(6)<<get_D()<<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t GENCLS::get_variable_index_from_variable_name(string var_name)

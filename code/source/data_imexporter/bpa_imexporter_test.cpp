@@ -77,41 +77,41 @@ void BPA_IMEXPORTER_TEST::test_load_zone_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<ZONE*> zones = db->get_all_zones();
 
-    sstream<<"Zone count: "<<zones.size()<<endl;
+    osstream<<"Zone count: "<<zones.size()<<endl;
     size_t n = zones.size();
     for(size_t i=0; i!=n; ++i)
-        sstream<<zones[i]->get_zone_name()<<", "<<zones[i]->get_zone_number()<<endl;
+        osstream<<zones[i]->get_zone_name()<<", "<<zones[i]->get_zone_number()<<endl;
 
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 void BPA_IMEXPORTER_TEST::test_load_owner_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<OWNER*> owners = db->get_all_owners();
 
-    sstream<<"Owner count: "<<owners.size()<<endl;
+    osstream<<"Owner count: "<<owners.size()<<endl;
     size_t n = owners.size();
     for(size_t i=0; i!=n; ++i)
-        sstream<<owners[i]->get_owner_name()<<", "<<owners[i]->get_owner_number()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+        osstream<<owners[i]->get_owner_name()<<", "<<owners[i]->get_owner_number()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 }
 void BPA_IMEXPORTER_TEST::test_load_bus_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<BUS*> buses = db->get_all_buses();
 
-    sstream<<"Bus count: "<<buses.size()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Bus count: "<<buses.size()<<endl;
+    show_information_with_leading_time_stamp(osstream);
     size_t n = buses.size();
     for(size_t i=0; i!=n; ++i)
         buses[i]->report();
@@ -120,15 +120,15 @@ void BPA_IMEXPORTER_TEST::test_load_area_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<AREA*> areas = db->get_all_areas();
 
-    sstream<<"Area count: "<<areas.size()<<endl;
+    osstream<<"Area count: "<<areas.size()<<endl;
     size_t n = areas.size();
     for(size_t i=0; i!=n; ++i)
-        sstream<<areas[i]->get_area_name()<<", "<<areas[i]->get_area_number()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+        osstream<<areas[i]->get_area_name()<<", "<<areas[i]->get_area_number()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 /*
@@ -191,20 +191,20 @@ void BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<LOAD*> loads = db->get_all_loads();
 
-    sstream<<"Load count: "<<loads.size()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Load count: "<<loads.size()<<endl;
+    show_information_with_leading_time_stamp(osstream);
     size_t n = loads.size();
     for(size_t i=0; i!=n; ++i)
         loads[i]->report();
 
     vector<FIXED_SHUNT*> fshunts = db->get_all_fixed_shunts();
 
-    sstream<<"Fixed shunt count: "<<fshunts.size()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Fixed shunt count: "<<fshunts.size()<<endl;
+    show_information_with_leading_time_stamp(osstream);
     n = fshunts.size();
     for(size_t i=0; i!=n; ++i)
         fshunts[i]->report();
@@ -219,12 +219,12 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<GENERATOR*> generators = db->get_all_generators();
 
-    sstream<<"Generator count: "<<generators.size()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Generator count: "<<generators.size()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     size_t n = generators.size();
     for(size_t i=0; i!=n; ++i)
@@ -291,7 +291,7 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<WT_GENERATOR*> wt_generators = db->get_all_wt_generators();
     size_t n = wt_generators.size();
@@ -339,12 +339,12 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<LINE*> lines = db->get_all_lines();
 
-    sstream<<"Line count: "<<lines.size()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Line count: "<<lines.size()<<endl;
+    show_information_with_leading_time_stamp(osstream);
     size_t n = lines.size();
     for(size_t i=0; i!=n; ++i)
         lines[i]->report();
@@ -413,12 +413,12 @@ void BPA_IMEXPORTER_TEST::test_load_transformer_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<TRANSFORMER*> trans = db->get_all_transformers();
 
-    sstream<<"Transformer count: "<<trans.size()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Transformer count: "<<trans.size()<<endl;
+    show_information_with_leading_time_stamp(osstream);
     size_t n = trans.size();
     for(size_t i=0; i!=n; ++i)
         trans[i]->report();
@@ -428,7 +428,7 @@ void BPA_IMEXPORTER_TEST::test_load_hvdc_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<HVDC*> hvdcs = db->get_all_hvdcs();
     size_t n = hvdcs.size();

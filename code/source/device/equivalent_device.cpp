@@ -8,12 +8,12 @@ using namespace std;
 
 EQUIVALENT_DEVICE::EQUIVALENT_DEVICE(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. EQUIVALENT_DEVICE object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. EQUIVALENT_DEVICE object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -33,13 +33,13 @@ EQUIVALENT_DEVICE::~EQUIVALENT_DEVICE()
 
 void EQUIVALENT_DEVICE::set_equivalent_device_bus(size_t device_bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(device_bus==0)
     {
-        sstream<<"Warning. Zero bus number (0) is not allowed for setting up equivalent device bus."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up equivalent device bus."<<endl
           <<"0 will be set to indicate invalid equivalent device.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->bus = device_bus;
         return;
     }
@@ -52,9 +52,9 @@ void EQUIVALENT_DEVICE::set_equivalent_device_bus(size_t device_bus)
     {
         if(not psdb->is_bus_exist(device_bus))
         {
-            sstream<<"Bus "<<device_bus<<" does not exist for setting up equivalent device."<<endl
+            osstream<<"Bus "<<device_bus<<" does not exist for setting up equivalent device."<<endl
               <<"0 will be set to indicate invalid equivalent device.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             this->bus = 0;
             return;
         }
@@ -297,9 +297,9 @@ void EQUIVALENT_DEVICE::switch_on()
     EQUIVALENT_MODEL* model = get_equivalent_model();
     if(model!=NULL)
     {
-        ostringstream sstream;
-        sstream<<"Equivalent model is found :"<<model->get_model_name();
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Equivalent model is found :"<<model->get_model_name();
+        show_information_with_leading_time_stamp(osstream);
         model->switch_output_to_equivalent_device();
     }
 }
@@ -373,8 +373,8 @@ bool EQUIVALENT_DEVICE::is_in_zone(size_t zone) const
 
 void EQUIVALENT_DEVICE::report() const
 {
-    ostringstream sstream;
-    sstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<endl
+    ostringstream osstream;
+    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<endl
       <<"equivalent voltage source: "<<(get_equivalent_voltage_source_status()==true?"in service":"out of service")<<", "
       <<"V = "<<setw(8)<<setprecision(6)<<fixed<<abs(get_equivalent_voltage_source_voltage_in_pu())<<" pu, "
       <<"Angle = "<<setw(8)<<setprecision(6)<<fixed<<rad2deg(arg(get_equivalent_voltage_source_voltage_in_pu()))<<" deg, "
@@ -383,7 +383,7 @@ void EQUIVALENT_DEVICE::report() const
       <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_power_load_in_MVA()<<"MVA, "
       <<"P+jQ[I part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_current_load_in_MVA()<<"MVA, "
       <<"P+jQ[Z part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_impedance_load_in_MVA()<<"MVA.";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void EQUIVALENT_DEVICE::save() const
@@ -470,9 +470,9 @@ void EQUIVALENT_DEVICE::set_equivalent_model(const EQUIVALENT_MODEL* model)
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append equivalent model of "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append equivalent model of "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 

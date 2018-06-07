@@ -459,9 +459,9 @@ void PSASPE2::check()
 
 void PSASPE2::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void PSASPE2::save()
@@ -471,7 +471,7 @@ void PSASPE2::save()
 
 string PSASPE2::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
@@ -492,7 +492,7 @@ string PSASPE2::get_standard_model_string() const
     double Kit = get_Kit();
     double Ke = get_Ke();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<KR<<", "
@@ -511,7 +511,7 @@ string PSASPE2::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<Kpt<<", "
       <<setw(8)<<setprecision(6)<<Kit<<", "
       <<setw(8)<<setprecision(6)<<Ke<<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 

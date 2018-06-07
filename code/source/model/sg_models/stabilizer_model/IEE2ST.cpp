@@ -344,7 +344,7 @@ bool IEE2ST::setup_model_with_bpa_string(string data)
 
 void IEE2ST::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
@@ -394,7 +394,7 @@ void IEE2ST::initialize()
     }
     else
     {
-        sstream<<"Initialization failed. T3<=0.0 in model "<<get_model_name()<<" of "
+        osstream<<"Initialization failed. T3<=0.0 in model "<<get_model_name()<<" of "
           <<get_generator_pointer()->get_device_name()<<" requires input signals with 0 steady state value."<<endl
           <<"However, "<<value_sum<<" is given. Check input signals in slots.";
         alternative_filter.set_output(0.0);
@@ -478,9 +478,9 @@ void IEE2ST::check()
 
 void IEE2ST::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void IEE2ST::save()
@@ -491,7 +491,7 @@ void IEE2ST::save()
 
 string IEE2ST::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double K1 = get_K1();
     double T1 = get_T1_in_s();
@@ -525,7 +525,7 @@ string IEE2ST::get_standard_model_string() const
     size_t signal1_bus = did1.get_device_terminal().get_buses()[0];
     size_t signal2_bus = did2.get_device_terminal().get_buses()[0];
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(4)<<signal1_type_number<<", "
@@ -545,7 +545,7 @@ string IEE2ST::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<T9<<", "
       <<setw(8)<<setprecision(6)<<T10<<"  /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t IEE2ST::get_variable_index_from_variable_name(string var_name)

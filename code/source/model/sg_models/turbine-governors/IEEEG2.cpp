@@ -212,7 +212,7 @@ bool IEEEG2::setup_model_with_bpa_string(string data)
 
 void IEEEG2::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(is_model_initialized())
         return;
@@ -238,15 +238,15 @@ void IEEEG2::initialize()
 
     if(pmech0>get_Pmax_in_pu())
     {
-        sstream<<"Initialization error. Pmech of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Pmech of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Pmech is "<<pmech0<<", and Pmax is "<<get_Pmax_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(pmech0<get_Pmin_in_pu())
     {
-        sstream<<"Initialization error. Pmech of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Pmech of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Pmech is "<<pmech0<<", and Pmin is "<<get_Pmin_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     water_hammer.set_output(pmech0);
@@ -318,9 +318,9 @@ void IEEEG2::check()
 
 void IEEEG2::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void IEEEG2::save()
 {
@@ -328,7 +328,7 @@ void IEEEG2::save()
 }
 string IEEEG2::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double K = get_K();
     double T1 = get_T1_in_s();
@@ -342,7 +342,7 @@ string IEEEG2::get_standard_model_string() const
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<K<<", "
@@ -353,7 +353,7 @@ string IEEEG2::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<Pmin<<", "
       <<setw(8)<<setprecision(6)<<T4<<"  /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t IEEEG2::get_variable_index_from_variable_name(string var_name)

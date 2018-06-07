@@ -337,9 +337,9 @@ int SPARSE_MATRIX::get_entry_index(int row, int col) const
     {
         if(not matrix_in_compressed_column_form())
         {
-            ostringstream sstream;
-            sstream<<"Error. Sparse matrix not in compressed form when getting entry index.\nINDEX_NOT_EXIST will be returned.";
-            show_information_with_leading_time_stamp(sstream);
+            ostringstream osstream;
+            osstream<<"Error. Sparse matrix not in compressed form when getting entry index.\nINDEX_NOT_EXIST will be returned.";
+            show_information_with_leading_time_stamp(osstream);
             return INDEX_NOT_EXIST;
         }
 
@@ -513,12 +513,12 @@ vector<double> SPARSE_MATRIX::solve_Ax_eq_b(vector<double> b)
 
 void SPARSE_MATRIX::solve_Lx_eq_b(vector<double>& b)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     double* bb = (double*)malloc(b.size()*sizeof(double));
     if(bb==NULL)
     {
-        sstream<<"Error. Failed to allocate temporary array for solving Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Error. Failed to allocate temporary array for solving Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
+        show_information_with_leading_time_stamp(osstream);
 
         return; // failed to allocate array bb
     }
@@ -530,8 +530,8 @@ void SPARSE_MATRIX::solve_Lx_eq_b(vector<double>& b)
     int OK = cs_lsolve (LU->L, LU_workspace) ;               /* x = L\x */
     if(OK != 1)
     {
-        sstream<<"Error. Failed to solve Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Error. Failed to solve Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
+        show_information_with_leading_time_stamp(osstream);
         return; // failed to solve equation
     }
     // now solution is OK
@@ -615,16 +615,16 @@ void SPARSE_MATRIX::report_full() const
 
 void SPARSE_MATRIX::save_matrix_to_file(string filename) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     ofstream file;
     file.open(filename);
 
     if(not file.is_open())
     {
-        sstream<<"File '"<<filename<<"' cannot be opened for saving sparse matrix contents."<<endl
+        osstream<<"File '"<<filename<<"' cannot be opened for saving sparse matrix contents."<<endl
           <<"No sparse matrix will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -654,10 +654,10 @@ void SPARSE_MATRIX::save_matrix_to_file(string filename) const
 
 SPARSE_MATRIX& SPARSE_MATRIX::operator=(const SPARSE_MATRIX& matrix)
 {
-    //ostringstream sstream;
+    //ostringstream osstream;
 
     //os<<"go copying matrix");
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     if(this==(&matrix)) return *this;
 
@@ -680,13 +680,13 @@ SPARSE_MATRIX& SPARSE_MATRIX::operator=(const SPARSE_MATRIX& matrix)
 
 
     //os<<"done copying matrix, nz = %d", nz);
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     if(matrix.matrix_in_compressed_column_form())
         compress_and_merge_duplicate_entries();
 
     //os<<"done compressing matrix");
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     clock_when_matrix_is_changed = clock();
     return *this;

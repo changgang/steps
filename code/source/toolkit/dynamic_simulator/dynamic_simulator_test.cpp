@@ -385,14 +385,14 @@ void DYNAMICS_SIMULATOR_TEST::test_start()
     size_t n = db->get_generator_count();
     vector<GENERATOR*> generators = db->get_all_generators();
     GENERATOR* generator;
-    ostringstream sstream;
+    ostringstream osstream;
     for(size_t i=0; i!=n; ++i)
     {
         generator = generators[i];
         SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
-        sstream<<genmodel->get_device_name()<<" initialized : "<<genmodel->get_rotor_angle_in_deg()<<" deg"<<endl;
+        osstream<<genmodel->get_device_name()<<" initialized : "<<genmodel->get_rotor_angle_in_deg()<<" deg"<<endl;
     }
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
     recover_stdout();
 }
 

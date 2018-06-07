@@ -19,9 +19,9 @@ void FIRST_ORDER_BLOCK::set_K(double k)
 {
     /*if(k==0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero amplifier K is not allowed for FIRST_ORDER_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Zero amplifier K is not allowed for FIRST_ORDER_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     this->K = k;
@@ -62,7 +62,7 @@ void FIRST_ORDER_BLOCK::initialize()
         return;
     }
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     double h = get_dynamic_simulation_time_step_in_s();
 
@@ -107,15 +107,15 @@ void FIRST_ORDER_BLOCK::initialize()
     {
         if(s>vmax)
         {
-            sstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
+            show_information_with_leading_time_stamp(osstream);
         }
         else
         {
             if(s<vmin)
             {
-                sstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
+                show_information_with_leading_time_stamp(osstream);
             }
         }
     }

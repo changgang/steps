@@ -18,13 +18,13 @@ SOURCE::~SOURCE()
 
 void SOURCE::set_source_bus(size_t bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(bus==0)
     {
-        sstream<<"Warning. Zero bus number (0) is not allowed for setting up source bus."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up source bus."<<endl
           <<"0 will be set to indicate invalid source.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         source_bus = 0;
         return;
     }
@@ -36,9 +36,9 @@ void SOURCE::set_source_bus(size_t bus)
     {
         if(not psdb->is_bus_exist(bus))
         {
-            sstream<<"Bus "<<bus<<" does not exist for setting up power source."<<endl
+            osstream<<"Bus "<<bus<<" does not exist for setting up power source."<<endl
               <<"0 will be set to indicate invalid power source.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             source_bus = 0;
             return;
         }
@@ -58,14 +58,14 @@ void SOURCE::set_status(bool status)
 
 void SOURCE::set_mbase_in_MVA(double mbase)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(mbase>=0.0)
         this->mbase_MVA = mbase;
     else
     {
-        sstream<<"Negative MBASE ("<<mbase<<" MVA) is not allowed for setting up power source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<"."<<endl
+        osstream<<"Negative MBASE ("<<mbase<<" MVA) is not allowed for setting up power source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<"."<<endl
           <<"Source MBASE will not be changed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     return;
     /*
@@ -83,11 +83,11 @@ void SOURCE::set_mbase_in_MVA(double mbase)
             this->mbase_MVA = mvabase;
         else
         {
-            ostringstream sstream;
-            sstream<<"Negative MBASE (%f MVA) is not allowed for setting up power source '%s' at bus %u.\n"
+            ostringstream osstream;
+            osstream<<"Negative MBASE (%f MVA) is not allowed for setting up power source '%s' at bus %u.\n"
                          "System base MVA (%f MVA) will be set automatically.",mbase,get_identifier().c_str(),
                          get_source_bus(),mvabase);
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             this->mbase_MVA = mvabase;
         }
     }*/
@@ -130,12 +130,12 @@ void SOURCE::set_regulating_mode(const SOURCE_REGULATING_MODE  mode)
 
 void SOURCE::set_voltage_to_regulate_in_pu(double v_pu)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(v_pu<=0.0)
     {
-        sstream<<"Non-positive voltage ("<<v_pu<<") is not supported for voltage to regulate when setting up power source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<"."<<endl
+        osstream<<"Non-positive voltage ("<<v_pu<<") is not supported for voltage to regulate when setting up power source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<"."<<endl
           <<"1.0 p.u. will set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         v_pu = 1.0;
     }
     voltage_to_regulate_pu = v_pu;
@@ -147,10 +147,10 @@ void SOURCE::set_bus_to_regulate(size_t bus)
         bus_to_regulate = get_source_bus();
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Currently generators are not supposed to regulate voltage at bus ("<<bus<<") different from its terminal bus.\n"
+        ostringstream osstream;
+        osstream<<"Warning. Currently generators are not supposed to regulate voltage at bus ("<<bus<<") different from its terminal bus.\n"
           <<"Terminal bus "<<get_source_bus()<<" will be set to regulate.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         bus_to_regulate = get_source_bus();
     }
 }
@@ -250,14 +250,14 @@ complex<double> SOURCE::get_source_impedance_in_pu() const
 
 double SOURCE::get_base_voltage_in_kV() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<" is not assigned to any power system database."<<endl
+        osstream<<"Source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<" is not assigned to any power system database."<<endl
           <<"Its base voltage will be returned as 0.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
     else
@@ -267,9 +267,9 @@ double SOURCE::get_base_voltage_in_kV() const
             return bus->get_base_voltage_in_kV();
         else
         {
-            sstream<<"No bus "<<get_source_bus()<<" is found in power system database '"<<psdb->get_system_name()<<"'."<<endl
+            osstream<<"No bus "<<get_source_bus()<<" is found in power system database '"<<psdb->get_system_name()<<"'."<<endl
               <<"Base voltage of source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<" will be returned as 0.0.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             return 0.0;
         }
     }

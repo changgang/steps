@@ -113,7 +113,7 @@ void POWERFLOW_CASE_GENERATOR_TEST::test_generate_load_scale_randoms()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_CASE_GENERATOR_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     generator->set_power_system_database_maximum_bus_number(100);
     generator->set_uniform_load_scale(0.2);
@@ -124,12 +124,12 @@ void POWERFLOW_CASE_GENERATOR_TEST::test_generate_load_scale_randoms()
     for(size_t i=0; i<cases.size(); ++i)
     {
         vector<double> rands = cases[i];
-        sstream<<"randoms of case "<<i<<": ";
+        osstream<<"randoms of case "<<i<<": ";
         for(size_t j=0; j<rands.size(); ++j)
-            sstream<<rands[j]<<", ";
-        sstream<<endl;
+            osstream<<rands[j]<<", ";
+        osstream<<endl;
     }
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void POWERFLOW_CASE_GENERATOR_TEST::test_generate_cases()

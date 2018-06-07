@@ -12,39 +12,39 @@ void BPA_IMEXPORTER::load_dynamic_data(string file)
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
-    sstream<<"Loading dynamic data from BPA file: "<<file;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Loading dynamic data from BPA file: "<<file;
+    show_information_with_leading_time_stamp(osstream);
 
     load_dynamic_data_into_ram(file);
 
     if(dat_data_in_ram.size()==0)
     {
-        sstream<<"No data in the given BPA file: "<<file<<endl
+        osstream<<"No data in the given BPA file: "<<file<<endl
           <<"Please check if the file exist or not.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
 
         return;
     }
     classify_dynamic_cards();
 
 
-    sstream<<"Done loading dynamic data.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Done loading dynamic data.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void BPA_IMEXPORTER::load_dynamic_data_into_ram(string file)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     swi_data_in_ram.clear();
 
     ifstream swi_file(file);
 
     if(!swi_file)
     {
-        ostringstream sstream;
-        sstream<<"BPA swi file '"<<file<<"' is not accessible. Loading BPA swi data is failed.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"BPA swi file '"<<file<<"' is not accessible. Loading BPA swi data is failed.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -60,9 +60,9 @@ void BPA_IMEXPORTER::load_dynamic_data_into_ram(string file)
     size_t n = swi_data_in_ram.size();
     for(size_t i=0; i!=n; ++i)
     {
-        sstream<<swi_data_in_ram[i]<<endl;
+        osstream<<swi_data_in_ram[i]<<endl;
     }
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 
@@ -432,9 +432,9 @@ void BPA_IMEXPORTER::load_all_models()
 
 void BPA_IMEXPORTER::load_one_model(string data)
 {
-    ostringstream sstream;
-    sstream<<"Now go parsing dynamic data: "<<data;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Now go parsing dynamic data: "<<data;
+    show_information_with_leading_time_stamp(osstream);
 
     string model_name = get_dynamic_model_name(data);
     if(model_name=="")
@@ -462,8 +462,8 @@ void BPA_IMEXPORTER::load_one_model(string data)
     if(model_name=="IEELAL" or model_name=="IEELAR" or model_name=="IEELZN" or
        model_name=="IEELOW" or model_name=="IEELBL") { add_IEEL_model(data); return;}
 
-    sstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__<<".";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__<<".";
+    show_information_with_leading_time_stamp(osstream);
 
 }
 string BPA_IMEXPORTER::get_dynamic_model_name(string data)

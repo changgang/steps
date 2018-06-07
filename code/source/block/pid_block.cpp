@@ -21,9 +21,9 @@ void PID_BLOCK::set_Kp(double K)
 {
     /*if(K==0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PID_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PID_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     p_block.set_K(K);
@@ -38,9 +38,9 @@ void PID_BLOCK::set_Ki(double K)
 {
     /*if(K==0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero amplifier Ki of INTEGRAL_BLOCK part is not allowed for PID_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Zero amplifier Ki of INTEGRAL_BLOCK part is not allowed for PID_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     if(K==0.0)
@@ -71,9 +71,9 @@ void PID_BLOCK::set_Td_in_s(double T)
 {
     if(T<=0.0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Non-positive time constant Td is not allowed for PID_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Non-positive time constant Td is not allowed for PID_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     d_block.set_T_in_s(T);
@@ -189,7 +189,7 @@ double PID_BLOCK::get_store() const
 
 void PID_BLOCK::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     p_block.initialize();
     i_block.initialize();
@@ -205,15 +205,15 @@ void PID_BLOCK::initialize()
     {
         if(s>vmax)
         {
-            sstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
+            show_information_with_leading_time_stamp(osstream);
         }
         else
         {
             if(s<vmin)
             {
-                sstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
+                show_information_with_leading_time_stamp(osstream);
             }
         }
     }

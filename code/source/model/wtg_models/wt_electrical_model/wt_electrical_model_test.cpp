@@ -291,7 +291,7 @@ void WT_ELECTRICAL_MODEL_TEST::initialize_models()
 
 void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
 {
-    ostringstream osstream;
+    ostringstream oosstream;
 
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
@@ -321,8 +321,8 @@ void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
             iq = model->get_reactive_current_command_in_pu_based_on_mbase();
             iter_count++;
         }
-        //osstream<<"Integration at time "<<STEPS::TIME<<", takes "<<iter_count<<" iterations.";
-        //show_information_with_leading_time_stamp(osstream);
+        //oosstream<<"Integration at time "<<STEPS::TIME<<", takes "<<iter_count<<" iterations.";
+        //show_information_with_leading_time_stamp(oosstream);
         model->run(UPDATE_MODE);
         wtgenmodel->run(UPDATE_MODE);
         export_meter_values();
@@ -331,9 +331,9 @@ void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
 
 void WT_ELECTRICAL_MODEL_TEST::export_meter_title()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tVOLT\tFREQ\tIPCMD\tIQCMD\tEQCMD\tPELEC\tQELEC";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tVOLT\tFREQ\tIPCMD\tIQCMD\tEQCMD\tPELEC\tQELEC";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
@@ -347,8 +347,8 @@ void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
     double voltage = bus->get_voltage_in_pu();
     double freq = bus->get_frequency_deviation_in_pu();
 
-    ostringstream osstream;
-    osstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
+    ostringstream oosstream;
+    oosstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<voltage<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<freq<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<model->get_active_current_command_in_pu_based_on_mbase()<<"\t"
@@ -356,7 +356,7 @@ void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
             <<setw(10)<<setprecision(6)<<fixed<<model->get_reactive_voltage_command_in_pu_based_on_mbase()<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<genmodel->get_terminal_active_power_in_MW()<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<genmodel->get_terminal_reactive_power_in_MVar();
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp(oosstream);
 }
 
 void WT_ELECTRICAL_MODEL_TEST::apply_voltage_drop_of_10_percent()

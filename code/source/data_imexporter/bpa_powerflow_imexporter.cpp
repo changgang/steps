@@ -35,7 +35,7 @@ BPA_IMEXPORTER::~BPA_IMEXPORTER()
 
 string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, string format)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     string data = trim_string(original_data);
     if(data.size()==0)
         return data;
@@ -44,8 +44,8 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
 
     if(format.size()<2)
     {
-        sstream<<"Warning. Invalid BPA format ("<<format<<") is given. No BPA data will be converted.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Invalid BPA format ("<<format<<") is given. No BPA data will be converted.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -70,8 +70,8 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
     if(type=="I")
         return data;
 
-    sstream<<"Warning. Unsupported format ("<<format<<") is given to format BPA data.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Warning. Unsupported format ("<<format<<") is given to format BPA data.";
+    show_information_with_leading_time_stamp(osstream);
     return original_data;
 }
 
@@ -93,17 +93,17 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
-    sstream<<"Loading powerflow data from BPA file: "<<file;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Loading powerflow data from BPA file: "<<file;
+    show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
 
     if(dat_data_in_ram.size()==0)
     {
-        sstream<<"No data in the given BPA file: "<<file<<endl
+        osstream<<"No data in the given BPA file: "<<file<<endl
           <<"Please check if the file exists or not.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
 
         return;
     }
@@ -121,8 +121,8 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
     load_case_data();
     */
 
-    sstream<<"Done loading powerflow data.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Done loading powerflow data.";
+    show_information_with_leading_time_stamp(osstream);
 
 }
 
@@ -143,9 +143,9 @@ void BPA_IMEXPORTER::load_powerflow_data_into_ram(string file)
 
     if(!dat_file)
     {
-        ostringstream sstream;
-        sstream<<"BPA dat file '"<<file<<"' is not accessible. Loading BPA dat data is failed.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"BPA dat file '"<<file<<"' is not accessible. Loading BPA dat data is failed.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -417,12 +417,12 @@ size_t BPA_IMEXPORTER::get_data_version() const
 
 void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string file)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     FILE* fid = fopen(file.c_str(),"rt");
     if(fid==NULL)
     {
-        sstream<<"Warning. Bus name and number pair file ("<<file<<") cannot be opened. No bus number will be updated.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Bus name and number pair file ("<<file<<") cannot be opened. No bus number will be updated.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     char buffer[1024];
@@ -2099,20 +2099,20 @@ void BPA_IMEXPORTER::load_hvdc_data()
 
 void BPA_IMEXPORTER::export_powerflow_data(string file)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. BPA imexporter is not connected to any power system database. No powerflow data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. BPA imexporter is not connected to any power system database. No powerflow data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     ofstream ofs(file);
     if(!ofs)
     {
-        sstream<<"Warning. BPA dat file "<<file<<" cannot be opened for exporting powerflow data.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. BPA dat file "<<file<<" cannot be opened for exporting powerflow data.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -2137,14 +2137,14 @@ void BPA_IMEXPORTER::export_powerflow_data(string file)
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string format) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     format = string2upper(format);
 
     if(format.size()<2 or format.at(0)!='A')
     {
-        sstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable string data to bpa data.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable string data to bpa data.";
+        show_information_with_leading_time_stamp(osstream);
         return original_data;
     }
 
@@ -2165,8 +2165,8 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
     }
     if(not is_valid_format)
     {
-        sstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable string data to bpa data.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable string data to bpa data.";
+        show_information_with_leading_time_stamp(osstream);
         return original_data;
     }
 
@@ -2180,8 +2180,8 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
     }
     else
     {
-        sstream<<"Warning. Longer string ("<<data<<") than format ("<<format<<") is detected. Information will be lost since tail will be trimmed.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Longer string ("<<data<<") than format ("<<format<<") is detected. Information will be lost since tail will be trimmed.";
+        show_information_with_leading_time_stamp(osstream);
 
         data = data.substr(0, n);
         return data;
@@ -2190,14 +2190,14 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string format) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     format = string2upper(format);
 
     if(format.size()<4 or format.at(0)!='F' or format.find(".")==string::npos)
     {
-        sstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable double data to bpa data.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable double data to bpa data.";
+        show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
     bool is_valid_format = false;
@@ -2218,8 +2218,8 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string
 
     if(not is_valid_format)
     {
-        sstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable double data to bpa data.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable double data to bpa data.";
+        show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
@@ -2235,9 +2235,9 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string
         m = get_integer_data(format.substr(4,1),"0");
     }
 
-    sstream<<setprecision(n)<<fixed<<original_data;
+    osstream<<setprecision(n)<<fixed<<original_data;
 
-    string data = sstream.str();
+    string data = osstream.str();
     data.erase(data.find_last_not_of("0")+1);
 
     double maxvalue_with_dot, minvalue_with_dot;
@@ -2294,8 +2294,8 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string
         }
         else
         {
-            sstream<<"Warning. Double data ("<<original_data<<") exceeds the limit of BPA format ("<<format<<").";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Warning. Double data ("<<original_data<<") exceeds the limit of BPA format ("<<format<<").";
+            show_information_with_leading_time_stamp(osstream);
             if(original_data>0.0)
             {
                 return convert_data_into_bpa_format(maxvalue_without_dot, format);
@@ -2315,14 +2315,14 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(size_t original_data, string
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string format) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     format = string2upper(format);
 
     if(format.size()<2 or format.at(0)!='I')
     {
-        sstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or size_t data to bpa data.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or size_t data to bpa data.";
+        show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
@@ -2343,8 +2343,8 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string fo
     }
     if(not is_valid_format)
     {
-        sstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or size_t data to bpa data.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or size_t data to bpa data.";
+        show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
@@ -2355,8 +2355,8 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string fo
 
     if(original_data>maxvalue or original_data<minvalue)
     {
-        sstream<<"Warning. Integer of size_t data ("<<original_data<<") (n="<<n<<") exceeds the limit ("<<minvalue<<", "<<maxvalue<<") of BPA format ("<<format<<").";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Integer of size_t data ("<<original_data<<") (n="<<n<<") exceeds the limit ("<<minvalue<<", "<<maxvalue<<") of BPA format ("<<format<<").";
+        show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
@@ -2377,12 +2377,12 @@ string BPA_IMEXPORTER::export_case_data() const
 
 string BPA_IMEXPORTER::export_bus_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. BPA imexporter is not connected to any power system database. No bus data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. BPA imexporter is not connected to any power system database. No bus data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2402,7 +2402,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         double vmin = bus->get_normal_voltage_lower_limit_in_pu();
         double slack_angle = bus->get_angle_in_deg();
 
-        sstream<<"."<<endl<<". Bus "<<bus_number<<": "<<bus_name<<endl;
+        osstream<<"."<<endl<<". Bus "<<bus_number<<": "<<bus_name<<endl;
 
         vector<LOAD*> loads = psdb->get_loads_connecting_to_bus(bus_number);
 
@@ -2454,7 +2454,7 @@ string BPA_IMEXPORTER::export_bus_data() const
             v_schedule = source->get_voltage_to_regulate_in_pu();
         }
 
-        sstream<<"B";
+        osstream<<"B";
         switch(bus_type)
         {
             case PV_TYPE:
@@ -2462,124 +2462,124 @@ string BPA_IMEXPORTER::export_bus_data() const
             case PV_TO_PQ_TYPE_2:
             case PV_TO_PQ_TYPE_3:
             case PV_TO_PQ_TYPE_4:
-                sstream<<"G";
+                osstream<<"G";
                 break;
             case SLACK_TYPE:
-                sstream<<"S";
+                osstream<<"S";
                 break;
             default:
-                sstream<<" ";
+                osstream<<" ";
                 break;
         }
-        sstream<<" ";
+        osstream<<" ";
 
         string owner_name = "";
         OWNER* owner = psdb->get_owner(owner_number);
         if(owner!=NULL)
             owner_name = owner->get_owner_name();
 
-        sstream<<convert_data_into_bpa_format(owner_name,"A3");
-        sstream<<convert_data_into_bpa_format(bus_name,"A8");
-        sstream<<convert_data_into_bpa_format(base_voltage,"F4.0");
+        osstream<<convert_data_into_bpa_format(owner_name,"A3");
+        osstream<<convert_data_into_bpa_format(bus_name,"A8");
+        osstream<<convert_data_into_bpa_format(base_voltage,"F4.0");
 
         string zone_name = "";
         ZONE* zone = psdb->get_zone(zone_number);
         if(zone!=NULL)
             zone_name = zone->get_zone_name();
 
-        sstream<<convert_data_into_bpa_format(zone_name, "A2");
+        osstream<<convert_data_into_bpa_format(zone_name, "A2");
 
         if(constant_power_load_P==0.0)
-            sstream<<string(5,' ');
+            osstream<<string(5,' ');
         else
-            sstream<<convert_data_into_bpa_format(constant_power_load_P,"F5.0");
+            osstream<<convert_data_into_bpa_format(constant_power_load_P,"F5.0");
 
         if(constant_power_load_Q==0.0)
-            sstream<<string(5,' ');
+            osstream<<string(5,' ');
         else
-            sstream<<convert_data_into_bpa_format(constant_power_load_Q,"F5.0");
+            osstream<<convert_data_into_bpa_format(constant_power_load_Q,"F5.0");
 
         if(constant_impedance_load_P==0.0)
-            sstream<<string(4,' ');
+            osstream<<string(4,' ');
         else
-            sstream<<convert_data_into_bpa_format(constant_impedance_load_P,"F4.0");
+            osstream<<convert_data_into_bpa_format(constant_impedance_load_P,"F4.0");
 
         if(constant_impedance_load_Q==0.0)
-            sstream<<string(4,' ');
+            osstream<<string(4,' ');
         else
-            sstream<<convert_data_into_bpa_format(-constant_impedance_load_Q,"F4.0");
+            osstream<<convert_data_into_bpa_format(-constant_impedance_load_Q,"F4.0");
 
         if(pmax==0.0)
-            sstream<<string(4,' ');
+            osstream<<string(4,' ');
         else
-            sstream<<convert_data_into_bpa_format(pmax,"F4.0");
+            osstream<<convert_data_into_bpa_format(pmax,"F4.0");
 
         if(pgen==0.0)
-            sstream<<string(5,' ');
+            osstream<<string(5,' ');
         else
-            sstream<<convert_data_into_bpa_format(pgen,"F5.0");
+            osstream<<convert_data_into_bpa_format(pgen,"F5.0");
 
         if(bus_type == PQ_TYPE)
         {
             if(qgen==0.0)
-                sstream<<string(5,' ');
+                osstream<<string(5,' ');
             else
-                sstream<<convert_data_into_bpa_format(qgen,"F5.0");
+                osstream<<convert_data_into_bpa_format(qgen,"F5.0");
         }
         else
         {
             if(qmax==0.0)
-                sstream<<string(5,' ');
+                osstream<<string(5,' ');
             else
-                sstream<<convert_data_into_bpa_format(qmax,"F5.0");
+                osstream<<convert_data_into_bpa_format(qmax,"F5.0");
         }
         if(qmin==0.0)
-            sstream<<string(5,' ');
+            osstream<<string(5,' ');
         else
-            sstream<<convert_data_into_bpa_format(qmin,"F5.0");
+            osstream<<convert_data_into_bpa_format(qmin,"F5.0");
 
         if(bus_type==PQ_TYPE)
-            sstream<<convert_data_into_bpa_format(vmax,"F4.3");
+            osstream<<convert_data_into_bpa_format(vmax,"F4.3");
         else
-            sstream<<convert_data_into_bpa_format(v_schedule,"F4.3");
+            osstream<<convert_data_into_bpa_format(v_schedule,"F4.3");
 
         if(bus_type==SLACK_TYPE)
-            sstream<<convert_data_into_bpa_format(slack_angle,"F4.1");
+            osstream<<convert_data_into_bpa_format(slack_angle,"F4.1");
         else
-            sstream<<convert_data_into_bpa_format(vmin,"F4.3");
+            osstream<<convert_data_into_bpa_format(vmin,"F4.3");
 
         if(constant_current_load_P!=0 or constant_current_load_Q!=0)
         {
-            sstream<<endl;
-            sstream<<"+C ";
-            sstream<<convert_data_into_bpa_format(owner_name,"A3");
-            sstream<<convert_data_into_bpa_format(bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(base_voltage,"F4.0");
-            sstream<<"*I";
+            osstream<<endl;
+            osstream<<"+C ";
+            osstream<<convert_data_into_bpa_format(owner_name,"A3");
+            osstream<<convert_data_into_bpa_format(bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(base_voltage,"F4.0");
+            osstream<<"*I";
             if(constant_current_load_P==0.0)
-                sstream<<"     ";
+                osstream<<"     ";
             else
-                sstream<<convert_data_into_bpa_format(constant_current_load_P,"F5.0");
+                osstream<<convert_data_into_bpa_format(constant_current_load_P,"F5.0");
             if(constant_current_load_Q==0.0)
-                sstream<<"     ";
+                osstream<<"     ";
             else
-                sstream<<convert_data_into_bpa_format(constant_current_load_Q,"F5.0");
+                osstream<<convert_data_into_bpa_format(constant_current_load_Q,"F5.0");
         }
-        sstream<<endl;
+        osstream<<endl;
     }
 
-    return sstream.str();
+    return osstream.str();
 }
 
 
 string BPA_IMEXPORTER::export_line_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. BPA imexporter is not connected to any power system database. No line data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. BPA imexporter is not connected to any power system database. No line data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2637,60 +2637,60 @@ string BPA_IMEXPORTER::export_line_data() const
 
         double rate_A = rate_MVA/sending_side_base_voltage/sqrt(3.0)*1000.0;
 
-        sstream<<"."<<endl
+        osstream<<"."<<endl
           <<". Line "<<sending_side_bus_number<<"("<<sending_side_bus_name<<") to "
           <<receiving_side_bus_number<<"("<<receiving_side_bus_name<<")"<<endl;
 
-        sstream<<"L  ";
-        sstream<<convert_data_into_bpa_format(owner_name, "A3");
-        sstream<<convert_data_into_bpa_format(sending_side_bus_name,"A8");
-        sstream<<convert_data_into_bpa_format(sending_side_base_voltage,"F4.0");
-        sstream<<convert_data_into_bpa_format(meter_end,"I1");
-        sstream<<convert_data_into_bpa_format(receiving_side_bus_name,"A8");
-        sstream<<convert_data_into_bpa_format(receiving_side_base_voltage,"F4.0");
-        sstream<<convert_data_into_bpa_format(identifier,"A1");
-        sstream<<convert_data_into_bpa_format(rate_A,"F4.0");
-        sstream<<" ";
-        sstream<<convert_data_into_bpa_format(r,"F6.5");
-        sstream<<convert_data_into_bpa_format(x,"F6.5");
-        sstream<<convert_data_into_bpa_format(g_half,"F6.5");
-        sstream<<convert_data_into_bpa_format(b_half,"F6.5");
-        sstream<<convert_data_into_bpa_format(length,"F4.1");
+        osstream<<"L  ";
+        osstream<<convert_data_into_bpa_format(owner_name, "A3");
+        osstream<<convert_data_into_bpa_format(sending_side_bus_name,"A8");
+        osstream<<convert_data_into_bpa_format(sending_side_base_voltage,"F4.0");
+        osstream<<convert_data_into_bpa_format(meter_end,"I1");
+        osstream<<convert_data_into_bpa_format(receiving_side_bus_name,"A8");
+        osstream<<convert_data_into_bpa_format(receiving_side_base_voltage,"F4.0");
+        osstream<<convert_data_into_bpa_format(identifier,"A1");
+        osstream<<convert_data_into_bpa_format(rate_A,"F4.0");
+        osstream<<" ";
+        osstream<<convert_data_into_bpa_format(r,"F6.5");
+        osstream<<convert_data_into_bpa_format(x,"F6.5");
+        osstream<<convert_data_into_bpa_format(g_half,"F6.5");
+        osstream<<convert_data_into_bpa_format(b_half,"F6.5");
+        osstream<<convert_data_into_bpa_format(length,"F4.1");
 
         if(y_shunt_sending!=0 or y_shunt_receiving!=0)
         {
-            sstream<<endl;
-            sstream<<"L+"<<string(4,' ');;
-            sstream<<convert_data_into_bpa_format(sending_side_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(sending_side_base_voltage,"F4.0");
-            sstream<<" ";
-            sstream<<convert_data_into_bpa_format(receiving_side_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(receiving_side_base_voltage,"F4.0");
-            sstream<<convert_data_into_bpa_format(identifier,"A1");
-            sstream<<" ";
+            osstream<<endl;
+            osstream<<"L+"<<string(4,' ');;
+            osstream<<convert_data_into_bpa_format(sending_side_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(sending_side_base_voltage,"F4.0");
+            osstream<<" ";
+            osstream<<convert_data_into_bpa_format(receiving_side_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(receiving_side_base_voltage,"F4.0");
+            osstream<<convert_data_into_bpa_format(identifier,"A1");
+            osstream<<" ";
             if(y_shunt_sending==0)
-                sstream<<string(5,' ');
+                osstream<<string(5,' ');
             else
-                sstream<<convert_data_into_bpa_format(-y_shunt_sending*sbase_MVA,"F5.0");
-            sstream<<string(5,' ');
+                osstream<<convert_data_into_bpa_format(-y_shunt_sending*sbase_MVA,"F5.0");
+            osstream<<string(5,' ');
             if(y_shunt_receiving==0)
-                sstream<<string(5,' ');
+                osstream<<string(5,' ');
             else
-                sstream<<convert_data_into_bpa_format(-y_shunt_receiving*sbase_MVA,"F5.0");
+                osstream<<convert_data_into_bpa_format(-y_shunt_receiving*sbase_MVA,"F5.0");
         }
-        sstream<<endl;
+        osstream<<endl;
     }
 
-    return sstream.str();
+    return osstream.str();
 }
 string BPA_IMEXPORTER::export_transformer_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. BPA imexporter is not connected to any power system database. No transformer data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. BPA imexporter is not connected to any power system database. No transformer data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2703,11 +2703,11 @@ string BPA_IMEXPORTER::export_transformer_data() const
     {
         TRANSFORMER* transformer = transformers[i];
         if(transformer->is_two_winding_transformer())
-            sstream<<export_two_winding_transformer(transformer);
+            osstream<<export_two_winding_transformer(transformer);
         else if (transformer->is_three_winding_transformer())
-            sstream<<export_three_winding_transformer(transformer);
+            osstream<<export_three_winding_transformer(transformer);
     }
-    return sstream.str();
+    return osstream.str();
 }
 
 
@@ -2776,40 +2776,40 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
             is_angle_shift_transformer = false;
     }
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(trans->get_winding_breaker_status(PRIMARY_SIDE) == false or
        trans->get_winding_breaker_status(SECONDARY_SIDE) == false)
-        sstream<<".";
+        osstream<<".";
 
 
     if(is_angle_shift_transformer)
-        sstream<<"TP";
+        osstream<<"TP";
     else
-        sstream<<"T ";
+        osstream<<"T ";
 
-    sstream<<" ";
-    sstream<<convert_data_into_bpa_format(owner_name,"A3");
-    sstream<<convert_data_into_bpa_format(primary_bus_name,"A8")
+    osstream<<" ";
+    osstream<<convert_data_into_bpa_format(owner_name,"A3");
+    osstream<<convert_data_into_bpa_format(primary_bus_name,"A8")
       <<convert_data_into_bpa_format(primary_base_voltage,"F4.0");
-    sstream<<meter_flag;
-    sstream<<convert_data_into_bpa_format(secondary_bus_name,"A8")
+    osstream<<meter_flag;
+    osstream<<convert_data_into_bpa_format(secondary_bus_name,"A8")
       <<convert_data_into_bpa_format(secondary_base_voltage,"F4.0");
-    sstream<<convert_data_into_bpa_format(identifier,"A1");
-    sstream<<" ";
-    sstream<<convert_data_into_bpa_format(capacity, "F4.0");
-    sstream<<" ";
-    sstream<<convert_data_into_bpa_format(Z.real(), "F6.5")
+    osstream<<convert_data_into_bpa_format(identifier,"A1");
+    osstream<<" ";
+    osstream<<convert_data_into_bpa_format(capacity, "F4.0");
+    osstream<<" ";
+    osstream<<convert_data_into_bpa_format(Z.real(), "F6.5")
       <<convert_data_into_bpa_format(Z.imag(), "F6.5");
-    sstream<<convert_data_into_bpa_format(Y.real(), "F6.5")
+    osstream<<convert_data_into_bpa_format(Y.real(), "F6.5")
       <<convert_data_into_bpa_format(Y.imag(), "F6.5");
 
     if(is_angle_shift_transformer)
-        sstream<<convert_data_into_bpa_format(angle_shift, "F5.2");
+        osstream<<convert_data_into_bpa_format(angle_shift, "F5.2");
     else
-        sstream<<convert_data_into_bpa_format(tap_primary, "F5.2")
+        osstream<<convert_data_into_bpa_format(tap_primary, "F5.2")
           <<convert_data_into_bpa_format(tap_secondary, "F5.2");
-    sstream<<endl;
+    osstream<<endl;
 
     if (trans->get_winding_control_mode(PRIMARY_SIDE)!=TRANSFORMER_TAP_NO_CONTROL||trans->get_winding_control_mode(SECONDARY_SIDE)!=TRANSFORMER_TAP_NO_CONTROL)
     {
@@ -2854,54 +2854,54 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
 
             if(trans->get_winding_breaker_status(PRIMARY_SIDE) == false or
                trans->get_winding_breaker_status(SECONDARY_SIDE) == false)
-                sstream<<".";
+                osstream<<".";
 
             if(trans->get_winding_control_mode(winding)==TRANSFORMER_TAP_VOLTAGE_CONTROL)
-                sstream<<"R ";
+                osstream<<"R ";
             else if( trans->get_winding_control_mode(winding)==TRANSFORMER_TAP_REACTIVE_POWER_CONTROL )
-                sstream<<"RN";
+                osstream<<"RN";
             else if( trans->get_winding_control_mode(winding)==TRANSFORMER_TAP_ACTIVE_POWER_CONTROL )
-                sstream<<"RM";
+                osstream<<"RM";
 
-            sstream<<" ";
-            sstream<<convert_data_into_bpa_format(owner_name,"A3");
-            sstream<<convert_data_into_bpa_format(adjustable_winding_bus_name,"A8")
+            osstream<<" ";
+            osstream<<convert_data_into_bpa_format(owner_name,"A3");
+            osstream<<convert_data_into_bpa_format(adjustable_winding_bus_name,"A8")
               <<convert_data_into_bpa_format(adjustable_winding_bus_base_voltage,"F4.0");
-            sstream<<convert_data_into_bpa_format(adjustable_flag,"I1");
-            sstream<<convert_data_into_bpa_format(controlled_winding_bus_name,"A8")
+            osstream<<convert_data_into_bpa_format(adjustable_flag,"I1");
+            osstream<<convert_data_into_bpa_format(controlled_winding_bus_name,"A8")
               <<convert_data_into_bpa_format(controlled_winding_bus_base_voltage,"F4.0");
-            sstream<<"  ";
-            sstream<<convert_data_into_bpa_format(controlled_winding_bus_name,"A8")
+            osstream<<"  ";
+            osstream<<convert_data_into_bpa_format(controlled_winding_bus_name,"A8")
               <<convert_data_into_bpa_format(controlled_winding_bus_base_voltage,"F4.0");
 
             if(winding_control_mode==TRANSFORMER_TAP_VOLTAGE_CONTROL || winding_control_mode == TRANSFORMER_TAP_REACTIVE_POWER_CONTROL )
             {
-                sstream<<convert_data_into_bpa_format(winding_max_adjustable_voltage,"F5.2");
-                sstream<<convert_data_into_bpa_format(winding_min_adjustable_voltage,"F5.2");
-                sstream<<convert_data_into_bpa_format(number_of_taps,"I2");
+                osstream<<convert_data_into_bpa_format(winding_max_adjustable_voltage,"F5.2");
+                osstream<<convert_data_into_bpa_format(winding_min_adjustable_voltage,"F5.2");
+                osstream<<convert_data_into_bpa_format(number_of_taps,"I2");
             }
 
             if(winding_control_mode==TRANSFORMER_TAP_REACTIVE_POWER_CONTROL)
             {
-                sstream<<convert_data_into_bpa_format(controlled_max_reactive_power_into_winding_in_MVar,"F5.0");
-                sstream<<convert_data_into_bpa_format(controlled_min_reactive_power_into_winding_in_MVar,"F5.0");
+                osstream<<convert_data_into_bpa_format(controlled_max_reactive_power_into_winding_in_MVar,"F5.0");
+                osstream<<convert_data_into_bpa_format(controlled_min_reactive_power_into_winding_in_MVar,"F5.0");
             }
 
             if(winding_control_mode==TRANSFORMER_TAP_ACTIVE_POWER_CONTROL)
             {
-                sstream<<convert_data_into_bpa_format(winding_max_angle_shift_in_deg,"F5.2");
-                sstream<<convert_data_into_bpa_format(winding_min_angle_shift_in_deg,"F5.2");
-                sstream<<convert_data_into_bpa_format(number_of_taps,"I2");
-                sstream<<convert_data_into_bpa_format(controlled_max_active_power_into_winding_in_MW,"F5.0");
-                sstream<<convert_data_into_bpa_format(controlled_min_active_power_into_winding_in_MW,"F5.0");
+                osstream<<convert_data_into_bpa_format(winding_max_angle_shift_in_deg,"F5.2");
+                osstream<<convert_data_into_bpa_format(winding_min_angle_shift_in_deg,"F5.2");
+                osstream<<convert_data_into_bpa_format(number_of_taps,"I2");
+                osstream<<convert_data_into_bpa_format(controlled_max_active_power_into_winding_in_MW,"F5.0");
+                osstream<<convert_data_into_bpa_format(controlled_min_active_power_into_winding_in_MW,"F5.0");
             }
 
 
-            sstream<<endl;
+            osstream<<endl;
         }
       }
     }
-    return sstream.str();
+    return osstream.str();
 }
 
 string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans) const
@@ -2937,7 +2937,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     double angle_shift_bwtween_primary_and_tertiary = trans->get_winding_angle_shift_in_deg(PRIMARY_SIDE)-trans->get_winding_angle_shift_in_deg(TERTIARY_SIDE);
 
     TRANSFORMER_WINDING_SIDE winding;
-    ostringstream sstream;
+    ostringstream osstream;
 
     for(size_t i=0; i<3; i++)
     {
@@ -2946,7 +2946,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
         if(i==2) winding=TERTIARY_SIDE;
 
         if(trans->get_winding_breaker_status(winding) == false)
-            sstream<<".";
+            osstream<<".";
 
         bool is_angle_shift_transformer = false;
 
@@ -2992,42 +2992,42 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
         if(i==2)  Z_winding_based_on_winding_base_voltage=Z_tertiary*(trans->get_winding_nominal_voltage_in_kV(winding)/winding_base_voltage)*(trans->get_winding_nominal_voltage_in_kV(winding)/winding_base_voltage);
 
         if(is_angle_shift_transformer)
-            sstream<<"TP";
+            osstream<<"TP";
         else
-            sstream<<"T ";
+            osstream<<"T ";
 
-        sstream<<" ";
-        sstream<<convert_data_into_bpa_format(owner_name,"A3");
-        sstream<<convert_data_into_bpa_format(winding_bus_name,"A8")
+        osstream<<" ";
+        osstream<<convert_data_into_bpa_format(owner_name,"A3");
+        osstream<<convert_data_into_bpa_format(winding_bus_name,"A8")
           <<convert_data_into_bpa_format(winding_base_voltage,"F4.0");
-        sstream<<meter_flag;
-        sstream<<convert_data_into_bpa_format(neutral_point_name,"A8")
+        osstream<<meter_flag;
+        osstream<<convert_data_into_bpa_format(neutral_point_name,"A8")
           <<convert_data_into_bpa_format(neutral_voltage_in_kv,"F4.0");
-        sstream<<convert_data_into_bpa_format(identifier,"A1");
-        sstream<<" ";
-        sstream<<convert_data_into_bpa_format(winding_capacity, "F4.0");
-        sstream<<" ";
-        sstream<<convert_data_into_bpa_format(Z_winding_based_on_winding_base_voltage.real(), "F6.5")
+        osstream<<convert_data_into_bpa_format(identifier,"A1");
+        osstream<<" ";
+        osstream<<convert_data_into_bpa_format(winding_capacity, "F4.0");
+        osstream<<" ";
+        osstream<<convert_data_into_bpa_format(Z_winding_based_on_winding_base_voltage.real(), "F6.5")
           <<convert_data_into_bpa_format(Z_winding_based_on_winding_base_voltage.imag(), "F6.5");
 
         if (i==0)
-        {   sstream<<convert_data_into_bpa_format(Y.real(), "F6.5")
+        {   osstream<<convert_data_into_bpa_format(Y.real(), "F6.5")
             <<convert_data_into_bpa_format(Y.imag(), "F6.5");
         }
         else
         {
-            sstream<<convert_data_into_bpa_format(0.0, "F6.5")
+            osstream<<convert_data_into_bpa_format(0.0, "F6.5")
             <<convert_data_into_bpa_format(0.0, "F6.5");
         }
 
         if(is_angle_shift_transformer)
-            if (i==0) sstream<<convert_data_into_bpa_format(0.0, "F5.2");
-            if (i==1) sstream<<convert_data_into_bpa_format(-1*angle_shift_bwtween_primary_and_secondary, "F5.2");
-            if (i==2) sstream<<convert_data_into_bpa_format(-1*angle_shift_bwtween_primary_and_tertiary, "F5.2");
+            if (i==0) osstream<<convert_data_into_bpa_format(0.0, "F5.2");
+            if (i==1) osstream<<convert_data_into_bpa_format(-1*angle_shift_bwtween_primary_and_secondary, "F5.2");
+            if (i==2) osstream<<convert_data_into_bpa_format(-1*angle_shift_bwtween_primary_and_tertiary, "F5.2");
         else
-            sstream<<convert_data_into_bpa_format(tap_winding, "F5.2")
+            osstream<<convert_data_into_bpa_format(tap_winding, "F5.2")
               <<convert_data_into_bpa_format(1.0, "F5.2");
-        sstream<<endl;
+        osstream<<endl;
 
         // now exporting tap
         TRANSFORMER_WINDING_CONTROL_MODE winding_control_mode = trans->get_winding_control_mode(winding);
@@ -3053,69 +3053,69 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
 
 
         if(trans->get_winding_breaker_status(winding) == false)
-            sstream<<".";
+            osstream<<".";
 
         if(winding_control_mode==TRANSFORMER_TAP_VOLTAGE_CONTROL)
-            sstream<<"R ";
+            osstream<<"R ";
         else if(winding_control_mode==TRANSFORMER_TAP_REACTIVE_POWER_CONTROL )
-            sstream<<"RN";
+            osstream<<"RN";
         else if(winding_control_mode==TRANSFORMER_TAP_ACTIVE_POWER_CONTROL )
-            sstream<<"RM";
+            osstream<<"RM";
 
-        sstream<<" ";
-        sstream<<convert_data_into_bpa_format(owner_name,"A3");
-        sstream<<convert_data_into_bpa_format(winding_bus_name,"A8")
+        osstream<<" ";
+        osstream<<convert_data_into_bpa_format(owner_name,"A3");
+        osstream<<convert_data_into_bpa_format(winding_bus_name,"A8")
           <<convert_data_into_bpa_format(winding_base_voltage,"F4.0");
-        sstream<<convert_data_into_bpa_format(1,"I1");
-        sstream<<convert_data_into_bpa_format(neutral_point_name,"A8")
+        osstream<<convert_data_into_bpa_format(1,"I1");
+        osstream<<convert_data_into_bpa_format(neutral_point_name,"A8")
           <<convert_data_into_bpa_format(neutral_voltage_in_kv,"F4.0");
-        sstream<<"  ";
+        osstream<<"  ";
         if(winding_control_mode==TRANSFORMER_TAP_VOLTAGE_CONTROL)
-            sstream<<convert_data_into_bpa_format(controlled_bus_name,"A8")
+            osstream<<convert_data_into_bpa_format(controlled_bus_name,"A8")
               <<convert_data_into_bpa_format(controlled_bus_base_voltage,"F4.0");
         else
-            sstream<<convert_data_into_bpa_format(winding_bus_name,"A8")
+            osstream<<convert_data_into_bpa_format(winding_bus_name,"A8")
               <<convert_data_into_bpa_format(winding_base_voltage,"F4.0");
 
 
         if(winding_control_mode==TRANSFORMER_TAP_VOLTAGE_CONTROL || winding_control_mode == TRANSFORMER_TAP_REACTIVE_POWER_CONTROL )
         {
-            sstream<<convert_data_into_bpa_format(winding_max_tap,"F5.2");
-            sstream<<convert_data_into_bpa_format(winding_min_tap,"F5.2");
+            osstream<<convert_data_into_bpa_format(winding_max_tap,"F5.2");
+            osstream<<convert_data_into_bpa_format(winding_min_tap,"F5.2");
         }
         else
         {
-            sstream<<convert_data_into_bpa_format(winding_max_angle_shift_in_deg,"F5.2");
-            sstream<<convert_data_into_bpa_format(winding_min_angle_shift_in_deg,"F5.2");
+            osstream<<convert_data_into_bpa_format(winding_max_angle_shift_in_deg,"F5.2");
+            osstream<<convert_data_into_bpa_format(winding_min_angle_shift_in_deg,"F5.2");
         }
-        sstream<<convert_data_into_bpa_format(number_of_taps,"I2");
+        osstream<<convert_data_into_bpa_format(number_of_taps,"I2");
 
         if(winding_control_mode==TRANSFORMER_TAP_REACTIVE_POWER_CONTROL)
         {
-            sstream<<convert_data_into_bpa_format(controlled_max_reactive_power_into_winding_in_MVar,"F5.0");
-            sstream<<convert_data_into_bpa_format(controlled_min_reactive_power_into_winding_in_MVar,"F5.0");
+            osstream<<convert_data_into_bpa_format(controlled_max_reactive_power_into_winding_in_MVar,"F5.0");
+            osstream<<convert_data_into_bpa_format(controlled_min_reactive_power_into_winding_in_MVar,"F5.0");
         }
         else
         {
             if(winding_control_mode==TRANSFORMER_TAP_ACTIVE_POWER_CONTROL)
             {
-                sstream<<convert_data_into_bpa_format(controlled_max_active_power_into_winding_in_MW,"F5.0");
-                sstream<<convert_data_into_bpa_format(controlled_min_active_power_into_winding_in_MW,"F5.0");
+                osstream<<convert_data_into_bpa_format(controlled_max_active_power_into_winding_in_MW,"F5.0");
+                osstream<<convert_data_into_bpa_format(controlled_min_active_power_into_winding_in_MW,"F5.0");
             }
         }
-        sstream<<endl;
+        osstream<<endl;
     }
-    return sstream.str();
+    return osstream.str();
 }
 
 string BPA_IMEXPORTER::export_hvdc_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. BPA imexporter is not connected to any power system database. No hvdc data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. BPA imexporter is not connected to any power system database. No hvdc data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -3241,30 +3241,30 @@ string BPA_IMEXPORTER::export_hvdc_data() const
                 rectifier_valve_bus_name=rectifier_grid_bus_name;
                 inverter_valve_bus_name=inverter_grid_bus_name;
             }
-            sstream<<".直流: "<<hvdc_name<<endl;
-            sstream<<"LD";
-            sstream<<string(4,' ');
-            sstream<<convert_data_into_bpa_format(rectifier_valve_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<".直流: "<<hvdc_name<<endl;
+            osstream<<"LD";
+            osstream<<string(4,' ');
+            osstream<<convert_data_into_bpa_format(rectifier_valve_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_base_voltage_in_kV,"F4.0");
 
-            sstream<<" ";
+            osstream<<" ";
 
-            sstream<<convert_data_into_bpa_format(inverter_valve_bus_name,"A8")
+            osstream<<convert_data_into_bpa_format(inverter_valve_bus_name,"A8")
               <<convert_data_into_bpa_format(inverter_valve_side_bus_base_voltage_in_kV,"F4.0");
 
-            sstream<<"  ";
+            osstream<<"  ";
 
-            sstream<<convert_data_into_bpa_format(nominal_dc_current_per_pole_in_A,"F4.0");
-            sstream<<convert_data_into_bpa_format(line_resistance_in_ohm,"F6.2");
-            sstream<<convert_data_into_bpa_format(line_inductance_in_mH,"F6.2");
-            sstream<<convert_data_into_bpa_format(line_capacitance_in_uF,"F6.2");
+            osstream<<convert_data_into_bpa_format(nominal_dc_current_per_pole_in_A,"F4.0");
+            osstream<<convert_data_into_bpa_format(line_resistance_in_ohm,"F6.2");
+            osstream<<convert_data_into_bpa_format(line_inductance_in_mH,"F6.2");
+            osstream<<convert_data_into_bpa_format(line_capacitance_in_uF,"F6.2");
 
-            if(power_controlled_side==RECTIFIER) sstream<<convert_data_into_bpa_format("R","A1");
-            if(power_controlled_side==INVERTER) sstream<<convert_data_into_bpa_format("I","A1");
+            if(power_controlled_side==RECTIFIER) osstream<<convert_data_into_bpa_format("R","A1");
+            if(power_controlled_side==INVERTER) osstream<<convert_data_into_bpa_format("I","A1");
 
-            sstream<<convert_data_into_bpa_format(nominal_dc_power_per_pole_in_MW,"F5.1");
-            sstream<<convert_data_into_bpa_format(nominal_dc_voltage_per_pole_in_kV,"F5.1");
-            sstream<<endl;
+            osstream<<convert_data_into_bpa_format(nominal_dc_power_per_pole_in_MW,"F5.1");
+            osstream<<convert_data_into_bpa_format(nominal_dc_voltage_per_pole_in_kV,"F5.1");
+            osstream<<endl;
         }
 
         for (size_t j=0; j!=pole_number; j++)
@@ -3279,20 +3279,20 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             {
                 inverter_valve_side_bus_name=inverter_grid_bus_name;
             }
-            sstream<<"BD";
-            sstream<<string(4,' ');
-            sstream<<convert_data_into_bpa_format(inverter_valve_side_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(inverter_valve_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<string(5,' ');
-            sstream<<convert_data_into_bpa_format(inverter_side_number_of_bridge,"I2");
-            sstream<<convert_data_into_bpa_format(line_inverter_smooting_inductance_in_mH,"F5.1");
-            sstream<<convert_data_into_bpa_format(inverter_min_alpha,"F5.1");
-            sstream<<convert_data_into_bpa_format(inverter_max_alpha,"F5.1");
-            sstream<<string(5,' ');
-            sstream<<convert_data_into_bpa_format(nominal_dc_current_per_pole_in_A,"F5.1");
-            sstream<<convert_data_into_bpa_format(inverter_grid_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(inverter_grid_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<endl;
+            osstream<<"BD";
+            osstream<<string(4,' ');
+            osstream<<convert_data_into_bpa_format(inverter_valve_side_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(inverter_valve_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<string(5,' ');
+            osstream<<convert_data_into_bpa_format(inverter_side_number_of_bridge,"I2");
+            osstream<<convert_data_into_bpa_format(line_inverter_smooting_inductance_in_mH,"F5.1");
+            osstream<<convert_data_into_bpa_format(inverter_min_alpha,"F5.1");
+            osstream<<convert_data_into_bpa_format(inverter_max_alpha,"F5.1");
+            osstream<<string(5,' ');
+            osstream<<convert_data_into_bpa_format(nominal_dc_current_per_pole_in_A,"F5.1");
+            osstream<<convert_data_into_bpa_format(inverter_grid_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(inverter_grid_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<endl;
         }
 
         for (size_t j=0; j != pole_number; j++)
@@ -3308,20 +3308,20 @@ string BPA_IMEXPORTER::export_hvdc_data() const
                 inverter_valve_side_bus_name=inverter_grid_bus_name;
             }
 
-            sstream<<"T ";
-            sstream<<string(4,' ');
-            sstream<<convert_data_into_bpa_format(inverter_grid_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(inverter_grid_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<" ";
-            sstream<<convert_data_into_bpa_format(inverter_valve_side_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(inverter_valve_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<" ";
-            sstream<<string(5,' ');
-            sstream<<convert_data_into_bpa_format(inverter_r_in_pu,"F6.5");
-            sstream<<convert_data_into_bpa_format(inverter_x_in_pu,"F6.5");
-            sstream<<convert_data_into_bpa_format(inverter_g_in_pu,"F6.5");
-            sstream<<convert_data_into_bpa_format(inverter_s_in_pu,"F6.5");
-            sstream<<endl;
+            osstream<<"T ";
+            osstream<<string(4,' ');
+            osstream<<convert_data_into_bpa_format(inverter_grid_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(inverter_grid_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<" ";
+            osstream<<convert_data_into_bpa_format(inverter_valve_side_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(inverter_valve_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<" ";
+            osstream<<string(5,' ');
+            osstream<<convert_data_into_bpa_format(inverter_r_in_pu,"F6.5");
+            osstream<<convert_data_into_bpa_format(inverter_x_in_pu,"F6.5");
+            osstream<<convert_data_into_bpa_format(inverter_g_in_pu,"F6.5");
+            osstream<<convert_data_into_bpa_format(inverter_s_in_pu,"F6.5");
+            osstream<<endl;
         }
 
         for (size_t j=0; j!=pole_number; j++)
@@ -3336,18 +3336,18 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             {
                 inverter_valve_side_bus_name=inverter_grid_bus_name;
             }
-            sstream<<"R ";
-            sstream<<string(4,' ');
-            sstream<<convert_data_into_bpa_format(inverter_grid_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(inverter_grid_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<" ";
-            sstream<<convert_data_into_bpa_format(inverter_valve_side_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(inverter_valve_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<string(14,' ');
-            sstream<<convert_data_into_bpa_format(inverter_transformer_max_tap_in_kv,"F5.2");
-            sstream<<convert_data_into_bpa_format(inverter_transformer_min_tap_in_kv,"F5.2");
-            sstream<<convert_data_into_bpa_format(inverter_transformer_number_of_taps,"I2");
-            sstream<<endl;
+            osstream<<"R ";
+            osstream<<string(4,' ');
+            osstream<<convert_data_into_bpa_format(inverter_grid_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(inverter_grid_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<" ";
+            osstream<<convert_data_into_bpa_format(inverter_valve_side_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(inverter_valve_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<string(14,' ');
+            osstream<<convert_data_into_bpa_format(inverter_transformer_max_tap_in_kv,"F5.2");
+            osstream<<convert_data_into_bpa_format(inverter_transformer_min_tap_in_kv,"F5.2");
+            osstream<<convert_data_into_bpa_format(inverter_transformer_number_of_taps,"I2");
+            osstream<<endl;
         }
 
        //imeporter rectifier data
@@ -3363,20 +3363,20 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             {
                 rectifier_valve_side_bus_name=rectifier_grid_bus_name;
             }
-            sstream<<"BD";
-            sstream<<string(4,' ');
-            sstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<string(5,' ');
-            sstream<<convert_data_into_bpa_format(rectifier_side_number_of_bridge,"I2");
-            sstream<<convert_data_into_bpa_format(line_rectifier_smooting_inductance_in_mH,"F5.1");
-            sstream<<convert_data_into_bpa_format(rectifier_min_alpha,"F5.1");
-            sstream<<convert_data_into_bpa_format(rectifier_max_alpha,"F5.1");
-            sstream<<string(5,' ');
-            sstream<<convert_data_into_bpa_format(nominal_dc_current_per_pole_in_A,"F5.1");
-            sstream<<convert_data_into_bpa_format(rectifier_grid_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(rectifier_grid_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<endl;
+            osstream<<"BD";
+            osstream<<string(4,' ');
+            osstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<string(5,' ');
+            osstream<<convert_data_into_bpa_format(rectifier_side_number_of_bridge,"I2");
+            osstream<<convert_data_into_bpa_format(line_rectifier_smooting_inductance_in_mH,"F5.1");
+            osstream<<convert_data_into_bpa_format(rectifier_min_alpha,"F5.1");
+            osstream<<convert_data_into_bpa_format(rectifier_max_alpha,"F5.1");
+            osstream<<string(5,' ');
+            osstream<<convert_data_into_bpa_format(nominal_dc_current_per_pole_in_A,"F5.1");
+            osstream<<convert_data_into_bpa_format(rectifier_grid_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(rectifier_grid_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<endl;
         }
 
         for (size_t j=0; j<pole_number; j++)
@@ -3392,20 +3392,20 @@ string BPA_IMEXPORTER::export_hvdc_data() const
                 rectifier_valve_side_bus_name=rectifier_grid_bus_name;
             }
 
-            sstream<<"T ";
-            sstream<<string(4,' ');
-            sstream<<convert_data_into_bpa_format(rectifier_grid_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(rectifier_grid_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<" ";
-            sstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<" ";
-            sstream<<string(5,' ');
-            sstream<<convert_data_into_bpa_format(rectifier_r_in_pu,"F6.5");
-            sstream<<convert_data_into_bpa_format(rectifier_x_in_pu,"F6.5");
-            sstream<<convert_data_into_bpa_format(rectifier_g_in_pu,"F6.5");
-            sstream<<convert_data_into_bpa_format(rectifier_s_in_pu,"F6.5");
-            sstream<<endl;
+            osstream<<"T ";
+            osstream<<string(4,' ');
+            osstream<<convert_data_into_bpa_format(rectifier_grid_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(rectifier_grid_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<" ";
+            osstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<" ";
+            osstream<<string(5,' ');
+            osstream<<convert_data_into_bpa_format(rectifier_r_in_pu,"F6.5");
+            osstream<<convert_data_into_bpa_format(rectifier_x_in_pu,"F6.5");
+            osstream<<convert_data_into_bpa_format(rectifier_g_in_pu,"F6.5");
+            osstream<<convert_data_into_bpa_format(rectifier_s_in_pu,"F6.5");
+            osstream<<endl;
         }
 
         for (size_t j=0; j!=pole_number; j++)
@@ -3420,21 +3420,21 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             {
                 rectifier_valve_side_bus_name=rectifier_grid_bus_name;
             }
-            sstream<<"R ";
-            sstream<<string(4,' ');
-            sstream<<convert_data_into_bpa_format(rectifier_grid_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(rectifier_grid_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<" ";
-            sstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_name,"A8");
-            sstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_base_voltage_in_kV,"F4.0");
-            sstream<<string(14,' ');
-            sstream<<convert_data_into_bpa_format(rectifier_transformer_max_tap_in_kv,"F5.2");
-            sstream<<convert_data_into_bpa_format(rectifier_transformer_min_tap_in_kv,"F5.2");
-            sstream<<convert_data_into_bpa_format(rectifier_transformer_number_of_taps,"I2");
-            sstream<<endl;
+            osstream<<"R ";
+            osstream<<string(4,' ');
+            osstream<<convert_data_into_bpa_format(rectifier_grid_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(rectifier_grid_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<" ";
+            osstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_name,"A8");
+            osstream<<convert_data_into_bpa_format(rectifier_valve_side_bus_base_voltage_in_kV,"F4.0");
+            osstream<<string(14,' ');
+            osstream<<convert_data_into_bpa_format(rectifier_transformer_max_tap_in_kv,"F5.2");
+            osstream<<convert_data_into_bpa_format(rectifier_transformer_min_tap_in_kv,"F5.2");
+            osstream<<convert_data_into_bpa_format(rectifier_transformer_number_of_taps,"I2");
+            osstream<<endl;
         }
     }
-    return sstream.str();
+    return osstream.str();
 }
 
 

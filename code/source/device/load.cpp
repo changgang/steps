@@ -10,12 +10,12 @@ double LOAD::voltage_threshold_of_constant_power_load_in_pu = 0.7;
 
 LOAD::LOAD(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. LOAD object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. LOAD object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -41,13 +41,13 @@ LOAD::~LOAD()
 
 void LOAD::set_load_bus(size_t load_bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(load_bus==0)
     {
-        sstream<<"Warning. Zero bus number (0) is not allowed for setting up load bus."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up load bus."<<endl
           <<"0 will be set to indicate invalid load.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->bus = load_bus;
         return;
     }
@@ -60,9 +60,9 @@ void LOAD::set_load_bus(size_t load_bus)
     {
         if(not psdb->is_bus_exist(load_bus))
         {
-            sstream<<"Bus "<<load_bus<<" does not exist for setting up load."<<endl
+            osstream<<"Bus "<<load_bus<<" does not exist for setting up load."<<endl
               <<"0 will be set to indicate invalid load.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             this->bus = 0;
             return;
         }
@@ -210,12 +210,12 @@ bool LOAD::is_in_zone(size_t zone) const
 
 void LOAD::report() const
 {
-    ostringstream sstream;
-    sstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
+    ostringstream osstream;
+    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_power_load_in_MVA()<<" MVA, "
       <<"P+jQ[I part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_current_load_in_MVA()<<" MVA, "
       <<"P+jQ[Z part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_impedance_load_in_MVA()<<" MVA.";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void LOAD::save() const
@@ -275,7 +275,7 @@ complex<double> LOAD::get_actual_total_load_in_MVA() const
 
 complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(get_status() == false)
         return 0.0;
@@ -285,17 +285,17 @@ complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<get_device_name()<<" is not assigned to any power system database. Actual constant power load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<get_device_name()<<" is not assigned to any power system database. Actual constant power load will be returned as it nominal power.";
+        show_information_with_leading_time_stamp(osstream);
         return S0;
     }
 
     BUS* busptr = psdb->get_bus(get_load_bus());
     if(busptr==NULL)
     {
-        sstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
+        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
           <<get_device_name()<<" actual constant power load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return S0;
     }
 
@@ -312,7 +312,7 @@ complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
 
 complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(get_status() == false)
         return 0.0;
@@ -322,17 +322,17 @@ complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<get_device_name()<<" is not assigned to any power system database. Actual constant current load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<get_device_name()<<" is not assigned to any power system database. Actual constant current load will be returned as it nominal power.";
+        show_information_with_leading_time_stamp(osstream);
         return S0;
     }
 
     BUS* busptr = psdb->get_bus(get_load_bus());
     if(busptr==NULL)
     {
-        sstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
+        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
           <<get_device_name()<<" actual constant current load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return S0;
     }
 
@@ -344,7 +344,7 @@ complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
 
 complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(get_status() == false)
         return 0.0;
@@ -354,17 +354,17 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<get_device_name()<<" is not assigned to any power system database. Actual constant impedance load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<get_device_name()<<" is not assigned to any power system database. Actual constant impedance load will be returned as it nominal power.";
+        show_information_with_leading_time_stamp(osstream);
         return S0;
     }
 
     BUS* busptr = psdb->get_bus(get_load_bus());
     if(busptr==NULL)
     {
-        sstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
+        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
           <<get_device_name()<<" actual constant impedance load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return S0;
     }
 
@@ -437,9 +437,9 @@ void LOAD::set_load_model(const LOAD_MODEL* model)
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append load model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -484,9 +484,9 @@ void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* mode
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append load frequency relay model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load frequency relay model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -615,10 +615,10 @@ complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power
         }
         else
         {
-            ostringstream sstream;
-            sstream<<get_device_name()<<" is not assigned to any power system database."<<endl
+            ostringstream osstream;
+            osstream<<get_device_name()<<" is not assigned to any power system database."<<endl
               <<"Dynamic load current will be returned as 0.0.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             return 0.0;
         }
     }

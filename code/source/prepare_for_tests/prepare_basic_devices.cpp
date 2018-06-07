@@ -3,12 +3,12 @@
 
 void prepare_basic_buses(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic buse."<<endl
+        osstream<<"NULL power system database is provided for preparing basic buse."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -38,12 +38,12 @@ void prepare_basic_buses(POWER_SYSTEM_DATABASE* db)
 
 void prepare_basic_generators(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic generators."<<endl
+        osstream<<"NULL power system database is provided for preparing basic generators."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -78,12 +78,12 @@ void prepare_basic_generators(POWER_SYSTEM_DATABASE* db)
 }
 void prepare_basic_wt_generators(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic power-electronic sources."<<endl
+        osstream<<"NULL power system database is provided for preparing basic power-electronic sources."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(db->get_bus_count()==0)
@@ -120,12 +120,12 @@ void prepare_basic_wt_generators(POWER_SYSTEM_DATABASE* db)
 
 void prepare_basic_loads(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic loads."<<endl
+        osstream<<"NULL power system database is provided for preparing basic loads."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -154,12 +154,12 @@ void prepare_basic_loads(POWER_SYSTEM_DATABASE* db)
 
 void prepare_basic_lines(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic lines."<<endl
+        osstream<<"NULL power system database is provided for preparing basic lines."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -185,12 +185,12 @@ void prepare_basic_lines(POWER_SYSTEM_DATABASE* db)
 }
 void prepare_basic_transformers(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic transformers."<<endl
+        osstream<<"NULL power system database is provided for preparing basic transformers."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -220,12 +220,12 @@ void prepare_basic_transformers(POWER_SYSTEM_DATABASE* db)
 
 void prepare_basic_fixed_shunts(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic fixed shunts."<<endl
+        osstream<<"NULL power system database is provided for preparing basic fixed shunts."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -254,12 +254,12 @@ void prepare_basic_fixed_shunts(POWER_SYSTEM_DATABASE* db)
 
 void prepare_basic_hvdcs(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic hvdcs."<<endl
+        osstream<<"NULL power system database is provided for preparing basic hvdcs."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -286,12 +286,12 @@ void prepare_basic_hvdcs(POWER_SYSTEM_DATABASE* db)
 
 void prepare_basic_equivalent_devices(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing basic equivalent devices."<<endl
+        osstream<<"NULL power system database is provided for preparing basic equivalent devices."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 

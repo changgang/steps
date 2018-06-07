@@ -157,12 +157,12 @@ map<string, vector<string>> SUPPORTED_METERS{   {"BUS",         bus_meters},
 
 METER::METER(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. METER object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. METER object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -212,9 +212,9 @@ void METER::set_device_id(const DEVICE_ID& did)
 {
     if(not did.is_valid())
     {
-        ostringstream sstream;
-        sstream<<"Warning. Device id is invalid for setting up meter.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Device id is invalid for setting up meter.";
+        show_information_with_leading_time_stamp(osstream);
     }
     this->device_id =did;
     set_device_pointer();
@@ -222,11 +222,11 @@ void METER::set_device_id(const DEVICE_ID& did)
 
 void METER::set_meter_type(string meter_type, size_t internal_variable_index)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not device_id.is_valid())
     {
-        sstream<<"Warning. Device id is invalid for setting up meter type. Set up proper device id first.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Device id is invalid for setting up meter type. Set up proper device id first.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -242,8 +242,8 @@ void METER::set_meter_type(string meter_type, size_t internal_variable_index)
     }
     else
     {
-        sstream<<"Warning, Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_id.get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning, Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_id.get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
         this->meter_type = "";
     }
 }
@@ -284,14 +284,14 @@ bool METER::is_valid_meter_type(string meter_type) const
 
 bool METER::is_valid_meter_type_of_device(string meter_type, string device_type) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     device_type = string2upper(device_type);
     map<string, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
     if(it==SUPPORTED_METERS.end())
     {
-        sstream<<"Warning. Device type "<<device_type<<" is not supported for setting up meter.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Device type "<<device_type<<" is not supported for setting up meter.";
+        show_information_with_leading_time_stamp(osstream);
         return false;
     }
     else
@@ -424,7 +424,7 @@ bool METER::operator!=(const METER& meter)
 
 void METER::set_device_pointer()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(not device_id.is_valid())
     {
@@ -436,9 +436,9 @@ void METER::set_device_pointer()
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER."<<endl
+        osstream<<"No power system database is set for METER."<<endl
           <<"Device pointer will be set as NULL to disable the meter.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         device_pointer = NULL;
         return;
     }
@@ -475,9 +475,9 @@ void METER::set_device_pointer()
     this->device_pointer = deviceptr;
     if(deviceptr==NULL)
     {
-        ostringstream sstream;
-        sstream<<"Device cannot be found in database for setting meter. Device is "<<device_id.get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Device cannot be found in database for setting meter. Device is "<<device_id.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 

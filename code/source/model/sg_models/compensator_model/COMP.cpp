@@ -151,9 +151,9 @@ void COMP::check()
 }
 void COMP::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void COMP::save()
 {
@@ -161,16 +161,16 @@ void COMP::save()
 }
 string COMP::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(8)<<get_Xe()
       <<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 

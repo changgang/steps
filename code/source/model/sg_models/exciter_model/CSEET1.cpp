@@ -581,7 +581,7 @@ double CSEET1::get_Efdmax_in_pu() const
 
 double CSEET1::get_initial_Ve_with_Fex_function() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
@@ -612,16 +612,16 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
 
         if(Fex == 0.0)
         {
-            sstream<<"Fatal error. Fex = 0.0 is encountered when initializing exciter CSEET1 of "<<get_device_name()<<".";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Fatal error. Fex = 0.0 is encountered when initializing exciter CSEET1 of "<<get_device_name()<<".";
+            show_information_with_leading_time_stamp(osstream);
             Ve = 0.0;
             break;
         }
 
         if(iter_count>10)
         {
-            sstream<<"Warning. Initial Ve is not solved within 10 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Warning. Initial Ve is not solved within 10 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".";
+            show_information_with_leading_time_stamp(osstream);
             break;
         }
     }
@@ -1059,9 +1059,9 @@ void CSEET1::check()
 
 void CSEET1::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void CSEET1::save()
@@ -1071,7 +1071,7 @@ void CSEET1::save()
 
 string CSEET1::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
@@ -1119,7 +1119,7 @@ string CSEET1::get_standard_model_string() const
 
     double TR = get_TR_in_s();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(4)<<source_index<<", "
@@ -1144,7 +1144,7 @@ string CSEET1::get_standard_model_string() const
         tuner_T3 = get_serial_tuner_T3_in_s();
         tuner_T4 = get_serial_tuner_T4_in_s();
 
-        sstream<<setw(4)<<tuner_selector<<", "
+        osstream<<setw(4)<<tuner_selector<<", "
           <<setw(8)<<setprecision(6)<<tuner_K<<", "
           <<setw(8)<<setprecision(6)<<tuner_T1<<", "
           <<setw(8)<<setprecision(6)<<tuner_T2<<", "
@@ -1164,7 +1164,7 @@ string CSEET1::get_standard_model_string() const
         tuner_VDmax = get_parallel_tuner_VDmax_in_pu();
         tuner_VDmin = get_parallel_tuner_VDmin_in_pu();
 
-        sstream<<setw(8)<<setprecision(6)<<tuner_KP<<", "
+        osstream<<setw(8)<<setprecision(6)<<tuner_KP<<", "
           <<setw(8)<<setprecision(6)<<tuner_KI<<", "
           <<setw(8)<<setprecision(6)<<tuner_VImax<<", "
           <<setw(8)<<setprecision(6)<<tuner_VImin<<", "
@@ -1195,7 +1195,7 @@ string CSEET1::get_standard_model_string() const
     double Efdmax = get_Efdmax_in_pu();
 
 
-    sstream<<setw(8)<<setprecision(6)<<KA<<", "
+    osstream<<setw(8)<<setprecision(6)<<KA<<", "
       <<setw(8)<<setprecision(6)<<TA<<", "
       <<setw(8)<<setprecision(6)<<VAmax<<", "
       <<setw(8)<<setprecision(6)<<VAmin<<", "
@@ -1214,7 +1214,7 @@ string CSEET1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<KD<<", "
       <<setw(8)<<setprecision(6)<<Efdmax<<"  /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 

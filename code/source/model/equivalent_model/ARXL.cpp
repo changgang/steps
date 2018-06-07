@@ -91,35 +91,35 @@ void ARXL::clear()
 
 void ARXL::set_output_line(DEVICE_ID did, size_t meter_side)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(did.get_device_type()!="LINE")
     {
-        sstream<<"Warning. The output device (of type "<<did.get_device_type()<<") is not a LINE when setting up output line for ARXL model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The output device (of type "<<did.get_device_type()<<") is not a LINE when setting up output line for ARXL model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. Power system database is not set when setting up ARXL model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Power system database is not set when setting up ARXL model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     LINE* line = psdb->get_line(did);
     if(line==NULL)
     {
-        sstream<<"Warning. "<<did.get_device_name()<<" is not found in power system database when setting up ARXL model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. "<<did.get_device_name()<<" is not found in power system database when setting up ARXL model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(line->get_sending_side_breaker_status()==false and line->get_receiving_side_breaker_status()==false)
     {
-        sstream<<"Warning. "<<did.get_device_name()<<" is out-of-service when setting up ARXL model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. "<<did.get_device_name()<<" is out-of-service when setting up ARXL model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -334,21 +334,21 @@ void ARXL::update_meters_buffer()
     for(size_t i=0; i!=n; ++i)
     {
         p_meters[i].update_meter_buffer();
-        /*sstream<<"P_INPUT meter "<<p_meters[i].get_meter_name()<<" buffer:"<<endl;
+        /*osstream<<"P_INPUT meter "<<p_meters[i].get_meter_name()<<" buffer:"<<endl;
         for(size_t j=0; j!=10; j++)
-            sstream<<p_meters[i].get_meter_value_from_buffer_with_delay(j)<<", ";
-        sstream<<endl;*/
+            osstream<<p_meters[i].get_meter_value_from_buffer_with_delay(j)<<", ";
+        osstream<<endl;*/
     }
     n = q_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         q_meters[i].update_meter_buffer();
-        /*sstream<<"Q_INPUT meter "<<q_meters[i].get_meter_name()<<" buffer:"<<endl;
+        /*osstream<<"Q_INPUT meter "<<q_meters[i].get_meter_name()<<" buffer:"<<endl;
         for(size_t j=0; j!=MAX_HISTORY_METER_BUFFER; j++)
-            sstream<<q_meters[i].get_meter_value_from_buffer_with_delay(j)<<", ";
-        sstream<<endl;*/
+            osstream<<q_meters[i].get_meter_value_from_buffer_with_delay(j)<<", ";
+        osstream<<endl;*/
     }
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 }
 
 void ARXL::update_equivalent_outputs()
@@ -360,7 +360,7 @@ void ARXL::update_equivalent_constant_power_load()
 {
     double time = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     double P = 0.0;
     size_t n = p_meters.size();
@@ -373,19 +373,19 @@ void ARXL::update_equivalent_constant_power_load()
             size_t delay = p_delays[i][j];
             if(delay==0)
             {
-                sstream<<"fatal erro. 0 delay is detected in ARXL model.";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"fatal erro. 0 delay is detected in ARXL model.";
+                show_information_with_leading_time_stamp(osstream);
             }
             double coef = p_coefficients[i][j];
 
             double v = p_meters[i].get_meter_value_from_buffer_with_delay(delay)-p_meters[i].get_meter_value_from_buffer_with_delay(delay+1);
 
-            //sstream<<"Meter "<<p_meters[i].get_meter_name()<<", delay = "<<delay<<", coefficient = "<<coef<<", difference = "<<v<<endl;
-            //sstream<<"i"<<i<<"j"<<j<<"d"<<delay<<"c"<<setprecision(6)<<fixed<<coef<<"D"<<setprecision(9)<<fixed<<v;
+            //osstream<<"Meter "<<p_meters[i].get_meter_name()<<", delay = "<<delay<<", coefficient = "<<coef<<", difference = "<<v<<endl;
+            //osstream<<"i"<<i<<"j"<<j<<"d"<<delay<<"c"<<setprecision(6)<<fixed<<coef<<"D"<<setprecision(9)<<fixed<<v;
             P += (coef*v);
         }
     }
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     P += p_meters[0].get_meter_value_from_buffer_with_delay(1);//meter[0] is the output meter
 
@@ -463,7 +463,7 @@ double ARXL::get_Q_load_power_in_MVar() const
 
 void ARXL::switch_output_to_equivalent_device()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
@@ -486,14 +486,14 @@ void ARXL::switch_output_to_equivalent_device()
     vector<EQUIVALENT_DEVICE*> pedevices = psdb->get_equivalent_devices_connecting_to_bus(arxl_bus);
     if(pedevices.size()==0)
     {
-        sstream<<"Warning. There is no EQUIVALENT DEVICE at bus "<<arxl_bus<<". Cannot switch output to equivalent device.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. There is no EQUIVALENT DEVICE at bus "<<arxl_bus<<". Cannot switch output to equivalent device.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(pedevices.size()>1)
     {
-        sstream<<"Warning. There are more than 1 EQUIVALENT DEVICEs at bus "<<arxl_bus<<". Cannot determine which equivalent device is to be switched to.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. There are more than 1 EQUIVALENT DEVICEs at bus "<<arxl_bus<<". Cannot determine which equivalent device is to be switched to.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -506,8 +506,8 @@ void ARXL::switch_output_to_equivalent_device()
     edevice->set_equivalent_nominal_constant_current_load_in_MVA(0.0);
     edevice->set_equivalent_nominal_constant_impedance_load_in_MVA(0.0);
 
-    sstream<<edevice->get_device_name()<<" is switched on at time "<<current_time<<" s. Desired equivalent load is "<<edevice->get_equivalent_load_in_MVA();
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<edevice->get_device_name()<<" is switched on at time "<<current_time<<" s. Desired equivalent load is "<<edevice->get_equivalent_load_in_MVA();
+    show_information_with_leading_time_stamp(osstream);
 
 
     // change 0-meters into equivalent device meters
@@ -516,9 +516,9 @@ void ARXL::switch_output_to_equivalent_device()
 
     DEVICE_ID  edevice_did = edevice->get_device_id();
 
-    sstream<<"P_meters[0] was "<<p_meters[0].get_meter_name()<<endl
+    osstream<<"P_meters[0] was "<<p_meters[0].get_meter_name()<<endl
            <<"Q_meters[0] was "<<q_meters[0].get_meter_name()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 
     METER meter = setter.prepare_equivalent_device_nominal_active_constant_power_load_in_MW_meter(edevice_did);
     p_meters[0].change_device_id(meter.get_device_id());
@@ -529,9 +529,9 @@ void ARXL::switch_output_to_equivalent_device()
     q_meters[0].change_meter_type(meter.get_meter_type());
 
 
-    sstream<<"P_meters[0] is "<<p_meters[0].get_meter_name()<<endl
+    osstream<<"P_meters[0] is "<<p_meters[0].get_meter_name()<<endl
            <<"Q_meters[0] is "<<q_meters[0].get_meter_name()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void ARXL::check()
@@ -540,9 +540,9 @@ void ARXL::check()
 }
 void ARXL::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void ARXL::save()
 {

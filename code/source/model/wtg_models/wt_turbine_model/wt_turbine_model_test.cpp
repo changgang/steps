@@ -182,7 +182,7 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generato
 
 void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
@@ -200,8 +200,8 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
 
     STEPS::TIME = -delt*2.0;
@@ -264,7 +264,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
 void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
@@ -282,8 +282,8 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
 
     STEPS::TIME = -delt*2.0;
@@ -354,7 +354,7 @@ void WT_TURBINE_MODEL_TEST::apply_1deg_pitch_angle_increase()
 
 void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
@@ -369,8 +369,8 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     STEPS::TIME = -delt*2.0;
     double generator_speed, turbine_speed;
@@ -437,7 +437,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
 void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_overspeed_mode()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
@@ -452,8 +452,8 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     STEPS::TIME = -delt*2.0;
     double generator_speed, turbine_speed;
@@ -528,23 +528,23 @@ void WT_TURBINE_MODEL_TEST::apply_10_percent_power_order_drop()
 
 void WT_TURBINE_MODEL_TEST::export_meter_title()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tPELEC\tPMECH\tTSPEED\tGSPEED\tANGLE";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tPELEC\tPMECH\tTSPEED\tGSPEED\tANGLE";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_TURBINE_MODEL_TEST::export_meter_values()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     WT_TURBINE_MODEL* model = get_test_wt_turbine_model();
 
-    sstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
+    osstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_wt_generator_active_power_generation_in_MW()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_mechanical_power_in_pu_from_wt_aerodynamic_model()*model->get_mbase_in_MVA()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_turbine_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_generator_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_rotor_angle_in_deg();
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 

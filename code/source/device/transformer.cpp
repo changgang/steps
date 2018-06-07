@@ -8,12 +8,12 @@ using namespace std;
 
 TRANSFORMER::TRANSFORMER(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. TRANSFORMER object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. TRANSFORMER object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -59,18 +59,18 @@ void TRANSFORMER::set_non_metered_end_bus(size_t bus)
         non_metered_end_bus = bus;
     else
     {
-        ostringstream sstream;
+        ostringstream osstream;
         if(get_winding_bus(TERTIARY_SIDE)==0)
         {
-            sstream<<"Bus "<<bus<<" is not among the winding buses ("<<get_winding_bus(PRIMARY_SIDE)<<", "<<get_winding_bus(SECONDARY_SIDE)<<") for setting up non-metered end bus of transformer."<<endl
+            osstream<<"Bus "<<bus<<" is not among the winding buses ("<<get_winding_bus(PRIMARY_SIDE)<<", "<<get_winding_bus(SECONDARY_SIDE)<<") for setting up non-metered end bus of transformer."<<endl
               <<"Secondary winding bus ("<<get_winding_bus(SECONDARY_SIDE)<<") will be set automatically.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }
         else
         {
-            sstream<<"Bus "<<bus<<" is not among the winding buses ("<<get_winding_bus(PRIMARY_SIDE)<<", "<<get_winding_bus(SECONDARY_SIDE)<<", "<<get_winding_bus(TERTIARY_SIDE)<<") for setting up non-metered end bus of transformer."<<endl
+            osstream<<"Bus "<<bus<<" is not among the winding buses ("<<get_winding_bus(PRIMARY_SIDE)<<", "<<get_winding_bus(SECONDARY_SIDE)<<", "<<get_winding_bus(TERTIARY_SIDE)<<") for setting up non-metered end bus of transformer."<<endl
               <<"Secondary winding bus ("<<get_winding_bus(SECONDARY_SIDE)<<") will be set automatically.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }
 
         non_metered_end_bus = get_winding_bus(SECONDARY_SIDE);
@@ -85,7 +85,7 @@ void TRANSFORMER::set_magnetizing_admittance_based_on_primary_winding_bus_base_v
 
 void TRANSFORMER::set_winding_bus(TRANSFORMER_WINDING_SIDE winding, size_t bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(bus==0 and winding==TERTIARY_SIDE)
     {
         winding_bus[winding] = 0;
@@ -94,9 +94,9 @@ void TRANSFORMER::set_winding_bus(TRANSFORMER_WINDING_SIDE winding, size_t bus)
 
     if(bus==0 and winding!=TERTIARY_SIDE)
     {
-        sstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<get_winding_name(winding)<<" winding bus of transformer."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<get_winding_name(winding)<<" winding bus of transformer."<<endl
           <<"0 will be set to indicate invalid transformer.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         winding_bus[winding] = 0;
         return;
     }
@@ -109,9 +109,9 @@ void TRANSFORMER::set_winding_bus(TRANSFORMER_WINDING_SIDE winding, size_t bus)
     {
         if(not psdb->is_bus_exist(bus))
         {
-            sstream<<"Bus "<<bus<<" does not exist in power system database '"<<psdb->get_system_name()<<"' for setting up "<<get_winding_name(winding)<<" winding bus of transformer."<<endl
+            osstream<<"Bus "<<bus<<" does not exist in power system database '"<<psdb->get_system_name()<<"' for setting up "<<get_winding_name(winding)<<" winding bus of transformer."<<endl
               <<"0 will be set to indicate invalid transformer.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             winding_bus[winding] = 0;
             return;
         }
@@ -144,12 +144,12 @@ void TRANSFORMER::set_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE win
             v = psdb->get_bus_base_voltage_in_kV(bus);
         if(v==0.0)
         {
-            ostringstream sstream;
+            ostringstream osstream;
             DEVICE_ID did = get_device_id();
             string device = did.get_device_name();
-            sstream<<"Error. Zero (0.0kV) nominal voltage is not allowed for setting up "<<get_winding_name(winding)<<" winding nominal voltage of "<<device<<"."<<endl
+            osstream<<"Error. Zero (0.0kV) nominal voltage is not allowed for setting up "<<get_winding_name(winding)<<" winding nominal voltage of "<<device<<"."<<endl
               <<"0.0 will be set to indicate invalid transformer";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }
         winding_nominal_voltage_in_kV[winding] = v;
     }
@@ -157,11 +157,11 @@ void TRANSFORMER::set_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE win
 
 void TRANSFORMER::set_winding_nominal_capacity_in_MVA(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2, double s)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(winding1==winding2)
     {
-        sstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to set winding nominal capacity.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to set winding nominal capacity.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(winding1>winding2)
@@ -180,9 +180,9 @@ void TRANSFORMER::set_winding_nominal_capacity_in_MVA(TRANSFORMER_WINDING_SIDE w
         {
             DEVICE_ID did = get_device_id();
             string device = did.get_device_name();
-            sstream<<"Warning. "<<device<<" is not assigned to any power system database."<<endl
+            osstream<<"Warning. "<<device<<" is not assigned to any power system database."<<endl
               <<get_winding_name(winding1)<<"-"<<get_winding_name(winding2)<<" nominal capacity will be set as 100MVA since 0.0 is input.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             if(winding1==PRIMARY_SIDE and winding2==TERTIARY_SIDE)
                 winding_nominal_capacity_in_MVA[TERTIARY_SIDE]=100.0;
             else
@@ -200,11 +200,11 @@ void TRANSFORMER::set_winding_nominal_capacity_in_MVA(TRANSFORMER_WINDING_SIDE w
 
 void TRANSFORMER::set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2, complex<double> z)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(winding1==winding2)
     {
-        sstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to set winding leakage impedance.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to set winding leakage impedance.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(winding1>winding2)
@@ -273,7 +273,7 @@ void TRANSFORMER::set_winding_control_mode(TRANSFORMER_WINDING_SIDE winding, TRA
 
 void TRANSFORMER::set_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding, size_t bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     size_t winding_bus = get_winding_bus(winding);
 
@@ -284,10 +284,10 @@ void TRANSFORMER::set_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding, s
         POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
         if(psdb==NULL)
         {
-            sstream<<get_device_name()<<" is not assigned to any power system database."<<endl
+            osstream<<get_device_name()<<" is not assigned to any power system database."<<endl
               <<get_winding_name(winding)<<" winding controlled bus will be set automatically as "
               <<get_winding_name(winding)<<" winding bus "<<get_winding_bus(PRIMARY_SIDE)<<".";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             winding_controlled_bus[winding] = winding_bus;
         }
         else
@@ -296,10 +296,10 @@ void TRANSFORMER::set_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding, s
                 winding_controlled_bus[winding] = bus;
             else
             {
-                sstream<<"Bus "<<bus<<" does not exist in power system database '"<<psdb->get_system_name()<<"' for setting up controlled bus by "
+                osstream<<"Bus "<<bus<<" does not exist in power system database '"<<psdb->get_system_name()<<"' for setting up controlled bus by "
                   <<get_winding_name(winding)<<" winding of "<<get_device_name()<<endl
                   <<get_winding_name(winding)<<" winding controlled bus will be set automatically as "<<get_winding_name(winding)<<" winding bus "<<winding_bus<<".";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
                 winding_controlled_bus[winding] = winding_bus;
             }
         }
@@ -380,11 +380,11 @@ double TRANSFORMER::get_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE w
 
 double TRANSFORMER::get_winding_nominal_capacity_in_MVA(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(winding1==winding2)
     {
-        sstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding nominal capacity. Zero will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding nominal capacity. Zero will be returned.";
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
     if(winding1>winding2)
@@ -402,11 +402,11 @@ double TRANSFORMER::get_winding_nominal_capacity_in_MVA(TRANSFORMER_WINDING_SIDE
 
 complex<double> TRANSFORMER::get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(winding1==winding2)
     {
-        sstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding nominal leakage impedance. Zero will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding nominal leakage impedance. Zero will be returned.";
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
     if(winding1>winding2)
@@ -716,9 +716,9 @@ bool TRANSFORMER::is_in_zone(size_t zone) const
 
 void TRANSFORMER::report() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_two_winding_transformer())
-        sstream<<"Two winding transformer '"<<get_identifier()<<"' connecting to bus "
+        osstream<<"Two winding transformer '"<<get_identifier()<<"' connecting to bus "
           <<get_winding_bus(PRIMARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(PRIMARY_SIDE)<<" kV) and "
           <<get_winding_bus(SECONDARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(SECONDARY_SIDE)<<" kV): "
           <<((get_winding_breaker_status(PRIMARY_SIDE)==true and get_winding_breaker_status(SECONDARY_SIDE)==true)?"in service":"out of service")<<", "<<endl
@@ -726,7 +726,7 @@ void TRANSFORMER::report() const
           <<"Gm+jBm = "<<setw(6)<<setprecision(4)<<fixed<<get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu()<<" pu"<<endl
           <<"Primary-Secondary capacity = "<<setw(6)<<setprecision(4)<<fixed<<get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<" MVA";
     else
-        sstream<<"Three winding transformer '"<<get_identifier()<<"' connecting to bus "
+        osstream<<"Three winding transformer '"<<get_identifier()<<"' connecting to bus "
           <<get_winding_bus(PRIMARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(PRIMARY_SIDE)<<" kV), "
           <<get_winding_bus(SECONDARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(SECONDARY_SIDE)<<" kV) and "
           <<get_winding_bus(TERTIARY_SIDE)<<"("<<get_winding_nominal_voltage_in_kV(TERTIARY_SIDE)<<" kV): "
@@ -738,7 +738,7 @@ void TRANSFORMER::report() const
           <<"Primary-Secondary capacity = "<<setw(6)<<setprecision(4)<<fixed<<get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<" MVA"<<endl
           <<"Secondary-Tertiary capacity = "<<setw(6)<<setprecision(4)<<fixed<<get_winding_nominal_capacity_in_MVA(SECONDARY_SIDE, TERTIARY_SIDE)<<" MVA"<<endl
           <<"Tertiary-Primary capacity = "<<setw(6)<<setprecision(4)<<fixed<<get_winding_nominal_capacity_in_MVA(TERTIARY_SIDE, PRIMARY_SIDE)<<" MVA"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void TRANSFORMER::save() const
@@ -934,13 +934,13 @@ complex<double> TRANSFORMER::get_two_winding_trans_star_bus_complex_voltage_in_p
     if(get_winding_breaker_status(PRIMARY_SIDE)==false and get_winding_breaker_status(SECONDARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Star bus voltage will be returned as 1.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 1.0;
     }
 
@@ -996,13 +996,13 @@ complex<double> TRANSFORMER::get_three_winding_trans_star_bus_complex_voltage_in
     if(get_winding_breaker_status(PRIMARY_SIDE)==false and get_winding_breaker_status(SECONDARY_SIDE)==false and get_winding_breaker_status(TERTIARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Star bus voltage will be returned as 1.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 1.0;
     }
 
@@ -1159,13 +1159,13 @@ complex<double> TRANSFORMER::get_two_winding_trans_primary_winding_complex_curre
     if(get_winding_breaker_status(PRIMARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Primary winding complex current will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1195,13 +1195,13 @@ complex<double> TRANSFORMER::get_two_winding_trans_secondary_winding_complex_cur
     if(get_winding_breaker_status(SECONDARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Secondary winding complex current will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1232,13 +1232,13 @@ complex<double> TRANSFORMER::get_three_winding_trans_primary_winding_complex_cur
     if(get_winding_breaker_status(PRIMARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Primary winding complex current will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1271,13 +1271,13 @@ complex<double> TRANSFORMER::get_three_winding_trans_secondary_winding_complex_c
     if(get_winding_breaker_status(SECONDARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Secondary winding complex current will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1310,13 +1310,13 @@ complex<double> TRANSFORMER::get_three_winding_trans_tertiary_winding_complex_cu
     if(get_winding_breaker_status(TERTIARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Tertiary winding complex current will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1363,13 +1363,13 @@ complex<double> TRANSFORMER::get_primary_winding_complex_current_in_kA() const
     if(get_winding_breaker_status(PRIMARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Primary winding complex current will be returned as 0.0 kA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1385,13 +1385,13 @@ complex<double> TRANSFORMER::get_secondary_winding_complex_current_in_kA() const
     if(get_winding_breaker_status(SECONDARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Secondary winding complex current will be returned as 0.0 kA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1407,13 +1407,13 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_current_in_kA() const
     if(is_two_winding_transformer() or get_winding_breaker_status(TERTIARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Tertiary winding complex current will be returned as 0.0 kA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1443,13 +1443,13 @@ complex<double> TRANSFORMER::get_primary_winding_complex_power_in_pu() const
     if(get_winding_breaker_status(PRIMARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Primary winding complex power will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1465,13 +1465,13 @@ complex<double> TRANSFORMER::get_secondary_winding_complex_power_in_pu() const
     if(get_winding_breaker_status(SECONDARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Secondary winding complex power will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1486,13 +1486,13 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_power_in_pu() const
     if(is_two_winding_transformer() or get_winding_breaker_status(TERTIARY_SIDE)==false)
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Tertiary winding complex power will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1518,13 +1518,13 @@ complex<double> TRANSFORMER::get_winding_complex_power_in_MVA(TRANSFORMER_WINDIN
 
 complex<double> TRANSFORMER::get_primary_winding_complex_power_in_MVA() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Primary winding complex power will be returned as 0.0 MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1533,13 +1533,13 @@ complex<double> TRANSFORMER::get_primary_winding_complex_power_in_MVA() const
 
 complex<double> TRANSFORMER::get_secondary_winding_complex_power_in_MVA() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Secondary winding complex power will be returned as 0.0 MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1548,13 +1548,13 @@ complex<double> TRANSFORMER::get_secondary_winding_complex_power_in_MVA() const
 
 complex<double> TRANSFORMER::get_tertiary_winding_complex_power_in_MVA() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Error. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Tertiary winding complex power will be returned as 0.0 MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1563,11 +1563,11 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_power_in_MVA() const
 
 complex<double> TRANSFORMER::get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(winding1==winding2)
     {
-        sstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding leakage impedance based on system base. Zero will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding leakage impedance based on system base. Zero will be returned.";
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
     if(winding1>winding2)
@@ -1583,9 +1583,9 @@ complex<double> TRANSFORMER::get_leakage_impedance_between_windings_based_on_sys
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Leakage impedance between "<<get_winding_name(winding1)<<" and "<< get_winding_name(winding2)<<" winding based on system base power in pu will be returned as system base power=100MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         Sbase = 100.0;
     }
     else
@@ -1614,13 +1614,13 @@ double TRANSFORMER::get_winding_off_nominal_turn_ratio_in_pu(TRANSFORMER_WINDING
 
 double TRANSFORMER::get_primary_winding_off_nominal_turn_ratio_in_pu() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Primary winding off nominal turn ratio will be returned as 1.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 1.0;
     }
 
@@ -1633,13 +1633,13 @@ double TRANSFORMER::get_primary_winding_off_nominal_turn_ratio_in_pu() const
 
 double TRANSFORMER::get_secondary_winding_off_nominal_turn_ratio_in_pu() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Secondary winding off nominal turn ratio will be returned as 1.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 1.0;
     }
 
@@ -1655,13 +1655,13 @@ double TRANSFORMER::get_tertiary_winding_off_nominal_turn_ratio_in_pu() const
     if(is_two_winding_transformer())
         return 0.0;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Tertiary winding off nominal turn ratio will be returned as 1.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 1.0;
     }
 
@@ -1676,13 +1676,13 @@ complex<double> TRANSFORMER::get_magnetizing_admittance_based_on_winding_normina
 {
     complex<double> Y = get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu();
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Magnitizing admittance based on winding norminal voltage and system base power will be returned without conversion.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return Y;
     }
 

@@ -29,9 +29,9 @@ void DIFFERENTIAL_BLOCK::set_T_in_s(double t)
 {
     if(t==0.0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero time constant T is not allowed for DIFFERENTIAL_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Zero time constant T is not allowed for DIFFERENTIAL_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     this->T = t;
@@ -116,8 +116,8 @@ void DIFFERENTIAL_BLOCK::check()
 {
     if(get_limiter_type() != NO_LIMITER)
     {
-        ostringstream sstream;
-        sstream<<"Warning. Limiter is not allowed for DIFFERENTIAL_BLOCK, and will be disabled.";
-        show_information_with_leading_time_stamp(sstream);;
+        ostringstream osstream;
+        osstream<<"Warning. Limiter is not allowed for DIFFERENTIAL_BLOCK, and will be disabled.";
+        show_information_with_leading_time_stamp(osstream);;
     }
 }

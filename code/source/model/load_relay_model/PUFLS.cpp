@@ -332,7 +332,7 @@ void PUFLS::initialize()
 
 void PUFLS::run(DYNAMIC_MODE mode)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     LOAD* load = get_load_pointer();
     double TIME = get_dynamic_simulation_time_in_s();
@@ -357,18 +357,18 @@ void PUFLS::run(DYNAMIC_MODE mode)
             {
                 if(is_discrete_stage_timer_timed_out(stage))
                 {
-                    sstream<<"PUFLS discrete stage "<<stage<<" timer of "<<get_device_name()<<" is timed out at time "<<TIME<<" s."<<endl
+                    osstream<<"PUFLS discrete stage "<<stage<<" timer of "<<get_device_name()<<" is timed out at time "<<TIME<<" s."<<endl
                       <<get_discrete_stage_shed_scale_in_pu(stage)*100.0<<"% loads are tripped.";
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
                     trip_discrete_stage(stage);
                     continue;
                 }
             }
             else
             {
-                sstream<<"PUFLS discrete stage "<<stage<<" timer of "<<get_device_name()<<" is started at time "<<TIME<<" s."<<endl
+                osstream<<"PUFLS discrete stage "<<stage<<" timer of "<<get_device_name()<<" is started at time "<<TIME<<" s."<<endl
                   <<get_discrete_stage_shed_scale_in_pu(stage)*100.0<<"% loads will be tripped.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
                 start_discrete_stage_timer_of_stage(stage);
                 continue;
             }
@@ -561,11 +561,11 @@ void PUFLS::trip_additional_stage()
     LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
-    sstream<<"PUFLS additional stage of "<<get_device_name()<<" is timed out at time "
+    ostringstream osstream;
+    osstream<<"PUFLS additional stage of "<<get_device_name()<<" is timed out at time "
       <<setprecision(3)<<fixed<<current_time<<" s. "<<endl
       <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()*100.0<<"% loads is tripped.";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
     flag_additional_stage_is_tripped = true;
     additional_stage_timer.reset();
 }
@@ -578,7 +578,7 @@ void PUFLS::try_to_start_additional_stage_timer()
     LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
     double current_freq = frequency_sensor.get_output();
     double f_th = get_frequency_threshold_in_Hz();
     switch(get_additional_stage_trigger_signal())
@@ -587,10 +587,10 @@ void PUFLS::try_to_start_additional_stage_timer()
         {
             if(current_freq<f_th)
             {
-                sstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "<<current_time
+                osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "<<current_time
                   <<" s due to drop of frequency."<<endl
                   <<"Current frequency is "<<current_freq<<" Hz, and stage frequency threshold is "<<f_th<<" Hz.",
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
                 start_additional_stage_timer();
             }
             break;
@@ -601,20 +601,20 @@ void PUFLS::try_to_start_additional_stage_timer()
             {
                 if(is_frequency_recovering_beyond_current_minimum_frequency()) // frequency is recovering
                 {
-                    sstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
+                    osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
                       <<current_time<<" s due to recovery of frequency."<<endl
                       <<"Current frequency is "<<current_freq<<" Hz.";
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
                     start_additional_stage_timer();
                 }
                 else
                 {
                     if(is_minimum_frequency_not_changing())
                     {
-                        sstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
+                        osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
                           <<current_time<<" s since minimum frequency is not changing."<<endl
                           <<"Current frequency is "<<current_freq<<" Hz.";
-                        show_information_with_leading_time_stamp(sstream);
+                        show_information_with_leading_time_stamp(osstream);
                         start_additional_stage_timer();
                     }
                 }
@@ -639,7 +639,7 @@ void PUFLS::try_to_reset_additional_stage_timer()
     LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
     double current_freq = frequency_sensor.get_output();
     double f_th = get_frequency_threshold_in_Hz();
     switch(get_additional_stage_trigger_signal())
@@ -648,10 +648,10 @@ void PUFLS::try_to_reset_additional_stage_timer()
         {
             if(current_freq>f_th)
             {
-                sstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is reset at time "<<current_time
+                osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is reset at time "<<current_time
                   <<" s due to recovery of frequency."<<endl
                   <<"Current frequency is "<<current_freq<<" Hz, and stage frequency threshold is "<<f_th<<" Hz.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
                 reset_additional_stage_timer();
             }
             break;
@@ -660,10 +660,10 @@ void PUFLS::try_to_reset_additional_stage_timer()
         {
             if(is_minimum_frequency_declining())
             {
-                sstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is reset at time "<<current_time
+                osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is reset at time "<<current_time
                   <<" s due to declining of minimum frequency."<<endl
                   <<"Current frequency is "<<current_freq<<" Hz.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
                 reset_additional_stage_timer();
             }
             break;
@@ -736,11 +736,11 @@ void PUFLS::save()
 
 string PUFLS::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
     string identifier = load->get_identifier();
-    sstream<<bus<<", "
+    osstream<<bus<<", "
       <<"'"<<get_detailed_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setprecision(1)<<fixed<<(get_additional_stage_trigger_signal()==REALTIME_FREQUENCY ? 0 : 1)<<", "
@@ -752,11 +752,11 @@ string PUFLS::get_standard_model_string() const
       <<setprecision(4)<<fixed<<get_additional_stage_time_delay_in_s()<<", "
       <<setprecision(4)<<fixed<<get_discrete_stage_time_delay_in_s();
     for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
-        sstream<<", "
+        osstream<<", "
           <<setprecision(4)<<fixed<<get_discrete_stage_shed_scale_in_pu(stage);
 
-    sstream<<"  /";
-    return sstream.str();
+    osstream<<"  /";
+    return osstream.str();
 }
 
 size_t PUFLS::get_variable_index_from_variable_name(string var_name)

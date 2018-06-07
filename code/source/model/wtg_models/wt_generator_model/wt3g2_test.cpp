@@ -107,7 +107,7 @@ void WT3G2_TEST::test_initialize_and_get_initialized_inputs()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
@@ -124,10 +124,10 @@ void WT3G2_TEST::test_initialize_and_get_initialized_inputs()
     //model->set_D(1.0);
 
     model->initialize();
-    sstream<<"WT3G2 model after initialized:"<<endl;
-    sstream<<"PLL angle = "<<model->get_pll_angle_in_deg()<<" deg, PLL frequency = "<<model->get_pll_frequency_in_Hz()<<endl;
-    sstream<<"Terminal P = "<<model->get_terminal_active_power_in_MW()<<" MW, Q = "<<model->get_terminal_reactive_power_in_MVar()<<" MVar"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"WT3G2 model after initialized:"<<endl;
+    osstream<<"PLL angle = "<<model->get_pll_angle_in_deg()<<" deg, PLL frequency = "<<model->get_pll_frequency_in_Hz()<<endl;
+    osstream<<"Terminal P = "<<model->get_terminal_active_power_in_MW()<<" MW, Q = "<<model->get_terminal_reactive_power_in_MVar()<<" MVar"<<endl;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 

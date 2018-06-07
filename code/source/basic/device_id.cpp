@@ -102,13 +102,13 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         return;
     }
 
-    ostringstream sstream;
-    sstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
+    ostringstream osstream;
+    osstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
       <<"Allowed device types are: "<<endl
       <<"GENERATOR, WT GENERATOR, PV SOURCE, BATTERY, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
       <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, MULTI DC, and EQUIVALENT DEVICE."<<endl
       <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
     device_type = "";
 }
 
@@ -118,10 +118,10 @@ void DEVICE_ID::set_device_terminal(const TERMINAL& term)
         this->terminal = term;
     else
     {
-        ostringstream sstream;
-        sstream<<"Invalid terminal is provided for setting DEVICE_ID object. nothing is changed."<<endl
+        ostringstream osstream;
+        osstream<<"Invalid terminal is provided for setting DEVICE_ID object. nothing is changed."<<endl
           <<"Possible device type is "<<get_device_type()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 

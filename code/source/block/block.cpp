@@ -129,9 +129,9 @@ void BLOCK::check_limiter() const
     {
         if(upper_limit<lower_limit)
         {
-            ostringstream sstream;
-            sstream<<"Error. Limiter upper bound ("<<upper_limit<<") is less than lower bound ("<<lower_limit<<").";
-            show_information_with_leading_time_stamp(sstream);
+            ostringstream osstream;
+            osstream<<"Error. Limiter upper bound ("<<upper_limit<<") is less than lower bound ("<<lower_limit<<").";
+            show_information_with_leading_time_stamp(osstream);
         }
     }
 }

@@ -197,7 +197,7 @@ bool SEXS::setup_model_with_bpa_string(string data)
 
 void SEXS::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_model_initialized())
         return;
 
@@ -217,15 +217,15 @@ void SEXS::initialize()
 
     if(Efd>get_Efdmax_in_pu())
     {
-        sstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(Efd<get_Efdmin_in_pu())
     {
-        sstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     exciter.set_output(Efd);
     exciter.initialize();
@@ -278,9 +278,9 @@ void SEXS::check()
 
 void SEXS::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void SEXS::save()
@@ -290,7 +290,7 @@ void SEXS::save()
 
 string SEXS::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
@@ -301,7 +301,7 @@ string SEXS::get_standard_model_string() const
     double Efdmax = get_Efdmax_in_pu();
     double Efdmin = get_Efdmin_in_pu();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<TA/TB<<", "
@@ -310,7 +310,7 @@ string SEXS::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<TE<<", "
       <<setw(8)<<setprecision(6)<<Efdmax<<", "
       <<setw(8)<<setprecision(6)<<Efdmin<<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 

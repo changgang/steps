@@ -47,7 +47,7 @@ int main()
     #pragma omp parallel for
     for(size_t i=0; i<n_events; ++i)
     {
-        ostringstream sstream;
+        ostringstream osstream;
         CCT_SEARCHER searcher;
         searcher.set_power_system_database_maximum_bus_number(1000);
         searcher.set_search_title("");
@@ -61,22 +61,22 @@ int main()
         searcher.set_fault_shunt_in_pu(complex<double>(0.0, -2e8));
         searcher.set_flag_trip_line_after_clearing_fault(true);
 
-        sstream<<"Now go searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Now go searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
         double cct = searcher.search_cct();
-        sstream<<"Now done searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Now done searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
         ccts[i] = cct;
 
         searcher.run_case_with_clearing_time(cct);
         searcher.run_case_with_clearing_time(cct+0.1);
     }
 
-    ostringstream sstream;
-    sstream<<"Searched CCT of all lines : "<<endl;
+    ostringstream osstream;
+    osstream<<"Searched CCT of all lines : "<<endl;
     for(size_t i=0; i!=n_events; ++i)
-        sstream<<fault_lines[i].get_device_name()<<" at fault side "<<fault_side_buses[i]<<": "<<ccts[i]<<" s."<<endl;
-    show_information_with_leading_time_stamp(sstream);
+        osstream<<fault_lines[i].get_device_name()<<" at fault side "<<fault_side_buses[i]<<": "<<ccts[i]<<" s."<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     terminate_simulator();
 

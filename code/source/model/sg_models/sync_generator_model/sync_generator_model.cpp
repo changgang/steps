@@ -182,9 +182,9 @@ double SYNC_GENERATOR_MODEL::get_Xpp() const
 {
     if(Xdpp!=Xqpp)
     {
-        ostringstream sstream;
-        sstream<<"Warning. Subtransient Xd\"("<<Xdpp<<") is not equal to Xq\"("<<Xqpp<<"). Xd\" will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Subtransient Xd\"("<<Xdpp<<") is not equal to Xq\"("<<Xqpp<<"). Xd\" will be returned.";
+        show_information_with_leading_time_stamp(osstream);
     }
     return Xdpp;
 }

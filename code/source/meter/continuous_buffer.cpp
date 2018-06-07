@@ -234,12 +234,12 @@ size_t CONTINUOUS_BUFFER::get_delay_index_of_time(double time) const
 }
 void CONTINUOUS_BUFFER::show_buffer() const
 {
-    ostringstream sstream;
-    sstream<<"Buffer conttens:"<<endl;
-    sstream<<"TIME,VALUE"<<endl;
+    ostringstream osstream;
+    osstream<<"Buffer conttens:"<<endl;
+    osstream<<"TIME,VALUE"<<endl;
     for(size_t i=0; i!=buffer_size; ++i)
     {
-        sstream<<get_buffer_time_at_delay_index(i)<<","<<get_buffer_value_at_delay_index(i)<<endl;
+        osstream<<get_buffer_time_at_delay_index(i)<<","<<get_buffer_value_at_delay_index(i)<<endl;
     }
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }

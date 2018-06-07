@@ -267,7 +267,7 @@ bool IEESGO::setup_model_with_bpa_string(string data)
 
 void IEESGO::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
 
@@ -292,17 +292,17 @@ void IEESGO::initialize()
     double pmin = get_Pmin_in_pu();
     if(pmech0>pmax)
     {
-        sstream<<"Initialization Error. Initial mechanical power exceeds upper limit when initializing "
+        osstream<<"Initialization Error. Initial mechanical power exceeds upper limit when initializing "
                <<get_model_type()<<" model "<<get_model_name()<<" of "<<get_device_name()<<endl
                <<"Initial mechanical power is "<<pmech0<<" p.u., upper limit is "<<pmax;
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(pmech0<pmin)
     {
-        sstream<<"Initialization Error. Initial mechanical power exceeds lower limit when initializing "
+        osstream<<"Initialization Error. Initial mechanical power exceeds lower limit when initializing "
                <<get_model_type()<<" model "<<get_model_name()<<" of "<<get_device_name()<<endl
                <<"Initial mechanical power is "<<pmech0<<" p.u., lower limit is "<<pmin;
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     set_flag_model_initialized_as_true();
@@ -372,9 +372,9 @@ void IEESGO::check()
 
 void IEESGO::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void IEESGO::save()
 {
@@ -382,7 +382,7 @@ void IEESGO::save()
 }
 string IEESGO::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double k1 = get_K1();
     double k2 = get_K2();
@@ -400,7 +400,7 @@ string IEESGO::get_standard_model_string() const
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<t1<<", "
@@ -414,7 +414,7 @@ string IEESGO::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<k3<<", "
       <<setw(8)<<setprecision(6)<<pmax<<", "
       <<setw(8)<<setprecision(6)<<pmin<<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t IEESGO::get_variable_index_from_variable_name(string var_name)

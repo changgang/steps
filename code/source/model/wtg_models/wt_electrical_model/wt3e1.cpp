@@ -224,9 +224,9 @@ void WT3E1::set_voltage_flag(size_t flag)
         Voltage_Flag = flag;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. "<<flag<<" is not allowed to set up voltage flag for "<<get_model_name()<<" model. 0, 1, or 2 is allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. "<<flag<<" is not allowed to set up voltage flag for "<<get_model_name()<<" model. 0, 1, or 2 is allowed.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -578,7 +578,7 @@ bool WT3E1::setup_model_with_bpa_string(string data)
 
 void WT3E1::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_model_initialized())
         return;
 
@@ -606,9 +606,9 @@ void WT3E1::initialize()
     double ipmax = get_IPmax_in_pu();
     if(ipcmd>ipmax)
     {
-        sstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     double porder = ipcmd*vterm;
     double pmax = get_Pmax_in_pu();
@@ -616,9 +616,9 @@ void WT3E1::initialize()
     power_order_integrator.set_output(porder);
     if(ipcmd>ipmax)
     {
-        sstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     power_order_integrator.initialize();
 
@@ -661,15 +661,15 @@ void WT3E1::initialize()
         V_error_integrator.set_output(eqcmd);
         if(eqcmd>vmax)
         {
-            sstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+            osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
               <<"Eqcmd is "<<eqcmd<<", and Vmax is "<<vmax<<".";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }
         if(eqcmd<vmin)
         {
-            sstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+            osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
               <<"Eqcmd is "<<eqcmd<<", and Vmin is "<<vmin<<".";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }
         V_error_integrator.initialize();
         verror = 0.0;
@@ -681,15 +681,15 @@ void WT3E1::initialize()
     Q_error_integrator.set_output(vcmd);
     if(vcmd>vmax)
     {
-        sstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Vcmd is "<<vcmd<<", and Vmax is "<<vmax<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(vcmd<vmin)
     {
-        sstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Vcmd is "<<vcmd<<", and Vmin is "<<vmin<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     Q_error_integrator.initialize();
 
@@ -698,15 +698,15 @@ void WT3E1::initialize()
     double qmin = get_Qmin_in_pu();
     if(qcmd>qmax)
     {
-        sstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Qcmd is "<<qcmd<<", and Qmax is "<<qmax<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(qcmd<qmin)
     {
-        sstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Qcmd is "<<qcmd<<", and Qmin is "<<qmin<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     set_reactive_power_reference_in_pu(qcmd);
@@ -740,7 +740,7 @@ void WT3E1::initialize()
 
 void WT3E1::run(DYNAMIC_MODE mode)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_model_initialized())
         return;
 
@@ -870,9 +870,9 @@ void WT3E1::clear()
 
 void WT3E1::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3E1::save()
@@ -882,7 +882,7 @@ void WT3E1::save()
 
 string WT3E1::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
     size_t bus = source->get_source_bus();
     string identifier= source->get_identifier();
@@ -929,7 +929,7 @@ string WT3E1::get_standard_model_string() const
     double pmin_at_wmin = power[0];
     double wp100 = table.get_reference_speed_with_power_in_pu(1.0);
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<bus_reg<<", "
@@ -970,7 +970,7 @@ string WT3E1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<pmin_at_wmin<<", "
       <<setw(8)<<setprecision(6)<<wp100<<"  /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t WT3E1::get_variable_index_from_variable_name(string var_name)

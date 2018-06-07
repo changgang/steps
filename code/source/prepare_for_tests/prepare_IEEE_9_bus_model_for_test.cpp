@@ -11,12 +11,12 @@ using namespace std;
 
 void prepare_IEEE_9_bus_model(POWER_SYSTEM_DATABASE* db)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(db==NULL)
     {
-        sstream<<"NULL power system database is provided for preparing IEEE 9 bus model."<<endl
+        osstream<<"NULL power system database is provided for preparing IEEE 9 bus model."<<endl
           <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 

@@ -9,12 +9,12 @@ using namespace std;
 
 HVDC::HVDC(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. HVDC object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. HVDC object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -42,14 +42,14 @@ string HVDC::get_converter_side_name(HVDC_CONVERTER_SIDE converter) const
 
 void HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     string converter_name = get_converter_side_name(converter);
 
     if(bus==0)
     {
-        sstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<converter_name<<" bus of HVDC link."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<converter_name<<" bus of HVDC link."<<endl
           <<"0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         converter_bus[converter] = bus;
         return;
     }
@@ -62,9 +62,9 @@ void HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus)
     {
         if(not psdb->is_bus_exist(bus))
         {
-            sstream<<"Bus "<<bus<<" does not exist for setting up "<<converter_name<<" side bus of hvdc link."<<endl
+            osstream<<"Bus "<<bus<<" does not exist for setting up "<<converter_name<<" side bus of hvdc link."<<endl
                <<"0 will be set to indicate invalid hvdc link.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             converter_bus[converter] = 0;
             return;
         }
@@ -102,10 +102,10 @@ void HVDC::set_line_resistance_in_ohm(const double R)
         this->line_R_in_ohm = R;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Non-positive ("<<R<<" ohm) is not allowed for setting HVDC line resistance of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Non-positive ("<<R<<" ohm) is not allowed for setting HVDC line resistance of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->line_R_in_ohm = 0.0;
     }
 }
@@ -116,10 +116,10 @@ void HVDC::set_line_inductance_in_mH(const double L)
         this->line_L_in_H = L*1e-3;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Negative ("<<L<<" mH) is not allowed for setting HVDC line inductance of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Negative ("<<L<<" mH) is not allowed for setting HVDC line inductance of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->line_L_in_H = 0.0;
     }
 }
@@ -130,10 +130,10 @@ void HVDC::set_line_capacitance_in_uF(const double C)
         this->line_C_in_F = C*1e-6;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Negative ("<<C<<" uF) is not allowed for setting HVDC line capacitance of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Negative ("<<C<<" uF) is not allowed for setting HVDC line capacitance of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->line_C_in_F = 0.0;
     }
 }
@@ -144,10 +144,10 @@ void HVDC::set_line_smooting_inductance_in_mH(HVDC_CONVERTER_SIDE converter, con
         this->smoothing_L_in_H[converter] = L*0.001;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Negative ("<<L<<" mH) is not allowed for setting HVDC smoothing inductance of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Negative ("<<L<<" mH) is not allowed for setting HVDC smoothing inductance of "<<get_device_name()<<endl
           <<"0.0 will be set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->smoothing_L_in_H[converter] = 0.0;
     }
 }
@@ -158,10 +158,10 @@ void HVDC::set_line_smooting_resistance_in_ohm(HVDC_CONVERTER_SIDE converter, co
         this->smoothing_R_in_ohm[converter] = R;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Negative ("<<R<<" ohm) is not allowed for setting HVDC smoothing resistance of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Negative ("<<R<<" ohm) is not allowed for setting HVDC smoothing resistance of "<<get_device_name()<<endl
           <<"0.0 will be set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->smoothing_R_in_ohm[converter] = 0.0;
     }
 }
@@ -174,10 +174,10 @@ void HVDC::set_nominal_dc_power_per_pole_in_MW(const double P)
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Non-positive ("<<P<<" MW) is not allowed for setting HVDC nominal dc power per pole of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Non-positive ("<<P<<" MW) is not allowed for setting HVDC nominal dc power per pole of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         demand_power_in_MW = 0.0;
         demand_current_in_kA = 0.0;
     }
@@ -197,10 +197,10 @@ void HVDC::set_nominal_dc_voltage_per_pole_in_kV(const double V)
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Non-positive ("<<V<<" kV) is not allowed for setting HVDC nominal dc voltage per pole of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Non-positive ("<<V<<" kV) is not allowed for setting HVDC nominal dc voltage per pole of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         demand_voltage_in_kV = 0.0;
     }
 }
@@ -218,10 +218,10 @@ void HVDC::set_nominal_dc_current_per_pole_in_kA(const double I)
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Non-positive ("<<I<<" kA) is not allowed for setting HVDC nominal dc current per pole of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Non-positive ("<<I<<" kA) is not allowed for setting HVDC nominal dc current per pole of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         demand_power_in_MW = 0.0;
         demand_current_in_kA = 0.0;
     }
@@ -233,10 +233,10 @@ void HVDC::set_threshold_dc_voltage_for_constant_power_and_constant_current_mode
         mode_switching_voltage_in_kV = V;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Non-positive ("<<V<<" kV) is not allowed for setting HVDC threshold dc voltage for constant power and constant current operation mode of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Non-positive ("<<V<<" kV) is not allowed for setting HVDC threshold dc voltage for constant power and constant current operation mode of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         mode_switching_voltage_in_kV = 0.0;
     }
 }
@@ -255,7 +255,7 @@ void HVDC::set_meter_end(const HVDC_CONVERTER_SIDE converter)
 
 void HVDC::set_converter_operation_mode(HVDC_CONVERTER_SIDE converter, const HVDC_OPERATION_MODE mode)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     string converter_name = get_converter_side_name(converter);
 
     if(converter==RECTIFIER)
@@ -264,9 +264,9 @@ void HVDC::set_converter_operation_mode(HVDC_CONVERTER_SIDE converter, const HVD
             operation_mode[converter] = mode;
         else
         {
-            sstream<<"Warning. Neither INVERTER_CONSTANT_VOLTAGE nor INVERTER_CONSTANT_GAMMA is allowed for setting HVDC "<<converter_name<<" operation mode of "<<get_device_name()<<endl
+            osstream<<"Warning. Neither INVERTER_CONSTANT_VOLTAGE nor INVERTER_CONSTANT_GAMMA is allowed for setting HVDC "<<converter_name<<" operation mode of "<<get_device_name()<<endl
               <<"RECTIFIER_CONSTANT_POWER mode will be set automatically.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             operation_mode[converter] = RECTIFIER_CONSTANT_POWER;
         }
     }
@@ -276,9 +276,9 @@ void HVDC::set_converter_operation_mode(HVDC_CONVERTER_SIDE converter, const HVD
             operation_mode[converter] = mode;
         else
         {
-            sstream<<"Warning. Neither INVERTER_CONSTANT_VOLTAGE nor INVERTER_CONSTANT_GAMMA is allowed for setting HVDC "<<converter_name<<" operation mode of "<<get_device_name()<<endl
+            osstream<<"Warning. Neither INVERTER_CONSTANT_VOLTAGE nor INVERTER_CONSTANT_GAMMA is allowed for setting HVDC "<<converter_name<<" operation mode of "<<get_device_name()<<endl
               <<"INVERTER_CONSTANT_VOLTAGE mode will be set automatically.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             operation_mode[converter] = INVERTER_CONSTANT_VOLTAGE;
         }
     }
@@ -291,10 +291,10 @@ void HVDC::set_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter, const s
         this->bridge_number[converter] = nbridge;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero (0) is not allowed for setting HVDC "<<converter_name<<" bridge number of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Error. Zero (0) is not allowed for setting HVDC "<<converter_name<<" bridge number of "<<get_device_name()<<endl
           <<"0 will be set to indicate invalid HVDC link.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->bridge_number[converter] = 0;
     }
 }
@@ -306,10 +306,10 @@ void HVDC::set_converter_voltage_drop_per_bridge_in_kV(HVDC_CONVERTER_SIDE conve
         this->voltage_drop_per_bridge_in_kV[converter] = V;
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Negative ("<<V<<" kV) is not allowed for setting HVDC "<<converter_name<<" voltage drop of "<<get_device_name()<<endl
+        ostringstream osstream;
+        osstream<<"Warning. Negative ("<<V<<" kV) is not allowed for setting HVDC "<<converter_name<<" voltage drop of "<<get_device_name()<<endl
           <<"0 will be set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->voltage_drop_per_bridge_in_kV[converter] = 0.0;
     }
 }
@@ -337,7 +337,7 @@ void HVDC::set_converter_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter
 
 void HVDC::set_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERTER_SIDE converter, const double V)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     string converter_name = get_converter_side_name(converter);
 
     if(V > 0.0)
@@ -350,9 +350,9 @@ void HVDC::set_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERTER
 
             if(psdb==NULL)
             {
-                sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+                osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
                    <<converter_name<<" transformer grid side base voltage will be set as 0.0 in indicate as base voltage of "<<converter_name<<" bus.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
                 this->converter_transformer_grid_side_base_voltage_in_kV[converter] = 0.0;
                 return;
             }
@@ -363,17 +363,17 @@ void HVDC::set_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERTER
             }
             else
             {
-                sstream<<"Warning. Zero (0.0 kV) is provided for setting HVDC "<<converter_name<<" transformer grid side base voltage of "<<get_device_name()<<endl
+                osstream<<"Warning. Zero (0.0 kV) is provided for setting HVDC "<<converter_name<<" transformer grid side base voltage of "<<get_device_name()<<endl
                   <<"However, the "<<converter_name<<" bus doesn't exist. 0.0 will be set to indicate as base voltage of "<<converter_name<<" bus.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
                 this->converter_transformer_grid_side_base_voltage_in_kV[converter] = 0.0;
             }
         }
          else
         {
-            sstream<<"Warning. Negative ("<<V<<" kV) is not allowed for setting HVDC "<<converter_name<<" transformer grid side base voltage of "<<get_device_name()<<endl
+            osstream<<"Warning. Negative ("<<V<<" kV) is not allowed for setting HVDC "<<converter_name<<" transformer grid side base voltage of "<<get_device_name()<<endl
               <<"0.0 will be set automatically as base voltage of "<<converter_name<<" bus.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             this->converter_transformer_grid_side_base_voltage_in_kV[converter] = 0.0;
         }
     }
@@ -381,16 +381,16 @@ void HVDC::set_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERTER
 
 void HVDC::set_converter_transformer_converter_side_base_voltage_in_kV(HVDC_CONVERTER_SIDE converter, const double V)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     string converter_name = get_converter_side_name(converter);
 
     if(V > 0.0)
         this->converter_transformer_converter_side_base_voltage_in_kV[converter] = V;
     else
     {
-        sstream<<"Error. Non-positive ("<<V<<" kV) is not allowed for setting HVDC "<<converter_name<<" transformer converter side base voltage of "<<get_device_name()<<endl
+        osstream<<"Error. Non-positive ("<<V<<" kV) is not allowed for setting HVDC "<<converter_name<<" transformer converter side base voltage of "<<get_device_name()<<endl
           <<"0.0 will be set to indicate invalid base voltage.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->converter_transformer_converter_side_base_voltage_in_kV[converter] = 0.0;
     }
 }
@@ -562,13 +562,13 @@ double HVDC::get_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERT
     if(V != 0.0)
         return V;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<converter_name<<" transformer grid side base voltage will be returned as 0.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
     else
@@ -614,9 +614,9 @@ void HVDC::turn_rectifier_constant_power_mode_into_constant_current_mode()
         double V = get_nominal_dc_voltage_per_pole_in_kV();
         set_nominal_dc_current_per_pole_in_kA(P/V);
         set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_CURRENT);
-        ostringstream sstream;
-        sstream<<get_device_name()<<" operation mode is turned from constant power mode into constant current mode.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<get_device_name()<<" operation mode is turned from constant power mode into constant current mode.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -628,9 +628,9 @@ void HVDC::turn_rectifier_constant_current_mode_into_constant_power_mode()
         double V = get_nominal_dc_voltage_per_pole_in_kV();
         set_nominal_dc_power_per_pole_in_MW(V*I);
         set_converter_operation_mode(RECTIFIER, RECTIFIER_CONSTANT_POWER);
-        ostringstream sstream;
-        sstream<<get_device_name()<<" operation mode is turned from constant current mode into constant power mode.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<get_device_name()<<" operation mode is turned from constant current mode into constant power mode.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -988,42 +988,42 @@ bool HVDC::is_in_zone(size_t zone) const
 
 void HVDC::report() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
-    sstream<<"HVDC '"<<get_name()<<"': Rdc = "<<get_line_resistance_in_ohm()<<" ohm";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"HVDC '"<<get_name()<<"': Rdc = "<<get_line_resistance_in_ohm()<<" ohm";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Vdc = "<<get_nominal_dc_voltage_per_pole_in_kV()<<" kV, "
+    osstream<<"Vdc = "<<get_nominal_dc_voltage_per_pole_in_kV()<<" kV, "
       <<"Idc = "<<get_nominal_dc_current_per_pole_in_kA()<<" kA, "
       <<"Pdc = "<<get_nominal_dc_power_per_pole_in_MW()<<" MW";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Compensating R = "<<get_compensating_resistance_to_hold_dc_voltage_in_ohm()<<" ohm";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Compensating R = "<<get_compensating_resistance_to_hold_dc_voltage_in_ohm()<<" ohm";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Rectifier at bus "<<get_converter_bus(RECTIFIER)<<": "<<get_converter_number_of_bridge(RECTIFIER)<<" bridges";
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"AlphaMax = "<<get_converter_max_alpha_or_gamma_in_deg(RECTIFIER)<<" deg, AlphaMin = "<<get_converter_min_alpha_or_gamma_in_deg(RECTIFIER)<<" deg";
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"Transformer grid side base = "<<get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER)<<" kV, "
+    osstream<<"Rectifier at bus "<<get_converter_bus(RECTIFIER)<<": "<<get_converter_number_of_bridge(RECTIFIER)<<" bridges";
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"AlphaMax = "<<get_converter_max_alpha_or_gamma_in_deg(RECTIFIER)<<" deg, AlphaMin = "<<get_converter_min_alpha_or_gamma_in_deg(RECTIFIER)<<" deg";
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"Transformer grid side base = "<<get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER)<<" kV, "
       <<"converter side base = "<<get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER)<<" kV";
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"Tap max = "<<get_converter_transformer_max_tap_in_pu(RECTIFIER)<<", tap min = "<<get_converter_transformer_min_tap_in_pu(RECTIFIER);
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"Rcr+jXcr = "<<get_converter_transformer_impedance_in_ohm(RECTIFIER)<<" ohm";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"Tap max = "<<get_converter_transformer_max_tap_in_pu(RECTIFIER)<<", tap min = "<<get_converter_transformer_min_tap_in_pu(RECTIFIER);
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"Rcr+jXcr = "<<get_converter_transformer_impedance_in_ohm(RECTIFIER)<<" ohm";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Inverter at bus "<<get_converter_bus(INVERTER)<<": "<<get_converter_number_of_bridge(INVERTER)<<" bridges";
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"GammaMax = "<<get_converter_max_alpha_or_gamma_in_deg(INVERTER)<<" deg, GammaMin = "<<get_converter_min_alpha_or_gamma_in_deg(INVERTER)<<" deg";
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"Transformer grid side base = "<<get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER)<<" kV, "
+    osstream<<"Inverter at bus "<<get_converter_bus(INVERTER)<<": "<<get_converter_number_of_bridge(INVERTER)<<" bridges";
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"GammaMax = "<<get_converter_max_alpha_or_gamma_in_deg(INVERTER)<<" deg, GammaMin = "<<get_converter_min_alpha_or_gamma_in_deg(INVERTER)<<" deg";
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"Transformer grid side base = "<<get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER)<<" kV, "
       <<"converter side base = "<<get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER)<<" kV";
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"Tap max = "<<get_converter_transformer_max_tap_in_pu(INVERTER)<<", tap min = "<<get_converter_transformer_min_tap_in_pu(INVERTER);
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"Rci+jXci = "<<get_converter_transformer_impedance_in_ohm(INVERTER)<<" ohm";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"Tap max = "<<get_converter_transformer_max_tap_in_pu(INVERTER)<<", tap min = "<<get_converter_transformer_min_tap_in_pu(INVERTER);
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"Rci+jXci = "<<get_converter_transformer_impedance_in_ohm(INVERTER)<<" ohm";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void HVDC::save() const
@@ -1033,7 +1033,7 @@ void HVDC::save() const
 
 void HVDC::set_model(const MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model->get_model_type()=="AUXILIARY SIGNAL")
         set_auxiliary_signal_model((AUXILIARY_SIGNAL_MODEL*) model);
     else
@@ -1042,28 +1042,28 @@ void HVDC::set_model(const MODEL* model)
             set_hvdc_model((HVDC_MODEL*) model);
         else
         {
-            sstream<<"Waring. Neither AUXILIARY SIGNAL model nor HVDC model is given to set dynamic model for "<<get_device_name();
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Waring. Neither AUXILIARY SIGNAL model nor HVDC model is given to set dynamic model for "<<get_device_name();
+            show_information_with_leading_time_stamp(osstream);
         }
     }
 }
 
 void HVDC::set_hvdc_model(const HVDC_MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model->get_allowed_device_type()!="HVDC")
     {
-        sstream<<"Waring. Dynamic model of device type "<<model->get_allowed_device_type()<<" is not allowed to set up HVDC model for "<<get_device_name()<<endl
+        osstream<<"Waring. Dynamic model of device type "<<model->get_allowed_device_type()<<" is not allowed to set up HVDC model for "<<get_device_name()<<endl
           <<"No HVDC model is set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(model->get_model_type()!="HVDC")
     {
-        sstream<<"Waring. "<<model->get_model_type()<<" model is not allowed to set up HVDC model for "<<get_device_name()<<endl
+        osstream<<"Waring. "<<model->get_model_type()<<" model is not allowed to set up HVDC model for "<<get_device_name()<<endl
           <<"No HVDC model is set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1095,20 +1095,20 @@ void HVDC::set_hvdc_model(const HVDC_MODEL* model)
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append HVDC model of "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append HVDC model of "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void HVDC::set_auxiliary_signal_model(const AUXILIARY_SIGNAL_MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model->get_model_type()!="AUXILIARY SIGNAL")
     {
-        sstream<<"Waring. "<< model->get_model_type()<<" model is not allowed to set up AUXILIARY SIGNAL model for "<<get_device_name()<<endl
+        osstream<<"Waring. "<< model->get_model_type()<<" model is not allowed to set up AUXILIARY SIGNAL model for "<<get_device_name()<<endl
           <<"No AUXILIARY SIGNAL model is set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1130,9 +1130,9 @@ void HVDC::set_auxiliary_signal_model(const AUXILIARY_SIGNAL_MODEL* model)
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append AUXILIARY SIGNAL model of "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append AUXILIARY SIGNAL model of "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -1276,26 +1276,26 @@ DEVICE_ID HVDC::get_device_id() const
 
 void HVDC::solve_steady_state()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     //os<<"Solve "<<get_device_name()<<endl;
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     HVDC_OPERATION_MODE r_mode = get_converter_operation_mode(RECTIFIER), i_mode = get_converter_operation_mode(INVERTER);
 
     if(r_mode != RECTIFIER_CONSTANT_POWER and r_mode != RECTIFIER_CONSTANT_CURRENT)
     {
-        sstream<<"Warning. Rectifier of "<<get_device_name()<<" is not in either RECTIFIER_CONSTANT_POWER or"
+        osstream<<"Warning. Rectifier of "<<get_device_name()<<" is not in either RECTIFIER_CONSTANT_POWER or"
                      " RECTIFIER_CONSTANT_CURRENT mode."<<endl<<"HVDC will not be solved.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(i_mode != INVERTER_CONSTANT_VOLTAGE and r_mode != INVERTER_CONSTANT_GAMMA)
     {
-        sstream<<"Warning. Inverter of "<<get_device_name()<<" is not in either INVERTER_CONSTANT_VOLTAGE or"
+        osstream<<"Warning. Inverter of "<<get_device_name()<<" is not in either INVERTER_CONSTANT_VOLTAGE or"
                      " INVERTER_CONSTANT_GAMMA mode."<<endl<<"HVDC will not be solved.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1315,28 +1315,28 @@ void HVDC::solve_steady_state()
     }
     //os<<"AC power at rectifier side: "<<get_converter_ac_active_power_in_MW(RECTIFIER)<<" MW, "<<get_converter_ac_reactive_power_in_MVar(RECTIFIER)<<" MVar."<<endl;
     //os<<"AC power at inverter side: "<<get_converter_ac_active_power_in_MW(INVERTER)<<" MW, "<<get_converter_ac_reactive_power_in_MVar(INVERTER)<<" MVar."<<endl;
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 }
 
 void HVDC::show_solved_hvdc_steady_state() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"It is not solve and no steady state will be shown.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
-    sstream<<"Solved steady state of HVDC '"<<get_name()<<"':";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Solved steady state of HVDC '"<<get_name()<<"':";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Idc = "<<get_line_dc_current_in_kA()<<" kA.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Idc = "<<get_line_dc_current_in_kA()<<" kA.";
+    show_information_with_leading_time_stamp(osstream);
 
     HVDC_CONVERTER_SIDE converter=RECTIFIER;
 
@@ -1370,28 +1370,28 @@ void HVDC::show_solved_hvdc_steady_state() const
             modestr = "constant firing angle";
             break;
     }
-    sstream<<"Rectifier: "<<modestr;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Rectifier: "<<modestr;
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Vdc = "<<get_converter_dc_voltage_in_kV(converter)<<" kV, "
+    osstream<<"Vdc = "<<get_converter_dc_voltage_in_kV(converter)<<" kV, "
       <<"Vac = "<<psdb->get_bus_voltage_in_kV(get_converter_bus(converter))<<" kV";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Transformer tap = "<<get_converter_transformer_tap_in_pu(converter)<<" pu.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Transformer tap = "<<get_converter_transformer_tap_in_pu(converter)<<" pu.";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"alpha = "<<get_converter_alpha_or_gamma_in_deg(converter)<<" deg, "
+    osstream<<"alpha = "<<get_converter_alpha_or_gamma_in_deg(converter)<<" deg, "
       <<"mu = "<<get_converter_commutating_overlap_angle_in_deg(converter)<<" deg";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Rectifier AC current = "<<get_converter_ac_current_in_kA(converter)<<" kA.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Rectifier AC current = "<<get_converter_ac_current_in_kA(converter)<<" kA.";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Pdc = "<<get_converter_dc_power_in_MW(converter)<<" MW, "
+    osstream<<"Pdc = "<<get_converter_dc_power_in_MW(converter)<<" MW, "
       <<"Pac = "<<get_converter_ac_active_power_in_MW(converter)<<" MW, "
       <<"Qac = "<<get_converter_ac_reactive_power_in_MVar(converter)<<" MVar, "
       <<"Eta = "<<get_converter_ac_power_factor(converter);
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 
 
     converter = INVERTER;
@@ -1414,28 +1414,28 @@ void HVDC::show_solved_hvdc_steady_state() const
             modestr = "constant firing angle";
             break;
     }
-    sstream<<"Rectifier: "<<modestr;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Rectifier: "<<modestr;
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Vdc = "<<get_converter_dc_voltage_in_kV(converter)<<" kV, "
+    osstream<<"Vdc = "<<get_converter_dc_voltage_in_kV(converter)<<" kV, "
       <<"Vac = "<<psdb->get_bus_voltage_in_kV(get_converter_bus(converter))<<" kV";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Transformer tap = "<<get_converter_transformer_tap_in_pu(converter)<<" pu.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Transformer tap = "<<get_converter_transformer_tap_in_pu(converter)<<" pu.";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"gamma = "<<get_converter_alpha_or_gamma_in_deg(converter)<<" deg, "
+    osstream<<"gamma = "<<get_converter_alpha_or_gamma_in_deg(converter)<<" deg, "
       <<"mu = "<<get_converter_commutating_overlap_angle_in_deg(converter)<<" deg";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Inverter AC current = "<<get_converter_ac_current_in_kA(converter)<<" kA.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Inverter AC current = "<<get_converter_ac_current_in_kA(converter)<<" kA.";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Pdc = "<<get_converter_dc_power_in_MW(converter)<<" MW, "
+    osstream<<"Pdc = "<<get_converter_dc_power_in_MW(converter)<<" MW, "
       <<"Pac = "<<get_converter_ac_active_power_in_MW(converter)<<" MW, "
       <<"Qac = "<<get_converter_ac_reactive_power_in_MVar(converter)<<" MVar, "
       <<"Eta = "<<get_converter_ac_power_factor(converter);
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void HVDC::set_converter_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, double angle)
@@ -1488,14 +1488,14 @@ double HVDC::get_converter_transformer_tap_in_pu(HVDC_CONVERTER_SIDE converter) 
 
 double HVDC::get_converter_commutating_overlap_angle_in_deg(HVDC_CONVERTER_SIDE converter) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<get_converter_side_name(converter)<<" commutating overlap angle will be returned as 0.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1575,14 +1575,14 @@ double HVDC::get_converter_ac_reactive_power_in_MVar(HVDC_CONVERTER_SIDE convert
 
 double HVDC::get_converter_ac_apparent_power_in_MVA(HVDC_CONVERTER_SIDE converter) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<get_converter_side_name(converter)<<" AC apparent power will be returned as 0.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -1620,9 +1620,9 @@ double HVDC::get_converter_ac_power_factor(HVDC_CONVERTER_SIDE converter) const
 
 void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
 {
-    ostringstream sstream;
-    //sstream<<"Solve "<<get_device_name()<<" as constant power (R) + constant voltage (I) mode.";
-    //show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    //osstream<<"Solve "<<get_device_name()<<" as constant power (R) + constant voltage (I) mode.";
+    //show_information_with_leading_time_stamp(osstream);
 
     // solve desired dc voltage and dc current
     double VdcR=0.0, VdcI=0.0, Idc=0.0;
@@ -1633,7 +1633,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
     double Rdc = get_line_resistance_in_ohm();
     VdcR = VdcI+Idc*Rdc;
     //os<< "Desired VdcR = %f kV, VdcI = %f kV, Idc = %f kA.", VdcR, VdcI, Idc);
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     // solve desired alpha and best tap
     bool minAlphaReached = solve_converter_transformer_tap_and_desired_firing_angle(RECTIFIER, VdcR, Idc);
@@ -1641,15 +1641,15 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
 
     if(minAlphaReached)
     {
-        sstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
+        osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
           <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(minGammaReached)
     {
-        sstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
+        osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
           <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     if(not(minAlphaReached) and not(minGammaReached))
@@ -1661,10 +1661,10 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
     {
         if(not(minAlphaReached) and minGammaReached)
         {
-            sstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
+            osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
               <<" with CONSTANT POWER and CONSTANT VOTLAGE mode."
               <<"HVDC link will turn into CONSTANT GAMMA mode for inverter.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
 
             solve_as_rectifier_regulating_power_and_inverter_regulating_gamma();
         }
@@ -1672,20 +1672,20 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
         {
             if(minAlphaReached and not(minGammaReached))
             {
-                sstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
+                osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
                   <<" with CONSTANT POWER and CONSTANT VOTLAGE mode."
                   <<"HVDC link will turn into reduced (DELTI) CONSTANT CURRENT mode controlled by inverter.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
 
                 solve_as_rectifier_regulating_alpha_and_inverter_regulating_current();
             }
             else
             {
                 // error!!!!!
-                sstream<<"Warning. Both minimum alpha and minimum gamma reached when trying to solve "<<get_device_name()
+                osstream<<"Warning. Both minimum alpha and minimum gamma reached when trying to solve "<<get_device_name()
                   <<" with CONSTANT POWER and CONSTANT VOTLAGE mode."
                   <<"HVDC link will be with minimum alpha and gamma. The solution may be incorrect.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
 
                 solve_with_solved_tap_and_firing_angle();
             }
@@ -1695,14 +1695,14 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
 
 bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERTER_SIDE converter, double Vdc, double Idc)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"HVDC will not be solved with function "<<__FUNCTION__<<". 0.0 will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return false;
     }
     //cout<<get_converter_side_name(converter)<<" desired Vdc = "<<Vdc<<"kV, Idc = "<<Idc<<endl;
@@ -1747,9 +1747,9 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
     else
         set_converter_alpha_or_gamma_in_deg(converter, get_converter_min_alpha_or_gamma_in_deg(converter));
 
-    //sstream<<get_device_name()<<": trying to solve "<<get_converter_side_name(converter)<<" transformer tap = "<<get_converter_transformer_tap_in_pu(converter)
+    //osstream<<get_device_name()<<": trying to solve "<<get_converter_side_name(converter)<<" transformer tap = "<<get_converter_transformer_tap_in_pu(converter)
     //       <<", best firing angle = "<<get_converter_alpha_or_gamma_in_deg(converter)<<" deg";
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     return minAngleReached;
 }
@@ -1757,14 +1757,14 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
 
 void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SIDE converter, double Vdc, double Idc)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"HVDC will not be solved with function "<<__FUNCTION__<<". 0.0 will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1801,7 +1801,7 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
     if(Tap > maxTap) Tap = maxTap;
 
     //os<<"Best converter transformer tap with min angle: %f for %s", Tap, get_converter_side_name(converter).c_str());
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     set_converter_transformer_tap_in_pu(converter, Tap);
     return;
@@ -1809,10 +1809,10 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
 
 void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     //os<<"Solve %s as constant current (R) + constant voltage (I) mode.",
     //              get_device_name().c_str());
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     // solve the desired dc voltage and dc current
     double Idc = get_rectifier_nominal_dc_current_command_in_kA();
@@ -1820,9 +1820,9 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
     double R = get_line_resistance_in_ohm();
     double VdcR = VdcI + Idc*R;
 
-    //sstream<<"trying to solve "<<get_device_name()<<" with desired DC voltage rec "<<VdcR<<" kV, inv "<<VdcI<<" kV, "
+    //osstream<<"trying to solve "<<get_device_name()<<" with desired DC voltage rec "<<VdcR<<" kV, inv "<<VdcI<<" kV, "
     //       <<" I "<<Idc<<" kA";
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     bool minAlphaReached = solve_converter_transformer_tap_and_desired_firing_angle(RECTIFIER, VdcR, Idc);
     bool minGammaReached = solve_converter_transformer_tap_and_desired_firing_angle(INVERTER, VdcI, Idc);
@@ -1836,9 +1836,9 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
     {
         if(not(minAlphaReached) and minGammaReached)
         {
-            sstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
+            osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
               <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
 
             solve_as_rectifier_regulating_current_and_inverter_regulating_gamma();
         }
@@ -1846,19 +1846,19 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
         {
             if(minAlphaReached and not(minGammaReached))
             {
-                sstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
+                osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
                   <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
 
                 solve_as_rectifier_regulating_alpha_and_inverter_regulating_current();
             }
             else
             {
                 // error!!!!!
-                sstream<<"Warning. Both minimum alpha and minimum gamma reached when trying to solve "<<get_device_name()
+                osstream<<"Warning. Both minimum alpha and minimum gamma reached when trying to solve "<<get_device_name()
                   <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode."
                   <<"HVDC link will be with minimum alpha and gamma. The solution may be incorrect.";
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
 
                 solve_with_solved_tap_and_firing_angle();
             }
@@ -1868,20 +1868,20 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
 
 void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"HVDC will not be solved with function "<<__FUNCTION__<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     //os<<"Solve %s as constant power (R) + constant gamma (I) mode.",
     //              get_device_name().c_str());
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     double Pn = get_nominal_dc_power_per_pole_in_MW();
     HVDC_CONVERTER_SIDE Pside = get_side_to_hold_dc_power();
@@ -1962,19 +1962,19 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 
 void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"HVDC will not be solved with function "<<__FUNCTION__<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     //os<<"Solve %s as constant current (R) + constant gamma (I) mode.",
     //              get_device_name().c_str());
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER));
 
@@ -2013,19 +2013,19 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
 
 void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"HVDC will not be solved with function "<<__FUNCTION__<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     //os<<"Solve %s as constant alpha (R) + constant current (I) mode.",
     //              get_device_name().c_str());
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
 
@@ -2064,21 +2064,21 @@ void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
 
 void HVDC::solve_with_solved_tap_and_firing_angle()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"HVDC will not be solved with function "<<__FUNCTION__<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
-    //sstream<<"solving "<<get_device_name()<<" with solved tap rec "<<get_converter_transformer_tap_in_pu(RECTIFIER)<<", "
+    //osstream<<"solving "<<get_device_name()<<" with solved tap rec "<<get_converter_transformer_tap_in_pu(RECTIFIER)<<", "
     //       <<"inv "<<get_converter_transformer_tap_in_pu(INVERTER)<<", angle rec "<<get_converter_alpha_or_gamma_in_deg(RECTIFIER)<<" deg, "
     //       <<" inv "<<get_converter_alpha_or_gamma_in_deg(INVERTER)<<" deg";
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     double VdropR = get_converter_voltage_drop_per_bridge_in_kV(RECTIFIER);
     double VdropI = get_converter_voltage_drop_per_bridge_in_kV(INVERTER);
@@ -2127,23 +2127,23 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     set_converter_dc_voltage_in_kV(RECTIFIER, VdcR);
     set_converter_dc_voltage_in_kV(INVERTER, VdcI);
 
-    //sstream<<"DC current "<<get_line_dc_current_in_kA()<<" kA, DC voltage "<<get_converter_dc_voltage_in_kV(RECTIFIER)
+    //osstream<<"DC current "<<get_line_dc_current_in_kA()<<" kA, DC voltage "<<get_converter_dc_voltage_in_kV(RECTIFIER)
     //       <<" kV, "<<get_converter_dc_voltage_in_kV(INVERTER)<<" kV";
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 }
 
 
 double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(HVDC_CONVERTER_SIDE converter, double Vdc, double Idc, double Tap)
 {
     // solve best alpha and gamma
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"HVDC will not be solved with function "<<__FUNCTION__<<". 0.0 will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -2166,14 +2166,14 @@ double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_an
 
 double HVDC::solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_tap(HVDC_CONVERTER_SIDE converter, double Idc, double Tap)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"HVDC will not be solved with function "<<__FUNCTION__<<". 0.0 will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 

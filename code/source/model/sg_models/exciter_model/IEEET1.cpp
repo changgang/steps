@@ -287,7 +287,7 @@ bool IEEET1::setup_model_with_bpa_string(string data)
 
 void IEEET1::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_model_initialized())
         return;
 
@@ -321,15 +321,15 @@ void IEEET1::initialize()
 
     if(input>get_VRmax_in_pu())
     {
-        sstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(input<get_VRmin_in_pu())
     {
-        sstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     regulator.set_output(input);
@@ -389,9 +389,9 @@ void IEEET1::check()
 
 void IEEET1::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void IEEET1::save()
@@ -401,7 +401,7 @@ void IEEET1::save()
 
 string IEEET1::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
@@ -419,7 +419,7 @@ string IEEET1::get_standard_model_string() const
     double E2 = get_E2_in_pu();
     double S2 = get_SE2_in_pu();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<TR<<", "
@@ -435,7 +435,7 @@ string IEEET1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<S1<<", "
       <<setw(8)<<setprecision(6)<<E2<<", "
       <<setw(8)<<setprecision(6)<<S2<<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 

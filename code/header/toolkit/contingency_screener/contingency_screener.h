@@ -10,7 +10,7 @@ class CONTINGENCY_SCREENER
 {
     public:
         CONTINGENCY_SCREENER();
-        ~CONTINGENCY_SCREENER();
+        virtual ~CONTINGENCY_SCREENER();
 
         void set_power_system_database_maximum_bus_number(size_t number);
         size_t get_power_system_database_maximum_bus_number() const;

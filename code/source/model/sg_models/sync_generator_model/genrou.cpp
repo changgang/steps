@@ -119,10 +119,10 @@ void GENROU::update_source_impedance()
         complex<double> Zsource = generator->get_source_impedance_in_pu();
         if(Zsource.imag()!=Z.imag())
         {
-            ostringstream sstream;
-            sstream<<"Warning. The subtransient reactance ("<<get_Xpp()<<") is not equal to generator source reactance ("<<Zsource.imag()<<") for '"<<get_model_name()<<"' of "<<get_device_name()<<"."<<endl
+            ostringstream osstream;
+            osstream<<"Warning. The subtransient reactance ("<<get_Xpp()<<") is not equal to generator source reactance ("<<Zsource.imag()<<") for '"<<get_model_name()<<"' of "<<get_device_name()<<"."<<endl
               <<"Source reactance will be updated with subtransient reactance.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             Zsource = complex<double>(Zsource.real(), Z.imag());
             generator->set_source_impedance_in_pu(Zsource);
         }
@@ -526,9 +526,9 @@ void GENROU::check()
 
 void GENROU::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void GENROU::save()
@@ -538,12 +538,12 @@ void GENROU::save()
 
 string GENROU::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<get_Td0p_in_s()<<", "
@@ -561,7 +561,7 @@ string GENROU::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<get_saturation_at_1()<<", "
       <<setw(8)<<setprecision(6)<<get_saturation_at_1p2()<<"  /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t GENROU::get_variable_index_from_variable_name(string var_name)

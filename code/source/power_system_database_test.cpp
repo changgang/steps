@@ -1875,9 +1875,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_owner_exist()
 void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
-    ostringstream sstream;
-    sstream<<"Known bug of change_bus_number(): only terminal bus can be changed. buses for additional control, i.e., generator control bus is not changed.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Known bug of change_bus_number(): only terminal bus can be changed. buses for additional control, i.e., generator control bus is not changed.";
+    show_information_with_leading_time_stamp(osstream);
 
     prepare_database_for_test();
 
@@ -6223,9 +6223,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_transformers()
 void POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunt()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
-    ostringstream sstream;
-    sstream<<"ALEEEEEEEEEEERT! clear_fixed_shunt is not functioning if using the vector::erase function.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"ALEEEEEEEEEEERT! clear_fixed_shunt is not functioning if using the vector::erase function.";
+    show_information_with_leading_time_stamp(osstream);
 
     prepare_database_for_test();
 

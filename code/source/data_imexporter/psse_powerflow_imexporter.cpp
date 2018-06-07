@@ -29,16 +29,16 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
-    sstream<<"Loading powerflow data from PSS/E file: "<<file;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Loading powerflow data from PSS/E file: "<<file;
+    show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
     if(raw_data_in_ram.size()==0)
     {
-        sstream<<"No data in the given PSS/E file: "<<file<<endl
+        osstream<<"No data in the given PSS/E file: "<<file<<endl
           <<"Please check if the file exist or not.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
 
         return;
     }
@@ -61,8 +61,8 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     load_facts_data();
     load_switched_shunt_data();
 
-    sstream<<"Done loading powerflow data.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Done loading powerflow data.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
@@ -76,15 +76,15 @@ void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
 
 void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     raw_data_in_ram.clear();
 
     FILE* fid = fopen(file.c_str(),"rt");
     if(fid == NULL)
     {
-        sstream<<"PSS/E raw file '"<<file<<"' is not accessible. Loading PSS/E raw data is failed.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"PSS/E raw file '"<<file<<"' is not accessible. Loading PSS/E raw data is failed.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1775,20 +1775,20 @@ void PSSE_IMEXPORTER::load_switched_shunt_data()
 
 void PSSE_IMEXPORTER::export_powerflow_data(string file)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No powerflow data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No powerflow data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     ofstream ofs(file);
     if(!ofs)
     {
-        sstream<<"Warning. PSS/E raw file "<<file<<" cannot be opened for exporting powerflow data.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSS/E raw file "<<file<<" cannot be opened for exporting powerflow data.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1838,29 +1838,29 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file)
 
 string PSSE_IMEXPORTER::export_case_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No case data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No case data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
-    sstream<<0<<", "<<psdb->get_system_base_power_in_MVA()<<", 33, 0, 0, "<<psdb->get_system_base_frequency_in_Hz()<<endl;
-    sstream<<psdb->get_case_title_1()<<endl;
-    sstream<<psdb->get_case_title_2()<<endl;
-    return sstream.str();
+    osstream<<0<<", "<<psdb->get_system_base_power_in_MVA()<<", 33, 0, 0, "<<psdb->get_system_base_frequency_in_Hz()<<endl;
+    osstream<<psdb->get_case_title_1()<<endl;
+    osstream<<psdb->get_case_title_2()<<endl;
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_bus_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No bus data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No bus data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -1879,7 +1879,7 @@ string PSSE_IMEXPORTER::export_bus_data() const
         if(bus_type == SLACK_TYPE) type = 3;
         if(bus_type == OUT_OF_SERVICE) type = 4;
 
-        sstream<<right
+        osstream<<right
               <<setw(8)<<setprecision(0)<<bus->get_bus_number()<<", "
               <<"\""
               <<left
@@ -1899,17 +1899,17 @@ string PSSE_IMEXPORTER::export_bus_data() const
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_lower_limit_in_pu()<<endl;
     }
 
-    return sstream.str();
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_load_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No load data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No load data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -1919,7 +1919,7 @@ string PSSE_IMEXPORTER::export_load_data() const
     {
         LOAD* load = loads[i];
 
-        sstream<<right
+        osstream<<right
           <<setw(8)
           <<load->get_load_bus()<<", "
           <<"\""<<left
@@ -1938,17 +1938,17 @@ string PSSE_IMEXPORTER::export_load_data() const
           <<setw(2)<<fixed<<1<<", "
           <<setw(2)<<load->get_flag_interruptable()<<endl;
     }
-    return sstream.str();
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_fixed_shunt_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No fixed shunt data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No fixed shunt data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -1958,7 +1958,7 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data() const
     {
         FIXED_SHUNT* shunt = fshunts[i];
 
-        sstream<<right
+        osstream<<right
                 <<setw(8)<<shunt->get_shunt_bus()<<", "
                 <<"\""
                 <<left
@@ -1969,26 +1969,26 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data() const
                 <<setw(12)<<setprecision(6)<<fixed<<shunt->get_nominal_impedance_shunt_in_MVA().real()<<", "
                 <<setw(12)<<setprecision(6)<<fixed<<-shunt->get_nominal_impedance_shunt_in_MVA().imag()<<endl;
     }
-    return sstream.str();
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_source_data() const
 {
-    ostringstream sstream;
-    sstream<<export_generator_data();
-    sstream<<export_wt_generator_data();
+    ostringstream osstream;
+    osstream<<export_generator_data();
+    osstream<<export_wt_generator_data();
 
-    return sstream.str();
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_generator_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No generator data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No generator data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -1998,7 +1998,7 @@ string PSSE_IMEXPORTER::export_generator_data() const
     {
         GENERATOR* generator = generators[i];
 
-        sstream<<right
+        osstream<<right
                <<setw(8)<<generator->get_generator_bus()<<", "
                <<"\""<<left
                <<setw(2)<<generator->get_identifier()<<"\""<<", "
@@ -2009,10 +2009,10 @@ string PSSE_IMEXPORTER::export_generator_data() const
                <<setw(12)<<setprecision(6)<<fixed<<generator->get_q_min_in_MVar()<<", "
                <<setw(8)<<setprecision(6)<<fixed<<generator->get_voltage_to_regulate_in_pu()<<", ";
         if(generator->get_bus_to_regulate()==generator->get_generator_bus())
-            sstream<<setw(8)<<0<<", ";
+            osstream<<setw(8)<<0<<", ";
         else
-            sstream<<setw(8)<<generator->get_bus_to_regulate()<<", ";
-        sstream<<setw(10)<<setprecision(4)<<fixed<<generator->get_mbase_in_MVA()<<", "
+            osstream<<setw(8)<<generator->get_bus_to_regulate()<<", ";
+        osstream<<setw(10)<<setprecision(4)<<fixed<<generator->get_mbase_in_MVA()<<", "
                <<setw(9)<<setprecision(6)<<fixed<<generator->get_source_impedance_in_pu().real()<<", "
                <<setw(9)<<setprecision(6)<<fixed<<generator->get_source_impedance_in_pu().imag()<<", "
                <<setprecision(2)<<0.0<<", "<<0.0<<", "<<1.0<<", "
@@ -2021,25 +2021,25 @@ string PSSE_IMEXPORTER::export_generator_data() const
                <<setw(12)<<setprecision(6)<<fixed<<generator->get_p_max_in_MW()<<", "
                <<setw(12)<<setprecision(6)<<fixed<<generator->get_p_min_in_MW()<<", ";
         if(generator->get_owner_count()==0)
-            sstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
+            osstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
         else
-            sstream<<setprecision(0)<<generator->get_owner_of_index(0)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(0)<<", "
+            osstream<<setprecision(0)<<generator->get_owner_of_index(0)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(0)<<", "
               <<setprecision(0)<<generator->get_owner_of_index(1)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(1)<<", "
               <<setprecision(0)<<generator->get_owner_of_index(2)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(2)<<", "
               <<setprecision(0)<<generator->get_owner_of_index(3)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(3)<<", ";
-        sstream<<"0, 0.0"<<endl;
+        osstream<<"0, 0.0"<<endl;
     }
-    return sstream.str();
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_wt_generator_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No WT generator data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No WT generator data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2054,7 +2054,7 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
         double pf = p/sqrt(p*p+q*q);
 
 
-        sstream<<right
+        osstream<<right
                <<setw(8)<<wt_generator->get_source_bus()<<", "
                <<"\""<<left
                <<setw(2)<<wt_generator->get_identifier()<<"\""<<", "
@@ -2065,10 +2065,10 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
                <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_q_min_in_MVar()<<", "
                <<setw(8)<<setprecision(6)<<fixed<<wt_generator->get_voltage_to_regulate_in_pu()<<", ";
         if(wt_generator->get_bus_to_regulate()==wt_generator->get_source_bus())
-            sstream<<setw(8)<<0<<", ";
+            osstream<<setw(8)<<0<<", ";
         else
-            sstream<<setw(8)<<wt_generator->get_bus_to_regulate()<<", ";
-        sstream<<setw(10)<<setprecision(4)<<fixed<<wt_generator->get_mbase_in_MVA()<<", "
+            osstream<<setw(8)<<wt_generator->get_bus_to_regulate()<<", ";
+        osstream<<setw(10)<<setprecision(4)<<fixed<<wt_generator->get_mbase_in_MVA()<<", "
                <<setw(9)<<setprecision(6)<<fixed<<wt_generator->get_source_impedance_in_pu().real()<<", "
                <<setw(9)<<setprecision(6)<<fixed<<wt_generator->get_source_impedance_in_pu().imag()<<", "
                <<setprecision(2)<<0.0<<", "<<0.0<<", "<<1.0<<", "
@@ -2077,26 +2077,26 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
                <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_max_in_MW()<<", "
                <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_min_in_MW()<<", ";
         if(wt_generator->get_owner_count()==0)
-            sstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
+            osstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
         else
-            sstream<<setprecision(0)<<wt_generator->get_owner_of_index(0)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(0)<<", "
+            osstream<<setprecision(0)<<wt_generator->get_owner_of_index(0)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(0)<<", "
               <<setprecision(0)<<wt_generator->get_owner_of_index(1)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(1)<<", "
               <<setprecision(0)<<wt_generator->get_owner_of_index(2)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(2)<<", "
               <<setprecision(0)<<wt_generator->get_owner_of_index(3)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(3)<<", ";
 
-        sstream<<"1, "<<setprecision(6)<<pf<<endl;
+        osstream<<"1, "<<setprecision(6)<<pf<<endl;
     }
-    return sstream.str();
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_line_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No line data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No line data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2110,7 +2110,7 @@ string PSSE_IMEXPORTER::export_line_data() const
         if(line->get_meter_end_bus()==line->get_receiving_side_bus())
             meterend = 2;
 
-        sstream<<right
+        osstream<<right
                 <<setw(8)<<line->get_sending_side_bus()<<", "
                 <<setw(8)<<line->get_receiving_side_bus()<<", "
                 <<"\""<<left
@@ -2135,16 +2135,16 @@ string PSSE_IMEXPORTER::export_line_data() const
                 <<setw(4)<<line->get_owner_of_index(3)<<", "<<setw(6)<<setprecision(3)<<line->get_fraction_of_owner_of_index(3)<<endl;
 
     }
-    return sstream.str();
+    return osstream.str();
 }
 string PSSE_IMEXPORTER::export_transformer_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No transformer data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No transformer data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2200,7 +2200,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                     status = 2;
             }
         }
-        sstream<<right
+        osstream<<right
               <<setw(8)<<trans->get_winding_bus(PRIMARY_SIDE)<<", "
               <<setw(8)<<trans->get_winding_bus(SECONDARY_SIDE)<<", "
               <<setw(8)<<trans->get_winding_bus(TERTIARY_SIDE)<<", "
@@ -2224,7 +2224,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
               <<"\"\""<<endl;
         if(trans->is_two_winding_transformer())
         {
-            sstream<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real()<<", "
+            osstream<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real()<<", "
               <<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).imag()<<", "
               <<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<endl;
 
@@ -2256,7 +2256,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                     break;
             }
 
-            sstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+            osstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
               <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<", "
               <<setw(6)<<setprecision(2)<<fixed<<trans->get_winding_angle_shift_in_deg(winding)<<", "
               <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_A_MVA()<<", "
@@ -2266,14 +2266,14 @@ string PSSE_IMEXPORTER::export_transformer_data() const
             switch(trans->get_winding_control_mode(winding))
             {
                 case TRANSFORMER_TAP_VOLTAGE_CONTROL:
-                    sstream<<trans->get_winding_controlled_bus(winding)<<", "
+                    osstream<<trans->get_winding_controlled_bus(winding)<<", "
                       <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                       <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                       <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
                       <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
                     break;
                 case TRANSFORMER_TAP_REACTIVE_POWER_CONTROL:
-                    sstream<<trans->get_winding_controlled_bus(winding)<<", "
+                    osstream<<trans->get_winding_controlled_bus(winding)<<", "
                       <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                       <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                       <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_reactive_power_into_winding_in_MVar(winding)<<", "
@@ -2281,7 +2281,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                     break;
                 case TRANSFORMER_TAP_ACTIVE_POWER_CONTROL:
                 case TRANSFORMER_TAP_ASYMMETRIC_ACTIVE_POWER_CONTROL:
-                    sstream<<trans->get_winding_controlled_bus(winding)<<", "
+                    osstream<<trans->get_winding_controlled_bus(winding)<<", "
                       <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_angle_shift_in_deg(winding)<<", "
                       <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_angle_shift_in_deg(winding)<<", "
                       <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_active_power_into_winding_in_MW(winding)<<", "
@@ -2290,7 +2290,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                 case TRANSFORMER_TAP_NO_CONTROL:
                 case TRANSFORMER_TAP_HVDC_LINE_CONTROL:
                 default:
-                    sstream<<0<<", "
+                    osstream<<0<<", "
                       <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                       <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                       <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
@@ -2298,19 +2298,19 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                     break;
             }
 
-            sstream<<setw(3)<<setprecision(0)<<trans->get_winding_number_of_taps(winding)<<", "
+            osstream<<setw(3)<<setprecision(0)<<trans->get_winding_number_of_taps(winding)<<", "
               <<setw(3)<<setprecision(0)<<0<<", "
               <<setw(3)<<setprecision(1)<<0.0<<", "
               <<setw(3)<<setprecision(1)<<0.0<<", "
               <<setw(3)<<setprecision(1)<<0.0<<endl;
 
             winding = SECONDARY_SIDE;
-            sstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+            osstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
               <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<endl;
         }
         else
         {
-            sstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real()<<", "
+            osstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).real()<<", "
               <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE).imag()<<", "
               <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)<<", "
               <<setw(8)<<setprecision(6)<<fixed<<trans->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE).real()<<", "
@@ -2354,7 +2354,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                         break;
                 }
 
-                sstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
+                osstream<<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                   <<setw(7)<<setprecision(2)<<fixed<<trans->get_winding_nominal_voltage_in_kV(winding)<<", "
                   <<setw(6)<<setprecision(2)<<fixed<<trans->get_winding_angle_shift_in_deg(winding)<<", "
                   <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_rating_in_MVA(winding).get_rating_A_MVA()<<", "
@@ -2364,14 +2364,14 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                 switch(trans->get_winding_control_mode(winding))
                 {
                     case TRANSFORMER_TAP_VOLTAGE_CONTROL:
-                        sstream<<trans->get_winding_controlled_bus(winding)<<", "
+                        osstream<<trans->get_winding_controlled_bus(winding)<<", "
                           <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                           <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                           <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
                           <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_min_voltage_in_pu(winding)<<", ";
                         break;
                     case TRANSFORMER_TAP_REACTIVE_POWER_CONTROL:
-                        sstream<<trans->get_winding_controlled_bus(winding)<<", "
+                        osstream<<trans->get_winding_controlled_bus(winding)<<", "
                           <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                           <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                           <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_reactive_power_into_winding_in_MVar(winding)<<", "
@@ -2379,7 +2379,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                         break;
                     case TRANSFORMER_TAP_ACTIVE_POWER_CONTROL:
                     case TRANSFORMER_TAP_ASYMMETRIC_ACTIVE_POWER_CONTROL:
-                        sstream<<trans->get_winding_controlled_bus(winding)<<", "
+                        osstream<<trans->get_winding_controlled_bus(winding)<<", "
                           <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_angle_shift_in_deg(winding)<<", "
                           <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_angle_shift_in_deg(winding)<<", "
                           <<setw(8)<<setprecision(2)<<fixed<<trans->get_controlled_max_active_power_into_winding_in_MW(winding)<<", "
@@ -2388,7 +2388,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                     case TRANSFORMER_TAP_NO_CONTROL:
                     case TRANSFORMER_TAP_HVDC_LINE_CONTROL:
                     default:
-                        sstream<<0<<", "
+                        osstream<<0<<", "
                           <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                           <<setw(8)<<setprecision(6)<<fixed<<trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)<<", "
                           <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_controlled_max_voltage_in_pu(winding)<<", "
@@ -2396,7 +2396,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                         break;
                 }
 
-                sstream<<setw(3)<<setprecision(0)<<trans->get_winding_number_of_taps(winding)<<", "
+                osstream<<setw(3)<<setprecision(0)<<trans->get_winding_number_of_taps(winding)<<", "
                   <<setw(3)<<setprecision(0)<<0<<", "
                   <<setw(3)<<setprecision(1)<<0.0<<", "
                   <<setw(3)<<setprecision(1)<<0.0<<", "
@@ -2404,16 +2404,16 @@ string PSSE_IMEXPORTER::export_transformer_data() const
             }
         }
     }
-    return sstream.str();
+    return osstream.str();
 }
 string PSSE_IMEXPORTER::export_area_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2423,23 +2423,23 @@ string PSSE_IMEXPORTER::export_area_data() const
     {
         AREA* area = areas[i];
 
-        sstream<<setw(8)<<area->get_area_number()<<", "
+        osstream<<setw(8)<<area->get_area_number()<<", "
           <<area->get_area_swing_bus()<<", "
           <<setprecision(3)<<area->get_expected_power_leaving_area_in_MW()<<", "
           <<setprecision(3)<<area->get_area_power_mismatch_tolerance_in_MW()<<", "
           <<"\""<<area->get_area_name()<<"\""<<endl;
     }
 
-    return sstream.str();
+    return osstream.str();
 }
 string PSSE_IMEXPORTER::export_hvdc_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2449,40 +2449,40 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
     {
         HVDC* hvdc = hvdcs[i];
 
-        sstream<<"\""<<left
+        osstream<<"\""<<left
                <<setw(16)<<hvdc->get_name()<<"\""<<", ";
-        sstream<<right;
+        osstream<<right;
 
         bool status = hvdc->get_status();
         HVDC_OPERATION_MODE mode = hvdc->get_converter_operation_mode(RECTIFIER);
         if(status == false)
-            sstream<<0<<", ";
+            osstream<<0<<", ";
         else
         {
             if(mode==RECTIFIER_CONSTANT_CURRENT)
-                sstream<<2<<", ";
+                osstream<<2<<", ";
             else
-                sstream<<1<<", ";
+                osstream<<1<<", ";
         }
-        sstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_line_resistance_in_ohm()<<", ";
+        osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_line_resistance_in_ohm()<<", ";
         if(mode==RECTIFIER_CONSTANT_CURRENT)
-            sstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_current_per_pole_in_kA()*100.0<<", ";
+            osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_current_per_pole_in_kA()*100.0<<", ";
         else
         {
             HVDC_CONVERTER_SIDE side = hvdc->get_side_to_hold_dc_power();
             if(side==RECTIFIER)
-                sstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_power_per_pole_in_MW()<<", ";
+                osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_power_per_pole_in_MW()<<", ";
             else
-                sstream<<setw(6)<<setprecision(2)<<fixed<<-hvdc->get_nominal_dc_power_per_pole_in_MW()<<", ";
+                osstream<<setw(6)<<setprecision(2)<<fixed<<-hvdc->get_nominal_dc_power_per_pole_in_MW()<<", ";
         }
 
-        sstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_voltage_per_pole_in_kV()<<", ";
-        sstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_threshold_dc_voltage_for_constant_power_and_constant_current_mode_in_kV()<<", ";
-        sstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm()<<", ";
-        sstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_current_power_margin()<<", ";
+        osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_nominal_dc_voltage_per_pole_in_kV()<<", ";
+        osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_threshold_dc_voltage_for_constant_power_and_constant_current_mode_in_kV()<<", ";
+        osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm()<<", ";
+        osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_current_power_margin()<<", ";
 
-        sstream<<"\""<<(hvdc->get_meter_end()==RECTIFIER?"R":"I")<<"\", ";
-        sstream<<"0.0, 20, 1.0"<<endl;
+        osstream<<"\""<<(hvdc->get_meter_end()==RECTIFIER?"R":"I")<<"\", ";
+        osstream<<"0.0, 20, 1.0"<<endl;
 
         for(size_t j=0; j!=2; ++j)
         {
@@ -2490,28 +2490,28 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
             if(j==0) converter = RECTIFIER;
             if(j==1) converter = INVERTER;
 
-            sstream<<setw(8)<<hvdc->get_converter_bus(converter)<<", ";
-            sstream<<hvdc->get_converter_number_of_bridge(converter)<<", ";
-            sstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_max_alpha_or_gamma_in_deg(converter)<<", ";
-            sstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_min_alpha_or_gamma_in_deg(converter)<<", ";
-            sstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_impedance_in_ohm(converter).real()<<", ";
-            sstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_impedance_in_ohm(converter).imag()<<", ";
-            sstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter)<<", ";
+            osstream<<setw(8)<<hvdc->get_converter_bus(converter)<<", ";
+            osstream<<hvdc->get_converter_number_of_bridge(converter)<<", ";
+            osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_max_alpha_or_gamma_in_deg(converter)<<", ";
+            osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_min_alpha_or_gamma_in_deg(converter)<<", ";
+            osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_impedance_in_ohm(converter).real()<<", ";
+            osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_impedance_in_ohm(converter).imag()<<", ";
+            osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter)<<", ";
             double turn_ratio = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter)/
                        hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter);
-            sstream<<setw(6)<<setprecision(4)<<fixed<<turn_ratio<<", ";
-            sstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_tap_in_pu(converter)<<", ";
-            sstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_max_tap_in_pu(converter)<<", ";
-            sstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_min_tap_in_pu(converter)<<", ";
+            osstream<<setw(6)<<setprecision(4)<<fixed<<turn_ratio<<", ";
+            osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_tap_in_pu(converter)<<", ";
+            osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_max_tap_in_pu(converter)<<", ";
+            osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_min_tap_in_pu(converter)<<", ";
             double tap_step = (hvdc->get_converter_transformer_max_tap_in_pu(converter)-
                                hvdc->get_converter_transformer_min_tap_in_pu(converter))/
                                hvdc->get_converter_transformer_number_of_taps(converter);
-            sstream<<setw(6)<<setprecision(5)<<fixed<<tap_step<<", ";
-            sstream<<"0, 0, 0, \"1\", 0.0"<<endl;
+            osstream<<setw(6)<<setprecision(5)<<fixed<<tap_step<<", ";
+            osstream<<"0, 0, 0, \"1\", 0.0"<<endl;
         }
     }
 
-    return sstream.str();
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_vsc_hvdc_data() const
@@ -2536,12 +2536,12 @@ string PSSE_IMEXPORTER::export_multi_section_line_data() const
 
 string PSSE_IMEXPORTER::export_zone_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No zone data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No zone data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2551,11 +2551,11 @@ string PSSE_IMEXPORTER::export_zone_data() const
     {
         ZONE* zone = zones[i];
 
-        sstream<<setw(8)<<zone->get_zone_number()<<", "
+        osstream<<setw(8)<<zone->get_zone_number()<<", "
           <<"\""<<zone->get_zone_name()<<"\""<<endl;
     }
 
-    return sstream.str();
+    return osstream.str();
 }
 
 string PSSE_IMEXPORTER::export_interarea_transfer_data() const
@@ -2565,12 +2565,12 @@ string PSSE_IMEXPORTER::export_interarea_transfer_data() const
 
 string PSSE_IMEXPORTER::export_owner_data() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -2580,11 +2580,11 @@ string PSSE_IMEXPORTER::export_owner_data() const
     {
         OWNER* owner = owners[i];
 
-        sstream<<setw(8)<<owner->get_owner_number()<<", "
+        osstream<<setw(8)<<owner->get_owner_number()<<", "
           <<"\""<<owner->get_owner_name()<<"\""<<endl;
     }
 
-    return sstream.str();
+    return osstream.str();
 }
 string PSSE_IMEXPORTER::export_facts_data() const
 {

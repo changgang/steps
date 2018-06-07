@@ -13,12 +13,12 @@ using namespace std;
 
 WT_GENERATOR::WT_GENERATOR(POWER_SYSTEM_DATABASE* psdb) : SOURCE(psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. WT_GENERATOR object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. WT_GENERATOR object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -92,7 +92,7 @@ double WT_GENERATOR::get_rated_power_per_wt_generator_in_MW() const
 
 void WT_GENERATOR::run(DYNAMIC_MODE mode)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(get_status()==false)
         return;
@@ -110,8 +110,8 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
         {
             if(gen==NULL)
             {
-                sstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                show_information_with_leading_time_stamp(osstream);
                 return;
             }
             gen->initialize();
@@ -121,16 +121,16 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
 
             if(aero==NULL)
             {
-                sstream<<"Error. No WT_AERO_DYNAMIC_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"Error. No WT_AERO_DYNAMIC_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                show_information_with_leading_time_stamp(osstream);
                 return;
             }
             aero->initialize();
 
             if(turbine==NULL)
             {
-                sstream<<"Error. No WT_TURBINE_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"Error. No WT_TURBINE_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                show_information_with_leading_time_stamp(osstream);
                 return;
             }
             turbine->initialize();
@@ -174,7 +174,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
 
 void WT_GENERATOR::report() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     string regulating_mode;
     switch(get_regulating_mode())
     {
@@ -190,7 +190,7 @@ void WT_GENERATOR::report() const
         default:
             regulating_mode = "not set(ERROR)";
     }
-    sstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
+    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
       <<"regulating mode: "<<regulating_mode<<endl
       <<"P = "<<setw(8)<<setprecision(4)<<fixed<<get_p_generation_in_MW()<<" MW, "
@@ -200,7 +200,7 @@ void WT_GENERATOR::report() const
       <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
       <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar"<<endl
       <<"Zsource = "<<setw(8)<<setprecision(6)<<fixed<<get_source_impedance_in_pu();
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_GENERATOR::save() const
@@ -252,21 +252,21 @@ void WT_GENERATOR::set_model(const MODEL* model)
         return;
     }
 
-    ostringstream sstream;
-    sstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up wind-turbine generator-related model.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up wind-turbine generator-related model.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_GENERATOR::set_wt_generator_model(const WT_GENERATOR_MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model==NULL)
         return;
 
     if(model->get_model_type()!="WT GENERATOR")
     {
-        sstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt generator model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt generator model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -293,27 +293,27 @@ void WT_GENERATOR::set_wt_generator_model(const WT_GENERATOR_MODEL* model)
 
         set_number_of_lumped_wt_generators(new_model->get_number_of_lumped_wt_generators());
         set_rated_power_per_wt_generator_in_MW(new_model->get_rated_power_per_wt_generator_in_MW());
-        sstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt generator model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt generator model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void WT_GENERATOR::set_wt_aerodynamic_model(const WT_AERODYNAMIC_MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model==NULL)
         return;
 
     if(model->get_model_type()!="WT AERODYNAMIC")
     {
-        sstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt aerodynamic model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt aerodynamic model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -337,26 +337,26 @@ void WT_GENERATOR::set_wt_aerodynamic_model(const WT_AERODYNAMIC_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wt_aerodynamic_model = new_model;
-        sstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
     else
     {
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt aerodynamic model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt aerodynamic model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void WT_GENERATOR::set_wt_turbine_model(const WT_TURBINE_MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model==NULL)
         return;
 
     if(model->get_model_type()!="WT TURBINE")
     {
-        sstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt turbine model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt turbine model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -380,27 +380,27 @@ void WT_GENERATOR::set_wt_turbine_model(const WT_TURBINE_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wt_turbine_model = new_model;
-        sstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
     else
     {
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt turbine model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt turbine model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
 
 void WT_GENERATOR::set_wt_electrical_model(const WT_ELECTRICAL_MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model==NULL)
         return;
 
     if(model->get_model_type()!="WT ELECTRICAL")
     {
-        sstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt electrical model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt electrical model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -424,26 +424,26 @@ void WT_GENERATOR::set_wt_electrical_model(const WT_ELECTRICAL_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wt_electrical_model = new_model;
-        sstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
     else
     {
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt electrical model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt electrical model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void WT_GENERATOR::set_wt_pitch_model(const WT_PITCH_MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model==NULL)
         return;
 
     if(model->get_model_type()!="WT PITCH")
     {
-        sstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt pitch model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt pitch model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -467,26 +467,26 @@ void WT_GENERATOR::set_wt_pitch_model(const WT_PITCH_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wt_pitch_model = new_model;
-        sstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
     else
     {
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt pitch model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt pitch model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void WT_GENERATOR::set_wind_speed_model(const WIND_SPEED_MODEL* model)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(model==NULL)
         return;
 
     if(model->get_model_type()!="WIND SPEED")
     {
-        sstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wind speed model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wind speed model.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -510,13 +510,13 @@ void WT_GENERATOR::set_wind_speed_model(const WIND_SPEED_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wind_speed_model = new_model;
-        sstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<new_model->get_model_name()<<" model is added to "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
     }
     else
     {
-        sstream<<"Warning. Model '"<<model_name<<"' is not supported when append wind speed model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append wind speed model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 

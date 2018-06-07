@@ -150,14 +150,14 @@ void WT_GENERATOR_MODEL_TEST::run_a_step()
 
 void WT_GENERATOR_MODEL_TEST::export_meter_title()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tVTERM\tBUSANGLE\tPLL_FREQ\tPLL_ANGLE\tIPCMD\tIQCMD\tEQCMD\tPELEC\tQELEC";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tVTERM\tBUSANGLE\tPLL_FREQ\tPLL_ANGLE\tIPCMD\tIQCMD\tEQCMD\tPELEC\tQELEC";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_GENERATOR_MODEL_TEST::export_meter_values(double time)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
 
@@ -171,7 +171,7 @@ void WT_GENERATOR_MODEL_TEST::export_meter_values(double time)
     double pelec = model->get_terminal_active_power_in_MW();
     double qelec = model->get_terminal_reactive_power_in_MVar();
 
-    sstream<<setw(6)<<setprecision(3)<<fixed<<time<<"\t"
+    osstream<<setw(6)<<setprecision(3)<<fixed<<time<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<vterm<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<busangle<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<freq<<"\t"
@@ -181,21 +181,21 @@ void WT_GENERATOR_MODEL_TEST::export_meter_values(double time)
       <<setw(10)<<setprecision(6)<<fixed<<pelec<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<qelec;
 
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_active_current_step_response_of_wt_generator_model()
 {
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-    ostringstream sstream;
+    ostringstream osstream;
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
         redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
         set_dynamic_simulation_time_step_in_s(delt);
@@ -247,15 +247,15 @@ void WT_GENERATOR_MODEL_TEST::test_active_current_step_response_of_wt_generator_
 void WT_GENERATOR_MODEL_TEST::test_reactive_current_step_response_of_wt_generator_model()
 {
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-    ostringstream sstream;
+    ostringstream osstream;
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
         redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
         set_dynamic_simulation_time_step_in_s(delt);
@@ -308,15 +308,15 @@ void WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_m
 {
     POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-    ostringstream sstream;
+    ostringstream osstream;
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
         redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
         set_dynamic_simulation_time_step_in_s(delt);
@@ -371,15 +371,15 @@ void WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model
 {
     POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-    ostringstream sstream;
+    ostringstream osstream;
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
         redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
         set_dynamic_simulation_time_step_in_s(delt);
@@ -434,15 +434,15 @@ void WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model
 void WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_step_response()
 {
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-    ostringstream sstream;
+    ostringstream osstream;
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
         redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
         set_dynamic_simulation_time_step_in_s(delt);

@@ -24,7 +24,7 @@ VIRTUAL_GENERATOR_LOAD_PAIR::~VIRTUAL_GENERATOR_LOAD_PAIR()
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::set_generator_power_system_name(string name)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     bool found = false;
     size_t nps = MAX_DATABASE_COUNT;
     string power_system_name = "";
@@ -40,16 +40,16 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::set_generator_power_system_name(string name)
     }
     if(not found)
     {
-        sstream<<"Warning. Power system with name '"<<name<<"' cannot be found in STEPS::power_system_db."<<endl
+        osstream<<"Warning. Power system with name '"<<name<<"' cannot be found in STEPS::power_system_db."<<endl
           <<"No generator power system databse will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     return;
 }
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::set_load_power_system_name(string name)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     bool found = false;
     size_t nps = MAX_DATABASE_COUNT;
     string power_system_name = "";
@@ -65,9 +65,9 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::set_load_power_system_name(string name)
     }
     if(not found)
     {
-        sstream<<"Warning. Power system with name '"<<name<<"' cannot be found in STEPS::power_system_db."<<endl
+        osstream<<"Warning. Power system with name '"<<name<<"' cannot be found in STEPS::power_system_db."<<endl
           <<"No load power system databse will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     return;
 }
@@ -91,30 +91,30 @@ string VIRTUAL_GENERATOR_LOAD_PAIR::get_load_power_system_name() const
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::set_generator_power_system_index(size_t index)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     size_t nps = MAX_DATABASE_COUNT;
     if(index<nps)
         generator_power_system_db = STEPS::power_system_db+index;
     else
     {
-        sstream<<"Warning. Power system with index "<<index<<" exceeds the size of STEPS::power_system_db."<<endl
+        osstream<<"Warning. Power system with index "<<index<<" exceeds the size of STEPS::power_system_db."<<endl
           <<"No generator power system databse will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     return;
 }
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::set_load_power_system_index(size_t index)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     size_t nps = MAX_DATABASE_COUNT;
     if(index<nps)
         load_power_system_db = STEPS::power_system_db+index;
     else
     {
-        sstream<<"Warning. Power system with index "<<index<<" exceeds the size of STEPS::power_system_db."<<endl
+        osstream<<"Warning. Power system with index "<<index<<" exceeds the size of STEPS::power_system_db."<<endl
           <<"No load power system databse will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     return;
 }
@@ -143,20 +143,20 @@ size_t VIRTUAL_GENERATOR_LOAD_PAIR::get_load_power_system_index() const
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::set_virtual_generator(DEVICE_ID generator)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = generator_power_system_db;
     if(psdb == NULL)
     {
-        sstream<<"Warning. No generator power system is set when setting up virtual generator."<<endl
+        osstream<<"Warning. No generator power system is set when setting up virtual generator."<<endl
           <<"No virtual generator will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(generator.get_device_type()!="GENERATOR")
     {
-        sstream<<"Warning. The input virtual 'generator' is not of GENERATOR type. It is a "<<generator.get_device_type()<<"."<<endl
+        osstream<<"Warning. The input virtual 'generator' is not of GENERATOR type. It is a "<<generator.get_device_type()<<"."<<endl
           <<"No virtual generator will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     bool exist = psdb->is_generator_exist(generator);
@@ -164,9 +164,9 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::set_virtual_generator(DEVICE_ID generator)
         generator_id = generator;
     else
     {
-        sstream<<"Warning. "<<generator.get_device_name()<<" doesn't exit in power system '"<<psdb->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<generator.get_device_name()<<" doesn't exit in power system '"<<psdb->get_system_name()<<"'."<<endl
           <<"No virtual generator will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -177,20 +177,20 @@ DEVICE_ID VIRTUAL_GENERATOR_LOAD_PAIR::get_virtual_generator() const
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::set_virtual_load(DEVICE_ID load)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = load_power_system_db;
     if(psdb == NULL)
     {
-        sstream<<"Warning. No load power system is set when setting up virtual load."<<endl
+        osstream<<"Warning. No load power system is set when setting up virtual load."<<endl
           <<"No virtual load will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(load.get_device_type()!="LOAD")
     {
-        sstream<<"Warning. The input virtual 'load' is not of LOAD type. It is a "<<load.get_device_type()<<"."<<endl
+        osstream<<"Warning. The input virtual 'load' is not of LOAD type. It is a "<<load.get_device_type()<<"."<<endl
           <<"No virtual load will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     bool exist = psdb->is_load_exist(load);
@@ -198,9 +198,9 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::set_virtual_load(DEVICE_ID load)
         load_id = load;
     else
     {
-        sstream<<"Warning. "<<load.get_device_name()<<" doesn't exit in power system '"<<psdb->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<load.get_device_name()<<" doesn't exit in power system '"<<psdb->get_system_name()<<"'."<<endl
           <<"No virtual load will be set for virtual generator load pair.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -211,12 +211,12 @@ DEVICE_ID VIRTUAL_GENERATOR_LOAD_PAIR::get_virtual_load() const
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::update()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_valid())
     {
-        sstream<<"Warning. Virtual generator load pair is invalid."<<endl
+        osstream<<"Warning. Virtual generator load pair is invalid."<<endl
           <<"Neither virtual generator voltage nor load power will be updated for powerflow.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -356,11 +356,11 @@ DEVICE_ID VIRTUAL_GENERATOR_LOAD_PAIR::get_device_id() const
 /*
 void VIRTUAL_GENERATOR_LOAD_PAIR::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_valid())
     {
-        sstream<<"Warning. Virtual generator load pair is invalid. Pair is not initialized.");
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Virtual generator load pair is invalid. Pair is not initialized.");
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -374,9 +374,9 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::initialize()
     SYNC_GENERATOR_MODEL* gen_model = generator->get_generator_model();
     if(gen_model==NULL)
     {
-        sstream<<"Warning. No dynamic model of virtual generator %s of power system %s is set. It will be set automatically",
+        osstream<<"Warning. No dynamic model of virtual generator %s of power system %s is set. It will be set automatically",
                 generator_id.get_device_name().c_str(), generator_power_system_db->get_system_name().c_str());
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
 
         GENCLS* model = new GENCLS(db, get_virtual_generator());
         model->set_Rs(0.0);
@@ -390,10 +390,10 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::initialize()
         string model_name = gen_model->get_model_name();
         if(model_name!="GENCLS")
         {
-            sstream<<"Error. The dynamic model of virtual generator %s of power system %s is not 'GENCLS'. It is '%s'.",
+            osstream<<"Error. The dynamic model of virtual generator %s of power system %s is not 'GENCLS'. It is '%s'.",
                     generator_id.get_device_name().c_str(), generator_power_system_db->get_system_name().c_str(),
                     model_name.c_str());
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             return;
         }
     }
@@ -406,11 +406,11 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::initialize()
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::run(DYNAMIC_MODE mode)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_valid())
     {
-        sstream<<"Warning. Virtual generator load pair is invalid. Neither virtual generator voltage nor load power will be updated for dynamics.");
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Virtual generator load pair is invalid. Neither virtual generator voltage nor load power will be updated for dynamics.");
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 

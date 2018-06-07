@@ -59,9 +59,9 @@ void INPHNO::update_with_new_internal_bus_permutation(const vector<size_t>& P)
 {
     if(not is_new_internal_bus_permutation_correct(P))
     {
-        ostringstream sstream;
-        sstream<<"Warning. Internal bus permutation is incorrect. Physical-internal bus pair will not be updated.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Internal bus permutation is incorrect. Physical-internal bus pair will not be updated.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -168,10 +168,10 @@ size_t INPHNO::get_physical_bus_number_of_internal_bus_number(const size_t bus) 
 
 void INPHNO::report() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
-    sstream<<"Physical<-->internal bus number pair:";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Physical<-->internal bus number pair:";
+    show_information_with_leading_time_stamp(osstream);
 
     size_t n = internal_to_physical_lookup_table.size();
 
@@ -179,9 +179,9 @@ void INPHNO::report() const
     for(size_t i=0; i!=n; ++i)
     {
         bus = get_physical_bus_number_of_internal_bus_number(i);
-        sstream<<setw(8)<<bus<<"<-->"<<setw(8)<<i;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<setw(8)<<bus<<"<-->"<<setw(8)<<i;
+        show_information_with_leading_time_stamp(osstream);
     }
-    sstream<<"All physical<-->internal bus number pair exported.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"All physical<-->internal bus number pair exported.";
+    show_information_with_leading_time_stamp(osstream);
 }

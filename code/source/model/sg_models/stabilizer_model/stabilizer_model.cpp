@@ -21,25 +21,25 @@ string STABILIZER_MODEL::get_model_type() const
 
 void STABILIZER_MODEL::set_input_signal_at_slot(size_t slot, SIGNAL& signal)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not signal.is_valid())
     {
-        sstream<<"Warning. Invalid signal ("<<signal.get_meter_name()<<") is not allowed when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Invalid signal ("<<signal.get_meter_name()<<") is not allowed when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(slot>=MAX_STABILIZER_INPUT_SIGNAL_SLOT)
     {
-        sstream<<"Warning. Signal slot "<<slot<<" is beyond the capacity of slots when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Signal slot "<<slot<<" is beyond the capacity of slots when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(signals[slot].is_valid())
     {
-        sstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signals[slot].get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
+        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signals[slot].get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
           <<"It will be deleted and new signal ("<<signal.get_meter_name()<<") will be set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         signals[slot].clear();
     }
     signals[slot] = signal;

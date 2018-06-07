@@ -236,7 +236,7 @@ bool WT3G2::setup_model_with_steps_string(string data)
 
 bool WT3G2::setup_model_with_psse_string(string data)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     bool is_successful = false;
     vector<string> dyrdata = split_string(data,",");
@@ -278,17 +278,17 @@ bool WT3G2::setup_model_with_psse_string(string data)
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
+        osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
                <<"No power system database is properly set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return is_successful;
     }
     WT_GENERATOR* gen = psdb->get_wt_generator(did);
     if(gen==NULL)
     {
-        sstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
+        osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
                <<"No such wt generator exists in the power system database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return is_successful;
     }
 
@@ -324,7 +324,7 @@ bool WT3G2::setup_model_with_bpa_string(string data)
 
 void WT3G2::initialize()
 {
-    ostringstream osstream;
+    ostringstream oosstream;
     if(is_model_initialized())
         return;
 
@@ -403,7 +403,7 @@ void WT3G2::initialize()
 
     set_flag_model_initialized_as_true();
 
-    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+    oosstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
             <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
             <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
             <<"(3) States of blocks"<<endl
@@ -415,7 +415,7 @@ void WT3G2::initialize()
             <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
             <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
             <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp(oosstream);
 }
 
 void WT3G2::run(DYNAMIC_MODE mode)
@@ -600,9 +600,9 @@ void WT3G2::check()
 
 void WT3G2::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3G2::save()
@@ -612,14 +612,14 @@ void WT3G2::save()
 
 string WT3G2::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
     LVPL lvpl = get_LVPL();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(4)<<get_number_of_lumped_wt_generators()<<", "
@@ -638,7 +638,7 @@ string WT3G2::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
       <<setw(8)<<setprecision(6)<<get_PLLmin()<<" /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t WT3G2::get_variable_index_from_variable_name(string var_name)

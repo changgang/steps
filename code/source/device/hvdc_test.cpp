@@ -1149,7 +1149,7 @@ void HVDC_TEST::test_solve_hvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     hvdc->set_converter_bus(RECTIFIER, 1);
     hvdc->set_converter_bus(INVERTER, 2);
@@ -1188,20 +1188,20 @@ void HVDC_TEST::test_solve_hvdc()
     hvdc->set_converter_transformer_tap_in_pu(RECTIFIER, 1.19);
     hvdc->set_converter_transformer_tap_in_pu(INVERTER, 1.27);
 
-    sstream<<"Test 1: solve with 1.0 AC voltage at both sides";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Test 1: solve with 1.0 AC voltage at both sides";
+    show_information_with_leading_time_stamp(osstream);
     hvdc->solve_steady_state();
     hvdc->show_solved_hvdc_steady_state();
 
-    sstream<<"Test 2: solve with 0.8 AC voltage at rectifier side";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Test 2: solve with 0.8 AC voltage at rectifier side";
+    show_information_with_leading_time_stamp(osstream);
     BUS* busptr = db->get_bus(hvdc->get_converter_bus(RECTIFIER));
     busptr->set_voltage_in_pu(0.8);
     hvdc->solve_steady_state();
     hvdc->show_solved_hvdc_steady_state();
 
-    sstream<<"Test 3: solve with 0.8 AC voltage at inverter side";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Test 3: solve with 0.8 AC voltage at inverter side";
+    show_information_with_leading_time_stamp(osstream);
     busptr = db->get_bus(hvdc->get_converter_bus(RECTIFIER));
     busptr->set_voltage_in_pu(1.0);
     busptr = db->get_bus(hvdc->get_converter_bus(INVERTER));
@@ -1209,8 +1209,8 @@ void HVDC_TEST::test_solve_hvdc()
     hvdc->solve_steady_state();
     hvdc->show_solved_hvdc_steady_state();
 
-    sstream<<"Test 4: solve with 0.8 AC voltage at both sides";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Test 4: solve with 0.8 AC voltage at both sides";
+    show_information_with_leading_time_stamp(osstream);
     busptr = db->get_bus(hvdc->get_converter_bus(RECTIFIER));
     busptr->set_voltage_in_pu(0.8);
     busptr = db->get_bus(hvdc->get_converter_bus(INVERTER));
@@ -1274,49 +1274,49 @@ void HVDC_TEST::test_set_get_converter_dc_voltage()
 
 void HVDC_TEST::test_get_converter_dc_power()
 {
-    ostringstream sstream;
-    sstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    show_information_with_leading_time_stamp(osstream);
 
 }
 
 void HVDC_TEST::test_get_converter_ac_active_power()
 {
-    ostringstream sstream;
-    sstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    show_information_with_leading_time_stamp(osstream);
 
 }
 
 void HVDC_TEST::test_get_converter_ac_reactive_power()
 {
-    ostringstream sstream;
-    sstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    show_information_with_leading_time_stamp(osstream);
 
 }
 
 void HVDC_TEST::test_get_converter_ac_apparent_power()
 {
-    ostringstream sstream;
-    sstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    show_information_with_leading_time_stamp(osstream);
 
 }
 
 void HVDC_TEST::test_get_converter_ac_power_factor()
 {
-    ostringstream sstream;
-    sstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    show_information_with_leading_time_stamp(osstream);
 
 }
 
 void HVDC_TEST::test_get_converter_commutating_overlap_angle()
 {
-    ostringstream sstream;
-    sstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
+    show_information_with_leading_time_stamp(osstream);
 
 }
 

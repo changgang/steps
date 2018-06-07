@@ -42,14 +42,14 @@ void TURBINE_GOVERNOR_MODEL_TEST::apply_speed_drop_of_1_percent()
 
 void TURBINE_GOVERNOR_MODEL_TEST::export_meter_title()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tSPEED\tPMECH";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tSPEED\tPMECH";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void TURBINE_GOVERNOR_MODEL_TEST::export_meter_values(double time)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     GENERATOR* genptr = get_test_generator();
     TURBINE_GOVERNOR_MODEL* model = genptr->get_turbine_governor_model();
@@ -57,20 +57,20 @@ void TURBINE_GOVERNOR_MODEL_TEST::export_meter_values(double time)
     double speed = model->get_rotor_speed_deviation_in_pu_from_sync_generator_model();
     double pmech = model->get_mechanical_power_in_pu_based_on_mbase();
 
-    sstream<<setw(6)<<setprecision(3)<<fixed<<time<<"\t"
+    osstream<<setw(6)<<setprecision(3)<<fixed<<time<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<speed<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<pmech;
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void TURBINE_GOVERNOR_MODEL_TEST::run_step_response_of_turbine_govnernor_model()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     GENERATOR* genptr = get_test_generator();
     TURBINE_GOVERNOR_MODEL* model = genptr->get_turbine_governor_model();
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);

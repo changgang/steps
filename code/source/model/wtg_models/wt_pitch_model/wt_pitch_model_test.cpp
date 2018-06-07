@@ -343,7 +343,7 @@ void WT_PITCH_MODEL_TEST::update_models()
 
 void WT_PITCH_MODEL_TEST::run_to_time(double tend)
 {
-    ostringstream osstream;
+    ostringstream oosstream;
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     WT_AERODYNAMIC_MODEL* aerd = get_test_wt_aerodynamic_model();
@@ -381,22 +381,22 @@ void WT_PITCH_MODEL_TEST::run_to_time(double tend)
 
 void WT_PITCH_MODEL_TEST::export_meter_title()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tSPEED\tSPEEDREF\tFREQ\tPITCH";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tSPEED\tSPEEDREF\tFREQ\tPITCH";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_PITCH_MODEL_TEST::export_meter_values()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     WT_PITCH_MODEL* model = get_test_wt_pitch_model();
 
-    sstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
+    osstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_wt_generator_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_wt_generator_reference_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_bus_frequency_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_pitch_angle_in_deg();
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 

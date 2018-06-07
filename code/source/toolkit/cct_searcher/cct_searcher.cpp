@@ -224,12 +224,12 @@ double CCT_SEARCHER::get_simulator_iteration_accelerator() const
 
 double CCT_SEARCHER::search_cct()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_searcher_is_properly_set())
     {
-        sstream<<"CCT searcher is not properly set. No CCT will be searched."<<endl
+        osstream<<"CCT searcher is not properly set. No CCT will be searched."<<endl
           <<"0.0 will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -248,15 +248,15 @@ double CCT_SEARCHER::search_cct()
     {
         if(is_clearing_time_min_stable==true and is_clearing_time_max_stable==true)
         {
-            sstream<<"System is stable at clearing time "<<clearing_time_min<<" s and "
+            osstream<<"System is stable at clearing time "<<clearing_time_min<<" s and "
               <<clearing_time_max<<" s"<<endl;
             double delt = clearing_time_max-clearing_time_min;
             clearing_time_min  = clearing_time_max;
             is_clearing_time_min_stable = true;
 
             clearing_time_max += delt;
-            sstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
+            show_information_with_leading_time_stamp(osstream);
 
             is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
         }
@@ -264,15 +264,15 @@ double CCT_SEARCHER::search_cct()
         {
             if(is_clearing_time_min_stable==true and is_clearing_time_max_stable==false)
             {
-                sstream<<"System is stable at clearing time "<<clearing_time_min<<" s, but unstable at clearing time "
+                osstream<<"System is stable at clearing time "<<clearing_time_min<<" s, but unstable at clearing time "
                   <<clearing_time_max<<" s"<<endl;
                 double delt = clearing_time_max-clearing_time_min;
                 clearing_time_min  = clearing_time_min;
                 is_clearing_time_min_stable = true;
 
                 clearing_time_max = clearing_time_min+0.5*delt;
-                sstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
+                show_information_with_leading_time_stamp(osstream);
 
                 is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
             }
@@ -280,15 +280,15 @@ double CCT_SEARCHER::search_cct()
             {
                 if(is_clearing_time_min_stable==false and is_clearing_time_max_stable==false)
                 {
-                    sstream<<"System is unstable at clearing time "<<clearing_time_min<<" s and "
+                    osstream<<"System is unstable at clearing time "<<clearing_time_min<<" s and "
                       <<clearing_time_max<<" s"<<endl;
 
                     clearing_time_max  = clearing_time_min;
                     is_clearing_time_max_stable = false;
 
                     clearing_time_min *=0.5;
-                    sstream<<"Now go on checking clearing time "<<clearing_time_min<<" s.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Now go on checking clearing time "<<clearing_time_min<<" s.";
+                    show_information_with_leading_time_stamp(osstream);
 
                     is_clearing_time_min_stable = perform_simulation_with_clearing_time(clearing_time_min);
                 }
@@ -296,11 +296,11 @@ double CCT_SEARCHER::search_cct()
                 {
                     // invalid condition
                     // is_clearing_time_min_stable==false and is_clearing_time_max_stable==true
-                    sstream<<"Warning. System is unstable when fault clearing time is "<<clearing_time_min
+                    osstream<<"Warning. System is unstable when fault clearing time is "<<clearing_time_min
                       <<", but stable when fault clearing time is "<<clearing_time_max<<endl
                       <<"This is impossible for power system operation."<<endl
                       <<"If you observe this message, CONGRATULATIONS, you find something interesting. Go on working on it.";
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
 
                     break;
                 }
@@ -320,53 +320,53 @@ double CCT_SEARCHER::search_cct()
 
 bool CCT_SEARCHER::is_searcher_is_properly_set() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     bool is_properly_set = true;
-    sstream<<"CCT searcher is not properly set due to:"<<endl;
+    osstream<<"CCT searcher is not properly set due to:"<<endl;
     if(get_powerflow_data_filename()=="")
     {
         is_properly_set = false;
-        sstream<<"Powerflow data file is not set."<<endl;
+        osstream<<"Powerflow data file is not set."<<endl;
     }
     if(get_dynamic_data_filename()=="")
     {
         is_properly_set = false;
-        sstream<<"Dynamic data file is not set."<<endl;
+        osstream<<"Dynamic data file is not set."<<endl;
     }
     if(not get_fault_device().is_valid())
     {
         is_properly_set = false;
-        sstream<<"Fault device is not set."<<endl;
+        osstream<<"Fault device is not set."<<endl;
     }
     if(get_fault_side_bus()==0)
     {
         is_properly_set = false;
-        sstream<<"Fault side bus is not set."<<endl;
+        osstream<<"Fault side bus is not set."<<endl;
     }
     if(abs(get_fault_shunt_in_pu())<FLOAT_EPSILON)
     {
         is_properly_set = false;
-        sstream<<"Fault shunt is not set."<<endl;
+        osstream<<"Fault shunt is not set."<<endl;
     }
     if(fabs(get_minimum_clearing_time_in_s()-get_maximum_clearing_time_in_s())<FLOAT_EPSILON)
     {
         is_properly_set = false;
-        sstream<<"Minimum clearing time and maximum clearing time are identical."<<endl;
+        osstream<<"Minimum clearing time and maximum clearing time are identical."<<endl;
     }
     if(fabs(get_simulation_time_span_in_s())<FLOAT_EPSILON)
     {
         is_properly_set = false;
-        sstream<<"Simulation time span is not set."<<endl;
+        osstream<<"Simulation time span is not set."<<endl;
     }
     if(fabs(get_angle_difference_threshold_in_deg())<FLOAT_EPSILON)
     {
         is_properly_set = false;
-        sstream<<"Angle difference threshold is not set."<<endl;
+        osstream<<"Angle difference threshold is not set."<<endl;
     }
 
     if(not is_properly_set)
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     return is_properly_set;
 }
 
@@ -503,7 +503,7 @@ void CCT_SEARCHER::clear_fault(DYNAMICS_SIMULATOR& simulator)
 bool CCT_SEARCHER::check_if_system_is_stable() const
 {
     cout<<__FUNCTION__<<", line "<<__LINE__<<endl;
-    ostringstream sstream;
+    ostringstream osstream;
     double TIME = get_dynamic_simulation_time_in_s();
     bool system_is_stable = true;
     size_t n = generators_in_islands.size();
@@ -546,7 +546,7 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
         if(fabs(scaled_angle_difference)>get_angle_difference_threshold_in_deg())
         {
             system_is_stable = false;
-            sstream<<"The following island is detected to be unstable at time "<<TIME<<" s. Maximum angle difference is :"<<fabs(angle_difference)<<" deg (a.k.a. "<<fabs(scaled_angle_difference)<<" deg)"<<endl
+            osstream<<"The following island is detected to be unstable at time "<<TIME<<" s. Maximum angle difference is :"<<fabs(angle_difference)<<" deg (a.k.a. "<<fabs(scaled_angle_difference)<<" deg)"<<endl
                    <<"Generator          Rotor angle in deg"<<endl;
 
             size_t n = generators_in_island.size();
@@ -554,9 +554,9 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
             {
                 GENERATOR* generator = generators_in_island[i];
                 SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
-                sstream<<generator->get_device_name()<<"  "<<genmodel->get_rotor_angle_in_deg()<<endl;
+                osstream<<generator->get_device_name()<<"  "<<genmodel->get_rotor_angle_in_deg()<<endl;
             }
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             break;
         }
     }

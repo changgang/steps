@@ -144,7 +144,7 @@ void POWERFLOW_CASE_GENERATOR::generate_cases()
 
 void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> load_randoms, size_t n)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     psdb.clear_database();
 
@@ -217,8 +217,8 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
 
     if(not solver.is_converged())
     {
-        sstream<<"Powerflow is converged. Need to manually tune it.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Powerflow is converged. Need to manually tune it.";
+        show_information_with_leading_time_stamp(osstream);
     }
 
     vector<string> splitted_string = split_string(pf_file, ".");

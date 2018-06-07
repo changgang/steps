@@ -45,10 +45,10 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
+        ostringstream osstream;
+        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"0 will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0;
     }
 }
@@ -89,10 +89,10 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
                         return sourceptr->set_regulating_mode(REGULATING_VA);
                     else
                     {
-                        ostringstream sstream;
-                        sstream<<"Input regulating mode "<<value<<" is not supported for PARAMETER_NAME=="<<sourceptr->get_device_name()<<" with api "<<__FUNCTION__<<endl
+                        ostringstream osstream;
+                        osstream<<"Input regulating mode "<<value<<" is not supported for PARAMETER_NAME=="<<sourceptr->get_device_name()<<" with api "<<__FUNCTION__<<endl
                                <<"Nothing will be set.";
-                        show_information_with_leading_time_stamp(sstream);
+                        show_information_with_leading_time_stamp(osstream);
                         return;
                     }
                 }
@@ -102,10 +102,10 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
+        ostringstream osstream;
+        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
                <<"Nothing will be set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -161,10 +161,10 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
+        ostringstream osstream;
+        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"0.0 will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 }
@@ -224,10 +224,10 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
+        ostringstream osstream;
+        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
                <<"Nothing will be set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -257,10 +257,10 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
+        ostringstream osstream;
+        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"EMPTY STRING will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return BLANK.c_str();
     }
 }
@@ -290,10 +290,10 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
+        ostringstream osstream;
+        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
                <<"Nothing will be set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -322,10 +322,10 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
+        ostringstream osstream;
+        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"False will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return false;
     }
 }
@@ -356,9 +356,9 @@ void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
+        ostringstream osstream;
+        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
                <<"Nothing will be set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }

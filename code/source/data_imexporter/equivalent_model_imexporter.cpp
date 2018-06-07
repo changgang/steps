@@ -33,10 +33,10 @@ bool EQUIVALENT_MODEL_IMEXPORTER::is_power_system_database_set() const
         return true;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Data imexporter is not connected to any target power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Error. Data imexporter is not connected to any target power system database."<<endl
           <<"No operation on the imexporter will work.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return false;
     }
 }
@@ -71,15 +71,15 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_equivalent_model(string file)
 
 void EQUIVALENT_MODEL_IMEXPORTER::load_data_into_ram(string file)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     data_in_ram.clear();
 
     FILE* fid = fopen(file.c_str(), "rt");
     if(fid==NULL)
     {
-        sstream<<"equivalent model file cannot be open"<<endl;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"equivalent model file cannot be open"<<endl;
+        show_information_with_leading_time_stamp(osstream);
     }
 
     char buffer[1024];
@@ -120,7 +120,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<string> data_line = model_data[0];
 
@@ -134,13 +134,13 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
 
     psdb->append_equivalent_device(edevice);
 
-    sstream<<"Equivalent device added: "<<edevice.get_device_name();
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Equivalent device added: "<<edevice.get_device_name();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & data_line, size_t& delay, double& coefficient)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     METER_SETTER setter;
@@ -150,8 +150,8 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
 
     if(data_line.size()==0)
     {
-        sstream<<"FATAL error. No data is found in the data line. Cannot generate meter for equivalent model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"FATAL error. No data is found in the data line. Cannot generate meter for equivalent model.";
+        show_information_with_leading_time_stamp(osstream);
         return meter;
     }
 
@@ -341,7 +341,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     vector<string> data_line = model_data[0];
     if(data_line[0]!="ARXL")
@@ -394,10 +394,10 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
         }
         else
         {
-            sstream<<"Warning. Invalid meter is detected in ARXL model data: "<<endl;
+            osstream<<"Warning. Invalid meter is detected in ARXL model data: "<<endl;
             for(size_t k=0; k<data_line.size(); ++k)
-               sstream<<data_line[k]<<", ";
-            show_information_with_leading_time_stamp(sstream);
+               osstream<<data_line[k]<<", ";
+            show_information_with_leading_time_stamp(osstream);
         }
     }
 
@@ -409,10 +409,10 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
 
     EQUIVALENT_MODEL* emodel = pedevice->get_equivalent_model();
 
-    sstream<<"ARXL model added to "<<pedevice->get_device_name();
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"ARXL model added to "<<pedevice->get_device_name();
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<emodel->get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<emodel->get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 
 }

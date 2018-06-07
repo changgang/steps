@@ -66,9 +66,9 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::test_get_bus_frequency()
 
 void LOAD_FREQUENCY_RELAY_MODEL_TEST::export_meter_title()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tFREQ\tSHED_SCALE";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tFREQ\tSHED_SCALE";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void LOAD_FREQUENCY_RELAY_MODEL_TEST::export_meter_values(double time)
@@ -76,11 +76,11 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::export_meter_values(double time)
     LOAD* load = get_load();
     LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
 
-    ostringstream sstream;
-    sstream<<setprecision(6)<<fixed<<time<<"\t"
+    ostringstream osstream;
+    osstream<<setprecision(6)<<fixed<<time<<"\t"
       <<setprecision(6)<<fixed<<model->get_bus_frequency_in_Hz()<<"\t"
       <<setprecision(6)<<fixed<<model->get_total_shed_scale_factor_in_pu()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 
@@ -103,10 +103,10 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
     POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
     double fbase = psdb->get_system_base_frequency_in_Hz();
 
-    ostringstream sstream;
+    ostringstream osstream;
 
-    sstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);

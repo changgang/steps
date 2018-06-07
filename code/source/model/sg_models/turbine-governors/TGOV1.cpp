@@ -260,9 +260,9 @@ void TGOV1::check()
 
 void TGOV1::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void TGOV1::save()
 {
@@ -270,7 +270,7 @@ void TGOV1::save()
 }
 string TGOV1::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double R = get_R();
     double T1 = get_T1_in_s();
@@ -284,7 +284,7 @@ string TGOV1::get_standard_model_string() const
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<R<<", "
@@ -294,7 +294,7 @@ string TGOV1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<T2<<", "
       <<setw(8)<<setprecision(6)<<T3<<", "
       <<setw(8)<<setprecision(6)<<D<<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t TGOV1::get_variable_index_from_variable_name(string var_name)

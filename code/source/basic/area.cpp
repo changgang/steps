@@ -24,9 +24,9 @@ void AREA::set_area_number(size_t number)
         this->area_number = number;
     else
     {
-        ostringstream sstream;
+        ostringstream osstream;
         string info("Error. 0 is not allowed for setting area number.  0 will be set to indicate invalid area.");
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->area_number = 0;
     }
 }
@@ -44,13 +44,13 @@ void AREA::set_area_swing_bus(size_t bus)
         return;
     }
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Area "<<get_area_number()<<" is not assigned to any power system database."<<endl
+        osstream<<"Area "<<get_area_number()<<" is not assigned to any power system database."<<endl
           <<"Its area swing bus will be set as input.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
 
         area_swing_bus = bus;
         return;
@@ -60,9 +60,9 @@ void AREA::set_area_swing_bus(size_t bus)
         set_area_swing_bus_with_existing_bus(bus);
     else
     {
-        sstream<<"Error. Bus "<<bus<<" does not exist in power system database "<<psdb->get_system_name()<<" when setting area swing bus number of area "<<get_area_number()<<"."<<endl
+        osstream<<"Error. Bus "<<bus<<" does not exist in power system database "<<psdb->get_system_name()<<" when setting area swing bus number of area "<<get_area_number()<<"."<<endl
           <<"Bus 0 will be set to indicate invalid area.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
 
         area_swing_bus = 0;
     }
@@ -70,13 +70,13 @@ void AREA::set_area_swing_bus(size_t bus)
 
 void AREA::set_area_swing_bus_with_zero_input()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        sstream<<"Area "<<get_area_number()<<" is not assigned to any power system database."<<endl
+        osstream<<"Area "<<get_area_number()<<" is not assigned to any power system database."<<endl
           <<"Bus 0 will be set as area swing bus to indicate invalid area.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         area_swing_bus = 0;
         return;
     }
@@ -96,16 +96,16 @@ void AREA::set_area_swing_bus_with_zero_input()
     }
     if(not found_slack_bus_in_this_area)
     {
-        sstream<<"Warning. Bus 0 is given for setting area swing bus, however no swing bus is found in area "<<get_area_number()<<"."<<endl
+        osstream<<"Warning. Bus 0 is given for setting area swing bus, however no swing bus is found in area "<<get_area_number()<<"."<<endl
           <<"Bus 0 will be set as area swing bus to indicate area without swing bus.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         area_swing_bus = 0;
     }
 }
 
 void AREA::set_area_swing_bus_with_existing_bus(size_t bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     BUS* busptr = psdb->get_bus(bus);
@@ -120,15 +120,15 @@ void AREA::set_area_swing_bus_with_existing_bus(size_t bus)
     {
         if(bus_type != PV_TYPE and bus_type != SLACK_TYPE)
         {
-            sstream<<"Error. Existing bus "<<bus<<" is given to set up area swing bus number of area "<<get_area_number()<<" in power system database "<<psdb->get_system_name()<<"."<<endl
+            osstream<<"Error. Existing bus "<<bus<<" is given to set up area swing bus number of area "<<get_area_number()<<" in power system database "<<psdb->get_system_name()<<"."<<endl
               <<"However, bus "<<bus<<" is of neither PV type nor SLACK type. It is actually of type "<<(bus_type==PQ_TYPE?"PQ_TYPE":"OUT_OF_SERVICE");
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }
         if(bus_area_number != get_area_number())
         {
-            sstream<<"Error. Existing bus "<<bus<<" is given to set up area swing bus number of area "<<get_area_number()<<" in power system database "<<psdb->get_system_name()<<"."<<endl
+            osstream<<"Error. Existing bus "<<bus<<" is given to set up area swing bus number of area "<<get_area_number()<<" in power system database "<<psdb->get_system_name()<<"."<<endl
               <<"However, bus "<<bus<<" is actually in area "<<bus_area_number;
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }
         area_swing_bus = 0;
     }
@@ -145,10 +145,10 @@ void AREA::set_area_power_mismatch_tolerance_in_MW(double P)
         this->area_power_mismatch_tolerance_in_MW = P;
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Non-positive area power mismatch tolerance ("<<P<<" MW) is not allowed for setting up area "<<get_area_number()<<"."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. Non-positive area power mismatch tolerance ("<<P<<" MW) is not allowed for setting up area "<<get_area_number()<<"."<<endl
           <<"10.0MW will be set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->area_power_mismatch_tolerance_in_MW = 10.0;
     }
 }
@@ -203,7 +203,7 @@ void AREA::clear()
 
 void AREA::report() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     size_t bus = get_area_swing_bus();
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -214,11 +214,11 @@ void AREA::report() const
     else
         busname = busptr->get_bus_name();
 
-    sstream<<"Area "<<get_area_number()<<" ("<<get_area_name()<<"): Expected leaving power = "
+    osstream<<"Area "<<get_area_number()<<" ("<<get_area_name()<<"): Expected leaving power = "
       <<setprecision(2)<<fixed<<get_expected_power_leaving_area_in_MW()<<" MW, tolerance = "
       <<setprecision(2)<<fixed<<get_area_power_mismatch_tolerance_in_MW()<<" MW, swing bus = "
       <<get_area_swing_bus()<<" ("<<busname<<").";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 AREA& AREA::operator=(const AREA& area)

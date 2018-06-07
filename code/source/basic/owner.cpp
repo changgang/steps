@@ -68,10 +68,10 @@ void OWNER::clear()
 
 void OWNER::report() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
-    sstream<<"Owner "<<get_owner_number()<<" ("<<get_owner_name()<<").";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Owner "<<get_owner_number()<<" ("<<get_owner_name()<<").";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 OWNER& OWNER::operator=(const OWNER& owner)

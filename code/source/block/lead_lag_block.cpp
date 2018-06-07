@@ -19,9 +19,9 @@ void LEAD_LAG_BLOCK::set_K(double k)
 {
     if(k==0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero amplifier K is not allowed for LEAD_LAG_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Zero amplifier K is not allowed for LEAD_LAG_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     this->K = k;

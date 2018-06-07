@@ -209,13 +209,13 @@ void WT3T0::initialize()
 
     set_flag_model_initialized_as_true();
 
-    ostringstream osstream;
-    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+    ostringstream oosstream;
+    oosstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
             <<"(1) Turbine speed is "<<get_turbine_speed_in_pu()<<" pu"<<endl
             <<"(2) Generator speed is "<<get_generator_speed_in_pu()<<" pu"<<endl
             <<"(3) Generator rotor angle is "<<get_rotor_angle_in_deg()<<" deg"<<endl
             <<"(4) Shaft block state is "<<shaft_twist_block.get_state();
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp(oosstream);
 }
 
 void WT3T0::run(DYNAMIC_MODE mode)
@@ -303,9 +303,9 @@ void WT3T0::check()
 
 void WT3T0::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3T0::save()
@@ -314,7 +314,7 @@ void WT3T0::save()
 }
 string WT3T0::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double ht = get_Hturbine_in_s();
     double hg = get_Hgenerator_in_s();
@@ -326,7 +326,7 @@ string WT3T0::get_standard_model_string() const
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<ht<<", "
@@ -334,7 +334,7 @@ string WT3T0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<kshaft<<", "
       <<setw(8)<<setprecision(6)<<dshaft<<", "
       <<setw(8)<<setprecision(6)<<damp<<" /";
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t WT3T0::get_variable_index_from_variable_name(string var_name)

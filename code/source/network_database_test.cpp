@@ -44,14 +44,14 @@ void NETWORK_DATABASE_TEST::test_build_and_get_network_matrix()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_DATABASE_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     network_db->build_network_matrix();
 
     SPARSE_MATRIX& Y = network_db->get_network_matrix();
 
-    sstream<<"Network Y matrix with initial physical bus : internal bus pair:";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Network Y matrix with initial physical bus : internal bus pair:";
+    show_information_with_leading_time_stamp(osstream);
 
     network_db->report_network_matrix();
 
@@ -89,14 +89,14 @@ void NETWORK_DATABASE_TEST::test_build_and_get_dynamic_network_matrix()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_DATABASE_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     network_db->build_dynamic_network_matrix();
 
     SPARSE_MATRIX Y = network_db->get_dynamic_network_matrix();
 
-    sstream<<"Dynamic network Y matrix with initial physical bus : internal bus pair:";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Dynamic network Y matrix with initial physical bus : internal bus pair:";
+    show_information_with_leading_time_stamp(osstream);
 
     network_db->report_dynamic_network_matrix();
 
@@ -106,8 +106,8 @@ void NETWORK_DATABASE_TEST::test_build_and_get_dynamic_network_matrix()
 
     Y = network_db->get_dynamic_network_matrix();
 
-    sstream<<"Dynamic network Y matrix with new physical bus : internal bus pair:";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Dynamic network Y matrix with new physical bus : internal bus pair:";
+    show_information_with_leading_time_stamp(osstream);
 
     network_db->report_network_matrix();
 }
@@ -116,33 +116,33 @@ void NETWORK_DATABASE_TEST::test_optimize_network_ordering()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_DATABASE_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = network_db->get_power_system_database();
     network_db->build_dynamic_network_matrix();
 
     size_t nbus = psdb->get_in_service_bus_count();
-    sstream<<"Initial physical bus : internal bus pair:";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Initial physical bus : internal bus pair:";
+    show_information_with_leading_time_stamp(osstream);
 
     size_t physical_bus;
     for(size_t i=0; i!=nbus; ++i)
     {
         physical_bus = network_db->get_physical_bus_number_of_internal_bus(i);
-        sstream<<setw(8)<<physical_bus<<" : "<<setw(8)<<i;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<setw(8)<<physical_bus<<" : "<<setw(8)<<i;
+        show_information_with_leading_time_stamp(osstream);
     }
 
     network_db->optimize_network_ordering();
 
-    sstream<<"Optimized physical bus : internal bus pair:";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Optimized physical bus : internal bus pair:";
+    show_information_with_leading_time_stamp(osstream);
 
     for(size_t i=0; i!=nbus; ++i)
     {
         physical_bus = network_db->get_physical_bus_number_of_internal_bus(i);
-        sstream<<setw(8)<<physical_bus<<" : "<<setw(8)<<i;
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<setw(8)<<physical_bus<<" : "<<setw(8)<<i;
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -153,9 +153,9 @@ void NETWORK_DATABASE_TEST::test_check_network_connectivity()
     POWER_SYSTEM_DATABASE* psdb = network_db->get_power_system_database();
     network_db->check_newtork_connectivity();
 
-    ostringstream sstream;
-    sstream<<"Islands when tripping line 4-5 and 4-6";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Islands when tripping line 4-5 and 4-6";
+    show_information_with_leading_time_stamp(osstream);
 
     DEVICE_ID device_id;
     device_id.set_device_type("LINE");
@@ -183,8 +183,8 @@ void NETWORK_DATABASE_TEST::test_check_network_connectivity()
 
     network_db->check_newtork_connectivity();
 
-    sstream<<"Islands when tripping line 4-5, 4-6, and 8-9";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Islands when tripping line 4-5, 4-6, and 8-9";
+    show_information_with_leading_time_stamp(osstream);
 
     terminal.clear();
     terminal.append_bus(8);

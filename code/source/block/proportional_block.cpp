@@ -16,9 +16,9 @@ void PROPORTIONAL_BLOCK::set_K(double k)
 {
     /*if(k==0.0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero amplifier K is not allowed for PROPORTIONAL_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Zero amplifier K is not allowed for PROPORTIONAL_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }*/
 
@@ -59,18 +59,18 @@ void PROPORTIONAL_BLOCK::initialize()
         if(y>=vmin and y<=vmax)
             return;
 
-        ostringstream sstream;
+        ostringstream osstream;
 
         if(y>vmax)
         {
-            sstream<<"Initialization Error. Proportional output ("<<y<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds upper limit bound ("<<vmax<<").";
+            show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(y<vmin)
         {
-            sstream<<"Initialization Error. Proportional output ("<<y<<") exceeds lower limit bound ("<<vmin<<").";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds lower limit bound ("<<vmin<<").";
+            show_information_with_leading_time_stamp(osstream);
             return;
         }
     }

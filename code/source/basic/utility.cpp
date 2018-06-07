@@ -271,16 +271,16 @@ complex<double> dq2xy_with_angle_in_rad(complex<double> V, double angle)
 
 void initialize_simulator()
 {
-    ostringstream sstream;
-    sstream<<"System started.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"System started.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void reset_simulator()
 {
-    ostringstream sstream;
-    sstream<<"Simulator reset.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Simulator reset.";
+    show_information_with_leading_time_stamp(osstream);
 
     POWER_SYSTEM_DATABASE* db;
     for(size_t i=0; i!=MAX_DATABASE_COUNT; ++i)
@@ -292,26 +292,26 @@ void reset_simulator()
 
 void terminate_simulator()
 {
-    ostringstream sstream;
-    sstream<<"System is terminated.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"System is terminated.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void show_test_information_for_function_of_class(string func, string cls)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     //os<<"--------------------------------------------------------------------");
-    sstream<<"--s--t--a--r--t-----------------------------------------------------";
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"Run testing of "<<cls<<"::"<<func;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"--s--t--a--r--t-----------------------------------------------------";
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"Run testing of "<<cls<<"::"<<func;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void show_test_end_information()
 {
-    ostringstream sstream;
-    sstream<<"--d--o--n--e-------------------------------------------------------";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"--d--o--n--e-------------------------------------------------------";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void show_information_with_leading_time_stamp(string info)
@@ -402,9 +402,9 @@ void reset_power_system_database(size_t i)
 void set_dynamic_simulation_time_step_in_s(double delt)
 {
     STEPS::DELT = delt;
-    ostringstream sstream;
-    sstream<<"System dynamic simulation time step is set as :"<<STEPS::DELT<<" s.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"System dynamic simulation time step is set as :"<<STEPS::DELT<<" s.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 double get_dynamic_simulation_time_step_in_s()

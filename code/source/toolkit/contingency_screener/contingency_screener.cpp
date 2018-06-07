@@ -216,12 +216,12 @@ void CONTINGENCY_SCREENER::append_generator_to_monitor(const DEVICE_ID& did)
 
 double CONTINGENCY_SCREENER::search_cct()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_searcher_is_properly_set())
     {
-        sstream<<"CCT searcher is not properly set. No CCT will be searched."<<endl
+        osstream<<"CCT searcher is not properly set. No CCT will be searched."<<endl
           <<"0.0 will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -240,15 +240,15 @@ double CONTINGENCY_SCREENER::search_cct()
     {
         if(is_clearing_time_min_stable==true and is_clearing_time_max_stable==true)
         {
-            sstream<<"System is stable at clearing time "<<clearing_time_min<<" s and "
+            osstream<<"System is stable at clearing time "<<clearing_time_min<<" s and "
               <<clearing_time_max<<" s"<<endl;
             double delt = clearing_time_max-clearing_time_min;
             clearing_time_min  = clearing_time_max;
             is_clearing_time_min_stable = true;
 
             clearing_time_max += delt;
-            sstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
+            show_information_with_leading_time_stamp(osstream);
 
             is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
         }
@@ -256,15 +256,15 @@ double CONTINGENCY_SCREENER::search_cct()
         {
             if(is_clearing_time_min_stable==true and is_clearing_time_max_stable==false)
             {
-                sstream<<"System is stable at clearing time "<<clearing_time_min<<" s, but unstable at clearing time "
+                osstream<<"System is stable at clearing time "<<clearing_time_min<<" s, but unstable at clearing time "
                   <<clearing_time_max<<" s"<<endl;
                 double delt = clearing_time_max-clearing_time_min;
                 clearing_time_min  = clearing_time_min;
                 is_clearing_time_min_stable = true;
 
                 clearing_time_max = clearing_time_min+0.5*delt;
-                sstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
+                show_information_with_leading_time_stamp(osstream);
 
                 is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
             }
@@ -272,15 +272,15 @@ double CONTINGENCY_SCREENER::search_cct()
             {
                 if(is_clearing_time_min_stable==false and is_clearing_time_max_stable==false)
                 {
-                    sstream<<"System is unstable at clearing time "<<clearing_time_min<<" s and "
+                    osstream<<"System is unstable at clearing time "<<clearing_time_min<<" s and "
                       <<clearing_time_max<<" s"<<endl;
 
                     clearing_time_max  = clearing_time_min;
                     is_clearing_time_max_stable = false;
 
                     clearing_time_min *=0.5;
-                    sstream<<"Now go on checking clearing time "<<clearing_time_min<<" s.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Now go on checking clearing time "<<clearing_time_min<<" s.";
+                    show_information_with_leading_time_stamp(osstream);
 
                     is_clearing_time_min_stable = perform_simulation_with_clearing_time(clearing_time_min);
                 }
@@ -288,11 +288,11 @@ double CONTINGENCY_SCREENER::search_cct()
                 {
                     // invalid condition
                     // is_clearing_time_min_stable==false and is_clearing_time_max_stable==true
-                    sstream<<"Warning. System is unstable when fault clearing time is "<<clearing_time_min
+                    osstream<<"Warning. System is unstable when fault clearing time is "<<clearing_time_min
                       <<", but stable when fault clearing time is "<<clearing_time_max<<endl
                       <<"This is impossible for power system operation."<<endl
                       <<"If you observe this message, CONGRATULATIONS, you find something interesting. Go on working on it.";
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
 
                     break;
                 }
@@ -312,57 +312,57 @@ double CONTINGENCY_SCREENER::search_cct()
 
 bool CONTINGENCY_SCREENER::is_searcher_is_properly_set() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     bool is_properly_set = true;
-    sstream<<"CCT searcher is not properly set due to:"<<endl;
+    osstream<<"CCT searcher is not properly set due to:"<<endl;
     if(get_powerflow_data_filename()=="")
     {
         is_properly_set = false;
-        sstream<<"Powerflow data file is not set."<<endl;
+        osstream<<"Powerflow data file is not set."<<endl;
     }
     if(get_dynamic_data_filename()=="")
     {
         is_properly_set = false;
-        sstream<<"Dynamic data file is not set."<<endl;
+        osstream<<"Dynamic data file is not set."<<endl;
     }
     if(not get_fault_device().is_valid())
     {
         is_properly_set = false;
-        sstream<<"Fault device is not set."<<endl;
+        osstream<<"Fault device is not set."<<endl;
     }
     if(get_fault_side_bus()==0)
     {
         is_properly_set = false;
-        sstream<<"Fault side bus is not set."<<endl;
+        osstream<<"Fault side bus is not set."<<endl;
     }
     if(abs(get_fault_shunt_in_pu())<FLOAT_EPSILON)
     {
         is_properly_set = false;
-        sstream<<"Fault shunt is not set."<<endl;
+        osstream<<"Fault shunt is not set."<<endl;
     }
     if(fabs(get_minimum_clearing_time_in_s()-get_maximum_clearing_time_in_s())<FLOAT_EPSILON)
     {
         is_properly_set = false;
-        sstream<<"Minimum clearing time and maximum clearing time are identical."<<endl;
+        osstream<<"Minimum clearing time and maximum clearing time are identical."<<endl;
     }
     if(fabs(get_simulation_time_span_in_s())<FLOAT_EPSILON)
     {
         is_properly_set = false;
-        sstream<<"Simulation time span is not set."<<endl;
+        osstream<<"Simulation time span is not set."<<endl;
     }
     if(fabs(get_angle_difference_threshold_in_deg())<FLOAT_EPSILON)
     {
         is_properly_set = false;
-        sstream<<"Angle difference threshold is not set."<<endl;
+        osstream<<"Angle difference threshold is not set."<<endl;
     }
     if(get_monitored_generator_count()<2)
     {
         is_properly_set = false;
-        sstream<<"Less than 2 generators are monitored."<<endl;
+        osstream<<"Less than 2 generators are monitored."<<endl;
     }
     if(not is_properly_set)
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     return is_properly_set;
 }
 

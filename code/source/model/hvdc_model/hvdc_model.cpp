@@ -59,12 +59,12 @@ string HVDC_MODEL::get_model_type() const
 
 double HVDC_MODEL::get_initial_alpha_in_deg() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
     {
-        sstream<<"Waring. HVDC dynamic model is not connected to any HVDC device. Initial alpha will be returned as 0.0.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Waring. HVDC dynamic model is not connected to any HVDC device. Initial alpha will be returned as 0.0.";
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
     return hvdc->get_converter_alpha_or_gamma_in_deg(RECTIFIER);
@@ -72,12 +72,12 @@ double HVDC_MODEL::get_initial_alpha_in_deg() const
 
 double HVDC_MODEL::get_initial_gamma_in_deg() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
     {
-        sstream<<"Waring. HVDC dynamic model is not connected to any HVDC device. Initial gamma will be returned as 0.0.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Waring. HVDC dynamic model is not connected to any HVDC device. Initial gamma will be returned as 0.0.";
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
     return hvdc->get_converter_alpha_or_gamma_in_deg(INVERTER);
@@ -393,7 +393,7 @@ void HVDC_MODEL::block_hvdc()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_blocked())
     {
         if(is_bypassed()) // if is bypassed, then clear bypass logic
@@ -417,8 +417,8 @@ void HVDC_MODEL::block_hvdc()
         block_timer.start();
         record_of_bypass_time.clear();
 
-        sstream<<hvdc->get_device_name()<<" is blocked at time "<<TIME<<" s.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<hvdc->get_device_name()<<" is blocked at time "<<TIME<<" s.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -433,7 +433,7 @@ void HVDC_MODEL::unblock_hvdc()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_blocked() and is_block_timer_timed_out())
     {
         hvdc->set_status(true);
@@ -441,8 +441,8 @@ void HVDC_MODEL::unblock_hvdc()
         block_timer.reset();
         time_when_unblocking = TIME;
 
-        sstream<<hvdc->get_device_name()<<" is unblocking at time "<<TIME<<" s.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<hvdc->get_device_name()<<" is unblocking at time "<<TIME<<" s.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -458,9 +458,9 @@ void HVDC_MODEL::manual_block_hvdc()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
-    sstream<<get_device_name()<<" is manually blocked at time "<<TIME<<" s.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_device_name()<<" is manually blocked at time "<<TIME<<" s.";
+    show_information_with_leading_time_stamp(osstream);
 
     if(not is_blocked())
         block_hvdc();
@@ -480,9 +480,9 @@ void HVDC_MODEL::manual_unblock_hvdc()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
-    sstream<<get_device_name()<<" is manually unblocked at time "<<TIME<<" s.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_device_name()<<" is manually unblocked at time "<<TIME<<" s.";
+    show_information_with_leading_time_stamp(osstream);
 
     if(is_manual_blocked())
         manual_blocked = false;
@@ -536,28 +536,28 @@ void HVDC_MODEL::clear_unblocking_time(HVDC_CONVERTER_SIDE converter)
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
     if(converter==RECTIFIER)
     {
         dc_current_recovered_after_unblocking = true;
 
-        sstream<<hvdc->get_device_name()<<"'s DC current command has been recovered from blocking at time "<<TIME<<" s.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<hvdc->get_device_name()<<"'s DC current command has been recovered from blocking at time "<<TIME<<" s.";
+        show_information_with_leading_time_stamp(osstream);
     }
     else
     {
         dc_voltage_recovered_after_unblocking = true;
 
-        sstream<<hvdc->get_device_name()<<"'s DC voltage command has been recovered from blocking at time "<<TIME<<" s.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<hvdc->get_device_name()<<"'s DC voltage command has been recovered from blocking at time "<<TIME<<" s.";
+        show_information_with_leading_time_stamp(osstream);
     }
     if(dc_current_recovered_after_unblocking and dc_voltage_recovered_after_unblocking)
     {
         time_when_unblocking = INFINITE_THRESHOLD;
 
-        sstream<<hvdc->get_device_name()<<"'s DC current and voltage commands have been recovered from blocking at time "<<TIME<<" s."<<endl
+        osstream<<hvdc->get_device_name()<<"'s DC current and voltage commands have been recovered from blocking at time "<<TIME<<" s."<<endl
           <<hvdc->get_device_name()<<" is fully unblocked.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -568,7 +568,7 @@ bool HVDC_MODEL::is_block_timer_timed_out() const
 
 void HVDC_MODEL::bypass_hvdc()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
@@ -591,15 +591,15 @@ void HVDC_MODEL::bypass_hvdc()
         clear_unbypassing_time();
         bypass_timer.start();
 
-        sstream<<hvdc->get_device_name()<<" is bypassed at time "<<TIME<<" s.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<hvdc->get_device_name()<<" is bypassed at time "<<TIME<<" s.";
+        show_information_with_leading_time_stamp(osstream);
 
         record_of_bypass_time.push_back(TIME);
         if(record_of_bypass_time.size()>=get_maximum_count_of_bypassing_before_blocked())
         {
-            sstream<<hvdc->get_device_name()<<" will be blocked at time "<<setprecision(5)<<fixed<<TIME
+            osstream<<hvdc->get_device_name()<<" will be blocked at time "<<setprecision(5)<<fixed<<TIME
               <<" s since the max count of bypassing is reached.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
 
             block_hvdc();
         }
@@ -617,7 +617,7 @@ void HVDC_MODEL::unbypass_hvdc()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_blocked() and is_bypassed() and is_bypass_timer_timed_out())
     {
         bypassed = false;
@@ -625,8 +625,8 @@ void HVDC_MODEL::unbypass_hvdc()
         time_when_unbypassing = TIME;
         bypass_timer.reset();
 
-        sstream<<hvdc->get_device_name()<<" is unbypassing at time "<<TIME<<" s.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<hvdc->get_device_name()<<" is unbypassing at time "<<TIME<<" s.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -641,9 +641,9 @@ void HVDC_MODEL::manual_bypass_hvdc()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
-    sstream<<get_device_name()<<" is manually bypassed at time "<<TIME<<" s.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_device_name()<<" is manually bypassed at time "<<TIME<<" s.";
+    show_information_with_leading_time_stamp(osstream);
 
     bypass_hvdc();
     manual_bypassed = true;
@@ -660,9 +660,9 @@ void HVDC_MODEL::manual_unbypass_hvdc()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
-    sstream<<get_device_name()<<" is manually unbypassed at time "<<TIME<<" s.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_device_name()<<" is manually unbypassed at time "<<TIME<<" s.";
+    show_information_with_leading_time_stamp(osstream);
 
     if(is_manual_bypassed())
         manual_bypassed = false;
@@ -729,14 +729,14 @@ void HVDC_MODEL::switch_hvdc_mode()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
     if((not is_blocked()) and (not is_bypassed()) and (not is_mode_switched()))
     {
         mode_switched = true;
         mode_switch_timer.start();
 
-        sstream<<hvdc->get_device_name()<<" is mode switched at time "<<TIME<<" s.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<hvdc->get_device_name()<<" is mode switched at time "<<TIME<<" s.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -751,14 +751,14 @@ void HVDC_MODEL::switch_hvdc_mode_back()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    ostringstream sstream;
+    ostringstream osstream;
     if((not is_blocked()) and (not is_bypassed()) and is_mode_switched() and is_mode_switch_timer_timed_out())
     {
         mode_switched = false;
         mode_switch_timer.reset();
 
-        sstream<<hvdc->get_device_name()<<"'s mode is switched back at time "<<TIME<<" s.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<hvdc->get_device_name()<<"'s mode is switched back at time "<<TIME<<" s.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -789,7 +789,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 {
     double Iset_kA_for_bypass = Iset_kA;
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
@@ -800,8 +800,8 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    //sstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
-    //show_information_with_leading_time_stamp(sstream);
+    //osstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
+    //show_information_with_leading_time_stamp(osstream);
 
     POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
 
@@ -878,12 +878,12 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
             }
             else
             {
-                sstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" inverter is operating in Constant Gamma mode, but Rectifier cannot hold current/power with alpha.("
+                osstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" inverter is operating in Constant Gamma mode, but Rectifier cannot hold current/power with alpha.("
                        <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                        <<"Minimum alpha is reached."<<endl
                        <<"Hvdc current command will be reduced from "<<Iset_kA<<" kA to ";
                 Iset_kA *= (1.0-margin);
-                sstream<<Iset_kA<<" kA with margin by "<<margin*100.0<<"%"<<endl;
+                osstream<<Iset_kA<<" kA with margin by "<<margin*100.0<<"%"<<endl;
 
                 Vdci =vdc0_i*cos_gamma_min-rceq_i*Iset_kA;
                 Vdcr = Vdci+Rdc*Iset_kA;
@@ -891,17 +891,17 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                 if(cos_alpha<cos_alpha_min)
                 {
                     alpha_in_rad = acos(cos_alpha);
-                    sstream<<"Rectifier can hold the reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Rectifier can hold the reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
+                    show_information_with_leading_time_stamp(osstream);
                 }
                 else
                 {
                     alpha_in_rad = alpha_min_in_rad;
-                    sstream<<"However, rectifier cannot hold the reduced current even with minimum alpha."<<endl
+                    osstream<<"However, rectifier cannot hold the reduced current even with minimum alpha."<<endl
                            <<"Rectifier will be operated with minimum alpha = "<<rad2deg(alpha_min_in_rad)<<" deg.("
                            <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                            <<"Hvdc will be bypassed.";
-                   show_information_with_leading_time_stamp(sstream);
+                   show_information_with_leading_time_stamp(osstream);
                    bypass_hvdc();
                    solve_hvdc_as_bypassed(Iset_kA_for_bypass);
                    return;
@@ -925,11 +925,11 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                 }
                 else // gamma can not hold dc voltage
                 {
-                    sstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" inverter cannot hold voltage with gamma.("
+                    osstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" inverter cannot hold voltage with gamma.("
                            <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                            <<"Minimum gamma is reached."<<endl
                            <<"Rectifier will try to regulate current as "<<Iset_kA<<" kA."<<endl;
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
 
                     gamma_in_rad = gamma_min_in_rad;
                     hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
@@ -939,39 +939,39 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                     if(cos_alpha<cos_alpha_min)
                     {
                         alpha_in_rad = acos(cos_alpha);
-                        sstream<<"Rectifier can hold the current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
+                        osstream<<"Rectifier can hold the current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
                     }
                     else//
                     {
                         alpha_in_rad = alpha_min_in_rad;
-                        sstream<<"However, Rectifier cannot hold current even with minimum alpha.("
+                        osstream<<"However, Rectifier cannot hold current even with minimum alpha.("
                                <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                                <<"Minimum alpha is alos reached."<<endl
                                <<"Hvdc current command will be reduced from "<<Iset_kA<<" kA to ";
                         Iset_kA *= (1.0-margin);
-                        sstream<<Iset_kA<<" kA with margin by "<<margin*100.0<<"%"<<endl;
+                        osstream<<Iset_kA<<" kA with margin by "<<margin*100.0<<"%"<<endl;
 
                         cos_alpha = (vdc0_i*cos_gamma_min-rceq_i*Iset_kA+Rdc*Iset_kA+rceq_r*Iset_kA)/vdc0_r;
                         if(cos_alpha<cos_alpha_min)
                         {
                             alpha_in_rad = acos(cos_alpha);
-                            sstream<<"Rectifier can hold reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
+                            osstream<<"Rectifier can hold reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
                         }
                         else
                         {
                             alpha_in_rad = alpha_min_in_rad;
-                            sstream<<"However, rectifier cannot hold the reduced current even with minimum alpha."<<endl
+                            osstream<<"However, rectifier cannot hold the reduced current even with minimum alpha."<<endl
                                    <<"Rectifier will be operated with minimum alpha = "<<rad2deg(alpha_min_in_rad)<<" deg.("
                                    <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                                    <<"Hvdc link will be bypassed.";
-                            show_information_with_leading_time_stamp(sstream);
+                            show_information_with_leading_time_stamp(osstream);
                             bypass_hvdc();
                             solve_hvdc_as_bypassed(Iset_kA_for_bypass);
                             return;
                         }
                     }
                     hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
                 }
             }
             else // alpha can not hold dc current
@@ -979,34 +979,34 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                 alpha_in_rad = alpha_min_in_rad;
                 hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
 
-                sstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" Rectifier cannot hold current with alpha.("
+                osstream<<"Warning. At time "<<TIME<<" s, "<<get_device_name()<<" Rectifier cannot hold current with alpha.("
                        <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                        <<"Minimum alpha is reached."<<endl
                        <<"Hvdc current command will be reduced from "<<Iset_kA<<" kA to ";
                 Iset_kA *= (1.0-margin);
-                sstream<<Iset_kA<<" kA with margin by "<<margin*100.0<<"%"<<endl
+                osstream<<Iset_kA<<" kA with margin by "<<margin*100.0<<"%"<<endl
                        <<"Hvdc current command will be regulated by inverter."<<endl;
 
                 cos_gamma = (vdc0_r*cos_alpha_min-rceq_r*Iset_kA-Rdc*Iset_kA+rceq_i*Iset_kA)/vdc0_i;
                 if(cos_gamma<cos_gamma_min) // gamma can hold the current
                 {
                     gamma_in_rad = acos(cos_gamma);
-                    sstream<<"Inverter can hold reduced current with gamma = "<<rad2deg(gamma_in_rad)<<" deg.";
+                    osstream<<"Inverter can hold reduced current with gamma = "<<rad2deg(gamma_in_rad)<<" deg.";
                 }
                 else // gamma can not hold dc current
                 {
                     gamma_in_rad = gamma_min_in_rad;
-                    sstream<<"However, inverter cannot hold the reduced current even with minimum gamma."<<endl
+                    osstream<<"However, inverter cannot hold the reduced current even with minimum gamma."<<endl
                            <<"Inverter will be operated with minimum gamma = "<<rad2deg(gamma_min_in_rad)<<" deg. ("
                            <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                            <<"Hvdc link will be bypassed.";
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
                     bypass_hvdc();
                     solve_hvdc_as_bypassed(Iset_kA_for_bypass);
                     return;
                 }
                 hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
-                show_information_with_leading_time_stamp(sstream);
+                show_information_with_leading_time_stamp(osstream);
 
             }
         }
@@ -1031,7 +1031,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 
 void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
@@ -1045,8 +1045,8 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    //sstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
-    //show_information_with_leading_time_stamp(sstream);
+    //osstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
+    //show_information_with_leading_time_stamp(osstream);
 
     POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
 

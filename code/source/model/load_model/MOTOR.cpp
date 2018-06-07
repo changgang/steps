@@ -314,16 +314,16 @@ double MOTOR::get_slip_in_pu() const
 
 void MOTOR::convert_to_flux_linkage_model()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_in_flux_linkage_model_type())
         return;
 
     POWER_SYSTEM_DATABASE* db = get_power_system_database();
     if(db == NULL)
     {
-        sstream<<"MOTOR model is not assigned to any power system database.\n"
+        osstream<<"MOTOR model is not assigned to any power system database.\n"
                       "Conversion into flux linkage model failed");
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     double fbase = db->get_system_base_frequency_in_Hz();
@@ -345,16 +345,16 @@ void MOTOR::convert_to_flux_linkage_model()
 }
 void MOTOR::convert_to_equivalent_circuit_model()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_in_equivalent_circuit_model_type())
         return;
 
     POWER_SYSTEM_DATABASE* db = get_power_system_database();
     if(db == NULL)
     {
-        sstream<<"MOTOR model is not assigned to any power system database.\n"
+        osstream<<"MOTOR model is not assigned to any power system database.\n"
                       "Conversion into equivalent circuit model failed");
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     double fbase = db->get_system_base_frequency_in_Hz();

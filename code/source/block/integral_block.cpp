@@ -28,7 +28,7 @@ double INTEGRAL_BLOCK::get_T_in_s() const
 
 void INTEGRAL_BLOCK::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double t = get_T_in_s();
     double y = get_output();
@@ -62,20 +62,20 @@ void INTEGRAL_BLOCK::initialize()
     {
         if(s>vmax)
         {
-            sstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
+            show_information_with_leading_time_stamp(osstream);
         }
         if(s<vmin)
         {
-            sstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
+            show_information_with_leading_time_stamp(osstream);
         }
     }
 }
 
 void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     double t = get_T_in_s();
     if(fabs(t)<FLOAT_EPSILON or fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)
         return;

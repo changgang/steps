@@ -386,9 +386,9 @@ void IEEL::check()
 }
 void IEEL::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void IEEL::save()
 {
@@ -396,12 +396,12 @@ void IEEL::save()
 }
 string IEEL::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
     string identifier = load->get_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_detailed_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<get_P_alpha_1()<<", "
@@ -419,7 +419,7 @@ string IEEL::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<get_Q_n_power_2()<<", "
       <<setw(8)<<setprecision(6)<<get_Q_n_power_3()<<"  /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t IEEL::get_variable_index_from_variable_name(string var_name)

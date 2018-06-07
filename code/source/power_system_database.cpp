@@ -97,9 +97,9 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"No valid steps_config.json found. Use default power system database capacity.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"No valid steps_config.json found. Use default power system database capacity.";
+        show_information_with_leading_time_stamp(osstream);
     }
 
     set_bus_capacity(bus_capacity);
@@ -301,10 +301,10 @@ void POWER_SYSTEM_DATABASE::set_system_base_power_in_MVA(const double s)
         system_base_power_in_MVA = s;
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Non positive power ("<<s<<" MVA) is not allowed for setting system base power."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. Non positive power ("<<s<<" MVA) is not allowed for setting system base power."<<endl
           <<"Nothing will be changed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -319,10 +319,10 @@ void POWER_SYSTEM_DATABASE::set_system_base_frequency_in_Hz(const double f)
         system_base_fequency_in_Hz = f;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Non positive frequency ("<<f<<" Hz) is not allowed for setting system base frequency."<<endl
+        ostringstream osstream;
+        osstream<<"Error. Non positive frequency ("<<f<<" Hz) is not allowed for setting system base frequency."<<endl
           <<"System base frequency will not be set. Original frequency is "<<get_system_base_frequency_in_Hz()<<" Hz.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -353,7 +353,7 @@ string POWER_SYSTEM_DATABASE::get_case_title_2() const
 
 void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(bus.get_power_system_database()==NULL)
         bus.set_power_system_database(this);
@@ -361,16 +361,16 @@ void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
     if(this != bus.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = bus.get_power_system_database();
-        sstream<<"Warning. "<<bus.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<bus.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not bus.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid bus "<<bus.get_bus_number()<<" due to either 0 bus number of 0 base voltage.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid bus "<<bus.get_bus_number()<<" due to either 0 bus number of 0 base voltage.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -378,25 +378,25 @@ void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
 
     if(not this->is_bus_in_allowed_range(bus_number))
     {
-        sstream<<"Warning. Bus number "<<bus_number<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<bus.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus number "<<bus_number<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<bus.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Bus will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(this->is_bus_exist(bus_number))
     {
-        sstream<<"Warning. Bus "<<bus_number<<" already exists in power system database '"<<get_system_name()<<"': Bus."<<endl
+        osstream<<"Warning. Bus "<<bus_number<<" already exists in power system database '"<<get_system_name()<<"': Bus."<<endl
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Bus.capacity()==Bus.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Bus.capacity()<<") reached when appending bus to power system database "<<get_system_name()<<"."<<endl
+        osstream<<"Warning. Capacity limit ("<<Bus.capacity()<<") reached when appending bus to power system database "<<get_system_name()<<"."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     size_t bus_count = get_bus_count();
@@ -408,7 +408,7 @@ void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
 
 void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(generator.get_power_system_database()==NULL)
     {
@@ -418,16 +418,16 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
     if(this != generator.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = generator.get_power_system_database();
-        sstream<<"Warning. "<<generator.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<generator.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not generator.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid generator to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid generator to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -435,9 +435,9 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 
     if(not this->is_bus_in_allowed_range(generator_bus))
     {
-        sstream<<"Warning. Bus number "<<generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<generator.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus number "<<generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<generator.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Generator will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -451,17 +451,17 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 
     if(this->is_generator_exist(device_id))
     {
-        sstream<<"Warning. "<<generator.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Generator."<<endl
+        osstream<<"Warning. "<<generator.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Generator."<<endl
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Generator.capacity()==Generator.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Generator.capacity()<<") reached when appending generator to power system database "<<get_system_name()<<"."<<endl
+        osstream<<"Warning. Capacity limit ("<<Generator.capacity()<<") reached when appending generator to power system database "<<get_system_name()<<"."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -472,7 +472,7 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 
 void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(wt_generator.get_power_system_database()==NULL)
     {
@@ -482,16 +482,16 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
     if(this != wt_generator.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = wt_generator.get_power_system_database();
-        sstream<<"Warning. "<<wt_generator.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<wt_generator.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not wt_generator.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid wt generator to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid wt generator to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -500,9 +500,9 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 
     if(not this->is_bus_in_allowed_range(wt_generator_bus))
     {
-        sstream<<"Warning. Bus "<<wt_generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<wt_generator.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<wt_generator_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<wt_generator.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"WT generator will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -516,17 +516,17 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 
     if(this->is_wt_generator_exist(device_id))
     {
-        sstream<<"Warning. "<<wt_generator.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': WT_Generator."<<endl
+        osstream<<"Warning. "<<wt_generator.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': WT_Generator."<<endl
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(WT_Generator.capacity()==WT_Generator.size())
     {
-        sstream<<"Warning. Capacity limit ("<<WT_Generator.capacity()<<") reached when appending WT generator to power system database "<<get_system_name()<<"."<<endl
+        osstream<<"Warning. Capacity limit ("<<WT_Generator.capacity()<<") reached when appending WT generator to power system database "<<get_system_name()<<"."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -537,7 +537,7 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 
 void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(load.get_power_system_database()==NULL)
     {
@@ -547,16 +547,16 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
     if(this != load.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = load.get_power_system_database();
-        sstream<<"Warning. "<<load.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'. "
+        osstream<<"Warning. "<<load.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'. "
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not load.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid load to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid load to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -564,9 +564,9 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 
     if(not this->is_bus_in_allowed_range(load_bus))
     {
-        sstream<<"Warning. Bus "<<load_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<load.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<load_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<load.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Load will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -580,17 +580,17 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 
     if(is_load_exist(device_id))
     {
-        sstream<<"Warning. "<<load.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Load."<<endl
+        osstream<<"Warning. "<<load.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Load."<<endl
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Load.capacity()==Load.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Load.capacity()<<") reached when appending load to power system database "<<get_system_name()<<"."<<endl
+        osstream<<"Warning. Capacity limit ("<<Load.capacity()<<") reached when appending load to power system database "<<get_system_name()<<"."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -601,7 +601,7 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 
 void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(line.get_power_system_database()==NULL)
     {
@@ -611,16 +611,16 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
     if(this != line.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = line.get_power_system_database();
-        sstream<<"Warning. "<<line.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<line.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not line.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid line to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid line to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -629,16 +629,16 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 
     if(not this->is_bus_in_allowed_range(sending_side_bus))
     {
-        sstream<<"Warning. Bus "<<sending_side_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<line.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<sending_side_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<line.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Line will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not this->is_bus_in_allowed_range(receiving_side_bus))
     {
-        sstream<<"Warning. Bus "<<receiving_side_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<line.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<receiving_side_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<line.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Line will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -653,17 +653,17 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 
     if(this->is_line_exist(device_id))
     {
-        sstream<<"Warning. "<<line.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Line."<<endl
+        osstream<<"Warning. "<<line.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Line."<<endl
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Line.capacity()==Line.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Line.capacity()<<") reached when appending line to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Line.capacity()<<") reached when appending line to power system database '"<<get_system_name()<<"'."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -674,7 +674,7 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 
 void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(transformer.get_power_system_database()==NULL)
     {
@@ -684,16 +684,16 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
     if(this != transformer.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = transformer.get_power_system_database();
-        sstream<<"Warning. "<<transformer.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<transformer.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not transformer.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid transformer to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid transformer to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -703,23 +703,23 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 
     if(not is_bus_in_allowed_range(primary_winding_bus))
     {
-        sstream<<"Warning. Bus "<<primary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<primary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Transformer will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not is_bus_in_allowed_range(secondary_winding_bus))
     {
-        sstream<<"Warning. Bus "<<secondary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<secondary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Transformer will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not(is_bus_in_allowed_range(tertiary_winding_bus) or tertiary_winding_bus==0))
     {
-        sstream<<"Warning. Bus "<<tertiary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<tertiary_winding_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<transformer.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Transformer will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -735,17 +735,17 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 
     if(is_transformer_exist(device_id))
     {
-        sstream<<"Warning. "<<transformer.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"':Transformer.\n"
+        osstream<<"Warning. "<<transformer.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"':Transformer.\n"
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Transformer.capacity()==Transformer.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Transformer.capacity()<<") reached when appending transformer to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Transformer.capacity()<<") reached when appending transformer to power system database '"<<get_system_name()<<"'."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -756,7 +756,7 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 
 void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(shunt.get_power_system_database()==NULL)
     {
@@ -766,16 +766,16 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
     if(this != shunt.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = shunt.get_power_system_database();
-        sstream<<"Warning. "<<shunt.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<shunt.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not shunt.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid fixed shunt to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid fixed shunt to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -783,9 +783,9 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 
     if(not this->is_bus_in_allowed_range(shunt_bus))
     {
-        sstream<<"Warning. Bus "<<shunt_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<shunt.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<shunt_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<shunt.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Fixed shunt will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -799,17 +799,17 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 
     if(this->is_fixed_shunt_exist(device_id))
     {
-        sstream<<"Warning. "<<shunt.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Fixed_shunt.\n"
+        osstream<<"Warning. "<<shunt.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Fixed_shunt.\n"
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Fixed_shunt.capacity()==Fixed_shunt.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Fixed_shunt.capacity()<<") reached when appending fixed shunt to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Fixed_shunt.capacity()<<") reached when appending fixed shunt to power system database '"<<get_system_name()<<"'."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -820,7 +820,7 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 
 void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(hvdc.get_power_system_database()==NULL)
     {
@@ -830,16 +830,16 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
     if(this != hvdc.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = hvdc.get_power_system_database();
-        sstream<<"Warning. "<<hvdc.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<hvdc.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not hvdc.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid hvdc to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid hvdc to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -848,16 +848,16 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 
     if(not this->is_bus_in_allowed_range(rec_bus))
     {
-        sstream<<"Warning. Bus "<<rec_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<hvdc.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<rec_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<hvdc.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Hvdc will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not this->is_bus_in_allowed_range(inv_bus))
     {
-        sstream<<"Warning. Bus "<<inv_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<hvdc.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<inv_bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<hvdc.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Hvdc will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -872,17 +872,17 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 
     if(this->is_hvdc_exist(device_id))
     {
-        sstream<<"Warning. "<<hvdc.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Hvdc.\n"
+        osstream<<"Warning. "<<hvdc.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Hvdc.\n"
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Hvdc.capacity()==Hvdc.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Hvdc.capacity()<<") reached when appending Hvdc to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Hvdc.capacity()<<") reached when appending Hvdc to power system database '"<<get_system_name()<<"'."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -893,7 +893,7 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 
 void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(edevice.get_power_system_database()==NULL)
     {
@@ -903,16 +903,16 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
     if(this != edevice.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = edevice.get_power_system_database();
-        sstream<<"Warning. "<<edevice.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. "<<edevice.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not edevice.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid equivalent device to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid equivalent device to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -920,9 +920,9 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 
     if(not this->is_bus_in_allowed_range(bus))
     {
-        sstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<edevice.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<edevice.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
           <<"Equivalent device will not be appended into the database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -936,17 +936,17 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 
     if(this->is_equivalent_device_exist(device_id))
     {
-        sstream<<"Warning. "<<edevice.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Equivalent_device.\n"
+        osstream<<"Warning. "<<edevice.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Equivalent_device.\n"
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Equivalent_device.capacity()==Equivalent_device.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Equivalent_device.capacity()<<") reached when appending equivalent device to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Equivalent_device.capacity()<<") reached when appending equivalent device to power system database '"<<get_system_name()<<"'."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -957,7 +957,7 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 
 void POWER_SYSTEM_DATABASE::append_area(AREA& area)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(area.get_power_system_database()==NULL)
         area.set_power_system_database(this);
@@ -965,32 +965,32 @@ void POWER_SYSTEM_DATABASE::append_area(AREA& area)
     if(this != area.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = area.get_power_system_database();
-        sstream<<"Warning. Area "<<area.get_area_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. Area "<<area.get_area_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not area.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid area to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid area to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(this->is_area_exist(area.get_area_number()))
     {
-        sstream<<"Warning. Area "<<area.get_area_number()<<" already exists in power system database '"<<get_system_name()<<"': Area."<<endl
+        osstream<<"Warning. Area "<<area.get_area_number()<<" already exists in power system database '"<<get_system_name()<<"': Area."<<endl
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Area.capacity()==Area.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Area.capacity()<<") reached when appending area to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Area.capacity()<<") reached when appending area to power system database '"<<get_system_name()<<"'."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1001,7 +1001,7 @@ void POWER_SYSTEM_DATABASE::append_area(AREA& area)
 
 void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(zone.get_power_system_database()==NULL)
         zone.set_power_system_database(this);
@@ -1009,32 +1009,32 @@ void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
     if(this != zone.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = zone.get_power_system_database();
-        sstream<<"Warning. Zone "<<zone.get_zone_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. Zone "<<zone.get_zone_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not zone.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid zone to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid zone to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(this->is_zone_exist(zone.get_zone_number()))
     {
-        sstream<<"Warning. Zone "<<zone.get_zone_number()<<" already exists in power system database '"<<get_system_name()<<"': Zone."<<endl
+        osstream<<"Warning. Zone "<<zone.get_zone_number()<<" already exists in power system database '"<<get_system_name()<<"': Zone."<<endl
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Zone.capacity()==Zone.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Zone.capacity()<<") reached when appending zone to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Zone.capacity()<<") reached when appending zone to power system database '"<<get_system_name()<<"'."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1045,7 +1045,7 @@ void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
 
 void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(owner.get_power_system_database()==NULL)
         owner.set_power_system_database(this);
@@ -1053,32 +1053,32 @@ void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
     if(this != owner.get_power_system_database())
     {
         POWER_SYSTEM_DATABASE* db = owner.get_power_system_database();
-        sstream<<"Warning. Owner "<<owner.get_owner_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Warning. Owner "<<owner.get_owner_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
           <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not owner.is_valid())
     {
-        sstream<<"Warning. Failed to append invalid owner to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. Failed to append invalid owner to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(this->is_owner_exist(owner.get_owner_number()))
     {
-        sstream<<"Warning. Owner "<<owner.get_owner_number()<<" already exists in power system database '"<<get_system_name()<<"': Owner."<<endl
+        osstream<<"Warning. Owner "<<owner.get_owner_number()<<" already exists in power system database '"<<get_system_name()<<"': Owner."<<endl
           <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(Owner.capacity()==Owner.size())
     {
-        sstream<<"Warning. Capacity limit ("<<Owner.capacity()<<") reached when appending owner to power system database '"<<get_system_name()<<"'."<<endl
+        osstream<<"Warning. Capacity limit ("<<Owner.capacity()<<") reached when appending owner to power system database '"<<get_system_name()<<"'."<<endl
           <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1178,23 +1178,23 @@ bool POWER_SYSTEM_DATABASE::is_owner_exist(const size_t no) const
 
 void POWER_SYSTEM_DATABASE::change_bus_number(size_t original_bus_number, size_t new_bus_number)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_bus_exist(original_bus_number))
     {
-        sstream<<"Warning. The original bus number to change ("<<original_bus_number<<") does not exist in the power system database. No bus number will be changed.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The original bus number to change ("<<original_bus_number<<") does not exist in the power system database. No bus number will be changed.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(is_bus_exist(new_bus_number))
     {
-        sstream<<"Warning. The new bus number to change ("<<new_bus_number<<") already exists in the power system database. No bus number will be changed.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The new bus number to change ("<<new_bus_number<<") already exists in the power system database. No bus number will be changed.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(not is_bus_in_allowed_range(new_bus_number))
     {
-        sstream<<"Warning. The new bus number to change ("<<new_bus_number<<") exceeds the allowed maximum bus number range [1, "<<get_allowed_max_bus_number()<<"] in the power system database. No bus number will be changed.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. The new bus number to change ("<<new_bus_number<<") exceeds the allowed maximum bus number range [1, "<<get_allowed_max_bus_number()<<"] in the power system database. No bus number will be changed.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -3678,9 +3678,9 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
     if(Bus[index].get_bus_type()==OUT_OF_SERVICE)
         return;
 
-    ostringstream sstream;
+    ostringstream osstream;
 
-    sstream<<"The following devices are tripped before bus "<<bus<<" is tripped."<<endl;
+    osstream<<"The following devices are tripped before bus "<<bus<<" is tripped."<<endl;
 
     size_t n = 0;
 
@@ -3691,7 +3691,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         if(gens[i]->get_status()==true)
         {
             gens[i]->set_status(false);
-            sstream<<gens[i]->get_device_name()<<endl;
+            osstream<<gens[i]->get_device_name()<<endl;
         }
     }
 
@@ -3702,7 +3702,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         if(pes[i]->get_status()==true)
         {
             pes[i]->set_status(false);
-            sstream<<pes[i]->get_device_name()<<endl;
+            osstream<<pes[i]->get_device_name()<<endl;
         }
     }
 
@@ -3713,7 +3713,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         if(loads[i]->get_status()==true)
         {
             loads[i]->set_status(false);
-            sstream<<loads[i]->get_device_name()<<endl;
+            osstream<<loads[i]->get_device_name()<<endl;
         }
     }
 
@@ -3724,7 +3724,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         if(fshunts[i]->get_status()==true)
         {
             fshunts[i]->set_status(false);
-            sstream<<fshunts[i]->get_device_name()<<endl;
+            osstream<<fshunts[i]->get_device_name()<<endl;
         }
     }
 
@@ -3736,7 +3736,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         {
             lines[i]->set_sending_side_breaker_status(false);
             lines[i]->set_receiving_side_breaker_status(false);
-            sstream<<lines[i]->get_device_name()<<endl;
+            osstream<<lines[i]->get_device_name()<<endl;
         }
     }
 
@@ -3752,7 +3752,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
             if(transes[i]->is_three_winding_transformer())
                 transes[i]->set_winding_breaker_status(TERTIARY_SIDE, false);
 
-            sstream<<transes[i]->get_device_name()<<endl;
+            osstream<<transes[i]->get_device_name()<<endl;
         }
     }
 
@@ -3763,7 +3763,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         if(hvdcs[i]->get_status()==true)
         {
             hvdcs[i]->set_status(false);
-            sstream<<hvdcs[i]->get_device_name()<<endl;
+            osstream<<hvdcs[i]->get_device_name()<<endl;
         }
     }
 
@@ -3774,13 +3774,13 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         if(edevices[i]->get_status()==true)
         {
             edevices[i]->set_status(false);
-            sstream<<edevices[i]->get_device_name()<<endl;
+            osstream<<edevices[i]->get_device_name()<<endl;
         }
     }
 
     Bus[index].set_bus_type(OUT_OF_SERVICE);
-    sstream<<"Bus "<<bus<<" is tripped.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Bus "<<bus<<" is tripped.";
+    show_information_with_leading_time_stamp(osstream);
 
     update_in_service_bus_count();
 }
@@ -4070,10 +4070,10 @@ double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(size
             {
                 if(v_schedule != voltage)
                 {
-                    ostringstream sstream;
-                    sstream<<"Warning. Generators at bus %u are regulating different voltages.\n"
+                    ostringstream osstream;
+                    osstream<<"Warning. Generators at bus %u are regulating different voltages.\n"
                                  "The regulating voltage of the first generator is returned.", bus);
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 }
             }
@@ -4100,10 +4100,10 @@ double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(size
             {
                 if(v_schedule != voltage)
                 {
-                    ostringstream sstream;
-                    sstream<<"Warning. WT generator at bus %u are regulating different voltages.\n"
+                    ostringstream osstream;
+                    osstream<<"Warning. WT generator at bus %u are regulating different voltages.\n"
                                  "The regulating voltage of the first source is returned.", bus);
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 }
             }

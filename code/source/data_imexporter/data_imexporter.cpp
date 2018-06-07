@@ -26,10 +26,10 @@ bool DATA_IMEXPORTER::is_power_system_database_set() const
         return true;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Data imexporter is not connected to any target power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Error. Data imexporter is not connected to any target power system database."<<endl
           <<"No operation on the imexporter will work.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return false;
     }
 }

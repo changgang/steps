@@ -7,12 +7,12 @@
 using namespace std;
 LINE::LINE(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. LINE object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. LINE object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -25,13 +25,13 @@ LINE::~LINE()
 
 void LINE::set_sending_side_bus(size_t bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(bus==0)
     {
-        sstream<<"Warning. Zero bus number (0) is not allowed for setting up sending side bus of line."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up sending side bus of line."<<endl
           <<"0 will be set to indicate invalid transmission line.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         sending_side_bus = 0;
         return;
     }
@@ -44,9 +44,9 @@ void LINE::set_sending_side_bus(size_t bus)
     {
         if(not psdb->is_bus_exist(bus))
         {
-            sstream<<"Warning. Bus "<<bus<<" does not exist for setting up sending side bus of line."<<endl
+            osstream<<"Warning. Bus "<<bus<<" does not exist for setting up sending side bus of line."<<endl
               <<"0 will be set to indicate invalid transmission line.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             sending_side_bus = 0;
             return;
         }
@@ -56,13 +56,13 @@ void LINE::set_sending_side_bus(size_t bus)
 
 void LINE::set_receiving_side_bus(size_t bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(bus==0)
     {
-        sstream<<"Warning. Zero bus number (0) is not allowed for setting up receiving side bus of line."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up receiving side bus of line."<<endl
           <<"0 will be set to indicate invalid transmission line.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         receiving_side_bus = 0;
         return;
     }
@@ -75,9 +75,9 @@ void LINE::set_receiving_side_bus(size_t bus)
     {
         if(not psdb->is_bus_exist(bus))
         {
-            sstream<<"Warning. Bus "<<bus<<" does not exist for setting up receiving side bus of line."<<endl
+            osstream<<"Warning. Bus "<<bus<<" does not exist for setting up receiving side bus of line."<<endl
               <<"0 will be set to indicate invalid transmission line.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             receiving_side_bus = 0;
             return;
         }
@@ -239,30 +239,30 @@ double LINE::get_length() const
 
 void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not is_connected_to_bus(to_bus))
         return;
 
     if(location<0.0 or location>1.0)
     {
-        sstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<get_device_name()<<"."<<endl
+        osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<get_device_name()<<"."<<endl
                <<"No fault will be set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(not fault.is_faulted())
     {
-        sstream<<"Warning. Given fault is not faulted for "<<get_device_name()<<"."<<endl
+        osstream<<"Warning. Given fault is not faulted for "<<get_device_name()<<"."<<endl
                <<"No fault will be set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     string fault_type = fault.get_fault_type_string();
 
     complex<double> y = fault.get_fault_shunt_in_pu();
-    sstream<<fault_type<<" fault is set for "<<get_device_name()<<"."<<endl
+    osstream<<fault_type<<" fault is set for "<<get_device_name()<<"."<<endl
            <<"Fault shunt is "<<y<<" pu at location "<<location<<" to bus "<<to_bus;
 
     if(to_bus == get_receiving_side_bus())
@@ -276,7 +276,7 @@ void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
     }
     if(iter!=faults.end())
     {
-        sstream<<"Fault at location "<<location<<" (to sending side bus) already exist for "<<get_device_name()<<"."<<endl
+        osstream<<"Fault at location "<<location<<" (to sending side bus) already exist for "<<get_device_name()<<"."<<endl
               <<"Setting fault at this location will remove the previous one";
         iter->second = fault;
     }
@@ -284,16 +284,16 @@ void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
     {
         faults.insert(pair<double,FAULT>(location, fault));
     }
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 double LINE::get_fault_location_of_fault(size_t index) const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(index>=get_fault_count())
     {
-        sstream<<"Invalid index ("<<index<<") was given to get fault location. [0, "<<faults.size()<<") is allowed.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Invalid index ("<<index<<") was given to get fault location. [0, "<<faults.size()<<") is allowed.";
+        show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
     map<double,FAULT>::const_iterator iter=faults.begin();
@@ -352,18 +352,18 @@ void LINE::clear_fault_at_location(size_t to_bus, double location)
     }
     if(iter!=faults.end())
     {
-        ostringstream sstream;
+        ostringstream osstream;
         FAULT fault = iter->second;
         string fault_type_str = fault.get_fault_type_string();
         complex<double> y = fault.get_fault_shunt_in_pu();
 
         if(to_bus==get_sending_side_bus())
-            sstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
+            osstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
               <<"Fault shunt "<<y<<" pu at location "<<location<<" to bus "<<get_sending_side_bus()<<".";
         else
-            sstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
+            osstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
               <<"Fault shunt "<<y<<" pu at location "<<1.0-location<<" to bus "<<get_receiving_side_bus()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         faults.erase(iter);
     }
 }
@@ -391,22 +391,22 @@ bool LINE::is_valid() const
 
 void LINE::check()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Line base voltage will not be checked.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     else
     {
         if(psdb->get_bus_base_voltage_in_kV(get_sending_side_bus()) !=
            psdb->get_bus_base_voltage_in_kV(get_receiving_side_bus()))
         {
-            sstream<<"Error. base voltage at sending and receiving sides are different.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Error. base voltage at sending and receiving sides are different.";
+            show_information_with_leading_time_stamp(osstream);
         }
     }
 
@@ -491,13 +491,13 @@ bool LINE::is_in_zone(size_t zone) const
 
 void LINE::report() const
 {
-    ostringstream sstream;
-    sstream<<get_device_name()<<": "<<((get_sending_side_breaker_status()==true and get_receiving_side_breaker_status()==true)?"in service":"out of service")<<", "
+    ostringstream osstream;
+    osstream<<get_device_name()<<": "<<((get_sending_side_breaker_status()==true and get_receiving_side_breaker_status()==true)?"in service":"out of service")<<", "
       <<"line R+jX = "<<setw(8)<<setprecision(4)<<fixed<<get_line_positive_sequence_z_in_pu()<<" pu, "
       <<"line G+jB = "<<setw(8)<<setprecision(4)<<fixed<<get_line_positive_sequence_y_in_pu()<<" pu, "
       <<"sending shunt G+jB = "<<setw(8)<<setprecision(4)<<fixed<<get_shunt_positive_sequence_y_at_sending_side_in_pu()<<" pu, "
       <<"receiving shunt G+jB = "<<setw(8)<<setprecision(4)<<fixed<<get_shunt_positive_sequence_y_at_receiving_side_in_pu()<<" pu";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void LINE::save() const
@@ -576,10 +576,10 @@ double LINE::get_line_base_voltage_in_kV() const
         return psdb->get_bus_base_voltage_in_kV(get_sending_side_bus());
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Line base voltage will be returned as 0.0.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 }
@@ -593,10 +593,10 @@ complex<double> LINE::get_line_complex_voltage_at_sending_side_in_pu() const
         return psdb->get_bus_complex_voltage_in_pu(get_sending_side_bus());
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex voltage at sending side will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 }
@@ -609,10 +609,10 @@ complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_pu() const
         return psdb->get_bus_complex_voltage_in_pu(get_receiving_side_bus());
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex voltage at receiving side will be returned as 0.0 p.u.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 }
@@ -625,10 +625,10 @@ complex<double> LINE::get_line_complex_voltage_at_sending_side_in_kV() const
         return psdb->get_bus_complex_voltage_in_kV(get_sending_side_bus());
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex voltage at sending side will be returned as 0.0 kV.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 }
@@ -641,10 +641,10 @@ complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_kV() const
         return psdb->get_bus_complex_voltage_in_kV(get_receiving_side_bus());
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex voltage at receiving side will be returned as 0.0 kV.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 }
@@ -707,10 +707,10 @@ complex<double> LINE::get_line_complex_current_at_sending_side_in_kA() const
         mvabase = psdb->get_system_base_power_in_MVA();
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex current at sending side will be returned with MVABASE=100MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     double Ibase_kA = mvabase/sqrt(3.0)/get_line_base_voltage_in_kV();
@@ -728,10 +728,10 @@ complex<double> LINE::get_line_complex_current_at_receiving_side_in_kA() const
         mvabase = psdb->get_system_base_power_in_MVA();
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex current at receiving side will be returned with MVABASE=100MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     double Ibase_kA = mvabase/sqrt(3.0)/get_line_base_voltage_in_kV();
@@ -759,10 +759,10 @@ complex<double> LINE::get_line_complex_power_at_sending_side_in_MVA() const
         mvabase = psdb->get_system_base_power_in_MVA();
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex power at sending side will be returned with MVABASE=100MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     return mvabase*get_line_complex_power_at_sending_side_in_pu();
@@ -778,10 +778,10 @@ complex<double> LINE::get_line_complex_power_at_receiving_side_in_MVA() const
         mvabase = psdb->get_system_base_power_in_MVA();
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex power at receiving side will be returned with MVABASE=100MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     return mvabase*get_line_complex_power_at_receiving_side_in_pu();
@@ -813,10 +813,10 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm
         mvabase = psdb->get_system_base_power_in_MVA();
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex apparent impedance at sending side will be returned with MVABASE=100MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     if(get_sending_side_breaker_status()==false)
@@ -839,10 +839,10 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_o
         mvabase = psdb->get_system_base_power_in_MVA();
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
           <<"Complex apparent impedance at receiving side will be returned with MVABASE=100MVA.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     if(get_receiving_side_breaker_status()==false)

@@ -342,9 +342,9 @@ void SPARSE_MATRIX_TEST::test_get_reorder_permutation()
 void SPARSE_MATRIX_TEST::test_slove_Ax_equal_b()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
-    ostringstream sstream;
-    sstream<<"LU_factorization is also tested.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"LU_factorization is also tested.";
+    show_information_with_leading_time_stamp(osstream);
 
     prepare_basic_matrix();
 

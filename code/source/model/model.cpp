@@ -41,9 +41,9 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
         allowed_device_type = device_type;
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Device type '"<<device_type<<"' is not supported when setting up dynamic model.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Warning. Device type '"<<device_type<<"' is not supported when setting up dynamic model.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 string MODEL::get_allowed_device_type() const
@@ -59,20 +59,20 @@ void MODEL::set_power_system_database_and_attached_device(POWER_SYSTEM_DATABASE*
 
 void MODEL::set_device_id(DEVICE_ID did)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not did.is_valid())
     {
-        sstream<<"Warning. Invalid device id (possible of "<<did.get_device_type()<<") is given to build model. "
+        osstream<<"Warning. Invalid device id (possible of "<<did.get_device_type()<<") is given to build model. "
           <<"Model device id will not be updated.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(did.get_device_type()!=get_allowed_device_type())
     {
-        sstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which "<<get_allowed_device_type()<<" is expected."
+        osstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which "<<get_allowed_device_type()<<" is expected."
           <<"Model device id will not be updated.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -82,9 +82,9 @@ void MODEL::set_device_id(DEVICE_ID did)
 
     if(get_device_pointer()!=NULL)
     {
-        sstream<<"Warning. Valid device ("<<get_device_name()<<") has already been set for "<<get_model_type()<<" model '"<<get_model_name()<<"'."<<endl
+        osstream<<"Warning. Valid device ("<<get_device_name()<<") has already been set for "<<get_model_type()<<" model '"<<get_model_name()<<"'."<<endl
           <<"New device ("<<did.get_device_name()<<") will be updated.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
 
@@ -92,8 +92,8 @@ void MODEL::set_device_id(DEVICE_ID did)
 
     if(device_pointer==NULL)
     {
-        sstream<<"Warning. No valid device can be found for dynamic model.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Warning. No valid device can be found for dynamic model.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 

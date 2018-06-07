@@ -307,7 +307,7 @@ bool IEEEG3::setup_model_with_bpa_string(string data)
 
 void IEEEG3::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_model_initialized())
         return;
 
@@ -348,15 +348,15 @@ void IEEEG3::initialize()
 
     if(valve>get_Pmax_in_pu())
     {
-        sstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(valve<get_Pmin_in_pu())
     {
-        sstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     servo_motor.set_output(valve);
@@ -421,9 +421,9 @@ void IEEEG3::check()
 
 void IEEEG3::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void IEEEG3::save()
 {
@@ -431,7 +431,7 @@ void IEEEG3::save()
 }
 string IEEEG3::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double TG = get_TG_in_s();
     double TP = get_TP_in_s();
@@ -452,7 +452,7 @@ string IEEEG3::get_standard_model_string() const
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<TG<<", "
@@ -469,7 +469,7 @@ string IEEEG3::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<a13<<", "
       <<setw(8)<<setprecision(6)<<a21<<", "
       <<setw(8)<<setprecision(6)<<a23<<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t IEEEG3::get_variable_index_from_variable_name(string var_name)

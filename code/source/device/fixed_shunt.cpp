@@ -6,12 +6,12 @@ using namespace std;
 
 FIXED_SHUNT::FIXED_SHUNT(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. FIXED_SHUNT object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. FIXED_SHUNT object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -24,13 +24,13 @@ FIXED_SHUNT::~FIXED_SHUNT()
 
 void FIXED_SHUNT::set_shunt_bus(size_t shunt_bus)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(shunt_bus==0)
     {
-        sstream<<"Warning. Zero bus number (0) is not allowed for setting up fixed shunt bus."<<endl
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up fixed shunt bus."<<endl
           <<"0 will be set to indicate invalid fixed shunt.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->bus = 0;
         return;
     }
@@ -44,9 +44,9 @@ void FIXED_SHUNT::set_shunt_bus(size_t shunt_bus)
             this->bus = shunt_bus;
         else
         {
-            sstream<<"Bus "<<shunt_bus<<" does not exist in the power system database '"<<psdb->get_system_name()<<"' for setting up fixed shunt."<<endl
+            osstream<<"Bus "<<shunt_bus<<" does not exist in the power system database '"<<psdb->get_system_name()<<"' for setting up fixed shunt."<<endl
               <<"0 will be set to indicate invalid fixed shunt.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             this->bus = 0;
         }
     }
@@ -89,15 +89,15 @@ complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_MVA() const
 
 complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     double mvabase = 100.0;
     if(psdb==NULL)
     {
-        sstream<<get_device_name()<<" is not assigned to any power system database. 100MVA will be used to get pu shunt impedance.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<get_device_name()<<" is not assigned to any power system database. 100MVA will be used to get pu shunt impedance.";
+        show_information_with_leading_time_stamp(osstream);
     }
     else
         mvabase = psdb->get_system_base_power_in_MVA();
@@ -173,10 +173,10 @@ bool FIXED_SHUNT::is_in_zone(size_t zone) const
 
 void FIXED_SHUNT::report() const
 {
-    ostringstream sstream;
-    sstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
+    ostringstream osstream;
+    osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"P+jQ[Z] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_impedance_shunt_in_MVA()<<" MVA.";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void FIXED_SHUNT::save() const
@@ -225,7 +225,7 @@ DEVICE_ID FIXED_SHUNT::get_device_id() const
 
 complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(get_status() == false)
         return 0.0;
@@ -236,8 +236,8 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 
     if(psdb==NULL)
     {
-        sstream<<get_device_name()<<" is not assigned to any power system database. Nominal impedance shunt in MVA will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<get_device_name()<<" is not assigned to any power system database. Nominal impedance shunt in MVA will be returned.";
+        show_information_with_leading_time_stamp(osstream);
         return S0;
     }
     else
@@ -246,8 +246,8 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 
         if(busptr==NULL)
         {
-            sstream<<"Bus "<<get_shunt_bus()<<" is not found when getting the actual impedance shunt of "<<get_device_name()<<". Nominal impedance shunt in MVA will be returned.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Bus "<<get_shunt_bus()<<" is not found when getting the actual impedance shunt of "<<get_device_name()<<". Nominal impedance shunt in MVA will be returned.";
+            show_information_with_leading_time_stamp(osstream);
             return S0;
         }
         double v = busptr->get_voltage_in_pu();

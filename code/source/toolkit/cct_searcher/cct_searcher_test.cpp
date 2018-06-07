@@ -249,7 +249,7 @@ void CCT_SEARCHER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CCT_SEARCHER_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     string file = "test_log/";
     file += __FUNCTION__;
@@ -277,8 +277,8 @@ void CCT_SEARCHER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
 
     double cct = searcher->search_cct();
 
-    sstream<<"Searched CCT is: "<<cct<<" s"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Searched CCT is: "<<cct<<" s"<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     recover_stdout();
 }

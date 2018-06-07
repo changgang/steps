@@ -149,14 +149,14 @@ void LOAD_MODEL_TEST::test_initialize()
 
 void LOAD_MODEL_TEST::export_meter_title()
 {
-    ostringstream sstream;
-    sstream<<"TIME\tVOLT_PU\tFREQ_PU\tP_MW\tQ_MVAR"<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"TIME\tVOLT_PU\tFREQ_PU\tP_MW\tQ_MVAR"<<endl;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void LOAD_MODEL_TEST::export_meter_values(double time)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
@@ -166,12 +166,12 @@ void LOAD_MODEL_TEST::export_meter_values(double time)
 
     complex<double> S = model->get_load_power_in_MVA();
 
-    sstream<<setprecision(6)<<fixed<<time<<"\t"
+    osstream<<setprecision(6)<<fixed<<time<<"\t"
       <<setprecision(6)<<fixed<<volt<<"\t"
       <<setprecision(6)<<fixed<<freq<<"\t"
       <<setprecision(6)<<fixed<<S.real()<<"\t"
       <<setprecision(6)<<fixed<<S.imag()<<endl;
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void LOAD_MODEL_TEST::test_run_voltage_ramp_response()

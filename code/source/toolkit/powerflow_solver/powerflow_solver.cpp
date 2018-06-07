@@ -52,9 +52,9 @@ void POWERFLOW_SOLVER::set_power_system_database(POWER_SYSTEM_DATABASE* psdb)
     }
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Invalid power system database (NULL) is given. Failed to connect POWERFLOW_SOLVER to POWER_SYSTEM_DATABASE.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Invalid power system database (NULL) is given. Failed to connect POWERFLOW_SOLVER to POWER_SYSTEM_DATABASE.";
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -74,10 +74,10 @@ bool POWERFLOW_SOLVER::is_power_system_database_set() const
         return true;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Powerflow solver is not connected to any power system database."<<endl
+        ostringstream osstream;
+        osstream<<"Error. Powerflow solver is not connected to any power system database."<<endl
           <<"No operation on the powerflow solver will work.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return false;
     }
 }
@@ -98,10 +98,10 @@ void POWERFLOW_SOLVER::set_allowed_max_active_power_imbalance_in_MW(double P)
         P_threshold_in_MW = P;
     else
     {
-        ostringstream sstream;
-        sstream<<"Non-positive ("<<P<<" MW) is not allowed for setting convergence threshold of "
+        ostringstream osstream;
+        osstream<<"Non-positive ("<<P<<" MW) is not allowed for setting convergence threshold of "
          <<"active power imbalance for powerflow solution.\n0.01MW will be set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         P_threshold_in_MW = 0.01;
     }
 }
@@ -112,10 +112,10 @@ void POWERFLOW_SOLVER::set_allowed_max_reactive_power_imbalance_in_MVar(double Q
         Q_threshold_in_MVar = Q;
     else
     {
-        ostringstream sstream;
-        sstream<<"Non-positive ("<<Q<<" MVar) is not allowed for setting convergence threshold of "
+        ostringstream osstream;
+        osstream<<"Non-positive ("<<Q<<" MVar) is not allowed for setting convergence threshold of "
           <<"reactive power imbalance for powerflow solution.\n0.01MVar will be set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         Q_threshold_in_MVar = 0.01;
     }
 }
@@ -178,9 +178,9 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
-    sstream<<"Start solve powerflow with Full Newton Raphson solution.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Start solve powerflow with Full Newton Raphson solution.";
+    show_information_with_leading_time_stamp(osstream);
 
     initialize_powerflow_solver();
 
@@ -198,11 +198,11 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 
     while(true)
     {
-        sstream<<"Iteration "<<iteration_count<<":";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Iteration "<<iteration_count<<":";
+        show_information_with_leading_time_stamp(osstream);
 
         //os<<"start calculating bus power mismatch");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         calculate_raw_bus_power_mismatch();
 
@@ -212,16 +212,16 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 
         //os<<"end calculating bus power mismatch\n"
         //        "start checking bus type constraints");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         bool bus_type_changed = check_bus_type_constraints();
 
         //os<<"end checking bus type constraints");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         if(bus_type_changed)
         {
             //os<<"start updating P Q equations.");
-            //show_information_with_leading_time_stamp(sstream);
+            //show_information_with_leading_time_stamp(osstream);
             update_P_and_Q_equation_internal_buses();
 
             calculate_raw_bus_power_mismatch();
@@ -229,7 +229,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
             max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
             //os<<"end updating P Q equations.");
-            //show_information_with_leading_time_stamp(sstream);
+            //show_information_with_leading_time_stamp(osstream);
             //continue;
         }
         if(max_P_mismatch_in_MW < get_allowed_max_active_power_imbalance_in_MW() and
@@ -237,46 +237,46 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
         {
             set_convergence_flag(true);
 
-            sstream<<"Powerflow converged within "<<iteration_count<<" iterations:";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Powerflow converged within "<<iteration_count<<" iterations:";
+            show_information_with_leading_time_stamp(osstream);
             break;
         }
 
         //os<<"start building bus power mismatch vector.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         bus_power_mismatch = get_bus_power_mismatch_vector_for_coupled_solution();
 
         //os<<"end building bus power mismatch vector.\nstart updating jacobian.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         jacobian_builder.update_seprate_jacobians();
 
         //os<<"end updating jacobian.\nstart getting full jacobian.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         jacobian = jacobian_builder.get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses,
                                                                                                    internal_Q_equation_buses);
         //os<<"Full Jacobian: (equation index)");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         //jacobian.report_without_bus_number();
 
         //os<<"end getting full jacobian.\nstart calculating va update");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         bus_delta_voltage_angle = bus_power_mismatch/jacobian;
 
         //os<<"end calculating va update.\n start updating va.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         update_bus_voltage_and_angle(bus_delta_voltage_angle);
         //os<<"end updating va.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         iteration_count ++;
         if(get_iteration_count()>get_max_iteration())
         {
-            sstream<<"Powerflow failed to converge in "<<get_max_iteration()<<" iterations.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Powerflow failed to converge in "<<get_max_iteration()<<" iterations.";
+            show_information_with_leading_time_stamp(osstream);
             break;
         }
     }
@@ -287,9 +287,9 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
-    sstream<<"Start solve powerflow with Fast Decoupled solution.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Start solve powerflow with Fast Decoupled solution.";
+    show_information_with_leading_time_stamp(osstream);
 
     initialize_powerflow_solver();
 
@@ -314,8 +314,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
     while(true)
     {
-        sstream<<"Iteration "<<iteration_count<<":";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Iteration "<<iteration_count<<":";
+        show_information_with_leading_time_stamp(osstream);
 
         calculate_raw_bus_power_mismatch();
         max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -340,13 +340,13 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         {
             set_convergence_flag(true);
 
-            sstream<<"Powerflow converged within "<<iteration_count<<" iterations:";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Powerflow converged within "<<iteration_count<<" iterations:";
+            show_information_with_leading_time_stamp(osstream);
             break;
         }
 
         //os<<"start building bus P power mismatch vector.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         P_power_mismatch = get_bus_P_power_mismatch_vector_for_decoupled_solution();
         size_t n = internal_P_equation_buses.size();
         for(size_t i=0; i!=n; ++i)
@@ -356,24 +356,24 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         }
 
         //os<<"start calculating bus angle update.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         bus_delta_angle = P_power_mismatch/BP;
         //for(size_t i=0; i<internal_P_equation_buses.size(); ++i)
         //    bus_delta_angle[i] /= abs(get_bus_complex_voltage_in_pu(get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
 
         //os<<"start updating bus angle.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         update_bus_angle(bus_delta_angle);
 
         //os<<"start calculating bus power mismatch for Q solution.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         calculate_raw_bus_power_mismatch();
 
         max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
         max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
 
         //os<<"start building bus Q power mismatch vector.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         Q_power_mismatch = get_bus_Q_power_mismatch_vector_for_decoupled_solution();
         n = internal_Q_equation_buses.size();
         for(size_t i=0; i!=n; ++i)
@@ -383,21 +383,21 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         }
 
         //os<<"start calculating bus voltage update.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         bus_delta_voltage = Q_power_mismatch/BQ;
 
         //os<<"start updating bus voltage.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
         update_bus_voltage(bus_delta_voltage);
 
         //os<<"end updating va.");
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         iteration_count ++;
         if(get_iteration_count()>get_max_iteration())
         {
-            sstream<<"Powerflow failed to converge in "<<get_max_iteration()<<" iterations.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Powerflow failed to converge in "<<get_max_iteration()<<" iterations.";
+            show_information_with_leading_time_stamp(osstream);
             break;
         }
     }
@@ -417,9 +417,9 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
-    sstream<<"Initializing powerflow solver.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Initializing powerflow solver.";
+    show_information_with_leading_time_stamp(osstream);
 
     initialize_generator_regulating_mode_with_bus_type();
     initialize_bus_type_and_voltage_to_regulate();
@@ -427,8 +427,8 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     optimize_bus_numbers();
     iteration_count = 0;
 
-    sstream<<"Done initializing powerflow solver.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Done initializing powerflow solver.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void POWERFLOW_SOLVER::initialize_bus_type_and_voltage_to_regulate()
@@ -556,20 +556,20 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
     }
 
 
-    ostringstream sstream;
-    sstream<<"Initial bus voltage and angle are listed as follows.";
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"bus      voltage(pu) angle(deg)";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Initial bus voltage and angle are listed as follows.";
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"bus      voltage(pu) angle(deg)";
+    show_information_with_leading_time_stamp(osstream);
 
     if(nbus>200)
         nbus = 200;
     for(size_t i=0; i!=nbus; ++i)
     {
-        sstream<<setw(8)<<buses[i]->get_bus_number()<<" "
+        osstream<<setw(8)<<buses[i]->get_bus_number()<<" "
                <<setw(10)<<setprecision(6)<<buses[i]->get_voltage_in_pu()<<" "
                <<setw(10)<<setprecision(6)<<buses[i]->get_angle_in_deg();
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -580,9 +580,9 @@ void POWERFLOW_SOLVER::optimize_bus_numbers()
 
 void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
 {
-    ostringstream sstream;
-    sstream<<"Updating powerflow P equation buses and Q equation buses.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Updating powerflow P equation buses and Q equation buses.";
+    show_information_with_leading_time_stamp(osstream);
 
     size_t nbus = db->get_in_service_bus_count();
 
@@ -609,25 +609,25 @@ void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
         }
     }
 /*
-    sstream<<"Buses with P equations (physical bus):");
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Buses with P equations (physical bus):");
+    show_information_with_leading_time_stamp(osstream);
     size_t n = internal_P_equation_buses.size();
     for(size_t i=0; i£¡=n; ++i)
     {
-        sstream<<"%u", get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]));
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"%u", get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]));
+        show_information_with_leading_time_stamp(osstream);
     }
-    sstream<<"Buses with Q equations (physical bus):");
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Buses with Q equations (physical bus):");
+    show_information_with_leading_time_stamp(osstream);
     n = internal_Q_equation_buses.size();
     for(size_t i=0; i!=n; ++i)
     {
-        sstream<<"%u", get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]));
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"%u", get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]));
+        show_information_with_leading_time_stamp(osstream);
     }
 */
-    sstream<<"Done updating powerflow P equation buses and Q equation buses.";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Done updating powerflow P equation buses and Q equation buses.";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void POWERFLOW_SOLVER::set_convergence_flag(bool flag)
@@ -664,11 +664,11 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     add_hvdc_to_bus_power_mismatch();
 
 /*
-    ostringstream sstream;
-    sstream<<"Power mismatch of all buses.");
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"bus     Pmismatch(MW) Qmismatch(MVar)");
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Power mismatch of all buses.");
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"bus     Pmismatch(MW) Qmismatch(MVar)");
+    show_information_with_leading_time_stamp(osstream);
 
     size_t bus;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -677,8 +677,8 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     for(size_t i=0; i!=nbus; ++i)
     {
         bus = ntdb->get_physical_bus_number_of_internal_bus(i);
-        sstream<<"%-8u %-10f %-10f",bus, bus_power[i].real()*sbase, bus_power[i].imag()*sbase);
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"%-8u %-10f %-10f",bus, bus_power[i].real()*sbase, bus_power[i].imag()*sbase);
+        show_information_with_leading_time_stamp(osstream);
     }
 */
 }
@@ -702,18 +702,18 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
         bus_power[i] = voltage*conj(bus_current[i]);
     }
 
-    /*ostringstream sstream;
-    sstream<<"Power flowing into network (physical bus).");
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"bus     P(pu)    P(pu)");
-    show_information_with_leading_time_stamp(sstream);
+    /*ostringstream osstream;
+    osstream<<"Power flowing into network (physical bus).");
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"bus     P(pu)    P(pu)");
+    show_information_with_leading_time_stamp(osstream);
 
     size_t bus;
     for(size_t i=0; i!=nbus; ++i)
     {
         bus = get_physical_bus_number_of_internal_bus(i);
-        sstream<<"%-8u %-10f %-10f",bus, bus_power[i].real(), bus_power[i].imag());
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"%-8u %-10f %-10f",bus, bus_power[i].real(), bus_power[i].imag());
+        show_information_with_leading_time_stamp(osstream);
     }*/
 }
 
@@ -750,18 +750,18 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
         k_start = k_end;
     }
 
-    /*ostringstream sstream;
-    sstream<<"Current flowing into network (physical bus).");
-    show_information_with_leading_time_stamp(sstream);
-    sstream<<"bus     Ireal(pu)    Iimag(pu)");
-    show_information_with_leading_time_stamp(sstream);
+    /*ostringstream osstream;
+    osstream<<"Current flowing into network (physical bus).");
+    show_information_with_leading_time_stamp(osstream);
+    osstream<<"bus     Ireal(pu)    Iimag(pu)");
+    show_information_with_leading_time_stamp(osstream);
 
     size_t bus;
     for(size_t i=0; i!=nbus; ++i)
     {
         bus = get_physical_bus_number_of_internal_bus(i);
-        sstream<<"%-8u %-10f %-10f",bus, bus_current[i].real(), bus_current[i].imag());
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"%-8u %-10f %-10f",bus, bus_current[i].real(), bus_current[i].imag());
+        show_information_with_leading_time_stamp(osstream);
     }*/
 }
 void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
@@ -886,9 +886,9 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
         S_rec = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER), hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER));
         S_inv = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER), -hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER));
 
-        //ostringstream sstream;
-        //sstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
-        //show_information_with_leading_time_stamp(sstream);
+        //ostringstream osstream;
+        //osstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
+        //show_information_with_leading_time_stamp(osstream);
 
         bus_power[internal_bus_rec] -= S_rec/Sbase;
         bus_power[internal_bus_inv] += S_inv/Sbase;
@@ -918,9 +918,9 @@ double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
 
     max_P_error_in_MW = max_P_error_in_pu*db->get_system_base_power_in_MVA();
 
-    ostringstream sstream;
-    sstream<<"Maximum   active power mismatch found: "<<max_P_error_in_MW<<" MW   at bus "<<max_P_error_physical_bus<<".";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Maximum   active power mismatch found: "<<max_P_error_in_MW<<" MW   at bus "<<max_P_error_physical_bus<<".";
+    show_information_with_leading_time_stamp(osstream);
 
     return max_P_error_in_MW;
 }
@@ -947,9 +947,9 @@ double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
     }
     max_Q_error_in_MVar =  max_Q_error_in_pu*db->get_system_base_power_in_MVA();
 
-    ostringstream sstream;
-    sstream<<"Maximum reactive power mismatch found: "<<max_Q_error_in_MVar<<" MVar   at bus "<<max_Q_error_physical_bus<<".";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Maximum reactive power mismatch found: "<<max_Q_error_in_MVar<<" MVar   at bus "<<max_Q_error_physical_bus<<".";
+    show_information_with_leading_time_stamp(osstream);
 
     return max_Q_error_in_MVar;
 }
@@ -977,15 +977,15 @@ bool POWERFLOW_SOLVER::check_bus_type_constraints()
         physical_bus = buses[i]->get_bus_number();
 
         //os<< "checking bus %u",physical_bus);
-        //show_information_with_leading_time_stamp(sstream);
+        //show_information_with_leading_time_stamp(osstream);
 
         if(btype==SLACK_TYPE)
         {
             //os<< "start checking as slack bus");
-            //show_information_with_leading_time_stamp(sstream);
+            //show_information_with_leading_time_stamp(osstream);
             check_SLACK_bus_constraint_of_physical_bus(physical_bus);
             //os<< "end checking as slack bus");
-            //show_information_with_leading_time_stamp(sstream);
+            //show_information_with_leading_time_stamp(osstream);
             system_bus_type_changed = false;
         }
         else
@@ -993,21 +993,21 @@ bool POWERFLOW_SOLVER::check_bus_type_constraints()
             if(btype == PV_TYPE)
             {
                 //os<< "start checking as PV bus");
-                //show_information_with_leading_time_stamp(sstream);
+                //show_information_with_leading_time_stamp(osstream);
                 bus_type_changed = check_PV_bus_constraint_of_physical_bus(physical_bus);
 
                 //os<< "end checking as PV bus");
-                //show_information_with_leading_time_stamp(sstream);
+                //show_information_with_leading_time_stamp(osstream);
                 if(bus_type_changed)
                     system_bus_type_changed = true;
             }
             else
             {
                 //os<< "start checking as PV_to_PQ bus");
-                //show_information_with_leading_time_stamp(sstream);
+                //show_information_with_leading_time_stamp(osstream);
                 bus_type_changed = check_PV_TO_PQ_bus_constraint_of_physical_bus(physical_bus);
                 //os<< "end checking as PV_to_PQ bus");
-                //show_information_with_leading_time_stamp(sstream);
+                //show_information_with_leading_time_stamp(osstream);
                 if(bus_type_changed)
                     system_bus_type_changed = true;
             }
@@ -1072,9 +1072,9 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
     if(bus->get_bus_type()!=PV_TYPE)
         return false;
 
-    ostringstream sstream;
+    ostringstream osstream;
     //os<<"Checking PV bus %u.", physical_bus);
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     bool bus_type_changed = false;
     size_t internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
@@ -1085,15 +1085,15 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
     double total_q_min_in_MVar = db->get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
     //os<<"desired Q=%fMVar, Qmax=%fMVar, Qmin=%fMVar.", bus_Q_mismatch_in_MVar, total_q_max_in_MVar, total_q_min_in_MVar);
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     if(total_q_max_in_MVar==total_q_min_in_MVar)
     {
         bus->set_bus_type(PV_TO_PQ_TYPE_3);
         bus_type_changed = true;
         set_all_sources_at_physical_bus_to_q_max(physical_bus);
-        sstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.";
+        show_information_with_leading_time_stamp(osstream);
         return bus_type_changed;
     }
 
@@ -1106,8 +1106,8 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
         bus->set_bus_type(PV_TO_PQ_TYPE_3);
         bus_type_changed = true;
 
-        sstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.";
+        show_information_with_leading_time_stamp(osstream);
 
         set_all_sources_at_physical_bus_to_q_max(physical_bus);
         return bus_type_changed;
@@ -1118,8 +1118,8 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
         bus->set_bus_type(PV_TO_PQ_TYPE_3);
         bus_type_changed = true;
 
-        sstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.";
+        show_information_with_leading_time_stamp(osstream);
 
         set_all_sources_at_physical_bus_to_q_min(physical_bus);
         return bus_type_changed;
@@ -1155,7 +1155,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
        bus->get_bus_type()!=PV_TO_PQ_TYPE_4)
         return false;
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     bool bus_type_changed = false;
 
@@ -1169,8 +1169,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             bus_type_changed = true;
 
-            sstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3.";
+            show_information_with_leading_time_stamp(osstream);
 
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
         }
@@ -1191,9 +1191,9 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
     //bus_Q_mismatch_in_MVar += total_q_generation_in_MVar;
 
     //os<<"Bus %u: current V= %fpu, V to regulate: %fpu, current Q= %fMVar", physical_bus, bus_voltage, voltage_to_regulated, total_q_generation_in_MVar);
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
     //os<<"Qmax= %fMVar, Qmin= %fMVar", total_q_max_in_MVar, total_q_min_in_MVar);
-    //show_information_with_leading_time_stamp(sstream);
+    //show_information_with_leading_time_stamp(osstream);
 
     if(bus_voltage>voltage_to_regulated)
     {
@@ -1208,24 +1208,24 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
                 case PV_TO_PQ_TYPE_4:
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
                     //os<<"Bus %u changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.", physical_bus);
-                    //show_information_with_leading_time_stamp(sstream);
+                    //show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_3:
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
                     //os<<"Bus %u changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.", physical_bus);
-                    //show_information_with_leading_time_stamp(sstream);
+                    //show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_2:
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
                     //os<<"Bus %u changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.", physical_bus);
-                    //show_information_with_leading_time_stamp(sstream);
+                    //show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_voltage_in_pu(voltage_to_regulated);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 default:
                     break;
@@ -1245,24 +1245,24 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
                 case PV_TO_PQ_TYPE_4:
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
                     //os<<"Bus %u changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.", physical_bus);
-                    //show_information_with_leading_time_stamp(sstream);
+                    //show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_3:
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
                     //os<<"Bus %u changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.", physical_bus);
-                    //show_information_with_leading_time_stamp(sstream);
+                    //show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_2:
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
                     //os<<"Bus %u changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.", physical_bus);
-                    //show_information_with_leading_time_stamp(sstream);
+                    //show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_voltage_in_pu(voltage_to_regulated);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 default:
                     break;
@@ -1278,8 +1278,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
-            sstream<<"Var of sources at bus "<<physical_bus<<" are set to max.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Var of sources at bus "<<physical_bus<<" are set to max.";
+            show_information_with_leading_time_stamp(osstream);
         }
         else
         {
@@ -1287,25 +1287,25 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
             {
                 case PV_TO_PQ_TYPE_4:
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_3:
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_2:
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_voltage_in_pu(voltage_to_regulated);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 default:
                     break;
@@ -1318,8 +1318,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             set_all_sources_at_physical_bus_to_q_min(physical_bus);
-            sstream<<"Var of sources at bus "<<physical_bus<<" are set to min.";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Var of sources at bus "<<physical_bus<<" are set to min.";
+            show_information_with_leading_time_stamp(osstream);
         }
         else
         {
@@ -1327,25 +1327,25 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
             {
                 case PV_TO_PQ_TYPE_4:
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_3:
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_2:
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_voltage_in_pu(voltage_to_regulated);
-                    sstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                    show_information_with_leading_time_stamp(sstream);
+                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                    show_information_with_leading_time_stamp(osstream);
                     break;
                 default:
                     break;
@@ -1402,18 +1402,18 @@ vector<double> POWERFLOW_SOLVER::get_bus_power_mismatch_vector_for_coupled_solut
         s_mismatch.push_back(-bus_power[internal_bus].imag());
     }
 /*
-    ostringstream sstream;
-    sstream<<"Bus power mismatch vector for coupled powerflow solution (equation index)");
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Bus power mismatch vector for coupled powerflow solution (equation index)");
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"index     mismatch(pu)");
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"index     mismatch(pu)");
+    show_information_with_leading_time_stamp(osstream);
 
     size_t n = s_mismatch.size();
     for(size_t i=0; i!=n; ++i)
     {
-        sstream<<"%-8u %-10f",i,s_mismatch[i]);
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"%-8u %-10f",i,s_mismatch[i]);
+        show_information_with_leading_time_stamp(osstream);
     }
     */
     return s_mismatch;
@@ -1457,18 +1457,18 @@ vector<double> POWERFLOW_SOLVER::get_bus_Q_power_mismatch_vector_for_decoupled_s
 
 void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update)
 {
-/*    ostringstream sstream;
-    sstream<<"Bus voltage and angle correction(equation index)");
-    show_information_with_leading_time_stamp(sstream);
+/*    ostringstream osstream;
+    osstream<<"Bus voltage and angle correction(equation index)");
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"index     mismatch(pu)");
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"index     mismatch(pu)");
+    show_information_with_leading_time_stamp(osstream);
 
     size_t n = update.size();
     for(size_t i=0; i!=n; ++i)
     {
-        sstream<<"%-8u %-10f",i,update[i]);
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"%-8u %-10f",i,update[i]);
+        show_information_with_leading_time_stamp(osstream);
     }
 */
 
@@ -1515,25 +1515,25 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
         bus->set_voltage_in_pu(current_voltage + alpha*delta_voltage);
     }
 /*
-    sstream<<"New bus voltage and angle in this iteration:");
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"New bus voltage and angle in this iteration:");
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"bus      voltage(pu) angle(deg)");
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"bus      voltage(pu) angle(deg)");
+    show_information_with_leading_time_stamp(osstream);
 
     size_t nbus = get_bus_count();
     for(size_t i=0; i!=nbus; ++i)
     {
-        sstream<<"%-8u %-10f %-10f",STEPS::Bus[i].get_bus_number(),STEPS::Bus[i].get_voltage_in_pu(),
+        osstream<<"%-8u %-10f %-10f",STEPS::Bus[i].get_bus_number(),STEPS::Bus[i].get_voltage_in_pu(),
                       STEPS::Bus[i].get_angle_in_deg());
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 */
 }
 
 void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     size_t nQ = internal_Q_equation_buses.size();
 
@@ -1567,14 +1567,14 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
             max_delta_v_bus = physical_bus;
         }
     }
-    sstream<<"Max voltage update: "<<max_delta_v<<" pu at physical bus "<<max_delta_v_bus<<".";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Max voltage update: "<<max_delta_v<<" pu at physical bus "<<max_delta_v_bus<<".";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 
 void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     size_t nP = internal_P_equation_buses.size();
 
@@ -1608,8 +1608,8 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
             max_delta_angle_bus = physical_bus;
         }
     }
-    sstream<<"Max angle update: "<<max_delta_angle<<" rad at physical bus "<<max_delta_angle_bus<<".";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Max angle update: "<<max_delta_angle<<" rad at physical bus "<<max_delta_angle_bus<<".";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void POWERFLOW_SOLVER::show_powerflow_result() const
@@ -1617,19 +1617,19 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     if(is_converged())
-        sstream<<"Powerflow converged within "<<get_iteration_count()<<" iterations. Results are listed as follows.";
+        osstream<<"Powerflow converged within "<<get_iteration_count()<<" iterations. Results are listed as follows.";
     else
-        sstream<<"Powerflow failed to converg in "<<get_iteration_count()<<" iterations. Results of the last iteration are listed as follows.";
-    show_information_with_leading_time_stamp(sstream);
+        osstream<<"Powerflow failed to converg in "<<get_iteration_count()<<" iterations. Results of the last iteration are listed as follows.";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"Solved bus voltage and angle:";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Solved bus voltage and angle:";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"bus      voltage(pu) angle(deg)";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"bus      voltage(pu) angle(deg)";
+    show_information_with_leading_time_stamp(osstream);
 
     vector<BUS*> buses = db->get_all_buses();
     size_t nbus = buses.size();
@@ -1637,16 +1637,16 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
         nbus = 200;*/
     for(size_t i=0; i!=nbus; ++i)
     {
-        sstream<<setw(8)<<buses[i]->get_bus_number()<<" "
+        osstream<<setw(8)<<buses[i]->get_bus_number()<<" "
           <<setw(10)<<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<" "
           <<setw(10)<<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg();
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
-    sstream<<"Solved machine power:";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Solved machine power:";
+    show_information_with_leading_time_stamp(osstream);
 
-    sstream<<"bus      id   P(MW)      Q(MVar)";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"bus      id   P(MW)      Q(MVar)";
+    show_information_with_leading_time_stamp(osstream);
 
     vector<SOURCE*> sources = db->get_all_sources();
     size_t nsource = sources.size();
@@ -1654,11 +1654,11 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
         nsource = 200;*/
     for(size_t i=0; i!=nsource; ++i)
     {
-        sstream<<setw(8)<<sources[i]->get_source_bus()<<" "
+        osstream<<setw(8)<<sources[i]->get_source_bus()<<" "
           <<"'"<<setw(2)<<sources[i]->get_identifier()<<"' "
           <<setw(10)<<setprecision(6)<<fixed<<sources[i]->get_p_generation_in_MW()<<" "
           <<setw(10)<<setprecision(6)<<fixed<<sources[i]->get_q_generation_in_MVar();
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
@@ -1666,14 +1666,14 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     ofstream file(filename);
     if(not file.is_open())
     {
-        sstream<<"File '"<<filename<<"' cannot be opened for saving powerflow result to file."<<endl
+        osstream<<"File '"<<filename<<"' cannot be opened for saving powerflow result to file."<<endl
           <<"No powerflow result will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1829,14 +1829,14 @@ void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(string filename) const
     if(not is_power_system_database_set())
         return;
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     ofstream file(filename);
     if(not file.is_open())
     {
-        sstream<<"File '"<<filename<<"' cannot be opened for saving bus powerflow result to file."<<endl
+        osstream<<"File '"<<filename<<"' cannot be opened for saving bus powerflow result to file."<<endl
           <<"No bus powerflow result will be exported.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
 

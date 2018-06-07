@@ -16,12 +16,12 @@ METER_SETTER::~METER_SETTER()
 
 void METER_SETTER::set_power_system_database(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Alert. Invalid power system database is provided for METER_SETTER object."<<endl
+        osstream<<"Alert. Invalid power system database is provided for METER_SETTER object."<<endl
           <<"No meter can be set without valid power system database.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     this->db = psdb;
 }
@@ -36,22 +36,22 @@ bool METER_SETTER::prepare_bus_meter(METER& meter, const size_t bus)
 {
     bool successful = false;
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER_SETTER."<<endl
+        osstream<<"No power system database is set for METER_SETTER."<<endl
           <<"Bus meter cannot be prepared. Invalid meter will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
     if(not psdb->is_bus_exist(bus))
     {
-        sstream<<"Bus "<<bus<<" doesn't exist in power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Bus "<<bus<<" doesn't exist in power system database '"<<db->get_system_name()<<"'."<<endl
           <<"Invalid meter will be returned.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -241,31 +241,31 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
 
     bool successful = false;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER_SETTER."<<endl
+        osstream<<"No power system database is set for METER_SETTER."<<endl
           <<"Line meter cannot be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     string device_type = device_id.get_device_type();
     if(device_type!="LINE")
     {
-        sstream<<"Warning. This device given ("<<device_type<<") is not a line when trying to set up a line meter. "
+        osstream<<"Warning. This device given ("<<device_type<<") is not a line when trying to set up a line meter. "
           <<"No line meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     if(not psdb->is_line_exist(device_id))
     {
-        sstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No line meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -277,9 +277,9 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
         meter.set_meter_side_bus(side_bus);
     else
     {
-        sstream<<"Warning. The side bus "<<side_bus<<" is neither the sending bus nor receiving bus of "<<device_id.get_device_name()<<". "
+        osstream<<"Warning. The side bus "<<side_bus<<" is neither the sending bus nor receiving bus of "<<device_id.get_device_name()<<". "
           <<"No line meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -431,32 +431,32 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
 {
     bool successful = false;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER_SETTER."<<endl
+        osstream<<"No power system database is set for METER_SETTER."<<endl
           <<"Transformer meter cannot be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     string device_type = device_id.get_device_type();
     if(device_type!="TRANSFORMER")
     {
-        sstream<<"Warning. This device given ("<<device_type<<") is not a transformer when trying to set up a transformer meter. "
+        osstream<<"Warning. This device given ("<<device_type<<") is not a transformer when trying to set up a transformer meter. "
           <<"No line meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
 
     if(not psdb->is_transformer_exist(device_id))
     {
-        sstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No transformer meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -468,9 +468,9 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
         meter.set_meter_side_bus(side_bus);
     else
     {
-        sstream<<"Warning. The side bus "<<side_bus<<" is not primary, secondary, or tertiary bus of "<<device_id.get_device_name()<<". "
+        osstream<<"Warning. The side bus "<<side_bus<<" is not primary, secondary, or tertiary bus of "<<device_id.get_device_name()<<". "
           <<"No transformer meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -569,31 +569,31 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
 {
     bool successful = false;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER_SETTER."<<endl
+        osstream<<"No power system database is set for METER_SETTER."<<endl
           <<"Load meter cannot be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     string device_type = device_id.get_device_type();
     if(device_type!="LOAD")
     {
-        sstream<<"Warning. This device given ("<<device_type<<") is not a load when trying to set up a load meter. "
+        osstream<<"Warning. This device given ("<<device_type<<") is not a load when trying to set up a load meter. "
           <<"No load meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     if(not psdb->is_load_exist(device_id))
     {
-        sstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No load meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -749,31 +749,31 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
 {
     bool successful = false;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER_SETTER."<<endl
+        osstream<<"No power system database is set for METER_SETTER."<<endl
           <<"Generator meter cannot be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     string device_type = device_id.get_device_type();
     if(device_type!="GENERATOR")
     {
-        sstream<<"Warning. This device given ("<<device_type<<") is not a generator when trying to set up a generator meter. "
+        osstream<<"Warning. This device given ("<<device_type<<") is not a generator when trying to set up a generator meter. "
           <<"No generator meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     if(not psdb->is_generator_exist(device_id))
     {
-        sstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No generator meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -788,31 +788,31 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
 {
     bool successful = false;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER_SETTER."<<endl
+        osstream<<"No power system database is set for METER_SETTER."<<endl
           <<"WT generator meter cannot be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     string device_type = device_id.get_device_type();
     if(device_type!="WT GENERATOR")
     {
-        sstream<<"Warning. This device given ("<<device_type<<") is not a wt generator when trying to set up a wt generator meter. "
+        osstream<<"Warning. This device given ("<<device_type<<") is not a wt generator when trying to set up a wt generator meter. "
           <<"No wt generator meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     if(not psdb->is_wt_generator_exist(device_id))
     {
-        sstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No wt generator meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -1728,31 +1728,31 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 {
     bool successful = false;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER_SETTER."<<endl
+        osstream<<"No power system database is set for METER_SETTER."<<endl
           <<"HVDC meter cannot be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     string device_type = device_id.get_device_type();
     if(device_type!="HVDC")
     {
-        sstream<<"Warning. This device given ("<<device_type<<") is not an hvdc when trying to set up an hvdc meter. "
+        osstream<<"Warning. This device given ("<<device_type<<") is not an hvdc when trying to set up an hvdc meter. "
           <<"No hvdc meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     if(not psdb->is_hvdc_exist(device_id))
     {
-        sstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No hvdc meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
@@ -2050,31 +2050,31 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
 {
     bool successful = false;
 
-    ostringstream sstream;
+    ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     if(psdb==NULL)
     {
-        sstream<<"No power system database is set for METER_SETTER."<<endl
+        osstream<<"No power system database is set for METER_SETTER."<<endl
           <<"EQUIVALENT DEVICE meter cannot be prepared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     string device_type = device_id.get_device_type();
     if(device_type!="EQUIVALENT DEVICE")
     {
-        sstream<<"Warning. This device given ("<<device_type<<") is not an equivalent device when trying to set up an equivalent device meter. "
+        osstream<<"Warning. This device given ("<<device_type<<") is not an equivalent device when trying to set up an equivalent device meter. "
           <<"No equivalent device meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
     if(not psdb->is_equivalent_device_exist(device_id))
     {
-        sstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No equivalent device meter will be added.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 

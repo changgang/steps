@@ -394,7 +394,7 @@ bool IEEEG1::setup_model_with_bpa_string(string data)
 
 void IEEEG1::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_model_initialized())
         return;
 
@@ -419,15 +419,15 @@ void IEEEG1::initialize()
 
     if(valve>get_Pmax_in_pu())
     {
-        sstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(valve<get_Pmin_in_pu())
     {
-        sstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     servo_motor.set_output(valve);
@@ -514,9 +514,9 @@ void IEEEG1::check()
 
 void IEEEG1::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void IEEEG1::save()
 {
@@ -524,7 +524,7 @@ void IEEEG1::save()
 }
 string IEEEG1::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double K = get_K();
     double T1 = get_T1_in_s();
@@ -551,7 +551,7 @@ string IEEEG1::get_standard_model_string() const
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', 0, '', "
       <<setw(8)<<setprecision(6)<<K<<", "
@@ -574,7 +574,7 @@ string IEEEG1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<T7<<", "
       <<setw(8)<<setprecision(6)<<K7<<", "
       <<setw(8)<<setprecision(6)<<K8<<"  /";
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t IEEEG1::get_variable_index_from_variable_name(string var_name)

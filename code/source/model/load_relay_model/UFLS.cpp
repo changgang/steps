@@ -258,7 +258,7 @@ void UFLS::initialize()
 
 void UFLS::run(DYNAMIC_MODE mode)
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
@@ -282,9 +282,9 @@ void UFLS::run(DYNAMIC_MODE mode)
             {
                 if(is_stage_breaker_timer_timed_out(i)) // breaker timed out
                 {
-                    sstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is timed out at time "<<current_time<<" s."<<endl
+                    osstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is timed out at time "<<current_time<<" s."<<endl
                       <<get_scale_in_pu_of_stage(i)*100.0<<"% loads are tripped.";
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
 
                     trip_stage(i); // trip it
                 }
@@ -295,9 +295,9 @@ void UFLS::run(DYNAMIC_MODE mode)
             {
                 if(is_stage_delayer_timer_timed_out(i)) // delayer timed out
                 {
-                    sstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is sending tripping signal to breaker at time "<<current_time<<" s since stage delayer timer is timed out."<<endl
+                    osstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is sending tripping signal to breaker at time "<<current_time<<" s since stage delayer timer is timed out."<<endl
                       <<"Current frequency is "<<f<<" Hz, and stage frequency threshold is "<<get_frequency_threshold_in_Hz_of_stage(i)<<" Hz.";
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
                     start_stage_breaker_timer(i); // start breaker;
                 }
                 else// delayer not timed out
@@ -307,9 +307,9 @@ void UFLS::run(DYNAMIC_MODE mode)
                     else
                     {
                         // need to reset
-                        sstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is reset at time "<<current_time<<" s due to recovery of frequency."<<endl
+                        osstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is reset at time "<<current_time<<" s due to recovery of frequency."<<endl
                           <<"Current frequency is "<<f<<" Hz, and stage frequency threshold is "<<get_frequency_threshold_in_Hz_of_stage(i)<<" Hz.";
-                        show_information_with_leading_time_stamp(sstream);
+                        show_information_with_leading_time_stamp(osstream);
                         reset_stage_delayer_timer(i);
                     }
                 }
@@ -319,9 +319,9 @@ void UFLS::run(DYNAMIC_MODE mode)
             {
                 if(f<get_frequency_threshold_in_Hz_of_stage(i))
                 {
-                    sstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is started at time "<<current_time<<" s due to drop of frequency."<<endl
+                    osstream<<"UFLS stage "<<i<<" timer of "<<get_device_name()<<" is started at time "<<current_time<<" s due to drop of frequency."<<endl
                       <<"Current frequency is "<<f<<" Hz, and stage frequency threshold is "<<get_frequency_threshold_in_Hz_of_stage(i)<<" Hz.";
-                    show_information_with_leading_time_stamp(sstream);
+                    show_information_with_leading_time_stamp(osstream);
                     start_stage_delayer_timer(i);
                 }
             }
@@ -397,7 +397,7 @@ bool UFLS::is_stage_breaker_timer_timed_out(size_t i) const
 
 void UFLS::trip_stage(size_t i)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(i<MAX_LOAD_RELAY_STAGE)
     {
         if(not is_stage_tripped(i))
@@ -433,11 +433,11 @@ void UFLS::save()
 
 string UFLS::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
     string identifier = load->get_identifier();
-    sstream<<bus<<", "
+    osstream<<bus<<", "
       <<"'"<<get_detailed_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setprecision(4)<<fixed<<get_frequency_sensor_time_in_s()<<", "
@@ -451,13 +451,13 @@ string UFLS::get_standard_model_string() const
         scale = get_scale_in_pu_of_stage(i);
         if(fabs(fth)<FLOAT_EPSILON)
             break;
-        sstream<<", ";
-        sstream<<setprecision(3)<<fixed<<fth<<", "
+        osstream<<", ";
+        osstream<<setprecision(3)<<fixed<<fth<<", "
           <<setprecision(3)<<fixed<<tdelay<<", "
           <<setprecision(3)<<fixed<<scale;
     }
-    sstream<<"  /";
-    return sstream.str();
+    osstream<<"  /";
+    return osstream.str();
 }
 
 size_t UFLS::get_variable_index_from_variable_name(string var_name)

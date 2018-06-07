@@ -9,12 +9,12 @@ using namespace std;
 
 BUS::BUS(POWER_SYSTEM_DATABASE* psdb)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(psdb==NULL)
     {
-        sstream<<"Error. BUS object cannot be constructed since NULL power system database is given."<<endl
+        osstream<<"Error. BUS object cannot be constructed since NULL power system database is given."<<endl
           <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     set_power_system_database(psdb);
     clear();
@@ -28,10 +28,10 @@ BUS::~BUS()
 
 void BUS::set_bus_number(size_t number)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(number==0)
     {
-        sstream<<"0 is not allowed for setting up a bus number. 0 will be set to indicate invalid bus.";
+        osstream<<"0 is not allowed for setting up a bus number. 0 will be set to indicate invalid bus.";
         bus_number = 0;
         return;
     }
@@ -45,10 +45,10 @@ void BUS::set_bus_number(size_t number)
             bus_number = number;
         else
         {
-            sstream<<"Error. Bus "<<number<<" is not in the allowed range [1, "<<psdb->get_allowed_max_bus_number()<<"] "
+            osstream<<"Error. Bus "<<number<<" is not in the allowed range [1, "<<psdb->get_allowed_max_bus_number()<<"] "
               <<"when setting up bus number."<<endl
               <<"0 will be set to indicate invalid bus.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
             bus_number = 0;
         }
     }
@@ -66,10 +66,10 @@ void BUS::set_base_voltage_in_kV(double voltage)
         base_voltage_in_kV = voltage;
     else
     {
-        ostringstream sstream;
-        sstream<<"Error. Non-positive kV ("<<voltage<<" kV) is not allowed for setting up bus base voltage."<<endl
+        ostringstream osstream;
+        osstream<<"Error. Non-positive kV ("<<voltage<<" kV) is not allowed for setting up bus base voltage."<<endl
           <<"0 will be set to indicate invalid bus.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         base_voltage_in_kV = 0.0;
     }
 }
@@ -100,11 +100,11 @@ void BUS::set_voltage_in_pu(double voltage)
         voltage_in_pu = voltage;
     else
     {
-        ostringstream sstream;
-        sstream<<"Warning. Non-positive voltage ("<<voltage<<" pu) is not allowed for setting up voltage for bus "
+        ostringstream osstream;
+        osstream<<"Warning. Non-positive voltage ("<<voltage<<" pu) is not allowed for setting up voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
                <<"0 will be set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         voltage_in_pu = 0.0;
     }
 }
@@ -115,11 +115,11 @@ void BUS::set_voltage_in_kV(double voltage)
         set_voltage_in_pu(voltage/get_base_voltage_in_kV());
     else
     {
-        ostringstream sstream;
-        sstream<<"Invalid to set bus voltage ("<<voltage<<" kV) with zero base voltage for bus "
+        ostringstream osstream;
+        osstream<<"Invalid to set bus voltage ("<<voltage<<" kV) with zero base voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
                <<"0 will be set automatically.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         set_voltage_in_pu(0.0);
     }
 }
@@ -193,11 +193,11 @@ void BUS::set_voltage_to_regulate_in_pu(double voltage)
     {
         if(get_voltage_to_regulate_in_pu()!=voltage)
         {
-            ostringstream sstream;
-            sstream<<"Warning. New voltage to regulate ("<<voltage<<" pu) is not allowed to set for bus "<<get_bus_number()
+            ostringstream osstream;
+            osstream<<"Warning. New voltage to regulate ("<<voltage<<" pu) is not allowed to set for bus "<<get_bus_number()
               <<" with existing voltage to regulate: "<<get_voltage_to_regulate_in_pu()<<" pu."<<endl
               <<"Voltage to regulate will not be changed.";
-            show_information_with_leading_time_stamp(sstream);
+            show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -364,12 +364,12 @@ DEVICE_ID BUS::get_device_id() const
 
 void BUS::set_fault(FAULT bus_fault)
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(not bus_fault.is_faulted())
     {
-        sstream<<"Warning. Non-faulted fault is given for bus "<<get_bus_number()<<"."<<endl
+        osstream<<"Warning. Non-faulted fault is given for bus "<<get_bus_number()<<"."<<endl
                <<"Fault will not be set.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         return;
     }
     else
@@ -377,12 +377,12 @@ void BUS::set_fault(FAULT bus_fault)
         string fault_type = bus_fault.get_fault_type_string();
         complex<double> y = bus_fault.get_fault_shunt_in_pu();
         if(not this->fault.is_faulted())
-            sstream<<fault_type<<" is set for bus "<<get_bus_number()<<" with fault shunt "<<y<<" pu";
+            osstream<<fault_type<<" is set for bus "<<get_bus_number()<<" with fault shunt "<<y<<" pu";
         else
-            sstream<<"Fault is already set for bus "<<get_bus_number()<<" with fault shunt "<<this->fault.get_fault_shunt_in_pu()<<" pu."<<endl
+            osstream<<"Fault is already set for bus "<<get_bus_number()<<" with fault shunt "<<this->fault.get_fault_shunt_in_pu()<<" pu."<<endl
                    <<"New "<<fault_type<<" is set for bus "<<get_bus_number()<<" with fault shunt "<<y<<" pu";
 
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
         this->fault = bus_fault;
     }
 }
@@ -394,18 +394,18 @@ FAULT BUS::get_fault() const
 
 void BUS::clear_fault()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if(is_faulted())
     {
-        sstream<<"Fault at bus "<<get_bus_number()<<" is cleared.";
-        show_information_with_leading_time_stamp(sstream);
+        osstream<<"Fault at bus "<<get_bus_number()<<" is cleared.";
+        show_information_with_leading_time_stamp(osstream);
         fault.clear();
     }
     else
     {
-        sstream<<"No fault was set for bus "<<get_bus_number()<<"."<<endl
+        osstream<<"No fault was set for bus "<<get_bus_number()<<"."<<endl
                <<"No fault will be cleared.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -446,15 +446,15 @@ BUS& BUS::operator=(const BUS& bus)
 
 void BUS::report() const
 {
-    ostringstream sstream;
-    sstream<<"Bus "
+    ostringstream osstream;
+    osstream<<"Bus "
       <<setw(6)<<get_bus_number()<<" "
       <<"'"<<get_bus_name()<<"' "
       <<setprecision(3)<<get_base_voltage_in_kV()<<" kV: "
       <<(get_bus_type()==SLACK_TYPE?"Slack":(get_bus_type()==PQ_TYPE?"PQ":(get_bus_type()==OUT_OF_SERVICE?"Out of service":"PV")))<<", "
       <<setprecision(6)<<fixed<<get_voltage_in_pu()<<" pu, "
       <<setprecision(6)<<fixed<<get_angle_in_deg()<<" deg.";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void BUS::save() const

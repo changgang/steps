@@ -63,10 +63,10 @@ void ZONE::clear()
 
 void ZONE::report() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
-    sstream<<"Zone "<<get_zone_number()<<" ("<<get_zone_name()<<")";
-    show_information_with_leading_time_stamp(sstream);
+    osstream<<"Zone "<<get_zone_number()<<" ("<<get_zone_name()<<")";
+    show_information_with_leading_time_stamp(osstream);
 }
 
 ZONE& ZONE::operator=(const ZONE& zone)

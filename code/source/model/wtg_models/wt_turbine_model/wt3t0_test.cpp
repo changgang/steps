@@ -75,12 +75,12 @@ void WT3T0_TEST::test_initialize()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"WT3T0_TEST");
 
-    ostringstream sstream;
+    ostringstream osstream;
 
     WT3T0* model = (WT3T0*) get_test_wt_turbine_model();
     model->initialize();
-    sstream<<"WT3T0 model after initialized:"<<endl;
-    sstream<<"Turbine speed = "<<model->get_turbine_speed_in_pu()<<" pu, generator speed = "<<model->get_generator_speed_in_pu()<<" pu"<<endl
+    osstream<<"WT3T0 model after initialized:"<<endl;
+    osstream<<"Turbine speed = "<<model->get_turbine_speed_in_pu()<<" pu, generator speed = "<<model->get_generator_speed_in_pu()<<" pu"<<endl
            <<"Rotor angle = "<<model->get_rotor_angle_in_deg()<<" deg";
-    show_information_with_leading_time_stamp(sstream);
+    show_information_with_leading_time_stamp(osstream);
 }

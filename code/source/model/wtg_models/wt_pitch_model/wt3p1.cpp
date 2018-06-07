@@ -234,7 +234,7 @@ bool WT3P1::setup_model_with_bpa_string(string data)
 
 void WT3P1::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     double pitch0 = 0.0;
 
     pitch_integrator.set_output(pitch0);
@@ -244,15 +244,15 @@ void WT3P1::initialize()
     double pmin = get_Pitchmin_in_deg();
     if(pitch0>pmax)
     {
-        sstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+        osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Pitch angle is "<<pitch0<<" deg, and Pitchmax is "<<pmax<<" deg.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
     if(pitch0<pmin)
     {
-        sstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+        osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Pitch angle is "<<pitch0<<" deg, and Pitchmin is "<<pmin<<" deg.";
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 
     speed_controller.set_output(pitch0);
@@ -317,9 +317,9 @@ void WT3P1::check()
 
 void WT3P1::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 void WT3P1::save()
 {
@@ -327,7 +327,7 @@ void WT3P1::save()
 }
 string WT3P1::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     double tp = get_Tp_in_s();
     double kps = get_Kp_speed_controller();
@@ -343,7 +343,7 @@ string WT3P1::get_standard_model_string() const
     size_t bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<tp<<", "
@@ -355,7 +355,7 @@ string WT3P1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<pmin<<", "
       <<setw(8)<<setprecision(6)<<rpmax<<", "
       <<setw(8)<<setprecision(6)<<pref<<" /";
-    return sstream.str();
+    return osstream.str();
 }
 
 size_t WT3P1::get_variable_index_from_variable_name(string var_name)

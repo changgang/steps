@@ -293,9 +293,9 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_arbitrary()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    ostringstream sstream;
-    sstream<<"Following will display error information of invalid device type \"ARB\". If not, error occurs.";
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<"Following will display error information of invalid device type \"ARB\". If not, error occurs.";
+    show_information_with_leading_time_stamp(osstream);
 
     device_id->set_device_type("arb");
     TEST_ASSERT(device_id->get_device_type()=="NONE");

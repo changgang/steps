@@ -163,15 +163,15 @@ double SATURATION_BLOCK::get_saturation(double V) const
 
 void SATURATION_BLOCK::check()
 {
-    ostringstream sstream;
+    ostringstream osstream;
     if( (V1<V2 and S1>S2) or (V1>V2 and S1<S2) )
     {
-        sstream<<"Warning. Saturation with greater input should not be less. Saturation block is not properly set."<<endl
+        osstream<<"Warning. Saturation with greater input should not be less. Saturation block is not properly set."<<endl
           <<"V1="<<setprecision(3)<<fixed<<V1<<", "
           <<"S1="<<setprecision(6)<<fixed<<S1<<", "
           <<"V2="<<setprecision(3)<<fixed<<V2<<", "
           <<"S2="<<setprecision(6)<<fixed<<S2;
-        show_information_with_leading_time_stamp(sstream);
+        show_information_with_leading_time_stamp(osstream);
     }
 }
 

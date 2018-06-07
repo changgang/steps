@@ -762,9 +762,9 @@ void CSEET2::check()
 
 void CSEET2::report()
 {
-    ostringstream sstream;
-    sstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(sstream);
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void CSEET2::save()
@@ -774,7 +774,7 @@ void CSEET2::save()
 
 string CSEET2::get_standard_model_string() const
 {
-    ostringstream sstream;
+    ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
@@ -812,7 +812,7 @@ string CSEET2::get_standard_model_string() const
     }
     double TR = get_TR_in_s();
 
-    sstream<<setw(8)<<bus<<", "
+    osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
       <<setw(4)<<source_index<<", "
@@ -833,7 +833,7 @@ string CSEET2::get_standard_model_string() const
         double T3 = get_serial_tuner_T3_in_s();
         double T4 = get_serial_tuner_T4_in_s();
 
-        sstream<<setw(4)<<selector<<", "
+        osstream<<setw(4)<<selector<<", "
           <<setw(8)<<setprecision(6)<<K<<", "
           <<setw(8)<<setprecision(6)<<T1<<", "
           <<setw(8)<<setprecision(6)<<T2<<", "
@@ -853,7 +853,7 @@ string CSEET2::get_standard_model_string() const
         double Vdmax = get_parallel_tuner_VDmax_in_pu();
         double Vdmin = get_parallel_tuner_VDmin_in_pu();
 
-        sstream<<setw(8)<<setprecision(6)<<KP<<", "
+        osstream<<setw(8)<<setprecision(6)<<KP<<", "
           <<setw(8)<<setprecision(6)<<KI<<", "
           <<setw(8)<<setprecision(6)<<Vimax<<", "
           <<setw(8)<<setprecision(6)<<Vimin<<", "
@@ -873,7 +873,7 @@ string CSEET2::get_standard_model_string() const
     double VRmin = get_VRmin_in_pu();
     double KC = get_KC();
 
-    sstream<<setw(8)<<setprecision(6)<<KA<<", "
+    osstream<<setw(8)<<setprecision(6)<<KA<<", "
       <<setw(8)<<setprecision(6)<<TA<<", "
       <<setw(8)<<setprecision(6)<<VAmax<<", "
       <<setw(8)<<setprecision(6)<<VAmin<<", "
@@ -883,7 +883,7 @@ string CSEET2::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<VRmin<<", "
       <<setw(8)<<setprecision(6)<<KC<<"  /";
 
-    return sstream.str();
+    return osstream.str();
 }
 
 

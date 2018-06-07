@@ -22,9 +22,9 @@ void PI_BLOCK::set_Kp(double K)
 {
     /*if(K==0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PI_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PI_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     pid_block.set_Kp(K);
@@ -39,9 +39,9 @@ void PI_BLOCK::set_Ki(double K)
 {
     /*if(K==0)
     {
-        ostringstream sstream;
-        sstream<<"Error. Zero amplifier Ki of INTEGRAL_BLOCK part is not allowed for PI_BLOCK.";
-        show_information_with_leading_time_stamp(sstream);
+        ostringstream osstream;
+        osstream<<"Error. Zero amplifier Ki of INTEGRAL_BLOCK part is not allowed for PI_BLOCK.";
+        show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     pid_block.set_Ki(K);
@@ -113,7 +113,7 @@ double PI_BLOCK::get_store() const
 
 void PI_BLOCK::initialize()
 {
-    ostringstream sstream;
+    ostringstream osstream;
 
     pid_block.initialize();
 
@@ -127,15 +127,15 @@ void PI_BLOCK::initialize()
     {
         if(s>vmax)
         {
-            sstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(sstream);
+            osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
+            show_information_with_leading_time_stamp(osstream);
         }
         else
         {
             if(s<vmin)
             {
-                sstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-                show_information_with_leading_time_stamp(sstream);
+                osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
+                show_information_with_leading_time_stamp(osstream);
             }
         }
     }
