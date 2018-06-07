@@ -1165,6 +1165,7 @@ void PSSE_IMEXPORTER::add_FILEWIND_model(string data)
 
 void PSSE_IMEXPORTER::export_dynamic_data(string file)
 {
-    file;
+    ofstream fid(file);
+    fid.close();
     return;
 }

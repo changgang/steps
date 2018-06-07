@@ -320,6 +320,10 @@ double IEEEG1::get_K8() const
 
 bool IEEEG1::setup_model_with_steps_string(string data)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
+            <<data;
+    show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -388,6 +392,10 @@ bool IEEEG1::setup_model_with_psse_string(string data)
 
 bool IEEEG1::setup_model_with_bpa_string(string data)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
+            <<data;
+    show_information_with_leading_time_stamp(osstream);
     return false;
 }
 

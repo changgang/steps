@@ -1190,7 +1190,8 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
     complex<double> cvalue;
     double rvalue;
 
-    int nentry = jacobian_delta_p_over_angle.get_matrix_entry_count();
+    size_t nentry;
+    nentry = (size_t) jacobian_delta_p_over_angle.get_matrix_entry_count();
     for(size_t k=0; k!=nentry; ++k)
     {
         row = jacobian_delta_p_over_angle.get_row_number_of_entry_index(k);
@@ -1206,7 +1207,7 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
             <<setprecision(6)<<fixed<<rvalue<<endl;
     }
 
-    nentry = jacobian_delta_p_over_voltage.get_matrix_entry_count();
+    nentry = (size_t) jacobian_delta_p_over_voltage.get_matrix_entry_count();
     for(size_t k=0; k!=nentry; ++k)
     {
         row = jacobian_delta_p_over_voltage.get_row_number_of_entry_index(k);
@@ -1222,7 +1223,7 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
             <<setprecision(6)<<fixed<<rvalue<<endl;
     }
 
-    nentry = jacobian_delta_q_over_angle.get_matrix_entry_count();
+    nentry = (size_t) jacobian_delta_q_over_angle.get_matrix_entry_count();
     for(size_t k=0; k!=nentry; ++k)
     {
         row = jacobian_delta_q_over_angle.get_row_number_of_entry_index(k);
@@ -1238,7 +1239,7 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
             <<setprecision(6)<<fixed<<rvalue<<endl;
     }
 
-    nentry = jacobian_delta_q_over_voltage.get_matrix_entry_count();
+    nentry = (size_t) jacobian_delta_q_over_voltage.get_matrix_entry_count();
     for(size_t k=0; k!=nentry; ++k)
     {
         row = jacobian_delta_q_over_voltage.get_row_number_of_entry_index(k);

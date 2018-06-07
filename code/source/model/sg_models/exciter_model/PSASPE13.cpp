@@ -240,6 +240,10 @@ double PSASPE13::get_KC() const
 
 bool PSASPE13::setup_model_with_steps_string(string data)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
+            <<data;
+    show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -292,6 +296,10 @@ bool PSASPE13::setup_model_with_psse_string(string data)
 
 bool PSASPE13::setup_model_with_bpa_string(string data)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
+            <<data;
+    show_information_with_leading_time_stamp(osstream);
     return false;
 }
 

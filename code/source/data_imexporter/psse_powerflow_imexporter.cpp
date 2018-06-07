@@ -511,7 +511,7 @@ void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* sour
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     double rs = 0.0, xs = 0.0;
-    double rt = 0.0, xt = 0.0, tt = 1.0;
+    //double rt = 0.0, xt = 0.0, tt = 1.0;
     int status;
     if(data.size()>0)
     {
@@ -572,20 +572,20 @@ void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* sour
         data.erase(data.begin());
     }
     source->set_source_impedance_in_pu(complex<double>(rs, xs));
-    rt = 0.0; xt = 0.0;
+    //rt = 0.0; xt = 0.0;
     if(data.size()>0)
     {
-        rt = get_double_data(data.front(),"0.0");
+        //rt = get_double_data(data.front(),"0.0");
         data.erase(data.begin());
     }
     if(data.size()>0)
     {
-        xt = get_double_data(data.front(),"0.0");
+        //xt = get_double_data(data.front(),"0.0");
         data.erase(data.begin());
     }
     if(data.size()>0)
     {
-        tt = get_double_data(data.front(),"0.0");
+        //tt = get_double_data(data.front(),"0.0");
         data.erase(data.begin());
     }
     status = 0;
@@ -677,7 +677,6 @@ void PSSE_IMEXPORTER::load_line_data()
             line.set_identifier(get_string_data(data[n],""));
             data.erase(data.begin());
         }
-        double r=0.0, x=0.0;
         if(data.size()>0)
         {
             r=get_double_data(data[n],"0.0");
@@ -689,7 +688,6 @@ void PSSE_IMEXPORTER::load_line_data()
             data.erase(data.begin());
         }
         line.set_line_positive_sequence_z_in_pu(complex<double>(r,x));
-        double b;
         if(data.size()>0)
         {
             b=get_double_data(data[n],"0.0");

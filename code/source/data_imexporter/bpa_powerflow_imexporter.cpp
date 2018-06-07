@@ -58,7 +58,7 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
         {
             char tempc;
             size_t total_bits, decimal_bits;
-            sscanf(format.c_str(),"%c%llu.%llu",&tempc, &total_bits, &decimal_bits);
+            sscanf(format.c_str(),"%c%lu.%lu",&tempc, &total_bits, &decimal_bits);
 
             data = original_data.substr(0, total_bits-decimal_bits)+"."+ original_data.substr(total_bits-decimal_bits, decimal_bits);
             return data;
@@ -2928,7 +2928,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     complex<double> Z_between_secondary_and_tertiary = trans->get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
     complex<double> Y = trans->get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu();
 
-    double sbase = psdb->get_system_base_power_in_MVA();
+    //double sbase = psdb->get_system_base_power_in_MVA();
     complex<double> Z_primary=(Z_between_primary_and_secondary+Z_between_primary_and_tertiary-Z_between_secondary_and_tertiary)/2.0;
     complex<double> Z_secondary=(Z_between_primary_and_secondary+Z_between_secondary_and_tertiary-Z_between_primary_and_tertiary)/2.0;
     complex<double> Z_tertiary=(Z_between_primary_and_tertiary+Z_between_secondary_and_tertiary-Z_between_primary_and_secondary)/2.0;
@@ -3021,9 +3021,11 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
         }
 
         if(is_angle_shift_transformer)
+        {
             if (i==0) osstream<<convert_data_into_bpa_format(0.0, "F5.2");
             if (i==1) osstream<<convert_data_into_bpa_format(-1*angle_shift_bwtween_primary_and_secondary, "F5.2");
             if (i==2) osstream<<convert_data_into_bpa_format(-1*angle_shift_bwtween_primary_and_tertiary, "F5.2");
+        }
         else
             osstream<<convert_data_into_bpa_format(tap_winding, "F5.2")
               <<convert_data_into_bpa_format(1.0, "F5.2");
@@ -3161,9 +3163,8 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         double nominal_dc_current_per_pole_in_A=hvdc->get_nominal_dc_current_per_pole_in_kA()*1000;
         double nominal_dc_voltage_per_pole_in_kV=hvdc->get_nominal_dc_voltage_per_pole_in_kV();
 
-        double rectifier_number_of_bridge=hvdc->get_converter_number_of_bridge(RECTIFIER);
-
-        double inverter_number_of_bridge=hvdc->get_converter_number_of_bridge(INVERTER);
+        //double rectifier_number_of_bridge=hvdc->get_converter_number_of_bridge(RECTIFIER);
+        //double inverter_number_of_bridge=hvdc->get_converter_number_of_bridge(INVERTER);
 
         double rectifier_max_alpha=hvdc->get_converter_max_alpha_or_gamma_in_deg(RECTIFIER);
         double inverter_max_alpha=hvdc->get_converter_max_alpha_or_gamma_in_deg(INVERTER);
@@ -3207,7 +3208,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         double rectifier_g_in_siemens=hvdc->get_converter_transformer_admittance_in_siemens(RECTIFIER).real();
         double rectifier_g_in_pu=rectifier_g_in_siemens/rectifier_y_base_based_on_grid_side_bus_nominal;
 
-        double rectifier_s_in_siemens=hvdc->get_converter_transformer_admittance_in_siemens(RECTIFIER).imag();
+        //double rectifier_s_in_siemens=hvdc->get_converter_transformer_admittance_in_siemens(RECTIFIER).imag();
         double rectifier_s_in_pu=inverter_s_in_siemens/inverter_y_base_based_on_grid_side_bus_nominal;
 
         size_t inverter_side_number_of_bridge=hvdc->get_converter_number_of_bridge(INVERTER);
@@ -3219,8 +3220,8 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         double inverter_transformer_max_tap_in_kv=inverter_transformer_max_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
         double inverter_transformer_min_tap_in_kv=inverter_transformer_min_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
 
-        double rectifier_transformer_max_tap_in_pu=hvdc->get_converter_transformer_max_tap_in_pu(RECTIFIER);
-        double rectifier_transformer_min_tap_in_pu=hvdc->get_converter_transformer_min_tap_in_pu(RECTIFIER);
+        //double rectifier_transformer_max_tap_in_pu=hvdc->get_converter_transformer_max_tap_in_pu(RECTIFIER);
+        //double rectifier_transformer_min_tap_in_pu=hvdc->get_converter_transformer_min_tap_in_pu(RECTIFIER);
         size_t rectifier_transformer_number_of_taps=hvdc->get_converter_transformer_number_of_taps(RECTIFIER);
         double rectifier_transformer_max_tap_in_kv=inverter_transformer_max_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
         double rectifier_transformer_min_tap_in_kv=inverter_transformer_min_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
@@ -3241,7 +3242,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
                 rectifier_valve_bus_name=rectifier_grid_bus_name;
                 inverter_valve_bus_name=inverter_grid_bus_name;
             }
-            osstream<<".Ö±Á÷: "<<hvdc_name<<endl;
+            osstream<<".HVDC: "<<hvdc_name<<endl;
             osstream<<"LD";
             osstream<<string(4,' ');
             osstream<<convert_data_into_bpa_format(rectifier_valve_bus_name,"A8");
@@ -3455,6 +3456,8 @@ string BPA_IMEXPORTER::export_switched_shunt_data() const
 
 void BPA_IMEXPORTER::export_sequence_data(string file)
 {
+    ofstream fid(file);
+    fid.close();
     return;
 }
 

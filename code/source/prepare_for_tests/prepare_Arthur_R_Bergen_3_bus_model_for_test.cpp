@@ -140,7 +140,8 @@ void prepare_Arthur_R_Bergen_3_bus_model_lines(POWER_SYSTEM_DATABASE* db)
 
 void prepare_Arthur_R_Bergen_3_bus_model_transformers(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    TRANSFORMER trans(db);
+    db->append_transformer(trans);
 }
 
 void prepare_Arthur_R_Bergen_3_bus_model_areas(POWER_SYSTEM_DATABASE* db)

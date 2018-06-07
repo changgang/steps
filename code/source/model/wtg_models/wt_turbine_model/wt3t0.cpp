@@ -118,6 +118,10 @@ void WT3T0::set_double_data_with_name(string par_name, double value)
 
 bool WT3T0::setup_model_with_steps_string(string data)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
+            <<data;
+    show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -154,6 +158,10 @@ bool WT3T0::setup_model_with_psse_string(string data)
 
 bool WT3T0::setup_model_with_bpa_string(string data)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
+            <<data;
+    show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -221,8 +229,6 @@ void WT3T0::initialize()
 void WT3T0::run(DYNAMIC_MODE mode)
 {
     WT_GENERATOR* wtgen = (WT_GENERATOR*) get_device_pointer();
-    size_t n = get_number_of_lumped_wt_generators();
-    double mbase = get_mbase_in_MVA();
 
     double dshaft = get_Dshaft_in_pu();
     double damp = get_damping_in_pu();

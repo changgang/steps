@@ -130,51 +130,66 @@ void prepare_psse_sample_model_buses(POWER_SYSTEM_DATABASE* db)
 }
 void prepare_psse_sample_model_generators(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    GENERATOR gen(db);
+    db->append_generator(gen);
 }
 
 void prepare_psse_sample_model_loads(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    LOAD load(db);
+    db->append_load(load);
 }
 
 void prepare_psse_sample_model_lines(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    LINE line(db);
+    db->append_line(line);
 }
 
 void prepare_psse_sample_model_transformers(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    TRANSFORMER trans(db);
+    db->append_transformer(trans);
 }
 
 void prepare_psse_sample_model_fixed_shunts(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    FIXED_SHUNT shunt(db);
+    db->append_fixed_shunt(shunt);
 }
 
 void prepare_psse_sample_model_switched_shunts(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    ostringstream osstream;
+    osstream<<"Switched shunt is not supported.  No Switched shunt will be added to sample model of "<<db->get_system_name()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void prepare_psse_sample_model_hvdcs(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    HVDC hvdc(db);
+    db->append_hvdc(hvdc);
 }
 
 void prepare_psse_sample_model_areas(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    AREA area(db);
+    area.set_area_number(1);
+    area.set_area_name("AREA");
+    db->append_area(area);
 }
 
 void prepare_psse_sample_model_zones(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    ZONE zone(db);
+    zone.set_zone_number(1);
+    zone.set_zone_name("ZONE");
+    db->append_zone(zone);
 }
 
 void prepare_psse_sample_model_owners(POWER_SYSTEM_DATABASE* db)
 {
-    ;
+    OWNER owner(db);
+    db->append_owner(owner);
 }
 

@@ -205,7 +205,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
 
     STEPS::TIME = -delt*2.0;
-    double generator_speed, turbine_speed;
+    double generator_speed;
 
     model->initialize();
     generator_speed = model->get_generator_speed_in_pu();
@@ -287,7 +287,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
 
     STEPS::TIME = -delt*2.0;
-    double generator_speed, turbine_speed;
+    double generator_speed;
 
     model->initialize();
     generator_speed = model->get_generator_speed_in_pu();
@@ -359,8 +359,6 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
-    WT_GENERATOR* genptr = get_test_wt_generator();
-
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
 
@@ -373,7 +371,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     show_information_with_leading_time_stamp(osstream);
 
     STEPS::TIME = -delt*2.0;
-    double generator_speed, turbine_speed;
+    double generator_speed;
 
     model->initialize();
     generator_speed = model->get_generator_speed_in_pu();
@@ -442,8 +440,6 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     double delt = 0.001;
     set_dynamic_simulation_time_step_in_s(delt);
 
-    WT_GENERATOR* genptr = get_test_wt_generator();
-
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
 
@@ -456,7 +452,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     show_information_with_leading_time_stamp(osstream);
 
     STEPS::TIME = -delt*2.0;
-    double generator_speed, turbine_speed;
+    double generator_speed;
 
     model->initialize();
     generator_speed = model->get_generator_speed_in_pu();
