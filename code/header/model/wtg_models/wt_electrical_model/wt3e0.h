@@ -33,6 +33,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         void set_KQV(double K);
         void set_EQmax_in_pu(double I);
         void set_EQmin_in_pu(double I);
+
         void set_Tspeed_in_s(double T);
         void set_KPP(double K);
         void set_KIP(double K);
@@ -40,6 +41,9 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         void set_Tvi_in_s(double T);
         void set_Kdroop(double K);
         void set_Tdroop_in_s(double T);
+        void set_frequency_deviation_upper_deadband_in_pu(double f);
+        void set_frequency_deviation_lower_deadband_in_pu(double f);
+        void set_Kfint(double K);
         void set_rPmax_in_pu(double r);
         void set_rPmin_in_pu(double r);
         void set_TFP_in_s(double T);
@@ -64,6 +68,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double get_KQV() const;
         double get_EQmax_in_pu() const;
         double get_EQmin_in_pu() const;
+
         double get_Tspeed_in_s() const;
         double get_KPP() const;
         double get_KIP() const;
@@ -71,6 +76,9 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double get_Tvi_in_s() const;
         double get_Kdroop() const;
         double get_Tdroop_in_s() const;
+        double get_frequency_deviation_upper_deadband_in_pu() const;
+        double get_frequency_deviation_lower_deadband_in_pu() const;
+        double get_Kfint() const;
         double get_TFP_in_s() const;
         double get_rPmax_in_pu() const;
         double get_rPmin_in_pu() const;
@@ -133,6 +141,9 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         PI_BLOCK torque_PI_regulator;
         DIFFERENTIAL_BLOCK virtual_inertia_emulator;
         FIRST_ORDER_BLOCK frequency_droop_controller;
+
+        double f_upper_pu, f_lower_pu;
+        INTEGRAL_BLOCK frequency_integral_controller;
         double max_torque_rate, min_torque_rate;
         INTEGRAL_BLOCK power_order_integrator;
         double IPmax;

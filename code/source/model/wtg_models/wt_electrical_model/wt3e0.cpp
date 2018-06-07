@@ -60,6 +60,9 @@ void WT3E0::copy_from_const_model(const WT3E0& model)
     set_Tvi_in_s(model.get_Tvi_in_s());
     set_Kdroop(model.get_Kdroop());
     set_Tdroop_in_s(model.get_Tdroop_in_s());
+    set_frequency_deviation_upper_deadband_in_pu(model.get_frequency_deviation_upper_deadband_in_pu());
+    set_frequency_deviation_lower_deadband_in_pu(model.get_frequency_deviation_lower_deadband_in_pu());
+    set_Kfint(model.get_Kfint());
     set_rPmax_in_pu(model.get_rPmax_in_pu());
     set_rPmin_in_pu(model.get_rPmin_in_pu());
     set_TFP_in_s(model.get_TFP_in_s());
@@ -203,6 +206,25 @@ void WT3E0::set_Tdroop_in_s(double T)
     frequency_droop_controller.set_T_in_s(T);
 }
 
+void WT3E0::set_frequency_deviation_upper_deadband_in_pu(double f)
+{
+    f_upper_pu = f;
+}
+
+void WT3E0::set_frequency_deviation_lower_deadband_in_pu(double f)
+{
+    f_lower_pu = f;
+}
+
+void WT3E0::set_Kfint(double K)
+{
+    double t = 0.0;
+    if(fabs(K)<FLOAT_EPSILON)
+        t = INFINITE_THRESHOLD;
+    else
+        t = 1.0/K;
+    frequency_integral_controller.set_T_in_s(t);
+}
 void WT3E0::set_rPmax_in_pu(double r)
 {
     max_torque_rate = r;
@@ -353,6 +375,26 @@ double WT3E0::get_Tdroop_in_s() const
     return frequency_droop_controller.get_T_in_s();
 }
 
+double WT3E0::get_frequency_deviation_upper_deadband_in_pu() const
+{
+    return f_upper_pu;
+}
+
+double WT3E0::get_frequency_deviation_lower_deadband_in_pu() const
+{
+    return f_lower_pu;
+}
+
+double WT3E0::get_Kfint() const
+{
+    double t = frequency_integral_controller.get_T_in_s();
+    double k = 0.0;
+    if(fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)
+        k = 0.0;
+    else
+        k = 1.0/t;
+    return k;
+}
 double WT3E0::get_rPmax_in_pu() const
 {
     return max_torque_rate;
@@ -601,8 +643,11 @@ void WT3E0::initialize()
     virtual_inertia_emulator.set_input(0.0);
     virtual_inertia_emulator.initialize();
 
-    frequency_droop_controller.set_output(freq);
+    frequency_droop_controller.set_output(0.0);
     frequency_droop_controller.initialize();
+
+    frequency_integral_controller.set_output(0.0);
+    frequency_integral_controller.initialize();
 
     set_frequency_reference_in_pu(freq);
 
@@ -781,9 +826,20 @@ void WT3E0::run(DYNAMIC_MODE mode)
     frequency_droop_controller.run(mode);
     osstream<<"frequency_droop_controller input = "<<input<<", output = "<<frequency_droop_controller.get_output()<<endl;
 
+    double fupper = get_frequency_deviation_upper_deadband_in_pu();
+    double flower = get_frequency_deviation_lower_deadband_in_pu();
+    double f_int =  freq;
+    if(freq>fupper)
+        f_int = freq - fupper;
+    if(freq<flower)
+        f_int = freq - flower;
+    frequency_integral_controller.set_input(f_int);
+    frequency_integral_controller.run(mode);
+
     input = torque_PI_regulator.get_output()*speed
             +virtual_inertia_emulator.get_output()
             +frequency_droop_controller.get_output()
+            +frequency_integral_controller.get_output()
             -power_order_integrator.get_output();
     if(input>get_rPmax_in_pu())
         input = get_rPmax_in_pu();
@@ -957,6 +1013,7 @@ void WT3E0::clear()
     V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
 
     power_order_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    frequency_integral_controller.set_limiter_type(NO_LIMITER);
 }
 
 void WT3E0::report()
