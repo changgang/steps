@@ -103,16 +103,25 @@ double WT3T0::get_double_data_with_index(size_t index) const
 
 double WT3T0::get_double_data_with_name(string par_name) const
 {
+    if(par_name=="")
+        return 0.0;
     return 0.0;
 }
 
 void WT3T0::set_double_data_with_index(size_t index, double value)
 {
+    string par_name = get_variable_name_from_variable_index(index);
+    set_double_data_with_name(par_name, value);
     return;
 }
 
 void WT3T0::set_double_data_with_name(string par_name, double value)
 {
+    if(par_name=="DAMPING")
+    {
+        set_damping_in_pu(value);
+        return;
+    }
     return;
 }
 
