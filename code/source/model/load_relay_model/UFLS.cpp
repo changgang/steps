@@ -72,6 +72,9 @@ string UFLS::get_model_name() const
 
 double UFLS::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
@@ -86,15 +89,18 @@ double UFLS::get_double_data_with_name(string par_name) const
 
 void UFLS::set_double_data_with_index(size_t index, double value)
 {
-    if(index==0)
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void UFLS::set_double_data_with_name(string par_name, double value)
 {
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void UFLS::set_frequency_sensor_time_in_s(double t)
@@ -268,7 +274,6 @@ void UFLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
 
-    LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
@@ -479,6 +484,9 @@ size_t UFLS::get_variable_index_from_variable_name(string var_name)
 
 string UFLS::get_variable_name_from_variable_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return "";
 }
 

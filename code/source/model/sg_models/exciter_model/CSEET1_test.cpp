@@ -136,7 +136,7 @@ void CSEET1_TEST::test_initialize()
     genmodel->initialize();
 
     double Efd0 = genmodel->get_initial_excitation_voltage_in_pu();
-    double Ecomp = model->get_compensated_voltage_in_pu();
+    //double Ecomp = model->get_compensated_voltage_in_pu();
 
     model->initialize();
 

@@ -1523,14 +1523,14 @@ void BPA_IMEXPORTER::load_transformer_data()
 
                 string min_voltage_adjustable_tap_in_kv_str=data.substr(50,5);
                 min_voltage_adjustable_tap_in_kv_str=format_bpa_data_to_readable_data(min_voltage_adjustable_tap_in_kv_str,"F5.2");
-                double min_voltage_adjustable_tap_in_kv = get_double_data(min_voltage_adjustable_tap_in_kv_str,"0.0");
+                //double min_voltage_adjustable_tap_in_kv = get_double_data(min_voltage_adjustable_tap_in_kv_str,"0.0");
 
                 string number_of_taps_str=data.substr(55,2);
                 number_of_taps_str=format_bpa_data_to_readable_data(number_of_taps_str,"I2");
                 size_t number_of_taps=get_integer_data(number_of_taps_str,"0");
 
-                TRANSFORMER_WINDING_SIDE winding;
-                double winding_nominal_voltage;
+                TRANSFORMER_WINDING_SIDE winding =PRIMARY_SIDE;
+                double winding_nominal_voltage = primary_winding_nominal_voltage;
                 if(adjustable_end_flag=="1")
                 {
                     winding = PRIMARY_SIDE;
@@ -1603,16 +1603,16 @@ void BPA_IMEXPORTER::load_transformer_data()
                 }
 
                 TRANSFORMER_WINDING_SIDE winding = PRIMARY_SIDE;
-                double winding_nominal_voltage = 0.0;
+                //double winding_nominal_voltage = primary_winding_nominal_voltage;
                 if(adjustable_end_flag=="1")
                 {
                     winding = PRIMARY_SIDE;
-                    winding_nominal_voltage=primary_winding_nominal_voltage;
+                    //winding_nominal_voltage=primary_winding_nominal_voltage;
                 }
                 if(adjustable_end_flag=="2")
                 {
                     winding = SECONDARY_SIDE;
-                    winding_nominal_voltage=secondary_winding_nominal_voltage;
+                    //winding_nominal_voltage=secondary_winding_nominal_voltage;
                 }
 
                 trans->set_winding_max_angle_shift_in_deg(winding,max_phase_shift);

@@ -1452,10 +1452,6 @@ double METER::get_meter_value_as_an_hvdc() const
     if(hvdc->get_status()==false)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
-    double sbase = psdb->get_system_base_power_in_MVA();
-
     HVDC_MODEL* hvdc_model = hvdc->get_hvdc_model();
 
     if(meter_type=="HVDC DC CURRENT IN KA")

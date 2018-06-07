@@ -77,6 +77,9 @@ string PUFLS::get_model_name() const
 
 double PUFLS::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
@@ -91,15 +94,18 @@ double PUFLS::get_double_data_with_name(string par_name) const
 
 void PUFLS::set_double_data_with_index(size_t index, double value)
 {
-    if(index==0)
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void PUFLS::set_double_data_with_name(string par_name, double value)
 {
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void PUFLS::set_frequency_sensor_time_in_s(double t)
@@ -342,7 +348,6 @@ void PUFLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
 
-    LOAD* load = get_load_pointer();
     double TIME = get_dynamic_simulation_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
@@ -389,7 +394,6 @@ void PUFLS::run(DYNAMIC_MODE mode)
 
 void PUFLS::append_new_minimum_frequency()
 {
-    LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
     double current_freq = frequency_sensor.get_output();
@@ -404,7 +408,6 @@ void PUFLS::append_new_minimum_frequency()
 
 double PUFLS::get_continuous_shed_command_in_pu() const
 {
-    LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
     //double current_freq = frequency_sensor.get_output();
@@ -566,7 +569,6 @@ void PUFLS::trip_additional_stage()
     if(is_additional_stage_tripped())
         return;
 
-    LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
@@ -583,7 +585,6 @@ void PUFLS::try_to_start_additional_stage_timer()
     if(is_additional_stage_timer_started())
         return;
 
-    LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
@@ -644,7 +645,6 @@ void PUFLS::try_to_reset_additional_stage_timer()
     if(not is_additional_stage_timer_started())
         return;
 
-    LOAD* load = get_load_pointer();
     double current_time = get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
@@ -778,6 +778,9 @@ size_t PUFLS::get_variable_index_from_variable_name(string var_name)
 
 string PUFLS::get_variable_name_from_variable_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return "";
 }
 

@@ -75,6 +75,9 @@ string PSASPE2::get_model_name() const
 
 double PSASPE2::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
@@ -89,15 +92,18 @@ double PSASPE2::get_double_data_with_name(string par_name) const
 
 void PSASPE2::set_double_data_with_index(size_t index, double value)
 {
-    if(index==0)
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void PSASPE2::set_double_data_with_name(string par_name, double value)
 {
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void PSASPE2::set_KR(double K)
@@ -304,10 +310,10 @@ bool PSASPE2::setup_model_with_psse_string(string data)
     set_KR(kr);
     set_TR_in_s(tr);
     set_K2(k2);
-    set_T1_in_s(tr);
-    set_T2_in_s(tr);
-    set_T3_in_s(tr);
-    set_T4_in_s(tr);
+    set_T1_in_s(t1);
+    set_T2_in_s(t2);
+    set_T3_in_s(t3);
+    set_T4_in_s(t4);
     set_KA(ka);
     set_TA_in_s(ta);
     set_Efdmax_in_pu(efdmax);

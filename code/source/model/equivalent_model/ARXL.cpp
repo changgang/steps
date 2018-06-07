@@ -54,6 +54,9 @@ string ARXL::get_model_name() const
 
 double ARXL::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
@@ -68,15 +71,18 @@ double ARXL::get_double_data_with_name(string par_name) const
 
 void ARXL::set_double_data_with_index(size_t index, double value)
 {
-    if(index==0)
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void ARXL::set_double_data_with_name(string par_name, double value)
 {
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void ARXL::clear()
@@ -370,8 +376,6 @@ void ARXL::update_equivalent_outputs()
 
 void ARXL::update_equivalent_constant_power_load()
 {
-    double time = get_dynamic_simulation_time_in_s();
-
     ostringstream osstream;
 
     double P = 0.0;
@@ -484,7 +488,8 @@ void ARXL::switch_output_to_equivalent_device()
     DEVICE_ID did = p_meters[0].get_device_id();
 
     LINE* line = psdb->get_line(did);
-    size_t arxl_bus, other_bus;
+    size_t arxl_bus;
+    //size_t other_bus;
     complex<double> arxl_power, other_power;
 
     string meter_type = p_meters[0].get_meter_type();

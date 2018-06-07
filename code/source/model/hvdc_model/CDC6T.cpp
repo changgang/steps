@@ -99,6 +99,9 @@ string CDC6T::get_model_name() const
 
 double CDC6T::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
@@ -113,15 +116,18 @@ double CDC6T::get_double_data_with_name(string par_name) const
 
 void CDC6T::set_double_data_with_index(size_t index, double value)
 {
-    if(index==0)
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void CDC6T::set_double_data_with_name(string par_name, double value)
 {
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void CDC6T::set_inverter_dc_voltage_sensor_T_in_s(double t)
@@ -445,19 +451,14 @@ void CDC6T::run(DYNAMIC_MODE mode)
     double Vdcr = hvdc->get_converter_dc_voltage_in_kV(RECTIFIER);
     rectifier_dc_voltage_sensor.set_input(Vdcr);
     rectifier_dc_voltage_sensor.run(mode);
-    double Vdcr_sensed = rectifier_dc_voltage_sensor.get_output();
 
     double Vdci = hvdc->get_converter_dc_voltage_in_kV(INVERTER);
     inverter_dc_voltage_sensor.set_input(Vdci);
     inverter_dc_voltage_sensor.run(mode);
-    double Vdci_sensed = inverter_dc_voltage_sensor.get_output();
 
     double Idc = hvdc->get_line_dc_current_in_kA();
     dc_current_sensor.set_input(Idc);
     dc_current_sensor.run(mode);
-    double Idc_sensed = dc_current_sensor.get_output();
-
-    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
     if(mode == UPDATE_MODE)
         set_flag_model_updated_as_true();
@@ -480,7 +481,7 @@ void CDC6T::solve_hvdc_model_without_integration()
         double Vdci_measured = inverter_dc_voltage_sensor.get_output();
         double Idc_measured = dc_current_sensor.get_output();
         double Icommand = get_rectifier_dc_current_command_in_kA(Vdci_measured, Idc_measured);
-        double Vcommand = get_inverter_dc_voltage_command_in_kV(Icommand);
+        double Vcommand = get_inverter_dc_voltage_command_in_kV();
         solve_hvdc_model_without_line_dynamics(Icommand, Vcommand);
     }
 }
@@ -598,12 +599,12 @@ void CDC6T::check_blocking_logic()
         double vacr_dunblock = get_rectifier_ac_delayed_unblocking_voltage_in_pu();
         double tr_dunblock = get_rectifier_ac_delayed_unblocking_time_in_s();
         double vaci_dunblock = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
-        double ti_dunblock = get_inverter_ac_delayed_unblocking_time_in_s();
-        double t_comm = get_communication_delay_between_converters_in_s();
+        //double ti_dunblock = get_inverter_ac_delayed_unblocking_time_in_s();
+        //double t_comm = get_communication_delay_between_converters_in_s();
 
-        bool rectifier_unblock_logic = false;
-        bool inverter_unblock_logic = false;
-        bool timer_unblock_logic = false;
+        //bool rectifier_unblock_logic = false;
+        //bool inverter_unblock_logic = false;
+        //bool timer_unblock_logic = false;
 
         if(not rec_ac_unblocking_timer.is_started())
         {
@@ -723,7 +724,7 @@ void CDC6T::check_bypassing_logic()
 
             double vac_i = psdb->get_bus_voltage_in_pu(hvdc->get_converter_bus(INVERTER));
             double vaci_dbypass = get_inverter_ac_delayed_bypassing_voltage_in_pu();
-            double ti_dbypass = get_inverter_ac_delayed_bypassing_time_in_s();
+            //double ti_dbypass = get_inverter_ac_delayed_bypassing_time_in_s();
             if(not inv_ac_bypassing_timer.is_started())
             {
                 if(vac_i<=vaci_dbypass)
@@ -771,7 +772,7 @@ void CDC6T::check_bypassing_logic()
         double vac_i = psdb->get_bus_voltage_in_pu(bus_i);
 
         double vac_dunbypass = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
-        double t_dunbypass = get_inverter_ac_delayed_unbypassing_time_in_s();
+        //double t_dunbypass = get_inverter_ac_delayed_unbypassing_time_in_s();
         if(not inv_ac_unbypassing_timer.is_started())
         {
             if(vac_i>vac_dunbypass)
@@ -879,8 +880,8 @@ string CDC6T::get_standard_model_string() const
     ostringstream osstream;
 
     HVDC* hvdc = get_hvdc_pointer();
-    size_t rbus = hvdc->get_converter_bus(RECTIFIER);
-    size_t ibus = hvdc->get_converter_bus(INVERTER);
+    //size_t rbus = hvdc->get_converter_bus(RECTIFIER);
+    //size_t ibus = hvdc->get_converter_bus(INVERTER);
     string dcname = hvdc->get_name();
 
     VDCOL vdcol_limiter = get_VDCOL();
@@ -966,6 +967,9 @@ double CDC6T::get_variable_with_name(string var_name)
     if(var_name == "STATE@EXCITER")
         return exciter.get_state();
     */
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 

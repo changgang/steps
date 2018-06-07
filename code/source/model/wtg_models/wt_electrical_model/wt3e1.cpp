@@ -118,22 +118,34 @@ double WT3E1::get_reactive_power_current_command_in_pu()
 
 double WT3E1::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 double WT3E1::get_double_data_with_name(string par_name) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 void WT3E1::set_double_data_with_index(size_t index, double value)
 {
-    ;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void WT3E1::set_double_data_with_name(string par_name, double value)
 {
-    ;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void WT3E1::set_transformer_from_bus(size_t bus)
@@ -594,23 +606,23 @@ void WT3E1::initialize()
     if(wt_generator==NULL)
         return;
 
-    WT_GENERATOR_MODEL* source_model = wt_generator->get_wt_generator_model();
-    if(source_model==NULL)
+    WT_GENERATOR_MODEL* gen_model = wt_generator->get_wt_generator_model();
+    if(gen_model==NULL)
         return;
 
-    if(not source_model->is_model_initialized())
-        source_model->initialize();
+    if(not gen_model->is_model_initialized())
+        gen_model->initialize();
 
     double vterm = get_terminal_bus_voltage_in_pu();
-    double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
-    double freq = get_terminal_bus_frequency_deviation_in_pu();
-    double mbase = wt_generator->get_mbase_in_MVA();
+    double iterm = gen_model->get_terminal_current_in_pu_based_on_mbase();
+    //double freq = get_terminal_bus_frequency_deviation_in_pu();
+    //double mbase = wt_generator->get_mbase_in_MVA();
     complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
     double speed = get_wind_turbine_reference_speed_with_power_in_pu(pelec);
 
-    double ipcmd = source_model->get_active_current_command_in_pu_based_on_mbase();
+    double ipcmd = gen_model->get_active_current_command_in_pu_based_on_mbase();
     double ipmax = get_IPmax_in_pu();
     if(ipcmd>ipmax)
     {
@@ -622,10 +634,16 @@ void WT3E1::initialize()
     double pmax = get_Pmax_in_pu();
     double pmin = get_Pmin_in_pu();
     power_order_integrator.set_output(porder);
-    if(ipcmd>ipmax)
+    if(porder>pmax)
     {
         osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
+        show_information_with_leading_time_stamp(osstream);
+    }
+    if(porder<pmin)
+    {
+        osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+          <<"Porder is "<<porder<<", and Pmin is "<<pmin<<".";
         show_information_with_leading_time_stamp(osstream);
     }
     power_order_integrator.initialize();
@@ -638,13 +656,13 @@ void WT3E1::initialize()
     wind_turbine_speed_reference_sensor.initialize();
 
 
-    double iqcmd = source_model->get_reactive_current_command_in_pu_based_on_mbase();
+    double iqcmd = gen_model->get_reactive_current_command_in_pu_based_on_mbase();
     double xsource = wt_generator->get_source_impedance_in_pu().imag();
     double eqcmd = iqcmd*(-xsource);
 
     double verror = 0.0;
     size_t vflag = get_voltage_flag();
-    if(vflag = 0)
+    if(vflag == 0)
     {
         V_error_integrator.set_output(0.0);
         V_error_integrator.initialize();
@@ -763,8 +781,8 @@ void WT3E1::run(DYNAMIC_MODE mode)
 
     double vterm = get_terminal_bus_voltage_in_pu();
     double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
-    double freq = get_terminal_bus_frequency_deviation_in_pu();
-    double mbase = wt_generator->get_mbase_in_MVA();
+    //double freq = get_terminal_bus_frequency_deviation_in_pu();
+    //double mbase = wt_generator->get_mbase_in_MVA();
     complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
@@ -983,21 +1001,33 @@ string WT3E1::get_standard_model_string() const
 
 size_t WT3E1::get_variable_index_from_variable_name(string var_name)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0;
 }
 
 string WT3E1::get_variable_name_from_variable_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return "";
 }
 
 double WT3E1::get_variable_with_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 double WT3E1::get_variable_with_name(string var_name)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 

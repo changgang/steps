@@ -186,7 +186,9 @@ void FIXED_SHUNT::save() const
 
 void FIXED_SHUNT::set_model(const MODEL* model)
 {
-    ;
+    ostringstream osstream;
+    osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
+    show_information_with_leading_time_stamp(osstream);
 }
 
 FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)

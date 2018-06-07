@@ -225,21 +225,33 @@ string AERD0::get_model_name() const
 
 double AERD0::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 double AERD0::get_double_data_with_name(string par_name) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 void AERD0::set_double_data_with_index(size_t index, double value)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
     return;
 }
 
 void AERD0::set_double_data_with_name(string par_name, double value)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
     return;
 }
 
@@ -534,8 +546,6 @@ void AERD0::initialize_pitch_angle()
         return;
     }
 
-    double v = get_wind_speed_in_mps();
-    double r = get_turbine_blade_radius_in_m();
     double wn = get_nominal_turbine_speed_in_rad_per_s();
     double w = get_initial_turbine_speed_in_rad_per_s();
     double dspeed = (w-wn)/wn;
@@ -610,7 +620,9 @@ void AERD0::initialize_turbine_speed()
 
 void AERD0::run(DYNAMIC_MODE mode)
 {
-    ;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 double AERD0::get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind) const
@@ -639,11 +651,6 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s() const
 
     double wn = get_nominal_turbine_speed_in_rad_per_s();
     double w = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
-
-    double lambda = get_lambda_at_Cpmax(get_pitch_angle_in_deg());
-    double wopt = lambda*get_wind_speed_in_mps()/get_turbine_blade_radius_in_m();
-    //oosstream<<"At time "<<STEPS::TIME<<", turbine speed reference is :"<<w<<" rad/s, "<<w/wn<<" pu, wopt = "<<wopt<<" rad/s, "<<wopt/wn<<" pu";
-    //show_information_with_leading_time_stamp(oosstream);
 
     double wmax = get_max_steady_state_turbine_speed_in_pu()*wn;
     double wmin = get_min_steady_state_turbine_speed_in_pu()*wn;
@@ -720,8 +727,8 @@ double AERD0::get_turbine_reference_speed_in_rad_per_s_without_speed_limit() con
         whigh = w_mppt*2.0;
     }
 
-    double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
-    double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
+    //double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
+    //double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
 
     double w = 0.0;
     size_t iter_count = 0, iter_max = 100;
@@ -828,21 +835,33 @@ string AERD0::get_standard_model_string() const
 
 size_t AERD0::get_variable_index_from_variable_name(string var_name)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0;
 }
 
 string AERD0::get_variable_name_from_variable_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return "";
 }
 
 double AERD0::get_variable_with_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 double AERD0::get_variable_with_name(string var_name)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 

@@ -1399,6 +1399,7 @@ void HVDC::show_solved_hvdc_steady_state() const
     switch(mode)
     {
         case INVERTER_CONSTANT_VOLTAGE:
+        {
             modestr = "constant voltage";
             if(get_compensating_resistance_to_hold_dc_voltage_in_ohm()==0.0)
                 modestr += " at inverter side";
@@ -1410,9 +1411,19 @@ void HVDC::show_solved_hvdc_steady_state() const
                     modestr += " at location of compensating R";
             }
             break;
+        }
         case INVERTER_CONSTANT_GAMMA:
+        {
             modestr = "constant firing angle";
             break;
+        }
+        default:
+        {
+            osstream<<"Mode "<<mode<<" is not supported for inverter side of "<<get_device_name()<<endl
+                    <<"This line should never appear. If you find it, ask for help.";
+            show_information_with_leading_time_stamp(osstream);
+        }
+
     }
     osstream<<"Rectifier: "<<modestr;
     show_information_with_leading_time_stamp(osstream);

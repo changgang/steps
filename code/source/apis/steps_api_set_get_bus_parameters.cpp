@@ -279,5 +279,8 @@ bool api_get_bus_boolean_data(size_t bus, char* parameter_name)
 
 void api_set_bus_boolean_data(size_t bus, char* parameter_name, bool value)
 {
+    ostringstream osstream;
+    osstream<<__FUNCTION__<<"() has not been implemented. Input parameters are provided: "<<bus<<", "<<parameter_name<<", "<<value;
+    show_information_with_leading_time_stamp(osstream);
     return;
 }

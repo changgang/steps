@@ -8,6 +8,9 @@
 #include "header/data_imexporter/equivalent_model_imexporter.h"
 using namespace std;
 
+void prepare_training_load_scale_case();
+void prepare_training_generation_shed_case();
+
 void prepare_training_load_scale_case()
 {
     POWER_SYSTEM_DATABASE* db;

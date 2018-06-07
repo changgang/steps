@@ -2597,5 +2597,7 @@ string PSSE_IMEXPORTER::export_switched_shunt_data() const
 
 void PSSE_IMEXPORTER::export_sequence_data(string file)
 {
+    ofstream fid(file);
+    fid.close();
     return;
 }

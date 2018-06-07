@@ -268,8 +268,10 @@ double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, cha
         return 0.0;
     }
     else
+    {
         show_device_not_exist_with_api(did, __FUNCTION__);
         return 0.0;
+    }
 
 }
 

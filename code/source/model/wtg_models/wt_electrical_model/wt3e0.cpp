@@ -437,22 +437,34 @@ double WT3E0::get_speed_reference_bias_in_pu() const
 
 double WT3E0::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 double WT3E0::get_double_data_with_name(string par_name) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 void WT3E0::set_double_data_with_index(size_t index, double value)
 {
-    ;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void WT3E0::set_double_data_with_name(string par_name, double value)
 {
-    ;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 bool WT3E0::setup_model_with_steps_string(string data)
@@ -624,7 +636,7 @@ void WT3E0::initialize()
     double vterm = get_terminal_bus_voltage_in_pu();
     double iterm = get_wt_generator_terminal_current_in_pu();
     double freq = get_terminal_bus_frequency_deviation_in_pu();
-    double mbase = get_mbase_in_MVA();
+    //double mbase = get_mbase_in_MVA();
     complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
@@ -642,10 +654,16 @@ void WT3E0::initialize()
     double pmax = get_Pmax_in_pu();
     double pmin = get_Pmin_in_pu();
     power_order_integrator.set_output(porder);
-    if(ipcmd>ipmax)
+    if(porder>pmax)
     {
         osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
+        show_information_with_leading_time_stamp(osstream);
+    }
+    if(porder<pmin)
+    {
+        osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+          <<"Porder is "<<porder<<", and Pmin is "<<pmin<<".";
         show_information_with_leading_time_stamp(osstream);
     }
     power_order_integrator.initialize();
@@ -812,7 +830,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
     double vterm = get_terminal_bus_voltage_in_pu();
     double iterm = get_wt_generator_terminal_current_in_pu();
     double freq = get_terminal_bus_frequency_deviation_in_pu();
-    double mbase = get_mbase_in_MVA();
+    //double mbase = get_mbase_in_MVA();
     complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
     double pelec = selec.real();
     double qelec = selec.imag();
@@ -1130,21 +1148,33 @@ string WT3E0::get_standard_model_string() const
 
 size_t WT3E0::get_variable_index_from_variable_name(string var_name)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0;
 }
 
 string WT3E0::get_variable_name_from_variable_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return "";
 }
 
 double WT3E0::get_variable_with_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 double WT3E0::get_variable_with_name(string var_name)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 

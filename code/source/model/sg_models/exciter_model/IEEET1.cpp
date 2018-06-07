@@ -70,6 +70,9 @@ string IEEET1::get_model_name() const
 
 double IEEET1::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
@@ -84,15 +87,18 @@ double IEEET1::get_double_data_with_name(string par_name) const
 
 void IEEET1::set_double_data_with_index(size_t index, double value)
 {
-    if(index==0)
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void IEEET1::set_double_data_with_name(string par_name, double value)
 {
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 
@@ -247,7 +253,7 @@ bool IEEET1::setup_model_with_psse_string(string data)
     if(model_name!=get_model_name())
         return is_successful;
 
-    double tr, ka, ta, vrmax, vrmin, ke, te, kf, tf, temp, e1, se1, e2, se2;
+    double tr, ka, ta, vrmax, vrmin, ke, te, kf, tf, e1, se1, e2, se2;
 
     size_t i=3;
     tr = get_double_data(dyrdata[i],"0.0"); i++;
@@ -259,7 +265,7 @@ bool IEEET1::setup_model_with_psse_string(string data)
     te = get_double_data(dyrdata[i],"0.0"); i++;
     kf = get_double_data(dyrdata[i],"0.0"); i++;
     tf = get_double_data(dyrdata[i],"0.0"); i++;
-    temp = get_double_data(dyrdata[i],"0.0"); i++;
+    /*double temp = get_double_data(dyrdata[i],"0.0");*/ i++;
     e1 = get_double_data(dyrdata[i],"0.0"); i++;
     se1 = get_double_data(dyrdata[i],"0.0"); i++;
     e2 = get_double_data(dyrdata[i],"0.0"); i++;
@@ -286,6 +292,9 @@ bool IEEET1::setup_model_with_psse_string(string data)
 
 bool IEEET1::setup_model_with_bpa_string(string data)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input data is provided: "<<data;
+    show_information_with_leading_time_stamp(osstream);
     return false;
 }
 

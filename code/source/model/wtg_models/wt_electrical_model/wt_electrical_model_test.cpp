@@ -306,7 +306,7 @@ void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
             break;
         }
         double ip=0.0, iq=0.0;
-        size_t iter_count = 0, iter_max = 10;
+        size_t iter_count = 0;
         while(true)
         {
             model->run(INTEGRATE_MODE);
@@ -314,8 +314,6 @@ void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
             if(fabs(ip-model->get_active_current_command_in_pu_based_on_mbase())<1e-6 and
                 fabs(iq-model->get_reactive_current_command_in_pu_based_on_mbase())<1e-6)
                 break;
-            //if(iter_count>iter_max)
-            //    break;
 
             ip = model->get_active_current_command_in_pu_based_on_mbase();
             iq = model->get_reactive_current_command_in_pu_based_on_mbase();

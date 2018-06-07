@@ -76,20 +76,34 @@ string FILEWIND::get_wind_speed_serial_file() const
 
 double FILEWIND::get_double_data_with_index(size_t index) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 double FILEWIND::get_double_data_with_name(string par_name) const
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 void FILEWIND::set_double_data_with_index(size_t index, double value)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 void FILEWIND::set_double_data_with_name(string par_name, double value)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
 }
 
 bool FILEWIND::setup_model_with_steps_string(string data)
@@ -202,7 +216,9 @@ void FILEWIND::load_wind_speed_from_file()
 
 void FILEWIND::run(DYNAMIC_MODE mode)
 {
-    ;
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
+    show_information_with_leading_time_stamp(osstream);
 }
 
 double FILEWIND::get_wind_speed_in_pu()
@@ -210,7 +226,6 @@ double FILEWIND::get_wind_speed_in_pu()
     if(time.size()==0)
         return 0.0;
 
-    WT_GENERATOR* generator = get_wt_generator_pointer();
     double simulation_time = STEPS::TIME;
 
     if(fabs(simulation_time-current_time)<FLOAT_EPSILON)
@@ -226,7 +241,6 @@ double FILEWIND::get_wind_direction_in_deg()
     if(time.size()==0)
         return 0.0;
 
-    WT_GENERATOR* generator = get_wt_generator_pointer();
     double simulation_time = STEPS::TIME;
 
     if(fabs(simulation_time-current_time)<FLOAT_EPSILON)
@@ -266,7 +280,6 @@ size_t FILEWIND::get_previous_position() const
 }
 void FILEWIND::search_wind_data_at_simulation_time()
 {
-    WT_GENERATOR* generator = get_wt_generator_pointer();
     double simulation_time = STEPS::TIME;
 
     current_time = simulation_time;
@@ -290,7 +303,7 @@ void FILEWIND::search_wind_data_at_simulation_time()
         else
         {
             size_t previous_index = 0, next_index = n-1;
-            size_t previous_time = time[previous_index], next_time = time[next_index];
+            //size_t previous_time = time[previous_index], next_time = time[next_index];
             while(true)
             {
                 size_t temp_index = ((previous_index+next_index)>>1);
@@ -306,12 +319,12 @@ void FILEWIND::search_wind_data_at_simulation_time()
                     if(temp_time>current_time)
                     {
                         next_index = temp_index;
-                        next_time = time[next_index];
+                        //next_time = time[next_index];
                     }
                     else
                     {
                         previous_index = temp_index;
-                        previous_time = time[previous_index];
+                        //previous_time = time[previous_index];
                     }
 
                     if(next_index-previous_index==1)
@@ -366,21 +379,33 @@ string FILEWIND::get_standard_model_string() const
 
 size_t FILEWIND::get_variable_index_from_variable_name(string var_name)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0;
 }
 
 string FILEWIND::get_variable_name_from_variable_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return "";
 }
 
 double FILEWIND::get_variable_with_index(size_t var_index)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 
 double FILEWIND::get_variable_with_name(string var_name)
 {
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_name is provided: "<<var_name;
+    show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 

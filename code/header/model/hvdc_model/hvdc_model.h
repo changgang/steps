@@ -70,7 +70,7 @@ class HVDC_MODEL : public MODEL
 
         void set_attached_device_of_common_meters();
 
-        double get_inverter_dc_voltage_command_in_kV(double Icommand);
+        double get_inverter_dc_voltage_command_in_kV();
         double get_rectifier_dc_current_command_in_kA(double Vdci_measured, double Idc_measured);
         // block and bypass logic
         void block_hvdc();
@@ -105,7 +105,7 @@ class HVDC_MODEL : public MODEL
 
         // common solver
         void solve_hvdc_model_without_line_dynamics(double Iset_kA, double Vset_kV);
-        void solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset_kV, double Vdc_medium_kV);
+        void solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset_kV);
         //
 
         double get_converter_dc_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const;

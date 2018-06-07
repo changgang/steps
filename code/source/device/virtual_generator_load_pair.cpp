@@ -437,12 +437,16 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::run(DYNAMIC_MODE mode)
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::set_model(const MODEL* model)
 {
-    ;
+    ostringstream osstream;
+    osstream<<"VIRTUAL_GENERATOR_LOAD_PAIR::"<<__FUNCTION__<<"() is a private function to disable the set method of BASE class. It should never be called. Input model name is:"<<(model==NULL?"":model->get_model_name());
+    show_information_with_leading_time_stamp(osstream);
 }
 
 void VIRTUAL_GENERATOR_LOAD_PAIR::set_power_system_database(POWER_SYSTEM_DATABASE* psdb)
 {
-    ;// this is a private method of the class. it is for disabling the set method of BASE class.
+    ostringstream osstream;
+    osstream<<"VIRTUAL_GENERATOR_LOAD_PAIR::"<<__FUNCTION__<<"() is a private function to disable the set method of BASE class. It should never be called. Input power system database is:"<<(psdb==NULL?"":psdb->get_system_name());
+    show_information_with_leading_time_stamp(osstream);
 }
 POWER_SYSTEM_DATABASE* VIRTUAL_GENERATOR_LOAD_PAIR::get_power_system_database() const
 {

@@ -507,7 +507,9 @@ void LINE::save() const
 
 void LINE::set_model(const MODEL* model)
 {
-    ;
+    ostringstream osstream;
+    osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
+    show_information_with_leading_time_stamp(osstream);
 }
 
 LINE& LINE::operator=(const LINE& line)

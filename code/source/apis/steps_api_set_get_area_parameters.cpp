@@ -157,5 +157,8 @@ bool api_get_area_boolean_data(size_t area, char* parameter_name)
 
 void api_set_area_boolean_data(size_t area, char* parameter_name, bool value)
 {
+    ostringstream osstream;
+    osstream<<__FUNCTION__<<"() has not been implemented. Input parameters are provided: "<<area<<", "<<parameter_name<<", "<<value;
+    show_information_with_leading_time_stamp(osstream);
     return;
 }

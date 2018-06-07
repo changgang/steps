@@ -65,6 +65,9 @@ double api_get_owner_float_data(size_t owner, char* parameter_name)
 
 void api_set_owner_float_data(size_t owner, char* parameter_name, double value)
 {
+    ostringstream osstream;
+    osstream<<__FUNCTION__<<"() has not been implemented. Input parameters are provided: "<<owner<<", "<<parameter_name<<", "<<value;
+    show_information_with_leading_time_stamp(osstream);
     return;
 }
 
@@ -131,5 +134,8 @@ bool api_get_owner_boolean_data(size_t owner, char* parameter_name)
 
 void api_set_owner_boolean_data(size_t owner, char* parameter_name, bool value)
 {
+    ostringstream osstream;
+    osstream<<__FUNCTION__<<"() has not been implemented. Input parameters are provided: "<<owner<<", "<<parameter_name<<", "<<value;
+    show_information_with_leading_time_stamp(osstream);
     return;
 }
