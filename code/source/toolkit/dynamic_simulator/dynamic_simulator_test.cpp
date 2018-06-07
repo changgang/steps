@@ -1377,14 +1377,21 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator->set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e8));
 
+    DEVICE_ID gendid_1;
+    gendid_1.set_device_type("GENERATOR");
+    terminal.clear();
+    terminal.append_bus(1);
+    gendid_1.set_device_terminal(terminal);
+    gendid_1.set_device_identifier("1");
+
+    /*simulator->set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e8));
     simulator->run_to(1.1);
-
     simulator->clear_line_fault(did, 7, 0.0);
-    simulator->trip_line(did);
+    simulator->trip_line(did);*/
+    simulator->shed_generator(gendid_1, 0.2);
 
-    simulator->run_to(6.0);
+    simulator->run_to(50.0);
 
     recover_stdout();
 }

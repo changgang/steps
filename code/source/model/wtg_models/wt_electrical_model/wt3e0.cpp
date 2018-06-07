@@ -464,7 +464,7 @@ bool WT3E0::setup_model_with_psse_string(string data)
 {
     bool is_successful = false;
     vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<35)
+    if(dyrdata.size()<38)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
@@ -476,7 +476,7 @@ bool WT3E0::setup_model_with_psse_string(string data)
     double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
            ipmax, trv, rpmax, rpmin, tspeed, kqi, vmax, vmin,
            kqv, eqmax, eqmin, tv, tp, fn,
-           kvi, tvi, kdroop, tdroop;
+           kvi, tvi, kdroop, tdroop, fupper, flower, kint;
 
     size_t i=3;
     bus = get_integer_data(dyrdata[i],"0"); i++;
@@ -505,6 +505,9 @@ bool WT3E0::setup_model_with_psse_string(string data)
     tvi = get_double_data(dyrdata[i],"0.0"); i++;
     kdroop = get_double_data(dyrdata[i],"0.0"); i++;
     tdroop = get_double_data(dyrdata[i],"0.0"); i++;
+    flower = get_double_data(dyrdata[i],"0.0"); i++;
+    fupper = get_double_data(dyrdata[i],"0.0"); i++;
+    kint = get_double_data(dyrdata[i],"0.0"); i++;
     rpmin = get_double_data(dyrdata[i],"0.0"); i++;
     rpmax = get_double_data(dyrdata[i],"0.0"); i++;
     tfp = get_double_data(dyrdata[i],"0.0"); i++;
@@ -566,6 +569,9 @@ bool WT3E0::setup_model_with_psse_string(string data)
     set_Tvi_in_s(tvi);
     set_Kdroop(kdroop);
     set_Tdroop_in_s(tdroop);
+    set_frequency_deviation_lower_deadband_in_pu(flower);
+    set_frequency_deviation_upper_deadband_in_pu(fupper);
+    set_Kfint(kint);
     set_rPmin_in_pu(rpmin);
     set_rPmax_in_pu(rpmax);
     set_TFP_in_s(tfp);
@@ -818,11 +824,11 @@ void WT3E0::run(DYNAMIC_MODE mode)
     torque_PI_regulator.run(mode);
     osstream<<"torque_PI_regulator input = "<<input<<", output = "<<torque_PI_regulator.get_output()<<endl;
 
-    virtual_inertia_emulator.set_input(freq);
+    virtual_inertia_emulator.set_input(-freq);
     virtual_inertia_emulator.run(mode);
     osstream<<"virtual_inertia_emulator input = "<<input<<", output = "<<virtual_inertia_emulator.get_output()<<endl;
 
-    frequency_droop_controller.set_input(freq);
+    frequency_droop_controller.set_input(-freq);
     frequency_droop_controller.run(mode);
     osstream<<"frequency_droop_controller input = "<<input<<", output = "<<frequency_droop_controller.get_output()<<endl;
 
@@ -833,7 +839,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
         f_int = freq - fupper;
     if(freq<flower)
         f_int = freq - flower;
-    frequency_integral_controller.set_input(f_int);
+    frequency_integral_controller.set_input(-f_int);
     frequency_integral_controller.run(mode);
 
     input = torque_PI_regulator.get_output()*speed
@@ -1062,6 +1068,9 @@ string WT3E0::get_standard_model_string() const
     double tvi = get_Tvi_in_s();
     double kdroop = get_Kdroop();
     double tdroop = get_Tdroop_in_s();
+    double flower = get_frequency_deviation_lower_deadband_in_pu();
+    double fupper = get_frequency_deviation_upper_deadband_in_pu();
+    double kint = get_Kfint();
     double rpmin = get_rPmin_in_pu();
     double rpmax = get_rPmax_in_pu();
     double tfp = get_TFP_in_s();
@@ -1098,6 +1107,9 @@ string WT3E0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<tvi<<", "
       <<setw(8)<<setprecision(6)<<kdroop<<", "
       <<setw(8)<<setprecision(6)<<tdroop<<", "
+      <<setw(8)<<setprecision(6)<<flower<<", "
+      <<setw(8)<<setprecision(6)<<fupper<<", "
+      <<setw(8)<<setprecision(6)<<kint<<", "
       <<setw(8)<<setprecision(6)<<rpmin<<", "
       <<setw(8)<<setprecision(6)<<rpmax<<", "
       <<setw(8)<<setprecision(6)<<tfp<<", "
