@@ -261,11 +261,11 @@ void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
         PSASPE1* smodel = (PSASPE1*) (model);
         new_model = (EXCITER_MODEL*) new PSASPE1(*smodel);
     }
-    /*if(model_name=="PSASPE2")
+    if(model_name=="PSASPE2")
     {
         PSASPE2* smodel = (PSASPE2*) (model);
         new_model = (EXCITER_MODEL*) new PSASPE2(*smodel);
-    }*/
+    }
     if(model_name=="PSASPE13")
     {
         PSASPE13* smodel = (PSASPE13*) (model);
