@@ -18,6 +18,8 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         void set_C4(double c);
         void set_C5(double c);
         void set_C6(double c);
+        void set_C7(double c);
+        void set_C8(double c);
 
         double get_C1() const;
         double get_C2() const;
@@ -25,6 +27,8 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         double get_C4() const;
         double get_C5() const;
         double get_C6() const;
+        double get_C7() const;
+        double get_C8() const;
     public:
         virtual double get_Cp(double lambda, double pitch_deg) const;
         virtual double get_derivative_of_Cp_over_lambda(double lambda, double pitch_deg) const;
@@ -57,7 +61,7 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
     private:
         void copy_from_const_model(const AERD0& model);
         // Cp function parameters
-        double Cp_Coefficients[6];
+        double Cp_Coefficients[8];
 
         double initial_pitch_angle_in_deg;
         double initial_turbine_speed_in_rad_per_s;

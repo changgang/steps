@@ -44,7 +44,6 @@ void AERD0_TEST::setup()
     model.set_C5(21.0);
     model.set_C6(0.0068);
 
-
     wt_gen->set_model(&model);
 }
 
@@ -81,6 +80,8 @@ void AERD0_TEST::test_set_get_parameters()
     model->set_C4(4.4);
     model->set_C5(5.5);
     model->set_C6(6.6);
+    model->set_C7(7.7);
+    model->set_C8(8.8);
 
     TEST_ASSERT(fabs(model->get_C1()-1.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_C2()-2.2)<FLOAT_EPSILON);
@@ -88,4 +89,6 @@ void AERD0_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_C4()-4.4)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_C5()-5.5)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_C6()-6.6)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_C7()-7.7)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_C8()-8.8)<FLOAT_EPSILON);
 }

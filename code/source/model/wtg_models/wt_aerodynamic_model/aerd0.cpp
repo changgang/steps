@@ -13,6 +13,9 @@ AERD0::AERD0()
     set_C4(5.0);
     set_C5(12.5);
     set_C6(0.0);
+
+    set_C7(0.08);
+    set_C8(0.035);
 }
 
 AERD0::AERD0(const AERD0& model):WT_AERODYNAMIC_MODEL()
@@ -43,6 +46,8 @@ void AERD0::copy_from_const_model(const AERD0& model)
     set_C4(model.get_C4());
     set_C5(model.get_C5());
     set_C6(model.get_C6());
+    set_C7(model.get_C7());
+    set_C8(model.get_C8());
 }
 
 void AERD0::set_C1(double c)
@@ -75,6 +80,16 @@ void AERD0::set_C6(double c)
     Cp_Coefficients[5] = c;
 }
 
+void AERD0::set_C7(double c)
+{
+    Cp_Coefficients[6] = c;
+}
+
+void AERD0::set_C8(double c)
+{
+    Cp_Coefficients[7] = c;
+}
+
 double AERD0::get_C1() const
 {
     return Cp_Coefficients[0];
@@ -105,12 +120,19 @@ double AERD0::get_C6() const
     return Cp_Coefficients[5];
 }
 
+double AERD0::get_C7() const
+{
+    return Cp_Coefficients[6];
+}
+
+double AERD0::get_C8() const
+{
+    return Cp_Coefficients[7];
+}
+
 double AERD0::get_Cp(double lambda, double pitch_deg) const
 {
     //double pitch_angle = deg2rad(pitch_deg);
-    double pitch_angle = pitch_deg;
-    double L = 1.0/(lambda+0.08*pitch_angle)-0.035/(pitch_angle*pitch_angle*pitch_angle+1.0);
-    L = 1.0/L;
 
     double C1 = get_C1();
     double C2 = get_C2();
@@ -118,6 +140,13 @@ double AERD0::get_Cp(double lambda, double pitch_deg) const
     double C4 = get_C4();
     double C5 = get_C5();
     double C6 = get_C6();
+    double C7 = get_C7();
+    double C8  = get_C8();
+
+    double pitch_angle = pitch_deg;
+    double L = 1.0/(lambda+C7*pitch_angle)-C8/(pitch_angle*pitch_angle*pitch_angle+1.0);
+    L = 1.0/L;
+
 
     double cp = C1*(C2/L-C3*pitch_angle-C4)*exp(-C5/L)+C6*lambda;
     if(cp<0.0)

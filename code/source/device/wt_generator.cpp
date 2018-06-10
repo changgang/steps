@@ -149,8 +149,8 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             if(pitch!=NULL)
                 pitch->run(mode);
 
-            if(wind!=NULL)
-                wind->run(mode);
+            //if(wind!=NULL)
+            //    wind->run(mode);
 
             if(turbine!=NULL)
                 turbine->run(mode);
@@ -161,8 +161,8 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             if(turbine!=NULL)
                 turbine->run(mode);
 
-            if(aero!=NULL)
-                aero->run(mode);
+            //if(aero!=NULL)
+            //    aero->run(mode);
 
             if(gen!=NULL)
                 gen->run(mode);
