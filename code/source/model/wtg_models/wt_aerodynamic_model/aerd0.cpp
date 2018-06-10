@@ -11,7 +11,7 @@ AERD0::AERD0()
     set_C2(116.0);
     set_C3(0.4);
     set_C4(5.0);
-    set_C5(-12.5);
+    set_C5(12.5);
     set_C6(0.0);
 }
 
@@ -133,7 +133,7 @@ double AERD0::get_Cp(double lambda, double pitch_deg) const
     double C5 = get_C5();
     double C6 = get_C6();
 
-    double cp = C1*(C2/L-C3*pitch_angle-C4)*exp(C5/L)+C6*lambda;
+    double cp = C1*(C2/L-C3*pitch_angle-C4)*exp(-C5/L)+C6*lambda;
     if(cp<0.0)
         cp = 0.0;
     return cp;
@@ -335,6 +335,11 @@ void AERD0::initialize()
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return;
+    WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
+    if(genmodel==NULL)
+        return;
+    if(not genmodel->is_model_initialized())
+        genmodel->initialize();
 
     POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
     if(psdb==NULL)

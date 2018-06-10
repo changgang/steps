@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
 	try
 	{
         Test::Suite ts;
-
+/*
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
         ts.add(unique_ptr<Test::Suite>(new AREA_TEST));
@@ -280,7 +280,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new VDCOL_TEST));
         ts.add(unique_ptr<Test::Suite>(new CDC4T_TEST));
         ts.add(unique_ptr<Test::Suite>(new CDC6T_TEST));
-
+*/
         ts.add(unique_ptr<Test::Suite>(new WT3G2_TEST));
         ts.add(unique_ptr<Test::Suite>(new AERD0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3T0_TEST));

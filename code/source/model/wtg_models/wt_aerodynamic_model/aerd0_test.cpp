@@ -38,14 +38,14 @@ void AERD0_TEST::setup()
     model.set_C2(116.0);
     model.set_C3(0.4);
     model.set_C4(5.0);
-    model.set_C5(-12.5);
+    model.set_C5(12.5);
     model.set_C6(0.0);
 
     model.set_C1(0.5176);
     model.set_C2(116.0);
     model.set_C3(0.4);
     model.set_C4(5.0);
-    model.set_C5(-21.0);
+    model.set_C5(21.0);
     model.set_C6(0.0068);
 
 

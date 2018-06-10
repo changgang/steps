@@ -63,14 +63,14 @@ void WT_TURBINE_MODEL_TEST::setup()
     aeromodel.set_C2(116.0);
     aeromodel.set_C3(0.4);
     aeromodel.set_C4(5.0);
-    aeromodel.set_C5(-12.5);
+    aeromodel.set_C5(12.5);
     aeromodel.set_C6(0.0);
 
     aeromodel.set_C1(0.5176);
     aeromodel.set_C2(116.0);
     aeromodel.set_C3(0.4);
     aeromodel.set_C4(5.0);
-    aeromodel.set_C5(-21.0);
+    aeromodel.set_C5(21.0);
     aeromodel.set_C6(0.0068);
 
     wt_gen->set_model(&aeromodel);

@@ -269,6 +269,17 @@ bool WT3P0::setup_model_with_bpa_string(string data)
 void WT3P0::initialize()
 {
     ostringstream osstream;
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
+    if(wt_generator==NULL)
+        return;
+
+    WT_AERODYNAMIC_MODEL* aerdmodel = wt_generator->get_wt_aerodynamic_model();
+    if(aerdmodel==NULL)
+        return;
+
+    if(not aerdmodel->is_model_initialized())
+        aerdmodel->initialize();
+
     double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
 
     pitch_integrator.set_output(pitch0);

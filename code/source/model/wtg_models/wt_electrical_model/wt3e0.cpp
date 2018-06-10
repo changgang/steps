@@ -626,6 +626,13 @@ void WT3E0::initialize()
     if(not wtgenmodel->is_model_initialized())
         wtgenmodel->initialize();
 
+    WT_AERODYNAMIC_MODEL* aerdmodel = wt_generator->get_wt_aerodynamic_model();
+    if(aerdmodel==NULL)
+        return;
+
+    if(not aerdmodel->is_model_initialized())
+        aerdmodel->initialize();
+
     WT_TURBINE_MODEL* turbine_model = wt_generator->get_wt_turbine_model();
     if(turbine_model==NULL)
         return;
