@@ -27,11 +27,6 @@ class AERD0_TEST : public WT_AERODYNAMIC_MODEL_TEST
     protected:
         virtual void test_get_model_name();
         virtual void test_set_get_parameters();
-        virtual void test_initialize_and_get_initialized_inputs_with_overspeed_flag();
-        virtual void test_initialize_and_get_initialized_inputs_without_overspeed_flag();
-        virtual void test_get_turbine_speed_reference();
-        virtual void test_set_as_typical_wt_generator();
-        void test_list_Cp_and_mechanical_power_data_of_different_wind_speed();
     private:
 };
 

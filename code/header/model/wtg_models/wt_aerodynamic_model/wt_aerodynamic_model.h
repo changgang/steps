@@ -59,6 +59,19 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_initial_turbine_speed_in_rad_per_s() const;
         double get_initial_turbine_speed_in_pu() const;
         double get_total_wind_power_per_wt_generator_in_MW(double vwind) const;
+
+
+        virtual void initialize();
+        virtual void run(DYNAMIC_MODE mode);
+        double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind) const;
+        double get_turbine_mechanical_power_per_wt_generator_in_MW() const;
+        double get_turbine_mechanical_power_in_MW() const;
+        double get_turbine_reference_speed_in_rad_per_s() const;
+        double get_turbine_reference_speed_in_pu() const;
+
+        double get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(double speed_rad_per_s) const;
+        double get_Cpmax(double pitch_deg) const;
+        double get_lambda_at_Cpmax(double pitch_deg) const;
     public:
         virtual string get_model_name() const = 0;
 
@@ -71,13 +84,8 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
 
-        virtual void initialize() = 0;
-        virtual void run(DYNAMIC_MODE mode) = 0;
-        virtual double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind) const = 0;
-        virtual double get_turbine_mechanical_power_per_wt_generator_in_MW() const = 0;
-        virtual double get_turbine_mechanical_power_in_MW() const = 0;
-        virtual double get_turbine_reference_speed_in_rad_per_s() const = 0;
-        virtual double get_turbine_reference_speed_in_pu() const = 0;
+        virtual double get_Cp(double lambda, double pitch_deg) const = 0;
+        virtual double get_derivative_of_Cp_over_lambda(double lambda, double pitch_deg) const = 0;
 
         virtual void check() = 0;
         virtual void clear() = 0;
@@ -94,6 +102,13 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
+        void initialize_wind_turbine_blade_radius_and_gear_ratio();
+        void initialize_turbine_blade_radius_with_nominal_parameters();
+        void initialize_generator_to_turbine_gear_ratio();
+        void initialize_pitch_angle_and_turbine_speed();
+        void initialize_pitch_angle();
+        void initialize_turbine_speed();
+        double get_turbine_reference_speed_in_rad_per_s_without_speed_limit() const;
         // turbine nominals
         double nominal_wind_speed_in_mps;
         double turbine_blade_radius_in_m;

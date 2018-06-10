@@ -55,12 +55,15 @@ class WT_AERODYNAMIC_MODEL_TEST : public WTG_MODEL_TEST
         void test_get_standard_model_string();
 
 
+        void test_initialize_and_get_initialized_inputs_with_overspeed_flag();
+        void test_initialize_and_get_initialized_inputs_without_overspeed_flag();
+        void test_list_Cp_and_mechanical_power_data_of_different_wind_speed();
+
+        void test_get_turbine_speed_reference();
+        void test_set_as_typical_wt_generator();
+
         virtual void test_get_model_name() = 0;
         virtual void test_set_get_parameters() = 0;
-        virtual void test_initialize_and_get_initialized_inputs_with_overspeed_flag() = 0;
-        virtual void test_initialize_and_get_initialized_inputs_without_overspeed_flag() = 0;
-        virtual void test_get_turbine_speed_reference() = 0;
-
 };
 
 #endif//WT_AERODYNAMIC_MODEL_TEST_H
