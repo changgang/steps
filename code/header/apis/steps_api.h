@@ -13,7 +13,7 @@ class STEPS_API_SEARCH_BUFFER
     public:
         vector<BUS*> buses;                            size_t bus_pointer;
         vector<GENERATOR*> generators;                 size_t generator_pointer;
-        vector<WT_GENERATOR*> wt_generators;                 size_t wt_generator_pointer;
+        vector<WT_GENERATOR*> wt_generators;           size_t wt_generator_pointer;
         vector<LOAD*> loads;                           size_t load_pointer;
         vector<FIXED_SHUNT*> fixed_shunts;             size_t fixed_shunt_pointer;
         vector<LINE*> lines;                           size_t line_pointer;

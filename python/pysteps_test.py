@@ -6,8 +6,8 @@ pysteps.set_allowed_maximum_bus_number(10000)
 max_bus = pysteps.get_allowed_maximum_bus_number()
 print(max_bus)
 
-pysteps.load_powerflow_data('ieee39.raw','PSS/E')
-pysteps.load_dynamic_data('ieee39.dyr','PSS/E')
+pysteps.load_powerflow_data('IEEE39.raw','PSS/E')
+pysteps.load_dynamic_data('IEEE39.dyr','PSS/E')
 
 nbus = pysteps.get_bus_count()
 print(nbus)
@@ -75,7 +75,7 @@ print("here goes running dynamic simulation")
 pysteps.load_dynamic_data('ieee39_genrou.dyr','psse')
 
 pysteps.set_dynamic_simulator_parameter('i', 'max_DAE_iter', 200)
-pysteps.set_dynamic_simulator_parameter('i', 'max_NET_iter', 1)
+pysteps.set_dynamic_simulator_parameter('i', 'max_NET_iter', 200)
 pysteps.set_dynamic_simulation_time_step(0.001)
 pysteps.set_dynamic_simulator_output_file('ieee39_pysteps')
 

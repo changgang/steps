@@ -30,12 +30,12 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
     if(ds!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="MAX DAE ITERATION")
+        if(PARAMETER_NAME=="MAX_DAE_ITER" or PARAMETER_NAME=="MAX DAE ITERATION")
         {
             ds->set_max_DAE_iteration(value);
             return;
         }
-        if(PARAMETER_NAME=="MAX NETWORK ITERATION")
+        if(PARAMETER_NAME=="MAX_NET_ITER" or PARAMETER_NAME=="MAX NETWORK ITERATION")
         {
             ds->set_max_network_iteration(value);
             return;

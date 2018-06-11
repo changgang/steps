@@ -18,7 +18,7 @@ def get_bus_capacity():
     return libsteps.api_get_device_capacity("BUS")
 def get_generator_capacity():
     return libsteps.api_get_device_capacity("Generator")
-def get_pe_source_capacity():
+def get_wt_generator_capacity():
     return libsteps.api_get_device_capacity("PE Source")
 def get_load_capacity():
     return libsteps.api_get_device_capacity("Load")
@@ -43,7 +43,7 @@ def set_bus_capacity(capacity):
     return libsteps.api_set_device_capacity("BUS", capacity)
 def set_generator_capacity(capacity):
     return libsteps.api_set_device_capacity("Generator", capacity)
-def set_pe_source_capacity(capacity):
+def set_wt_generator_capacity(capacity):
     return libsteps.api_set_device_capacity("PE Source", capacity)
 def set_load_capacity(capacity):
     return libsteps.api_set_device_capacity("Load", capacity)
@@ -69,7 +69,7 @@ def get_bus_count():
     return libsteps.api_get_device_count("BUS")
 def get_generator_count():
     return libsteps.api_get_device_count("Generator")
-def get_pe_source_count():
+def get_wt_generator_count():
     return libsteps.api_get_device_count("PE Source")
 def get_load_count():
     return libsteps.api_get_device_count("Load")
@@ -134,17 +134,17 @@ def get_generators_at_bus(bus):
         libsteps.api_goto_next_device("GENERATOR")
     return generators
     
-def get_pe_sources_at_bus(bus):
+def get_wt_generators_at_bus(bus):
     libsteps.api_initialize_device_search("PE SOURCE", bus)
-    pe_sources = []
+    wt_generators = []
     while True:
         bus = libsteps.api_get_current_device_bus_number("PE SOURCE", "")
         if bus==0:
             break
         id = libsteps.api_get_current_device_identifier("PE SOURCE")
-        pe_sources.append([bus, id])
+        wt_generators.append([bus, id])
         libsteps.api_goto_next_device("PE SOURCE")
-    return pe_sources
+    return wt_generators
     
 def get_loads_at_bus(bus):
     libsteps.api_initialize_device_search("LOAD", bus)
@@ -286,13 +286,13 @@ def get_generator_data(generator, par_type, par_name):
         return libsteps.api_get_source_string_data(bus, id, par_name)
     return None
 
-def get_pe_source_data(pe_source, par_type, par_name):
+def get_wt_generator_data(wt_generator, par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
     
-    bus = pe_source[0]
-    id = pe_source[1]
+    bus = wt_generator[0]
+    id = wt_generator[1]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_get_source_integer_data(bus, id, par_name)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
@@ -490,13 +490,13 @@ def set_generator_data(generator, par_type, par_name, value):
         return libsteps.api_set_source_string_data(bus, id, par_name, value)
     return None
 
-def set_pe_source_data(pe_source, par_type, par_name, value):
+def set_wt_generator_data(wt_generator, par_type, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
     
-    bus = pe_source[0]
-    id = pe_source[1]
+    bus = wt_generator[0]
+    id = wt_generator[1]
     if par_type in ['I', 'INT', 'INTEGER']:
         return libsteps.api_set_source_integer_data(bus, id, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:

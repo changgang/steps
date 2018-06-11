@@ -1,5 +1,6 @@
 from ctypes import *
-libsteps = CDLL("steps_core.dll")
+#libsteps = CDLL("libSTEPS.dll")
+libsteps = cdll.LoadLibrary("./libSTEPS.so")
 
 libsteps.api_load_powerflow_data_from_file.restype = None
 libsteps.api_load_powerflow_data_from_file.argtypes = (c_char_p, c_char_p)
@@ -101,8 +102,8 @@ libsteps.api_add_bus.restype = None
 libsteps.api_add_bus.argtypes = (c_uint, c_char_p, c_double)
 libsteps.api_add_generator.restype = None
 libsteps.api_add_generator.argtypes = (c_uint, c_char_p)
-libsteps.api_add_pe_source.restype = None
-libsteps.api_add_pe_source.argtypes = (c_uint, c_char_p)
+libsteps.api_add_wt_generator.restype = None
+libsteps.api_add_wt_generator.argtypes = (c_uint, c_char_p)
 libsteps.api_add_load.restype = None
 libsteps.api_add_load.argtypes = (c_uint, c_char_p)
 libsteps.api_add_fixed_shunt.restype = None

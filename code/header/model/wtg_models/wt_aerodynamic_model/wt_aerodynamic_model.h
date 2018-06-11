@@ -63,15 +63,15 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind) const;
+        double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind);
         double get_turbine_mechanical_power_per_wt_generator_in_MW() const;
         double get_turbine_mechanical_power_in_MW() const;
-        double get_turbine_reference_speed_in_rad_per_s() const;
-        double get_turbine_reference_speed_in_pu() const;
+        double get_turbine_reference_speed_in_rad_per_s();
+        double get_turbine_reference_speed_in_pu();
 
         double get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(double speed_rad_per_s) const;
-        double get_Cpmax(double pitch_deg) const;
-        double get_lambda_at_Cpmax(double pitch_deg) const;
+        double get_Cpmax(double pitch_deg);
+        double get_lambda_at_Cpmax(double pitch_deg);
     public:
         virtual string get_model_name() const = 0;
 
@@ -108,7 +108,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         void initialize_pitch_angle_and_turbine_speed();
         void initialize_pitch_angle();
         void initialize_turbine_speed();
-        double get_turbine_reference_speed_in_rad_per_s_without_speed_limit() const;
+        double get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
         // turbine nominals
         double nominal_wind_speed_in_mps;
         double turbine_blade_radius_in_m;
@@ -130,6 +130,9 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         bool overspeed_mode_flag;
 
         double max_steady_state_turbine_speed_in_pu, min_steady_state_turbine_speed_in_pu;
+
+        double current_pitch_angle_in_deg, current_lambda_at_cpmax;
+        double current_pelec_including_loss_per_turbine, current_turbine_speed_reference_without_limit_in_rad_per_s;
 };
 
 #endif // WT_AERODYNAMIC_MODEL_H
