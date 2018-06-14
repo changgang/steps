@@ -960,6 +960,7 @@ void DYNAMICS_SIMULATOR::update()
         osstream<<"Failed to solve network in "<<network_iter_max<<" iterations when updating at time "<<get_dynamic_simulation_time_in_s()<<" s.";
         show_information_with_leading_time_stamp(osstream);
     }
+    update_bus_frequency_blocks();
 
     save_meter_values();
     //cout<<"    elapsed time for export meters: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;

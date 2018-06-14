@@ -355,11 +355,13 @@ void PUFLS::run(DYNAMIC_MODE mode)
     frequency_sensor.set_input(freq);
     frequency_sensor.run(mode);
 
+    append_new_minimum_frequency();
+
     if(mode==UPDATE_MODE)
     {
-        append_new_minimum_frequency();
 
         size_t N = get_number_of_discrete_stage_to_meet_total_continuous_shed_scale();
+        //cout<<"N="<<N<<endl;
         // try to shed lines
         for(size_t stage=0; stage!=N; ++stage)
         {
@@ -398,6 +400,7 @@ void PUFLS::append_new_minimum_frequency()
 
     double current_freq = frequency_sensor.get_output();
     double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
+    //cout<<"at time "<<STEPS::TIME<<": freq = "<<current_freq<<", previous minimum = "<<previous_minimum_freq<<endl;
 
     if(current_freq<previous_minimum_freq)
         history_minimum_frequency_buffer.append_data(current_time, current_freq);
@@ -419,6 +422,7 @@ double PUFLS::get_continuous_shed_command_in_pu() const
 
     double continuous_shed_command = 0.0;
     double delayed_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_time(current_time-delay);
+    //cout<<"delayed minimum freq ="<<delayed_minimum_freq<<", f_th = "<<f_th<<endl;
     if(delayed_minimum_freq<f_th)
     {
         double delta_frequency = f_th-delayed_minimum_freq;
@@ -427,6 +431,7 @@ double PUFLS::get_continuous_shed_command_in_pu() const
         //if(continuous_shed_command>max_continuous_shed_scale)
         //    continuous_shed_command = max_continuous_shed_scale;
     }
+    //cout<<"continuous shed command = "<<continuous_shed_command<<endl;
     return continuous_shed_command;
 }
 
@@ -449,6 +454,8 @@ size_t PUFLS::get_number_of_discrete_stage_to_meet_total_continuous_shed_scale()
     double c_max = get_maximum_continuous_shed_scale_in_pu();
     if(total_shed_command>c_max)
         discrete_shed_command = total_shed_command - c_max;
+    else
+        return 0;
 
     size_t N=0;
     double total_to_shed = 0.0;
@@ -691,7 +698,7 @@ bool PUFLS::is_frequency_recovering_beyond_current_minimum_frequency() const
     double current_freq = frequency_sensor.get_output();
     double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
 
-    return fabs(current_freq-current_minimum_freq)>FLOAT_EPSILON;
+    return (current_freq-current_minimum_freq)>FLOAT_EPSILON;
 }
 
 bool PUFLS::is_minimum_frequency_declining() const
@@ -699,7 +706,7 @@ bool PUFLS::is_minimum_frequency_declining() const
     double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
     double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_delay_index(1);
 
-    return fabs(current_minimum_freq-previous_minimum_freq)>FLOAT_EPSILON;
+    return (current_minimum_freq-previous_minimum_freq)<-FLOAT_EPSILON;
 }
 
 bool PUFLS::is_minimum_frequency_not_changing() const
@@ -723,6 +730,7 @@ double PUFLS::get_total_shed_scale_factor_in_pu() const
         total_shed_scale += c_max;
         total_shed_scale += get_total_discrete_shed_scale_in_pu();
     }
+    //cout<<"total shed scale = "<<total_shed_scale<<endl;
 
     return total_shed_scale;
 }
