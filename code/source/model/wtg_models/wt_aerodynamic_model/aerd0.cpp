@@ -220,13 +220,14 @@ bool AERD0::setup_model_with_psse_string(string data)
     if(model_name!=get_model_name())
         return is_successful;
 
-    size_t overspeed_flag, n;
+    int speed_mode_flag=0;
+    size_t n;
     double vwind0, gear_eta, rou0_air, min_speed, max_speed;
     double rou_air;
     double c1, c2, c3, c4, c5, c6;
 
     size_t i=3;
-    overspeed_flag = size_t(get_integer_data(dyrdata[i],"0")); i++;
+    speed_mode_flag = get_integer_data(dyrdata[i],"0"); i++;
     n = size_t(get_integer_data(dyrdata[i],"1")); i++;
     vwind0 = get_double_data(dyrdata[i],"0.0"); i++;
     gear_eta = get_double_data(dyrdata[i],"0.0"); i++;
@@ -241,10 +242,24 @@ bool AERD0::setup_model_with_psse_string(string data)
     c5 = get_double_data(dyrdata[i],"0.0"); i++;
     c6 = get_double_data(dyrdata[i],"0.0");
 
-    if(overspeed_flag==0)
-        set_overspeed_mode_flag(false);
-    else
-        set_overspeed_mode_flag(true);
+    switch(speed_mode_flag)
+    {
+        case -1:
+        {
+            set_turbine_speed_mode(UNDERSPEED_MODE);
+            break;
+        }
+        case 1:
+        {
+            set_turbine_speed_mode(OVERSPEED_MODE);
+            break;
+        }
+        default:
+        {
+            set_turbine_speed_mode(MPPT_MODE);
+            break;
+        }
+    }
     set_number_of_pole_pairs(n);
     set_nominal_wind_speed_in_mps(vwind0);
     set_gear_efficiency(gear_eta);
@@ -301,13 +316,31 @@ string AERD0::get_standard_model_string() const
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
 
-    size_t overspeed_flag = (get_overspeed_mode_flag()==false? 0: 1);
+    int speed_mode_flag = 0;
+    switch(get_turbine_speed_mode())
+    {
+        case UNDERSPEED_MODE:
+        {
+            speed_mode_flag = -1;
+            break;
+        }
+        case OVERSPEED_MODE:
+        {
+            speed_mode_flag = 1;
+            break;
+        }
+        default:
+        {
+            speed_mode_flag = 0;
+            break;
+        }
+    }
     size_t n = get_number_of_pole_pairs();
 
     osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
-      <<setw(4)<<overspeed_flag<<", "
+      <<setw(4)<<speed_mode_flag<<", "
       <<setw(4)<<n<<", "
       <<setw(6)<<setprecision(4)<<get_nominal_wind_speed_in_mps()<<", "
       <<setw(6)<<setprecision(4)<<get_gear_efficiency()<<", "

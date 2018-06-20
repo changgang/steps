@@ -781,6 +781,7 @@ void api_close_load(size_t bus, char* identifier)
         ds->close_load(did);
     }
 }
+
 void api_scale_load(size_t bus, char* identifier, double percent)
 {
     DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
@@ -817,6 +818,59 @@ void api_scale_all_loads(double percent)
     }
 }
 
+
+void api_trip_fixed_shunt(size_t bus, char* identifier)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
+
+    if(ds!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("FIXED SHUNT");
+        TERMINAL terminal;
+        terminal.append_bus(bus);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(identifier);
+
+        if(not psdb->is_fixed_shunt_exist(did))
+        {
+            ostringstream osstream;
+            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
+            show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+
+        ds->trip_fixed_shunt(did);
+    }
+}
+
+void api_close_fixed_shunt(size_t bus, char* identifier)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
+
+    if(ds!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("FIXED SHUNT");
+        TERMINAL terminal;
+        terminal.append_bus(bus);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(identifier);
+
+        if(not psdb->is_load_exist(did))
+        {
+            ostringstream osstream;
+            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
+            show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+
+        ds->close_fixed_shunt(did);
+    }
+}
+
 void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 {
     DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
@@ -832,7 +886,7 @@ void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier)
         did.set_device_terminal(terminal);
         did.set_device_identifier(identifier);
 
-        if(not psdb->is_load_exist(did))
+        if(not psdb->is_hvdc_exist(did))
         {
             ostringstream osstream;
             osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
@@ -859,7 +913,7 @@ void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier)
         did.set_device_terminal(terminal);
         did.set_device_identifier(identifier);
 
-        if(not psdb->is_load_exist(did))
+        if(not psdb->is_hvdc_exist(did))
         {
             ostringstream osstream;
             osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
@@ -886,7 +940,7 @@ void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier)
         did.set_device_terminal(terminal);
         did.set_device_identifier(identifier);
 
-        if(not psdb->is_load_exist(did))
+        if(not psdb->is_hvdc_exist(did))
         {
             ostringstream osstream;
             osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
@@ -913,7 +967,7 @@ void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier)
         did.set_device_terminal(terminal);
         did.set_device_identifier(identifier);
 
-        if(not psdb->is_load_exist(did))
+        if(not psdb->is_hvdc_exist(did))
         {
             ostringstream osstream;
             osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;

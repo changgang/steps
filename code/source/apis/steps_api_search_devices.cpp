@@ -204,7 +204,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.hvdcs.size();
         if(index<n)
         {
-            if(SIDE=="SENDING" or SIDE=="SEND")
+            if(SIDE=="RECTIFIER" or SIDE=="REC")
                 return api_search_buffer.hvdcs[index]->get_converter_bus(RECTIFIER);
             else
                 return api_search_buffer.hvdcs[index]->get_converter_bus(INVERTER);

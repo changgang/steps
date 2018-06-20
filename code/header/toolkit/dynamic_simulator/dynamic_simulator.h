@@ -97,6 +97,9 @@ class DYNAMICS_SIMULATOR: public BASE
         void scale_load(DEVICE_ID load_id, double percent);
         void scale_all_load(double percent);
 
+        void trip_fixed_shunt(DEVICE_ID shunt_id);
+        void close_fixed_shunt(DEVICE_ID shunt_id);
+
 
         void manual_bypass_hvdc(DEVICE_ID hvdc_id);
         void manual_block_hvdc(DEVICE_ID hvdc_id);

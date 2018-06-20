@@ -55,7 +55,7 @@ void WT_AERODYNAMIC_MODEL::copy_from_const_model(const WT_AERODYNAMIC_MODEL& mod
     set_nominal_air_density_in_kgpm3(model.get_nominal_air_density_in_kgpm3());
 
     set_air_density_in_kgpm3(model.get_air_density_in_kgpm3());
-    set_overspeed_mode_flag(model.get_overspeed_mode_flag());
+    set_turbine_speed_mode(model.get_turbine_speed_mode());
 
     set_max_steady_state_turbine_speed_in_pu(model.get_max_steady_state_turbine_speed_in_pu());
     set_min_steady_state_turbine_speed_in_pu(model.get_min_steady_state_turbine_speed_in_pu());
@@ -195,9 +195,9 @@ void WT_AERODYNAMIC_MODEL::set_air_density_in_kgpm3(double rou)
     air_density_in_kgpm3 = rou;
 }
 
-void WT_AERODYNAMIC_MODEL::set_overspeed_mode_flag(bool flag)
+void WT_AERODYNAMIC_MODEL::set_turbine_speed_mode(WTG_TURBINE_SPEED_MODE mode)
 {
-    overspeed_mode_flag = flag;
+    speed_mode = mode;
 }
 
 void WT_AERODYNAMIC_MODEL::set_max_steady_state_turbine_speed_in_pu(double w)
@@ -215,9 +215,9 @@ double WT_AERODYNAMIC_MODEL::get_air_density_in_kgpm3() const
     return air_density_in_kgpm3;
 }
 
-bool WT_AERODYNAMIC_MODEL::get_overspeed_mode_flag() const
+WTG_TURBINE_SPEED_MODE WT_AERODYNAMIC_MODEL::get_turbine_speed_mode() const
 {
-    return overspeed_mode_flag;
+    return speed_mode;
 }
 
 double WT_AERODYNAMIC_MODEL::get_max_steady_state_turbine_speed_in_pu() const
@@ -682,6 +682,9 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
     double r = get_turbine_blade_radius_in_m();
     double w_mppt = lambda*vwind/r;
 
+    if(get_turbine_speed_mode()==MPPT_MODE)
+        return w_mppt;
+
     double pmax = cpmax*get_total_wind_power_per_wt_generator_in_MW(vwind);
     if(pmech>pmax)
     {
@@ -695,7 +698,7 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
     }
 
     double wlow, whigh;
-    if(get_overspeed_mode_flag()==false)
+    if(get_turbine_speed_mode()==UNDERSPEED_MODE)
     {
         wlow = w_mppt*0.5;
         whigh = w_mppt;
@@ -730,7 +733,7 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
             show_information_with_leading_time_stamp(osstream);
             break;
         }
-        if(get_overspeed_mode_flag()==false)
+        if(get_turbine_speed_mode()==UNDERSPEED_MODE)
         {
             if(pnew>pmech)
                 whigh = wnew;

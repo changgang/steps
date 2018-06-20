@@ -68,6 +68,8 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
     private:
         void copy_from_const_model(const PUFLS& model);
         void append_new_minimum_frequency();
+
+        void update_continuous_shed_command();
         double get_continuous_shed_command_in_pu() const;
 
         size_t get_number_of_discrete_stage_to_meet_total_continuous_shed_scale() const;
@@ -79,6 +81,7 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         bool is_discrete_stage_timer_started(size_t stage) const;
         void trip_discrete_stage(size_t stage);
         void start_discrete_stage_timer_of_stage(size_t stage);
+        void reset_discrete_stage_timer_of_stage(size_t stage);
 
         void try_to_shed_additional_stage();
         bool is_additional_stage_set() const;
@@ -113,6 +116,8 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         bool flag_discrete_stage_is_tripped[MAX_LOAD_RELAY_STAGE];
 
         CONTINUOUS_BUFFER history_minimum_frequency_buffer;
+
+        double current_continuous_shed_command_in_pu;
 };
 
 #endif // PUFLS_H

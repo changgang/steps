@@ -2646,6 +2646,77 @@ void DYNAMICS_SIMULATOR::scale_all_load(double percent)
 }
 
 
+void DYNAMICS_SIMULATOR::trip_fixed_shunt(DEVICE_ID shunt_id)
+{
+    ostringstream osstream;
+
+    if(shunt_id.get_device_type()!="FIXED SHUNT")
+    {
+        osstream<<"The given device is not a FIXED SHUNT (it is a "<<shunt_id.get_device_type()<<") for tripping fixed shunt."<<endl
+               <<"No fixed shunt will be tripped at time "<<get_dynamic_simulation_time_in_s()<<" s."<<endl;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    POWER_SYSTEM_DATABASE* db = get_power_system_database();
+    FIXED_SHUNT* shunt = db->get_fixed_shunt(shunt_id);
+    if(shunt!=NULL)
+    {
+        if(shunt->get_status()==true)
+        {
+            shunt->set_status(false);
+
+            network_db->build_dynamic_network_matrix();
+            build_jacobian();
+
+            osstream<<shunt->get_device_name()<<" is tripped at time "<<get_dynamic_simulation_time_in_s()<<" s.";
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"Warning. "<<shunt_id.get_device_name()<<" does not exist in power system database."<<endl
+               <<"No fixed shunt will be tripped at time "<<get_dynamic_simulation_time_in_s()<<" s.";
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::close_fixed_shunt(DEVICE_ID shunt_id)
+{
+    ostringstream osstream;
+
+    if(shunt_id.get_device_type()!="FIXED SHUNT")
+    {
+        osstream<<"The given device is not a FIXED SHUNT (it is a "<<shunt_id.get_device_type()<<") for closing fixed shunt."<<endl
+               <<"No fixed shunt will be closed at time "<<get_dynamic_simulation_time_in_s()<<" s."<<endl;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    POWER_SYSTEM_DATABASE* db = get_power_system_database();
+    FIXED_SHUNT* shunt = db->get_fixed_shunt(shunt_id);
+    if(shunt!=NULL)
+    {
+        if(shunt->get_status()==false)
+        {
+            shunt->set_status(true);
+
+            network_db->build_dynamic_network_matrix();
+            build_jacobian();
+
+            osstream<<shunt->get_device_name()<<" is closed at time "<<get_dynamic_simulation_time_in_s()<<" s.";
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"Warning. "<<shunt_id.get_device_name()<<" does not exist in power system database."<<endl
+               <<"No fixed shunt will be closed at time "<<get_dynamic_simulation_time_in_s()<<" s.";
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+
 void DYNAMICS_SIMULATOR::manual_bypass_hvdc(DEVICE_ID hvdc_id)
 {
     ostringstream osstream;

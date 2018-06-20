@@ -28,7 +28,7 @@ void AERD0_TEST::setup()
     model.set_nominal_wind_speed_in_mps(13.0);
     model.set_nominal_air_density_in_kgpm3(1.25);
     model.set_air_density_in_kgpm3(1.25);
-    model.set_overspeed_mode_flag(false);
+    model.set_turbine_speed_mode(UNDERSPEED_MODE);
 
     model.set_C1(0.22);
     model.set_C2(116.0);

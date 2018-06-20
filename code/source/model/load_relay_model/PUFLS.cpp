@@ -35,6 +35,8 @@ void PUFLS::clear()
         discrete_stage_timer[stage].reset();
         flag_discrete_stage_is_tripped[stage] = false;
     }
+
+    current_continuous_shed_command_in_pu = 0.0;
 }
 
 void PUFLS::copy_from_const_model(const PUFLS& model)
@@ -331,7 +333,7 @@ void PUFLS::initialize()
 
     double current_time = get_dynamic_simulation_time_in_s();
 
-    history_minimum_frequency_buffer.set_buffer_size(2*(size_t)(t_delay/delt));
+    history_minimum_frequency_buffer.set_buffer_size(2*(size_t)(t_delay/delt)+2);
     history_minimum_frequency_buffer.initialize_buffer(current_time, fbase);
 
     additional_stage_timer.reset();
@@ -342,6 +344,8 @@ void PUFLS::initialize()
         discrete_stage_timer[stage].reset();
         flag_discrete_stage_is_tripped[stage] = false;
     }
+
+    current_continuous_shed_command_in_pu = 0.0;
 }
 
 void PUFLS::run(DYNAMIC_MODE mode)
@@ -357,7 +361,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
 
     append_new_minimum_frequency();
 
-    if(mode==UPDATE_MODE)
+    if(mode==UPDATE_MODE or mode==INTEGRATE_MODE)
     {
 
         size_t N = get_number_of_discrete_stage_to_meet_total_continuous_shed_scale();
@@ -370,7 +374,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
 
             if(is_discrete_stage_timer_started(stage))
             {
-                if(is_discrete_stage_timer_timed_out(stage))
+                if(is_discrete_stage_timer_timed_out(stage) and is_minimum_frequency_declining())
                 {
                     osstream<<"PUFLS discrete stage "<<stage<<" timer of "<<get_device_name()<<" is timed out at time "<<TIME<<" s."<<endl
                       <<get_discrete_stage_shed_scale_in_pu(stage)*100.0<<"% loads are tripped.";
@@ -390,49 +394,79 @@ void PUFLS::run(DYNAMIC_MODE mode)
         }
 
         try_to_shed_additional_stage();
-
     }
+    if(mode==UPDATE_MODE)
+        update_continuous_shed_command();
 }
 
 void PUFLS::append_new_minimum_frequency()
 {
+    ostringstream osstream;
+
     double current_time = get_dynamic_simulation_time_in_s();
+    double delt = get_dynamic_simulation_time_step_in_s();
 
     double current_freq = frequency_sensor.get_output();
-    double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
+    //double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
+    double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_time(current_time-delt);
     //cout<<"at time "<<STEPS::TIME<<": freq = "<<current_freq<<", previous minimum = "<<previous_minimum_freq<<endl;
 
     if(current_freq<previous_minimum_freq)
         history_minimum_frequency_buffer.append_data(current_time, current_freq);
     else
         history_minimum_frequency_buffer.append_data(current_time, previous_minimum_freq);
-
+/*
+    size_t bus = ((LOAD*) get_device_pointer())->get_load_bus();
+    if(bus==3)
+    {
+        osstream<<setw(10)<<setprecision(6)
+                <<"At time "<<current_time<<"s, "<<get_device_name()<<endl
+                <<"Current bus frequency is: "<<get_bus_frequency_in_Hz()<<"Hz"<<endl
+                <<"Current sensed frequency is: "<<frequency_sensor.get_output()<<"Hz"<<endl
+                <<"Current minimum frequency is: "<<history_minimum_frequency_buffer.get_buffer_value_at_head()<<"Hz";
+        show_information_with_leading_time_stamp(osstream);
+        history_minimum_frequency_buffer.show_buffer();
+    }
+*/
 }
 
-double PUFLS::get_continuous_shed_command_in_pu() const
+void PUFLS::update_continuous_shed_command()
 {
-    double current_time = get_dynamic_simulation_time_in_s();
+    ostringstream osstream;
 
-    //double current_freq = frequency_sensor.get_output();
-    //double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
+    double current_time = get_dynamic_simulation_time_in_s();
 
     double f_th = get_frequency_threshold_in_Hz();
     double delay = get_time_delay_in_s();
     double K = get_scale_K_in_pu_per_Hz();
 
-    double continuous_shed_command = 0.0;
-    double delayed_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_time(current_time-delay);
-    //cout<<"delayed minimum freq ="<<delayed_minimum_freq<<", f_th = "<<f_th<<endl;
-    if(delayed_minimum_freq<f_th)
+    if(is_minimum_frequency_declining())
     {
-        double delta_frequency = f_th-delayed_minimum_freq;
-        continuous_shed_command = K*delta_frequency;
-        //double max_continuous_shed_scale = get_maximum_continuous_shed_scale_in_pu();
-        //if(continuous_shed_command>max_continuous_shed_scale)
-        //    continuous_shed_command = max_continuous_shed_scale;
+        double delayed_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_time(current_time-delay);
+        if(delayed_minimum_freq<f_th)
+        {
+            double delta_frequency = f_th-delayed_minimum_freq;
+            current_continuous_shed_command_in_pu = K*delta_frequency;
+            /*size_t bus = ((LOAD*) get_device_pointer())->get_load_bus();
+            if(bus==3)
+            {
+                osstream<<setw(10)<<setprecision(6)
+                        <<"At time "<<current_time<<"s, "<<get_device_name()<<" minimum frequency is declining."<<endl
+                        <<"Current bus frequency is: "<<get_bus_frequency_in_Hz()<<"Hz"<<endl
+                        <<"Current sensed frequency is: "<<frequency_sensor.get_output()<<"Hz"<<endl
+                        <<"Current minimum frequency is: "<<history_minimum_frequency_buffer.get_buffer_value_at_head()<<"Hz"<<endl
+                        <<"Delayed minimum frequency is: "<<delayed_minimum_freq<<"Hz"<<endl
+                        <<"Current shed command is: "<<current_continuous_shed_command_in_pu;
+                show_information_with_leading_time_stamp(osstream);
+                history_minimum_frequency_buffer.show_buffer();
+            }*/
+        }
     }
-    //cout<<"continuous shed command = "<<continuous_shed_command<<endl;
-    return continuous_shed_command;
+}
+
+double PUFLS::get_continuous_shed_command_in_pu() const
+{
+    return current_continuous_shed_command_in_pu;
 }
 
 double PUFLS::get_total_discrete_shed_scale_in_pu() const
@@ -528,6 +562,15 @@ void PUFLS::start_discrete_stage_timer_of_stage(size_t stage)
     {
         if(not is_discrete_stage_timer_started(stage))
             discrete_stage_timer[stage].start();
+    }
+}
+
+void PUFLS::reset_discrete_stage_timer_of_stage(size_t stage)
+{
+    if(stage<MAX_LOAD_RELAY_STAGE)
+    {
+        if(is_discrete_stage_timer_started(stage))
+            discrete_stage_timer[stage].reset();
     }
 }
 
@@ -717,8 +760,6 @@ bool PUFLS::is_minimum_frequency_not_changing() const
 double PUFLS::get_total_shed_scale_factor_in_pu() const
 {
     double total_shed_scale = 0.0;
-    if(flag_additional_stage_is_tripped)
-        total_shed_scale = get_additional_stage_shed_scale_in_pu();
 
     double total_continous_shed = get_continuous_shed_command_in_pu();
     double c_max = get_maximum_continuous_shed_scale_in_pu();
@@ -730,6 +771,9 @@ double PUFLS::get_total_shed_scale_factor_in_pu() const
         total_shed_scale += c_max;
         total_shed_scale += get_total_discrete_shed_scale_in_pu();
     }
+
+    if(flag_additional_stage_is_tripped)
+        total_shed_scale += get_additional_stage_shed_scale_in_pu();
     //cout<<"total shed scale = "<<total_shed_scale<<endl;
 
     return total_shed_scale;

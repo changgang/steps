@@ -4,6 +4,14 @@
 #include "header/model/wtg_models/wtg_model.h"
 #include <cstdlib>
 
+enum WTG_TURBINE_SPEED_MODE
+{
+    UNDERSPEED_MODE = -1,
+    MPPT_MODE = 0,
+    OVERSPEED_MODE = 1
+};
+
+
 class WT_AERODYNAMIC_MODEL : public WTG_MODEL
 {
     /*  aero dynamic model for WTG
@@ -39,12 +47,12 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_nominal_turbine_speed_in_rad_per_s() const;
 
         void set_air_density_in_kgpm3(double rou);
-        void set_overspeed_mode_flag(bool flag);
+        void set_turbine_speed_mode(WTG_TURBINE_SPEED_MODE mode);
         void set_max_steady_state_turbine_speed_in_pu(double w);
         void set_min_steady_state_turbine_speed_in_pu(double w);
 
         double get_air_density_in_kgpm3() const;
-        bool get_overspeed_mode_flag() const;
+        WTG_TURBINE_SPEED_MODE get_turbine_speed_mode() const;
         double get_max_steady_state_turbine_speed_in_pu() const;
         double get_min_steady_state_turbine_speed_in_pu() const;
 
@@ -127,7 +135,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double air_density_in_kgpm3;
         double pitch_angle_in_deg;
         double turbine_speed_in_rad_per_s;
-        bool overspeed_mode_flag;
+        WTG_TURBINE_SPEED_MODE speed_mode;
 
         double max_steady_state_turbine_speed_in_pu, min_steady_state_turbine_speed_in_pu;
 

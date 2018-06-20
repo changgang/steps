@@ -280,6 +280,9 @@ void api_close_load(size_t bus, char* identifier);
 void api_scale_load(size_t bus, char* identifier, double percent);
 void api_scale_all_loads(double percent);
 
+void api_trip_fixed_shunt(size_t bus, char* identifier);
+void api_close_fixed_shunt(size_t bus, char* identifier);
+
 void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier);
 void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier);
 void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier);

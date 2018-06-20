@@ -66,7 +66,7 @@ void WT_ELECTRICAL_MODEL_TEST::setup()
     aeromodel.set_nominal_wind_speed_in_mps(13.0);
     aeromodel.set_nominal_air_density_in_kgpm3(1.25);
     aeromodel.set_air_density_in_kgpm3(1.25);
-    aeromodel.set_overspeed_mode_flag(false);
+    aeromodel.set_turbine_speed_mode(UNDERSPEED_MODE);
 
     aeromodel.set_C1(0.22);
     aeromodel.set_C2(116.0);
