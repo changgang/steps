@@ -48,6 +48,14 @@ class DYNAMICS_SIMULATOR: public BASE
         void prepare_hvdc_related_meters();
         void prepare_equivalent_device_related_meters();
 
+        void prepare_bus_related_meter(size_t bus, string meter_type);
+        void prepare_generator_related_meter(DEVICE_ID did, string meter_type);
+        void prepare_wt_generator_related_meter(DEVICE_ID did, string meter_type);
+        void prepare_load_related_meter(DEVICE_ID did, string meter_type);
+        void prepare_line_related_meter(DEVICE_ID did, string meter_type, string side);
+        void prepare_hvdc_related_meter(DEVICE_ID did, string meter_type, string side);
+        void prepare_equivalent_device_related_meter(DEVICE_ID did, string meter_type);
+
         void append_meter(const METER& meter);
         size_t get_meter_count() const;
         METER get_meter(size_t i);

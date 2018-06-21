@@ -284,6 +284,50 @@ void api_prepare_equivalent_device_related_meters()
 }
 
 
+void api_prepare_bus_related_meter(size_t bus, char* meter_type)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        ds->prepare_bus_related_meter(bus, meter_type);
+    }
+}
+
+void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("GENERATOR");
+        TERMINAL terminal;
+        terminal.append_bus(bus);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(id);
+
+        ds->prepare_generator_related_meter(did, meter_type);
+    }
+}
+
+void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("LOAD");
+        TERMINAL terminal;
+        terminal.append_bus(bus);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(id);
+
+        ds->prepare_load_related_meter(did, meter_type);
+    }
+}
+
 void api_start_dynamic_simulation()
 {
     DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();

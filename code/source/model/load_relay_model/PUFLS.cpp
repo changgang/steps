@@ -392,11 +392,12 @@ void PUFLS::run(DYNAMIC_MODE mode)
                 continue;
             }
         }
-
-        try_to_shed_additional_stage();
     }
     if(mode==UPDATE_MODE)
+    {
         update_continuous_shed_command();
+        try_to_shed_additional_stage();
+    }
 }
 
 void PUFLS::append_new_minimum_frequency()

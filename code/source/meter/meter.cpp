@@ -8,7 +8,7 @@
 
 using namespace std;
 
-vector<string> bus_meters{  "BUS VOLTAGE IN PU",             "BUS VOLTAGE IN KV",
+vector<string> bus_meters{ "BUS VOLTAGE IN PU",             "BUS VOLTAGE IN KV",
                             "BUS ANGLE IN DEG",              "BUS ANGLE IN RAD",
                             "BUS FREQUENCY IN PU",           "BUS FREQUENCY IN HZ",
                             "BUS FREQUENCY DEVIATION IN PU", "BUS FREQUENCY DEVIATION IN HZ",
@@ -16,7 +16,7 @@ vector<string> bus_meters{  "BUS VOLTAGE IN PU",             "BUS VOLTAGE IN KV"
                             "BUS ROCOF IN PU/S",             "BUS ROCOF IN HZ/S"};
 
 
-vector<string> line_meters{ "LINE CURRENT AT SENDING SIDE IN KA",                    "LINE CURRENT AT RECEIVING SIDE IN KA",
+vector<string> line_meters{"LINE CURRENT AT SENDING SIDE IN KA",                    "LINE CURRENT AT RECEIVING SIDE IN KA",
                             "LINE ACTIVE POWER AT SENDING SIDE IN MW",               "LINE ACTIVE POWER AT RECEIVING SIDE IN MW",
                             "LINE REACTIVE POWER AT SENDING SIDE IN MVAR",           "LINE REACTIVE POWER AT RECEIVING SIDE IN MVAR",
                             "LINE APPARENT IMPEDANCE AT SENDING SIDE IN OHM",        "LINE APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM",
@@ -47,7 +47,7 @@ vector<string> transformer_meters{ "TRANSFORMER CURRENT AT PRIMARY WINDING IN KA
                                    "TRANSFORMER REACTIVE POWER IN PU"};
 
 
-vector<string> load_meters{ "LOAD CURRENT IN KA",
+vector<string> load_meters{"LOAD CURRENT IN KA",
                             "LOAD CURRENT IN PU",
                             "LOAD ACTIVE POWER IN MW", "LOAD REACTIVE POWER IN MVAR",
                             "LOAD ACTIVE POWER IN PU", "LOAD REACTIVE POWER IN PU",
@@ -56,7 +56,7 @@ vector<string> load_meters{ "LOAD CURRENT IN KA",
                             "LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE",
                             "LOAD SHED SCALE IN PU"};
 
-vector<string> generator_meters{    "GENERATOR ROTOR ANGLE IN DEG",
+vector<string> generator_meters{   "GENERATOR ROTOR ANGLE IN DEG",
                                     "GENERATOR ROTOR SPEED IN PU",               "GENERATOR ROTOR SPEED IN HZ",
                                     "GENERATOR ROTOR SPEED DEVIATION IN PU",     "GENERATOR ROTOR SPEED DEVIATION IN HZ",
                                     "GENERATOR INTERNAL VOLTAGE IN PU",
@@ -81,7 +81,7 @@ vector<string> generator_meters{    "GENERATOR ROTOR ANGLE IN DEG",
                                     "GENERATOR STABILIZER MODEL INTERNAL VARIABLE",
                                     "GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE"};
 
-vector<string> wt_generator_meters{ "WT GENERATOR TERMINAL CURRENT IN PU", "WT GENERATOR TERMINAL CURRENT IN KA",
+vector<string> wt_generator_meters{"WT GENERATOR TERMINAL CURRENT IN PU", "WT GENERATOR TERMINAL CURRENT IN KA",
                                     "WT GENERATOR TERMINAL ACTIVE POWER IN MW",
                                     "WT GENERATOR TERMINAL REACTIVE POWER IN MVAR",
                                     "WT GENERATOR MECHANICAL POWER IN MW", "WT GENERATOR MAX AVAILABLE MECHANICAL POWER IN MW",

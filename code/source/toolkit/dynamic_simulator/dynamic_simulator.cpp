@@ -546,6 +546,357 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
     }
 }
 
+void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(not psdb->is_bus_exist(bus))
+    {
+        osstream<<"Warning. Meter of bus "<<bus<<" cannot be set since the given bus does not exist in the power system database";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    METER_SETTER setter;
+    setter.set_power_system_database(psdb);
+
+    METER meter;
+    meter_type = string2upper(meter_type);
+
+    if(meter_type=="VOLTAGE IN PU")
+        meter = setter.prepare_bus_voltage_in_pu_meter(bus);
+    if(meter_type=="ANGLE IN DEG")
+        meter = setter.prepare_bus_angle_in_deg_meter(bus);
+    if(meter_type=="FREQUENCY DEVIATION IN PU")
+        meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus);
+    if(meter_type=="FREQUENCY IN HZ")
+        meter = setter.prepare_bus_frequency_in_Hz_meter(bus);
+
+    if(meter.is_valid())
+        append_meter(meter);
+    else
+    {
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for bus "<<bus;
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_generator_related_meter(DEVICE_ID did, string meter_type)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(did.get_device_type()!="GENERATOR")
+    {
+        osstream<<"Warning. The device type of "<<did.get_device_name()<<" is not GENERATOR when setting up meter with "<<__FUNCTION__;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(not psdb->is_generator_exist(did))
+    {
+        osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    METER_SETTER setter;
+    setter.set_power_system_database(psdb);
+
+    METER meter;
+    meter_type = string2upper(meter_type);
+
+    if(meter_type=="ROTOR ANGLE IN DEG")
+        meter = setter.prepare_generator_rotor_angle_in_deg_meter(did);
+    if(meter_type=="ROTOR SPEED DEVIATION IN PU")
+        meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(did);
+    if(meter_type=="EXCITATION VOLTAGE IN PU")
+        meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
+    if(meter_type=="MECHANICAL POWER IN MW")
+        meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
+    if(meter_type=="TERMINAL ACTIVE POWER IN MW")
+        meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
+    if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
+        meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
+
+    if(meter.is_valid())
+        append_meter(meter);
+    else
+    {
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(DEVICE_ID did, string meter_type)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(did.get_device_type()!="WT GENERATOR")
+    {
+        osstream<<"Warning. The device type of "<<did.get_device_name()<<" is not WT GENERATOR when setting up meter with "<<__FUNCTION__;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(not psdb->is_wt_generator_exist(did))
+    {
+        osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    METER_SETTER setter;
+    setter.set_power_system_database(psdb);
+
+    METER meter;
+    meter_type = string2upper(meter_type);
+
+    if(meter_type=="TERMINAL CURRENT IN KA")
+        meter = setter.prepare_wt_generator_terminal_current_in_kA_meter(did);
+    if(meter_type=="TERMINAL ACTIVE POWER IN MW")
+        meter = setter.prepare_wt_generator_terminal_active_power_in_MW_meter(did);
+    if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
+        meter = setter.prepare_wt_generator_terminal_reactive_power_in_MVar_meter(did);
+    if(meter_type=="MECHANICAL POWER IN MW")
+        meter = setter.prepare_wt_generator_mechanical_power_in_MW_meter(did);
+    if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN MW")
+        meter = setter.prepare_wt_generator_max_available_mechanical_power_in_MW_meter(did);
+    if(meter_type=="SPEED REFERENCE IN PU")
+        meter = setter.prepare_wt_generator_speed_reference_in_pu_meter(did);
+    if(meter_type=="TURBINE SPEED IN PU")
+        meter = setter.prepare_wt_generator_turbine_speed_in_pu_meter(did);
+    if(meter_type=="ROTOR SPEED IN PU")
+        meter = setter.prepare_wt_generator_rotor_speed_in_pu_meter(did);
+    if(meter_type=="ROTOR ANGLE IN DEG")
+        meter = setter.prepare_wt_generator_rotor_angle_in_deg_meter(did);
+    if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
+        meter = setter.prepare_wt_generator_active_current_command_in_pu_meter(did);
+    if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
+        meter = setter.prepare_wt_generator_reactive_current_command_in_pu_meter(did);
+    if(meter_type=="ACTIVE POWER COMMAND IN PU")
+        meter = setter.prepare_wt_generator_active_power_command_in_pu_meter(did);
+    if(meter_type=="REACTIVE POWER COMMAND IN PU")
+        meter = setter.prepare_wt_generator_reactive_power_command_in_pu_meter(did);
+    if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
+        meter = setter.prepare_wt_generator_reactive_voltage_command_in_pu_meter(did);
+    if(meter_type=="PITCH ANGLE IN DEG")
+        meter = setter.prepare_wt_generator_pitch_angle_in_deg_meter(did);
+    if(meter_type=="WIND SPEED IN PU")
+        meter = setter.prepare_wt_generator_wind_speed_in_pu_meter(did);
+    if(meter_type=="WIND SPEED IN MPS")
+        meter = setter.prepare_wt_generator_wind_speed_in_mps_meter(did);
+
+    if(meter.is_valid())
+        append_meter(meter);
+    else
+    {
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_load_related_meter(DEVICE_ID did, string meter_type)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(did.get_device_type()!="LOAD")
+    {
+        osstream<<"Warning. The device type of "<<did.get_device_name()<<" is not LOAD when setting up meter with "<<__FUNCTION__;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(not psdb->is_load_exist(did))
+    {
+        osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    METER_SETTER setter;
+    setter.set_power_system_database(psdb);
+
+    METER meter;
+    meter_type = string2upper(meter_type);
+
+    if(meter_type=="ACTIVE POWER IN MW")
+        meter = setter.prepare_load_active_power_in_MW_meter(did);
+    if(meter_type=="REACTIVE POWER IN MVAR")
+        meter = setter.prepare_load_reactive_power_in_MVar_meter(did);
+    if(meter_type=="SHED SCALE IN PU")
+        meter = setter.prepare_load_shed_scale_in_pu_meter(did);
+
+    if(meter.is_valid())
+        append_meter(meter);
+    else
+    {
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_line_related_meter(DEVICE_ID did, string meter_type, string side)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(did.get_device_type()!="LINE")
+    {
+        osstream<<"Warning. The device type of "<<did.get_device_name()<<" is not LINE when setting up meter with "<<__FUNCTION__;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(not psdb->is_line_exist(did))
+    {
+        osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    METER_SETTER setter;
+    setter.set_power_system_database(psdb);
+
+    METER meter;
+    meter_type = string2upper(meter_type);
+    side = string2upper(side);
+
+    LINE* line = psdb->get_line(did);
+    size_t bus = 0;
+    if(side=="SENDING" or side=="S")
+        bus = line->get_sending_side_bus();
+    if(side=="RECEIVING" or side=="R")
+        bus = line->get_receiving_side_bus();
+
+    if(meter_type=="ACTIVE POWER IN MW")
+        meter = setter.prepare_line_active_power_in_MW_meter(did, bus);
+    if(meter_type=="REACTIVE POWER IN MVAR")
+        meter = setter.prepare_line_reactive_power_in_MVar_meter(did, bus);
+
+    if(meter.is_valid())
+        append_meter(meter);
+    else
+    {
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+
+void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(DEVICE_ID did, string meter_type, string side)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(did.get_device_type()!="HVDC")
+    {
+        osstream<<"Warning. The device type of "<<did.get_device_name()<<" is not HVDC when setting up meter with "<<__FUNCTION__;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(not psdb->is_hvdc_exist(did))
+    {
+        osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    METER_SETTER setter;
+    setter.set_power_system_database(psdb);
+
+    METER meter;
+    meter_type = string2upper(meter_type);
+    side = string2upper(side);
+
+    if(side=="RECTIFIER" or side=="R")
+    {
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_ac_voltage_in_pu_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_ac_voltage_in_pu_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_dc_voltage_in_kV_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_dc_voltage_in_kV_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_dc_current_in_kA_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_dc_current_in_kA_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_alpha_in_deg_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_mu_in_deg_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_gamma_in_deg_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_mu_in_deg_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_dc_power_in_MW_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_dc_power_in_MW_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_ac_active_power_in_MW_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_ac_active_power_in_MW_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_rectifier_ac_current_in_kA_meter(did);
+        if(meter_type=="")
+            meter = setter.prepare_hvdc_inverter_ac_current_in_kA_meter(did);
+    }
+
+    if(meter.is_valid())
+        append_meter(meter);
+    else
+    {
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(DEVICE_ID did, string meter_type)
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(did.get_device_type()!="EQUIVALENT DEVICE")
+    {
+        osstream<<"Warning. The device type of "<<did.get_device_name()<<" is not EQUIVALENT DEVICE when setting up meter with "<<__FUNCTION__;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(not psdb->is_equivalent_device_exist(did))
+    {
+        osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    METER_SETTER setter;
+    setter.set_power_system_database(psdb);
+
+    METER meter;
+    meter_type = string2upper(meter_type);
+
+
+    if(meter.is_valid())
+        append_meter(meter);
+    else
+    {
+        osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_device_name();
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 
 size_t DYNAMICS_SIMULATOR::get_meter_count() const
 {

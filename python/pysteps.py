@@ -713,6 +713,10 @@ def solve_powerflow(method):
 def is_powerflow_converged():
     return libsteps.api_is_powerflow_converged()
     
+def show_powerflow_result():
+    libsteps.api_show_powerflow_result()
+    return
+    
 def save_powerflow_result(file):
     libsteps.api_save_powerflow_result(file)
     return
@@ -791,6 +795,22 @@ def prepare_meters(device_type):
     if device_type in ['EQUIVALENT DEVICE']:
         libsteps.api_prepare_equivalent_device_related_meters()
         return
+    return
+
+def prepare_bus_meter(bus, meter_type):
+    libsteps.api_prepare_bus_related_meter(bus, meter_type)
+    return
+
+def prepare_generator_meter(generator, meter_type):
+    bus = generator[0]
+    id = generator[1]
+    libsteps.api_prepare_generator_related_meter(bus, id, meter_type)
+    return
+
+def prepare_load_meter(load, meter_type):
+    bus = load[0]
+    id = load[1]
+    libsteps.api_prepare_load_related_meter(bus, id, meter_type)
     return
 
 def start_dynamic_simulation():
@@ -886,6 +906,14 @@ def scale_load(load, percent):
 
 def scale_all_loads(ercent):
     libsteps.api_shed_all_loads(percent)
+    return
+
+def trip_fixed_shunt(shunt):
+    libsteps.api_trip_fixed_shunt(shunt[0], shunt[1])
+    return
+
+def close_fixed_shunt(shunt):
+    libsteps.api_close_fixed_shunt(shunt[0], shunt[1])
     return
 
 def manually_bypass_hvdc(hvdc):

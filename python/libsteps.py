@@ -347,6 +347,14 @@ libsteps.api_prepare_hvdc_related_meters.argtypes = None
 libsteps.api_prepare_equivalent_device_related_meters.restype = None
 libsteps.api_prepare_equivalent_device_related_meters.argtypes = None
 
+
+libsteps.api_prepare_bus_related_meter.restype = None
+libsteps.api_prepare_bus_related_meter.argtypes = (c_uint, c_char_p)
+libsteps.api_prepare_generator_related_meter.restype = None
+libsteps.api_prepare_generator_related_meter.argtypes = (c_uint, c_char_p, c_char_p)
+libsteps.api_prepare_load_related_meter.restype = None
+libsteps.api_prepare_load_related_meter.argtypes = (c_uint, c_char_p, c_char_p)
+
 libsteps.api_start_dynamic_simulation.restype = None
 libsteps.api_start_dynamic_simulation.argtypes = None
 libsteps.api_stop_dynamic_simulation.restype = None
@@ -398,6 +406,11 @@ libsteps.api_scale_load.restype = None
 libsteps.api_scale_load.argtypes = (c_uint, c_char_p, c_double)
 libsteps.api_scale_all_loads.restype = None
 libsteps.api_scale_all_loads.argtypes = (c_double, )
+
+libsteps.api_trip_fixed_shunt.restype = None
+libsteps.api_trip_fixed_shunt.argtypes = (c_uint, c_char_p)
+libsteps.api_close_fixed_shunt.restype = None
+libsteps.api_close_fixed_shunt.argtypes = (c_uint, c_char_p)
 
 libsteps.api_manually_bypass_hvdc.restype = None
 libsteps.api_manually_bypass_hvdc.argtypes = (c_uint, c_uint, c_char_p)
