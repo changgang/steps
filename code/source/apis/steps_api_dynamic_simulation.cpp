@@ -243,6 +243,17 @@ void api_prepare_generator_related_meters()
     }
 }
 
+
+void api_prepare_wt_generator_related_meters()
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        ds->prepare_wt_generator_related_meters();
+    }
+}
+
 void api_prepare_load_related_meters()
 {
     DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();

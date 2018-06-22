@@ -246,6 +246,7 @@ double api_get_dynamic_simulation_time_step();
 void api_prepare_meters();
 void api_prepare_bus_related_meters();
 void api_prepare_generator_related_meters();
+void api_prepare_wt_generator_related_meters();
 void api_prepare_load_related_meters();
 void api_prepare_line_related_meters();
 void api_prepare_hvdc_related_meters();

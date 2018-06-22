@@ -783,6 +783,9 @@ def prepare_meters(device_type):
     if device_type in ['GENERATOR']:
         libsteps.api_prepare_generator_related_meters()
         return
+    if device_type in ['WT GENERATOR']:
+        libsteps.api_prepare_wt_generator_related_meters()
+        return
     if device_type in ['LOAD']:
         libsteps.api_prepare_load_related_meters()
         return
