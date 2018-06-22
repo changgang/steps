@@ -815,41 +815,45 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(DEVICE_ID did, string meter_
 
     if(side=="RECTIFIER" or side=="R")
     {
-        if(meter_type=="")
+        if(meter_type=="AC VOLTAGE IN PU")
             meter = setter.prepare_hvdc_rectifier_ac_voltage_in_pu_meter(did);
-        if(meter_type=="")
-            meter = setter.prepare_hvdc_inverter_ac_voltage_in_pu_meter(did);
-        if(meter_type=="")
+        if(meter_type=="DC VOLTAGE IN KV")
             meter = setter.prepare_hvdc_rectifier_dc_voltage_in_kV_meter(did);
-        if(meter_type=="")
-            meter = setter.prepare_hvdc_inverter_dc_voltage_in_kV_meter(did);
-        if(meter_type=="")
+        if(meter_type=="DC CURRENT IN KA")
             meter = setter.prepare_hvdc_rectifier_dc_current_in_kA_meter(did);
-        if(meter_type=="")
-            meter = setter.prepare_hvdc_inverter_dc_current_in_kA_meter(did);
-        if(meter_type=="")
+        if(meter_type=="ALPHA IN DEG")
             meter = setter.prepare_hvdc_rectifier_alpha_in_deg_meter(did);
-        if(meter_type=="")
+        if(meter_type=="MU IN DEG")
             meter = setter.prepare_hvdc_rectifier_mu_in_deg_meter(did);
-        if(meter_type=="")
-            meter = setter.prepare_hvdc_inverter_gamma_in_deg_meter(did);
-        if(meter_type=="")
-            meter = setter.prepare_hvdc_inverter_mu_in_deg_meter(did);
-        if(meter_type=="")
+        if(meter_type=="DC POWER IN MW")
             meter = setter.prepare_hvdc_rectifier_dc_power_in_MW_meter(did);
-        if(meter_type=="")
-            meter = setter.prepare_hvdc_inverter_dc_power_in_MW_meter(did);
-        if(meter_type=="")
+        if(meter_type=="AC ACTIVE POWER IN MW")
             meter = setter.prepare_hvdc_rectifier_ac_active_power_in_MW_meter(did);
-        if(meter_type=="")
+        if(meter_type=="AC REACTIVE POWER IN MVAR")
             meter = setter.prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(did);
-        if(meter_type=="")
-            meter = setter.prepare_hvdc_inverter_ac_active_power_in_MW_meter(did);
-        if(meter_type=="")
-            meter = setter.prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(did);
-        if(meter_type=="")
+        if(meter_type=="AC CURRENT IN KA")
             meter = setter.prepare_hvdc_rectifier_ac_current_in_kA_meter(did);
-        if(meter_type=="")
+    }
+
+    if(side=="INVERTER" or side=="I")
+    {
+        if(meter_type=="AC VOLTAGE IN PU")
+            meter = setter.prepare_hvdc_inverter_ac_voltage_in_pu_meter(did);
+        if(meter_type=="DC VOLTAGE IN KV")
+            meter = setter.prepare_hvdc_inverter_dc_voltage_in_kV_meter(did);
+        if(meter_type=="DC CURRENT IN KA")
+            meter = setter.prepare_hvdc_inverter_dc_current_in_kA_meter(did);
+        if(meter_type=="GAMMA IN DEG")
+            meter = setter.prepare_hvdc_inverter_gamma_in_deg_meter(did);
+        if(meter_type=="MU IN DEG")
+            meter = setter.prepare_hvdc_inverter_mu_in_deg_meter(did);
+        if(meter_type=="DC POWER IN MW")
+            meter = setter.prepare_hvdc_inverter_dc_power_in_MW_meter(did);
+        if(meter_type=="AC ACTIVE POWER IN MW")
+            meter = setter.prepare_hvdc_inverter_ac_active_power_in_MW_meter(did);
+        if(meter_type=="AC REACTIVE POWER IN MVAR")
+            meter = setter.prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(did);
+        if(meter_type=="AC CURRENT IN KA")
             meter = setter.prepare_hvdc_inverter_ac_current_in_kA_meter(did);
     }
 
@@ -887,6 +891,18 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(DEVICE_ID did, 
     METER meter;
     meter_type = string2upper(meter_type);
 
+    if(meter_type=="ACTIVE POWER GENERATION IN MW")
+        meter = setter.prepare_equivalent_device_active_power_generation_in_MW_meter(did);
+    if(meter_type=="REACTIVE POWER GENERATION IN MVAR")
+        meter = setter.prepare_equivalent_device_reactive_power_generation_in_MVar_meter(did);
+    if(meter_type=="ACTIVE POWER LOAD IN MW")
+        meter = setter.prepare_equivalent_device_active_power_load_in_MW_meter(did);
+    if(meter_type=="REACTIVE POWER LOAD IN MVAR")
+        meter = setter.prepare_equivalent_device_reactive_power_load_in_MVar_meter(did);
+    if(meter_type=="ACTIVE POWER NET LOAD IN MW")
+        meter = setter.prepare_equivalent_device_active_power_net_load_in_MW_meter(did);
+    if(meter_type=="REACTIVE POWER NET LOAD IN MVAR")
+        meter = setter.prepare_equivalent_device_reactive_power_net_load_in_MVar_meter(did);
 
     if(meter.is_valid())
         append_meter(meter);

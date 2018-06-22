@@ -253,7 +253,11 @@ void api_prepare_equivalent_device_related_meters();
 
 void api_prepare_bus_related_meter(size_t bus, char* meter_type);
 void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type);
+void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type);
 void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type);
+void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side);
+void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side);
+void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type);
 
 void api_start_dynamic_simulation();
 void api_stop_dynamic_simulation();

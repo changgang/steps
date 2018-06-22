@@ -311,6 +311,24 @@ void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type)
     }
 }
 
+
+void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("WT GENERATOR");
+        TERMINAL terminal;
+        terminal.append_bus(bus);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(id);
+
+        ds->prepare_wt_generator_related_meter(did, meter_type);
+    }
+}
+
 void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type)
 {
     DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
@@ -325,6 +343,59 @@ void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type)
         did.set_device_identifier(id);
 
         ds->prepare_load_related_meter(did, meter_type);
+    }
+}
+
+void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("LINE");
+        TERMINAL terminal;
+        terminal.append_bus(ibus);
+        terminal.append_bus(jbus);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(id);
+
+        ds->prepare_line_related_meter(did, meter_type, side);
+    }
+}
+
+void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("HVDC");
+        TERMINAL terminal;
+        terminal.append_bus(ibus);
+        terminal.append_bus(jbus);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(id);
+
+        ds->prepare_line_related_meter(did, meter_type, side);
+    }
+}
+
+void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type)
+{
+    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("EQUIVALENT DEVICE");
+        TERMINAL terminal;
+        terminal.append_bus(bus);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(id);
+
+        ds->prepare_equivalent_device_related_meter(did, meter_type);
     }
 }
 

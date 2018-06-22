@@ -807,10 +807,36 @@ def prepare_generator_meter(generator, meter_type):
     libsteps.api_prepare_generator_related_meter(bus, id, meter_type)
     return
 
+def prepare_wt_generator_meter(generator, meter_type):
+    bus = generator[0]
+    id = generator[1]
+    libsteps.api_prepare_wt_generator_related_meter(bus, id, meter_type)
+    return
+
 def prepare_load_meter(load, meter_type):
     bus = load[0]
     id = load[1]
     libsteps.api_prepare_load_related_meter(bus, id, meter_type)
+    return
+
+def prepare_line_meter(line, meter_type, side):
+    ibus = line[0]
+    jbus = line[1]
+    id = line[2]
+    libsteps.api_prepare_line_related_meter(ibus, jbus, id, meter_type, side)
+    return
+
+def prepare_hvdc_meter(hvdc, meter_type, side):
+    ibus = hvdc[0]
+    jbus = hvdc[1]
+    id = hvdc[2]
+    libsteps.api_prepare_hvdc_related_meter(ibus, jbus, id, meter_type, side)
+    return
+
+def prepare_equivalent_device_meter(edevice, meter_type):
+    bus = edevice[0]
+    id = edevice[1]
+    libsteps.api_prepare_equivalent_device_related_meter(bus, id, meter_type)
     return
 
 def start_dynamic_simulation():
