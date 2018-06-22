@@ -385,7 +385,7 @@ POWERFLOW_SOLVER* api_get_default_powerflow_solver()
     return &STEPS::default_powerflow_solver;
 }
 
-DYNAMICS_SIMULATOR* api_get_default_dynamic_simulator()
+DYNAMICS_SIMULATOR* get_default_dynamic_simulator()
 {
     return &STEPS::default_dynamic_simulator;
 }

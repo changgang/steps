@@ -3,7 +3,7 @@
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -25,7 +25,7 @@ size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name)
 
 void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -52,7 +52,7 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
 
 double api_get_dynamic_simulator_float_parameter(char* parameter_name)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -74,7 +74,7 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name)
 
 void api_set_dynamic_simulator_float_parameter(char* parameter_name, double value)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -101,7 +101,7 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
 
 const char* api_get_dynamic_simulator_string_parameter(char* parameter_name)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     string BLANK="";
     if(ds!=NULL)
@@ -122,7 +122,7 @@ const char* api_get_dynamic_simulator_string_parameter(char* parameter_name)
 
 void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* value)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -144,7 +144,7 @@ void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* valu
 
 bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -165,7 +165,7 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name)
 }
 void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool value)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -198,7 +198,7 @@ void api_set_dynamic_simulator_output_file(char* file)
 
 const char* api_get_dynamic_simulator_output_file()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     return ds->get_output_file().c_str();
 }
@@ -215,7 +215,7 @@ double api_get_dynamic_simulation_time_step()
 
 void api_prepare_meters()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -225,7 +225,7 @@ void api_prepare_meters()
 
 void api_prepare_bus_related_meters()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -235,7 +235,7 @@ void api_prepare_bus_related_meters()
 
 void api_prepare_generator_related_meters()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -246,7 +246,7 @@ void api_prepare_generator_related_meters()
 
 void api_prepare_wt_generator_related_meters()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -256,7 +256,7 @@ void api_prepare_wt_generator_related_meters()
 
 void api_prepare_load_related_meters()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -266,7 +266,7 @@ void api_prepare_load_related_meters()
 
 void api_prepare_line_related_meters()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -276,7 +276,7 @@ void api_prepare_line_related_meters()
 
 void api_prepare_hvdc_related_meters()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -286,7 +286,7 @@ void api_prepare_hvdc_related_meters()
 
 void api_prepare_equivalent_device_related_meters()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -297,7 +297,7 @@ void api_prepare_equivalent_device_related_meters()
 
 void api_prepare_bus_related_meter(size_t bus, char* meter_type)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -307,7 +307,7 @@ void api_prepare_bus_related_meter(size_t bus, char* meter_type)
 
 void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -325,7 +325,7 @@ void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type)
 
 void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -342,7 +342,7 @@ void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_ty
 
 void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -359,7 +359,7 @@ void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type)
 
 void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -377,7 +377,7 @@ void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* me
 
 void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -395,7 +395,7 @@ void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* me
 
 void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -412,7 +412,7 @@ void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* met
 
 void api_start_dynamic_simulation()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -422,7 +422,7 @@ void api_start_dynamic_simulation()
 
 void api_stop_dynamic_simulation()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -432,7 +432,7 @@ void api_stop_dynamic_simulation()
 
 void api_run_simulation_to_time(double t_end)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -442,7 +442,7 @@ void api_run_simulation_to_time(double t_end)
 
 void api_run_a_step()
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -452,7 +452,7 @@ void api_run_a_step()
 
 void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double fault_B)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -472,7 +472,7 @@ void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double faul
 
 void api_clear_bus_fault(size_t bus, char* fault_type)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -492,7 +492,7 @@ void api_clear_bus_fault(size_t bus, char* fault_type)
 
 void api_trip_bus(size_t bus)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -503,7 +503,7 @@ void api_trip_bus(size_t bus)
 
 void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -540,7 +540,7 @@ void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_
 
 void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_type, double fault_location)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -578,7 +578,7 @@ void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* faul
 
 void api_trip_line(size_t ibus, size_t jbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -606,7 +606,7 @@ void api_trip_line(size_t ibus, size_t jbus, char* identifier)
 
 void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -634,7 +634,7 @@ void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier)
 
 void api_close_line(size_t ibus, size_t jbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -662,7 +662,7 @@ void api_close_line(size_t ibus, size_t jbus, char* identifier)
 
 void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -690,7 +690,7 @@ void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier)
 
 void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -719,7 +719,7 @@ void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifie
 
 void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -747,7 +747,7 @@ void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* i
 }
 void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -776,7 +776,7 @@ void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifi
 
 void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -805,7 +805,7 @@ void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* 
 
 void api_trip_generator(size_t bus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -831,7 +831,7 @@ void api_trip_generator(size_t bus, char* identifier)
 
 void api_shed_generator(size_t bus, char* identifier, double percent)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -858,7 +858,7 @@ void api_shed_generator(size_t bus, char* identifier, double percent)
 
 void api_trip_load(size_t bus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -884,7 +884,7 @@ void api_trip_load(size_t bus, char* identifier)
 
 void api_close_load(size_t bus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -910,7 +910,7 @@ void api_close_load(size_t bus, char* identifier)
 
 void api_scale_load(size_t bus, char* identifier, double percent)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -936,7 +936,7 @@ void api_scale_load(size_t bus, char* identifier, double percent)
 
 void api_scale_all_loads(double percent)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
     if(ds!=NULL)
     {
@@ -947,7 +947,7 @@ void api_scale_all_loads(double percent)
 
 void api_trip_fixed_shunt(size_t bus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -973,7 +973,7 @@ void api_trip_fixed_shunt(size_t bus, char* identifier)
 
 void api_close_fixed_shunt(size_t bus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -999,7 +999,7 @@ void api_close_fixed_shunt(size_t bus, char* identifier)
 
 void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -1026,7 +1026,7 @@ void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 
 void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -1053,7 +1053,7 @@ void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 
 void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -1080,7 +1080,7 @@ void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier)
 
 void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -1108,7 +1108,7 @@ void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier)
 
 double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -1142,7 +1142,7 @@ double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier)
 
 double api_get_generator_power_reference_in_MW(size_t bus, char* identifier)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -1176,7 +1176,7 @@ double api_get_generator_power_reference_in_MW(size_t bus, char* identifier)
 
 void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, double value)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)
@@ -1202,7 +1202,7 @@ void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, dou
 
 void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, double value)
 {
-    DYNAMICS_SIMULATOR* ds = api_get_default_dynamic_simulator();
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
     POWER_SYSTEM_DATABASE* psdb = ds->get_power_system_database();
 
     if(ds!=NULL)

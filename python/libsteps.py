@@ -2,6 +2,13 @@ from ctypes import *
 #libsteps = CDLL("libSTEPS.dll")
 libsteps = cdll.LoadLibrary("./libSTEPS.so")
 
+libsteps.api_clear_package.restype = None
+libsteps.api_clear_package.argtypes = None
+libsteps.api_terminate_package.restype = None
+libsteps.api_terminate_package.argtypes = None
+libsteps.api_get_package_float_data.restype = None
+libsteps.api_get_package_float_data.argtypes = (c_char_p, )
+
 libsteps.api_load_powerflow_data_from_file.restype = None
 libsteps.api_load_powerflow_data_from_file.argtypes = (c_char_p, c_char_p)
 libsteps.api_load_dynamic_data_from_file.restype = None

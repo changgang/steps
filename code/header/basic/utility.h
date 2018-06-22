@@ -54,7 +54,7 @@ POWER_SYSTEM_DATABASE* get_built_in_power_system_database_of_number(size_t i);
 
 POWER_SYSTEM_DATABASE* get_default_power_system_database();
 POWERFLOW_SOLVER* api_get_default_powerflow_solver();
-DYNAMICS_SIMULATOR* api_get_default_dynamic_simulator();
+DYNAMICS_SIMULATOR* get_default_dynamic_simulator();
 
 void reset_power_system_database(size_t i=0);
 

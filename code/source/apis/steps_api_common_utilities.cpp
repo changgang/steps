@@ -179,7 +179,9 @@ void api_set_owner_capacity(size_t cap)
 
 void api_clear_package()
 {
-    STEPS::power_system_db[0].clear_database();
+    get_default_power_system_database()->clear_database();
+    get_default_dynamic_simulator()->clear();
+
 }
 
 void api_terminate_package()
