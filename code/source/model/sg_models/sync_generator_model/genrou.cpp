@@ -94,8 +94,10 @@ double GENROU::get_double_data_with_index(size_t index) const
 double GENROU::get_double_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
+    if(par_name=="H")
+        return get_H_in_s();
+    if(par_name=="D")
+        return get_D();
 
     return 0.0;
 }
@@ -110,9 +112,11 @@ void GENROU::set_double_data_with_index(size_t index, double value)
 
 void GENROU::set_double_data_with_name(string par_name, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    par_name = string2upper(par_name);
+    if(par_name=="H")
+        return set_H_in_s(value);
+    if(par_name=="D")
+        return set_D(value);
     return;
 }
 

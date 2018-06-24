@@ -28,7 +28,7 @@ WT_AERODYNAMIC_MODEL_TEST::WT_AERODYNAMIC_MODEL_TEST()
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_initial_turbine_speed);
 
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_air_density);
-    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_overspeed_mode_flag);
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_turbine_speed_mode);
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_max_steady_state_turbine_speed);
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_set_get_min_steady_state_turbine_speed);
 
@@ -39,8 +39,9 @@ WT_AERODYNAMIC_MODEL_TEST::WT_AERODYNAMIC_MODEL_TEST()
 
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_get_standard_model_string);
 
-    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_flag);
-    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag);
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_underspeed_mode);
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_mode);
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_mppt_mode);
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_list_Cp_and_mechanical_power_data_of_different_wind_speed);
 }
 
@@ -277,7 +278,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_set_get_air_density()
         TEST_ASSERT(false);
 }
 
-void WT_AERODYNAMIC_MODEL_TEST::test_set_get_overspeed_mode_flag()
+void WT_AERODYNAMIC_MODEL_TEST::test_set_get_turbine_speed_mode()
 {
     WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
     if(model!=NULL)
@@ -435,7 +436,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_standard_model_string()
 }
 
 
-void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_without_overspeed_flag()
+void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_underspeed_mode()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
     set_dynamic_simulation_time_step_in_s(0.001);
@@ -464,7 +465,37 @@ void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_witho
     }
 }
 
-void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_flag()
+void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_mppt_mode()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
+    set_dynamic_simulation_time_step_in_s(0.001);
+    ostringstream osstream;
+
+    WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
+    WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
+    model->set_turbine_speed_mode(MPPT_MODE);
+
+    WT_GENERATOR* gen = get_test_wt_generator();
+
+    for(double p=5.0; p<31.0; p+=5.0)
+    {
+        if(p>=30.0)
+            p = 29.0;
+        gen->set_p_generation_in_MW(p);
+        wtgenmodel->set_flag_model_initialized_as_false();
+        model->set_flag_model_initialized_as_false();
+        wtgenmodel->initialize();
+        model->initialize();
+        osstream<<model->get_model_name()<<" model after initialized with generation of each turbine: "<<gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()<<" MW"<<endl;
+        osstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
+               <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
+               <<model->get_initial_turbine_speed_in_pu()<<" pu)";
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+
+void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_mode()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
     set_dynamic_simulation_time_step_in_s(0.001);

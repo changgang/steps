@@ -429,7 +429,7 @@ void WT3G2::initialize()
             <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
             <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
             <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-    show_information_with_leading_time_stamp(oosstream);
+    //show_information_with_leading_time_stamp(oosstream);
 }
 
 void WT3G2::run(DYNAMIC_MODE mode)

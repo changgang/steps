@@ -114,9 +114,11 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         void initialize_turbine_blade_radius_with_nominal_parameters();
         void initialize_generator_to_turbine_gear_ratio();
         void initialize_pitch_angle_and_turbine_speed();
+        void initialize_pitch_angle_and_turbine_speed_with_mppt_mode();
         void initialize_pitch_angle();
         void initialize_turbine_speed();
         double get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
+        double get_mppt_speed_in_rad_per_s(double pitch_in_deg);
         // turbine nominals
         double nominal_wind_speed_in_mps;
         double turbine_blade_radius_in_m;

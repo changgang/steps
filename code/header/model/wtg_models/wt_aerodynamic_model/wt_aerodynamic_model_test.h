@@ -43,7 +43,7 @@ class WT_AERODYNAMIC_MODEL_TEST : public WTG_MODEL_TEST
         void test_set_get_initial_turbine_speed();
 
         void test_set_get_air_density();
-        void test_set_get_overspeed_mode_flag();
+        void test_set_get_turbine_speed_mode();
         void test_set_get_max_steady_state_turbine_speed();
         void test_set_get_min_steady_state_turbine_speed();
 
@@ -55,8 +55,9 @@ class WT_AERODYNAMIC_MODEL_TEST : public WTG_MODEL_TEST
         void test_get_standard_model_string();
 
 
-        void test_initialize_and_get_initialized_inputs_with_overspeed_flag();
-        void test_initialize_and_get_initialized_inputs_without_overspeed_flag();
+        void test_initialize_and_get_initialized_inputs_with_underspeed_mode();
+        void test_initialize_and_get_initialized_inputs_with_mppt_mode();
+        void test_initialize_and_get_initialized_inputs_with_overspeed_mode();
         void test_list_Cp_and_mechanical_power_data_of_different_wind_speed();
 
         void test_get_turbine_speed_reference();
