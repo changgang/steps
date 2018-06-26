@@ -45,22 +45,24 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     public:
         void set_frequency_sensor_time_in_s(double t);
-        void set_frequency_threshold_in_Hz(double f);
+        void set_continuous_frequency_threshold_in_Hz(double f);
         void set_scale_K_in_pu_per_Hz(double K);
         void set_time_delay_in_s(double t);
         void set_maximum_continuous_shed_scale_in_pu(double scale);
         void set_additional_stage_trigger_signal(UFLS_TRIGGER_SIGNAL signal);
+        void set_additional_stage_frequency_threshold_in_Hz(double f);
         void set_additional_stage_time_delay_in_s(double t);
         void set_additional_stage_shed_scale_in_pu(double scale);
         void set_discrete_stage_time_delay_in_s(double t);
         void set_discrete_stage_shed_scale_in_pu(size_t stage, double scale);
 
         double get_frequency_sensor_time_in_s() const;
-        double get_frequency_threshold_in_Hz() const;
+        double get_continuous_frequency_threshold_in_Hz() const;
         double get_scale_K_in_pu_per_Hz() const;
         double get_time_delay_in_s() const;
         double get_maximum_continuous_shed_scale_in_pu() const;
         UFLS_TRIGGER_SIGNAL get_additional_stage_trigger_signal() const;
+        double get_additional_stage_frequency_threshold_in_Hz() const;
         double get_additional_stage_time_delay_in_s() const;
         double get_additional_stage_shed_scale_in_pu() const;
         double get_discrete_stage_time_delay_in_s() const;
@@ -101,12 +103,13 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
 
 
         FIRST_ORDER_BLOCK frequency_sensor;
-        double frequency_threshold_in_Hz;
+        double continuous_frequency_threshold_in_Hz;
         double K;
         double t_delay;
         double max_continuous_shed_scale;
 
         UFLS_TRIGGER_SIGNAL trigger_signal;
+        double additional_stage_frequency_threshold_in_Hz;
         TIMER additional_stage_timer;
         double additional_shed_scale;
         bool flag_additional_stage_is_tripped;

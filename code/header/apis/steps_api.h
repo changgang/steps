@@ -210,10 +210,6 @@ double api_get_generator_related_model_float_parameter(size_t bus, char* identif
 void api_set_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
 
 
-
-
-
-
 size_t api_get_powerflow_solver_integer_parameter(char* parameter_name);
 void api_set_powerflow_solver_integer_parameter(char* parameter_name, int value);
 double api_get_powerflow_solver_float_parameter(char* parameter_name);
@@ -225,8 +221,16 @@ void api_solve_powerflow(char* method);
 bool api_is_powerflow_converged();
 void api_show_powerflow_result();
 void api_save_powerflow_result(char* file);
-void api_save_network_matrix(char* file);
 void api_save_jacobian_matrix(char* file);
+
+void api_build_network_matrix();
+void api_build_decoupled_network_matrix();
+void api_build_dc_network_matrix();
+void api_build_dynamic_network_matrix();
+void api_save_network_matrix(char* file);
+void api_save_decoupled_network_matrix(char* file);
+void api_save_dc_network_matrix(char* file);
+void api_save_dynamic_network_matrix(char* file);
 
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name);

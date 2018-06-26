@@ -2,6 +2,18 @@ from libsteps import libsteps
 
 libsteps.api_initialize_package()
 
+def clear_package():
+    libsteps.api_clear_package()
+    return
+
+def terminate_package():
+    libsteps.api_terminate_package()
+    return
+
+def get_package_float_data(dataname):
+    libsteps.api_get_package_float_data(dataname)
+    return
+
 def get_allowed_maximum_bus_number():
     return libsteps.api_get_allowed_maximum_bus_number()
 
@@ -721,12 +733,40 @@ def save_powerflow_result(file):
     libsteps.api_save_powerflow_result(file)
     return
     
+def save_jacobian_matrix(file):
+    libsteps.api_save_jacobian_matrix(file)
+    return
+
+def build_network_matrix():
+    libsteps.api_build_network_matrix()
+    return
+
+def build_decoupled_network_matrix():
+    libsteps.api_build_decoupled_network_matrix()
+    return
+
+def build_dc_network_matrix():
+    libsteps.api_build_dc_network_matrix()
+    return
+
+def build_dynamic_network_matrix():
+    libsteps.api_build_dynamic_network_matrix()
+    return
+
 def save_network_matrix(file):
     libsteps.api_save_network_matrix(file)
     return
     
-def save_jacobian_matrix(file):
-    libsteps.api_save_jacobian_matrix(file)
+def save_decoupled_network_matrix(file):
+    libsteps.api_save_decoupled_network_matrix(file)
+    return
+    
+def save_dc_network_matrix(file):
+    libsteps.api_save_dc_network_matrix(file)
+    return
+    
+def save_dynamic_network_matrix(file):
+    libsteps.api_save_dynamic_network_matrix(file)
     return
     
     

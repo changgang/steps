@@ -33,6 +33,7 @@ void NETWORK_DATABASE::clear_database()
     network_Y_matrix.clear();
     network_BP_matrix.clear();
     network_BQ_matrix.clear();
+    network_DC_B_matrix.clear();
     inphno.clear();
 }
 
@@ -126,6 +127,36 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BQ_matrix()
         build_decoupled_network_matrix();
 
     return network_BQ_matrix;
+}
+
+void NETWORK_DATABASE::build_dc_network_matrix()
+{
+    if(not is_power_system_database_set())
+        return;
+
+    if(inphno.empty())
+        initialize_physical_internal_bus_pair();
+
+    network_DC_B_matrix.clear();
+
+    add_lines_to_dc_network();
+    add_transformers_to_dc_network();
+
+    network_DC_B_matrix.compress_and_merge_duplicate_entries();
+}
+
+SPARSE_MATRIX& NETWORK_DATABASE::get_dc_network_matrix()
+{
+    if(not is_power_system_database_set())
+    {
+        network_DC_B_matrix.clear();
+        return network_DC_B_matrix;
+    }
+
+    if(network_DC_B_matrix.matrix_in_triplet_form())
+        build_dc_network_matrix();
+
+    return network_DC_B_matrix;
 }
 
 
@@ -1733,6 +1764,204 @@ void NETWORK_DATABASE::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& s
 }
 
 
+
+void NETWORK_DATABASE::add_lines_to_dc_network()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    vector<LINE*> lines = psdb->get_all_lines();
+
+    size_t n = lines.size();
+
+    for(size_t i = 0; i!=n; ++i)
+        add_line_to_dc_network(*(lines[i]));
+}
+
+void NETWORK_DATABASE::add_line_to_dc_network(const LINE& line)
+{
+    if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==false)
+        return;
+
+    /*ostringstream osstream;
+    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", line.get_identifier().c_str(),
+                  line.get_sending_side_bus(), line.get_receiving_side_bus());
+    show_information_with_leading_time_stamp(osstream);
+    */
+
+    size_t sending_bus = line.get_sending_side_bus();
+    size_t receiving_bus = line.get_receiving_side_bus();
+
+    size_t i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+    size_t j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+
+    complex<double> Zline = line.get_line_positive_sequence_z_in_pu();
+    Zline = complex<double>(0.0, Zline.imag());
+    complex<double> Yline = 1.0/Zline;
+    if(line.get_sending_side_breaker_status()==true and line.get_receiving_side_breaker_status()==true)
+    {
+        network_DC_B_matrix.add_entry(i,j, -Yline);
+        network_DC_B_matrix.add_entry(j,i, -Yline);
+        network_DC_B_matrix.add_entry(i,i, Yline);
+        network_DC_B_matrix.add_entry(j,j, Yline);
+        return;
+    }
+}
+
+
+void NETWORK_DATABASE::add_transformers_to_dc_network()
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    vector<TRANSFORMER*> transformers = psdb->get_all_transformers();
+
+    size_t n = transformers.size();
+
+    for(size_t i = 0; i!=n; ++i)
+        add_transformer_to_dc_network(*(transformers[i]));
+}
+
+void NETWORK_DATABASE::add_transformer_to_dc_network(const TRANSFORMER& trans)
+{
+    if(trans.is_two_winding_transformer())
+        add_two_winding_transformer_to_dc_network(trans);
+    else
+        add_three_winding_transformer_to_dc_network(trans);
+}
+
+void NETWORK_DATABASE::add_three_winding_transformer_to_dc_network(const TRANSFORMER& trans)
+{
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and
+       trans.get_winding_breaker_status(SECONDARY_SIDE)==false and
+       trans.get_winding_breaker_status(TERTIARY_SIDE)==false)
+        return;
+
+    /*ostringstream osstream;
+    osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", trans.get_identifier().c_str(),
+                  trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE), trans.get_winding_bus(TERTIARY_SIDE));
+    show_information_with_leading_time_stamp(osstream);
+    */
+
+    size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+    size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+    size_t tertiary_bus = trans.get_winding_bus(TERTIARY_SIDE);
+
+    size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+    size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+    size_t t = inphno.get_internal_bus_number_of_physical_bus_number(tertiary_bus);
+
+    complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+    complex<double> Zst = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+    complex<double> Zpt = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
+
+    complex<double> Zp = 0.5*(Zps+Zpt-Zst),
+                     Zs = 0.5*(Zps+Zst-Zpt),
+                     Zt = 0.5*(Zpt+Zst-Zps);
+    double Xp = Zp.imag();
+    double Xs = Zs.imag();
+    double Xt = Zt.imag();
+
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and
+       trans.get_winding_breaker_status(SECONDARY_SIDE)==true and
+       trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
+    {
+        double Xsigma = Xp*Xs+Xs*Xt+Xt*Xp;
+        double Xps = Xsigma/Xt;
+        double Xst = Xsigma/Xp;
+        double Xtp = Xsigma/Xs;
+
+        complex<double> Yps(0.0, -1.0/Xps);
+        complex<double> Yst(0.0, -1.0/Xst);
+        complex<double> Ytp(0.0, -1.0/Xtp);
+
+        network_DC_B_matrix.add_entry(p,p,Yps+Ytp);
+        network_DC_B_matrix.add_entry(p,s,-Yps);
+        network_DC_B_matrix.add_entry(p,t,-Ytp);
+        network_DC_B_matrix.add_entry(s,p,-Yps);
+        network_DC_B_matrix.add_entry(s,s,Yps+Yst);
+        network_DC_B_matrix.add_entry(s,t,-Yst);
+        network_DC_B_matrix.add_entry(t,p,-Ytp);
+        network_DC_B_matrix.add_entry(t,s,-Yst);
+        network_DC_B_matrix.add_entry(t,t,Yst+Ytp);
+        return;
+    }
+
+
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and
+       trans.get_winding_breaker_status(SECONDARY_SIDE)==true and
+       trans.get_winding_breaker_status(TERTIARY_SIDE)==false)
+    {
+        double Xps = Zps.imag();
+        complex<double> Yps(0.0, -1.0/Xps);
+
+        network_DC_B_matrix.add_entry(p,p,Yps);
+        network_DC_B_matrix.add_entry(p,s,-Yps);
+        network_DC_B_matrix.add_entry(s,p,-Yps);
+        network_DC_B_matrix.add_entry(s,s,Yps);
+        return;
+    }
+
+
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and
+       trans.get_winding_breaker_status(SECONDARY_SIDE)==false and
+       trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
+    {
+        double Xpt = Zpt.imag();
+        complex<double> Ypt(0.0, -1.0/Xpt);
+
+        network_DC_B_matrix.add_entry(p,p,Ypt);
+        network_DC_B_matrix.add_entry(p,t,-Ypt);
+        network_DC_B_matrix.add_entry(t,p,-Ypt);
+        network_DC_B_matrix.add_entry(t,t,Ypt);
+        return;
+    }
+
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and
+       trans.get_winding_breaker_status(SECONDARY_SIDE)==true and
+       trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
+    {
+
+        double Xst = Zst.imag();
+        complex<double> Yst(0.0, -1.0/Xst);
+
+        network_DC_B_matrix.add_entry(s,s,Yst);
+        network_DC_B_matrix.add_entry(s,t,-Yst);
+        network_DC_B_matrix.add_entry(t,s,-Yst);
+        network_DC_B_matrix.add_entry(t,t,Yst);
+        return;
+    }
+}
+
+void NETWORK_DATABASE::add_two_winding_transformer_to_dc_network(const TRANSFORMER& trans)
+{
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
+        return;
+
+    /*ostringstream osstream;
+    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", trans.get_identifier().c_str(),
+                  trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
+    show_information_with_leading_time_stamp(osstream);
+    */
+
+    size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+    size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+
+    size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+    size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+
+    complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
+
+    double Xps = Zps.imag();
+    complex<double> Yps(0.0, -1.0/Xps);
+
+    if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
+    {
+        network_DC_B_matrix.add_entry(p,p,Yps);
+        network_DC_B_matrix.add_entry(p,s,-Yps);
+        network_DC_B_matrix.add_entry(s,p,-Yps);
+        network_DC_B_matrix.add_entry(s,s,Yps);
+        return;
+    }
+}
+
+
 void NETWORK_DATABASE::add_bus_fault_to_dynamic_network()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -2295,9 +2524,9 @@ void NETWORK_DATABASE::report_decoupled_network_matrix() const
         for(int k=k_starting; k!=k_ending; ++k)
         {
             y = network_BP_matrix.get_entry_value(k);
-            bp = y.real();
+            bp = y.imag();
             y = network_BQ_matrix.get_entry_value(k);
-            bq = y.real();
+            bq = y.imag();
             i = network_BP_matrix.get_row_number_of_entry_index(k);
             ibus = get_physical_bus_number_of_internal_bus(i);
             jbus = get_physical_bus_number_of_internal_bus(j);
@@ -2314,6 +2543,50 @@ void NETWORK_DATABASE::report_decoupled_network_matrix() const
         k_starting = k_ending;
     }
     osstream<<"Network decoupled B matrix lists finished.";
+    show_information_with_leading_time_stamp(osstream);
+}
+
+void NETWORK_DATABASE::report_dc_network_matrix() const
+{
+    if(not is_power_system_database_set())
+        return;
+
+    ostringstream osstream;
+
+    osstream<<"DC network B matrix lists begin:";
+    show_information_with_leading_time_stamp(osstream);
+
+    osstream<<"row   [  bus  ]  column[  bus  ]     B";
+    show_information_with_leading_time_stamp(osstream);
+
+    size_t i, ibus, jbus;
+    size_t n = network_DC_B_matrix.get_matrix_size();
+    int k_starting, k_ending;
+    k_starting = 0;
+    complex<double> y;
+    double b;
+    for(size_t j=0; j!=n; ++j)
+    {
+        k_ending = network_DC_B_matrix.get_starting_index_of_column(j+1);
+        for(int k=k_starting; k!=k_ending; ++k)
+        {
+            y = network_DC_B_matrix.get_entry_value(k);
+            b = y.imag();
+            i = network_DC_B_matrix.get_row_number_of_entry_index(k);
+            ibus = get_physical_bus_number_of_internal_bus(i);
+            jbus = get_physical_bus_number_of_internal_bus(j);
+
+            osstream<<setw(6)<<i<<"["
+              <<setw(7)<<ibus<<"]  "
+              <<setw(6)<<j<<"["
+              <<setw(7)<<jbus<<"]  "
+              <<setw(10)<<setprecision(6)<<fixed<<b<<endl;
+
+            show_information_with_leading_time_stamp(osstream);
+        }
+        k_starting = k_ending;
+    }
+    osstream<<"DC network B matrix lists finished.";
     show_information_with_leading_time_stamp(osstream);
 }
 
@@ -2366,6 +2639,7 @@ void NETWORK_DATABASE::report_network_matrix_common() const
     show_information_with_leading_time_stamp(osstream);
 }
 
+
 void NETWORK_DATABASE::save_network_matrix_to_file(string filename) const
 {
     ostringstream osstream;
@@ -2379,6 +2653,108 @@ void NETWORK_DATABASE::save_network_matrix_to_file(string filename) const
         return;
     }
 
+    save_network_matrix_common(file);
+    file.close();
+}
+
+
+void NETWORK_DATABASE::save_decoupled_network_matrix_to_file(string filename) const
+{
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(not file.is_open())
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving decoupled network matrix to file."<<endl
+          <<"No decoupled network matrix will be exported.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,BP,BQ"<<endl;
+
+    size_t i, ibus, jbus;
+    size_t n = network_BP_matrix.get_matrix_size();
+    int k_starting, k_ending;
+    k_starting = 0;
+    complex<double> yp, yq;
+    for(size_t j=0; j!=n; ++j)
+    {
+        k_ending = network_BP_matrix.get_starting_index_of_column(j+1);
+        for(int k=k_starting; k!=k_ending; ++k)
+        {
+            yp = network_BP_matrix.get_entry_value(k);
+            yq = network_BQ_matrix.get_entry_value(k);
+            i = network_BP_matrix.get_row_number_of_entry_index(k);
+            ibus = get_physical_bus_number_of_internal_bus(i);
+            jbus = get_physical_bus_number_of_internal_bus(j);
+
+            file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
+                <<setprecision(6)<<fixed<<yp.imag()<<","
+                <<setprecision(6)<<fixed<<yq.imag()<<endl;
+        }
+        k_starting = k_ending;
+    }
+    file.close();
+}
+
+void NETWORK_DATABASE::save_dc_network_matrix_to_file(string filename) const
+{
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(not file.is_open())
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving DC network matrix to file."<<endl
+          <<"No DC network matrix will be exported.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,B"<<endl;
+
+    size_t i, ibus, jbus;
+    size_t n = network_DC_B_matrix.get_matrix_size();
+    int k_starting, k_ending;
+    k_starting = 0;
+    complex<double> y;
+    for(size_t j=0; j!=n; ++j)
+    {
+        k_ending = network_DC_B_matrix.get_starting_index_of_column(j+1);
+        for(int k=k_starting; k!=k_ending; ++k)
+        {
+            y = network_DC_B_matrix.get_entry_value(k);
+            i = network_DC_B_matrix.get_row_number_of_entry_index(k);
+            ibus = get_physical_bus_number_of_internal_bus(i);
+            jbus = get_physical_bus_number_of_internal_bus(j);
+
+            file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
+                <<setprecision(6)<<fixed<<y.imag()<<endl;
+        }
+        k_starting = k_ending;
+    }
+    file.close();
+}
+
+void NETWORK_DATABASE::save_dynamic_network_matrix_to_file(string filename) const
+{
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(not file.is_open())
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving dynamic network matrix to file."<<endl
+          <<"No dynamic network matrix will be exported.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    save_network_matrix_common(file);
+    file.close();
+}
+
+
+void NETWORK_DATABASE::save_network_matrix_common(ofstream& file) const
+{
     file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
 
     size_t i, ibus, jbus;
@@ -2402,8 +2778,8 @@ void NETWORK_DATABASE::save_network_matrix_to_file(string filename) const
         }
         k_starting = k_ending;
     }
-    file.close();
 }
+
 
 void NETWORK_DATABASE::report_physical_internal_bus_number_pair() const
 {

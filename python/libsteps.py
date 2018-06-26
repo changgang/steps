@@ -308,10 +308,25 @@ libsteps.api_show_powerflow_result.restype = None
 libsteps.api_show_powerflow_result.argtypes = None
 libsteps.api_save_powerflow_result.restype = None
 libsteps.api_save_powerflow_result.argtypes = (c_char_p, )
-libsteps.api_save_network_matrix.restype = None
-libsteps.api_save_network_matrix.argtypes = (c_char_p, )
 libsteps.api_save_jacobian_matrix.restype = None
 libsteps.api_save_jacobian_matrix.argtypes = (c_char_p, )
+
+libsteps.api_build_network_matrix.restype = None
+libsteps.api_build_network_matrix.argtypes = None
+libsteps.api_build_decoupled_network_matrix.restype = None
+libsteps.api_build_decoupled_network_matrix.argtypes = None
+libsteps.api_build_dc_network_matrix.restype = None
+libsteps.api_build_dc_network_matrix.argtypes = None
+libsteps.api_build_dynamic_network_matrix.restype = None
+libsteps.api_build_dynamic_network_matrix.argtypes = None
+libsteps.api_save_network_matrix.restype = None
+libsteps.api_save_network_matrix.argtypes = (c_char_p, )
+libsteps.api_save_decoupled_network_matrix.restype = None
+libsteps.api_save_decoupled_network_matrix.argtypes = (c_char_p, )
+libsteps.api_save_dc_network_matrix.restype = None
+libsteps.api_save_dc_network_matrix.argtypes = (c_char_p, )
+libsteps.api_save_dynamic_network_matrix.restype = None
+libsteps.api_save_dynamic_network_matrix.argtypes = (c_char_p, )
 
 libsteps.api_get_dynamic_simulator_integer_parameter.restype = (c_uint)
 libsteps.api_get_dynamic_simulator_integer_parameter.argtypes = (c_char_p, )

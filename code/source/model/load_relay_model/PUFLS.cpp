@@ -18,12 +18,13 @@ PUFLS::~PUFLS()
 void PUFLS::clear()
 {
     set_frequency_sensor_time_in_s(1.0);
-    set_frequency_threshold_in_Hz(0.0);
+    set_continuous_frequency_threshold_in_Hz(0.0);
     set_time_delay_in_s(0.0);
     set_scale_K_in_pu_per_Hz(0.0);
     set_maximum_continuous_shed_scale_in_pu(0.0);
 
     set_additional_stage_trigger_signal(REALTIME_FREQUENCY);
+    set_additional_stage_frequency_threshold_in_Hz(0.0);
     set_additional_stage_shed_scale_in_pu(0.0);
     set_additional_stage_time_delay_in_s(0.0);
 
@@ -43,12 +44,13 @@ void PUFLS::copy_from_const_model(const PUFLS& model)
 {
     clear();
     set_frequency_sensor_time_in_s(model.get_frequency_sensor_time_in_s());
-    set_frequency_threshold_in_Hz(model.get_frequency_threshold_in_Hz());
+    set_continuous_frequency_threshold_in_Hz(model.get_continuous_frequency_threshold_in_Hz());
     set_time_delay_in_s(model.get_time_delay_in_s());
     set_scale_K_in_pu_per_Hz(model.get_scale_K_in_pu_per_Hz());
     set_maximum_continuous_shed_scale_in_pu(model.get_maximum_continuous_shed_scale_in_pu());
 
     set_additional_stage_trigger_signal(model.get_additional_stage_trigger_signal());
+    set_additional_stage_frequency_threshold_in_Hz(model.get_additional_stage_frequency_threshold_in_Hz());
     set_additional_stage_shed_scale_in_pu(model.get_additional_stage_shed_scale_in_pu());
     set_additional_stage_time_delay_in_s(model.get_additional_stage_time_delay_in_s());
 
@@ -115,9 +117,9 @@ void PUFLS::set_frequency_sensor_time_in_s(double t)
     frequency_sensor.set_T_in_s(t);
 }
 
-void PUFLS::set_frequency_threshold_in_Hz(double f)
+void PUFLS::set_continuous_frequency_threshold_in_Hz(double f)
 {
-    frequency_threshold_in_Hz = f;
+    continuous_frequency_threshold_in_Hz = f;
 }
 
 void PUFLS::set_scale_K_in_pu_per_Hz(double K)
@@ -138,6 +140,11 @@ void PUFLS::set_maximum_continuous_shed_scale_in_pu(double scale)
 void PUFLS::set_additional_stage_trigger_signal(UFLS_TRIGGER_SIGNAL signal)
 {
     trigger_signal = signal;
+}
+
+void PUFLS::set_additional_stage_frequency_threshold_in_Hz(double f)
+{
+    additional_stage_frequency_threshold_in_Hz = f;
 }
 
 void PUFLS::set_additional_stage_time_delay_in_s(double t)
@@ -169,9 +176,9 @@ double PUFLS::get_frequency_sensor_time_in_s() const
     return frequency_sensor.get_T_in_s();
 }
 
-double PUFLS::get_frequency_threshold_in_Hz() const
+double PUFLS::get_continuous_frequency_threshold_in_Hz() const
 {
-    return frequency_threshold_in_Hz;
+    return continuous_frequency_threshold_in_Hz;
 }
 
 double PUFLS::get_scale_K_in_pu_per_Hz() const
@@ -192,6 +199,11 @@ double PUFLS::get_maximum_continuous_shed_scale_in_pu() const
 UFLS_TRIGGER_SIGNAL PUFLS::get_additional_stage_trigger_signal() const
 {
     return trigger_signal;
+}
+
+double PUFLS::get_additional_stage_frequency_threshold_in_Hz() const
+{
+    return additional_stage_frequency_threshold_in_Hz;
 }
 
 double PUFLS::get_additional_stage_time_delay_in_s() const
@@ -233,40 +245,42 @@ bool PUFLS::setup_model_with_psse_string(string data)
 
     size_t n = dyrdata.size();
 
-    if(n<11)
+    if(n<12)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
     if(model_name!="PUFLSAL" and model_name!="PUFLSAR" and model_name!="PUFLSZN" and model_name!="PUFLSBL")
         return is_successful;
 
-    double t_freq, fth, tdelay, K_scale, max_scale;
+    double t_freq, fth_continuous, tdelay, K_scale, max_scale;
     size_t signal_flag;
-    double additional_scale, additional_time_delay;
+    double fth_additional, additional_scale, additional_time_delay;
 
     size_t i=3;
     signal_flag = get_integer_data(dyrdata[i], "0"); i++;
     t_freq = get_double_data(dyrdata[i],"0.0"); i++;
-    fth = get_double_data(dyrdata[i],"0.0"); i++;
+    fth_continuous = get_double_data(dyrdata[i],"0.0"); i++;
     K_scale = get_double_data(dyrdata[i],"0.0"); i++;
     tdelay = get_double_data(dyrdata[i],"0.0"); i++;
     max_scale = get_double_data(dyrdata[i],"0.0"); i++;
 
     set_frequency_sensor_time_in_s(t_freq);
-    set_frequency_threshold_in_Hz(fth);
+    set_continuous_frequency_threshold_in_Hz(fth_continuous);
     set_time_delay_in_s(tdelay);
     set_scale_K_in_pu_per_Hz(K_scale);
     set_maximum_continuous_shed_scale_in_pu(max_scale);
 
-    additional_scale = get_double_data(dyrdata[i],"0.0"); i++;
+    fth_additional = get_double_data(dyrdata[i],"0.0"); i++;
     additional_time_delay = get_double_data(dyrdata[i],"0.0"); i++;
+    additional_scale = get_double_data(dyrdata[i],"0.0"); i++;
 
     if(signal_flag==0)
         set_additional_stage_trigger_signal(REALTIME_FREQUENCY);
     else
         set_additional_stage_trigger_signal(MINIMUM_FREQUENCY);
-    set_additional_stage_shed_scale_in_pu(additional_scale);
+    set_additional_stage_frequency_threshold_in_Hz(fth_additional);
     set_additional_stage_time_delay_in_s(additional_time_delay);
+    set_additional_stage_shed_scale_in_pu(additional_scale);
 
     if(n>=12)
     {
@@ -437,7 +451,7 @@ void PUFLS::update_continuous_shed_command()
 
     double current_time = get_dynamic_simulation_time_in_s();
 
-    double f_th = get_frequency_threshold_in_Hz();
+    double f_th = get_continuous_frequency_threshold_in_Hz();
     double delay = get_time_delay_in_s();
     double K = get_scale_K_in_pu_per_Hz();
 
@@ -640,7 +654,7 @@ void PUFLS::try_to_start_additional_stage_timer()
 
     ostringstream osstream;
     double current_freq = frequency_sensor.get_output();
-    double f_th = get_frequency_threshold_in_Hz();
+    double f_th = get_additional_stage_frequency_threshold_in_Hz();
     switch(get_additional_stage_trigger_signal())
     {
         case REALTIME_FREQUENCY:
@@ -700,7 +714,7 @@ void PUFLS::try_to_reset_additional_stage_timer()
 
     ostringstream osstream;
     double current_freq = frequency_sensor.get_output();
-    double f_th = get_frequency_threshold_in_Hz();
+    double f_th = get_additional_stage_frequency_threshold_in_Hz();
     switch(get_additional_stage_trigger_signal())
     {
         case REALTIME_FREQUENCY:
@@ -806,11 +820,12 @@ string PUFLS::get_standard_model_string() const
       <<"'"<<identifier<<"', "
       <<setprecision(1)<<fixed<<(get_additional_stage_trigger_signal()==REALTIME_FREQUENCY ? 0 : 1)<<", "
       <<setprecision(4)<<fixed<<get_frequency_sensor_time_in_s()<<", "
-      <<setprecision(4)<<fixed<<get_frequency_threshold_in_Hz()<<", "
+      <<setprecision(4)<<fixed<<get_continuous_frequency_threshold_in_Hz()<<", "
       <<setprecision(4)<<fixed<<get_scale_K_in_pu_per_Hz()<<", "
       <<setprecision(4)<<fixed<<get_time_delay_in_s()<<", "
-      <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()<<", "
+      <<setprecision(4)<<fixed<<get_additional_stage_frequency_threshold_in_Hz()<<", "
       <<setprecision(4)<<fixed<<get_additional_stage_time_delay_in_s()<<", "
+      <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()<<", "
       <<setprecision(4)<<fixed<<get_discrete_stage_time_delay_in_s();
     for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
         osstream<<", "

@@ -30,13 +30,14 @@ void PUFLS_TEST::setup()
     PUFLS model;
 
     model.set_frequency_sensor_time_in_s(0.0);
-    model.set_frequency_threshold_in_Hz(49.5);
+    model.set_continuous_frequency_threshold_in_Hz(49.5);
     model.set_time_delay_in_s(0.2);
     model.set_scale_K_in_pu_per_Hz(0.2);
     model.set_maximum_continuous_shed_scale_in_pu(0.5);
     model.set_additional_stage_trigger_signal(MINIMUM_FREQUENCY);
-    model.set_additional_stage_shed_scale_in_pu(0.1);
+    model.set_additional_stage_frequency_threshold_in_Hz(49.5);
     model.set_additional_stage_time_delay_in_s(5.0);
+    model.set_additional_stage_shed_scale_in_pu(0.1);
 
     model.set_discrete_stage_time_delay_in_s(0.1);
     size_t stage = 0;
@@ -73,13 +74,14 @@ void PUFLS_TEST::test_set_get_parameters()
     PUFLS* model = (PUFLS*) get_load()->get_load_frequency_relay_model();
 
     TEST_ASSERT(fabs(model->get_frequency_sensor_time_in_s()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_frequency_threshold_in_Hz()-49.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_continuous_frequency_threshold_in_Hz()-49.5)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_time_delay_in_s()-0.2)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_scale_K_in_pu_per_Hz()-0.2)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_maximum_continuous_shed_scale_in_pu()-0.5)<FLOAT_EPSILON);
     TEST_ASSERT(model->get_additional_stage_trigger_signal()==MINIMUM_FREQUENCY);
     TEST_ASSERT(fabs(model->get_additional_stage_shed_scale_in_pu()-0.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_additional_stage_time_delay_in_s()-5.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_additional_stage_frequency_threshold_in_Hz()-49.5)<FLOAT_EPSILON);
 
     TEST_ASSERT(fabs(model->get_discrete_stage_time_delay_in_s()-0.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_discrete_stage_shed_scale_in_pu(0)-0.05)<FLOAT_EPSILON);
@@ -99,13 +101,14 @@ void PUFLS_TEST::test_continuous_load_shedding_scheme_with_realtime_frequency_ad
     PUFLS* model = (PUFLS*) get_load()->get_load_frequency_relay_model();
 
     model->set_frequency_sensor_time_in_s(0.0);
-    model->set_frequency_threshold_in_Hz(49.5);
+    model->set_continuous_frequency_threshold_in_Hz(49.5);
     model->set_time_delay_in_s(0.2);
     model->set_scale_K_in_pu_per_Hz(0.2);
     model->set_maximum_continuous_shed_scale_in_pu(0.5);
     model->set_additional_stage_trigger_signal(REALTIME_FREQUENCY);
     model->set_additional_stage_shed_scale_in_pu(0.1);
     model->set_additional_stage_time_delay_in_s(5.0);
+    model->set_additional_stage_frequency_threshold_in_Hz(49.5);
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
@@ -123,13 +126,14 @@ void PUFLS_TEST::test_continuous_load_shedding_scheme_with_minimum_frequency_add
     PUFLS* model = (PUFLS*) get_load()->get_load_frequency_relay_model();
 
     model->set_frequency_sensor_time_in_s(0.0);
-    model->set_frequency_threshold_in_Hz(49.5);
+    model->set_continuous_frequency_threshold_in_Hz(49.5);
     model->set_time_delay_in_s(0.2);
     model->set_scale_K_in_pu_per_Hz(0.2);
     model->set_maximum_continuous_shed_scale_in_pu(0.5);
     model->set_additional_stage_trigger_signal(MINIMUM_FREQUENCY);
     model->set_additional_stage_shed_scale_in_pu(0.1);
     model->set_additional_stage_time_delay_in_s(5.0);
+    model->set_additional_stage_frequency_threshold_in_Hz(49.5);
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
@@ -147,13 +151,14 @@ void PUFLS_TEST::test_discrete_load_shedding_scheme_with_realtime_frequency_addi
     PUFLS* model = (PUFLS*) get_load()->get_load_frequency_relay_model();
 
     model->set_frequency_sensor_time_in_s(0.0);
-    model->set_frequency_threshold_in_Hz(49.5);
+    model->set_continuous_frequency_threshold_in_Hz(49.5);
     model->set_time_delay_in_s(0.2);
     model->set_scale_K_in_pu_per_Hz(0.2);
     model->set_maximum_continuous_shed_scale_in_pu(0.0);
     model->set_additional_stage_trigger_signal(REALTIME_FREQUENCY);
     model->set_additional_stage_shed_scale_in_pu(0.1);
     model->set_additional_stage_time_delay_in_s(5.0);
+    model->set_additional_stage_frequency_threshold_in_Hz(49.5);
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
@@ -178,13 +183,14 @@ void PUFLS_TEST::test_discrete_load_shedding_scheme_with_minimum_frequency_addit
     PUFLS* model = (PUFLS*) get_load()->get_load_frequency_relay_model();
 
     model->set_frequency_sensor_time_in_s(0.0);
-    model->set_frequency_threshold_in_Hz(49.5);
+    model->set_continuous_frequency_threshold_in_Hz(49.5);
     model->set_time_delay_in_s(0.2);
     model->set_scale_K_in_pu_per_Hz(0.2);
     model->set_maximum_continuous_shed_scale_in_pu(0.0);
     model->set_additional_stage_trigger_signal(MINIMUM_FREQUENCY);
     model->set_additional_stage_shed_scale_in_pu(0.1);
     model->set_additional_stage_time_delay_in_s(5.0);
+    model->set_additional_stage_frequency_threshold_in_Hz(49.5);
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
@@ -209,13 +215,14 @@ void PUFLS_TEST::test_composite_load_shedding_scheme_with_realtime_frequency_add
     PUFLS* model = (PUFLS*) get_load()->get_load_frequency_relay_model();
 
     model->set_frequency_sensor_time_in_s(0.0);
-    model->set_frequency_threshold_in_Hz(49.5);
+    model->set_continuous_frequency_threshold_in_Hz(49.5);
     model->set_time_delay_in_s(0.2);
     model->set_scale_K_in_pu_per_Hz(0.2);
     model->set_maximum_continuous_shed_scale_in_pu(0.2);
     model->set_additional_stage_trigger_signal(REALTIME_FREQUENCY);
     model->set_additional_stage_shed_scale_in_pu(0.1);
     model->set_additional_stage_time_delay_in_s(5.0);
+    model->set_additional_stage_frequency_threshold_in_Hz(49.5);
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
@@ -240,13 +247,14 @@ void PUFLS_TEST::test_composite_load_shedding_scheme_with_minimum_frequency_addi
     PUFLS* model = (PUFLS*) get_load()->get_load_frequency_relay_model();
 
     model->set_frequency_sensor_time_in_s(0.0);
-    model->set_frequency_threshold_in_Hz(49.5);
+    model->set_continuous_frequency_threshold_in_Hz(49.5);
     model->set_time_delay_in_s(0.2);
     model->set_scale_K_in_pu_per_Hz(0.2);
     model->set_maximum_continuous_shed_scale_in_pu(0.2);
     model->set_additional_stage_trigger_signal(MINIMUM_FREQUENCY);
     model->set_additional_stage_shed_scale_in_pu(0.1);
     model->set_additional_stage_time_delay_in_s(5.0);
+    model->set_additional_stage_frequency_threshold_in_Hz(49.5);
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 

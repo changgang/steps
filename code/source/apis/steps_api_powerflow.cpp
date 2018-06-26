@@ -193,6 +193,43 @@ void api_save_powerflow_result(char* file)
     solver->save_powerflow_result_to_file(file);
 }
 
+void api_save_jacobian_matrix(char* file)
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    solver->save_jacobian_matrix_to_file(file);
+}
+
+
+
+void api_build_network_matrix()
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    NETWORK_DATABASE* ntdb = solver->get_network_database();
+    ntdb->build_network_matrix();
+}
+
+void api_build_decoupled_network_matrix()
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    NETWORK_DATABASE* ntdb = solver->get_network_database();
+    ntdb->build_decoupled_network_matrix();
+}
+
+void api_build_dc_network_matrix()
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    NETWORK_DATABASE* ntdb = solver->get_network_database();
+    ntdb->build_dc_network_matrix();
+}
+
+void api_build_dynamic_network_matrix()
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    NETWORK_DATABASE* ntdb = solver->get_network_database();
+    ntdb->build_dynamic_network_matrix();
+}
+
+
 void api_save_network_matrix(char* file)
 {
     POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
@@ -200,8 +237,26 @@ void api_save_network_matrix(char* file)
     ntdb->save_network_matrix_to_file(file);
 }
 
-void api_save_jacobian_matrix(char* file)
+
+void api_save_decoupled_network_matrix(char* file)
 {
     POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
-    solver->save_jacobian_matrix_to_file(file);
+    NETWORK_DATABASE* ntdb = solver->get_network_database();
+    ntdb->save_decoupled_network_matrix_to_file(file);
+}
+
+
+void api_save_dc_network_matrix(char* file)
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    NETWORK_DATABASE* ntdb = solver->get_network_database();
+    ntdb->save_dc_network_matrix_to_file(file);
+}
+
+
+void api_save_dynamic_network_matrix(char* file)
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    NETWORK_DATABASE* ntdb = solver->get_network_database();
+    ntdb->save_dynamic_network_matrix_to_file(file);
 }
