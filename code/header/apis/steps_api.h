@@ -307,6 +307,8 @@ double api_get_generator_power_reference_in_MW(size_t bus, char* identifier);
 void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, double value);
 void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, double value);
 
+
+double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line);
 #ifdef  __cplusplus
 }
 #endif

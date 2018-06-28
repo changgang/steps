@@ -679,8 +679,8 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
 
         if(fabs(pnew-pmech)<FLOAT_EPSILON)
         {
-            osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
-            show_information_with_leading_time_stamp(osstream);
+            //osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
+            //show_information_with_leading_time_stamp(osstream);
             break;
         }
         if(pnew>pmech)
@@ -850,8 +850,8 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
         if(fabs(pnew-pmech)<1e-6)
         {
             w = wnew;
-            osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
-            show_information_with_leading_time_stamp(osstream);
+            //osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
+            //show_information_with_leading_time_stamp(osstream);
             break;
         }
         if(get_turbine_speed_mode()==UNDERSPEED_MODE)
@@ -872,13 +872,13 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
         if(iter_count>iter_max)
         {
             w = wnew;
-            /*osstream<<"Warning. Failed to get reference wt turbine speed in "<<iter_max<<" iterations."<<endl
+            osstream<<"Warning. Failed to get reference wt turbine speed in "<<iter_max<<" iterations."<<endl
                    <<"Current electrical power generation = "<<pmech*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW at 0.0 pitch ange"<<endl
                    <<"Maximum available wind power = "<<get_total_wind_power_per_wt_generator_in_MW(vwind)*cpmax*n<<" MW at current pitch ange"<<endl
                    <<"Current wind speed = "<<vwind<<" m/s, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
                    <<"Reference turbine speed is returned as "<<w<<" rad/s."<<endl
                    <<"Check "<<get_model_name()<<" model of "<<get_device_name();
-            show_information_with_leading_time_stamp(osstream);*/
+            show_information_with_leading_time_stamp(osstream);
             break;
         }
     }

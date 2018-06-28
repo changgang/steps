@@ -1,5 +1,6 @@
 #include "header/apis/steps_api.h"
 #include "header/basic/utility.h"
+#include "header/toolkit/cct_searcher/cct_searcher.h"
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name)
 {
@@ -1226,3 +1227,42 @@ void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, doubl
     }
 }
 
+double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line)
+{
+    ostringstream osstream;
+
+    set_dynamic_simulation_time_step_in_s(0.01);
+
+    CCT_SEARCHER searcher;
+    searcher.set_power_system_database_maximum_bus_number(10000);
+    searcher.set_search_title("");
+    searcher.set_powerflow_data_filename(pf_file);
+    searcher.set_dynamic_data_filename(dy_file);
+
+    DEVICE_ID did;
+    TERMINAL terminal;
+    terminal.append_bus(ibus);
+    terminal.append_bus(jbus);
+    did.set_device_type("LINE");
+    did.set_device_terminal(terminal);
+    did.set_device_identifier(id);
+
+    searcher.set_fault_device(did);
+    searcher.set_fault_side_bus(sidebus);
+    searcher.set_fault_location_to_fault_side_bus_in_pu(0.0);
+    searcher.set_fault_shunt_in_pu(complex<double>(0.0, -2e8));
+    if(trip_line==0)
+        searcher.set_flag_trip_line_after_clearing_fault(false);
+    else
+        searcher.set_flag_trip_line_after_clearing_fault(true);
+
+    osstream<<"Now go searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
+    show_information_with_leading_time_stamp(osstream);
+    double cct = searcher.search_cct();
+    osstream<<"Now done searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
+    show_information_with_leading_time_stamp(osstream);
+
+    searcher.run_case_with_clearing_time(cct);
+    searcher.run_case_with_clearing_time(cct+0.1);
+    return cct;
+}

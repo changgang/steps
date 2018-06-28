@@ -1,6 +1,7 @@
 #include "header/meter/continuous_buffer.h"
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
+#include <iostream>
 /****
 current time:T
 step: t
@@ -214,10 +215,11 @@ size_t CONTINUOUS_BUFFER::get_delay_index_of_time(double time) const
 
     double time_at_head = get_buffer_time_at_head();
     double time_at_tail = time_buffer[index_of_buffer_tail];
+
     if(fabs(time_at_head-time)<FLOAT_EPSILON)
-        return index_of_buffer_head;
+        return 0;
     if(fabs(time_at_tail-time)<FLOAT_EPSILON)
-        return index_of_buffer_tail;
+        return buffer_size-1;
 
     if(time<time_at_tail or time>time_at_head)
         return INDEX_NOT_EXIST;
