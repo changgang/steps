@@ -2690,8 +2690,8 @@ void NETWORK_DATABASE::save_decoupled_network_matrix_to_file(string filename) co
             jbus = get_physical_bus_number_of_internal_bus(j);
 
             file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
-                <<setprecision(6)<<fixed<<yp.imag()<<","
-                <<setprecision(6)<<fixed<<yq.imag()<<endl;
+                <<setprecision(14)<<fixed<<yp.imag()<<","
+                <<setprecision(14)<<fixed<<yq.imag()<<endl;
         }
         k_starting = k_ending;
     }
@@ -2729,7 +2729,7 @@ void NETWORK_DATABASE::save_dc_network_matrix_to_file(string filename) const
             jbus = get_physical_bus_number_of_internal_bus(j);
 
             file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
-                <<setprecision(6)<<fixed<<y.imag()<<endl;
+                <<setprecision(14)<<fixed<<y.imag()<<endl;
         }
         k_starting = k_ending;
     }
@@ -2773,8 +2773,8 @@ void NETWORK_DATABASE::save_network_matrix_common(ofstream& file) const
             jbus = get_physical_bus_number_of_internal_bus(j);
 
             file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
-                <<setprecision(6)<<fixed<<y.real()<<","
-                <<setprecision(6)<<fixed<<y.imag()<<endl;
+                <<setprecision(14)<<fixed<<y.real()<<","
+                <<setprecision(14)<<fixed<<y.imag()<<endl;
         }
         k_starting = k_ending;
     }
