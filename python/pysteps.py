@@ -77,6 +77,54 @@ def set_owner_capacity(capacity):
     return libsteps.api_set_owner_capacity(capacity)
 
 
+def add_bus(busnumber, busname, basevoltage):
+    libsteps.api_add_bus(busnumber, busname, basevoltage)
+    return
+
+def add_generator(bus, ickt):
+    libsteps.api_add_generator(bus, ickt)
+    return
+
+def add_wt_generator(bus, ickt):
+    libsteps.api_add_wt_generator(bus, ickt)
+    return
+
+def add_load(bus, ickt):
+    libsteps.api_add_load(bus, ickt)
+    return
+
+def add_fixed_shunt(bus, ickt):
+    libsteps.api_add_fixed_shunt(bus, ickt)
+    return
+
+def add_line(ibus, jbus, ickt):
+    libsteps.api_add_line(ibus, jbus, ickt)
+    return
+
+def add_hvdc(ibus, jbus, ickt):
+    libsteps.api_add_hvdc(ibus, jbus, ickt)
+    return
+
+def add_transformer(ibus, jbus, kbus, ickt):
+    libsteps.api_add_transformer(ibus, jbus, kbus, ickt)
+    return
+
+def add_equivalent_device(bus, ickt):
+    libsteps.api_add_equivalent_device(bus, ickt)
+    return
+
+def add_area(areanumber, areaname):
+    libsteps.api_add_area(areanumber, areaname)
+    return
+
+def add_zone(zonenumber, zonename):
+    libsteps.api_add_zone(zonenumber, zonename)
+    return
+
+def add_owner(ownernumber, ownername):
+    libsteps.api_add_owner(ownernumber, ownername)
+    return
+
 def get_bus_count():
     return libsteps.api_get_device_count("BUS")
 def get_generator_count():
@@ -1014,3 +1062,14 @@ def set_generator_power_reference_in_MW(generator, value):
     return libsteps.api_set_generator_power_reference_in_MW(generator[0], generator[1], value)
 
     
+def search_cct(pf_file, dy_file, line, side, trip_logic):
+    ibus = line[0]
+    jbus = line[1]
+    ickt = line[2]
+    trip_flag = 0
+    print(line)
+    print(side)
+    print(trip_logic)
+    if trip_logic is True:
+        trip_flag = 1
+    return libsteps.api_search_cct(pf_file, dy_file, ibus, jbus, ickt, side, trip_flag)

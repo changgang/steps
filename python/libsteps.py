@@ -462,3 +462,6 @@ libsteps.api_get_generator_power_reference_in_MW.restype = (c_double)
 libsteps.api_get_generator_power_reference_in_MW.argtypes = (c_uint, c_char_p)
 libsteps.api_set_generator_power_reference_in_MW.restype = None
 libsteps.api_set_generator_power_reference_in_MW.argtypes = (c_uint, c_char_p, c_double)
+
+libsteps.api_search_cct.restype = (c_double)
+libsteps.api_search_cct.argtypes = (c_char_p, c_char_p, c_uint, c_uint, c_char_p, c_uint, c_uint)
