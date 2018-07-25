@@ -139,8 +139,6 @@
 		<Unit filename="header/block/integral_block_test.h" />
 		<Unit filename="header/block/lead_lag_block.h" />
 		<Unit filename="header/block/lead_lag_block_test.h" />
-		<Unit filename="header/block/limiter_block.h" />
-		<Unit filename="header/block/nonlinear_block.h" />
 		<Unit filename="header/block/pd_block.h" />
 		<Unit filename="header/block/pd_block_test.h" />
 		<Unit filename="header/block/pi_block.h" />
@@ -151,15 +149,11 @@
 		<Unit filename="header/block/proportional_block_test.h" />
 		<Unit filename="header/block/saturation_block.h" />
 		<Unit filename="header/block/saturation_block_test.h" />
-		<Unit filename="header/block/second_order_block.h" />
 		<Unit filename="header/data_imexporter/bpa_imexporter.h" />
 		<Unit filename="header/data_imexporter/bpa_imexporter_test.h" />
 		<Unit filename="header/data_imexporter/data_imexporter.h" />
 		<Unit filename="header/data_imexporter/equivalent_model_imexporter.h" />
 		<Unit filename="header/data_imexporter/equivalent_model_imexporter_test.h" />
-		<Unit filename="header/data_imexporter/load_dynamic_data.h" />
-		<Unit filename="header/data_imexporter/load_network_data.h" />
-		<Unit filename="header/data_imexporter/model_database.h" />
 		<Unit filename="header/data_imexporter/psse_imexporter.h" />
 		<Unit filename="header/data_imexporter/psse_imexporter_test.h" />
 		<Unit filename="header/device/bus.h" />
@@ -177,8 +171,6 @@
 		<Unit filename="header/device/line_test.h" />
 		<Unit filename="header/device/load.h" />
 		<Unit filename="header/device/load_test.h" />
-		<Unit filename="header/device/pe_source.h" />
-		<Unit filename="header/device/pv_source.h" />
 		<Unit filename="header/device/source.h" />
 		<Unit filename="header/device/source_test.h" />
 		<Unit filename="header/device/transformer.h" />
@@ -285,7 +277,6 @@
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_models.h" />
-		<Unit filename="header/model/wtg_models/wind_speed_model/wind_test.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/aerd0.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h" />
@@ -729,18 +720,10 @@
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p0.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p0_test.cpp" />
-		<Unit filename="source/model/wtg_models/wt_pitch_model/wt3p1.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_pitch_model/wt_pitch_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t0_test.cpp" />
-		<Unit filename="source/model/wtg_models/wt_turbine_model/wt3t1.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt_turbine_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_turbine_model/wt_turbine_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wtg_model.cpp" />
