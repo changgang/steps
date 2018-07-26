@@ -81,7 +81,7 @@ void CCT_SEARCHER::set_fault_location_to_fault_side_bus_in_pu(double location)
 
 void CCT_SEARCHER::set_fault_shunt_in_pu(complex<double> shunt)
 {
-    if(abs(shunt)>FLOAT_EPSILON)
+    if(fast_complex_abs(shunt)>FLOAT_EPSILON)
         fault_shunt_in_pu = shunt;
 }
 
@@ -344,7 +344,7 @@ bool CCT_SEARCHER::is_searcher_is_properly_set() const
         is_properly_set = false;
         osstream<<"Fault side bus is not set."<<endl;
     }
-    if(abs(get_fault_shunt_in_pu())<FLOAT_EPSILON)
+    if(fast_complex_abs(get_fault_shunt_in_pu())<FLOAT_EPSILON)
     {
         is_properly_set = false;
         osstream<<"Fault shunt is not set."<<endl;

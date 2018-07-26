@@ -497,7 +497,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     complex<double> vterm = get_terminal_complex_voltage_in_pu();
 
     selec /= mbase;
-    double iterm = abs(selec)/abs(vterm);
+    double iterm = fast_complex_abs(selec)/ fast_complex_abs(vterm);
     selec += (iterm*iterm*zsource);
 
     selec *= mbase;
@@ -616,7 +616,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
     complex<double> vterm = get_terminal_complex_voltage_in_pu();
 
     selec /= mbase;
-    double iterm = abs(selec)/abs(vterm);
+    double iterm = fast_complex_abs(selec)/ fast_complex_abs(vterm);
     selec += (iterm*iterm*zsource);
 
     selec *= mbase;

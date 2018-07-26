@@ -1,5 +1,6 @@
 #include "header/basic/fault.h"
 #include "header/steps_namespace.h"
+#include "header/basic/utility.h"
 #include <iostream>
 
 using namespace std;
@@ -56,7 +57,7 @@ complex<double> FAULT::get_fault_shunt_in_pu() const
 
 bool FAULT::is_faulted() const
 {
-    if(abs(get_fault_shunt_in_pu())>FLOAT_EPSILON)
+    if(fast_complex_abs(get_fault_shunt_in_pu())>FLOAT_EPSILON)
         return true;
     else
         return false;

@@ -1,6 +1,7 @@
 from libsteps import libsteps
 
-libsteps.api_initialize_package()
+def initialize_package():
+	libsteps.api_initialize_package()
 
 def clear_package():
     libsteps.api_clear_package()
@@ -31,7 +32,7 @@ def get_bus_capacity():
 def get_generator_capacity():
     return libsteps.api_get_device_capacity("Generator")
 def get_wt_generator_capacity():
-    return libsteps.api_get_device_capacity("PE Source")
+    return libsteps.api_get_device_capacity("WT GENERATOR")
 def get_load_capacity():
     return libsteps.api_get_device_capacity("Load")
 def get_fixed_shunt_capacity():
@@ -56,7 +57,7 @@ def set_bus_capacity(capacity):
 def set_generator_capacity(capacity):
     return libsteps.api_set_device_capacity("Generator", capacity)
 def set_wt_generator_capacity(capacity):
-    return libsteps.api_set_device_capacity("PE Source", capacity)
+    return libsteps.api_set_device_capacity("Wt Generator", capacity)
 def set_load_capacity(capacity):
     return libsteps.api_set_device_capacity("Load", capacity)
 def set_fixed_shunt_capacity(capacity):
@@ -130,7 +131,7 @@ def get_bus_count():
 def get_generator_count():
     return libsteps.api_get_device_count("Generator")
 def get_wt_generator_count():
-    return libsteps.api_get_device_count("PE Source")
+    return libsteps.api_get_device_count("WT Generator")
 def get_load_count():
     return libsteps.api_get_device_count("Load")
 def get_fixed_shunt_count():
@@ -195,15 +196,15 @@ def get_generators_at_bus(bus):
     return generators
     
 def get_wt_generators_at_bus(bus):
-    libsteps.api_initialize_device_search("PE SOURCE", bus)
+    libsteps.api_initialize_device_search("WT GENERATOR", bus)
     wt_generators = []
     while True:
-        bus = libsteps.api_get_current_device_bus_number("PE SOURCE", "")
+        bus = libsteps.api_get_current_device_bus_number("WT GENERATOR", "")
         if bus==0:
             break
-        id = libsteps.api_get_current_device_identifier("PE SOURCE")
+        id = libsteps.api_get_current_device_identifier("WT GENERATOR")
         wt_generators.append([bus, id])
-        libsteps.api_goto_next_device("PE SOURCE")
+        libsteps.api_goto_next_device("WT GENERATOR")
     return wt_generators
     
 def get_loads_at_bus(bus):

@@ -80,7 +80,7 @@ void COMP_TEST::test_initialize()
     complex<double> V = psdb->get_bus_complex_voltage_in_pu(1);
     complex<double> I = genmodel->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
 
-    double ecomp = abs(V - 0.1*I*complex<double>(0,1.0));
+    double ecomp = fast_complex_abs(V - 0.1*I*complex<double>(0,1.0));
 
     TEST_ASSERT(fabs(model->get_compensated_voltage_in_pu()-ecomp)<FLOAT_EPSILON);
 }

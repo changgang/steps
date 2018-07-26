@@ -375,7 +375,7 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::initialize()
     if(gen_model==NULL)
     {
         osstream<<"Warning. No dynamic model of virtual generator %s of power system %s is set. It will be set automatically",
-                generator_id.get_device_name().c_str(), generator_power_system_db->get_system_name().c_str());
+                (generator_id.get_device_name()).c_str(), (generator_power_system_db->get_system_name()).c_str());
         show_information_with_leading_time_stamp(osstream);
 
         GENCLS* model = new GENCLS(db, get_virtual_generator());
@@ -391,7 +391,7 @@ void VIRTUAL_GENERATOR_LOAD_PAIR::initialize()
         if(model_name!="GENCLS")
         {
             osstream<<"Error. The dynamic model of virtual generator %s of power system %s is not 'GENCLS'. It is '%s'.",
-                    generator_id.get_device_name().c_str(), generator_power_system_db->get_system_name().c_str(),
+                    (generator_id.get_device_name()).c_str(), (generator_power_system_db->get_system_name()).c_str(),
                     model_name.c_str());
             show_information_with_leading_time_stamp(osstream);
             return;

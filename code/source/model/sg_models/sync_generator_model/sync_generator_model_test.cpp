@@ -201,7 +201,7 @@ void SYNC_GENERATOR_MODEL_TEST::export_meter_values(double time)
     double efd = model->get_excitation_voltage_in_pu();
     double pelec = model->get_terminal_active_power_in_pu_based_on_mbase();
     double qelec = model->get_terminal_reactive_power_in_pu_based_on_mbase();
-    double vterm = abs(model->get_terminal_complex_voltage_in_pu());
+    double vterm = fast_complex_abs(model->get_terminal_complex_voltage_in_pu());
 
     osstream<<setw(6)<<setprecision(3)<<fixed<<time<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<angle<<"\t"

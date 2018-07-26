@@ -37,6 +37,9 @@ class UTILITY_TEST : public Test::Suite
         void test_rad2deg();
         void test_deg2rad();
 
+		void test_fast_complex_abs();
+		void test_fast_complex_arg();
+
         void test_radps2hz();
         void test_hz2radps();
 

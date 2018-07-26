@@ -187,13 +187,9 @@ double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, cha
             if(PARAMETER_NAME == "X_TP_PU" or PARAMETER_NAME == "LEAKAGE X BETWEEN TER AND PRI BASED ON WINDING NOMINALS IN PU")
                 return transptr->get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE).imag();
             if(PARAMETER_NAME == "VSTAR_PU" or PARAMETER_NAME == "STAR BUS VOLTAGE IN PU")
-                return abs(transptr->get_star_bus_complex_voltage_in_pu());
+                return fast_complex_abs(transptr->get_star_bus_complex_voltage_in_pu());
             if(PARAMETER_NAME == "ASTAR_DEG" or PARAMETER_NAME == "STAR BUS ANGLE IN DEG")
-            {
-                double vx = transptr->get_star_bus_complex_voltage_in_pu().real();
-                double vy = transptr->get_star_bus_complex_voltage_in_pu().imag();
-                return rad2deg(atan2(vx,vy));
-            }
+                return rad2deg(fast_complex_arg(transptr->get_star_bus_complex_voltage_in_pu()));
         }
         else
         {
@@ -244,13 +240,13 @@ double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, cha
                 return transptr->get_winding_off_nominal_turn_ratio_in_pu(winding);
 
             if(PARAMETER_NAME=="VSTAR_KV" or PARAMETER_NAME=="STAR BUS VOLTAGE IN KV")
-                return abs(transptr->get_star_bus_complex_voltage_in_kV_based_on_winding_nominal_voltage(winding));
+                return fast_complex_abs(transptr->get_star_bus_complex_voltage_in_kV_based_on_winding_nominal_voltage(winding));
 
             if(PARAMETER_NAME=="I_PU" or PARAMETER_NAME=="CURRENT IN PU")
-                return abs(transptr->get_winding_complex_current_in_pu(winding));
+                return fast_complex_abs(transptr->get_winding_complex_current_in_pu(winding));
 
             if(PARAMETER_NAME=="I_KA" or PARAMETER_NAME=="CURRENT IN KA")
-                return abs(transptr->get_winding_complex_current_in_kA(winding));
+                return fast_complex_abs(transptr->get_winding_complex_current_in_kA(winding));
 
             if(PARAMETER_NAME=="P_PU" or PARAMETER_NAME=="ACTIVE POWER IN PU")
                 return transptr->get_winding_complex_power_in_pu(winding).real();
@@ -465,7 +461,7 @@ const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbu
         else
         {
             if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-                return transptr->get_identifier().c_str();
+                return (transptr->get_identifier()).c_str();
         }
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);

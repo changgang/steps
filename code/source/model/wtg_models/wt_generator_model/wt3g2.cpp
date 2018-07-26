@@ -377,7 +377,7 @@ void WT3G2::initialize()
 
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double V = abs(Vxy);
+    double V = fast_complex_abs(Vxy);
     double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
     // ignore voltage angle
     complex<double> Ixy = conj(S/Vxy);
@@ -450,7 +450,7 @@ void WT3G2::run(DYNAMIC_MODE mode)
     //complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double V = abs(Vxy);
+    double V = fast_complex_abs(Vxy);
     double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
     double angle_in_deg = rad2deg(angle_in_rad);
 
@@ -522,7 +522,7 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     double mbase = get_mbase_in_MVA();
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double V = abs(Vxy);
+    double V = fast_complex_abs(Vxy);
 
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
     double Xeq = Zsource.imag();
@@ -598,12 +598,12 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sb
 
 double WT3G2::get_terminal_current_in_pu_based_on_mbase()
 {
-    return abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+    return fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
 }
 
 double WT3G2::get_terminal_current_in_pu_based_on_sbase()
 {
-    return abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase());
+    return fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase());
 }
 
 
@@ -685,9 +685,9 @@ double WT3G2::get_variable_with_name(string var_name)
     if(var_name == "TERMINAL Q IN MW")
         return get_terminal_reactive_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
     if(var_name == "TERMINAL S IN PU ON MBASE")
-        return abs(get_terminal_complex_power_in_pu_based_on_mbase());
+        return fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
     if(var_name == "TERMINAL S IN MVA")
-        return abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
+        return fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
     if(var_name == "ACTIVE CURRENT COMMAND IN PU")
         return get_active_current_command_in_pu_based_on_mbase();
     if(var_name == "REACTIVE CURRENT COMMAND IN PU")
@@ -698,7 +698,7 @@ double WT3G2::get_variable_with_name(string var_name)
         return get_reactive_current_command_in_pu_based_on_mbase()*(-Xeq);
     }
     if(var_name == "INTERNAL VOLTAGE IN PU")
-        return abs(get_internal_voltage_in_pu_in_xy_axis());
+        return fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
     if(var_name == "TERMINAL CURRENT IN PU")
         return get_terminal_current_in_pu_based_on_mbase();
     if(var_name == "TERMINAL CURRENT IN KA")
@@ -771,7 +771,7 @@ double WT3G2::get_active_power_generation_including_stator_loss_in_MW()
 {
     double pterm = get_terminal_active_power_in_MW();
     double rsource = get_source_impedance_in_pu_based_on_mbase().real();
-    double iterm = abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+    double iterm = fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
     double mbase = get_mbase_in_MVA();
 
     return pterm+rsource*iterm*iterm*mbase;

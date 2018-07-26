@@ -150,8 +150,17 @@ void FILEWIND::initialize()
     load_wind_speed_from_file();
 
     current_time = -INFINITE_THRESHOLD;
-    current_wind_speed = 0.0;
-    current_wind_direction = 0.0;
+
+	if (wind_speed.size() == 0)
+		current_wind_speed = 1.0;
+	else
+		current_wind_speed = wind_speed[0];
+
+	if (wind_direction.size() == 0)
+		current_wind_direction = 0.0;
+	else
+		current_wind_direction = wind_direction[0];
+
     set_previous_position(0);
 
     set_flag_model_initialized_as_true();

@@ -362,8 +362,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
     double g, b;
     double Vim, Vjm, anglei, anglej, dangle;
 
-    Vim = abs(Vi);
-    anglei = arg(Vi);
+    Vim = fast_complex_abs(Vi);
+    anglei = fast_complex_arg(Vi);
 
     double der = 0.0;
 
@@ -374,8 +374,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
         {
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
             Vj = db->get_bus_complex_voltage_in_pu(JBUS);
-            Vjm = abs(Vj);
-            anglej = arg(Vj);
+            Vjm = fast_complex_abs(Vj);
+            anglej = fast_complex_arg(Vj);
             g = y.real();
             b = y.imag();
             dangle = anglei - anglej;
@@ -399,8 +399,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
 
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
             Vj = db->get_bus_complex_voltage_in_pu(JBUS);
-            Vjm = abs(Vj);
-            anglej = arg(Vj);
+            Vjm = fast_complex_abs(Vj);
+            anglej = fast_complex_arg(Vj);
             g = y.real();
             b = y.imag();
             dangle = anglei - anglej;
@@ -427,8 +427,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
     double g, b;
     double Vim, Vjm, anglei, anglej, dangle;
 
-    Vim = abs(Vi);
-    anglei = arg(Vi);
+    Vim = fast_complex_abs(Vi);
+    anglei = fast_complex_arg(Vi);
 
     double der = 0.0;
 
@@ -439,8 +439,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
         {
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
             Vj = db->get_bus_complex_voltage_in_pu(JBUS);
-            Vjm = abs(Vj);
-            anglej = arg(Vj);
+            Vjm = fast_complex_abs(Vj);
+            anglej = fast_complex_arg(Vj);
             g = y.real();
             b = y.imag();
             dangle = anglei - anglej;
@@ -461,8 +461,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
 
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
             Vj = db->get_bus_complex_voltage_in_pu(JBUS);
-            Vjm = abs(Vj);
-            anglej = arg(Vj);
+            Vjm = fast_complex_abs(Vj);
+            anglej = fast_complex_arg(Vj);
             g = y.real();
             b = y.imag();
             dangle = anglei - anglej;
@@ -492,8 +492,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
     double g, b;
     double Vim, Vjm, anglei, anglej, dangle;
 
-    Vim = abs(Vi);
-    anglei = arg(Vi);
+    Vim = fast_complex_abs(Vi);
+    anglei = fast_complex_arg(Vi);
 
     double der = 0.0;
 
@@ -504,8 +504,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
         {
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
             Vj = db->get_bus_complex_voltage_in_pu(JBUS);
-            Vjm = abs(Vj);
-            anglej = arg(Vj);
+            Vjm = fast_complex_abs(Vj);
+            anglej = fast_complex_arg(Vj);
             g = y.real();
             b = y.imag();
             dangle = anglei - anglej;
@@ -529,8 +529,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
 
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
             Vj = db->get_bus_complex_voltage_in_pu(JBUS);
-            Vjm = abs(Vj);
-            anglej = arg(Vj);
+            Vjm = fast_complex_abs(Vj);
+            anglej = fast_complex_arg(Vj);
             g = y.real();
             b = y.imag();
             dangle = anglei - anglej;
@@ -557,8 +557,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
     double g, b;
     double Vim, Vjm, anglei, anglej, dangle;
 
-    Vim = abs(Vi);
-    anglei = arg(Vi);
+    Vim = fast_complex_abs(Vi);
+    anglei = fast_complex_arg(Vi);
 
     double der = 0.0;
 
@@ -569,8 +569,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
         {
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
             Vj = db->get_bus_complex_voltage_in_pu(JBUS);
-            Vjm = abs(Vj);
-            anglej = arg(Vj);
+            Vjm = fast_complex_abs(Vj);
+            anglej = fast_complex_arg(Vj);
             g = y.real();
             b = y.imag();
             dangle = anglei - anglej;
@@ -591,8 +591,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
 
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
             Vj = db->get_bus_complex_voltage_in_pu(JBUS);
-            Vjm = abs(Vj);
-            anglej = arg(Vj);
+            Vjm = fast_complex_abs(Vj);
+            anglej = fast_complex_arg(Vj);
             g = y.real();
             b = y.imag();
             dangle = anglei - anglej;

@@ -206,7 +206,7 @@ void NETWORK_DATABASE::add_line_to_network(const LINE& line)
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", line.get_identifier().c_str(),
+    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", (line.get_identifier()).c_str(),
                   line.get_sending_side_bus(), line.get_receiving_side_bus());
     show_information_with_leading_time_stamp(osstream);
     */
@@ -279,7 +279,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", trans.get_identifier().c_str(),
+    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                   trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
     show_information_with_leading_time_stamp(osstream);
     */
@@ -349,8 +349,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
         network_Y_matrix.add_entry(s,s,yss);
 
 
-        kp = kp/abs(kp);
-        ks = ks/abs(ks);
+        kp = kp/ fast_complex_abs(kp);
+        ks = ks/ fast_complex_abs(ks);
         Ym = 0.0;
 
         V = 1.0;
@@ -388,8 +388,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
         kp = kp_store;
         ks = ks_store;
 
-        kp = abs(kp);
-        ks = abs(ks);
+        kp = fast_complex_abs(kp);
+        ks = fast_complex_abs(ks);
         Ym = Ym_store;
 
         Zp = complex<double>(0.0, Zp.imag());
@@ -444,7 +444,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
 
         network_BP_matrix.add_entry(p,p,0.0);
 
-        kp = abs(kp);
+        kp = fast_complex_abs(kp);
 
         Zp = complex<double>(0.0, Zp.imag());
         Zs = complex<double>(0.0, Zs.imag());
@@ -474,7 +474,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
 
         network_BP_matrix.add_entry(s,s,0.0);
 
-        ks = abs(ks);
+        ks = fast_complex_abs(ks);
 
         Zp = complex<double>(0.0, Zp.imag());
         Zs = complex<double>(0.0, Zs.imag());
@@ -500,7 +500,7 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_network(const TRANSFORME
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", trans.get_identifier().c_str(),
+    osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                   trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE), trans.get_winding_bus(TERTIARY_SIDE));
     show_information_with_leading_time_stamp(osstream);
     */
@@ -774,7 +774,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network_v2(const TRANSFORM
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", trans.get_identifier().c_str(),
+    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                   trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
     show_information_with_leading_time_stamp(osstream);
     */
@@ -888,7 +888,7 @@ void NETWORK_DATABASE::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding fixed shunt '%s' at bus %u to network Y matrix.", shunt.get_identifier().c_str(),
+    osstream<<"Adding fixed shunt '%s' at bus %u to network Y matrix.", (shunt.get_identifier()).c_str(),
                   shunt.get_shunt_bus());
     show_information_with_leading_time_stamp(osstream);
     */
@@ -920,7 +920,7 @@ void NETWORK_DATABASE::add_line_to_decoupled_network(const LINE& line)
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", line.get_identifier().c_str(),
+    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", (line.get_identifier()).c_str(),
                   line.get_sending_side_bus(), line.get_receiving_side_bus());
     show_information_with_leading_time_stamp(osstream);
     */
@@ -1024,7 +1024,7 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", trans.get_identifier().c_str(),
+    osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                   trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE), trans.get_winding_bus(TERTIARY_SIDE));
     show_information_with_leading_time_stamp(osstream);
     */
@@ -1072,9 +1072,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
        trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
     {
         // voltage at primary side.
-        kp = kp/abs(kp);
-        ks = ks/abs(ks);
-        kt = kt/abs(kt);
+        kp = kp/ fast_complex_abs(kp);
+        ks = ks/ fast_complex_abs(ks);
+        kt = kt/ fast_complex_abs(kt);
 
         Ym = 0.0;
 
@@ -1142,9 +1142,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(t,s,yts);
         network_BP_matrix.add_entry(t,t,ytt);
 
-        kp = abs(kp_store);
-        ks = abs(ks_store);
-        kt = abs(kt_store);
+        kp = fast_complex_abs(kp_store);
+        ks = fast_complex_abs(ks_store);
+        kt = fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1225,9 +1225,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
        trans.get_winding_breaker_status(SECONDARY_SIDE)==true and
        trans.get_winding_breaker_status(TERTIARY_SIDE)==false)
     {
-        kp = kp/abs(kp);
-        ks = ks/abs(ks);
-        kt = kt/abs(kt);
+        kp = kp/ fast_complex_abs(kp);
+        ks = ks/ fast_complex_abs(ks);
+        kt = kt/ fast_complex_abs(kt);
 
         Ym = 0.0;
 
@@ -1263,9 +1263,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(s,s,yss);
 
 
-        kp = abs(kp_store);
-        ks = abs(ks_store);
-        kt = abs(kt_store);
+        kp = fast_complex_abs(kp_store);
+        ks = fast_complex_abs(ks_store);
+        kt = fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1312,9 +1312,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
        trans.get_winding_breaker_status(SECONDARY_SIDE)==false and
        trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
     {
-        kp = kp/abs(kp);
-        ks = ks/abs(ks);
-        kt = kt/abs(kt);
+        kp = kp/ fast_complex_abs(kp);
+        ks = ks/ fast_complex_abs(ks);
+        kt = kt/ fast_complex_abs(kt);
 
         Ym = 0.0;
 
@@ -1350,9 +1350,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(t,t,ytt);
 
 
-        kp = abs(kp_store);
-        ks = abs(ks_store);
-        kt = abs(kt_store);
+        kp = fast_complex_abs(kp_store);
+        ks = fast_complex_abs(ks_store);
+        kt = fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1398,9 +1398,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
        trans.get_winding_breaker_status(SECONDARY_SIDE)==true and
        trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
     {
-        kp = kp/abs(kp);
-        ks = ks/abs(ks);
-        kt = kt/abs(kt);
+        kp = kp/ fast_complex_abs(kp);
+        ks = ks/ fast_complex_abs(ks);
+        kt = kt/ fast_complex_abs(kt);
 
         Ym = 0.0;
 
@@ -1436,9 +1436,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(t,t,ytt);
 
 
-        kp = abs(kp_store);
-        ks = abs(ks_store);
-        kt = abs(kt_store);
+        kp = fast_complex_abs(kp_store);
+        ks = fast_complex_abs(ks_store);
+        kt = fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1486,9 +1486,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
     {
         network_BP_matrix.add_entry(p,p,0.0);
 
-        kp = abs(kp_store);
-        ks = abs(ks_store);
-        kt = abs(kt_store);
+        kp = fast_complex_abs(kp_store);
+        ks = fast_complex_abs(ks_store);
+        kt = fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1517,9 +1517,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(s,s,0.0);
 
 
-        kp = abs(kp_store);
-        ks = abs(ks_store);
-        kt = abs(kt_store);
+        kp = fast_complex_abs(kp_store);
+        ks = fast_complex_abs(ks_store);
+        kt = fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1547,9 +1547,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(t,t,0.0);
 
 
-        kp = abs(kp_store);
-        ks = abs(ks_store);
-        kt = abs(kt_store);
+        kp = fast_complex_abs(kp_store);
+        ks = fast_complex_abs(ks_store);
+        kt = fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1576,7 +1576,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", trans.get_identifier().c_str(),
+    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                   trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
     show_information_with_leading_time_stamp(osstream);
     */
@@ -1614,8 +1614,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
 
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
     {
-        kp = kp/abs(kp);
-        ks = ks/abs(ks);
+        kp = kp/fast_complex_abs(kp);
+        ks = ks/fast_complex_abs(ks);
         Ym = 0.0;
 
         V = 1.0;
@@ -1653,8 +1653,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
         kp = kp_store;
         ks = ks_store;
 
-        kp = abs(kp);
-        ks = abs(ks);
+        kp = fast_complex_abs(kp);
+        ks = fast_complex_abs(ks);
 
         Zp = complex<double>(0.0, Zp.imag());
         Zs = complex<double>(0.0, Zs.imag());
@@ -1712,7 +1712,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
     {
         network_BP_matrix.add_entry(s,s,0.0);
 
-        ks = abs(ks);
+        ks = fast_complex_abs(ks);
 
         Zps = complex<double>(0.0, Zps.imag());
         Ym = complex<double>(0.0, Ym.imag());
@@ -1747,7 +1747,7 @@ void NETWORK_DATABASE::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& s
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding fixed shunt '%s' at bus %u to network Y matrix.", shunt.get_identifier().c_str(),
+    osstream<<"Adding fixed shunt '%s' at bus %u to network Y matrix.", (shunt.get_identifier()).c_str(),
                   shunt.get_shunt_bus());
     show_information_with_leading_time_stamp(osstream);
     */
@@ -1782,7 +1782,7 @@ void NETWORK_DATABASE::add_line_to_dc_network(const LINE& line)
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", line.get_identifier().c_str(),
+    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", (line.get_identifier()).c_str(),
                   line.get_sending_side_bus(), line.get_receiving_side_bus());
     show_information_with_leading_time_stamp(osstream);
     */
@@ -1834,7 +1834,7 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_dc_network(const TRANSFO
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", trans.get_identifier().c_str(),
+    osstream<<"Adding three-winding transformer '%s' connecting to bus %u, %u, and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                   trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE), trans.get_winding_bus(TERTIARY_SIDE));
     show_information_with_leading_time_stamp(osstream);
     */
@@ -1935,7 +1935,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_dc_network(const TRANSFORM
         return;
 
     /*ostringstream osstream;
-    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", trans.get_identifier().c_str(),
+    osstream<<"Adding two-winding transformer '%s' connecting to bus %u and %u to network Y matrix.", (trans.get_identifier()).c_str(),
                   trans.get_winding_bus(PRIMARY_SIDE), trans.get_winding_bus(SECONDARY_SIDE));
     show_information_with_leading_time_stamp(osstream);
     */
@@ -2016,7 +2016,7 @@ void NETWORK_DATABASE::add_faulted_line_to_dynamic_network(const LINE& line)
     }
 
     /*ostringstream osstream;
-    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", line.get_identifier().c_str(),
+    osstream<<"Adding line '%s' connecting to bus %u and %u to network Y matrix.", (line.get_identifier()).c_str(),
                   line.get_sending_side_bus(), line.get_receiving_side_bus());
     show_information_with_leading_time_stamp(osstream);*/
 

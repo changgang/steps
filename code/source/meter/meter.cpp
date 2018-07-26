@@ -592,16 +592,16 @@ double METER::get_meter_value_as_a_line() const
     if(meter_type=="LINE CURRENT IN KA")
     {
         if(metered_bus!=line->get_receiving_side_bus())
-            return abs(line->get_line_complex_current_at_sending_side_in_kA());
+            return fast_complex_abs(line->get_line_complex_current_at_sending_side_in_kA());
         else
-            return abs(line->get_line_complex_current_at_receiving_side_in_kA());
+            return fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_kA());
     }
     if(meter_type=="LINE CURRENT IN PU")
     {
         if(metered_bus!=line->get_receiving_side_bus())
-            return abs(line->get_line_complex_current_at_sending_side_in_pu());
+            return fast_complex_abs(line->get_line_complex_current_at_sending_side_in_pu());
         else
-            return abs(line->get_line_complex_current_at_receiving_side_in_pu());
+            return fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_pu());
     }
 
     if(meter_type=="LINE ACTIVE POWER IN MW")
@@ -639,57 +639,57 @@ double METER::get_meter_value_as_a_line() const
     if(meter_type=="LINE APPARENT IMPEDANCE IN OHM")
     {
         if(metered_bus!=line->get_receiving_side_bus())
-            return abs(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
+            return fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
         else
-            return abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
+            return fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
     }
 
     if(meter_type=="LINE APPARENT IMPEDANCE IN PU")
     {
         if(metered_bus!=line->get_receiving_side_bus())
-            return abs(line->get_line_complex_apparent_impedance_at_sending_side_in_pu());
+            return fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_pu());
         else
-            return abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_pu());
+            return fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_pu());
     }
 
     if(meter_type=="LINE APPARENT IMPEDANCE ANGLE IN DEG")
     {
         if(metered_bus!=line->get_receiving_side_bus())
-            return rad2deg(arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm()));
+            return rad2deg(fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm()));
         else
-            return rad2deg(arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm()));
+            return rad2deg(fast_complex_arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm()));
     }
 
     if(meter_type=="LINE APPARENT IMPEDANCE ANGLE IN RAD")
     {
         if(metered_bus!=line->get_receiving_side_bus())
-            return arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
+            return fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
         else
-            return arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
+            return fast_complex_arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
     }
 
 
     if(meter_type=="LINE CURRENT AT SENDING SIDE IN KA")
-        return abs(line->get_line_complex_current_at_sending_side_in_kA());
+        return fast_complex_abs(line->get_line_complex_current_at_sending_side_in_kA());
     if(meter_type=="LINE ACTIVE POWER AT SENDING SIDE IN MW")
         return (line->get_line_complex_power_at_sending_side_in_MVA()).real();
     if(meter_type=="LINE REACTIVE POWER AT SENDING SIDE IN MVAR")
         return (line->get_line_complex_power_at_sending_side_in_MVA()).imag();
     if(meter_type=="LINE CURRENT AT RECEIVING SIDE IN KA")
-        return abs(line->get_line_complex_current_at_receiving_side_in_kA());
+        return fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_kA());
     if(meter_type=="LINE ACTIVE POWER AT RECEIVING SIDE IN MW")
         return (line->get_line_complex_power_at_receiving_side_in_MVA()).real();
     if(meter_type=="LINE REACTIVE POWER AT RECEIVING SIDE IN MVAR")
         return (line->get_line_complex_power_at_receiving_side_in_MVA()).imag();
 
     if(meter_type=="LINE APPARENT IMPEDANCE AT SENDING SIDE IN OHM")
-        return abs(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
+        return fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
     if(meter_type=="LINE APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG")
-        return rad2deg(arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm()));
+        return rad2deg(fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm()));
     if(meter_type=="LINE APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM")
-        return abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
+        return fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
     if(meter_type=="LINE APPARENT IMPEDANCE ANGLE AT RECEIVING SIDE IN DEG")
-        return rad2deg(arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm()));
+        return rad2deg(fast_complex_arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm()));
 
     return 0.0;
 }
@@ -705,17 +705,17 @@ double METER::get_meter_value_as_a_transformer() const
         if(meter_type=="TRANSFORMER CURRENT IN KA")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
-                return abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
+                return fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
             else
-                return abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
+                return fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
         }
 
         if(meter_type=="TRANSFORMER CURRENT IN PU")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
-                return abs(trans->get_winding_complex_current_in_pu(PRIMARY_SIDE));
+                return fast_complex_abs(trans->get_winding_complex_current_in_pu(PRIMARY_SIDE));
             else
-                return abs(trans->get_winding_complex_current_in_pu(SECONDARY_SIDE));
+                return fast_complex_abs(trans->get_winding_complex_current_in_pu(SECONDARY_SIDE));
         }
 
         if(meter_type=="TRANSFORMER ACTIVE POWER IN MW")
@@ -755,26 +755,26 @@ double METER::get_meter_value_as_a_transformer() const
         if(meter_type=="TRANSFORMER CURRENT IN KA")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
-                return abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
+                return fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
             else
             {
                 if(metered_bus==trans->get_winding_bus(SECONDARY_SIDE))
-                    return abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
+                    return fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
                 else
-                    return abs(trans->get_winding_complex_current_in_kA(TERTIARY_SIDE));
+                    return fast_complex_abs(trans->get_winding_complex_current_in_kA(TERTIARY_SIDE));
             }
         }
 
         if(meter_type=="TRANSFORMER CURRENT IN PU")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
-                return abs(trans->get_winding_complex_current_in_pu(PRIMARY_SIDE));
+                return fast_complex_abs(trans->get_winding_complex_current_in_pu(PRIMARY_SIDE));
             else
             {
                 if(metered_bus==trans->get_winding_bus(SECONDARY_SIDE))
-                    return abs(trans->get_winding_complex_current_in_pu(SECONDARY_SIDE));
+                    return fast_complex_abs(trans->get_winding_complex_current_in_pu(SECONDARY_SIDE));
                 else
-                    return abs(trans->get_winding_complex_current_in_pu(TERTIARY_SIDE));
+                    return fast_complex_abs(trans->get_winding_complex_current_in_pu(TERTIARY_SIDE));
             }
         }
 
@@ -834,11 +834,11 @@ double METER::get_meter_value_as_a_transformer() const
 
 
     if(meter_type=="TRANSFORMER CURRENT AT PRIMARY WINDING IN KA")
-        return abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
+        return fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
     if(meter_type=="TRANSFORMER CURRENT AT SECONDARY WINDING IN KA")
-        return abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
+        return fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
     if(meter_type=="TRANSFORMER CURRENT AT TERTIARY WINDING IN KA")
-        return abs(trans->get_winding_complex_current_in_kA(TERTIARY_SIDE));
+        return fast_complex_abs(trans->get_winding_complex_current_in_kA(TERTIARY_SIDE));
     if(meter_type=="TRANSFORMER ACTIVE POWER AT PRIMARY WINDING IN MW")
         return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).real();
     if(meter_type=="TRANSFORMER ACTIVE POWER AT SECONDARY WINDING IN MW")
@@ -881,13 +881,13 @@ double METER::get_meter_value_as_a_load() const
         double sbase = psdb->get_system_base_power_in_MVA();
         double vbase = psdb->get_bus_base_voltage_in_kV(load->get_load_bus());
         double ibase = sbase/(sqrt(3.0)*vbase);
-        return ibase*abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
+        return ibase* fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
     }
 
 
     if(meter_type=="LOAD CURRENT IN PU")
     {
-        return abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
+        return fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
     }
 
     if(meter_type=="LOAD LOAD MODEL INTERNAL VARIABLE")
@@ -980,7 +980,7 @@ double METER::get_meter_value_as_a_generator() const
         if(gen_model == NULL)
             return 0.0;
         else
-            return abs(gen_model->get_internal_voltage_in_pu_in_dq_axis());
+            return fast_complex_abs(gen_model->get_internal_voltage_in_pu_in_dq_axis());
     }
     if(meter_type =="GENERATOR TERMINAL CURRENT IN PU ON MBASE")
     {
@@ -1475,7 +1475,7 @@ double METER::get_meter_value_as_an_hvdc() const
         if(hvdc_model == NULL)
             return 0.0;
         else
-            return abs(hvdc_model->get_converter_ac_current_in_kA(RECTIFIER));
+            return fast_complex_abs(hvdc_model->get_converter_ac_current_in_kA(RECTIFIER));
     }
 
     if(meter_type=="HVDC INVERTER DC CURRENT IN KA")
@@ -1490,7 +1490,7 @@ double METER::get_meter_value_as_an_hvdc() const
         if(hvdc_model == NULL)
             return 0.0;
         else
-            return abs(hvdc_model->get_converter_ac_current_in_kA(INVERTER));
+            return fast_complex_abs(hvdc_model->get_converter_ac_current_in_kA(INVERTER));
     }
 
     if(meter_type=="HVDC RECTIFIER ALPHA IN DEG")
@@ -1546,7 +1546,7 @@ double METER::get_meter_value_as_an_hvdc() const
         if(hvdc_model == NULL)
             return 0.0;
         else
-            return abs(hvdc_model->get_converter_ac_voltage_in_pu(RECTIFIER));
+            return hvdc_model->get_converter_ac_voltage_in_pu(RECTIFIER);
     }
 
     if(meter_type=="HVDC INVERTER AC VOLTAGE IN PU")
@@ -1554,7 +1554,7 @@ double METER::get_meter_value_as_an_hvdc() const
         if(hvdc_model == NULL)
             return 0.0;
         else
-            return abs(hvdc_model->get_converter_ac_voltage_in_pu(INVERTER));
+            return hvdc_model->get_converter_ac_voltage_in_pu(INVERTER);
     }
 
     if(meter_type=="HVDC RECTIFIER DC POWER IN MW")
@@ -1624,20 +1624,20 @@ double METER::get_meter_value_as_an_equivalent_device() const
 
     if(meter_type=="EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAGE IN PU")
     {
-        return abs(edevice->get_equivalent_voltage_source_voltage_in_pu());
+        return fast_complex_abs(edevice->get_equivalent_voltage_source_voltage_in_pu());
         if(edevice->get_equivalent_voltage_source_status()==false)
             return 0.0;
         else
-            return abs(edevice->get_equivalent_voltage_source_voltage_in_pu());
+            return fast_complex_abs(edevice->get_equivalent_voltage_source_voltage_in_pu());
     }
 
     if(meter_type=="EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAGE ANGLE IN DEG")
     {
-        return rad2deg(arg(edevice->get_equivalent_voltage_source_voltage_in_pu()));
+        return rad2deg(fast_complex_arg(edevice->get_equivalent_voltage_source_voltage_in_pu()));
         if(edevice->get_equivalent_voltage_source_status()==false)
             return 0.0;
         else
-            return rad2deg(arg(edevice->get_equivalent_voltage_source_voltage_in_pu()));
+            return rad2deg(fast_complex_arg(edevice->get_equivalent_voltage_source_voltage_in_pu()));
     }
 
     if(meter_type=="EQUIVALENT DEVICE VOLTAGE SOURCE RESISTANCE IN PU")

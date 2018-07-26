@@ -6,12 +6,14 @@ using namespace std;
 
 BUS_INDEX::BUS_INDEX()
 {
+	max_bus_number = 0;
     index.clear();
     index.push_back(INDEX_NOT_EXIST);
 }
 
 BUS_INDEX::~BUS_INDEX()
 {
+	max_bus_number = 0;
     index.clear();
 }
 void BUS_INDEX::set_max_bus_number(size_t max_bus_number)
@@ -20,7 +22,9 @@ void BUS_INDEX::set_max_bus_number(size_t max_bus_number)
     // four digit for area(province+city) last three for bus
     if(max_bus_number>10000000) max_bus_number = 10000000;
 
-    index.resize(max_bus_number+1, INDEX_NOT_EXIST);
+	this->max_bus_number = max_bus_number;
+
+    index.resize(this->max_bus_number+1, INDEX_NOT_EXIST);
 }
 
 void BUS_INDEX::set_bus_with_index(size_t bus, size_t thisindex)
@@ -31,12 +35,11 @@ void BUS_INDEX::set_bus_with_index(size_t bus, size_t thisindex)
 
 size_t BUS_INDEX::get_max_bus_number() const
 {
-    return index.size()-1;
+    return max_bus_number;
 }
 
 void BUS_INDEX::clear()
 {
-    size_t max_bus_number = this->get_max_bus_number();
     for(size_t i=1; i<=max_bus_number; ++i) index[i]=INDEX_NOT_EXIST;
 }
 

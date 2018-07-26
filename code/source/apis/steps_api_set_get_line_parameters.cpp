@@ -288,7 +288,7 @@ const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier,
     {
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            return lineptr->get_identifier().c_str();
+            return (lineptr->get_identifier()).c_str();
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return BLANK.c_str();

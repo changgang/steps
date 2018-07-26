@@ -223,7 +223,7 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="NAME" or PARAMETER_NAME=="BUS NAME")
-            return busptr->get_bus_name().c_str();
+            return (busptr->get_bus_name()).c_str();
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return BLANK.c_str();

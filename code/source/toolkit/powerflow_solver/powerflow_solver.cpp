@@ -1754,8 +1754,8 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             <<setprecision(6)<<fixed<<si.imag()<<","
             <<setprecision(6)<<fixed<<sj.real()<<","
             <<setprecision(6)<<fixed<<sj.imag()<<","
-            <<setprecision(6)<<fixed<<abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
-            <<setprecision(6)<<fixed<<abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;
+            <<setprecision(6)<<fixed<< fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
+            <<setprecision(6)<<fixed<< fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;
     }
 
     file<<"% Transformer"<<endl;

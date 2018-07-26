@@ -1,8 +1,8 @@
 #ifndef STEPS_API_H
 #define STEPS_API_H
 
-//#define EXPORT_STEPS_DLL __declspec(dllexport)
-#define EXPORT_STEPS_DLL
+#define EXPORT_STEPS_DLL __declspec(dllexport)
+//#define EXPORT_STEPS_DLL
 
 #include "header/power_system_database.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"

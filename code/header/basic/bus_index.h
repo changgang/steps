@@ -22,6 +22,7 @@ class BUS_INDEX
         size_t operator[](const size_t bus) const;
 
     private:
+		size_t max_bus_number;
         vector<size_t> index;
 };
 

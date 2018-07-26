@@ -109,7 +109,7 @@ const char* api_get_dynamic_simulator_string_parameter(char* parameter_name)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="OUTPUT FILENAME")
-            return ds->get_output_file().c_str();
+            return (ds->get_output_file()).c_str();
 
         ostringstream osstream;
         osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for dynamic simulator with api "<<__FUNCTION__<<endl

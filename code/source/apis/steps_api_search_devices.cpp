@@ -236,7 +236,7 @@ const char* api_get_current_device_identifier(const char* device_type)
         size_t index = api_search_buffer.generator_pointer;
         size_t n = api_search_buffer.generators.size();
         if(index<n)
-            return api_search_buffer.generators[index]->get_identifier().c_str();
+            return (api_search_buffer.generators[index]->get_identifier()).c_str();
         else
             return BLANK.c_str();
     }
@@ -246,7 +246,7 @@ const char* api_get_current_device_identifier(const char* device_type)
         size_t index = api_search_buffer.wt_generator_pointer;
         size_t n = api_search_buffer.wt_generators.size();
         if(index<n)
-            return api_search_buffer.wt_generators[index]->get_identifier().c_str();
+            return (api_search_buffer.wt_generators[index]->get_identifier()).c_str();
         else
             return BLANK.c_str();
     }
@@ -256,7 +256,7 @@ const char* api_get_current_device_identifier(const char* device_type)
         size_t index = api_search_buffer.load_pointer;
         size_t n = api_search_buffer.loads.size();
         if(index<n)
-            return api_search_buffer.loads[index]->get_identifier().c_str();
+            return (api_search_buffer.loads[index]->get_identifier()).c_str();
         else
             return BLANK.c_str();
     }
@@ -266,7 +266,7 @@ const char* api_get_current_device_identifier(const char* device_type)
         size_t index = api_search_buffer.fixed_shunt_pointer;
         size_t n = api_search_buffer.fixed_shunts.size();
         if(index<n)
-            return api_search_buffer.fixed_shunts[index]->get_identifier().c_str();
+            return (api_search_buffer.fixed_shunts[index]->get_identifier()).c_str();
         else
             return BLANK.c_str();
     }
@@ -276,7 +276,7 @@ const char* api_get_current_device_identifier(const char* device_type)
         size_t index = api_search_buffer.line_pointer;
         size_t n = api_search_buffer.lines.size();
         if(index<n)
-            return api_search_buffer.lines[index]->get_identifier().c_str();
+            return (api_search_buffer.lines[index]->get_identifier()).c_str();
         else
             return BLANK.c_str();
     }
@@ -286,7 +286,7 @@ const char* api_get_current_device_identifier(const char* device_type)
         size_t index = api_search_buffer.transformer_pointer;
         size_t n = api_search_buffer.transformers.size();
         if(index<n)
-            return api_search_buffer.transformers[index]->get_identifier().c_str();
+            return (api_search_buffer.transformers[index]->get_identifier()).c_str();
         else
             return BLANK.c_str();
     }
@@ -296,7 +296,7 @@ const char* api_get_current_device_identifier(const char* device_type)
         size_t index = api_search_buffer.hvdc_pointer;
         size_t n = api_search_buffer.hvdcs.size();
         if(index<n)
-            return api_search_buffer.hvdcs[index]->get_identifier().c_str();
+            return (api_search_buffer.hvdcs[index]->get_identifier()).c_str();
         else
             return BLANK.c_str();
     }
@@ -306,7 +306,7 @@ const char* api_get_current_device_identifier(const char* device_type)
         size_t index = api_search_buffer.equivalent_device_pointer;
         size_t n = api_search_buffer.equivalent_devices.size();
         if(index<n)
-            return api_search_buffer.equivalent_devices[index]->get_identifier().c_str();
+            return (api_search_buffer.equivalent_devices[index]->get_identifier()).c_str();
         else
             return BLANK.c_str();
     }

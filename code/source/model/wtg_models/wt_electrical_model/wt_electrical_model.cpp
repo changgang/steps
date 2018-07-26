@@ -53,7 +53,9 @@ complex<double> WT_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() co
 
 double WT_ELECTRICAL_MODEL::get_terminal_bus_voltage_in_pu() const
 {
-    return abs(get_terminal_bus_complex_voltage_in_pu());
+	complex<double> V = get_terminal_bus_complex_voltage_in_pu();
+	double x = V.real(), y = V.imag();
+	return sqrt(x*x + y * y);
 }
 
 double WT_ELECTRICAL_MODEL::get_terminal_bus_frequency_in_pu() const
@@ -90,7 +92,9 @@ complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_complex_current_i
 
 double WT_ELECTRICAL_MODEL::get_wt_generator_terminal_current_in_pu() const
 {
-    return abs(get_wt_generator_terminal_complex_current_in_pu());
+	complex<double> I =get_wt_generator_terminal_complex_current_in_pu();
+	double x = I.real(), y = I.imag();
+	return sqrt(x*x+y*y);
 }
 // reference
 

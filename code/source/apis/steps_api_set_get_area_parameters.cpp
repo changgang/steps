@@ -104,7 +104,7 @@ const char* api_get_area_string_data(size_t area, char* parameter_name)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="NAME" or PARAMETER_NAME=="AREA NAME")
-            return areaptr->get_area_name().c_str();
+            return (areaptr->get_area_name()).c_str();
 
         show_parameter_not_supported_for_area_zone_owner_with_api(PARAMETER_NAME, area, __FUNCTION__);
         return BLANK.c_str();

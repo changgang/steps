@@ -250,7 +250,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     {
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            return sourceptr->get_identifier().c_str();
+            return (sourceptr->get_identifier()).c_str();
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
         return BLANK.c_str();

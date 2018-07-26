@@ -102,6 +102,59 @@ double hz2radps(double f)
     return 2.0*PI*f;
 }
 
+
+double fast_complex_abs(complex<double>& z)
+{
+	double x = z.real();
+	double y = z.imag();
+	return sqrt(x*x+y*y);
+}
+
+double fast_complex_arg(complex<double>& z)
+{
+	double x = z.real();
+	double y = z.imag();
+	
+	if (x == 0.0 and y == 0.0)
+		return 0.0;
+
+	if (x == 0.0)
+	{
+		if (y > 0)
+			return PI * 0.5;
+		else
+		{
+			if (y < 0.0)
+				return -PI * 0.5;
+			else
+				return 0.0;
+		}
+	}
+
+	if (y == 0.0)
+	{
+		if (x > 0.0)
+			return 0.0;
+		else
+		{
+			if (x < 0.0)
+				return PI;
+			else
+				return 0.0;
+		}
+	}
+
+	double angle = atan(y / x);
+	if (x < 0.0)
+	{
+		if (y > 0.0)
+			angle += PI;
+		else
+			angle -= PI;
+	}
+	return angle;
+}
+
 string trim_string(string str)
 {
     if(str.empty())

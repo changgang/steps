@@ -1567,7 +1567,7 @@ void PSSE_IMEXPORTER::add_hvdc_basic_data(HVDC& hvdc, vector<string> data)
                 hvdc.set_nominal_dc_current_per_pole_in_kA(value*1e-3);
                 break;
             default:// constant power + blocked
-                hvdc.set_nominal_dc_power_per_pole_in_MW(abs(value));
+                hvdc.set_nominal_dc_power_per_pole_in_MW(fabs(value));
                 if(value>0.0)
                     hvdc.set_side_to_hold_power(RECTIFIER);
                 else
@@ -1672,7 +1672,7 @@ void PSSE_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE co
         double step = get_double_data(data.front(),"1.0");
         data.erase(data.begin());
         double tap = hvdc.get_converter_transformer_max_tap_in_pu(converter)-hvdc.get_converter_transformer_min_tap_in_pu(converter);
-        int n = int(abs(round(tap/step)))+1;
+        int n = int(fabs(round(tap/step)))+1;
         hvdc.set_converter_transformer_number_of_taps(converter, n);
     }
     if(data.size()>0)

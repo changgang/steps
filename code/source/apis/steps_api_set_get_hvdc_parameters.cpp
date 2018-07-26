@@ -443,10 +443,10 @@ const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier,
         }
 
         if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            return hvdcptr->get_identifier().c_str();
+            return (hvdcptr->get_identifier()).c_str();
 
         if(PARAMETER_NAME=="NAME")
-            return hvdcptr->get_name().c_str();
+            return (hvdcptr->get_name()).c_str();
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return BLANK.c_str();

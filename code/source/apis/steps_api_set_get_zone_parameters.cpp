@@ -81,7 +81,7 @@ const char* api_get_zone_string_data(size_t zone, char* parameter_name)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
         if(PARAMETER_NAME=="NAME" or PARAMETER_NAME=="ZONE NAME")
-            return zoneptr->get_zone_name().c_str();
+            return (zoneptr->get_zone_name()).c_str();
 
         show_parameter_not_supported_for_area_zone_owner_with_api(PARAMETER_NAME, zone, __FUNCTION__);
         return BLANK.c_str();

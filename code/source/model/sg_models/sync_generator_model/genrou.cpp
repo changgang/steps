@@ -246,7 +246,7 @@ void GENROU::initialize()
     complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, rotor_angle);
     complex<double> Edq = xy2dq_with_angle_in_rad(Exy, rotor_angle);
     complex<double> Flux_dq = Edq*complex<double>(0.0, -1.0);
-    double Flux = abs(Flux_dq);
+    double Flux = fast_complex_abs(Flux_dq);
     double delta_XadIfd = get_saturation_with_flux(Flux)*Flux;
 
     // d axis
@@ -328,10 +328,10 @@ void GENROU::initialize()
     subtransient_block_q_axis->initialize();
 
     //cout<<"init Efd = "<<efd0<<", Flux_dq = "<<Flux_dq<<", Edq="<<Edq<<", Ed0'="<<sdp<<", Ed0''="<<sdpp<<", Eq0'="<<sqp<<", Eq0''="<<sqpp<<endl;
-    //cout<<"init Flux="<<abs(Flux)<<", E''="<<abs(Edq)<<", "<<abs(Exy)<<endl;
+    //cout<<"init Flux="<<abs(Flux)<<", E''="<<fast_complex_abs(Edq)<<", "<<fast_complex_abs(Exy)<<endl;
 
     // mechanical power
-    double I = abs(Ixy);
+    double I = fast_complex_abs(Ixy);
     double pmech0 = S.real()+I*I*get_Rs();
     set_initial_mechanical_power_in_pu_based_on_mbase(pmech0);
 
@@ -364,7 +364,7 @@ void GENROU::initialize_rotor_angle()
     double xqpp = get_Xqpp();
     double xl = get_Xl();
 
-    double Flux = abs(Exy);
+    double Flux = fast_complex_abs(Exy);
     double delta_XadIfd = get_saturation_with_flux(Flux)*Flux;
 
     double A = (xq-xqp)*(xqpp-xl)/(xqp-xl)+(xq-xl)*(xqp-xqpp)/(xqp-xl);
@@ -375,7 +375,7 @@ void GENROU::initialize_rotor_angle()
     complex<double> Zq(rs, xq);
     complex<double> EQ = Vxy+Ixy*Zq;
 
-    double rotor_angle_EQ = arg(EQ/Vxy) + arg(Vxy);
+    double rotor_angle_EQ = fast_complex_arg(EQ/Vxy) + fast_complex_arg(Vxy);
     double rotor_angle = 0.0;
     if(C == 0.0)
         rotor_angle = PI*0.5;
@@ -422,7 +422,7 @@ void GENROU::run(DYNAMIC_MODE mode)
     double fluxq = transient_block_q_axis->get_output()*(xpp-xl)/(xqp-xl) + subtransient_block_q_axis->get_output()*(xqp-xpp)/(xqp-xl);
     fluxq = -fluxq;
     complex<double> Flux_dq(fluxd, fluxq);
-    double Flux = abs(Flux_dq);
+    double Flux = fast_complex_abs(Flux_dq);
     double delta_XadIfd = get_saturation_with_flux(Flux)*Flux;
 
     complex<double> Idq = get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase();
@@ -522,7 +522,7 @@ complex<double> GENROU::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
 
 double GENROU::get_terminal_current_in_pu_based_on_mbase()
 {
-    return abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+    return fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
 }
 
 double GENROU::get_terminal_current_in_pu_based_on_sbase()
@@ -621,9 +621,9 @@ double GENROU::get_variable_with_name(string var_name)
     if(var_name == "GENERATOR TERMINAL Q IN MW")
         return get_terminal_reactive_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
     if(var_name == "GENERATOR TERMINAL S IN PU")
-        return abs(get_terminal_complex_power_in_pu_based_on_mbase());
+        return fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
     if(var_name == "GENERATOR TERMINAL S IN MVA")
-        return abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
+        return fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
     if(var_name == "GENERATOR MECHANICAL POWER IN PU")
         return get_mechanical_power_in_pu_based_on_mbase();
     if(var_name == "GENERATOR MECHANICAL POWER IN MW")
@@ -633,7 +633,7 @@ double GENROU::get_variable_with_name(string var_name)
     if(var_name == "FIELD CURRENT IN PU")
         return get_field_current_in_pu_based_on_mbase();
     if(var_name == "GENERATOR INTERNAL VOLTAGE IN PU")
-        return abs(get_internal_voltage_in_pu_in_xy_axis());
+        return fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
     if(var_name == "GENERATOR TERMINAL CURRENT IN PU")
         return get_terminal_current_in_pu_based_on_mbase();
     if(var_name == "GENERATOR TERMINAL CURRENT IN KA")
@@ -741,7 +741,7 @@ double GENROU::get_field_current_in_pu_based_on_mbase()
     double fluxq = transient_block_q_axis->get_output()*(xpp-xl)/(xqp-xl) + subtransient_block_q_axis->get_output()*(xqp-xpp)/(xqp-xl);
     fluxq = -fluxq;
     complex<double> Flux_dq(fluxd, fluxq);
-    double Flux = abs(Flux_dq);
+    double Flux = fast_complex_abs(Flux_dq);
 
     complex<double> Edq = get_internal_voltage_in_pu_in_dq_axis();
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
