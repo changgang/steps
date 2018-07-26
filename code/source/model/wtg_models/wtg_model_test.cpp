@@ -39,7 +39,7 @@ void WTG_MODEL_TEST::setup()
     wt_generator.set_source_impedance_in_pu(complex<double>(0.0, 0.1));
     wt_generator.set_p_generation_in_MW(70.0);
     wt_generator.set_q_generation_in_MVar(30.0);
-    wt_generator.set_number_of_lumped_wt_generators(50.0);
+    wt_generator.set_number_of_lumped_wt_generators(50);
     wt_generator.set_rated_power_per_wt_generator_in_MW(2.0);
 
     psdb->append_wt_generator(wt_generator);

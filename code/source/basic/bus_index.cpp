@@ -18,7 +18,7 @@ void BUS_INDEX::set_max_bus_number(size_t max_bus_number)
 {
     //it is possible to include all buses in China with 7 digits.
     // four digit for area(province+city) last three for bus
-    if(max_bus_number>1e7) max_bus_number = 1e7;
+    if(max_bus_number>10000000) max_bus_number = 10000000;
 
     index.resize(max_bus_number+1, INDEX_NOT_EXIST);
 }

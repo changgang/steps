@@ -1,6 +1,11 @@
 #ifndef STEPS_ENUM_H
 #define STEPS_ENUM_H
 
+/*
+#define and &&
+#define or  ||
+#define not !
+*/
 // bus enum
 enum BUS_TYPE
 {

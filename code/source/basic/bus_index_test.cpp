@@ -64,7 +64,7 @@ void BUS_INDEX_TEST::test_set_get_bus_index()
     bus_index->set_bus_with_index(1, 10);
     bus_index->set_bus_with_index(3, 20);
     bus_index->set_bus_with_index(1000, 23);
-    bus_index->set_bus_with_index(1e8, 24);
+    bus_index->set_bus_with_index(100000000, 24);
     TEST_ASSERT(bus_index->get_index_of_bus(1)==10);
     TEST_ASSERT(bus_index->get_index_of_bus(3)==20);
     TEST_ASSERT(bus_index->get_index_of_bus(1000)==23);
@@ -75,11 +75,11 @@ void BUS_INDEX_TEST::test_clear_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_INDEX_TEST");
 
-    bus_index->set_max_bus_number(1e5);
+    bus_index->set_max_bus_number(100000);
     bus_index->set_bus_with_index(1, 10);
     bus_index->set_bus_with_index(3, 20);
     bus_index->set_bus_with_index(1000, 23);
-    bus_index->set_bus_with_index(1e8, 24);
+    bus_index->set_bus_with_index(100000000, 24);
     bus_index->clear();
     size_t max_bus_number = bus_index->get_max_bus_number();
     for(size_t i=1; i<=max_bus_number; ++i)
@@ -90,11 +90,11 @@ void BUS_INDEX_TEST::test_get_index_of_bus_and_operator_bracket()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_INDEX_TEST");
 
-    bus_index->set_max_bus_number(1e5);
+    bus_index->set_max_bus_number(100000);
     bus_index->set_bus_with_index(1, 10);
     bus_index->set_bus_with_index(3, 20);
     bus_index->set_bus_with_index(1000, 23);
-    bus_index->set_bus_with_index(1e8, 24);
+    bus_index->set_bus_with_index(100000000, 24);
     TEST_ASSERT(bus_index->get_index_of_bus(1)==10);
     TEST_ASSERT((*bus_index)[1]==10);
     TEST_ASSERT(bus_index->get_index_of_bus(3)==20);

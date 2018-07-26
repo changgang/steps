@@ -303,7 +303,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
     //Y.report_brief();
 
     network_db->build_decoupled_network_matrix();
-
+	
     update_P_and_Q_equation_internal_buses();
     BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
     BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
@@ -608,24 +608,24 @@ void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
                 internal_Q_equation_buses.push_back(i);
         }
     }
-/*
-    osstream<<"Buses with P equations (physical bus):");
+	/*
+    osstream<<"Buses with P equations (physical bus):" << endl;
     show_information_with_leading_time_stamp(osstream);
     size_t n = internal_P_equation_buses.size();
-    for(size_t i=0; i£¡=n; ++i)
+    for(size_t i=0; i!=n; ++i)
     {
-        osstream<<"%u", get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]));
+        osstream<<network_db->get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]) << endl;
         show_information_with_leading_time_stamp(osstream);
     }
-    osstream<<"Buses with Q equations (physical bus):");
+    osstream<<"Buses with Q equations (physical bus):"<<endl;
     show_information_with_leading_time_stamp(osstream);
     n = internal_Q_equation_buses.size();
     for(size_t i=0; i!=n; ++i)
     {
-        osstream<<"%u", get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]));
+        osstream<< network_db->get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]) << endl;
         show_information_with_leading_time_stamp(osstream);
-    }
-*/
+    }*/
+
     osstream<<"Done updating powerflow P equation buses and Q equation buses.";
     show_information_with_leading_time_stamp(osstream);
 }

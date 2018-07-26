@@ -14,6 +14,7 @@
 #include <cstring>
 #include <iostream>
 #include <cstdio>
+#include <algorithm>
 
 using namespace std;
 
@@ -1008,10 +1009,10 @@ void HVDC_TEST::test_reverse_converters()
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER) - 510.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER) - 230.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER) - 220.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER) - complex<double>(0.0, 0.12))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(hvdc->get_converter_transformer_impedance_in_ohm(INVERTER) - complex<double>(0.1, 0.22))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(hvdc->get_converter_transformer_admittance_in_siemens(RECTIFIER) - complex<double>(0.0, 0.002))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(hvdc->get_converter_transformer_admittance_in_siemens(INVERTER) - complex<double>(0.001, 0.022))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER) - complex<double>(0.0, 0.12))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(hvdc->get_converter_transformer_impedance_in_ohm(INVERTER) - complex<double>(0.1, 0.22))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(hvdc->get_converter_transformer_admittance_in_siemens(RECTIFIER) - complex<double>(0.0, 0.002))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(hvdc->get_converter_transformer_admittance_in_siemens(INVERTER) - complex<double>(0.001, 0.022))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_max_tap_in_pu(RECTIFIER) - 1.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_max_tap_in_pu(INVERTER) - 1.2)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_min_tap_in_pu(RECTIFIER) - 0.9)<FLOAT_EPSILON);
@@ -1046,10 +1047,10 @@ void HVDC_TEST::test_reverse_converters()
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER) - 500.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER) - 220.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER) - 230.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER) - complex<double>(0.1, 0.22))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(hvdc->get_converter_transformer_impedance_in_ohm(INVERTER) - complex<double>(0.0, 0.12))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(hvdc->get_converter_transformer_admittance_in_siemens(RECTIFIER) - complex<double>(0.001, 0.022))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(hvdc->get_converter_transformer_admittance_in_siemens(INVERTER) - complex<double>(0.0, 0.002))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER) - complex<double>(0.1, 0.22))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(hvdc->get_converter_transformer_impedance_in_ohm(INVERTER) - complex<double>(0.0, 0.12))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(hvdc->get_converter_transformer_admittance_in_siemens(RECTIFIER) - complex<double>(0.001, 0.022))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(hvdc->get_converter_transformer_admittance_in_siemens(INVERTER) - complex<double>(0.0, 0.002))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_max_tap_in_pu(RECTIFIER) - 1.2)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_max_tap_in_pu(INVERTER) - 1.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(hvdc->get_converter_transformer_min_tap_in_pu(RECTIFIER) - 0.8)<FLOAT_EPSILON);

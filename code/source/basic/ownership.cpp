@@ -9,9 +9,10 @@ OWNERSHIP::OWNERSHIP()
 
 void OWNERSHIP::append_owner_and_its_fraction(size_t owner, double fraction)
 {
+	if(owner == 0) return;
     if(fraction<0.0) return;
 
-    if(not has_owner(owner))
+    if(! has_owner(owner))
         ownership_pair.insert(map<size_t,double>::value_type(owner, fraction));
     else
     {
@@ -69,34 +70,48 @@ size_t OWNERSHIP::get_owner_of_index(const size_t index) const
 {
     map<size_t, double>::const_iterator it;
     it = ownership_pair.begin();
+	size_t n = ownership_pair.size();
     if(it!=ownership_pair.end())
     {
-        std::advance(it, index);
-
-        if(it!=ownership_pair.end())
-            return it->first;
-        else
-            return 0;
+		if (index < n)
+		{
+			std::advance(it, index);
+			if (it != ownership_pair.end())
+				return it->first;
+			else
+				return 0;
+		}
+		else
+			return 0;
     }
-    else
-        return 0;
+	else
+	{
+		return 0;
+	}
 }
 
 double OWNERSHIP::get_fraction_of_owner_of_index(const size_t index) const
 {
     map<size_t, double>::const_iterator it;
     it = ownership_pair.begin();
+	size_t n = ownership_pair.size();
     if(it!=ownership_pair.end())
     {
-        std::advance(it, index);
-
-        if(it!=ownership_pair.end())
-            return it->second;
-        else
-            return 0.0;
+		if (index < n)
+		{
+			std::advance(it, index);
+			if (it != ownership_pair.end())
+				return it->second;
+			else
+				return 0.0;
+		}
+		else
+			return 0.0;
     }
-    else
-        return 0.0;
+	else
+	{
+		return 0.0;
+	}
 }
 
 vector<double> OWNERSHIP::get_all_fraction() const

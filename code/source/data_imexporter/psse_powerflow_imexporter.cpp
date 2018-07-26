@@ -632,7 +632,7 @@ void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* sour
         }
         else
             break;
-
+		
         os.append_owner_and_its_fraction(owner, frac);
     }
     os.normalize();
@@ -1672,7 +1672,7 @@ void PSSE_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE co
         double step = get_double_data(data.front(),"1.0");
         data.erase(data.begin());
         double tap = hvdc.get_converter_transformer_max_tap_in_pu(converter)-hvdc.get_converter_transformer_min_tap_in_pu(converter);
-        int n = abs(round(tap/step))+1;
+        int n = int(abs(round(tap/step)))+1;
         hvdc.set_converter_transformer_number_of_taps(converter, n);
     }
     if(data.size()>0)
@@ -1789,7 +1789,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file)
         show_information_with_leading_time_stamp(osstream);
         return;
     }
-
+	
     ofs<<export_case_data();
     ofs<<export_bus_data();
     ofs<<"0 / END OF BUS DATA, BEGIN LOAD DATA"<<endl;
@@ -2051,7 +2051,6 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
         double q = wt_generator->get_q_generation_in_MVar();
         double pf = p/sqrt(p*p+q*q);
 
-
         osstream<<right
                <<setw(8)<<wt_generator->get_source_bus()<<", "
                <<"\""<<left
@@ -2076,11 +2075,13 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
                <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_min_in_MW()<<", ";
         if(wt_generator->get_owner_count()==0)
             osstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
-        else
-            osstream<<setprecision(0)<<wt_generator->get_owner_of_index(0)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(0)<<", "
-              <<setprecision(0)<<wt_generator->get_owner_of_index(1)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(1)<<", "
-              <<setprecision(0)<<wt_generator->get_owner_of_index(2)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(2)<<", "
-              <<setprecision(0)<<wt_generator->get_owner_of_index(3)<<", "<<setprecision(6)<<wt_generator->get_fraction_of_owner_of_index(3)<<", ";
+		else
+		{
+			osstream<< setprecision(0) << wt_generator->get_owner_of_index(0) << ", " << setprecision(6) << wt_generator->get_fraction_of_owner_of_index(0) << ", "
+				    << setprecision(0) << wt_generator->get_owner_of_index(1) << ", " << setprecision(6) << wt_generator->get_fraction_of_owner_of_index(1) << ", "
+				    << setprecision(0) << wt_generator->get_owner_of_index(2) << ", " << setprecision(6) << wt_generator->get_fraction_of_owner_of_index(2) << ", "
+				    << setprecision(0) << wt_generator->get_owner_of_index(3) << ", " << setprecision(6) << wt_generator->get_fraction_of_owner_of_index(3) << ", ";
+		}
 
         osstream<<"1, "<<setprecision(6)<<pf<<endl;
     }
@@ -2321,7 +2322,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
 
             for(size_t j=1; j!=4; ++j)
             {
-                TRANSFORMER_WINDING_SIDE winding;
+                TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
                 if(j==0) winding = PRIMARY_SIDE;
                 if(j==1) winding = SECONDARY_SIDE;
                 if(j==2) winding = TERTIARY_SIDE;

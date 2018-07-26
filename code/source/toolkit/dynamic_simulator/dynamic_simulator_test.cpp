@@ -1364,7 +1364,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator->set_output_file("test_log/IEEE9_test_with_wt3_models");
 
     simulator->set_max_DAE_iteration(20);
-    simulator->set_max_network_iteration(100.0);
+    simulator->set_max_network_iteration(100);
     simulator->start();
     simulator->run_to(1.0);
 

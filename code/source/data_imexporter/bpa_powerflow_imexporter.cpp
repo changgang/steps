@@ -1869,8 +1869,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 continue;
 
             size_t converter_bus = (primary_bus_number!=0 ? primary_bus_number:secondary_bus_number);
-            size_t converter_bus_base_voltage = (converter_bus==primary_bus_number ? primary_bus_base_voltage : secondary_bus_base_voltage);
-            size_t valve_bus_base_voltage = (converter_bus==primary_bus_number ? secondary_bus_base_voltage : primary_bus_base_voltage);
+            double converter_bus_base_voltage = (converter_bus==primary_bus_number ? primary_bus_base_voltage : secondary_bus_base_voltage);
+			double valve_bus_base_voltage = (converter_bus==primary_bus_number ? secondary_bus_base_voltage : primary_bus_base_voltage);
 
             resistance_str=format_bpa_data_to_readable_data(resistance_str,"F6.5");
             double resistance=get_double_data(resistance_str,"0.0");

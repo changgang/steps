@@ -610,10 +610,6 @@
 			<Option target="Debug" />
 			<Option target="Release" />
 		</Unit>
-		<Unit filename="source/model/load_model/MOTOR.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
 		<Unit filename="source/model/load_model/load_model.cpp" />
 		<Unit filename="source/model/load_model/load_model_test.cpp">
 			<Option target="Debug" />
@@ -798,7 +794,7 @@
 		<Unit filename="thirdparty/cpptest/htmloutput.cpp" />
 		<Unit filename="thirdparty/cpptest/missing.cpp" />
 		<Unit filename="thirdparty/cpptest/missing.h" />
-		<Unit filename="thirdparty/cpptest/source.cpp" />
+		<Unit filename="thirdparty/cpptest/source_cpptest.cpp" />
 		<Unit filename="thirdparty/cpptest/suite.cpp" />
 		<Unit filename="thirdparty/cpptest/textoutput.cpp" />
 		<Unit filename="thirdparty/cpptest/time.cpp" />

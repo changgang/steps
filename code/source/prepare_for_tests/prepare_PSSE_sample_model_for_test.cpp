@@ -27,7 +27,7 @@ void prepare_psse_sample_model(POWER_SYSTEM_DATABASE* db)
 
 void prepare_psse_sample_model_buses(POWER_SYSTEM_DATABASE* db)
 {
-    db->set_allowed_max_bus_number(1e5);
+    db->set_allowed_max_bus_number(100000);
 
     BUS bus(db);
     bus.set_bus_number(101);

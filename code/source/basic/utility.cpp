@@ -34,7 +34,7 @@ string num2str(double number)
 
 int str2int(string str)
 {
-    return round(str2double(str));
+    return int(round(str2double(str)));
 }
 
 double str2double(string str)

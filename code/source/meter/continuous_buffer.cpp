@@ -2,6 +2,7 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 #include <iostream>
+#include <algorithm>
 /****
 current time:T
 step: t

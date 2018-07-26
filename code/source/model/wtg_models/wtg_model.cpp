@@ -44,7 +44,7 @@ size_t WTG_MODEL::get_number_of_lumped_wt_generators() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
-        return 0.0;
+        return 0;
     return gen->get_number_of_lumped_wt_generators();
 }
 

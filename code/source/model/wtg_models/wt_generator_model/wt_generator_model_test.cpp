@@ -86,7 +86,7 @@ void WT_GENERATOR_MODEL_TEST::test_get_source_impedance_in_pu_based_on_mbase()
 {
     WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-    TEST_ASSERT(fabs(model->get_source_impedance_in_pu_based_on_mbase()-wt_gen->get_source_impedance_in_pu())<FLOAT_EPSILON);
+    TEST_ASSERT(abs(model->get_source_impedance_in_pu_based_on_mbase()-wt_gen->get_source_impedance_in_pu())<FLOAT_EPSILON);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_get_model_type()

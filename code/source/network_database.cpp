@@ -98,6 +98,7 @@ void NETWORK_DATABASE::build_decoupled_network_matrix()
 
     network_BP_matrix.compress_and_merge_duplicate_entries();
     network_BQ_matrix.compress_and_merge_duplicate_entries();
+
 }
 
 SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BP_matrix()

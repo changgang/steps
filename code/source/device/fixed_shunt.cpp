@@ -89,6 +89,9 @@ complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_MVA() const
 
 complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
 {
+	if (get_nominal_impedance_shunt_in_MVA() == 0.0)
+		return complex<double>(0.0, INFINITE_THRESHOLD);
+
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -107,7 +110,10 @@ complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
 
 complex<double> FIXED_SHUNT::get_nominal_admittance_shunt_in_pu() const
 {
-    return 1.0/get_nominal_impedance_shunt_in_pu();
+	if (get_nominal_impedance_shunt_in_MVA() == 0.0)
+		return 0.0;
+    else
+		return 1.0/get_nominal_impedance_shunt_in_pu();
 }
 
 bool FIXED_SHUNT::is_valid() const

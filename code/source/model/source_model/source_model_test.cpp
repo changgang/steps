@@ -80,6 +80,6 @@ void SOURCE_MODEL_TEST::test_get_terminal_voltage()
 
     complex<double> V = db->get_bus_complex_voltage_in_pu(1);
 
-    TEST_ASSERT(fabs(model->get_terminal_complex_voltage_in_pu()-V)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-V)<FLOAT_EPSILON);
 }
 
