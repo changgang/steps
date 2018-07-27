@@ -4,7 +4,6 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-
 int api_get_owner_integer_data(size_t owner, char* parameter_name)
 {
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
@@ -75,21 +74,25 @@ const char* api_get_owner_string_data(size_t owner, char* parameter_name)
 {
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-    string BLANK = "";
+	sprintf(STEPS::steps_char_buffer, "%s", "");
+
     OWNER* ownerptr = psdb->get_owner(owner);
     if(ownerptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="NAME" or PARAMETER_NAME=="OWNER NAME")
-            return (ownerptr->get_owner_name()).c_str();
+		if (PARAMETER_NAME == "NAME" or PARAMETER_NAME == "OWNER NAME")
+		{
+			sprintf(STEPS::steps_char_buffer, "%s", (ownerptr->get_owner_name()).c_str());
+			return STEPS::steps_char_buffer;
+		}
 
         show_parameter_not_supported_for_area_zone_owner_with_api(PARAMETER_NAME, owner, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
     else
     {
         show_area_zone_owner_not_exist_with_api(owner, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
 }
 

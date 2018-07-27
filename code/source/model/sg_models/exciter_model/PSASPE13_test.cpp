@@ -25,6 +25,8 @@ void PSASPE13_TEST::setup()
     model.set_TR_in_s(0.03);
     model.set_VImax_in_pu(2.0);
     model.set_VImin_in_pu(-2.0);
+    model.set_TB_in_s(1.0);
+    model.set_TC_in_s(1.0);
     model.set_KA(50.0);
     model.set_TA_in_s(0.03);
     model.set_VRmax_in_pu(5.0);

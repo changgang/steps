@@ -1,6 +1,7 @@
 #include "header/apis/steps_api.h"
 #include "header/basic/utility.h"
 #include "header/toolkit/cct_searcher/cct_searcher.h"
+#include "header/steps_namespace.h"
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name)
 {
@@ -104,21 +105,24 @@ const char* api_get_dynamic_simulator_string_parameter(char* parameter_name)
 {
     DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
-    string BLANK="";
+	sprintf(STEPS::steps_char_buffer, "%s", "");
     if(ds!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="OUTPUT FILENAME")
-            return (ds->get_output_file()).c_str();
+		if (PARAMETER_NAME == "OUTPUT FILENAME")
+		{
+			sprintf(STEPS::steps_char_buffer, "%s", (ds->get_output_file()).c_str());
+			return STEPS::steps_char_buffer;
+		}
 
         ostringstream osstream;
         osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for dynamic simulator with api "<<__FUNCTION__<<endl
                <<"0 will be returned.";
         show_information_with_leading_time_stamp(osstream);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
     else
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
 }
 
 void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* value)
@@ -201,7 +205,8 @@ const char* api_get_dynamic_simulator_output_file()
 {
     DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
-    return ds->get_output_file().c_str();
+	sprintf(STEPS::steps_char_buffer, "%s", ds->get_output_file().c_str());
+	return STEPS::steps_char_buffer;
 }
 
 void api_set_dynamic_simulation_time_step(double value)

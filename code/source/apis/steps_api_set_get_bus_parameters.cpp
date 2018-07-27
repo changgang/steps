@@ -4,7 +4,6 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-
 int api_get_bus_integer_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
@@ -216,22 +215,25 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name)
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-    string BLANK = "";
+	sprintf(STEPS::steps_char_buffer, "%s", "");
 
     BUS* busptr = psdb->get_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="NAME" or PARAMETER_NAME=="BUS NAME")
-            return (busptr->get_bus_name()).c_str();
+		if (PARAMETER_NAME == "NAME" or PARAMETER_NAME == "BUS NAME")
+		{
+			sprintf(STEPS::steps_char_buffer, "%s", (busptr->get_bus_name()).c_str());
+			return STEPS::steps_char_buffer;
+		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
     else
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
 }
 

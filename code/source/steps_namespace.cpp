@@ -12,6 +12,8 @@ namespace STEPS
     double TIME;
 
     time_t clock_when_system_started=clock();
+
+	char steps_char_buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
 }
 
 

@@ -427,7 +427,7 @@ const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier,
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-    string BLANK = "";
+	sprintf(STEPS::steps_char_buffer, "%s", "");
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -439,22 +439,28 @@ const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier,
         if(SIDE!="HVDC")
         {
             show_side_not_supported_for_device_with_api(SIDE, did, __FUNCTION__);
-            return BLANK.c_str();
+            return STEPS::steps_char_buffer;
         }
 
-        if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            return (hvdcptr->get_identifier()).c_str();
+		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
+		{
+			sprintf(STEPS::steps_char_buffer, "%s", (hvdcptr->get_identifier()).c_str());
+			return STEPS::steps_char_buffer;
+		}
 
-        if(PARAMETER_NAME=="NAME")
-            return (hvdcptr->get_name()).c_str();
+		if (PARAMETER_NAME == "NAME")
+		{
+			sprintf(STEPS::steps_char_buffer, "%s", (hvdcptr->get_name()).c_str());
+			return STEPS::steps_char_buffer;
+		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
     else
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
 }
 

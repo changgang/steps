@@ -21,5 +21,7 @@ namespace STEPS
 
     extern double DELT;
     extern double TIME;
+
+	extern char steps_char_buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
 }
 #endif // STEPS_NAMESPACE_H

@@ -886,22 +886,22 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
     wind_turbine_speed_reference_sensor.set_input(speed_ref);
     wind_turbine_speed_reference_sensor.run(mode);
-    osstream<<"wind_turbine_speed_reference_sensor input = "<<speed_ref<<", output = "<<wind_turbine_speed_reference_sensor.get_output()<<endl;
+    //osstream<<"wind_turbine_speed_reference_sensor input = "<<speed_ref<<", output = "<<wind_turbine_speed_reference_sensor.get_output()<<endl;
 
     //double input = speed + speedref_bias - wind_turbine_speed_reference_sensor.get_output();
     double input = speed - wind_turbine_speed_reference_sensor.get_output();
 
     torque_PI_regulator.set_input(input);
     torque_PI_regulator.run(mode);
-    osstream<<"torque_PI_regulator input = "<<input<<", output = "<<torque_PI_regulator.get_output()<<endl;
+    //osstream<<"torque_PI_regulator input = "<<input<<", output = "<<torque_PI_regulator.get_output()<<endl;
 
     virtual_inertia_emulator.set_input(-freq);
     virtual_inertia_emulator.run(mode);
-    osstream<<"virtual_inertia_emulator input = "<<input<<", output = "<<virtual_inertia_emulator.get_output()<<endl;
+    //osstream<<"virtual_inertia_emulator input = "<<input<<", output = "<<virtual_inertia_emulator.get_output()<<endl;
 
     frequency_droop_controller.set_input(-freq);
     frequency_droop_controller.run(mode);
-    osstream<<"frequency_droop_controller input = "<<input<<", output = "<<frequency_droop_controller.get_output()<<endl;
+    //osstream<<"frequency_droop_controller input = "<<input<<", output = "<<frequency_droop_controller.get_output()<<endl;
 
     double fupper = get_frequency_deviation_upper_deadband_in_pu();
     double flower = get_frequency_deviation_lower_deadband_in_pu();
@@ -925,36 +925,36 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
     power_order_integrator.set_input(input);
     power_order_integrator.run(mode);
-    osstream<<"power_order_integrator input = "<<input<<", output = "<<power_order_integrator.get_output()<<endl;
+    //osstream<<"power_order_integrator input = "<<input<<", output = "<<power_order_integrator.get_output()<<endl;
 
     active_power_sensor.set_input(pelec);
     active_power_sensor.run(mode);
-    osstream<<"active_power_sensor input = "<<pelec<<", output = "<<active_power_sensor.get_output()<<endl;
+    //osstream<<"active_power_sensor input = "<<pelec<<", output = "<<active_power_sensor.get_output()<<endl;
 
     double xcomp = get_Xcomp_in_pu();
     input = vterm+iterm*xcomp;
     voltage_sensor.set_input(input);
     voltage_sensor.run(mode);
-    osstream<<"At time "<<STEPS::TIME<<" s"<<endl;
-    osstream<<"voltage_sensor input = "<<setw(20)<<setprecision(19)<<fixed<<input<<", output = "<<voltage_sensor.get_output()<<endl;
+    //osstream<<"At time "<<STEPS::TIME<<" s"<<endl;
+    //osstream<<"voltage_sensor input = "<<setw(20)<<setprecision(19)<<fixed<<input<<", output = "<<voltage_sensor.get_output()<<endl;
 
     input = get_voltage_reference_in_pu()-voltage_sensor.get_output();
-    osstream<<"input = "<<input<<endl;
+    //osstream<<"input = "<<input<<endl;
     input /= get_Fn();
 
     voltage_regulator_integrator.set_input(input);
     voltage_regulator_integrator.run(mode);
-    osstream<<"voltage regulator integrator input = "<<input<<", output = "<<voltage_regulator_integrator.get_output()<<endl;
+    //osstream<<"voltage regulator integrator input = "<<input<<", output = "<<voltage_regulator_integrator.get_output()<<endl;
 
     voltage_regulator_first_order_block.set_input(input);
     voltage_regulator_first_order_block.run(mode);
-    osstream<<"voltage regulator first order block input = "<<input<<", output = "<<voltage_regulator_first_order_block.get_output()<<endl;
+    //osstream<<"voltage regulator first order block input = "<<input<<", output = "<<voltage_regulator_first_order_block.get_output()<<endl;
 
     input = voltage_regulator_integrator.get_output() + voltage_regulator_first_order_block.get_output();
-    osstream<<"voltage_regulator_filter input = "<<input<<", output = "<<voltage_regulator_filter.get_output()<<endl;
+    //osstream<<"voltage_regulator_filter input = "<<input<<", output = "<<voltage_regulator_filter.get_output()<<endl;
     voltage_regulator_filter.set_input(input);
     voltage_regulator_filter.run(mode);
-    osstream<<"voltage_regulator_filter input = "<<input<<", output = "<<voltage_regulator_filter.get_output()<<endl;
+    //osstream<<"voltage_regulator_filter input = "<<input<<", output = "<<voltage_regulator_filter.get_output()<<endl;
 
     PE_VAR_CONTROL_MODE var_mode = get_var_control_mode();
     double qcmd = 0.0;
@@ -974,12 +974,12 @@ void WT3E0::run(DYNAMIC_MODE mode)
         qcmd = get_Qmax_in_pu();
     if(qcmd<get_Qmin_in_pu())
         qcmd = get_Qmin_in_pu();
-    osstream<<"Q command = "<<qcmd<<endl;
+    //osstream<<"Q command = "<<qcmd<<endl;
 
     input = qcmd - qelec;
     Q_error_integrator.set_input(input);
     Q_error_integrator.run(mode);
-    osstream<<"Q_error_integrator input = "<<input<<", output = "<<Q_error_integrator.get_output()<<endl;
+    //osstream<<"Q_error_integrator input = "<<input<<", output = "<<Q_error_integrator.get_output()<<endl;
 
     size_t vflag = get_voltage_flag();
     if(vflag == 1 or vflag == 2)
@@ -1000,7 +1000,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
         input = Q_error_integrator.get_output()-vterm;
         V_error_integrator.set_input(input);
         V_error_integrator.run(mode);
-        osstream<<"V_error_integrator input = "<<input<<", output = "<<V_error_integrator.get_output()<<endl;
+        //osstream<<"V_error_integrator input = "<<input<<", output = "<<V_error_integrator.get_output()<<endl;
     }
     //show_information_with_leading_time_stamp(osstream);
 

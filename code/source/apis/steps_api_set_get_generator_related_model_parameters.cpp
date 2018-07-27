@@ -6,14 +6,14 @@
 
 const char* api_get_generator_related_model_name(size_t bus, char* identifier, char* model_type)
 {
-    string BLANK = "";
+	sprintf(STEPS::steps_char_buffer, "%s", "");
     DEVICE_ID did = get_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
     GENERATOR* generator = psdb->get_generator(did);
     if(generator==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
 
     string MODEL_TYPE = string2upper(model_type);
@@ -21,44 +21,39 @@ const char* api_get_generator_related_model_name(size_t bus, char* identifier, c
     {
         SYNC_GENERATOR_MODEL* model = generator->get_sync_generator_model();
         if(model!=NULL)
-			return (model->get_model_name()).c_str();
-        else
-            return BLANK.c_str();
+			sprintf(STEPS::steps_char_buffer, "%s", (model->get_model_name()).c_str());
+		return STEPS::steps_char_buffer;;
     }
     if(MODEL_TYPE=="AVR" or MODEL_TYPE=="EXCITER")
     {
         EXCITER_MODEL* model = generator->get_exciter_model();
-        if(model!=NULL)
-			return (model->get_model_name()).c_str();
-        else
-            return BLANK.c_str();
+		if (model != NULL)
+			sprintf(STEPS::steps_char_buffer, "%s", (model->get_model_name()).c_str());
+		return STEPS::steps_char_buffer;
     }
     if(MODEL_TYPE=="PSS" or MODEL_TYPE=="STABILIZER")
     {
         STABILIZER_MODEL* model = generator->get_stabilizer_model();
         if(model!=NULL)
-			return (model->get_model_name()).c_str();
-        else
-            return BLANK.c_str();
+			sprintf(STEPS::steps_char_buffer, "%s", (model->get_model_name()).c_str());
+        return STEPS::steps_char_buffer;
     }
     if(MODEL_TYPE=="GOV" or MODEL_TYPE=="TURBINE GOVERNOR")
     {
         TURBINE_GOVERNOR_MODEL* model = generator->get_turbine_governor_model();
         if(model!=NULL)
-            return (model->get_model_name()).c_str();
-        else
-            return BLANK.c_str();
+			sprintf(STEPS::steps_char_buffer, "%s", (model->get_model_name()).c_str());
+        return STEPS::steps_char_buffer;
     }
     if(MODEL_TYPE=="COMP" or MODEL_TYPE=="COMPENSATOR")
     {
         COMPENSATOR_MODEL* model = generator->get_compensator_model();
         if(model!=NULL)
-            return (model->get_model_name()).c_str();
-        else
-            return BLANK.c_str();
+			sprintf(STEPS::steps_char_buffer, "%s", (model->get_model_name()).c_str());
+        return STEPS::steps_char_buffer;
     }
     show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
-    return BLANK.c_str();
+    return STEPS::steps_char_buffer;
 }
 
 double api_get_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name)

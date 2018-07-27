@@ -1,7 +1,7 @@
 from ctypes import *
-#libsteps = CDLL("vsSTEPS.dll")
+libsteps = CDLL("vsSTEPS.dll")
 #libsteps = CDLL("libSTEPS.dll")
-libsteps = cdll.LoadLibrary("./libSTEPS.so")
+#libsteps = cdll.LoadLibrary("./libSTEPS.so")
 
 libsteps.api_clear_package.restype = None
 libsteps.api_clear_package.argtypes = None

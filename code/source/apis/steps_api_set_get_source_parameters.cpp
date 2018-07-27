@@ -239,7 +239,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-    string BLANK = "";
+	sprintf(STEPS::steps_char_buffer, "%s", "");
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb->get_source(generator_did);
@@ -249,11 +249,14 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     if(sourceptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            return (sourceptr->get_identifier()).c_str();
+		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
+		{
+			sprintf(STEPS::steps_char_buffer, "%s", (sourceptr->get_identifier()).c_str());
+			return STEPS::steps_char_buffer;
+		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
     else
     {
@@ -261,7 +264,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
         osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
                <<"EMPTY STRING will be returned.";
         show_information_with_leading_time_stamp(osstream);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
 }
 

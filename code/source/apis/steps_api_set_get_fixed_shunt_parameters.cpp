@@ -151,22 +151,25 @@ const char* api_get_fixed_shunt_string_data(size_t bus, char* identifier, char* 
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-    string BLANK = "";
+	sprintf(STEPS::steps_char_buffer, "%s", "");
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            return (shuntptr->get_identifier()).c_str();
+		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
+		{
+			sprintf(STEPS::steps_char_buffer, "%s", (shuntptr->get_identifier()).c_str());
+			return STEPS::steps_char_buffer;
+		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
     else
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
-        return BLANK.c_str();
+        return STEPS::steps_char_buffer;
     }
 }
 

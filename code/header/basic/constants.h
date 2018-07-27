@@ -22,8 +22,12 @@
 #endif // get_variable_name(x)
 
 #ifndef MAX_DATABASE_COUNT
-    #define MAX_DATABASE_COUNT 10
+#define MAX_DATABASE_COUNT 10
 #endif // MAX_DATABASE_COUNT
+
+#ifndef MAX_TEMP_CHAR_BUFFER_SIZE
+#define MAX_TEMP_CHAR_BUFFER_SIZE 100
+#endif // MAX_TEMP_CHAR_BUFFER_SIZE
 
 #ifndef MAX_LOAD_RELAY_STAGE
     #define MAX_LOAD_RELAY_STAGE 10

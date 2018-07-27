@@ -809,11 +809,11 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
     double pmax = cpmax*get_total_wind_power_per_wt_generator_in_MW(vwind);
     if(pmech>pmax)
     {
-        osstream<<"Warning. Current electrical power generation of "<<get_device_name()<<" exceeds the maximum available wind power:"<<endl
+        /*osstream<<"Warning. Current electrical power generation of "<<get_device_name()<<" exceeds the maximum available wind power:"<<endl
                <<"Current electrical power generation = "<<pmech*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW"<<endl
                <<"Current wind speed = "<<vwind<<" m, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
                <<"MPPT speed will be returned as speed reference: "<<w_mppt<<" rad/s.";
-        show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp(osstream);*/
 
         return w_mppt;
     }
@@ -872,13 +872,13 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
         if(iter_count>iter_max)
         {
             w = wnew;
-            osstream<<"Warning. Failed to get reference wt turbine speed in "<<iter_max<<" iterations."<<endl
+            /*osstream<<"Warning. Failed to get reference wt turbine speed in "<<iter_max<<" iterations."<<endl
                    <<"Current electrical power generation = "<<pmech*n<<"MW. Maximum available wind power = "<<pmax*n<<" MW at 0.0 pitch ange"<<endl
                    <<"Maximum available wind power = "<<get_total_wind_power_per_wt_generator_in_MW(vwind)*cpmax*n<<" MW at current pitch ange"<<endl
                    <<"Current wind speed = "<<vwind<<" m/s, pitch angle = "<<pitch<<" deg, Cpmax = "<<cpmax<<" at w_mpppt = "<<w_mppt<<" rad/s"<<endl
                    <<"Reference turbine speed is returned as "<<w<<" rad/s."<<endl
                    <<"Check "<<get_model_name()<<" model of "<<get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            show_information_with_leading_time_stamp(osstream);*/
             break;
         }
     }
@@ -990,12 +990,12 @@ double WT_AERODYNAMIC_MODEL::get_lambda_at_Cpmax(double pitch_deg)
         iter_count++;
         if(iter_count>iter_max)
         {
-            string iteration_info = osstream.str();
+            /*string iteration_info = osstream.str();
             osstream.str("");
             osstream<<"Warning. Failed to get MPPT lambda at Cpmax in "<<iter_max<<" iterations with pitch angle = "<<pitch_deg<<" deg."<<endl
                    <<"Lambda is returned as "<<newlambda<<"."<<endl<<"Check "<<get_model_name()<<" model of "<<get_device_name()<<endl
                    <<"Below are iterations to get MPPT lambda:"<<endl<<iteration_info;
-            show_information_with_leading_time_stamp(osstream);
+            show_information_with_leading_time_stamp(osstream);*/
             break;
         }
     }
