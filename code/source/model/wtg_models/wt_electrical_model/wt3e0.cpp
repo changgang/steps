@@ -445,9 +445,27 @@ double WT3E0::get_double_data_with_index(size_t index) const
 
 double WT3E0::get_double_data_with_name(string par_name) const
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
-    show_information_with_leading_time_stamp(osstream);
+    par_name = string2upper(par_name);
+    if(par_name=="K VIRTUAL INERTIA")
+        return get_Kvi();
+    if(par_name=="T VIRTUAL INERTIA")
+        return get_TV_in_s();
+    if(par_name=="UPPER FREQUENCY DEADBAND")
+        return get_frequency_deviation_upper_deadband_in_pu();
+    if(par_name=="LOWER FREQUENCY DEADBAND")
+        return get_frequency_deviation_lower_deadband_in_pu();
+    if(par_name=="K DROOP")
+        return get_Kdroop();
+    if(par_name=="T DROOP")
+        return get_Tdroop_in_s();
+    if(par_name=="K SECONDARY FREQUENCY REGULATION")
+        return get_Kfint();
+    if(par_name=="T SPEED REFERENCE FILTER")
+        return get_Tspeed_in_s();
+    if(par_name=="KP TORQUE CONTROL")
+        return get_KPP();
+    if(par_name=="KI TORQUE CONTROL")
+        return get_KIP();
     return 0.0;
 }
 
@@ -461,9 +479,28 @@ void WT3E0::set_double_data_with_index(size_t index, double value)
 
 void WT3E0::set_double_data_with_name(string par_name, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    par_name = string2upper(par_name);
+    if(par_name=="K VIRTUAL INERTIA")
+        return set_Kvi(value);
+    if(par_name=="T VIRTUAL INERTIA")
+        return set_TV_in_s(value);
+    if(par_name=="UPPER FREQUENCY DEADBAND")
+        return set_frequency_deviation_upper_deadband_in_pu(value);
+    if(par_name=="LOWER FREQUENCY DEADBAND")
+        return set_frequency_deviation_lower_deadband_in_pu(value);
+    if(par_name=="K DROOP")
+        return set_Kdroop(value);
+    if(par_name=="T DROOP")
+        return set_Tdroop_in_s(value);
+    if(par_name=="K SECONDARY FREQUENCY REGULATION")
+        return set_Kfint(value);
+    if(par_name=="T SPEED REFERENCE FILTER")
+        return set_Tspeed_in_s(value);
+    if(par_name=="KP TORQUE CONTROL")
+        return set_KPP(value);
+    if(par_name=="KI TORQUE CONTROL")
+        return set_KIP(value);
+
     return;
 }
 

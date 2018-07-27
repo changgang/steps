@@ -89,8 +89,25 @@ double WT3P0::get_double_data_with_index(size_t index) const
 double WT3P0::get_double_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
+
+    if(par_name == "KP FREQUENCY CONTROLLER")
+        return get_Kp_frequency_controller();
+
+    if(par_name == "KI FREQUENCY CONTROLLER")
+        return get_Ki_frequency_controller();
+
+    if(par_name == "KP SPEED CONTROLLER")
+        return get_Kp_speed_controller();
+
+    if(par_name == "KI SPEED CONTROLLER")
+        return get_Ki_speed_controller();
+
+    if(par_name == "PITCH ANGLE IN DEG")
+        return get_pitch_angle_in_deg();
+
     if(par_name=="PITCHMAX")
         return get_Pitchmax_in_deg();
+
     if(par_name=="PITCHMIN")
         return get_Pitchmin_in_deg();
 
@@ -108,8 +125,22 @@ void WT3P0::set_double_data_with_index(size_t index, double value)
 void WT3P0::set_double_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
+
+    if(par_name == "KP FREQUENCY CONTROLLER")
+        return set_Kp_frequency_controller(value);
+
+    if(par_name == "KI FREQUENCY CONTROLLER")
+        return set_Ki_frequency_controller(value);
+
+    if(par_name == "KP SPEED CONTROLLER")
+        return set_Kp_speed_controller(value);
+
+    if(par_name == "KI SPEED CONTROLLER")
+        return set_Ki_speed_controller(value);
+
     if(par_name=="PITCHMAX")
         return set_Pitchmax_in_deg(value);
+
     if(par_name=="PITCHMIN")
         return set_Pitchmin_in_deg(value);
 }
@@ -438,9 +469,6 @@ double WT3P0::get_variable_with_index(size_t var_index)
 double WT3P0::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-
-    if(var_name == "PITCH ANGLE IN DEG")
-        return get_pitch_angle_in_deg();
 
     if(var_name == "STATE@SPEED CONTROLLER")
         return speed_controller.get_state();

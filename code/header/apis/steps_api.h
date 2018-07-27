@@ -1,8 +1,8 @@
 #ifndef STEPS_API_H
 #define STEPS_API_H
 
-#define EXPORT_STEPS_DLL __declspec(dllexport)
-//#define EXPORT_STEPS_DLL
+//#define EXPORT_STEPS_DLL __declspec(dllexport)
+#define EXPORT_STEPS_DLL
 
 #include "header/power_system_database.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -208,6 +208,10 @@ EXPORT_STEPS_DLL void api_set_owner_boolean_data(size_t owner, char* parameter_n
 EXPORT_STEPS_DLL const char* api_get_generator_related_model_name(size_t bus, char* identifier, char* model_type);
 EXPORT_STEPS_DLL double api_get_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
+
+EXPORT_STEPS_DLL const char* api_get_wt_generator_related_model_name(size_t bus, char* identifier, char* model_type);
+EXPORT_STEPS_DLL double api_get_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
 
 
 EXPORT_STEPS_DLL size_t api_get_powerflow_solver_integer_parameter(char* parameter_name);

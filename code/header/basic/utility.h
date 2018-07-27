@@ -25,8 +25,8 @@ double deg2rad(double angle);
 double radps2hz(double w);
 double hz2radps(double f);
 
-double fast_complex_abs(complex<double>& z);
-double fast_complex_arg(complex<double>& z);
+double fast_complex_abs(complex<double> z);
+double fast_complex_arg(complex<double> z);
 
 string trim_string(string str);
 string replace_string_contents(string str, string source, string destination);

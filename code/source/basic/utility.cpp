@@ -103,18 +103,18 @@ double hz2radps(double f)
 }
 
 
-double fast_complex_abs(complex<double>& z)
+double fast_complex_abs(complex<double> z)
 {
 	double x = z.real();
 	double y = z.imag();
 	return sqrt(x*x+y*y);
 }
 
-double fast_complex_arg(complex<double>& z)
+double fast_complex_arg(complex<double> z)
 {
 	double x = z.real();
 	double y = z.imag();
-	
+
 	if (x == 0.0 and y == 0.0)
 		return 0.0;
 

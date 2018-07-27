@@ -15,7 +15,7 @@ using namespace std;
 
 DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 {
-	/*
+
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_and_get_power_system_database);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_is_power_system_database_set);
@@ -56,10 +56,10 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_without_UFLS);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS);
-	*/
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENCLS_CDC4T);
 
-    //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
+
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
 
 }
 
@@ -1221,7 +1221,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFL
     recover_stdout();
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENCLS_CDC4T()
+void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
 
@@ -1235,8 +1235,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENC
     db->set_allowed_max_bus_number(1000);
 
     importer.set_power_system_database(db);
-    importer.load_powerflow_data("bench_shandong.raw");
-    importer.load_dynamic_data("bench_shandong.dyr");
+    importer.load_powerflow_data("bench_shandong_change.raw");
+    importer.load_dynamic_data("bench_shandong_change_with_gov.dyr");
 
     vector<HVDC*> hvdcs = db->get_all_hvdcs();
     size_t n = hvdcs.size();
@@ -1259,7 +1259,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENC
 
     simulator->prepare_meters();
 
-    simulator->set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENCLS_CDC4T");
+    simulator->set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
     simulator->set_allowed_max_power_imbalance_in_MVA(0.001);
     simulator->set_max_DAE_iteration(10);
     simulator->set_max_network_iteration(200);

@@ -1,4 +1,5 @@
 from ctypes import *
+#libsteps = CDLL("vsSTEPS.dll")
 #libsteps = CDLL("libSTEPS.dll")
 libsteps = cdll.LoadLibrary("./libSTEPS.so")
 
@@ -285,6 +286,13 @@ libsteps.api_get_generator_related_model_float_parameter.restype = c_double
 libsteps.api_get_generator_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p)
 libsteps.api_set_generator_related_model_float_parameter.restype = None
 libsteps.api_set_generator_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_double)
+
+libsteps.api_get_wt_generator_related_model_name.restype = c_char_p
+libsteps.api_get_wt_generator_related_model_name.argtypes = (c_uint, c_char_p, c_char_p)
+libsteps.api_get_wt_generator_related_model_float_parameter.restype = c_double
+libsteps.api_get_wt_generator_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p)
+libsteps.api_set_wt_generator_related_model_float_parameter.restype = None
+libsteps.api_set_wt_generator_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_double)
 
 
 libsteps.api_get_powerflow_solver_integer_parameter.restype = (c_uint)

@@ -743,6 +743,33 @@ def set_generator_related_model_data(generator, model_type, par_type, par_name, 
         return
     return
     
+def get_wt_generator_related_model_name(generator, model_type):
+    return libsteps.api_get_wt_generator_related_model_name(generator[0], generator[1], model_type)
+
+def get_wt_generator_related_model_data(generator, model_type, par_type, par_name):
+    par_type = par_type.upper()
+    if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+        return None
+    if par_type in ['I', 'INT', 'INTEGER']:
+        return 0
+    if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+        return libsteps.api_get_wt_generator_related_model_float_parameter(generator[0], generator[1], model_type, par_name)
+    if par_type in ['B', 'BOOL', 'BOOLEAN']:
+        return False
+    return None
+    
+def set_wt_generator_related_model_data(generator, model_type, par_type, par_name, value):
+    par_type = par_type.upper()
+    if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
+        return
+    if par_type in ['I', 'INT', 'INTEGER']:
+        return
+    if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
+        return libsteps.api_set_wt_generator_related_model_float_parameter(generator[0], generator[1], model_type, par_name, value)
+    if par_type in ['B', 'BOOL', 'BOOLEAN']:
+        return
+    return
+    
 def get_powerflow_solver_parameter(par_type, par_name):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
