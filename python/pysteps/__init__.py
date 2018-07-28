@@ -1,7 +1,9 @@
-from libsteps import libsteps
+from pylibsteps import libsteps, libsteps_version, libsteps_date
 
-def initialize_package():
-	libsteps.api_initialize_package()
+pysteps_version = "0.1"
+pysteps_date = "2018/07/28"
+
+libsteps.api_initialize_package()
 
 def clear_package():
     libsteps.api_clear_package()

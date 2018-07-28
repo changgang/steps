@@ -632,7 +632,7 @@ void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* sour
         }
         else
             break;
-		
+
         os.append_owner_and_its_fraction(owner, frac);
     }
     os.normalize();
@@ -1789,7 +1789,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file)
         show_information_with_leading_time_stamp(osstream);
         return;
     }
-	
+
     ofs<<export_case_data();
     ofs<<export_bus_data();
     ofs<<"0 / END OF BUS DATA, BEGIN LOAD DATA"<<endl;
@@ -2485,7 +2485,7 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
 
         for(size_t j=0; j!=2; ++j)
         {
-            HVDC_CONVERTER_SIDE converter;
+            HVDC_CONVERTER_SIDE converter=RECTIFIER;
             if(j==0) converter = RECTIFIER;
             if(j==1) converter = INVERTER;
 

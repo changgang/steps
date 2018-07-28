@@ -2815,8 +2815,8 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
     {
         for (int i=0;i<2;i++)
         {
-            TRANSFORMER_WINDING_SIDE winding;
-            TRANSFORMER_WINDING_SIDE winding2;
+            TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
+            TRANSFORMER_WINDING_SIDE winding2=SECONDARY_SIDE;
             if(i==0)
             {
                 winding=PRIMARY_SIDE;
@@ -2936,7 +2936,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     double angle_shift_bwtween_primary_and_secondary = trans->get_winding_angle_shift_in_deg(PRIMARY_SIDE)-trans->get_winding_angle_shift_in_deg(SECONDARY_SIDE);
     double angle_shift_bwtween_primary_and_tertiary = trans->get_winding_angle_shift_in_deg(PRIMARY_SIDE)-trans->get_winding_angle_shift_in_deg(TERTIARY_SIDE);
 
-    TRANSFORMER_WINDING_SIDE winding;
+    TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
     ostringstream osstream;
 
     for(size_t i=0; i<3; i++)
@@ -2976,7 +2976,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
 
         string identifier = trans->get_identifier();
 
-        TRANSFORMER_WINDING_SIDE winding2;
+        TRANSFORMER_WINDING_SIDE winding2=SECONDARY_SIDE;
         if(i==0) winding2 = SECONDARY_SIDE;
         if(i==1) winding2 = TERTIARY_SIDE;
         if(i==2) winding2 = PRIMARY_SIDE;

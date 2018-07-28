@@ -3,7 +3,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/toolkit/cct_searcher/cct_searcher.h"
 #include <iostream>
-#include <omp.h>
+//#include <omp.h>
 
 using namespace std;
 

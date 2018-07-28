@@ -1,11 +1,8 @@
 #ifndef STEPS_ENUM_H
 #define STEPS_ENUM_H
 
-/*
-#define and &&
-#define or  ||
-#define not !
-*/
+#include <iso646.h>
+
 // bus enum
 enum BUS_TYPE
 {

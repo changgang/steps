@@ -171,7 +171,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void guess_bus_voltage_with_line_fault_cleared(DEVICE_ID did, size_t side_bus, double location, FAULT fault);
 
         //double TIME;
-        size_t ITER;
+        size_t ITER_DAE, ITER_NET;
         double P_threshold_in_MW, Q_threshold_in_MVar;
         size_t network_iteration_count, DAE_iteration_count, max_network_iteration, max_DAE_iteration;
         double alpha;

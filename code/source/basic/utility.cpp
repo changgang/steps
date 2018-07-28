@@ -345,6 +345,7 @@ void reset_simulator()
 
 void terminate_simulator()
 {
+    reset_simulator();
     ostringstream osstream;
     osstream<<"System is terminated.";
     show_information_with_leading_time_stamp(osstream);

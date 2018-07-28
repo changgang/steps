@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <iostream>
 #include <ctime>
+//#include <omp.h>
 
 using namespace std;
 
@@ -49,7 +50,7 @@ void DYNAMICS_SIMULATOR::clear()
 
     set_max_DAE_iteration(2);
     set_max_network_iteration(200);
-    set_allowed_max_power_imbalance_in_MVA(0.0001);
+    set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
 }
 
@@ -1082,7 +1083,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
         //    csv_output_file<<","<<meters[i].get_meter_type();
         //csv_output_file<<endl;
 
-        csv_output_file<<"TIME,ITERATION,MISMATCH IN MVA";
+        csv_output_file<<"TIME,ITERATION_DAE,ITERATION_NET,MISMATCH IN MVA";
 
         for(size_t i=0; i!=n; ++i)
             csv_output_file<<","<<meters[i].get_meter_name();
@@ -1125,7 +1126,7 @@ void DYNAMICS_SIMULATOR::save_meter_values()
 
     ostringstream osstream;
     osstream<<setw(8)<<setprecision(4)<<fixed<<get_dynamic_simulation_time_in_s()<<","
-      <<setw(3)<<ITER<<","
+      <<setw(3)<<ITER_DAE<<","<<setw(3)<<ITER_NET<<","
       <<setw(6)<<setprecision(3)<<fixed<<smax;
 
     for(size_t i=0; i!=n; ++i)
@@ -1160,16 +1161,20 @@ void DYNAMICS_SIMULATOR::start()
 
     build_jacobian();
 
+    ITER_DAE = 0;
+    ITER_NET = 0;
+
     bool converged = false;
     size_t iter_count  = 0;
     while(true)
     {
         iter_count++;
         converged = solve_network();
+        ITER_NET += network_iteration_count;
         if(converged or iter_count>2)
             break;
     }
-    ITER = iter_count;
+    ITER_DAE = iter_count;
     if(iter_count>1)
     {
         osstream<<"Warning. Network solution converged in "<<iter_count<<" iterations for dynamics simulation initialization.";
@@ -1247,24 +1252,27 @@ void DYNAMICS_SIMULATOR::run_a_step()
 
     //bool network_converged = false;
     //bool DAE_converged = false;
-    size_t DAE_iter_count = 0;//network_iter_count = 0;
+    ITER_DAE = 0;
+    ITER_NET = 0;
     size_t DAE_iter_max = get_max_DAE_iteration();
     //size_t network_iter_max = get_max_network_iteration();
     double max_angle_difference_old = get_system_max_angle_difference_in_deg();
     while(true)
     {
-        ++DAE_iter_count;
-        if(DAE_iter_count>DAE_iter_max)
+        ++ITER_DAE;
+        if(ITER_DAE>DAE_iter_max)
         {
             if(DAE_iter_max!=2)
             {
                 osstream<<"Failed to solve DAE in "<<DAE_iter_max<<" iterations when integrating at time "<<get_dynamic_simulation_time_in_s()<<" s.";
                 show_information_with_leading_time_stamp(osstream);
             }
+            --ITER_DAE;
             break;
         }
         integrate();
         solve_network();
+        ITER_NET += network_iteration_count;
         /*network_converged = solve_network();
         if(not network_converged)
         {
@@ -1277,8 +1285,6 @@ void DYNAMICS_SIMULATOR::run_a_step()
         else
             max_angle_difference_old = max_angle_difference_new;
     }
-    DAE_iteration_count = DAE_iter_count;
-    ITER = DAE_iteration_count;
     update();
 }
 
@@ -1289,7 +1295,10 @@ void DYNAMICS_SIMULATOR::update_with_event()
     bool network_converged = false;
     size_t network_iter_max = get_max_network_iteration();
 
+    ITER_DAE = 0;
+    ITER_NET = 0;
     network_converged = solve_network();
+    ITER_NET = network_iteration_count;
     if(not network_converged)
     {
         osstream<<"Failed to solve network in "<<network_iter_max<<" iterations when updating with event at time "<<get_dynamic_simulation_time_in_s()<<" s.";
@@ -1320,6 +1329,7 @@ void DYNAMICS_SIMULATOR::update()
     bool network_converged = false;
 
     network_converged = solve_network();
+    ITER_NET += network_iteration_count;
 
     if(not network_converged)
     {
@@ -1340,7 +1350,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<GENERATOR*> generators = db->get_all_generators();
     GENERATOR* generator;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         generator = generators[i];
         if(generator->get_status()==false)
@@ -1352,7 +1362,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<WT_GENERATOR*> wtgens = db->get_all_wt_generators();
     WT_GENERATOR* wtgen;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         wtgen = wtgens[i];
         if(wtgen->get_status()==false)
@@ -1490,7 +1500,10 @@ bool DYNAMICS_SIMULATOR::solve_network()
     {
         ++network_iter_count;
         if(network_iter_count>network_iter_max)
+        {
+            --network_iter_count;
             break;
+        }
         solve_hvdcs_without_integration();
         I_mismatch = get_bus_current_mismatch();
         if(not is_converged(I_mismatch))
@@ -1585,7 +1598,8 @@ vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_current_mismatch() const
     I_mismatch = get_bus_currnet_into_network();
 
     size_t n = I_mismatch.size();
-    for(size_t i = 0; i!=n; ++i)
+    //#pragma omp parallel for
+    for(size_t i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
 
     add_generators_to_bus_current_mismatch(I_mismatch);
@@ -1606,23 +1620,19 @@ vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_currnet_into_network() con
     vector< complex<double> > bus_current;
     bus_current.resize(nbus, 0.0);
 
-    complex<double> voltage, y;
-
-    int row;
-    size_t column_physical_bus;
-
+    complex<double> y, voltage;
     int nsize = Y.get_matrix_size();
     int k_start=0, k_end=0;
+
     for(int column=0; column!=nsize; column++)
     {
-        column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(column);
+        size_t column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(column);
         voltage = psdb->get_bus_complex_voltage_in_pu(column_physical_bus);
-        //cout<<"Bus "<<column_physical_bus<<", voltage "<<fast_complex_abs(voltage)<<", angle="<<rad2deg(fast_complex_arg(voltage))<<endl;
 
         k_end = Y.get_starting_index_of_column(column+1);
         for(int k=k_start; k!=k_end; ++k)
         {
-            row = Y.get_row_number_of_entry_index(k);
+            int row = Y.get_row_number_of_entry_index(k);
             y = Y.get_entry_value(k);
             bus_current[row] += y*voltage;
         }
@@ -1753,29 +1763,20 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch(vector< complex<doubl
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
-    size_t physical_bus, internal_bus;
-
     vector<LOAD*> loads = psdb->get_all_loads();
-
-    LOAD* load;
 
     size_t nload = loads.size();
 
-    complex<double> I;
-
-    for(size_t i=0; i!=nload; ++i)
+    //#pragma omp parallel for
+    for(size_t i=0; i<nload; ++i)
     {
-        load = loads[i];
+        LOAD* load = loads[i];
 
-        if(load->get_status()) //  == true
-        {
-            physical_bus = load->get_load_bus();
+        size_t physical_bus = load->get_load_bus();
 
-            internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
+        size_t internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
 
-            I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();;
-        }
-
+        I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
         /*ostringstream osstream;
         osstream<< "Load %u source current: %f + j%f",physical_bus, I.real(), I.imag());
         show_information_with_leading_time_stamp(osstream);*/

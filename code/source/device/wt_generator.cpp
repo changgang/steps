@@ -335,7 +335,6 @@ void WT_GENERATOR::set_wt_aerodynamic_model(const WT_AERODYNAMIC_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wt_aerodynamic_model = new_model;
-        cout<<"model "<<new_model->get_model_name()<<" is added"<<endl;
     }
     else
     {
@@ -377,7 +376,6 @@ void WT_GENERATOR::set_wt_turbine_model(const WT_TURBINE_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wt_turbine_model = new_model;
-        cout<<"model "<<new_model->get_model_name()<<" is added"<<endl;
     }
     else
     {
@@ -420,7 +418,6 @@ void WT_GENERATOR::set_wt_electrical_model(const WT_ELECTRICAL_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wt_electrical_model = new_model;
-        cout<<"model "<<new_model->get_model_name()<<" is added"<<endl;
     }
     else
     {
@@ -462,7 +459,6 @@ void WT_GENERATOR::set_wt_pitch_model(const WT_PITCH_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wt_pitch_model = new_model;
-        cout<<"model "<<new_model->get_model_name()<<" is added"<<endl;
     }
     else
     {
@@ -504,7 +500,6 @@ void WT_GENERATOR::set_wind_speed_model(const WIND_SPEED_MODEL* model)
         new_model->set_power_system_database(get_power_system_database());
         new_model->set_device_id(get_device_id());
         wind_speed_model = new_model;
-        cout<<"model "<<new_model->get_model_name()<<" is added"<<endl;
     }
     else
     {

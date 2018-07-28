@@ -233,7 +233,7 @@ void FILEWIND::run(DYNAMIC_MODE mode)
 double FILEWIND::get_wind_speed_in_pu()
 {
     if(time.size()==0)
-        return 0.0;
+        return 1.0;
 
     double simulation_time = STEPS::TIME;
 

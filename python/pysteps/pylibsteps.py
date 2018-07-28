@@ -1,7 +1,10 @@
 from ctypes import *
-libsteps = CDLL("vsSTEPS.dll")
-#libsteps = CDLL("libSTEPS.dll")
-#libsteps = cdll.LoadLibrary("./libSTEPS.so")
+
+libsteps_version = "0.1"
+libsteps_date = "2018/07/28"
+
+libsteps = cdll.LoadLibrary("D:/Python27/Lib/site-packages/pysteps/libSTEPS.dll")
+libsteps = cdll.LoadLibrary("/usr/lib/python2.7/dist-packages/pysteps/libSTEPS.so")
 
 libsteps.api_clear_package.restype = None
 libsteps.api_clear_package.argtypes = None

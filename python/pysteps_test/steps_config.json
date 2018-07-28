@@ -1,0 +1,14 @@
+{"bus":10000,
+"generator": 5000,
+"peSource":5000,
+"load":5000,
+"fixedShunt": 2000,
+"switchedShunt":2000,
+"line":50000,
+"transformer":10000,
+"hvdc":100,
+"equivalentDevice":100,
+"area":1000,
+"zone":1000,
+"owner":1000
+}

@@ -15,7 +15,7 @@ using namespace std;
 
 DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 {
-
+    /*
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_and_get_power_system_database);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_is_power_system_database_set);
@@ -56,7 +56,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_without_UFLS);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS);
-
+    */
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
@@ -1261,9 +1261,9 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 
     simulator->set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
     simulator->set_allowed_max_power_imbalance_in_MVA(0.001);
-    simulator->set_max_DAE_iteration(10);
+    simulator->set_max_DAE_iteration(20);
     simulator->set_max_network_iteration(200);
-    set_dynamic_simulation_time_step_in_s(0.01);
+    set_dynamic_simulation_time_step_in_s(0.02);
 
     simulator->start();
     simulator->run_to(1.0);
@@ -1283,7 +1283,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     simulator->clear_line_fault(did, 60, 0.0);
     simulator->trip_line(did);
 
-    simulator->run_to(10.0);
+    simulator->run_to(5.0);
 
     recover_stdout();
 }
@@ -1298,7 +1298,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     file += ".txt";
     redirect_stdout_to_file(file);
 
-    set_dynamic_simulation_time_step_in_s(0.001);
 
     PSSE_IMEXPORTER importer;
 
@@ -1365,7 +1364,9 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator->set_output_file("test_log/IEEE9_test_with_wt3_models");
 
     simulator->set_max_DAE_iteration(20);
-    simulator->set_max_network_iteration(100);
+    simulator->set_max_network_iteration(200);
+    simulator->set_allowed_max_power_imbalance_in_MVA(0.001);
+    set_dynamic_simulation_time_step_in_s(0.01);
     simulator->start();
     simulator->run_to(1.0);
 
@@ -1391,7 +1392,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator->trip_line(did);*/
     simulator->shed_generator(gendid_1, 0.2);
 
-    simulator->run_to(10.0);
+    simulator->run_to(5.0);
 
     recover_stdout();
 }
