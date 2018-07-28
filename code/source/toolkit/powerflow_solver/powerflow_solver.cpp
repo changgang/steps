@@ -178,6 +178,10 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
     if(not is_power_system_database_set())
         return;
 
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    if(psdb->get_bus_count()==0)
+        return;
+
     ostringstream osstream;
     osstream<<"Start solve powerflow with Full Newton Raphson solution.";
     show_information_with_leading_time_stamp(osstream);
@@ -287,6 +291,10 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
     if(not is_power_system_database_set())
         return;
 
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    if(psdb->get_bus_count()==0)
+        return;
+
     ostringstream osstream;
     osstream<<"Start solve powerflow with Fast Decoupled solution.";
     show_information_with_leading_time_stamp(osstream);
@@ -303,7 +311,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
     //Y.report_brief();
 
     network_db->build_decoupled_network_matrix();
-	
+
     update_P_and_Q_equation_internal_buses();
     BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
     BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
