@@ -31,6 +31,7 @@ LOAD_TEST::LOAD_TEST()
     TEST_ADD(LOAD_TEST::test_set_get_zone_number);
     TEST_ADD(LOAD_TEST::test_set_get_owner_number);
     TEST_ADD(LOAD_TEST::test_set_get_flag_interruptable);
+    TEST_ADD(LOAD_TEST::test_set_get_load_manually_scale);
 
     TEST_ADD(LOAD_TEST::test_is_valid);
     TEST_ADD(LOAD_TEST::test_clear);
@@ -180,6 +181,19 @@ void LOAD_TEST::test_set_get_flag_interruptable()
     TEST_ASSERT(load->get_flag_interruptable()==true);
     load->set_flag_interruptable(false);
     TEST_ASSERT(load->get_flag_interruptable()==false);
+}
+
+void LOAD_TEST::test_set_get_load_manually_scale()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"LOAD_TEST");
+
+    TEST_ASSERT(fabs(load->get_load_manually_scale_factor_in_pu()-0.0)<FLOAT_EPSILON);
+    load->set_load_manually_scale_factor_in_pu(0.1);
+    TEST_ASSERT(fabs(load->get_load_manually_scale_factor_in_pu()-0.1)<FLOAT_EPSILON);
+    load->set_load_manually_scale_factor_in_pu(0.2);
+    TEST_ASSERT(fabs(load->get_load_manually_scale_factor_in_pu()-0.2)<FLOAT_EPSILON);
+    load->set_load_manually_scale_factor_in_pu(-0.2);
+    TEST_ASSERT(fabs(load->get_load_manually_scale_factor_in_pu()+0.2)<FLOAT_EPSILON);
 }
 
 void LOAD_TEST::test_is_valid()

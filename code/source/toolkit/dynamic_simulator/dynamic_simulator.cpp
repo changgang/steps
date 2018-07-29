@@ -406,7 +406,11 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
         append_meter(meter);
         meter = setter.prepare_load_reactive_power_in_MVar_meter(load->get_device_id());
         append_meter(meter);
-        meter = setter.prepare_load_shed_scale_in_pu_meter(load->get_device_id());
+        meter = setter.prepare_load_total_scale_in_pu_meter(load->get_device_id());
+        append_meter(meter);
+        meter = setter.prepare_load_manually_scale_in_pu_meter(load->get_device_id());
+        append_meter(meter);
+        meter = setter.prepare_load_relay_shed_scale_in_pu_meter(load->get_device_id());
         append_meter(meter);
     }
 
@@ -727,8 +731,12 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(DEVICE_ID did, string meter_
         meter = setter.prepare_load_active_power_in_MW_meter(did);
     if(meter_type=="REACTIVE POWER IN MVAR")
         meter = setter.prepare_load_reactive_power_in_MVar_meter(did);
-    if(meter_type=="SHED SCALE IN PU")
-        meter = setter.prepare_load_shed_scale_in_pu_meter(did);
+    if(meter_type=="TOTAL SCALE IN PU")
+        meter = setter.prepare_load_total_scale_in_pu_meter(did);
+    if(meter_type=="MANUALLY SCALE IN PU")
+        meter = setter.prepare_load_manually_scale_in_pu_meter(did);
+    if(meter_type=="RELAY SHED SCALE IN PU")
+        meter = setter.prepare_load_relay_shed_scale_in_pu_meter(did);
 
     if(meter.is_valid())
         append_meter(meter);
@@ -1667,8 +1675,6 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch(vector< complex<
 
     size_t physical_bus, internal_bus;
 
-    bool status;
-
     vector<GENERATOR*> generators = psdb->get_all_generators();
 
     GENERATOR* generator;
@@ -1682,8 +1688,7 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch(vector< complex<
     {
         generator = generators[i];
 
-        status = generator->get_status();
-        if(status == false)
+        if(generator->get_status() == false)
             continue;
 
         physical_bus = generator->get_generator_bus();
@@ -1717,8 +1722,6 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch(vector< compl
 
     size_t physical_bus, internal_bus;
 
-    bool status;
-
     vector<WT_GENERATOR*> generators = psdb->get_all_wt_generators();
 
     WT_GENERATOR* generator;
@@ -1732,8 +1735,7 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch(vector< compl
     {
         generator = generators[i];
 
-        status = generator->get_status();
-        if(status == false)
+        if(generator->get_status() == false)
             continue;
 
         physical_bus = generator->get_generator_bus();
@@ -1771,6 +1773,8 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch(vector< complex<doubl
     for(size_t i=0; i<nload; ++i)
     {
         LOAD* load = loads[i];
+        if(load->get_status()==false)
+            continue;
 
         size_t physical_bus = load->get_load_bus();
 
@@ -1796,6 +1800,10 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch(vector< complex<doubl
 
     for(size_t i=0; i!=nhvdc; ++i)
     {
+        HVDC* hvdc = hvdcs[i];
+        if(hvdc->get_status()==false)
+            continue;
+
         physical_bus = hvdcs[i]->get_converter_bus(RECTIFIER);
 
         internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
@@ -1826,8 +1834,6 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch(vector< 
 
     size_t physical_bus, internal_bus;
 
-    bool status;
-
     vector<EQUIVALENT_DEVICE*> edevices = psdb->get_all_equivalent_devices();
 
     size_t nedevice = edevices.size();
@@ -1836,8 +1842,7 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch(vector< 
 
     for(size_t i=0; i!=nedevice; ++i)
     {
-        status = edevices[i]->get_status();
-        if(status == false)
+        if(edevices[i]->get_status() == false)
             continue;
 
         physical_bus = edevices[i]->get_equivalent_device_bus();
@@ -2936,39 +2941,11 @@ void DYNAMICS_SIMULATOR::scale_load(DEVICE_ID load_id, double percent)
 
         if(load->get_status()==true)
         {
-            osstream<<load->get_device_name()<<" is scaled "<<(percent>0.0?"up":"down")<<" by "<<percent*100.0<<"% at time "<<get_dynamic_simulation_time_in_s()<<" s."<<endl;
-            LOAD_MODEL* load_model = load->get_load_model();
-            if(load_model!=NULL)
-            {
-                osstream<<"Load dynamic model scale is changed from "<<load_model->get_load_scale()<<" to ";
-
-                load_model->set_load_scale(load_model->get_load_scale()+percent);
-
-                osstream<<load_model->get_load_scale()<<".";
-                show_information_with_leading_time_stamp(osstream);
-            }
-            else
-            {
-                complex<double> s = load->get_nominal_constant_power_load_in_MVA();
-                osstream<<"Load static constant power load is changed from "<<s<<" MVA to ";
-
-                load->set_nominal_constant_power_load_in_MVA(s*(1.0+percent));
-                osstream<<load->get_nominal_constant_power_load_in_MVA()<<" MVA.";
-
-                s = load->get_nominal_constant_current_load_in_MVA();
-                osstream<<"Load static constant current load is changed from "<<s<<" MVA to ";
-
-                load->set_nominal_constant_current_load_in_MVA(s*(1.0+percent));
-                osstream<<load->get_nominal_constant_current_load_in_MVA()<<" MVA.";
-
-                s = load->get_nominal_constant_impedance_load_in_MVA();
-                osstream<<"Load static constant impedance load is changed from "<<s<<" MVA to ";
-
-                load->set_nominal_constant_impedance_load_in_MVA(s*(1.0+percent));
-                osstream<<load->get_nominal_constant_impedance_load_in_MVA()<<" MVA.";
-
-                show_information_with_leading_time_stamp(osstream);
-            }
+            osstream<<load->get_device_name()<<" is manually scaled "<<(percent>0.0?"up":"down")<<" by "<<percent*100.0<<"% at time "<<get_dynamic_simulation_time_in_s()<<" s."<<endl;
+            double scale = load->get_load_manually_scale_factor_in_pu();
+            load->set_load_manually_scale_factor_in_pu(scale+percent);
+            osstream<<"Load manual scale is changed from "<<scale<<" to "<<scale+percent<<".";
+            show_information_with_leading_time_stamp(osstream);
         }
         else
         {

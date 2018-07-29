@@ -115,6 +115,11 @@ void LOAD::set_flag_interruptable(bool flag)
     interruptable = flag;
 }
 
+void LOAD::set_load_manually_scale_factor_in_pu(double scale)
+{
+    manually_scale_in_pu = scale;
+}
+
 size_t LOAD::get_load_bus() const
 {
     return bus;
@@ -190,6 +195,7 @@ void LOAD::clear()
     set_zone_number(0);
     set_owner_number(0);
     set_flag_interruptable(false);
+    set_load_manually_scale_factor_in_pu(0.0);
 }
 
 bool LOAD::is_connected_to_bus(size_t target_bus) const
@@ -567,7 +573,7 @@ complex<double> LOAD::get_dynamic_load_in_MVA()
         else
             S = get_actual_total_load_in_MVA();
 
-        return S*(1.0-get_load_shed_scale_factor_in_pu());
+        return S*(1.0+get_load_total_scale_factor_in_pu());
     }
     else
         return 0.0;
@@ -580,7 +586,20 @@ complex<double> LOAD::get_dynamic_load_in_pu()
     return get_dynamic_load_in_MVA()/sbase;
 }
 
-double LOAD::get_load_shed_scale_factor_in_pu()
+double LOAD::get_load_total_scale_factor_in_pu() const
+{
+    double scale = get_load_manually_scale_factor_in_pu()-get_load_relay_shed_scale_factor_in_pu();
+    if(scale<-1.0)
+        scale = -1.0;
+    return scale;
+}
+
+double LOAD::get_load_manually_scale_factor_in_pu() const
+{
+    return manually_scale_in_pu;
+}
+
+double LOAD::get_load_relay_shed_scale_factor_in_pu() const
 {
     if(get_status())//==true
     {

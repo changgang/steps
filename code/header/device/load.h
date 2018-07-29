@@ -28,6 +28,7 @@ class LOAD : public DEVICE
         void set_zone_number(size_t num);
         void set_owner_number(size_t num);
         void set_flag_interruptable(bool flag);
+        void set_load_manually_scale_factor_in_pu(double scale);
 
         size_t get_load_bus() const;
         string get_identifier() const;
@@ -77,7 +78,9 @@ class LOAD : public DEVICE
         virtual void run(DYNAMIC_MODE mode);
         complex<double> get_dynamic_load_in_MVA();
         complex<double> get_dynamic_load_in_pu();
-        double get_load_shed_scale_factor_in_pu();
+        double get_load_total_scale_factor_in_pu() const;
+        double get_load_manually_scale_factor_in_pu() const;
+        double get_load_relay_shed_scale_factor_in_pu() const;
         complex<double> get_dynamics_load_current_in_pu_based_on_system_base_power();
     private:
         size_t bus;
@@ -90,6 +93,8 @@ class LOAD : public DEVICE
         bool interruptable;
 
         static double voltage_threshold_of_constant_power_load_in_pu;
+
+        double manually_scale_in_pu;
 
         LOAD_MODEL* load_model;
         LOAD_VOLTAGE_RELAY_MODEL* load_voltage_relay_model;

@@ -35,6 +35,7 @@ class LOAD_TEST : public Test::Suite
         void test_set_get_zone_number();
         void test_set_get_owner_number();
         void test_set_get_flag_interruptable();
+        void test_set_get_load_manually_scale();
 
         void test_is_valid();
         void test_clear();

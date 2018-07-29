@@ -19,8 +19,6 @@ class LOAD_MODEL : public MODEL
         double get_bus_voltage_in_pu() const;
         double get_bus_frequency_deviation_in_pu() const;
         // common scale
-        void set_load_scale(double scale);
-        double get_load_scale() const;
         void set_subsystem_type(SUBSYSTEM_TYPE subtype);
         SUBSYSTEM_TYPE get_subsystem_type() const;
         string get_detailed_model_name() const;
@@ -54,7 +52,6 @@ class LOAD_MODEL : public MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
-        double load_scale;
         SUBSYSTEM_TYPE subsystem_type;
 
 };

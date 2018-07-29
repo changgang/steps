@@ -54,7 +54,8 @@ vector<string> load_meters{"LOAD CURRENT IN KA",
                             "LOAD LOAD MODEL INTERNAL VARIABLE",
                             "LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE",
                             "LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE",
-                            "LOAD SHED SCALE IN PU"};
+                            "LOAD TOTAL SCALE IN PU", "LOAD MANUALLY SCALE IN PU",
+                            "LOAD RELAY SHED SCALE IN PU"};
 
 vector<string> generator_meters{   "GENERATOR ROTOR ANGLE IN DEG",
                                     "GENERATOR ROTOR SPEED IN PU",               "GENERATOR ROTOR SPEED IN HZ",
@@ -914,9 +915,17 @@ double METER::get_meter_value_as_a_load() const
         else
             return model->get_variable_with_index(internal_variable_index);
     }
-    if(meter_type=="LOAD SHED SCALE IN PU")
+    if(meter_type=="LOAD TOTAL SCALE IN PU")
     {
-        return load->get_load_shed_scale_factor_in_pu();
+        return load->get_load_total_scale_factor_in_pu();
+    }
+    if(meter_type=="LOAD MANUALLY SCALE IN PU")
+    {
+        return load->get_load_manually_scale_factor_in_pu();
+    }
+    if(meter_type=="LOAD RELAY SHED SCALE IN PU")
+    {
+        return load->get_load_relay_shed_scale_factor_in_pu();
     }
     return 0.0;
 }

@@ -392,7 +392,7 @@ complex<double> IEEL::get_load_power_in_MVA() const
 
     double Q = get_initial_load_power_in_MVA().imag()*(alpha1*pow(V,n1)+alpha2*pow(V,n2)+alpha3*pow(V,n3))*(1.0+kf*f);
 
-    return complex<double>(P,Q)*get_load_scale();
+    return complex<double>(P,Q);
 }
 void IEEL::check()
 {

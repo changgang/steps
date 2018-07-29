@@ -6,8 +6,6 @@
 LOAD_MODEL::LOAD_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("LOAD");
-
-    set_load_scale(1.0);
 }
 
 LOAD_MODEL::~LOAD_MODEL()
@@ -42,16 +40,6 @@ double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
     size_t bus = load->get_load_bus();
 
     return psdb->get_bus_frequency_deviation_in_pu(bus);
-}
-
-void LOAD_MODEL::set_load_scale(double scale)
-{
-    load_scale = scale;
-}
-
-double LOAD_MODEL::get_load_scale() const
-{
-    return load_scale;
 }
 
 void LOAD_MODEL::set_subsystem_type(SUBSYSTEM_TYPE subtype)

@@ -435,9 +435,17 @@ void METER_SETTER_TEST::test_prepare_load_related_meters()
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="LOAD CURRENT IN PU");
 
-    meter = setter->prepare_load_shed_scale_in_pu_meter(did);
+    meter = setter->prepare_load_total_scale_in_pu_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="LOAD SHED SCALE IN PU");
+    TEST_ASSERT(meter.get_meter_type()=="LOAD TOTAL SCALE IN PU");
+
+    meter = setter->prepare_load_manually_scale_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="LOAD MANUALLY SCALE IN PU");
+
+    meter = setter->prepare_load_relay_shed_scale_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="LOAD RELAY SHED SCALE IN PU");
 
     meter = setter->prepare_load_load_model_internal_variable_meter(did,1);
     TEST_ASSERT(meter.get_device_id()==did);

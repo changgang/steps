@@ -689,7 +689,7 @@ METER METER_SETTER::prepare_load_reactive_power_in_pu_meter(const DEVICE_ID& dev
     return meter;
 }
 
-METER METER_SETTER::prepare_load_shed_scale_in_pu_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_load_total_scale_in_pu_meter(const DEVICE_ID& device_id)
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
@@ -698,7 +698,35 @@ METER METER_SETTER::prepare_load_shed_scale_in_pu_meter(const DEVICE_ID& device_
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD SHED SCALE IN PU");
+        meter.set_meter_type("LOAD TOTAL SCALE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_load_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("LOAD MANUALLY SCALE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_load_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("LOAD RELAY SHED SCALE IN PU");
 
     return meter;
 }

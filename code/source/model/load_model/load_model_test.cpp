@@ -11,7 +11,6 @@ LOAD_MODEL_TEST::LOAD_MODEL_TEST()
     TEST_ADD(LOAD_MODEL_TEST::test_get_detailed_model_name);
     TEST_ADD(LOAD_MODEL_TEST::test_get_bus_voltage);
     TEST_ADD(LOAD_MODEL_TEST::test_get_bus_frequency_deviation);
-    TEST_ADD(LOAD_MODEL_TEST::test_set_get_load_scale);
     TEST_ADD(LOAD_MODEL_TEST::test_set_get_subsystem_type);
     TEST_ADD(LOAD_MODEL_TEST::test_initialize);
     TEST_ADD(LOAD_MODEL_TEST::test_run_voltage_ramp_response);
@@ -96,20 +95,6 @@ void LOAD_MODEL_TEST::test_get_bus_frequency_deviation()
     LOAD_MODEL* model = load->get_load_model();
 
     TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu() - db->get_bus_frequency_deviation_in_pu(1))<FLOAT_EPSILON);
-}
-
-void LOAD_MODEL_TEST::test_set_get_load_scale()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"LOAD_MODEL_TEST");
-
-    LOAD* load = get_load();
-    LOAD_MODEL* model = load->get_load_model();
-
-    model->set_load_scale(0.1);
-    TEST_ASSERT(fabs(model->get_load_scale() - 0.1)<FLOAT_EPSILON);
-
-    model->set_load_scale(0.8);
-    TEST_ASSERT(fabs(model->get_load_scale() -0.8)<FLOAT_EPSILON);
 }
 
 void LOAD_MODEL_TEST::test_set_get_subsystem_type()

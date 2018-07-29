@@ -54,7 +54,9 @@ class METER_SETTER
         METER prepare_load_load_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
         METER prepare_load_frequency_relay_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
         METER prepare_load_voltage_relay_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
-        METER prepare_load_shed_scale_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_load_total_scale_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& device_id);
 
         METER prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id);
         METER prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id);

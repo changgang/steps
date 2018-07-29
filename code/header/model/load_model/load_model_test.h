@@ -28,7 +28,6 @@ class LOAD_MODEL_TEST : public Test::Suite
         void test_get_model_type();
         void test_get_bus_voltage();
         void test_get_bus_frequency_deviation();
-        void test_set_get_load_scale();
         void test_set_get_subsystem_type();
 
         void test_initialize();
