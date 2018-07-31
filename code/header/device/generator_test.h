@@ -1,5 +1,5 @@
-#ifndef GENERATOR_AND_SOURCE_TEST_H
-#define GENERATOR_AND_SOURCE_TEST_H
+#ifndef GENERATOR_TEST_H
+#define GENERATOR_TEST_H
 
 #include <cstdlib>
 #include <cstring>
@@ -44,4 +44,4 @@ class GENERATOR_TEST : public Test::Suite
         GENERATOR* generator;
 };
 
-#endif //GENERATOR_AND_SOURCE_TEST_H
+#endif //GENERATOR_TEST_H

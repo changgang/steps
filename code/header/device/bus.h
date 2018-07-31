@@ -83,6 +83,7 @@ class BUS : public DEVICE
         bool is_faulted() const;
 
         BUS_FREQUENCY_MODEL* get_bus_frequency_model();
+        void set_frequency_deviation_in_pu(double f);
         double get_frequency_deviation_in_pu();
         double get_frequency_deviation_in_Hz();
     private:

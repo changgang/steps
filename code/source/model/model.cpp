@@ -37,7 +37,7 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
     if(device_type=="BUS" or device_type=="GENERATOR" or device_type=="WT GENERATOR" or
        device_type=="LOAD" or device_type=="LINE" or device_type=="TRANSFORMER" or
        device_type=="HVDC" or device_type=="FIXED SHUNT" or device_type=="SWITCHED SHUNT" or
-       device_type=="EQUIVALENT DEVICE")
+       device_type=="EQUIVALENT DEVICE" or device_type=="ENERGY STORAGE")
         allowed_device_type = device_type;
     else
     {

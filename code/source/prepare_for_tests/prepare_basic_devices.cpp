@@ -312,3 +312,32 @@ void prepare_basic_equivalent_devices(POWER_SYSTEM_DATABASE* db)
     edevice.set_identifier("E3");
     db->append_equivalent_device(edevice);
 }
+
+void prepare_basic_energy_strorages(POWER_SYSTEM_DATABASE* db)
+{
+    ostringstream osstream;
+    if(db==NULL)
+    {
+        osstream<<"NULL power system database is provided for preparing basic energy storages."<<endl
+          <<"Model will not be prepared.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(db->get_bus_count()==0)
+        prepare_basic_buses(db);
+
+    ENERGY_STORAGE estorage(db);
+
+    estorage.set_energy_storage_bus(1);
+    estorage.set_identifier("#1");
+    db->append_energy_storage(estorage);
+
+    estorage.set_energy_storage_bus(2);
+    estorage.set_identifier("#2");
+    db->append_energy_storage(estorage);
+
+    estorage.set_energy_storage_bus(3);
+    estorage.set_identifier("#3");
+    db->append_energy_storage(estorage);
+}

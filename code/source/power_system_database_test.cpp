@@ -21,7 +21,8 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_line_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_transformer_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_hvdc_capacity);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_equivalent_capacity);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_equivalent_device_capacity);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_energy_storage_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_area_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_zone_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_owner_capacity);
@@ -43,6 +44,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_owner);
@@ -55,6 +57,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_fixed_shunt_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_equivalent_device_exist);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_energy_storage_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_area_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_zone_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_owner_exist);
@@ -70,6 +73,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_connecting_to_bus);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_bus);
@@ -80,6 +84,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_connecting_to_bus);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_area);
@@ -91,6 +96,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_area);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_area);
@@ -102,6 +108,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_area);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_zone);
@@ -113,6 +120,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_zone);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_zone);
@@ -124,6 +132,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_buses);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_with_constraints);
@@ -137,6 +146,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_areas);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_zones);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_owners);
@@ -153,6 +163,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices_device_id);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_areas_number);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_zones_number);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_owners_number);
@@ -168,6 +179,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_count);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_area_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_zone_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_owner_count);
@@ -181,6 +193,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_index);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_area_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_zone_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_owner_index);
@@ -245,6 +258,9 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_equivalent_device);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_equivalent_devices_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_equivalent_devices);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storage);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storages_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_energy_storages);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_areas);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_zones);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_owners);
@@ -288,6 +304,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     // Transformer: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2, 1-2-3-#1, 1-2-3-#2
     // Hvdc: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2,
     // Equivalent device: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // Energy storage: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // Area: 1, 2, 3
     // Zone: 1, 2, 3
     // Owner: 1, 2, 3
@@ -646,6 +663,36 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     }
 
     {
+        ENERGY_STORAGE estorage(db);
+        estorage.set_energy_storage_bus(1);
+        estorage.set_identifier("#1");
+        estorage.set_status(true);
+        db->append_energy_storage(estorage);
+
+        estorage.set_identifier("#2");
+        estorage.set_status(false);
+        db->append_energy_storage(estorage);
+
+        estorage.set_energy_storage_bus(2);
+        estorage.set_identifier("#1");
+        estorage.set_status(true);
+        db->append_energy_storage(estorage);
+
+        estorage.set_identifier("#2");
+        estorage.set_status(false);
+        db->append_energy_storage(estorage);
+
+        estorage.set_energy_storage_bus(3);
+        estorage.set_identifier("#1");
+        estorage.set_status(true);
+        db->append_energy_storage(estorage);
+
+        estorage.set_identifier("#2");
+        estorage.set_status(false);
+        db->append_energy_storage(estorage);
+    }
+
+    {
         AREA area(db);
         area.set_area_number(1);
         area.set_area_name("AREA A");
@@ -654,12 +701,12 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
         area.set_area_number(2);
         area.set_area_name("AREA B");
-        area.set_area_swing_bus(1);
+        //area.set_area_swing_bus(0);
         db->append_area(area);
 
         area.set_area_number(3);
         area.set_area_name("AREA C");
-        area.set_area_swing_bus(1);
+        area.set_area_swing_bus(3);
         db->append_area(area);
     }
 
@@ -806,7 +853,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_hvdc_capacity()
     TEST_ASSERT(db->get_hvdc_capacity()==20000);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_set_get_equivalent_capacity()
+void POWER_SYSTEM_DATABASE_TEST::test_set_get_equivalent_device_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
@@ -818,6 +865,20 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_equivalent_capacity()
 
     db->set_equivalent_device_capacity(20000);
     TEST_ASSERT(db->get_equivalent_device_capacity()==20000);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_set_get_energy_storage_capacity()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    db->set_energy_storage_capacity(10000);
+    TEST_ASSERT(db->get_energy_storage_capacity()==10000);
+
+    db->set_energy_storage_capacity(1000);
+    TEST_ASSERT(db->get_energy_storage_capacity()==10000);
+
+    db->set_energy_storage_capacity(20000);
+    TEST_ASSERT(db->get_energy_storage_capacity()==20000);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_set_get_area_capacity()
@@ -1439,6 +1500,55 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
     TEST_ASSERT(pedevice->get_status()==false);
 }
 
+void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    db->set_allowed_max_bus_number(100);
+
+    BUS bus(db);
+    bus.set_bus_number(1);
+    bus.set_base_voltage_in_kV(525.0);
+    db->append_bus(bus);
+
+    ENERGY_STORAGE estorage(db);
+    estorage.set_energy_storage_bus(1);
+    estorage.set_identifier("#1");
+    estorage.set_status(true);
+
+    db->append_energy_storage(estorage);
+
+    estorage.set_identifier("#2");
+    estorage.set_status(false);
+
+    db->append_energy_storage(estorage);
+
+    TEST_ASSERT(db->get_energy_storage_count()==2);
+
+    ENERGY_STORAGE* pestorage;
+    DEVICE_ID did;
+    did.set_device_type("ENERGY STORAGE");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    pestorage = db->get_energy_storage(did);
+
+    TEST_ASSERT(pestorage!=NULL);
+    TEST_ASSERT(pestorage->get_energy_storage_bus()==1);
+    TEST_ASSERT(pestorage->get_identifier()=="#1");
+    TEST_ASSERT(pestorage->get_status()==true);
+
+    did.set_device_identifier("#2");
+    pestorage = db->get_energy_storage(did);
+
+    TEST_ASSERT(pestorage!=NULL);
+    TEST_ASSERT(pestorage->get_energy_storage_bus()==1);
+    TEST_ASSERT(pestorage->get_identifier()=="#2");
+    TEST_ASSERT(pestorage->get_status()==false);
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -1835,6 +1945,32 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_equivalent_device_exist()
 
         did.set_device_identifier("#3");
         TEST_ASSERT(db->is_equivalent_device_exist(did)==false);
+    }
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_is_energy_storage_exist()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    DEVICE_ID did;
+    did.set_device_type("ENERGY STORAGE");
+    TERMINAL terminal;
+    for(size_t i=1; i!=4; ++i)
+    {
+        terminal.clear();
+        terminal.append_bus(i);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier("#1");
+
+        TEST_ASSERT(db->is_energy_storage_exist(did)==true);
+
+        did.set_device_identifier("#2");
+        TEST_ASSERT(db->is_energy_storage_exist(did)==true);
+
+        did.set_device_identifier("#3");
+        TEST_ASSERT(db->is_energy_storage_exist(did)==false);
     }
 }
 
@@ -2440,6 +2576,30 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_connecting_to_bus()
 }
 
 
+void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_connecting_to_bus()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<ENERGY_STORAGE*> device;
+    for(size_t i=1; i!=4; ++i)
+    {
+        device = db->get_energy_storages_connecting_to_bus(i);
+
+        TEST_ASSERT(device.size()==2);
+
+        TEST_ASSERT(device[0]->get_energy_storage_bus()==i);
+        TEST_ASSERT(device[0]->get_identifier()=="#1");
+        TEST_ASSERT(device[1]->get_energy_storage_bus()==i);
+        TEST_ASSERT(device[1]->get_identifier()=="#2");
+    }
+
+    device = db->get_energy_storages_connecting_to_bus(4);
+    TEST_ASSERT(device.size()==0);
+}
+
+
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus()
 {
@@ -2617,6 +2777,26 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_connectin
         {
             TEST_ASSERT(dids[j].get_device_type()=="EQUIVALENT DEVICE");
             TEST_ASSERT(db->get_equivalent_device(dids[j])->is_connected_to_bus(i)==true);
+        }
+    }
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_connecting_to_bus()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE_ID> dids;
+
+    for(size_t i=1; i!=4; ++i)
+    {
+        dids = db->get_energy_storages_device_id_connecting_to_bus(i);
+        TEST_ASSERT(dids.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(dids[j].get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(db->get_energy_storage(dids[j])->is_connected_to_bus(i)==true);
         }
     }
 }
@@ -2817,6 +2997,26 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_area()
         for(size_t j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="EQUIVALENT DEVICE");
+            TEST_ASSERT(devices[j]->is_in_area(i)==true);
+        }
+    }
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_area()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<ENERGY_STORAGE*> devices;
+
+    for(size_t i=1; i!=3; ++i)
+    {
+        devices = db->get_energy_storages_in_area(i);
+        TEST_ASSERT(devices.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="ENERGY STORAGE");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3023,6 +3223,26 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_area()
     }
 }
 
+void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_area()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE_ID> devices;
+
+    for(size_t i=1; i!=3; ++i)
+    {
+        devices = db->get_energy_storages_device_id_in_area(i);
+        TEST_ASSERT(devices.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(devices[j].get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(db->get_energy_storage(devices[j])->is_in_area(i)==true);
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -3218,6 +3438,26 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_zone()
         for(size_t j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="EQUIVALENT DEVICE");
+            TEST_ASSERT(devices[j]->is_in_zone(i)==true);
+        }
+    }
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_zone()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<ENERGY_STORAGE*> devices;
+
+    for(size_t i=1; i!=3; ++i)
+    {
+        devices = db->get_energy_storages_in_zone(i);
+        TEST_ASSERT(devices.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="ENERGY STORAGE");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3420,6 +3660,26 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone()
         {
             TEST_ASSERT(devices[j].get_device_type()=="EQUIVALENT DEVICE");
             TEST_ASSERT(db->get_equivalent_device(devices[j])->is_in_zone(i)==true);
+        }
+    }
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE_ID> devices;
+
+    for(size_t i=1; i!=3; ++i)
+    {
+        devices = db->get_energy_storages_device_id_in_zone(i);
+        TEST_ASSERT(devices.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(devices[j].get_device_type()=="ENERGY STORAGE");
+            TEST_ASSERT(db->get_energy_storage(devices[j])->is_in_zone(i)==true);
         }
     }
 }
@@ -3769,6 +4029,30 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices()
     TEST_ASSERT(device[4]->get_equivalent_device_bus()==3);
     TEST_ASSERT(device[4]->get_identifier()=="#1");
     TEST_ASSERT(device[5]->get_equivalent_device_bus()==3);
+    TEST_ASSERT(device[5]->get_identifier()=="#2");
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<ENERGY_STORAGE*> device = db->get_all_energy_storages();
+
+    TEST_ASSERT(device.size()==6);
+
+    TEST_ASSERT(device[0]->get_energy_storage_bus()==1);
+    TEST_ASSERT(device[0]->get_identifier()=="#1");
+    TEST_ASSERT(device[1]->get_energy_storage_bus()==1);
+    TEST_ASSERT(device[1]->get_identifier()=="#2");
+    TEST_ASSERT(device[2]->get_energy_storage_bus()==2);
+    TEST_ASSERT(device[2]->get_identifier()=="#1");
+    TEST_ASSERT(device[3]->get_energy_storage_bus()==2);
+    TEST_ASSERT(device[3]->get_identifier()=="#2");
+    TEST_ASSERT(device[4]->get_energy_storage_bus()==3);
+    TEST_ASSERT(device[4]->get_identifier()=="#1");
+    TEST_ASSERT(device[5]->get_energy_storage_bus()==3);
     TEST_ASSERT(device[5]->get_identifier()=="#2");
 }
 
@@ -4211,6 +4495,33 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices_device_id()
     }
 }
 
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages_device_id()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE_ID> device = db->get_all_energy_storages_device_id();
+
+    TEST_ASSERT(device.size()==6);
+
+    DEVICE_ID did;
+    did.set_device_type("ENERGY STORAGE");
+    TERMINAL terminal;
+    for(size_t i=1; i!=4; ++i)
+    {
+        terminal.clear();
+        terminal.append_bus(i);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier("#1");
+
+        TEST_ASSERT(device[2*(i-1)]==did);
+
+        did.set_device_identifier("#2");
+        TEST_ASSERT(device[2*(i-1)+1]==did);
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_all_areas_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -4356,6 +4667,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_count()
     prepare_database_for_test();
 
     TEST_ASSERT(db->get_equivalent_device_count()==6);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_count()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    TEST_ASSERT(db->get_energy_storage_count()==6);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_area_count()
@@ -4728,6 +5048,45 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_index()
 
     did.set_device_identifier("#3");
     TEST_ASSERT(db->get_equivalent_device_index(did)==INDEX_NOT_EXIST);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_index()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    DEVICE_ID did;
+    did.set_device_type("ENERGY STORAGE");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+    TEST_ASSERT(db->get_energy_storage_index(did)==0);
+
+    did.set_device_identifier("#2");
+    TEST_ASSERT(db->get_energy_storage_index(did)==1);
+
+    terminal.clear();
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+    TEST_ASSERT(db->get_energy_storage_index(did)==2);
+
+    did.set_device_identifier("#2");
+    TEST_ASSERT(db->get_energy_storage_index(did)==3);
+
+    terminal.clear();
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+    TEST_ASSERT(db->get_energy_storage_index(did)==4);
+
+    did.set_device_identifier("#2");
+    TEST_ASSERT(db->get_energy_storage_index(did)==5);
+
+    did.set_device_identifier("#3");
+    TEST_ASSERT(db->get_energy_storage_index(did)==INDEX_NOT_EXIST);
 }
 
 
@@ -6498,6 +6857,98 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_equivalent_devices()
     db->clear_all_equivalent_devices();
 
     TEST_ASSERT(db->get_equivalent_device_count()==0);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storage()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<ENERGY_STORAGE*> edevices;
+
+    DEVICE_ID did;
+    did.set_device_type("ENERGY STORAGE");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    db->clear_energy_storage(did);
+    TEST_ASSERT(db->is_energy_storage_exist(did)==false);
+    TEST_ASSERT(db->get_energy_storage_count()==5);
+
+    did.set_device_identifier("#2");
+
+    db->clear_energy_storage(did);
+    TEST_ASSERT(db->is_energy_storage_exist(did)==false);
+    TEST_ASSERT(db->get_energy_storage_count()==4);
+
+    terminal.clear();
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    db->clear_energy_storage(did);
+    TEST_ASSERT(db->is_energy_storage_exist(did)==false);
+    TEST_ASSERT(db->get_energy_storage_count()==3);
+
+    did.set_device_identifier("#2");
+
+    db->clear_energy_storage(did);
+    TEST_ASSERT(db->is_energy_storage_exist(did)==false);
+    TEST_ASSERT(db->get_energy_storage_count()==2);
+
+    terminal.clear();
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    db->clear_energy_storage(did);
+    TEST_ASSERT(db->is_energy_storage_exist(did)==false);
+    TEST_ASSERT(db->get_energy_storage_count()==1);
+
+    did.set_device_identifier("#2");
+
+    db->clear_energy_storage(did);
+    TEST_ASSERT(db->is_energy_storage_exist(did)==false);
+    TEST_ASSERT(db->get_energy_storage_count()==0);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storages_connecting_to_bus()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    db->clear_energy_storages_connecting_to_bus(1);
+
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(3).size()==2);
+
+    db->clear_energy_storages_connecting_to_bus(2);
+
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(3).size()==2);
+
+    db->clear_energy_storages_connecting_to_bus(3);
+
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(db->get_energy_storages_connecting_to_bus(3).size()==0);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_clear_all_energy_storages()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    db->clear_all_energy_storages();
+
+    TEST_ASSERT(db->get_energy_storage_count()==0);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_clear_all_areas()

@@ -107,6 +107,8 @@
 		<Unit filename="header/device/bus.h" />
 		<Unit filename="header/device/bus_test.h" />
 		<Unit filename="header/device/device.h" />
+		<Unit filename="header/device/energy_storage.h" />
+		<Unit filename="header/device/engergy_storage_test.h" />
 		<Unit filename="header/device/equivalent_device.h" />
 		<Unit filename="header/device/equivalent_device_test.h" />
 		<Unit filename="header/device/fixed_shunt.h" />
@@ -138,6 +140,11 @@
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_model_test.h" />
 		<Unit filename="header/model/auxiliary_signal_model/auxiliary_signal_models.h" />
 		<Unit filename="header/model/bus_frequency_model/bus_frequency_model.h" />
+		<Unit filename="header/model/energy_storage_model/energy_storage_model.h" />
+		<Unit filename="header/model/energy_storage_model/energy_storage_model_test.h" />
+		<Unit filename="header/model/energy_storage_model/energy_storage_models.h" />
+		<Unit filename="header/model/energy_storage_model/estr0.h" />
+		<Unit filename="header/model/energy_storage_model/estr0_test.h" />
 		<Unit filename="header/model/equivalent_model/ARXL.h" />
 		<Unit filename="header/model/equivalent_model/equivalent_model.h" />
 		<Unit filename="header/model/equivalent_model/equivalent_models.h" />
@@ -386,6 +393,8 @@
 		<Unit filename="source/device/bus.cpp" />
 		<Unit filename="source/device/bus_test.cpp" />
 		<Unit filename="source/device/device.cpp" />
+		<Unit filename="source/device/energy_storage.cpp" />
+		<Unit filename="source/device/energy_storage_test.cpp" />
 		<Unit filename="source/device/equivalent_device.cpp" />
 		<Unit filename="source/device/equivalent_device_test.cpp" />
 		<Unit filename="source/device/fixed_shunt.cpp" />
@@ -413,6 +422,10 @@
 		<Unit filename="source/meter/meter_setter_test.cpp" />
 		<Unit filename="source/meter/meter_test.cpp" />
 		<Unit filename="source/model/bus_frequency_model/bus_frequency_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/energy_storage_model.cpp" />
+		<Unit filename="source/model/energy_storage_model/energy_storage_model_test.cpp" />
+		<Unit filename="source/model/energy_storage_model/estr0.cpp" />
+		<Unit filename="source/model/energy_storage_model/estr0_test.cpp" />
 		<Unit filename="source/model/equivalent_model/ARXL.cpp" />
 		<Unit filename="source/model/equivalent_model/equivalent_model.cpp" />
 		<Unit filename="source/model/hvdc_model/CDC4T.cpp" />

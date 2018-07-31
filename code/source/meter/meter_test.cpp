@@ -24,6 +24,7 @@ METER_TEST::METER_TEST()
     TEST_ADD(METER_TEST::test_set_get_hvdc_meter_type);
     TEST_ADD(METER_TEST::test_set_get_wt_generator_meter_type);
     TEST_ADD(METER_TEST::test_set_get_equivalent_device_meter_type);
+    TEST_ADD(METER_TEST::test_set_get_energy_storage_meter_type);
     TEST_ADD(METER_TEST::test_set_get_meter_internal_variable_index);
     TEST_ADD(METER_TEST::test_set_get_device_pointer);
     TEST_ADD(METER_TEST::test_clear);
@@ -92,6 +93,13 @@ void METER_TEST::setup()
     edevice.set_identifier("#1");
     edevice.set_status(true);
     db->append_equivalent_device(edevice);
+
+
+    ENERGY_STORAGE estorage(db);
+    estorage.set_energy_storage_bus(1);
+    estorage.set_identifier("#1");
+    estorage.set_status(true);
+    db->append_energy_storage(estorage);
 
 
     meter = new METER(db);
@@ -394,6 +402,31 @@ void METER_TEST::test_set_get_equivalent_device_meter_type()
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = equivalent_device_meters[i];
+        meter->set_meter_type(meter_type);
+        TEST_ASSERT(meter->get_meter_type()==meter_type);
+    }
+}
+
+
+void METER_TEST::test_set_get_energy_storage_meter_type()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
+
+    DEVICE_ID did;
+    TERMINAL terminal;
+    string meter_type;
+
+    did.set_device_type("ENERGY STORAGE");
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    meter->set_device_id(did);
+
+    size_t n = energy_storage_meters.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        meter_type = energy_storage_meters[i];
         meter->set_meter_type(meter_type);
         TEST_ASSERT(meter->get_meter_type()==meter_type);
     }
@@ -737,3 +770,12 @@ void METER_TEST::test_get_equivalent_device_meter_value()
     meter->set_meter_type("EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN MVAR");
     TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_total_equivalent_power_as_load_in_MVA().imag())<FLOAT_EPSILON);
 }
+
+
+void METER_TEST::test_get_energy_storage_meter_value()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
+
+}
+
+

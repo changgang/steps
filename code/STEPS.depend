@@ -13407,7 +13407,7 @@
 	<cstdio>
 	<cmath>
 
-1532832116 source:/home/changgang/steps/code/main_tests.cpp
+1532999471 source:/home/changgang/steps/code/main_tests.cpp
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -13436,6 +13436,7 @@
 	"header/device/fixed_shunt_test.h"
 	"header/device/hvdc_test.h"
 	"header/device/equivalent_device_test.h"
+	"header/device/engergy_storage_test.h"
 	"header/device/virtual_generator_load_pair_test.h"
 	"header/power_system_database_test.h"
 	"header/data_imexporter/psse_imexporter_test.h"
@@ -13611,12 +13612,12 @@
 	<vector>
 	<string>
 
-1527518554 /home/changgang/steps/code/header/basic/device_id_test.h
+1532999038 /home/changgang/steps/code/header/basic/device_id_test.h
 	<iostream>
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/device_id.h"
 
-1527518554 /home/changgang/steps/code//header/basic/device_id.h
+1532917918 /home/changgang/steps/code//header/basic/device_id.h
 	<vector>
 	<string>
 	<functional>
@@ -13636,7 +13637,7 @@
 
 1527518536 /home/changgang/steps/code//header/basic/base.h
 
-1532672378 /home/changgang/steps/code//header/power_system_database.h
+1532920908 /home/changgang/steps/code//header/power_system_database.h
 	"header/device/bus.h"
 	"header/device/generator.h"
 	"header/device/wt_generator.h"
@@ -13646,6 +13647,7 @@
 	"header/device/fixed_shunt.h"
 	"header/device/hvdc.h"
 	"header/device/equivalent_device.h"
+	"header/device/energy_storage.h"
 	"header/basic/area.h"
 	"header/basic/zone.h"
 	"header/basic/owner.h"
@@ -13657,7 +13659,7 @@
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 	<string>
 
-1532672378 /home/changgang/steps/code//header/device/bus.h
+1532949549 /home/changgang/steps/code//header/device/bus.h
 	"header/device/device.h"
 	"header/basic/area.h"
 	"header/basic/zone.h"
@@ -13762,7 +13764,7 @@
 
 1532690274 /home/changgang/steps/code//header/basic/constants.h
 
-1527518554 /home/changgang/steps/code//header/meter/meter.h
+1533005766 /home/changgang/steps/code//header/meter/meter.h
 	"header/basic/constants.h"
 	"header/basic/device_id.h"
 	"header/device/device.h"
@@ -14088,7 +14090,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/bus_index.h"
 
-1527518536 /home/changgang/steps/code/header/basic/device_index_map_test.h
+1532999364 /home/changgang/steps/code/header/basic/device_index_map_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -14102,7 +14104,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/inphno.h"
 
-1527518554 /home/changgang/steps/code/header/device/bus_test.h
+1532949601 /home/changgang/steps/code/header/device/bus_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -14118,7 +14120,7 @@
 	"header/device/generator.h"
 	"header/power_system_database.h"
 
-1527518536 /home/changgang/steps/code/header/device/generator_test.h
+1532915709 /home/changgang/steps/code/header/device/generator_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -14196,7 +14198,7 @@
 	<string>
 	<complex>
 
-1532672378 /home/changgang/steps/code/header/power_system_database_test.h
+1533004364 /home/changgang/steps/code/header/power_system_database_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -14356,7 +14358,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/meter/continuous_buffer.h"
 
-1527518554 /home/changgang/steps/code/header/meter/meter_test.h
+1533001710 /home/changgang/steps/code/header/meter/meter_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -14364,7 +14366,7 @@
 	"header/meter/meter.h"
 	"header/power_system_database.h"
 
-1527518554 /home/changgang/steps/code/header/meter/meter_setter_test.h
+1533002260 /home/changgang/steps/code/header/meter/meter_setter_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -14372,7 +14374,7 @@
 	"header/meter/meter_setter.h"
 	"header/power_system_database.h"
 
-1532831855 /home/changgang/steps/code//header/meter/meter_setter.h
+1533001905 /home/changgang/steps/code//header/meter/meter_setter.h
 	"header/meter/meter.h"
 
 1532674764 /home/changgang/steps/code/header/toolkit/dynamic_simulator/dynamic_simulator_test.h
@@ -14921,7 +14923,7 @@
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/data_imexporter/equivalent_model_imexporter.h"
 
-1532672378 /home/changgang/steps/code/header/power_system_database.h
+1532920908 /home/changgang/steps/code/header/power_system_database.h
 	"header/device/bus.h"
 	"header/device/generator.h"
 	"header/device/wt_generator.h"
@@ -14931,6 +14933,7 @@
 	"header/device/fixed_shunt.h"
 	"header/device/hvdc.h"
 	"header/device/equivalent_device.h"
+	"header/device/energy_storage.h"
 	"header/basic/area.h"
 	"header/basic/zone.h"
 	"header/basic/owner.h"
@@ -14969,7 +14972,7 @@
 	"header/device/hvdc.h"
 	<vector>
 
-1527518554 /home/changgang/steps/code/header/prepare_for_tests/prepare_models_for_test.h
+1533003359 /home/changgang/steps/code/header/prepare_for_tests/prepare_models_for_test.h
 	"header/power_system_database.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 
@@ -15270,7 +15273,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/bus_index.h"
 
-1532569210 source:/home/changgang/steps/code/source/basic/device_id.cpp
+1532999047 source:/home/changgang/steps/code/source/basic/device_id.cpp
 	"header/basic/device_id.h"
 	"header/basic/exception.h"
 	"header/basic/utility.h"
@@ -15280,7 +15283,7 @@
 
 1527518536 /home/changgang/steps/code//header/basic/exception.h
 
-1528361802 source:/home/changgang/steps/code/source/basic/device_id_test.cpp
+1532999281 source:/home/changgang/steps/code/source/basic/device_id_test.cpp
 	"header/basic/device_id_test.h"
 	"header/basic/utility.h"
 	<cstdlib>
@@ -15288,7 +15291,7 @@
 	<iostream>
 	<cstdio>
 
-1527518554 /home/changgang/steps/code//header/basic/device_id_test.h
+1532999038 /home/changgang/steps/code//header/basic/device_id_test.h
 	<iostream>
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/device_id.h"
@@ -15299,7 +15302,7 @@
 	"header/basic/constants.h"
 	<iostream>
 
-1528361802 source:/home/changgang/steps/code/source/basic/device_index_map_test.cpp
+1532999420 source:/home/changgang/steps/code/source/basic/device_index_map_test.cpp
 	<cmath>
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/device_index_map_test.h"
@@ -15310,7 +15313,7 @@
 	<iostream>
 	<cstdio>
 
-1527518536 /home/changgang/steps/code//header/basic/device_index_map_test.h
+1532999364 /home/changgang/steps/code//header/basic/device_index_map_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -15365,7 +15368,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/inphno.h"
 
-1527518554 /home/changgang/steps/code//header/prepare_for_tests/prepare_models_for_test.h
+1533003359 /home/changgang/steps/code//header/prepare_for_tests/prepare_models_for_test.h
 	"header/power_system_database.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 
@@ -15889,7 +15892,7 @@
 	<cstdio>
 	<iostream>
 
-1532672388 source:/home/changgang/steps/code/source/device/bus.cpp
+1532949561 source:/home/changgang/steps/code/source/device/bus.cpp
 	"header/device/bus.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -15897,7 +15900,7 @@
 	<iostream>
 	<cstdio>
 
-1532672388 source:/home/changgang/steps/code/source/device/bus_test.cpp
+1532949666 source:/home/changgang/steps/code/source/device/bus_test.cpp
 	<cmath>
 	"thirdparty/cpptest/cpptest.h"
 	"header/device/bus_test.h"
@@ -15908,7 +15911,7 @@
 	<iostream>
 	<cstdio>
 
-1527518554 /home/changgang/steps/code//header/device/bus_test.h
+1532949601 /home/changgang/steps/code//header/device/bus_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -15998,7 +16001,7 @@
 	<iostream>
 	<cstdio>
 
-1527518536 /home/changgang/steps/code//header/device/generator_test.h
+1532915709 /home/changgang/steps/code//header/device/generator_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -16226,7 +16229,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/meter/continuous_buffer.h"
 
-1532830795 source:/home/changgang/steps/code/source/meter/meter.cpp
+1533006673 source:/home/changgang/steps/code/source/meter/meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -16234,13 +16237,13 @@
 	<vector>
 	<iostream>
 
-1532831895 source:/home/changgang/steps/code/source/meter/meter_setter.cpp
+1533002243 source:/home/changgang/steps/code/source/meter/meter_setter.cpp
 	"header/meter/meter_setter.h"
 	"header/basic/terminal.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1532831947 source:/home/changgang/steps/code/source/meter/meter_setter_test.cpp
+1533005998 source:/home/changgang/steps/code/source/meter/meter_setter_test.cpp
 	"header/meter/meter_setter_test.h"
 	"header/basic/utility.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
@@ -16250,7 +16253,7 @@
 	<cstdio>
 	<cmath>
 
-1527518554 /home/changgang/steps/code//header/meter/meter_setter_test.h
+1533002260 /home/changgang/steps/code//header/meter/meter_setter_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -16258,7 +16261,7 @@
 	"header/meter/meter_setter.h"
 	"header/power_system_database.h"
 
-1527518554 source:/home/changgang/steps/code/source/meter/meter_test.cpp
+1533005945 source:/home/changgang/steps/code/source/meter/meter_test.cpp
 	"header/meter/meter_test.h"
 	"header/basic/utility.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
@@ -16269,7 +16272,7 @@
 	<cstdio>
 	<cmath>
 
-1527518554 /home/changgang/steps/code//header/meter/meter_test.h
+1533001710 /home/changgang/steps/code//header/meter/meter_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -16476,7 +16479,7 @@
 	"header/model/load_relay_model/UFLS.h"
 	"header/power_system_database.h"
 
-1528361802 source:/home/changgang/steps/code/source/model/model.cpp
+1532999638 source:/home/changgang/steps/code/source/model/model.cpp
 	"header/model/model.h"
 	<cstdio>
 	"header/basic/utility.h"
@@ -17109,7 +17112,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/network_database.h"
 
-1532672388 source:/home/changgang/steps/code/source/power_system_database.cpp
+1532921983 source:/home/changgang/steps/code/source/power_system_database.cpp
 	"header/power_system_database.h"
 	"header/basic/utility.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
@@ -17255,7 +17258,7 @@
 	<utility>
 	"internal/stack.h"
 
-1532672388 source:/home/changgang/steps/code/source/power_system_database_test.cpp
+1533005394 source:/home/changgang/steps/code/source/power_system_database_test.cpp
 	"header/power_system_database_test.h"
 	"header/basic/utility.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
@@ -17266,7 +17269,7 @@
 	<cstdio>
 	<cmath>
 
-1532672378 /home/changgang/steps/code//header/power_system_database_test.h
+1533004364 /home/changgang/steps/code//header/power_system_database_test.h
 	<cstdlib>
 	<cstring>
 	<iostream>
@@ -17278,7 +17281,7 @@
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1528361802 source:/home/changgang/steps/code/source/prepare_for_tests/prepare_basic_devices.cpp
+1533003516 source:/home/changgang/steps/code/source/prepare_for_tests/prepare_basic_devices.cpp
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/basic/utility.h"
 
@@ -17374,7 +17377,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/toolkit/contingency_screener/contingency_screener.h"
 
-1532832050 source:/home/changgang/steps/code/source/toolkit/dynamic_simulator/dynamic_simulator.cpp
+1532833817 source:/home/changgang/steps/code/source/toolkit/dynamic_simulator/dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -17711,4 +17714,103 @@
 
 1527518536 source:/home/changgang/steps/code/thirdparty/cpptest/source_cpptest.cpp
 	"cpptest-source.h"
+
+1532925954 /home/changgang/steps/code//header/device/energy_storage.h
+	<string>
+	<complex>
+	"header/device/source.h"
+	"header/model/energy_storage_model/energy_storage_model.h"
+
+1533001613 /home/changgang/steps/code//header/model/energy_storage_model/energy_storage_model.h
+	"header/model/model.h"
+	<complex>
+
+1532926103 source:/home/changgang/steps/code/source/device/energy_storage_test.cpp
+	<cmath>
+	"thirdparty/cpptest/cpptest.h"
+	"header/device/engergy_storage_test.h"
+	"header/basic/constants.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/model/energy_storage_model/estr0.h"
+	<cstdlib>
+	<cstring>
+	<iostream>
+	<cstdio>
+
+1532926007 /home/changgang/steps/code//header/device/engergy_storage_test.h
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"thirdparty/cpptest/cpptest.h"
+	"header/device/energy_storage.h"
+	"header/power_system_database.h"
+
+1533001604 /home/changgang/steps/code//header/model/energy_storage_model/estr0.h
+	"header/model/energy_storage_model/energy_storage_model.h"
+	"header/block/pid_block.h"
+	"header/block/integral_block.h"
+	"header/block/lead_lag_block.h"
+	"header/block/first_order_block.h"
+
+1532930180 source:/home/changgang/steps/code/source/model/energy_storage_model/energy_storage_model.cpp
+	"header/model/energy_storage_model/energy_storage_model.h"
+	"header/power_system_database.h"
+
+1532949932 source:/home/changgang/steps/code/source/model/energy_storage_model/energy_storage_model_test.cpp
+	"header/model/energy_storage_model/energy_storage_model_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1532947895 /home/changgang/steps/code//header/model/energy_storage_model/energy_storage_model_test.h
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"thirdparty/cpptest/cpptest.h"
+	"header/power_system_database.h"
+
+1533001647 source:/home/changgang/steps/code/source/model/energy_storage_model/estr0.cpp
+	"header/model/energy_storage_model/estr0.h"
+	"header/basic/utility.h"
+	<cstdio>
+	<iostream>
+
+1532925995 source:/home/changgang/steps/code/source/device/energy_storage.cpp
+	"header/device/energy_storage.h"
+	"header/basic/utility.h"
+	"header/model/energy_storage_model/energy_storage_models.h"
+	<iostream>
+
+1532999076 /home/changgang/steps/code//header/model/energy_storage_model/energy_storage_models.h
+	"header/model/energy_storage_model/estr0.h"
+
+1532998970 source:/home/changgang/steps/code/source/model/energy_storage_model/estr0_test.cpp
+	"header/model/energy_storage_model/estr0_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1532950562 /home/changgang/steps/code//header/model/energy_storage_model/estr0_test.h
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/energy_storage_model/energy_storage_model_test.h"
+	"header/model/energy_storage_model/estr0.h"
+
+1532926007 /home/changgang/steps/code/header/device/engergy_storage_test.h
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"thirdparty/cpptest/cpptest.h"
+	"header/device/energy_storage.h"
+	"header/power_system_database.h"
 

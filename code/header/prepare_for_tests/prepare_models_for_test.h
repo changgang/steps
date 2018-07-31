@@ -14,6 +14,7 @@ void prepare_basic_fixed_shunts(POWER_SYSTEM_DATABASE* db);
 void prepare_basic_switched_shunts(POWER_SYSTEM_DATABASE* db);
 void prepare_basic_hvdcs(POWER_SYSTEM_DATABASE* db);
 void prepare_basic_equivalent_devices(POWER_SYSTEM_DATABASE* db);
+void prepare_basic_energy_strorages(POWER_SYSTEM_DATABASE* db);
 
 
 void prepare_Arthur_R_Bergen_3_bus_model(POWER_SYSTEM_DATABASE* db);

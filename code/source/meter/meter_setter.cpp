@@ -2514,3 +2514,160 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_pu_mete
 }
 
 
+
+bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id)
+{
+    bool successful = false;
+
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(psdb==NULL)
+    {
+        osstream<<"No power system database is set for METER_SETTER."<<endl
+          <<"ENERGY STORAGE meter cannot be prepared.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    string device_type = device_id.get_device_type();
+    if(device_type!="ENERGY STORAGE")
+    {
+        osstream<<"Warning. This device given ("<<device_type<<") is not an energy storage when trying to set up an energy storage meter. "
+          <<"No energy storage meter will be added.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    if(not psdb->is_energy_storage_exist(device_id))
+    {
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+          <<"No energy storage meter will be added.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    meter.set_device_id(device_id);
+
+    successful = true;
+
+    return successful;
+}
+
+
+METER METER_SETTER::prepare_energy_storage_state_of_energy_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ENERGY STORAGE STATE OF ENERGY IN PU");
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_energy_storage_active_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ENERGY STORAGE ACTIVE POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_active_power_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ENERGY STORAGE ACTIVE POWER IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ENERGY STORAGE REACTIVE POWER IN MVAR");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_reactive_power_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ENERGY STORAGE REACTIVE POWER IN PU");
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ENERGY STORAGE TERMINAL CURRENT IN KA");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ENERGY STORAGE TERMINAL CURRENT IN PU");
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ENERGY STORAGE MODEL INTERNAL VARIABLE", index);
+
+    return meter;
+}
+
+

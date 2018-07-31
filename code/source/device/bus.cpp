@@ -466,6 +466,11 @@ BUS_FREQUENCY_MODEL* BUS::get_bus_frequency_model()
     return &bus_frequency_model;
 }
 
+void BUS::set_frequency_deviation_in_pu(double f)
+{
+    return bus_frequency_model.set_frequency_deviation_in_pu(f);
+}
+
 double BUS::get_frequency_deviation_in_pu()
 {
     return bus_frequency_model.get_frequency_deviation_in_pu();

@@ -51,7 +51,7 @@ DEVICE_ID get_bus_device_id(size_t bus_number);
 DEVICE_ID get_generator_device_id(size_t bus, string identifier);
 DEVICE_ID get_wt_generator_device_id(size_t bus, string identifier);
 DEVICE_ID get_pv_source_device_id(size_t bus, string identifier);
-DEVICE_ID get_battery_device_id(size_t bus, string identifier);
+DEVICE_ID get_energy_storage_device_id(size_t bus, string identifier);
 DEVICE_ID get_load_device_id(size_t bus, string identifier);
 DEVICE_ID get_fixed_shunt_device_id(size_t bus, string identifier);
 DEVICE_ID get_line_device_id(size_t ibus, size_t jbus, string identifier);

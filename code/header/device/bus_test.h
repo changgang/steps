@@ -53,7 +53,7 @@ class BUS_TEST : public Test::Suite
         void test_clear_fault();
         void test_is_faulted();
 
-        void test_get_frequency_deviation();
+        void test_set_get_frequency_deviation();
     private:
         POWER_SYSTEM_DATABASE* db;
         BUS* bus;

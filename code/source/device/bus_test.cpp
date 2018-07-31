@@ -46,6 +46,7 @@ BUS_TEST::BUS_TEST()
     TEST_ADD(BUS_TEST::test_set_get_fault);
     TEST_ADD(BUS_TEST::test_clear_fault);
     TEST_ADD(BUS_TEST::test_is_faulted);
+    TEST_ADD(BUS_TEST::test_set_get_frequency_deviation);
 }
 
 void BUS_TEST::setup()
@@ -516,8 +517,14 @@ void BUS_TEST::test_dynamics_run()
     }
 }*/
 
-void BUS_TEST::test_get_frequency_deviation()
+void BUS_TEST::test_set_get_frequency_deviation()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
 
+    bus->set_frequency_deviation_in_pu(0.0);
+    TEST_ASSERT(fabs(bus->get_frequency_deviation_in_pu()-0.0)<FLOAT_EPSILON);
+    bus->set_frequency_deviation_in_pu(0.01);
+    TEST_ASSERT(fabs(bus->get_frequency_deviation_in_pu()-0.01)<FLOAT_EPSILON);
+    bus->set_frequency_deviation_in_pu(-0.01);
+    TEST_ASSERT(fabs(bus->get_frequency_deviation_in_pu()+0.01)<FLOAT_EPSILON);
 }

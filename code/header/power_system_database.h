@@ -10,6 +10,7 @@
 #include "header/device/fixed_shunt.h"
 #include "header/device/hvdc.h"
 #include "header/device/equivalent_device.h"
+#include "header/device/energy_storage.h"
 #include "header/basic/area.h"
 #include "header/basic/zone.h"
 #include "header/basic/owner.h"
@@ -44,6 +45,7 @@ class POWER_SYSTEM_DATABASE
         size_t get_transformer_capacity() const;
         size_t get_hvdc_capacity() const;
         size_t get_equivalent_device_capacity() const;
+        size_t get_energy_storage_capacity() const;
         size_t get_area_capacity() const;
         size_t get_zone_capacity() const;
         size_t get_owner_capacity() const;
@@ -57,6 +59,7 @@ class POWER_SYSTEM_DATABASE
         void set_transformer_capacity(size_t n);
         void set_hvdc_capacity(size_t n);
         void set_equivalent_device_capacity(size_t n);
+        void set_energy_storage_capacity(size_t n);
         void set_area_capacity(size_t n);
         void set_zone_capacity(size_t n);
         void set_owner_capacity(size_t n);
@@ -91,6 +94,7 @@ class POWER_SYSTEM_DATABASE
         void append_fixed_shunt(FIXED_SHUNT& shunt);
         void append_hvdc(HVDC& hvdc);
         void append_equivalent_device(EQUIVALENT_DEVICE& edevice);
+        void append_energy_storage(ENERGY_STORAGE& estorage);
         void append_area(AREA& area);
         void append_zone(ZONE& zone);
         void append_owner(OWNER& owner);
@@ -104,6 +108,7 @@ class POWER_SYSTEM_DATABASE
         bool is_fixed_shunt_exist(const DEVICE_ID& device_id) const;
         bool is_hvdc_exist(const DEVICE_ID& device_id) const;
         bool is_equivalent_device_exist(const DEVICE_ID& device_id) const;
+        bool is_energy_storage_exist(const DEVICE_ID& device_id) const;
         bool is_area_exist(const size_t no) const;
         bool is_zone_exist(const size_t no) const;
         bool is_owner_exist(const size_t no) const;
@@ -122,6 +127,7 @@ class POWER_SYSTEM_DATABASE
         FIXED_SHUNT* get_fixed_shunt(const DEVICE_ID & device_id);
         HVDC* get_hvdc(const DEVICE_ID & device_id);
         EQUIVALENT_DEVICE* get_equivalent_device(const DEVICE_ID & device_id);
+        ENERGY_STORAGE* get_energy_storage(const DEVICE_ID & device_id);
         AREA* get_area(const size_t no);
         ZONE* get_zone(const size_t no);
         OWNER* get_owner(const size_t no);
@@ -136,6 +142,7 @@ class POWER_SYSTEM_DATABASE
         vector<FIXED_SHUNT*> get_fixed_shunts_connecting_to_bus(const size_t bus);
         vector<HVDC*> get_hvdcs_connecting_to_bus(const size_t bus);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_connecting_to_bus(const size_t bus);
+        vector<ENERGY_STORAGE*> get_energy_storages_connecting_to_bus(const size_t bus);
 
         vector<DEVICE_ID> get_all_devices_device_id_connecting_to_bus(const size_t bus);
         vector<DEVICE_ID> get_generators_device_id_connecting_to_bus(const size_t bus);
@@ -147,6 +154,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_fixed_shunts_device_id_connecting_to_bus(const size_t bus);
         vector<DEVICE_ID> get_hvdcs_device_id_connecting_to_bus(const size_t bus);
         vector<DEVICE_ID> get_equivalent_devices_device_id_connecting_to_bus(const size_t bus);
+        vector<DEVICE_ID> get_energy_storages_device_id_connecting_to_bus(const size_t bus);
 
         vector<DEVICE*> get_all_devices_in_area(const size_t area);
         vector<BUS*> get_buses_in_area(const size_t area);
@@ -159,6 +167,7 @@ class POWER_SYSTEM_DATABASE
         vector<FIXED_SHUNT*> get_fixed_shunts_in_area(const size_t area);
         vector<HVDC*> get_hvdcs_in_area(const size_t area);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_area(const size_t area);
+        vector<ENERGY_STORAGE*> get_energy_storages_in_area(const size_t area);
 
         vector<DEVICE_ID> get_all_devices_device_id_in_area(const size_t area);
         vector<DEVICE_ID> get_buses_device_id_in_area(const size_t area);
@@ -171,6 +180,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_fixed_shunts_device_id_in_area(const size_t area);
         vector<DEVICE_ID> get_hvdcs_device_id_in_area(const size_t area);
         vector<DEVICE_ID> get_equivalent_devices_device_id_in_area(const size_t area);
+        vector<DEVICE_ID> get_energy_storages_device_id_in_area(const size_t area);
 
         vector<DEVICE*> get_all_devices_in_zone(const size_t zone);
         vector<BUS*> get_buses_in_zone(const size_t zone);
@@ -183,6 +193,7 @@ class POWER_SYSTEM_DATABASE
         vector<FIXED_SHUNT*> get_fixed_shunts_in_zone(const size_t zone);
         vector<HVDC*> get_hvdcs_in_zone(const size_t zone);
         vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_zone(const size_t zone);
+        vector<ENERGY_STORAGE*> get_energy_storages_in_zone(const size_t zone);
 
         vector<DEVICE_ID> get_all_devices_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_buses_device_id_in_zone(const size_t zone);
@@ -195,6 +206,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_fixed_shunts_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_hvdcs_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_equivalent_devices_device_id_in_zone(const size_t zone);
+        vector<DEVICE_ID> get_energy_storages_device_id_in_zone(const size_t zone);
 
         vector<BUS*> get_all_buses();
         vector<BUS*> get_buses_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
@@ -208,6 +220,7 @@ class POWER_SYSTEM_DATABASE
         vector<FIXED_SHUNT*> get_all_fixed_shunts();
         vector<HVDC*> get_all_hvdcs();
         vector<EQUIVALENT_DEVICE*> get_all_equivalent_devices();
+        vector<ENERGY_STORAGE*> get_all_energy_storages();
         vector<AREA*> get_all_areas();
         vector<ZONE*> get_all_zones();
         vector<OWNER*> get_all_owners();
@@ -224,6 +237,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_all_fixed_shunts_device_id();
         vector<DEVICE_ID> get_all_hvdcs_device_id();
         vector<DEVICE_ID> get_all_equivalent_devices_device_id();
+        vector<DEVICE_ID> get_all_energy_storages_device_id();
         vector<size_t> get_all_areas_number();
         vector<size_t> get_all_zones_number();
         vector<size_t> get_all_owners_number();
@@ -240,6 +254,7 @@ class POWER_SYSTEM_DATABASE
         size_t get_hvdc_count() const;
         size_t get_switched_shunt_count() const;
         size_t get_equivalent_device_count() const;
+        size_t get_energy_storage_count() const;
         size_t get_area_count() const;
         size_t get_zone_count() const;
         size_t get_owner_count() const;
@@ -253,6 +268,7 @@ class POWER_SYSTEM_DATABASE
         size_t get_fixed_shunt_index(const DEVICE_ID & device_id) const;
         size_t get_hvdc_index(const DEVICE_ID & device_id) const;
         size_t get_equivalent_device_index(const DEVICE_ID & device_id) const;
+        size_t get_energy_storage_index(const DEVICE_ID & device_id) const;
         size_t get_area_index(const size_t no) const;
         size_t get_zone_index(const size_t no) const;
         size_t get_owner_index(const size_t no) const;
@@ -328,6 +344,10 @@ class POWER_SYSTEM_DATABASE
         void clear_equivalent_devices_connecting_to_bus(const size_t bus);
         void clear_all_equivalent_devices();
 
+        void clear_energy_storage(DEVICE_ID& device_id);
+        void clear_energy_storages_connecting_to_bus(const size_t bus);
+        void clear_all_energy_storages();
+
         void clear_all_areas();
 
         void clear_all_zones();
@@ -375,6 +395,7 @@ class POWER_SYSTEM_DATABASE
         void check_line_status_for_out_of_service_bus(size_t bus);
         void check_transformer_status_for_out_of_service_bus(size_t bus);
         void check_hvdc_status_for_out_of_service_bus(size_t bus);
+        void check_energy_storage_status_for_out_of_service_bus(size_t bus);
 
         string system_name;
         double system_base_power_in_MVA;
@@ -391,6 +412,7 @@ class POWER_SYSTEM_DATABASE
         vector<FIXED_SHUNT> Fixed_shunt;
         vector<HVDC> Hvdc;
         vector<EQUIVALENT_DEVICE> Equivalent_device;
+        vector<ENERGY_STORAGE> Energy_storage;
         vector<AREA> Area;
         vector<ZONE> Zone;
         vector<OWNER> Owner;
@@ -399,7 +421,7 @@ class POWER_SYSTEM_DATABASE
 
         BUS_INDEX bus_index;
         DEVICE_INDEX_MAP generator_index, wt_generator_index, load_index, fixed_shunt_index, switched_shunt_index,
-                            line_index, transformer_index, hvdc_index, equivalent_device_index;
+                            line_index, transformer_index, hvdc_index, equivalent_device_index, energy_storage_index;
         map<size_t,  size_t> area_index, zone_index, owner_index;
 
         DYNAMICS_SIMULATOR* simulator;

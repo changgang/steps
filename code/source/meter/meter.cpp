@@ -147,14 +147,24 @@ vector<string> equivalent_device_meters{"EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAG
                                          "EQUIVALENT DEVICE ACTIVE POWER NET LOAD IN PU",
                                          "EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN PU"};
 
-map<string, vector<string>> SUPPORTED_METERS{   {"BUS",         bus_meters},
+vector<string> energy_storage_meters{"ENERGY STORAGE STATE OF ENERGY IN PU",
+                                      "ENERGY STORAGE ACTIVE POWER IN MW",
+                                      "ENERGY STORAGE ACTIVE POWER IN PU",
+                                      "ENERGY STORAGE REACTIVE POWER IN MVAR",
+                                      "ENERGY STORAGE REACTIVE POWER IN PU",
+                                      "ENERGY STORAGE TERMINAL CURRENT IN KA",
+                                      "ENERGY STORAGE TERMINAL CURRENT IN PU",
+                                      "ENERGY STORAGE MODEL INTERNAL VARIABLE"};
+
+map<string, vector<string>> SUPPORTED_METERS{ {"BUS",         bus_meters},
                                                 {"LINE",        line_meters},
                                                 {"TRANSFORMER", transformer_meters},
                                                 {"LOAD",        load_meters},
                                                 {"GENERATOR",   generator_meters},
                                                 {"WT GENERATOR",    wt_generator_meters},
                                                 {"HVDC", hvdc_meters},
-                                                {"EQUIVALENT DEVICE", equivalent_device_meters}};
+                                                {"EQUIVALENT DEVICE", equivalent_device_meters},
+                                                {"ENERGY STORAGE", energy_storage_meters}};
 
 METER::METER(POWER_SYSTEM_DATABASE* psdb)
 {
@@ -472,6 +482,9 @@ void METER::set_device_pointer()
 
     if(device_type=="EQUIVALENT DEVICE")
         deviceptr = (DEVICE*) psdb->get_equivalent_device(device_id);
+
+    if(device_type=="ENERGY STORAGE")
+        deviceptr = (DEVICE*) psdb->get_energy_storage(device_id);
 
     this->device_pointer = deviceptr;
     if(deviceptr==NULL)
@@ -1875,3 +1888,43 @@ double METER::get_meter_value_as_an_equivalent_device() const
 
     return 0.0;
 }
+
+
+double METER::get_meter_value_as_an_energy_storage() const
+{
+    ENERGY_STORAGE* estorage = (ENERGY_STORAGE*) get_device_pointer();
+    if(estorage == NULL)
+        return 0.0;
+    ENERGY_STORAGE_MODEL* model = estorage->get_energy_storage_model();
+    if(model==NULL)
+        return 0.0;
+
+    if(meter_type=="ENERGY STORAGE STATE OF ENERGY IN PU")
+        return model->get_energy_state_in_pu();
+
+    if(meter_type=="ENERGY STORAGE ACTIVE POWER IN MW")
+        return model->get_terminal_active_power_in_MW();
+
+    if(meter_type=="ENERGY STORAGE ACTIVE POWER IN PU")
+        return model->get_terminal_active_power_in_pu_based_on_mbase();
+
+    if(meter_type=="ENERGY STORAGE REACTIVE POWER IN MVAR")
+        return model->get_terminal_reactive_power_in_MVar();
+
+    if(meter_type=="ENERGY STORAGE REACTIVE POWER IN PU")
+        return model->get_terminal_reactive_power_in_pu_based_on_mbase();
+
+    if(meter_type=="ENERGY STORAGE TERMINAL CURRENT IN KA")
+        return model->get_terminal_current_in_kA();
+
+    if(meter_type=="ENERGY STORAGE TERMINAL CURRENT IN PU")
+        return model->get_terminal_current_in_pu_based_on_mbase();
+
+    if(meter_type=="ENERGY STORAGE MODEL INTERNAL VARIABLE")
+        return model->get_variable_with_index(internal_variable_index);
+
+
+    return 0.0;
+}
+
+

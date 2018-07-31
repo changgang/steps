@@ -44,6 +44,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     size_t transformer_capacity = bus_capacity;
     size_t hvdc_capacity = size_t(round(bus_capacity*0.1));
     size_t equivalentdevice_capacity = size_t(round(bus_capacity*0.1));
+    size_t energy_storage_capacity = size_t(round(bus_capacity*0.1));
     size_t area_capacity = size_t(round(bus_capacity*0.1));
     size_t zone_capacity = size_t(round(bus_capacity*0.1));
     size_t owner_capacity = size_t(round(bus_capacity*0.1));
@@ -86,6 +87,9 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
         if(document.HasMember("equivalentDevice") and document["equivalentDevice"].IsInt())
             equivalentdevice_capacity = size_t(document["equivalentDevice"].GetInt());
 
+        if(document.HasMember("energyStorage") and document["energyStorage"].IsInt())
+            energy_storage_capacity = size_t(document["energyStorage"].GetInt());
+
         if(document.HasMember("area") and document["area"].IsInt())
             area_capacity = size_t(document["area"].GetInt());
 
@@ -111,6 +115,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     set_transformer_capacity(transformer_capacity);
     set_hvdc_capacity(hvdc_capacity);
     set_equivalent_device_capacity(equivalentdevice_capacity);
+    set_energy_storage_capacity(energy_storage_capacity);
     set_area_capacity(area_capacity);
     set_zone_capacity(zone_capacity);
     set_owner_capacity(owner_capacity);
@@ -159,6 +164,11 @@ size_t POWER_SYSTEM_DATABASE::get_hvdc_capacity() const
 size_t POWER_SYSTEM_DATABASE::get_equivalent_device_capacity() const
 {
     return Equivalent_device.capacity();
+}
+
+size_t POWER_SYSTEM_DATABASE::get_energy_storage_capacity() const
+{
+    return Energy_storage.capacity();
 }
 
 size_t POWER_SYSTEM_DATABASE::get_area_capacity() const
@@ -221,6 +231,11 @@ void POWER_SYSTEM_DATABASE::set_equivalent_device_capacity(size_t n)
     Equivalent_device.reserve(n);
 }
 
+void POWER_SYSTEM_DATABASE::set_energy_storage_capacity(size_t n)
+{
+    Energy_storage.reserve(n);
+}
+
 void POWER_SYSTEM_DATABASE::set_area_capacity(size_t n)
 {
     Area.reserve(n);
@@ -249,6 +264,7 @@ void POWER_SYSTEM_DATABASE::clear_database()
     clear_all_fixed_shunts();
     clear_all_hvdcs();
     clear_all_equivalent_devices();
+    clear_all_energy_storages();
     clear_all_areas();
     clear_all_zones();
     clear_all_owners();
@@ -955,6 +971,70 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
     equivalent_device_index.set_device_index(device_id, equivalent_device_count);
  }
 
+void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
+{
+    ostringstream osstream;
+
+    if(estorage.get_power_system_database()==NULL)
+    {
+        estorage.set_power_system_database(this);
+    }
+
+    if(this != estorage.get_power_system_database())
+    {
+        POWER_SYSTEM_DATABASE* db = estorage.get_power_system_database();
+        osstream<<"Warning. "<<estorage.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+          <<"It cannot be appended into the new power system database '";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(not estorage.is_valid())
+    {
+        osstream<<"Warning. Failed to append invalid energy storage to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    size_t bus = estorage.get_energy_storage_bus();
+
+    if(not this->is_bus_in_allowed_range(bus))
+    {
+        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<estorage.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+          <<"Energy storage will not be appended into the database.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    string identifier = estorage.get_identifier();
+    DEVICE_ID device_id;
+    device_id.set_device_type("ENERGY STORAGE");
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+    device_id.set_device_terminal(terminal);
+    device_id.set_device_identifier(identifier);
+
+    if(this->is_energy_storage_exist(device_id))
+    {
+        osstream<<"Warning. "<<estorage.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Energy_storage.\n"
+          <<"Duplicate copy is not allowed.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(Energy_storage.capacity()==Energy_storage.size())
+    {
+        osstream<<"Warning. Capacity limit ("<<Energy_storage.capacity()<<") reached when appending energy storage to power system database '"<<get_system_name()<<"'."<<endl
+          <<"Increase capacity by modified steps_config.json.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    size_t energy_storage_count = get_energy_storage_count();
+    Energy_storage.push_back(estorage);
+    energy_storage_index.set_device_index(device_id, energy_storage_count);
+ }
+
 void POWER_SYSTEM_DATABASE::append_area(AREA& area)
 {
     ostringstream osstream;
@@ -1155,6 +1235,13 @@ bool POWER_SYSTEM_DATABASE::is_equivalent_device_exist(const DEVICE_ID& device_i
     else return true;
 }
 
+bool POWER_SYSTEM_DATABASE::is_energy_storage_exist(const DEVICE_ID& device_id) const
+{
+    size_t index = get_energy_storage_index(device_id);
+    if(index==INDEX_NOT_EXIST) return false;
+    else return true;
+}
+
 bool POWER_SYSTEM_DATABASE::is_area_exist(const size_t no) const
 {
     size_t index = get_area_index(no);
@@ -1232,6 +1319,20 @@ void POWER_SYSTEM_DATABASE::change_bus_number(size_t original_bus_number, size_t
         wt_generator->set_source_bus(new_bus_number);
         DEVICE_ID new_did = wt_generator->get_device_id();
         wt_generator_index.set_device_index(new_did, index);
+    }
+
+    vector<ENERGY_STORAGE*> estorages = get_energy_storages_connecting_to_bus(original_bus_number);
+    size_t nestorage = estorages.size();
+    for(size_t i=0; i!=nestorage; ++i)
+    {
+        ENERGY_STORAGE* estorage = estorages[i];
+        DEVICE_ID old_did = estorage->get_device_id();
+        size_t index = get_energy_storage_index(old_did);
+        energy_storage_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+        estorage->set_energy_storage_bus(new_bus_number);
+        DEVICE_ID new_did = estorage->get_device_id();
+        energy_storage_index.set_device_index(new_did, index);
     }
 
     vector<LOAD*> loads = get_loads_connecting_to_bus(original_bus_number);
@@ -1471,6 +1572,15 @@ EQUIVALENT_DEVICE* POWER_SYSTEM_DATABASE::get_equivalent_device(const DEVICE_ID 
         return NULL;
 }
 
+ENERGY_STORAGE* POWER_SYSTEM_DATABASE::get_energy_storage(const DEVICE_ID & device_id)
+{
+    size_t index = energy_storage_index.get_index_of_device(device_id);
+    if(index!=INDEX_NOT_EXIST)
+        return &(Energy_storage[index]);
+    else
+        return NULL;
+}
+
 AREA* POWER_SYSTEM_DATABASE::get_area(const size_t no)
 {
     size_t index = get_area_index(no);
@@ -1537,6 +1647,11 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_connecting_to_bus(const s
     n = edevices.size();
     for(size_t i=0; i!=n; ++i)
         devices.push_back(edevices[i]);
+
+    vector<ENERGY_STORAGE*> estorages = get_energy_storages_connecting_to_bus(bus);
+    n = estorages.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(estorages[i]);
 
     return devices;
 }
@@ -1673,6 +1788,19 @@ vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_connect
     return device;
 }
 
+vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_connecting_to_bus(const size_t bus)
+{
+    vector<ENERGY_STORAGE*> device;
+    device.reserve(8);
+
+    size_t n = get_energy_storage_count();
+    for(size_t i=0; i!=n; ++i)
+    {
+        if(Energy_storage[i].is_connected_to_bus(bus))
+            device.push_back(&(Energy_storage[i]));
+    }
+    return device;
+}
 
 
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_devices_device_id_connecting_to_bus(const size_t bus)
@@ -1795,6 +1923,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_connec
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_connecting_to_bus(const size_t bus)
+{
+    vector<ENERGY_STORAGE*> devices = get_energy_storages_connecting_to_bus(bus);
+    size_t n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(size_t i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
 
 vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_area(const size_t area)
 {
@@ -1840,6 +1980,11 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_area(const size_t area
     n = edevices.size();
     for(size_t i=0; i!=n; ++i)
         devices.push_back(edevices[i]);
+
+    vector<ENERGY_STORAGE*> estorages = get_energy_storages_in_area(area);
+    n = estorages.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(estorages[i]);
 
     return devices;
 }
@@ -1990,6 +2135,20 @@ vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_area
     return device;
 }
 
+vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_in_area(const size_t area)
+{
+    vector<ENERGY_STORAGE*> device;
+    device.reserve(8);
+
+    size_t n = get_energy_storage_count();
+    for(size_t i=0; i!=n; ++i)
+    {
+        if(Energy_storage[i].is_in_area(area))
+            device.push_back(&(Energy_storage[i]));
+    }
+    return device;
+}
+
 
 
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_devices_device_id_in_area(const size_t area)
@@ -2124,6 +2283,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_in_are
     return dids;
 }
 
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_in_area(const size_t area)
+{
+    vector<ENERGY_STORAGE*> devices = get_energy_storages_in_area(area);
+    size_t n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(size_t i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
 vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_zone(const size_t zone)
 {
     vector<DEVICE*> devices;
@@ -2168,6 +2339,11 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_zone(const size_t zone
     n = edevices.size();
     for(size_t i=0; i!=n; ++i)
         devices.push_back(edevices[i]);
+
+    vector<ENERGY_STORAGE*> estorages = get_energy_storages_in_zone(zone);
+    n = estorages.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(estorages[i]);
 
     return devices;
 }
@@ -2318,7 +2494,19 @@ vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_zone
     return device;
 }
 
+vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_in_zone(const size_t zone)
+{
+    vector<ENERGY_STORAGE*> device;
+    device.reserve(8);
 
+    size_t n = get_energy_storage_count();
+    for(size_t i=0; i!=n; ++i)
+    {
+        if(Energy_storage[i].is_in_zone(zone))
+            device.push_back(&(Energy_storage[i]));
+    }
+    return device;
+}
 
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_devices_device_id_in_zone(const size_t zone)
 {
@@ -2443,6 +2631,18 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_hvdcs_device_id_in_zone(const size_
 vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_equivalent_devices_device_id_in_zone(const size_t zone)
 {
     vector<EQUIVALENT_DEVICE*> devices = get_equivalent_devices_in_zone(zone);
+    size_t n = devices.size();
+
+    vector<DEVICE_ID> dids;
+    for(size_t i=0; i!=n; ++i)
+        dids.push_back(devices[i]->get_device_id());
+
+    return dids;
+}
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_in_zone(const size_t zone)
+{
+    vector<ENERGY_STORAGE*> devices = get_energy_storages_in_zone(zone);
     size_t n = devices.size();
 
     vector<DEVICE_ID> dids;
@@ -2601,6 +2801,16 @@ vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_all_equivalent_devices()
     device.reserve(n);
     for(size_t i=0; i!=n; ++i)
         device.push_back(&(Equivalent_device[i]));
+    return device;
+}
+
+vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_all_energy_storages()
+{
+    vector<ENERGY_STORAGE*> device;
+    size_t n = get_energy_storage_count();
+    device.reserve(n);
+    for(size_t i=0; i!=n; ++i)
+        device.push_back(&(Energy_storage[i]));
     return device;
 }
 
@@ -2782,6 +2992,17 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_equivalent_devices_device_id()
         dids.push_back(Equivalent_device[i].get_device_id());
     return dids;
 }
+
+vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_energy_storages_device_id()
+{
+    vector<DEVICE_ID> dids;
+    size_t n=get_energy_storage_count();
+    dids.reserve(n);
+    for(size_t i=0; i!=n; ++i)
+        dids.push_back(Energy_storage[i].get_device_id());
+    return dids;
+}
+
 vector<size_t> POWER_SYSTEM_DATABASE::get_all_areas_number()
 {
     vector<size_t> areas_number;
@@ -2881,6 +3102,11 @@ size_t POWER_SYSTEM_DATABASE::get_equivalent_device_count() const
     return Equivalent_device.size();
 }
 
+size_t POWER_SYSTEM_DATABASE::get_energy_storage_count() const
+{
+    return Energy_storage.size();
+}
+
 size_t POWER_SYSTEM_DATABASE::get_area_count() const
 {
     return Area.size();
@@ -2939,6 +3165,11 @@ size_t POWER_SYSTEM_DATABASE::get_hvdc_index(const DEVICE_ID & device_id) const
 size_t POWER_SYSTEM_DATABASE::get_equivalent_device_index(const DEVICE_ID & device_id) const
 {
     return equivalent_device_index.get_index_of_device(device_id);
+}
+
+size_t POWER_SYSTEM_DATABASE::get_energy_storage_index(const DEVICE_ID & device_id) const
+{
+    return energy_storage_index.get_index_of_device(device_id);
 }
 
 size_t POWER_SYSTEM_DATABASE::get_area_index(const size_t no) const
@@ -3648,6 +3879,48 @@ void POWER_SYSTEM_DATABASE::clear_all_equivalent_devices()
 {
     Equivalent_device.clear();
     equivalent_device_index.clear();
+}
+
+
+void POWER_SYSTEM_DATABASE::clear_energy_storage(DEVICE_ID& device_id)
+{
+    if(not is_energy_storage_exist(device_id)) return;
+
+    size_t current_index = get_energy_storage_index(device_id);
+
+    vector<ENERGY_STORAGE>::iterator iter_edevice = Energy_storage.begin();
+
+
+    std::advance(iter_edevice, current_index);
+    Energy_storage.erase(iter_edevice);
+    energy_storage_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+    energy_storage_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+}
+
+void POWER_SYSTEM_DATABASE::clear_energy_storages_connecting_to_bus(const size_t bus)
+{
+    DEVICE_ID device_id;
+    TERMINAL terminal;
+    device_id.set_device_type("ENERGY STORAGE");
+    while(true)
+    {
+        vector<ENERGY_STORAGE*> estorage = get_energy_storages_connecting_to_bus(bus);
+        if(estorage.size()==0)
+            break;
+
+        terminal.clear();
+        terminal.append_bus(estorage[0]->get_energy_storage_bus());
+        device_id.set_device_terminal(terminal);
+        device_id.set_device_identifier(estorage[0]->get_identifier());
+        clear_energy_storage(device_id);
+    }
+}
+
+void POWER_SYSTEM_DATABASE::clear_all_energy_storages()
+{
+    Energy_storage.clear();
+    energy_storage_index.clear();
 }
 
 

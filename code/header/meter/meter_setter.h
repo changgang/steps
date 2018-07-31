@@ -173,6 +173,15 @@ class METER_SETTER
         METER prepare_equivalent_device_reactive_power_load_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_equivalent_device_active_power_net_load_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_equivalent_device_reactive_power_net_load_in_pu_meter(const DEVICE_ID& device_id);
+
+        METER prepare_energy_storage_state_of_energy_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_energy_storage_active_power_in_MW_meter(const DEVICE_ID& device_id);
+        METER prepare_energy_storage_active_power_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_energy_storage_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
+        METER prepare_energy_storage_reactive_power_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_energy_storage_terminal_current_in_kA_meter(const DEVICE_ID& device_id);
+        METER prepare_energy_storage_terminal_current_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
     private:
         bool prepare_bus_meter(METER& meter, const size_t bus);
         bool prepare_line_meter(METER& meter, const DEVICE_ID& device_id, size_t side_bus);
@@ -182,6 +191,7 @@ class METER_SETTER
         bool prepare_wt_generator_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_equivalent_device_meter(METER& meter, const DEVICE_ID& device_id);
+        bool prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id);
 
         POWER_SYSTEM_DATABASE* db;
 };

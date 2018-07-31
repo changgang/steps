@@ -63,6 +63,7 @@ class METER : public BASE
         double get_meter_value_as_a_wt_generator() const;
         double get_meter_value_as_an_hvdc() const;
         double get_meter_value_as_an_equivalent_device() const;
+        double get_meter_value_as_an_energy_storage() const;
 
         virtual void check();
 
@@ -84,6 +85,7 @@ extern vector<string> load_meters;
 extern vector<string> wt_generator_meters;
 extern vector<string> hvdc_meters;
 extern vector<string> equivalent_device_meters;
+extern vector<string> energy_storage_meters;
 extern map<string, vector<string>> SUPPORTED_METERS;
 
 #endif // METER_H

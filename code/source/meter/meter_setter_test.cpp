@@ -21,6 +21,7 @@ METER_SETTER_TEST::METER_SETTER_TEST()
     TEST_ADD(METER_SETTER_TEST::test_prepare_wt_generator_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_hvdc_related_meters);
     TEST_ADD(METER_SETTER_TEST::test_prepare_equivalent_device_related_meters);
+    TEST_ADD(METER_SETTER_TEST::test_prepare_energy_storage_related_meters);
 }
 
 void METER_SETTER_TEST::setup()
@@ -979,3 +980,52 @@ void METER_SETTER_TEST::test_prepare_equivalent_device_related_meters()
     TEST_ASSERT(meter.get_meter_type()=="EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN PU");
 }
 
+
+void METER_SETTER_TEST::test_prepare_energy_storage_related_meters()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
+
+    prepare_basic_energy_strorages(db);
+
+    METER meter(db);
+    DEVICE_ID did;
+    TERMINAL terminal;
+
+    did.set_device_type("ENERGY STORAGE");
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    meter = setter->prepare_energy_storage_state_of_energy_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="ENERGY STORAGE STATE OF ENERGY IN PU");
+
+    meter = setter->prepare_energy_storage_active_power_in_MW_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="ENERGY STORAGE ACTIVE POWER IN MW");
+
+    meter = setter->prepare_energy_storage_active_power_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="ENERGY STORAGE ACTIVE POWER IN PU");
+
+    meter = setter->prepare_energy_storage_reactive_power_in_MVar_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="ENERGY STORAGE REACTIVE POWER IN MVAR");
+
+    meter = setter->prepare_energy_storage_reactive_power_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="ENERGY STORAGE REACTIVE POWER IN PU");
+
+    meter = setter->prepare_energy_storage_terminal_current_in_kA_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="ENERGY STORAGE TERMINAL CURRENT IN KA");
+
+    meter = setter->prepare_energy_storage_terminal_current_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="ENERGY STORAGE TERMINAL CURRENT IN PU");
+
+    meter = setter->prepare_energy_storage_model_internal_variable_meter(did, 0);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="ENERGY STORAGE MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_internal_variable_index()==0);
+}

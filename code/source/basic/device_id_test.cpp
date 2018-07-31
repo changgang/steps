@@ -11,7 +11,7 @@ DEVICE_ID_TEST::DEVICE_ID_TEST()
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_generator);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_wt_generator);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_source);
-    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_battery);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_energy_storage);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_load);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_fixedshunt);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_switchedshunt);
@@ -112,12 +112,12 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_source()
     TEST_ASSERT(terminal.get_bus_count()==1);
 }
 
-void DEVICE_ID_TEST::test_constructor_and_get_device_type_battery()
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_energy_storage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id->set_device_type("battery");
-    TEST_ASSERT(device_id->get_device_type()=="BATTERY");
+    device_id->set_device_type("energy storage");
+    TEST_ASSERT(device_id->get_device_type()=="ENERGY STORAGE");
 
     TEST_ASSERT(device_id->get_minimum_allowed_terminal_count()==1);
     TEST_ASSERT(device_id->get_maximum_allowed_terminal_count()==1);
@@ -420,6 +420,14 @@ void DEVICE_ID_TEST::test_get_device_name()
     device_id->set_device_terminal(terminal);
     device_id->set_device_identifier("#1");
     TEST_ASSERT(device_id->get_device_name()=="EQUIVALENT DEVICE #1 AT BUS 1");
+
+    device_id->clear();
+    terminal.clear();
+    device_id->set_device_type("ENERGY STORAGE");
+    terminal.append_bus(1);
+    device_id->set_device_terminal(terminal);
+    device_id->set_device_identifier("#1");
+    TEST_ASSERT(device_id->get_device_name()=="ENERGY STORAGE #1 AT BUS 1");
 }
 
 void DEVICE_ID_TEST::test_is_valid()
