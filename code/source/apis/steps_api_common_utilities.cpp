@@ -155,6 +155,8 @@ void api_set_device_capacity(const char* device_type, size_t cap)
         return psdb->set_hvdc_capacity(cap);
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
         return psdb->set_equivalent_device_capacity(cap);
+    if(DEVICE_TYPE=="ENERGY STORAGE")
+        return psdb->set_energy_storage_capacity(cap);
 
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
 }

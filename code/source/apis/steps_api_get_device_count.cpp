@@ -27,6 +27,8 @@ size_t api_get_device_count(const char* device_type)
         return psdb->get_hvdc_count();
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
         return psdb->get_equivalent_device_count();
+    if(DEVICE_TYPE=="ENERGY STORAGE")
+        return psdb->get_energy_storage_count();
 
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
     return 0;

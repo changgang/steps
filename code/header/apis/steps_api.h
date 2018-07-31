@@ -23,6 +23,7 @@ class STEPS_API_SEARCH_BUFFER
         vector<TRANSFORMER*> transformers;             size_t transformer_pointer;
         vector<HVDC*> hvdcs;                           size_t hvdc_pointer;
         vector<EQUIVALENT_DEVICE*> equivalent_devices; size_t equivalent_device_pointer;
+        vector<ENERGY_STORAGE*> energy_storages;       size_t energy_storage_pointer;
         vector<AREA*> areas;                           size_t area_pointer;
         vector<ZONE*> zones;                           size_t zone_pointer;
         vector<OWNER*> owners;                         size_t owner_pointer;
@@ -77,6 +78,7 @@ EXPORT_STEPS_DLL void api_add_line(size_t sending_side_bus_number, size_t receiv
 EXPORT_STEPS_DLL void api_add_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char* identifier);
 EXPORT_STEPS_DLL void api_add_transformer(size_t primary_side_bus_number, size_t secondary_side_bus_number, size_t tertiary_side_bus_number, char* identifier);
 EXPORT_STEPS_DLL void api_add_equivalent_device(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_add_energy_storage(size_t bus_number, char* identifier);
 EXPORT_STEPS_DLL void api_add_area(size_t area_number, char* area_name);
 EXPORT_STEPS_DLL void api_add_zone(size_t zone_number, char* zone_name);
 EXPORT_STEPS_DLL void api_add_owner(size_t owner_number, char* owner_name);
@@ -172,14 +174,23 @@ EXPORT_STEPS_DLL void api_set_hvdc_string_data(size_t ibus, size_t jbus, char* i
 EXPORT_STEPS_DLL bool api_get_hvdc_boolean_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_hvdc_boolean_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, bool value);
 
-EXPORT_STEPS_DLL int api_get_euivalent_device_integer_data(size_t bus, char* identifier, char* parameter_name);
+EXPORT_STEPS_DLL int api_get_equivalent_device_integer_data(size_t bus, char* identifier, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_equivalent_device_integer_data(size_t bus, char* identifier, char* parameter_name, int value);
-EXPORT_STEPS_DLL double api_get_euivalent_device_float_data(size_t bus, char* identifier, char* parameter_name);
+EXPORT_STEPS_DLL double api_get_equivalent_device_float_data(size_t bus, char* identifier, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_equivalent_device_float_data(size_t bus, char* identifier, char* parameter_name, double value);
-EXPORT_STEPS_DLL const char* api_get_euivalent_device_string_data(size_t bus, char* identifier, char* parameter_name);
+EXPORT_STEPS_DLL const char* api_get_equivalent_device_string_data(size_t bus, char* identifier, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_equivalent_device_string_data(size_t bus, char* identifier, char* parameter_name, char* value);
-EXPORT_STEPS_DLL bool api_get_euivalent_device_boolean_data(size_t bus, char* identifier, char* parameter_name);
+EXPORT_STEPS_DLL bool api_get_equivalent_device_boolean_data(size_t bus, char* identifier, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_equivalent_device_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value);
+
+EXPORT_STEPS_DLL int api_get_energy_storage_integer_data(size_t bus, char* identifier, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_energy_storage_integer_data(size_t bus, char* identifier, char* parameter_name, int value);
+EXPORT_STEPS_DLL double api_get_energy_storage_float_data(size_t bus, char* identifier, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_energy_storage_float_data(size_t bus, char* identifier, char* parameter_name, double value);
+EXPORT_STEPS_DLL const char* api_get_energy_storage_string_data(size_t bus, char* identifier, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_energy_storage_string_data(size_t bus, char* identifier, char* parameter_name, char* value);
+EXPORT_STEPS_DLL bool api_get_energy_storage_boolean_data(size_t bus, char* identifier, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_energy_storage_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value);
 
 EXPORT_STEPS_DLL int api_get_area_integer_data(size_t area, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_area_integer_data(size_t area, char* parameter_name, int value);
@@ -215,6 +226,18 @@ EXPORT_STEPS_DLL void api_set_generator_related_model_float_parameter(size_t bus
 EXPORT_STEPS_DLL const char* api_get_wt_generator_related_model_name(size_t bus, char* identifier, char* model_type);
 EXPORT_STEPS_DLL double api_get_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
+
+EXPORT_STEPS_DLL const char* api_get_load_related_model_name(size_t bus, char* identifier, char* model_type);
+EXPORT_STEPS_DLL double api_get_load_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_load_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
+
+EXPORT_STEPS_DLL const char* api_get_hvdc_related_model_name(size_t ibus, size_t jbus, char* identifier, char* model_type);
+EXPORT_STEPS_DLL double api_get_hvdc_related_model_float_parameter(size_t ibus, size_t jbus, char* identifier, char* model_type, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_hvdc_related_model_float_parameter(size_t ibus, size_t jbus, char* identifier, char* model_type, char* parameter_name, double value);
+
+EXPORT_STEPS_DLL const char* api_get_energy_storage_related_model_name(size_t bus, char* identifier, char* model_type);
+EXPORT_STEPS_DLL double api_get_energy_storage_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_energy_storage_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
 
 
 EXPORT_STEPS_DLL size_t api_get_powerflow_solver_integer_parameter(char* parameter_name);
@@ -262,6 +285,7 @@ EXPORT_STEPS_DLL void api_prepare_load_related_meters();
 EXPORT_STEPS_DLL void api_prepare_line_related_meters();
 EXPORT_STEPS_DLL void api_prepare_hvdc_related_meters();
 EXPORT_STEPS_DLL void api_prepare_equivalent_device_related_meters();
+EXPORT_STEPS_DLL void api_prepare_energy_storage_related_meters();
 
 EXPORT_STEPS_DLL void api_prepare_bus_related_meter(size_t bus, char* meter_type);
 EXPORT_STEPS_DLL void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type);
@@ -270,6 +294,7 @@ EXPORT_STEPS_DLL void api_prepare_load_related_meter(size_t bus, char* id, char*
 EXPORT_STEPS_DLL void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side);
 EXPORT_STEPS_DLL void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side);
 EXPORT_STEPS_DLL void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type);
+EXPORT_STEPS_DLL void api_prepare_energy_storage_related_meter(size_t bus, char* id, char* meter_type);
 
 EXPORT_STEPS_DLL void api_start_dynamic_simulation();
 EXPORT_STEPS_DLL void api_stop_dynamic_simulation();

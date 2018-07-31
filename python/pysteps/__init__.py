@@ -1,7 +1,7 @@
 from pylibsteps import libsteps, libsteps_version, libsteps_date
 
-pysteps_version = "0.1"
-pysteps_date = "2018/07/28"
+pysteps_version = "0.2"
+pysteps_date = "2018/07/31"
 
 libsteps.api_initialize_package()
 
@@ -25,6 +25,9 @@ def set_allowed_maximum_bus_number(max_bus_number):
 
 def load_powerflow_data(file, type):
     libsteps.api_load_powerflow_data_from_file(file, type)
+
+def save_powerflow_data(file, type):
+    libsteps.api_save_powerflow_data_to_file(file, type)
     
 def load_dynamic_data(file, type):
     libsteps.api_load_dynamic_data_from_file(file, type)
@@ -84,35 +87,58 @@ def add_bus(busnumber, busname, basevoltage):
     libsteps.api_add_bus(busnumber, busname, basevoltage)
     return
 
-def add_generator(bus, ickt):
+def add_generator(generator):
+    bus = generator[0]
+    ickt = generator[1]
     libsteps.api_add_generator(bus, ickt)
     return
 
-def add_wt_generator(bus, ickt):
+def add_wt_generator(generator):
+    bus = generator[0]
+    ickt = generator[1]
     libsteps.api_add_wt_generator(bus, ickt)
     return
 
-def add_load(bus, ickt):
+def add_load(load):
+    bus = load[0]
+    ickt = load[1]
     libsteps.api_add_load(bus, ickt)
     return
 
-def add_fixed_shunt(bus, ickt):
+def add_fixed_shunt(shunt):
+    bus = shunt[0]
+    ickt = shunt[1]
     libsteps.api_add_fixed_shunt(bus, ickt)
     return
 
-def add_line(ibus, jbus, ickt):
+def add_line(line):
+    ibus = line[0]
+    jbus = line[1]
+    ickt = line[2]
     libsteps.api_add_line(ibus, jbus, ickt)
     return
 
-def add_hvdc(ibus, jbus, ickt):
+def add_hvdc(hvdc):
+    ibus = hvdc[0]
+    jbus = hvdc[1]
+    ickt = hvdc[2]
     libsteps.api_add_hvdc(ibus, jbus, ickt)
     return
 
-def add_transformer(ibus, jbus, kbus, ickt):
+def add_transformer(transformer):
+    ibus = transformer[0]
+    jbus = transformer[1]
+    kbus = 0
+    ickt = transformer[-1]
+    if len(transformer)>3:
+        kbus = transformer[2]
+        
     libsteps.api_add_transformer(ibus, jbus, kbus, ickt)
     return
 
-def add_equivalent_device(bus, ickt):
+def add_equivalent_device(device):
+    bus = device[0]
+    ickt = device[1]
     libsteps.api_add_equivalent_device(bus, ickt)
     return
 

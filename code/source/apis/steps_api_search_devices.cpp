@@ -119,6 +119,15 @@ void api_initialize_device_search(const char* device_type, size_t bus)
             api_search_buffer.equivalent_devices = psdb->get_equivalent_devices_connecting_to_bus(bus);
         api_search_buffer.equivalent_device_pointer = 0;
     }
+
+    if(DEVICE_TYPE=="ENERGY STORAGE")
+    {
+        if(bus==0)
+            api_search_buffer.energy_storages = psdb->get_all_energy_storages();
+        else
+            api_search_buffer.energy_storages = psdb->get_energy_storages_connecting_to_bus(bus);
+        api_search_buffer.energy_storage_pointer = 0;
+    }
 }
 
 size_t api_get_current_device_bus_number(const char* device_type, const char* side)
@@ -221,6 +230,16 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.equivalent_devices.size();
         if(index<n)
             return api_search_buffer.equivalent_devices[index]->get_equivalent_device_bus();
+        else
+            return 0;
+    }
+
+    if(DEVICE_TYPE=="ENERGY STORAGE")
+    {
+        size_t index = api_search_buffer.energy_storage_pointer;
+        size_t n = api_search_buffer.energy_storages.size();
+        if(index<n)
+            return api_search_buffer.energy_storages[index]->get_energy_storage_bus();
         else
             return 0;
     }
@@ -337,6 +356,19 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
             return STEPS::steps_char_buffer;
     }
 
+    if(DEVICE_TYPE=="ENERGY STORAGE")
+    {
+        size_t index = api_search_buffer.energy_storage_pointer;
+        size_t n = api_search_buffer.energy_storages.size();
+        if(index<n)
+		{
+			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.energy_storages[index]->get_identifier()).c_str());
+			return STEPS::steps_char_buffer;
+		}
+        else
+            return STEPS::steps_char_buffer;
+    }
+
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
     return STEPS::steps_char_buffer;
 }
@@ -413,6 +445,15 @@ void api_goto_next_device(const char* device_type)
         size_t n = api_search_buffer.equivalent_devices.size();
         if(index<n)
             api_search_buffer.equivalent_device_pointer ++;
+        return;
+    }
+
+    if(DEVICE_TYPE=="ENERGY STORAGE")
+    {
+        size_t index = api_search_buffer.energy_storage_pointer;
+        size_t n = api_search_buffer.energy_storages.size();
+        if(index<n)
+            api_search_buffer.energy_storage_pointer ++;
         return;
     }
 

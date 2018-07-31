@@ -1,10 +1,14 @@
 from ctypes import *
+import platform
 
-libsteps_version = "0.1"
-libsteps_date = "2018/07/28"
+libsteps_version = "0.2"
+libsteps_date = "2018/07/31"
 
-libsteps = cdll.LoadLibrary("D:/Python27/Lib/site-packages/pysteps/libSTEPS.dll")
-libsteps = cdll.LoadLibrary("/usr/lib/python2.7/dist-packages/pysteps/libSTEPS.so")
+if platform.system()=="Linux":
+    libsteps = cdll.LoadLibrary("/usr/lib/python2.7/dist-packages/pysteps/libSTEPS.so")
+else:
+    if platform.system()=="Windows":
+        libsteps = cdll.LoadLibrary("D:/Python27/Lib/site-packages/pysteps/libSTEPS.dll")
 
 libsteps.api_clear_package.restype = None
 libsteps.api_clear_package.argtypes = None

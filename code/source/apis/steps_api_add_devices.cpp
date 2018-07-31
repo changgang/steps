@@ -231,6 +231,31 @@ void api_add_equivalent_device(size_t bus_number, char* identifier)
     }
 }
 
+void api_add_energy_storage(size_t bus_number, char* identifier)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+
+    if(psdb!=NULL)
+    {
+        DEVICE_ID did;
+        did.set_device_type("ENERGY STORAGE");
+        TERMINAL terminal;
+        terminal.append_bus(bus_number);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier(identifier);
+
+        if(not psdb->is_energy_storage_exist(did))
+        {
+            ENERGY_STORAGE newes(psdb);
+            newes.set_energy_storage_bus(bus_number);
+            newes.set_identifier(identifier);
+            psdb->append_energy_storage(newes);
+        }
+        else
+            return;
+    }
+}
+
 void api_add_area(size_t area_number, char* area_name)
 {
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
