@@ -429,6 +429,9 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     osstream<<"Initializing powerflow solver.";
     show_information_with_leading_time_stamp(osstream);
 
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    psdb->update_in_service_bus_count();
+
     initialize_generator_regulating_mode_with_bus_type();
     initialize_bus_type_and_voltage_to_regulate();
     initialize_bus_voltage();

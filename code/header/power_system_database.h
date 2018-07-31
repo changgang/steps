@@ -385,9 +385,11 @@ class POWER_SYSTEM_DATABASE
         complex<double> get_total_load_power_in_MVA();
         complex<double> get_total_generation_power_in_MVA();
         complex<double> get_total_loss_power_in_MVA();
+
+
+        void update_in_service_bus_count();
     private:
         void set_database_capacity();
-        void update_in_service_bus_count();
 
         void check_source_status_for_out_of_service_bus(size_t bus);
         void check_load_status_for_out_of_service_bus(size_t bus);
