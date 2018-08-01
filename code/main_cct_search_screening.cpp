@@ -45,7 +45,7 @@ int main()
     size_t n_events = n_lines*2;
 
     //#pragma omp parallel for
-    for(size_t i=0; i<n_events; ++i)
+    for(size_t i=0; i!=n_events; ++i)
     {
         ostringstream osstream;
         CCT_SEARCHER searcher;

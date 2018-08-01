@@ -111,7 +111,7 @@ bool INPHNO::is_table_full() const
 
     size_t physical_bus;
 
-    for(size_t internal_bus=0; internal_bus!=nbus; internal_bus++)
+    for(size_t internal_bus=0; internal_bus!=nbus; ++internal_bus)
     {
         physical_bus = get_physical_bus_number_of_internal_bus_number(internal_bus);
 

@@ -211,20 +211,20 @@ string string2csv(string str)
         if(source=='"')
         {
             csv[ncsv] = source;
-            ncsv++;
-            for(i++; i!=n; ++i)
+            ++ncsv;
+            for(++i; i!=n; ++i)
             {
                 source=str[i];
                 if(source=='"')
                 {
                     csv[ncsv] = source;
-                    ncsv++;
+                    ++ncsv;
                     break;
                 }
                 else
                 {
                     csv[ncsv] = source;
-                    ncsv++;
+                    ++ncsv;
                 }
             }
             continue;
@@ -234,13 +234,13 @@ string string2csv(string str)
             if(source==',' or source==' ')
             {
                 csv[ncsv]=',';
-                ncsv++;
+                ++ncsv;
                 continue;
             }
             else
             {
                 csv[ncsv] = source;
-                ncsv++;
+                ++ncsv;
                 continue;
             }
         }

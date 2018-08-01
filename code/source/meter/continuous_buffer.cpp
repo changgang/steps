@@ -150,7 +150,7 @@ void CONTINUOUS_BUFFER::append_data(double time, double value)
             else
             {
                 if(index_of_buffer_head>0)
-                    index_of_buffer_head --;
+                    --index_of_buffer_head;
                 else
                     index_of_buffer_head = buffer_size-1;
 

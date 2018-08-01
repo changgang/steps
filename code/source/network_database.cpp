@@ -2081,7 +2081,7 @@ void NETWORK_DATABASE::add_faulted_line_to_dynamic_network(const LINE& line)
         double line_length = sublines[n-1].to_loc - sublines[n-1].from_loc;
         y = Yline*line_length; z = Zline*line_length;
         Z = z; Y = 1.0/Z+y*0.5;
-        for(int k=n-2; k>=0; k--)
+        for(int k=n-2; k>=0; --k)
         {
             double fault_location = sublines[k].to_loc;
             line_length = sublines[k].to_loc - sublines[k].from_loc;
@@ -2141,7 +2141,7 @@ void NETWORK_DATABASE::add_faulted_line_to_dynamic_network(const LINE& line)
         V = 1.0; // source at sending side
         Y = Yshunt_receiving; Z = 0;
         n = sublines.size();
-        for(int k=n-1; k>=0; k--)
+        for(int k=n-1; k>=0; --k)
         {
             double fault_location = sublines[k].from_loc;
             double line_length = sublines[k].to_loc - sublines[k].from_loc;

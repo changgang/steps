@@ -316,7 +316,7 @@ int SPARSE_MATRIX::get_column_number_of_entry_index(int index) const
     if(index<=get_starting_index_of_column(n))
     {
         int k_start, k_end;
-        for(int col = 0; col!=n; col++)
+        for(int col = 0; col!=n; ++col)
         {
             k_start = get_starting_index_of_column(col);
             k_end = get_starting_index_of_column(col+1)-1;

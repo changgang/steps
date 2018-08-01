@@ -39,7 +39,7 @@ void api_goto_next_bus()
     size_t index = api_search_buffer.bus_pointer;
     size_t n = api_search_buffer.buses.size();
     if(index<n)
-        api_search_buffer.bus_pointer ++;
+        ++api_search_buffer.bus_pointer;
 }
 
 
@@ -381,7 +381,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.generator_pointer;
         size_t n = api_search_buffer.generators.size();
         if(index<n)
-            api_search_buffer.generator_pointer ++;
+            ++api_search_buffer.generator_pointer;
         return;
     }
 
@@ -390,7 +390,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.wt_generator_pointer;
         size_t n = api_search_buffer.wt_generators.size();
         if(index<n)
-            api_search_buffer.wt_generator_pointer ++;
+            ++api_search_buffer.wt_generator_pointer;
         return;
     }
 
@@ -399,7 +399,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.load_pointer;
         size_t n = api_search_buffer.loads.size();
         if(index<n)
-            api_search_buffer.load_pointer ++;
+            ++api_search_buffer.load_pointer;
         return;
     }
 
@@ -408,7 +408,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.fixed_shunt_pointer;
         size_t n = api_search_buffer.fixed_shunts.size();
         if(index<n)
-            api_search_buffer.fixed_shunt_pointer ++;
+            ++api_search_buffer.fixed_shunt_pointer;
         return;
     }
 
@@ -417,7 +417,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.line_pointer;
         size_t n = api_search_buffer.lines.size();
         if(index<n)
-            api_search_buffer.line_pointer ++;
+            ++api_search_buffer.line_pointer;
         return;
     }
 
@@ -426,7 +426,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.transformer_pointer;
         size_t n = api_search_buffer.transformers.size();
         if(index<n)
-            api_search_buffer.transformer_pointer ++;
+            ++api_search_buffer.transformer_pointer;
         return;
     }
 
@@ -435,7 +435,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.hvdc_pointer;
         size_t n = api_search_buffer.hvdcs.size();
         if(index<n)
-            api_search_buffer.hvdc_pointer ++;
+            ++api_search_buffer.hvdc_pointer;
         return;
     }
 
@@ -444,7 +444,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.equivalent_device_pointer;
         size_t n = api_search_buffer.equivalent_devices.size();
         if(index<n)
-            api_search_buffer.equivalent_device_pointer ++;
+            ++api_search_buffer.equivalent_device_pointer;
         return;
     }
 
@@ -453,7 +453,7 @@ void api_goto_next_device(const char* device_type)
         size_t index = api_search_buffer.energy_storage_pointer;
         size_t n = api_search_buffer.energy_storages.size();
         if(index<n)
-            api_search_buffer.energy_storage_pointer ++;
+            ++api_search_buffer.energy_storage_pointer;
         return;
     }
 
@@ -484,7 +484,7 @@ void api_goto_next_area()
     size_t index = api_search_buffer.area_pointer;
     size_t n = api_search_buffer.areas.size();
     if(index<n)
-        api_search_buffer.area_pointer ++;
+		++api_search_buffer.area_pointer;
 }
 
 void api_initialize_zone_search()
@@ -510,7 +510,7 @@ void api_goto_next_zone()
     size_t index = api_search_buffer.zone_pointer;
     size_t n = api_search_buffer.zones.size();
     if(index<n)
-        api_search_buffer.zone_pointer ++;
+		++api_search_buffer.zone_pointer;
 }
 
 void api_initialize_owner_search()
@@ -536,5 +536,5 @@ void api_goto_next_owner()
     size_t index = api_search_buffer.owner_pointer;
     size_t n = api_search_buffer.owners.size();
     if(index<n)
-        api_search_buffer.owner_pointer ++;
+		++api_search_buffer.owner_pointer;
 }

@@ -492,7 +492,7 @@ DEVICE_ID BPA_IMEXPORTER::get_generator_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    bus = get_integer_data(swidata[i], "0"); i++; i++;
+    bus = get_integer_data(swidata[i], "0"); ++i; ++i;
     identifier = get_string_data(swidata[i],"");
 
     TERMINAL terminal;
@@ -516,7 +516,7 @@ DEVICE_ID BPA_IMEXPORTER::get_load_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    bus = get_integer_data(swidata[i], "0"); i++; i++;
+    bus = get_integer_data(swidata[i], "0"); ++i; ++i;
     identifier = get_string_data(swidata[i],"");
 
     TERMINAL terminal;
@@ -540,8 +540,8 @@ DEVICE_ID BPA_IMEXPORTER::get_line_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    ibus = get_integer_data(swidata[i], "0"); i++; i++;
-    jbus = get_integer_data(swidata[i], "0"); i++;
+    ibus = get_integer_data(swidata[i], "0"); ++i; ++i;
+    jbus = get_integer_data(swidata[i], "0"); ++i;
     identifier = get_string_data(swidata[i],"");
 
     TERMINAL terminal;
@@ -565,8 +565,8 @@ DEVICE_ID BPA_IMEXPORTER::get_hvdc_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    ibus = get_integer_data(swidata[i], "0"); i++; i++;
-    jbus = get_integer_data(swidata[i], "0"); i++;
+    ibus = get_integer_data(swidata[i], "0"); ++i; ++i;
+    jbus = get_integer_data(swidata[i], "0"); ++i;
     identifier = get_string_data(swidata[i],"");
 
     TERMINAL terminal;
@@ -590,9 +590,9 @@ DEVICE_ID BPA_IMEXPORTER::get_transformer_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    ibus = get_integer_data(swidata[i], "0"); i++; i++;
-    jbus = get_integer_data(swidata[i], "0"); i++;
-    kbus = get_integer_data(swidata[i], "0"); i++;
+    ibus = get_integer_data(swidata[i], "0"); ++i; ++i;
+    jbus = get_integer_data(swidata[i], "0"); ++i;
+    kbus = get_integer_data(swidata[i], "0"); ++i;
     identifier = get_string_data(swidata[i],"");
 
     TERMINAL terminal;
@@ -979,8 +979,8 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
     string identifier;
 
     size_t i=0;
-    subsystem_number = get_integer_data(swidata[i], "0");  i++; i++;
-    identifier = get_string_data(swidata[i],""); i++;
+    subsystem_number = get_integer_data(swidata[i], "0");  ++i; ++i;
+    identifier = get_string_data(swidata[i],""); ++i;
 
     if(model_name=="IEELAL" or model_name=="CIM5AL")
     {
@@ -994,7 +994,7 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
         loads = psdb->get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
-            iter--;
+            --iter;
             size_t area = (*iter)->get_area_number();
             if(area!=area_no)
                 loads.erase(iter);
@@ -1008,7 +1008,7 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
         loads = psdb->get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
-            iter--;
+            --iter;
             size_t zone = (*iter)->get_zone_number();
             if(zone!=zone_no)
                 loads.erase(iter);
@@ -1033,7 +1033,7 @@ vector<LOAD*> BPA_IMEXPORTER::remove_loads_with_different_identifier(vector<LOAD
 
     for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
     {
-        iter--;
+        --iter;
         string load_id = (*iter)->get_identifier();
         if(load_id!=identifier)
             loads.erase(iter);

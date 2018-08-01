@@ -810,15 +810,15 @@ void PSSE_IMEXPORTER::load_transformer_data()
 
         data = split_string(DATA[i],",");
         trans_data.push_back(DATA[i]);
-        i++;
+        ++i;
         if(i>=ndata)
             break;
         trans_data.push_back(DATA[i]);
-        i++;
+        ++i;
         if(i>=ndata)
             break;
         trans_data.push_back(DATA[i]);
-        i++;
+        ++i;
         if(i>=ndata)
             break;
         trans_data.push_back(DATA[i]);
@@ -827,7 +827,7 @@ void PSSE_IMEXPORTER::load_transformer_data()
             trans_data.push_back("");
         else
         {
-            i++;
+            ++i;
             if(i>=ndata)
                 break;
             trans_data.push_back(DATA[i]);

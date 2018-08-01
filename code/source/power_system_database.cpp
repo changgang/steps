@@ -3051,7 +3051,7 @@ void POWER_SYSTEM_DATABASE::update_in_service_bus_count()
     for(size_t i=0; i!=n; ++i)
     {
         if(Bus[i].get_bus_type()==OUT_OF_SERVICE)
-            n_out_of_service++;
+			++n_out_of_service;
     }
 
     in_service_bus_count = n-n_out_of_service;

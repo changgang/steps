@@ -157,7 +157,7 @@ void BPA_IMEXPORTER::load_powerflow_data_into_ram(string file)
     }
     dat_file.close();
 
-    //for(size_t i=0; i<dat_data_in_ram.size(); i++)
+    //for(size_t i=0; i<dat_data_in_ram.size(); ++i)
     //    cout<<dat_data_in_ram[i]<<endl;
 }
 
@@ -450,7 +450,7 @@ void BPA_IMEXPORTER::load_area_data()
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -487,7 +487,7 @@ void BPA_IMEXPORTER::load_zone_data()
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -521,7 +521,7 @@ void BPA_IMEXPORTER::load_owner_data()
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -558,7 +558,7 @@ void BPA_IMEXPORTER::load_bus_data()
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -647,7 +647,7 @@ void BPA_IMEXPORTER::set_bus_area()
 
     vector<BUS*> buses = psdb->get_all_buses();
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -662,7 +662,7 @@ void BPA_IMEXPORTER::set_bus_area()
             if(area_number == 0)
                 continue;
 
-            for(size_t j=0; j<20; j++)
+            for(size_t j=0; j<20; ++j)
             {
                 string zone_name = data.substr(35+j*3, 2);
                 size_t zone_number = psdb->zone_name2zone_number(zone_name);
@@ -670,7 +670,7 @@ void BPA_IMEXPORTER::set_bus_area()
                     continue;
 
                 size_t bus_count = psdb->get_bus_count();
-                for(size_t k=0; k<bus_count; k++)
+                for(size_t k=0; k<bus_count; ++k)
                 {
                     if(buses[k]->get_zone_number() == zone_number)
                         buses[k]->set_area_number(area_number);
@@ -685,7 +685,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -710,7 +710,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
     vector<BUS*> buses = psdb->get_all_buses();
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -725,7 +725,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
             if(area_number == 0)
                 continue;
 
-            for(size_t j=0; j<20; j++)
+            for(size_t j=0; j<20; ++j)
             {
                 string zone_name = data.substr(35+j*3, 2);
                 size_t zone_number = psdb->zone_name2zone_number(zone_name);
@@ -733,7 +733,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
                     continue;
 
                 size_t bus_count = psdb->get_bus_count();
-                for(size_t k=0; k<bus_count; k++)
+                for(size_t k=0; k<bus_count; ++k)
                 {
                     if(buses[k]->get_zone_number() == zone_number)
                         buses[k]->set_area_number(area_number);
@@ -749,7 +749,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -807,7 +807,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
         }
     }
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -868,7 +868,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
     {
         bool load_cleared = false;
         vector<LOAD*> loads = psdb->get_all_loads();
-        for(size_t i=0; i<loads.size(); i++)
+        for(size_t i=0; i<loads.size(); ++i)
         {
             complex<double> S_p = loads[i]->get_nominal_constant_power_load_in_MVA();
             complex<double> S_i = loads[i]->get_nominal_constant_current_load_in_MVA();
@@ -920,7 +920,7 @@ void BPA_IMEXPORTER::load_generator_data()
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1021,7 +1021,7 @@ void BPA_IMEXPORTER::load_line_data()
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i!=n; i++)
+    for(size_t i=0; i!=n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1135,7 +1135,7 @@ void BPA_IMEXPORTER::load_line_data()
         }
     }
 
-    for(size_t i=0; i!=n; i++)
+    for(size_t i=0; i!=n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1251,7 +1251,7 @@ void BPA_IMEXPORTER::load_line_data()
 
     double sbase = psdb->get_system_base_power_in_MVA();
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1303,7 +1303,7 @@ void BPA_IMEXPORTER::load_transformer_data()
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1463,7 +1463,7 @@ void BPA_IMEXPORTER::load_transformer_data()
         }
     }
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1639,7 +1639,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     map<string,int>    from_converter_grid_bus_name_to_pole_number;
 
     // build map
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1666,7 +1666,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     }
 
     // load hvdc data
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1748,7 +1748,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     }
 
     // load HVDC angle data
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1781,7 +1781,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
 
             vector<HVDC*> hvdcs = psdb->get_hvdcs_connecting_to_bus(converter_grid_side_bus_number);
             HVDC_CONVERTER_SIDE converter_side_type;
-            for(size_t j=0; j<hvdcs.size(); j++)
+            for(size_t j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
                 if(hvdc_ptr->get_converter_bus(RECTIFIER)==converter_grid_side_bus_number)
@@ -1840,7 +1840,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     }
 
     // load transformer impedance
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1901,7 +1901,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             vector<HVDC*> hvdcs = psdb->get_hvdcs_connecting_to_bus(converter_bus);
 
             HVDC_CONVERTER_SIDE converter_side_type;
-            for(size_t j=0; j<hvdcs.size(); j++)
+            for(size_t j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
                 if(hvdc_ptr->get_converter_bus(RECTIFIER)==converter_bus)
@@ -1964,7 +1964,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     }
 
     // load transformer taps
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -2005,7 +2005,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             vector<HVDC*> hvdcs = psdb->get_hvdcs_connecting_to_bus(converter_bus);
 
             HVDC_CONVERTER_SIDE converter_side_type;
-            for(size_t j=0; j<hvdcs.size(); j++)
+            for(size_t j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
                 if(hvdc_ptr->get_converter_bus(RECTIFIER)==converter_bus)
@@ -2070,13 +2070,13 @@ void BPA_IMEXPORTER::load_hvdc_data()
     vector <BUS*> bus_ptr_vector=psdb->get_all_buses();
     size_t m=bus_ptr_vector.size();
     vector <HVDC*> hvdc_ptr_vector;
-    for(size_t i=0; i<m; i++)
+    for(size_t i=0; i<m; ++i)
     {
         hvdc_ptr_vector=psdb->get_hvdcs_connecting_to_bus(bus_ptr_vector[i]->get_bus_number());
 
         size_t hvdc_number = hvdc_ptr_vector.size();
 
-        for(size_t j=0; j<hvdc_number; j++)
+        for(size_t j=0; j<hvdc_number; ++j)
         {
             HVDC* hvdc_ptr = hvdc_ptr_vector[j];
 
@@ -2388,7 +2388,7 @@ string BPA_IMEXPORTER::export_bus_data() const
 
     vector<BUS*> buses = psdb->get_all_buses();
     size_t n = buses.size();
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         BUS* bus = buses[i];
 
@@ -2407,7 +2407,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         vector<LOAD*> loads = psdb->get_loads_connecting_to_bus(bus_number);
 
         double constant_power_load_P = 0.0, constant_power_load_Q = 0.0;
-        for(size_t j=0; j<loads.size(); j++)
+        for(size_t j=0; j<loads.size(); ++j)
         {
             LOAD* load = loads[j];
             if(load->get_status()==false)
@@ -2417,7 +2417,7 @@ string BPA_IMEXPORTER::export_bus_data() const
             constant_power_load_Q += load->get_nominal_constant_power_load_in_MVA().imag();
         }
         double constant_current_load_P = 0.0, constant_current_load_Q = 0.0;
-        for(size_t j=0; j<loads.size(); j++)
+        for(size_t j=0; j<loads.size(); ++j)
         {
             LOAD* load = loads[j];
             if(load->get_status()==false)
@@ -2427,7 +2427,7 @@ string BPA_IMEXPORTER::export_bus_data() const
             constant_current_load_Q -= load->get_nominal_constant_current_load_in_MVA().imag();
         }
         double constant_impedance_load_P = 0.0, constant_impedance_load_Q = 0.0;
-        for(size_t j=0; j<loads.size(); j++)
+        for(size_t j=0; j<loads.size(); ++j)
         {
             LOAD* load = loads[j];
             if(load->get_status()==false)
@@ -2440,7 +2440,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         vector<SOURCE*> sources = psdb->get_sources_connecting_to_bus(bus_number);
         double pmax = 0.0, pgen = 0.0, qgen = 0.0, qmax = 0.0, qmin = 0.0, v_schedule = 1.0;
 
-        for(size_t j=0; j<sources.size(); j++)
+        for(size_t j=0; j<sources.size(); ++j)
         {
             SOURCE* source = sources[j];
             if(source->get_status()==false)
@@ -2588,7 +2588,7 @@ string BPA_IMEXPORTER::export_line_data() const
 
     double sbase_MVA = psdb->get_system_base_power_in_MVA();
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         LINE* line = lines[i];
 
@@ -2699,7 +2699,7 @@ string BPA_IMEXPORTER::export_transformer_data() const
     size_t n;
     n = transformers.size();
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         TRANSFORMER* transformer = transformers[i];
         if(transformer->is_two_winding_transformer())
@@ -2813,7 +2813,7 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
 
     if (trans->get_winding_control_mode(PRIMARY_SIDE)!=TRANSFORMER_TAP_NO_CONTROL||trans->get_winding_control_mode(SECONDARY_SIDE)!=TRANSFORMER_TAP_NO_CONTROL)
     {
-        for (int i=0;i<2;i++)
+        for (int i=0;i<2;++i)
         {
             TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
             TRANSFORMER_WINDING_SIDE winding2=SECONDARY_SIDE;
@@ -2939,7 +2939,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
     ostringstream osstream;
 
-    for(size_t i=0; i<3; i++)
+    for(size_t i=0; i<3; ++i)
     {
         if(i==0) winding=PRIMARY_SIDE;
         if(i==1) winding=SECONDARY_SIDE;
@@ -3126,7 +3126,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
 
     double sbase_MVA = psdb->get_system_base_power_in_MVA();
 
-    for(size_t i=0; i<n; i++)
+    for(size_t i=0; i<n; ++i)
     {
         HVDC* hvdc = hvdcs[i];
 
@@ -3227,7 +3227,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         double rectifier_transformer_min_tap_in_kv=inverter_transformer_min_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
 
         //imexporter inverter data
-        for (size_t j=0; j!=pole_number; j++)
+        for (size_t j=0; j!=pole_number; ++j)
         {
             string rectifier_valve_bus_name;
             string inverter_valve_bus_name;
@@ -3268,7 +3268,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j!=pole_number; j++)
+        for (size_t j=0; j!=pole_number; ++j)
         {
             string inverter_valve_side_bus_name;
 
@@ -3296,7 +3296,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j != pole_number; j++)
+        for (size_t j=0; j != pole_number; ++j)
         {
             string inverter_valve_side_bus_name;
 
@@ -3325,7 +3325,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j!=pole_number; j++)
+        for (size_t j=0; j!=pole_number; ++j)
         {
             string inverter_valve_side_bus_name;
 
@@ -3352,7 +3352,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         }
 
        //imeporter rectifier data
-        for (size_t j=0; j!=pole_number; j++)
+        for (size_t j=0; j!=pole_number; ++j)
         {
             string rectifier_valve_side_bus_name;
 
@@ -3380,7 +3380,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j<pole_number; j++)
+        for (size_t j=0; j<pole_number; ++j)
         {
             string rectifier_valve_side_bus_name;
 
@@ -3409,7 +3409,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j!=pole_number; j++)
+        for (size_t j=0; j!=pole_number; ++j)
         {
             string rectifier_valve_side_bus_name;
 

@@ -269,7 +269,7 @@ void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
         location = 1.0-location;
 
     map<double,FAULT>::iterator iter;
-    for(iter=faults.begin(); iter!=faults.end(); iter++)
+    for(iter=faults.begin(); iter!=faults.end(); ++iter)
     {
         if(fabs(iter->first-location)<FLOAT_EPSILON)
             break;
@@ -299,7 +299,7 @@ double LINE::get_fault_location_of_fault(size_t index) const
     map<double,FAULT>::const_iterator iter=faults.begin();
 
     for(size_t i=0; i!=index; ++i)
-        iter++;
+		++iter;
 
     return iter->first;
 }
@@ -317,7 +317,7 @@ FAULT LINE::get_fault_at_location(size_t to_bus, double location) const
         location = 1.0-location;
 
     map<double,FAULT>::const_iterator iter;
-    for(iter=faults.begin(); iter!=faults.end(); iter++)
+    for(iter=faults.begin(); iter!=faults.end(); ++iter)
     {
         if(fabs(iter->first-location)<FLOAT_EPSILON)
             break;
@@ -345,7 +345,7 @@ void LINE::clear_fault_at_location(size_t to_bus, double location)
         location = 1.0-location;
 
     map<double,FAULT>::iterator iter;
-    for(iter=faults.begin(); iter!=faults.end(); iter++)
+    for(iter=faults.begin(); iter!=faults.end(); ++iter)
     {
         if(fabs(iter->first-location)<FLOAT_EPSILON)
             break;

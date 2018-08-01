@@ -565,15 +565,13 @@ complex<double> LOAD::get_dynamic_load_in_MVA()
 {
     if(get_status())//==true
     {
-        complex<double> S;
+        double scale = 1.0+get_load_total_scale_factor_in_pu();
 
         LOAD_MODEL* load_model = get_load_model();
         if(load_model!=NULL)
-            S = load_model->get_load_power_in_MVA();
+            return scale*(load_model->get_load_power_in_MVA());
         else
-            S = get_actual_total_load_in_MVA();
-
-        return S*(1.0+get_load_total_scale_factor_in_pu());
+            return scale*get_actual_total_load_in_MVA();
     }
     else
         return 0.0;

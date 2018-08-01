@@ -36,12 +36,12 @@ void OWNERSHIP::normalize()
 {
     map<size_t, double>::iterator iter;
     double sum_fraction = 0.0;
-    for(iter=ownership_pair.begin(); iter!=ownership_pair.end(); iter++)
+    for(iter=ownership_pair.begin(); iter!=ownership_pair.end(); ++iter)
         sum_fraction += iter->second;
 
     if(sum_fraction==0.0) return;
 
-    for(iter=ownership_pair.begin(); iter!=ownership_pair.end(); iter++)
+    for(iter=ownership_pair.begin(); iter!=ownership_pair.end(); ++iter)
         iter->second /= sum_fraction;
 }
 
@@ -60,7 +60,7 @@ vector<size_t> OWNERSHIP::get_all_owners() const
 {
     vector<size_t> owners;
     map<size_t, double>::const_iterator it;
-    for(it=ownership_pair.begin(); it!=ownership_pair.end(); it++)
+    for(it=ownership_pair.begin(); it!=ownership_pair.end(); ++it)
         owners.push_back(it->first);
 
     return owners;
@@ -118,7 +118,7 @@ vector<double> OWNERSHIP::get_all_fraction() const
 {
     vector<double> fraction;
     map<size_t, double>::const_iterator it;
-    for(it=ownership_pair.begin(); it!=ownership_pair.end(); it++)
+    for(it=ownership_pair.begin(); it!=ownership_pair.end(); ++it)
         fraction.push_back(it->second);
 
     return fraction;

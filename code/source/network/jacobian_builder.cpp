@@ -118,7 +118,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
     int k_start, k_end;
     k_start = 0;
     size_t ibus;
-    for(size_t jbus = 0; jbus!=nbus; jbus++)
+    for(size_t jbus = 0; jbus!=nbus; ++jbus)
     {
         k_end = Y.get_starting_index_of_column(jbus+1);
         for(int k=k_start; k!=k_end; ++k)
@@ -177,7 +177,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
     int k_start, k_end;
     k_start = 0;
     size_t ibus;
-    for(size_t jbus = 0; jbus!=nbus; jbus++)
+    for(size_t jbus = 0; jbus!=nbus; ++jbus)
     {
         k_end = Y.get_starting_index_of_column(jbus+1);
         for(int k=k_start; k!=k_end; ++k)
@@ -238,7 +238,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
     int k_start, k_end;
     k_start = 0;
     size_t ibus;
-    for(size_t jbus = 0; jbus!=nbus; jbus++)
+    for(size_t jbus = 0; jbus!=nbus; ++jbus)
     {
         k_end = Y.get_starting_index_of_column(jbus+1);
         for(int k=k_start; k!=k_end; ++k)
@@ -299,7 +299,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
     int k_start, k_end;
     k_start = 0;
     size_t ibus;
-    for(size_t jbus = 0; jbus!=nbus; jbus++)
+    for(size_t jbus = 0; jbus!=nbus; ++jbus)
     {
         k_end = Y.get_starting_index_of_column(jbus+1);
         for(int k=k_start; k!=k_end; ++k)

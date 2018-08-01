@@ -127,10 +127,10 @@ void DEVICE_INDEX_MAP::decrease_index_by_1_for_device_with_index_greater_than_ma
 {
     map<DEVICE_ID, size_t>::iterator iter;
     map<DEVICE_ID, size_t>::iterator iter_end = index_map.end();
-    for(iter = index_map.begin(); iter!=iter_end; iter++)
+    for(iter = index_map.begin(); iter!=iter_end; ++iter)
     {
         if(iter->second>index and iter->second!=INDEX_NOT_EXIST)
-            iter->second --;
+            --(iter->second);
     }
 }
 
@@ -138,10 +138,10 @@ void DEVICE_INDEX_MAP::decrease_index_by_1_for_device_with_index_greater_than_um
 {
     unordered_map<DEVICE_ID, size_t>::iterator iter = index_umap.begin();
     unordered_map<DEVICE_ID, size_t>::iterator iter_end = index_umap.end();
-    for(; iter!=iter_end; iter++)
+    for(; iter!=iter_end; ++iter)
     {
         if(iter->second>index and iter->second!=INDEX_NOT_EXIST)
-            iter->second --;
+            --(iter->second);
     }
 }
 

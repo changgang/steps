@@ -276,7 +276,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
         //os<<"end updating va.");
         //show_information_with_leading_time_stamp(osstream);
 
-        iteration_count ++;
+		++iteration_count;
         if(get_iteration_count()>get_max_iteration())
         {
             osstream<<"Powerflow failed to converge in "<<get_max_iteration()<<" iterations.";
@@ -746,7 +746,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
 
     int nsize = Y.get_matrix_size();
     int k_start=0, k_end=0;
-    for(int column=0; column!=nsize; column++)
+    for(int column=0; column!=nsize; ++column)
     {
         column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(column);
         voltage = db->get_bus_complex_voltage_in_pu(column_physical_bus);

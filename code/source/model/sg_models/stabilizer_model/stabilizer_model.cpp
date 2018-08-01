@@ -4,13 +4,13 @@
 STABILIZER_MODEL::STABILIZER_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
-    for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; slot++)
+    for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
         signals[slot].clear();
 }
 
 STABILIZER_MODEL::~STABILIZER_MODEL()
 {
-    for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; slot++)
+    for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
         signals[slot].clear();
 }
 

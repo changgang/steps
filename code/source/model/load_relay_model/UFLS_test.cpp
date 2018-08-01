@@ -27,17 +27,17 @@ void UFLS_TEST::setup()
     model.set_time_delay_in_s_of_stage(stage, 0.2);
     model.set_scale_in_pu_of_stage(stage, 0.05);
 
-    stage ++;
+	++stage;
     model.set_frequency_threshold_in_Hz_of_stage(stage, 48.5);
     model.set_time_delay_in_s_of_stage(stage, 0.3);
     model.set_scale_in_pu_of_stage(stage, 0.06);
 
-    stage ++;
+	++stage;
     model.set_frequency_threshold_in_Hz_of_stage(stage, 48.0);
     model.set_time_delay_in_s_of_stage(stage, 0.15);
     model.set_scale_in_pu_of_stage(stage, 0.03);
 
-    stage ++;
+	++stage;
     model.set_frequency_threshold_in_Hz_of_stage(stage, 49.5);
     model.set_time_delay_in_s_of_stage(stage, 3.0);
     model.set_scale_in_pu_of_stage(stage, 0.02);
@@ -72,17 +72,17 @@ void UFLS_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_time_delay_in_s_of_stage(stage)-0.2)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_scale_in_pu_of_stage(stage)-0.05)<FLOAT_EPSILON);
 
-    stage ++;
+	++stage;
     TEST_ASSERT(fabs(model->get_frequency_threshold_in_Hz_of_stage(stage)-48.5)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_time_delay_in_s_of_stage(stage)-0.3)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_scale_in_pu_of_stage(stage)-0.06)<FLOAT_EPSILON);
 
-    stage ++;
+	++stage;
     TEST_ASSERT(fabs(model->get_frequency_threshold_in_Hz_of_stage(stage)-48.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_time_delay_in_s_of_stage(stage)-0.15)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_scale_in_pu_of_stage(stage)-0.03)<FLOAT_EPSILON);
 
-    stage ++;
+	++stage;
     TEST_ASSERT(fabs(model->get_frequency_threshold_in_Hz_of_stage(stage)-49.5)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_time_delay_in_s_of_stage(stage)-3.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_scale_in_pu_of_stage(stage)-0.02)<FLOAT_EPSILON);

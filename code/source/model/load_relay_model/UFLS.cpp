@@ -194,10 +194,10 @@ bool UFLS::setup_model_with_psse_string(string data)
 
     size_t i=3;
 
-    t_sensor = get_double_data(dyrdata[i],"0.0"); i++;
+    t_sensor = get_double_data(dyrdata[i],"0.0"); ++i;
     set_frequency_sensor_time_in_s(t_sensor);
 
-    tbreak = get_double_data(dyrdata[i],"0.0"); i++;
+    tbreak = get_double_data(dyrdata[i],"0.0"); ++i;
     set_breaker_time_in_s(tbreak);
 
     size_t stage = 0;

@@ -1176,7 +1176,7 @@ void DYNAMICS_SIMULATOR::start()
     size_t iter_count  = 0;
     while(true)
     {
-        iter_count++;
+		++iter_count;
         converged = solve_network();
         ITER_NET += network_iteration_count;
         if(converged or iter_count>2)
@@ -1632,7 +1632,7 @@ vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_currnet_into_network() con
     int nsize = Y.get_matrix_size();
     int k_start=0, k_end=0;
 
-    for(int column=0; column!=nsize; column++)
+    for(int column=0; column!=nsize; ++column)
     {
         size_t column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(column);
         voltage = psdb->get_bus_complex_voltage_in_pu(column_physical_bus);

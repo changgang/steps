@@ -165,7 +165,7 @@ DEVICE_ID PSSE_IMEXPORTER::get_generator_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    bus = get_integer_data(dyrdata[i], "0"); i++; i++;
+    bus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
     identifier = get_string_data(dyrdata[i],"");
 
     TERMINAL terminal;
@@ -189,7 +189,7 @@ DEVICE_ID PSSE_IMEXPORTER::get_wt_generator_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    bus = get_integer_data(dyrdata[i], "0"); i++; i++;
+    bus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
     identifier = get_string_data(dyrdata[i],"");
 
     TERMINAL terminal;
@@ -213,7 +213,7 @@ DEVICE_ID PSSE_IMEXPORTER::get_load_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    bus = get_integer_data(dyrdata[i], "0"); i++; i++;
+    bus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
     identifier = get_string_data(dyrdata[i],"");
 
     TERMINAL terminal;
@@ -237,8 +237,8 @@ DEVICE_ID PSSE_IMEXPORTER::get_line_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    ibus = get_integer_data(dyrdata[i], "0"); i++; i++;
-    jbus = get_integer_data(dyrdata[i], "0"); i++;
+    ibus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
+    jbus = get_integer_data(dyrdata[i], "0"); ++i;
     identifier = get_string_data(dyrdata[i],"");
 
     TERMINAL terminal;
@@ -295,9 +295,9 @@ DEVICE_ID PSSE_IMEXPORTER::get_transformer_device_id_from_string(string data)
     string identifier;
 
     size_t i=0;
-    ibus = get_integer_data(dyrdata[i], "0"); i++; i++;
-    jbus = get_integer_data(dyrdata[i], "0"); i++;
-    kbus = get_integer_data(dyrdata[i], "0"); i++;
+    ibus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
+    jbus = get_integer_data(dyrdata[i], "0"); ++i;
+    kbus = get_integer_data(dyrdata[i], "0"); ++i;
     identifier = get_string_data(dyrdata[i],"");
 
     TERMINAL terminal;
@@ -814,8 +814,8 @@ vector<LOAD*> PSSE_IMEXPORTER::get_all_loads_of(string data)
     string identifier;
 
     size_t i=0;
-    subsystem_number = get_integer_data(dyrdata[i], "0");  i++; i++;
-    identifier = get_string_data(dyrdata[i],""); i++;
+    subsystem_number = get_integer_data(dyrdata[i], "0");  ++i; ++i;
+    identifier = get_string_data(dyrdata[i],""); ++i;
 
     size_t model_name_size = model_name.size();
     string model_subsystem_type = model_name.substr(model_name_size-2,2);
@@ -832,7 +832,7 @@ vector<LOAD*> PSSE_IMEXPORTER::get_all_loads_of(string data)
         loads = psdb->get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
-            iter--;
+            --iter;
             size_t area = (*iter)->get_area_number();
             if(area!=area_no)
                 loads.erase(iter);
@@ -846,7 +846,7 @@ vector<LOAD*> PSSE_IMEXPORTER::get_all_loads_of(string data)
         loads = psdb->get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
-            iter--;
+            --iter;
             size_t zone = (*iter)->get_zone_number();
             if(zone!=zone_no)
                 loads.erase(iter);
@@ -871,7 +871,7 @@ vector<LOAD*> PSSE_IMEXPORTER::remove_loads_with_different_identifier(vector<LOA
 
     for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
     {
-        iter--;
+        --iter;
         string load_id = (*iter)->get_identifier();
         if(load_id!=identifier)
             loads.erase(iter);
