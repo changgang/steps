@@ -132,23 +132,21 @@ class DYNAMICS_SIMULATOR: public BASE
         bool solve_network();
         void solve_hvdcs_without_integration();
 
-        void get_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
-        void get_bus_currnet_into_network(vector< complex<double> >& I_mismatch) const;
-        void add_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
-        void add_wt_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
-        void add_loads_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
-        void add_hvdcs_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
-        void add_equivalent_devices_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
+        void get_bus_current_mismatch();
+        void get_bus_currnet_into_network();
+        void add_generators_to_bus_current_mismatch();
+        void add_wt_generators_to_bus_current_mismatch();
+        void add_loads_to_bus_current_mismatch();
+        void add_hvdcs_to_bus_current_mismatch();
+        void add_equivalent_devices_to_bus_current_mismatch();
 
-        bool is_converged(vector< complex<double> > &I_mismatch);
-        vector< complex<double> > get_bus_power_mismatch_in_MVA(vector< complex<double> > &I_mismatch);
-        double get_max_power_mismatch_in_MVA(vector< complex<double> > &S_mismatch);
+        bool is_converged();
+        void get_bus_power_mismatch_in_MVA();
+        double get_max_power_mismatch_in_MVA();
 
-        void get_bus_current_mismatch_vector(const vector< complex<double> >& I_mismatch, vector<double>& I_vec) const;
+        void build_bus_current_mismatch_vector();
 
         void build_jacobian();
-
-        void update_bus_voltage(const vector<double> delta_V);
 
         void check_convergence() const;
 
@@ -176,8 +174,10 @@ class DYNAMICS_SIMULATOR: public BASE
         size_t network_iteration_count, DAE_iteration_count, max_network_iteration, max_DAE_iteration;
         double alpha;
 
-        vector< complex<double> > deltaI;
-        vector<double> deltaV;
+        vector< complex<double> > I_mismatch, S_mismatch;
+        vector<double> I_vec;
+
+        vector<double> delta_V;
 
         SPARSE_MATRIX jacobian;
 

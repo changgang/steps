@@ -16,6 +16,7 @@
 				<Option parameters="--compiler " />
 				<Compiler>
 					<Add option="-march=corei7-avx" />
+					<Add option="-O3" />
 					<Add option="-Wnon-virtual-dtor" />
 					<Add option="-Winit-self" />
 					<Add option="-Wredundant-decls" />
@@ -33,6 +34,10 @@
 					<Add option="-Og" />
 					<Add directory="/home/changgang/steps/code/" />
 				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>

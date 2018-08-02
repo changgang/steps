@@ -155,7 +155,6 @@ double DYNAMICS_SIMULATOR::get_iteration_accelerator() const
 
 void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
 {
-    ostringstream osstream;
     if(not is_power_system_database_set())
         return;
 
@@ -167,6 +166,7 @@ void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
     }
     else
     {
+        ostringstream osstream;
         osstream<<"Warning. Invalid meter is given. No meter will be set.";
         show_information_with_leading_time_stamp(osstream);
     }
@@ -1125,10 +1125,9 @@ void DYNAMICS_SIMULATOR::save_meter_values()
     if(not csv_output_file.is_open() and not json_output_file.is_open())
         return;
 
-    vector< complex<double> > I_mismatch;
-    get_bus_current_mismatch(I_mismatch);
-    vector< complex<double> > S_mismatch = get_bus_power_mismatch_in_MVA(I_mismatch);
-    double smax = get_max_power_mismatch_in_MVA(S_mismatch);
+    get_bus_current_mismatch();
+    get_bus_power_mismatch_in_MVA();
+    double smax = get_max_power_mismatch_in_MVA();
 
     update_all_meters_value();
 
@@ -1145,7 +1144,9 @@ void DYNAMICS_SIMULATOR::save_meter_values()
 		temp_str += temp_buffer;
 	}
 	osstream << temp_str;
-		//osstream<<","<<setw(16)<<setprecision(12)<<fixed<<meter_values[i];
+
+	/*for(size_t i=0; i!=n; ++i)
+        osstream<<","<<setw(16)<<setprecision(12)<<fixed<<meter_values[i];*/
 
     if(is_csv_file_export_enabled() and csv_output_file.is_open())
         csv_output_file<<osstream.str()<<endl;
@@ -1463,7 +1464,6 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
     vector<EQUIVALENT_DEVICE*> edevices = db->get_all_equivalent_devices();
     size_t n = edevices.size();
     EQUIVALENT_DEVICE* edevice;
-    ostringstream osstream;
     for(size_t i=0; i!=n; ++i)
     {
         edevice = edevices[i];
@@ -1507,10 +1507,6 @@ bool DYNAMICS_SIMULATOR::solve_network()
     size_t network_iter_max = get_max_network_iteration();
     size_t network_iter_count = 0;
 
-    vector< complex<double> > I_mismatch;
-    vector<double> I_vec;
-    vector<double> delta_V;
-
     while(true)
     {
         ++network_iter_count;
@@ -1520,12 +1516,12 @@ bool DYNAMICS_SIMULATOR::solve_network()
             break;
         }
         solve_hvdcs_without_integration();
-        get_bus_current_mismatch(I_mismatch);
-        if(not is_converged(I_mismatch))
+        get_bus_current_mismatch();
+        if(not is_converged())
         {
-            get_bus_current_mismatch_vector(I_mismatch, I_vec);
+            build_bus_current_mismatch_vector();
             delta_V = I_vec/jacobian;
-            update_bus_voltage(delta_V);
+            update_bus_voltage();
         }
         else
         {
@@ -1544,43 +1540,42 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
 
     //start = clock();
-    get_bus_current_mismatch(I_mismatch);
+    get_bus_current_mismatch();
     //osstream<<"Bus current mismatch for network solution at time "<<TIME<<endl;
     //for(size_t i=0; i<I_mismatch.size(); ++i)
     //    osstream<<"Current mismatch ["<<setw(6)<<i<<"("<<network_db->get_physical_bus_number_of_internal_bus(i)<<")]: "<<I_mismatch[i]<<endl;
     //show_information_with_leading_time_stamp(osstream);
     //cout<<"    elapsed time for getting bus current mismatch: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
-    if(is_converged(I_mismatch))
+    if(is_converged())
     {
         converged = true;
     }
     else
     {
         //start = clock();
-        get_bus_current_mismatch_vector(I_mismatch, I_vec);
+        build_bus_current_mismatch_vector();
         //cout<<"    elapsed time for getting bus current mismatch vector: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
         //start = clock();
-        vector<double> delta_V = I_vec/jacobian;
+        delta_V = I_vec/jacobian;
         //cout<<"    elapsed time for solving delta V: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
         //start = clock();
-        update_bus_voltage(delta_V);
+        update_bus_voltage();
         //cout<<"    elapsed time for updating voltage: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
     }
     //cout<<"    elapsed time for solve network: "<<double(clock()-start0)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
 
     /*while(true)
     {
-        vector< complex<double> > I_mismatch;
-        get_bus_current_mismatch(I_mismatch);
-        if(is_converged(I_mismatch))
+        get_bus_current_mismatch();
+        if(is_converged())
         {
             converged = true;
             return converged;
         }
 
-        vector<double> I_vec = get_bus_current_mismatch_vector(I_mismatch);
-        vector<double> delta_V = I_vec/jacobian;
-        update_bus_voltage(delta_V);
+        build_bus_current_mismatch_vector();
+        delta_V = I_vec/jacobian;
+        update_bus_voltage();
     }*/
     /*for(int i=0; i!=nbus; ++i)
     {
@@ -1607,33 +1602,33 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
     }
 }
 
-void DYNAMICS_SIMULATOR::get_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
+void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 {
-    get_bus_currnet_into_network(I_mismatch);
+    get_bus_currnet_into_network();
 
     size_t n = I_mismatch.size();
     //#pragma omp parallel for
     for(size_t i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
 
-    add_generators_to_bus_current_mismatch(I_mismatch);
-    add_wt_generators_to_bus_current_mismatch(I_mismatch);
-    add_loads_to_bus_current_mismatch(I_mismatch);
-    add_hvdcs_to_bus_current_mismatch(I_mismatch);
-    add_equivalent_devices_to_bus_current_mismatch(I_mismatch);
+    add_generators_to_bus_current_mismatch();
+    add_wt_generators_to_bus_current_mismatch();
+    add_loads_to_bus_current_mismatch();
+    add_hvdcs_to_bus_current_mismatch();
+    add_equivalent_devices_to_bus_current_mismatch();
 }
 
-void DYNAMICS_SIMULATOR::get_bus_currnet_into_network(vector< complex<double> >& bus_current) const
+void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     const SPARSE_MATRIX& Y = network_db->get_dynamic_network_matrix();
     size_t nbus = psdb->get_in_service_bus_count();
 
-	if(bus_current.size()<nbus)
-		bus_current.resize(nbus, 0.0);
+	if(I_mismatch.size()<nbus)
+		I_mismatch.resize(nbus, 0.0);
 
 	for (size_t i = 0; i != nbus; ++i)
-		bus_current[i] = 0.0;
+		I_mismatch[i] = 0.0;
 
     int nsize = Y.get_matrix_size();
     int k_start=0, k_end=0;
@@ -1647,7 +1642,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network(vector< complex<double> >&
         for(int k=k_start; k!=k_end; ++k)
         {
             int row = Y.get_row_number_of_entry_index(k);
-            bus_current[row] += Y.get_entry_value(k)*voltage;
+            I_mismatch[row] += Y.get_entry_value(k)*voltage;
         }
         k_start = k_end;
     }
@@ -1671,10 +1666,8 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network(vector< complex<double> >&
 */
 }
 
-void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
+void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 {
-    ostringstream osstream;
-
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     size_t physical_bus, internal_bus;
@@ -1718,10 +1711,8 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch(vector< complex<
     }
 }
 
-void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
+void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 {
-    ostringstream osstream;
-
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     size_t physical_bus, internal_bus;
@@ -1765,7 +1756,7 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch(vector< compl
     }
 }
 
-void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
+void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
@@ -1790,7 +1781,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch(vector< complex<doubl
         show_information_with_leading_time_stamp(osstream);*/
     }
 }
-void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
+void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
@@ -1828,10 +1819,8 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch(vector< complex<doubl
     }
 }
 
-void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
+void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 {
-    ostringstream osstream;
-
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
     double sbase = psdb->get_system_base_power_in_MVA();
@@ -1861,12 +1850,12 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch(vector< 
     }
 }
 
-bool DYNAMICS_SIMULATOR::is_converged(vector< complex<double> > &I_mismatch)
+bool DYNAMICS_SIMULATOR::is_converged()
 {
     //clock_t start = clock();
-    vector< complex<double> > S_mismatch = get_bus_power_mismatch_in_MVA(I_mismatch);
+    get_bus_power_mismatch_in_MVA();
 
-    double smax = get_max_power_mismatch_in_MVA(S_mismatch);
+    double smax = get_max_power_mismatch_in_MVA();
 
     double s_allowed = get_allowed_max_power_imbalance_in_MVA();
 
@@ -1877,12 +1866,12 @@ bool DYNAMICS_SIMULATOR::is_converged(vector< complex<double> > &I_mismatch)
         return false;
 }
 
-vector< complex<double> > DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA(vector< complex<double> > &I_mismatch)
+void DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     double sbase = psdb->get_system_base_power_in_MVA();
 
-    vector< complex<double> > S_mismatch = I_mismatch;
+    S_mismatch = I_mismatch;
 
     size_t n = I_mismatch.size();
     size_t physical_bus;
@@ -1893,24 +1882,22 @@ vector< complex<double> > DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA(vec
         V = psdb->get_bus_complex_voltage_in_pu(physical_bus);
         S_mismatch[i] = V*conj(S_mismatch[i])*sbase;
     }
-    return S_mismatch;
 }
 
-double DYNAMICS_SIMULATOR::get_max_power_mismatch_in_MVA(vector< complex<double> > &S_mismatch)
+double DYNAMICS_SIMULATOR::get_max_power_mismatch_in_MVA()
 {
-    ostringstream osstream;
-    double smax = 0.0, s;
-    complex<double> smax_complex;
+    double smax = 0.0;
+    //complex<double> smax_complex;
     //size_t smax_bus = 0;
     size_t n = S_mismatch.size();
     for(size_t i=0; i!=n; ++i)
     {
-        s = steps_fast_complex_abs(S_mismatch[i]);
+        double s = steps_fast_complex_abs(S_mismatch[i]);
         if(s>smax)
         {
             smax = s;
             //smax_bus = network_db->get_physical_bus_number_of_internal_bus(i);
-            smax_complex = S_mismatch[i];
+            //smax_complex = S_mismatch[i];
         }
     }
     //os<<"AT TIME %f, Max power mismatch found: %f (%f + j%f) MVA at bus %u.", TIME, smax, smax_complex.real(), smax_complex.imag(), smax_bus);
@@ -1920,7 +1907,7 @@ double DYNAMICS_SIMULATOR::get_max_power_mismatch_in_MVA(vector< complex<double>
 }
 
 
-void DYNAMICS_SIMULATOR::get_bus_current_mismatch_vector(const vector< complex<double> >& I_mismatch, vector<double>& I_vec) const
+void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 {
     size_t n = I_mismatch.size();
     I_vec.resize(n*2, 0.0);
@@ -1932,7 +1919,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch_vector(const vector< complex<d
 }
 
 
-void DYNAMICS_SIMULATOR::update_bus_voltage(const vector<double> delta_V)
+void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
 
