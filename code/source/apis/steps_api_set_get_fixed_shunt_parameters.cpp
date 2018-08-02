@@ -151,7 +151,7 @@ const char* api_get_fixed_shunt_string_data(size_t bus, char* identifier, char* 
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-	sprintf(STEPS::steps_char_buffer, "%s", "");
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -159,7 +159,7 @@ const char* api_get_fixed_shunt_string_data(size_t bus, char* identifier, char* 
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (shuntptr->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (shuntptr->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
 

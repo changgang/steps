@@ -105,13 +105,13 @@ const char* api_get_dynamic_simulator_string_parameter(char* parameter_name)
 {
     DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
-	sprintf(STEPS::steps_char_buffer, "%s", "");
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     if(ds!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "OUTPUT FILENAME")
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (ds->get_output_file()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (ds->get_output_file()).c_str());
 			return STEPS::steps_char_buffer;
 		}
 
@@ -205,7 +205,7 @@ const char* api_get_dynamic_simulator_output_file()
 {
     DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
-	sprintf(STEPS::steps_char_buffer, "%s", ds->get_output_file().c_str());
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", ds->get_output_file().c_str());
 	return STEPS::steps_char_buffer;
 }
 

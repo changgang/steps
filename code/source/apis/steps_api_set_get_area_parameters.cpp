@@ -97,14 +97,14 @@ const char* api_get_area_string_data(size_t area, char* parameter_name)
 {
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-	sprintf(STEPS::steps_char_buffer, "%s", "");
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     AREA* areaptr = psdb->get_area(area);
     if(areaptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "NAME" or PARAMETER_NAME == "AREA NAME")
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (areaptr->get_area_name()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (areaptr->get_area_name()).c_str());
 			return STEPS::steps_char_buffer;
 		}
 

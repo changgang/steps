@@ -349,8 +349,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
         network_Y_matrix.add_entry(s,s,yss);
 
 
-        kp = kp/ fast_complex_abs(kp);
-        ks = ks/ fast_complex_abs(ks);
+        kp = kp/ steps_fast_complex_abs(kp);
+        ks = ks/ steps_fast_complex_abs(ks);
         Ym = 0.0;
 
         V = 1.0;
@@ -388,8 +388,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
         kp = kp_store;
         ks = ks_store;
 
-        kp = fast_complex_abs(kp);
-        ks = fast_complex_abs(ks);
+        kp = steps_fast_complex_abs(kp);
+        ks = steps_fast_complex_abs(ks);
         Ym = Ym_store;
 
         Zp = complex<double>(0.0, Zp.imag());
@@ -444,7 +444,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
 
         network_BP_matrix.add_entry(p,p,0.0);
 
-        kp = fast_complex_abs(kp);
+        kp = steps_fast_complex_abs(kp);
 
         Zp = complex<double>(0.0, Zp.imag());
         Zs = complex<double>(0.0, Zs.imag());
@@ -474,7 +474,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
 
         network_BP_matrix.add_entry(s,s,0.0);
 
-        ks = fast_complex_abs(ks);
+        ks = steps_fast_complex_abs(ks);
 
         Zp = complex<double>(0.0, Zp.imag());
         Zs = complex<double>(0.0, Zs.imag());
@@ -1072,9 +1072,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
        trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
     {
         // voltage at primary side.
-        kp = kp/ fast_complex_abs(kp);
-        ks = ks/ fast_complex_abs(ks);
-        kt = kt/ fast_complex_abs(kt);
+        kp = kp/ steps_fast_complex_abs(kp);
+        ks = ks/ steps_fast_complex_abs(ks);
+        kt = kt/ steps_fast_complex_abs(kt);
 
         Ym = 0.0;
 
@@ -1142,9 +1142,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(t,s,yts);
         network_BP_matrix.add_entry(t,t,ytt);
 
-        kp = fast_complex_abs(kp_store);
-        ks = fast_complex_abs(ks_store);
-        kt = fast_complex_abs(kt_store);
+        kp = steps_fast_complex_abs(kp_store);
+        ks = steps_fast_complex_abs(ks_store);
+        kt = steps_fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1225,9 +1225,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
        trans.get_winding_breaker_status(SECONDARY_SIDE)==true and
        trans.get_winding_breaker_status(TERTIARY_SIDE)==false)
     {
-        kp = kp/ fast_complex_abs(kp);
-        ks = ks/ fast_complex_abs(ks);
-        kt = kt/ fast_complex_abs(kt);
+        kp = kp/ steps_fast_complex_abs(kp);
+        ks = ks/ steps_fast_complex_abs(ks);
+        kt = kt/ steps_fast_complex_abs(kt);
 
         Ym = 0.0;
 
@@ -1263,9 +1263,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(s,s,yss);
 
 
-        kp = fast_complex_abs(kp_store);
-        ks = fast_complex_abs(ks_store);
-        kt = fast_complex_abs(kt_store);
+        kp = steps_fast_complex_abs(kp_store);
+        ks = steps_fast_complex_abs(ks_store);
+        kt = steps_fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1312,9 +1312,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
        trans.get_winding_breaker_status(SECONDARY_SIDE)==false and
        trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
     {
-        kp = kp/ fast_complex_abs(kp);
-        ks = ks/ fast_complex_abs(ks);
-        kt = kt/ fast_complex_abs(kt);
+        kp = kp/ steps_fast_complex_abs(kp);
+        ks = ks/ steps_fast_complex_abs(ks);
+        kt = kt/ steps_fast_complex_abs(kt);
 
         Ym = 0.0;
 
@@ -1350,9 +1350,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(t,t,ytt);
 
 
-        kp = fast_complex_abs(kp_store);
-        ks = fast_complex_abs(ks_store);
-        kt = fast_complex_abs(kt_store);
+        kp = steps_fast_complex_abs(kp_store);
+        ks = steps_fast_complex_abs(ks_store);
+        kt = steps_fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1398,9 +1398,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
        trans.get_winding_breaker_status(SECONDARY_SIDE)==true and
        trans.get_winding_breaker_status(TERTIARY_SIDE)==true)
     {
-        kp = kp/ fast_complex_abs(kp);
-        ks = ks/ fast_complex_abs(ks);
-        kt = kt/ fast_complex_abs(kt);
+        kp = kp/ steps_fast_complex_abs(kp);
+        ks = ks/ steps_fast_complex_abs(ks);
+        kt = kt/ steps_fast_complex_abs(kt);
 
         Ym = 0.0;
 
@@ -1436,9 +1436,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(t,t,ytt);
 
 
-        kp = fast_complex_abs(kp_store);
-        ks = fast_complex_abs(ks_store);
-        kt = fast_complex_abs(kt_store);
+        kp = steps_fast_complex_abs(kp_store);
+        ks = steps_fast_complex_abs(ks_store);
+        kt = steps_fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1486,9 +1486,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
     {
         network_BP_matrix.add_entry(p,p,0.0);
 
-        kp = fast_complex_abs(kp_store);
-        ks = fast_complex_abs(ks_store);
-        kt = fast_complex_abs(kt_store);
+        kp = steps_fast_complex_abs(kp_store);
+        ks = steps_fast_complex_abs(ks_store);
+        kt = steps_fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1517,9 +1517,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(s,s,0.0);
 
 
-        kp = fast_complex_abs(kp_store);
-        ks = fast_complex_abs(ks_store);
-        kt = fast_complex_abs(kt_store);
+        kp = steps_fast_complex_abs(kp_store);
+        ks = steps_fast_complex_abs(ks_store);
+        kt = steps_fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1547,9 +1547,9 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
         network_BP_matrix.add_entry(t,t,0.0);
 
 
-        kp = fast_complex_abs(kp_store);
-        ks = fast_complex_abs(ks_store);
-        kt = fast_complex_abs(kt_store);
+        kp = steps_fast_complex_abs(kp_store);
+        ks = steps_fast_complex_abs(ks_store);
+        kt = steps_fast_complex_abs(kt_store);
 
         Ym = Ym_store;
 
@@ -1614,8 +1614,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
 
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and trans.get_winding_breaker_status(SECONDARY_SIDE)==true)
     {
-        kp = kp/fast_complex_abs(kp);
-        ks = ks/fast_complex_abs(ks);
+        kp = kp/steps_fast_complex_abs(kp);
+        ks = ks/steps_fast_complex_abs(ks);
         Ym = 0.0;
 
         V = 1.0;
@@ -1653,8 +1653,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
         kp = kp_store;
         ks = ks_store;
 
-        kp = fast_complex_abs(kp);
-        ks = fast_complex_abs(ks);
+        kp = steps_fast_complex_abs(kp);
+        ks = steps_fast_complex_abs(ks);
 
         Zp = complex<double>(0.0, Zp.imag());
         Zs = complex<double>(0.0, Zs.imag());
@@ -1712,7 +1712,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
     {
         network_BP_matrix.add_entry(s,s,0.0);
 
-        ks = fast_complex_abs(ks);
+        ks = steps_fast_complex_abs(ks);
 
         Zps = complex<double>(0.0, Zps.imag());
         Ym = complex<double>(0.0, Ym.imag());

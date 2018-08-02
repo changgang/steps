@@ -188,12 +188,12 @@ void GENCLS::initialize()
 
     // mechanical power
     complex<double> Ixy = conj(S/Vxy);
-    double I = fast_complex_abs(Ixy);
+    double I = steps_fast_complex_abs(Ixy);
     double pmech0 = S.real()+I*I*rs;
     set_initial_mechanical_power_in_pu_based_on_mbase(pmech0);
     // excitation voltage
     complex<double> Exy = Vxy+Ixy*Zsource;
-    double efd0 = fast_complex_abs(Exy);
+    double efd0 = steps_fast_complex_abs(Exy);
     set_initial_excitation_voltage_in_pu(efd0);
 }
 
@@ -217,7 +217,7 @@ void GENCLS::initialize_rotor_angle()
 
     complex<double> Exy = Vxy+Ixy*Z;
 
-    double rotor_angle = fast_complex_arg(Exy/Vxy)+ fast_complex_arg(Vxy);
+    double rotor_angle = steps_fast_complex_arg(Exy/Vxy)+ steps_fast_complex_arg(Vxy);
 
     rotor_angle_block->set_output(rotor_angle);
     rotor_angle_block->initialize();
@@ -301,7 +301,7 @@ complex<double> GENCLS::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
 
 double GENCLS::get_terminal_current_in_pu_based_on_mbase()
 {
-    return fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
 }
 
 double GENCLS::get_terminal_current_in_pu_based_on_sbase()
@@ -387,9 +387,9 @@ double GENCLS::get_variable_with_name(string var_name)
     if(var_name == "GENERATOR TERMINAL Q IN MW")
         return get_terminal_reactive_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
     if(var_name == "GENERATOR TERMINAL S IN PU")
-        return fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
+        return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
     if(var_name == "GENERATOR TERMINAL S IN MVA")
-        return fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
+        return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
     if(var_name == "GENERATOR MECHANICAL POWER IN PU")
         return get_mechanical_power_in_pu_based_on_mbase();
     if(var_name == "GENERATOR MECHANICAL POWER IN MW")
@@ -397,7 +397,7 @@ double GENCLS::get_variable_with_name(string var_name)
     if(var_name == "GENERATOR EXCITATION VOLTAGE IN PU")
         return get_excitation_voltage_in_pu();
     if(var_name == "GENERATOR INTERNAL VOLTAGE IN PU")
-        return fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
+        return steps_fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
     if(var_name == "GENERATOR TERMINAL CURRENT IN PU")
         return get_terminal_current_in_pu_based_on_mbase();
     if(var_name == "GENERATOR TERMINAL CURRENT IN KA")

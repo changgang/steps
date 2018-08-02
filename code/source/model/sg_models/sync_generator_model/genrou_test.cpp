@@ -95,10 +95,10 @@ void GENROU_TEST::test_initialize_and_get_initialized_inputs()
     complex<double> I, E, SS;
     I = conj(S/V);
     E = V+I*Z;
-    SS = S+ fast_complex_abs(I)*fast_complex_abs(I)*Z;
+    SS = S+ steps_fast_complex_abs(I)*steps_fast_complex_abs(I)*Z;
 
-    //TEST_ASSERT(fabs(model->get_rotor_angle_in_deg()-rad2deg(fast_complex_arg(E)))<FLOAT_EPSILON);
+    //TEST_ASSERT(fabs(model->get_rotor_angle_in_deg()-rad2deg(steps_fast_complex_arg(E)))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_rotor_speed_deviation_in_pu()-0.0)<FLOAT_EPSILON);
-    //TEST_ASSERT(fabs(model->get_initial_excitation_voltage_in_pu()-fast_complex_abs(E))<FLOAT_EPSILON);
+    //TEST_ASSERT(fabs(model->get_initial_excitation_voltage_in_pu()-steps_fast_complex_abs(E))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_initial_mechanical_power_in_pu_based_on_mbase()-SS.real())<FLOAT_EPSILON);
 }

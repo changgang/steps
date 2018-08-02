@@ -132,8 +132,8 @@ class DYNAMICS_SIMULATOR: public BASE
         bool solve_network();
         void solve_hvdcs_without_integration();
 
-        vector< complex<double> > get_bus_current_mismatch() const;
-        vector< complex<double> > get_bus_currnet_into_network() const;
+        void get_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
+        void get_bus_currnet_into_network(vector< complex<double> >& I_mismatch) const;
         void add_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
         void add_wt_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
         void add_loads_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const;
@@ -144,7 +144,7 @@ class DYNAMICS_SIMULATOR: public BASE
         vector< complex<double> > get_bus_power_mismatch_in_MVA(vector< complex<double> > &I_mismatch);
         double get_max_power_mismatch_in_MVA(vector< complex<double> > &S_mismatch);
 
-        vector<double> get_bus_current_mismatch_vector(const vector< complex<double> > I_mismatch) const;
+        void get_bus_current_mismatch_vector(const vector< complex<double> >& I_mismatch, vector<double>& I_vec) const;
 
         void build_jacobian();
 

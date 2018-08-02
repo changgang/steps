@@ -1283,7 +1283,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     simulator->clear_line_fault(did, 60, 0.0);
     simulator->trip_line(did);
 
-    simulator->run_to(5.0);
+    simulator->run_to(50.0);
 
     recover_stdout();
 }

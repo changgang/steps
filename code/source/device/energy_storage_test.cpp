@@ -95,7 +95,7 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_impedance()
 
     complex<double> z(0.1, 0.01);
     energy_storage->set_energy_storage_impedance_in_pu(z);
-    TEST_ASSERT(fast_complex_abs(energy_storage->get_energy_storage_impedance_in_pu()-z)<FLOAT_EPSILON);
+    TEST_ASSERT(steps_fast_complex_abs(energy_storage->get_energy_storage_impedance_in_pu()-z)<FLOAT_EPSILON);
 }
 
 

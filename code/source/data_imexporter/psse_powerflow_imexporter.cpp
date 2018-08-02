@@ -556,7 +556,7 @@ void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* sour
     if(data.size()>0)
     {
         char mbase[100];
-        sprintf(mbase,"%lf",psdb->get_system_base_power_in_MVA());
+        snprintf(mbase, 100, "%lf",psdb->get_system_base_power_in_MVA());
         source->set_mbase_in_MVA(get_double_data(data.front(),mbase));
         data.erase(data.begin());
     }

@@ -427,7 +427,7 @@ const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier,
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-	sprintf(STEPS::steps_char_buffer, "%s", "");
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -444,13 +444,13 @@ const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier,
 
 		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (hvdcptr->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (hvdcptr->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
 
 		if (PARAMETER_NAME == "NAME")
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (hvdcptr->get_name()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (hvdcptr->get_name()).c_str());
 			return STEPS::steps_char_buffer;
 		}
 

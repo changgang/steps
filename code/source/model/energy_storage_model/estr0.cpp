@@ -619,18 +619,18 @@ complex<double> ESTR0::get_terminal_complex_current_in_kA() const
 
 double ESTR0::get_terminal_current_in_kA() const
 {
-    return fast_complex_abs(get_terminal_complex_current_in_kA());
+    return steps_fast_complex_abs(get_terminal_complex_current_in_kA());
 }
 
 
 double ESTR0::get_terminal_current_in_pu_based_on_mbase() const
 {
-    return fast_complex_abs(get_terminal_complex_current_in_pu_based_on_mbase());
+    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_based_on_mbase());
 }
 
 double ESTR0::get_terminal_current_in_pu_based_on_sbase() const
 {
-    return fast_complex_abs(get_terminal_complex_current_in_pu_based_on_sbase());
+    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_based_on_sbase());
 }
 
 double ESTR0::get_energy_state_in_pu() const

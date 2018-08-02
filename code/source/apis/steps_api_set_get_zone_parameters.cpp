@@ -74,7 +74,7 @@ const char* api_get_zone_string_data(size_t zone, char* parameter_name)
 {
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-	sprintf(STEPS::steps_char_buffer, "%s", "");
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     ZONE* zoneptr = psdb->get_zone(zone);
     if(zoneptr!=NULL)
@@ -82,7 +82,7 @@ const char* api_get_zone_string_data(size_t zone, char* parameter_name)
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "NAME" or PARAMETER_NAME == "ZONE NAME")
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (zoneptr->get_zone_name()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (zoneptr->get_zone_name()).c_str());
 			return STEPS::steps_char_buffer;
 		}
 

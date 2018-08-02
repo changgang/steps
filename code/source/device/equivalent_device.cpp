@@ -376,8 +376,8 @@ void EQUIVALENT_DEVICE::report() const
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<endl
       <<"equivalent voltage source: "<<(get_equivalent_voltage_source_status()==true?"in service":"out of service")<<", "
-      <<"V = "<<setw(8)<<setprecision(6)<<fixed<< fast_complex_abs(get_equivalent_voltage_source_voltage_in_pu())<<" pu, "
-      <<"Angle = "<<setw(8)<<setprecision(6)<<fixed<<rad2deg(fast_complex_arg(get_equivalent_voltage_source_voltage_in_pu()))<<" deg, "
+      <<"V = "<<setw(8)<<setprecision(6)<<fixed<< steps_fast_complex_abs(get_equivalent_voltage_source_voltage_in_pu())<<" pu, "
+      <<"Angle = "<<setw(8)<<setprecision(6)<<fixed<<rad2deg(steps_fast_complex_arg(get_equivalent_voltage_source_voltage_in_pu()))<<" deg, "
       <<"Z = "<<setw(8)<<setprecision(6)<<fixed<<get_equivalent_voltage_source_impedance_in_pu()<<" pu"<<endl
       <<"equivalent load: "<<(get_equivalent_load_status()==true?"in service":"out of service")<<", "
       <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_power_load_in_MVA()<<"MVA, "

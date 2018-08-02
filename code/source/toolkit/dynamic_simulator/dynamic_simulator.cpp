@@ -1013,7 +1013,7 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
         tm* local_time= localtime(&tt);
 
         char time_stamp[60];
-        sprintf(time_stamp,"dynamic_result_%d-%02d-%02d~%02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
+        snprintf(time_stamp, 60, "dynamic_result_%d-%02d-%02d~%02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
                 local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
         output_filename = string(time_stamp);
 
@@ -1126,7 +1126,7 @@ void DYNAMICS_SIMULATOR::save_meter_values()
         return;
 
     vector< complex<double> > I_mismatch;
-    I_mismatch = get_bus_current_mismatch();
+    get_bus_current_mismatch(I_mismatch);
     vector< complex<double> > S_mismatch = get_bus_power_mismatch_in_MVA(I_mismatch);
     double smax = get_max_power_mismatch_in_MVA(S_mismatch);
 
@@ -1137,8 +1137,15 @@ void DYNAMICS_SIMULATOR::save_meter_values()
       <<setw(3)<<ITER_DAE<<","<<setw(3)<<ITER_NET<<","
       <<setw(6)<<setprecision(3)<<fixed<<smax;
 
-    for(size_t i=0; i!=n; ++i)
-        osstream<<","<<setw(16)<<setprecision(12)<<fixed<<meter_values[i];
+	char temp_buffer[50];
+	string temp_str = "";
+	for (size_t i = 0; i != n; ++i)
+	{
+		snprintf(temp_buffer, 50, ",%16.12f", meter_values[i]);
+		temp_str += temp_buffer;
+	}
+	osstream << temp_str;
+		//osstream<<","<<setw(16)<<setprecision(12)<<fixed<<meter_values[i];
 
     if(is_csv_file_export_enabled() and csv_output_file.is_open())
         csv_output_file<<osstream.str()<<endl;
@@ -1492,7 +1499,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     {
         size_t bus = network_db->get_physical_bus_number_of_internal_bus(i);
         complex<double> V = psdb->get_bus_complex_voltage_in_pu(bus);
-        osstream<<"Initial voltage of bus %u: %f pu, %f deg",bus, fast_complex_abs(V), rad2deg(fast_complex_arg(V)));
+        osstream<<"Initial voltage of bus %u: %f pu, %f deg",bus, steps_fast_complex_abs(V), rad2deg(steps_fast_complex_arg(V)));
         show_information_with_leading_time_stamp(osstream);
     }*/
     bool converged = false;
@@ -1513,10 +1520,10 @@ bool DYNAMICS_SIMULATOR::solve_network()
             break;
         }
         solve_hvdcs_without_integration();
-        I_mismatch = get_bus_current_mismatch();
+        get_bus_current_mismatch(I_mismatch);
         if(not is_converged(I_mismatch))
         {
-            I_vec = get_bus_current_mismatch_vector(I_mismatch);
+            get_bus_current_mismatch_vector(I_mismatch, I_vec);
             delta_V = I_vec/jacobian;
             update_bus_voltage(delta_V);
         }
@@ -1537,7 +1544,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
 
     //start = clock();
-    I_mismatch = get_bus_current_mismatch();
+    get_bus_current_mismatch(I_mismatch);
     //osstream<<"Bus current mismatch for network solution at time "<<TIME<<endl;
     //for(size_t i=0; i<I_mismatch.size(); ++i)
     //    osstream<<"Current mismatch ["<<setw(6)<<i<<"("<<network_db->get_physical_bus_number_of_internal_bus(i)<<")]: "<<I_mismatch[i]<<endl;
@@ -1550,7 +1557,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     else
     {
         //start = clock();
-        vector<double> I_vec = get_bus_current_mismatch_vector(I_mismatch);
+        get_bus_current_mismatch_vector(I_mismatch, I_vec);
         //cout<<"    elapsed time for getting bus current mismatch vector: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
         //start = clock();
         vector<double> delta_V = I_vec/jacobian;
@@ -1564,7 +1571,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     /*while(true)
     {
         vector< complex<double> > I_mismatch;
-        I_mismatch = get_bus_current_mismatch();
+        get_bus_current_mismatch(I_mismatch);
         if(is_converged(I_mismatch))
         {
             converged = true;
@@ -1579,7 +1586,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     {
         size_t bus = network_db->get_physical_bus_number_of_internal_bus(i);
         complex<double> V = psdb->get_bus_complex_voltage_in_pu(bus);
-        osstream<<"Solved  voltage of bus %u: %f pu, %f deg",bus, fast_complex_abs(V), rad2deg(fast_complex_arg(V)));
+        osstream<<"Solved  voltage of bus %u: %f pu, %f deg",bus, steps_fast_complex_abs(V), rad2deg(steps_fast_complex_arg(V)));
         show_information_with_leading_time_stamp(osstream);
     }*/
 
@@ -1600,10 +1607,9 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
     }
 }
 
-vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_current_mismatch() const
+void DYNAMICS_SIMULATOR::get_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
 {
-    vector< complex<double> > I_mismatch;
-    I_mismatch = get_bus_currnet_into_network();
+    get_bus_currnet_into_network(I_mismatch);
 
     size_t n = I_mismatch.size();
     //#pragma omp parallel for
@@ -1615,34 +1621,33 @@ vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_current_mismatch() const
     add_loads_to_bus_current_mismatch(I_mismatch);
     add_hvdcs_to_bus_current_mismatch(I_mismatch);
     add_equivalent_devices_to_bus_current_mismatch(I_mismatch);
-
-    return I_mismatch;
 }
 
-vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_currnet_into_network() const
+void DYNAMICS_SIMULATOR::get_bus_currnet_into_network(vector< complex<double> >& bus_current) const
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     const SPARSE_MATRIX& Y = network_db->get_dynamic_network_matrix();
     size_t nbus = psdb->get_in_service_bus_count();
 
-    vector< complex<double> > bus_current;
-    bus_current.resize(nbus, 0.0);
+	if(bus_current.size()<nbus)
+		bus_current.resize(nbus, 0.0);
 
-    complex<double> y, voltage;
+	for (size_t i = 0; i != nbus; ++i)
+		bus_current[i] = 0.0;
+
     int nsize = Y.get_matrix_size();
     int k_start=0, k_end=0;
 
     for(int column=0; column!=nsize; ++column)
     {
         size_t column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(column);
-        voltage = psdb->get_bus_complex_voltage_in_pu(column_physical_bus);
+		complex<double> voltage = psdb->get_bus_complex_voltage_in_pu(column_physical_bus);
 
         k_end = Y.get_starting_index_of_column(column+1);
         for(int k=k_start; k!=k_end; ++k)
         {
             int row = Y.get_row_number_of_entry_index(k);
-            y = Y.get_entry_value(k);
-            bus_current[row] += y*voltage;
+            bus_current[row] += Y.get_entry_value(k)*voltage;
         }
         k_start = k_end;
     }
@@ -1664,7 +1669,6 @@ vector< complex<double> > DYNAMICS_SIMULATOR::get_bus_currnet_into_network() con
         show_information_with_leading_time_stamp(osstream);
     }
 */
-    return bus_current;
 }
 
 void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch(vector< complex<double> >& I_mismatch) const
@@ -1901,7 +1905,7 @@ double DYNAMICS_SIMULATOR::get_max_power_mismatch_in_MVA(vector< complex<double>
     size_t n = S_mismatch.size();
     for(size_t i=0; i!=n; ++i)
     {
-        s = fast_complex_abs(S_mismatch[i]);
+        s = steps_fast_complex_abs(S_mismatch[i]);
         if(s>smax)
         {
             smax = s;
@@ -1916,17 +1920,15 @@ double DYNAMICS_SIMULATOR::get_max_power_mismatch_in_MVA(vector< complex<double>
 }
 
 
-vector<double> DYNAMICS_SIMULATOR::get_bus_current_mismatch_vector(const vector< complex<double> > I_mismatch) const
+void DYNAMICS_SIMULATOR::get_bus_current_mismatch_vector(const vector< complex<double> >& I_mismatch, vector<double>& I_vec) const
 {
     size_t n = I_mismatch.size();
-    vector<double> I_vec;
     I_vec.resize(n*2, 0.0);
     for(size_t i=0; i!=n; ++i)
     {
         I_vec[i] = I_mismatch[i].imag();
         I_vec[i+n] = I_mismatch[i].real();
     }
-    return I_vec;
 }
 
 
@@ -1954,12 +1956,12 @@ void DYNAMICS_SIMULATOR::update_bus_voltage(const vector<double> delta_V)
 
         V = V0-delta_v;
 
-		vmag_new = fast_complex_abs(V);
+		vmag_new = steps_fast_complex_abs(V);
 
 		double x = V.real(), y = V.imag();
 		double x0 = V0.real(), y0 = V0.imag();
 		complex<double> z(x*x0 + y * y0, x0*y - y0 * x);
-        delta_vang = fast_complex_arg(z);
+        delta_vang = steps_fast_complex_arg(z);
         vang_new = vang0+delta_vang;
 
         bus->set_voltage_in_pu(vmag_new);
@@ -2179,7 +2181,7 @@ void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, complex<double> fault_shunt)
     BUS* busptr = db->get_bus(bus);
     if(busptr!=NULL)
     {
-        if(fast_complex_abs(fault_shunt)<FLOAT_EPSILON)
+        if(steps_fast_complex_abs(fault_shunt)<FLOAT_EPSILON)
         {
             osstream<<"Zero fault shunt is given for bus "<<bus<<"."<<endl
                    <<"No fault will be set for bus "<<bus<<" at time "<<get_dynamic_simulation_time_in_s()<<" s.";
@@ -2290,7 +2292,7 @@ void DYNAMICS_SIMULATOR::set_line_fault(DEVICE_ID line_id, size_t side_bus, doub
             return;
         }
 
-        if(fast_complex_abs(fault_shunt)<FLOAT_EPSILON)
+        if(steps_fast_complex_abs(fault_shunt)<FLOAT_EPSILON)
         {
             osstream<<"Zero fault shunt is given for "<<lineptr->get_device_name()<<"."<<endl
                    <<"No fault will be set for "<<lineptr->get_device_name()<<" at time "<<get_dynamic_simulation_time_in_s()<<" s.";

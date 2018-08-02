@@ -22,8 +22,8 @@ UTILITY_TEST::UTILITY_TEST()
 
     TEST_ADD(UTILITY_TEST::test_rad2deg);
     TEST_ADD(UTILITY_TEST::test_deg2rad);
-    TEST_ADD(UTILITY_TEST::test_fast_complex_abs);
-    TEST_ADD(UTILITY_TEST::test_fast_complex_arg);
+    TEST_ADD(UTILITY_TEST::test_steps_fast_complex_abs);
+    TEST_ADD(UTILITY_TEST::test_steps_fast_complex_arg);
     TEST_ADD(UTILITY_TEST::test_radps2hz);
     TEST_ADD(UTILITY_TEST::test_hz2radps);
 
@@ -137,42 +137,42 @@ void UTILITY_TEST::test_deg2rad()
     TEST_ASSERT(fabs(deg2rad(angle)-angle2)<FLOAT_EPSILON);
 }
 
-void UTILITY_TEST::test_fast_complex_abs()
+void UTILITY_TEST::test_steps_fast_complex_abs()
 {
 	show_test_information_for_function_of_class(__FUNCTION__, "UTILITY_TEST");
 
 	complex<double> V;
 	V = complex<double>(0.0, 0.0);
-	TEST_ASSERT(fabs(fast_complex_abs(V) - abs(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_abs(V) - abs(V))<FLOAT_EPSILON);
 	V = complex<double>(1.0, 0.0);
-	TEST_ASSERT(fabs(fast_complex_abs(V) - abs(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_abs(V) - abs(V))<FLOAT_EPSILON);
 	V = complex<double>(0.0, 1.0);
-	TEST_ASSERT(fabs(fast_complex_abs(V) - abs(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_abs(V) - abs(V))<FLOAT_EPSILON);
 }
 
-void UTILITY_TEST::test_fast_complex_arg()
+void UTILITY_TEST::test_steps_fast_complex_arg()
 {
 	show_test_information_for_function_of_class(__FUNCTION__, "UTILITY_TEST");
 
 	complex<double> V;
 	V = complex<double>(0.0, 0.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(1.0, 0.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(-1.0, 0.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(0.0, 1.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(0.0, -1.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(1.0, 1.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(-1.0, 1.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(-1.0, -1.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 	V = complex<double>(1.0, -1.0);
-	TEST_ASSERT(fabs(fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
+	TEST_ASSERT(fabs(steps_fast_complex_arg(V) - arg(V))<FLOAT_EPSILON);
 }
 
 void UTILITY_TEST::test_radps2hz()

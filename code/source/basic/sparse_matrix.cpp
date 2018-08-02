@@ -463,7 +463,7 @@ void SPARSE_MATRIX::LU_factorization(int order, double tolerance)
     csi n, ok ;
     if (!CS_CSC (matrix_real))/* check inputs */
     {
-        sprintf(buffer, "No real matrix is set for LU factorization. Return. (line %d in file %s)\n",__LINE__,__FILE__);
+        snprintf(buffer, 256, "No real matrix is set for LU factorization. Return. (line %d in file %s)\n",__LINE__,__FILE__);
         show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -473,7 +473,7 @@ void SPARSE_MATRIX::LU_factorization(int order, double tolerance)
     ok = (LU_symbolic && LU) ; // check
     if(ok!=1)
     {
-        sprintf(buffer, "ALERT!  LU factorization for sparse matrix failed! (line %d in file %s)\n",__LINE__,__FILE__);
+        snprintf(buffer, 256, "ALERT!  LU factorization for sparse matrix failed! (line %d in file %s)\n",__LINE__,__FILE__);
         show_information_with_leading_time_stamp(buffer);
         return;
     }
@@ -482,7 +482,7 @@ void SPARSE_MATRIX::LU_factorization(int order, double tolerance)
     LU_workspace = (double *)cs_malloc(n, sizeof (double)) ;  // get workspace
     if(LU_workspace == NULL)
     {
-        sprintf(buffer, "Global variable LU_workspace was not successfully set. No workspace for LU solution. (line %d in file %s)\n",__LINE__,__FILE__);
+        snprintf(buffer, 256, "Global variable LU_workspace was not successfully set. No workspace for LU solution. (line %d in file %s)\n",__LINE__,__FILE__);
         show_information_with_leading_time_stamp(buffer);
     }
 
@@ -549,7 +549,7 @@ void SPARSE_MATRIX::solve_xU_eq_b(vector<double>& b)
     double* bb = (double*)malloc(b.size()*sizeof(double));
     if(bb==NULL)
     {
-        sprintf(cbuffer,"Error. Failed to allocate temporary array for solving xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
+        snprintf(cbuffer, 1000, "Error. Failed to allocate temporary array for solving xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
         buffer = cbuffer;
         show_information_with_leading_time_stamp(buffer);
         return; // failed to allocate array bb
@@ -562,7 +562,7 @@ void SPARSE_MATRIX::solve_xU_eq_b(vector<double>& b)
 
     if(OK != 1)
     {
-        sprintf(cbuffer,"Error. Failed to solve xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
+        snprintf(cbuffer, 1000, "Error. Failed to solve xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
         buffer = cbuffer;
         show_information_with_leading_time_stamp(buffer);
         return; // failed to solve equation
@@ -586,7 +586,7 @@ void SPARSE_MATRIX::report_brief() const
     buffer="matrix entries:\n";
     show_information_with_leading_time_stamp(buffer);
 
-	sprintf(cbuffer,"row   column     real       imaginary\n");
+	snprintf(cbuffer, 1000, "row   column     real       imaginary\n");
     show_information_with_leading_time_stamp(cbuffer);
 
     int n = get_matrix_size();
@@ -597,9 +597,9 @@ void SPARSE_MATRIX::report_brief() const
             i=matrix_real->i[k];
 
             if(matrix_imag->n==0)
-                sprintf(cbuffer,"%-6d, %-6d, % 10.6f\n",i,j,matrix_real->x[k]);
+                snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f\n",i,j,matrix_real->x[k]);
             else
-                sprintf(cbuffer,"%-6d, %-6d, % 10.6f, % 10.6f\n",i,j,matrix_real->x[k],matrix_imag->x[k]);
+                snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f, % 10.6f\n",i,j,matrix_real->x[k],matrix_imag->x[k]);
 
             buffer = cbuffer;
             show_information_with_leading_time_stamp(buffer);

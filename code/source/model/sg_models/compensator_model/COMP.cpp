@@ -157,7 +157,7 @@ double COMP::get_compensated_voltage_in_pu() const
     double xe = get_Xe();
     complex<double> j(0.0,1.0);
     complex<double> Vct = Vt-j*xe*It;
-    return fast_complex_abs(Vct);
+    return steps_fast_complex_abs(Vct);
 }
 void COMP::check()
 {
@@ -207,10 +207,10 @@ double COMP::get_variable_with_index(size_t var_index)
 double COMP::get_variable_with_name(string var_name)
 {
     if(var_name == "GENERATOR TERMINAL VOLTAGE")
-        return fast_complex_abs(get_generator_terminal_voltage_in_pu());
+        return steps_fast_complex_abs(get_generator_terminal_voltage_in_pu());
 
     if(var_name == "GENERATOR TERMINAL CURRENT")
-        return fast_complex_abs(get_generator_terminal_current_in_pu());
+        return steps_fast_complex_abs(get_generator_terminal_current_in_pu());
 
     if(var_name == "COMPENSATED VOLTAGE")
         return get_compensated_voltage_in_pu();

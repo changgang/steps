@@ -740,7 +740,7 @@ void WT3E1::initialize()
     active_power_sensor.set_output(pelec);
     active_power_sensor.initialize();
 
-	double smag = fast_complex_abs(selec);
+	double smag = steps_fast_complex_abs(selec);
     double pf = fabs(pelec)/smag;
     pf = (qelec/pelec>0? pf:-pf);
     set_power_factor_reference_in_pu(pf);

@@ -16,7 +16,7 @@ ofstream output_file;
 string num2str(int number)
 {
     char str[1000];
-    sprintf(str,"%d",number);
+    snprintf(str,1000, "%d",number);
     return string(str);
 }
 
@@ -28,7 +28,7 @@ string num2str(size_t number)
 string num2str(double number)
 {
     char str[1000];
-    sprintf(str,"%G",number);
+    snprintf(str,100, "%G",number);
     return string(str);
 }
 
@@ -103,14 +103,14 @@ double hz2radps(double f)
 }
 
 
-double fast_complex_abs(complex<double> z)
+double steps_fast_complex_abs(complex<double> z)
 {
 	double x = z.real();
 	double y = z.imag();
 	return sqrt(x*x+y*y);
 }
 
-double fast_complex_arg(complex<double> z)
+double steps_fast_complex_arg(complex<double> z)
 {
 	double x = z.real();
 	double y = z.imag();
@@ -153,6 +153,19 @@ double fast_complex_arg(complex<double> z)
 			angle -= PI;
 	}
 	return angle;
+}
+
+double steps_fast_pow(double base, double exp)
+{
+	if (fabs(exp - 0.0) < FLOAT_EPSILON)
+		return 1.0;
+	if (fabs(exp - 1.0) < FLOAT_EPSILON)
+		return base;
+	if (fabs(exp - 2.0) < FLOAT_EPSILON)
+		return base*base;
+	if (fabs(exp - 3.0) < FLOAT_EPSILON)
+		return base*base*base;
+	return pow(base, exp);
 }
 
 string trim_string(string str)
@@ -397,7 +410,7 @@ string get_system_time_stamp_string()
     double elapsed_time_in_s = double(clock_now-STEPS::clock_when_system_started)/double(CLOCKS_PER_SEC);
 
     char time_stamp[40];
-    sprintf(time_stamp,"%d-%02d-%02d %02d:%02d:%02d [% 8.3f]", local_time->tm_year + 1900, local_time->tm_mon + 1,
+    snprintf(time_stamp,40, "%d-%02d-%02d %02d:%02d:%02d [% 8.3f]", local_time->tm_year + 1900, local_time->tm_mon + 1,
             local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec, elapsed_time_in_s);
     return string(time_stamp);
 }

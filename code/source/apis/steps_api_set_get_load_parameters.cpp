@@ -192,7 +192,7 @@ const char* api_get_load_string_data(size_t bus, char* identifier, char* paramet
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-	sprintf(STEPS::steps_char_buffer, "%s", "");
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     LOAD* loadptr = psdb->get_load(did);
     if(loadptr!=NULL)
@@ -200,7 +200,7 @@ const char* api_get_load_string_data(size_t bus, char* identifier, char* paramet
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (loadptr->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (loadptr->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
 

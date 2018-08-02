@@ -250,7 +250,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
 
  const char* api_get_current_device_identifier(const char* device_type)
 {
-	sprintf(STEPS::steps_char_buffer,"%s","");
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
     string DEVICE_TYPE = string2upper(device_type);
     if(DEVICE_TYPE=="GENERATOR")
     {
@@ -258,7 +258,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.generators.size();
 		if (index < n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.generators[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.generators[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else
@@ -271,7 +271,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.wt_generators.size();
         if(index<n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.wt_generators[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.wt_generators[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else
@@ -284,7 +284,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.loads.size();
         if(index<n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.loads[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.loads[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else
@@ -297,7 +297,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.fixed_shunts.size();
         if(index<n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.fixed_shunts[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.fixed_shunts[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else
@@ -310,7 +310,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.lines.size();
         if(index<n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.lines[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.lines[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else
@@ -323,7 +323,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.transformers.size();
         if(index<n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.transformers[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.transformers[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else
@@ -336,7 +336,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.hvdcs.size();
         if(index<n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.hvdcs[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.hvdcs[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else
@@ -349,7 +349,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.equivalent_devices.size();
         if(index<n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.equivalent_devices[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.equivalent_devices[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else
@@ -362,7 +362,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.energy_storages.size();
         if(index<n)
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (api_search_buffer.energy_storages[index]->get_identifier()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.energy_storages[index]->get_identifier()).c_str());
 			return STEPS::steps_char_buffer;
 		}
         else

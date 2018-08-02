@@ -1692,7 +1692,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
     tm* local_time= localtime(&tt);
 
     char time_stamp[40];
-    sprintf(time_stamp,"%d-%02d-%02d %02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
+    snprintf(time_stamp,40, "%d-%02d-%02d %02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
             local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
     file<<"% Powerflow result exported at "<<time_stamp<<endl;
@@ -1765,8 +1765,8 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             <<setprecision(6)<<fixed<<si.imag()<<","
             <<setprecision(6)<<fixed<<sj.real()<<","
             <<setprecision(6)<<fixed<<sj.imag()<<","
-            <<setprecision(6)<<fixed<< fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
-            <<setprecision(6)<<fixed<< fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;
+            <<setprecision(6)<<fixed<< steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
+            <<setprecision(6)<<fixed<< steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;
     }
 
     file<<"% Transformer"<<endl;

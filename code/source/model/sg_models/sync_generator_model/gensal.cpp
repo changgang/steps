@@ -231,7 +231,7 @@ void GENSAL::initialize()
     complex<double> Idq = xy2dq_with_angle_in_rad(Ixy, rotor_angle);
     complex<double> Edq = xy2dq_with_angle_in_rad(Exy, rotor_angle);
     complex<double> Flux_dq = Edq*complex<double>(0.0, -1.0);
-    double Flux = fast_complex_abs(Flux_dq);
+    double Flux = steps_fast_complex_abs(Flux_dq);
     double delta_XadIfd = get_saturation_with_flux(Flux)*Flux;
 
     double sp, spp;
@@ -265,7 +265,7 @@ void GENSAL::initialize()
     subtransient_block_q_axis->initialize();
 
     // mechanical power
-    double I = fast_complex_abs(Ixy);
+    double I = steps_fast_complex_abs(Ixy);
     double pmech0 = S.real()+I*I*get_Rs();
     set_initial_mechanical_power_in_pu_based_on_mbase(pmech0);
 
@@ -297,7 +297,7 @@ void GENSAL::initialize_rotor_angle()
     double xqpp = get_Xqpp();
     double xl = get_Xl();
 
-    double Flux = fast_complex_abs(Exy);
+    double Flux = steps_fast_complex_abs(Exy);
     double delta_XadIfd = get_saturation_with_flux(Flux)*Flux;
 
     double A = (xq-xqpp);
@@ -308,7 +308,7 @@ void GENSAL::initialize_rotor_angle()
     complex<double> Zq(rs, xq);
     complex<double> EQ = Vxy+Ixy*Zq;
 
-    double rotor_angle_EQ = fast_complex_arg(EQ/Vxy) + fast_complex_arg(Vxy);
+    double rotor_angle_EQ = steps_fast_complex_arg(EQ/Vxy) + steps_fast_complex_arg(Vxy);
     double rotor_angle = 0.0;
     if(C == 0.0)
         rotor_angle = PI*0.5;
@@ -352,7 +352,7 @@ void GENSAL::run(DYNAMIC_MODE mode)
     double fluxd = transient_block_d_axis->get_output()*(xpp-xl)/(xdp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp)/(xdp-xl);
     double fluxq = -subtransient_block_q_axis->get_output();
     complex<double> Flux_dq(fluxd, fluxq);
-    double Flux = fast_complex_abs(Flux_dq);
+    double Flux = steps_fast_complex_abs(Flux_dq);
     double saturation = get_saturation_with_flux(Flux)*Flux;
 
     complex<double> Idq = get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase();
@@ -447,7 +447,7 @@ complex<double> GENSAL::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
 
 double GENSAL::get_terminal_current_in_pu_based_on_mbase()
 {
-    return fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
+    return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
 }
 
 double GENSAL::get_terminal_current_in_pu_based_on_sbase()
@@ -543,9 +543,9 @@ double GENSAL::get_variable_with_name(string var_name)
     if(var_name == "GENERATOR TERMINAL Q IN MW")
         return get_terminal_reactive_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
     if(var_name == "GENERATOR TERMINAL S IN PU")
-        return fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
+        return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
     if(var_name == "GENERATOR TERMINAL S IN MVA")
-        return fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
+        return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
     if(var_name == "GENERATOR MECHANICAL POWER IN PU")
         return get_mechanical_power_in_pu_based_on_mbase();
     if(var_name == "GENERATOR MECHANICAL POWER IN MW")
@@ -555,7 +555,7 @@ double GENSAL::get_variable_with_name(string var_name)
     if(var_name == "FIELD CURRENT IN PU")
         return get_field_current_in_pu_based_on_mbase();
     if(var_name == "GENERATOR INTERNAL VOLTAGE IN PU")
-        return fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
+        return steps_fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
     if(var_name == "GENERATOR TERMINAL CURRENT IN PU")
         return get_terminal_current_in_pu_based_on_mbase();
     if(var_name == "GENERATOR TERMINAL CURRENT IN KA")
@@ -665,7 +665,7 @@ double GENSAL::get_field_current_in_pu_based_on_mbase()
     complex<double> Zsource(get_Rs(), get_Xpp());
     complex<double> Idq = (Edq-Vdq)/Zsource;
 
-    double saturation = get_saturation_with_flux(fast_complex_abs(Flux_dq));
+    double saturation = get_saturation_with_flux(steps_fast_complex_abs(Flux_dq));
 
     double xadifd;
     // d-axis
@@ -673,7 +673,7 @@ double GENSAL::get_field_current_in_pu_based_on_mbase()
     xadifd = transient_block_d_axis->get_output()-subtransient_block_d_axis->get_output()-Idq.real()*(xdp-xl);
 
     xadifd = transient_block_d_axis->get_output()+(xd-xdp)*(Idq.real()+xadifd*(xdp-xpp)/((xdp-xl)*(xdp-xl)))+
-            Flux_dq.real()/ fast_complex_abs(Flux_dq)*saturation;
+            Flux_dq.real()/ steps_fast_complex_abs(Flux_dq)*saturation;
 
     return xadifd/(xd-xl);
 }

@@ -162,7 +162,7 @@ void WT_GENERATOR_MODEL_TEST::export_meter_values(double time)
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
 
     complex<double> Vxy = model->get_terminal_complex_voltage_in_pu();
-    double vterm = fast_complex_abs(Vxy);
+    double vterm = steps_fast_complex_abs(Vxy);
     double busangle = rad2deg(atan2(Vxy.imag(), Vxy.real()));
     double freq = model->get_pll_frequency_deviation_in_pu();
     double angle = model->get_pll_angle_in_deg();

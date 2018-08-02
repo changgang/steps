@@ -215,7 +215,7 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name)
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
-	sprintf(STEPS::steps_char_buffer, "%s", "");
+	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     BUS* busptr = psdb->get_bus(bus);
     if(busptr!=NULL)
@@ -223,7 +223,7 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name)
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "NAME" or PARAMETER_NAME == "BUS NAME")
 		{
-			sprintf(STEPS::steps_char_buffer, "%s", (busptr->get_bus_name()).c_str());
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (busptr->get_bus_name()).c_str());
 			return STEPS::steps_char_buffer;
 		}
 

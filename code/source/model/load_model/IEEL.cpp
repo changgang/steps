@@ -380,7 +380,7 @@ complex<double> IEEL::get_load_power_in_MVA() const
     double n3 = get_P_n_power_3();
     double kf = get_P_Kf();
 
-    double P = get_initial_load_power_in_MVA().real()*(alpha1*pow(V,n1)+alpha2*pow(V,n2)+alpha3*pow(V,n3))*(1.0+kf*f);
+    double P = get_initial_load_power_in_MVA().real()*(alpha1*steps_fast_pow(V,n1)+alpha2*steps_fast_pow(V,n2)+alpha3*steps_fast_pow(V,n3))*(1.0+kf*f);
 
     alpha1 = get_Q_alpha_1();
     alpha2 = get_Q_alpha_2();
@@ -390,7 +390,7 @@ complex<double> IEEL::get_load_power_in_MVA() const
     n3 = get_Q_n_power_3();
     kf = get_Q_Kf();
 
-    double Q = get_initial_load_power_in_MVA().imag()*(alpha1*pow(V,n1)+alpha2*pow(V,n2)+alpha3*pow(V,n3))*(1.0+kf*f);
+    double Q = get_initial_load_power_in_MVA().imag()*(alpha1*steps_fast_pow(V,n1)+alpha2* steps_fast_pow(V,n2)+alpha3*steps_fast_pow(V,n3))*(1.0+kf*f);
 
     return complex<double>(P,Q);
 }

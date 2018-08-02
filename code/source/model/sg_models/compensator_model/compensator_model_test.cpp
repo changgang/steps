@@ -65,8 +65,8 @@ void COMPENSATOR_MODEL_TEST::export_meter_values()
 
     COMPENSATOR_MODEL* model = get_test_compensator_model();
 
-    double voltage = fast_complex_abs(model->get_generator_terminal_voltage_in_pu());
-    double current = fast_complex_abs(model->get_generator_terminal_current_in_pu());
+    double voltage = steps_fast_complex_abs(model->get_generator_terminal_voltage_in_pu());
+    double current = steps_fast_complex_abs(model->get_generator_terminal_current_in_pu());
     double ecomp = model->get_compensated_voltage_in_pu();
     osstream<<setw(6)<<setprecision(3)<<fixed<<STEPS::TIME<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<voltage<<"\t"
