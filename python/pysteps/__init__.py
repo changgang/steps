@@ -1074,7 +1074,7 @@ def close_load(load):
     return
 
 def scale_load(load, percent):
-    libsteps.api_shed_load(load[0], load[1], percent)
+    libsteps.api_scale_load(load[0], load[1], percent)
     return
 
 def scale_all_loads(ercent):
