@@ -308,11 +308,13 @@ void WT_AERODYNAMIC_MODEL::initialize()
     if(psdb==NULL)
         return;
 
+    set_cpmax_at_zero_pitch();
+
     initialize_wind_turbine_blade_radius_and_gear_ratio();
     //current_turbine_speed_reference_without_limit_in_rad_per_s = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
 
     double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW(get_wind_speed_in_mps());
-    double cp_max = get_Cpmax(0.0);
+    double cp_max = get_cpmax_at_zero_pitch();
     double pmech = gen->get_p_generation_in_MW()/gen->get_number_of_lumped_wt_generators()/get_gear_efficiency();
     if(pmax<pmech)
     {
@@ -393,7 +395,7 @@ void WT_AERODYNAMIC_MODEL::initialize_turbine_blade_radius_with_nominal_paramete
     double v3 =  v*v*v;
     double rou = get_nominal_air_density_in_kgpm3();
 
-    double cp_max = get_Cpmax(0.0);
+    double cp_max = get_cpmax_at_zero_pitch()
 
     double blade_area = 2.0*pn/(cp_max*rou*v3);
     double blade_radius = sqrt(blade_area/PI);
@@ -418,6 +420,16 @@ void WT_AERODYNAMIC_MODEL::initialize_generator_to_turbine_gear_ratio()
     return;
 }
 
+
+void WT_AERODYNAMIC_MODEL::set_cpmax_at_zero_pitch()
+{
+    cpmax_at_zero_pitch = get_Cpmax(0.0);
+}
+
+double WT_AERODYNAMIC_MODEL::get_cpmax_at_zero_pitch() const
+{
+    return cpmax_at_zero_pitch;
+}
 
 void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
 {
@@ -755,7 +767,7 @@ void WT_AERODYNAMIC_MODEL::run(DYNAMIC_MODE mode)
 
 double WT_AERODYNAMIC_MODEL::get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind)
 {
-    double cpmax = get_Cpmax(0.0);
+    double cpmax = get_cpmax_at_zero_pitch();
     double pmax = get_total_wind_power_per_wt_generator_in_MW(vwind);
     return pmax*cpmax;
 }

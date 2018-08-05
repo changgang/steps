@@ -110,6 +110,8 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
+        void set_cpmax_at_zero_pitch();
+        double get_cpmax_at_zero_pitch() const;
         void initialize_wind_turbine_blade_radius_and_gear_ratio();
         void initialize_turbine_blade_radius_with_nominal_parameters();
         void initialize_generator_to_turbine_gear_ratio();
@@ -151,6 +153,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
 
         double max_steady_state_turbine_speed_in_pu, min_steady_state_turbine_speed_in_pu;
 
+        double cpmax_at_zero_pitch;
         double current_pitch_angle_in_deg, current_lambda_at_cpmax;
         double current_pelec_including_loss_per_turbine, current_turbine_speed_reference_without_limit_in_rad_per_s;
 };
