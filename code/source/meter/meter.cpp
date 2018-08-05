@@ -1196,6 +1196,8 @@ double METER::get_meter_value_as_a_generator() const
 
 double METER::get_meter_value_as_a_wt_generator() const
 {
+    ostringstream osstream;
+
     WT_GENERATOR* generator = (WT_GENERATOR*) get_device_pointer();
     if(generator == NULL)
         return 0.0;

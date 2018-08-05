@@ -1077,8 +1077,8 @@ def scale_load(load, percent):
     libsteps.api_scale_load(load[0], load[1], percent)
     return
 
-def scale_all_loads(ercent):
-    libsteps.api_shed_all_loads(percent)
+def scale_all_loads(percent):
+    libsteps.api_scale_all_loads(percent)
     return
 
 def trip_fixed_shunt(shunt):

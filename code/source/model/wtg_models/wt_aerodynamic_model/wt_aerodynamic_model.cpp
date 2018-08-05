@@ -15,6 +15,9 @@ WT_AERODYNAMIC_MODEL::WT_AERODYNAMIC_MODEL()
     set_max_steady_state_turbine_speed_in_pu(1.2);
     set_min_steady_state_turbine_speed_in_pu(0.7);
 
+    set_initial_pitch_angle_in_deg(0.0);
+    set_initial_turbine_speed_in_rad_per_s(0.0);
+
     current_pitch_angle_in_deg = -1e10;
     current_lambda_at_cpmax = 0.0;
     current_pelec_including_loss_per_turbine = -1e10;
@@ -59,6 +62,9 @@ void WT_AERODYNAMIC_MODEL::copy_from_const_model(const WT_AERODYNAMIC_MODEL& mod
 
     set_max_steady_state_turbine_speed_in_pu(model.get_max_steady_state_turbine_speed_in_pu());
     set_min_steady_state_turbine_speed_in_pu(model.get_min_steady_state_turbine_speed_in_pu());
+
+    set_initial_pitch_angle_in_deg(model.get_initial_pitch_angle_in_deg());
+    set_initial_turbine_speed_in_rad_per_s(model.get_initial_turbine_speed_in_rad_per_s());
 }
 
 string WT_AERODYNAMIC_MODEL::get_model_type() const
@@ -303,7 +309,7 @@ void WT_AERODYNAMIC_MODEL::initialize()
         return;
 
     initialize_wind_turbine_blade_radius_and_gear_ratio();
-    current_turbine_speed_reference_without_limit_in_rad_per_s = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
+    //current_turbine_speed_reference_without_limit_in_rad_per_s = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
 
     double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW(get_wind_speed_in_mps());
     double cp_max = get_Cpmax(0.0);
@@ -429,11 +435,35 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
             <<"Current wind speed is "<<get_wind_speed_in_mps()<<" m/s";
     show_information_with_leading_time_stamp(osstream);
 
-    if(get_turbine_speed_mode()==MPPT_MODE)
+    switch(get_turbine_speed_mode())
     {
-        initialize_pitch_angle_and_turbine_speed_with_mppt_mode();
-        return;
+        case MPPT_MODE:
+        {
+            initialize_pitch_angle_and_turbine_speed_with_mppt_mode();
+            break;
+        }
+        case UNDERSPEED_MODE:
+        case OVERSPEED_MODE:
+        {
+            initialize_pitch_angle_and_turbine_speed_with_underspeed_or_overspeed_mode();
+            break;
+        }
     }
+}
+
+void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_underspeed_or_overspeed_mode()
+{
+    ostringstream osstream;
+
+    osstream<<"Now go initialize pitch angle and turbine speed of "<<get_device_name()<<" with turbine speed mode: ";
+    if(get_turbine_speed_mode()==UNDERSPEED_MODE)
+        osstream<<"UNDERSPEED mode";
+    else
+    {
+        if(get_turbine_speed_mode()==OVERSPEED_MODE)
+            osstream<<"OVERSPEED mode";
+    }
+    show_information_with_leading_time_stamp(osstream);
 
     set_initial_pitch_angle_in_deg(0.0);
     initialize_turbine_speed();
@@ -480,6 +510,9 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
 void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mode()
 {
     ostringstream osstream;
+
+    osstream<<"Now go initialize pitch angle and turbine speed of "<<get_device_name()<<" with turbine speed mode: MPPT mode";
+    show_information_with_leading_time_stamp(osstream);
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
@@ -530,7 +563,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     double w_high = (w_mppt_high-wn)/wn;
     double pmech_high = pelec+(D*w_high)*(w_mppt_high/wn)*(mbase/n);
     double cpmax_high = get_Cpmax(pitch_high);
-    //osstream<<"pitch_high = "<<pitch_high<<", w_high= "<<w_high<<", pmechmax = "<<pmax*cpmax_high;
+    //osstream<<"pitch_high = "<<pitch_high<<", w_mppt_high = "<<w_mppt_high<<", w_high = "<<w_high<<", pmechmax = "<<pmax*cpmax_high;
     //show_information_with_leading_time_stamp(osstream);
     if(fabs(pmech_high-pmax*cpmax_high)<FLOAT_EPSILON)
     {
@@ -548,6 +581,9 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         double w = (w_mppt-wn)/wn;
         double pmech = pelec+(D*w)*(w_mppt/wn)*(mbase/n);
         double cpmax = get_Cpmax(pitch);
+
+        //osstream<<"pitch = "<<pitch<<", w_mppt = "<<w_mppt<<", w = "<<w<<", pmechmax = "<<pmax*cpmax;
+        //show_information_with_leading_time_stamp(osstream);
         if(fabs(pmech-pmax*cpmax)<FLOAT_EPSILON)
         {
             set_initial_pitch_angle_in_deg(pitch);
@@ -744,6 +780,8 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s()
     double wn = get_nominal_turbine_speed_in_rad_per_s();
     double w = get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
 
+    //osstream<<__LINE__<<"@"<<__FILE__<<endl
+    //        <<"wref = "<<w<<", wn = "<<wn<<endl;
     double wmax = get_max_steady_state_turbine_speed_in_pu()*wn;
     double wmin = get_min_steady_state_turbine_speed_in_pu()*wn;
     if(w>wmax)
@@ -751,7 +789,8 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s()
 
     if(w<wmin)
         w = wmin;
-
+    //osstream<<"w to return is "<<w;
+    //show_information_with_leading_time_stamp(osstream);
     return w;
 }
 
@@ -772,10 +811,6 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
     if(wtgenmodel==NULL)
         return 0.0;
 
-    double damping = get_damping_in_pu();
-    double wn = get_nominal_turbine_speed_in_rad_per_s();
-    double eta = get_gear_efficiency();
-
     complex<double> selec = wtgenmodel->get_terminal_complex_power_in_MVA();
     double iterm = wtgenmodel->get_terminal_current_in_pu_based_on_mbase();
     complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
@@ -788,19 +823,119 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
     double pelec = selec.real();
 
     double pitch = get_pitch_angle_in_deg();
-    if(fabs(current_pelec_including_loss_per_turbine-pelec)<FLOAT_EPSILON and
-       fabs(current_pitch_angle_in_deg-pitch)<FLOAT_EPSILON)
-        return current_turbine_speed_reference_without_limit_in_rad_per_s;
+    if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)<FLOAT_EPSILON and
+       fabs(get_current_pitch_angle_in_deg()-pitch)<FLOAT_EPSILON)
+        return get_current_turbine_speed_reference_without_limit_in_rad_per_s();
     else
     {
-        current_pelec_including_loss_per_turbine = pelec;
-        current_pitch_angle_in_deg = pitch;
+        set_current_pitch_angle_in_deg(pitch);
+        set_current_pelec_including_loss_per_turbine_in_MW(pelec);
+        update_current_turbine_speed_reference_without_limit();
+        return get_current_turbine_speed_reference_without_limit_in_rad_per_s();
     }
+
+}
+
+double WT_AERODYNAMIC_MODEL::get_mppt_speed_in_rad_per_s(double pitch_in_deg)
+{
+    double lambda = get_lambda_at_Cpmax(pitch_in_deg);
+    double vwind = get_wind_speed_in_mps();
+    double r = get_turbine_blade_radius_in_m();
+    double w_mppt = lambda*vwind/r;
+    return w_mppt;
+}
+
+
+void WT_AERODYNAMIC_MODEL::set_current_pitch_angle_in_deg(double pitch)
+{
+    if(fabs(get_current_pitch_angle_in_deg()-pitch)<FLOAT_EPSILON)
+        return;
+
+    current_pitch_angle_in_deg = pitch;
+    update_current_lambda_at_cpmax_with_current_pitch_angle();
+}
+
+void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_angle()
+{
+    double pitch = get_current_pitch_angle_in_deg();
+
+    double lambdalow = 3.0;
+    double lambdahigh = 3.0;
+    while(true)
+    {
+        double der = get_derivative_of_Cp_over_lambda(lambdalow, pitch);
+        if(der>0.0)
+            break;
+        else
+        {
+            lambdalow *= 0.5;
+        }
+    }
+    while(true)
+    {
+        double der = get_derivative_of_Cp_over_lambda(lambdahigh, pitch);
+        if(der<0.0)
+            break;
+        else
+        {
+            lambdahigh *= 1.5;
+        }
+    }
+
+    double derlow =  get_derivative_of_Cp_over_lambda(lambdalow, pitch);
+    double derhigh =  get_derivative_of_Cp_over_lambda(lambdahigh, pitch);
+
+    double newlambda = 0.0;
+    size_t iter_count = 0, iter_max = 50;
+    while(true)
+    {
+        newlambda = lambdalow*(derhigh/(derhigh-derlow))-lambdahigh*(derlow/(derhigh-derlow));
+        double dernew =  get_derivative_of_Cp_over_lambda(newlambda, pitch);
+        if(fabs(dernew)<1e-8)
+        {
+            break;
+        }
+
+        if(dernew>0.0)
+        {
+            lambdalow = newlambda;
+            derlow = dernew;
+        }
+        else
+        {
+            lambdahigh = newlambda;
+            derhigh = dernew;
+        }
+        iter_count++;
+        if(iter_count>iter_max)
+        {
+            break;
+        }
+    }
+
+    current_lambda_at_cpmax = newlambda;
+}
+
+
+void WT_AERODYNAMIC_MODEL::set_current_pelec_including_loss_per_turbine_in_MW(double pelec)
+{
+    if(fabs(get_current_pelec_including_loss_per_turbine_in_MW()-pelec)>FLOAT_EPSILON)
+        current_pelec_including_loss_per_turbine = pelec;
+}
+
+void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit()
+{
+    double pitch = get_current_pitch_angle_in_deg();
 
     double w_mppt = get_mppt_speed_in_rad_per_s(pitch);
 
     if(get_turbine_speed_mode()==MPPT_MODE)
-        return w_mppt;
+    {
+        current_turbine_speed_reference_without_limit_in_rad_per_s = w_mppt;
+        return;
+    }
+
+    double pelec = get_current_pelec_including_loss_per_turbine_in_MW();
 
     double pmech = pelec;
     double cpmax = get_Cpmax(pitch);
@@ -815,7 +950,8 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
                <<"MPPT speed will be returned as speed reference: "<<w_mppt<<" rad/s.";
         show_information_with_leading_time_stamp(osstream);*/
 
-        return w_mppt;
+        current_turbine_speed_reference_without_limit_in_rad_per_s = w_mppt;
+        return;
     }
 
     double wlow, whigh;
@@ -832,6 +968,13 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
 
     //double plow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(wlow);
     //double phigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(whigh);
+
+    double damping = get_damping_in_pu();
+    double wn = get_nominal_turbine_speed_in_rad_per_s();
+    double eta = get_gear_efficiency();
+
+    double mbase = get_mbase_in_MVA();
+    size_t n = get_number_of_lumped_wt_generators();
 
     double w = 0.0;
     size_t iter_count = 0, iter_max = 100;
@@ -884,17 +1027,26 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
     }
 
     current_turbine_speed_reference_without_limit_in_rad_per_s = w;
-
-    return w;
 }
 
-double WT_AERODYNAMIC_MODEL::get_mppt_speed_in_rad_per_s(double pitch_in_deg)
+double WT_AERODYNAMIC_MODEL::get_current_pitch_angle_in_deg() const
 {
-    double lambda = get_lambda_at_Cpmax(pitch_in_deg);
-    double vwind = get_wind_speed_in_mps();
-    double r = get_turbine_blade_radius_in_m();
-    double w_mppt = lambda*vwind/r;
-    return w_mppt;
+    return current_pitch_angle_in_deg;
+}
+
+double WT_AERODYNAMIC_MODEL::get_current_lambda_at_cpmax() const
+{
+    return current_lambda_at_cpmax;
+}
+
+double WT_AERODYNAMIC_MODEL::get_current_pelec_including_loss_per_turbine_in_MW() const
+{
+    return current_pelec_including_loss_per_turbine;
+}
+
+double WT_AERODYNAMIC_MODEL::get_current_turbine_speed_reference_without_limit_in_rad_per_s() const
+{
+    return current_turbine_speed_reference_without_limit_in_rad_per_s;
 }
 
 double WT_AERODYNAMIC_MODEL::get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(double speed_rad_per_s) const
@@ -918,89 +1070,20 @@ double WT_AERODYNAMIC_MODEL::get_Cpmax(double pitch_deg)
 
 double WT_AERODYNAMIC_MODEL::get_lambda_at_Cpmax(double pitch_deg)
 {
-    ostringstream osstream;
+    /*ostringstream osstream;
+    osstream<<"Searching lambda_max of pitch "<<pitch_deg<<endl
+            <<"Current [pitch, lambda_max] pair is ["<<get_current_pitch_angle_in_deg()
+            <<", "<<get_current_lambda_at_cpmax()<<"]";
+    show_information_with_leading_time_stamp(osstream);*/
 
-    if(fabs(current_pitch_angle_in_deg-pitch_deg)<FLOAT_EPSILON)
-        return current_lambda_at_cpmax;
+    if(fabs(get_current_pitch_angle_in_deg()-pitch_deg)<FLOAT_EPSILON)
+        return get_current_lambda_at_cpmax();
 
-    current_pitch_angle_in_deg = pitch_deg;
+    set_current_pitch_angle_in_deg(pitch_deg);
 
-    double lambdalow = 3.0;
-    double lambdahigh = 3.0;
-    //osstream<<"now go get Cp'>0";
+    //osstream<<"New [pitch, lambda_max] pair is ["<<get_current_pitch_angle_in_deg()
+    //        <<", "<<get_current_lambda_at_cpmax()<<"]";
     //show_information_with_leading_time_stamp(osstream);
-    while(true)
-    {
-        double der = get_derivative_of_Cp_over_lambda(lambdalow, pitch_deg);
-        if(der>0.0)
-            break;
-        else
-        {
-            lambdalow *= 0.5;
-            //cout<<"lambda = "<<lambdalow<<endl;
-        }
-    }
-    //osstream<<"now go get Cp'<0";
-    //show_information_with_leading_time_stamp(osstream);
-    while(true)
-    {
-        double der = get_derivative_of_Cp_over_lambda(lambdahigh, pitch_deg);
-        //cout<<lambdahigh<<", der = "<<der<<endl;
-        if(der<0.0)
-            break;
-        else
-        {
-            lambdahigh *= 1.5;
-            //cout<<"lambda = "<<lambdahigh<<endl;
-        }
 
-    }
-
-    double derlow =  get_derivative_of_Cp_over_lambda(lambdalow, pitch_deg);
-    double derhigh =  get_derivative_of_Cp_over_lambda(lambdahigh, pitch_deg);
-
-    //osstream<<"Initials: Low lambda = "<< lambdalow<<", dCp/dl = "<<derlow<<endl
-    //        <<"          High lambda = "<<lambdahigh<<", dCp/dl = "<<derhigh<<endl;
-    //show_information_with_leading_time_stamp(osstream);
-    double newlambda = 0.0;
-    size_t iter_count = 0, iter_max = 50;
-    while(true)
-    {
-        newlambda = lambdalow*(derhigh/(derhigh-derlow))-lambdahigh*(derlow/(derhigh-derlow));
-        double dernew =  get_derivative_of_Cp_over_lambda(newlambda, pitch_deg);
-        //osstream<<"Iteration "<<iter_count<<": lambda = "<<newlambda<<",, dCp/dl = "<<dernew<<endl;
-        //show_information_with_leading_time_stamp(osstream);
-        if(fabs(dernew)<1e-8)
-        {
-            //osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
-            //show_information_with_leading_time_stamp(osstream);
-            break;
-        }
-
-        if(dernew>0.0)
-        {
-            lambdalow = newlambda;
-            derlow = dernew;
-        }
-        else
-        {
-            lambdahigh = newlambda;
-            derhigh = dernew;
-        }
-        iter_count++;
-        if(iter_count>iter_max)
-        {
-            /*string iteration_info = osstream.str();
-            osstream.str("");
-            osstream<<"Warning. Failed to get MPPT lambda at Cpmax in "<<iter_max<<" iterations with pitch angle = "<<pitch_deg<<" deg."<<endl
-                   <<"Lambda is returned as "<<newlambda<<"."<<endl<<"Check "<<get_model_name()<<" model of "<<get_device_name()<<endl
-                   <<"Below are iterations to get MPPT lambda:"<<endl<<iteration_info;
-            show_information_with_leading_time_stamp(osstream);*/
-            break;
-        }
-    }
-
-    current_lambda_at_cpmax = newlambda;
-
-    return newlambda;
+    return get_current_lambda_at_cpmax();
 }

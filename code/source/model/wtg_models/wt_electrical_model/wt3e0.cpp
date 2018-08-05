@@ -897,11 +897,11 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
     virtual_inertia_emulator.set_input(-freq);
     virtual_inertia_emulator.run(mode);
-    //osstream<<"virtual_inertia_emulator input = "<<input<<", output = "<<virtual_inertia_emulator.get_output()<<endl;
+    //osstream<<"virtual_inertia_emulator input = "<<-freq<<", output = "<<virtual_inertia_emulator.get_output()<<endl;
 
     frequency_droop_controller.set_input(-freq);
     frequency_droop_controller.run(mode);
-    //osstream<<"frequency_droop_controller input = "<<input<<", output = "<<frequency_droop_controller.get_output()<<endl;
+    //osstream<<"frequency_droop_controller input = "<<-freq<<", output = "<<frequency_droop_controller.get_output()<<endl;
 
     double fupper = get_frequency_deviation_upper_deadband_in_pu();
     double flower = get_frequency_deviation_lower_deadband_in_pu();
@@ -913,6 +913,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
     frequency_integral_controller.set_input(-f_int);
     frequency_integral_controller.run(mode);
 
+    //osstream<<"speed = "<<speed<<endl;
     input = torque_PI_regulator.get_output()*speed
             +virtual_inertia_emulator.get_output()
             +frequency_droop_controller.get_output()
@@ -923,6 +924,8 @@ void WT3E0::run(DYNAMIC_MODE mode)
     if(input<get_rPmin_in_pu())
         input = get_rPmin_in_pu();
 
+    //osstream<<"At time "<<STEPS::TIME<<", WT3E0 power_order_integrator input is "<<input;
+    //show_information_with_leading_time_stamp(osstream);
     power_order_integrator.set_input(input);
     power_order_integrator.run(mode);
     //osstream<<"power_order_integrator input = "<<input<<", output = "<<power_order_integrator.get_output()<<endl;

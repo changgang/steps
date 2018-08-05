@@ -115,10 +115,20 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         void initialize_generator_to_turbine_gear_ratio();
         void initialize_pitch_angle_and_turbine_speed();
         void initialize_pitch_angle_and_turbine_speed_with_mppt_mode();
+        void initialize_pitch_angle_and_turbine_speed_with_underspeed_or_overspeed_mode();
         void initialize_pitch_angle();
         void initialize_turbine_speed();
         double get_turbine_reference_speed_in_rad_per_s_without_speed_limit();
         double get_mppt_speed_in_rad_per_s(double pitch_in_deg);
+
+        void set_current_pitch_angle_in_deg(double pitch);
+        void update_current_lambda_at_cpmax_with_current_pitch_angle();
+        void set_current_pelec_including_loss_per_turbine_in_MW(double pelec);
+        void update_current_turbine_speed_reference_without_limit();
+        double get_current_pitch_angle_in_deg() const;
+        double get_current_lambda_at_cpmax() const;
+        double get_current_pelec_including_loss_per_turbine_in_MW() const;
+        double get_current_turbine_speed_reference_without_limit_in_rad_per_s() const;
         // turbine nominals
         double nominal_wind_speed_in_mps;
         double turbine_blade_radius_in_m;
