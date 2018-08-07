@@ -1091,7 +1091,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
         //    csv_output_file<<","<<meters[i].get_meter_type();
         //csv_output_file<<endl;
 
-        csv_output_file<<"TIME,ITERATION_DAE,ITERATION_NET,MISMATCH IN MVA";
+        csv_output_file<<"TIME,DAE INTEGRATION,NETWORK ITERATION,MISMATCH IN MVA";
 
         for(size_t i=0; i!=n; ++i)
             csv_output_file<<","<<meters[i].get_meter_name();
@@ -1108,7 +1108,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
         //    json_output_file<<", \""<<meters[i].get_meter_type()<<"\"";
         //json_output_file<<"],"<<endl<<endl;
 
-        json_output_file<<"    \"meter_name\" : [\"TIME\", \"ITERATION\", \"MISMATCH IN MVA\"";
+        json_output_file<<"    \"meter_name\" : [\"TIME\", \"DAE INTEGRATION\", \"NETWORK ITERATION\", \"MISMATCH IN MVA\"";
         for(size_t i=0; i!=n; ++i)
             json_output_file<<", \""<<meters[i].get_meter_name()<<"\"";
         json_output_file<<"],"<<endl<<endl;
@@ -1132,12 +1132,20 @@ void DYNAMICS_SIMULATOR::save_meter_values()
     update_all_meters_value();
 
     ostringstream osstream;
-    osstream<<setw(8)<<setprecision(4)<<fixed<<get_dynamic_simulation_time_in_s()<<","
-      <<setw(3)<<ITER_DAE<<","<<setw(3)<<ITER_NET<<","
-      <<setw(6)<<setprecision(3)<<fixed<<smax;
+    //osstream<<setw(8)<<setprecision(4)<<fixed<<get_dynamic_simulation_time_in_s()<<","
+    //  <<setw(3)<<ITER_DAE<<","<<setw(3)<<ITER_NET<<","
+    //  <<setw(6)<<setprecision(3)<<fixed<<smax;
 
 	char temp_buffer[50];
 	string temp_str = "";
+	snprintf(temp_buffer, 50, "%8.4f",get_dynamic_simulation_time_in_s());
+	temp_str += temp_buffer;
+	snprintf(temp_buffer, 50, ",%3u",ITER_DAE);
+	temp_str += temp_buffer;
+	snprintf(temp_buffer, 50, ",%3u",ITER_NET);
+	temp_str += temp_buffer;
+	snprintf(temp_buffer, 50, ",%6.3f",smax);
+	temp_str += temp_buffer;
 	for (size_t i = 0; i != n; ++i)
 	{
 		snprintf(temp_buffer, 50, ",%16.12f", meter_values[i]);

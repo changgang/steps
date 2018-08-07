@@ -241,7 +241,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
         {
             set_convergence_flag(true);
 
-            osstream<<"Powerflow converged within "<<iteration_count<<" iterations:";
+            osstream<<"Powerflow converged within "<<iteration_count<<" iterations.";
             show_information_with_leading_time_stamp(osstream);
             break;
         }

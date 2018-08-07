@@ -395,7 +395,7 @@ void WT_AERODYNAMIC_MODEL::initialize_turbine_blade_radius_with_nominal_paramete
     double v3 =  v*v*v;
     double rou = get_nominal_air_density_in_kgpm3();
 
-    double cp_max = get_cpmax_at_zero_pitch()
+    double cp_max = get_cpmax_at_zero_pitch();
 
     double blade_area = 2.0*pn/(cp_max*rou*v3);
     double blade_radius = sqrt(blade_area/PI);
