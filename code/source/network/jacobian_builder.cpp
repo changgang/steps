@@ -1181,6 +1181,8 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
         return;
     }
 
+    char buffer[1000];
+
     file<<"ROW_TYPE,COLUMN_TYPE,ROW,ROW_BUS,COLUMN,COLUMN_BUS,VALUE"<<endl;
 
     NETWORK_DATABASE* nw_db = get_network_database();
@@ -1203,8 +1205,10 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
         cvalue = jacobian_delta_p_over_angle.get_entry_value(k);
         rvalue = cvalue.real();
 
-        file<<"P,A,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
-            <<setprecision(6)<<fixed<<rvalue<<endl;
+        /*file<<"P,A,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
+            <<setprecision(6)<<fixed<<rvalue<<endl;*/
+        snprintf(buffer, 1000, "P,A,%d,%lu,%d,%lu,%.6f",row, row_bus, col, col_bus, rvalue);
+        file<<buffer<<endl;
     }
 
     nentry = (size_t) jacobian_delta_p_over_voltage.get_matrix_entry_count();
@@ -1219,8 +1223,10 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
         cvalue = jacobian_delta_p_over_voltage.get_entry_value(k);
         rvalue = cvalue.real();
 
-        file<<"P,V,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
-            <<setprecision(6)<<fixed<<rvalue<<endl;
+        /*file<<"P,V,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
+            <<setprecision(6)<<fixed<<rvalue<<endl;*/
+        snprintf(buffer, 1000, "P,V,%d,%lu,%d,%lu,%.6f",row, row_bus, col, col_bus, rvalue);
+        file<<buffer<<endl;
     }
 
     nentry = (size_t) jacobian_delta_q_over_angle.get_matrix_entry_count();
@@ -1235,8 +1241,10 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
         cvalue = jacobian_delta_q_over_angle.get_entry_value(k);
         rvalue = cvalue.real();
 
-        file<<"Q,A,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
-            <<setprecision(6)<<fixed<<rvalue<<endl;
+        /*file<<"Q,A,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
+            <<setprecision(6)<<fixed<<rvalue<<endl;*/
+        snprintf(buffer, 1000, "Q,A,%d,%lu,%d,%lu,%.6f",row, row_bus, col, col_bus, rvalue);
+        file<<buffer<<endl;
     }
 
     nentry = (size_t) jacobian_delta_q_over_voltage.get_matrix_entry_count();
@@ -1251,8 +1259,10 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
         cvalue = jacobian_delta_q_over_voltage.get_entry_value(k);
         rvalue = cvalue.real();
 
-        file<<"Q,V,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
-            <<setprecision(6)<<fixed<<rvalue<<endl;
+        /*file<<"Q,V,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
+            <<setprecision(6)<<fixed<<rvalue<<endl;*/
+        snprintf(buffer, 1000, "Q,V,%d,%lu,%d,%lu,%.6f",row, row_bus, col, col_bus, rvalue);
+        file<<buffer<<endl;
     }
     file.close();
 }

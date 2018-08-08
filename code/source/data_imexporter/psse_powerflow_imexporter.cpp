@@ -1845,9 +1845,16 @@ string PSSE_IMEXPORTER::export_case_data() const
         return "";
     }
 
-    osstream<<0<<", "<<psdb->get_system_base_power_in_MVA()<<", 33, 0, 0, "<<psdb->get_system_base_frequency_in_Hz()<<endl;
+    char buffer[1000];
+    snprintf(buffer, 1000, "0, %f, 33, 0, 0, %f", psdb->get_system_base_power_in_MVA(), psdb->get_system_base_frequency_in_Hz());
+    osstream<<buffer<<endl;
+    snprintf(buffer, 1000, "%s", (psdb->get_case_title_1()).c_str());
+    osstream<<buffer<<endl;
+    snprintf(buffer, 1000, "%s", (psdb->get_case_title_2()).c_str());
+    osstream<<buffer<<endl;
+    /*osstream<<0<<", "<<psdb->get_system_base_power_in_MVA()<<", 33, 0, 0, "<<psdb->get_system_base_frequency_in_Hz()<<endl;
     osstream<<psdb->get_case_title_1()<<endl;
-    osstream<<psdb->get_case_title_2()<<endl;
+    osstream<<psdb->get_case_title_2()<<endl;*/
     return osstream.str();
 }
 
@@ -1864,6 +1871,7 @@ string PSSE_IMEXPORTER::export_bus_data() const
 
     vector<BUS*> buses = psdb->get_all_buses();
     size_t n = buses.size();
+    char buffer[1000];
     for(size_t i=0; i!=n; ++i)
     {
         BUS* bus = buses[i];
@@ -1877,7 +1885,7 @@ string PSSE_IMEXPORTER::export_bus_data() const
         if(bus_type == SLACK_TYPE) type = 3;
         if(bus_type == OUT_OF_SERVICE) type = 4;
 
-        osstream<<right
+        /*osstream<<right
               <<setw(8)<<setprecision(0)<<bus->get_bus_number()<<", "
               <<"\""
               <<left
@@ -1894,7 +1902,15 @@ string PSSE_IMEXPORTER::export_bus_data() const
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_normal_voltage_upper_limit_in_pu()<<", "
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_normal_voltage_lower_limit_in_pu()<<", "
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_upper_limit_in_pu()<<", "
-              <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_lower_limit_in_pu()<<endl;
+              <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_lower_limit_in_pu()<<endl;*/
+        snprintf(buffer, 1000, "%8lu, \"%16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f",
+                 bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,
+                 bus->get_area_number(), bus->get_zone_number(), bus->get_owner_number(),
+                 bus->get_voltage_in_pu(), bus->get_angle_in_deg(),
+                 bus->get_normal_voltage_upper_limit_in_pu(), bus->get_normal_voltage_lower_limit_in_pu(),
+                 bus->get_emergency_voltage_upper_limit_in_pu(), bus->get_emergency_voltage_lower_limit_in_pu());
+        osstream<<buffer<<endl;
+
     }
 
     return osstream.str();
@@ -1913,11 +1929,12 @@ string PSSE_IMEXPORTER::export_load_data() const
 
     vector<LOAD*> loads = psdb->get_all_loads();
     size_t n = loads.size();
+    char buffer[1000];
     for(size_t i=0; i!=n; ++i)
     {
         LOAD* load = loads[i];
 
-        osstream<<right
+        /*osstream<<right
           <<setw(8)
           <<load->get_load_bus()<<", "
           <<"\""<<left
@@ -1934,7 +1951,16 @@ string PSSE_IMEXPORTER::export_load_data() const
           <<setw(12)<<setprecision(6)<<fixed<<-load->get_nominal_constant_impedance_load_in_MVA().imag()<<", "
           <<setw(4)<<load->get_owner_number()<<", "
           <<setw(2)<<fixed<<1<<", "
-          <<setw(2)<<load->get_flag_interruptable()<<endl;
+          <<setw(2)<<load->get_flag_interruptable()<<endl;*/
+
+        snprintf(buffer, 1000, "%lu, \"%s\", %d, %4lu, %4lu, %12.6f, %12.6f, %12.6f, %12.6f, %12.6f, %12.6f, %4lu, 1, %2d",
+                load->get_load_bus(), (load->get_identifier()).c_str(), (load->get_status()==true)?1:0,
+                load->get_area_number(), load->get_zone_number(),
+                load->get_nominal_constant_power_load_in_MVA().real(), load->get_nominal_constant_power_load_in_MVA().imag(),
+                load->get_nominal_constant_current_load_in_MVA().real(), load->get_nominal_constant_current_load_in_MVA().imag(),
+                load->get_nominal_constant_impedance_load_in_MVA().real(), load->get_nominal_constant_impedance_load_in_MVA().imag(),
+                load->get_owner_number(), (load->get_flag_interruptable()==true)?1:0);
+        osstream<<buffer<<endl;
     }
     return osstream.str();
 }

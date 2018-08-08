@@ -2678,6 +2678,7 @@ void NETWORK_DATABASE::save_decoupled_network_matrix_to_file(string filename) co
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> yp, yq;
+    char buffer[1000];
     for(size_t j=0; j!=n; ++j)
     {
         k_ending = network_BP_matrix.get_starting_index_of_column(j+1);
@@ -2689,9 +2690,11 @@ void NETWORK_DATABASE::save_decoupled_network_matrix_to_file(string filename) co
             ibus = get_physical_bus_number_of_internal_bus(i);
             jbus = get_physical_bus_number_of_internal_bus(j);
 
-            file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
+            snprintf(buffer, 1000, "%lu,%lu,%lu,%lu,%.14f,%.14f",i, ibus, j, jbus, yp.imag(), yq.imag());
+            file<<buffer<<endl;
+            /*file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
                 <<setprecision(14)<<fixed<<yp.imag()<<","
-                <<setprecision(14)<<fixed<<yq.imag()<<endl;
+                <<setprecision(14)<<fixed<<yq.imag()<<endl;*/
         }
         k_starting = k_ending;
     }
@@ -2718,6 +2721,7 @@ void NETWORK_DATABASE::save_dc_network_matrix_to_file(string filename) const
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> y;
+    char buffer[1000];
     for(size_t j=0; j!=n; ++j)
     {
         k_ending = network_DC_B_matrix.get_starting_index_of_column(j+1);
@@ -2728,8 +2732,10 @@ void NETWORK_DATABASE::save_dc_network_matrix_to_file(string filename) const
             ibus = get_physical_bus_number_of_internal_bus(i);
             jbus = get_physical_bus_number_of_internal_bus(j);
 
-            file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
-                <<setprecision(14)<<fixed<<y.imag()<<endl;
+            snprintf(buffer, 1000, "%lu,%lu,%lu,%lu,%.14f",i, ibus, j, jbus, y.imag());
+            file<<buffer<<endl;
+            /*file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
+                <<setprecision(14)<<fixed<<y.imag()<<endl;*/
         }
         k_starting = k_ending;
     }
@@ -2762,6 +2768,7 @@ void NETWORK_DATABASE::save_network_matrix_common(ofstream& file) const
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> y;
+    char buffer[1000];
     for(size_t j=0; j!=n; ++j)
     {
         k_ending = network_Y_matrix.get_starting_index_of_column(j+1);
@@ -2772,9 +2779,11 @@ void NETWORK_DATABASE::save_network_matrix_common(ofstream& file) const
             ibus = get_physical_bus_number_of_internal_bus(i);
             jbus = get_physical_bus_number_of_internal_bus(j);
 
-            file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
+            snprintf(buffer, 1000, "%lu,%lu,%lu,%lu,%.14f,%.14f",i, ibus, j, jbus, y.real(), y.imag());
+            file<<buffer<<endl;
+            /*file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
                 <<setprecision(14)<<fixed<<y.real()<<","
-                <<setprecision(14)<<fixed<<y.imag()<<endl;
+                <<setprecision(14)<<fixed<<y.imag()<<endl;*/
         }
         k_starting = k_ending;
     }

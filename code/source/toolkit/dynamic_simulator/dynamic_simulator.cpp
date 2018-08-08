@@ -1140,9 +1140,9 @@ void DYNAMICS_SIMULATOR::save_meter_values()
 	string temp_str = "";
 	snprintf(temp_buffer, 50, "%8.4f",get_dynamic_simulation_time_in_s());
 	temp_str += temp_buffer;
-	snprintf(temp_buffer, 50, ",%3u",ITER_DAE);
+	snprintf(temp_buffer, 50, ",%3lu",ITER_DAE);
 	temp_str += temp_buffer;
-	snprintf(temp_buffer, 50, ",%3u",ITER_NET);
+	snprintf(temp_buffer, 50, ",%3lu",ITER_NET);
 	temp_str += temp_buffer;
 	snprintf(temp_buffer, 50, ",%6.3f",smax);
 	temp_str += temp_buffer;
@@ -2007,27 +2007,26 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT 
     BUS* busptr = db->get_bus(bus);
     double fault_b = fault.get_fault_shunt_in_pu().imag();
     double current_voltage = busptr->get_voltage_in_pu();
-    if(fault_b<-2e8)
+    double vbase = busptr->get_base_voltage_in_kV();
+    double sbase = db->get_system_base_power_in_MVA();
+    double zbase = vbase*vbase/sbase;
+    double fault_x = -1.0/fault_b*zbase;
+    if(fault_x<1)
         busptr->set_voltage_in_pu(0.05);
     else
     {
-        if(fault_b<-2e7)
+        if(fault_x<5)
             busptr->set_voltage_in_pu(0.1);
         else
         {
-            if(fault_b<-2e6)
+            if(fault_x<10)
                 busptr->set_voltage_in_pu(0.2);
             else
             {
-                if(fault_b<-2e5)
-                    busptr->set_voltage_in_pu(0.3);
+                if(fault_x<100)
+                    busptr->set_voltage_in_pu(0.5);
                 else
-                {
-                    if(fault_b<-2e4)
-                        busptr->set_voltage_in_pu(0.4);
-                    else
-                        busptr->set_voltage_in_pu(current_voltage-0.1);
-                }
+                    busptr->set_voltage_in_pu(current_voltage-0.1);
             }
         }
     }
@@ -2039,6 +2038,9 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, FA
     BUS* busptr = db->get_bus(bus);
     double fault_b = fault.get_fault_shunt_in_pu().imag();
     double current_voltage = busptr->get_voltage_in_pu();
+    busptr->set_voltage_in_pu(0.8);;
+    return;
+
     if(fault_b<-2e8)
         busptr->set_voltage_in_pu(current_voltage+0.95);
     else
