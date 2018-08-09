@@ -10,7 +10,10 @@ class LOAD_VOLTAGE_RELAY_MODEL : public LOAD_RELAY_MODEL
         virtual ~LOAD_VOLTAGE_RELAY_MODEL();
 
         virtual string get_model_type() const;
+    public: // common input
+        double get_bus_voltage_in_pu() const;
 
+    public: // other common
         virtual string get_model_name() const = 0;
 
         virtual double get_double_data_with_index(size_t index) const = 0;
@@ -24,23 +27,21 @@ class LOAD_VOLTAGE_RELAY_MODEL : public LOAD_RELAY_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
+        virtual double get_total_shed_scale_factor_in_pu() const = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;
         virtual void save() = 0;
+        virtual string get_standard_model_string() const = 0;
 
-        virtual double get_variable_with_index(size_t var_index) = 0;
-        virtual double get_variable_with_name(string var_name) = 0;
-        virtual size_t get_variable_index_from_variable_name(string var_name) = 0;
-
-        virtual double get_total_shed_scale_factor_in_pu() const = 0;
+        virtual size_t get_variable_index_from_variable_name(string var_name)= 0;
+        virtual string get_variable_name_from_variable_index(size_t var_index)= 0;
+        virtual double get_variable_with_index(size_t var_index)= 0;
+        virtual double get_variable_with_name(string var_name)= 0;
 
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
-    public:
-
-    private:
 
 };
 

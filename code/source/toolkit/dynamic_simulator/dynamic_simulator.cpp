@@ -784,6 +784,8 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(DEVICE_ID did, string meter_
         meter = setter.prepare_line_active_power_in_MW_meter(did, bus);
     if(meter_type=="REACTIVE POWER IN MVAR")
         meter = setter.prepare_line_reactive_power_in_MVar_meter(did, bus);
+    if(meter_type=="CURRENT IN KA")
+        meter = setter.prepare_line_current_in_kA_meter(did, bus);
 
     if(meter.is_valid())
         append_meter(meter);

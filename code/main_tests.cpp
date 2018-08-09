@@ -93,6 +93,7 @@
 #include "header/model/load_model/load_model_test.h"
 #include "header/model/load_model/IEEL_test.h"
 
+#include "header/model/load_relay_model/UVLS_test.h"
 #include "header/model/load_relay_model/UFLS_test.h"
 #include "header/model/load_relay_model/PUFLS_test.h"
 
@@ -275,7 +276,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new IEEEG3_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEESGO_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new IEEL_TEST));
+        ts.add(unique_ptr<Test::Suite>(new IEEL_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new UVLS_TEST));/*
         ts.add(unique_ptr<Test::Suite>(new UFLS_TEST));
         ts.add(unique_ptr<Test::Suite>(new PUFLS_TEST));
 

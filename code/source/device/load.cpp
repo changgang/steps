@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/model/load_model/load_models.h"
 #include "header/model/load_relay_model/load_frequency_relay_models.h"
+#include "header/model/load_relay_model/load_voltage_relay_models.h"
 #include <iostream>
 
 using namespace std;
@@ -476,11 +477,6 @@ void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* mode
         PUFLS* smodel = (PUFLS*) (model);
         new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new PUFLS(*smodel);
     }
-    if(model_name=="PUFLS")
-    {
-        PUFLS* smodel = (PUFLS*) (model);
-        new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new PUFLS(*smodel);
-    }
 
     if(new_model!=NULL)
     {
@@ -498,9 +494,39 @@ void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* mode
 
 void LOAD::set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model)
 {
-    ostringstream osstream;
-    osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
-    show_information_with_leading_time_stamp(osstream);
+    if(model == NULL)
+        return;
+
+    if(model->get_model_type()!="LOAD VOLTAGE RELAY")
+        return;
+
+    LOAD_VOLTAGE_RELAY_MODEL* oldmodel = get_load_voltage_relay_model();
+    if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
+    {
+        delete oldmodel;
+        load_voltage_relay_model = NULL;
+    }
+
+    LOAD_VOLTAGE_RELAY_MODEL *new_model = NULL;
+    string model_name = model->get_model_name();
+    if(model_name=="UVLS")
+    {
+        UVLS* smodel = (UVLS*) (model);
+        new_model = (LOAD_VOLTAGE_RELAY_MODEL*) new UVLS(*smodel);
+    }
+
+    if(new_model!=NULL)
+    {
+        new_model->set_power_system_database(get_power_system_database());
+        new_model->set_device_id(get_device_id());
+        load_voltage_relay_model = new_model;
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load voltage relay model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
+    }
 }
 
 

@@ -86,7 +86,6 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
         TIMER stage_timer[MAX_LOAD_RELAY_STAGE];
         TIMER breaker_timer[MAX_LOAD_RELAY_STAGE];
         bool flag_stage_is_tripped[MAX_LOAD_RELAY_STAGE];
-
 };
 
 #endif // UFLS_H

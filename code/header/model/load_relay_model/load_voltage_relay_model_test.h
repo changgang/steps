@@ -1,5 +1,5 @@
-#ifndef LOAD_FREQUENCY_RELAY_MODEL_TEST_H
-#define LOAD_FREQUENCY_RELAY_MODEL_TEST_H
+#ifndef LOAD_VOLTAGE_RELAY_MODEL_TEST_H
+#define LOAD_VOLTAGE_RELAY_MODEL_TEST_H
 
 
 #include <cstdlib>
@@ -12,21 +12,21 @@
 
 #include "thirdparty/cpptest/cpptest.h"
 
-#include "header/model/load_relay_model/load_frequency_relay_model.h"
+#include "header/model/load_relay_model/load_voltage_relay_model.h"
 #include "header/model/load_relay_model/load_relay_model_test.h"
 #include "header/power_system_database.h"
 using namespace std;
 
-class LOAD_FREQUENCY_RELAY_MODEL_TEST : public LOAD_RELAY_MODEL_TEST
+class LOAD_VOLTAGE_RELAY_MODEL_TEST : public LOAD_RELAY_MODEL_TEST
 {
     public:
-        LOAD_FREQUENCY_RELAY_MODEL_TEST();
+        LOAD_VOLTAGE_RELAY_MODEL_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
     protected:
         void test_model_type();
-        void test_get_bus_frequency();
+        void test_get_bus_voltage();
         void test_run();
         void run_model(string outputfile);
 
@@ -37,4 +37,4 @@ class LOAD_FREQUENCY_RELAY_MODEL_TEST : public LOAD_RELAY_MODEL_TEST
         void export_meter_values();
 };
 
-#endif//LOAD_FREQUENCY_RELAY_MODEL_TEST_H
+#endif//LOAD_VOLTAGE_RELAY_MODEL_TEST_H
