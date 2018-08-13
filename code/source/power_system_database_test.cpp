@@ -16,6 +16,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_bus_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_generator_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_wt_generator_capacity);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_pv_unit_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_load_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_fixed_shunt_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_line_capacity);
@@ -38,6 +39,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_bus_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer);
@@ -51,6 +53,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_generator_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_wt_generator_exist);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_pv_unit_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_load_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_line_exist);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_transformer_exist);
@@ -66,6 +69,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_connecting_to_bus);
@@ -77,6 +81,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_connecting_to_bus);
@@ -89,6 +94,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_area);
@@ -101,6 +107,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_area);
@@ -113,6 +120,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_zone);
@@ -125,6 +133,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_zone);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_zone);
@@ -139,6 +148,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_generators);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_pv_units);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_sources);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_loads);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_lines);
@@ -156,6 +166,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses_number);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_generators_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators_device_id);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_pv_units_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_loads_device_id);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_lines_device_id);
@@ -172,6 +183,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_in_service_bus_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generator_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_count);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_unit_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_source_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_load_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_line_count);
@@ -187,6 +199,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generator_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_index);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_unit_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_load_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_line_index);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_transformer_index);
@@ -229,6 +242,12 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_zone);
 
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_all_pv_unit_power);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_at_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_area);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_zone);
+
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_database);
     //TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_buses);
@@ -238,6 +257,9 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generator);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generators_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_wt_generators);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_pv_unit);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_pv_units_connecting_to_bus);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_pv_units);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_sources_connecting_to_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_sources);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_load);
@@ -298,6 +320,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     // Bus: 1, 2, 3
     // Generator: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // WT generator: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // PV UNIT: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // Load: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // Fixed shunt: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
     // Line: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2,
@@ -476,6 +499,76 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         wt_generator.set_q_max_in_MVar(302.0);
         wt_generator.set_q_min_in_MVar(-302.0);
         db->append_wt_generator(wt_generator);
+    }
+
+
+    {
+        PV_UNIT pv_unit(db);
+        pv_unit.set_unit_bus(1);
+        pv_unit.set_identifier("#1");
+        pv_unit.set_status(true);
+        pv_unit.set_p_generation_in_MW(10.0);
+        pv_unit.set_q_generation_in_MVar(10.0);
+        pv_unit.set_p_max_in_MW(101.0);
+        pv_unit.set_p_min_in_MW(-101.0);
+        pv_unit.set_q_max_in_MVar(101.0);
+        pv_unit.set_q_min_in_MVar(-101.0);
+        pv_unit.set_regulating_mode(REGULATING_VA);
+        db->append_pv_unit(pv_unit);
+
+        pv_unit.set_identifier("#2");
+        pv_unit.set_status(true);
+        pv_unit.set_p_generation_in_MW(10.0);
+        pv_unit.set_q_generation_in_MVar(20.0);
+        pv_unit.set_p_max_in_MW(102.0);
+        pv_unit.set_p_min_in_MW(-102.0);
+        pv_unit.set_q_max_in_MVar(102.0);
+        pv_unit.set_q_min_in_MVar(-102.0);
+        db->append_pv_unit(pv_unit);
+
+        pv_unit.set_unit_bus(2);
+        pv_unit.set_identifier("#1");
+        pv_unit.set_status(true);
+        pv_unit.set_p_generation_in_MW(20.0);
+        pv_unit.set_q_generation_in_MVar(10.0);
+        pv_unit.set_p_max_in_MW(201.0);
+        pv_unit.set_p_min_in_MW(-201.0);
+        pv_unit.set_q_max_in_MVar(201.0);
+        pv_unit.set_q_min_in_MVar(-201.0);
+        pv_unit.set_regulating_mode(REGULATING_PV);
+        db->append_pv_unit(pv_unit);
+
+        pv_unit.set_identifier("#2");
+        pv_unit.set_status(true);
+        pv_unit.set_p_generation_in_MW(20.0);
+        pv_unit.set_q_generation_in_MVar(20.0);
+        pv_unit.set_p_max_in_MW(202.0);
+        pv_unit.set_p_min_in_MW(-202.0);
+        pv_unit.set_q_max_in_MVar(202.0);
+        pv_unit.set_q_min_in_MVar(-202.0);
+        db->append_pv_unit(pv_unit);
+
+        pv_unit.set_unit_bus(3);
+        pv_unit.set_identifier("#1");
+        pv_unit.set_status(true);
+        pv_unit.set_p_generation_in_MW(30.0);
+        pv_unit.set_q_generation_in_MVar(10.0);
+        pv_unit.set_p_max_in_MW(301.0);
+        pv_unit.set_p_min_in_MW(-301.0);
+        pv_unit.set_q_max_in_MVar(301.0);
+        pv_unit.set_q_min_in_MVar(-301.0);
+        pv_unit.set_regulating_mode(REGULATING_PQ);
+        db->append_pv_unit(pv_unit);
+
+        pv_unit.set_identifier("#2");
+        pv_unit.set_status(true);
+        pv_unit.set_p_generation_in_MW(30.0);
+        pv_unit.set_q_generation_in_MVar(20.0);
+        pv_unit.set_p_max_in_MW(302.0);
+        pv_unit.set_p_min_in_MW(-302.0);
+        pv_unit.set_q_max_in_MVar(302.0);
+        pv_unit.set_q_min_in_MVar(-302.0);
+        db->append_pv_unit(pv_unit);
     }
 
     {
@@ -781,6 +874,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_wt_generator_capacity()
 
     db->set_wt_generator_capacity(20000);
     TEST_ASSERT(db->get_wt_generator_capacity()==20000);
+}
+
+
+void POWER_SYSTEM_DATABASE_TEST::test_set_get_pv_unit_capacity()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    db->set_pv_unit_capacity(10000);
+    TEST_ASSERT(db->get_pv_unit_capacity()==10000);
+
+    db->set_pv_unit_capacity(1000);
+    TEST_ASSERT(db->get_pv_unit_capacity()==10000);
+
+    db->set_pv_unit_capacity(20000);
+    TEST_ASSERT(db->get_pv_unit_capacity()==20000);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_set_get_load_capacity()
@@ -1141,6 +1249,59 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
     TEST_ASSERT(pwt_generator->get_source_bus()==1);
     TEST_ASSERT(pwt_generator->get_identifier()=="#2");
     TEST_ASSERT(pwt_generator->get_status()==false);
+}
+
+
+void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    db->set_allowed_max_bus_number(100);
+
+    BUS bus(db);
+    bus.set_bus_number(1);
+    bus.set_base_voltage_in_kV(18.0);
+    bus.set_voltage_in_pu(1.0);
+    db->append_bus(bus);
+
+    PV_UNIT pv_unit(db);
+    pv_unit.set_unit_bus(1);
+    pv_unit.set_identifier("#1");
+    pv_unit.set_status(true);
+
+    db->append_pv_unit(pv_unit);
+
+    pv_unit.set_unit_bus(1);
+    pv_unit.set_identifier("#2");
+    pv_unit.set_status(false);
+
+    db->append_pv_unit(pv_unit);
+
+    TEST_ASSERT(db->get_pv_unit_count()==2);
+
+    PV_UNIT* ppv_unit;
+    DEVICE_ID did;
+    did.set_device_type("PV UNIT");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    ppv_unit = db->get_pv_unit(did);
+
+    TEST_ASSERT(ppv_unit!=NULL);
+    TEST_ASSERT(ppv_unit->get_source_bus()==1);
+    TEST_ASSERT(ppv_unit->get_identifier()=="#1");
+    TEST_ASSERT(ppv_unit->get_status()==true);
+
+    did.set_device_identifier("#2");
+
+    ppv_unit = db->get_pv_unit(did);
+
+    TEST_ASSERT(ppv_unit!=NULL);
+    TEST_ASSERT(ppv_unit->get_source_bus()==1);
+    TEST_ASSERT(ppv_unit->get_identifier()=="#2");
+    TEST_ASSERT(ppv_unit->get_status()==false);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
@@ -1737,6 +1898,32 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_wt_generator_exist()
     }
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_is_pv_unit_exist()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    DEVICE_ID did;
+    did.set_device_type("PV UNIT");
+    TERMINAL terminal;
+    for(size_t i=1; i!=4; ++i)
+    {
+        terminal.clear();
+        terminal.append_bus(i);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier("#1");
+        TEST_ASSERT(db->is_pv_unit_exist(did)==true);
+
+        did.set_device_identifier("#2");
+        TEST_ASSERT(db->is_pv_unit_exist(did)==true);
+
+        did.set_device_identifier("#3");
+        TEST_ASSERT(db->is_pv_unit_exist(did)==false);
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_is_load_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -2255,6 +2442,30 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_connecting_to_bus()
     TEST_ASSERT(device.size()==0);
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_connecting_to_bus()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<PV_UNIT*> device;
+    for(size_t i=1; i!=4; ++i)
+    {
+        device = db->get_pv_units_connecting_to_bus(i);
+
+        TEST_ASSERT(device.size()==2);
+
+        TEST_ASSERT(device[0]->get_unit_bus()==i);
+        TEST_ASSERT(device[0]->get_identifier()=="#1");
+        TEST_ASSERT(device[1]->get_source_bus()==i);
+        TEST_ASSERT(device[1]->get_identifier()=="#2");
+    }
+
+    device = db->get_pv_units_connecting_to_bus(4);
+    TEST_ASSERT(device.size()==0);
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_sources_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -2266,7 +2477,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_connecting_to_bus()
     {
         device = db->get_sources_connecting_to_bus(i);
 
-        TEST_ASSERT(device.size()==4);
+        TEST_ASSERT(device.size()==6);
 
         TEST_ASSERT(device[0]->get_source_bus()==i);
         TEST_ASSERT(device[0]->get_identifier()=="#1");
@@ -2276,6 +2487,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_connecting_to_bus()
         TEST_ASSERT(device[2]->get_identifier()=="#1");
         TEST_ASSERT(device[3]->get_source_bus()==i);
         TEST_ASSERT(device[3]->get_identifier()=="#2");
+        TEST_ASSERT(device[4]->get_source_bus()==i);
+        TEST_ASSERT(device[4]->get_identifier()=="#1");
+        TEST_ASSERT(device[5]->get_source_bus()==i);
+        TEST_ASSERT(device[5]->get_identifier()=="#2");
     }
 
     device = db->get_sources_connecting_to_bus(4);
@@ -2641,6 +2856,27 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_
     }
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_connecting_to_bus()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE_ID> dids;
+
+    for(size_t i=1; i!=4; ++i)
+    {
+        dids = db->get_pv_units_device_id_connecting_to_bus(i);
+        TEST_ASSERT(dids.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(dids[j].get_device_type()=="PV UNIT");
+            TEST_ASSERT(db->get_pv_unit(dids[j])->is_connected_to_bus(i)==true);
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -2652,10 +2888,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus()
     for(size_t i=1; i!=4; ++i)
     {
         dids = db->get_sources_device_id_connecting_to_bus(i);
-        TEST_ASSERT(dids.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        TEST_ASSERT(dids.size()==6);
+        for(size_t j=0; j!=6; ++j)
         {
-            TEST_ASSERT(dids[j].get_device_type()=="GENERATOR" or dids[j].get_device_type()=="WT GENERATOR" );
+            TEST_ASSERT(dids[j].get_device_type()=="GENERATOR" or dids[j].get_device_type()=="WT GENERATOR"
+                        or dids[j].get_device_type()=="PV UNIT");
             TEST_ASSERT(db->get_source(dids[j])->is_connected_to_bus(i)==true);
         }
     }
@@ -2862,6 +3099,27 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_area()
     }
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_area()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<PV_UNIT*> devices;
+
+    for(size_t i=1; i!=3; ++i)
+    {
+        devices = db->get_pv_units_in_area(i);
+        TEST_ASSERT(devices.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="PV UNIT");
+            TEST_ASSERT(devices[j]->is_in_area(i)==true);
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -2873,10 +3131,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_area()
     for(size_t i=1; i!=3; ++i)
     {
         devices = db->get_sources_in_area(i);
-        TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        TEST_ASSERT(devices.size()==6);
+        for(size_t j=0; j!=6; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR" or devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR"
+                        or devices[j]->get_device_id().get_device_type()=="WT GENERATOR"
+                        or devices[j]->get_device_id().get_device_type()=="PV UNIT");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
         }
     }
@@ -3083,6 +3343,27 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_area()
     }
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_area()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE_ID> devices;
+
+    for(size_t i=1; i!=3; ++i)
+    {
+        devices = db->get_pv_units_device_id_in_area(i);
+        TEST_ASSERT(devices.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(devices[j].get_device_type()=="PV UNIT");
+            TEST_ASSERT(db->get_pv_unit(devices[j])->is_in_area(i)==true);
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -3094,10 +3375,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area()
     for(size_t i=1; i!=3; ++i)
     {
         devices = db->get_sources_device_id_in_area(i);
-        TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        TEST_ASSERT(devices.size()==6);
+        for(size_t j=0; j!=6; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR" or devices[j].get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR"
+                        or devices[j].get_device_type()=="WT GENERATOR"
+                        or devices[j].get_device_type()=="PV UNIT");
             TEST_ASSERT(db->get_source(devices[j])->is_in_area(i)==true);
         }
     }
@@ -3303,6 +3586,27 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_zone()
     }
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_zone()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<PV_UNIT*> devices;
+
+    for(size_t i=1; i!=3; ++i)
+    {
+        devices = db->get_pv_units_in_zone(i);
+        TEST_ASSERT(devices.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="PV UNIT");
+            TEST_ASSERT(devices[j]->is_in_zone(i)==true);
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -3314,10 +3618,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_zone()
     for(size_t i=1; i!=3; ++i)
     {
         devices = db->get_sources_in_zone(i);
-        TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        TEST_ASSERT(devices.size()==6);
+        for(size_t j=0; j!=6; ++j)
         {
-            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR" or devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR"
+                        or devices[j]->get_device_id().get_device_type()=="WT GENERATOR"
+                        or devices[j]->get_device_id().get_device_type()=="PV UNIT");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
         }
     }
@@ -3524,6 +3830,27 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_zone()
     }
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_zone()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE_ID> devices;
+
+    for(size_t i=1; i!=3; ++i)
+    {
+        devices = db->get_pv_units_device_id_in_zone(i);
+        TEST_ASSERT(devices.size()==2);
+        for(size_t j=0; j!=2; ++j)
+        {
+            TEST_ASSERT(devices[j].get_device_type()=="PV UNIT");
+            TEST_ASSERT(db->get_pv_unit(devices[j])->is_in_zone(i)==true);
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -3535,10 +3862,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone()
     for(size_t i=1; i!=3; ++i)
     {
         devices = db->get_sources_device_id_in_zone(i);
-        TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        TEST_ASSERT(devices.size()==6);
+        for(size_t j=0; j!=6; ++j)
         {
-            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR" or devices[j].get_device_type()=="WT GENERATOR");
+            TEST_ASSERT(devices[j].get_device_type()=="GENERATOR"
+                        or devices[j].get_device_type()=="WT GENERATOR"
+                        or devices[j].get_device_type()=="PV UNIT");
             TEST_ASSERT(db->get_source(devices[j])->is_in_zone(i)==true);
         }
     }
@@ -3818,6 +4147,31 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators()
     TEST_ASSERT(device[5]->get_identifier()=="#2");
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_pv_units()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<PV_UNIT*> device = db->get_all_pv_units();
+
+    TEST_ASSERT(device.size()==6);
+
+    TEST_ASSERT(device[0]->get_source_bus()==1);
+    TEST_ASSERT(device[0]->get_identifier()=="#1");
+    TEST_ASSERT(device[1]->get_source_bus()==1);
+    TEST_ASSERT(device[1]->get_identifier()=="#2");
+    TEST_ASSERT(device[2]->get_source_bus()==2);
+    TEST_ASSERT(device[2]->get_identifier()=="#1");
+    TEST_ASSERT(device[3]->get_source_bus()==2);
+    TEST_ASSERT(device[3]->get_identifier()=="#2");
+    TEST_ASSERT(device[4]->get_source_bus()==3);
+    TEST_ASSERT(device[4]->get_identifier()=="#1");
+    TEST_ASSERT(device[5]->get_source_bus()==3);
+    TEST_ASSERT(device[5]->get_identifier()=="#2");
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -3826,7 +4180,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources()
 
     vector<SOURCE*> device = db->get_all_sources();
 
-    TEST_ASSERT(device.size()==12);
+    TEST_ASSERT(device.size()==18);
 
     TEST_ASSERT(device[0]->get_source_bus()==1);
     TEST_ASSERT(device[0]->get_identifier()=="#1");
@@ -3852,6 +4206,18 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources()
     TEST_ASSERT(device[10]->get_identifier()=="#1");
     TEST_ASSERT(device[11]->get_source_bus()==3);
     TEST_ASSERT(device[11]->get_identifier()=="#2");
+    TEST_ASSERT(device[12]->get_source_bus()==1);
+    TEST_ASSERT(device[12]->get_identifier()=="#1");
+    TEST_ASSERT(device[13]->get_source_bus()==1);
+    TEST_ASSERT(device[13]->get_identifier()=="#2");
+    TEST_ASSERT(device[14]->get_source_bus()==2);
+    TEST_ASSERT(device[14]->get_identifier()=="#1");
+    TEST_ASSERT(device[15]->get_source_bus()==2);
+    TEST_ASSERT(device[15]->get_identifier()=="#2");
+    TEST_ASSERT(device[16]->get_source_bus()==3);
+    TEST_ASSERT(device[16]->get_identifier()=="#1");
+    TEST_ASSERT(device[17]->get_source_bus()==3);
+    TEST_ASSERT(device[17]->get_identifier()=="#2");
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_all_loads()
@@ -4243,6 +4609,34 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators_device_id()
     }
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_pv_units_device_id()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE_ID> device = db->get_all_pv_units_device_id();
+
+    TEST_ASSERT(device.size()==6);
+
+    DEVICE_ID did;
+    did.set_device_type("PV UNIT");
+    TERMINAL terminal;
+    for(size_t i=1; i!=4; ++i)
+    {
+        terminal.clear();
+        terminal.append_bus(i);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier("#1");
+
+        TEST_ASSERT(device[2*(i-1)]==did);
+
+        did.set_device_identifier("#2");
+        TEST_ASSERT(device[2*(i-1)+1]==did);
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -4251,7 +4645,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id()
 
     vector<DEVICE_ID> device = db->get_all_sources_device_id();
 
-    TEST_ASSERT(device.size()==12);
+    TEST_ASSERT(device.size()==18);
 
     DEVICE_ID did;
     TERMINAL terminal;
@@ -4278,6 +4672,17 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id()
 
         did.set_device_identifier("#2");
         TEST_ASSERT(device[6+2*(i-1)+1]==did);
+
+        did.set_device_type("PV UNIT");
+        terminal.clear();
+        terminal.append_bus(i);
+        did.set_device_terminal(terminal);
+        did.set_device_identifier("#1");
+
+        TEST_ASSERT(device[12+2*(i-1)]==did);
+
+        did.set_device_identifier("#2");
+        TEST_ASSERT(device[12+2*(i-1)+1]==did);
     }
 }
 
@@ -4606,13 +5011,22 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_count()
     TEST_ASSERT(db->get_wt_generator_count()==6);
 }
 
+void POWER_SYSTEM_DATABASE_TEST::test_get_pv_unit_count()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    TEST_ASSERT(db->get_pv_unit_count()==6);
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_source_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    TEST_ASSERT(db->get_source_count()==12);
+    TEST_ASSERT(db->get_source_count()==18);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_load_count()
@@ -4797,6 +5211,46 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_index()
 
     did.set_device_identifier("#3");
     TEST_ASSERT(db->get_wt_generator_index(did)==INDEX_NOT_EXIST);
+}
+
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_pv_unit_index()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    DEVICE_ID did;
+    did.set_device_type("PV UNIT");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+    TEST_ASSERT(db->get_pv_unit_index(did)==0);
+
+    did.set_device_identifier("#2");
+    TEST_ASSERT(db->get_pv_unit_index(did)==1);
+
+    terminal.clear();
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+    TEST_ASSERT(db->get_pv_unit_index(did)==2);
+
+    did.set_device_identifier("#2");
+    TEST_ASSERT(db->get_pv_unit_index(did)==3);
+
+    terminal.clear();
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+    TEST_ASSERT(db->get_pv_unit_index(did)==4);
+
+    did.set_device_identifier("#2");
+    TEST_ASSERT(db->get_pv_unit_index(did)==5);
+
+    did.set_device_identifier("#3");
+    TEST_ASSERT(db->get_pv_unit_index(did)==INDEX_NOT_EXIST);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_load_index()
@@ -5444,6 +5898,19 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
     db->scale_source_power(did, -0.1);
 
     TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0-0.1))<FLOAT_EPSILON);
+
+    did.set_device_type("PV UNIT");
+    terminal.clear();
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#2");
+
+    source = db->get_pv_unit(did);
+    S = source->get_complex_generation_in_MVA();
+
+    db->scale_source_power(did, -0.1);
+
+    TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0-0.1))<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_scale_all_source_power()
@@ -5750,7 +6217,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power()
     source = db->get_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
 
-    db->scale_generator_power(did, 0.1);
+    db->scale_wt_generator_power(did, 0.1);
 
     TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0+0.1))<FLOAT_EPSILON);
 
@@ -5762,7 +6229,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power()
     source = db->get_wt_generator(did);
     S = source->get_complex_generation_in_MVA();
 
-    db->scale_generator_power(did, -0.1);
+    db->scale_wt_generator_power(did, -0.1);
 
     TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0-0.1))<FLOAT_EPSILON);
 }
@@ -5890,6 +6357,168 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_zone()
     }
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    PV_UNIT* source;
+    complex<double> S;
+
+    DEVICE_ID did;
+    did.set_device_type("PV UNIT");
+    TERMINAL terminal;
+
+    terminal.clear();
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    source = db->get_pv_unit(did);
+    S = source->get_complex_generation_in_MVA();
+
+    db->scale_pv_unit_power(did, 0.1);
+
+    TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0+0.1))<FLOAT_EPSILON);
+
+    terminal.clear();
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#2");
+
+    source = db->get_pv_unit(did);
+    S = source->get_complex_generation_in_MVA();
+
+    db->scale_pv_unit_power(did, -0.1);
+
+    TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S*(1.0-0.1))<FLOAT_EPSILON);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_scale_all_pv_unit_power()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<PV_UNIT*> sources = db->get_all_pv_units();
+    vector< complex<double> > S0;
+    size_t n=sources.size();
+    PV_UNIT* source;
+    for(size_t i=0; i!=n; ++i)
+    {
+        source = sources[i];
+        S0.push_back(source->get_complex_generation_in_MVA());
+    }
+
+    db->scale_all_pv_units_power(0.1);
+
+    for(size_t i=0; i!=n; ++i)
+    {
+        source = sources[i];
+        TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i]*1.1)<FLOAT_EPSILON);
+    }
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_at_bus()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<PV_UNIT*> sources = db->get_all_pv_units();
+    vector< complex<double> > S0;
+    size_t n=sources.size();
+    PV_UNIT* source;
+    for(size_t i=0; i!=n; ++i)
+    {
+        source = sources[i];
+        S0.push_back(source->get_complex_generation_in_MVA());
+    }
+
+    db->scale_pv_units_power_at_bus(1, 0.1);
+
+    for(size_t i=0; i!=n; ++i)
+    {
+        source = sources[i];
+        if(source->is_connected_to_bus(1))
+        {
+            TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i]*1.1)<FLOAT_EPSILON);
+        }
+        else
+        {
+            TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i])<FLOAT_EPSILON);
+        }
+    }
+
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_area()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<PV_UNIT*> sources = db->get_all_pv_units();
+    vector< complex<double> > S0;
+    size_t n=sources.size();
+    PV_UNIT* source;
+    for(size_t i=0; i!=n; ++i)
+    {
+        source = sources[i];
+        S0.push_back(source->get_complex_generation_in_MVA());
+    }
+
+    db->scale_pv_units_power_in_area(1, 0.1);
+
+    for(size_t i=0; i!=n; ++i)
+    {
+        source = sources[i];
+        if(source->is_in_area(1))
+        {
+            TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i]*1.1)<FLOAT_EPSILON);
+        }
+        else
+        {
+            TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i])<FLOAT_EPSILON);
+        }
+    }
+
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_zone()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<PV_UNIT*> sources = db->get_all_pv_units();
+    vector< complex<double> > S0;
+    size_t n=sources.size();
+    PV_UNIT* source;
+    for(size_t i=0; i!=n; ++i)
+    {
+        source = sources[i];
+        S0.push_back(source->get_complex_generation_in_MVA());
+    }
+
+    db->scale_pv_units_power_in_zone(1, 0.1);
+
+    for(size_t i=0; i!=n; ++i)
+    {
+        source = sources[i];
+        if(source->is_in_zone(1))
+        {
+            TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i]*1.1)<FLOAT_EPSILON);
+        }
+        else
+        {
+            TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i])<FLOAT_EPSILON);
+        }
+    }
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -5906,6 +6535,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==2);
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==2);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(1).size()==2);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(3).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(1).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(3).size()==2);
@@ -5937,6 +6569,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==2);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(3).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(3).size()==2);
@@ -5968,6 +6603,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(3).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(2).size()==2);
     TEST_ASSERT(db->get_loads_connecting_to_bus(3).size()==0);
@@ -5998,6 +6636,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(2).size()==0);
     TEST_ASSERT(db->get_wt_generators_connecting_to_bus(3).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(3).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(2).size()==0);
     TEST_ASSERT(db->get_loads_connecting_to_bus(3).size()==0);
@@ -6029,6 +6670,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_database()
     TEST_ASSERT(db->get_bus_count()==0);
     TEST_ASSERT(db->get_generator_count()==0);
     TEST_ASSERT(db->get_wt_generator_count()==0);
+    TEST_ASSERT(db->get_pv_unit_count()==0);
     TEST_ASSERT(db->get_load_count()==0);
     TEST_ASSERT(db->get_line_count()==0);
     TEST_ASSERT(db->get_transformer_count()==0);
@@ -6052,6 +6694,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_buses()
     TEST_ASSERT(db->get_bus_count()==0);
     TEST_ASSERT(db->get_generator_count()==0);
     TEST_ASSERT(db->get_wt_generator_count()==0);
+    TEST_ASSERT(db->get_pv_unit_count()==0);
     TEST_ASSERT(db->get_load_count()==0);
     TEST_ASSERT(db->get_line_count()==0);
     TEST_ASSERT(db->get_transformer_count()==0);
@@ -6249,25 +6892,120 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_wt_generators()
     TEST_ASSERT(db->get_wt_generator_count()==0);
 }
 
+
+void POWER_SYSTEM_DATABASE_TEST::test_clear_pv_unit()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    TEST_ASSERT(db->get_pv_unit_count()==6);
+
+    vector<PV_UNIT*> pv_units;
+
+    DEVICE_ID did;
+    did.set_device_type("PV UNIT");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    db->clear_pv_unit(did);
+    TEST_ASSERT(db->is_pv_unit_exist(did)==false);
+    TEST_ASSERT(db->get_pv_unit_count()==5);
+
+    did.set_device_identifier("#2");
+
+    db->clear_pv_unit(did);
+    TEST_ASSERT(db->is_pv_unit_exist(did)==false);
+    TEST_ASSERT(db->get_pv_unit_count()==4);
+
+    terminal.clear();
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    db->clear_pv_unit(did);
+    TEST_ASSERT(db->is_pv_unit_exist(did)==false);
+    TEST_ASSERT(db->get_pv_unit_count()==3);
+
+    did.set_device_identifier("#2");
+
+    db->clear_pv_unit(did);
+    TEST_ASSERT(db->is_pv_unit_exist(did)==false);
+    TEST_ASSERT(db->get_pv_unit_count()==2);
+
+    terminal.clear();
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("#1");
+
+    db->clear_pv_unit(did);
+    TEST_ASSERT(db->is_pv_unit_exist(did)==false);
+    TEST_ASSERT(db->get_pv_unit_count()==1);
+
+    did.set_device_identifier("#2");
+
+    db->clear_pv_unit(did);
+    TEST_ASSERT(db->is_pv_unit_exist(did)==false);
+    TEST_ASSERT(db->get_pv_unit_count()==0);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_clear_pv_units_connecting_to_bus()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    db->clear_pv_units_connecting_to_bus(1);
+
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(3).size()==2);
+
+    db->clear_pv_units_connecting_to_bus(3);
+
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(2).size()==2);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(3).size()==0);
+
+    db->clear_pv_units_connecting_to_bus(2);
+
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(1).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(2).size()==0);
+    TEST_ASSERT(db->get_pv_units_connecting_to_bus(3).size()==0);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_clear_all_pv_units()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    db->clear_all_pv_units();
+
+    TEST_ASSERT(db->get_pv_unit_count()==0);
+}
+
 void POWER_SYSTEM_DATABASE_TEST::test_clear_sources_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
     prepare_database_for_test();
 
-    TEST_ASSERT(db->get_source_count()==12);
+    TEST_ASSERT(db->get_source_count()==18);
 
     db->clear_sources_connecting_to_bus(1);
 
     TEST_ASSERT(db->get_sources_connecting_to_bus(1).size()==0);
-    TEST_ASSERT(db->get_sources_connecting_to_bus(2).size()==4);
-    TEST_ASSERT(db->get_sources_connecting_to_bus(3).size()==4);
+    TEST_ASSERT(db->get_sources_connecting_to_bus(2).size()==6);
+    TEST_ASSERT(db->get_sources_connecting_to_bus(3).size()==6);
 
     db->clear_sources_connecting_to_bus(2);
 
     TEST_ASSERT(db->get_sources_connecting_to_bus(1).size()==0);
     TEST_ASSERT(db->get_sources_connecting_to_bus(2).size()==0);
-    TEST_ASSERT(db->get_sources_connecting_to_bus(3).size()==4);
+    TEST_ASSERT(db->get_sources_connecting_to_bus(3).size()==6);
 
     db->clear_sources_connecting_to_bus(3);
 
@@ -7087,9 +7825,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_q_max_at_physical_bus_in_M
     // VA                      PV                    PQ
     // 110/-110   120/-120     210/-210 220/-220     310/-310 320/-320
     // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
+    // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
 
-    TEST_ASSERT(fabs(db->get_regulatable_q_max_at_physical_bus_in_MVar(1)-433.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(db->get_regulatable_q_max_at_physical_bus_in_MVar(2)-833.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_regulatable_q_max_at_physical_bus_in_MVar(1)-636.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_regulatable_q_max_at_physical_bus_in_MVar(2)-1236.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(db->get_regulatable_q_max_at_physical_bus_in_MVar(3)-0.0)<FLOAT_EPSILON);
 }
 
@@ -7102,9 +7841,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_q_min_at_physical_bus_in_M
     // VA                      PV                    PQ
     // 110/-110   120/-120     210/-210 220/-220     310/-310 320/-320
     // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
+    // 101/-101   102/-102     201/-201 202/-202     301/-301 302/-302
 
-    TEST_ASSERT(fabs(db->get_regulatable_q_min_at_physical_bus_in_MVar(1)-(-433.0))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(db->get_regulatable_q_min_at_physical_bus_in_MVar(2)-(-833.0))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_regulatable_q_min_at_physical_bus_in_MVar(1)-(-636.0))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_regulatable_q_min_at_physical_bus_in_MVar(2)-(-1236.0))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(db->get_regulatable_q_min_at_physical_bus_in_MVar(3)-0.0)<FLOAT_EPSILON);
 }
 
@@ -7116,8 +7856,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_regulating_p_generation_at_physi
     // 1                 2                  3
     // VA                PV                 PQ
     // 10/10   10/20     20/10   20/20     30/10   30/20
+    // 10/10   10/20     20/10   20/20     30/10   30/20
+    // 10/10   10/20     20/10   20/20     30/10   30/20
 
-    TEST_ASSERT(fabs(db->get_total_regulating_p_generation_at_physical_bus_in_MW(1)-40.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_total_regulating_p_generation_at_physical_bus_in_MW(1)-60.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(db->get_total_regulating_p_generation_at_physical_bus_in_MW(2)-0.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(db->get_total_regulating_p_generation_at_physical_bus_in_MW(3)-0.0)<FLOAT_EPSILON);
 }
@@ -7130,9 +7872,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_regulating_q_generation_at_physi
     // 1                 2                  3
     // VA                PV                 PQ
     // 10/10   10/20     20/10   20/20     30/10   30/20
+    // 10/10   10/20     20/10   20/20     30/10   30/20
+    // 10/10   10/20     20/10   20/20     30/10   30/20
 
-    TEST_ASSERT(fabs(db->get_total_regulating_q_generation_at_physical_bus_in_MVar(1)-60.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(db->get_total_regulating_q_generation_at_physical_bus_in_MVar(2)-60.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_total_regulating_q_generation_at_physical_bus_in_MVar(1)-90.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_total_regulating_q_generation_at_physical_bus_in_MVar(2)-90.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(db->get_total_regulating_q_generation_at_physical_bus_in_MVar(3)-0.0)<FLOAT_EPSILON);
 }
 
@@ -7144,10 +7888,12 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_p_generation_of_sources_at_physi
     // 1                 2                  3
     // VA                PV                 PQ
     // 10/10   10/20     20/10   20/20     30/10   30/20
+    // 10/10   10/20     20/10   20/20     30/10   30/20
+    // 10/10   10/20     20/10   20/20     30/10   30/20
 
-    TEST_ASSERT(fabs(db->get_total_p_generation_at_physical_bus_in_MW(1)-40.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(db->get_total_p_generation_at_physical_bus_in_MW(2)-80.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(db->get_total_p_generation_at_physical_bus_in_MW(3)-120.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_total_p_generation_at_physical_bus_in_MW(1)-60.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_total_p_generation_at_physical_bus_in_MW(2)-120.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_total_p_generation_at_physical_bus_in_MW(3)-180.0)<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_total_q_generation_of_sources_at_physical_bus_in_MVar()
@@ -7158,7 +7904,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_q_generation_of_sources_at_physi
     // 1                 2                  3
     // VA                PV                 PQ
     // 10/10   10/20     20/10   20/20     30/10   30/20
-    TEST_ASSERT(fabs(db->get_total_q_generation_at_physical_bus_in_MVar(1)-60.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(db->get_total_q_generation_at_physical_bus_in_MVar(2)-60.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(db->get_total_q_generation_at_physical_bus_in_MVar(3)-60.0)<FLOAT_EPSILON);
+    // 10/10   10/20     20/10   20/20     30/10   30/20
+    // 10/10   10/20     20/10   20/20     30/10   30/20
+    TEST_ASSERT(fabs(db->get_total_q_generation_at_physical_bus_in_MVar(1)-90.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_total_q_generation_at_physical_bus_in_MVar(2)-90.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(db->get_total_q_generation_at_physical_bus_in_MVar(3)-90.0)<FLOAT_EPSILON);
 }

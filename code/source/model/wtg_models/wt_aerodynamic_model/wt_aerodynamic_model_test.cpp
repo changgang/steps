@@ -285,12 +285,12 @@ void WT_AERODYNAMIC_MODEL_TEST::test_set_get_turbine_speed_mode()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        model->set_turbine_speed_mode(UNDERSPEED_MODE);
-        TEST_ASSERT(model->get_turbine_speed_mode()==UNDERSPEED_MODE);
-        model->set_turbine_speed_mode(MPPT_MODE);
-        TEST_ASSERT(model->get_turbine_speed_mode()==MPPT_MODE);
-        model->set_turbine_speed_mode(OVERSPEED_MODE);
-        TEST_ASSERT(model->get_turbine_speed_mode()==OVERSPEED_MODE);
+        model->set_turbine_speed_mode(WT_UNDERSPEED_MODE);
+        TEST_ASSERT(model->get_turbine_speed_mode()==WT_UNDERSPEED_MODE);
+        model->set_turbine_speed_mode(WT_MPPT_MODE);
+        TEST_ASSERT(model->get_turbine_speed_mode()==WT_MPPT_MODE);
+        model->set_turbine_speed_mode(WT_OVERSPEED_MODE);
+        TEST_ASSERT(model->get_turbine_speed_mode()==WT_OVERSPEED_MODE);
     }
     else
         TEST_ASSERT(false);
@@ -444,7 +444,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_
 
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
     WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
-    model->set_turbine_speed_mode(UNDERSPEED_MODE);
+    model->set_turbine_speed_mode(WT_UNDERSPEED_MODE);
 
     WT_GENERATOR* gen = get_test_wt_generator();
 
@@ -473,7 +473,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_
 
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
     WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
-    model->set_turbine_speed_mode(MPPT_MODE);
+    model->set_turbine_speed_mode(WT_MPPT_MODE);
 
     WT_GENERATOR* gen = get_test_wt_generator();
 
@@ -503,7 +503,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_
 
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
     WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
-    model->set_turbine_speed_mode(OVERSPEED_MODE);
+    model->set_turbine_speed_mode(WT_OVERSPEED_MODE);
 
     WT_GENERATOR* gen = get_test_wt_generator();
 

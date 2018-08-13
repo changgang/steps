@@ -41,4 +41,21 @@
     #define MAX_HISTORY_METER_BUFFER 100
 #endif // MAX_HISTORY_METER_BUFFER
 
+
+#ifndef STEPS_MAGIC1
+    #define STEPS_MAGIC1 621877636
+#endif // STEPS_MAGIC1
+
+#ifndef STEPS_MAGIC2
+    #define STEPS_MAGIC2 40966531
+#endif // STEPS_MAGIC2
+
+#ifndef STEPS_MAGIC3
+    #define STEPS_MAGIC3 20389910
+#endif // STEPS_MAGIC3
+
+#ifndef STEPS_MAGIC4
+    #define STEPS_MAGIC4 7807000
+#endif // STEPS_MAGIC4
+
 #endif // CONSTANTS_H

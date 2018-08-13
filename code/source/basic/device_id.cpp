@@ -53,7 +53,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
     if(device_type=="BUS"         ||
        device_type=="GENERATOR"   ||
        device_type=="WT GENERATOR" ||
-       device_type=="PV SOURCE"   ||
+       device_type=="PV UNIT"   ||
        device_type=="ENERGY STORAGE"     ||
        device_type=="LOAD"        ||
        device_type=="FIXED SHUNT" ||
@@ -106,7 +106,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
     ostringstream osstream;
     osstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
       <<"Allowed device types are: "<<endl
-      <<"GENERATOR, WT GENERATOR, PV SOURCE, ENERGY STORAGE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
+      <<"GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
       <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, MULTI DC, and EQUIVALENT DEVICE."<<endl
       <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp(osstream);
@@ -215,7 +215,7 @@ string DEVICE_ID::get_device_name() const
         return device_name;
     }
 
-    if(name=="GENERATOR" or name=="WT GENERATOR" or name=="PV SOURCE" or name=="ENERGY STORAGE" or
+    if(name=="GENERATOR" or name=="WT GENERATOR" or name=="PV UNIT" or name=="ENERGY STORAGE" or
        name=="LOAD" or name=="FIXED SHUNT" or name=="SWITCHED SHUNT" or name=="EQUIVALENT DEVICE")
     {
         if(ident=="")
@@ -378,10 +378,10 @@ DEVICE_ID get_wt_generator_device_id(size_t bus, string identifier)
     return did;
 }
 
-DEVICE_ID get_pv_source_device_id(size_t bus, string identifier)
+DEVICE_ID get_pv_unit_device_id(size_t bus, string identifier)
 {
     DEVICE_ID did;
-    did.set_device_type("PV SOURCE");
+    did.set_device_type("PV UNIT");
 
     TERMINAL terminal;
     terminal.append_bus(bus);

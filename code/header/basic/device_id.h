@@ -1,6 +1,7 @@
 #ifndef DEVICE_ID_H
 #define DEVICE_ID_H
 
+#include "header/basic/constants.h"
 #include <vector>
 #include <string>
 #include <functional>
@@ -50,7 +51,7 @@ class DEVICE_ID
 DEVICE_ID get_bus_device_id(size_t bus_number);
 DEVICE_ID get_generator_device_id(size_t bus, string identifier);
 DEVICE_ID get_wt_generator_device_id(size_t bus, string identifier);
-DEVICE_ID get_pv_source_device_id(size_t bus, string identifier);
+DEVICE_ID get_pv_unit_device_id(size_t bus, string identifier);
 DEVICE_ID get_energy_storage_device_id(size_t bus, string identifier);
 DEVICE_ID get_load_device_id(size_t bus, string identifier);
 DEVICE_ID get_fixed_shunt_device_id(size_t bus, string identifier);
@@ -77,14 +78,29 @@ namespace std
                 if(bus!=0)
                 {
                     size_t hash_value = std::hash<std::size_t>{}(bus);
-                    seed ^= hash_value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                    switch(i)
+                    {
+                        case 0:
+                            seed ^= hash_value + STEPS_MAGIC1 + (seed << 6) + (seed >> 2);
+                            break;
+                        case 1:
+                            seed ^= hash_value + STEPS_MAGIC2 + (seed << 6) + (seed >> 2);
+                            break;
+                        case 2:
+                            seed ^= hash_value + STEPS_MAGIC3 + (seed << 6) + (seed >> 2);
+                            break;
+                        case 3:
+                        default:
+                            seed ^= hash_value + STEPS_MAGIC4 + (seed << 6) + (seed >> 2);
+                            break;
+                    }
                 }
             }
             string id = did.get_device_identifier();
             if(id!="")
             {
                 size_t hash_value = std::hash<std::string>{}(id);
-                seed ^= hash_value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                seed ^= hash_value + STEPS_MAGIC1 + (seed << 6) + (seed >> 2);
             }
 
             return seed;

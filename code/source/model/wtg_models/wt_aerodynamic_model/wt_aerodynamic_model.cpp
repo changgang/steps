@@ -449,13 +449,13 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
 
     switch(get_turbine_speed_mode())
     {
-        case MPPT_MODE:
+        case WT_MPPT_MODE:
         {
             initialize_pitch_angle_and_turbine_speed_with_mppt_mode();
             break;
         }
-        case UNDERSPEED_MODE:
-        case OVERSPEED_MODE:
+        case WT_UNDERSPEED_MODE:
+        case WT_OVERSPEED_MODE:
         {
             initialize_pitch_angle_and_turbine_speed_with_underspeed_or_overspeed_mode();
             break;
@@ -468,11 +468,11 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_undersp
     ostringstream osstream;
 
     osstream<<"Now go initialize pitch angle and turbine speed of "<<get_device_name()<<" with turbine speed mode: ";
-    if(get_turbine_speed_mode()==UNDERSPEED_MODE)
+    if(get_turbine_speed_mode()==WT_UNDERSPEED_MODE)
         osstream<<"UNDERSPEED mode";
     else
     {
-        if(get_turbine_speed_mode()==OVERSPEED_MODE)
+        if(get_turbine_speed_mode()==WT_OVERSPEED_MODE)
             osstream<<"OVERSPEED mode";
     }
     show_information_with_leading_time_stamp(osstream);
@@ -610,7 +610,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         iter ++;
         if(iter>iter_max)
         {
-            osstream<<"Warning. Failed to initialize pitch angle and turbine speed within "<<iter_max<<" iterations when turbine speed mode is MPPT_MODE."<<endl
+            osstream<<"Warning. Failed to initialize pitch angle and turbine speed within "<<iter_max<<" iterations when turbine speed mode is WT_MPPT_MODE."<<endl
                     <<"Initial pitch angle is set as "<<pitch<<" deg, and initial turbine speed is set as "<<w_mppt<<" rad/s";
             show_information_with_leading_time_stamp(osstream);
             set_initial_pitch_angle_in_deg(pitch);
@@ -624,7 +624,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     double wmin = get_min_steady_state_turbine_speed_in_pu();
     if(w>wmax*wn)
     {
-        osstream<<"In MPPT_MODE, initialized turbine speed = "<<w<<" rad/s, greater than wmax = "<<wmax*wn<<" rad/s."<<endl
+        osstream<<"In WT_MPPT_MODE, initialized turbine speed = "<<w<<" rad/s, greater than wmax = "<<wmax*wn<<" rad/s."<<endl
                 <<"Initial turbine speed will be set as wmax = "<<wmax*wn<<" rad/s";
         show_information_with_leading_time_stamp(osstream);
         set_initial_turbine_speed_in_rad_per_s(wmax*wn);
@@ -633,7 +633,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     }
     if(w<wmin*wn)
     {
-        osstream<<"In MPPT_MODE, initialized turbine speed = "<<w<<" rad/s, less than wmin = "<<wmin*wn<<" rad/s."<<endl
+        osstream<<"In WT_MPPT_MODE, initialized turbine speed = "<<w<<" rad/s, less than wmin = "<<wmin*wn<<" rad/s."<<endl
                 <<"Initial turbine speed will be set as wmin = "<<wmin*wn<<" rad/s";
         show_information_with_leading_time_stamp(osstream);
         set_initial_turbine_speed_in_rad_per_s(wmin*wn);
@@ -941,7 +941,7 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
 
     double w_mppt = get_mppt_speed_in_rad_per_s(pitch);
 
-    if(get_turbine_speed_mode()==MPPT_MODE)
+    if(get_turbine_speed_mode()==WT_MPPT_MODE)
     {
         current_turbine_speed_reference_without_limit_in_rad_per_s = w_mppt;
         return;
@@ -967,7 +967,7 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
     }
 
     double wlow, whigh;
-    if(get_turbine_speed_mode()==UNDERSPEED_MODE)
+    if(get_turbine_speed_mode()==WT_UNDERSPEED_MODE)
     {
         wlow = w_mppt*0.5;
         whigh = w_mppt;
@@ -1009,7 +1009,7 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
             //show_information_with_leading_time_stamp(osstream);
             break;
         }
-        if(get_turbine_speed_mode()==UNDERSPEED_MODE)
+        if(get_turbine_speed_mode()==WT_UNDERSPEED_MODE)
         {
             if(pnew>pmech)
                 whigh = wnew;

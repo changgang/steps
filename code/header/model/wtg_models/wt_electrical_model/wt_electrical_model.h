@@ -7,7 +7,7 @@
 class WT_ELECTRICAL_MODEL : public WTG_MODEL
 {
     /*
-    PE Electrical control model
+    Wind electrical control model
     General inputs:
         vterm: wt generator terminal or remote AC voltage
         iterm: wt generator terminal current

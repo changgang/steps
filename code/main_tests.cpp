@@ -28,6 +28,7 @@
 #include "header/device/source_test.h"
 #include "header/device/generator_test.h"
 #include "header/device/wt_generator_test.h"
+#include "header/device/pv_unit_test.h"
 #include "header/device/load_test.h"
 #include "header/device/line_test.h"
 #include "header/device/transformer_test.h"
@@ -189,7 +190,7 @@ int main(int argc, char* argv[])
 	{
         Test::Suite ts;
 
-/*        ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
+        ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
         ts.add(unique_ptr<Test::Suite>(new AREA_TEST));
         ts.add(unique_ptr<Test::Suite>(new ZONE_TEST));
@@ -209,6 +210,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new SOURCE_TEST));
         ts.add(unique_ptr<Test::Suite>(new GENERATOR_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT_GENERATOR_TEST));
+        ts.add(unique_ptr<Test::Suite>(new PV_UNIT_TEST));
         ts.add(unique_ptr<Test::Suite>(new LOAD_TEST));
         ts.add(unique_ptr<Test::Suite>(new LINE_TEST));
         ts.add(unique_ptr<Test::Suite>(new TRANSFORMER_TEST));
@@ -276,8 +278,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new IEEEG3_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEESGO_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new IEEL_TEST));*/
-        ts.add(unique_ptr<Test::Suite>(new UVLS_TEST));/*
+        ts.add(unique_ptr<Test::Suite>(new IEEL_TEST));
+        ts.add(unique_ptr<Test::Suite>(new UVLS_TEST));
         ts.add(unique_ptr<Test::Suite>(new UFLS_TEST));
         ts.add(unique_ptr<Test::Suite>(new PUFLS_TEST));
 
@@ -291,7 +293,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new WT3E0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
         ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
-*/
+
         ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));

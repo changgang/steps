@@ -32,6 +32,14 @@
 
 #include "header/model/wtg_models/wind_speed_model/wind_speed_models.h"
 
+#include "header/model/pvu_models/pv_converter_model/pv_converter_models.h"
+
+#include "header/model/pvu_models/pv_panel_model/pv_panel_models.h"
+
+#include "header/model/pvu_models/pv_electrical_model/pv_electrical_models.h"
+
+#include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_models.h"
+
 #include "header/model/equivalent_model/ARXL.h"
 
 #endif // ALL_SUPPORTED_MODELS_H

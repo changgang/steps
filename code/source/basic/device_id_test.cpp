@@ -10,7 +10,7 @@ DEVICE_ID_TEST::DEVICE_ID_TEST()
 {
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_generator);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_wt_generator);
-    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_source);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_unit);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_energy_storage);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_load);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_fixedshunt);
@@ -97,12 +97,12 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_wt_generator()
     TEST_ASSERT(terminal.get_bus_count()==1);
 }
 
-void DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_source()
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_pv_unit()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    device_id->set_device_type("pv source");
-    TEST_ASSERT(device_id->get_device_type()=="PV SOURCE");
+    device_id->set_device_type("pv unit");
+    TEST_ASSERT(device_id->get_device_type()=="PV UNIT");
 
     TEST_ASSERT(device_id->get_minimum_allowed_terminal_count()==1);
     TEST_ASSERT(device_id->get_maximum_allowed_terminal_count()==1);

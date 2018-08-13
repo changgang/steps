@@ -246,17 +246,17 @@ bool AERD0::setup_model_with_psse_string(string data)
     {
         case -1:
         {
-            set_turbine_speed_mode(UNDERSPEED_MODE);
+            set_turbine_speed_mode(WT_UNDERSPEED_MODE);
             break;
         }
         case 1:
         {
-            set_turbine_speed_mode(OVERSPEED_MODE);
+            set_turbine_speed_mode(WT_OVERSPEED_MODE);
             break;
         }
         default:
         {
-            set_turbine_speed_mode(MPPT_MODE);
+            set_turbine_speed_mode(WT_MPPT_MODE);
             break;
         }
     }
@@ -319,12 +319,12 @@ string AERD0::get_standard_model_string() const
     int speed_mode_flag = 0;
     switch(get_turbine_speed_mode())
     {
-        case UNDERSPEED_MODE:
+        case WT_UNDERSPEED_MODE:
         {
             speed_mode_flag = -1;
             break;
         }
-        case OVERSPEED_MODE:
+        case WT_OVERSPEED_MODE:
         {
             speed_mode_flag = 1;
             break;

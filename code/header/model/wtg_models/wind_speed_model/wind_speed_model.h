@@ -4,13 +4,6 @@
 #include "header/model/wtg_models/wtg_model.h"
 class WIND_SPEED_MODEL : public WTG_MODEL
 {
-    /*
-    wind speed model:
-    inputs:
-        file: csv file storing wind speed data
-    output:
-        vwind: wind speed in mps
-    */
     public:
         WIND_SPEED_MODEL();
         virtual ~WIND_SPEED_MODEL();

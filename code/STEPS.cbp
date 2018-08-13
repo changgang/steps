@@ -8,10 +8,11 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="../build/bin/Release/STEPS" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/bin/Release/STEPS" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../build/obj/Release/" />
-				<Option type="3" />
+				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Option parameters="--compiler " />
 				<Compiler>
 					<Add option="-march=corei7-avx" />
@@ -125,6 +126,8 @@
 		<Unit filename="header/device/line_test.h" />
 		<Unit filename="header/device/load.h" />
 		<Unit filename="header/device/load_test.h" />
+		<Unit filename="header/device/pv_unit.h" />
+		<Unit filename="header/device/pv_unit_test.h" />
 		<Unit filename="header/device/source.h" />
 		<Unit filename="header/device/source_test.h" />
 		<Unit filename="header/device/transformer.h" />
@@ -183,6 +186,26 @@
 		<Unit filename="header/model/load_relay_model/load_voltage_relay_models.h" />
 		<Unit filename="header/model/model.h" />
 		<Unit filename="header/model/model_test.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pv_converter_model.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pv_converter_model_test.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pv_converter_models.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pvcv0.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pvcv0_test.h" />
+		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_model.h" />
+		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_model_test.h" />
+		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_models.h" />
+		<Unit filename="header/model/pvu_models/pv_irradiance_model/fileirrd.h" />
+		<Unit filename="header/model/pvu_models/pv_irradiance_model/fileirrd_test.h" />
+		<Unit filename="header/model/pvu_models/pv_irradiance_model/pv_irradiance_model.h" />
+		<Unit filename="header/model/pvu_models/pv_irradiance_model/pv_irradiance_model_test.h" />
+		<Unit filename="header/model/pvu_models/pv_irradiance_model/pv_irradiance_models.h" />
+		<Unit filename="header/model/pvu_models/pv_panel_model/pv_panel_model.h" />
+		<Unit filename="header/model/pvu_models/pv_panel_model/pv_panel_model_test.h" />
+		<Unit filename="header/model/pvu_models/pv_panel_model/pv_panel_models.h" />
+		<Unit filename="header/model/pvu_models/pv_panel_model/pvp0.h" />
+		<Unit filename="header/model/pvu_models/pv_panel_model/pvp0_test.h" />
+		<Unit filename="header/model/pvu_models/pvu_model.h" />
+		<Unit filename="header/model/pvu_models/pvu_model_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/COMP.h" />
 		<Unit filename="header/model/sg_models/compensator_model/COMP_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/compensator_model.h" />
@@ -414,6 +437,8 @@
 		<Unit filename="source/device/line_test.cpp" />
 		<Unit filename="source/device/load.cpp" />
 		<Unit filename="source/device/load_test.cpp" />
+		<Unit filename="source/device/pv_unit.cpp" />
+		<Unit filename="source/device/pv_unit_test.cpp" />
 		<Unit filename="source/device/source.cpp" />
 		<Unit filename="source/device/source_test.cpp" />
 		<Unit filename="source/device/transformer.cpp" />
@@ -461,6 +486,22 @@
 		<Unit filename="source/model/load_relay_model/load_voltage_relay_model_test.cpp" />
 		<Unit filename="source/model/model.cpp" />
 		<Unit filename="source/model/model_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_converter_model/pv_converter_model.cpp" />
+		<Unit filename="source/model/pvu_models/pv_converter_model/pv_converter_model_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_converter_model/pvcv0.cpp" />
+		<Unit filename="source/model/pvu_models/pv_converter_model/pvcv0_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_electrical_model/pv_electrical_model.cpp" />
+		<Unit filename="source/model/pvu_models/pv_electrical_model/pv_electrical_model_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_irradiance_model/fileirrd.cpp" />
+		<Unit filename="source/model/pvu_models/pv_irradiance_model/fileirrd_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_irradiance_model/pv_irradiance_model.cpp" />
+		<Unit filename="source/model/pvu_models/pv_irradiance_model/pv_irradiance_model_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_panel_model/pv_panel_model.cpp" />
+		<Unit filename="source/model/pvu_models/pv_panel_model/pv_panel_model_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_panel_model/pvp0.cpp" />
+		<Unit filename="source/model/pvu_models/pv_panel_model/pvp0_test.cpp" />
+		<Unit filename="source/model/pvu_models/pvu_model.cpp" />
+		<Unit filename="source/model/pvu_models/pvu_model_test.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/COMP.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/COMP_test.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/compensator_model.cpp" />
