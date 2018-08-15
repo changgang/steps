@@ -67,6 +67,15 @@ void api_initialize_device_search(const char* device_type, size_t bus)
         api_search_buffer.wt_generator_pointer = 0;
     }
 
+    if(DEVICE_TYPE=="PV UNIT")
+    {
+        if(bus==0)
+            api_search_buffer.pv_units = psdb->get_all_pv_units();
+        else
+            api_search_buffer.pv_units = psdb->get_pv_units_connecting_to_bus(bus);
+        api_search_buffer.pv_unit_pointer = 0;
+    }
+
     if(DEVICE_TYPE=="LOAD")
     {
         if(bus==0)
@@ -151,6 +160,16 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
         size_t n = api_search_buffer.wt_generators.size();
         if(index<n)
             return api_search_buffer.wt_generators[index]->get_source_bus();
+        else
+            return 0;
+    }
+
+    if(DEVICE_TYPE=="PV UNIT")
+    {
+        size_t index = api_search_buffer.pv_unit_pointer;
+        size_t n = api_search_buffer.pv_units.size();
+        if(index<n)
+            return api_search_buffer.pv_units[index]->get_unit_bus();
         else
             return 0;
     }
@@ -279,6 +298,19 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
             return STEPS::steps_char_buffer;
     }
 
+    if(DEVICE_TYPE=="PV UNIT")
+    {
+        size_t index = api_search_buffer.pv_unit_pointer;
+        size_t n = api_search_buffer.pv_units.size();
+        if(index<n)
+		{
+			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (api_search_buffer.pv_units[index]->get_identifier()).c_str());
+			return STEPS::steps_char_buffer;
+		}
+        else
+            return STEPS::steps_char_buffer;
+    }
+
     if(DEVICE_TYPE=="LOAD")
     {
         size_t index = api_search_buffer.load_pointer;
@@ -392,6 +424,15 @@ void api_goto_next_device(const char* device_type)
         size_t n = api_search_buffer.wt_generators.size();
         if(index<n)
             ++api_search_buffer.wt_generator_pointer;
+        return;
+    }
+
+    if(DEVICE_TYPE=="PV UNIT")
+    {
+        size_t index = api_search_buffer.pv_unit_pointer;
+        size_t n = api_search_buffer.pv_units.size();
+        if(index<n)
+            ++api_search_buffer.pv_unit_pointer;
         return;
     }
 

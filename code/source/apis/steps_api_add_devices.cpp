@@ -29,12 +29,7 @@ void api_add_generator(size_t bus_number, char* identifier)
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_generator_device_id(bus_number, identifier);
 
         if(not psdb->is_generator_exist(did))
         {
@@ -54,12 +49,7 @@ void api_add_wt_generator(size_t bus_number, char* identifier)
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("WT GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_wt_generator_device_id(bus_number, identifier);
 
         if(not psdb->is_wt_generator_exist(did))
         {
@@ -73,18 +63,34 @@ void api_add_wt_generator(size_t bus_number, char* identifier)
     }
 }
 
+
+void api_add_pv_unit(size_t bus_number, char* identifier)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+
+    if(psdb!=NULL)
+    {
+        DEVICE_ID did = get_pv_unit_device_id(bus_number, identifier);
+
+        if(not psdb->is_pv_unit_exist(did))
+        {
+            PV_UNIT newpv_unit(psdb);
+            newpv_unit.set_unit_bus(bus_number);
+            newpv_unit.set_identifier(identifier);
+            psdb->append_pv_unit(newpv_unit);
+        }
+        else
+            return;
+    }
+}
+
 void api_add_load(size_t bus_number, char* identifier)
 {
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LOAD");
-        TERMINAL terminal;
-        terminal.append_bus(bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_load_device_id(bus_number, identifier);
 
         if(not psdb->is_load_exist(did))
         {
@@ -104,12 +110,7 @@ void api_add_fixed_shunt(size_t bus_number, char* identifier)
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("FIXED SHUNT");
-        TERMINAL terminal;
-        terminal.append_bus(bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_fixed_shunt_device_id(bus_number, identifier);
 
         if(not psdb->is_fixed_shunt_exist(did))
         {
@@ -129,13 +130,7 @@ void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_numb
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LINE");
-        TERMINAL terminal;
-        terminal.append_bus(sending_side_bus_number);
-        terminal.append_bus(receiving_side_bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_line_device_id(sending_side_bus_number, receiving_side_bus_number, identifier);
 
         if(not psdb->is_line_exist(did))
         {
@@ -156,13 +151,7 @@ void api_add_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char*
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("HVDC");
-        TERMINAL terminal;
-        terminal.append_bus(rectifier_bus_number);
-        terminal.append_bus(inverter_bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_hvdc_device_id(rectifier_bus_number, inverter_bus_number, identifier);
 
         if(not psdb->is_hvdc_exist(did))
         {
@@ -183,14 +172,7 @@ void api_add_transformer(size_t primary_side_bus_number, size_t secondary_side_b
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("TRANSFORMER");
-        TERMINAL terminal;
-        terminal.append_bus(primary_side_bus_number);
-        terminal.append_bus(secondary_side_bus_number);
-        terminal.append_bus(tertiary_side_bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_transformer_device_id(primary_side_bus_number, secondary_side_bus_number, tertiary_side_bus_number, identifier);
 
         if(not psdb->is_transformer_exist(did))
         {
@@ -212,12 +194,7 @@ void api_add_equivalent_device(size_t bus_number, char* identifier)
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("EQUIVALENT DEVICE");
-        TERMINAL terminal;
-        terminal.append_bus(bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_equivalent_device_id(bus_number, identifier);
 
         if(not psdb->is_equivalent_device_exist(did))
         {
@@ -237,12 +214,7 @@ void api_add_energy_storage(size_t bus_number, char* identifier)
 
     if(psdb!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("ENERGY STORAGE");
-        TERMINAL terminal;
-        terminal.append_bus(bus_number);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_energy_storage_device_id(bus_number, identifier);
 
         if(not psdb->is_energy_storage_exist(did))
         {

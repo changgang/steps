@@ -95,6 +95,8 @@ size_t api_get_device_capacity(const char* device_type)
         return psdb->get_generator_capacity();
     if(DEVICE_TYPE=="WT GENERATOR")
         return psdb->get_wt_generator_capacity();
+    if(DEVICE_TYPE=="PV UNIT")
+        return psdb->get_pv_unit_capacity();
     if(DEVICE_TYPE=="LOAD")
         return psdb->get_load_capacity();
     if(DEVICE_TYPE=="FIXED SHUNT")
@@ -107,6 +109,8 @@ size_t api_get_device_capacity(const char* device_type)
         return psdb->get_hvdc_capacity();
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
         return psdb->get_equivalent_device_capacity();
+    if(DEVICE_TYPE=="ENERGY STORAGE")
+        return psdb->get_energy_storage_capacity();
 
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
     return 0;
@@ -143,6 +147,8 @@ void api_set_device_capacity(const char* device_type, size_t cap)
         return psdb->set_generator_capacity(cap);
     if(DEVICE_TYPE=="WT GENERATOR")
         return psdb->set_wt_generator_capacity(cap);
+    if(DEVICE_TYPE=="PV UNIT")
+        return psdb->set_pv_unit_capacity(cap);
     if(DEVICE_TYPE=="LOAD")
         return psdb->set_load_capacity(cap);
     if(DEVICE_TYPE=="FIXED SHUNT")

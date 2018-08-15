@@ -15,6 +15,8 @@ size_t api_get_device_count(const char* device_type)
         return psdb->get_generator_count();
     if(DEVICE_TYPE=="WT GENERATOR")
         return psdb->get_wt_generator_count();
+    if(DEVICE_TYPE=="PV UNIT")
+        return psdb->get_pv_unit_count();
     if(DEVICE_TYPE=="LOAD")
         return psdb->get_load_count();
     if(DEVICE_TYPE=="FIXED SHUNT")

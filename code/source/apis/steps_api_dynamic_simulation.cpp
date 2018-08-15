@@ -317,12 +317,7 @@ void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(id);
+        DEVICE_ID did = get_generator_device_id(bus, id);
 
         ds->prepare_generator_related_meter(did, meter_type);
     }
@@ -335,12 +330,7 @@ void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_ty
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("WT GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(id);
+        DEVICE_ID did = get_wt_generator_device_id(bus, id);
 
         ds->prepare_wt_generator_related_meter(did, meter_type);
     }
@@ -352,12 +342,7 @@ void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LOAD");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(id);
+        DEVICE_ID did = get_load_device_id(bus, id);
 
         ds->prepare_load_related_meter(did, meter_type);
     }
@@ -369,13 +354,7 @@ void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* me
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LINE");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(id);
+        DEVICE_ID did = get_line_device_id(ibus, jbus, id);
 
         ds->prepare_line_related_meter(did, meter_type, side);
     }
@@ -387,13 +366,7 @@ void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* me
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("HVDC");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(id);
+        DEVICE_ID did = get_hvdc_device_id(ibus, jbus, id);
 
         ds->prepare_line_related_meter(did, meter_type, side);
     }
@@ -405,12 +378,7 @@ void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* met
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("EQUIVALENT DEVICE");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(id);
+        DEVICE_ID did = get_equivalent_device_id(bus, id);
 
         ds->prepare_equivalent_device_related_meter(did, meter_type);
     }
@@ -514,13 +482,7 @@ void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LINE");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_line_exist(did))
         {
@@ -551,13 +513,7 @@ void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* faul
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LINE");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_line_exist(did))
         {
@@ -589,13 +545,7 @@ void api_trip_line(size_t ibus, size_t jbus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LINE");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_line_exist(did))
         {
@@ -617,13 +567,7 @@ void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LINE");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_line_exist(did))
         {
@@ -645,13 +589,7 @@ void api_close_line(size_t ibus, size_t jbus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LINE");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_line_exist(did))
         {
@@ -673,13 +611,7 @@ void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LINE");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_line_exist(did))
         {
@@ -701,14 +633,7 @@ void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifie
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("TRANSFORMER");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        terminal.append_bus(kbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
         if(not psdb->is_transformer_exist(did))
         {
@@ -730,16 +655,9 @@ void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* i
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("TRANSFORMER");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        terminal.append_bus(kbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-        if(not psdb->is_line_exist(did))
+        if(not psdb->is_transformer_exist(did))
         {
             ostringstream osstream;
             osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
@@ -758,14 +676,7 @@ void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifi
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("TRANSFORMER");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        terminal.append_bus(kbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
         if(not psdb->is_transformer_exist(did))
         {
@@ -787,16 +698,9 @@ void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* 
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("TRANSFORMER");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        terminal.append_bus(kbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-        if(not psdb->is_line_exist(did))
+        if(not psdb->is_transformer_exist(did))
         {
             ostringstream osstream;
             osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
@@ -816,12 +720,7 @@ void api_trip_generator(size_t bus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_generator_device_id(bus, identifier);
 
         if(not psdb->is_generator_exist(did))
         {
@@ -842,12 +741,7 @@ void api_shed_generator(size_t bus, char* identifier, double percent)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_generator_device_id(bus, identifier);
 
         if(not psdb->is_generator_exist(did))
         {
@@ -869,12 +763,7 @@ void api_trip_load(size_t bus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LOAD");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_load_device_id(bus, identifier);
 
         if(not psdb->is_load_exist(did))
         {
@@ -895,12 +784,7 @@ void api_close_load(size_t bus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LOAD");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_load_device_id(bus, identifier);
 
         if(not psdb->is_load_exist(did))
         {
@@ -921,12 +805,7 @@ void api_scale_load(size_t bus, char* identifier, double percent)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("LOAD");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_load_device_id(bus, identifier);
 
         if(not psdb->is_load_exist(did))
         {
@@ -958,12 +837,7 @@ void api_trip_fixed_shunt(size_t bus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("FIXED SHUNT");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
         if(not psdb->is_fixed_shunt_exist(did))
         {
@@ -984,12 +858,7 @@ void api_close_fixed_shunt(size_t bus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("FIXED SHUNT");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
         if(not psdb->is_load_exist(did))
         {
@@ -1010,13 +879,7 @@ void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("HVDC");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_hvdc_exist(did))
         {
@@ -1037,13 +900,7 @@ void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("HVDC");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_hvdc_exist(did))
         {
@@ -1064,13 +921,7 @@ void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("HVDC");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_hvdc_exist(did))
         {
@@ -1091,13 +942,7 @@ void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("HVDC");
-        TERMINAL terminal;
-        terminal.append_bus(ibus);
-        terminal.append_bus(jbus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
         if(not psdb->is_hvdc_exist(did))
         {
@@ -1119,12 +964,7 @@ double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_generator_device_id(bus, identifier);
 
         GENERATOR* gen = psdb->get_generator(did);
 
@@ -1153,12 +993,7 @@ double api_get_generator_power_reference_in_MW(size_t bus, char* identifier)
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_generator_device_id(bus, identifier);
 
         GENERATOR* gen = psdb->get_generator(did);
 
@@ -1187,12 +1022,7 @@ void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, dou
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_generator_device_id(bus, identifier);
 
         if(not psdb->is_generator_exist(did))
         {
@@ -1213,12 +1043,7 @@ void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, doubl
 
     if(ds!=NULL)
     {
-        DEVICE_ID did;
-        did.set_device_type("GENERATOR");
-        TERMINAL terminal;
-        terminal.append_bus(bus);
-        did.set_device_terminal(terminal);
-        did.set_device_identifier(identifier);
+        DEVICE_ID did = get_generator_device_id(bus, identifier);
 
         if(not psdb->is_generator_exist(did))
         {

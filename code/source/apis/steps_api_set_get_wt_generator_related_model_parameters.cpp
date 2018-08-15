@@ -1,8 +1,6 @@
 #include "header/apis/steps_api.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
-#include "header/data_imexporter/psse_imexporter.h"
-#include "header/data_imexporter/bpa_imexporter.h"
 
 const char* api_get_wt_generator_related_model_name(size_t bus, char* identifier, char* model_type)
 {
@@ -192,5 +190,4 @@ void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identi
     }
     show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }
-
 

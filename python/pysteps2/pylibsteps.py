@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.2"
-libsteps_date = "2018/07/31"
+libsteps_version = "0.4"
+libsteps_date = "2018/08/15"
 
 def get_base_library(): 
     if platform.system()=="Linux":
@@ -83,6 +83,29 @@ def load_library(parallel_flag):
     libsteps.api_get_owner_count.restype = c_uint
     libsteps.api_get_owner_count.argtypes = None
 
+    libsteps.api_is_bus_exist.restype = c_bool
+    libsteps.api_is_bus_exist.argtypes = (c_uint, )
+    libsteps.api_is_generator_exist.restype = c_bool
+    libsteps.api_is_generator_exist.argtypes = (c_uint, c_char_p)
+    libsteps.api_is_wt_generator_exist.restype = c_bool
+    libsteps.api_is_wt_generator_exist.argtypes = (c_uint, c_char_p)
+    libsteps.api_is_pv_unit_exist.restype = c_bool
+    libsteps.api_is_pv_unit_exist.argtypes = (c_uint, c_char_p)
+    libsteps.api_is_energy_storage_exist.restype = c_bool
+    libsteps.api_is_energy_storage_exist.argtypes = (c_uint, c_char_p)
+    libsteps.api_is_load_exist.restype = c_bool
+    libsteps.api_is_load_exist.argtypes = (c_uint, c_char_p)
+    libsteps.api_is_fixed_shunt_exist.restype = c_bool
+    libsteps.api_is_fixed_shunt_exist.argtypes = (c_uint, c_char_p)
+    libsteps.api_is_line_exist.restype = c_bool
+    libsteps.api_is_line_exist.argtypes = (c_uint, c_uint, c_char_p)
+    libsteps.api_is_transformer_exist.restype = c_bool
+    libsteps.api_is_transformer_exist.argtypes = (c_uint, c_uint, c_uint, c_char_p)
+    libsteps.api_is_hvdc_exist.restype = c_bool
+    libsteps.api_is_hvdc_exist.argtypes = (c_uint, c_uint, c_char_p)
+    libsteps.api_is_equivalent_device_exist.restype = c_bool
+    libsteps.api_is_equivalent_device_exist.argtypes = (c_uint, c_char_p)
+
     libsteps.api_show_device_data.restype = None
     libsteps.api_show_device_data.argtypes = (c_char_p, )
 
@@ -142,6 +165,10 @@ def load_library(parallel_flag):
     libsteps.api_add_generator.argtypes = (c_uint, c_char_p)
     libsteps.api_add_wt_generator.restype = None
     libsteps.api_add_wt_generator.argtypes = (c_uint, c_char_p)
+    libsteps.api_add_pv_unit.restype = None
+    libsteps.api_add_pv_unit.argtypes = (c_uint, c_char_p)
+    libsteps.api_add_energy_storage.restype = None
+    libsteps.api_add_energy_storage.argtypes = (c_uint, c_char_p)
     libsteps.api_add_load.restype = None
     libsteps.api_add_load.argtypes = (c_uint, c_char_p)
     libsteps.api_add_fixed_shunt.restype = None
@@ -323,6 +350,13 @@ def load_library(parallel_flag):
     libsteps.api_get_wt_generator_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p)
     libsteps.api_set_wt_generator_related_model_float_parameter.restype = None
     libsteps.api_set_wt_generator_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_double)
+
+    libsteps.api_get_pv_unit_related_model_name.restype = c_char_p
+    libsteps.api_get_pv_unit_related_model_name.argtypes = (c_uint, c_char_p, c_char_p)
+    libsteps.api_get_pv_unit_related_model_float_parameter.restype = c_double
+    libsteps.api_get_pv_unit_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p)
+    libsteps.api_set_pv_unit_related_model_float_parameter.restype = None
+    libsteps.api_set_pv_unit_related_model_float_parameter.argtypes = (c_uint, c_char_p, c_char_p, c_char_p, c_double)
 
 
     libsteps.api_get_powerflow_solver_integer_parameter.restype = (c_uint)

@@ -17,6 +17,7 @@ class STEPS_API_SEARCH_BUFFER
         vector<BUS*> buses;                            size_t bus_pointer;
         vector<GENERATOR*> generators;                 size_t generator_pointer;
         vector<WT_GENERATOR*> wt_generators;           size_t wt_generator_pointer;
+        vector<PV_UNIT*> pv_units;                     size_t pv_unit_pointer;
         vector<LOAD*> loads;                           size_t load_pointer;
         vector<FIXED_SHUNT*> fixed_shunts;             size_t fixed_shunt_pointer;
         vector<LINE*> lines;                           size_t line_pointer;
@@ -72,6 +73,7 @@ EXPORT_STEPS_DLL void api_save_dynamic_data_to_file(char* file, char* file_type)
 EXPORT_STEPS_DLL void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV);
 EXPORT_STEPS_DLL void api_add_generator(size_t bus_number, char* identifier);
 EXPORT_STEPS_DLL void api_add_wt_generator(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_add_pv_unit(size_t bus_number, char* identifier);
 EXPORT_STEPS_DLL void api_add_load(size_t bus_number, char* identifier);
 EXPORT_STEPS_DLL void api_add_fixed_shunt(size_t bus_number, char* identifier);
 EXPORT_STEPS_DLL void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_number, char* identifier);
@@ -93,6 +95,7 @@ EXPORT_STEPS_DLL bool api_is_line_exist(size_t ibus, size_t jbus, char* ickt);
 EXPORT_STEPS_DLL bool api_is_transformer_exist(size_t ibus, size_t jbus, size_t kbus, char* ickt);
 EXPORT_STEPS_DLL bool api_is_hvdc_exist(size_t ibus, size_t jbus, char* ickt);
 EXPORT_STEPS_DLL bool api_is_equivalent_device_exist(size_t bus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_energy_storage_exist(size_t bus, char* ickt);
 
 EXPORT_STEPS_DLL size_t api_get_device_count(const char* device_type);
 EXPORT_STEPS_DLL size_t api_get_area_count();
@@ -194,15 +197,6 @@ EXPORT_STEPS_DLL void api_set_equivalent_device_string_data(size_t bus, char* id
 EXPORT_STEPS_DLL bool api_get_equivalent_device_boolean_data(size_t bus, char* identifier, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_equivalent_device_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value);
 
-EXPORT_STEPS_DLL int api_get_energy_storage_integer_data(size_t bus, char* identifier, char* parameter_name);
-EXPORT_STEPS_DLL void api_set_energy_storage_integer_data(size_t bus, char* identifier, char* parameter_name, int value);
-EXPORT_STEPS_DLL double api_get_energy_storage_float_data(size_t bus, char* identifier, char* parameter_name);
-EXPORT_STEPS_DLL void api_set_energy_storage_float_data(size_t bus, char* identifier, char* parameter_name, double value);
-EXPORT_STEPS_DLL const char* api_get_energy_storage_string_data(size_t bus, char* identifier, char* parameter_name);
-EXPORT_STEPS_DLL void api_set_energy_storage_string_data(size_t bus, char* identifier, char* parameter_name, char* value);
-EXPORT_STEPS_DLL bool api_get_energy_storage_boolean_data(size_t bus, char* identifier, char* parameter_name);
-EXPORT_STEPS_DLL void api_set_energy_storage_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value);
-
 EXPORT_STEPS_DLL int api_get_area_integer_data(size_t area, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_area_integer_data(size_t area, char* parameter_name, int value);
 EXPORT_STEPS_DLL double api_get_area_float_data(size_t area, char* parameter_name);
@@ -237,6 +231,10 @@ EXPORT_STEPS_DLL void api_set_generator_related_model_float_parameter(size_t bus
 EXPORT_STEPS_DLL const char* api_get_wt_generator_related_model_name(size_t bus, char* identifier, char* model_type);
 EXPORT_STEPS_DLL double api_get_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
+
+EXPORT_STEPS_DLL const char* api_get_pv_unit_related_model_name(size_t bus, char* identifier, char* model_type);
+EXPORT_STEPS_DLL double api_get_pv_unit_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);
+EXPORT_STEPS_DLL void api_set_pv_unit_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value);
 
 EXPORT_STEPS_DLL const char* api_get_load_related_model_name(size_t bus, char* identifier, char* model_type);
 EXPORT_STEPS_DLL double api_get_load_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);

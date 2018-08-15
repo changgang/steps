@@ -72,3 +72,10 @@ bool api_is_equivalent_device_exist(size_t bus, char* ickt)
     return psdb->is_equivalent_device_exist(did);
 }
 
+bool api_is_energy_storage_exist(size_t bus, char* ickt)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    DEVICE_ID did = get_energy_storage_device_id(bus, ickt);
+    return psdb->is_energy_storage_exist(did);
+}
+

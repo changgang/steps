@@ -6,9 +6,11 @@
 
 int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_name)
 {
-    DEVICE_ID generator_did, wt_generator_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -16,6 +18,11 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
         sourceptr = psdb->get_source(wt_generator_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(pv_unit_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(energy_storage_did);
+
 
     if(sourceptr!=NULL)
     {
@@ -55,9 +62,11 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
 
 void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_name, int value)
 {
-    DEVICE_ID generator_did, wt_generator_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -65,6 +74,10 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
         sourceptr = psdb->get_source(wt_generator_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(pv_unit_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(energy_storage_did);
 
     if(sourceptr!=NULL)
     {
@@ -112,9 +125,11 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
 
 double api_get_source_float_data(size_t bus, char* identifier, char* parameter_name)
 {
-    DEVICE_ID generator_did, wt_generator_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -122,6 +137,10 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
         sourceptr = psdb->get_source(wt_generator_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(pv_unit_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(energy_storage_did);
 
     if(sourceptr!=NULL)
     {
@@ -171,9 +190,11 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
 
 void api_set_source_float_data(size_t bus, char* identifier, char* parameter_name, double value)
 {
-    DEVICE_ID generator_did, wt_generator_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -181,6 +202,10 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
         sourceptr = psdb->get_source(wt_generator_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(pv_unit_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(energy_storage_did);
 
     if(sourceptr!=NULL)
     {
@@ -233,9 +258,11 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
 
 const char* api_get_source_string_data(size_t bus, char* identifier, char* parameter_name)
 {
-    DEVICE_ID generator_did, wt_generator_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -245,6 +272,10 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
         sourceptr = psdb->get_source(wt_generator_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(pv_unit_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(energy_storage_did);
 
     if(sourceptr!=NULL)
     {
@@ -271,9 +302,11 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
 
 void api_set_source_string_data(size_t bus, char* identifier, char* parameter_name, char* value)
 {
-    DEVICE_ID generator_did, wt_generator_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -281,6 +314,10 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
         sourceptr = psdb->get_source(wt_generator_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(pv_unit_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(energy_storage_did);
 
     if(sourceptr!=NULL)
     {
@@ -302,9 +339,11 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
 
 bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_name)
 {
-    DEVICE_ID generator_did, wt_generator_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -312,6 +351,10 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
         sourceptr = psdb->get_source(wt_generator_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(pv_unit_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(energy_storage_did);
 
     if(sourceptr!=NULL)
     {
@@ -336,9 +379,11 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
 
 void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value)
 {
-    DEVICE_ID generator_did, wt_generator_did;
+    DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
+    pv_unit_did = get_pv_unit_device_id(bus, identifier);
+    energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
@@ -346,6 +391,10 @@ void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     sourceptr = psdb->get_source(generator_did);
     if(sourceptr==NULL)
         sourceptr = psdb->get_source(wt_generator_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(pv_unit_did);
+    if(sourceptr==NULL)
+        sourceptr = psdb->get_source(energy_storage_did);
 
     if(sourceptr!=NULL)
     {
