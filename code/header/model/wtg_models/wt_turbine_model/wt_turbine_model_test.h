@@ -1,7 +1,7 @@
 #ifndef WT_TURBINE_MODEL_TEST_H
 #define WT_TURBINE_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

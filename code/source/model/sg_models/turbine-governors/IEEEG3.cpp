@@ -1,5 +1,6 @@
 #include "header/model/sg_models/turbine_governor_model/IEEEG3.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 using namespace std;
 static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR MECHANICAL POWER IN PU", //0

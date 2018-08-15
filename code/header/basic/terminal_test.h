@@ -1,7 +1,7 @@
 #ifndef TERMINAL_TEST_H
 #define TERMINAL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

@@ -1,7 +1,7 @@
 #ifndef PVP0_TEST_H
 #define PVP0_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

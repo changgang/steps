@@ -6,6 +6,7 @@
 #include "header/model/wtg_models/wt_turbine_model/wt3t0.h"
 #include <cstdlib>
 #include <cstring>
+#include <istream>
 #include <iostream>
 #include <cstdio>
 #include <cmath>

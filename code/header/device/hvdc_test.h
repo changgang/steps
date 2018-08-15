@@ -1,6 +1,7 @@
 #ifndef HVDC_TEST_H
 #define HVDC_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

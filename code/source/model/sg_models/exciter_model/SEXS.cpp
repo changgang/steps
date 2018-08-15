@@ -1,6 +1,7 @@
 #include "header/model/sg_models/exciter_model/SEXS.h"
 #include "header/basic/utility.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 
 using namespace std;

@@ -1,7 +1,7 @@
 #ifndef PV_PANEL_MODEL_TEST_H
 #define PV_PANEL_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

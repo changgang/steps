@@ -1,7 +1,7 @@
 #ifndef COMPENSATOR_MODEL_TEST_H
 #define COMPENSATOR_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

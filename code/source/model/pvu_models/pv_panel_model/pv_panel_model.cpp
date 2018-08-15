@@ -1,5 +1,6 @@
 #include "header/model/pvu_models/pv_panel_model/pv_panel_model.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 
 using namespace std;

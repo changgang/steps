@@ -1,7 +1,7 @@
 #ifndef RATING_TEST_H
 #define RATING_TEST_H
 
-
+#include <istream>
 #include <iostream>
 
 #ifdef _MSC_VER

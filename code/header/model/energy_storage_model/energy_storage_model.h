@@ -2,7 +2,7 @@
 #define ENERGY_STORAGE_MODEL_H
 
 #include "header/model/model.h"
-#include<complex>
+#include <complex>
 
 class ENERGY_STORAGE;
 

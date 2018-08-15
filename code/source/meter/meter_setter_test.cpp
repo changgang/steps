@@ -3,6 +3,7 @@
 #include "header/prepare_for_tests/prepare_models_for_test.h"
 #include <cstdlib>
 #include <cstring>
+#include <istream>
 #include <iostream>
 #include <cstdio>
 #include <cmath>

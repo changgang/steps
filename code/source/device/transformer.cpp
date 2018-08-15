@@ -1,5 +1,6 @@
 #include "header/device/transformer.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 
 

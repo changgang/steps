@@ -1,6 +1,7 @@
 #ifndef GENERATOR_TEST_H
 #define GENERATOR_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

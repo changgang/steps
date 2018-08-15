@@ -1,6 +1,7 @@
 #ifndef PV_UNIT_TEST_H
 #define PV_UNIT_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

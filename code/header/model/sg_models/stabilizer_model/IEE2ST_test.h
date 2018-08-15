@@ -1,7 +1,7 @@
 #ifndef IEE2ST_TEST_H
 #define IEE2ST_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

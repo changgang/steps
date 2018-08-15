@@ -1,7 +1,7 @@
 #ifndef WIND_SPEED_MODEL_TEST_H
 #define WIND_SPEED_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

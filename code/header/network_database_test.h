@@ -1,7 +1,7 @@
 #ifndef NETWORK_DATABASE_TEST_H
 #define NETWORK_DATABASE_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

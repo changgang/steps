@@ -1,6 +1,7 @@
 #ifndef DEVICE_INDEX_MAP_TEST_H
 #define DEVICE_INDEX_MAP_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

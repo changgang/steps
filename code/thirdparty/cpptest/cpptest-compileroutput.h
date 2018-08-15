@@ -29,6 +29,7 @@
 #ifndef CPPTEST_COMPILEROUTPUT_H
 #define CPPTEST_COMPILEROUTPUT_H
 
+#include <istream>
 #include <iostream>
 #include <stdexcept>
 
@@ -64,14 +65,14 @@ namespace Test
 				InvalidFormat(const std::string& what)
 					: std::logic_error(what) {}
 		};
-		
+
 		/// Pre-defined compiler output formats.
 		///
 		enum Format
 		{
 			/// Generic compiler format, which equals:
 			/// <tt>%%file:%%line: %%text</tt>
-			/// 
+			///
 			Generic,
 
 			/// <a href="http://www.borland.com/products/downloads/download_cbuilder.html">
@@ -79,34 +80,34 @@ namespace Test
 			/// <tt>Error cpptest %%file %%line: %%text</tt>.
 			///
 			BCC,
-			
-			/// <a href="http://gcc.gnu.org">GNU Compiler Collection</a> 
+
+			/// <a href="http://gcc.gnu.org">GNU Compiler Collection</a>
 			/// (GCC) format, which equals:
 			/// <tt>%%file:%%line: %%text</tt>
 			///
 			GCC,
 
-			/// <a href="http://www.microsoft.com">Microsoft Visual C++</a> 
+			/// <a href="http://www.microsoft.com">Microsoft Visual C++</a>
 			/// (MSVC) format, which equals:
 			/// <tt>%%file(%%line) : %%text</tt>
 			///
 			MSVC
 		};
-		
+
 		explicit CompilerOutput(Format 				format = Generic,
 								std::ostream& 		stream = std::cout);
-		
+
 		explicit CompilerOutput(const std::string&	format,
 								std::ostream& 		stream = std::cout);
-		
+
 		virtual void assertment(const Source& s);
-		
+
 	private:
 		std::string		_format;
 		std::ostream&	_stream;
 	};
 
 } // namespace Test
-	
+
 #endif // #ifndef CPPTEST_COMPILEROUTPUT_H
 

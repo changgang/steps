@@ -1,7 +1,7 @@
 #ifndef WT_PITCH_MODEL_TEST_H
 #define WT_PITCH_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

@@ -1,5 +1,6 @@
 #include "header/basic/owner.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 #include <cmath>
 

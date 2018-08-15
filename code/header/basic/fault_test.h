@@ -1,6 +1,7 @@
 #ifndef FAULT_TEST_H
 #define FAULT_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

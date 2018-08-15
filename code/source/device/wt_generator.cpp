@@ -7,6 +7,7 @@
 #include "header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
 #include "header/model/wtg_models/wind_speed_model/wind_speed_models.h"
 
+#include <istream>
 #include <iostream>
 
 using namespace std;

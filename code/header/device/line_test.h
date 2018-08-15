@@ -1,6 +1,7 @@
 #ifndef LINE_TEST_H
 #define LINE_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

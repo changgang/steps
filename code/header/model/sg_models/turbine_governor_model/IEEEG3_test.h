@@ -1,7 +1,7 @@
 #ifndef IEEEG3_TEST_H
 #define IEEEG3_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

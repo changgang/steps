@@ -1,6 +1,7 @@
 #ifndef JACOBIAN_BUILDER_TEST_H
 #define JACOBIAN_BUILDER_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

@@ -1,4 +1,5 @@
 #include "header/basic/ownership.h"
+#include <istream>
 #include <iostream>
 using namespace std;
 

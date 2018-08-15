@@ -1,6 +1,7 @@
 #ifndef VIRTUAL_GENERATOR_LOAD_PAIR_TEST_H
 #define VIRTUAL_GENERATOR_LOAD_PAIR_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

@@ -1,6 +1,7 @@
 #ifndef FIRST_ORDER_BLOCK_TEST_H
 #define FIRST_ORDER_BLOCK_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

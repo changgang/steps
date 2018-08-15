@@ -3,6 +3,7 @@
 
 #include "header/model/energy_storage_model/energy_storage_models.h"
 
+#include <istream>
 #include <iostream>
 
 using namespace std;

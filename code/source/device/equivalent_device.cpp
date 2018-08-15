@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/model/equivalent_model/equivalent_model.h"
 #include "header/model/equivalent_model/equivalent_models.h"
+#include <istream>
 #include <iostream>
 
 using namespace std;

@@ -1,7 +1,7 @@
 #ifndef STABILIZER_TEST_H
 #define STABILIZER_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

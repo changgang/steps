@@ -1,6 +1,7 @@
 #ifndef DEVICE_ID_TEST_H
 #define DEVICE_ID_TEST_H
 
+#include <istream>
 #include <iostream>
 
 #ifdef _MSC_VER

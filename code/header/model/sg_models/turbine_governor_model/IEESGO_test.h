@@ -1,7 +1,7 @@
 #ifndef IEESGO_TEST_H
 #define IEESGO_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

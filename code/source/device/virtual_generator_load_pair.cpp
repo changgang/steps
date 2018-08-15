@@ -8,6 +8,7 @@
 #include "header/model/sg_models/sync_generator_model/gencls.h"
 
 #include <cstdio>
+#include <istream>
 #include <iostream>
 
 using namespace std;

@@ -1,3 +1,4 @@
+#include <istream>
 #include "header/apis/steps_api.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"

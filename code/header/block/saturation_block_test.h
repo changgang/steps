@@ -1,6 +1,7 @@
 #ifndef SATURATION_BLOCK_TEST_H
 #define SATURATION_BLOCK_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

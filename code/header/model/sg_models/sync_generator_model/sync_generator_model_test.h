@@ -1,7 +1,7 @@
 #ifndef SYNC_GENERATOR_MODEL_TEST_H
 #define SYNC_GENERATOR_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

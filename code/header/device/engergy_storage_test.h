@@ -1,6 +1,7 @@
 #ifndef ENERGY_STORAGE_TEST_H
 #define ENERGY_STORAGE_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

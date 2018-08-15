@@ -1,7 +1,7 @@
 #ifndef POWER_SYSTEM_DATABASE_TEST_H
 #define POWER_SYSTEM_DATABASE_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

@@ -8,7 +8,7 @@
 #include "header/basic/sparse_matrix.h"
 #include "header/network_database.h"
 
-#include <time.h>
+#include <ctime>
 
 class JACOBIAN_BUILDER
 {

@@ -1,5 +1,6 @@
 #include "header/device/fixed_shunt.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 
 using namespace std;

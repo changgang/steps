@@ -1,7 +1,7 @@
 #ifndef SPARSE_MATRIX_TEST_H
 #define SPARSE_MATRIX_TEST_H
 
-
+#include <istream>
 #include <iostream>
 
 #ifdef _MSC_VER

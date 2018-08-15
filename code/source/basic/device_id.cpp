@@ -1,6 +1,7 @@
 #include "header/basic/device_id.h"
 #include "header/basic/exception.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 #include <cstdio>
 #include <algorithm>

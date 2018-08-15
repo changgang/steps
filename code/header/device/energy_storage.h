@@ -1,8 +1,8 @@
 #ifndef ENERGY_STORAGE_H
 #define ENERGY_STORAGE_H
 
-#include<string>
-#include<complex>
+#include <complex>
+#include <string>
 #include "header/device/source.h"
 #include "header/model/energy_storage_model/energy_storage_model.h"
 

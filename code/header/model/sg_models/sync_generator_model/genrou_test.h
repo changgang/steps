@@ -1,7 +1,7 @@
 #ifndef GENROU_TEST_H
 #define GENROU_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

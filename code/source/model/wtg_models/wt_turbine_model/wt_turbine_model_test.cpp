@@ -5,6 +5,7 @@
 #include "header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 #include <cstdlib>
 #include <cstring>
+#include <istream>
 #include <iostream>
 #include <cstdio>
 #include <cmath>

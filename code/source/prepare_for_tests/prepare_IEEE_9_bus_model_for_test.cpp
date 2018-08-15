@@ -6,6 +6,7 @@
 
 #include "header/data_imexporter/psse_imexporter.h"
 
+#include <istream>
 #include <iostream>
 using namespace std;
 

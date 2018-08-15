@@ -1,6 +1,7 @@
 #ifndef BPA_IMEXPORTER_TEST_H
 #define BPA_IMEXPORTER_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

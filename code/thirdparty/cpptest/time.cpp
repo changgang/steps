@@ -31,7 +31,7 @@
 # include "config.h"
 #endif
 */
-
+#include <istream>
 #include "missing.h"
 #include "cpptest-time.h"
 

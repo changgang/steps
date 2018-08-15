@@ -1,7 +1,7 @@
 #ifndef LOAD_MODEL_TEST_H
 #define LOAD_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

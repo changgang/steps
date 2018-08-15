@@ -1,6 +1,7 @@
 #include "header/model/hvdc_model/vdcol.h"
 #include "header/basic/utility.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 
 using namespace std;

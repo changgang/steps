@@ -1,7 +1,7 @@
 #ifndef PVU_MODEL_TEST_H
 #define PVU_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

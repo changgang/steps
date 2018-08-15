@@ -3,6 +3,7 @@
 #include "header/basic/constants.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 
 using namespace std;

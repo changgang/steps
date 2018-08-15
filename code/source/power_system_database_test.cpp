@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
 #include "header/data_imexporter/psse_imexporter.h"
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

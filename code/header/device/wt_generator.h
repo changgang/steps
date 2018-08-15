@@ -1,8 +1,8 @@
 #ifndef WT_GENERATOR_H
 #define WT_GENERATOR_H
 
-#include<string>
-#include<complex>
+#include <string>
+#include <complex>
 #include "header/device/source.h"
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 #include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"

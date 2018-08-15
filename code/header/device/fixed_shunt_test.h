@@ -1,6 +1,7 @@
 #ifndef FIXED_SHUNT_TEST_H
 #define FIXED_SHUNT_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

@@ -4,6 +4,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <istream>
 #include <iostream>
 
 #ifdef _MSC_VER

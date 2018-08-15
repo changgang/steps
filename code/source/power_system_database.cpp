@@ -4,6 +4,7 @@
 #include "thirdparty/rapidjson/document.h"
 #include "thirdparty/rapidjson/prettywriter.h"
 #include "thirdparty/rapidjson/stringbuffer.h"
+#include <istream>
 #include <iostream>
 #include <fstream>
 

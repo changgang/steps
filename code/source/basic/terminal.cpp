@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/basic/exception.h"
 
+#include <istream>
 #include <iostream>
 #include <string>
 #include <algorithm>

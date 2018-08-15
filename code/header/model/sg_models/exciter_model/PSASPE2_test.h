@@ -1,7 +1,7 @@
 #ifndef PSASPE2_TEST_H
 #define PSASPE2_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

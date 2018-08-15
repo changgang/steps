@@ -1,7 +1,7 @@
 #ifndef LOAD_VOLTAGE_RELAY_MODEL_TEST_H
 #define LOAD_VOLTAGE_RELAY_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

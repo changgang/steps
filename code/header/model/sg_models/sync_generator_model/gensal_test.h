@@ -1,7 +1,7 @@
 #ifndef GENSAL_TEST_H
 #define GENSAL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

@@ -1,6 +1,7 @@
 #include "header/basic/bus_index.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 using namespace std;
 

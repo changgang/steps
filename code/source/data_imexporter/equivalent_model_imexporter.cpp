@@ -3,6 +3,7 @@
 #include "header/basic/utility.h"
 #include "header/meter/meter_setter.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 
 using namespace std;

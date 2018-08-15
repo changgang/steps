@@ -1,7 +1,7 @@
 #ifndef CSEET2_TEST_H
 #define CSEET2_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

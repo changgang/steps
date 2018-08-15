@@ -1,6 +1,7 @@
 #ifndef PROPORTIONAL_BLOCK_TEST_H
 #define PROPORTIONAL_BLOCK_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

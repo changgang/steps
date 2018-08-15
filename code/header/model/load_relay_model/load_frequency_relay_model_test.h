@@ -1,7 +1,7 @@
 #ifndef LOAD_FREQUENCY_RELAY_MODEL_TEST_H
 #define LOAD_FREQUENCY_RELAY_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

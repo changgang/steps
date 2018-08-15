@@ -1,7 +1,7 @@
 #ifndef OWNER_TEST_H
 #define OWNER_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

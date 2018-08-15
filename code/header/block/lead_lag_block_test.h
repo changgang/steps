@@ -1,6 +1,7 @@
 #ifndef LEAD_LAG_BLOCK_TEST_H
 #define LEAD_LAG_BLOCK_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

@@ -1,3 +1,4 @@
+#include <istream>
 #include <iostream>
 #include "header/power_system_database.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"

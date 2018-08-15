@@ -1,6 +1,7 @@
 #include "header/model/wtg_models/wt_pitch_model/wt3p0.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include <istream>
 #include <iostream>
 
 using namespace std;

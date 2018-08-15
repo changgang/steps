@@ -7,6 +7,7 @@
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include <cstdlib>
 #include <cstring>
+#include <istream>
 #include <iostream>
 #include <cstdio>
 #include <cmath>

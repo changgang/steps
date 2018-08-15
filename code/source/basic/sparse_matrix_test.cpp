@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include <cstdlib>
 #include <cstring>
+#include <istream>
 #include <iostream>
 #include <cstdio>
 #include <complex>

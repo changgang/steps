@@ -2,6 +2,7 @@
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
 #include <string>
+#include <istream>
 #include <ostream>
 #include <sstream>
 #include <iomanip>

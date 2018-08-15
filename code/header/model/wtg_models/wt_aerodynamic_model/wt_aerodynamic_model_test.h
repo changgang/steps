@@ -1,7 +1,7 @@
 #ifndef WT_AERODYNAMIC_MODEL_TEST_H
 #define WT_AERODYNAMIC_MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

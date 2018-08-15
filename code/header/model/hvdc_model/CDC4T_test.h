@@ -1,7 +1,7 @@
 #ifndef CDC4T_TEST_H
 #define CDC4T_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

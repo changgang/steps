@@ -1,7 +1,7 @@
 #ifndef SEXS_TEST_H
 #define SEXS_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

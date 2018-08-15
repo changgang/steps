@@ -1,6 +1,7 @@
 #ifndef POWERFLOW_SOLVER_TEST_H
 #define POWERFLOW_SOLVER_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

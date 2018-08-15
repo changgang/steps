@@ -1,6 +1,7 @@
 #ifndef ZONE_TEST_H
 #define ZONE_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

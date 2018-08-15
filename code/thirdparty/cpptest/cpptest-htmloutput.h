@@ -29,6 +29,7 @@
 #ifndef CPPTEST_HTMLOUTPUT_H
 #define CPPTEST_HTMLOUTPUT_H
 
+#include <istream>
 #include <iostream>
 #include <string>
 
@@ -44,9 +45,9 @@ namespace Test
 	class HtmlOutput : public CollectorOutput
 	{
 	public:
-		void generate(std::ostream& os, bool incl_ok_tests = true, 
+		void generate(std::ostream& os, bool incl_ok_tests = true,
 					  const std::string& name = "");
-		
+
 	private:
 		struct SuiteRow;
 		struct TestRow;
@@ -57,8 +58,8 @@ namespace Test
 
 		friend struct TestSuiteRow;
 	};
-	
+
 } // namespace Test
-		
-#endif // #ifndef CPPTEST_HTMLOUTPUT_H		
+
+#endif // #ifndef CPPTEST_HTMLOUTPUT_H
 

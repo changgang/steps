@@ -1,7 +1,7 @@
 #ifndef WT3E0_TEST_H
 #define WT3E0_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

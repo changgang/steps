@@ -6,6 +6,7 @@
 #include "header/model/pvu_models/pv_electrical_model/pv_electrical_models.h"
 #include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_models.h"
 
+#include <istream>
 #include <iostream>
 
 using namespace std;

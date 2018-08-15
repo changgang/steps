@@ -1,6 +1,7 @@
 #include "header/basic/device_index_map.h"
 #include "header/basic/utility.h"
 #include "header/basic/constants.h"
+#include <istream>
 #include <iostream>
 
 DEVICE_INDEX_MAP::DEVICE_INDEX_MAP()

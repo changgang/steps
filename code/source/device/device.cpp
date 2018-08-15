@@ -1,5 +1,6 @@
 #include "header/power_system_database.h"
 #include "header/device/device.h"
+#include <istream>
 #include <iostream>
 
 using namespace std;

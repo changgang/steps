@@ -9,6 +9,7 @@
 #include "header/device/virtual_generator_load_pair_test.h"
 #include <cstdlib>
 #include <cstring>
+#include <istream>
 #include <iostream>
 #include <cstdio>
 

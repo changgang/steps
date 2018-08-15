@@ -9,6 +9,7 @@
 #include "header/device/transformer.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 #include <fstream>
 

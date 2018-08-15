@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/toolkit/cct_searcher/cct_searcher.h"
+#include <istream>
 #include <iostream>
 //#include <omp.h>
 

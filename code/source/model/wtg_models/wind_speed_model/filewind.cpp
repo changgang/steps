@@ -1,6 +1,7 @@
 #include "header/model/wtg_models/wind_speed_model/filewind.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include <istream>
 #include <iostream>
 
 using namespace std;

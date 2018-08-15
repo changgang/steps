@@ -6,8 +6,8 @@
 #include "header/basic/device_id.h"
 #include "header/power_system_database.h"
 
-#include<string>
-#include<complex>
+#include <string>
+#include <complex>
 
 using namespace std;
 

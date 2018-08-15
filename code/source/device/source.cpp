@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#include <istream>
 #include <iostream>
 
 using namespace std;

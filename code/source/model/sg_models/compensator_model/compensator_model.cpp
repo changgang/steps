@@ -3,6 +3,7 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 
 using namespace std;

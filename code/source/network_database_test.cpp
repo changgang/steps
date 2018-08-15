@@ -4,6 +4,7 @@
 #include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
+#include <istream>
 #include <iostream>
 #include <cstdio>
 #include <cmath>

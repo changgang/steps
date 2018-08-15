@@ -1,7 +1,7 @@
 #ifndef MODEL_TEST_H
 #define MODEL_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

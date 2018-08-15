@@ -3,6 +3,7 @@
 #include "header/steps_namespace.h"
 #include <map>
 #include <vector>
+#include <istream>
 #include <iostream>
 
 

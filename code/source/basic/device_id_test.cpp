@@ -1,5 +1,6 @@
 #include "header/basic/device_id_test.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

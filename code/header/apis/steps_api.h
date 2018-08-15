@@ -83,6 +83,17 @@ EXPORT_STEPS_DLL void api_add_area(size_t area_number, char* area_name);
 EXPORT_STEPS_DLL void api_add_zone(size_t zone_number, char* zone_name);
 EXPORT_STEPS_DLL void api_add_owner(size_t owner_number, char* owner_name);
 
+EXPORT_STEPS_DLL bool api_is_bus_exist(size_t bus);
+EXPORT_STEPS_DLL bool api_is_generator_exist(size_t bus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_wt_generator_exist(size_t bus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_pv_unit_exist(size_t bus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_load_exist(size_t bus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_fixed_shunt_exist(size_t bus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_line_exist(size_t ibus, size_t jbus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_transformer_exist(size_t ibus, size_t jbus, size_t kbus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_hvdc_exist(size_t ibus, size_t jbus, char* ickt);
+EXPORT_STEPS_DLL bool api_is_equivalent_device_exist(size_t bus, char* ickt);
+
 EXPORT_STEPS_DLL size_t api_get_device_count(const char* device_type);
 EXPORT_STEPS_DLL size_t api_get_area_count();
 EXPORT_STEPS_DLL size_t api_get_zone_count();

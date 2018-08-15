@@ -7,6 +7,7 @@
 #include "header/basic/bus_index_test.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

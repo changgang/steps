@@ -1,5 +1,6 @@
 #include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 
 using namespace std;

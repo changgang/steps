@@ -1,6 +1,7 @@
 #include "header/model/energy_storage_model/estr0.h"
 #include "header/basic/utility.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 using namespace std;
 

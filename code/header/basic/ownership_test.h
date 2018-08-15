@@ -1,6 +1,7 @@
 #ifndef OWNERSHIP_TEST_H
 #define OWNERSHIP_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

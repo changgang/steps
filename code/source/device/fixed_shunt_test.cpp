@@ -1,4 +1,3 @@
-#include <cstdlib>
 #ifdef _MSC_VER
 	#pragma warning (disable: 4290)
 #endif
@@ -9,8 +8,10 @@
 #include "header/basic/utility.h"
 #include "header/device/fixed_shunt_test.h"
 #include <cstring>
+#include <istream>
 #include <iostream>
 #include <cstdio>
+#include <cstdlib>
 
 using namespace std;
 

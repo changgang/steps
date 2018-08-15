@@ -1,6 +1,7 @@
 #include "header/basic/timer.h"
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
+#include <istream>
 #include <iostream>
 #include <cstdio>
 

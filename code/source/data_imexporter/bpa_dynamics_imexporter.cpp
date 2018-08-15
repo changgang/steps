@@ -3,6 +3,7 @@
 #include "header/steps_namespace.h"
 #include "header/model/all_supported_models.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 #include <fstream>
 using namespace std;

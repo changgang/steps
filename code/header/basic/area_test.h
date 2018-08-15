@@ -1,6 +1,7 @@
 #ifndef AREA_TEST_H
 #define AREA_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

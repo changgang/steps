@@ -1,6 +1,7 @@
 #include "header/model/sg_models/sync_generator_model/gencls.h"
 #include "header/basic/utility.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 using namespace std;
 

@@ -1,6 +1,7 @@
 #ifndef METER_SETTER_TEST_H
 #define METER_SETTER_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

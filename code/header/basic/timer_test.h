@@ -1,6 +1,7 @@
 #ifndef TIMER_TEST_H
 #define TIMER_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

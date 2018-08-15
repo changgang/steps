@@ -1,6 +1,7 @@
 #ifndef PID_BLOCK_TEST_H
 #define PID_BLOCK_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

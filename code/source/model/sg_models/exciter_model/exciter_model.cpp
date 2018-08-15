@@ -4,6 +4,7 @@
 #include "header/model/sg_models/compensator_model/compensator_model.h"
 #include "header/basic/utility.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 
 using namespace std;

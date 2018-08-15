@@ -3,6 +3,7 @@
 #include "header/steps_namespace.h"
 #include "header/meter/meter_setter.h"
 #include <cstdio>
+#include <istream>
 #include <iostream>
 #include <ctime>
 //#include <omp.h>

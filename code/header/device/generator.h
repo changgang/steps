@@ -1,8 +1,8 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include<string>
-#include<complex>
+#include <string>
+#include <complex>
 #include "header/device/source.h"
 #include "header/model/sg_models/sync_generator_model/sync_generator_model.h"
 #include "header/model/sg_models/compensator_model/compensator_model.h"

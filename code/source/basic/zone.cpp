@@ -1,6 +1,7 @@
 #include "header/basic/zone.h"
 #include "header/basic/utility.h"
 
+#include <istream>
 #include <iostream>
 
 using namespace std;

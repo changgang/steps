@@ -1,7 +1,7 @@
 #ifndef FILEIRRAD_TEST_H
 #define FILEIRRAD_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

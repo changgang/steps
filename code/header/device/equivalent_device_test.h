@@ -1,6 +1,7 @@
 #ifndef EQUIVALENT_DEVICE_TEST_H
 #define EQUIVALENT_DEVICE_TEST_H
 
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>

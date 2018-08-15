@@ -1,7 +1,7 @@
 #ifndef DYNAMICS_SIMULATOR_TEST_H
 #define DYNAMICS_SIMULATOR_TEST_H
 
-
+#include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
