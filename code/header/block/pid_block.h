@@ -8,7 +8,7 @@
 
 class PID_BLOCK : public BLOCK
 {
-    // Kp+Ki/s+sKd/Td
+    // Kp+Ki/s+sKd/(1+sTd)
     public:
         PID_BLOCK();
         ~PID_BLOCK();

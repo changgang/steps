@@ -534,15 +534,12 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
             }
         }
         double angle_difference = angle_max - angle_min;
-        double scaled_angle_difference = angle_difference;
-        while(scaled_angle_difference>180.0)
-            scaled_angle_difference -= 360.0;
-        while(scaled_angle_difference<-180.0)
-            scaled_angle_difference += 360.0;
-        if(fabs(scaled_angle_difference)>get_angle_difference_threshold_in_deg())
+        double scaled_angle_difference = rad2deg(round_angle_in_rad_to_PI(deg2rad(angle_difference)));
+
+        if(angle_difference>get_angle_difference_threshold_in_deg())
         {
             system_is_stable = false;
-            osstream<<"The following island is detected to be unstable at time "<<TIME<<" s. Maximum angle difference is :"<<fabs(angle_difference)<<" deg (a.k.a. "<<fabs(scaled_angle_difference)<<" deg)"<<endl
+            osstream<<"The following island is detected to be unstable at time "<<TIME<<" s. Maximum angle difference is :"<<angle_difference<<" deg (a.k.a. "<<scaled_angle_difference<<" deg)"<<endl
                    <<"Generator          Rotor angle in deg"<<endl;
 
             size_t n = generators_in_island.size();

@@ -32,7 +32,12 @@ void WT3P0::clear()
 
     speed_controller.set_limiter_type(NO_LIMITER);
 
+    frequency_sensor.set_limiter_type(NO_LIMITER);
+    frequency_sensor.set_K(1.0);
+
     frequency_controller.set_limiter_type(NO_LIMITER);
+    set_Kd_frequency_controller(0.0);
+    set_Td_frequency_controller_in_s(0.5);
 
     pitch_integrator.set_limiter_type(NON_WINDUP_LIMITER);
 
@@ -46,17 +51,20 @@ void WT3P0::copy_from_const_model(const WT3P0& model)
     //this->set_power_system_database(model.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
-    set_Tp_in_s(model.get_Tp_in_s());
+    set_Tspeed_in_s(model.get_Tspeed_in_s());
     set_Kp_speed_controller(model.get_Kp_speed_controller());
     set_Ki_speed_controller(model.get_Ki_speed_controller());
+    set_Tfrequency_in_s(model.get_Tfrequency_in_s());
     set_frequency_upper_deadband_in_pu(model.get_frequency_upper_deadband_in_pu());
     set_frequency_lower_deadband_in_pu(model.get_frequency_lower_deadband_in_pu());
     set_Kp_frequency_controller(model.get_Kp_frequency_controller());
     set_Ki_frequency_controller(model.get_Ki_frequency_controller());
+    set_Kd_frequency_controller(model.get_Kd_frequency_controller());
+    set_Td_frequency_controller_in_s(model.get_Td_frequency_controller_in_s());
     set_Pitchmax_in_deg(model.get_Pitchmax_in_deg());
     set_Pitchmin_in_deg(model.get_Pitchmin_in_deg());
     set_ratePitchmax_in_deg_per_s(model.get_ratePitchmax_in_deg_per_s());
-    set_Tspeed_in_s(model.get_Tspeed_in_s());
+    set_Tp_in_s(model.get_Tp_in_s());
 }
 
 WT3P0::WT3P0(const WT3P0&model) : WT_PITCH_MODEL()
@@ -97,6 +105,12 @@ double WT3P0::get_double_data_with_name(string par_name) const
     if(par_name == "KI FREQUENCY CONTROLLER")
         return get_Ki_frequency_controller();
 
+    if(par_name == "KD FREQUENCY CONTROLLER")
+        return get_Kd_frequency_controller();
+
+    if(par_name == "TD FREQUENCY CONTROLLER")
+        return get_Td_frequency_controller_in_s();
+
     if(par_name == "KP SPEED CONTROLLER")
         return get_Kp_speed_controller();
 
@@ -133,6 +147,12 @@ void WT3P0::set_double_data_with_name(string par_name, double value)
     if(par_name == "KI FREQUENCY CONTROLLER")
         return set_Ki_frequency_controller(value);
 
+    if(par_name == "KD FREQUENCY CONTROLLER")
+        return set_Kd_frequency_controller(value);
+
+    if(par_name == "TD FREQUENCY CONTROLLER")
+        return set_Td_frequency_controller_in_s(value);
+
     if(par_name == "KP SPEED CONTROLLER")
         return set_Kp_speed_controller(value);
 
@@ -146,9 +166,9 @@ void WT3P0::set_double_data_with_name(string par_name, double value)
         return set_Pitchmin_in_deg(value);
 }
 
-void WT3P0::set_Tp_in_s(double T)
+void WT3P0::set_Tspeed_in_s(double T)
 {
-    pitch_integrator.set_T_in_s(T);
+    speed_reference_sensor.set_T_in_s(T);
 }
 
 void WT3P0::set_Kp_speed_controller(double K)
@@ -161,6 +181,11 @@ void WT3P0::set_Ki_speed_controller(double K)
     speed_controller.set_Ki(K);
 }
 
+void WT3P0::set_Tfrequency_in_s(double T)
+{
+    frequency_sensor.set_T_in_s(T);
+}
+
 void WT3P0::set_Kp_frequency_controller(double K)
 {
     frequency_controller.set_Kp(K);
@@ -169,6 +194,16 @@ void WT3P0::set_Kp_frequency_controller(double K)
 void WT3P0::set_Ki_frequency_controller(double K)
 {
     frequency_controller.set_Ki(K);
+}
+
+void WT3P0::set_Kd_frequency_controller(double K)
+{
+    frequency_controller.set_Kd(K);
+}
+
+void WT3P0::set_Td_frequency_controller_in_s(double T)
+{
+    frequency_controller.set_Td_in_s(T);
 }
 
 void WT3P0::set_Pitchmax_in_deg(double P)
@@ -186,14 +221,14 @@ void WT3P0::set_ratePitchmax_in_deg_per_s(double rP)
     ratePitchmax = rP;
 }
 
-void WT3P0::set_Tspeed_in_s(double T)
+void WT3P0::set_Tp_in_s(double T)
 {
-    speed_reference_sensor.set_T_in_s(T);
+    pitch_integrator.set_T_in_s(T);
 }
 
-double WT3P0::get_Tp_in_s() const
+double WT3P0::get_Tspeed_in_s() const
 {
-    return pitch_integrator.get_T_in_s();
+    return speed_reference_sensor.get_T_in_s();
 }
 
 double WT3P0::get_Kp_speed_controller() const
@@ -206,6 +241,11 @@ double WT3P0::get_Ki_speed_controller() const
     return speed_controller.get_Ki();
 }
 
+double WT3P0::get_Tfrequency_in_s() const
+{
+    return frequency_sensor.get_T_in_s();
+}
+
 double WT3P0::get_Kp_frequency_controller() const
 {
     return frequency_controller.get_Kp();
@@ -214,6 +254,16 @@ double WT3P0::get_Kp_frequency_controller() const
 double WT3P0::get_Ki_frequency_controller() const
 {
     return frequency_controller.get_Ki();
+}
+
+double WT3P0::get_Kd_frequency_controller() const
+{
+    return frequency_controller.get_Kd();
+}
+
+double WT3P0::get_Td_frequency_controller_in_s() const
+{
+    return frequency_controller.get_Td_in_s();
 }
 
 double WT3P0::get_Pitchmax_in_deg() const
@@ -231,9 +281,9 @@ double WT3P0::get_ratePitchmax_in_deg_per_s() const
     return ratePitchmax;
 }
 
-double WT3P0::get_Tspeed_in_s() const
+double WT3P0::get_Tp_in_s() const
 {
-    return speed_reference_sensor.get_T_in_s();
+    return pitch_integrator.get_T_in_s();
 }
 
 bool WT3P0::setup_model_with_steps_string(string data)
@@ -249,23 +299,26 @@ bool WT3P0::setup_model_with_psse_string(string data)
 {
     bool is_successful = false;
     vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<14)
+    if(dyrdata.size()<17)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
     if(model_name!=get_model_name())
         return is_successful;
 
-    double tp, kps, kis, fup, flow, kpf, kif, pmax, pmin, rpmax, tspeed;
+    double tp, kps, kis, tf, fup, flow, kpf, kif, kdf, tdf, rpmax, pmax, pmin, tspeed;
 
     size_t i=3;
     tspeed = get_double_data(dyrdata[i],"0.0"); i++;
     kps = get_double_data(dyrdata[i],"0.0"); i++;
     kis = get_double_data(dyrdata[i],"0.0"); i++;
+    tf = get_double_data(dyrdata[i],"0.0"); i++;
     flow = get_double_data(dyrdata[i],"1.0"); i++;
     fup = get_double_data(dyrdata[i],"1.0"); i++;
     kpf = get_double_data(dyrdata[i],"0.0"); i++;
     kif = get_double_data(dyrdata[i],"0.0"); i++;
+    kdf = get_double_data(dyrdata[i],"0.0"); i++;
+    tdf = get_double_data(dyrdata[i],"0.0"); i++;
     rpmax = get_double_data(dyrdata[i],"0.0"); i++;
     pmin = get_double_data(dyrdata[i],"0.0"); i++;
     pmax = get_double_data(dyrdata[i],"0.0"); i++;
@@ -274,10 +327,13 @@ bool WT3P0::setup_model_with_psse_string(string data)
     set_Tspeed_in_s(tspeed);
     set_Kp_speed_controller(kps);
     set_Ki_speed_controller(kis);
+    set_Tfrequency_in_s(tf);
     set_frequency_upper_deadband_in_pu(fup);
     set_frequency_lower_deadband_in_pu(flow);
     set_Kp_frequency_controller(kpf);
     set_Ki_frequency_controller(kif);
+    set_Kd_frequency_controller(kdf);
+    set_Td_frequency_controller_in_s(tdf);
     set_ratePitchmax_in_deg_per_s(rpmax);
     set_Pitchmin_in_deg(pmin);
     set_Pitchmax_in_deg(pmax);
@@ -339,6 +395,9 @@ void WT3P0::initialize()
     speed_reference_sensor.set_output(speed_ref);
     speed_reference_sensor.initialize();
 
+    frequency_sensor.set_output(1.0);
+    frequency_sensor.initialize();
+
     frequency_controller.set_output(0.0);
     frequency_controller.initialize();
 
@@ -366,6 +425,10 @@ void WT3P0::run(DYNAMIC_MODE mode)
     speed_controller.run(mode);
 
     double freq = get_bus_frequency_in_pu();
+    frequency_sensor.set_input(freq);
+    frequency_sensor.run(mode);
+    freq = frequency_sensor.get_output();
+
     double fup = get_frequency_upper_deadband_in_pu();
     double flow = get_frequency_lower_deadband_in_pu();
     if(freq>fup)
@@ -424,13 +487,16 @@ string WT3P0::get_standard_model_string() const
     double tspeed = get_Tspeed_in_s();
     double kps = get_Kp_speed_controller();
     double kis = get_Ki_speed_controller();
+    double tf = get_Tfrequency_in_s();
     double fup = get_frequency_upper_deadband_in_pu();
     double flow = get_frequency_lower_deadband_in_pu();
     double kpf = get_Kp_frequency_controller();
     double kif = get_Ki_frequency_controller();
+    double kdf = get_Kd_frequency_controller();
+    double tdf = get_Td_frequency_controller_in_s();
+    double rpmax = get_ratePitchmax_in_deg_per_s();
     double pmax = get_Pitchmax_in_deg();
     double pmin = get_Pitchmin_in_deg();
-    double rpmax = get_ratePitchmax_in_deg_per_s();
     double tp = get_Tp_in_s();
 
     DEVICE_ID did = get_device_id();
@@ -443,10 +509,13 @@ string WT3P0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<tspeed<<", "
       <<setw(8)<<setprecision(6)<<kps<<", "
       <<setw(8)<<setprecision(6)<<kis<<", "
+      <<setw(8)<<setprecision(6)<<tf<<", "
       <<setw(8)<<setprecision(6)<<flow<<", "
       <<setw(8)<<setprecision(6)<<fup<<", "
       <<setw(8)<<setprecision(6)<<kpf<<", "
       <<setw(8)<<setprecision(6)<<kif<<", "
+      <<setw(8)<<setprecision(6)<<kdf<<", "
+      <<setw(8)<<setprecision(6)<<tdf<<", "
       <<setw(8)<<setprecision(6)<<rpmax<<", "
       <<setw(8)<<setprecision(6)<<pmin<<", "
       <<setw(8)<<setprecision(6)<<pmax<<", "

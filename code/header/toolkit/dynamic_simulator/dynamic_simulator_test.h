@@ -37,6 +37,8 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_set_get_max_network_iteration();
         void test_set_get_allowed_max_power_imbalance_in_MVA();
         void test_set_get_iteration_accelerator();
+        void test_set_get_rotor_angle_stability_survilliance_flag();
+        void test_set_get_rotor_angle_stability_threshold();
 
         void test_append_and_get_meter();
         void test_get_meter_count();
@@ -58,6 +60,9 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_run_IEEE_9_bus_model_classic_trip_bus();
 
         void test_run_IEEE_9_bus_model_classic();
+
+        void test_run_IEEE_9_bus_model_classic_with_rotor_angle_survilliance();
+
         void test_run_IEEE_9_bus_model_complete();
         void test_run_IEEE_39_bus_model_GENROU();
         void test_run_IEEE_39_bus_model_GENSAL();
@@ -72,6 +77,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T();
 
         void test_run_IEEE_9_bus_model_with_WT3_models();
+
     private:
         void run_single_machine_model_for_model_test();
         POWER_SYSTEM_DATABASE* db;

@@ -37,6 +37,8 @@ class UTILITY_TEST : public Test::Suite
         void test_rad2deg();
         void test_deg2rad();
 
+        void test_round_angle_to_PI();
+
 		void test_steps_fast_complex_abs();
 		void test_steps_fast_complex_arg();
 

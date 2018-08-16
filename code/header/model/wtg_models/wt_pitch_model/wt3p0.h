@@ -20,25 +20,31 @@ class WT3P0 : public WT_PITCH_MODEL
         virtual void set_double_data_with_index(size_t index, double value);
         virtual void set_double_data_with_name(string par_name, double value);
 
-        void set_Tp_in_s(double T);
+        void set_Tspeed_in_s(double T);
         void set_Kp_speed_controller(double K);
         void set_Ki_speed_controller(double K);
+        void set_Tfrequency_in_s(double T);
         void set_Kp_frequency_controller(double K);
         void set_Ki_frequency_controller(double K);
+        void set_Kd_frequency_controller(double K);
+        void set_Td_frequency_controller_in_s(double T);
         void set_Pitchmax_in_deg(double P);
         void set_Pitchmin_in_deg(double P);
         void set_ratePitchmax_in_deg_per_s(double rP);
-        void set_Tspeed_in_s(double T);
+        void set_Tp_in_s(double T);
 
-        double get_Tp_in_s() const;
+        double get_Tspeed_in_s() const;
         double get_Kp_speed_controller() const;
         double get_Ki_speed_controller() const;
+        double get_Tfrequency_in_s() const;
         double get_Kp_frequency_controller() const;
         double get_Ki_frequency_controller() const;
+        double get_Kd_frequency_controller() const;
+        double get_Td_frequency_controller_in_s() const;
         double get_Pitchmax_in_deg() const;
         double get_Pitchmin_in_deg() const;
         double get_ratePitchmax_in_deg_per_s() const;
-        double get_Tspeed_in_s() const;
+        double get_Tp_in_s() const;
     public:
         virtual bool setup_model_with_steps_string(string data);
         virtual bool setup_model_with_psse_string(string data);
@@ -65,7 +71,8 @@ class WT3P0 : public WT_PITCH_MODEL
         void copy_from_const_model(const WT3P0& model);
         FIRST_ORDER_BLOCK speed_reference_sensor;
         PI_BLOCK speed_controller;
-        PI_BLOCK frequency_controller;
+        FIRST_ORDER_BLOCK frequency_sensor;
+        PID_BLOCK frequency_controller;
         INTEGRAL_BLOCK pitch_integrator;
         double ratePitchmax;
 };

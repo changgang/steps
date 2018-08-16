@@ -25,6 +25,7 @@ double deg2rad(double angle);
 double radps2hz(double w);
 double hz2radps(double f);
 
+double round_angle_in_rad_to_PI(double angle);
 double steps_fast_complex_abs(complex<double> z);
 double steps_fast_complex_arg(complex<double> z);
 double steps_fast_pow(double base, double exp);

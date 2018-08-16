@@ -64,8 +64,9 @@ void WT3P0_TEST::test_set_get_parameters()
 
     WT3P0* model = (WT3P0*) get_test_wt_pitch_model();
 
-    model->set_Tp_in_s(0.5);
-    TEST_ASSERT(fabs(model->get_Tp_in_s()-0.5)<FLOAT_EPSILON);
+
+    model->set_Tspeed_in_s(0.5);
+    TEST_ASSERT(fabs(model->get_Tspeed_in_s()-0.5)<FLOAT_EPSILON);
 
     model->set_Kp_speed_controller(1.0);
     TEST_ASSERT(fabs(model->get_Kp_speed_controller()-1.0)<FLOAT_EPSILON);
@@ -73,11 +74,20 @@ void WT3P0_TEST::test_set_get_parameters()
     model->set_Ki_speed_controller(2.0);
     TEST_ASSERT(fabs(model->get_Ki_speed_controller()-2.0)<FLOAT_EPSILON);
 
+    model->set_Tfrequency_in_s(0.5);
+    TEST_ASSERT(fabs(model->get_Tfrequency_in_s()-0.5)<FLOAT_EPSILON);
+
     model->set_Kp_frequency_controller(1.0);
     TEST_ASSERT(fabs(model->get_Kp_frequency_controller()-1.0)<FLOAT_EPSILON);
 
     model->set_Ki_frequency_controller(2.0);
     TEST_ASSERT(fabs(model->get_Ki_frequency_controller()-2.0)<FLOAT_EPSILON);
+
+    model->set_Kd_frequency_controller(3.0);
+    TEST_ASSERT(fabs(model->get_Kd_frequency_controller()-3.0)<FLOAT_EPSILON);
+
+    model->set_Td_frequency_controller_in_s(0.5);
+    TEST_ASSERT(fabs(model->get_Td_frequency_controller_in_s()-0.5)<FLOAT_EPSILON);
 
     model->set_frequency_upper_deadband_in_pu(1.005);
     TEST_ASSERT(fabs(model->get_frequency_upper_deadband_in_pu()-1.005)<FLOAT_EPSILON);
@@ -93,6 +103,9 @@ void WT3P0_TEST::test_set_get_parameters()
 
     model->set_ratePitchmax_in_deg_per_s(3.0);
     TEST_ASSERT(fabs(model->get_ratePitchmax_in_deg_per_s()-3.0)<FLOAT_EPSILON);
+
+    model->set_Tp_in_s(0.5);
+    TEST_ASSERT(fabs(model->get_Tp_in_s()-0.5)<FLOAT_EPSILON);
 }
 
 void WT3P0_TEST::test_initialize()

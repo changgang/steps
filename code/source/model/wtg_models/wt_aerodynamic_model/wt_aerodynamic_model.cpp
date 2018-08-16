@@ -761,9 +761,9 @@ void WT_AERODYNAMIC_MODEL::initialize_turbine_speed()
 
 void WT_AERODYNAMIC_MODEL::run(DYNAMIC_MODE mode)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
-    show_information_with_leading_time_stamp(osstream);
+    //ostringstream osstream;
+    //osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
+    //show_information_with_leading_time_stamp(osstream);
 }
 
 double WT_AERODYNAMIC_MODEL::get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind)

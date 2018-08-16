@@ -63,6 +63,8 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name)
             return ds->get_allowed_max_power_imbalance_in_MVA();
         if(PARAMETER_NAME=="ITERATION ACCELERATOR")
             return ds->get_iteration_accelerator();
+        if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
+            return ds->get_rotor_angle_stability_threshold_in_deg();
 
         ostringstream osstream;
         osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for dynamic simulator with api "<<__FUNCTION__<<endl
@@ -89,6 +91,11 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
         if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         {
             ds->set_iteration_accelerator(value);
+            return;
+        }
+        if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
+        {
+            ds->set_rotor_angle_stability_threshold_in_deg(value);
             return;
         }
 
@@ -154,6 +161,8 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name)
     if(ds!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
+        if(PARAMETER_NAME=="ANGLE STABILITY SURVILLIANCE LOGIC")
+            return ds->get_rotor_angle_stability_survilliance_flag();
         if(PARAMETER_NAME=="CSV EXPORT LOGIC")
             return ds->is_csv_file_export_enabled();
         if(PARAMETER_NAME=="JSON EXPORT LOGIC")
@@ -175,6 +184,11 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
     if(ds!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
+        if(PARAMETER_NAME=="ANGLE STABILITY SURVILLIANCE LOGIC")
+        {
+            ds->set_rotor_angle_stability_survilliance_flag(value);
+            return;
+        }
         if(PARAMETER_NAME=="CSV EXPORT LOGIC")
         {
             ds->set_csv_file_export_enable_flag(value);
@@ -217,6 +231,11 @@ void api_set_dynamic_simulation_time_step(double value)
 double api_get_dynamic_simulation_time_step()
 {
     return get_dynamic_simulation_time_step_in_s();
+}
+
+double api_get_dynamic_simulation_time()
+{
+    return get_dynamic_simulation_time_in_s();
 }
 
 void api_prepare_meters()

@@ -193,6 +193,13 @@ void api_save_powerflow_result(char* file)
     solver->save_powerflow_result_to_file(file);
 }
 
+void api_save_extended_powerflow_result(char* file)
+{
+    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+
+    solver->save_extended_powerflow_result_to_file(file);
+}
+
 void api_save_jacobian_matrix(char* file)
 {
     POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();

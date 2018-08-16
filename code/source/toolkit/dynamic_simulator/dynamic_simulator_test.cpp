@@ -16,7 +16,7 @@ using namespace std;
 
 DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 {
-/*
+
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_and_get_power_system_database);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_is_power_system_database_set);
@@ -30,6 +30,8 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_survilliance_flag);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_threshold);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_get_meter_count);
@@ -48,6 +50,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle_survilliance);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1);
@@ -59,8 +62,9 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
-*/
+
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
+
 
 }
 
@@ -177,6 +181,29 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator()
 
     simulator->set_iteration_accelerator(1.2);
     TEST_ASSERT(fabs(simulator->get_iteration_accelerator()-1.2)<FLOAT_EPSILON);
+}
+
+void DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_survilliance_flag()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    TEST_ASSERT(simulator->get_rotor_angle_stability_survilliance_flag()==false);
+    simulator->set_rotor_angle_stability_survilliance_flag(true);
+    TEST_ASSERT(simulator->get_rotor_angle_stability_survilliance_flag()==true);
+    simulator->set_rotor_angle_stability_survilliance_flag(false);
+    TEST_ASSERT(simulator->get_rotor_angle_stability_survilliance_flag()==false);
+}
+
+
+void DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_threshold()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    TEST_ASSERT(fabs(simulator->get_rotor_angle_stability_threshold_in_deg()-360.0)<FLOAT_EPSILON);
+    simulator->set_rotor_angle_stability_threshold_in_deg(180.0);
+    TEST_ASSERT(fabs(simulator->get_rotor_angle_stability_threshold_in_deg()-180.0)<FLOAT_EPSILON);
+    simulator->set_rotor_angle_stability_threshold_in_deg(-170);
+    TEST_ASSERT(fabs(simulator->get_rotor_angle_stability_threshold_in_deg()-170.0)<FLOAT_EPSILON);
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter()
@@ -684,6 +711,71 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
     simulator->set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e10));
 
     simulator->run_to(0.08333);
+
+    simulator->clear_line_fault(did, 7, 0.0);
+    simulator->trip_line(did);
+
+    simulator->run_to(5.0);
+
+    recover_stdout();
+}
+
+
+
+void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle_survilliance()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    string file = "test_log/";
+    file += __FUNCTION__;
+    file += ".txt";
+    redirect_stdout_to_file(file);
+
+    PSSE_IMEXPORTER importer;
+
+    importer.set_power_system_database(db);
+    importer.load_powerflow_data("IEEE9_classical.raw");
+    importer.load_dynamic_data("IEEE9_classical.dyr");
+
+    //prepare_IEEE_9_bus_model(db);
+    //prepare_IEEE_9_bus_model_classical_dynamic_model(db);
+
+    POWERFLOW_SOLVER powerflow_solver;
+
+    powerflow_solver.set_power_system_database(db);
+
+    powerflow_solver.set_max_iteration(30);
+    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
+    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
+    powerflow_solver.set_flat_start_logic(false);
+    powerflow_solver.set_transformer_tap_adjustment_logic(true);
+
+    powerflow_solver.solve_with_fast_decoupled_solution();
+
+    powerflow_solver.show_powerflow_result();
+
+    set_dynamic_simulation_time_step_in_s(0.0083333);
+
+    simulator->prepare_meters();
+    simulator->set_rotor_angle_stability_survilliance_flag(true);
+    simulator->set_rotor_angle_stability_threshold_in_deg(360.0);
+
+    simulator->set_output_file("test_log/IEEE9_test_with_classical_model_with_rotor_angle_survilliance");
+
+    simulator->start();
+    simulator->run_to(0.0);
+
+    DEVICE_ID did;
+    did.set_device_type("LINE");
+    TERMINAL terminal;
+    terminal.append_bus(5);
+    terminal.append_bus(7);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+    simulator->set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e10));
+
+    simulator->run_to(0.3);
 
     simulator->clear_line_fault(did, 7, 0.0);
     simulator->trip_line(did);

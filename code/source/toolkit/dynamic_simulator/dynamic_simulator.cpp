@@ -49,10 +49,13 @@ void DYNAMICS_SIMULATOR::clear()
 
     set_dynamic_simulation_time_in_s(0.0);
 
-    set_max_DAE_iteration(2);
-    set_max_network_iteration(200);
+    set_max_DAE_iteration(200);
+    set_max_network_iteration(1);
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
+    set_rotor_angle_stability_survilliance_flag(false);
+    set_rotor_angle_stability_threshold_in_deg(360.0);
+    generators_in_islands.clear();
 }
 
 bool DYNAMICS_SIMULATOR::is_power_system_database_set() const
@@ -124,6 +127,17 @@ void DYNAMICS_SIMULATOR::set_iteration_accelerator(double iter_alpha)
         this->alpha = iter_alpha;
 }
 
+void DYNAMICS_SIMULATOR::set_rotor_angle_stability_survilliance_flag(bool flag)
+{
+    this->flag_rotor_angle_stability_survilliance = flag;
+}
+
+void DYNAMICS_SIMULATOR::set_rotor_angle_stability_threshold_in_deg(double angle_th)
+{
+    if(angle_th<0.0) angle_th = - angle_th;
+    this->rotor_angle_stability_threshold_in_deg = angle_th;
+}
+
 /*void DYNAMICS_SIMULATOR::set_current_simulation_time_in_s(double time)
 {
     TIME = time;
@@ -152,6 +166,16 @@ double DYNAMICS_SIMULATOR::get_allowed_max_power_imbalance_in_MVA() const
 double DYNAMICS_SIMULATOR::get_iteration_accelerator() const
 {
     return alpha;
+}
+
+bool DYNAMICS_SIMULATOR::get_rotor_angle_stability_survilliance_flag() const
+{
+    return this->flag_rotor_angle_stability_survilliance;
+}
+
+double DYNAMICS_SIMULATOR::get_rotor_angle_stability_threshold_in_deg() const
+{
+    return this->rotor_angle_stability_threshold_in_deg;
 }
 
 void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
@@ -1179,6 +1203,9 @@ void DYNAMICS_SIMULATOR::start()
 
     network_db->optimize_network_ordering();
 
+    if(get_rotor_angle_stability_survilliance_flag()==true)
+        update_generators_in_islands();
+
     run_all_models(INITIALIZE_MODE);
 
     network_db->build_dynamic_network_matrix();
@@ -1266,7 +1293,24 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 {
     update_with_event();
     while(get_dynamic_simulation_time_in_s()<=time-FLOAT_EPSILON)
+    {
         run_a_step();
+
+        if(get_rotor_angle_stability_survilliance_flag()==true)
+        {
+            update_generators_in_islands();
+            bool stable = is_system_angular_stable();
+            if(stable==false)
+            {
+                ostringstream osstream;
+                osstream<<"At time "<<get_dynamic_simulation_time_in_s()<<"s, "
+                        <<"system is detected to be unstable due to rotor angular stability survilliance logic."<<endl
+                        <<"No further simulation will be performed.";
+                show_information_with_leading_time_stamp(osstream);
+                break;
+            }
+        }
+    }
 }
 
 void DYNAMICS_SIMULATOR::run_a_step()
@@ -1324,6 +1368,7 @@ void DYNAMICS_SIMULATOR::update_with_event()
 
     ITER_DAE = 0;
     ITER_NET = 0;
+
     network_converged = solve_network();
     ITER_NET = network_iteration_count;
     if(not network_converged)
@@ -1526,6 +1571,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
             --network_iter_count;
             break;
         }
+
         solve_hvdcs_without_integration();
         get_bus_current_mismatch();
         if(not is_converged())
@@ -1540,7 +1586,6 @@ bool DYNAMICS_SIMULATOR::solve_network()
             break;
         }
     }
-
     network_iteration_count = network_iter_count;
 
     return converged;
@@ -1635,7 +1680,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     const SPARSE_MATRIX& Y = network_db->get_dynamic_network_matrix();
     size_t nbus = psdb->get_in_service_bus_count();
 
-	if(I_mismatch.size()<nbus)
+	if(I_mismatch.size()!=nbus)
 		I_mismatch.resize(nbus, 0.0);
 
 	for (size_t i = 0; i != nbus; ++i)
@@ -2172,6 +2217,105 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(DEVICE_ID did
 
         }
     }
+}
+
+void DYNAMICS_SIMULATOR::update_generators_in_islands()
+{
+    NETWORK_DATABASE* network_db = get_network_database();
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    vector< vector<size_t> > islands = network_db->get_islands_with_physical_bus_number();
+    if(islands.size()==generators_in_islands.size()) // won't update if islands doesn't change
+        return;
+
+    generators_in_islands.clear();
+
+    size_t nislands = islands.size();
+    for(size_t i=0; i!=nislands; ++i)
+    {
+        vector<size_t> island = islands[i];
+
+        vector<GENERATOR*> generators_in_island;
+        vector<GENERATOR*> generators_at_bus;
+
+        size_t nisland = island.size();
+        for(size_t j=0; j!=nisland; ++j)
+        {
+            size_t bus = island[j];
+            generators_at_bus = psdb->get_generators_connecting_to_bus(bus);
+            size_t n = generators_at_bus.size();
+            for(size_t k=0; k!=n; ++k)
+            {
+                GENERATOR* generator = generators_at_bus[k];
+                generators_in_island.push_back(generator);
+            }
+        }
+
+        generators_in_islands.push_back(generators_in_island);
+    }
+}
+
+bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
+{
+    ostringstream osstream;
+    double TIME = get_dynamic_simulation_time_in_s();
+    bool system_is_stable = true;
+    size_t nislands = generators_in_islands.size();
+    vector<double> angles;
+    for(size_t island=0; island!=nislands; island++)
+    {
+        vector<GENERATOR*> generators_in_island = generators_in_islands[island];
+        size_t n = generators_in_island.size();
+        angles.resize(n, 0.0);
+        angles.clear();
+
+        for(size_t i=0; i!=n; ++i)
+        {
+            GENERATOR* generator = generators_in_island[i];
+            if(generator->get_status()==true)
+            {
+                SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
+                angles.push_back(genmodel->get_rotor_angle_in_deg());
+            }
+        }
+        double angle_max=0.0, angle_min = 0.0;
+        size_t nangle = angles.size();
+        if(nangle>0)
+        {
+            angle_max = angles[0];
+            angle_min = angles[0];
+            for(size_t i=1; i!=nangle; ++i)
+            {
+                if(angles[i]>angle_max)
+                    angle_max = angles[i];
+                if(angles[i]<angle_min)
+                    angle_min = angles[i];
+            }
+        }
+        double angle_difference = angle_max - angle_min;
+        double scaled_angle_difference = rad2deg(round_angle_in_rad_to_PI(deg2rad(angle_difference)));
+
+        if(angle_difference>get_rotor_angle_stability_threshold_in_deg())
+        {
+            system_is_stable = false;
+            osstream<<"The following island is detected to be unstable at time "<<TIME<<" s. Maximum angle difference is :"<<angle_difference<<" deg (a.k.a. "<<scaled_angle_difference<<" deg)"<<endl
+                   <<"Generator          Rotor angle in deg"<<endl;
+
+            size_t n = generators_in_island.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                GENERATOR* generator = generators_in_island[i];
+                if(generator->get_status()==true)
+                {
+                    SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
+                    osstream<<generator->get_device_name()<<"  "<<genmodel->get_rotor_angle_in_deg()<<endl;
+                }
+            }
+            show_information_with_leading_time_stamp(osstream);
+            break;
+        }
+    }
+    return system_is_stable;
 }
 
 void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, complex<double> fault_shunt)

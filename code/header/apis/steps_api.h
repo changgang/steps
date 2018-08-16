@@ -260,6 +260,7 @@ EXPORT_STEPS_DLL void api_solve_powerflow(char* method);
 EXPORT_STEPS_DLL bool api_is_powerflow_converged();
 EXPORT_STEPS_DLL void api_show_powerflow_result();
 EXPORT_STEPS_DLL void api_save_powerflow_result(char* file);
+EXPORT_STEPS_DLL void api_save_extended_powerflow_result(char* file);
 EXPORT_STEPS_DLL void api_save_jacobian_matrix(char* file);
 
 EXPORT_STEPS_DLL void api_build_network_matrix();
@@ -285,6 +286,7 @@ EXPORT_STEPS_DLL const char* api_get_dynamic_simulator_output_file();
 
 EXPORT_STEPS_DLL void api_set_dynamic_simulation_time_step(double value);
 EXPORT_STEPS_DLL double api_get_dynamic_simulation_time_step();
+EXPORT_STEPS_DLL double api_get_dynamic_simulation_time();
 
 EXPORT_STEPS_DLL void api_prepare_meters();
 EXPORT_STEPS_DLL void api_prepare_bus_related_meters();
@@ -350,6 +352,7 @@ EXPORT_STEPS_DLL void api_set_generator_power_reference_in_MW(size_t bus, char* 
 
 
 EXPORT_STEPS_DLL double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line);
+
 #ifdef  __cplusplus
 }
 #endif

@@ -103,7 +103,23 @@ double hz2radps(double f)
     return 2.0*PI*f;
 }
 
+double round_angle_in_rad_to_PI(double angle)
+{
+    if(angle>PI)
+    {
+        angle -= (PI+PI);
+    }
+    else
+    {
+        if(angle<(-PI))
+            angle += (PI+PI);
+    }
+    if(fabs(angle)<=PI)
+        return angle;
+    else
+        return round_angle_in_rad_to_PI(angle);
 
+}
 double steps_fast_complex_abs(complex<double> z)
 {
 	double x = z.real();

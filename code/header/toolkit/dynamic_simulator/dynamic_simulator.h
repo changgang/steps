@@ -33,11 +33,15 @@ class DYNAMICS_SIMULATOR: public BASE
         void set_max_network_iteration(size_t iteration);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
         void set_iteration_accelerator(double alpha);
+        void set_rotor_angle_stability_survilliance_flag(bool flag);
+        void set_rotor_angle_stability_threshold_in_deg(double angle_th);
 
         size_t get_max_DAE_iteration() const;
         size_t get_max_network_iteration() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
         double get_iteration_accelerator() const;
+        bool get_rotor_angle_stability_survilliance_flag() const;
+        double get_rotor_angle_stability_threshold_in_deg() const;
 
         void prepare_meters();
         void prepare_bus_related_meters();
@@ -168,6 +172,9 @@ class DYNAMICS_SIMULATOR: public BASE
         void guess_bus_voltage_with_line_fault_set(DEVICE_ID did, size_t side_bus, double location, FAULT fault);
         void guess_bus_voltage_with_line_fault_cleared(DEVICE_ID did, size_t side_bus, double location, FAULT fault);
 
+        void update_generators_in_islands();
+        bool is_system_angular_stable() const;
+
         //double TIME;
         size_t ITER_DAE, ITER_NET;
         double P_threshold_in_MW, Q_threshold_in_MVar;
@@ -185,6 +192,10 @@ class DYNAMICS_SIMULATOR: public BASE
 
         vector<METER> meters;
         vector<double> meter_values;
+
+        bool flag_rotor_angle_stability_survilliance;
+        double rotor_angle_stability_threshold_in_deg;
+        vector< vector<GENERATOR*> > generators_in_islands;
 
         string output_filename;
         ofstream csv_output_file, json_output_file;
