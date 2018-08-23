@@ -10,10 +10,10 @@ size_t api_get_powerflow_solver_integer_parameter(char* parameter_name)
     if(PARAMETER_NAME=="MAX ITERATION")
         return solver->get_max_iteration();
 
-    ostringstream osstream;
-    osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for powerflow solver with api "<<__FUNCTION__<<endl
-           <<"0 will be returned.";
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n"
+             "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
+    show_information_with_leading_time_stamp(buffer);
     return 0;
 }
 
@@ -27,10 +27,10 @@ void api_set_powerflow_solver_integer_parameter(char* parameter_name, int value)
         solver->set_max_iteration(value);
         return;
     }
-
-    ostringstream osstream;
-    osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be set for powerflow solver with api "<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n",
+             PARAMETER_NAME.c_str(), __FUNCTION__);
+    show_information_with_leading_time_stamp(buffer);
     return;
 }
 
@@ -51,10 +51,10 @@ double api_get_powerflow_solver_float_parameter(char* parameter_name)
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         return solver->get_iteration_accelerator();
 
-    ostringstream osstream;
-    osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for powerflow solver with api "<<__FUNCTION__<<endl
-           <<"0.0 will be returned.";
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n"
+             "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
+    show_information_with_leading_time_stamp(buffer);
     return 0.0;
 }
 
@@ -89,10 +89,10 @@ void api_set_powerflow_solver_float_parameter(char* parameter_name, double value
         solver->set_iteration_accelerator(value);
         return;
     }
-
-    ostringstream osstream;
-    osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be set for powerflow solver with api "<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n",
+             PARAMETER_NAME.c_str(), __FUNCTION__);
+    show_information_with_leading_time_stamp(buffer);
     return;
 }
 
@@ -108,10 +108,10 @@ bool api_get_powerflow_solver_boolean_parameter(char* parameter_name)
     if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
         return solver->get_non_divergent_solution_logic();
 
-    ostringstream osstream;
-    osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for powerflow solver with api "<<__FUNCTION__<<endl
-           <<"False will be returned.";
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n"
+             "False will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
+    show_information_with_leading_time_stamp(buffer);
     return false;
 }
 
@@ -135,10 +135,10 @@ void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value
         solver->set_non_divergent_solution_logic(value);
         return;
     }
-
-    ostringstream osstream;
-    osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be set for powerflow solver with api "<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n",
+             PARAMETER_NAME.c_str(), __FUNCTION__);
+    show_information_with_leading_time_stamp(buffer);
     return;
 }
 
@@ -166,9 +166,10 @@ void api_solve_powerflow(char* method)
         return;
     }
 
-    ostringstream osstream;
-    osstream<<"Method '"<<string_method<<"' is not supported for solving powerflow with api "<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Method %s is not supported for solving powerflow with api %s.",
+             string_method.c_str(), __FUNCTION__);
+    show_information_with_leading_time_stamp(buffer);
     return;
 }
 

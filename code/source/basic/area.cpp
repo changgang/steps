@@ -25,9 +25,9 @@ void AREA::set_area_number(size_t number)
         this->area_number = number;
     else
     {
-        ostringstream osstream;
-        string info("Error. 0 is not allowed for setting area number.  0 will be set to indicate invalid area.");
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Error. 0 is not allowed for setting area number.  0 will be set to indicate invalid area.");
+        show_information_with_leading_time_stamp(buffer);
         this->area_number = 0;
     }
 }
@@ -49,9 +49,10 @@ void AREA::set_area_swing_bus(size_t bus)
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        osstream<<"Area "<<get_area_number()<<" is not assigned to any power system database."<<endl
-          <<"Its area swing bus will be set as input.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Area %lu is no assigned to any power system database.\n"
+                 "Its area swing bus will be set as input.", get_area_number());
+        show_information_with_leading_time_stamp(buffer);
 
         area_swing_bus = bus;
         return;
@@ -61,9 +62,10 @@ void AREA::set_area_swing_bus(size_t bus)
         set_area_swing_bus_with_existing_bus(bus);
     else
     {
-        osstream<<"Error. Bus "<<bus<<" does not exist in power system database "<<psdb->get_system_name()<<" when setting area swing bus number of area "<<get_area_number()<<"."<<endl
-          <<"Bus 0 will be set to indicate invalid area.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Error. Bus %lu does not exist in power system database %s when setting area swing bus number of area %lu.\n"
+                 "Bus 0 will be set to indicate invalid area.", bus, (psdb->get_system_name()).c_str(), get_area_number());
+        show_information_with_leading_time_stamp(buffer);
 
         area_swing_bus = 0;
     }
@@ -75,9 +77,11 @@ void AREA::set_area_swing_bus_with_zero_input()
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb==NULL)
     {
-        osstream<<"Area "<<get_area_number()<<" is not assigned to any power system database."<<endl
-          <<"Bus 0 will be set as area swing bus to indicate invalid area.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Area %lu is no assigned to any power system database.\n"
+                 "Bus 0 will be set as area swing bus to indicate invalid area", get_area_number());
+        show_information_with_leading_time_stamp(buffer);
+
         area_swing_bus = 0;
         return;
     }

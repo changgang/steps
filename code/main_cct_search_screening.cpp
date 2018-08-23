@@ -48,7 +48,7 @@ int main()
     //#pragma omp parallel for
     for(size_t i=0; i!=n_events; ++i)
     {
-        ostringstream osstream;
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
         CCT_SEARCHER searcher;
         searcher.set_power_system_database_maximum_bus_number(1000);
         searcher.set_search_title("");
@@ -62,22 +62,28 @@ int main()
         searcher.set_fault_shunt_in_pu(complex<double>(0.0, -2e8));
         searcher.set_flag_trip_line_after_clearing_fault(true);
 
-        osstream<<"Now go searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Now go searching CCT for fault at side %lu of %s.",
+                 searcher.get_fault_side_bus(),(did.get_device_name()).c_str());
+        show_information_with_leading_time_stamp(buffer);
         double cct = searcher.search_cct();
-        osstream<<"Now done searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Now done searching CCT for fault at side %lu of %s.",
+                 searcher.get_fault_side_bus(),(did.get_device_name()).c_str());
+        show_information_with_leading_time_stamp(buffer);
         ccts[i] = cct;
 
         searcher.run_case_with_clearing_time(cct);
         searcher.run_case_with_clearing_time(cct+0.1);
     }
 
-    ostringstream osstream;
-    osstream<<"Searched CCT of all lines : "<<endl;
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Searched CCT of all lines:\n");
+    show_information_with_leading_time_stamp(buffer);
     for(size_t i=0; i!=n_events; ++i)
-        osstream<<fault_lines[i].get_device_name()<<" at fault side "<<fault_side_buses[i]<<": "<<ccts[i]<<" s."<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    {
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s at fault side %lu: %fs.\n",(fault_lines[i].get_device_name()).c_str(),
+                 fault_side_buses[i], ccts[i]);
+        show_information_with_leading_time_stamp(buffer);
+    }
 
     terminate_simulator();
 

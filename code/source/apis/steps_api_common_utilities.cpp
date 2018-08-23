@@ -4,57 +4,63 @@
 
 void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func)
 {
-    ostringstream osstream;
-    osstream<<"Side '"<<side<<"' is not supported for "<<did.get_device_name()<<" with api "<<api_func<<endl
-            <<"Nothing will be changed."<<endl
-            <<"If return value is expected, 0/0.0/False/EMPTY STRING will be returned"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Side '%s' is not supported for %s with api %s.\n"
+             "Nothing will be chaged.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             side.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
+    show_information_with_leading_time_stamp(buffer);
 }
 
 void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func)
 {
-    ostringstream osstream;
-    osstream<<"Parameter '"<<par_name<<"' is not supported for "<<did.get_device_name()<<" with api "<<api_func<<endl
-            <<"Nothing will be changed."<<endl
-            <<"If return value is expected, 0/0.0/False/EMPTY STRING will be returned"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for %s with api %s.\n"
+             "Nothing will be chaged.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             par_name.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
+    show_information_with_leading_time_stamp(buffer);
 }
 
 void show_parameter_not_supported_with_api(string par_name, string api_func)
 {
-    ostringstream osstream;
-    osstream<<"Parameter '"<<par_name<<"' is not supported with api "<<api_func<<endl
-            <<"Nothing will be changed."<<endl
-            <<"If return value is expected, 0/0.0/False/EMPTY STRING will be returned"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported with api %s.\n"
+             "Nothing will be chaged.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             par_name.c_str(), api_func.c_str());
+    show_information_with_leading_time_stamp(buffer);
 }
 
 void show_device_not_exist_with_api(DEVICE_ID did, string api_func)
 {
-    ostringstream osstream;
-    osstream<<did.get_device_name()<<" does not exist in database with api "<<api_func<<endl
-            <<"Nothing will be changed."<<endl
-            <<"If return value is expected, 0/0.0/False/EMPTY STRING will be returned"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Device %s does not exist in database with api %s.\n"
+             "Nothing will be chaged.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             (did.get_device_name()).c_str(), api_func.c_str());
+    show_information_with_leading_time_stamp(buffer);
 }
 
 
 void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, size_t no, string api_func)
 {
-    ostringstream osstream;
-    osstream<<"Parameter '"<<par_name<<"' is not supported for Area/Zone/Owner "<<no<<" with api "<<api_func<<endl
-            <<"Nothing will be changed."<<endl
-            <<"If return value is expected, 0/0.0/False/EMPTY STRING will be returned"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for Area/Zone/Owner %lu with api %s.\n"
+             "Nothing will be chaged.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             par_name.c_str(), no, api_func.c_str());
+    show_information_with_leading_time_stamp(buffer);
 }
 
 void show_area_zone_owner_not_exist_with_api(size_t no, string api_func)
 {
-    ostringstream osstream;
-    osstream<<"Area/Zone/Owner "<<no<<" does not exist in database with api "<<api_func<<endl
-            <<"Nothing will be changed."<<endl
-            <<"If return value is expected, 0/0.0/False/EMPTY STRING will be returned"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Area/Zone/Owner %lu does not exist in database with api %s.\n"
+             "Nothing will be chaged.\n"
+             "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
+             no, api_func.c_str());
+    show_information_with_leading_time_stamp(buffer);
 }
 
 void api_initialize_package()

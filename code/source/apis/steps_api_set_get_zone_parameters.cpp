@@ -64,9 +64,10 @@ double api_get_zone_float_data(size_t zone, char* parameter_name)
 
 void api_set_zone_float_data(size_t zone, char* parameter_name, double value)
 {
-    ostringstream osstream;
-    osstream<<__FUNCTION__<<"() has not been implemented. Input parameters are provided: "<<zone<<", "<<parameter_name<<", "<<value;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %lu, %s, %f.",
+             __FUNCTION__, zone, parameter_name, value);
+    show_information_with_leading_time_stamp(buffer);
     return;
 }
 
@@ -137,8 +138,9 @@ bool api_get_zone_boolean_data(size_t zone, char* parameter_name)
 
 void api_set_zone_boolean_data(size_t zone, char* parameter_name, bool value)
 {
-    ostringstream osstream;
-    osstream<<__FUNCTION__<<"() has not been implemented. Input parameters are provided: "<<zone<<", "<<parameter_name<<", "<<value;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %lu, %s, %s.",
+             __FUNCTION__, zone, parameter_name, (value==true?"True":"False"));
+    show_information_with_leading_time_stamp(buffer);
     return;
 }

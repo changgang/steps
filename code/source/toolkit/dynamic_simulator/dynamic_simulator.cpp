@@ -1193,9 +1193,9 @@ void DYNAMICS_SIMULATOR::save_meter_values()
 
 void DYNAMICS_SIMULATOR::start()
 {
-    ostringstream osstream;
-    osstream<<"Dynamics initialization starts.";
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Dynamics initialization starts.");
+    show_information_with_leading_time_stamp(buffer);
 
     meter_values.resize(meters.size(), 0.0);
 
@@ -1231,12 +1231,13 @@ void DYNAMICS_SIMULATOR::start()
     ITER_DAE = iter_count;
     if(iter_count>1)
     {
-        osstream<<"Warning. Network solution converged in "<<iter_count<<" iterations for dynamics simulation initialization.";
-        show_information_with_leading_time_stamp(osstream);
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Warning. Network solution converged in %lu iterations for dynamics simulation initialization.",
+                 iter_count);
+        show_information_with_leading_time_stamp(buffer);
     }
 
-    osstream<<"Dynamics initialization finished.";
-    show_information_with_leading_time_stamp(osstream);
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Dynamics initialization finished.");
+    show_information_with_leading_time_stamp(buffer);
 
     save_meter_information();
     save_meter_values();
@@ -1335,8 +1336,10 @@ void DYNAMICS_SIMULATOR::run_a_step()
         {
             if(DAE_iter_max!=2)
             {
-                osstream<<"Failed to solve DAE in "<<DAE_iter_max<<" iterations when integrating at time "<<get_dynamic_simulation_time_in_s()<<" s.";
-                show_information_with_leading_time_stamp(osstream);
+                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve DAE in %lu iterations when integrating at time %f s.",
+                         DAE_iter_max, get_dynamic_simulation_time_in_s());
+                show_information_with_leading_time_stamp(buffer);
             }
             --ITER_DAE;
             break;
@@ -1373,8 +1376,10 @@ void DYNAMICS_SIMULATOR::update_with_event()
     ITER_NET = network_iteration_count;
     if(not network_converged)
     {
-        osstream<<"Failed to solve network in "<<network_iter_max<<" iterations when updating with event at time "<<get_dynamic_simulation_time_in_s()<<" s.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %lu iterations when updating with event at time %f s.",
+                 network_iter_max, get_dynamic_simulation_time_in_s());
+        show_information_with_leading_time_stamp(buffer);
     }
 
     update_bus_frequency_blocks();
@@ -1403,10 +1408,12 @@ void DYNAMICS_SIMULATOR::update()
     network_converged = solve_network();
     ITER_NET += network_iteration_count;
 
-    if(not network_converged)
+    if(not network_converged and get_max_network_iteration()>1)
     {
-        osstream<<"Failed to solve network in "<<network_iter_max<<" iterations when updating at time "<<get_dynamic_simulation_time_in_s()<<" s.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %lu iterations when updating at time %f s.",
+                 network_iter_max, get_dynamic_simulation_time_in_s());
+        show_information_with_leading_time_stamp(buffer);
     }
     update_bus_frequency_blocks();
 
@@ -1710,7 +1717,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     show_information_with_leading_time_stamp(osstream);
 
     complex<double> s;
-    for(size_t i=0; i!=nbus; ++i)
+    for(size_t i=0; i!=nbus; ++i)Warning. Network solution converged in
     {
         column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(i);
         voltage = psdb->get_bus_complex_voltage_in_pu(column_physical_bus);

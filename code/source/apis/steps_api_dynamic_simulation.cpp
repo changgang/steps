@@ -15,10 +15,10 @@ size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name)
         if(PARAMETER_NAME=="MAX NETWORK ITERATION")
             return ds->get_max_network_iteration();
 
-        ostringstream osstream;
-        osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for dynamic simulator with api "<<__FUNCTION__<<endl
-               <<"0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
+                 "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return 0;
     }
     else
@@ -43,9 +43,10 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
             return;
         }
 
-        ostringstream osstream;
-        osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be set for dynamic simulator with api "<<__FUNCTION__;
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
+                 PARAMETER_NAME.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return;
     }
     else
@@ -66,10 +67,11 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name)
         if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
             return ds->get_rotor_angle_stability_threshold_in_deg();
 
-        ostringstream osstream;
-        osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for dynamic simulator with api "<<__FUNCTION__<<endl
-               <<"0.0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
+                 "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return 0.0;
     }
     else
@@ -98,10 +100,10 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
             ds->set_rotor_angle_stability_threshold_in_deg(value);
             return;
         }
-
-        ostringstream osstream;
-        osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be set for dynamic simulator with api "<<__FUNCTION__;
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
+                 PARAMETER_NAME.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return;
     }
     else
@@ -122,10 +124,10 @@ const char* api_get_dynamic_simulator_string_parameter(char* parameter_name)
 			return STEPS::steps_char_buffer;
 		}
 
-        ostringstream osstream;
-        osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for dynamic simulator with api "<<__FUNCTION__<<endl
-               <<"0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
+                 "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return STEPS::steps_char_buffer;
     }
     else
@@ -144,10 +146,10 @@ void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* valu
             ds->set_output_file(value);
             return;
         }
-
-        ostringstream osstream;
-        osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be set for dynamic simulator with api "<<__FUNCTION__;
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
+                 PARAMETER_NAME.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return;
     }
     else
@@ -168,10 +170,10 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name)
         if(PARAMETER_NAME=="JSON EXPORT LOGIC")
             return ds->is_json_file_export_enabled();
 
-        ostringstream osstream;
-        osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be retrieved for dynamic simulator with api "<<__FUNCTION__<<endl
-               <<"False will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
+                 "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return false;
     }
     else
@@ -199,10 +201,10 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
             ds->set_json_file_export_enable_flag(value);
             return;
         }
-
-        ostringstream osstream;
-        osstream<<"Parameter '"<<PARAMETER_NAME<<"' cannot be set for dynamic simulator with api "<<__FUNCTION__;
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
+                 PARAMETER_NAME.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return;
     }
     else
@@ -455,10 +457,10 @@ void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double faul
             ds->set_bus_fault(bus, complex<double>(fault_G, fault_B));
             return;
         }
-
-        ostringstream osstream;
-        osstream<<"Fault type '"<<string_fault_type<<"' isnot supported for dynamic simulator with api "<<__FUNCTION__;
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
+                 string_fault_type.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return;
     }
 }
@@ -475,10 +477,10 @@ void api_clear_bus_fault(size_t bus, char* fault_type)
             ds->clear_bus_fault(bus);
             return;
         }
-
-        ostringstream osstream;
-        osstream<<"Fault type '"<<string_fault_type<<"' isnot supported for dynamic simulator with api "<<__FUNCTION__;
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
+                 string_fault_type.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return;
     }
 }
@@ -505,9 +507,10 @@ void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_
 
         if(not psdb->is_line_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -517,10 +520,10 @@ void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_
             ds->set_line_fault(did, ibus, fault_location, complex<double>(fault_G, fault_B));
             return;
         }
-
-        ostringstream osstream;
-        osstream<<"Fault type '"<<string_fault_type<<"' isnot supported for dynamic simulator with api "<<__FUNCTION__;
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
+                 string_fault_type.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return;
     }
 }
@@ -536,9 +539,10 @@ void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* faul
 
         if(not psdb->is_line_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -548,10 +552,10 @@ void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* faul
             ds->clear_line_fault(did, ibus, fault_location);
             return;
         }
-
-        ostringstream osstream;
-        osstream<<"Fault type '"<<string_fault_type<<"' isnot supported for dynamic simulator with api "<<__FUNCTION__;
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
+                 string_fault_type.c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return;
     }
 }
@@ -568,9 +572,10 @@ void api_trip_line(size_t ibus, size_t jbus, char* identifier)
 
         if(not psdb->is_line_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -590,9 +595,10 @@ void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier)
 
         if(not psdb->is_line_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -612,9 +618,10 @@ void api_close_line(size_t ibus, size_t jbus, char* identifier)
 
         if(not psdb->is_line_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -634,9 +641,10 @@ void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier)
 
         if(not psdb->is_line_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -656,9 +664,10 @@ void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifie
 
         if(not psdb->is_transformer_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -678,9 +687,10 @@ void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* i
 
         if(not psdb->is_transformer_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -699,9 +709,10 @@ void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifi
 
         if(not psdb->is_transformer_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -721,9 +732,10 @@ void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* 
 
         if(not psdb->is_transformer_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -743,9 +755,10 @@ void api_trip_generator(size_t bus, char* identifier)
 
         if(not psdb->is_generator_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -764,9 +777,10 @@ void api_shed_generator(size_t bus, char* identifier, double percent)
 
         if(not psdb->is_generator_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -786,9 +800,10 @@ void api_trip_load(size_t bus, char* identifier)
 
         if(not psdb->is_load_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -807,9 +822,10 @@ void api_close_load(size_t bus, char* identifier)
 
         if(not psdb->is_load_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -828,9 +844,10 @@ void api_scale_load(size_t bus, char* identifier, double percent)
 
         if(not psdb->is_load_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -860,9 +877,10 @@ void api_trip_fixed_shunt(size_t bus, char* identifier)
 
         if(not psdb->is_fixed_shunt_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -881,9 +899,10 @@ void api_close_fixed_shunt(size_t bus, char* identifier)
 
         if(not psdb->is_load_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -902,9 +921,10 @@ void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 
         if(not psdb->is_hvdc_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -923,9 +943,10 @@ void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier)
 
         if(not psdb->is_hvdc_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -944,9 +965,10 @@ void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier)
 
         if(not psdb->is_hvdc_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -965,9 +987,10 @@ void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier)
 
         if(not psdb->is_hvdc_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -989,9 +1012,10 @@ double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier)
 
         if(gen==NULL)
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return 0.0;
         }
 
@@ -1018,9 +1042,10 @@ double api_get_generator_power_reference_in_MW(size_t bus, char* identifier)
 
         if(gen==NULL)
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return 0.0;
         }
 
@@ -1045,9 +1070,10 @@ void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, dou
 
         if(not psdb->is_generator_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -1066,9 +1092,10 @@ void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, doubl
 
         if(not psdb->is_generator_exist(did))
         {
-            ostringstream osstream;
-            osstream<<did.get_device_name()<<" does not exist in database for dynamic simulator with api "<<__FUNCTION__;
-            show_information_with_leading_time_stamp(osstream);
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+                     (did.get_device_name()).c_str(), __FUNCTION__);
+            show_information_with_leading_time_stamp(buffer);
             return;
         }
 
@@ -1105,11 +1132,15 @@ double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, ch
     else
         searcher.set_flag_trip_line_after_clearing_fault(true);
 
-    osstream<<"Now go searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
-    show_information_with_leading_time_stamp(osstream);
+
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Now go searching CCT for fault at side %lu of %s.",
+             searcher.get_fault_side_bus(), (did.get_device_name()).c_str());
+    show_information_with_leading_time_stamp(buffer);
     double cct = searcher.search_cct();
-    osstream<<"Now done searching CCT for fault at side "<<searcher.get_fault_side_bus()<<" of "<<did.get_device_name();
-    show_information_with_leading_time_stamp(osstream);
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Now done searching CCT for fault at side %lu of %s.",
+             searcher.get_fault_side_bus(), (did.get_device_name()).c_str());
+    show_information_with_leading_time_stamp(buffer);
 
     searcher.run_case_with_clearing_time(cct);
     searcher.run_case_with_clearing_time(cct+0.1);

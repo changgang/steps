@@ -52,10 +52,12 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
     }
     else
     {
-        ostringstream osstream;
-        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
-               <<"0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+                 "0 will be returned.",
+                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
+                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return 0;
     }
 }
@@ -102,10 +104,11 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
                         return sourceptr->set_regulating_mode(REGULATING_VA);
                     else
                     {
-                        ostringstream osstream;
-                        osstream<<"Input regulating mode "<<value<<" is not supported for PARAMETER_NAME=="<<sourceptr->get_device_name()<<" with api "<<__FUNCTION__<<endl
-                               <<"Nothing will be set.";
-                        show_information_with_leading_time_stamp(osstream);
+                        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+                        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Input regulating mode %d is not supported for %s with api %s.\n"
+                                 "Nothing will be changed.",
+                                 value, (sourceptr->get_device_name()).c_str(), __FUNCTION__);
+                        show_information_with_leading_time_stamp(buffer);
                         return;
                     }
                 }
@@ -115,10 +118,12 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        ostringstream osstream;
-        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
-               <<"Nothing will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+                 "Nothing will be changed.",
+                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
+                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
     }
 }
 
@@ -180,10 +185,12 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        ostringstream osstream;
-        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
-               <<"0.0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+                 "0.0 will be returned.",
+                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
+                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return 0.0;
     }
 }
@@ -249,10 +256,12 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
     }
     else
     {
-        ostringstream osstream;
-        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
-               <<"Nothing will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+                 "Nothing will be changed.",
+                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
+                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
     }
 }
 
@@ -291,10 +300,12 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     }
     else
     {
-        ostringstream osstream;
-        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
-               <<"EMPTY STRING will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+                 "EMPTY STRING will be returned.",
+                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
+                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return STEPS::steps_char_buffer;
     }
 }
@@ -330,10 +341,12 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
     }
     else
     {
-        ostringstream osstream;
-        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
-               <<"Nothing will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+                 "Nothing will be changed.",
+                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
+                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
     }
 }
 
@@ -368,10 +381,12 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        ostringstream osstream;
-        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when retrieving data with api "<<__FUNCTION__<<endl
-               <<"False will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+                 "False will be returned.",
+                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
+                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
         return false;
     }
 }
@@ -408,9 +423,11 @@ void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        ostringstream osstream;
-        osstream<<"Neither "<<generator_did.get_device_name()<<" nor PARAMETER_NAME=="<<wt_generator_did.get_device_name()<<" exists in database when changing data with api "<<__FUNCTION__<<endl
-               <<"Nothing will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+                 "Nothing will be changed.",
+                 (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
+                 (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
+        show_information_with_leading_time_stamp(buffer);
     }
 }

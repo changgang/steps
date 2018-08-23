@@ -391,18 +391,22 @@ void PUFLS::run(DYNAMIC_MODE mode)
             {
                 if(is_discrete_stage_timer_timed_out(stage) and is_minimum_frequency_declining())
                 {
-                    osstream<<"PUFLS discrete stage "<<stage<<" timer of "<<get_device_name()<<" is timed out at time "<<TIME<<" s."<<endl
-                      <<get_discrete_stage_shed_scale_in_pu(stage)*100.0<<"% loads are tripped.";
-                    show_information_with_leading_time_stamp(osstream);
+                    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+                    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS discrete stage %lu timer of %s is timed out at time %.3fs.\n"
+                            "%f%% loads are tripped.",stage,get_device_name().c_str(),TIME,
+                            get_discrete_stage_shed_scale_in_pu(stage)*100.0);
+                    show_information_with_leading_time_stamp(buffer);
                     trip_discrete_stage(stage);
                     continue;
                 }
             }
             else
             {
-                osstream<<"PUFLS discrete stage "<<stage<<" timer of "<<get_device_name()<<" is started at time "<<TIME<<" s."<<endl
-                  <<get_discrete_stage_shed_scale_in_pu(stage)*100.0<<"% loads will be tripped.";
-                show_information_with_leading_time_stamp(osstream);
+                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS discrete stage %lu timer of %s is started at time %.3fs.\n"
+                        "%f%% loads are tripped.",stage,get_device_name().c_str(),TIME,
+                        get_discrete_stage_shed_scale_in_pu(stage)*100.0);
+                show_information_with_leading_time_stamp(buffer);
                 start_discrete_stage_timer_of_stage(stage);
                 continue;
             }
@@ -722,10 +726,11 @@ void PUFLS::try_to_reset_additional_stage_timer()
         {
             if(current_freq>f_th)
             {
-                osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is reset at time "<<current_time
-                  <<" s due to recovery of frequency."<<endl
-                  <<"Current frequency is "<<current_freq<<" Hz, and stage frequency threshold is "<<f_th<<" Hz.";
-                show_information_with_leading_time_stamp(osstream);
+                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS additional stage timer of %s is reset at time %.3fs due to recovery of frequency.\n"
+                        "Current frequency is %.4fHz, and stage frequency threshold is %.4fHz.",get_device_name().c_str(),current_time,
+                        current_freq,f_th);
+                show_information_with_leading_time_stamp(buffer);
                 reset_additional_stage_timer();
             }
             break;

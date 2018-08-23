@@ -281,8 +281,9 @@ bool api_get_bus_boolean_data(size_t bus, char* parameter_name)
 
 void api_set_bus_boolean_data(size_t bus, char* parameter_name, bool value)
 {
-    ostringstream osstream;
-    osstream<<__FUNCTION__<<"() has not been implemented. Input parameters are provided: "<<bus<<", "<<parameter_name<<", "<<value;
-    show_information_with_leading_time_stamp(osstream);
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %lu, %s, %s.",
+             __FUNCTION__, bus, parameter_name, (value==true?"True":"False"));
+    show_information_with_leading_time_stamp(buffer);
     return;
 }
