@@ -1,24 +1,55 @@
 from pysteps import STEPS
 from math import exp, fabs
 
-class OPF():
+class ED():
     def __init__(self):
         self.__unit_config = dict() # store configuration of each unit, [pmax, pmin, cost_table_no]
         self.__cost_tables = dict() # cost table, [cost_type, cost_parameter]
         self.__simulator = STEPS() # simulator for solving powerflow
+        self.__power_step = 10.0
 
     def __del__(self):
         self.__simulator.clear_package()
         del self.__simulator
+    
+    def help(self):
+        print("""
+            To use the Optimal Powerflow module, do the following:
+            ed = ED() # create optimizer
+            ed.load_powerflow_case("case.raw") # load powerflow
+            ed.generate_initial_unit_config_file('units') # generate initial unit config if you do not have a config file
+            ed.load_cost_table('cost') # load cost table
+            ed.load_unit_config('units') # load unit config file
+            ed.set_power_step(100.0) # set power change step, in MW
+            ed.optimize() # go optimize
+            ed.save_ed_powerflow("case_ed.raw") # save ed result            
+            """)
 
+    def set_power_step(self, step):
+        self.__power_step = step
+        return
+    
+    def get_power_step(self):
+        return self.__power_step
+    
     def load_powerflow_case(self, pf_file): # load powerflow and solve it
         self.__simulator.load_powerflow_data(pf_file,"PSSE")
         self.__simulator.solve_powerflow("PQ")
         return
     
-    def save_opf_powerflow(self, pf_file): # once OPF is converged, save it to new file
+    def save_ed_powerflow(self, pf_file): # once ed is converged, save it to new file
         self.__simulator.save_powerflow_data(pf_file, "PSSE")
         return
+    
+    def generate_initial_unit_config_file(self, file):
+        with open(file, 'wt') as fid:
+            gens = self.__simulator.get_generators_at_bus(0)
+            for gen in gens:
+                pmax = self.__simulator.get_generator_data(gen, 'd', 'pmax_MW')
+                pmin = self.__simulator.get_generator_data(gen, 'd', 'pmin_MW')
+                fid.write(str(gen[0])+",'"+gen[1]+"',1,"+str(pmax)+","+str(pmin)+",1\n")
+        
+        
     
     def load_cost_table(self, cost_table_file): # load all cost table
         """ format of cost table file:
@@ -136,19 +167,53 @@ class OPF():
                 cost += cost_para[-2]*exp(cost_para[-1]*power)
         return cost
     
+    def optimize(self): # this is the core of the class. Optimize it
+        cost0 = self.get_current_cost() # get initial cost
+        
+        iteration = 0
+        print('iteration',iteration,'cost=',cost0)
+        while True: # iteration
+            dcost = self.get_dcost_over_dp_of_all_unit() # get derivative
+            self.tune_unit_power(dcost) # use the derivative to tune unit power
+            cost = self.get_current_cost() # then get the new cost
+            iteration += 1
+            print('iteration',iteration,'cost=',cost)
+            if cost0>cost: # criteria to exit the loop
+                cost0 = cost
+            else:
+                break
+            
     def get_current_cost(self): # get cost of the current powerflow
         self.__simulator.solve_powerflow("PQ") # first solve powerflow
+        if not self.__simulator.is_powerflow_converged():
+            print("powerflow not converged.")
+            return 0.0
+        
         total_cost = 0.0
         for unit in self.__unit_config: # count only units in unit_config
             cost = self.get_cost_of_generator(unit)
             total_cost += cost
         return total_cost
-
+    
     def get_cost_of_generator(self, unit): # get cost of specific generator
         config = self.__unit_config[unit]
         table_no = config[-1]
         p = self.__simulator.get_generator_data(unit, 'd', 'PGEN_MW') # get P generation of the unit
         return self.get_cost_of_table(table_no, p)
+            
+
+    def get_dcost_over_dp_of_all_unit(self): # get derivative of system cost over power of each unit
+        # remember: generator at slack bus is not calculated
+        P0 = self.get_current_generation_of_cost_units()
+        cost0 = self.get_current_cost() # get initial cost
+        delta_p = 0.1 # step
+        dcost_dp = dict()
+        for (unit, p0) in P0.items():
+            self.__simulator.set_generator_data(unit, 'd', 'PGEN_MW', p0+delta_p) # change generator power 
+            cost = self.get_current_cost() # caculate new cost
+            dcost_dp[unit] = (cost-cost0)/delta_p # get derivative
+            self.__simulator.set_generator_data(unit, 'd', 'PGEN_MW', p0) # recover generator power
+        return dcost_dp
         
     def get_current_generation_of_cost_units(self): # get current power generation of units
         # remember: generator at slack bus is not stored
@@ -160,41 +225,12 @@ class OPF():
                 continue
             P[unit] = self.__simulator.get_generator_data(unit, 'd', 'PGEN_MW')
         return P
-
-    def get_dcost_over_dp_of_all_unit(self, P0): # get derivative of system cost over power of each unit
-        # remember: generator at slack bus is not calculated
-        self.apply_generation(P0) # first set up system as initial status
-        cost0 = self.get_current_cost() # get initial cost
-        delta_p = 0.1 # step
-        dcost_dp = dict()
-        for (unit, p0) in P0.items():
-            self.__simulator.set_generator_data(unit, 'd', 'PGEN_MW', p0+delta_p) # change generator power 
-            cost = self.get_current_cost() # caculate new cost
-            dcost_dp[unit] = (cost-cost0)/delta_p # get derivative
-            self.__simulator.set_generator_data(unit, 'd', 'PGEN_MW', p0) # recover generator power
-        return dcost_dp
-        
-    def apply_generation(self, P):
-        for (unit, p) in P.items():
-            self.__simulator.set_generator_data(unit, 'd', 'PGEN_MW', p)
-
-    def optimize(self): # this is the core of the class. Optimize it
-        cost0 = self.get_current_cost() # get initial cost
-        print(cost0)
-        while True: # iteration
-            P0 = self.get_current_generation_of_cost_units() # save current power generation
-            dcost = self.get_dcost_over_dp_of_all_unit(P0) # get derivative
-            self.tune_unit_power(dcost, P0) # use the derivative to tune unit power
-            cost = self.get_current_cost() # then get the new cost
-            print("new cost is", cost)
-            if cost0-cost>0.1: # criteria to exit the loop
-                cost0 = cost
-            else:
-                break
-            
-            
-    def tune_unit_power(self, dcost, P0):# key to tune unit power. need further modification
+    
+    def tune_unit_power(self, dcost):# key to tune unit power. need further modification
         # first: remove generators at the boundary
+        P0 = self.get_current_generation_of_cost_units()
+        cost0 = self.get_current_cost() # get current cost
+        
         unit_to_delete = []
         for (unit, cost) in dcost.items():
             p = P0[unit]
@@ -209,7 +245,7 @@ class OPF():
         if len(dcost.keys())==0: # if no more units to tune, exit
             return
         
-        print(dcost)
+        #print(dcost)
         unit_candidate = None
         dcost_max = 0.0
         for (unit, cost) in dcost.items(): # the unit with greatest derivative, aka, most sensitive
@@ -220,20 +256,38 @@ class OPF():
         current_p = P0[unit_candidate]
         pmax = self.__unit_config[unit_candidate][0]
         pmin = self.__unit_config[unit_candidate][1]
+        
+        pstep = self.get_power_step()
         if dcost_candidate>0.0 and current_p>pmin: # change unit power
-            p = current_p - 1
-            if p<pmin:
-                p = pmin
-            self.__simulator.set_generator_data(unit_candidate, 'd', 'PGEN_MW', p)
-            print("generator", unit_candidate, " is changed to ", p,"dcost is ",dcost_candidate)
+            for i in range(10):
+                p = current_p - pstep
+                if p<pmin:
+                    p = pmin
+                self.__simulator.set_generator_data(unit_candidate, 'd', 'PGEN_MW', p)
+                cost = self.get_current_cost()
+                if cost<cost0:
+                    print("Change generator", unit_candidate, " to ", p,"dcost=",dcost_candidate)
+                    break
+                else:
+                    pstep *= 0.5        
             return
+        
         if dcost_candidate<0.0 and current_p<pmax:
-            p = current_p + 1
-            if p>pmax:
-                p = pmax
-            self.__simulator.set_generator_data(unit_candidate, 'd', 'PGEN_MW', p)
-            print("generator", unit_candidate, " is changed to ", p,"dcost is ",dcost_candidate)
+            for i in range(10):
+                p = current_p + pstep
+                if p>pmax:
+                    p = pmax
+                self.__simulator.set_generator_data(unit_candidate, 'd', 'PGEN_MW', p)
+                cost = self.get_current_cost()
+                if cost<cost0:
+                    print("Change generator", unit_candidate, " to ", p,"dcost=",dcost_candidate)
+                    break
+                else:
+                    pstep *= 0.5
             return
+        
+
+        
             
             
 

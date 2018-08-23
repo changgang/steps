@@ -7,7 +7,7 @@ libsteps_date = "2018/08/15"
 
 def get_base_library(): 
     if platform.system()=="Linux":
-        library = "/home/changgang/test_pysteps/pysteps2/libSTEPS.so"
+        library = "/home/changgang/steps/build/bin/Release/libSTEPS.so"
     else:
         if platform.system()=="Windows":
             library = "D:/Python27/Lib/site-packages/pysteps/libSTEPS.dll"
@@ -19,11 +19,17 @@ def get_parallel_library():
     filename, extension = os.path.splitext(base_library)
     parallel_library = filename+'-p'+extension
     if not os.path.exists(parallel_library):
-        print("Fatal Error. No library for parallel simulation of STEPS exists. Consult your system administrator.")
-        parallel_library = None
+        command = "copy"
+        if platform.system()=="Linux":
+            command = "cp"
+        command = command + " "+base_library+" "+parallel_library
+        os.system(command)
+    if not os.path.exists(parallel_library):
+        print("Library for parallel STEPS does not exist and cannot be created. Consult your administrator.")
+        return None
     return parallel_library
     
-def load_library(parallel_flag):
+def load_library(parallel_flag=False):
     if parallel_flag is True:
         library = get_parallel_library()
     else:
@@ -380,6 +386,8 @@ def load_library(parallel_flag):
     libsteps.api_show_powerflow_result.argtypes = None
     libsteps.api_save_powerflow_result.restype = None
     libsteps.api_save_powerflow_result.argtypes = (c_char_p, )
+    libsteps.api_save_extended_powerflow_result.restype = None
+    libsteps.api_save_extended_powerflow_result.argtypes = (c_char_p, )
     libsteps.api_save_jacobian_matrix.restype = None
     libsteps.api_save_jacobian_matrix.argtypes = (c_char_p, )
 
@@ -425,6 +433,8 @@ def load_library(parallel_flag):
     libsteps.api_get_dynamic_simulation_time_step.argtypes = None
     libsteps.api_set_dynamic_simulation_time_step.restype = None
     libsteps.api_set_dynamic_simulation_time_step.argtypes = (c_double, )
+    libsteps.api_get_dynamic_simulation_time.restype = (c_double)
+    libsteps.api_get_dynamic_simulation_time.argtypes = None
 
     libsteps.api_prepare_meters.restype = None
     libsteps.api_prepare_meters.argtypes = None
