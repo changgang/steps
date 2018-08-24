@@ -115,6 +115,11 @@ def load_library(parallel_flag=False):
     libsteps.api_show_device_data.restype = None
     libsteps.api_show_device_data.argtypes = (c_char_p, )
 
+    libsteps.api_bus_number2bus_name.restype = c_char_p
+    libsteps.api_bus_number2bus_name.argtypes = (c_unit, )
+    libsteps.api_bus_name2bus_number.restype = c_unit
+    libsteps.api_bus_name2bus_number.argtypes = (c_char_p, )
+
     libsteps.api_initialize_bus_search.restype = None
     libsteps.api_initialize_bus_search.argtypes = (c_double, c_double, c_double, c_double, c_uint, c_uint, c_uint)
     libsteps.api_initialize_all_bus_search.restype = None

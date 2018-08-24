@@ -117,6 +117,11 @@ EXPORT_STEPS_DLL size_t api_get_zone_count();
 EXPORT_STEPS_DLL size_t api_get_owner_count();
 EXPORT_STEPS_DLL void api_show_device_data(const char* device_type);
 
+
+EXPORT_STEPS_DLL size_t api_bus_name2bus_number(const char* bus_name);
+EXPORT_STEPS_DLL const char* api_bus_number2bus_name(size_t bus_number);
+
+
 EXPORT_STEPS_DLL void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
 EXPORT_STEPS_DLL void api_initialize_all_bus_search();
 EXPORT_STEPS_DLL size_t api_get_current_bus_number();

@@ -65,6 +65,9 @@ class STEPS():
         
     def load_dynamic_data(self, file, type):
         self.libsteps.api_load_dynamic_data_from_file(file, type)
+        
+    def save_dynamic_data(self, file, type):
+        self.libsteps.api_save_dynamic_data_from_file(file, type)
 
     def get_bus_capacity(self):
         return int(self.libsteps.api_get_device_capacity("BUS"))
@@ -264,6 +267,12 @@ class STEPS():
         ickt = energy_storage[1]
         return self.libsteps.api_is_energy_storage_exist(bus, ickt)
     
+    def bus_name2number(self, name):
+        return self.libsteps.api_bus_name2bus_number(name)
+
+    def bus_number2nane(self, bus):
+        return self.libsteps.api_bus_number2bus_name(bus)
+
     def get_all_buses(self):
         self.libsteps.api_initialize_all_bus_search()
         buses = []

@@ -179,6 +179,12 @@ def get_zone_count():
 def get_owner_count():
     return libsteps.api_get_owner_count()
 
+def bus_name2number(name):
+    return libsteps.api_bus_name2bus_number(name)
+
+def bus_number2nane(bus):
+    return libsteps.api_bus_number2bus_name(bus)
+
 def get_all_buses():
     libsteps.api_initialize_all_bus_search()
     buses = []

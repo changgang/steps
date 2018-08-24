@@ -9,6 +9,24 @@ using namespace std;
 
 STEPS_API_SEARCH_BUFFER api_search_buffer;
 
+
+
+size_t api_bus_name2bus_number(const char* bus_name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    return psdb->bus_name2bus_number(bus_name);
+}
+
+const char* api_bus_number2bus_name(size_t bus_number)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    string name = psdb->bus_number2bus_name(bus_number);
+
+    snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+    return STEPS::steps_char_buffer;
+}
+
+
 void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner)
 {
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
