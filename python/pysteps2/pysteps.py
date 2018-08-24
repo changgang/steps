@@ -48,8 +48,11 @@ class STEPS():
         self.libsteps.api_terminate_package()
         return
 
-    def get_package_float_data(self,dataname):
+    def get_package_float_data(self, dataname):
         return self.libsteps.api_get_package_float_data(dataname)        
+
+    def set_package_float_data(self, dataname, value):
+        return self.libsteps.api_set_package_float_data(dataname, value)
 
     def get_allowed_maximum_bus_number(self):
         return int(self.libsteps.api_get_allowed_maximum_bus_number())

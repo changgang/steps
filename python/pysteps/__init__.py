@@ -17,6 +17,10 @@ def get_package_float_data(dataname):
     libsteps.api_get_package_float_data(dataname)
     return
 
+def set_package_float_data(dataname, value):
+    libsteps.api_set_package_float_data(dataname, value)
+    return
+
 def get_allowed_maximum_bus_number():
     return libsteps.api_get_allowed_maximum_bus_number()
 

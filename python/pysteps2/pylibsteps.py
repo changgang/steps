@@ -43,8 +43,10 @@ def load_library(parallel_flag=False):
     libsteps.api_clear_package.argtypes = None
     libsteps.api_terminate_package.restype = None
     libsteps.api_terminate_package.argtypes = None
-    libsteps.api_get_package_float_data.restype = None
+    libsteps.api_get_package_float_data.restype = c_double
     libsteps.api_get_package_float_data.argtypes = (c_char_p, )
+    libsteps.api_set_package_float_data.restype = None
+    libsteps.api_set_package_float_data.argtypes = (c_char_p, c_double)
 
     libsteps.api_load_powerflow_data_from_file.restype = None
     libsteps.api_load_powerflow_data_from_file.argtypes = (c_char_p, c_char_p)
@@ -116,8 +118,8 @@ def load_library(parallel_flag=False):
     libsteps.api_show_device_data.argtypes = (c_char_p, )
 
     libsteps.api_bus_number2bus_name.restype = c_char_p
-    libsteps.api_bus_number2bus_name.argtypes = (c_unit, )
-    libsteps.api_bus_name2bus_number.restype = c_unit
+    libsteps.api_bus_number2bus_name.argtypes = (c_uint, )
+    libsteps.api_bus_name2bus_number.restype = c_uint
     libsteps.api_bus_name2bus_number.argtypes = (c_char_p, )
 
     libsteps.api_initialize_bus_search.restype = None

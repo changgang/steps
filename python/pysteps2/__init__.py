@@ -1,4 +1,4 @@
-from pysteps import STEPS, PARALLEL_STEPS
+from pysteps import STEPS, pSTEPS
 from stepsed import ED
 from stepscct import CCT
 
