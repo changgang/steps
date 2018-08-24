@@ -14,8 +14,6 @@ int api_get_bus_integer_data(size_t bus, char* parameter_name)
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
-            return busptr->get_bus_number();
 
         if(PARAMETER_NAME=="TYPE" or PARAMETER_NAME=="BUS TYPE")
         {
@@ -68,8 +66,6 @@ void api_set_bus_integer_data(size_t bus, char* parameter_name, int value)
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
-            return busptr->set_bus_number(value);
 
         if(PARAMETER_NAME=="TYPE" or PARAMETER_NAME=="BUS TYPE")
         {

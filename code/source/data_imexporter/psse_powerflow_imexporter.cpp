@@ -789,6 +789,7 @@ void PSSE_IMEXPORTER::load_line_data()
 
             os.append_owner_and_its_fraction(owner, frac);
         }
+        os.normalize();
         line.set_ownership(os);
 
         psdb->append_line(line);
@@ -1070,6 +1071,7 @@ void PSSE_IMEXPORTER::add_transformer_basic_data(TRANSFORMER& trans, vector<stri
 
         os.append_owner_and_its_fraction(owner, frac);
     }
+    os.normalize();
     trans.set_ownership(os);
 }
 void PSSE_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORMER_WINDING_SIDE winding, vector<string> data, TRANSFORMER_WINDING_TAP_CODE winding_code)

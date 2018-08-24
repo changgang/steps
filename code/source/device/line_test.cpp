@@ -29,6 +29,7 @@ LINE_TEST::LINE_TEST()
     TEST_ADD(LINE_TEST::test_set_get_rating);
     TEST_ADD(LINE_TEST::test_set_get_meter_end_bus);
     TEST_ADD(LINE_TEST::test_set_get_length);
+    TEST_ADD(LINE_TEST::test_set_get_ownership);
     TEST_ADD(LINE_TEST::test_set_get_fault);
     TEST_ADD(LINE_TEST::test_clear_fault);
     TEST_ADD(LINE_TEST::test_get_fault_count);
@@ -251,6 +252,26 @@ void LINE_TEST::test_set_get_length()
 
     line->set_length(-3.0);
     TEST_ASSERT(line->get_length()==123.0);
+}
+
+void LINE_TEST::test_set_get_ownership()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+
+    OWNERSHIP os0, os1;
+    os0.append_owner_and_its_fraction(1, 0.5);
+    os0.append_owner_and_its_fraction(2, 0.3);
+    os0.append_owner_and_its_fraction(3, 0.2);
+    line->set_ownership(os0);
+
+    os1 = line->get_ownership();
+    TEST_ASSERT(os1.get_owner_count()==3);
+    TEST_ASSERT(os1.get_owner_of_index(0)==1);
+    TEST_ASSERT(os1.get_owner_of_index(1)==2);
+    TEST_ASSERT(os1.get_owner_of_index(2)==3);
+    TEST_ASSERT(fabs(os1.get_fraction_of_owner_of_index(0)-0.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(os1.get_fraction_of_owner_of_index(1)-0.3)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(os1.get_fraction_of_owner_of_index(2)-0.2)<FLOAT_EPSILON);
 }
 
 void LINE_TEST::test_set_get_fault()

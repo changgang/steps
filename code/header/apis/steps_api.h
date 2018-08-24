@@ -56,6 +56,10 @@ EXPORT_STEPS_DLL void show_device_not_exist_with_api(DEVICE_ID did, string api_f
 EXPORT_STEPS_DLL void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, size_t no, string api_func);
 EXPORT_STEPS_DLL void show_area_zone_owner_not_exist_with_api(size_t no, string api_func);
 
+EXPORT_STEPS_DLL size_t get_owner_of_device(DEVICE* device, string parameter_name);
+EXPORT_STEPS_DLL void set_owner_of_device(DEVICE* device, string parameter_name, int value);
+EXPORT_STEPS_DLL double get_owner_fraction_of_device(DEVICE* device, string parameter_name);
+EXPORT_STEPS_DLL void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double value);
 
 EXPORT_STEPS_DLL void api_initialize_package();
 EXPORT_STEPS_DLL void api_initialize_powerflow_solver();

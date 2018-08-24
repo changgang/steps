@@ -31,6 +31,11 @@ void DEVICE::set_ownership(const OWNERSHIP& os)
     this->ownership = os;
 }
 
+OWNERSHIP DEVICE::get_ownership() const
+{
+    return this->ownership;
+}
+
 size_t DEVICE::get_owner_count() const
 {
     return ownership.get_owner_count();

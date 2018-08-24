@@ -14,8 +14,6 @@ int api_get_load_integer_data(size_t bus, char* identifier, char* parameter_name
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
-            return loadptr->get_load_bus();
 
         if(PARAMETER_NAME=="AREA" or PARAMETER_NAME=="AREA NUMBER")
             return loadptr->get_area_number();
@@ -46,8 +44,6 @@ void api_set_load_integer_data(size_t bus, char* identifier, char* parameter_nam
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
-            return loadptr->set_load_bus(value);
 
         if(PARAMETER_NAME=="AREA" or PARAMETER_NAME=="AREA NUMBER")
             return loadptr->set_area_number(value);
@@ -198,11 +194,6 @@ const char* api_get_load_string_data(size_t bus, char* identifier, char* paramet
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
-		{
-			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (loadptr->get_identifier()).c_str());
-			return STEPS::steps_char_buffer;
-		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return STEPS::steps_char_buffer;
@@ -225,8 +216,6 @@ void api_set_load_string_data(size_t bus, char* identifier, char* parameter_name
     if(loadptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            return loadptr->set_identifier(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }

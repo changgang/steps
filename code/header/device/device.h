@@ -21,6 +21,7 @@ class DEVICE : public BASE
         //double get_dynamic_simulator_time_in_s() const;
 
         void set_ownership(const OWNERSHIP& ownership);
+        OWNERSHIP get_ownership() const;
         size_t get_owner_count() const;
         size_t get_owner_of_index(size_t index) const;
         double get_fraction_of_owner_of_index(size_t index) const;

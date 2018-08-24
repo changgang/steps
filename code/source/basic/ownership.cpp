@@ -8,6 +8,11 @@ OWNERSHIP::OWNERSHIP()
     ownership_pair.clear();
 }
 
+OWNERSHIP::OWNERSHIP(const OWNERSHIP& ownership)
+{
+    copy_from_const_ownership(ownership);
+}
+
 void OWNERSHIP::append_owner_and_its_fraction(size_t owner, double fraction)
 {
 	if(owner == 0) return;
@@ -154,6 +159,13 @@ OWNERSHIP& OWNERSHIP::operator=(const OWNERSHIP& ownership)
 {
     if(this==(&ownership)) return *this;
 
+    copy_from_const_ownership(ownership);
+
+    return *this;
+}
+
+void OWNERSHIP::copy_from_const_ownership(const OWNERSHIP& ownership)
+{
     clear();
     size_t n = ownership.get_owner_count();
     vector<size_t> all_owners = ownership.get_all_owners();
@@ -163,7 +175,4 @@ OWNERSHIP& OWNERSHIP::operator=(const OWNERSHIP& ownership)
         fraction = ownership.get_fraction_of_owner(all_owners[i]);
         append_owner_and_its_fraction(all_owners[i], fraction);
     }
-
-    normalize();
-    return *this;
 }

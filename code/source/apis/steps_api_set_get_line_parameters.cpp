@@ -23,6 +23,10 @@ int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
         if(PARAMETER_NAME=="BUS_METER" or PARAMETER_NAME=="METER END BUS NUMBER")
             return lineptr->get_meter_end_bus();
 
+
+        if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
+            return get_owner_of_device(lineptr, PARAMETER_NAME);
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0;
     }
@@ -51,6 +55,9 @@ void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char*
 
         if(PARAMETER_NAME=="BUS_METER" or PARAMETER_NAME=="METER END BUS NUMBER")
             return lineptr->set_meter_end_bus(value);
+
+        if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
+            return set_owner_of_device(lineptr, PARAMETER_NAME, value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }
@@ -128,6 +135,9 @@ double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char*
 
         if(PARAMETER_NAME=="LENGTH" or PARAMETER_NAME=="LINE LENGTH")
             return lineptr->get_length();
+
+        if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
+            return get_owner_fraction_of_device(lineptr, parameter_name);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
@@ -268,6 +278,9 @@ void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* p
 
         if(PARAMETER_NAME=="LENGTH" or PARAMETER_NAME=="LINE LENGTH")
             return lineptr->set_length(value);
+
+        if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
+            return set_owner_fraction_of_device(lineptr, PARAMETER_NAME, value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
     }

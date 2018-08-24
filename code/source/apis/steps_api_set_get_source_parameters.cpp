@@ -27,8 +27,6 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
     if(sourceptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
-            return sourceptr->get_source_bus();
 
         if(PARAMETER_NAME=="BUS_REG" or PARAMETER_NAME=="BUS TO REGULATE")
             return sourceptr->get_bus_to_regulate();
@@ -46,6 +44,9 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
                     return 3;
             }
         }
+
+        if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
+            return get_owner_of_device(sourceptr, PARAMETER_NAME);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
         return 0;
@@ -84,8 +85,6 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
     if(sourceptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
-            return sourceptr->set_source_bus(value);
 
         if(PARAMETER_NAME=="BUS_REG" or PARAMETER_NAME=="BUS TO REGULATE")
             return sourceptr->set_bus_to_regulate(value);
@@ -114,6 +113,9 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
                 }
             }
         }
+        if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
+            return set_owner_of_device(sourceptr, PARAMETER_NAME, value);
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
     }
     else
@@ -179,6 +181,10 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
 
         if(PARAMETER_NAME=="XSOURCE_PU" or PARAMETER_NAME=="SOURCE REACTANCE IN PU")
             return sourceptr->get_source_impedance_in_pu().imag();
+
+
+        if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
+            return get_owner_fraction_of_device(sourceptr, parameter_name);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
         return 0.0;
@@ -252,6 +258,10 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
             complex<double> Z = sourceptr->get_source_impedance_in_pu();
             return sourceptr->set_source_impedance_in_pu(complex<double>(Z.real(), value));
         }
+
+        if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
+            return set_owner_fraction_of_device(sourceptr, PARAMETER_NAME, value);
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
     }
     else
@@ -289,11 +299,6 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     if(sourceptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
-		{
-			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (sourceptr->get_identifier()).c_str());
-			return STEPS::steps_char_buffer;
-		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
         return STEPS::steps_char_buffer;
@@ -333,8 +338,6 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
     if(sourceptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
-        if(PARAMETER_NAME=="ID" or PARAMETER_NAME=="IDENTIFIER")
-            return sourceptr->set_identifier(value);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
         return;
