@@ -445,10 +445,35 @@ void PSSE_IMEXPORTER::load_source_data()
         else
         {
             int var_control_mode = get_integer_data(data[GENERATOR_LENGTH],"0");
-            if(var_control_mode == 0)
-                load_generator_data(data);
-            else
-                load_wt_generator_data(data);
+            switch(var_control_mode)
+            {
+                case 0:
+                {
+                    load_generator_data(data);
+                    break;
+                }
+                case 1:
+                case 2:
+                case 3:
+                {
+                    load_wt_generator_data(data);
+                    break;
+                }
+                case 11:
+                case 12:
+                case 13:
+                {
+                    load_pv_unit_data(data);
+                    break;
+                }
+                case 21:
+                case 22:
+                case 23:
+                {
+                    load_energy_storage_data(data);
+                    break;
+                }
+            }
         }
     }
 }
@@ -505,6 +530,74 @@ void PSSE_IMEXPORTER::load_wt_generator_data(vector<string>& data)
         data.erase(data.begin());
     }
     psdb->append_wt_generator(wt_generator);
+}
+
+
+void PSSE_IMEXPORTER::load_pv_unit_data(vector<string>& data)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    PV_UNIT pv_unit(psdb);
+
+    load_source_common_data(data, &pv_unit);
+
+    int var_control_mode = 11;
+    double pf;
+    if(data.size()>0)
+    {
+        var_control_mode = get_integer_data(data.front(),"1");
+        if(var_control_mode == 11)
+            pv_unit.set_regulating_mode(REGULATING_PV);
+        if(var_control_mode == 12 or var_control_mode == 13)
+            pv_unit.set_regulating_mode(REGULATING_PQ);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        pf = get_double_data(data.front(),"1.0");
+        if(var_control_mode==12)
+        {
+            double p = pv_unit.get_p_generation_in_MW();
+            double q = p/pf*sqrt(1.0-pf*pf);
+            pv_unit.set_q_generation_in_MVar(q);
+        }
+        data.erase(data.begin());
+    }
+    psdb->append_pv_unit(pv_unit);
+}
+
+
+void PSSE_IMEXPORTER::load_energy_storage_data(vector<string>& data)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    ENERGY_STORAGE estorage(psdb);
+
+    load_source_common_data(data, &estorage);
+
+    int var_control_mode = 1;
+    double pf;
+    if(data.size()>0)
+    {
+        var_control_mode = get_integer_data(data.front(),"1");
+        if(var_control_mode == 21)
+            estorage.set_regulating_mode(REGULATING_PV);
+        if(var_control_mode == 22 or var_control_mode == 23)
+            estorage.set_regulating_mode(REGULATING_PQ);
+        data.erase(data.begin());
+    }
+    if(data.size()>0)
+    {
+        pf = get_double_data(data.front(),"1.0");
+        if(var_control_mode==12)
+        {
+            double p = estorage.get_p_generation_in_MW();
+            double q = p/pf*sqrt(1.0-pf*pf);
+            estorage.set_q_generation_in_MVar(q);
+        }
+        data.erase(data.begin());
+    }
+    psdb->append_energy_storage(estorage);
 }
 
 void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* source)
@@ -1906,7 +1999,7 @@ string PSSE_IMEXPORTER::export_bus_data() const
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_normal_voltage_lower_limit_in_pu()<<", "
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_upper_limit_in_pu()<<", "
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_lower_limit_in_pu()<<endl;*/
-        snprintf(buffer, 1000, "%8lu, \"%16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f",
+        snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f",
                  bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,
                  bus->get_area_number(), bus->get_zone_number(), bus->get_owner_number(),
                  bus->get_voltage_in_pu(), bus->get_angle_in_deg(),
@@ -2004,6 +2097,8 @@ string PSSE_IMEXPORTER::export_source_data() const
     ostringstream osstream;
     osstream<<export_generator_data();
     osstream<<export_wt_generator_data();
+    osstream<<export_pv_unit_data();
+    osstream<<export_energy_storage_data();
 
     return osstream.str();
 }
@@ -2025,35 +2120,7 @@ string PSSE_IMEXPORTER::export_generator_data() const
     {
         GENERATOR* generator = generators[i];
 
-        osstream<<right
-               <<setw(8)<<generator->get_generator_bus()<<", "
-               <<"\""<<left
-               <<setw(2)<<generator->get_identifier()<<"\""<<", "
-               <<right
-               <<setw(12)<<setprecision(6)<<fixed<<generator->get_p_generation_in_MW()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<generator->get_q_generation_in_MVar()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<generator->get_q_max_in_MVar()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<generator->get_q_min_in_MVar()<<", "
-               <<setw(8)<<setprecision(6)<<fixed<<generator->get_voltage_to_regulate_in_pu()<<", ";
-        if(generator->get_bus_to_regulate()==generator->get_generator_bus())
-            osstream<<setw(8)<<0<<", ";
-        else
-            osstream<<setw(8)<<generator->get_bus_to_regulate()<<", ";
-        osstream<<setw(10)<<setprecision(4)<<fixed<<generator->get_mbase_in_MVA()<<", "
-               <<setw(9)<<setprecision(6)<<fixed<<generator->get_source_impedance_in_pu().real()<<", "
-               <<setw(9)<<setprecision(6)<<fixed<<generator->get_source_impedance_in_pu().imag()<<", "
-               <<setprecision(2)<<0.0<<", "<<0.0<<", "<<1.0<<", "
-               <<generator->get_status()<<","
-               <<setprecision(2)<<100.0<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<generator->get_p_max_in_MW()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<generator->get_p_min_in_MW()<<", ";
-        if(generator->get_owner_count()==0)
-            osstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
-        else
-            osstream<<setprecision(0)<<generator->get_owner_of_index(0)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(0)<<", "
-              <<setprecision(0)<<generator->get_owner_of_index(1)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(1)<<", "
-              <<setprecision(0)<<generator->get_owner_of_index(2)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(2)<<", "
-              <<setprecision(0)<<generator->get_owner_of_index(3)<<", "<<setprecision(6)<<generator->get_fraction_of_owner_of_index(3)<<", ";
+        osstream<<export_source_common_data(generator);
         osstream<<"0, 0.0"<<endl;
     }
     return osstream.str();
@@ -2080,40 +2147,106 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
         double q = wt_generator->get_q_generation_in_MVar();
         double pf = p/sqrt(p*p+q*q);
 
-        osstream<<right
-               <<setw(8)<<wt_generator->get_source_bus()<<", "
-               <<"\""<<left
-               <<setw(2)<<wt_generator->get_identifier()<<"\""<<", "
-               <<right
-               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_generation_in_MW()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_q_generation_in_MVar()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_q_max_in_MVar()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_q_min_in_MVar()<<", "
-               <<setw(8)<<setprecision(6)<<fixed<<wt_generator->get_voltage_to_regulate_in_pu()<<", ";
-        if(wt_generator->get_bus_to_regulate()==wt_generator->get_source_bus())
-            osstream<<setw(8)<<0<<", ";
-        else
-            osstream<<setw(8)<<wt_generator->get_bus_to_regulate()<<", ";
-        osstream<<setw(10)<<setprecision(4)<<fixed<<wt_generator->get_mbase_in_MVA()<<", "
-               <<setw(9)<<setprecision(6)<<fixed<<wt_generator->get_source_impedance_in_pu().real()<<", "
-               <<setw(9)<<setprecision(6)<<fixed<<wt_generator->get_source_impedance_in_pu().imag()<<", "
-               <<setprecision(2)<<0.0<<", "<<0.0<<", "<<1.0<<", "
-               <<wt_generator->get_status()<<","
-               <<setprecision(2)<<100.0<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_max_in_MW()<<", "
-               <<setw(12)<<setprecision(6)<<fixed<<wt_generator->get_p_min_in_MW()<<", ";
-        if(wt_generator->get_owner_count()==0)
-            osstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
-		else
-		{
-			osstream<< setprecision(0) << wt_generator->get_owner_of_index(0) << ", " << setprecision(6) << wt_generator->get_fraction_of_owner_of_index(0) << ", "
-				    << setprecision(0) << wt_generator->get_owner_of_index(1) << ", " << setprecision(6) << wt_generator->get_fraction_of_owner_of_index(1) << ", "
-				    << setprecision(0) << wt_generator->get_owner_of_index(2) << ", " << setprecision(6) << wt_generator->get_fraction_of_owner_of_index(2) << ", "
-				    << setprecision(0) << wt_generator->get_owner_of_index(3) << ", " << setprecision(6) << wt_generator->get_fraction_of_owner_of_index(3) << ", ";
-		}
-
+        osstream<<export_source_common_data(wt_generator);
         osstream<<"1, "<<setprecision(6)<<pf<<endl;
     }
+    return osstream.str();
+}
+
+
+string PSSE_IMEXPORTER::export_pv_unit_data() const
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    if(psdb==NULL)
+    {
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No PV unit data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
+        return "";
+    }
+
+    vector<PV_UNIT*> pv_units = psdb->get_all_pv_units();
+    size_t n = pv_units.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        PV_UNIT* pv_unit = pv_units[i];
+
+        double p = pv_unit->get_p_generation_in_MW();
+        double q = pv_unit->get_q_generation_in_MVar();
+        double pf = p/sqrt(p*p+q*q);
+
+        osstream<<export_source_common_data(pv_unit);
+
+        osstream<<"11, "<<setprecision(6)<<pf<<endl;
+    }
+    return osstream.str();
+}
+
+
+string PSSE_IMEXPORTER::export_energy_storage_data() const
+{
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    if(psdb==NULL)
+    {
+        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No energy storage data will be exported.";
+        show_information_with_leading_time_stamp(osstream);
+        return "";
+    }
+
+    vector<ENERGY_STORAGE*> estorages = psdb->get_all_energy_storages();
+    size_t n = estorages.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        ENERGY_STORAGE* estorage = estorages[i];
+
+        double p = estorage->get_p_generation_in_MW();
+        double q = estorage->get_q_generation_in_MVar();
+        double pf = p/sqrt(p*p+q*q);
+
+        osstream<<export_source_common_data(estorage);
+
+        osstream<<"21, "<<setprecision(6)<<pf<<endl;
+    }
+    return osstream.str();
+}
+
+string PSSE_IMEXPORTER::export_source_common_data(SOURCE* source) const
+{
+    ostringstream osstream;
+
+    osstream<<right
+           <<setw(8)<<source->get_source_bus()<<", "
+           <<"\""<<left
+           <<setw(2)<<source->get_identifier()<<"\""<<", "
+           <<right
+           <<setw(12)<<setprecision(6)<<fixed<<source->get_p_generation_in_MW()<<", "
+           <<setw(12)<<setprecision(6)<<fixed<<source->get_q_generation_in_MVar()<<", "
+           <<setw(12)<<setprecision(6)<<fixed<<source->get_q_max_in_MVar()<<", "
+           <<setw(12)<<setprecision(6)<<fixed<<source->get_q_min_in_MVar()<<", "
+           <<setw(8)<<setprecision(6)<<fixed<<source->get_voltage_to_regulate_in_pu()<<", ";
+    if(source->get_bus_to_regulate()==source->get_source_bus())
+        osstream<<setw(8)<<0<<", ";
+    else
+        osstream<<setw(8)<<source->get_bus_to_regulate()<<", ";
+    osstream<<setw(10)<<setprecision(4)<<fixed<<source->get_mbase_in_MVA()<<", "
+           <<setw(9)<<setprecision(6)<<fixed<<source->get_source_impedance_in_pu().real()<<", "
+           <<setw(9)<<setprecision(6)<<fixed<<source->get_source_impedance_in_pu().imag()<<", "
+           <<setprecision(2)<<0.0<<", "<<0.0<<", "<<1.0<<", "
+           <<source->get_status()<<","
+           <<setprecision(2)<<100.0<<", "
+           <<setw(12)<<setprecision(6)<<fixed<<source->get_p_max_in_MW()<<", "
+           <<setw(12)<<setprecision(6)<<fixed<<source->get_p_min_in_MW()<<", ";
+    if(source->get_owner_count()==0)
+        osstream<<"1, 1.0, 0, 0.0, 0, 0.0, 0, 0.0, ";
+    else
+    {
+        osstream<< setprecision(0) << source->get_owner_of_index(0) << ", " << setprecision(6) << source->get_fraction_of_owner_of_index(0) << ", "
+                << setprecision(0) << source->get_owner_of_index(1) << ", " << setprecision(6) << source->get_fraction_of_owner_of_index(1) << ", "
+                << setprecision(0) << source->get_owner_of_index(2) << ", " << setprecision(6) << source->get_fraction_of_owner_of_index(2) << ", "
+                << setprecision(0) << source->get_owner_of_index(3) << ", " << setprecision(6) << source->get_fraction_of_owner_of_index(3) << ", ";
+    }
+
     return osstream.str();
 }
 

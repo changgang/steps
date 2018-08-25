@@ -35,6 +35,8 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void load_source_data();
         void load_generator_data(vector<string>& data);
         void load_wt_generator_data(vector<string>& data);
+        void load_pv_unit_data(vector<string>& data);
+        void load_energy_storage_data(vector<string>& data);
         void load_source_common_data(vector<string>& data, SOURCE* source);
         void load_line_data();
         void load_transformer_data();
@@ -64,7 +66,9 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         string export_source_data() const;
         string export_generator_data() const;
         string export_wt_generator_data() const;
-        string export_source_common_data() const;
+        string export_pv_unit_data() const;
+        string export_energy_storage_data() const;
+        string export_source_common_data(SOURCE* source) const;
         string export_line_data() const;
         string export_transformer_data() const;
         string export_area_data() const;
