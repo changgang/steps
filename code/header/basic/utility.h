@@ -54,13 +54,9 @@ string get_system_time_stamp_string();
 
 bool is_file_exist(const string file);
 
-POWER_SYSTEM_DATABASE* get_built_in_power_system_database_of_number(size_t i);
-
 POWER_SYSTEM_DATABASE* get_default_power_system_database();
 POWERFLOW_SOLVER* api_get_default_powerflow_solver();
 DYNAMICS_SIMULATOR* get_default_dynamic_simulator();
-
-void reset_power_system_database(size_t i=0);
 
 void set_dynamic_simulation_time_step_in_s(double delt);
 double get_dynamic_simulation_time_step_in_s();

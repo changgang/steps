@@ -80,7 +80,7 @@ void PV_CONVERTER_MODEL_TEST::test_get_nominal_frequency_in_Hz()
     PV_UNIT* pv_unit = get_test_pv_unit();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
     POWER_SYSTEM_DATABASE* psdb = pv_unit->get_power_system_database();
-    TEST_ASSERT(fabs(model->get_power_system_base_frequency_in_Hz()-psdb->get_system_base_frequency_in_Hz())<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_bus_base_frequency_in_Hz()-psdb->get_bus_base_frequency_in_Hz(pv_unit->get_unit_bus()))<FLOAT_EPSILON);
 }
 
 void PV_CONVERTER_MODEL_TEST::test_get_source_impedance_in_pu_based_on_mbase()

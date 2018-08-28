@@ -352,7 +352,7 @@ void WT3G2::initialize()
         return;
 
     size_t n_lumped = get_number_of_lumped_wt_generators();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
 
     double kipll = get_KIPLL();
@@ -443,7 +443,7 @@ void WT3G2::run(DYNAMIC_MODE mode)
     if(psdb==NULL)
         return;
 
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
     double Xeq = Zsource.imag();
@@ -804,7 +804,7 @@ double WT3G2::get_pll_frequency_deviation_in_pu()
     if(psdb==NULL)
         return 0.0;
 
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
@@ -836,7 +836,7 @@ double WT3G2::get_pll_frequency_deviation_in_Hz()
     if(psdb==NULL)
         return 0.0;
 
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
 
     return fbase*get_pll_frequency_deviation_in_pu();
 }
@@ -853,7 +853,7 @@ double WT3G2::get_pll_frequency_in_Hz()
     if(psdb==NULL)
         return 0.0;
 
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
 
     return fbase*get_pll_frequency_in_pu();
 }

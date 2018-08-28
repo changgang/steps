@@ -217,7 +217,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_nominal_turbine_speed()
         POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
         if(psdb!=NULL)
         {
-            double fbase = psdb->get_system_base_frequency_in_Hz();
+            double fbase = model->get_bus_base_frequency_in_Hz();
             size_t npole = model->get_number_of_pole_pairs();
             double turn_ratio = model->get_generator_to_turbine_gear_ratio();
             double w = 2*PI*fbase;

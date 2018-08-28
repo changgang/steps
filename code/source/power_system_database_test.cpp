@@ -289,6 +289,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_owners);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_complex_voltage);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_base_frequency);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_base_voltage);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_voltage);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_angle);
@@ -333,6 +334,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     // Zone: 1, 2, 3
     // Owner: 1, 2, 3
     db->set_allowed_max_bus_number(100);
+    db->set_system_base_frequency_in_Hz(50.0);
 
     {
         BUS bus(db);
@@ -7735,6 +7737,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_complex_voltage()
 
     complex<double> V(1.05*cos(0.5), 1.05*sin(0.5));
     TEST_ASSERT(abs(db->get_bus_complex_voltage_in_pu(1)-V)<FLOAT_EPSILON);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_bus_base_frequency()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    TEST_ASSERT(fabs(db->get_bus_base_frequency_in_Hz(1)-50.0)<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_bus_base_voltage()

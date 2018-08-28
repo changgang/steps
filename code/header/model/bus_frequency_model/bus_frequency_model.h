@@ -1,18 +1,19 @@
 #ifndef BUS_FREQUENCY_MODEL_H
 #define BUS_FREQUENCY_MODEL_H
 
-#include "header/basic/base.h"
 #include "header/block/differential_block.h"
 
 class BUS;
 
-class BUS_FREQUENCY_MODEL : public BASE
+class BUS_FREQUENCY_MODEL
 {
     public:
         BUS_FREQUENCY_MODEL();
         virtual ~BUS_FREQUENCY_MODEL();
 
-        void set_bus(size_t bus);
+        void set_bus_pointer(BUS* bus);
+        BUS* get_bus_pointer() const;
+        size_t get_bus() const;
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);

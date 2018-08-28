@@ -1,0 +1,38 @@
+STEPS version convention
+2018/08/28
+LI Changgang
+
+1. STEPS version format
+
+STEPS version is described with three digits like: major.minor.build.
+
+If major is increased by 1, it indicates that there are some incompatible updates included in the new version. Such as: delete or change format of existing input or output data, delete or change definition of existing APIs.
+
+If minor is increased by 1, it indicates that there are some compatible updates included in the new version. Such as: add new input or output data, add new APIs.
+
+If build is increased by 1, it indicates that there are some bugs are fixed in the new version. No changes are made to input or ouput data format or APIs definition.
+
+1.0.0 starts from
+
+
+
+2. pylibSTEPS version format
+
+pylibSTEPS version is described with three digits like: major.minor.build.
+
+If major is increased by 1, it indicates that there are some incompatible updates included in the new version. Such as: delete or change calling format of existing APIs.
+
+If minor is increased by 1, it indicates that there are some compatible updates included in the new version. Such as: add new APIs.
+
+If build is increased by 1, it indicates that there are some bugs are fixed in the new version. No changes are made to APIs calling format.
+
+
+3. pysteps version format
+
+pysteps version is described with three digits like: major.minor.build.
+
+If major is increased by 1, it indicates that there are some incompatible updates included in the new version. Such as: delete or change calling format of existing classes or APIs.
+
+If minor is increased by 1, it indicates that there are some compatible updates included in the new version. Such as: add new classes or APIs.
+
+If build is increased by 1, it indicates that there are some bugs are fixed in the new version. No changes are made to APIs calling format.

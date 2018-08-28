@@ -53,9 +53,6 @@ class UTILITY_TEST : public Test::Suite
 
         void test_redirect_and_recover_stdout();
 
-        void test_get_built_in_power_system_database_of_number();
-        void test_reset_power_system_database();
-
         void test_is_file_exist();
         void test_set_get_dynamic_simulation_time_step();
         void test_set_get_dynamic_simulation_time();

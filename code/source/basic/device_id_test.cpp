@@ -32,6 +32,7 @@ DEVICE_ID_TEST::DEVICE_ID_TEST()
     TEST_ADD(DEVICE_ID_TEST::test_compare_less);
     TEST_ADD(DEVICE_ID_TEST::test_compare_equal_not_equal);
 }
+
 void DEVICE_ID_TEST::setup()
 {
     device_id = new DEVICE_ID;
@@ -54,6 +55,7 @@ void DEVICE_ID_TEST::setup()
     terminal_101_bus = terminal_100_bus;
     terminal_101_bus.append_bus(101);
 }
+
 void DEVICE_ID_TEST::tear_down()
 {
     delete device_id;

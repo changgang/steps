@@ -21,10 +21,6 @@
     #define get_variable_name(x) #x
 #endif // get_variable_name(x)
 
-#ifndef MAX_DATABASE_COUNT
-#define MAX_DATABASE_COUNT 10
-#endif // MAX_DATABASE_COUNT
-
 #ifndef MAX_TEMP_CHAR_BUFFER_SIZE
 #define MAX_TEMP_CHAR_BUFFER_SIZE 500
 #endif // MAX_TEMP_CHAR_BUFFER_SIZE

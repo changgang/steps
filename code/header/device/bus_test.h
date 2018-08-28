@@ -42,6 +42,7 @@ class BUS_TEST : public Test::Suite
         void test_set_get_emergency_voltage_lower_limit();
         void test_set_get_voltage_upper_limit();
         void test_set_get_voltage_lower_limit();
+        void test_set_get_base_frequency();
         void test_set_get_voltage_to_regulate();
         void test_is_valid();
         void test_clear();

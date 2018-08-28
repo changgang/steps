@@ -162,7 +162,7 @@ double WT_AERODYNAMIC_MODEL::get_nominal_air_density_in_kgpm3() const
 
 double WT_AERODYNAMIC_MODEL::get_nominal_turbine_speed_in_rad_per_s() const
 {
-    double fbase = get_power_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
     size_t npair = get_number_of_pole_pairs();
     double tratio = get_generator_to_turbine_gear_ratio();
     double fn = fbase/(npair*tratio);
@@ -352,7 +352,7 @@ void WT_AERODYNAMIC_MODEL::initialize_turbine_blade_radius_with_nominal_paramete
         show_information_with_leading_time_stamp(osstream);
     }
 
-    if(get_power_system_base_frequency_in_Hz()<=0.0)
+    if(get_bus_base_frequency_in_Hz()<=0.0)
     {
         osstream<<"Error. Wind turbine nominal frequency is not properly set before setup turbine blade radius.";
         show_information_with_leading_time_stamp(osstream);
@@ -414,7 +414,7 @@ void WT_AERODYNAMIC_MODEL::initialize_generator_to_turbine_gear_ratio()
     double wt = lambda_mppt*vwind/radius;
 
     size_t n = get_number_of_pole_pairs();
-    double fbase = get_power_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
     double wg = 2.0*PI*fbase/n;
     double turnratio = wg/wt;
     set_generator_to_turbine_gear_ratio(turnratio);

@@ -251,8 +251,7 @@ bool UFLS::setup_model_with_bpa_string(string data)
 void UFLS::initialize()
 {
     LOAD* load = get_load_pointer();
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
 
     for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
     {

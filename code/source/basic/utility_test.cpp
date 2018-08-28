@@ -37,9 +37,6 @@ UTILITY_TEST::UTILITY_TEST()
 
     TEST_ADD(UTILITY_TEST::test_redirect_and_recover_stdout);
 
-    TEST_ADD(UTILITY_TEST::test_get_built_in_power_system_database_of_number);
-    TEST_ADD(UTILITY_TEST::test_reset_power_system_database);
-
     TEST_ADD(UTILITY_TEST::test_is_file_exist);
     TEST_ADD(UTILITY_TEST::test_set_get_dynamic_simulation_time_step);
     TEST_ADD(UTILITY_TEST::test_set_get_dynamic_simulation_time);
@@ -257,31 +254,6 @@ void UTILITY_TEST::test_redirect_and_recover_stdout()
 
     recover_stdout();
     show_information_with_leading_time_stamp("This line should be outputted to stdout.");
-}
-
-void UTILITY_TEST::test_get_built_in_power_system_database_of_number()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
-
-    POWER_SYSTEM_DATABASE* psdb = get_built_in_power_system_database_of_number(0);
-
-    TEST_ASSERT(psdb->get_allowed_max_bus_number()==1000);
-
-    psdb->set_allowed_max_bus_number(10000);
-    TEST_ASSERT(psdb->get_allowed_max_bus_number()==10000);
-}
-
-void UTILITY_TEST::test_reset_power_system_database()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
-
-    TEST_ASSERT(db->get_bus_count()==0);
-
-    db->set_allowed_max_bus_number(1000);
-    TEST_ASSERT(db->get_allowed_max_bus_number()==1000);
-
-    reset_power_system_database();
-    TEST_ASSERT(db->get_bus_count()==0);
 }
 
 void UTILITY_TEST::test_is_file_exist()

@@ -231,8 +231,7 @@ void GENCLS::run(DYNAMIC_MODE mode)
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
 
     double damping = get_D();
 

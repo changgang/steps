@@ -12,6 +12,7 @@ class LOAD_FREQUENCY_RELAY_MODEL : public LOAD_RELAY_MODEL
         virtual string get_model_type() const;
     public: // common input
         double get_bus_frequency_in_Hz() const;
+        double get_bus_base_frequency_in_Hz() const;
 
     public: // other common
         virtual string get_model_name() const = 0;

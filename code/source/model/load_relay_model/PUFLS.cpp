@@ -333,8 +333,7 @@ void PUFLS::initialize()
     if(load==NULL)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
 
     additional_stage_timer.set_attached_device(load);
     for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)

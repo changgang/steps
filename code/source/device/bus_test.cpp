@@ -36,6 +36,7 @@ BUS_TEST::BUS_TEST()
     TEST_ADD(BUS_TEST::test_set_get_emergency_voltage_lower_limit);
     TEST_ADD(BUS_TEST::test_set_get_voltage_upper_limit);
     TEST_ADD(BUS_TEST::test_set_get_voltage_lower_limit);
+    TEST_ADD(BUS_TEST::test_set_get_base_frequency);
     TEST_ADD(BUS_TEST::test_set_get_voltage_to_regulate);
     TEST_ADD(BUS_TEST::test_is_valid);
     TEST_ADD(BUS_TEST::test_clear);
@@ -54,15 +55,14 @@ void BUS_TEST::setup()
 {
     db = new POWER_SYSTEM_DATABASE;
     db->set_allowed_max_bus_number(100);
+    db->set_system_base_frequency_in_Hz(50.0);
 
     bus = new BUS(db);
     bus->set_power_system_database(db);
 }
+
 void BUS_TEST::tear_down()
 {
-    delete bus;
-    bus = NULL;
-
     delete db;
     db = NULL;
 
@@ -83,6 +83,7 @@ void BUS_TEST::test_constructor()
     TEST_ASSERT(bus->get_voltage_in_pu()==1.0);
     TEST_ASSERT(bus->get_angle_in_rad()==0.0);
     TEST_ASSERT(bus->get_angle_in_deg()==0.0);
+    TEST_ASSERT(bus->get_base_frequency_in_Hz()==50.0);
     TEST_ASSERT(bus->get_voltage_to_regulate_in_pu()==0.0);
 
     TEST_ASSERT(bus->is_faulted()==false);
@@ -262,6 +263,15 @@ void BUS_TEST::test_set_get_voltage_lower_limit()
     TEST_ASSERT(fabs(bus->get_voltage_lower_limit_in_pu()-0.9)<FLOAT_EPSILON);
     bus->set_voltage_lower_limit_in_pu(0.75);
     TEST_ASSERT(fabs(bus->get_voltage_lower_limit_in_pu()-0.75)<FLOAT_EPSILON);
+}
+
+void BUS_TEST::test_set_get_base_frequency()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
+
+    TEST_ASSERT(fabs(bus->get_base_frequency_in_Hz()-50.0)<FLOAT_EPSILON);
+    bus->set_base_frequency_in_Hz(60.0);
+    TEST_ASSERT(fabs(bus->get_base_frequency_in_Hz()-60.0)<FLOAT_EPSILON);
 }
 
 void BUS_TEST::test_set_get_voltage_to_regulate()
@@ -446,77 +456,6 @@ void BUS_TEST::test_is_connected_to_bus()
     TEST_ASSERT(bus->is_connected_to_bus(2)==true);
     TEST_ASSERT(bus->is_connected_to_bus(1)==false);
 }
-
-/*
-void BUS_TEST::test_dynamics_initialize()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
-
-    bus->set_bus_number(1);
-    bus->set_base_voltage_in_kV(110.0);
-    bus->set_voltage_in_pu(1.0);
-    bus->set_angle_in_deg(10.0);
-    set_dynamic_simulation_time_step_in_s(0.001);
-
-    db->set_system_base_frequency_in_Hz(50.0);
-    bus->set_power_system_database(db);
-
-    bus->initialize();
-
-    TEST_ASSERT(bus->get_frequency_deviation_in_pu()==0.0);
-}
-
-void BUS_TEST::test_dynamics_run()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
-
-    bus->set_bus_number(1);
-    bus->set_base_voltage_in_kV(110.0);
-    bus->set_voltage_in_pu(1.0);
-    bus->set_angle_in_deg(10.0);
-
-
-    bus->set_power_system_database(db);
-
-
-    set_dynamic_simulation_time_step_in_s(0.001);
-    double h = get_dynamic_simulation_time_step_in_s();
-
-    db->set_system_base_frequency_in_Hz(50.0);
-    double fbase = db->get_system_base_frequency_in_Hz();
-
-    double time = -2.0*h;
-
-    bus->initialize();
-
-    for(; time<=0.0; time=time+h)
-    {
-        bus->run(INTEGRATE_MODE);
-        bus->run(UPDATE_MODE);
-        TEST_ASSERT(fabs(bus->get_frequency_deviation_in_pu())<FLOAT_EPSILON);
-    }
-    for(; time<=0.2; time=time+h)
-    {
-        double angle = bus->get_angle_in_rad();
-        angle += (2.0*PI*fbase*(-0.01))*h;
-        bus->set_angle_in_rad(angle);
-
-        bus->run(INTEGRATE_MODE);
-        bus->run(UPDATE_MODE);
-        //TEST_ASSERT(fabs(bus->get_frequency_deviation_in_pu()+0.01)<0.0001);
-    }
-
-    for(; time<=2.0; time=time+h)
-    {
-        double angle = bus->get_angle_in_rad();
-        angle += (2.0*PI*fbase*(-0.01))*h;
-        bus->set_angle_in_rad(angle);
-
-        bus->run(INTEGRATE_MODE);
-        bus->run(UPDATE_MODE);
-        TEST_ASSERT(fabs(bus->get_frequency_deviation_in_pu()+0.01)<0.0001);
-    }
-}*/
 
 void BUS_TEST::test_set_get_frequency_deviation()
 {

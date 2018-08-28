@@ -339,8 +339,7 @@ void GENSAL::run(DYNAMIC_MODE mode)
     INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
     INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
 
 
     double xd = get_Xd();

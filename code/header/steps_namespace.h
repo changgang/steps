@@ -11,8 +11,6 @@ using namespace std;
 
 namespace STEPS
 {
-    extern POWER_SYSTEM_DATABASE power_system_db[MAX_DATABASE_COUNT];
-
     extern POWER_SYSTEM_DATABASE default_power_system_db;
     extern POWERFLOW_SOLVER default_powerflow_solver;
     extern DYNAMICS_SIMULATOR default_dynamic_simulator;

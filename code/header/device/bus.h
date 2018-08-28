@@ -22,6 +22,7 @@ class BUS : public DEVICE
 {
     public:
         BUS(POWER_SYSTEM_DATABASE* db);
+        BUS(const BUS& bus);
         virtual ~BUS();
 
         void set_bus_number(size_t number);
@@ -41,6 +42,7 @@ class BUS : public DEVICE
         void set_emergency_voltage_lower_limit_in_pu(double voltage);
         void set_voltage_upper_limit_in_pu(double voltage);
         void set_voltage_lower_limit_in_pu(double voltage);
+        void set_base_frequency_in_Hz(double fn);
         void set_voltage_to_regulate_in_pu(double voltage);
 
         size_t get_bus_number() const;
@@ -60,6 +62,7 @@ class BUS : public DEVICE
         double get_emergency_voltage_lower_limit_in_pu() const;
         double get_voltage_upper_limit_in_pu() const;
         double get_voltage_lower_limit_in_pu() const;
+        double get_base_frequency_in_Hz() const;
         double get_voltage_to_regulate_in_pu() const;
 
         virtual bool is_valid() const;
@@ -109,7 +112,9 @@ class BUS : public DEVICE
 
         FAULT fault;
     private:
+        void copy_from_const_bus(const BUS& bus);
         virtual void set_model(const MODEL* model);
+        double fn_Hz;
 };
 
 #endif // BUS_H

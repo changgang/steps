@@ -25,6 +25,19 @@ double SG_MODEL::get_mbase_in_MVA() const
         return 0.0;
 }
 
+double SG_MODEL::get_bus_base_frequency_in_Hz() const
+{
+    GENERATOR* gen = get_generator_pointer();
+    if(gen==NULL)
+        return 0.0;
+
+    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
+    if(psdb==NULL)
+        return 0.0;
+
+    return psdb->get_bus_base_frequency_in_Hz(gen->get_generator_bus());
+}
+
 complex<double> SG_MODEL::get_terminal_complex_voltage_in_pu() const
 {
     GENERATOR* gen = get_generator_pointer();

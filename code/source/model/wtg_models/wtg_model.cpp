@@ -56,7 +56,7 @@ double WTG_MODEL::get_rated_power_per_wt_generator_in_MW() const
     return gen->get_rated_power_per_wt_generator_in_MW();
 }
 
-double WTG_MODEL::get_power_system_base_frequency_in_Hz() const
+double WTG_MODEL::get_bus_base_frequency_in_Hz() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
@@ -66,7 +66,7 @@ double WTG_MODEL::get_power_system_base_frequency_in_Hz() const
     if(psdb==NULL)
         return 0.0;
 
-    return psdb->get_system_base_frequency_in_Hz();
+    return psdb->get_bus_base_frequency_in_Hz(gen->get_generator_bus());
 }
 
 complex<double> WTG_MODEL::get_source_impedance_in_pu_based_on_mbase() const

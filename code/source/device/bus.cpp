@@ -19,7 +19,14 @@ BUS::BUS(POWER_SYSTEM_DATABASE* psdb)
     }
     set_power_system_database(psdb);
     clear();
-    bus_frequency_model.set_power_system_database(psdb);
+
+    bus_frequency_model.set_bus_pointer(this);
+}
+
+BUS::BUS(const BUS& bus)
+{
+    copy_from_const_bus(bus);
+    bus_frequency_model.set_bus_pointer(this);
 }
 
 BUS::~BUS()
@@ -53,7 +60,6 @@ void BUS::set_bus_number(size_t number)
             bus_number = 0;
         }
     }
-    bus_frequency_model.set_bus(number);
 }
 
 void BUS::set_bus_name(string name)
@@ -180,6 +186,14 @@ void BUS::set_voltage_lower_limit_in_pu(double voltage)
     set_emergency_voltage_lower_limit_in_pu(voltage);
 }
 
+void BUS::set_base_frequency_in_Hz(double fn)
+{
+    if(fn==0.0)
+        fn = get_power_system_database()->get_system_base_frequency_in_Hz();
+    fn_Hz = fn;
+}
+
+
 void BUS::set_voltage_to_regulate_in_pu(double voltage)
 {
     if(voltage == 0.0)
@@ -288,6 +302,11 @@ double BUS::get_voltage_lower_limit_in_pu() const
     return get_normal_voltage_lower_limit_in_pu();
 }
 
+double BUS::get_base_frequency_in_Hz() const
+{
+    return fn_Hz;
+}
+
 double BUS::get_voltage_to_regulate_in_pu() const
 {
     return voltage_to_regulate_in_pu;
@@ -320,6 +339,9 @@ void BUS::clear()
     set_voltage_upper_limit_in_pu(1.1);
     set_voltage_lower_limit_in_pu(0.9);
     voltage_to_regulate_in_pu = 0.0;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    if(psdb!=NULL)
+        set_base_frequency_in_Hz(psdb->get_system_base_frequency_in_Hz());
 
     fault.clear();
 }
@@ -420,6 +442,15 @@ BUS& BUS::operator=(const BUS& bus)
 {
     if(this==&bus) return *this; // to avoid self assignment
 
+    copy_from_const_bus(bus);
+
+    bus_frequency_model.set_bus_pointer(this);
+
+    return *this;
+}
+
+void BUS::copy_from_const_bus(const BUS& bus)
+{
     clear();
 
     set_power_system_database(bus.get_power_system_database());
@@ -432,17 +463,12 @@ BUS& BUS::operator=(const BUS& bus)
     set_owner_number(bus.get_owner_number());
     set_voltage_in_pu(bus.get_voltage_in_pu());
     set_angle_in_rad(bus.get_angle_in_rad());
+    set_base_frequency_in_Hz(bus.get_base_frequency_in_Hz());
 
     if(bus.is_faulted())
     {
         set_fault(bus.get_fault());
     }
-
-
-    bus_frequency_model.set_power_system_database(bus.get_power_system_database());
-    bus_frequency_model.set_bus(bus.get_bus_number());
-
-    return *this;
 }
 
 void BUS::report() const
@@ -451,7 +477,7 @@ void BUS::report() const
     osstream<<"Bus "
       <<setw(6)<<get_bus_number()<<" "
       <<"'"<<get_bus_name()<<"' "
-      <<setprecision(3)<<get_base_voltage_in_kV()<<" kV: "
+      <<setprecision(3)<<get_base_voltage_in_kV()<<" kV, "<<get_base_frequency_in_Hz()<<" Hz: "
       <<(get_bus_type()==SLACK_TYPE?"Slack":(get_bus_type()==PQ_TYPE?"PQ":(get_bus_type()==OUT_OF_SERVICE?"Out of service":"PV")))<<", "
       <<setprecision(6)<<fixed<<get_voltage_in_pu()<<" pu, "
       <<setprecision(6)<<fixed<<get_angle_in_deg()<<" deg.";

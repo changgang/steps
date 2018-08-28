@@ -18,7 +18,7 @@ public:
 
         size_t get_number_of_lumped_wt_generators() const;
         double get_rated_power_per_wt_generator_in_MW() const;
-        double get_power_system_base_frequency_in_Hz() const;
+        double get_bus_base_frequency_in_Hz() const;
         complex<double> get_source_impedance_in_pu_based_on_mbase() const;
 
     public: // specific model level

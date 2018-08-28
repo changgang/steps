@@ -102,7 +102,7 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
     redirect_stdout_to_file(outputfile);
 
     POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = psdb->get_bus_base_frequency_in_Hz(load->get_load_bus());
 
     ostringstream osstream;
 

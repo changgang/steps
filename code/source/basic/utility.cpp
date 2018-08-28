@@ -365,12 +365,7 @@ void reset_simulator()
     osstream<<"Simulator reset.";
     show_information_with_leading_time_stamp(osstream);
 
-    POWER_SYSTEM_DATABASE* db;
-    for(size_t i=0; i!=MAX_DATABASE_COUNT; ++i)
-    {
-        db = STEPS::power_system_db+i;
-        db->clear_database();
-    }
+    STEPS::default_power_system_db.clear_database();
 }
 
 void terminate_simulator()
@@ -449,14 +444,6 @@ bool is_file_exist(const string file)
     }
 }
 
-POWER_SYSTEM_DATABASE* get_built_in_power_system_database_of_number(size_t i)
-{
-    if(i<10)
-        return &(STEPS::power_system_db[i]);
-    else
-        return NULL;
-}
-
 
 POWER_SYSTEM_DATABASE* get_default_power_system_database()
 {
@@ -472,15 +459,6 @@ POWERFLOW_SOLVER* api_get_default_powerflow_solver()
 DYNAMICS_SIMULATOR* get_default_dynamic_simulator()
 {
     return &STEPS::default_dynamic_simulator;
-}
-
-void reset_power_system_database(size_t i)
-{
-    POWER_SYSTEM_DATABASE* db = get_built_in_power_system_database_of_number(i);
-    if(db==NULL)
-        return;
-
-    db->clear_database();
 }
 
 void set_dynamic_simulation_time_step_in_s(double delt)

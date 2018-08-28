@@ -279,6 +279,31 @@ void PSSE_IMEXPORTER::load_bus_data()
             bus.set_angle_in_deg(get_double_data(data.front(),"0.0"));
             data.erase(data.begin());
         }
+        if(data.size()>0)
+        {
+            bus.set_normal_voltage_upper_limit_in_pu(get_double_data(data.front(),"1.1"));
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            bus.set_normal_voltage_lower_limit_in_pu(get_double_data(data.front(),"0.9"));
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            bus.set_emergency_voltage_upper_limit_in_pu(get_double_data(data.front(),"1.1"));
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            bus.set_emergency_voltage_lower_limit_in_pu(get_double_data(data.front(),"0.9"));
+            data.erase(data.begin());
+        }
+        if(data.size()>0)
+        {
+            bus.set_base_frequency_in_Hz(get_double_data(data.front(),"0.0"));
+            data.erase(data.begin());
+        }
 
         psdb->append_bus(bus);
     }
@@ -435,44 +460,55 @@ void PSSE_IMEXPORTER::load_source_data()
 
     size_t ndata = DATA.size();
 
-    size_t GENERATOR_LENGTH = 26;
+    size_t VAR_MODE_INDEX = 26;
+    size_t SOURCE_TYPE_INDEX = 28;
     for(size_t i=0; i!=ndata; ++i)
     {
         str = DATA[i];
         data = split_string(str,",");
-        if(data.size()<=GENERATOR_LENGTH)
-            load_generator_data(data);
-        else
+
+        size_t n = data.size();
+        int var_control_mode = 0;
+        if(n>VAR_MODE_INDEX)
+            var_control_mode = get_integer_data(data[VAR_MODE_INDEX],"0");
+        int source_type = 0;
+        if(n>SOURCE_TYPE_INDEX)
+            var_control_mode = get_integer_data(data[SOURCE_TYPE_INDEX],"0");
+
+        switch(var_control_mode)
         {
-            int var_control_mode = get_integer_data(data[GENERATOR_LENGTH],"0");
-            switch(var_control_mode)
+            case 0:
             {
-                case 0:
+                load_generator_data(data);
+                break;
+            }
+            default:
+            {
+                switch(source_type)
                 {
-                    load_generator_data(data);
-                    break;
+                    case 0:
+                    case 1:
+                    {
+                        load_wt_generator_data(data);
+                        break;
+                    }
+                    case 2:
+                    {
+                        load_pv_unit_data(data);
+                        break;
+                    }
+                    case 3:
+                    {
+                        load_energy_storage_data(data);
+                        break;
+                    }
+                    default:
+                    {
+                        load_wt_generator_data(data);
+                        break;
+                    }
                 }
-                case 1:
-                case 2:
-                case 3:
-                {
-                    load_wt_generator_data(data);
-                    break;
-                }
-                case 11:
-                case 12:
-                case 13:
-                {
-                    load_pv_unit_data(data);
-                    break;
-                }
-                case 21:
-                case 22:
-                case 23:
-                {
-                    load_energy_storage_data(data);
-                    break;
-                }
+                break;
             }
         }
     }
@@ -1948,9 +1984,6 @@ string PSSE_IMEXPORTER::export_case_data() const
     osstream<<buffer<<endl;
     snprintf(buffer, 1000, "%s", (psdb->get_case_title_2()).c_str());
     osstream<<buffer<<endl;
-    /*osstream<<0<<", "<<psdb->get_system_base_power_in_MVA()<<", 33, 0, 0, "<<psdb->get_system_base_frequency_in_Hz()<<endl;
-    osstream<<psdb->get_case_title_1()<<endl;
-    osstream<<psdb->get_case_title_2()<<endl;*/
     return osstream.str();
 }
 
@@ -1999,12 +2032,13 @@ string PSSE_IMEXPORTER::export_bus_data() const
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_normal_voltage_lower_limit_in_pu()<<", "
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_upper_limit_in_pu()<<", "
               <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_lower_limit_in_pu()<<endl;*/
-        snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f",
+        snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
                  bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,
                  bus->get_area_number(), bus->get_zone_number(), bus->get_owner_number(),
                  bus->get_voltage_in_pu(), bus->get_angle_in_deg(),
                  bus->get_normal_voltage_upper_limit_in_pu(), bus->get_normal_voltage_lower_limit_in_pu(),
-                 bus->get_emergency_voltage_upper_limit_in_pu(), bus->get_emergency_voltage_lower_limit_in_pu());
+                 bus->get_emergency_voltage_upper_limit_in_pu(), bus->get_emergency_voltage_lower_limit_in_pu(),
+                 bus->get_base_frequency_in_Hz());
         osstream<<buffer<<endl;
 
     }
@@ -2121,7 +2155,7 @@ string PSSE_IMEXPORTER::export_generator_data() const
         GENERATOR* generator = generators[i];
 
         osstream<<export_source_common_data(generator);
-        osstream<<"0, 0.0"<<endl;
+        osstream<<"0, 0.0, 0"<<endl;
     }
     return osstream.str();
 }
@@ -2148,7 +2182,7 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
         double pf = p/sqrt(p*p+q*q);
 
         osstream<<export_source_common_data(wt_generator);
-        osstream<<"1, "<<setprecision(6)<<pf<<endl;
+        osstream<<"1, "<<setprecision(6)<<pf<<", 1"<<endl;
     }
     return osstream.str();
 }
@@ -2177,7 +2211,7 @@ string PSSE_IMEXPORTER::export_pv_unit_data() const
 
         osstream<<export_source_common_data(pv_unit);
 
-        osstream<<"11, "<<setprecision(6)<<pf<<endl;
+        osstream<<"1, "<<setprecision(6)<<pf<<", 2"<<endl;
     }
     return osstream.str();
 }
@@ -2206,7 +2240,7 @@ string PSSE_IMEXPORTER::export_energy_storage_data() const
 
         osstream<<export_source_common_data(estorage);
 
-        osstream<<"21, "<<setprecision(6)<<pf<<endl;
+        osstream<<"1, "<<setprecision(6)<<pf<<", 3"<<endl;
     }
     return osstream.str();
 }

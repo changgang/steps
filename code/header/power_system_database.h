@@ -388,6 +388,7 @@ class POWER_SYSTEM_DATABASE
 
         complex<double> get_bus_complex_voltage_in_pu(size_t bus);
         complex<double> get_bus_complex_voltage_in_kV(size_t bus);
+        double get_bus_base_frequency_in_Hz(size_t bus);
         double get_bus_base_voltage_in_kV(size_t bus);
         double get_bus_voltage_in_pu(size_t bus);
         double get_bus_voltage_in_kV(size_t bus);

@@ -14,6 +14,7 @@ public:
 
         GENERATOR* get_generator_pointer() const;
         double get_mbase_in_MVA() const;
+        double get_bus_base_frequency_in_Hz() const;
         complex<double> get_terminal_complex_voltage_in_pu() const;
     public: // specific model level
         virtual string get_model_type() const = 0;

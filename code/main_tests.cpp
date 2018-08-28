@@ -37,7 +37,7 @@
 #include "header/device/hvdc_test.h"
 #include "header/device/equivalent_device_test.h"
 #include "header/device/engergy_storage_test.h"
-#include "header/device/virtual_generator_load_pair_test.h"
+//#include "header/device/virtual_generator_load_pair_test.h"
 
 #include "header/power_system_database_test.h"
 
@@ -220,7 +220,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new HVDC_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_DEVICE_TEST));
-        ts.add(unique_ptr<Test::Suite>(new VIRTUAL_GENERATOR_LOAD_PAIR_TEST));
+
         ts.add(unique_ptr<Test::Suite>(new ENERGY_STORAGE_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new POWER_SYSTEM_DATABASE_TEST));

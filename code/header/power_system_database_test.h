@@ -317,6 +317,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_clear_all_owners();
 
         void test_get_bus_complex_voltage();
+        void test_get_bus_base_frequency();
         void test_get_bus_base_voltage();
         void test_get_bus_voltage();
         void test_get_bus_angle();

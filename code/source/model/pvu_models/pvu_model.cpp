@@ -56,17 +56,17 @@ double PVU_MODEL::get_rated_power_per_pv_unit_in_MW() const
     return gen->get_rated_power_per_pv_unit_in_MW();
 }
 
-double PVU_MODEL::get_power_system_base_frequency_in_Hz() const
+double PVU_MODEL::get_bus_base_frequency_in_Hz() const
 {
-    PV_UNIT* gen = get_pv_unit_pointer();
-    if(gen==NULL)
+    PV_UNIT* pvu = get_pv_unit_pointer();
+    if(pvu==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = pvu->get_power_system_database();
     if(psdb==NULL)
         return 0.0;
 
-    return psdb->get_system_base_frequency_in_Hz();
+    return psdb->get_bus_base_frequency_in_Hz(pvu->get_unit_bus());
 }
 
 complex<double> PVU_MODEL::get_source_impedance_in_pu_based_on_mbase() const

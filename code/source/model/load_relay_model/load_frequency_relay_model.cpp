@@ -31,3 +31,18 @@ double LOAD_FREQUENCY_RELAY_MODEL::get_bus_frequency_in_Hz() const
 
     return psdb->get_bus_frequency_in_Hz(bus);
 }
+
+double LOAD_FREQUENCY_RELAY_MODEL::get_bus_base_frequency_in_Hz() const
+{
+    LOAD* load = get_load_pointer();
+    if(load==NULL)
+        return 0.0;
+
+    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
+    if(psdb == NULL)
+        return 0.0;
+
+    size_t bus = load->get_load_bus();
+
+    return psdb->get_bus_base_frequency_in_Hz(bus);
+}

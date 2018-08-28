@@ -589,7 +589,7 @@ double METER::get_meter_value_as_a_bus() const
     if(meter_type=="BUS FREQUENCY IN PU")
         return 1.0+bus->get_frequency_deviation_in_pu();
     if(meter_type=="BUS FREQUENCY IN HZ")
-        return bus->get_power_system_database()->get_system_base_frequency_in_Hz()+bus->get_frequency_deviation_in_Hz();
+        return bus->get_base_frequency_in_Hz()+bus->get_frequency_deviation_in_Hz();
 
     return 0.0;
 }
@@ -953,7 +953,7 @@ double METER::get_meter_value_as_a_generator() const
         return 0.0;
 
     POWER_SYSTEM_DATABASE* psdb = generator->get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = psdb->get_bus_base_frequency_in_Hz(generator->get_generator_bus());
     double sbase = psdb->get_system_base_power_in_MVA();
     double mbase = generator->get_mbase_in_MVA();
 
@@ -1208,7 +1208,7 @@ double METER::get_meter_value_as_a_wt_generator() const
 
     size_t bus = generator->get_generator_bus();
     POWER_SYSTEM_DATABASE* psdb = generator->get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = psdb->get_bus_base_frequency_in_Hz(generator->get_generator_bus());
     //double sbase = psdb->get_system_base_power_in_MVA();
     double mbase = generator->get_mbase_in_MVA();
 

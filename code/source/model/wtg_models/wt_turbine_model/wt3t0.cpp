@@ -202,7 +202,7 @@ void WT3T0::initialize()
 
     size_t bus = gen->get_generator_bus();
 
-    double fbase = get_power_system_base_frequency_in_Hz();
+    double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
 
     generator_rotor_angle_block.set_T_in_s(1.0/wbase);
@@ -269,7 +269,7 @@ void WT3T0::run(DYNAMIC_MODE mode)
         generator_inertia_block.set_input(input);
         generator_inertia_block.run(mode);
 
-        double fbase = get_power_system_base_frequency_in_Hz();
+        double fbase = get_bus_base_frequency_in_Hz();
         double wbase = 2.0*PI*fbase;
 
         input = (turbine_inertia_block.get_output()-generator_inertia_block.get_output())*wbase;

@@ -9,6 +9,7 @@ using namespace std;
 BUS_FREQUENCY_MODEL::BUS_FREQUENCY_MODEL()
 {
     frequency_block.set_K(1.0/(2.0*PI));
+    bus_ptr = NULL;
 }
 
 BUS_FREQUENCY_MODEL::~BUS_FREQUENCY_MODEL()
@@ -16,26 +17,31 @@ BUS_FREQUENCY_MODEL::~BUS_FREQUENCY_MODEL()
     ;
 }
 
-void BUS_FREQUENCY_MODEL::set_bus(size_t bus_number)
+void BUS_FREQUENCY_MODEL::set_bus_pointer(BUS* bus)
 {
-    this->bus = bus_number;
+    bus_ptr = bus;
+}
+
+BUS* BUS_FREQUENCY_MODEL::get_bus_pointer() const
+{
+    return bus_ptr;
+}
+
+size_t BUS_FREQUENCY_MODEL::get_bus() const
+{
+    if(bus_ptr!=NULL)
+        return bus_ptr->get_bus_number();
+    else
+        return 0;
 }
 
 void BUS_FREQUENCY_MODEL::initialize()
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = this->get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. Power system database is not set for BUS_FREQUENCY MODEL of bus "<<bus<<" when initializing bus frequency model.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
-    bus_ptr = psdb->get_bus(bus);
     if(bus_ptr==NULL)
     {
-        osstream<<"Warning. Bus "<<bus<<" cannot be found in power system database "<<psdb->get_system_name()<<" when initializing bus frequency model.";
+        osstream<<"Warning. Bus frequency model is not properly set since bus pointer is NULL. This line should never appear.";
         show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -73,21 +79,13 @@ void BUS_FREQUENCY_MODEL::update_for_applying_event()
 
 void BUS_FREQUENCY_MODEL::set_frequency_deviation_in_pu(double f)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = bus_ptr->get_base_frequency_in_Hz();
     frequency_block.set_output(f*fbase);
 }
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_pu() const
 {
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = this->get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<"NULL power system database is detected. Failed to call BUS_FREQUENCY_MODEL::"<<__FUNCTION__<<"().";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = bus_ptr->get_base_frequency_in_Hz();
     return get_frequency_deviation_in_Hz()/fbase;
 }
 
@@ -103,14 +101,7 @@ double BUS_FREQUENCY_MODEL::get_frequency_in_pu() const
 
 double BUS_FREQUENCY_MODEL::get_frequency_in_Hz() const
 {
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = this->get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<"NULL power system database is detected. Failed to call BUS_FREQUENCY_MODEL::"<<__FUNCTION__<<"().";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    double fbase = psdb->get_system_base_frequency_in_Hz();
+    double fbase = bus_ptr->get_base_frequency_in_Hz();
     return fbase+get_frequency_deviation_in_Hz();
 }
 

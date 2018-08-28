@@ -4593,6 +4593,15 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_complex_voltage_in_kV(size_t bus)
         return 0.0;
 }
 
+double POWER_SYSTEM_DATABASE::get_bus_base_frequency_in_Hz(size_t bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_base_frequency_in_Hz();
+    else
+        return 0.0;
+}
+
 double POWER_SYSTEM_DATABASE::get_bus_base_voltage_in_kV(size_t bus)
 {
     BUS* busptr = get_bus(bus);
@@ -4637,8 +4646,15 @@ double POWER_SYSTEM_DATABASE::get_bus_angle_in_rad(size_t bus)
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_pu(size_t bus)
 {
-    double fbase = get_system_base_frequency_in_Hz();
-    return get_bus_frequency_deviation_in_Hz(bus)/fbase;
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+    {
+        BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
+
+        return fmodel->get_frequency_deviation_in_pu();
+    }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_Hz(size_t bus)
@@ -4652,18 +4668,32 @@ double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_Hz(size_t bus)
     }
     else
         return 0.0;
-
 }
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_in_Hz(size_t bus)
 {
-    double fbase = get_system_base_frequency_in_Hz();
-    return get_bus_frequency_deviation_in_Hz(bus)+fbase;
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+    {
+        BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
+
+        return fmodel->get_frequency_in_Hz();
+    }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_in_pu(size_t bus)
 {
-    return get_bus_frequency_deviation_in_pu(bus)+1.0;
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+    {
+        BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
+
+        return fmodel->get_frequency_in_pu();
+    }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(size_t bus)
