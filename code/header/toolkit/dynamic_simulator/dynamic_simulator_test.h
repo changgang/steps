@@ -35,6 +35,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
 
         void test_set_get_max_DAE_iteration();
         void test_set_get_max_network_iteration();
+        void test_set_get_max_update_event_iteration();
         void test_set_get_allowed_max_power_imbalance_in_MVA();
         void test_set_get_iteration_accelerator();
         void test_set_get_rotor_angle_stability_survilliance_flag();

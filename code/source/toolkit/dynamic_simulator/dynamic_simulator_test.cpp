@@ -28,6 +28,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_DAE_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_event_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_survilliance_flag);
@@ -166,6 +167,16 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration()
     TEST_ASSERT(simulator->get_max_network_iteration()==200);
     simulator->set_max_network_iteration(100);
     TEST_ASSERT(simulator->get_max_network_iteration()==100);
+}
+
+void DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_event_iteration()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    simulator->set_max_update_event_iteration(200);
+    TEST_ASSERT(simulator->get_max_update_event_iteration()==200);
+    simulator->set_max_update_event_iteration(100);
+    TEST_ASSERT(simulator->get_max_update_event_iteration()==100);
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA()
@@ -1355,8 +1366,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 
     simulator->set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
     simulator->set_allowed_max_power_imbalance_in_MVA(0.001);
-    simulator->set_max_DAE_iteration(20);
-    simulator->set_max_network_iteration(200);
+    //simulator->set_max_DAE_iteration(20);
+    //simulator->set_max_network_iteration(200);
     set_dynamic_simulation_time_step_in_s(0.01);
 
     simulator->start();
@@ -1457,8 +1468,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
 
     simulator->set_output_file("test_log/IEEE9_test_with_wt3_models");
 
-    simulator->set_max_DAE_iteration(20);
-    simulator->set_max_network_iteration(200);
+    //simulator->set_max_DAE_iteration(20);
+    //simulator->set_max_network_iteration(200);
     simulator->set_allowed_max_power_imbalance_in_MVA(0.001);
     set_dynamic_simulation_time_step_in_s(0.01);
     simulator->start();

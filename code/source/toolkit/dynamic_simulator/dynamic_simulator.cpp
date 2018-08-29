@@ -51,6 +51,7 @@ void DYNAMICS_SIMULATOR::clear()
 
     set_max_DAE_iteration(200);
     set_max_network_iteration(1);
+    set_max_update_event_iteration(200);
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
     set_rotor_angle_stability_survilliance_flag(false);
@@ -112,6 +113,12 @@ void DYNAMICS_SIMULATOR::set_max_network_iteration(size_t iteration)
         this->max_network_iteration = iteration;
 }
 
+void DYNAMICS_SIMULATOR::set_max_update_event_iteration(size_t iteration)
+{
+    if(iteration>0)
+        this->max_update_event_iteration = iteration;
+}
+
 void DYNAMICS_SIMULATOR::set_allowed_max_power_imbalance_in_MVA(double tol)
 {
     if(tol>0.0)
@@ -156,6 +163,11 @@ size_t DYNAMICS_SIMULATOR::get_max_DAE_iteration() const
 size_t DYNAMICS_SIMULATOR::get_max_network_iteration() const
 {
     return max_network_iteration;
+}
+
+size_t DYNAMICS_SIMULATOR::get_max_update_event_iteration() const
+{
+    return max_update_event_iteration;
 }
 
 double DYNAMICS_SIMULATOR::get_allowed_max_power_imbalance_in_MVA() const
@@ -1367,19 +1379,32 @@ void DYNAMICS_SIMULATOR::update_with_event()
     ostringstream osstream;
 
     bool network_converged = false;
-    size_t network_iter_max = get_max_network_iteration();
+    size_t update_event_iter_max = get_max_update_event_iteration();
 
     ITER_DAE = 0;
     ITER_NET = 0;
 
-    network_converged = solve_network();
-    ITER_NET = network_iteration_count;
-    if(not network_converged)
+    size_t iter = 0;
+    while(true)
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %lu iterations when updating with event at time %f s.",
-                 network_iter_max, get_dynamic_simulation_time_in_s());
-        show_information_with_leading_time_stamp(buffer);
+        network_converged = solve_network();
+        ++iter;
+        ITER_NET += network_iteration_count;
+        if(not network_converged)
+        {
+            if(iter>update_event_iter_max)
+            {
+                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %lu iterations when updating with event at time %f s.",
+                         update_event_iter_max, get_dynamic_simulation_time_in_s());
+                show_information_with_leading_time_stamp(buffer);
+                break;
+            }
+            else
+                continue;
+        }
+        else
+            break;
     }
 
     update_bus_frequency_blocks();

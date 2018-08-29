@@ -31,6 +31,7 @@ class DYNAMICS_SIMULATOR: public BASE
 
         void set_max_DAE_iteration(size_t iteration);
         void set_max_network_iteration(size_t iteration);
+        void set_max_update_event_iteration(size_t iteration);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
         void set_iteration_accelerator(double alpha);
         void set_rotor_angle_stability_survilliance_flag(bool flag);
@@ -38,6 +39,7 @@ class DYNAMICS_SIMULATOR: public BASE
 
         size_t get_max_DAE_iteration() const;
         size_t get_max_network_iteration() const;
+        size_t get_max_update_event_iteration() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
         double get_iteration_accelerator() const;
         bool get_rotor_angle_stability_survilliance_flag() const;
@@ -178,7 +180,8 @@ class DYNAMICS_SIMULATOR: public BASE
         //double TIME;
         size_t ITER_DAE, ITER_NET;
         double P_threshold_in_MW, Q_threshold_in_MVar;
-        size_t network_iteration_count, DAE_iteration_count, max_network_iteration, max_DAE_iteration;
+        size_t network_iteration_count, DAE_iteration_count;
+        size_t max_network_iteration, max_DAE_iteration, max_update_event_iteration;
         double alpha;
 
         vector< complex<double> > I_mismatch, S_mismatch;
