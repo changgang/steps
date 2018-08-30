@@ -144,6 +144,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone);
 
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_devices);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_buses);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_buses_with_constraints);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses);
@@ -217,7 +218,6 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_zone_name2zone_number);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_owner_name2owner_number);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_bus_number2bus_name);
-
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_load_power);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_all_load_power);
@@ -2398,6 +2398,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
     TEST_ASSERT(db->is_transformer_exist(did)==true);
 }
 
+
 void POWER_SYSTEM_DATABASE_TEST::test_get_generators_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
@@ -4015,6 +4016,36 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone()
         }
     }
 }
+
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_all_devices()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    prepare_database_for_test();
+
+    vector<DEVICE*> device;
+    device = db->get_all_devices();
+
+    TEST_ASSERT(device.size()==3+6*9+8);
+
+    // all devices in the test database are:
+    // Bus: 1, 2, 3
+    // Generator: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // WT generator: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // PV UNIT: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // Load: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // Fixed shunt: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // Line: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2,
+    // Transformer: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2, 1-2-3-#1, 1-2-3-#2
+    // Hvdc: 1-2-#1, 1-2-#2, 2-3-#1, 2-3-#2, 1-3-#1, 1-3-#2,
+    // Equivalent device: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // Energy storage: 1-#1, 1-#2, 2-#1, 2-#2, 3-#1, 3-#2
+    // Area: 1, 2, 3
+    // Zone: 1, 2, 3
+    // Owner: 1, 2, 3
+}
+
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_all_buses()
 {

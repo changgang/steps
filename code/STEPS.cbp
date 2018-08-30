@@ -334,6 +334,7 @@
 			<Option link="0" />
 		</Unit>
 		<Unit filename="source/apis/steps_api_add_devices.cpp" />
+		<Unit filename="source/apis/steps_api_check.cpp" />
 		<Unit filename="source/apis/steps_api_common_utilities.cpp" />
 		<Unit filename="source/apis/steps_api_data_import_export.cpp" />
 		<Unit filename="source/apis/steps_api_dynamic_simulation.cpp" />

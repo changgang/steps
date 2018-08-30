@@ -2878,6 +2878,60 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_energy_storages_device_id_in_zone(c
 }
 
 
+vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices()
+{
+    vector<DEVICE*> devices;
+    size_t n=0;
+
+    vector<BUS*> buses = get_all_buses();
+    n = buses.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(buses[i]);
+
+    vector<SOURCE*> sources = get_all_sources();
+    n = sources.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(sources[i]);
+
+    vector<LOAD*> loads = get_all_loads();
+    n = loads.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(loads[i]);
+
+    vector<FIXED_SHUNT*> fshunts = get_all_fixed_shunts();
+    n = fshunts.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(fshunts[i]);
+
+    vector<LINE*> lines = get_all_lines();
+    n = lines.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(lines[i]);
+
+    vector<TRANSFORMER*> transes = get_all_transformers();
+    n = transes.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(transes[i]);
+
+
+    vector<HVDC*> hvdcs = get_all_hvdcs();
+    n = hvdcs.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(hvdcs[i]);
+
+    vector<EQUIVALENT_DEVICE*> edevices = get_all_equivalent_devices();
+    n = edevices.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(edevices[i]);
+
+    vector<ENERGY_STORAGE*> estorages = get_all_energy_storages();
+    n = estorages.size();
+    for(size_t i=0; i!=n; ++i)
+        devices.push_back(estorages[i]);
+
+    return devices;
+}
+
 vector<BUS*> POWER_SYSTEM_DATABASE::get_all_buses()
 {
     vector<BUS*> device;
@@ -3550,7 +3604,282 @@ string POWER_SYSTEM_DATABASE::owner_number2owner_name(size_t number)
         return owner->get_owner_name();
 }
 
+void POWER_SYSTEM_DATABASE::check_database()
+{
+    check_all_devices();
+    check_all_areas();
+    check_all_zones();
+    check_all_owners();
+}
 
+void POWER_SYSTEM_DATABASE::check_all_devices()
+{
+    check_all_buses();
+    check_all_sources();
+    check_all_loads();
+    check_all_fixed_shunts();
+    check_all_lines();
+    check_all_transformers();
+    check_all_hvdcs();
+    check_all_equivalent_devices();
+    check_all_energy_storages();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_buses()
+{
+    size_t n = get_bus_count();
+    for(size_t i=0; i!=n; ++i)
+        Bus[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_sources()
+{
+    check_all_generators();
+    check_all_wt_generators();
+    check_all_pv_units();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_generators()
+{
+    size_t n = get_generator_count();
+    for(size_t i=0; i!=n; ++i)
+        Generator[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_wt_generators()
+{
+    size_t n = get_wt_generator_count();
+    for(size_t i=0; i!=n; ++i)
+        WT_Generator[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_pv_units()
+{
+    size_t n = get_pv_unit_count();
+    for(size_t i=0; i!=n; ++i)
+        PV_Unit[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_loads()
+{
+    size_t n = get_load_count();
+    for(size_t i=0; i!=n; ++i)
+        Load[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_fixed_shunts()
+{
+    size_t n = get_fixed_shunt_count();
+    for(size_t i=0; i!=n; ++i)
+        Fixed_shunt[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_lines()
+{
+    size_t n = get_line_count();
+    for(size_t i=0; i!=n; ++i)
+        Line[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_transformers()
+{
+    size_t n = get_transformer_count();
+    for(size_t i=0; i!=n; ++i)
+        Transformer[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_hvdcs()
+{
+    size_t n = get_hvdc_count();
+    for(size_t i=0; i!=n; ++i)
+        Hvdc[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_equivalent_devices()
+{
+    size_t n = get_equivalent_device_count();
+    for(size_t i=0; i!=n; ++i)
+        Equivalent_device[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_energy_storages()
+{
+    size_t n = get_energy_storage_count();
+    for(size_t i=0; i!=n; ++i)
+        Energy_storage[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_areas()
+{
+    size_t n = get_area_count();
+    for(size_t i=0; i!=n; ++i)
+        Area[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_zones()
+{
+    size_t n = get_zone_count();
+    for(size_t i=0; i!=n; ++i)
+        Zone[i].check();
+}
+
+void POWER_SYSTEM_DATABASE::check_all_owners()
+{
+    size_t n = get_owner_count();
+    for(size_t i=0; i!=n; ++i)
+        Owner[i].check();
+}
+
+
+void POWER_SYSTEM_DATABASE::check_dynamic_data()
+{
+    check_generator_related_dynamic_data();
+    check_wt_generator_related_dynamic_data();
+    check_pv_unit_related_dynamic_data();
+    check_load_related_dynamic_data();
+    check_hvdc_related_dynamic_data();
+    check_energy_storage_related_dynamic_data();
+    check_equivalent_device_related_dynamic_data();
+}
+
+void POWER_SYSTEM_DATABASE::check_generator_related_dynamic_data()
+{
+    vector<GENERATOR*> generators = get_all_generators();
+    size_t n = generators.size();
+    GENERATOR* generator;
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+
+        SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
+        if(genmodel!=NULL)
+            genmodel->check();
+
+        EXCITER_MODEL* avrmodel = generator->get_exciter_model();
+        if(avrmodel!=NULL)
+            avrmodel->check();
+
+        STABILIZER_MODEL* pssmodel = generator->get_stabilizer_model();
+        if(pssmodel!=NULL)
+            pssmodel->check();
+
+        COMPENSATOR_MODEL* compmodel = generator->get_compensator_model();
+        if(compmodel!=NULL)
+            compmodel->check();
+
+        TURBINE_GOVERNOR_MODEL* govmodel = generator->get_turbine_governor_model();
+        if(govmodel!=NULL)
+            govmodel->check();
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_wt_generator_related_dynamic_data()
+{
+    vector<WT_GENERATOR*> generators = get_all_wt_generators();
+    size_t n = generators.size();
+    WT_GENERATOR* generator;
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+
+        WT_GENERATOR_MODEL* genmodel = generator->get_wt_generator_model();
+        if(genmodel!=NULL)
+            genmodel->check();
+
+        WT_ELECTRICAL_MODEL* elecmodel = generator->get_wt_electrical_model();
+        if(elecmodel!=NULL)
+            elecmodel->check();
+
+        WT_AERODYNAMIC_MODEL* aerdmodel = generator->get_wt_aerodynamic_model();
+        if(aerdmodel!=NULL)
+            aerdmodel->check();
+
+        WT_TURBINE_MODEL* turbmodel = generator->get_wt_turbine_model();
+        if(turbmodel!=NULL)
+            turbmodel->check();
+
+        WT_PITCH_MODEL* pitchmodel = generator->get_wt_pitch_model();
+        if(pitchmodel!=NULL)
+            pitchmodel->check();
+
+        WIND_SPEED_MODEL* windmodel = generator->get_wind_speed_model();
+        if(windmodel!=NULL)
+            windmodel->check();
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_pv_unit_related_dynamic_data()
+{
+    ;
+}
+
+void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
+{
+    vector<LOAD*> loads = get_all_loads();
+    size_t n = loads.size();
+    LOAD* load;
+    for(size_t i=0; i!=n; ++i)
+    {
+        load = loads[i];
+
+        LOAD_MODEL* loadmodel = load->get_load_model();
+        if(loadmodel!=NULL)
+            loadmodel->check();
+
+        LOAD_VOLTAGE_RELAY_MODEL* uvlsmodel = load->get_load_voltage_relay_model();
+        if(uvlsmodel!=NULL)
+            uvlsmodel->check();
+
+        LOAD_FREQUENCY_RELAY_MODEL* uflsmodel = load->get_load_frequency_relay_model();
+        if(uflsmodel!=NULL)
+            uflsmodel->check();
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_hvdc_related_dynamic_data()
+{
+    vector<HVDC*> hvdcs = get_all_hvdcs();
+    size_t n = hvdcs.size();
+    HVDC* hvdc;
+    for(size_t i=0; i!=n; ++i)
+    {
+        hvdc = hvdcs[i];
+
+        HVDC_MODEL* hvdcmodel = hvdc->get_hvdc_model();
+        if(hvdcmodel!=NULL)
+            hvdcmodel->check();
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
+{
+    vector<ENERGY_STORAGE*> estorages = get_all_energy_storages();
+    size_t n = estorages.size();
+    ENERGY_STORAGE* estorage;
+    for(size_t i=0; i!=n; ++i)
+    {
+        estorage = estorages[i];
+
+        ENERGY_STORAGE_MODEL* esmodel = estorage->get_energy_storage_model();
+        if(esmodel!=NULL)
+            esmodel->check();
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_equivalent_device_related_dynamic_data()
+{
+    vector<EQUIVALENT_DEVICE*> edevices = get_all_equivalent_devices();
+    size_t n = edevices.size();
+    EQUIVALENT_DEVICE* edevice;
+    for(size_t i=0; i!=n; ++i)
+    {
+        edevice = edevices[i];
+
+        EQUIVALENT_MODEL* eqmodel = edevice->get_equivalent_model();
+        if(eqmodel!=NULL)
+            eqmodel->check();
+    }
+}
 
 void POWER_SYSTEM_DATABASE::scale_load_power(DEVICE_ID did, double scale)
 {

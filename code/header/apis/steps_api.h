@@ -374,6 +374,9 @@ EXPORT_STEPS_DLL void api_set_generator_voltage_reference_in_pu(size_t bus, char
 EXPORT_STEPS_DLL void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, double value);
 
 
+EXPORT_STEPS_DLL void api_check_database();
+EXPORT_STEPS_DLL void api_check_dynamic_data();
+
 EXPORT_STEPS_DLL double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line);
 
 #ifdef  __cplusplus

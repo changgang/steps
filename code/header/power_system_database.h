@@ -220,6 +220,7 @@ class POWER_SYSTEM_DATABASE
         vector<DEVICE_ID> get_equivalent_devices_device_id_in_zone(const size_t zone);
         vector<DEVICE_ID> get_energy_storages_device_id_in_zone(const size_t zone);
 
+        vector<DEVICE*> get_all_devices();
         vector<BUS*> get_all_buses();
         vector<BUS*> get_buses_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
         vector<BUS*> get_all_in_service_buses();
@@ -297,6 +298,34 @@ class POWER_SYSTEM_DATABASE
         string area_number2area_name(size_t number);
         string zone_number2zone_name(size_t number);
         string owner_number2owner_name(size_t number);
+
+        void check_database();
+        void check_all_devices();
+        void check_all_buses();
+        void check_all_sources();
+        void check_all_generators();
+        void check_all_wt_generators();
+        void check_all_pv_units();
+        void check_all_loads();
+        void check_all_fixed_shunts();
+        void check_all_lines();
+        void check_all_transformers();
+        void check_all_hvdcs();
+        void check_all_equivalent_devices();
+        void check_all_energy_storages();
+        void check_all_areas();
+        void check_all_zones();
+        void check_all_owners();
+
+        void check_dynamic_data();
+        void check_generator_related_dynamic_data();
+        void check_wt_generator_related_dynamic_data();
+        void check_pv_unit_related_dynamic_data();
+        void check_load_related_dynamic_data();
+        void check_hvdc_related_dynamic_data();
+        void check_energy_storage_related_dynamic_data();
+        void check_equivalent_device_related_dynamic_data();
+
 
         void scale_load_power(DEVICE_ID did, double scale);
         void scale_all_loads_power(double scale);

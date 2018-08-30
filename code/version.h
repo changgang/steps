@@ -15,7 +15,7 @@ namespace AutoVersion{
 
 	//Standard Version Type
 	static const long MAJOR  = 1;
-	static const long MINOR  = 0;
+	static const long MINOR  = 1;
 	static const long BUILD  = 0;
 	static const long REVISION  = 0;
 

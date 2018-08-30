@@ -170,6 +170,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_equivalent_devices_device_id_in_zone();
         void test_get_energy_storages_device_id_in_zone();
 
+        void test_get_all_devices();
         void test_get_all_buses();
         void test_get_buses_with_constraints();
         void test_get_all_in_service_buses();
