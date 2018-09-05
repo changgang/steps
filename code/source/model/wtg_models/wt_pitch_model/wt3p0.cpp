@@ -65,6 +65,7 @@ void WT3P0::copy_from_const_model(const WT3P0& model)
     set_Pitchmin_in_deg(model.get_Pitchmin_in_deg());
     set_ratePitchmax_in_deg_per_s(model.get_ratePitchmax_in_deg_per_s());
     set_Tp_in_s(model.get_Tp_in_s());
+    set_hold_wtg_speed_flag(model.get_hold_wtg_speed_flag());
 }
 
 WT3P0::WT3P0(const WT3P0&model) : WT_PITCH_MODEL()
@@ -299,16 +300,18 @@ bool WT3P0::setup_model_with_psse_string(string data)
 {
     bool is_successful = false;
     vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<17)
+    if(dyrdata.size()<18)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
     if(model_name!=get_model_name())
         return is_successful;
 
+    int hold_speed_flag = 0;
     double tp, kps, kis, tf, fup, flow, kpf, kif, kdf, tdf, rpmax, pmax, pmin, tspeed;
 
     size_t i=3;
+    hold_speed_flag = get_integer_data(dyrdata[i],"0"); i++;
     tspeed = get_double_data(dyrdata[i],"0.0"); i++;
     kps = get_double_data(dyrdata[i],"0.0"); i++;
     kis = get_double_data(dyrdata[i],"0.0"); i++;
@@ -323,6 +326,11 @@ bool WT3P0::setup_model_with_psse_string(string data)
     pmin = get_double_data(dyrdata[i],"0.0"); i++;
     pmax = get_double_data(dyrdata[i],"0.0"); i++;
     tp = get_double_data(dyrdata[i],"0.0");
+
+    if(hold_speed_flag==0)
+        set_hold_wtg_speed_flag(false);
+    else
+        set_hold_wtg_speed_flag(true);
 
     set_Tspeed_in_s(tspeed);
     set_Kp_speed_controller(kps);
@@ -394,6 +402,8 @@ void WT3P0::initialize()
     double speed_ref = get_wt_generator_reference_speed_in_pu();
     speed_reference_sensor.set_output(speed_ref);
     speed_reference_sensor.initialize();
+    if(get_hold_wtg_speed_flag()==true)
+        set_const_wtg_speed_reference_in_pu(speed_ref);
 
     frequency_sensor.set_output(1.0);
     frequency_sensor.initialize();
@@ -414,7 +424,11 @@ void WT3P0::initialize()
 void WT3P0::run(DYNAMIC_MODE mode)
 {
     double speed = get_wt_generator_speed_in_pu();
-    double speedref = get_wt_generator_reference_speed_in_pu();
+    double speedref = 0.0;
+    if(get_hold_wtg_speed_flag()==true)
+        speedref = get_const_wtg_speed_reference_in_pu();
+    else
+        speedref = get_wt_generator_reference_speed_in_pu();
 
     speed_reference_sensor.set_input(speedref);
     speed_reference_sensor.run(mode);
@@ -484,6 +498,11 @@ string WT3P0::get_standard_model_string() const
 {
     ostringstream osstream;
 
+    bool flag = get_hold_wtg_speed_flag();
+    int hold_speed_flag = 0;
+    if(flag==true)
+        hold_speed_flag = 1;
+
     double tspeed = get_Tspeed_in_s();
     double kps = get_Kp_speed_controller();
     double kis = get_Ki_speed_controller();
@@ -506,6 +525,7 @@ string WT3P0::get_standard_model_string() const
     osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
+      <<setw(8)<<hold_speed_flag<<", "
       <<setw(8)<<setprecision(6)<<tspeed<<", "
       <<setw(8)<<setprecision(6)<<kps<<", "
       <<setw(8)<<setprecision(6)<<kis<<", "

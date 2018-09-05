@@ -28,6 +28,11 @@ class WT_PITCH_MODEL : public WTG_MODEL
         void set_frequency_lower_deadband_in_pu(double freq);
         double get_frequency_upper_deadband_in_pu() const;
         double get_frequency_lower_deadband_in_pu() const;
+
+        void set_hold_wtg_speed_flag(bool flag);
+        void set_const_wtg_speed_reference_in_pu(double w);
+        bool get_hold_wtg_speed_flag() const;
+        double get_const_wtg_speed_reference_in_pu() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
 
@@ -62,6 +67,8 @@ class WT_PITCH_MODEL : public WTG_MODEL
         void common_constructor();
 
         double frequency_deadband_upper_in_pu, frequency_deadband_lower_in_pu;
+        bool hold_wtg_speed_flag;
+        double const_wtg_speed_reference;
 };
 
 #endif // WT_PITCH_MODEL_H

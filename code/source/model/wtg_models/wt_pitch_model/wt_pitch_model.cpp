@@ -19,6 +19,8 @@ void WT_PITCH_MODEL::common_constructor()
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("WT GENERATOR");
     set_frequency_upper_deadband_in_pu(1.0);
     set_frequency_lower_deadband_in_pu(1.0);
+    set_hold_wtg_speed_flag(false);
+    set_const_wtg_speed_reference_in_pu(0.0);
 }
 
 string WT_PITCH_MODEL::get_model_type() const
@@ -102,4 +104,24 @@ double WT_PITCH_MODEL::get_frequency_upper_deadband_in_pu() const
 double WT_PITCH_MODEL::get_frequency_lower_deadband_in_pu() const
 {
     return frequency_deadband_lower_in_pu;
+}
+
+void WT_PITCH_MODEL::set_hold_wtg_speed_flag(bool flag)
+{
+    hold_wtg_speed_flag = flag;
+}
+
+void WT_PITCH_MODEL::set_const_wtg_speed_reference_in_pu(double w)
+{
+    const_wtg_speed_reference = w;
+}
+
+bool WT_PITCH_MODEL::get_hold_wtg_speed_flag() const
+{
+    hold_wtg_speed_flag;
+}
+
+double WT_PITCH_MODEL::get_const_wtg_speed_reference_in_pu() const
+{
+    return const_wtg_speed_reference;
 }
