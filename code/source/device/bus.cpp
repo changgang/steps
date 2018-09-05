@@ -322,7 +322,12 @@ bool BUS::is_valid() const
 
 void BUS::check()
 {
-    ;
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    if(get_bus_number()==0)
+    {
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid bus number 0 is detected.");
+        show_information_with_leading_time_stamp(buffer);
+    }
 }
 
 void BUS::clear()

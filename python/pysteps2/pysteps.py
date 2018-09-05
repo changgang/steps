@@ -763,19 +763,19 @@ class STEPS():
             return self.libsteps.api_set_transformer_string_data(ibus, jbus, kbus, ickt, side, par_name, value)
         return
 
-    def set_hvdc_data(self, hvdc, par_type, par_name, value):
+    def set_hvdc_data(self, hvdc, par_type, side, par_name, value):
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
             return
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         if par_type in ['I', 'INT', 'INTEGER']:
-            return self.libsteps.api_set_hvdc_integer_data(ibus, jbus, ickt, par_name, value)
+            return self.libsteps.api_set_hvdc_integer_data(ibus, jbus, ickt, side, par_name, value)
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return self.libsteps.api_set_hvdc_float_data(ibus, jbus, ickt, par_name, value)
+            return self.libsteps.api_set_hvdc_float_data(ibus, jbus, ickt, side, par_name, value)
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return self.libsteps.api_set_hvdc_boolean_data(ibus, jbus, ickt, par_name, value)
+            return self.libsteps.api_set_hvdc_boolean_data(ibus, jbus, ickt, side, par_name, value)
         if par_type in ['S', 'STRING']:
-            return self.libsteps.api_set_hvdc_string_data(ibus, jbus, ickt, par_name, value)
+            return self.libsteps.api_set_hvdc_string_data(ibus, jbus, ickt, side, par_name, value)
         return
 
     def set_area_data(self, area, par_type, par_name, value):

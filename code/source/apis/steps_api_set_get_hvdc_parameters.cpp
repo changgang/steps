@@ -159,7 +159,7 @@ double api_get_hvdc_float_data(size_t ibus, size_t jbus, char* identifier, char*
             if(PARAMETER_NAME=="IDCN_KA" or PARAMETER_NAME=="NOMINAL DC CURRENT PER POLE IN KA")
                 return hvdcptr->get_nominal_dc_current_per_pole_in_kA();
 
-            if(PARAMETER_NAME=="VDCN_KA" or PARAMETER_NAME=="NOMINAL DC VOLTAGE PER POLE IN KV")
+            if(PARAMETER_NAME=="VDCN_KV" or PARAMETER_NAME=="NOMINAL DC VOLTAGE PER POLE IN KV")
                 return hvdcptr->get_nominal_dc_voltage_per_pole_in_kV();
 
             if(PARAMETER_NAME=="RCOMP_OHM" or PARAMETER_NAME=="COMPENSATING RESISTANCE TO HOLD DC VOLTAGE IN OHM")
@@ -320,7 +320,7 @@ void api_set_hvdc_float_data(size_t ibus, size_t jbus, char* identifier, char* s
             if(PARAMETER_NAME=="IDCN_KA" or PARAMETER_NAME=="NOMINAL DC CURRENT PER POLE IN KA")
                 return hvdcptr->set_nominal_dc_current_per_pole_in_kA(value);
 
-            if(PARAMETER_NAME=="VDCN_KA" or PARAMETER_NAME=="NOMINAL DC VOLTAGE PER POLE IN KV")
+            if(PARAMETER_NAME=="VDCN_KV" or PARAMETER_NAME=="NOMINAL DC VOLTAGE PER POLE IN KV")
                 return hvdcptr->set_nominal_dc_voltage_per_pole_in_kV(value);
 
             if(PARAMETER_NAME=="RCOMP_OHM" or PARAMETER_NAME=="COMPENSATING RESISTANCE TO HOLD DC VOLTAGE IN OHM")
