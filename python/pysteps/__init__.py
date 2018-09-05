@@ -694,7 +694,7 @@ def set_transformer_data(transformer, par_type, side, par_name, value):
         return libsteps.api_set_transformer_string_data(ibus, jbus, kbus, id, side, par_name, value)
     return None
 
-def set_hvdc_data(hvdc, par_type, par_name, value):
+def set_hvdc_data(hvdc, par_type, side, par_name, value):
     par_type = par_type.upper()
     if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
         return None
@@ -703,13 +703,13 @@ def set_hvdc_data(hvdc, par_type, par_name, value):
     jbus = hvdc[1]
     id = hvdc[2]
     if par_type in ['I', 'INT', 'INTEGER']:
-        return libsteps.api_set_hvdc_integer_data(ibus, jbus, id, par_name, value)
+        return libsteps.api_set_hvdc_integer_data(ibus, jbus, id, side, par_name, value)
     if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-        return libsteps.api_set_hvdc_float_data(ibus, jbus, id, par_name, value)
+        return libsteps.api_set_hvdc_float_data(ibus, jbus, id, side, par_name, value)
     if par_type in ['B', 'BOOL', 'BOOLEAN']:
-        return libsteps.api_set_hvdc_boolean_data(ibus, jbus, id, par_name, value)
+        return libsteps.api_set_hvdc_boolean_data(ibus, jbus, id, side, par_name, value)
     if par_type in ['S', 'STRING']:
-        return libsteps.api_set_hvdc_string_data(ibus, jbus, id, par_name, value)
+        return libsteps.api_set_hvdc_string_data(ibus, jbus, id, side, par_name, value)
     return None
 
 def set_area_data(area, par_type, par_name, value):

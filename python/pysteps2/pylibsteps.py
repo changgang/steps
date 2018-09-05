@@ -5,12 +5,17 @@ import os
 libsteps_version = "0.4"
 libsteps_date = "2018/08/15"
 
-def get_base_library(): 
+def get_base_library():
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    dirname.replace('\\','/')
+    if not dirname.endswith('/'):
+        dirname = dirname + '/'
+        
     if platform.system()=="Linux":
         library = "/home/changgang/steps/build/bin/Release/libSTEPS.so"
     else:
         if platform.system()=="Windows":
-            library = "D:/Python27/Lib/site-packages/pysteps/libSTEPS.dll"
+            library = dirname+"libSTEPS.dll"
 
     return library
 

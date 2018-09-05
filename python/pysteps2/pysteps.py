@@ -11,14 +11,14 @@ class STEPS():
             return None
         
         self.libsteps.api_initialize_package()
-        if parallel_flag==False:
-            print("STEPS simulator is created:", self)
+        #if parallel_flag==False:
+        #    print("STEPS simulator is created:", self)
         
     def __del__(self):
         if self.libsteps is None:
             return None
         self.clear_package()
-        print("STEPS simulator is deleted")
+        #print("STEPS simulator is deleted")
 
     def __extract_single_bus_device_id(self, did):
         bus = did[0]
@@ -1240,4 +1240,4 @@ class STEPS():
 class pSTEPS(STEPS):
     def __init__(self):
         STEPS.__init__(self, True)
-        print("Parallel STEPS simulator is created:", self)
+        #print("Parallel STEPS simulator is created:", self)
