@@ -118,7 +118,7 @@ void WT_PITCH_MODEL::set_const_wtg_speed_reference_in_pu(double w)
 
 bool WT_PITCH_MODEL::get_hold_wtg_speed_flag() const
 {
-    hold_wtg_speed_flag;
+    return hold_wtg_speed_flag;
 }
 
 double WT_PITCH_MODEL::get_const_wtg_speed_reference_in_pu() const
