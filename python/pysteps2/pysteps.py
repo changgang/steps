@@ -752,7 +752,7 @@ class STEPS():
         par_type = par_type.upper()
         if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN', 'S', 'STRING']:
             return
-        ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(line)
+        ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
         if par_type in ['I', 'INT', 'INTEGER']:
             return self.libsteps.api_set_transformer_integer_data(ibus, jbus, kbus, ickt, side, par_name, value)
         if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
