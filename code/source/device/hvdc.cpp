@@ -897,6 +897,8 @@ void HVDC::clear()
     set_line_smooting_inductance_in_mH(INVERTER, 0.0);
     set_line_smooting_resistance_in_ohm(RECTIFIER, 0.0);
     set_line_smooting_resistance_in_ohm(INVERTER, 0.0);
+	set_compensating_resistance_to_hold_dc_voltage_in_ohm(0.0);
+	set_current_power_margin(0.15);
     demand_power_in_MW = 0.0; demand_current_in_kA = 0.0; demand_voltage_in_kV = 0.0;
     mode_switching_voltage_in_kV = 0.0;
     set_meter_end(INVERTER);
@@ -906,10 +908,10 @@ void HVDC::clear()
     bridge_number[RECTIFIER] = 0; bridge_number[INVERTER] = 0;
     set_converter_voltage_drop_per_bridge_in_kV(RECTIFIER, 0.0);
     set_converter_voltage_drop_per_bridge_in_kV(INVERTER, 0.0);
-    set_converter_max_alpha_or_gamma_in_deg(RECTIFIER, 0.0);
-    set_converter_max_alpha_or_gamma_in_deg(INVERTER, 0.0);
-    set_converter_min_alpha_or_gamma_in_deg(RECTIFIER, 0.0);
-    set_converter_min_alpha_or_gamma_in_deg(INVERTER, 0.0);
+    set_converter_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
+    set_converter_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
+    set_converter_min_alpha_or_gamma_in_deg(RECTIFIER, 5.0);
+    set_converter_min_alpha_or_gamma_in_deg(INVERTER, 5.0);
 
     converter_transformer_grid_side_base_voltage_in_kV[RECTIFIER] = 0.0;
     converter_transformer_grid_side_base_voltage_in_kV[INVERTER] = 0.0;

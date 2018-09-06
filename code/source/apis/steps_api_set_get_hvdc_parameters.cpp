@@ -37,8 +37,11 @@ int api_get_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
             if(PARAMETER_NAME=="BUS_METER" or PARAMETER_NAME=="METER END BUS NUMBER")
                 return hvdcptr->get_converter_bus(hvdcptr->get_meter_end());
 
-            if(PARAMETER_NAME=="PSIDE" or PARAMETER_NAME=="SIDE TO HOLD POWER")
-                return (hvdcptr->get_side_to_hold_dc_power()==RECTIFIER)?0:1;
+			if (PARAMETER_NAME == "PSIDE" or PARAMETER_NAME == "SIDE TO HOLD POWER")
+				return (hvdcptr->get_side_to_hold_dc_power() == RECTIFIER) ? 0 : 1;
+
+			if (PARAMETER_NAME == "RMODE" or PARAMETER_NAME == "RECTIFIER CONTROL MODE")
+				return (hvdcptr->get_converter_operation_mode(RECTIFIER)== RECTIFIER_CONSTANT_POWER) ? 1 : 2;
         }
         else
         {
@@ -47,8 +50,8 @@ int api_get_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
             if(PARAMETER_NAME=="BUS" or PARAMETER_NAME=="BUS NUMBER")
                 return hvdcptr->get_converter_bus(con_side);
 
-            if(PARAMETER_NAME=="NBRIDGE" or PARAMETER_NAME=="NUMBER OF BRIDGE")
-                return hvdcptr->get_converter_number_of_bridge(con_side);
+			if (PARAMETER_NAME == "NBRIDGE" or PARAMETER_NAME == "NUMBER OF BRIDGE")
+				return hvdcptr->get_converter_number_of_bridge(con_side);
 
             if(PARAMETER_NAME=="NTAP" or PARAMETER_NAME=="NUMBER OF TAPS")
                 return hvdcptr->get_converter_transformer_number_of_taps(con_side);
@@ -96,6 +99,9 @@ void api_set_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char*
 
             if(PARAMETER_NAME=="PSIDE" or PARAMETER_NAME=="SIDE TO HOLD POWER")
                 return hvdcptr->set_side_to_hold_power(value==0?RECTIFIER:INVERTER);
+
+			if (PARAMETER_NAME == "RMODE" or PARAMETER_NAME == "RECTIFIER CONTROL MODE")
+				return (hvdcptr->set_converter_operation_mode(RECTIFIER, (value == 1 ? RECTIFIER_CONSTANT_POWER : RECTIFIER_CONSTANT_CURRENT)));
         }
         else
         {
