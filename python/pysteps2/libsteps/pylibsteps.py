@@ -10,32 +10,20 @@ def get_base_library():
     dirname = dirname.replace('\\','/')
     if not dirname.endswith('/'):
         dirname = dirname + '/'
-        
-    python_compiler = platform.python_compiler()
-    python_bits = 32
-    if python_compiler.find('64 bit')!=-1:
-        print('pysteps is not supported on 64 bit Python. Try 32 bit version.')
-        python_bits = 64
-        return None
     
     libsteps_name = 'libSTEPS'
     libsteps_extension = '.so'
     if platform.system()=="Linux" or platform.system()=="Unix":
-        #library = "/home/changgang/steps/build/bin/Release/libSTEPS.so"
         libsteps_extension = '.so'
     elif platform.system()=="Windows":
         libsteps_extension = '.dll'
         
-    if python_bits==32:
+    library = dirname+libsteps_name+libsteps_extension
+    if not os.path.exists(library):
         library = dirname+libsteps_name+libsteps_extension
         if not os.path.exists(library):
-            library = dirname+libsteps_name+'.32'+libsteps_extension
-            if not os.path.exists(library):
-                library = None
-    else:
-        library = dirname+libsteps_name+'.64'+libsteps_extension
-        if not os.path.exists(library):
             library = None
+
     return library
 
 def get_parallel_library():
@@ -44,7 +32,7 @@ def get_parallel_library():
     parallel_library = filename+'-p'+extension
     if not os.path.exists(parallel_library):
         command = "copy"
-        if platform.system()=="Linux":
+        if platform.system()=="Linux" or platform.system()=="Unix":
             command = "cp"
         command = command + " "+base_library+" "+parallel_library
         os.system(command)
