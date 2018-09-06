@@ -133,8 +133,6 @@ double AERD0::get_C8() const
 
 double AERD0::get_Cp(double lambda, double pitch_deg) const
 {
-    //double pitch_angle = deg2rad(pitch_deg);
-
     double C1 = get_C1();
     double C2 = get_C2();
     double C3 = get_C3();
@@ -145,6 +143,7 @@ double AERD0::get_Cp(double lambda, double pitch_deg) const
     double C8  = get_C8();
 
     double pitch_angle = pitch_deg;
+    //double pitch_angle = deg2rad(pitch_deg);
     double L = 1.0/(lambda+C7*pitch_angle)-C8/(pitch_angle*pitch_angle*pitch_angle+1.0);
     L = 1.0/L;
 

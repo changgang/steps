@@ -1478,7 +1478,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<LOAD*> loads = db->get_all_loads();
     LOAD* load;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         load = loads[i];
         if(load->get_status()==false)
@@ -1490,7 +1490,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<HVDC*> hvdcs = db->get_all_hvdcs();
     HVDC* hvdc;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         hvdc = hvdcs[i];
         hvdc->run(mode);
@@ -1500,7 +1500,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<EQUIVALENT_DEVICE*> edevices = db->get_all_equivalent_devices();
     EQUIVALENT_DEVICE* edevice;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         edevice = edevices[i];
         edevice->run(mode);
@@ -1510,7 +1510,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     n = buses.size();
     BUS* bus;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         bus = buses[i];
         BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();

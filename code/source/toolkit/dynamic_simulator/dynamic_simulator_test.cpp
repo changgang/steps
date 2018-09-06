@@ -16,7 +16,7 @@ using namespace std;
 
 DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 {
-
+/*
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_and_get_power_system_database);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_is_power_system_database_set);
@@ -63,7 +63,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
-
+*/
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
 
 
@@ -1461,10 +1461,11 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator->append_meter(meter);
     meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,17);
     simulator->append_meter(meter);
-    */
     simulator->prepare_meters();
-    //simulator->prepare_wt_generator_related_meters();
-
+    */
+    simulator->prepare_bus_related_meter(3, "Frequency in Hz");
+    simulator->prepare_bus_related_meter(3, "Voltage in pu");
+    simulator->prepare_wt_generator_related_meters();
 
     simulator->set_output_file("test_log/IEEE9_test_with_wt3_models");
 
@@ -1497,7 +1498,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator->trip_line(did);*/
     simulator->shed_generator(gendid_1, 0.2);
 
-    simulator->run_to(5.0);
+    simulator->run_to(100.0);
 
     recover_stdout();
 }

@@ -7,16 +7,35 @@ libsteps_date = "2018/08/15"
 
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
-    dirname.replace('\\','/')
+    dirname = dirname.replace('\\','/')
     if not dirname.endswith('/'):
         dirname = dirname + '/'
         
-    if platform.system()=="Linux":
-        library = "/home/changgang/steps/build/bin/Release/libSTEPS.so"
+    python_compiler = platform.python_compiler()
+    python_bits = 32
+    if python_compiler.find('64 bit')!=-1:
+        print('pysteps is not supported on 64 bit Python. Try 32 bit version.')
+        python_bits = 64
+        return None
+    
+    libsteps_name = 'libSTEPS'
+    libsteps_extension = '.so'
+    if platform.system()=="Linux" or platform.system()=="Unix":
+        #library = "/home/changgang/steps/build/bin/Release/libSTEPS.so"
+        libsteps_extension = '.so'
+    elif platform.system()=="Windows":
+        libsteps_extension = '.dll'
+        
+    if python_bits==32:
+        library = dirname+libsteps_name+libsteps_extension
+        if not os.path.exists(library):
+            library = dirname+libsteps_name+'.32'+libsteps_extension
+            if not os.path.exists(library):
+                library = None
     else:
-        if platform.system()=="Windows":
-            library = dirname+"libSTEPS.dll"
-
+        library = dirname+libsteps_name+'.64'+libsteps_extension
+        if not os.path.exists(library):
+            library = None
     return library
 
 def get_parallel_library():

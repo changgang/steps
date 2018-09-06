@@ -26,6 +26,7 @@ class WT_PITCH_MODEL_TEST : public WTG_MODEL_TEST
         void test_get_wt_generator_speed();
         void test_get_wt_generator_reference_speed();
         void test_get_bus_frequency();
+        void test_get_bus_frequency_deviation();
         void test_get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
 
         void test_set_get_frequency_upper_deadband();

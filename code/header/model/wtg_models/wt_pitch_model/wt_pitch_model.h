@@ -22,6 +22,7 @@ class WT_PITCH_MODEL : public WTG_MODEL
         double get_wt_generator_speed_in_pu() const;
         double get_wt_generator_reference_speed_in_pu() const;
         double get_bus_frequency_in_pu() const;
+        double get_bus_frequency_deviation_in_pu() const;
         double get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model() const;
 
         void set_frequency_upper_deadband_in_pu(double freq);

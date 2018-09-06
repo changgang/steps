@@ -19,6 +19,7 @@ WT_PITCH_MODEL_TEST::WT_PITCH_MODEL_TEST()
     TEST_ADD(WT_PITCH_MODEL_TEST::test_get_wt_generator_speed);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_get_wt_generator_reference_speed);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_get_bus_frequency);
+    TEST_ADD(WT_PITCH_MODEL_TEST::test_get_bus_frequency_deviation);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_set_get_frequency_upper_deadband);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_set_get_frequency_lower_deadband);
@@ -174,6 +175,28 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency()
         BUS_FREQUENCY_MODEL* freqmodel = busptrr->get_bus_frequency_model();
         freqmodel->set_frequency_deviation_in_pu(0.05);
         TEST_ASSERT(fabs(model->get_bus_frequency_in_pu()-psdb->get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
+    }
+    else
+        TEST_ASSERT(false);
+}
+
+void WT_PITCH_MODEL_TEST::test_get_bus_frequency_deviation()
+{
+    WT_PITCH_MODEL* model = get_test_wt_pitch_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        WT_GENERATOR* gen = get_test_wt_generator();
+        size_t bus = gen->get_generator_bus();
+
+        POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+        BUS* busptrr = psdb->get_bus(bus);
+
+        TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu()-psdb->get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
+        BUS_FREQUENCY_MODEL* freqmodel = busptrr->get_bus_frequency_model();
+        freqmodel->set_frequency_deviation_in_pu(0.05);
+        TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu()-psdb->get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
     }
     else
         TEST_ASSERT(false);

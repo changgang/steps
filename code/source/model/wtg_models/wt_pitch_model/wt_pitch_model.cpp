@@ -69,6 +69,20 @@ double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
     return psdb->get_bus_frequency_in_pu(bus);
 }
 
+double WT_PITCH_MODEL::get_bus_frequency_deviation_in_pu() const
+{
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen==NULL)
+        return 1.0;
+
+    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
+    if(psdb==NULL)
+        return 1.0;
+
+    size_t bus = gen->get_generator_bus();
+    return psdb->get_bus_frequency_deviation_in_pu(bus);
+}
+
 double WT_PITCH_MODEL::get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();

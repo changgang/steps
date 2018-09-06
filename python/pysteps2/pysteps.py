@@ -2,7 +2,7 @@ pysteps_version = "0.5"
 pysteps_date = "2018/08/23"
 pysteps_author = (("Changgang Li", "lichangang@sdu.edu.cn"),("Yue Wu","sduyuewu2018@163.com"))
 
-import pylibsteps
+from .libsteps import pylibsteps
 
 class STEPS():
     def __init__(self, parallel_flag = False):        

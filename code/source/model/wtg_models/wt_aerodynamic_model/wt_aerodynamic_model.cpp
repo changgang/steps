@@ -558,7 +558,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
 
     double wn = get_nominal_turbine_speed_in_rad_per_s();
 
-    double pitch_low = 0.0, pitch_high = 30.0;
+    double pitch_low = 0.0, pitch_high = 60.0;
     double w_mppt_low = get_mppt_speed_in_rad_per_s(pitch_low);
 
     double w_low = (w_mppt_low-wn)/wn;
@@ -585,7 +585,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         return;
     }
 
-    size_t iter_max = 50;
+    size_t iter_max = 100;
     size_t iter = 0;
     while(true)
     {
@@ -695,6 +695,15 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
     pitchhigh = 10.0;
 
     double pwind;
+
+    cout<<"pitch,pwind with w = "<<w<<" rad/s("<<w/wn<<" pu)"<<endl;
+    for(double pitch=0.0; pitch<90.0; pitch+=0.1)
+    {
+        set_initial_pitch_angle_in_deg(pitch);
+        pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        cout<<pitch<<","<<pwind<<endl;
+    }
+
     while(true)
     {
         set_initial_pitch_angle_in_deg(pitchhigh);

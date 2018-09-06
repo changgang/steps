@@ -28,6 +28,8 @@ WT3P0::~WT3P0()
 
 void WT3P0::clear()
 {
+    set_hold_wtg_speed_flag(false);
+
     speed_reference_sensor.set_limiter_type(NO_LIMITER);
 
     speed_controller.set_limiter_type(NO_LIMITER);
@@ -438,7 +440,7 @@ void WT3P0::run(DYNAMIC_MODE mode)
     speed_controller.set_input(speed-speedref);
     speed_controller.run(mode);
 
-    double freq = get_bus_frequency_in_pu();
+    double freq = get_bus_frequency_deviation_in_pu();
     frequency_sensor.set_input(freq);
     frequency_sensor.run(mode);
     freq = frequency_sensor.get_output();
