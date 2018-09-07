@@ -283,7 +283,7 @@ class STEPS():
             bus = self.libsteps.api_get_current_bus_number()
             if bus==0:
                 break
-            buses.append(bus)
+            buses.append(int(bus))
             self.libsteps.api_goto_next_bus()
         return tuple(buses)
 
@@ -304,7 +304,7 @@ class STEPS():
             bus = self.libsteps.api_get_current_bus_number()
             if bus==0:
                 break
-            buses.append(bus)
+            buses.append(int(bus))
             self.libsteps.api_goto_next_bus()
         return tuple(buses)
         
@@ -316,7 +316,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier("GENERATOR")
-            generators.append((bus, id))
+            generators.append((int(bus), id))
             self.libsteps.api_goto_next_device("GENERATOR")
         return tuple(generators)
         
@@ -328,7 +328,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier("WT GENERATOR")
-            wt_generators.append((bus, id))
+            wt_generators.append((int(bus), id))
             self.libsteps.api_goto_next_device("WT GENERATOR")
         return tuple(wt_generators)
         
@@ -340,7 +340,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier("PV UNIT")
-            pv_units.append((bus, id))
+            pv_units.append((int(bus), id))
             self.libsteps.api_goto_next_device("PV UNIT")
         return tuple(pv_units)
         
@@ -352,7 +352,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier("LOAD")
-            loads.append((bus, id))
+            loads.append((int(bus), id))
             self.libsteps.api_goto_next_device("LOAD")
         return tuple(loads)
         
@@ -364,7 +364,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier("FIXED SHUNT")
-            fixed_shunts.append((bus, id))
+            fixed_shunts.append((int(bus), id))
             self.libsteps.api_goto_next_device("FIXED SHUNT")
         return tuple(fixed_shunts)
         
@@ -376,7 +376,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier("EQUIVALENT DEVICE")
-            equivalent_devices.append((bus, id))
+            equivalent_devices.append((int(bus), id))
             self.libsteps.api_goto_next_device("EQUIVALENT DEVICE")
         return tuple(equivalent_devices)
         
@@ -388,7 +388,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier("ENERGY STORAGE")
-            energy_storages.append((bus, id))
+            energy_storages.append((int(bus), id))
             self.libsteps.api_goto_next_device("ENERGY STORAGE")
         return tuple(energy_storages)
 
@@ -401,7 +401,7 @@ class STEPS():
                 break
             jbus = self.libsteps.api_get_current_device_bus_number("LINE", "RECEIVE")
             id = self.libsteps.api_get_current_device_identifier("LINE")
-            lines.append((ibus, jbus, id))
+            lines.append((int(ibus), int(jbus), id))
             self.libsteps.api_goto_next_device("LINE")
         return tuple(lines)
 
@@ -415,7 +415,7 @@ class STEPS():
             jbus = self.libsteps.api_get_current_device_bus_number("TRANSFORMER", "SECONDARY")
             kbus = self.libsteps.api_get_current_device_bus_number("TRANSFORMER", "TERTIARY")
             id = self.libsteps.api_get_current_device_identifier("TRANSFORMER")
-            transformers.append((ibus, jbus, kbus, id))
+            transformers.append((int(ibus), int(jbus), int(kbus), id))
             self.libsteps.api_goto_next_device("TRANSFORMER")
         return tuple(transformers)
 
@@ -428,7 +428,7 @@ class STEPS():
                 break
             jbus = self.libsteps.api_get_current_device_bus_number("HVDC", "INVERTER")
             id = self.libsteps.api_get_current_device_identifier("HVDC")
-            hvdcs.append((ibus, jbus, id))
+            hvdcs.append((int(ibus), int(jbus), id))
             self.libsteps.api_goto_next_device("HVDC")
         return tuple(hvdcs)
 
@@ -439,7 +439,7 @@ class STEPS():
             area = self.libsteps.api_get_current_area_number()
             if area==0:
                 break
-            areas.append(area)
+            areas.append(int(area))
             self.libsteps.api_goto_next_area()
         return tuple(areas)
 
@@ -450,7 +450,7 @@ class STEPS():
             zone = self.libsteps.api_get_current_zone_number()
             if zone==0:
                 break
-            zones.append(zone)
+            zones.append(int(zone))
             self.libsteps.api_goto_next_zone()
         return tuple(zones)
 
@@ -461,7 +461,7 @@ class STEPS():
             owner = self.libsteps.api_get_current_owner_number()
             if owner==0:
                 break
-            owners.append(owner)
+            owners.append(int(owner))
             self.libsteps.api_goto_next_owner()
         return tuple(owners)
 
@@ -931,7 +931,33 @@ class STEPS():
 
     def is_powerflow_converged(self):
         return self.libsteps.api_is_powerflow_converged()
+    
+    def get_powerflow_loss(self):
+        p_gen = 0.0
+        gens = self.get_generators_at_bus(0)
+        for gen in gens:
+            p_gen += self.get_generator_data(gen, 'd', 'Pgen_MW')
+            
+        gens = self.get_wt_generators_at_bus(0)
+        for gen in gens:
+            p_gen += self.get_wt_generator_data(gen, 'd', 'Pgen_MW')
+            
+        pvs = self.get_pv_units_at_bus(0)
+        for pv in pvs:
+            p_gen += self.get_pv_unit_data(pv, 'd', 'Pgen_MW')
+            
+        eses = self.get_energy_storages_at_bus(0)
+        for es in eses:
+            p_gen += self.get_energy_storage_data(es, 'd', 'Pgen_MW')
+
+        p_load = 0.0
+        loads = self.get_loads_at_bus(0)
+        for load in loads:
+            p_load += self.get_load_data(load, 'd', 'P_MW')
+            
+        return p_gen-p_load
         
+            
     def show_powerflow_result(self):
         self.libsteps.api_show_powerflow_result()
         return

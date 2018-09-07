@@ -235,6 +235,15 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             show_information_with_leading_time_stamp(buffer);
             break;
         }
+        else
+            set_convergence_flag(false);
+
+        if(get_iteration_count()>=get_max_iteration())
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %lu iterations.",get_max_iteration());
+            show_information_with_leading_time_stamp(buffer);
+            break;
+        }
 
         bus_power_mismatch = get_bus_power_mismatch_vector_for_coupled_solution();
 
@@ -248,13 +257,8 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
         update_bus_voltage_and_angle(bus_delta_voltage_angle);
 
 		++iteration_count;
-        if(get_iteration_count()>get_max_iteration())
-        {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %lu iterations.",get_max_iteration());
-            show_information_with_leading_time_stamp(buffer);
-            break;
-        }
     }
+    show_powerflow_result();
 }
 
 void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
@@ -324,6 +328,15 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             show_information_with_leading_time_stamp(buffer);
             break;
         }
+        else
+            set_convergence_flag(false);
+
+        if(get_iteration_count()>=get_max_iteration())
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %lu iterations.",get_max_iteration());
+            show_information_with_leading_time_stamp(buffer);
+            break;
+        }
 
         P_power_mismatch = get_bus_P_power_mismatch_vector_for_decoupled_solution();
         size_t n = internal_P_equation_buses.size();
@@ -354,13 +367,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         update_bus_voltage(bus_delta_voltage);
 
         iteration_count ++;
-        if(get_iteration_count()>get_max_iteration())
-        {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %lu iterations.",get_max_iteration());
-            show_information_with_leading_time_stamp(buffer);
-            break;
-        }
     }
+    show_powerflow_result();
 }
 
 void POWERFLOW_SOLVER::solve_with_modified_Gaussian_Seidel_solution()
@@ -387,6 +395,7 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     initialize_bus_voltage();
     optimize_bus_numbers();
     iteration_count = 0;
+    set_convergence_flag(false);
 
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Done initializing powerflow solver.");
     show_information_with_leading_time_stamp(buffer);
@@ -1577,8 +1586,10 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
                 get_iteration_count());
     show_information_with_leading_time_stamp(buffer);
 
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Solved bus voltage and angle:\n"
-             "bus      voltage(pu) angle(deg)");
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Solved bus voltage and angle:");
+    show_information_with_leading_time_stamp(buffer);
+
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      voltage(pu) angle(deg)");
     show_information_with_leading_time_stamp(buffer);
 
     vector<BUS*> buses = db->get_all_buses();
@@ -1592,8 +1603,10 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
         show_information_with_leading_time_stamp(buffer);
     }
 
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Solved machine power:\n"
-             "bus      id   P(MW)      Q(MVar)");
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Solved machine power:");
+    show_information_with_leading_time_stamp(buffer);
+
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      id   P(MW)      Q(MVar)");
     show_information_with_leading_time_stamp(buffer);
 
     vector<SOURCE*> sources = db->get_all_sources();

@@ -139,6 +139,16 @@ double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char*
         if(PARAMETER_NAME=="FRAC1" or PARAMETER_NAME=="FRAC2" or PARAMETER_NAME=="FRAC3" or PARAMETER_NAME=="FRAC4")
             return get_owner_fraction_of_device(lineptr, parameter_name);
 
+        if(PARAMETER_NAME=="PSEND_MW")
+            return lineptr->get_line_complex_power_at_sending_side_in_MVA().real();
+        if(PARAMETER_NAME=="QSEND_MVAR")
+            return lineptr->get_line_complex_power_at_sending_side_in_MVA().imag();
+
+        if(PARAMETER_NAME=="PRECV_MW")
+            return lineptr->get_line_complex_power_at_receiving_side_in_MVA().real();
+        if(PARAMETER_NAME=="QRECV_MVAR")
+            return lineptr->get_line_complex_power_at_receiving_side_in_MVA().imag();
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
     }
