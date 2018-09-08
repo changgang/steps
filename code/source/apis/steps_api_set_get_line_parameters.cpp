@@ -149,6 +149,11 @@ double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char*
         if(PARAMETER_NAME=="QRECV_MVAR")
             return lineptr->get_line_complex_power_at_receiving_side_in_MVA().imag();
 
+        if(PARAMETER_NAME=="ISEND_KA")
+            return abs(lineptr->get_line_complex_current_at_sending_side_in_kA());
+        if(PARAMETER_NAME=="IRECV_KA")
+            return abs(lineptr->get_line_complex_current_at_receiving_side_in_kA());
+
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
     }

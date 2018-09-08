@@ -266,6 +266,9 @@ double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, cha
 
             if(PARAMETER_NAME=="Q_MVAR" or PARAMETER_NAME=="REACTIVE POWER IN MVAR")
                 return transptr->get_winding_complex_power_in_MVA(winding).imag();
+
+            if(PARAMETER_NAME=="I_KA" or PARAMETER_NAME=="CURRENT IN KA")
+                return abs(transptr->get_winding_complex_current_in_kA(winding));
         }
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
         return 0.0;
