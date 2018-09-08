@@ -140,13 +140,12 @@ double AERD0::get_Cp(double lambda, double pitch_deg) const
     double C5 = get_C5();
     double C6 = get_C6();
     double C7 = get_C7();
-    double C8  = get_C8();
+    double C8 = get_C8();
 
     double pitch_angle = pitch_deg;
     //double pitch_angle = deg2rad(pitch_deg);
     double L = 1.0/(lambda+C7*pitch_angle)-C8/(pitch_angle*pitch_angle*pitch_angle+1.0);
     L = 1.0/L;
-
 
     double cp = C1*(C2/L-C3*pitch_angle-C4)*exp(-C5/L)+C6*lambda;
     if(cp<0.0)
@@ -158,6 +157,8 @@ double AERD0::get_derivative_of_Cp_over_lambda(double lambda, double pitch_deg) 
 {
     double Cp0 = get_Cp(lambda, pitch_deg);
     double Cp1 = get_Cp(lambda+1e-4, pitch_deg);
+
+    //cout<<lambda<<", "<<pitch_deg<<", "<<Cp0<<", "<<Cp1<<endl;
 
     return (Cp1-Cp0)*1e4;
 }
@@ -213,7 +214,7 @@ bool AERD0::setup_model_with_psse_string(string data)
 {
     bool is_successful = false;
     vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<17)
+    if(dyrdata.size()<19)
         return is_successful;
 
     string model_name = get_string_data(dyrdata[1],"");
@@ -224,7 +225,7 @@ bool AERD0::setup_model_with_psse_string(string data)
     size_t n;
     double vwind0, gear_eta, rou0_air, min_speed, max_speed;
     double rou_air;
-    double c1, c2, c3, c4, c5, c6;
+    double c1, c2, c3, c4, c5, c6, c7, c8;
 
     size_t i=3;
     speed_mode_flag = get_integer_data(dyrdata[i],"0"); i++;
@@ -240,7 +241,9 @@ bool AERD0::setup_model_with_psse_string(string data)
     c3 = get_double_data(dyrdata[i],"0.0"); i++;
     c4 = get_double_data(dyrdata[i],"0.0"); i++;
     c5 = get_double_data(dyrdata[i],"0.0"); i++;
-    c6 = get_double_data(dyrdata[i],"0.0");
+    c6 = get_double_data(dyrdata[i],"0.0");i++;
+    c7 = get_double_data(dyrdata[i],"0.0");i++;
+    c8 = get_double_data(dyrdata[i],"0.0");
 
     switch(speed_mode_flag)
     {
@@ -273,6 +276,8 @@ bool AERD0::setup_model_with_psse_string(string data)
     set_C4(c4);
     set_C5(c5);
     set_C6(c6);
+    set_C7(c7);
+    set_C8(c8);
 
     is_successful = true;
 
@@ -353,7 +358,9 @@ string AERD0::get_standard_model_string() const
       <<setw(6)<<setprecision(4)<<get_C3()<<", "
       <<setw(6)<<setprecision(4)<<get_C4()<<", "
       <<setw(6)<<setprecision(4)<<get_C5()<<", "
-      <<setw(6)<<setprecision(4)<<get_C6()<<" /";
+      <<setw(6)<<setprecision(4)<<get_C6()<<", "
+      <<setw(6)<<setprecision(4)<<get_C7()<<", "
+      <<setw(6)<<setprecision(4)<<get_C8()<<" /";
 
     return osstream.str();
 }

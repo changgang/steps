@@ -66,6 +66,9 @@ void WT_AERODYNAMIC_MODEL::copy_from_const_model(const WT_AERODYNAMIC_MODEL& mod
 
     set_initial_pitch_angle_in_deg(model.get_initial_pitch_angle_in_deg());
     set_initial_turbine_speed_in_rad_per_s(model.get_initial_turbine_speed_in_rad_per_s());
+
+    set_current_pitch_angle_in_deg(model.get_current_pitch_angle_in_deg());
+    set_current_pelec_including_loss_per_turbine_in_MW(model.get_current_pelec_including_loss_per_turbine_in_MW());
 }
 
 string WT_AERODYNAMIC_MODEL::get_model_type() const
@@ -295,6 +298,8 @@ double WT_AERODYNAMIC_MODEL::get_total_wind_power_per_wt_generator_in_MW(double 
 void WT_AERODYNAMIC_MODEL::initialize()
 {
     ostringstream osstream;
+    osstream<<"Now go initialize "<<get_model_name()<<" model of "<<get_device_name()<<endl;
+    show_information_with_leading_time_stamp(osstream);
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
@@ -333,7 +338,29 @@ void WT_AERODYNAMIC_MODEL::initialize()
             <<"(1) Turbine radius is "<<get_turbine_blade_radius_in_m()<<" m"<<endl
             <<"(2) Gear turn ratio is "<<get_generator_to_turbine_gear_ratio()<<endl
             <<"(3) Initial turbine speed is "<<get_initial_turbine_speed_in_pu()<<" pu"<<endl
-            <<"(4) Initial pitch angle is "<<get_initial_pitch_angle_in_deg()<<" deg";
+            <<"(4) Initial pitch angle is "<<get_initial_pitch_angle_in_deg()<<" deg"<<endl;
+
+    double lambda = get_initial_turbine_speed_in_rad_per_s()*get_turbine_blade_radius_in_m()/get_wind_speed_in_mps();
+    double pitch = get_initial_pitch_angle_in_deg();
+    double der = get_derivative_of_Cp_over_lambda(lambda, pitch);
+    osstream<<"With initial pitch angle and rotor speed, the initial operating point is located at the ";
+    if(fabs(der)<1e-5)
+        osstream<<"MPPT";
+    else
+    {
+        if(der>0.0)
+            osstream<<"ascending";
+        else
+            osstream<<"descending";
+    }
+    osstream<<" side of Cp curve (Cp v.s. w)";
+    double w0 = get_initial_turbine_speed_in_rad_per_s();
+    osstream<<"With pitch = "<<pitch<<" deg and initial w = "<<w0<<" rad/s, the near OPs are: "<<endl;
+    for(double w = w0-0.2; w<w0+0.21; w+=0.1)
+    {
+        double pmax = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+        osstream<<pitch<<"deg, "<<w<<"rad/s, "<<pmax*get_number_of_lumped_wt_generators()<<"MW"<<endl;
+    }
     show_information_with_leading_time_stamp(osstream);
 }
 
@@ -402,11 +429,16 @@ void WT_AERODYNAMIC_MODEL::initialize_turbine_blade_radius_with_nominal_paramete
     double blade_radius = sqrt(blade_area/PI);
     set_turbine_blade_radius_in_m(blade_radius);
 
+    osstream<<"Turbine blade radius is initialized as: "<<blade_radius<<"m";
+    show_information_with_leading_time_stamp(osstream);
+
     return;
 }
 
 void WT_AERODYNAMIC_MODEL::initialize_generator_to_turbine_gear_ratio()
 {
+    ostringstream osstream;
+
     double lambda_mppt = get_lambda_at_Cpmax(0.0);
     double vwind = get_nominal_wind_speed_in_mps();
     double radius = get_turbine_blade_radius_in_m();
@@ -418,6 +450,9 @@ void WT_AERODYNAMIC_MODEL::initialize_generator_to_turbine_gear_ratio()
     double wg = 2.0*PI*fbase/n;
     double turnratio = wg/wt;
     set_generator_to_turbine_gear_ratio(turnratio);
+
+    osstream<<"Turbine gear ratio is initialized as: "<<turnratio;
+    show_information_with_leading_time_stamp(osstream);
     return;
 }
 
@@ -558,31 +593,46 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
 
     double wn = get_nominal_turbine_speed_in_rad_per_s();
 
-    double pitch_low = 0.0, pitch_high = 60.0;
-    double w_mppt_low = get_mppt_speed_in_rad_per_s(pitch_low);
+    double pitch_low = 0.0, pitch_high = 0.0;
+    double pitch_step = 2.0;
+    double w_mppt_low = 0.0, w_mppt_high = 0.0;
+
+    w_mppt_low = get_mppt_speed_in_rad_per_s(pitch_low);
 
     double w_low = (w_mppt_low-wn)/wn;
     double cpmax_low = get_Cpmax(pitch_low);
     //osstream<<"pitch_low = "<<pitch_low<<", w_mppt_low = "<<w_mppt_low<<", w_low = "<<w_low<<", pmechmax = "<<pmax*cpmax_low;
     //show_information_with_leading_time_stamp(osstream);
     double pmech_low = pelec+(D*w_low)*(w_mppt_low/wn)*(mbase/n);
+    if(pmech_low>pmax*cpmax_low)
+    {
+        osstream<<"Error. Mechanical power with Cpmax at 0 pitch angle is less than required mechanical power."<<endl
+                <<"Initialization of "<<get_model_name()<<" of "<<get_device_name()<<" failed.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
     if(fabs(pmech_low-pmax*cpmax_low)<FLOAT_EPSILON)
     {
         set_initial_pitch_angle_in_deg(pitch_low);
         set_initial_turbine_speed_in_rad_per_s(w_mppt_low);
         return;
     }
-    double w_mppt_high = get_mppt_speed_in_rad_per_s(pitch_high);
-    double w_high = (w_mppt_high-wn)/wn;
-    double pmech_high = pelec+(D*w_high)*(w_mppt_high/wn)*(mbase/n);
-    double cpmax_high = get_Cpmax(pitch_high);
-    //osstream<<"pitch_high = "<<pitch_high<<", w_mppt_high = "<<w_mppt_high<<", w_high = "<<w_high<<", pmechmax = "<<pmax*cpmax_high;
-    //show_information_with_leading_time_stamp(osstream);
-    if(fabs(pmech_high-pmax*cpmax_high)<FLOAT_EPSILON)
+
+    while(true)
     {
-        set_initial_pitch_angle_in_deg(pitch_high);
-        set_initial_turbine_speed_in_rad_per_s(w_mppt_high);
-        return;
+        pitch_high = pitch_low+pitch_step;
+        w_mppt_high = get_mppt_speed_in_rad_per_s(pitch_high);
+
+        double w_high = (w_mppt_high-wn)/wn;
+        double cpmax_high = get_Cpmax(pitch_high);
+        double pmech_high = pelec+(D*w_high)*(w_mppt_high/wn)*(mbase/n);
+        if(pmech_high>pmax*cpmax_high)
+            break;
+        else
+        {
+            pitch_low = pitch_high;
+            w_mppt_low = w_mppt_high;
+        }
     }
 
     size_t iter_max = 100;
@@ -690,50 +740,41 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
     double eta = get_gear_efficiency();
     double pmech = (pelec+pdamp)/eta;
 
-    double pitchlow, pitchhigh;
-    pitchlow = 0.0;
-    pitchhigh = 10.0;
+    double pitch_low = 0.0, pitch_high = 0.0;
+    double pitch_step = 2.0;
 
-    double pwind;
-
-    cout<<"pitch,pwind with w = "<<w<<" rad/s("<<w/wn<<" pu)"<<endl;
-    for(double pitch=0.0; pitch<90.0; pitch+=0.1)
-    {
-        set_initial_pitch_angle_in_deg(pitch);
-        pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-        cout<<pitch<<","<<pwind<<endl;
-    }
+    set_initial_pitch_angle_in_deg(pitch_low);
+    double pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
 
     while(true)
     {
-        set_initial_pitch_angle_in_deg(pitchhigh);
+        pitch_high = pitch_low + pitch_step;
+
+        set_initial_pitch_angle_in_deg(pitch_high);
         pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-        if(pwind<=pmech)
-            break;
+
+        if(pwind>pelec)
+            pitch_low = pitch_high;
         else
-        {
-            pitchhigh *=2.0;
-            if(pitchhigh>90.0)
-                pitchhigh = 90.0;
-        }
+            break;
     }
 
-    set_initial_pitch_angle_in_deg(pitchlow);
-    double pwindlow = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-    set_initial_pitch_angle_in_deg(pitchhigh);
-    double pwindhigh = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+    set_initial_pitch_angle_in_deg(pitch_low);
+    double pwind_low = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
+    set_initial_pitch_angle_in_deg(pitch_high);
+    double pwind_high = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
 
     osstream<<"Desired pmech = "<<pmech<<" MW (per wind turbine)"<<endl
-            <<"Initial pitch angle: low pitch = "<<pitchlow<<" deg, pmech = "<<pwindlow<<" MW"<<endl
-            <<"                     high pitch = "<<pitchhigh<<" deg, pmech = "<<pwindhigh<<" MW"<<endl;
+            <<"Initial pitch angle: low pitch = "<<pitch_low<<" deg, pmech = "<<pwind_low<<" MW"<<endl
+            <<"                     high pitch = "<<pitch_high<<" deg, pmech = "<<pwind_high<<" MW"<<endl;
     size_t iter_count = 0, iter_max = 100;
 
     while(true)
     {
-        double pitchnew = 0.5*(pitchlow+pitchhigh);
-        set_initial_pitch_angle_in_deg(pitchnew);
+        double pitch_new = 0.5*(pitch_low+pitch_high);
+        set_initial_pitch_angle_in_deg(pitch_new);
         double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
-        osstream<<"Iteration "<<iter_count<<": pitch = "<<pitchnew<<" deg, pmech = "<<pnew<<" MW"<<endl;
+        osstream<<"Iteration "<<iter_count<<": pitch = "<<pitch_new<<" deg, pmech = "<<pnew<<" MW"<<endl;
 
         if(fabs(pnew-pmech)<FLOAT_EPSILON)
         {
@@ -742,9 +783,9 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
             break;
         }
         if(pnew>pmech)
-            pitchlow = pitchnew;
+            pitch_low = pitch_new;
         if(pnew<pmech)
-            pitchhigh = pitchnew;
+            pitch_high = pitch_new;
 
         iter_count++;
         if(iter_count>iter_max)
@@ -752,7 +793,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
             string iteration_info = osstream.str();
             osstream.str("");
             osstream<<"Warning. Failed to get initial pitch angle in "<<iter_max<<" iterations."<<endl
-                    <<"Pitch angle is initialized as "<<pitchnew<<" deg."<<endl
+                    <<"Pitch angle is initialized as "<<pitch_new<<" deg."<<endl
                     <<"Check "<<get_model_name()<<" model of "<<get_device_name()<<endl
                     <<"Below are iteration:"<<endl
                     <<iteration_info;
@@ -874,6 +915,7 @@ void WT_AERODYNAMIC_MODEL::set_current_pitch_angle_in_deg(double pitch)
         return;
 
     current_pitch_angle_in_deg = pitch;
+
     update_current_lambda_at_cpmax_with_current_pitch_angle();
 }
 
@@ -883,6 +925,7 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
 
     double lambdalow = 3.0;
     double lambdahigh = 3.0;
+
     while(true)
     {
         double der = get_derivative_of_Cp_over_lambda(lambdalow, pitch);
@@ -890,7 +933,7 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
             break;
         else
         {
-            lambdalow *= 0.5;
+            lambdalow -= 0.1;
         }
     }
     while(true)
@@ -900,7 +943,7 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
             break;
         else
         {
-            lambdahigh *= 1.5;
+            lambdahigh += 0.1;
         }
     }
 
