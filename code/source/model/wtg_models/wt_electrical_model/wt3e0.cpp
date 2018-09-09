@@ -992,13 +992,10 @@ void WT3E0::run(DYNAMIC_MODE mode)
             V_error_integrator.set_upper_limit(vterm+get_EQmax_in_pu());
             V_error_integrator.set_lower_limit(vterm+get_EQmin_in_pu());
         }
-        else
+        else //vflag == 2
         {
-            if(vflag == 2)
-            {
-                V_error_integrator.set_upper_limit(get_EQmax_in_pu());
-                V_error_integrator.set_lower_limit(get_EQmin_in_pu());
-            }
+            V_error_integrator.set_upper_limit(get_EQmax_in_pu());
+            V_error_integrator.set_lower_limit(get_EQmin_in_pu());
         }
         input = Q_error_integrator.get_output()-vterm;
         V_error_integrator.set_input(input);

@@ -612,7 +612,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         show_information_with_leading_time_stamp(osstream);
         return;
     }
-    if(fabs(pmech_low-pmax*cpmax_low)<1e-6)
+    if(fabs(pmech_low-pmax*cpmax_low)<FLOAT_EPSILON)
     {
         set_initial_pitch_angle_in_deg(pitch_low);
         set_initial_turbine_speed_in_rad_per_s(w_mppt_low);
@@ -650,7 +650,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
 
         //osstream<<"pitch = "<<pitch<<", w_mppt = "<<w_mppt<<", w = "<<w<<", pmechmax = "<<pmax*cpmax;
         //show_information_with_leading_time_stamp(osstream);
-        if(fabs(pmech-pmax*cpmax)<1e-6)
+        if(fabs(pmech-pmax*cpmax)<FLOAT_EPSILON)
         {
             set_initial_pitch_angle_in_deg(pitch);
             set_initial_turbine_speed_in_rad_per_s(w_mppt);
@@ -781,7 +781,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
         double pnew = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
         osstream<<"Iteration "<<iter_count<<": pitch = "<<pitch_new<<" deg, pmech = "<<pnew<<" MW"<<endl;
 
-        if(fabs(pnew-pmech)<1e-6)
+        if(fabs(pnew-pmech)<FLOAT_EPSILON)
         {
             //osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
             //show_information_with_leading_time_stamp(osstream);
@@ -968,7 +968,7 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
         //cout<<__FILE__<<" @ line "<<__LINE__<<endl;
         lambda_new = 0.5*(lambda_low+lambda_high);
         double der_new =  get_derivative_of_Cp_over_lambda(lambda_new, pitch);
-        if(fabs(der_new)<1e-6)
+        if(fabs(der_new)<FLOAT_EPSILON)
         {
             break;
         }
@@ -1096,7 +1096,7 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
         //cout<<"pelec = "<<telec*w_new<<", pdamp = "<<tdamp*w_new<<", pmech = "<<tmech*w_new<<endl;
         pmech = tmech*w_new;
         pmech /= eta;
-        if(fabs(p_new-pmech)<1e-6)
+        if(fabs(p_new-pmech)<FLOAT_EPSILON)
         {
             w = w_new;
             //osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
