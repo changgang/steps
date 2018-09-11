@@ -66,6 +66,8 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 */
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
 
+    //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models);
+
 
 }
 
@@ -1468,6 +1470,125 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator->prepare_wt_generator_related_meters();
 
     simulator->set_output_file("test_log/IEEE9_test_with_wt3_models");
+
+    //simulator->set_max_DAE_iteration(20);
+    //simulator->set_max_network_iteration(200);
+    simulator->set_allowed_max_power_imbalance_in_MVA(0.001);
+    set_dynamic_simulation_time_step_in_s(0.01);
+    simulator->start();
+    simulator->run_to(100.0);
+
+    DEVICE_ID did;
+    did.set_device_type("LINE");
+    TERMINAL terminal;
+    terminal.append_bus(5);
+    terminal.append_bus(7);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+
+    DEVICE_ID gendid_1;
+    gendid_1.set_device_type("GENERATOR");
+    terminal.clear();
+    terminal.append_bus(1);
+    gendid_1.set_device_terminal(terminal);
+    gendid_1.set_device_identifier("1");
+
+    /*simulator->set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e8));
+    simulator->run_to(1.1);
+    simulator->clear_line_fault(did, 7, 0.0);
+    simulator->trip_line(did);*/
+    simulator->shed_generator(gendid_1, 0.2);
+
+    simulator->run_to(150.0);
+
+    recover_stdout();
+}
+
+void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    string file = "test_log/";
+    file += __FUNCTION__;
+    file += ".txt";
+    redirect_stdout_to_file(file);
+
+
+    PSSE_IMEXPORTER importer;
+
+    importer.set_power_system_database(db);
+    importer.load_powerflow_data("IEEE9_all_wind.raw");
+    importer.load_dynamic_data("IEEE9_all_wt3_models.dyr");
+
+    vector<WT_GENERATOR*> gens = db->get_all_wt_generators();
+    for(size_t i=0; i<gens.size(); ++i)
+    {
+        WT_GENERATOR* gen = gens[i];
+        if(gen->get_wt_generator_model()!=NULL)
+            cout<<gen->get_wt_generator_model()->get_standard_model_string()<<endl;
+        if(gen->get_wt_aerodynamic_model()!=NULL)
+            cout<<gen->get_wt_aerodynamic_model()->get_standard_model_string()<<endl;
+        if(gen->get_wt_turbine_model()!=NULL)
+            cout<<gen->get_wt_turbine_model()->get_standard_model_string()<<endl;
+        if(gen->get_wt_electrical_model()!=NULL)
+            cout<<gen->get_wt_electrical_model()->get_standard_model_string()<<endl;
+        if(gen->get_wt_pitch_model()!=NULL)
+            cout<<gen->get_wt_pitch_model()->get_standard_model_string()<<endl;
+        if(gen->get_wind_speed_model()!=NULL)
+            cout<<gen->get_wind_speed_model()->get_standard_model_string()<<endl;
+    }
+
+    //prepare_IEEE_9_bus_model(db);
+    //prepare_IEEE_9_bus_model_classical_dynamic_model(db);
+
+    POWERFLOW_SOLVER powerflow_solver;
+
+    powerflow_solver.set_power_system_database(db);
+
+    powerflow_solver.set_max_iteration(30);
+    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
+    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
+    powerflow_solver.set_flat_start_logic(false);
+    powerflow_solver.set_transformer_tap_adjustment_logic(true);
+
+    powerflow_solver.solve_with_fast_decoupled_solution();
+
+    //powerflow_solver.show_powerflow_result();
+
+    /*METER meter;
+    METER_SETTER setter;
+    setter.set_power_system_database(db);
+    meter = setter.prepare_bus_voltage_in_pu_meter(3);
+    simulator->append_meter(meter);
+    meter = setter.prepare_bus_angle_in_deg_meter(3);
+    simulator->append_meter(meter);
+    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,0);
+    simulator->append_meter(meter);
+    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,13);
+    simulator->append_meter(meter);
+    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,14);
+    simulator->append_meter(meter);
+    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,15);
+    simulator->append_meter(meter);
+    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,16);
+    simulator->append_meter(meter);
+    meter = setter.prepare_wt_generator_model_internal_variable_meter(gendid,17);
+    simulator->append_meter(meter);
+    simulator->prepare_meters();
+    */
+    simulator->prepare_bus_related_meter(1, "Frequency in Hz");
+    simulator->prepare_bus_related_meter(2, "Frequency in Hz");
+    simulator->prepare_bus_related_meter(3, "Frequency in Hz");
+    simulator->prepare_bus_related_meter(1, "Voltage in pu");
+    simulator->prepare_bus_related_meter(2, "Voltage in pu");
+    simulator->prepare_bus_related_meter(3, "Voltage in pu");
+    simulator->prepare_bus_related_meter(1, "Angle in deg");
+    simulator->prepare_bus_related_meter(2, "Angle in deg");
+    simulator->prepare_bus_related_meter(3, "Angle in deg");
+    simulator->prepare_wt_generator_related_meters();
+
+    simulator->set_output_file("test_log/IEEE9_test_with_all_wt3_models");
 
     //simulator->set_max_DAE_iteration(20);
     //simulator->set_max_network_iteration(200);

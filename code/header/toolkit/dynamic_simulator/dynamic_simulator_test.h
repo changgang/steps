@@ -78,6 +78,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T();
 
         void test_run_IEEE_9_bus_model_with_WT3_models();
+        void test_run_IEEE_9_bus_model_with_all_WT3_models();
 
     private:
         void run_single_machine_model_for_model_test();

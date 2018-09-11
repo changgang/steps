@@ -3023,6 +3023,60 @@ void DYNAMICS_SIMULATOR::shed_generator(DEVICE_ID gen_id,double percent)
 }
 
 
+void DYNAMICS_SIMULATOR::trip_wt_generator(DEVICE_ID gen_id, size_t n)
+{
+    ostringstream osstream;
+
+    if(gen_id.get_device_type()!="WT GENERATOR")
+    {
+        osstream<<"The given device is not a WT GENERATOR (it is a "<<gen_id.get_device_type()<<") for tripping wt generator."<<endl
+               <<"No wt generator will be tripped at time "<<get_dynamic_simulation_time_in_s()<<" s."<<endl;
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    POWER_SYSTEM_DATABASE* db = get_power_system_database();
+    WT_GENERATOR* generator = db->get_wt_generator(gen_id);
+    if(generator!=NULL)
+    {
+        if(generator->get_status()==true)
+        {
+            if(n==0)
+            {
+                osstream<<n<<" = 0, and no individual generators of "<<generator->get_device_name()<<" will be tripped at time "<<get_dynamic_simulation_time_in_s()<<" s.";
+                show_information_with_leading_time_stamp(osstream);
+                return;
+            }
+            size_t N = generator->get_number_of_lumped_wt_generators();
+            if(n<N)
+            {
+                generator->set_number_of_lumped_wt_generators(N-n);
+                double mbase = generator->get_mbase_in_MVA();
+                generator->set_mbase_in_MVA(mbase/N*(N-n));
+
+                osstream<<n<<" individual generators of "<<generator->get_device_name()<<" are tripped at time "<<get_dynamic_simulation_time_in_s()<<" s.";
+                show_information_with_leading_time_stamp(osstream);
+            }
+            else
+            {
+                generator->set_status(false);
+
+                osstream<<"All individual generators of "<<generator->get_device_name()<<" are tripped at time "<<get_dynamic_simulation_time_in_s()<<" s.";
+                show_information_with_leading_time_stamp(osstream);
+            }
+
+            network_db->build_dynamic_network_matrix();
+            build_jacobian();
+        }
+    }
+    else
+    {
+        osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist in power system database."<<endl
+               <<"No wt generator will be tripped at time "<<get_dynamic_simulation_time_in_s()<<" s.";
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 void DYNAMICS_SIMULATOR::trip_load(DEVICE_ID load_id)
 {
     ostringstream osstream;

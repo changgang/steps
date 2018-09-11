@@ -3518,7 +3518,7 @@ size_t POWER_SYSTEM_DATABASE::get_owner_index(const size_t no) const
 
 size_t POWER_SYSTEM_DATABASE::bus_name2bus_number(const string name) const
 {
-    string trimmed_name = trim_string(name);
+    string trimmed_name = string2upper(trim_string(name));
     size_t n = get_bus_count();
     for(size_t i=0; i!=n; ++i)
     {

@@ -106,6 +106,8 @@ class DYNAMICS_SIMULATOR: public BASE
         void trip_generator(DEVICE_ID gen_id);
         void shed_generator(DEVICE_ID gen_id,double percent);
 
+        void trip_wt_generator(DEVICE_ID gen_id, size_t n);
+
         void trip_load(DEVICE_ID load_id);
         void close_load(DEVICE_ID load_id);
         void scale_load(DEVICE_ID load_id, double percent);
