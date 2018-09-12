@@ -76,8 +76,6 @@ class SOURCE : public DEVICE
         double voltage_to_regulate_pu;
         size_t bus_to_regulate;
 
-        SOURCE_REGULATING_MODE reg_mode;
-
         complex<double> source_Z_pu;
 };
 #endif // SOURCE_H

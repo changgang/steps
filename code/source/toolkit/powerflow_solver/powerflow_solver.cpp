@@ -1254,7 +1254,6 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(size_t physical_
 {
     vector<SOURCE*> sources = db->get_sources_connecting_to_bus(physical_bus);
 
-    SOURCE_REGULATING_MODE mode;
     size_t n = sources.size();
     for(size_t i=0; i!=n; ++i)
         sources[i]->set_q_generation_in_MVar(sources[i]->get_q_min_in_MVar());
@@ -1263,7 +1262,6 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_
 {
     vector<SOURCE*> sources = db->get_sources_connecting_to_bus(physical_bus);
 
-    SOURCE_REGULATING_MODE mode;
     size_t n = sources.size();
     for(size_t i=0; i!=n; ++i)
         sources[i]->set_q_generation_in_MVar(sources[i]->get_q_max_in_MVar());

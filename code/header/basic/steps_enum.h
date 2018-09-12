@@ -18,14 +18,6 @@ enum BUS_TYPE
 };
 
 // source enum
-enum SOURCE_REGULATING_MODE
-{
-    REGULATING_PQ = 1,
-    REGULATING_PV = 2,
-    REGULATING_VA = 3
-};
-
-// source enum
 enum SOURCE_TYPE
 {
     SYNC_GENERATOR_SOURCE = 0,
