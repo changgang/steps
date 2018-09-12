@@ -73,7 +73,6 @@ void WT_GENERATOR_TEST::test_constructor()
     TEST_ASSERT(fabs(wt_generator->get_voltage_to_regulate_in_pu()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(wt_generator->get_bus_to_regulate()==0);
     TEST_ASSERT(wt_generator->get_source_impedance_in_pu()==0.0);
-    TEST_ASSERT(wt_generator->get_regulating_mode()==REGULATING_PV);
 }
 
 void WT_GENERATOR_TEST::test_set_get_generator_bus()

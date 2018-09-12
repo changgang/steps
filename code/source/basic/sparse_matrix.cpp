@@ -455,7 +455,7 @@ vector<size_t> SPARSE_MATRIX::get_reorder_permutation()
 
 void SPARSE_MATRIX::LU_factorization(int order, double tolerance)
 {
-    if(LU_factorization_is_performed()) return;
+    //if(LU_factorization_is_performed()) return;
 
     char buffer[256];
 
@@ -501,7 +501,6 @@ bool SPARSE_MATRIX::LU_factorization_is_performed() const
 
 vector<double> SPARSE_MATRIX::solve_Ax_eq_b(vector<double> b)
 {
-
     if(not LU_factorization_is_performed())
         LU_factorization(1, 1e-6);
 

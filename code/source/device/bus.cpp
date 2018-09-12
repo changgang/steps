@@ -343,7 +343,7 @@ void BUS::clear()
     set_angle_in_rad(0.0);
     set_voltage_upper_limit_in_pu(1.1);
     set_voltage_lower_limit_in_pu(0.9);
-    voltage_to_regulate_in_pu = 0.0;
+    set_voltage_to_regulate_in_pu(0.0);
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb!=NULL)
         set_base_frequency_in_Hz(psdb->get_system_base_frequency_in_Hz());
@@ -468,6 +468,7 @@ void BUS::copy_from_const_bus(const BUS& bus)
     set_owner_number(bus.get_owner_number());
     set_voltage_in_pu(bus.get_voltage_in_pu());
     set_angle_in_rad(bus.get_angle_in_rad());
+    set_voltage_to_regulate_in_pu(bus.get_voltage_to_regulate_in_pu());
     set_base_frequency_in_Hz(bus.get_base_frequency_in_Hz());
 
     if(bus.is_faulted())

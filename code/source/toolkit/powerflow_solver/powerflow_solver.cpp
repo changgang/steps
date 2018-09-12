@@ -15,7 +15,7 @@ POWERFLOW_SOLVER::POWERFLOW_SOLVER()
 
     set_flat_start_logic(false);
     set_transformer_tap_adjustment_logic(true);
-    set_non_divergent_solution_logic(false);
+    set_non_divergent_solution_logic(true);
 
     set_allowed_max_active_power_imbalance_in_MW(0.001);
     set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
@@ -282,21 +282,24 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
     jacobian_builder.set_network_database(network_db);
 
     network_db->build_network_matrix();
-    //const SPARSE_MATRIX& Y = network_db->get_network_matrix();
-    //Y.report_brief();
 
     network_db->build_decoupled_network_matrix();
+    //const SPARSE_MATRIX& Y = network_db->get_network_matrix();
+    //cout<<"Y matrix identity is: "<<get_sparse_matrix_identity(Y)<<endl;
 
     update_P_and_Q_equation_internal_buses();
     BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
     BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
     //BP.LU_factorization(1, 1e-6);
     //BQ.LU_factorization(1, 1e-6);
+    //BP.report_brief();
+    //BQ.report_brief();
 
     size_t physical_bus;
 
     while(true)
     {
+
         char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %lu:",iteration_count);
         show_information_with_leading_time_stamp(buffer);
@@ -346,8 +349,14 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             P_power_mismatch[i] /= db->get_bus_voltage_in_pu(physical_bus);
         }
         bus_delta_angle = P_power_mismatch/BP;
+        //BP.report_brief();
+        //for(size_t i=0; i<P_power_mismatch.size(); i++)
+        //    cout<<i<<","<<P_power_mismatch[i]<<endl;
         //for(size_t i=0; i<internal_P_equation_buses.size(); ++i)
-        //    bus_delta_angle[i] /= abs(get_bus_complex_voltage_in_pu(get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
+        //{
+        //    cout<<bus_delta_angle[i]<<endl;
+        //    //bus_delta_angle[i] /= abs(psdb->get_bus_complex_voltage_in_pu(network_db->get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
+        //}
         update_bus_angle(bus_delta_angle);
 
         calculate_raw_bus_power_mismatch();
@@ -390,9 +399,8 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     psdb->update_in_service_bus_count();
 
-    initialize_generator_regulating_mode_with_bus_type();
+    initialize_bus_type();
     initialize_bus_voltage_to_regulate();
-    //initialize_bus_type_and_voltage_to_regulate();
     initialize_bus_voltage();
     optimize_bus_numbers();
     iteration_count = 0;
@@ -402,137 +410,62 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     show_information_with_leading_time_stamp(buffer);
 }
 
-void POWERFLOW_SOLVER::initialize_bus_type_and_voltage_to_regulate()
+void POWERFLOW_SOLVER::initialize_bus_type()
 {
+    bool flat_flag = get_flat_start_logic();
+
     vector<BUS*> buses = db->get_all_buses();
 
     size_t nbus = buses.size();
     for(size_t i=0; i!=nbus; ++i)
     {
-        buses[i]->set_voltage_to_regulate_in_pu(0.0);
-        if(buses[i]->get_bus_type()!=OUT_OF_SERVICE)
-            buses[i]->set_bus_type(PQ_TYPE);
-    }
-
-    vector<SOURCE*> sources = db->get_all_sources();
-    size_t nsource = sources.size();
-    for(size_t i=0; i!=nsource; ++i)
-        set_bus_type_and_voltage_to_regulate_with_source(*(sources[i]));
-    /*
-    size_t ngen = generators.size();
-    for(size_t i=0; i!=ngen; ++i)
-        set_bus_type_and_voltage_to_regulate_with_source(*(generators[i]));
-
-    vector<
-    size_t nwt_generator = get_wt_generator_count();
-    for(size_t i=0; i!=nwt_generator; ++i)
-        set_bus_type_and_voltage_to_regulate_with_source(*(wt_generators[i]));
-    */
-}
-
-void POWERFLOW_SOLVER::initialize_generator_regulating_mode_with_bus_type()
-{
-    vector<GENERATOR*> generators = db->get_all_generators();
-    size_t n = generators.size();
-    GENERATOR* gen;
-    for(size_t i=0; i!=n; ++i)
-    {
-        gen = generators[i];
-        size_t bus = gen->get_generator_bus();
-
-        BUS* busptr = db->get_bus(bus);
-
-        BUS_TYPE bustype = busptr->get_bus_type();
-
-        switch(bustype)
+        BUS_TYPE btype = buses[i]->get_bus_type();
+        if(flat_flag==true)
+            if(btype == PV_TO_PQ_TYPE_1 or btype == PV_TO_PQ_TYPE_2 or
+               btype == PV_TO_PQ_TYPE_3 or btype == PV_TO_PQ_TYPE_4)
+                buses[i]->set_bus_type(PV_TYPE);
+        if(btype==PV_TYPE)
         {
-            case PQ_TYPE:
-                gen->set_regulating_mode(REGULATING_PQ);
-                break;
-            case PV_TYPE:
-            case PV_TO_PQ_TYPE_1:
-            case PV_TO_PQ_TYPE_2:
-            case PV_TO_PQ_TYPE_3:
-            case PV_TO_PQ_TYPE_4:
-                gen->set_regulating_mode(REGULATING_PV);
-                break;
-            case SLACK_TYPE:
-                gen->set_regulating_mode(REGULATING_VA);
-                break;
-            default:
-                gen->set_regulating_mode(REGULATING_PQ);
-                break;
+            vector<SOURCE*> sources = db->get_sources_connecting_to_bus(buses[i]->get_bus_number());
+            size_t nsource = sources.size();
+            size_t n_inservice = 0;
+            for(size_t j=0; j!=nsource; ++j)
+                if(sources[j]->get_status()==true)
+                    n_inservice++;
+            if(n_inservice==0)
+                buses[i]->set_bus_type(PQ_TYPE);
         }
     }
 }
-
-void POWERFLOW_SOLVER::set_bus_type_and_voltage_to_regulate_with_source(SOURCE& source)
-{
-    if(source.get_status()==false)
-        return;
-
-    SOURCE_REGULATING_MODE mode = source.get_regulating_mode();
-
-    BUS* busptr;
-
-    if(mode==REGULATING_PV or mode == REGULATING_VA)
-    {
-        size_t bus = source.get_bus_to_regulate();
-        double v = source.get_voltage_to_regulate_in_pu();
-
-        busptr = db->get_bus(bus);
-
-        if(busptr!=NULL)
-        {
-            busptr->set_voltage_to_regulate_in_pu(v);
-            switch(busptr->get_bus_type())
-            {
-                case PQ_TYPE:
-                    if(mode==REGULATING_PV)
-                        busptr->set_bus_type(PV_TYPE);
-                    else
-                        busptr->set_bus_type(SLACK_TYPE);
-                    break;
-                case PV_TYPE:
-                    if(mode==REGULATING_VA)
-                        busptr->set_bus_type(SLACK_TYPE);
-                    break;
-                case SLACK_TYPE:
-                default:
-                    break;
-            }
-        }
-    }
-}
-
 
 void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 {
     vector<SOURCE*> sources = db->get_all_sources();
     size_t nsource = sources.size();
     for(size_t i=0; i!=nsource; ++i)
-        set_bus_type_and_voltage_to_regulate_with_source(*(sources[i]));
-}
-
-void POWERFLOW_SOLVER::set_bus_voltage_to_regulate_with_source(SOURCE& source)
-{
-    if(source.get_status()==false)
-        return;
-
-    SOURCE_REGULATING_MODE mode = source.get_regulating_mode();
-
-    BUS* busptr;
-
-    if(mode==REGULATING_PV or mode == REGULATING_VA)
     {
-        size_t bus = source.get_bus_to_regulate();
-        double v = source.get_voltage_to_regulate_in_pu();
+        if(sources[i]->get_status()==false)
+            continue;
 
-        busptr = db->get_bus(bus);
-
-        if(busptr!=NULL)
+        double qmax = sources[i]->get_q_max_in_MVar();
+        double qmin = sources[i]->get_q_min_in_MVar();
+        if(qmax!=qmin)
         {
-            busptr->set_voltage_to_regulate_in_pu(v);
+            size_t bus = sources[i]->get_bus_to_regulate();
+            double vreg = sources[i]->get_voltage_to_regulate_in_pu();
+            BUS* busptr = db->get_bus(bus);
+            busptr->set_voltage_to_regulate_in_pu(vreg);
+        }
+    }
+    vector<BUS*> buses = db->get_all_buses();
+    size_t nbus = buses.size();
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        BUS_TYPE btype = buses[i]->get_bus_type();
+        if(btype!=PQ_TYPE and  btype!=OUT_OF_SERVICE)
+        {
+            if(fabs(buses[i]->get_voltage_to_regulate_in_pu())<FLOAT_EPSILON)
+                buses[i]->set_voltage_to_regulate_in_pu(1.0);
         }
     }
 }
@@ -667,11 +600,10 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     add_load_to_bus_power_mismatch();
     add_hvdc_to_bus_power_mismatch();
 
-/*
-    ostringstream osstream;
-    osstream<<"Power mismatch of all buses.");
+    /*ostringstream osstream;
+    osstream<<"Power mismatch of buses.";
     show_information_with_leading_time_stamp(osstream);
-    osstream<<"bus     Pmismatch(MW) Qmismatch(MVar)");
+    osstream<<"bus     Pmismatch(MW) Qmismatch(MVar)";
     show_information_with_leading_time_stamp(osstream);
 
     size_t bus;
@@ -681,10 +613,17 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     for(size_t i=0; i!=nbus; ++i)
     {
         bus = ntdb->get_physical_bus_number_of_internal_bus(i);
-        osstream<<"%-8u %-10f %-10f",bus, bus_power[i].real()*sbase, bus_power[i].imag()*sbase);
+        BUS_TYPE btype = psdb->get_bus(bus)->get_bus_type();
+        double p = bus_power[i].real()*sbase;
+        double q = bus_power[i].imag()*sbase;
+        if(btype==PV_TYPE or btype == SLACK_TYPE)
+            q = 0.0;
+        if(btype==SLACK_TYPE)
+            p = 0.0;
+        osstream<<setw(6)<<bus<<", "<<setw(8)<<setprecision(6)<<p<<", "<<setw(8)<<setprecision(6)<<q;
+
         show_information_with_leading_time_stamp(osstream);
-    }
-*/
+    }*/
 }
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
@@ -778,8 +717,6 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 
     BUS_TYPE btype;
 
-    SOURCE_REGULATING_MODE mode;
-
     complex<double> Sgen;
 
     vector<SOURCE*> sources = db->get_all_sources();
@@ -794,35 +731,19 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
         if(status == false)
             continue;
 
-        mode = sources[i]->get_regulating_mode();
-        if(mode==REGULATING_VA)
-            continue;
-
         physical_bus = sources[i]->get_source_bus();
 
         busptr = db->get_bus(physical_bus);
 
         btype = busptr->get_bus_type();
-        if(btype == OUT_OF_SERVICE)
+        if(btype == OUT_OF_SERVICE or btype == SLACK_TYPE)
             continue;
 
-        if(mode==REGULATING_PV)
-        {
-            switch(btype)
-            {
-                case SLACK_TYPE:
-                case PV_TYPE:
-                    Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), 0.0);
-                    break;
-                default: // PV_PQ_TYPE
-                    Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), sources[i]->get_q_generation_in_MVar());
-                    break;
-            }
-        }
-        else // REGULATING_PQ
-        {
+        if(btype == PV_TYPE)
+            Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), 0.0);
+        else// PQ, PV2PQ
             Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), sources[i]->get_q_generation_in_MVar());
-        }
+
         internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
         bus_power[internal_bus] += (Sgen/Sbase);
     }
@@ -1016,9 +937,9 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(size_t physica
 
     size_t internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
 
-    double mvabase = db->get_system_base_power_in_MVA();
-    double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*mvabase;
-    double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*mvabase;
+    double sbase = db->get_system_base_power_in_MVA();
+    double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*sbase;
+    double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*sbase;
 
     double total_p_max_in_MW = db->get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
     double total_p_min_in_MW = db->get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
@@ -1032,26 +953,19 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(size_t physica
 
     vector<SOURCE*> sources = db->get_sources_connecting_to_bus(physical_bus);
     size_t n;
-    SOURCE_REGULATING_MODE mode;
     n = sources.size();
     for(size_t i=0; i!=n; ++i)
     {
         if(sources[i]->get_status() == false)
             continue;
 
-        mode = sources[i]->get_regulating_mode();
-        if(mode == REGULATING_VA)
-        {
-            double P_loading_in_MW = sources[i]->get_p_max_in_MW() - sources[i]->get_p_min_in_MW();
-            P_loading_in_MW = P_loading_in_MW*P_loading_percentage + sources[i]->get_p_min_in_MW();
-            sources[i]->set_p_generation_in_MW(P_loading_in_MW);
-        }
-        if(mode == REGULATING_VA or mode == REGULATING_PV)
-        {
-            double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
-            Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
-            sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
-        }
+        double P_loading_in_MW = sources[i]->get_p_max_in_MW() - sources[i]->get_p_min_in_MW();
+        P_loading_in_MW = P_loading_in_MW*P_loading_percentage + sources[i]->get_p_min_in_MW();
+        sources[i]->set_p_generation_in_MW(P_loading_in_MW);
+
+        double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
+        Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
+        sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
     }
 }
 
@@ -1084,8 +998,6 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
         return bus_type_changed;
     }
 
-
-    SOURCE_REGULATING_MODE mode;
     size_t n;
 
     if(bus_Q_mismatch_in_MVar > total_q_max_in_MVar)
@@ -1121,13 +1033,9 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
     {
         if(sources[i]->get_status() == false)
             continue;
-        mode = sources[i]->get_regulating_mode();
-        if(mode == REGULATING_PV)
-        {
-            double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
-            Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
-            sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
-        }
+        double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
+        Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
+        sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
     }
     return bus_type_changed;
 }
@@ -1349,11 +1257,7 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(size_t physical_
     SOURCE_REGULATING_MODE mode;
     size_t n = sources.size();
     for(size_t i=0; i!=n; ++i)
-    {
-        mode = sources[i]->get_regulating_mode();
-        if(mode==REGULATING_PV or mode == REGULATING_VA)
-            sources[i]->set_q_generation_in_MVar(sources[i]->get_q_min_in_MVar());
-    }
+        sources[i]->set_q_generation_in_MVar(sources[i]->get_q_min_in_MVar());
 }
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_bus)
 {
@@ -1362,11 +1266,7 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_
     SOURCE_REGULATING_MODE mode;
     size_t n = sources.size();
     for(size_t i=0; i!=n; ++i)
-    {
-        mode = sources[i]->get_regulating_mode();
-        if(mode==REGULATING_PV or mode == REGULATING_VA)
-            sources[i]->set_q_generation_in_MVar(sources[i]->get_q_max_in_MVar());
-    }
+        sources[i]->set_q_generation_in_MVar(sources[i]->get_q_max_in_MVar());
 }
 vector<double> POWERFLOW_SOLVER::get_bus_power_mismatch_vector_for_coupled_solution()
 {
@@ -1420,6 +1320,7 @@ vector<double> POWERFLOW_SOLVER::get_bus_P_power_mismatch_vector_for_decoupled_s
     {
         internal_bus = internal_P_equation_buses[i];
         P_mismatch.push_back(-bus_power[internal_bus].real());
+        //cout<<"Pmismatch vector, "<<i<<", "<<-bus_power[internal_bus].real()<<endl;
     }
     return P_mismatch;
 }
@@ -1437,6 +1338,7 @@ vector<double> POWERFLOW_SOLVER::get_bus_Q_power_mismatch_vector_for_decoupled_s
     {
         internal_bus = internal_Q_equation_buses[i];
         Q_mismatch.push_back(-bus_power[internal_bus].imag());
+        //cout<<"Qmismatch vector, "<<i<<", "<<-bus_power[internal_bus].imag()<<endl;
     }
 
     return Q_mismatch;
@@ -1458,6 +1360,9 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
         show_information_with_leading_time_stamp(osstream);
     }
 */
+
+    double Perror0 = get_maximum_active_power_mismatch_in_MW();
+    double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
 
     size_t nP = internal_P_equation_buses.size();
     size_t nQ = internal_Q_equation_buses.size();
@@ -1501,6 +1406,50 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
 
         bus->set_voltage_in_pu(current_voltage + alpha*delta_voltage);
     }
+
+    if(get_non_divergent_solution_logic()==true)
+    {
+        for(size_t i=0; i<10; ++i)
+        {
+            calculate_raw_bus_power_mismatch();
+            double Perror = get_maximum_active_power_mismatch_in_MW();
+            double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
+            if((Perror<Perror0 or Perror<get_allowed_max_active_power_imbalance_in_MW())
+                and (Qerror<Qerror0 or Qerror<get_allowed_max_reactive_power_imbalance_in_MVar()))
+                break;
+            else
+            {
+                alpha *= 0.5;
+                for(size_t i=0; i!=nP; ++i)
+                {
+                    internal_bus = internal_P_equation_buses[i];
+                    physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+
+                    bus = db->get_bus(physical_bus);
+
+                    current_angle = bus->get_angle_in_rad();
+
+                    delta_angle = update[i];
+
+                    bus->set_angle_in_rad(current_angle - alpha*delta_angle);
+                }
+
+                for(size_t i=0; i!=nQ; ++i)
+                {
+                    internal_bus = internal_Q_equation_buses[i];
+                    physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+
+                    bus = db->get_bus(physical_bus);
+
+                    current_voltage = bus->get_voltage_in_pu();
+
+                    delta_voltage = update[nP+i];
+
+                    bus->set_voltage_in_pu(current_voltage - alpha*delta_voltage);
+                }
+            }
+        }
+    }
 /*
     osstream<<"New bus voltage and angle in this iteration:");
     show_information_with_leading_time_stamp(osstream);
@@ -1520,6 +1469,9 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
 
 void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
 {
+    double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
+
+    size_t nP = internal_P_equation_buses.size();
     size_t nQ = internal_Q_equation_buses.size();
 
     size_t internal_bus, physical_bus;
@@ -1552,6 +1504,36 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
             max_delta_v_bus = physical_bus;
         }
     }
+
+    if(get_non_divergent_solution_logic()==true)
+    {
+        for(size_t i=0; i<10; ++i)
+        {
+            calculate_raw_bus_power_mismatch();
+            double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
+            if(Qerror<Qerror0 or Qerror<get_allowed_max_reactive_power_imbalance_in_MVar())
+                break;
+            else
+            {
+                alpha *= 0.5;
+                max_delta_v *= 0.5;
+                for(size_t i=0; i!=nQ; ++i)
+                {
+                    internal_bus = internal_Q_equation_buses[i];
+                    physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+
+                    bus = db->get_bus(physical_bus);
+
+                    current_voltage = bus->get_voltage_in_pu();
+
+                    delta_voltage = update[nP+i];
+
+                    bus->set_voltage_in_pu(current_voltage - alpha*delta_voltage);
+                }
+            }
+        }
+    }
+
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Max voltage update: %f pu at physical bus %lu.",
              max_delta_v,max_delta_v_bus);
@@ -1562,6 +1544,8 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
 void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
 {
     ostringstream osstream;
+
+    double Perror0 = get_maximum_active_power_mismatch_in_MW();
 
     size_t nP = internal_P_equation_buses.size();
 
@@ -1596,8 +1580,38 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
         }
     }
 
+
+    if(get_non_divergent_solution_logic()==true)
+    {
+        for(size_t i=0; i<10; ++i)
+        {
+            calculate_raw_bus_power_mismatch();
+            double Perror = get_maximum_active_power_mismatch_in_MW();
+            if(Perror<Perror0 or Perror<get_allowed_max_active_power_imbalance_in_MW())
+                break;
+            else
+            {
+                alpha *= 0.5;
+                max_delta_angle *=0.5;
+                for(size_t i=0; i!=nP; ++i)
+                {
+                    internal_bus = internal_P_equation_buses[i];
+                    physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+
+                    bus = db->get_bus(physical_bus);
+
+                    current_angle = bus->get_angle_in_rad();
+
+                    delta_angle = update[i];
+
+                    bus->set_angle_in_rad(current_angle - alpha*delta_angle);
+                }
+            }
+        }
+    }
+
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Max angle update: %f pu at physical bus %lu.",
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Max angle update: %f rad at physical bus %lu.",
              max_delta_angle,max_delta_angle_bus);
     show_information_with_leading_time_stamp(buffer);
 }

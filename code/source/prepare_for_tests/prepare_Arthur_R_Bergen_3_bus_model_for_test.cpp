@@ -77,7 +77,6 @@ void prepare_Arthur_R_Bergen_3_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_generator_impedance_in_pu(gen_z);
     generator.set_voltage_to_regulate_in_pu(1.0);
     generator.set_bus_to_regulate(0);
-    generator.set_regulating_mode(REGULATING_VA);
 
     db->append_generator(generator);
 
@@ -89,7 +88,6 @@ void prepare_Arthur_R_Bergen_3_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_q_generation_in_MVar(0.0);
     generator.set_voltage_to_regulate_in_pu(1.05);
     generator.set_bus_to_regulate(0);
-    generator.set_regulating_mode(REGULATING_PV);
 
     db->append_generator(generator);
 }

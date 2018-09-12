@@ -1023,7 +1023,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_intern
     B_jacobian.compress_and_merge_duplicate_entries();
 
 
-    osstream<<"Done building BP matrix for active power solution.";
+    osstream<<"Done building BQ matrix for active power solution.";
     show_information_with_leading_time_stamp(osstream);
 
     return B_jacobian;

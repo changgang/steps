@@ -124,11 +124,6 @@ void SOURCE::set_q_min_in_MVar(double q_min)
     this->q_min_MVar = q_min;
 }
 
-void SOURCE::set_regulating_mode(const SOURCE_REGULATING_MODE  mode)
-{
-    this->reg_mode = mode;
-}
-
 void SOURCE::set_voltage_to_regulate_in_pu(double v_pu)
 {
     ostringstream osstream;
@@ -224,11 +219,6 @@ double SOURCE::get_q_max_in_MVar() const
 double SOURCE::get_q_min_in_MVar() const
 {
     return q_min_MVar;
-}
-
-SOURCE_REGULATING_MODE SOURCE::get_regulating_mode() const
-{
-    return this->reg_mode;
 }
 
 double SOURCE::get_voltage_to_regulate_in_pu() const

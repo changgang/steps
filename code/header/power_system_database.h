@@ -357,6 +357,12 @@ class POWER_SYSTEM_DATABASE
         void scale_pv_units_power_in_area(size_t area_number, double scale);
         void scale_pv_units_power_in_zone(size_t zone_number, double scale);
 
+        void scale_energy_storage_power(DEVICE_ID did, double scale);
+        void scale_all_energy_storages_power(double scale);
+        void scale_energy_storages_power_at_bus(size_t bus, double scale);
+        void scale_energy_storages_power_in_area(size_t area_number, double scale);
+        void scale_energy_storages_power_in_zone(size_t zone_number, double scale);
+
         void clear_bus(size_t bus);
         void clear_all_buses();
 

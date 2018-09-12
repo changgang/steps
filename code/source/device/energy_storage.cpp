@@ -18,8 +18,6 @@ ENERGY_STORAGE::ENERGY_STORAGE(POWER_SYSTEM_DATABASE* psdb) : SOURCE(psdb)
         show_information_with_leading_time_stamp(osstream);
     }
     clear();
-    set_regulating_mode(REGULATING_PV);
-
     energy_storage_model = NULL;
 }
 
@@ -176,24 +174,8 @@ void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
 void ENERGY_STORAGE::report() const
 {
     ostringstream osstream;
-    string regulating_mode;
-    switch(get_regulating_mode())
-    {
-        case REGULATING_PQ:
-            regulating_mode = "regulating P and Q";
-            break;
-        case REGULATING_PV:
-            regulating_mode = "regulating P and V";
-            break;
-        case REGULATING_VA:
-            regulating_mode = "regulating V and Angle";
-            break;
-        default:
-            regulating_mode = "not set(ERROR)";
-    }
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
-      <<"regulating mode: "<<regulating_mode<<endl
       <<"P = "<<setw(8)<<setprecision(4)<<fixed<<get_p_generation_in_MW()<<" MW, "
       <<"Pmax = "<<setw(8)<<setprecision(4)<<fixed<<get_p_max_in_MW()<<" MW, "
       <<"Pmin = "<<setw(8)<<setprecision(4)<<fixed<<get_p_min_in_MW()<<" MW"<<endl

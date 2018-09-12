@@ -31,20 +31,6 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
         if(PARAMETER_NAME=="BUS_REG" or PARAMETER_NAME=="BUS TO REGULATE")
             return sourceptr->get_bus_to_regulate();
 
-        if(PARAMETER_NAME=="MODE" or PARAMETER_NAME=="REGULATING MODE")
-        {
-            SOURCE_REGULATING_MODE mode = sourceptr->get_regulating_mode();
-            if(mode==REGULATING_PQ)
-                return 1;
-            else
-            {
-                if(mode==REGULATING_PV)
-                    return 2;
-                else
-                    return 3;
-            }
-        }
-
         if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
             return get_owner_of_device(sourceptr, PARAMETER_NAME);
 
@@ -89,30 +75,6 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
         if(PARAMETER_NAME=="BUS_REG" or PARAMETER_NAME=="BUS TO REGULATE")
             return sourceptr->set_bus_to_regulate(value);
 
-        if(PARAMETER_NAME=="MODE" or PARAMETER_NAME=="REGULATING MODE")
-        {
-            if(value==1)
-                return sourceptr->set_regulating_mode(REGULATING_PQ);
-            else
-            {
-                if(value==2)
-                    return sourceptr->set_regulating_mode(REGULATING_PV);
-                else
-                {
-                    if(value==3)
-                        return sourceptr->set_regulating_mode(REGULATING_VA);
-                    else
-                    {
-                        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Input regulating mode %d is not supported for %s with api %s.\n"
-                                 "Nothing will be changed.",
-                                 value, (sourceptr->get_device_name()).c_str(), __FUNCTION__);
-                        show_information_with_leading_time_stamp(buffer);
-                        return;
-                    }
-                }
-            }
-        }
         if(PARAMETER_NAME=="OWNER1" or PARAMETER_NAME=="OWNER2" or PARAMETER_NAME=="OWNER3" or PARAMETER_NAME=="OWNER4")
             return set_owner_of_device(sourceptr, PARAMETER_NAME, value);
 

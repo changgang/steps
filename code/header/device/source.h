@@ -26,7 +26,6 @@ class SOURCE : public DEVICE
         void set_p_min_in_MW(double p_min_MW);
         void set_q_max_in_MVar(double q_max_MVar);
         void set_q_min_in_MVar(double q_min_MVar);
-        void set_regulating_mode(const SOURCE_REGULATING_MODE  mode);
         void set_voltage_to_regulate_in_pu(double v_pu);
         void set_bus_to_regulate(size_t bus);
         void set_source_impedance_in_pu(complex<double> z_pu);
@@ -43,7 +42,6 @@ class SOURCE : public DEVICE
         double get_p_min_in_MW() const;
         double get_q_max_in_MVar() const;
         double get_q_min_in_MVar() const;
-        SOURCE_REGULATING_MODE get_regulating_mode() const;
         double get_voltage_to_regulate_in_pu() const;
         size_t get_bus_to_regulate() const;
         complex<double> get_source_impedance_in_pu() const;

@@ -17,6 +17,9 @@ int get_integer_data(string strval, string strdefault);
 double get_double_data(string strval, string strdefault);
 string get_string_data(string strval, string strdefault);
 
+size_t get_sparse_matrix_identity(const SPARSE_MATRIX& matrix);
+size_t get_vector_identity(const vector<double>& vec);
+
 string string2upper(string str);
 
 double rad2deg(double angle);

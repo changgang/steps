@@ -25,6 +25,15 @@ enum SOURCE_REGULATING_MODE
     REGULATING_VA = 3
 };
 
+// source enum
+enum SOURCE_TYPE
+{
+    SYNC_GENERATOR_SOURCE = 0,
+    WT_GENERATOR_SOURCE = 1,
+    PV_UNIT_SOURCE = 2,
+    ENERGY_STORAGE_SOURCE = 3
+};
+
 // transformer enums
 enum TRANSFORMER_WINDING_SIDE
 {

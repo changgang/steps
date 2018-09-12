@@ -16,7 +16,7 @@ using namespace std;
 
 DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 {
-/*
+
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_and_get_power_system_database);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_is_power_system_database_set);
@@ -63,8 +63,8 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
-*/
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
+
+    //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
 
     //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models);
 
@@ -414,10 +414,6 @@ void DYNAMICS_SIMULATOR_TEST::test_start()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
-
-
     simulator->set_output_file("test_log/test_dynamic_simulator_initialize");
 
     simulator->start();
@@ -451,8 +447,6 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     set_dynamic_simulation_time_step_in_s(0.001);
 
@@ -654,8 +648,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     set_dynamic_simulation_time_step_in_s(0.0083333);
 
     simulator->prepare_meters();
@@ -702,8 +694,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     set_dynamic_simulation_time_step_in_s(0.0083333);
 
@@ -766,8 +756,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     set_dynamic_simulation_time_step_in_s(0.0083333);
 
     simulator->prepare_meters();
@@ -828,8 +816,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     simulator->prepare_meters();
 
     simulator->set_output_file("test_log/IEEE_39_bus_model_dynamic_test_result_GENROU");
@@ -884,8 +870,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     simulator->prepare_meters();
 
@@ -944,8 +928,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     simulator->prepare_meters();
 
     simulator->set_output_file("test_log/IEEE_39_bus_model_dynamic_test_result_GENROU_IEEET1");
@@ -1001,8 +983,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     simulator->prepare_meters();
 
@@ -1060,8 +1040,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     simulator->prepare_meters();
 
     simulator->set_output_file("test_log/IEEE_39_bus_model_dynamic_test_result_GENROU_IEEET1_IEEEG1");
@@ -1117,8 +1095,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     simulator->prepare_meters();
 
     simulator->set_output_file("test_log/IEEE_39_bus_model_dynamic_test_result_GENROU_SEXS_IEEEG1");
@@ -1173,8 +1149,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_with
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     simulator->prepare_meters();
 
@@ -1234,8 +1208,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     simulator->prepare_meters();
 
     simulator->set_output_file("test_log/IEEE_39_bus_model_dynamic_test_result_GENROU_SEXS_IEEEG1_UFLS");
@@ -1294,8 +1266,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFL
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     simulator->prepare_meters();
 
@@ -1361,8 +1331,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     simulator->prepare_meters();
 
@@ -1441,8 +1409,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     /*METER meter;
     METER_SETTER setter;
@@ -1553,8 +1519,6 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    //powerflow_solver.show_powerflow_result();
 
     /*METER meter;
     METER_SETTER setter;

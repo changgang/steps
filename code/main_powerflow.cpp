@@ -28,7 +28,6 @@ int main()
     solver.solve_with_fast_decoupled_solution();
     solver.solve_with_full_Newton_Raphson_solution();
 
-    solver.show_powerflow_result();
     solver.save_network_matrix_to_file("IEEE39_network_matrix.csv");
     solver.save_jacobian_matrix_to_file("IEEE39_jacobian_matrix.csv");
     solver.save_bus_powerflow_result_to_file("IEEE39_bus_powerflow_result.csv");

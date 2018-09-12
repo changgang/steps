@@ -77,6 +77,44 @@ string get_string_data(string strval, string strdefault)
     }
 }
 
+size_t get_sparse_matrix_identity(const SPARSE_MATRIX& matrix)
+{
+    int n = matrix.get_matrix_entry_count();
+    int identity = 0;
+    for(int i=0; i<n; ++i)
+    {
+        int row = matrix.get_row_number_of_entry_index(i);
+        int col = matrix.get_column_number_of_entry_index(i);
+        complex<double> value = matrix.get_entry_value(i);
+        int rvalue = int(value.real()*1000.0)<<10;
+        int ivalue = int(value.imag()*1000.0)<<10;
+        row = row^STEPS_MAGIC1;
+        col = col^STEPS_MAGIC2;
+        rvalue = rvalue^STEPS_MAGIC3;
+        ivalue = ivalue^STEPS_MAGIC4;
+
+        identity = identity^((row^col)^(rvalue^ivalue));
+    }
+    return size_t(identity);
+}
+
+size_t get_vector_identity(const vector<double>& vec)
+{
+    int n = vec.size();
+    int identity = 0;
+    for(int i=0; i<n; ++i)
+    {
+        int index = i;
+        int value = int(vec[i]*10000.0)<<10;
+        index = index^STEPS_MAGIC1;
+        value = value^STEPS_MAGIC2;
+
+        identity = identity^(index^value);
+    }
+    return size_t(identity);
+}
+
+
 string string2upper(string str)
 {
     transform(str.begin(),str.end(),str.begin(),::toupper);

@@ -48,6 +48,7 @@ class POWERFLOW_SOLVER_TEST : public Test::Suite
         void test_solve_IEEE_9_bus_model_with_fast_decoupled_solution();
         void test_solve_ISO_New_England_39_bus_model_with_fast_decoupled_solution();
         void test_solve_NPCC_140_bus_model_with_fast_decoupled_solution();
+
         void test_solve_Shandong_2000_bus_model_with_fast_decoupled_solution();
         void test_solve_Shandong_2000_bus_model_with_HVDC_with_fast_decoupled_solution();
 

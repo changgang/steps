@@ -35,7 +35,6 @@ class SOURCE_TEST : public Test::Suite
         void test_set_get_q_generation();
         void test_set_get_p_max_min();
         void test_set_get_q_max_min();
-        void test_set_get_regulating_mode();
         void test_set_get_v_to_regulate();
         void test_set_get_bus_to_regulate();
         void test_set_get_source_impedance();

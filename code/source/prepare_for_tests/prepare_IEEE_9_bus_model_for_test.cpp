@@ -165,7 +165,6 @@ void prepare_IEEE_9_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_generator_impedance_in_pu(gen_z);
     generator.set_voltage_to_regulate_in_pu(1.04);
     generator.set_bus_to_regulate(0);
-    generator.set_regulating_mode(REGULATING_VA);
 
     db->append_generator(generator);
 
@@ -184,7 +183,6 @@ void prepare_IEEE_9_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_generator_impedance_in_pu(gen_z);
     generator.set_voltage_to_regulate_in_pu(1.025);
     generator.set_bus_to_regulate(0);
-    generator.set_regulating_mode(REGULATING_PV);
 
     db->append_generator(generator);
 
@@ -203,7 +201,6 @@ void prepare_IEEE_9_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_generator_impedance_in_pu(gen_z);
     generator.set_voltage_to_regulate_in_pu(1.025);
     generator.set_bus_to_regulate(0);
-    generator.set_regulating_mode(REGULATING_PV);
 
     db->append_generator(generator);
 }

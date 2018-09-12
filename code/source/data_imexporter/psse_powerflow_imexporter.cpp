@@ -460,7 +460,6 @@ void PSSE_IMEXPORTER::load_source_data()
 
     size_t ndata = DATA.size();
 
-    size_t VAR_MODE_INDEX = 26;
     size_t SOURCE_TYPE_INDEX = 28;
     for(size_t i=0; i!=ndata; ++i)
     {
@@ -468,50 +467,68 @@ void PSSE_IMEXPORTER::load_source_data()
         data = split_string(str,",");
 
         size_t n = data.size();
-        int var_control_mode = 0;
-        if(n>VAR_MODE_INDEX)
-            var_control_mode = get_integer_data(data[VAR_MODE_INDEX],"0");
-        int source_type = 0;
-        if(n>SOURCE_TYPE_INDEX)
-            var_control_mode = get_integer_data(data[SOURCE_TYPE_INDEX],"0");
 
-        switch(var_control_mode)
+        SOURCE_TYPE source_type = SYNC_GENERATOR_SOURCE;
+        if(n>SOURCE_TYPE_INDEX)
         {
-            case 0:
+            int type = get_integer_data(data[SOURCE_TYPE_INDEX],"0");
+            switch(type)
+            {
+                case 0:
+                    source_type = SYNC_GENERATOR_SOURCE;
+                    break;
+                case 1:
+                    source_type = WT_GENERATOR_SOURCE;
+                    break;
+                case 2:
+                    source_type = PV_UNIT_SOURCE;
+                    break;
+                case 3:
+                    source_type = ENERGY_STORAGE_SOURCE;
+                    break;
+                default:
+                    source_type = SYNC_GENERATOR_SOURCE;
+                    break;
+            }
+        }
+
+        switch(source_type)
+        {
+            case SYNC_GENERATOR_SOURCE:
             {
                 load_generator_data(data);
                 break;
             }
+            case WT_GENERATOR_SOURCE:
+            {
+                load_wt_generator_data(data);
+                break;
+            }
+            case PV_UNIT_SOURCE:
+            {
+                load_pv_unit_data(data);
+                break;
+            }
+            case ENERGY_STORAGE_SOURCE:
+            {
+                load_energy_storage_data(data);
+                break;
+            }
             default:
             {
-                switch(source_type)
-                {
-                    case 0:
-                    case 1:
-                    {
-                        load_wt_generator_data(data);
-                        break;
-                    }
-                    case 2:
-                    {
-                        load_pv_unit_data(data);
-                        break;
-                    }
-                    case 3:
-                    {
-                        load_energy_storage_data(data);
-                        break;
-                    }
-                    default:
-                    {
-                        load_wt_generator_data(data);
-                        break;
-                    }
-                }
+                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid source type is detected in PSS/E raw file of line:\n%s",str.c_str());
+                show_information_with_leading_time_stamp(buffer);
                 break;
             }
         }
     }
+    /*
+    POWER_SYSTEM_DATABASE* db = get_power_system_database();
+    vector<SOURCE*> sources = db->get_all_sources();
+    for(size_t i=0; i<sources.size(); ++i)
+        sources[i]->report();
+    */
 }
 
 void PSSE_IMEXPORTER::load_generator_data(vector<string>& data)
@@ -521,16 +538,6 @@ void PSSE_IMEXPORTER::load_generator_data(vector<string>& data)
     GENERATOR generator(psdb);
 
     load_source_common_data(data, &generator);
-
-    BUS* bus = psdb->get_bus(generator.get_bus_to_regulate());
-    if(bus!=NULL)
-    {
-        if(bus->get_bus_type()==SLACK_TYPE)
-            generator.set_regulating_mode(REGULATING_VA);
-        else
-            generator.set_regulating_mode(REGULATING_PV);
-    }
-
 
     psdb->append_generator(generator);
 }
@@ -542,29 +549,8 @@ void PSSE_IMEXPORTER::load_wt_generator_data(vector<string>& data)
     WT_GENERATOR wt_generator(psdb);
 
     load_source_common_data(data, &wt_generator);
+    load_source_var_control_data(data, &wt_generator);
 
-    int var_control_mode = 1;
-    double pf;
-    if(data.size()>0)
-    {
-        var_control_mode = get_integer_data(data.front(),"1");
-        if(var_control_mode == 1)
-            wt_generator.set_regulating_mode(REGULATING_PV);
-        if(var_control_mode == 2 or var_control_mode == 3)
-            wt_generator.set_regulating_mode(REGULATING_PQ);
-        data.erase(data.begin());
-    }
-    if(data.size()>0)
-    {
-        pf = get_double_data(data.front(),"1.0");
-        if(var_control_mode==2)
-        {
-            double p = wt_generator.get_p_generation_in_MW();
-            double q = p/pf*sqrt(1.0-pf*pf);
-            wt_generator.set_q_generation_in_MVar(q);
-        }
-        data.erase(data.begin());
-    }
     psdb->append_wt_generator(wt_generator);
 }
 
@@ -576,29 +562,8 @@ void PSSE_IMEXPORTER::load_pv_unit_data(vector<string>& data)
     PV_UNIT pv_unit(psdb);
 
     load_source_common_data(data, &pv_unit);
+    load_source_var_control_data(data, &pv_unit);
 
-    int var_control_mode = 11;
-    double pf;
-    if(data.size()>0)
-    {
-        var_control_mode = get_integer_data(data.front(),"1");
-        if(var_control_mode == 11)
-            pv_unit.set_regulating_mode(REGULATING_PV);
-        if(var_control_mode == 12 or var_control_mode == 13)
-            pv_unit.set_regulating_mode(REGULATING_PQ);
-        data.erase(data.begin());
-    }
-    if(data.size()>0)
-    {
-        pf = get_double_data(data.front(),"1.0");
-        if(var_control_mode==12)
-        {
-            double p = pv_unit.get_p_generation_in_MW();
-            double q = p/pf*sqrt(1.0-pf*pf);
-            pv_unit.set_q_generation_in_MVar(q);
-        }
-        data.erase(data.begin());
-    }
     psdb->append_pv_unit(pv_unit);
 }
 
@@ -610,29 +575,8 @@ void PSSE_IMEXPORTER::load_energy_storage_data(vector<string>& data)
     ENERGY_STORAGE estorage(psdb);
 
     load_source_common_data(data, &estorage);
+    load_source_var_control_data(data, &estorage);
 
-    int var_control_mode = 1;
-    double pf;
-    if(data.size()>0)
-    {
-        var_control_mode = get_integer_data(data.front(),"1");
-        if(var_control_mode == 21)
-            estorage.set_regulating_mode(REGULATING_PV);
-        if(var_control_mode == 22 or var_control_mode == 23)
-            estorage.set_regulating_mode(REGULATING_PQ);
-        data.erase(data.begin());
-    }
-    if(data.size()>0)
-    {
-        pf = get_double_data(data.front(),"1.0");
-        if(var_control_mode==12)
-        {
-            double p = estorage.get_p_generation_in_MW();
-            double q = p/pf*sqrt(1.0-pf*pf);
-            estorage.set_q_generation_in_MVar(q);
-        }
-        data.erase(data.begin());
-    }
     psdb->append_energy_storage(estorage);
 }
 
@@ -767,8 +711,61 @@ void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* sour
     }
     os.normalize();
     source->set_ownership(os);
+}
+
+void PSSE_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE* source)
+{
+    double pgen = source->get_p_generation_in_MW();
+
+    int var_control_mode = 0;
+    double pf = 1.0;
+    if(data.size()>0)
+    {
+        var_control_mode = get_integer_data(data.front(),"0");
+        data.erase(data.begin());
+        if(data.size()>0)
+        {
+            pf = get_double_data(data.front(),"1.0");
+            data.erase(data.begin());
+        }
+        if(pf==0.0)
+            pf = 1.0;
+        if(pf<0.0)
+            pf = -pf;
+        if(pf>1.0)
+            pf = 1.0;;
+
+        switch(var_control_mode)
+        {
+            case 0:
+            case 1: // qmax and qmin to hold voltage
+            {
+                break;
+            }
+            case 2: // constant power factor to hold voltage
+            {
+                double qmax = 0.0;
+                if(pf==1.0)
+                    qmax = 0.0;
+                else
+                    qmax = pgen/pf*sqrt(1.0-pf*pf);
+                source->set_q_max_in_MVar(qmax);
+                source->set_q_min_in_MVar(-qmax);
+                break;
+            }
+            case 3: // constant power
+            default:
+            {
+                double qgen = source->get_q_generation_in_MVar();
+                source->set_q_max_in_MVar(qgen);
+                source->set_q_min_in_MVar(qgen);
+                break;
+            }
+        }
+    }
 
 }
+
 void PSSE_IMEXPORTER::load_line_data()
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -2177,12 +2174,9 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
     {
         WT_GENERATOR* wt_generator = wt_generators[i];
 
-        double p = wt_generator->get_p_generation_in_MW();
-        double q = wt_generator->get_q_generation_in_MVar();
-        double pf = p/sqrt(p*p+q*q);
-
         osstream<<export_source_common_data(wt_generator);
-        osstream<<"1, "<<setprecision(6)<<pf<<", 1"<<endl;
+        osstream<<export_source_var_control_data(wt_generator);
+        osstream<<", 1"<<endl;
     }
     return osstream.str();
 }
@@ -2205,13 +2199,10 @@ string PSSE_IMEXPORTER::export_pv_unit_data() const
     {
         PV_UNIT* pv_unit = pv_units[i];
 
-        double p = pv_unit->get_p_generation_in_MW();
-        double q = pv_unit->get_q_generation_in_MVar();
-        double pf = p/sqrt(p*p+q*q);
-
         osstream<<export_source_common_data(pv_unit);
+        osstream<<export_source_var_control_data(pv_unit);
 
-        osstream<<"1, "<<setprecision(6)<<pf<<", 2"<<endl;
+        osstream<<", 2"<<endl;
     }
     return osstream.str();
 }
@@ -2234,13 +2225,10 @@ string PSSE_IMEXPORTER::export_energy_storage_data() const
     {
         ENERGY_STORAGE* estorage = estorages[i];
 
-        double p = estorage->get_p_generation_in_MW();
-        double q = estorage->get_q_generation_in_MVar();
-        double pf = p/sqrt(p*p+q*q);
-
         osstream<<export_source_common_data(estorage);
+        osstream<<export_source_var_control_data(estorage);
 
-        osstream<<"1, "<<setprecision(6)<<pf<<", 3"<<endl;
+        osstream<<", 3"<<endl;
     }
     return osstream.str();
 }
@@ -2281,6 +2269,28 @@ string PSSE_IMEXPORTER::export_source_common_data(SOURCE* source) const
                 << setprecision(0) << source->get_owner_of_index(3) << ", " << setprecision(6) << source->get_fraction_of_owner_of_index(3) << ", ";
     }
 
+    return osstream.str();
+}
+
+string PSSE_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
+{
+    ostringstream osstream;
+    double p = source->get_p_generation_in_MW();
+
+    double qmax = source->get_q_max_in_MVar();
+    double qmin = source->get_q_min_in_MVar();
+    if(fabs(qmax+qmin)>FLOAT_EPSILON)
+    {
+        if(fabs(qmax-qmin)>FLOAT_EPSILON)
+            osstream<<"0, 0.0";
+        else
+            osstream<<"3, 0.0";
+    }
+    else
+    {
+        double pf = p/sqrt(p*p+qmax*qmax);
+        osstream<<"2, "<<setprecision(6)<<pf;
+    }
     return osstream.str();
 }
 

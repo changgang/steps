@@ -305,8 +305,8 @@ void PSSE_IMEXPORTER_TEST::test_load_wt_generator_data()
     //TEST_ASSERT(fabs(wt_generator->get_q_generation_in_MVar()-2.193034)<FLOAT_EPSILON); // this one is the constant pf Q
     TEST_ASSERT(fabs(wt_generator->get_p_max_in_MW()-10.8)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(wt_generator->get_p_min_in_MW()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(wt_generator->get_q_max_in_MVar()-2.193)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(wt_generator->get_q_min_in_MVar()-(-2.193))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_q_max_in_MVar()-2.1930335348472467)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(wt_generator->get_q_min_in_MVar()-(-2.1930335348472467))<FLOAT_EPSILON);
 
     terminal.clear();
     terminal.append_bus(93002);

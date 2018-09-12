@@ -45,8 +45,6 @@ void prepare_training_load_scale_case()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     simulator->prepare_meters();
 
     simulator->set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_load_scale_down_at_bus_3_by_10%");
@@ -102,8 +100,6 @@ void prepare_training_generation_shed_case()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     simulator->prepare_meters();
 
@@ -175,8 +171,6 @@ int main()
     powerflow_solver.set_transformer_tap_adjustment_logic(true);
 
     powerflow_solver.solve_with_fast_decoupled_solution();
-
-    powerflow_solver.show_powerflow_result();
 
     simulator->prepare_meters();
 

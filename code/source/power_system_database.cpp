@@ -272,16 +272,13 @@ void POWER_SYSTEM_DATABASE::clear_database()
     set_case_title_1("");
     set_case_title_2("");
     clear_all_buses();
-    clear_all_generators();
-    clear_all_wt_generators();
-    clear_all_pv_units();
+    clear_all_sources();
     clear_all_loads();
     clear_all_lines();
     clear_all_transformers();
     clear_all_fixed_shunts();
     clear_all_hvdcs();
     clear_all_equivalent_devices();
-    clear_all_energy_storages();
     clear_all_areas();
     clear_all_zones();
     clear_all_owners();
@@ -1775,11 +1772,6 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_connecting_to_bus(const s
     for(size_t i=0; i!=n; ++i)
         devices.push_back(edevices[i]);
 
-    vector<ENERGY_STORAGE*> estorages = get_energy_storages_connecting_to_bus(bus);
-    n = estorages.size();
-    for(size_t i=0; i!=n; ++i)
-        devices.push_back(estorages[i]);
-
     return devices;
 }
 
@@ -1832,6 +1824,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_connecting_to_bus(const size_
     vector<GENERATOR*> gen_device;
     vector<WT_GENERATOR*> wt_generator_device;
     vector<PV_UNIT*> pv_unit_device;
+    vector<ENERGY_STORAGE*> estorage_device;
     device.reserve(8);
 
     gen_device = get_generators_connecting_to_bus(bus);
@@ -1848,6 +1841,11 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_connecting_to_bus(const size_
     size_t npv_unit = pv_unit_device.size();
     for(size_t i=0; i!=npv_unit; ++i)
         device.push_back(pv_unit_device[i]);
+
+    estorage_device = get_energy_storages_connecting_to_bus(bus);
+    size_t nes = estorage_device.size();
+    for(size_t i=0; i!=nes; ++i)
+        device.push_back(estorage_device[i]);
 
     return device;
 }
@@ -2141,11 +2139,6 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_area(const size_t area
     for(size_t i=0; i!=n; ++i)
         devices.push_back(edevices[i]);
 
-    vector<ENERGY_STORAGE*> estorages = get_energy_storages_in_area(area);
-    n = estorages.size();
-    for(size_t i=0; i!=n; ++i)
-        devices.push_back(estorages[i]);
-
     return devices;
 }
 
@@ -2212,6 +2205,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_area(const size_t area)
     vector<GENERATOR*> gen_device;
     vector<WT_GENERATOR*> wt_generator_device;
     vector<PV_UNIT*> pv_unit_device;
+    vector<ENERGY_STORAGE*> estorage_device;
     device.reserve(8);
 
     gen_device = get_generators_in_area(area);
@@ -2228,6 +2222,11 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_area(const size_t area)
     size_t npv_unit = pv_unit_device.size();
     for(size_t i=0; i!=npv_unit; ++i)
         device.push_back(pv_unit_device[i]);
+
+    estorage_device = get_energy_storages_in_area(area);
+    size_t nes = estorage_device.size();
+    for(size_t i=0; i!=nes; ++i)
+        device.push_back(estorage_device[i]);
 
     return device;
 }
@@ -2533,11 +2532,6 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices_in_zone(const size_t zone
     for(size_t i=0; i!=n; ++i)
         devices.push_back(edevices[i]);
 
-    vector<ENERGY_STORAGE*> estorages = get_energy_storages_in_zone(zone);
-    n = estorages.size();
-    for(size_t i=0; i!=n; ++i)
-        devices.push_back(estorages[i]);
-
     return devices;
 }
 
@@ -2603,6 +2597,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_zone(const size_t zone)
     vector<GENERATOR*> gen_device;
     vector<WT_GENERATOR*> wt_generator_device;
     vector<PV_UNIT*> pv_unit_device;
+    vector<ENERGY_STORAGE*> estorage_device;
     device.reserve(8);
 
     gen_device = get_generators_in_zone(zone);
@@ -2619,6 +2614,11 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_sources_in_zone(const size_t zone)
     size_t npv_unit = pv_unit_device.size();
     for(size_t i=0; i!=npv_unit; ++i)
         device.push_back(pv_unit_device[i]);
+
+    estorage_device = get_energy_storages_in_zone(zone);
+    size_t nes = estorage_device.size();
+    for(size_t i=0; i!=nes; ++i)
+        device.push_back(estorage_device[i]);
 
     return device;
 }
@@ -2924,11 +2924,6 @@ vector<DEVICE*> POWER_SYSTEM_DATABASE::get_all_devices()
     for(size_t i=0; i!=n; ++i)
         devices.push_back(edevices[i]);
 
-    vector<ENERGY_STORAGE*> estorages = get_all_energy_storages();
-    n = estorages.size();
-    for(size_t i=0; i!=n; ++i)
-        devices.push_back(estorages[i]);
-
     return devices;
 }
 
@@ -3019,6 +3014,7 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_all_sources()
     vector<GENERATOR*> gen_device;
     vector<WT_GENERATOR*> wt_generator_device;
     vector<PV_UNIT*> pv_unit_device;
+    vector<ENERGY_STORAGE*> estorage_device;
     device.reserve(get_source_count());
 
     gen_device = get_all_generators();
@@ -3035,6 +3031,11 @@ vector<SOURCE*> POWER_SYSTEM_DATABASE::get_all_sources()
     size_t npv_unit = pv_unit_device.size();
     for(size_t i=0; i!=npv_unit; ++i)
         device.push_back(pv_unit_device[i]);
+
+    estorage_device = get_all_energy_storages();
+    size_t nes = estorage_device.size();
+    for(size_t i=0; i!=nes; ++i)
+        device.push_back(estorage_device[i]);
 
     return device;
 }
@@ -3240,6 +3241,10 @@ vector<DEVICE_ID> POWER_SYSTEM_DATABASE::get_all_sources_device_id()
     size_t npv_unit = get_pv_unit_count();
     for(size_t i=0; i!=npv_unit; ++i)
         dids.push_back(PV_Unit[i].get_device_id());
+
+    size_t nes = get_energy_storage_count();
+    for(size_t i=0; i!=nes; ++i)
+        dids.push_back(Energy_storage[i].get_device_id());
     return dids;
 }
 
@@ -3384,7 +3389,12 @@ size_t POWER_SYSTEM_DATABASE::get_pv_unit_count() const
 
 size_t POWER_SYSTEM_DATABASE::get_source_count() const
 {
-    return get_generator_count()+get_wt_generator_count()+get_pv_unit_count();
+    size_t n = 0;
+    n += get_generator_count();
+    n += get_wt_generator_count();
+    n += get_pv_unit_count();
+    n += get_energy_storage_count();
+    return n;
 }
 
 size_t POWER_SYSTEM_DATABASE::get_load_count() const
@@ -3637,6 +3647,7 @@ void POWER_SYSTEM_DATABASE::check_all_sources()
     check_all_generators();
     check_all_wt_generators();
     check_all_pv_units();
+    check_all_energy_storages();
 }
 
 void POWER_SYSTEM_DATABASE::check_all_generators()
@@ -4111,13 +4122,48 @@ void POWER_SYSTEM_DATABASE::scale_pv_units_power_in_zone(size_t zone_number, dou
         scale_pv_unit_power(pv_units[i], scale);
 }
 
+void POWER_SYSTEM_DATABASE::scale_energy_storage_power(DEVICE_ID did, double scale)
+{
+    scale_source_power(did, scale);
+}
+
+void POWER_SYSTEM_DATABASE::scale_all_energy_storages_power(double scale)
+{
+    vector<DEVICE_ID> ess = get_all_energy_storages_device_id();
+    size_t n = ess.size();
+    for(size_t i=0; i!=n; ++i)
+        scale_energy_storage_power(ess[i], scale);
+}
+
+void POWER_SYSTEM_DATABASE::scale_energy_storages_power_at_bus(size_t bus, double scale)
+{
+    vector<DEVICE_ID> ess = get_energy_storages_device_id_connecting_to_bus(bus);
+    size_t n = ess.size();
+    for(size_t i=0; i!=n; ++i)
+        scale_energy_storage_power(ess[i], scale);
+}
+
+void POWER_SYSTEM_DATABASE::scale_energy_storages_power_in_area(size_t area_number, double scale)
+{
+    vector<DEVICE_ID> ess = get_energy_storages_device_id_in_area(area_number);
+    size_t n = ess.size();
+    for(size_t i=0; i!=n; ++i)
+        scale_energy_storage_power(ess[i], scale);
+}
+
+void POWER_SYSTEM_DATABASE::scale_energy_storages_power_in_zone(size_t zone_number, double scale)
+{
+    vector<DEVICE_ID> ess = get_energy_storages_device_id_in_zone(zone_number);
+    size_t n = ess.size();
+    for(size_t i=0; i!=n; ++i)
+        scale_energy_storage_power(ess[i], scale);
+}
+
 void POWER_SYSTEM_DATABASE::clear_bus(size_t bus)
 {
     if(not is_bus_exist(bus)) return;
 
-    clear_generators_connecting_to_bus(bus);
-    clear_wt_generators_connecting_to_bus(bus);
-    clear_pv_units_connecting_to_bus(bus);
+    clear_sources_connecting_to_bus(bus);
     clear_loads_connecting_to_bus(bus);
     clear_lines_connecting_to_bus(bus);
     clear_transformers_connecting_to_bus(bus);
@@ -4149,9 +4195,7 @@ void POWER_SYSTEM_DATABASE::clear_all_buses()
     Bus.clear();
     bus_index.clear();
 
-    clear_all_generators();
-    clear_all_wt_generators();
-    clear_all_pv_units();
+    clear_all_sources();
     clear_all_loads();
     clear_all_lines();
     clear_all_transformers();
@@ -4290,6 +4334,7 @@ void POWER_SYSTEM_DATABASE::clear_sources_connecting_to_bus(const size_t bus)
     clear_generators_connecting_to_bus(bus);
     clear_wt_generators_connecting_to_bus(bus);
     clear_pv_units_connecting_to_bus(bus);
+    clear_energy_storages_connecting_to_bus(bus);
 }
 
 void POWER_SYSTEM_DATABASE::clear_all_sources()
@@ -4297,6 +4342,7 @@ void POWER_SYSTEM_DATABASE::clear_all_sources()
     clear_all_generators();
     clear_all_wt_generators();
     clear_all_pv_units();
+    clear_all_energy_storages();
 }
 
 void POWER_SYSTEM_DATABASE::clear_load(DEVICE_ID& device_id)
@@ -4662,6 +4708,17 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
         {
             pvs[i]->set_status(false);
             osstream<<pvs[i]->get_device_name()<<endl;
+        }
+    }
+
+    vector<ENERGY_STORAGE*> ess = get_energy_storages_connecting_to_bus(bus);
+    n=ess.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        if(ess[i]->get_status()==true)
+        {
+            ess[i]->set_status(false);
+            osstream<<ess[i]->get_device_name()<<endl;
         }
     }
 
@@ -5032,366 +5089,169 @@ double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(size
         return busptr->get_voltage_to_regulate_in_pu();
     else
         return 0.0;
-    /*
-
-    double v_schedule = 0.0;
-    vector<size_t> index = get_index_of_all_generators_connecting_to_bus(bus);
-
-    SOURCE_REGULATING_MODE mode;
-    double voltage;
-    if(not index.empty())
-    {
-        size_t n = index.size();
-        for(size_t i=0; i!=n; ++i)
-        {
-            size_t j= index[i];
-            if(Generator[j].get_status() == false)
-                continue;
-
-            mode = Generator[j].get_regulating_mode();
-            if(mode != REGULATING_PV and mode != REGULATING_VA)
-                continue;
-
-            voltage = Generator[j].get_voltage_to_regulate_in_pu();
-            if(v_schedule == 0.0)
-                v_schedule = voltage;
-            else
-            {
-                if(v_schedule != voltage)
-                {
-                    ostringstream osstream;
-                    osstream<<"Warning. Generators at bus %u are regulating different voltages.\n"
-                                 "The regulating voltage of the first generator is returned.", bus);
-                    show_information_with_leading_time_stamp(osstream);
-                    break;
-                }
-            }
-        }
-    }
-    index = get_index_of_all_wt_generators_connecting_to_bus(bus);
-    if(not index.empty())
-    {
-        size_t n = index.size();
-        for(size_t i=0; i!=n; ++i)
-        {
-            size_t j= index[i];
-            if(WT_Generator[j].get_status() == false)
-                continue;
-
-            mode = WT_Generator[j].get_regulating_mode();
-            if(mode != REGULATING_PV and mode != REGULATING_VA)
-                continue;
-
-            voltage = WT_Generator[j].get_voltage_to_regulate_in_pu();
-            if(v_schedule == 0.0)
-                v_schedule = voltage;
-            else
-            {
-                if(v_schedule != voltage)
-                {
-                    ostringstream osstream;
-                    osstream<<"Warning. WT generator at bus %u are regulating different voltages.\n"
-                                 "The regulating voltage of the first source is returned.", bus);
-                    show_information_with_leading_time_stamp(osstream);
-                    break;
-                }
-            }
-        }
-    }
-    if(v_schedule == 0.0)
-        v_schedule = 1.0;
-
-    return v_schedule;
-    */
 }
 
 double POWER_SYSTEM_DATABASE::get_regulatable_p_max_at_physical_bus_in_MW(size_t bus)
 {
-    double total_p_max_in_MW = 0.0;
+    if(not is_bus_exist(bus))
+        return 0.0;
 
-    vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-    size_t n = sources.size();
-    for(size_t i=0; i!=n; ++i)
+    BUS* busptr = get_bus(bus);
+    BUS_TYPE btype = busptr->get_bus_type();
+    if(btype!=SLACK_TYPE)
+        return 0.0;
+    else
     {
-        if(sources[i]->get_status() == false)
-            continue;
+        double total_p_max_in_MW = 0.0;
 
-        if(sources[i]->get_regulating_mode()==REGULATING_VA)
+        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+
+        size_t n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == false)
+                continue;
             total_p_max_in_MW += sources[i]->get_p_max_in_MW();
+        }
+        return total_p_max_in_MW;
     }
-    return total_p_max_in_MW;
-
-    /*
-    vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-
-    size_t n = generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(generator[i]->get_status() == false)
-            continue;
-
-        if(generator[i]->get_regulating_mode()==REGULATING_VA)
-            total_p_max_in_MW += generator[i]->get_p_max_in_MW();
-    }
-
-
-    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-    n = wt_generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wt_generator[i]->get_status() == false)
-            continue;
-
-        if(wt_generator[i]->get_regulating_mode()==REGULATING_VA)
-            total_p_max_in_MW += wt_generator[i]->get_p_max_in_MW();
-    }
-    return total_p_max_in_MW;*/
 }
 
 double POWER_SYSTEM_DATABASE::get_regulatable_p_min_at_physical_bus_in_MW(size_t bus)
 {
-    double total_p_min_in_MW = 0.0;
+    if(not is_bus_exist(bus))
+        return 0.0;
 
-    vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-    size_t n = sources.size();
-    for(size_t i=0; i!=n; ++i)
+    BUS* busptr = get_bus(bus);
+    BUS_TYPE btype = busptr->get_bus_type();
+    if(btype!=SLACK_TYPE)
+        return 0.0;
+    else
     {
-        if(sources[i]->get_status() == false)
-            continue;
+        double total_p_min_in_MW = 0.0;
 
-        if(sources[i]->get_regulating_mode()==REGULATING_VA)
+        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+
+        size_t n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == false)
+                continue;
             total_p_min_in_MW += sources[i]->get_p_min_in_MW();
+        }
+        return total_p_min_in_MW;
     }
-    return total_p_min_in_MW;
-
-    /*
-
-    vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-
-    size_t n = generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(generator[i]->get_status() == false)
-            continue;
-
-        if(generator[i]->get_regulating_mode()==REGULATING_VA)
-            total_p_min_in_MW += generator[i]->get_p_min_in_MW();
-    }
-
-
-    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-    n = wt_generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wt_generator[i]->get_status() == false)
-            continue;
-
-        if(wt_generator[i]->get_regulating_mode()==REGULATING_VA)
-            total_p_min_in_MW += wt_generator[i]->get_p_min_in_MW();
-    }
-    return total_p_min_in_MW;*/
 }
 
 double POWER_SYSTEM_DATABASE::get_regulatable_q_max_at_physical_bus_in_MVar(size_t bus)
 {
-    double total_q_max_in_MVar = 0.0;
+    if(not is_bus_exist(bus))
+        return 0.0;
 
-    vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-    SOURCE_REGULATING_MODE mode;
-
-    size_t n = sources.size();
-    for(size_t i=0; i!=n; ++i)
+    BUS* busptr = get_bus(bus);
+    BUS_TYPE btype = busptr->get_bus_type();
+    if(btype!=SLACK_TYPE and btype!=PV_TYPE
+       and btype!=PV_TO_PQ_TYPE_1 and btype!=PV_TO_PQ_TYPE_2
+       and btype!=PV_TO_PQ_TYPE_3 and btype!=PV_TO_PQ_TYPE_4)
+        return 0.0;
+    else
     {
-        if(sources[i]->get_status() == false)
-            continue;
+        double total_q_max_in_MVar = 0.0;
 
-        mode = sources[i]->get_regulating_mode();
+        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
 
-        if(mode==REGULATING_PV or mode==REGULATING_VA)
+        size_t n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == false)
+                continue;
             total_q_max_in_MVar += sources[i]->get_q_max_in_MVar();
+        }
+        return total_q_max_in_MVar;
     }
-    return total_q_max_in_MVar;
-
-/*
-    double total_q_max_in_MVar = 0.0;
-    vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-
-    size_t n = generator.size();
-    SOURCE_REGULATING_MODE mode;
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(generator[i]->get_status() == false)
-            continue;
-        mode = generator[i]->get_regulating_mode();
-        if(mode==REGULATING_PV or mode==REGULATING_VA)
-            total_q_max_in_MVar += generator[i]->get_q_max_in_MVar();
-    }
-
-    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-    n = wt_generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wt_generator[i]->get_status() == false)
-            continue;
-        mode = wt_generator[i]->get_regulating_mode();
-        if(mode==REGULATING_PV or mode==REGULATING_VA)
-            total_q_max_in_MVar += wt_generator[i]->get_q_max_in_MVar();
-    }
-    return total_q_max_in_MVar;*/
 }
 
 double POWER_SYSTEM_DATABASE::get_regulatable_q_min_at_physical_bus_in_MVar(size_t bus)
 {
-    double total_q_min_in_MVar = 0.0;
+    if(not is_bus_exist(bus))
+        return 0.0;
 
-    vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-    SOURCE_REGULATING_MODE mode;
-
-    size_t n = sources.size();
-    for(size_t i=0; i!=n; ++i)
+    BUS* busptr = get_bus(bus);
+    BUS_TYPE btype = busptr->get_bus_type();
+    if(btype!=SLACK_TYPE and btype!=PV_TYPE
+       and btype!=PV_TO_PQ_TYPE_1 and btype!=PV_TO_PQ_TYPE_2
+       and btype!=PV_TO_PQ_TYPE_3 and btype!=PV_TO_PQ_TYPE_4)
+        return 0.0;
+    else
     {
-        if(sources[i]->get_status() == false)
-            continue;
+        double total_q_min_in_MVar = 0.0;
 
-        mode = sources[i]->get_regulating_mode();
+        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
 
-        if(mode==REGULATING_PV or mode==REGULATING_VA)
+        size_t n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == false)
+                continue;
             total_q_min_in_MVar += sources[i]->get_q_min_in_MVar();
+        }
+        return total_q_min_in_MVar;
     }
-    return total_q_min_in_MVar;
-    /*
-    double total_q_min_in_MVar = 0.0;
-    vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-
-    size_t n = generator.size();
-    SOURCE_REGULATING_MODE mode;
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(generator[i]->get_status() == false)
-            continue;
-        mode = generator[i]->get_regulating_mode();
-        if(mode==REGULATING_PV or mode==REGULATING_VA)
-            total_q_min_in_MVar += generator[i]->get_q_min_in_MVar();
-    }
-
-    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-    n = wt_generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wt_generator[i]->get_status() == false)
-            continue;
-        mode = wt_generator[i]->get_regulating_mode();
-        if(mode==REGULATING_PV or mode==REGULATING_VA)
-            total_q_min_in_MVar += wt_generator[i]->get_q_min_in_MVar();
-    }
-    return total_q_min_in_MVar;*/
 }
 
 double POWER_SYSTEM_DATABASE::get_total_regulating_p_generation_at_physical_bus_in_MW(size_t bus)
 {
-    double total_p_in_MW = 0.0;
+    if(not is_bus_exist(bus))
+        return 0.0;
 
-    vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-    SOURCE_REGULATING_MODE mode;
-
-    size_t n = sources.size();
-    for(size_t i=0; i!=n; ++i)
+    BUS* busptr = get_bus(bus);
+    BUS_TYPE btype = busptr->get_bus_type();
+    if(btype!=SLACK_TYPE)
+        return 0.0;
+    else
     {
-        if(sources[i]->get_status() == false)
-            continue;
+        double total_p_in_MW = 0.0;
 
-        mode = sources[i]->get_regulating_mode();
+        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
 
-        if(mode==REGULATING_VA)
+        size_t n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == false)
+                continue;
             total_p_in_MW += sources[i]->get_p_generation_in_MW();
+        }
+        return total_p_in_MW;
     }
-    return total_p_in_MW;
-
- /*   double total_p_in_MW = 0.0;
-    vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-
-    size_t n;
-    n = generator.size();
-    SOURCE_REGULATING_MODE mode;
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(generator[i]->get_status() == false)
-            continue;
-
-        mode = generator[i]->get_regulating_mode();
-
-        if(mode == REGULATING_VA)
-            total_p_in_MW += generator[i]->get_p_generation_in_MW();
-    }
-
-    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-    n = wt_generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wt_generator[i]->get_status() == false)
-            continue;
-
-        mode = wt_generator[i]->get_regulating_mode();
-
-        if(mode == REGULATING_VA)
-            total_p_in_MW += wt_generator[i]->get_p_generation_in_MW();
-    }
-    return total_p_in_MW;*/
 }
 
 double POWER_SYSTEM_DATABASE::get_total_regulating_q_generation_at_physical_bus_in_MVar(size_t bus)
 {
-    double total_q_in_MVar = 0.0;
 
-    vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+    if(not is_bus_exist(bus))
+        return 0.0;
 
-    SOURCE_REGULATING_MODE mode;
-
-    size_t n = sources.size();
-    for(size_t i=0; i!=n; ++i)
+    BUS* busptr = get_bus(bus);
+    BUS_TYPE btype = busptr->get_bus_type();
+    if(btype!=SLACK_TYPE and btype!=PV_TYPE
+       and btype!=PV_TO_PQ_TYPE_1 and btype!=PV_TO_PQ_TYPE_2
+       and btype!=PV_TO_PQ_TYPE_3 and btype!=PV_TO_PQ_TYPE_4)
+        return 0.0;
+    else
     {
-        if(sources[i]->get_status() == false)
-            continue;
+        double total_q_in_MVar = 0.0;
 
-        mode = sources[i]->get_regulating_mode();
+        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
 
-        if(mode==REGULATING_PV or mode==REGULATING_VA)
+        size_t n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == false)
+                continue;
             total_q_in_MVar += sources[i]->get_q_generation_in_MVar();
+        }
+        return total_q_in_MVar;
     }
-    return total_q_in_MVar;
-
-    /*
-    double total_q_in_MVar = 0.0;
-    vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-
-    size_t n;
-    n = generator.size();
-    SOURCE_REGULATING_MODE mode;
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(generator[i]->get_status() == false)
-            continue;
-        mode = generator[i]->get_regulating_mode();
-        if(mode==REGULATING_PV or mode == REGULATING_VA)
-            total_q_in_MVar += generator[i]->get_q_generation_in_MVar();
-    }
-
-    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-    n = wt_generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wt_generator[i]->get_status() == false)
-            continue;
-        mode = generator[i]->get_regulating_mode();
-        if(mode==REGULATING_PV or mode == REGULATING_VA)
-            total_q_in_MVar += wt_generator[i]->get_q_generation_in_MVar();
-    }
-    return total_q_in_MVar;*/
 }
 
 double POWER_SYSTEM_DATABASE::get_total_p_generation_at_physical_bus_in_MW(size_t bus)
@@ -5409,30 +5269,6 @@ double POWER_SYSTEM_DATABASE::get_total_p_generation_at_physical_bus_in_MW(size_
         total_p_in_MW += sources[i]->get_p_generation_in_MW();
     }
     return total_p_in_MW;
-    /*
-    double total_p_in_MW = 0.0;
-    vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-
-    size_t n;
-    n = generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(generator[i]->get_status() == false)
-            continue;
-        else
-            total_p_in_MW += generator[i]->get_p_generation_in_MW();
-    }
-
-    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-    n = wt_generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wt_generator[i]->get_status() == false)
-            continue;
-        else
-            total_p_in_MW += wt_generator[i]->get_p_generation_in_MW();
-    }
-    return total_p_in_MW;*/
 }
 
 double POWER_SYSTEM_DATABASE::get_total_q_generation_at_physical_bus_in_MVar(size_t bus)
@@ -5450,30 +5286,6 @@ double POWER_SYSTEM_DATABASE::get_total_q_generation_at_physical_bus_in_MVar(siz
         total_q_in_MVar += sources[i]->get_q_generation_in_MVar();
     }
     return total_q_in_MVar;
-    /*
-    double total_q_in_MVar = 0.0;
-    vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-
-    size_t n;
-    n = generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(generator[i]->get_status() == false)
-            continue;
-        else
-            total_q_in_MVar += generator[i]->get_q_generation_in_MVar();
-    }
-
-    vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-    n = wt_generator.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wt_generator[i]->get_status() == false)
-            continue;
-        else
-            total_q_in_MVar += wt_generator[i]->get_q_generation_in_MVar();
-    }
-    return total_q_in_MVar;*/
 }
 
 

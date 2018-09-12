@@ -982,25 +982,6 @@ void BPA_IMEXPORTER::load_generator_data()
             double v_schedule = get_double_data(v_schedule_str, "1.0");
             generator.set_voltage_to_regulate_in_pu(v_schedule);
 
-
-            BUS* bus = psdb->get_bus(generator.get_bus_to_regulate());
-            if(bus!=NULL)
-            {
-                if(bus->get_bus_type()==SLACK_TYPE)
-                    generator.set_regulating_mode(REGULATING_VA);
-                else
-                {
-                    if(bus->get_bus_type()==PQ_TYPE)
-                    {
-                        generator.set_regulating_mode(REGULATING_PQ);
-                        if(fabs(generator.get_p_generation_in_MW())<FLOAT_EPSILON and
-                           fabs(generator.get_q_generation_in_MVar())<FLOAT_EPSILON)
-                            continue;
-                    }
-                    else
-                        generator.set_regulating_mode(REGULATING_PV);
-                }
-            }
             psdb->append_generator(generator);
         }
     }

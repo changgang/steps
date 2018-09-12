@@ -26,7 +26,6 @@ SOURCE_TEST::SOURCE_TEST()
     TEST_ADD(SOURCE_TEST::test_set_get_q_generation);
     TEST_ADD(SOURCE_TEST::test_set_get_p_max_min);
     TEST_ADD(SOURCE_TEST::test_set_get_q_max_min);
-    TEST_ADD(SOURCE_TEST::test_set_get_regulating_mode);
     TEST_ADD(SOURCE_TEST::test_set_get_v_to_regulate);
     TEST_ADD(SOURCE_TEST::test_set_get_bus_to_regulate);
     TEST_ADD(SOURCE_TEST::test_set_get_source_impedance);
@@ -160,18 +159,6 @@ void SOURCE_TEST::test_set_get_q_max_min()
     TEST_ASSERT(generator->get_q_max_in_MVar()==100.0);
     generator->set_q_min_in_MVar(-10.0);
     TEST_ASSERT(fabs(generator->get_q_min_in_MVar()-(-10.0))<FLOAT_EPSILON);
-}
-
-void SOURCE_TEST::test_set_get_regulating_mode()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"SOURCE_TEST");
-
-    generator->set_regulating_mode(REGULATING_PQ);
-    TEST_ASSERT(generator->get_regulating_mode()==REGULATING_PQ);
-    generator->set_regulating_mode(REGULATING_PV);
-    TEST_ASSERT(generator->get_regulating_mode()==REGULATING_PV);
-    generator->set_regulating_mode(REGULATING_VA);
-    TEST_ASSERT(generator->get_regulating_mode()==REGULATING_VA);
 }
 
 void SOURCE_TEST::test_set_get_v_to_regulate()

@@ -33,8 +33,6 @@ int main()
 
     solver.solve_with_fast_decoupled_solution();
 
-    solver.show_powerflow_result();
-
     DYNAMICS_SIMULATOR simulator(psdb_ptr);
     set_dynamic_simulation_time_step_in_s(0.01);
 

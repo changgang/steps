@@ -47,8 +47,6 @@ int main()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    powerflow_solver.show_powerflow_result();
-
     simulator->prepare_meters();
     //simulator->prepare_hvdc_related_meters();
 

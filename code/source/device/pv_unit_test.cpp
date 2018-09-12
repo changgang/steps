@@ -73,7 +73,6 @@ void PV_UNIT_TEST::test_constructor()
     TEST_ASSERT(fabs(pv_unit->get_voltage_to_regulate_in_pu()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(pv_unit->get_bus_to_regulate()==0);
     TEST_ASSERT(pv_unit->get_source_impedance_in_pu()==0.0);
-    TEST_ASSERT(pv_unit->get_regulating_mode()==REGULATING_PV);
 }
 
 void PV_UNIT_TEST::test_set_get_unit_bus()
