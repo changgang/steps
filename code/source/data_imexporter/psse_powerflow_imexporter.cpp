@@ -491,7 +491,6 @@ void PSSE_IMEXPORTER::load_source_data()
                     break;
             }
         }
-
         switch(source_type)
         {
             case SYNC_GENERATOR_SOURCE:

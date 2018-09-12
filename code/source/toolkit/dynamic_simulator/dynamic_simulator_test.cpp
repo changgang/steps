@@ -1441,6 +1441,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     //simulator->set_max_network_iteration(200);
     simulator->set_allowed_max_power_imbalance_in_MVA(0.001);
     set_dynamic_simulation_time_step_in_s(0.01);
+    simulator->set_max_DAE_iteration(200);
+    simulator->set_max_network_iteration(1);
     simulator->start();
     simulator->run_to(100.0);
 
