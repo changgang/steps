@@ -391,7 +391,8 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     psdb->update_in_service_bus_count();
 
     initialize_generator_regulating_mode_with_bus_type();
-    initialize_bus_type_and_voltage_to_regulate();
+    initialize_bus_voltage_to_regulate();
+    //initialize_bus_type_and_voltage_to_regulate();
     initialize_bus_voltage();
     optimize_bus_numbers();
     iteration_count = 0;
@@ -449,6 +450,10 @@ void POWERFLOW_SOLVER::initialize_generator_regulating_mode_with_bus_type()
                 gen->set_regulating_mode(REGULATING_PQ);
                 break;
             case PV_TYPE:
+            case PV_TO_PQ_TYPE_1:
+            case PV_TO_PQ_TYPE_2:
+            case PV_TO_PQ_TYPE_3:
+            case PV_TO_PQ_TYPE_4:
                 gen->set_regulating_mode(REGULATING_PV);
                 break;
             case SLACK_TYPE:
@@ -500,6 +505,38 @@ void POWERFLOW_SOLVER::set_bus_type_and_voltage_to_regulate_with_source(SOURCE& 
     }
 }
 
+
+void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
+{
+    vector<SOURCE*> sources = db->get_all_sources();
+    size_t nsource = sources.size();
+    for(size_t i=0; i!=nsource; ++i)
+        set_bus_type_and_voltage_to_regulate_with_source(*(sources[i]));
+}
+
+void POWERFLOW_SOLVER::set_bus_voltage_to_regulate_with_source(SOURCE& source)
+{
+    if(source.get_status()==false)
+        return;
+
+    SOURCE_REGULATING_MODE mode = source.get_regulating_mode();
+
+    BUS* busptr;
+
+    if(mode==REGULATING_PV or mode == REGULATING_VA)
+    {
+        size_t bus = source.get_bus_to_regulate();
+        double v = source.get_voltage_to_regulate_in_pu();
+
+        busptr = db->get_bus(bus);
+
+        if(busptr!=NULL)
+        {
+            busptr->set_voltage_to_regulate_in_pu(v);
+        }
+    }
+}
+
 void POWERFLOW_SOLVER::initialize_bus_voltage()
 {
     vector<BUS*> buses;
@@ -525,8 +562,6 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
         }
     }
 
-
-
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Initial bus voltage and angle are listed as follows.");
     show_information_with_leading_time_stamp(buffer);
@@ -536,7 +571,6 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
         nbus = 200;
     for(size_t i=0; i!=nbus; ++i)
     {
-
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f",
                  buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg());
         show_information_with_leading_time_stamp(buffer);
