@@ -16,10 +16,10 @@ class IEEEG3 : public TURBINE_GOVERNOR_MODEL
         virtual IEEEG3& operator=(const IEEEG3& model);
     public: // specific model level
         virtual string get_model_name() const;
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_TG_in_s(double TG);
         void set_TP_in_s(double TP);

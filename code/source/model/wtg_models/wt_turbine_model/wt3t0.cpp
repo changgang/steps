@@ -96,7 +96,7 @@ double WT3T0::get_Dshaft_in_pu() const
     return Dshaft;
 }
 
-double WT3T0::get_double_data_with_index(size_t index) const
+double WT3T0::get_model_data_with_index(size_t index) const
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
@@ -104,21 +104,21 @@ double WT3T0::get_double_data_with_index(size_t index) const
     return 0.0;
 }
 
-double WT3T0::get_double_data_with_name(string par_name) const
+double WT3T0::get_model_data_with_name(string par_name) const
 {
     if(par_name=="")
         return 0.0;
     return 0.0;
 }
 
-void WT3T0::set_double_data_with_index(size_t index, double value)
+void WT3T0::set_model_data_with_index(size_t index, double value)
 {
     string par_name = get_variable_name_from_variable_index(index);
-    set_double_data_with_name(par_name, value);
+    set_model_data_with_name(par_name, value);
     return;
 }
 
-void WT3T0::set_double_data_with_name(string par_name, double value)
+void WT3T0::set_model_data_with_name(string par_name, double value)
 {
     if(par_name=="DAMPING")
     {

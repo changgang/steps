@@ -15,10 +15,10 @@ class PSASPE1: public EXCITER_MODEL
         virtual PSASPE1& operator=(const PSASPE1& model);
     public: // specific exciter
         virtual string get_model_name() const;
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_KR(double K);
         void set_TR_in_s(double T);

@@ -52,7 +52,7 @@ string ARXL::get_model_name() const
     return "ARXL";
 }
 
-double ARXL::get_double_data_with_index(size_t index) const
+double ARXL::get_model_data_with_index(size_t index) const
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
@@ -60,7 +60,7 @@ double ARXL::get_double_data_with_index(size_t index) const
     return 0.0;
 }
 
-double ARXL::get_double_data_with_name(string par_name) const
+double ARXL::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="")
@@ -69,7 +69,7 @@ double ARXL::get_double_data_with_name(string par_name) const
     return 0.0;
 }
 
-void ARXL::set_double_data_with_index(size_t index, double value)
+void ARXL::set_model_data_with_index(size_t index, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
@@ -77,7 +77,7 @@ void ARXL::set_double_data_with_index(size_t index, double value)
     return;
 }
 
-void ARXL::set_double_data_with_name(string par_name, double value)
+void ARXL::set_model_data_with_name(string par_name, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";

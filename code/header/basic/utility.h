@@ -53,6 +53,8 @@ void show_test_information_for_function_of_class(string func, string cls);
 void show_test_end_information();
 void show_information_with_leading_time_stamp(string info);
 void show_information_with_leading_time_stamp(ostringstream& stream);
+void show_set_get_model_data_with_index_error(string device, string model, string func, size_t index);
+void show_set_get_model_data_with_name_error(string device, string model, string func, string par_name);
 string get_system_time_stamp_string();
 
 bool is_file_exist(const string file);

@@ -15,10 +15,10 @@ class WT3P0 : public WT_PITCH_MODEL
         virtual WT3P0& operator=(const WT3P0& model);
     public: // specific model level
         virtual string get_model_name() const;
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_Tspeed_in_s(double T);
         void set_Kp_speed_controller(double K);

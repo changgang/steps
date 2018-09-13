@@ -268,7 +268,7 @@ double ESTR0::get_Dq() const
     return this->Dq;
 }
 
-double ESTR0::get_double_data_with_index(size_t index) const
+double ESTR0::get_model_data_with_index(size_t index) const
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
@@ -276,7 +276,7 @@ double ESTR0::get_double_data_with_index(size_t index) const
     return 0.0;
 }
 
-double ESTR0::get_double_data_with_name(string par_name) const
+double ESTR0::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="PMAX")
@@ -289,7 +289,7 @@ double ESTR0::get_double_data_with_name(string par_name) const
     return 0.0;
 }
 
-void ESTR0::set_double_data_with_index(size_t index, double value)
+void ESTR0::set_model_data_with_index(size_t index, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
@@ -297,7 +297,7 @@ void ESTR0::set_double_data_with_index(size_t index, double value)
     return;
 }
 
-void ESTR0::set_double_data_with_name(string par_name, double value)
+void ESTR0::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
     if(par_name=="PMAX")

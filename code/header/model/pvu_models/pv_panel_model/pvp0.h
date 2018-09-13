@@ -14,10 +14,10 @@ class PVP0 : public PV_PANEL_MODEL
     public:
         virtual string get_model_name() const;
 
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
 
         virtual bool setup_model_with_steps_string(string data);
         virtual bool setup_model_with_psse_string(string data);

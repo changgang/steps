@@ -435,72 +435,486 @@ double WT3E0::get_speed_reference_bias_in_pu() const
     return speedref_bias;
 }
 
-double WT3E0::get_double_data_with_index(size_t index) const
+double WT3E0::get_model_data_with_index(size_t index) const
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
+    switch(index)
+    {
+        case 1:
+            return get_bus_to_regulate();
+        case 2:
+            return get_var_control_mode();
+        case 3:
+            return get_voltage_flag();
+        case 4:
+            return get_Xcomp_in_pu();
+        case 5:
+            return get_TRV_in_s();
+        case 6:
+            return get_Fn();
+        case 7:
+            return get_KPV();
+        case 8:
+            return get_TV_in_s();
+        case 9:
+            return get_KIV();
+        case 10:
+            return get_Qmin_in_pu();
+        case 11:
+            return get_Qmax_in_pu();
+        case 12:
+            return get_TFV_in_s();
+        case 13:
+            return get_TP_in_s();
+        case 14:
+            return get_KQI();
+        case 15:
+            return get_Vmin_in_pu();
+        case 16:
+            return get_Vmax_in_pu();
+        case 17:
+            return get_KQV();
+        case 18:
+            return get_EQmin_in_pu();
+        case 19:
+            return get_EQmax_in_pu();
+        case 20:
+            return get_Tspeed_in_s();
+        case 21:
+            return get_KPP();
+        case 22:
+            return get_KIP();
+        case 23:
+            return get_Kvi();
+        case 24:
+            return get_Tvi_in_s();
+        case 25:
+            return get_Kdroop();
+        case 26:
+            return get_Tdroop_in_s();
+        case 27:
+            return get_frequency_deviation_lower_deadband_in_pu();
+        case 28:
+            return get_frequency_deviation_upper_deadband_in_pu();
+        case 29:
+            return get_Kfint();
+        case 30:
+            return get_rPmin_in_pu();
+        case 31:
+            return get_rPmax_in_pu();
+        case 32:
+            return get_TFP_in_s();
+        case 33:
+            return get_Pmin_in_pu();
+        case 34:
+            return get_Pmax_in_pu();
+        case 35:
+            return get_IPmax_in_pu();
+        default:
+        {
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return 0.0;
+        }
+    }
+}
+
+
+double WT3E0::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+
+    size_t index = 1;
+    if(par_name == "BUS TO REGULATE")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "VAR CONTROL FLAG")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "VOLTAGE FLAG")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "XCOMP IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "T VOLTAGE SENSOR IN S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "FN")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "KP VOLTAGE ERROR")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "TP VOLTAGE ERROR")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "KI VOLTAGE ERROR")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "QMIN IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "QMAX IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "T REACTIVE POWER FILTER IN S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "T ACTIVE POWER SENSOR IN S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "KI REACTIVE POWER ERROR")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "VMIN IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "VMAX IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "KI VOLTAGE COMMAND")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "EQMIN IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "EQMAX IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "T SPEED SENSOR IN S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "KP SPEED")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "KI SPEED")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "K VIRTUAL INERTIA")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "T VIRTUAL INERTIA IN S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "K FREQUENCY DROOP")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "T FREQUENCY DROOP IN S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "F LOWER IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "F UPPER IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "K SECONDARY FREQUENCY REGULATION")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "P RATE MIN IN PU/S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "P RATE MAX IN PU/S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "T ACTIVE POWER COMMAND IN S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "PMIN IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "PMAX IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "ACTIVE CURRENT MAX IN PU")
+        return get_model_data_with_index(index);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
-double WT3E0::get_double_data_with_name(string par_name) const
+void WT3E0::set_model_data_with_index(size_t index, double value)
 {
-    par_name = string2upper(par_name);
-    if(par_name=="K VIRTUAL INERTIA")
-        return get_Kvi();
-    if(par_name=="T VIRTUAL INERTIA")
-        return get_TV_in_s();
-    if(par_name=="UPPER FREQUENCY DEADBAND")
-        return get_frequency_deviation_upper_deadband_in_pu();
-    if(par_name=="LOWER FREQUENCY DEADBAND")
-        return get_frequency_deviation_lower_deadband_in_pu();
-    if(par_name=="K DROOP")
-        return get_Kdroop();
-    if(par_name=="T DROOP")
-        return get_Tdroop_in_s();
-    if(par_name=="K SECONDARY FREQUENCY REGULATION")
-        return get_Kfint();
-    if(par_name=="T SPEED REFERENCE FILTER")
-        return get_Tspeed_in_s();
-    if(par_name=="KP TORQUE CONTROL")
-        return get_KPP();
-    if(par_name=="KI TORQUE CONTROL")
-        return get_KIP();
-    return 0.0;
+    switch(index)
+    {
+        case 1:
+            return set_bus_to_regulate(size_t(value));
+        case 2:
+        {
+            int ivalue = int(value);
+            PE_VAR_CONTROL_MODE mode = CONSTANT_VAR_MODE;
+            switch(ivalue)
+            {
+                case 0:
+                    mode = CONSTANT_VAR_MODE;
+                    break;
+                case 1:
+                    mode = CONSTANT_VOLTAGE_MODE;
+                    break;
+                case -1:
+                    mode = CONSTANT_POWER_FACTOR_MODE;
+                    break;
+                default:
+                    mode = CONSTANT_VAR_MODE;
+                    break;
+            }
+            return set_var_control_mode(mode);
+        }
+        case 3:
+        {
+            size_t flag = size_t(value);
+            return set_voltage_flag(flag);
+        }
+        case 4:
+            return set_Xcomp_in_pu(value);
+        case 5:
+            return set_TRV_in_s(value);
+        case 6:
+            return set_Fn(value);
+        case 7:
+            return set_KPV(value);
+        case 8:
+            return set_TV_in_s(value);
+        case 9:
+            return set_KIV(value);
+        case 10:
+            return set_Qmin_in_pu(value);
+        case 11:
+            return set_Qmax_in_pu(value);
+        case 12:
+            return set_TFV_in_s(value);
+        case 13:
+            return set_TP_in_s(value);
+        case 14:
+            return set_KQI(value);
+        case 15:
+            return set_Vmin_in_pu(value);
+        case 16:
+            return set_Vmax_in_pu(value);
+        case 17:
+            return set_KQV(value);
+        case 18:
+            return set_EQmin_in_pu(value);
+        case 19:
+            return set_EQmax_in_pu(value);
+        case 20:
+            return set_Tspeed_in_s(value);
+        case 21:
+            return set_KPP(value);
+        case 22:
+            return set_KIP(value);
+        case 23:
+            return set_Kvi(value);
+        case 24:
+            return set_Tvi_in_s(value);
+        case 25:
+            return set_Kdroop(value);
+        case 26:
+            return set_Tdroop_in_s(value);
+        case 27:
+            return set_frequency_deviation_lower_deadband_in_pu(value);
+        case 28:
+            return set_frequency_deviation_upper_deadband_in_pu(value);
+        case 29:
+            return set_Kfint(value);
+        case 30:
+            return set_rPmin_in_pu(value);
+        case 31:
+            return set_rPmax_in_pu(value);
+        case 32:
+            return set_TFP_in_s(value);
+        case 33:
+            return set_Pmin_in_pu(value);
+        case 34:
+            return set_Pmax_in_pu(value);
+        case 35:
+            return set_IPmax_in_pu(value);
+        default:
+        {
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return;
+        }
+    }
 }
 
-void WT3E0::set_double_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void WT3E0::set_double_data_with_name(string par_name, double value)
+void WT3E0::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="K VIRTUAL INERTIA")
-        return set_Kvi(value);
-    if(par_name=="T VIRTUAL INERTIA")
-        return set_TV_in_s(value);
-    if(par_name=="UPPER FREQUENCY DEADBAND")
-        return set_frequency_deviation_upper_deadband_in_pu(value);
-    if(par_name=="LOWER FREQUENCY DEADBAND")
-        return set_frequency_deviation_lower_deadband_in_pu(value);
-    if(par_name=="K DROOP")
-        return set_Kdroop(value);
-    if(par_name=="T DROOP")
-        return set_Tdroop_in_s(value);
-    if(par_name=="K SECONDARY FREQUENCY REGULATION")
-        return set_Kfint(value);
-    if(par_name=="T SPEED REFERENCE FILTER")
-        return set_Tspeed_in_s(value);
-    if(par_name=="KP TORQUE CONTROL")
-        return set_KPP(value);
-    if(par_name=="KI TORQUE CONTROL")
-        return set_KIP(value);
 
+    size_t index = 1;
+    if(par_name == "BUS TO REGULATE")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "VAR CONTROL FLAG")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "VOLTAGE FLAG")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "XCOMP IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T VOLTAGE SENSOR IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "FN")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KP VOLTAGE ERROR")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "TP VOLTAGE ERROR")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KI VOLTAGE ERROR")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "QMIN IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "QMAX IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T REACTIVE POWER FILTER IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T ACTIVE POWER SENSOR IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KI REACTIVE POWER ERROR")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "VMIN IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "VMAX IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KI VOLTAGE COMMAND")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "EQMIN IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "EQMAX IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T SPEED SENSOR IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KP SPEED")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KI SPEED")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "K VIRTUAL INERTIA")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T VIRTUAL INERTIA IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "K FREQUENCY DROOP")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T FREQUENCY DROOP IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "F LOWER IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "F UPPER IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "K SECONDARY FREQUENCY REGULATION")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "P RATE MIN IN PU/S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "P RATE MAX IN PU/S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T ACTIVE POWER COMMAND IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "PMIN IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "PMAX IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "ACTIVE CURRENT MAX IN PU")
+        return set_model_data_with_index(index, value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

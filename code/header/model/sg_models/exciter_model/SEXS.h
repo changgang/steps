@@ -13,10 +13,10 @@ class SEXS: public EXCITER_MODEL
         virtual SEXS& operator=(const SEXS& model);
     public: // specific exciter
         virtual string get_model_name() const;
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_TA_in_s(double T);
         void set_TB_in_s(double T);

@@ -63,7 +63,7 @@ double api_get_pv_unit_related_model_float_parameter(size_t bus, char* identifie
     {
         PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -72,7 +72,7 @@ double api_get_pv_unit_related_model_float_parameter(size_t bus, char* identifie
     {
         PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -81,7 +81,7 @@ double api_get_pv_unit_related_model_float_parameter(size_t bus, char* identifie
     {
         PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -89,7 +89,7 @@ double api_get_pv_unit_related_model_float_parameter(size_t bus, char* identifie
     {
         PV_IRRADIANCE_MODEL* model = pv_unit->get_pv_irradiance_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -113,7 +113,7 @@ void api_set_pv_unit_related_model_float_parameter(size_t bus, char* identifier,
     {
         PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }
@@ -122,7 +122,7 @@ void api_set_pv_unit_related_model_float_parameter(size_t bus, char* identifier,
     {
         PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }
@@ -130,7 +130,7 @@ void api_set_pv_unit_related_model_float_parameter(size_t bus, char* identifier,
     {
         PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }
@@ -138,7 +138,7 @@ void api_set_pv_unit_related_model_float_parameter(size_t bus, char* identifier,
     {
         PV_IRRADIANCE_MODEL* model = pv_unit->get_pv_irradiance_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }

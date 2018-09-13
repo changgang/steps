@@ -451,6 +451,44 @@ void show_information_with_leading_time_stamp(ostringstream& stream)
     stream.str("");
 }
 
+void show_set_get_model_data_with_index_error(string device, string model, string func, size_t index)
+{
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    if(func=="set_model_data_with_index")
+    {
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Index %lu is out of range when calling %s:%s() for %s.\n0.0 will be returned.",
+                 index, model.c_str(), func.c_str(), device.c_str());
+        show_information_with_leading_time_stamp(buffer);
+        return;
+    }
+    if(func=="get_model_data_with_index")
+    {
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Index %lu is out of range when calling %s:%s() for %s.\nNothing will be set.",
+                 index, model.c_str(), func.c_str(), device.c_str());
+        show_information_with_leading_time_stamp(buffer);
+        return;
+    }
+}
+
+void show_set_get_model_data_with_name_error(string device, string model, string func, string par_name)
+{
+    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    if(func=="set_model_data_with_name")
+    {
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s is not supported when calling %s:%s() of %s.\n0.0 will be returned.",
+                 par_name.c_str(), model.c_str(), func.c_str(), device.c_str());
+        show_information_with_leading_time_stamp(buffer);
+        return;
+    }
+    if(func=="get_model_data_with_name")
+    {
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s is not supported when calling %s:%s() of %s.\nNothing will be set.",
+                 par_name.c_str(), model.c_str(), func.c_str(), device.c_str());
+        show_information_with_leading_time_stamp(buffer);
+        return;
+    }
+}
+
 string get_system_time_stamp_string()
 {
     time_t tt = time(NULL);

@@ -75,7 +75,7 @@ string FILEWIND::get_wind_speed_serial_file() const
 }
 
 
-double FILEWIND::get_double_data_with_index(size_t index) const
+double FILEWIND::get_model_data_with_index(size_t index) const
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
@@ -83,7 +83,7 @@ double FILEWIND::get_double_data_with_index(size_t index) const
     return 0.0;
 }
 
-double FILEWIND::get_double_data_with_name(string par_name) const
+double FILEWIND::get_model_data_with_name(string par_name) const
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
@@ -91,7 +91,7 @@ double FILEWIND::get_double_data_with_name(string par_name) const
     return 0.0;
 }
 
-void FILEWIND::set_double_data_with_index(size_t index, double value)
+void FILEWIND::set_model_data_with_index(size_t index, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
@@ -99,7 +99,7 @@ void FILEWIND::set_double_data_with_index(size_t index, double value)
     return;
 }
 
-void FILEWIND::set_double_data_with_name(string par_name, double value)
+void FILEWIND::set_model_data_with_name(string par_name, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";

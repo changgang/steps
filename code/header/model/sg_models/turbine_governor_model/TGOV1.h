@@ -15,10 +15,10 @@ class TGOV1 : public TURBINE_GOVERNOR_MODEL
         virtual TGOV1& operator=(const TGOV1& model);
     public: // specific model level
         virtual string get_model_name() const;
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_R(double R);
         void set_T1_in_s(double T);

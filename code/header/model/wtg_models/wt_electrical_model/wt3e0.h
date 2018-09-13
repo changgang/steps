@@ -89,10 +89,10 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         void set_speed_reference_bias_in_pu(double bias);
         double get_speed_reference_bias_in_pu() const;
 
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
     public:
 
         virtual bool setup_model_with_steps_string(string data);

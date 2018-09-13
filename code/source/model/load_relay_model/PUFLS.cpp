@@ -80,7 +80,7 @@ string PUFLS::get_model_name() const
     return "PUFLS";
 }
 
-double PUFLS::get_double_data_with_index(size_t index) const
+double PUFLS::get_model_data_with_index(size_t index) const
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
@@ -88,7 +88,7 @@ double PUFLS::get_double_data_with_index(size_t index) const
     return 0.0;
 }
 
-double PUFLS::get_double_data_with_name(string par_name) const
+double PUFLS::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="")
@@ -97,7 +97,7 @@ double PUFLS::get_double_data_with_name(string par_name) const
     return 0.0;
 }
 
-void PUFLS::set_double_data_with_index(size_t index, double value)
+void PUFLS::set_model_data_with_index(size_t index, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
@@ -105,7 +105,7 @@ void PUFLS::set_double_data_with_index(size_t index, double value)
     return;
 }
 
-void PUFLS::set_double_data_with_name(string par_name, double value)
+void PUFLS::set_model_data_with_name(string par_name, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";

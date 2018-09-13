@@ -65,7 +65,7 @@ string FILEIRRAD::get_solar_irradiance_serial_file() const
 }
 
 
-double FILEIRRAD::get_double_data_with_index(size_t index) const
+double FILEIRRAD::get_model_data_with_index(size_t index) const
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
@@ -73,7 +73,7 @@ double FILEIRRAD::get_double_data_with_index(size_t index) const
     return 0.0;
 }
 
-double FILEIRRAD::get_double_data_with_name(string par_name) const
+double FILEIRRAD::get_model_data_with_name(string par_name) const
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
@@ -81,7 +81,7 @@ double FILEIRRAD::get_double_data_with_name(string par_name) const
     return 0.0;
 }
 
-void FILEIRRAD::set_double_data_with_index(size_t index, double value)
+void FILEIRRAD::set_model_data_with_index(size_t index, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
@@ -89,7 +89,7 @@ void FILEIRRAD::set_double_data_with_index(size_t index, double value)
     return;
 }
 
-void FILEIRRAD::set_double_data_with_name(string par_name, double value)
+void FILEIRRAD::set_model_data_with_name(string par_name, double value)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";

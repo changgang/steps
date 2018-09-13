@@ -77,7 +77,7 @@ double api_get_wt_generator_related_model_float_parameter(size_t bus, char* iden
     {
         WT_GENERATOR_MODEL* model = generator->get_wt_generator_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -86,7 +86,7 @@ double api_get_wt_generator_related_model_float_parameter(size_t bus, char* iden
     {
         WT_AERODYNAMIC_MODEL* model = generator->get_wt_aerodynamic_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -95,7 +95,7 @@ double api_get_wt_generator_related_model_float_parameter(size_t bus, char* iden
     {
         WT_ELECTRICAL_MODEL* model = generator->get_wt_electrical_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -103,7 +103,7 @@ double api_get_wt_generator_related_model_float_parameter(size_t bus, char* iden
     {
         WT_TURBINE_MODEL* model = generator->get_wt_turbine_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -111,7 +111,7 @@ double api_get_wt_generator_related_model_float_parameter(size_t bus, char* iden
     {
         WT_PITCH_MODEL* model = generator->get_wt_pitch_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -119,7 +119,7 @@ double api_get_wt_generator_related_model_float_parameter(size_t bus, char* iden
     {
         WIND_SPEED_MODEL* model = generator->get_wind_speed_model();
         if(model!=NULL)
-            return model->get_double_data_with_name(PARAMETER_NAME);
+            return model->get_model_data_with_name(PARAMETER_NAME);
         else
             return 0.0;
     }
@@ -143,7 +143,7 @@ void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identi
     {
         WT_GENERATOR_MODEL* model = generator->get_wt_generator_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }
@@ -152,7 +152,7 @@ void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identi
     {
         WT_AERODYNAMIC_MODEL* model = generator->get_wt_aerodynamic_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }
@@ -160,7 +160,7 @@ void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identi
     {
         WT_ELECTRICAL_MODEL* model = generator->get_wt_electrical_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }
@@ -168,7 +168,7 @@ void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identi
     {
         WT_TURBINE_MODEL* model = generator->get_wt_turbine_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }
@@ -176,7 +176,7 @@ void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identi
     {
         WT_PITCH_MODEL* model = generator->get_wt_pitch_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }
@@ -184,7 +184,7 @@ void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identi
     {
         WIND_SPEED_MODEL* model = generator->get_wind_speed_model();
         if(model!=NULL)
-            return model->set_double_data_with_name(PARAMETER_NAME, value);
+            return model->set_model_data_with_name(PARAMETER_NAME, value);
         else
             return;
     }

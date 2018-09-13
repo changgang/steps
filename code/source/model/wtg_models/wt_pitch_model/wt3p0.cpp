@@ -90,83 +90,229 @@ string WT3P0::get_model_name() const
     return "WT3P0";
 }
 
-double WT3P0::get_double_data_with_index(size_t index) const
+double WT3P0::get_model_data_with_index(size_t index) const
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
+    switch(index)
+    {
+        case 1:
+            return get_hold_wtg_speed_flag();
+        case 2:
+            return get_Tspeed_in_s();
+        case 3:
+            return get_Kp_speed_controller();
+        case 4:
+            return get_Ki_speed_controller();
+        case 5:
+            return get_Tfrequency_in_s();
+        case 6:
+            return get_frequency_lower_deadband_in_pu();
+        case 7:
+            return get_frequency_upper_deadband_in_pu();
+        case 8:
+            return get_Kp_frequency_controller();
+        case 9:
+            return get_Ki_frequency_controller();
+        case 10:
+            return get_Kd_frequency_controller();
+        case 11:
+            return get_Td_frequency_controller_in_s();
+        case 12:
+            return get_ratePitchmax_in_deg_per_s();
+        case 13:
+            return get_Pitchmin_in_deg();
+        case 14:
+            return get_Pitchmax_in_deg();
+        case 15:
+            return get_Tp_in_s();
+        default:
+        {
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return 0.0;
+        }
+    }
 }
 
-double WT3P0::get_double_data_with_name(string par_name) const
+double WT3P0::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
 
-    if(par_name == "KP FREQUENCY CONTROLLER")
-        return get_Kp_frequency_controller();
+    size_t index = 1;
+    if(par_name == "HOLD SPEED FLAG")
+        return get_model_data_with_index(index);
 
-    if(par_name == "KI FREQUENCY CONTROLLER")
-        return get_Ki_frequency_controller();
+    index++;
+    if(par_name == "T SPEED IN S")
+        return get_model_data_with_index(index);
 
-    if(par_name == "KD FREQUENCY CONTROLLER")
-        return get_Kd_frequency_controller();
+    index++;
+    if(par_name == "KP SPEED")
+        return get_model_data_with_index(index);
 
-    if(par_name == "TD FREQUENCY CONTROLLER")
-        return get_Td_frequency_controller_in_s();
+    index++;
+    if(par_name == "KI SPEED")
+        return get_model_data_with_index(index);
 
-    if(par_name == "KP SPEED CONTROLLER")
-        return get_Kp_speed_controller();
+    index++;
+    if(par_name == "T FREQUENCY IN S")
+        return get_model_data_with_index(index);
 
-    if(par_name == "KI SPEED CONTROLLER")
-        return get_Ki_speed_controller();
+    index++;
+    if(par_name == "F LOWER IN PU")
+        return get_model_data_with_index(index);
 
-    if(par_name == "PITCH ANGLE IN DEG")
-        return get_pitch_angle_in_deg();
+    index++;
+    if(par_name == "F UPPER IN PU")
+        return get_model_data_with_index(index);
 
-    if(par_name=="PITCHMAX")
-        return get_Pitchmax_in_deg();
+    index++;
+    if(par_name == "KP FREQUENCY")
+        return get_model_data_with_index(index);
 
-    if(par_name=="PITCHMIN")
-        return get_Pitchmin_in_deg();
+    index++;
+    if(par_name == "KI FREQUENCY")
+        return get_model_data_with_index(index);
 
+    index++;
+    if(par_name == "KD FREQUENCY")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "TD FREQUENCY IN S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "MAX PITCH RATE IN DEG/S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "PITCH MIN IN DEG")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "PITCH MAX IN DEG")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name == "T PITCH IN S")
+        return get_model_data_with_index(index);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
-void WT3P0::set_double_data_with_index(size_t index, double value)
+void WT3P0::set_model_data_with_index(size_t index, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    switch(index)
+    {
+        case 1:
+        {
+            bool flag = bool(value);
+            return set_hold_wtg_speed_flag(flag);
+        }
+        case 2:
+            return set_Tspeed_in_s(value);
+        case 3:
+            return set_Kp_speed_controller(value);
+        case 4:
+            return set_Ki_speed_controller(value);
+        case 5:
+            return set_Tfrequency_in_s(value);
+        case 6:
+            return set_frequency_lower_deadband_in_pu(value);
+        case 7:
+            return set_frequency_upper_deadband_in_pu(value);
+        case 8:
+            return set_Kp_frequency_controller(value);
+        case 9:
+            return set_Ki_frequency_controller(value);
+        case 10:
+            return set_Kd_frequency_controller(value);
+        case 11:
+            return set_Td_frequency_controller_in_s(value);
+        case 12:
+            return set_ratePitchmax_in_deg_per_s(value);
+        case 13:
+            return set_Pitchmin_in_deg(value);
+        case 14:
+            return set_Pitchmax_in_deg(value);
+        case 15:
+            return set_Tp_in_s(value);
+        default:
+        {
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return;
+        }
+    }
+}
+
+
+void WT3P0::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    par_name = string2upper(par_name);
+
+    size_t index = 1;
+    if(par_name == "HOLD SPEED FLAG")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T SPEED IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KP SPEED")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KI SPEED")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T FREQUENCY IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "F LOWER IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "F UPPER IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KP FREQUENCY")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KI FREQUENCY")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "KD FREQUENCY")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "TD FREQUENCY IN S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "MAX PITCH RATE IN DEG/S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "PITCH MIN IN DEG")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "PITCH MAX IN DEG")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "T PITCH IN S")
+        return set_model_data_with_index(index, value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
-}
-
-void WT3P0::set_double_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-
-    if(par_name == "KP FREQUENCY CONTROLLER")
-        return set_Kp_frequency_controller(value);
-
-    if(par_name == "KI FREQUENCY CONTROLLER")
-        return set_Ki_frequency_controller(value);
-
-    if(par_name == "KD FREQUENCY CONTROLLER")
-        return set_Kd_frequency_controller(value);
-
-    if(par_name == "TD FREQUENCY CONTROLLER")
-        return set_Td_frequency_controller_in_s(value);
-
-    if(par_name == "KP SPEED CONTROLLER")
-        return set_Kp_speed_controller(value);
-
-    if(par_name == "KI SPEED CONTROLLER")
-        return set_Ki_speed_controller(value);
-
-    if(par_name=="PITCHMAX")
-        return set_Pitchmax_in_deg(value);
-
-    if(par_name=="PITCHMIN")
-        return set_Pitchmin_in_deg(value);
 }
 
 void WT3P0::set_Tspeed_in_s(double T)

@@ -18,10 +18,10 @@ class WT3E1: public WT_ELECTRICAL_MODEL
         virtual double get_active_power_current_command_in_pu();
         virtual double get_reactive_power_current_command_in_pu();
 
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_transformer_from_bus(size_t bus);
         void set_transformer_to_bus(size_t bus);

@@ -998,37 +998,19 @@ class STEPS():
         model_type = self.__get_c_char_p_of_string(model_type)
         return (self.libsteps.api_get_generator_related_model_name(ibus, ickt, model_type)).decode()
 
-    def get_generator_related_model_data(self, generator, model_type, par_type, par_name):
-        par_type = par_type.upper()
+    def get_generator_related_model_data(self, generator, model_type, par_name):
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
-        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
-            return None
-        if par_type in ['I', 'INT', 'INTEGER']:
-            return 0
-        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return self.libsteps.api_get_generator_related_model_float_parameter(ibus, ickt, model_type, par_name)
-        if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return False
-        return None
+        return self.libsteps.api_get_generator_related_model_float_parameter(ibus, ickt, model_type, par_name)
         
-    def set_generator_related_model_data(self, generator, model_type, par_type, par_name, value):
-        par_type = par_type.upper()
+    def set_generator_related_model_data(self, generator, model_type, par_name, value):
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
-        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
-            return
-        if par_type in ['I', 'INT', 'INTEGER']:
-            return
-        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return self.libsteps.api_set_generator_related_model_float_parameter(ibus, ickt, model_type, par_name, value)
-        if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return
-        return
+        return self.libsteps.api_set_generator_related_model_float_parameter(ibus, ickt, model_type, par_name, value)
         
     def get_wt_generator_related_model_name(self, generator, model_type):
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1036,37 +1018,19 @@ class STEPS():
         model_type = self.__get_c_char_p_of_string(model_type)
         return (self.libsteps.api_get_wt_generator_related_model_name(ibus, ickt, model_type)).decode()
 
-    def get_wt_generator_related_model_data(self, generator, model_type, par_type, par_name):
-        par_type = par_type.upper()
+    def get_wt_generator_related_model_data(self, generator, model_type, par_name):
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
-        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
-            return None
-        if par_type in ['I', 'INT', 'INTEGER']:
-            return 0
-        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return self.libsteps.api_get_wt_generator_related_model_float_parameter(ibus, ickt, model_type, par_name)
-        if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return False
-        return None
+        return self.libsteps.api_get_wt_generator_related_model_float_parameter(ibus, ickt, model_type, par_name)
         
-    def set_wt_generator_related_model_data(self, generator, model_type, par_type, par_name, value):
-        par_type = par_type.upper()
+    def set_wt_generator_related_model_data(self, generator, model_type, par_name, value):
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
-        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
-            return
-        if par_type in ['I', 'INT', 'INTEGER']:
-            return
-        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return self.libsteps.api_set_wt_generator_related_model_float_parameter(ibus, ickt, model_type, par_name, value)
-        if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return
-        return
+        return self.libsteps.api_set_wt_generator_related_model_float_parameter(ibus, ickt, model_type, par_name, value)
         
     def get_pv_unit_related_model_name(self, pv_unit, model_type):
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
@@ -1074,37 +1038,19 @@ class STEPS():
         model_type = self.__get_c_char_p_of_string(model_type)
         return (self.libsteps.api_get_pv_unit_related_model_name(ibus, ickt, model_type)).decode()
 
-    def get_pv_unit_related_model_data(self, pv_unit, model_type, par_type, par_name):
-        par_type = par_type.upper()
+    def get_pv_unit_related_model_data(self, pv_unit, model_type, par_name):
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
-        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
-            return None
-        if par_type in ['I', 'INT', 'INTEGER']:
-            return 0
-        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return self.libsteps.api_get_pv_unit_related_model_float_parameter(ibus, ickt, model_type, par_name)
-        if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return False
-        return None
+        return self.libsteps.api_get_pv_unit_related_model_float_parameter(ibus, ickt, model_type, par_name)
         
-    def set_pv_unit_related_model_data(self, pv_unit, model_type, par_type, par_name, value):
-        par_type = par_type.upper()
+    def set_pv_unit_related_model_data(self, pv_unit, model_type, par_name, value):
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
-        if par_type not in ['I', 'INT', 'INTEGER', 'F', 'D', 'FLOAT', 'DOUBLE', 'B', 'BOOL', 'BOOLEAN']:
-            return
-        if par_type in ['I', 'INT', 'INTEGER']:
-            return
-        if par_type in ['F', 'D', 'FLOAT', 'DOUBLE']:
-            return self.libsteps.api_set_pv_unit_related_model_float_parameter(ibus, ickt, model_type, par_name, value)
-        if par_type in ['B', 'BOOL', 'BOOLEAN']:
-            return
-        return
+        return self.libsteps.api_set_pv_unit_related_model_float_parameter(ibus, ickt, model_type, par_name, value)
         
     def get_powerflow_solver_parameter(self, par_type, par_name):
         par_type = par_type.upper()

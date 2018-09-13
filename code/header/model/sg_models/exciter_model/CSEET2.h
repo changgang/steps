@@ -13,10 +13,10 @@ class CSEET2: public EXCITER_MODEL
         virtual CSEET2& operator=(const CSEET2& model);
     public: // specific exciter
         virtual string get_model_name() const;
-        virtual double get_double_data_with_index(size_t index) const;
-        virtual double get_double_data_with_name(string par_name) const;
-        virtual void set_double_data_with_index(size_t index, double value);
-        virtual void set_double_data_with_name(string par_name, double value);
+        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_excitation_source(AVR_EXCITATION_SOURCE source);
         void set_stabilizer_slot(AVR_FEEDBACK_SLOT slot);

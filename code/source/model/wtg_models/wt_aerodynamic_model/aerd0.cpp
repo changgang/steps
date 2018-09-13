@@ -169,35 +169,250 @@ string AERD0::get_model_name() const
     return "AERD0";
 }
 
-double AERD0::get_double_data_with_index(size_t index) const
+double AERD0::get_model_data_with_index(size_t index) const
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
+    switch(index)
+    {
+        case 1:
+            return get_turbine_speed_mode();
+        case 2:
+            return get_number_of_pole_pairs();
+        case 3:
+            return get_nominal_wind_speed_in_mps();
+        case 4:
+            return get_gear_efficiency();
+        case 5:
+            return get_nominal_air_density_in_kgpm3();
+        case 6:
+            return get_min_steady_state_turbine_speed_in_pu();
+        case 7:
+            return get_max_steady_state_turbine_speed_in_pu();
+        case 8:
+            return get_air_density_in_kgpm3();
+        case 9:
+            return get_C1();
+        case 10:
+            return get_C2();
+        case 11:
+            return get_C3();
+        case 12:
+            return get_C4();
+        case 13:
+            return get_C5();
+        case 14:
+            return get_C6();
+        case 15:
+            return get_C7();
+        case 16:
+            return get_C8();
+        default:
+        {
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return 0.0;
+        }
+    }
+}
+
+double AERD0::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    size_t index = 1;
+    if(par_name=="SPEED MODE")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="POLE PAIR")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="NOMINAL WIND SPEED IN M/S")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="GEAR EFFICIENCY")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="NOMINAL AIR DENSITY IN KG/M3")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="MIN TURBINE SPEED IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="MAX TURBINE SPEED IN PU")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="AIR DENSITY IN KG/M3")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="C1")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="C2")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="C3")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="C4")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="C5")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="C6")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="C7")
+        return get_model_data_with_index(index);
+
+    index++;
+    if(par_name=="C8")
+        return get_model_data_with_index(index);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
-double AERD0::get_double_data_with_name(string par_name) const
+void AERD0::set_model_data_with_index(size_t index, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
+    switch(index)
+    {
+        case 1:
+        {
+            int ivalue = int(value);
+            WTG_TURBINE_SPEED_MODE mode = WT_MPPT_MODE;
+            switch(ivalue)
+            {
+                case 1:
+                    mode = WT_OVERSPEED_MODE;
+                    break;
+                case -1:
+                    mode = WT_UNDERSPEED_MODE;
+                    break;
+                case 0:
+                default:
+                    mode = WT_MPPT_MODE;
+                    break;
+            }
+            return set_turbine_speed_mode(mode);
+        }
+        case 2:
+            return set_number_of_pole_pairs(size_t(value));
+        case 3:
+            return set_nominal_wind_speed_in_mps(value);
+        case 4:
+            return set_gear_efficiency(value);
+        case 5:
+            return set_nominal_air_density_in_kgpm3(value);
+        case 6:
+            return set_min_steady_state_turbine_speed_in_pu(value);
+        case 7:
+            return set_max_steady_state_turbine_speed_in_pu(value);
+        case 8:
+            return set_air_density_in_kgpm3(value);
+        case 9:
+            return set_C1(value);
+        case 10:
+            return set_C2(value);
+        case 11:
+            return set_C3(value);
+        case 12:
+            return set_C4(value);
+        case 13:
+            return set_C5(value);
+        case 14:
+            return set_C6(value);
+        case 15:
+            return set_C7(value);
+        case 16:
+            return set_C8(value);
+        default:
+        {
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return;
+        }
+    }
 }
 
-void AERD0::set_double_data_with_index(size_t index, double value)
+void AERD0::set_model_data_with_name(string par_name, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
+    par_name = string2upper(par_name);
+    size_t index = 1;
+    if(par_name=="SPEED MODE")
+        return set_model_data_with_index(index, value);
 
-void AERD0::set_double_data_with_name(string par_name, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    index++;
+    if(par_name=="POLE PAIR")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="NOMINAL WIND SPEED IN M/S")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="GEAR EFFICIENCY")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="NOMINAL AIR DENSITY IN KG/M3")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="MIN TURBINE SPEED IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="MAX TURBINE SPEED IN PU")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="AIR DENSITY IN KG/M3")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="C1")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="C2")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="C3")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="C4")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="C5")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="C6")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="C7")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name=="C8")
+        return set_model_data_with_index(index, value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 
