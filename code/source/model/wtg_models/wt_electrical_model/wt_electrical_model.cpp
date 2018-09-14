@@ -192,7 +192,7 @@ double WT_ELECTRICAL_MODEL::get_wt_generator_speed_in_pu() const
 
     WT_TURBINE_MODEL* turbinemodel = gen->get_wt_turbine_model();
     if(turbinemodel != NULL and turbinemodel->is_model_initialized())
-        return turbinemodel->get_generator_speed_in_pu();
+        return turbinemodel->get_turbine_speed_in_pu();
     else
         return 1.0;
 }
