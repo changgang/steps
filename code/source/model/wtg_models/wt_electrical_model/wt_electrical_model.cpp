@@ -200,18 +200,31 @@ double WT_ELECTRICAL_MODEL::get_wt_generator_speed_in_pu() const
 double WT_ELECTRICAL_MODEL::get_wt_generator_speed_referance_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen == NULL)
-        return 0.0;
+    if(gen == NULL)  return 0.0;
 
-    WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
-    if(aero_model != NULL)
-    {
-        if(not aero_model->is_model_initialized())
-            aero_model->initialize();
-        return aero_model->get_turbine_reference_speed_in_pu();
-    }
-    else
-        return 0.0;
+
+	WT_PITCH_MODEL* pitch_model = gen->get_wt_pitch_model();
+	if (pitch_model != NULL)
+	{
+		if (not pitch_model->is_model_initialized())
+			pitch_model->initialize();
+		if (pitch_model->get_hold_wtg_speed_flag() == true)
+			return pitch_model->get_const_wtg_speed_reference_in_pu();
+		else
+			return pitch_model->get_wt_generator_reference_speed_in_pu();
+	}
+	else
+	{
+		WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
+		if (aero_model != NULL)
+		{
+			if (not aero_model->is_model_initialized())
+				aero_model->initialize();
+			return aero_model->get_turbine_reference_speed_in_pu();
+		}
+		else
+			return 0.0;
+	}
 }
 
 void WT_ELECTRICAL_MODEL::set_wind_turbine_power_speed_lookup_table(WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table)

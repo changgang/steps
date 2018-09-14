@@ -206,7 +206,9 @@ void WT3P0::set_model_data_with_index(size_t index, double value)
     {
         case 1:
         {
-            bool flag = bool(value);
+			bool flag = false;
+			if (value != 0.0)
+				flag = true;
             return set_hold_wtg_speed_flag(flag);
         }
         case 2:

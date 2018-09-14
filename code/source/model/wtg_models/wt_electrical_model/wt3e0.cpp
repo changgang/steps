@@ -1304,10 +1304,14 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
     //double input = speed + speedref_bias - wind_turbine_speed_reference_sensor.get_output();
     double input = speed - wind_turbine_speed_reference_sensor.get_output();
+	//osstream << "at time " << STEPS::TIME << "s, speed error is: " << input << endl;
+	//show_information_with_leading_time_stamp(osstream);
 
     torque_PI_regulator.set_input(input);
     torque_PI_regulator.run(mode);
-    //osstream<<"torque_PI_regulator input = "<<input<<", output = "<<torque_PI_regulator.get_output()<<endl;
+	//osstream << "at time " << STEPS::TIME << "s, speed error PI regulator is: " << torque_PI_regulator.get_output() << endl;
+	//show_information_with_leading_time_stamp(osstream);
+	//osstream<<"torque_PI_regulator input = "<<input<<", output = "<<torque_PI_regulator.get_output()<<endl;
 
     virtual_inertia_emulator.set_input(-freq);
     virtual_inertia_emulator.run(mode);
@@ -1333,6 +1337,8 @@ void WT3E0::run(DYNAMIC_MODE mode)
             +frequency_droop_controller.get_output()
             +frequency_integral_controller.get_output()
             -power_order_integrator.get_output();
+	//osstream << "at time " << STEPS::TIME << "s, active power rate is: " << input << endl;
+	//show_information_with_leading_time_stamp(osstream);
     if(input>get_rPmax_in_pu())
         input = get_rPmax_in_pu();
     if(input<get_rPmin_in_pu())
@@ -1342,7 +1348,9 @@ void WT3E0::run(DYNAMIC_MODE mode)
     //show_information_with_leading_time_stamp(osstream);
     power_order_integrator.set_input(input);
     power_order_integrator.run(mode);
-    //osstream<<"power_order_integrator input = "<<input<<", output = "<<power_order_integrator.get_output()<<endl;
+	//osstream << "at time " << STEPS::TIME << "s, active power order is: " << power_order_integrator.get_output() << endl;
+	//show_information_with_leading_time_stamp(osstream);
+	//osstream<<"power_order_integrator input = "<<input<<", output = "<<power_order_integrator.get_output()<<endl;
 
     active_power_sensor.set_input(pelec);
     active_power_sensor.run(mode);

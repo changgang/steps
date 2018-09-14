@@ -45,14 +45,12 @@ double WT_PITCH_MODEL::get_wt_generator_speed_in_pu() const
 double WT_PITCH_MODEL::get_wt_generator_reference_speed_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return 0.0;
-
-    WT_AERODYNAMIC_MODEL* aerd = gen->get_wt_aerodynamic_model();
-    if(aerd!=NULL and aerd->is_model_initialized())
-        return aerd->get_turbine_reference_speed_in_pu();
-    else
-        return 0.0;
+    if(gen==NULL) return 0.0;
+	WT_AERODYNAMIC_MODEL* aerd = gen->get_wt_aerodynamic_model();
+	if (aerd != NULL and aerd->is_model_initialized())
+		return aerd->get_turbine_reference_speed_in_pu();
+	else
+		return 0.0;
 }
 
 double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
