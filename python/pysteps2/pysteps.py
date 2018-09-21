@@ -352,7 +352,7 @@ class STEPS():
         return int(self.libsteps.api_bus_name2bus_number(name))
 
     def bus_number2name(self, bus):
-        return (self.libsteps.api_bus_number2bus_name(bus)).decode()
+        return str(self.libsteps.api_bus_number2bus_name(bus))
 
     def get_all_buses(self):
         self.libsteps.api_initialize_all_bus_search()
@@ -397,7 +397,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             generators.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(generators)
@@ -413,7 +413,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             wt_generators.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(wt_generators)
@@ -429,7 +429,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             pv_units.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(pv_units)
@@ -445,7 +445,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             loads.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(loads)
@@ -461,7 +461,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             fixed_shunts.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(fixed_shunts)
@@ -477,7 +477,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             equivalent_devices.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(equivalent_devices)
@@ -493,7 +493,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             energy_storages.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(energy_storages)
@@ -511,7 +511,7 @@ class STEPS():
                 break
             jbus = self.libsteps.api_get_current_device_bus_number(device, recv_side)
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             lines.append((int(ibus), int(jbus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(lines)
@@ -531,7 +531,7 @@ class STEPS():
             jbus = self.libsteps.api_get_current_device_bus_number(device, sec_side)
             kbus = self.libsteps.api_get_current_device_bus_number(device, ter_side)
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             transformers.append((int(ibus), int(jbus), int(kbus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(transformers)
@@ -549,7 +549,7 @@ class STEPS():
                 break
             jbus = self.libsteps.api_get_current_device_bus_number(device, inv_side)
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = id.decode()
+            id = str(id)
             hvdcs.append((int(ibus), int(jbus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(hvdcs)
@@ -599,7 +599,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_bus_boolean_data(bus, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_bus_string_data(bus, par_name)).decode()
+            return str(self.libsteps.api_get_bus_string_data(bus, par_name))
         return None
 
     def __get_source_data(self, source, par_type, par_name):
@@ -616,7 +616,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_source_boolean_data(bus, ickt, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_source_string_data(bus, ickt, par_name)).decode()
+            return str(self.libsteps.api_get_source_string_data(bus, ickt, par_name))
         return None
 
     def get_generator_data(self, generator, par_type, par_name):
@@ -645,7 +645,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_load_boolean_data(bus, ickt, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_load_string_data(bus, ickt, par_name)).decode()
+            return str(self.libsteps.api_get_load_string_data(bus, ickt, par_name))
         return None
 
     def get_fixed_shunt_data(self, fixed_shunt, par_type, par_name):
@@ -662,7 +662,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_fixed_shunt_boolean_data(bus, ickt, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_fixed_shunt_string_data(bus, ickt, par_name)).decode()
+            return str(self.libsteps.api_get_fixed_shunt_string_data(bus, ickt, par_name))
         return None
 
     def get_equivalent_device_data(self, equivalent_device, par_type, par_name):
@@ -679,7 +679,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_equivalent_device_boolean_data(bus, ickt, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_equivalent_device_string_data(bus, ickt, par_name)).decode()
+            return str(self.libsteps.api_get_equivalent_device_string_data(bus, ickt, par_name))
         return None
 
     def get_line_data(self, line, par_type, par_name):
@@ -696,7 +696,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_line_boolean_data(ibus, jbus, ickt, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_line_string_data(ibus, jbus, ickt, par_name)).decode()
+            return str(self.libsteps.api_get_line_string_data(ibus, jbus, ickt, par_name))
         return None
 
     def get_transformer_data(self, transformer, par_type, side, par_name):
@@ -717,7 +717,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_transformer_boolean_data(ibus, jbus, kbus, ickt, side, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_transformer_string_data(ibus, jbus, kbus, ickt, side, par_name)).decode()
+            return str(self.libsteps.api_get_transformer_string_data(ibus, jbus, kbus, ickt, side, par_name))
         return None
 
     def get_hvdc_data(self, hvdc, par_type, side, par_name):
@@ -738,7 +738,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_hvdc_boolean_data(ibus, jbus, ickt, side, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_hvdc_string_data(ibus, jbus, ickt, side, par_name)).decode()
+            return str(self.libsteps.api_get_hvdc_string_data(ibus, jbus, ickt, side, par_name))
         return None
 
     def get_area_data(self, area, par_type, par_name):
@@ -753,7 +753,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_area_boolean_data(area, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_area_string_data(area, par_name)).decode()
+            return str(self.libsteps.api_get_area_string_data(area, par_name))
         return None
 
     def get_zone_data(self, zone, par_type, par_name):
@@ -768,7 +768,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_zone_boolean_data(zone, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_zone_string_data(zone, par_name)).decode()
+            return str(self.libsteps.api_get_zone_string_data(zone, par_name))
         return None
     
     def get_owner_data(self, owner, par_type, par_name):
@@ -783,7 +783,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_owner_boolean_data(owner, par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_owner_string_data(owner, par_name)).decode()
+            return str(self.libsteps.api_get_owner_string_data(owner, par_name))
         return None
 
         
@@ -996,7 +996,7 @@ class STEPS():
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
-        return (self.libsteps.api_get_generator_related_model_name(ibus, ickt, model_type)).decode()
+        return str(self.libsteps.api_get_generator_related_model_name(ibus, ickt, model_type))
 
     def get_generator_related_model_data(self, generator, model_type, par_name):
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1016,7 +1016,7 @@ class STEPS():
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
-        return (self.libsteps.api_get_wt_generator_related_model_name(ibus, ickt, model_type)).decode()
+        return str(self.libsteps.api_get_wt_generator_related_model_name(ibus, ickt, model_type))
 
     def get_wt_generator_related_model_data(self, generator, model_type, par_name):
         ibus, ickt = self.__extract_single_bus_device_id(generator)
@@ -1036,7 +1036,7 @@ class STEPS():
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
         ickt = self.__get_c_char_p_of_string(ickt)
         model_type = self.__get_c_char_p_of_string(model_type)
-        return (self.libsteps.api_get_pv_unit_related_model_name(ibus, ickt, model_type)).decode()
+        return str(self.libsteps.api_get_pv_unit_related_model_name(ibus, ickt, model_type))
 
     def get_pv_unit_related_model_data(self, pv_unit, model_type, par_name):
         ibus, ickt = self.__extract_single_bus_device_id(pv_unit)
@@ -1180,7 +1180,7 @@ class STEPS():
         if par_type in ['B', 'BOOL', 'BOOLEAN']:
             return self.libsteps.api_get_dynamic_simulator_boolean_parameter(par_name)
         if par_type in ['S', 'STRING']:
-            return (self.libsteps.api_get_dynamic_simulator_string_parameter(par_name)).decode()
+            return str(self.libsteps.api_get_dynamic_simulator_string_parameter(par_name))
         return None
 
     def set_dynamic_simulator_parameter(self, par_type, par_name, value):
@@ -1200,7 +1200,7 @@ class STEPS():
         return None
         
     def get_dynamic_simulator_output_file(self):
-        return (self.libsteps.api_get_dynamic_simulator_output_file()).decode()
+        return str(self.libsteps.api_get_dynamic_simulator_output_file())
         
     def set_dynamic_simulator_output_file(self, file):
         file = self.__get_c_char_p_of_string(file)
@@ -1250,18 +1250,18 @@ class STEPS():
         self.libsteps.api_prepare_bus_related_meter(bus, meter_type)
         return
 
-    def prepare_generator_meter(self, generator, meter_type):
+    def prepare_generator_meter(self, generator, meter_type, var_index=0):
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
-        self.libsteps.api_prepare_generator_related_meter(bus, ickt, meter_type)
+        self.libsteps.api_prepare_generator_related_meter(bus, ickt, meter_type, var_index)
         return
 
-    def prepare_wt_generator_meter(self, generator, meter_type):
+    def prepare_wt_generator_meter(self, generator, meter_type, var_index=0):
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
-        self.libsteps.api_prepare_wt_generator_related_meter(bus, ickt, meter_type)
+        self.libsteps.api_prepare_wt_generator_related_meter(bus, ickt, meter_type, var_index)
         return
 
     def prepare_load_meter(self, load, meter_type):

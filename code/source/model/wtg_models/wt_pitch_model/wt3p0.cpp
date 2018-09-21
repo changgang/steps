@@ -6,14 +6,15 @@
 
 using namespace std;
 
-static vector<string> MODEL_VARIABLE_TABLE{ "PITCH ANGLE IN DEG", //0
-                                            "SPEED REFERENCE IN PU",      //1
-                                            "POWER REFERENCE IN PU",     //2
-                                            "FREQUENCY REFERENCE IN PU",      //3
-                                            "STATE@SPEED CONTROLLER",     //4
-                                            "STATE@POWER CONTROLLER",     //5
-                                            "STATE@FREQUENCY CONTROLLER",     //6
-                                            "STATE@PITCH INTEGRATOR",       //7
+static vector<string> MODEL_VARIABLE_TABLE{"PITCH ANGLE IN DEG", //0
+                                             "SPEED IN PU",      //1
+                                             "SPEED REFERENCE IN PU",      //2
+                                             "FREQUENCY DEVIATION IN PU",     //3
+                                             "STATE@SPEED REFERENCE SENSOR",     //4
+                                             "STATE@SPEED REGULATOR",     //5
+                                             "STATE@FREQUENCY SENSOR",     //6
+                                             "STATE@FREQUENCY PID CONTROLLER",     //7
+                                             "STATE@PITCH INTEGRATOR",       //8
                                             };//8
 
 WT3P0::WT3P0()
@@ -555,7 +556,7 @@ void WT3P0::initialize()
     if(get_hold_wtg_speed_flag()==true)
         set_const_wtg_speed_reference_in_pu(speed_ref);
 
-    frequency_sensor.set_output(1.0);
+    frequency_sensor.set_output(0.0);
     frequency_sensor.initialize();
 
     frequency_controller.set_output(0.0);
@@ -709,6 +710,25 @@ double WT3P0::get_variable_with_index(size_t var_index)
 double WT3P0::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
+
+    if(var_name == "PITCH ANGLE IN DEG")
+        return get_pitch_angle_in_deg();
+    if(var_name == "SPEED IN PU")
+        return get_wt_generator_speed_in_pu();
+    if(var_name == "SPEED REFERENCE IN PU")
+        return get_wt_generator_reference_speed_in_pu();
+    if(var_name == "FREQUENCY DEVIATION IN PU")
+        return get_bus_frequency_deviation_in_pu();
+    if(var_name == "STATE@SPEED REFERENCE SENSOR")
+        return speed_reference_sensor.get_state();
+    if(var_name == "STATE@SPEED REGULATOR")
+        return speed_controller.get_state();
+    if(var_name == "STATE@FREQUENCY SENSOR")
+        return frequency_sensor.get_state();
+    if(var_name == "STATE@FREQUENCY PID CONTROLLER")
+        return frequency_controller.get_state();
+    if(var_name == "STATE@PITCH INTEGRATOR")
+        return pitch_integrator.get_state();
 
     if(var_name == "STATE@SPEED CONTROLLER")
         return speed_controller.get_state();

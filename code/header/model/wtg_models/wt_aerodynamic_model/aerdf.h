@@ -1,34 +1,19 @@
-#ifndef AERD0_H
-#define AERD0_H
+#ifndef AERDF_H
+#define AERDF_H
 
 #include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h"
 #include <cstdlib>
 
-class AERD0 : public WT_AERODYNAMIC_MODEL
+class AERDF : public WT_AERODYNAMIC_MODEL
 {
     public:
-        AERD0();
-        AERD0(const AERD0& model);
-        virtual ~AERD0();
-        AERD0& operator=(const AERD0& model);
+        AERDF();
+        AERDF(const AERDF& model);
+        virtual ~AERDF();
+        AERDF& operator=(const AERDF& model);
     public:
-        void set_C1(double c);
-        void set_C2(double c);
-        void set_C3(double c);
-        void set_C4(double c);
-        void set_C5(double c);
-        void set_C6(double c);
-        void set_C7(double c);
-        void set_C8(double c);
-
-        double get_C1() const;
-        double get_C2() const;
-        double get_C3() const;
-        double get_C4() const;
-        double get_C5() const;
-        double get_C6() const;
-        double get_C7() const;
-        double get_C8() const;
+        void set_Cp_file(string file);
+        string get_Cp_file() const;
     public:
         virtual double get_Cp(double lambda, double pitch_deg) const;
         virtual double get_derivative_of_Cp_over_lambda(double lambda, double pitch_deg) const;
@@ -59,9 +44,18 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void copy_from_const_model(const AERD0& model);
+        void copy_from_const_model(const AERDF& model);
+        void load_data_from_Cp_file();
+        void load_pitch_angles();
+        void load_tip_speed_ratios();
+        void load_Cp_matrix();
+        bool is_Cp_point_exist(double pitch, double lambda);
         // Cp function parameters
-        double Cp_Coefficients[8];
+        string cp_file_name;
+        vector<double> pitch_angles;
+        vector<double> tip_speed_ratios;
+        vector<vector<double> > Cp_Matrix;
+
 };
 
-#endif // AERD0_H
+#endif // AERDF_H

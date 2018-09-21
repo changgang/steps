@@ -332,7 +332,7 @@ void api_prepare_bus_related_meter(size_t bus, char* meter_type)
     }
 }
 
-void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type)
+void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type, size_t interna_var_index)
 {
     DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
@@ -340,12 +340,12 @@ void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type)
     {
         DEVICE_ID did = get_generator_device_id(bus, id);
 
-        ds->prepare_generator_related_meter(did, meter_type);
+        ds->prepare_generator_related_meter(did, meter_type, interna_var_index);
     }
 }
 
 
-void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type)
+void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type, size_t interna_var_index)
 {
     DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
 
@@ -353,7 +353,7 @@ void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_ty
     {
         DEVICE_ID did = get_wt_generator_device_id(bus, id);
 
-        ds->prepare_wt_generator_related_meter(did, meter_type);
+        ds->prepare_wt_generator_related_meter(did, meter_type, interna_var_index);
     }
 }
 

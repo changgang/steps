@@ -623,7 +623,7 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_generator_related_meter(DEVICE_ID did, string meter_type)
+void DYNAMICS_SIMULATOR::prepare_generator_related_meter(DEVICE_ID did, string meter_type, size_t interna_var_index)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -660,6 +660,16 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(DEVICE_ID did, string m
         meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
     if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
         meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
+    if(meter_type=="GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_generator_sync_generator_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_generator_compensator_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="GENERATOR EXCITER MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_generator_exciter_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="GENERATOR STABILIZER MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_generator_stabilizer_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_generator_turbine_governor_model_internal_variable_meter(did, interna_var_index);
 
     if(meter.is_valid())
         append_meter(meter);
@@ -670,7 +680,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(DEVICE_ID did, string m
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(DEVICE_ID did, string meter_type)
+void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(DEVICE_ID did, string meter_type, size_t interna_var_index)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -729,6 +739,18 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(DEVICE_ID did, strin
         meter = setter.prepare_wt_generator_wind_speed_in_pu_meter(did);
     if(meter_type=="WIND SPEED IN MPS")
         meter = setter.prepare_wt_generator_wind_speed_in_mps_meter(did);
+    if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_wt_generator_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_wt_aerodynamic_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="WT TURBINE MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_wt_turbine_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_wt_electrical_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="WT PITCH MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_wt_pitch_model_internal_variable_meter(did, interna_var_index);
+    if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
+        meter = setter.prepare_wind_speed_model_internal_variable_meter(did, interna_var_index);
 
     if(meter.is_valid())
         append_meter(meter);

@@ -261,6 +261,7 @@
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_models.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/aerd0.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h" />
+		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/aerdf.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h" />
@@ -551,6 +552,7 @@
 		<Unit filename="source/model/wtg_models/wind_speed_model/wind_speed_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/aerd0.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/aerd0_test.cpp" />
+		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/aerdf.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.cpp" />
