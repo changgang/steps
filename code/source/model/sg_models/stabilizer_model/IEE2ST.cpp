@@ -6,7 +6,6 @@
 IEE2ST::IEE2ST()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 IEE2ST::~IEE2ST()
@@ -16,7 +15,7 @@ IEE2ST::~IEE2ST()
 
 void IEE2ST::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
 
 void IEE2ST::copy_from_const_model(const IEE2ST& model)

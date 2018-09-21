@@ -6,7 +6,6 @@ using namespace std;
 IEEEG2::IEEEG2()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 IEEEG2::~IEEEG2()
@@ -15,6 +14,8 @@ IEEEG2::~IEEEG2()
 }
 void IEEEG2::clear()
 {
+    prepare_model_variable_table();
+
     droop.set_limiter_type(NO_LIMITER);
     tuner.set_limiter_type(NO_LIMITER);
     tuner.set_K(1.0);

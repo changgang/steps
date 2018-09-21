@@ -8,11 +8,12 @@ using namespace std;
 CSEET1::CSEET1()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 void CSEET1::clear()
 {
+    prepare_model_variable_table();
+
     set_feedback_slot(AT_VOLTAGE_ERROR);
     set_excitation_source(SEPARATE_EXCITATION);
     set_exciter_brush(WITHOUT_BRUSH);

@@ -8,7 +8,6 @@ using namespace std;
 PVCV0::PVCV0()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 PVCV0::~PVCV0()
@@ -18,6 +17,8 @@ PVCV0::~PVCV0()
 
 void PVCV0::clear()
 {
+    prepare_model_variable_table();
+
     set_current_source_flag(true);
 
     active_current_commander.set_limiter_type(NO_LIMITER);

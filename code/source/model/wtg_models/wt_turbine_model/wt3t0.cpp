@@ -4,7 +4,6 @@
 WT3T0::WT3T0()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 WT3T0::~WT3T0()
@@ -14,7 +13,7 @@ WT3T0::~WT3T0()
 
 void WT3T0::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
 
 void WT3T0::copy_from_const_model(const WT3T0& model)

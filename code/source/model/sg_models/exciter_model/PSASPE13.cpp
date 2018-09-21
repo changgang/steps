@@ -8,7 +8,6 @@ using namespace std;
 PSASPE13::PSASPE13()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 PSASPE13::~PSASPE13()
@@ -17,6 +16,8 @@ PSASPE13::~PSASPE13()
 }
 void PSASPE13::clear()
 {
+    prepare_model_variable_table();
+
     sensor.set_limiter_type(NO_LIMITER);
     sensor.set_K(1.0);
     tuner.set_limiter_type(NO_LIMITER);

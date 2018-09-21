@@ -8,7 +8,6 @@ using namespace std;
 PSASPE2::PSASPE2()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 PSASPE2::~PSASPE2()
@@ -18,6 +17,8 @@ PSASPE2::~PSASPE2()
 
 void PSASPE2::clear()
 {
+    prepare_model_variable_table();
+
     sensor.set_limiter_type(NO_LIMITER);
     tuner1_lead_lag.set_limiter_type(NO_LIMITER);
     tuner1_pi.set_limiter_type(NO_LIMITER);

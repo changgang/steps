@@ -8,7 +8,6 @@ using namespace std;
 UFLS::UFLS()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 UFLS::~UFLS()
@@ -18,6 +17,8 @@ UFLS::~UFLS()
 
 void UFLS::clear()
 {
+    prepare_model_variable_table();
+
     frequency_sensor.set_limiter_type(NO_LIMITER);
     frequency_sensor.set_K(1.0);
 

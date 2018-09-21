@@ -8,7 +8,6 @@ using namespace std;
 UVLS::UVLS()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 UVLS::~UVLS()
@@ -18,6 +17,8 @@ UVLS::~UVLS()
 
 void UVLS::clear()
 {
+    prepare_model_variable_table();
+
     voltage_sensor.set_limiter_type(NO_LIMITER);
     voltage_sensor.set_K(1.0);
 

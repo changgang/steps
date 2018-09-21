@@ -8,11 +8,12 @@ using namespace std;
 CSEET2::CSEET2()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 void CSEET2::clear()
 {
+    prepare_model_variable_table();
+
     set_stabilizer_slot(AT_VOLTAGE_ERROR);
     set_excitation_source(SEPARATE_EXCITATION);
     set_tuner_type(SERIAL_TUNER);

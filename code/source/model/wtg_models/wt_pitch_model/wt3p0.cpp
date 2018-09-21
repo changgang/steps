@@ -8,7 +8,6 @@ using namespace std;
 WT3P0::WT3P0()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 WT3P0::~WT3P0()
@@ -18,6 +17,8 @@ WT3P0::~WT3P0()
 
 void WT3P0::clear()
 {
+    prepare_model_variable_table();
+
     set_hold_wtg_speed_flag(false);
 
     speed_reference_sensor.set_limiter_type(NO_LIMITER);

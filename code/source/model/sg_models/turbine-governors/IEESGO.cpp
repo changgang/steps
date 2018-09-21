@@ -3,7 +3,6 @@
 IEESGO::IEESGO()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 IEESGO::~IEESGO()
@@ -13,6 +12,8 @@ IEESGO::~IEESGO()
 
 void IEESGO::clear()
 {
+    prepare_model_variable_table();
+
     governor_tuner.set_limiter_type(NO_LIMITER);
     governor.set_limiter_type(NO_LIMITER);
     high_pressure_turbine.set_limiter_type(NO_LIMITER);

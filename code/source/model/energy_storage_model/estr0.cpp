@@ -7,7 +7,6 @@ using namespace std;
 ESTR0::ESTR0() : ENERGY_STORAGE_MODEL()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 ESTR0::~ESTR0()
@@ -17,6 +16,8 @@ ESTR0::~ESTR0()
 
 void ESTR0::clear()
 {
+    prepare_model_variable_table();
+
     active_power_filter.set_limiter_type(WINDUP_LIMITER);
     reactive_integral_block.set_limiter_type(WINDUP_LIMITER);
     energy_state_block.set_limiter_type(WINDUP_LIMITER);

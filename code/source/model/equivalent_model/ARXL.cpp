@@ -5,7 +5,6 @@
 ARXL::ARXL() : EQUIVALENT_MODEL()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 ARXL::~ARXL()
@@ -82,6 +81,8 @@ void ARXL::set_model_data_with_name(string par_name, double value)
 
 void ARXL::clear()
 {
+    prepare_model_variable_table();
+
     p_meters.clear();
     q_meters.clear();
     p_delays.clear();

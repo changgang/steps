@@ -8,7 +8,6 @@ using namespace std;
 FILEWIND::FILEWIND()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 FILEWIND::~FILEWIND()
@@ -18,6 +17,8 @@ FILEWIND::~FILEWIND()
 
 void FILEWIND::clear()
 {
+    prepare_model_variable_table();
+
     time.clear();
     wind_speed.clear();
     wind_direction.clear();

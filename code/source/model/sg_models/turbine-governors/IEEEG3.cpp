@@ -6,7 +6,6 @@ using namespace std;
 IEEEG3::IEEEG3()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 IEEEG3::~IEEEG3()
@@ -15,6 +14,8 @@ IEEEG3::~IEEEG3()
 }
 void IEEEG3::clear()
 {
+    prepare_model_variable_table();
+
     governor.set_limiter_type(NON_WINDUP_LIMITER);
     servo_motor.set_limiter_type(NON_WINDUP_LIMITER);
     servo_motor.set_T_in_s(1.0);

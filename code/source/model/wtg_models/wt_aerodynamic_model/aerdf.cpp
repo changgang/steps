@@ -9,7 +9,6 @@ using namespace std;
 AERDF::AERDF()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 AERDF::AERDF(const AERDF& model):WT_AERODYNAMIC_MODEL()
@@ -483,6 +482,8 @@ void AERDF::check()
 
 void AERDF::clear()
 {
+    prepare_model_variable_table();
+
     cp_file_name = "";
     pitch_angles.clear();
     tip_speed_ratios.clear();

@@ -17,8 +17,6 @@ AERD0::AERD0()
 
     set_C7(0.08);
     set_C8(0.035);
-
-    prepare_model_variable_table();
 }
 
 AERD0::AERD0(const AERD0& model):WT_AERODYNAMIC_MODEL()
@@ -41,6 +39,8 @@ AERD0& AERD0::operator=(const AERD0& model)
 
 void AERD0::copy_from_const_model(const AERD0& model)
 {
+    clear();
+
     WT_AERODYNAMIC_MODEL::copy_from_const_model(model);
 
     set_C1(model.get_C1());
@@ -518,7 +518,7 @@ void AERD0::check()
 
 void AERD0::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
 
 void AERD0::report()

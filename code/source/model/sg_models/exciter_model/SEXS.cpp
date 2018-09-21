@@ -8,7 +8,6 @@ using namespace std;
 SEXS::SEXS()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 SEXS::~SEXS()
@@ -18,6 +17,8 @@ SEXS::~SEXS()
 
 void SEXS::clear()
 {
+    prepare_model_variable_table();
+
     exciter.set_limiter_type(WINDUP_LIMITER);
 }
 

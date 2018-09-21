@@ -4,7 +4,6 @@
 IEEL::IEEL()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 IEEL::~IEEL()
@@ -14,8 +13,9 @@ IEEL::~IEEL()
 
 void IEEL::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
+
 void IEEL::copy_from_const_model(const IEEL& model)
 {
     clear();

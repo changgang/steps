@@ -8,7 +8,6 @@ using namespace std;
 IEEET1::IEEET1()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 IEEET1::~IEEET1()
@@ -18,6 +17,8 @@ IEEET1::~IEEET1()
 
 void IEEET1::clear()
 {
+    prepare_model_variable_table();
+
     regulator.set_limiter_type(WINDUP_LIMITER);
     saturation_block.set_saturation_type(QUADRATIC_SATURATION_TYPE);
 }

@@ -3,7 +3,6 @@
 TGOV1::TGOV1()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 TGOV1::~TGOV1()
@@ -13,6 +12,7 @@ TGOV1::~TGOV1()
 
 void TGOV1::clear()
 {
+    prepare_model_variable_table();
     governor.set_limiter_type(WINDUP_LIMITER);
     turbine.set_K(1.0);
 }

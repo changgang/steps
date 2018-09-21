@@ -7,7 +7,6 @@ using namespace std;
 COMP::COMP()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 COMP::~COMP()
@@ -17,7 +16,7 @@ COMP::~COMP()
 
 void COMP::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
 
 void COMP::copy_from_const_model(const COMP& model)

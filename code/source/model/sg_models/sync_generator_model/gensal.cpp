@@ -4,7 +4,6 @@
 GENSAL::GENSAL()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 GENSAL::~GENSAL()
@@ -14,8 +13,9 @@ GENSAL::~GENSAL()
 
 void GENSAL::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
+
 void GENSAL::copy_from_const_model(const GENSAL& model)
 {
     clear();

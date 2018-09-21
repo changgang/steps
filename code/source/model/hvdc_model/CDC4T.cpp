@@ -9,7 +9,6 @@ using namespace std;
 CDC4T::CDC4T()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 CDC4T::~CDC4T()
@@ -19,6 +18,8 @@ CDC4T::~CDC4T()
 
 void CDC4T::clear()
 {
+    prepare_model_variable_table();
+
     set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
     set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
     inverter_dc_voltage_sensor.set_limiter_type(NO_LIMITER);

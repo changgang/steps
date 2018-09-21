@@ -7,7 +7,6 @@
 WT3E0::WT3E0()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 WT3E0::WT3E0(const WT3E0& model)
@@ -1508,6 +1507,8 @@ void WT3E0::check()
 
 void WT3E0::clear()
 {
+    prepare_model_variable_table();
+
     voltage_regulator_integrator.set_limiter_type(NON_WINDUP_LIMITER);
     Q_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
     V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);

@@ -7,7 +7,6 @@ using namespace std;
 GENROU::GENROU() : SYNC_GENERATOR_MODEL()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 GENROU::~GENROU()
@@ -16,7 +15,7 @@ GENROU::~GENROU()
 }
 void GENROU::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
 void GENROU::copy_from_const_model(const GENROU& model)
 {

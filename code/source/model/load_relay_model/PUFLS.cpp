@@ -9,7 +9,6 @@ using namespace std;
 PUFLS::PUFLS()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 PUFLS::~PUFLS()
@@ -19,6 +18,8 @@ PUFLS::~PUFLS()
 
 void PUFLS::clear()
 {
+    prepare_model_variable_table();
+
     set_frequency_sensor_time_in_s(1.0);
     set_continuous_frequency_threshold_in_Hz(0.0);
     set_time_delay_in_s(0.0);

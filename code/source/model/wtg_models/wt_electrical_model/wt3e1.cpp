@@ -6,7 +6,6 @@
 WT3E1::WT3E1()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 WT3E1::WT3E1(const WT3E1& model)
@@ -30,6 +29,8 @@ WT3E1& WT3E1::operator=(const WT3E1& model)
 
 void WT3E1::copy_from_const_model(const WT3E1& model)
 {
+    clear();
+
     set_bus_to_regulate(model.get_bus_to_regulate());
     set_var_control_mode(model.get_var_control_mode());
     set_wind_turbine_power_speed_lookup_table(model.get_wind_turbine_power_speed_lookup_table());
@@ -886,6 +887,8 @@ void WT3E1::check()
 
 void WT3E1::clear()
 {
+    prepare_model_variable_table();
+
     set_transformer_from_bus(0);
     set_transformer_to_bus(0);
     set_transformer_id("");

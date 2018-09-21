@@ -8,7 +8,6 @@ using namespace std;
 FILEIRRAD::FILEIRRAD()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 FILEIRRAD::~FILEIRRAD()
@@ -18,6 +17,7 @@ FILEIRRAD::~FILEIRRAD()
 
 void FILEIRRAD::clear()
 {
+    prepare_model_variable_table();
 }
 
 void FILEIRRAD::copy_from_const_model(const FILEIRRAD& model)

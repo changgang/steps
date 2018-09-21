@@ -6,7 +6,6 @@ using namespace std;
 IEEEG1::IEEEG1()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 IEEEG1::~IEEEG1()
@@ -15,6 +14,8 @@ IEEEG1::~IEEEG1()
 }
 void IEEEG1::clear()
 {
+    prepare_model_variable_table();
+
     servo_motor.set_limiter_type(NON_WINDUP_LIMITER);
     servo_motor.set_T_in_s(1.0);
     set_T5_in_s(0.0);

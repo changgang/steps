@@ -7,7 +7,6 @@ using namespace std;
 GENCLS::GENCLS()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 GENCLS::~GENCLS()
@@ -17,7 +16,7 @@ GENCLS::~GENCLS()
 
 void GENCLS::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
 void GENCLS::copy_from_const_model(const GENCLS& model)
 {

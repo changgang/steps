@@ -9,7 +9,6 @@ using namespace std;
 WT3G2::WT3G2()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 WT3G2::~WT3G2()
@@ -19,6 +18,8 @@ WT3G2::~WT3G2()
 
 void WT3G2::clear()
 {
+    prepare_model_variable_table();
+
     set_current_source_flag(true);
 
     active_current_commander.set_limiter_type(NO_LIMITER);

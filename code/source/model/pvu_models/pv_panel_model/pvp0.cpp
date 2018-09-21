@@ -9,7 +9,6 @@ using namespace std;
 PVP0::PVP0()
 {
     clear();
-    prepare_model_variable_table();
 }
 
 PVP0::PVP0(const PVP0& model):PV_PANEL_MODEL()
@@ -32,6 +31,7 @@ PVP0& PVP0::operator=(const PVP0& model)
 
 void PVP0::copy_from_const_model(const PVP0& model)
 {
+    clear();
     PV_PANEL_MODEL::copy_from_const_model(model);
 }
 
@@ -103,7 +103,7 @@ void PVP0::check()
 
 void PVP0::clear()
 {
-    ;
+    prepare_model_variable_table();
 }
 
 void PVP0::report()
