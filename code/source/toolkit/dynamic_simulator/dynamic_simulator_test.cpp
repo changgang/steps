@@ -1444,7 +1444,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator->set_max_DAE_iteration(200);
     simulator->set_max_network_iteration(1);
     simulator->start();
-    simulator->run_to(100.0);
+    simulator->run_to(1.0);
 
     DEVICE_ID did;
     did.set_device_type("LINE");
@@ -1468,7 +1468,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator->trip_line(did);*/
     simulator->shed_generator(gendid_1, 0.2);
 
-    simulator->run_to(150.0);
+    simulator->run_to(50.0);
 
     recover_stdout();
 }

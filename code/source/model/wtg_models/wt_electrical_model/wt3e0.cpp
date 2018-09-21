@@ -4,17 +4,10 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-static vector<string> MODEL_VARIABLE_TABLE{
-                                            "STATE@SPEED REFERENCE SENSOR",  //0
-                                            "STATE@TORQUE REGULATOR",  //1
-                                            "STATE@VIRTUAL INERTIA CONTROL",  //2
-                                            "STATE@PRIMARY FREQUENCY CONTROL",  //3
-                                            "STATE@SECONDARY FREQUENCY CONTROL",  //4
-                                            };//8
-
 WT3E0::WT3E0()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 WT3E0::WT3E0(const WT3E0& model)
@@ -1621,18 +1614,14 @@ string WT3E0::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t WT3E0::get_variable_index_from_variable_name(string var_name)
+void WT3E0::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-string WT3E0::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-double WT3E0::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@TORQUE REGULATOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@VIRTUAL INERTIA CONTROL", i); i++;
+    add_model_variable_name_and_index_pair("STATE@PRIMARY FREQUENCY CONTROL", i); i++;
+    add_model_variable_name_and_index_pair("STATE@SECONDARY FREQUENCY CONTROL", i); i++;
 }
 
 double WT3E0::get_variable_with_name(string var_name)
@@ -1640,12 +1629,13 @@ double WT3E0::get_variable_with_name(string var_name)
     var_name = string2upper(var_name);
 
     if(var_name == "STATE@SPEED REFERENCE SENSOR") return wind_turbine_speed_reference_sensor.get_state();
-	if (var_name == "STATE@TORQUE REGULATOR") return torque_PI_regulator.get_state();
-	if (var_name == "STATE@VIRTUAL INERTIA CONTROL") return virtual_inertia_emulator.get_state();
-	if (var_name == "STATE@PRIMARY FREQUENCY CONTROL") return frequency_droop_controller.get_state();
-	if (var_name == "STATE@SECONDARY FREQUENCY CONTROL") return frequency_integral_controller.get_state();
+	if(var_name == "STATE@TORQUE REGULATOR") return torque_PI_regulator.get_state();
+	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return virtual_inertia_emulator.get_state();
+	if(var_name == "STATE@PRIMARY FREQUENCY CONTROL") return frequency_droop_controller.get_state();
+	if(var_name == "STATE@SECONDARY FREQUENCY CONTROL") return frequency_integral_controller.get_state();
     return 0.0;
 }
+
 string WT3E0::get_dynamic_data_in_psse_format() const
 {
     return get_standard_model_string();

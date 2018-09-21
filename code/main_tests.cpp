@@ -67,6 +67,8 @@
 
 #include "header/toolkit/dynamic_simulator/dynamic_simulator_test.h"
 
+#include "header/model/model_var_table_test.h"
+
 #include "header/model/model_test.h"
 #include "header/model/sg_models/sync_generator_model/sync_generator_model_test.h"
 #include "header/model/sg_models/sync_generator_model/gencls_test.h"
@@ -254,7 +256,9 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new CONTINUOUS_BUFFER_TEST));
         ts.add(unique_ptr<Test::Suite>(new METER_TEST));
         ts.add(unique_ptr<Test::Suite>(new METER_SETTER_TEST));
-
+*/
+        ts.add(unique_ptr<Test::Suite>(new MODEL_VAR_TABLE_TEST));
+/*
         ts.add(unique_ptr<Test::Suite>(new MODEL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new GENCLS_TEST));
@@ -295,7 +299,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
         ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 */
-        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
+        //ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
 

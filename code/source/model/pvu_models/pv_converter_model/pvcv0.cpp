@@ -5,30 +5,10 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{ "PLL ANGLE IN DEG",      //0
-                                            "TERMINAL P IN PU ON MBASE",      //1
-                                            "TERMINAL P IN MW",      //2
-                                            "TERMINAL Q IN PU ON MBASE",      //3
-                                            "TERMINAL Q IN MVAR",      //4
-                                            "TERMINAL S IN PU ON MBASE",      //5
-                                            "TERMINAL S IN MVA",      //6
-                                            "INTERNAL VOLTAGE IN PU",      //7
-                                            "TERMINAL CURRENT IN PU",      //8
-                                            "TERMINAL CURRENT IN KA",      //9
-                                            "ACTIVE CURRENT COMMAND IN PU",      //10
-                                            "REACTIVE CURRENT COMMAND IN PU",      //11
-                                            "REACTIVE VOLTAGE COMMAND IN PU",      //12
-                                            "STATE@ACTIVE CURRENT COMMAND BLOCK",     //13
-                                            "STATE@REACTIVE VOLTAGE COMMAND BLOCK",    //14
-                                            "STATE@PLL FREQUENCY BLOCK",    //15
-                                            "STATE@PLL ANGLE BLOCK",    //16
-                                            "STATE@LVPL VOLTAGE SENSOR"    //17
-                                            };
-
 PVCV0::PVCV0()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 PVCV0::~PVCV0()
@@ -656,20 +636,27 @@ string PVCV0::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t PVCV0::get_variable_index_from_variable_name(string var_name)
+void PVCV0::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string PVCV0::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double PVCV0::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL P IN PU ON MBASE", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL P IN MW", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL Q IN PU ON MBASE", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL Q IN MVAR", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL S IN PU ON MBASE", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL S IN MVA", i); i++;
+    add_model_variable_name_and_index_pair("INTERNAL VOLTAGE IN PU", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL CURRENT IN PU", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL CURRENT IN KA", i); i++;
+    add_model_variable_name_and_index_pair("ACTIVE CURRENT COMMAND IN PU", i); i++;
+    add_model_variable_name_and_index_pair("REACTIVE CURRENT COMMAND IN PU", i); i++;
+    add_model_variable_name_and_index_pair("REACTIVE VOLTAGE COMMAND IN PU", i); i++;
+    add_model_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@PLL FREQUENCY BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@PLL ANGLE BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@LVPL VOLTAGE SENSOR", i); i++;
 }
 
 double PVCV0::get_variable_with_name(string var_name)

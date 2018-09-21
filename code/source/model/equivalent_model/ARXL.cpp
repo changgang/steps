@@ -2,15 +2,10 @@
 #include "header/basic/utility.h"
 #include "header/meter/meter_setter.h"
 #include <cstdio>
-
-static vector<string> MODEL_VARIABLE_TABLE{ "TOTAL ACTIVE POWER LOAD IN MW",      //0
-                                            "TOTAL REACTIVE POWER LOAD IN MVAR",      //1
-                                            };
-
-
 ARXL::ARXL() : EQUIVALENT_MODEL()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 ARXL::~ARXL()
@@ -754,19 +749,13 @@ string ARXL::get_load_meter_string(const METER& meter) const
     return data;
 }
 
-size_t ARXL::get_variable_index_from_variable_name(string var_name)
+void ARXL::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
+    add_model_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;
 }
-string ARXL::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-double ARXL::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
-}
+
 double ARXL::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);

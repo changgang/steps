@@ -3,22 +3,10 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
-
-static vector<string> MODEL_VARIABLE_TABLE{ "STABILIZING SIGNAL", //0
-                                            "SIGNAL@SLOT 1",      //1
-                                            "SIGNAL@SLOT 2",      //2
-                                            "STATE@SENSOR 1",     //3
-                                            "STATE@SENSOR 2",     //4
-                                            "STATE@FILTER",       //5
-                                            "STATE@PHASE TUNER 1",   //6
-                                            "STATE@PHASE TUNER 2",   //7
-                                            "STATE@PHASE TUNER 3",   //8
-                                            };//8
-
-
 IEE2ST::IEE2ST()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 IEE2ST::~IEE2ST()
@@ -562,20 +550,18 @@ string IEE2ST::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t IEE2ST::get_variable_index_from_variable_name(string var_name)
+void IEE2ST::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string IEE2ST::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double IEE2ST::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("STABILIZING SIGNAL", i); i++;
+    add_model_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
+    add_model_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
+    add_model_variable_name_and_index_pair("STATE@SENSOR 1", i); i++;
+    add_model_variable_name_and_index_pair("STATE@SENSOR 2", i); i++;
+    add_model_variable_name_and_index_pair("STATE@FILTER", i); i++;
+    add_model_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;
+    add_model_variable_name_and_index_pair("STATE@PHASE TUNER 2", i); i++;
+    add_model_variable_name_and_index_pair("STATE@PHASE TUNER 3", i); i++;
 }
 
 double IEE2ST::get_variable_with_name(string var_name)

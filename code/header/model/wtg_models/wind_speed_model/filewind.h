@@ -43,15 +43,13 @@ class FILEWIND : public WIND_SPEED_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name);
-        virtual string get_variable_name_from_variable_index(size_t var_index);
-        virtual double get_variable_with_index(size_t var_index);
         virtual double get_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
+        virtual void prepare_model_variable_table();
         void load_wind_speed_from_file();
         void copy_from_const_model(const FILEWIND& model);
         void search_wind_data_at_simulation_time();

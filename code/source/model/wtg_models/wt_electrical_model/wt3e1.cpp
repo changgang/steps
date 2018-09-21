@@ -6,6 +6,7 @@
 WT3E1::WT3E1()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 WT3E1::WT3E1(const WT3E1& model)
@@ -1000,28 +1001,10 @@ string WT3E1::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t WT3E1::get_variable_index_from_variable_name(string var_name)
+void WT3E1::prepare_model_variable_table()
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
-    return 0;
-}
-
-string WT3E1::get_variable_name_from_variable_index(size_t var_index)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
-    show_information_with_leading_time_stamp(osstream);
-    return "";
-}
-
-double WT3E1::get_variable_with_index(size_t var_index)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
+    size_t i=0;
+    add_model_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
 }
 
 double WT3E1::get_variable_with_name(string var_name)

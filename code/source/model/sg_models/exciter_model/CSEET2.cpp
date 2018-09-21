@@ -5,21 +5,10 @@
 #include <iostream>
 
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{ "EXCITATION VOLTAGE",      //0
-                                            "VOLTAGE REFERENCE",      //1
-                                            "CSEET2ENSATED VOLTAGE",      //2
-                                            "STABILIZING SIGNAL",      //3
-                                            "STATE@SENSOR",     //4
-                                            "STATE@TUNER1",     //5
-                                            "STATE@TUNER2",     //5
-                                            "STATE@REGULATOR",     //5
-                                            "STATE@FEEDBACKER",     //6
-                                            };
-
 CSEET2::CSEET2()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 void CSEET2::clear()
@@ -901,21 +890,18 @@ string CSEET2::get_standard_model_string() const
     return osstream.str();
 }
 
-
-size_t CSEET2::get_variable_index_from_variable_name(string var_name)
+void CSEET2::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string CSEET2::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double CSEET2::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("EXCITATION VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("VOLTAGE REFERENCE", i); i++;
+    add_model_variable_name_and_index_pair("CSEET2ENSATED VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("STABILIZING SIGNAL", i); i++;
+    add_model_variable_name_and_index_pair("STATE@SENSOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@TUNER1", i); i++;
+    add_model_variable_name_and_index_pair("STATE@TUNER2", i); i++;
+    add_model_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
 }
 
 double CSEET2::get_variable_with_name(string var_name)

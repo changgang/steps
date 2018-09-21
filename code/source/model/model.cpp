@@ -51,6 +51,39 @@ string MODEL::get_allowed_device_type() const
     return allowed_device_type;
 }
 
+
+void MODEL::add_model_variable_name_and_index_pair(string var_name, size_t var_index)
+{
+    variable_table.add_variable_name_index_pair(var_name, var_index);
+}
+
+size_t MODEL::get_model_variable_index(string var_name) const
+{
+    return variable_table[var_name];
+}
+
+string MODEL::get_model_variable_name(size_t var_index) const
+{
+    return variable_table[var_index];
+}
+
+bool MODEL::is_model_variable_exist(string var_name) const
+{
+    return variable_table[var_name]!=INDEX_NOT_EXIST;
+}
+
+bool MODEL::is_model_variable_exist(size_t var_index) const
+{
+    return variable_table[var_index]!="";
+}
+
+double MODEL::get_variable_with_index(size_t index)
+{
+    string var_name = get_model_variable_name(index);
+    if(var_name!="") return get_variable_with_name(var_name);
+    else             return 0.0;
+}
+
 void MODEL::set_power_system_database_and_attached_device(POWER_SYSTEM_DATABASE* psdb, DEVICE_ID did)
 {
     set_power_system_database(psdb);
@@ -162,27 +195,6 @@ bool MODEL::is_model_active() const
     return flag_model_active;
 }
 
-
-size_t MODEL::get_variable_index_from_variable_name(string var_name, vector<string>& MODEL_VARIABLE_TABLE) const
-{
-    var_name = string2upper(var_name);
-
-    size_t n = MODEL_VARIABLE_TABLE.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(MODEL_VARIABLE_TABLE[i]==var_name)
-            return i;
-    }
-    return INDEX_NOT_EXIST;
-}
-string MODEL::get_variable_name_from_variable_index(size_t var_index, vector<string>& MODEL_VARIABLE_TABLE) const
-{
-    size_t n = MODEL_VARIABLE_TABLE.size();
-    if(var_index<n)
-        return MODEL_VARIABLE_TABLE[var_index];
-    else
-        return "";
-}
 
 bool MODEL::is_valid() const
 {

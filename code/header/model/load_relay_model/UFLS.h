@@ -33,9 +33,6 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name);
-        virtual string get_variable_name_from_variable_index(size_t var_index);
-        virtual double get_variable_with_index(size_t var_index);
         virtual double get_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -56,7 +53,6 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
         double get_delayer_timer_in_s_of_stage(size_t i) const;
         double get_breaker_timer_in_s_of_stage(size_t i) const;
     private:
-
         bool is_stage_delayer_timer_started(size_t i) const;
         bool is_stage_breaker_timer_started(size_t i) const;
         void start_stage_delayer_timer(size_t i);
@@ -77,6 +73,7 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
 
     private:
         void copy_from_const_model(const UFLS& model);
+        virtual void prepare_model_variable_table();
 
         FIRST_ORDER_BLOCK frequency_sensor;
 

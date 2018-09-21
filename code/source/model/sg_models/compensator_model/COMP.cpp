@@ -4,15 +4,10 @@
 #include <iostream>
 
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR TERMINAL VOLTAGE",      //0
-                                            "GENERATOR TERMINAL CURRENT",      //1
-                                            "COMPENSATED VOLTAGE"      //2
-                                            };
-
 COMP::COMP()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 COMP::~COMP()
@@ -188,21 +183,12 @@ string COMP::get_standard_model_string() const
     return osstream.str();
 }
 
-
-size_t COMP::get_variable_index_from_variable_name(string var_name)
+void COMP::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string COMP::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double COMP::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL CURRENT", i); i++;
+    add_model_variable_name_and_index_pair("COMPENSATED VOLTAGE", i); i++;
 }
 
 double COMP::get_variable_with_name(string var_name)

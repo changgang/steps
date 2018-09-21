@@ -5,21 +5,10 @@
 #include <iostream>
 
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{"PITCH ANGLE IN DEG", //0
-                                             "SPEED IN PU",      //1
-                                             "SPEED REFERENCE IN PU",      //2
-                                             "FREQUENCY DEVIATION IN PU",     //3
-                                             "STATE@SPEED REFERENCE SENSOR",     //4
-                                             "STATE@SPEED REGULATOR",     //5
-                                             "STATE@FREQUENCY SENSOR",     //6
-                                             "STATE@FREQUENCY PID CONTROLLER",     //7
-                                             "STATE@PITCH INTEGRATOR",       //8
-                                            };//8
-
 WT3P0::WT3P0()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 WT3P0::~WT3P0()
@@ -693,20 +682,20 @@ string WT3P0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<tp<<" /";
     return osstream.str();
 }
+void WT3P0::prepare_model_variable_table()
+{
+    size_t i=0;
+    add_model_variable_name_and_index_pair("PITCH ANGLE IN DEG", i); i++;
+    add_model_variable_name_and_index_pair("SPEED IN PU", i); i++;
+    add_model_variable_name_and_index_pair("SPEED REFERENCE IN PU", i); i++;
+    add_model_variable_name_and_index_pair("FREQUENCY DEVIATION IN PU", i); i++;
+    add_model_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@SPEED REGULATOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@FREQUENCY SENSOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@FREQUENCY PID CONTROLLER", i); i++;
+    add_model_variable_name_and_index_pair("STATE@PITCH INTEGRATOR", i); i++;
+}
 
-size_t WT3P0::get_variable_index_from_variable_name(string var_name)
-{
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-string WT3P0::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-double WT3P0::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
-}
 double WT3P0::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);

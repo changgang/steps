@@ -8,6 +8,7 @@ using namespace std;
 UVLS::UVLS()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 UVLS::~UVLS()
@@ -474,37 +475,15 @@ string UVLS::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t UVLS::get_variable_index_from_variable_name(string var_name)
+void UVLS::prepare_model_variable_table()
 {
-    if(var_name=="SCALE")
-        return 0;
-
-    return INDEX_NOT_EXIST;
+    size_t i=0;
+    add_model_variable_name_and_index_pair("", i); i++;
 }
 
-
-string UVLS::get_variable_name_from_variable_index(size_t var_index)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
-    show_information_with_leading_time_stamp(osstream);
-    return "";
-}
-
-double UVLS::get_variable_with_index(size_t var_index)
-{
-    switch(var_index)
-    {
-        case 0:
-            return get_total_shed_scale_factor_in_pu();
-        default:
-            return 0.0;
-    }
-}
 double UVLS::get_variable_with_name(string var_name)
 {
-    size_t index = get_variable_index_from_variable_name(var_name);
-    return get_variable_with_index(index);
+    return 0.0;
 }
 
 string UVLS::get_dynamic_data_in_psse_format() const

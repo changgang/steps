@@ -35,9 +35,6 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name);
-        virtual string get_variable_name_from_variable_index(size_t var_index);
-        virtual double get_variable_with_index(size_t var_index);
         virtual double get_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -69,6 +66,8 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         double get_discrete_stage_shed_scale_in_pu(size_t stage) const;
     private:
         void copy_from_const_model(const PUFLS& model);
+        virtual void prepare_model_variable_table();
+
         void append_new_minimum_frequency();
 
         void update_continuous_shed_command();

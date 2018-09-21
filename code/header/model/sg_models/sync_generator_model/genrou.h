@@ -41,9 +41,6 @@ class GENROU : public SYNC_GENERATOR_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name);
-        virtual string get_variable_name_from_variable_index(size_t var_index);
-        virtual double get_variable_with_index(size_t var_index);
         virtual double get_variable_with_name(string var_name);
 
         virtual double get_air_gap_power_in_pu_based_on_mbase();
@@ -76,6 +73,8 @@ class GENROU : public SYNC_GENERATOR_MODEL
         void set_rotor_speed_deviation_in_pu(double speed);
     private:
         void copy_from_const_model(const GENROU& model);
+        virtual void prepare_model_variable_table();
+
         double get_initial_rotor_angle() const;
         /*INTEGRAL_BLOCK transient_block_d_axis, subtransient_block_d_axis;
         INTEGRAL_BLOCK transient_block_q_axis, subtransient_block_q_axis;

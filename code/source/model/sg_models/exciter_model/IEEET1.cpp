@@ -5,20 +5,10 @@
 #include <iostream>
 
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{ "EXCITATION VOLTAGE",      //0
-                                            "VOLTAGE REFERENCE",      //1
-                                            "COMPENSATED VOLTAGE",      //2
-                                            "STABILIZING SIGNAL",      //3
-                                            "STATE@SENSOR",     //4
-                                            "STATE@REGULATOR",     //5
-                                            "STATE@FEEDBACKER",     //6
-                                            "STATE@EXCITER"     //7
-                                            };
-
 IEEET1::IEEET1()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 IEEET1::~IEEET1()
@@ -452,21 +442,17 @@ string IEEET1::get_standard_model_string() const
     return osstream.str();
 }
 
-
-size_t IEEET1::get_variable_index_from_variable_name(string var_name)
+void IEEET1::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string IEEET1::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double IEEET1::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("EXCITATION VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("VOLTAGE REFERENCE", i); i++;
+    add_model_variable_name_and_index_pair("COMPENSATED VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("STABILIZING SIGNAL", i); i++;
+    add_model_variable_name_and_index_pair("STATE@SENSOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
+    add_model_variable_name_and_index_pair("STATE@EXCITER", i); i++;
 }
 
 double IEEET1::get_variable_with_name(string var_name)

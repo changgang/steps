@@ -53,9 +53,6 @@ class CDC4T: public HVDC_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name);
-        virtual string get_variable_name_from_variable_index(size_t var_index);
-        virtual double get_variable_with_index(size_t var_index);
         virtual double get_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -63,6 +60,8 @@ class CDC4T: public HVDC_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const CDC4T& model);
+        virtual void prepare_model_variable_table();
+
         FIRST_ORDER_BLOCK inverter_dc_voltage_sensor, dc_current_sensor;
         double rectifier_ac_instantaneous_blocking_voltage_in_pu, rectifier_ac_instantaneous_unblocking_voltage_in_pu;
         double inverter_dc_instantaneous_bypassing_voltage_in_kV, inverter_ac_instantaneous_unbypassing_voltage_in_pu;

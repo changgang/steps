@@ -1,17 +1,10 @@
 #include "header/model/wtg_models/wt_turbine_model/wt3t0.h"
 #include "header/basic/utility.h"
 
-static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR MECHANICAL POWER IN PU", //0
-                                            "GENERATOR MECHANICAL POWER IN MW",      //1
-                                            "MECHANICAL POWER REFERENCE IN PU",      //2
-                                            "GENERATOR ROTOR SPEED DEVIATION IN PU",     //3
-                                            "STATE@GOVERNOR",     //4
-                                            "STATE@TURBINE",       //5
-                                            };//8
-
 WT3T0::WT3T0()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 WT3T0::~WT3T0()
@@ -113,8 +106,6 @@ double WT3T0::get_model_data_with_name(string par_name) const
 
 void WT3T0::set_model_data_with_index(size_t index, double value)
 {
-    string par_name = get_variable_name_from_variable_index(index);
-    set_model_data_with_name(par_name, value);
     return;
 }
 
@@ -355,19 +346,17 @@ string WT3T0::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t WT3T0::get_variable_index_from_variable_name(string var_name)
+void WT3T0::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN MW", i); i++;
+    add_model_variable_name_and_index_pair("MECHANICAL POWER REFERENCE IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR ROTOR SPEED DEVIATION IN PU", i); i++;
+    add_model_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@TURBINE", i); i++;
 }
-string WT3T0::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-double WT3T0::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
-}
+
 double WT3T0::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);

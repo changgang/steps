@@ -5,18 +5,10 @@
 #include <iostream>
 
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR MECHANICAL POWER IN PU", //0
-                                            "GENERATOR MECHANICAL POWER IN MW",      //1
-                                            "MECHANICAL POWER REFERENCE IN PU",      //2
-                                            "GENERATOR ROTOR SPEED DEVIATION IN PU",     //3
-                                            "STATE@GOVERNOR",     //4
-                                            "STATE@TURBINE",       //5
-                                            };//8
-
 FILEIRRAD::FILEIRRAD()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 FILEIRRAD::~FILEIRRAD()
@@ -170,29 +162,10 @@ string FILEIRRAD::get_standard_model_string() const
     return "";
 }
 
-
-size_t FILEIRRAD::get_variable_index_from_variable_name(string var_name)
+void FILEIRRAD::prepare_model_variable_table()
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
-    return 0;
-}
-
-string FILEIRRAD::get_variable_name_from_variable_index(size_t var_index)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
-    show_information_with_leading_time_stamp(osstream);
-    return "";
-}
-
-double FILEIRRAD::get_variable_with_index(size_t var_index)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
+    size_t i=0;
+    add_model_variable_name_and_index_pair("", i); i++;
 }
 
 double FILEIRRAD::get_variable_with_name(string var_name)

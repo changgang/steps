@@ -116,9 +116,7 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         virtual void save() = 0;
         virtual string get_standard_model_string() const = 0;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name)= 0;
-        virtual string get_variable_name_from_variable_index(size_t var_index)= 0;
-        virtual double get_variable_with_index(size_t var_index)= 0;
+        virtual void prepare_model_variable_table() = 0;
         virtual double get_variable_with_name(string var_name)= 0;
 
         virtual double get_air_gap_power_in_pu_based_on_mbase() = 0;

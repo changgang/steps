@@ -5,20 +5,10 @@
 #include <iostream>
 
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{ "EXCITATION VOLTAGE",      //0
-                                            "VOLTAGE REFERENCE",      //1
-                                            "PSASPE2ENSATED VOLTAGE",      //2
-                                            "STABILIZING SIGNAL",      //3
-                                            "STATE@SENSOR",     //4
-                                            "STATE@TUNER1",     //5
-                                            "STATE@TUNER2",     //5
-                                            "STATE@REGULATOR"     //5
-                                            };
-
 PSASPE2::PSASPE2()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 PSASPE2::~PSASPE2()
@@ -530,20 +520,17 @@ string PSASPE2::get_standard_model_string() const
 }
 
 
-size_t PSASPE2::get_variable_index_from_variable_name(string var_name)
+void PSASPE2::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string PSASPE2::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double PSASPE2::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("EXCITATION VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("VOLTAGE REFERENCE", i); i++;
+    add_model_variable_name_and_index_pair("PSASPE2ENSATED VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("STABILIZING SIGNAL", i); i++;
+    add_model_variable_name_and_index_pair("STATE@SENSOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@TUNER1", i); i++;
+    add_model_variable_name_and_index_pair("STATE@TUNER2", i); i++;
+    add_model_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
 }
 
 double PSASPE2::get_variable_with_name(string var_name)

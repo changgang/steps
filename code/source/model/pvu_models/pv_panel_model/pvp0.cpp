@@ -8,6 +8,8 @@ using namespace std;
 
 PVP0::PVP0()
 {
+    clear();
+    prepare_model_variable_table();
 }
 
 PVP0::PVP0(const PVP0& model):PV_PANEL_MODEL()
@@ -119,28 +121,10 @@ string PVP0::get_standard_model_string() const
     return "";
 }
 
-size_t PVP0::get_variable_index_from_variable_name(string var_name)
+void PVP0::prepare_model_variable_table()
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
-    return 0;
-}
-
-string PVP0::get_variable_name_from_variable_index(size_t var_index)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
-    show_information_with_leading_time_stamp(osstream);
-    return "";
-}
-
-double PVP0::get_variable_with_index(size_t var_index)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_index is provided: "<<var_index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
+    size_t i=0;
+    add_model_variable_name_and_index_pair("", i); i++;
 }
 
 double PVP0::get_variable_with_name(string var_name)

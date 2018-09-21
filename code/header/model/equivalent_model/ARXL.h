@@ -60,9 +60,6 @@ class ARXL : public EQUIVALENT_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name);
-        virtual string get_variable_name_from_variable_index(size_t var_index);
-        virtual double get_variable_with_index(size_t var_index);
         virtual double get_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -81,6 +78,8 @@ class ARXL : public EQUIVALENT_MODEL
         string get_load_meter_string(const METER& meter) const;
     private:
         void copy_from_constant_model(const ARXL& model);
+        virtual void prepare_model_variable_table();
+
         vector<METER> p_meters, q_meters;
         vector< vector<size_t> > p_delays, q_delays;
         vector< vector<double> > p_coefficients, q_coefficients;

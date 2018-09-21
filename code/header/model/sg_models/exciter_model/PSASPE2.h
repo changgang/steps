@@ -66,9 +66,6 @@ class PSASPE2: public EXCITER_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name);
-        virtual string get_variable_name_from_variable_index(size_t var_index);
-        virtual double get_variable_with_index(size_t var_index);
         virtual double get_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -76,6 +73,8 @@ class PSASPE2: public EXCITER_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const PSASPE2& model);
+        virtual void prepare_model_variable_table();
+
         FIRST_ORDER_BLOCK sensor;
         bool K2;
         LEAD_LAG_BLOCK tuner1_lead_lag;

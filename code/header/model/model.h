@@ -4,6 +4,7 @@
 #include "header/basic/base.h"
 #include "header/basic/device_id.h"
 #include "header/block/block.h"
+#include "header/model/model_var_table.h"
 
 class POWER_SYSTEM_DATABASE;
 class DEVICE;
@@ -19,6 +20,12 @@ class MODEL : public BASE
 
         void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type);
         string get_allowed_device_type() const;
+
+        void add_model_variable_name_and_index_pair(string var_name, size_t var_index);
+        size_t get_model_variable_index(string var_name) const;
+        string get_model_variable_name(size_t var_index) const;
+        bool is_model_variable_exist(string var_name) const;
+        bool is_model_variable_exist(size_t var_index) const;
 
         void set_power_system_database_and_attached_device(POWER_SYSTEM_DATABASE* psdb, DEVICE_ID did);
         void set_device_id(DEVICE_ID did);
@@ -44,8 +51,6 @@ class MODEL : public BASE
 
         bool is_model_active() const;
 
-        size_t get_variable_index_from_variable_name(string var_name, vector<string>& MODEL_VARIABLE_TABLE) const;
-        string get_variable_name_from_variable_index(size_t var_index, vector<string>& MODEL_VARIABLE_TABLE) const;
     public: // specific type level
         virtual string get_model_type() const = 0;
 
@@ -64,10 +69,9 @@ class MODEL : public BASE
         virtual void save() = 0;
         virtual string get_standard_model_string() const = 0;
 
-        virtual size_t get_variable_index_from_variable_name(string var_name)= 0;
-        virtual string get_variable_name_from_variable_index(size_t var_index)= 0;
-        virtual double get_variable_with_index(size_t var_index)= 0;
+        virtual void prepare_model_variable_table() = 0;
         virtual double get_variable_with_name(string var_name)= 0;
+        double get_variable_with_index(size_t index);
 
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
@@ -83,6 +87,8 @@ class MODEL : public BASE
         bool flag_model_updated;
 
         bool flag_model_active;
+
+        MODEL_VAR_TABLE variable_table;
 };
 
 #endif // MODEL_H

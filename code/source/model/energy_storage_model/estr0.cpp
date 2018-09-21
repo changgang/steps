@@ -4,21 +4,10 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-
-
-static vector<string> MODEL_VARIABLE_TABLE{"ENERGY STORAGE TERMINAL P IN PU",      //4
-                                            "ENERGY STORAGE TERMINAL P IN MW",      //5
-                                            "ENERGY STORAGE TERMINAL Q IN PU",      //6
-                                            "ENERGY STORAGE TERMINAL Q IN MVAR",      //7
-                                            "ENERGY STORAGE TERMINAL S IN PU",      //8
-                                            "ENERGY STORAGE TERMINAL S IN MVA",      //9
-                                            "ENERGY STORAGE TERMINAL CURRENT IN PU",      //14
-                                            "ENERGY STORAGE TERMINAL CURRENT IN KA",      //15
-                                            "ENERGY STORAGE STATE OF ENERGY",      //9
-                                            };
 ESTR0::ESTR0() : ENERGY_STORAGE_MODEL()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 ESTR0::~ESTR0()
@@ -692,20 +681,18 @@ string ESTR0::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t ESTR0::get_variable_index_from_variable_name(string var_name)
+void ESTR0::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string ESTR0::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double ESTR0::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE TERMINAL P IN PU", i); i++;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE TERMINAL P IN MW", i); i++;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE TERMINAL Q IN PU", i); i++;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE TERMINAL Q IN MVAR", i); i++;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE TERMINAL S IN PU", i); i++;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE TERMINAL S IN MVA", i); i++;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE TERMINAL CURRENT IN PU", i); i++;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE TERMINAL CURRENT IN KA", i); i++;
+    add_model_variable_name_and_index_pair("ENERGY STORAGE STATE OF ENERGY", i); i++;
 }
 
 double ESTR0::get_variable_with_name(string var_name)

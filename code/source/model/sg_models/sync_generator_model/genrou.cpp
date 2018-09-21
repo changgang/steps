@@ -4,35 +4,10 @@
 #include <istream>
 #include <iostream>
 using namespace std;
-
-
-static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR ROTOR ANGLE IN DEG",      //0
-                                            "GENERATOR ROTOR SPEED DEVIATION IN PU",      //1
-                                            "GENERATOR AIR GAP POWER IN PU",      //2
-                                            "GENERATOR AIR GAP POWER IN MW",      //3
-                                            "GENERATOR TERMINAL P IN PU",      //4
-                                            "GENERATOR TERMINAL P IN MW",      //5
-                                            "GENERATOR TERMINAL Q IN PU",      //6
-                                            "GENERATOR TERMINAL Q IN MVAR",      //7
-                                            "GENERATOR TERMINAL S IN PU",      //8
-                                            "GENERATOR TERMINAL S IN MVA",      //9
-                                            "GENERATOR MECHANICAL POWER IN PU",      //10
-                                            "GENERATOR MECHANICAL POWER IN MW",      //11
-                                            "GENERATOR EXCITATION VOLTAGE IN PU",      //12
-                                            "FIELD CURRENT IN PU",      //12
-                                            "GENERATOR INTERNAL VOLTAGE IN PU",      //13
-                                            "GENERATOR TERMINAL CURRENT IN PU",      //14
-                                            "GENERATOR TERMINAL CURRENT IN KA",      //15
-                                            "STATE@ROTOR ANGLE BLOCK",     //16
-                                            "STATE@ROTOR SPEED BLOCK",    //17
-                                            "STATE@D-AXIS TRANSIENT BLOCK",    //18
-                                            "STATE@Q-AXIS TRANSIENT BLOCK",    //19
-                                            "STATE@D-AXIS SUBTRANSIENT BLOCK",    //20
-                                            "STATE@Q-AXIS SUBTRANSIENT BLOCK",    //21
-                                            };
 GENROU::GENROU() : SYNC_GENERATOR_MODEL()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 GENROU::~GENROU()
@@ -582,20 +557,32 @@ string GENROU::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t GENROU::get_variable_index_from_variable_name(string var_name)
+void GENROU::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string GENROU::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double GENROU::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("GENERATOR ROTOR ANGLE IN DEG", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR ROTOR SPEED DEVIATION IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR AIR GAP POWER IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR AIR GAP POWER IN MW", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL P IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL P IN MW", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL Q IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL Q IN MVAR", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL S IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL S IN MVA", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN MW", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR EXCITATION VOLTAGE IN PU", i); i++;
+    add_model_variable_name_and_index_pair("FIELD CURRENT IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR INTERNAL VOLTAGE IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL CURRENT IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR TERMINAL CURRENT IN KA", i); i++;
+    add_model_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@Q-AXIS TRANSIENT BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@D-AXIS SUBTRANSIENT BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@Q-AXIS SUBTRANSIENT BLOCK", i); i++;
 }
 
 double GENROU::get_variable_with_name(string var_name)

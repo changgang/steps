@@ -1,17 +1,10 @@
 #include "header/model/load_model/IEEL.h"
 #include "header/basic/utility.h"
 #include <cstdio>
-
-static vector<string> MODEL_VARIABLE_TABLE{ "TOTAL ACTIVE POWER LOAD IN MW",      //0
-                                            "TOTAL REACTIVE POWER LOAD IN MVAR",      //1
-                                            "INITIAL ACTIVE POWER LOAD IN MW",      //2
-                                            "INITIAL REACTIVE POWER LOAD IN MVAR",      //3
-                                            };
-
-
 IEEL::IEEL()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 IEEL::~IEEL()
@@ -436,19 +429,16 @@ string IEEL::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t IEEL::get_variable_index_from_variable_name(string var_name)
+void IEEL::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
+    size_t i=0;
+
+    add_model_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
+    add_model_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;
+    add_model_variable_name_and_index_pair("INITIAL ACTIVE POWER LOAD IN MW", i); i++;
+    add_model_variable_name_and_index_pair("INITIAL REACTIVE POWER LOAD IN MVAR", i); i++;
 }
-string IEEL::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-double IEEL::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
-}
+
 double IEEL::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);

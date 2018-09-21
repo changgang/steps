@@ -1,20 +1,9 @@
 #include "header/model/sg_models/turbine_governor_model/IEESGO.h"
 #include "header/basic/utility.h"
-
-static vector<string> MODEL_VARIABLE_TABLE{ "GENERATOR MECHANICAL POWER IN PU", //0
-                                            "GENERATOR MECHANICAL POWER IN MW",      //1
-                                            "MECHANICAL POWER REFERENCE IN PU",      //2
-                                            "GENERATOR ROTOR SPEED DEVIATION IN PU",     //3
-                                            "STATE@GOVERNOR TUNER",     //4
-                                            "STATE@GOVERNOR",     //4
-                                            "STATE@HIGH TURBINE",       //5
-                                            "STATE@MEDIUM TURBINE",       //5
-                                            "STATE@LOW TURBINE",       //5
-                                            };//8
-
 IEESGO::IEESGO()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 IEESGO::~IEESGO()
@@ -430,19 +419,20 @@ string IEESGO::get_standard_model_string() const
     return osstream.str();
 }
 
-size_t IEESGO::get_variable_index_from_variable_name(string var_name)
+void IEESGO::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN MW", i); i++;
+    add_model_variable_name_and_index_pair("MECHANICAL POWER REFERENCE IN PU", i); i++;
+    add_model_variable_name_and_index_pair("GENERATOR ROTOR SPEED DEVIATION IN PU", i); i++;
+    add_model_variable_name_and_index_pair("STATE@GOVERNOR TUNER", i); i++;
+    add_model_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@HIGH TURBINE", i); i++;
+    add_model_variable_name_and_index_pair("STATE@MEDIUM TURBINE", i); i++;
+    add_model_variable_name_and_index_pair("STATE@LOW TURBINE", i); i++;
 }
-string IEESGO::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-double IEESGO::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
-}
+
 double IEESGO::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);

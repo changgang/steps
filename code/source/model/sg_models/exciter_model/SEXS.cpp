@@ -5,18 +5,10 @@
 #include <iostream>
 
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{ "EXCITATION VOLTAGE",      //0
-                                            "VOLTAGE REFERENCE",      //1
-                                            "SEXSENSATED VOLTAGE",      //2
-                                            "STABILIZING SIGNAL",      //3
-                                            "STATE@PHASE TUNER",     //4
-                                            "STATE@EXCITER"     //5
-                                            };
-
 SEXS::SEXS()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 SEXS::~SEXS()
@@ -328,21 +320,15 @@ string SEXS::get_standard_model_string() const
     return osstream.str();
 }
 
-
-size_t SEXS::get_variable_index_from_variable_name(string var_name)
+void SEXS::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string SEXS::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double SEXS::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("EXCITATION VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("VOLTAGE REFERENCE", i); i++;
+    add_model_variable_name_and_index_pair("SEXSENSATED VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("STABILIZING SIGNAL", i); i++;
+    add_model_variable_name_and_index_pair("STATE@PHASE TUNER", i); i++;
+    add_model_variable_name_and_index_pair("STATE@EXCITER", i); i++;
 }
 
 double SEXS::get_variable_with_name(string var_name)

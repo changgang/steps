@@ -6,20 +6,10 @@
 #include <iostream>
 
 using namespace std;
-
-static vector<string> MODEL_VARIABLE_TABLE{ "EXCITATION VOLTAGE",      //0
-                                            "VOLTAGE REFERENCE",      //1
-                                            "CDC6TENSATED VOLTAGE",      //2
-                                            "STABILIZING SIGNAL",      //3
-                                            "STATE@SENSOR",     //4
-                                            "STATE@REGULATOR",     //5
-                                            "STATE@FEEDBACKER",     //6
-                                            "STATE@EXCITER"     //7
-                                            };
-
 CDC6T::CDC6T()
 {
     clear();
+    prepare_model_variable_table();
 }
 
 CDC6T::~CDC6T()
@@ -925,20 +915,10 @@ string CDC6T::get_standard_model_string() const
 }
 
 
-size_t CDC6T::get_variable_index_from_variable_name(string var_name)
+void CDC6T::prepare_model_variable_table()
 {
-    return MODEL::get_variable_index_from_variable_name(var_name, MODEL_VARIABLE_TABLE);
-}
-
-string CDC6T::get_variable_name_from_variable_index(size_t var_index)
-{
-    return MODEL::get_variable_name_from_variable_index(var_index, MODEL_VARIABLE_TABLE);
-}
-
-double CDC6T::get_variable_with_index(size_t var_index)
-{
-    string var_name = get_variable_name_from_variable_index(var_index);
-    return get_variable_with_name(var_name);
+    size_t i=0;
+    add_model_variable_name_and_index_pair("", i); i++;
 }
 
 double CDC6T::get_variable_with_name(string var_name)
