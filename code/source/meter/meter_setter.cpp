@@ -740,7 +740,10 @@ METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD LOAD MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("LOAD LOAD MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -754,7 +757,10 @@ METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(c
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -768,7 +774,63 @@ METER METER_SETTER::prepare_load_voltage_relay_model_internal_variable_meter(con
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
+
+    return meter;
+}
+
+
+
+METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_load_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LOAD LOAD MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_load_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_load_voltage_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_load_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
 
     return meter;
 }
@@ -1241,7 +1303,10 @@ METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_met
     bool successful = prepare_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1255,7 +1320,10 @@ METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(
     bool successful = prepare_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1269,7 +1337,10 @@ METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(c
     bool successful = prepare_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("GENERATOR STABILIZER MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("GENERATOR STABILIZER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1283,7 +1354,10 @@ METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(cons
     bool successful = prepare_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("GENERATOR EXCITER MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("GENERATOR EXCITER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1297,7 +1371,95 @@ METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_m
     bool successful = prepare_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("GENERATOR STABILIZER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("GENERATOR EXCITER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
 
     return meter;
 }
@@ -1676,7 +1838,10 @@ METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEV
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("WT GENERATOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1690,7 +1855,10 @@ METER METER_SETTER::prepare_wt_aerodynamic_model_internal_variable_meter(const D
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT AERODYNAMIC MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("WT AERODYNAMIC MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1704,7 +1872,10 @@ METER METER_SETTER::prepare_wt_turbine_model_internal_variable_meter(const DEVIC
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT TURBINE MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("WT TURBINE MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1718,7 +1889,10 @@ METER METER_SETTER::prepare_wt_electrical_model_internal_variable_meter(const DE
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT ELECTRICAL MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("WT ELECTRICAL MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1732,7 +1906,10 @@ METER METER_SETTER::prepare_wt_pitch_model_internal_variable_meter(const DEVICE_
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT PITCH MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("WT PITCH MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
 
     return meter;
 }
@@ -1746,7 +1923,113 @@ METER METER_SETTER::prepare_wind_speed_model_internal_variable_meter(const DEVIC
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WIND SPEED MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("WIND SPEED MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WT GENERATOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_aerodynamic_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WT AERODYNAMIC MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_turbine_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WT TURBINE MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WT ELECTRICAL MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wt_pitch_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WT PITCH MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_wind_speed_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("WIND SPEED MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
 
     return meter;
 }
@@ -2068,7 +2351,27 @@ METER METER_SETTER::prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("HVDC MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_hvdc_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("HVDC MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
 
     return meter;
 }
@@ -2665,7 +2968,27 @@ METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const D
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("ENERGY STORAGE MODEL INTERNAL VARIABLE", index);
+    {
+        meter.set_meter_type("ENERGY STORAGE MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_index(index);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ENERGY STORAGE MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
 
     return meter;
 }

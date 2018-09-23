@@ -54,6 +54,9 @@ class METER_SETTER
         METER prepare_load_load_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
         METER prepare_load_frequency_relay_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
         METER prepare_load_voltage_relay_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
+        METER prepare_load_load_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_load_frequency_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_load_voltage_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_load_total_scale_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& device_id);
@@ -90,6 +93,11 @@ class METER_SETTER
         METER prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
         METER prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
         METER prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
+        METER prepare_generator_sync_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_generator_compensator_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
         METER prepare_wt_generator_terminal_current_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_wt_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id);
@@ -123,6 +131,12 @@ class METER_SETTER
         METER prepare_wt_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
         METER prepare_wt_pitch_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
         METER prepare_wind_speed_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
+        METER prepare_wt_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_wt_aerodynamic_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_wt_turbine_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_wt_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_wt_pitch_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_wind_speed_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
         METER prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id);
         METER prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id);
@@ -144,6 +158,7 @@ class METER_SETTER
         METER prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
         METER prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID& device_id);
         METER prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
+        METER prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
         METER prepare_equivalent_device_voltage_source_voltage_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_equivalent_device_voltage_source_voltage_angle_in_deg_meter(const DEVICE_ID& device_id);
@@ -182,6 +197,7 @@ class METER_SETTER
         METER prepare_energy_storage_terminal_current_in_kA_meter(const DEVICE_ID& device_id);
         METER prepare_energy_storage_terminal_current_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index);
+        METER prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
     private:
         bool prepare_bus_meter(METER& meter, const size_t bus);
         bool prepare_line_meter(METER& meter, const DEVICE_ID& device_id, size_t side_bus);

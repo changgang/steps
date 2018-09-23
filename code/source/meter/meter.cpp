@@ -192,7 +192,12 @@ void METER::copy_from_const_meter(const METER& meter)
     set_power_system_database(meter.get_power_system_database());
     set_buffer_size(meter.get_buffer_size());
     set_device_id(meter.get_device_id());
-    set_meter_type(meter.get_meter_type(), meter.get_internal_variable_index());
+    set_meter_type(meter.get_meter_type());
+    if(meter_type.find("INTERNAL VARIABLE") != string::npos)
+    {
+        set_internal_variable_index(meter.get_internal_variable_index());
+        set_internal_variable_name(meter.get_internal_variable_name());
+    }
     set_meter_side_bus(meter.get_meter_side_bus());
 
     if(meter.get_device_pointer()!=NULL)
@@ -232,7 +237,7 @@ void METER::set_device_id(const DEVICE_ID& did)
     set_device_pointer();
 }
 
-void METER::set_meter_type(string meter_type, size_t internal_variable_index)
+void METER::set_meter_type(string meter_type)
 {
     ostringstream osstream;
     if(not device_id.is_valid())
@@ -247,10 +252,6 @@ void METER::set_meter_type(string meter_type, size_t internal_variable_index)
     if(is_valid_meter_type(meter_type))
     {
         this->meter_type = meter_type;
-        if(meter_type.find("INTERNAL VARIABLE") != string::npos)
-            this->internal_variable_index = internal_variable_index;
-        else
-            this->internal_variable_index = 0;
     }
     else
     {
@@ -259,6 +260,177 @@ void METER::set_meter_type(string meter_type, size_t internal_variable_index)
         this->meter_type = "";
     }
 }
+
+void METER::set_internal_variable_index(size_t internal_variable_index)
+{
+    ostringstream osstream;
+    if(not device_id.is_valid())
+    {
+        osstream<<"Warning. Device id is invalid for setting up meter internal variable index. Set up proper device id first.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(meter_type.find("INTERNAL VARIABLE") != string::npos)
+        this->internal_variable_index = internal_variable_index;
+    else
+    {
+        osstream<<"Warning, Meter type '"<<meter_type<<"' is not valid Internal Variable Meter. No internal variable index will be set.";
+        show_information_with_leading_time_stamp(osstream);
+        this->internal_variable_index = 0;
+    }
+}
+
+void METER::set_internal_variable_name(string internal_variable_name)
+{
+    ostringstream osstream;
+    if(not device_id.is_valid())
+    {
+        osstream<<"Warning. Device id is invalid for setting up meter internal variable index. Set up proper device id first.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(meter_type.find("INTERNAL VARIABLE") != string::npos)
+    {
+        size_t index = get_internal_variable_index_with_name(internal_variable_name);
+        if(index==INDEX_NOT_EXIST)
+        {
+            osstream<<"Warning, Internal variable name '"<<internal_variable_name<<"' is not valid. No internal variable name will be set.";
+            show_information_with_leading_time_stamp(osstream);
+            this->internal_variable_name = "";
+            this->internal_variable_index = INDEX_NOT_EXIST;
+        }
+        else
+        {
+            this->internal_variable_name = internal_variable_name;
+            this->internal_variable_index = index;
+        }
+    }
+    else
+    {
+        osstream<<"Warning, Meter type '"<<meter_type<<"' is not valid Internal Variable Meter. No internal variable name will be set.";
+        show_information_with_leading_time_stamp(osstream);
+        this->internal_variable_name = "";
+        this->internal_variable_index = INDEX_NOT_EXIST;
+    }
+}
+
+
+
+size_t METER::get_internal_variable_index_with_name(string name) const
+{
+    if(get_meter_type().find("INTERNAL VARIABLE")==string::npos) return INDEX_NOT_EXIST;
+
+    size_t index=INDEX_NOT_EXIST;
+    if(get_device_type()=="LOAD")
+        index = get_internal_variable_index_with_name_as_load(name);
+    else
+    {
+        if(get_device_type()=="GENERATOR")
+            index = get_internal_variable_index_with_name_as_generator(name);
+        else
+        {
+            if(get_device_type()=="WT GENERATOR")
+                index = get_internal_variable_index_with_name_as_wt_generator(name);
+            else
+            {
+                if(get_device_type()=="HVDC")
+                    index = get_internal_variable_index_with_name_as_hvdc(name);
+                else
+                    index = INDEX_NOT_EXIST;
+            }
+        }
+    }
+    return index;
+}
+
+size_t METER::get_internal_variable_index_with_name_as_load(string name) const
+{
+    if(get_device_type()!="LOAD") return INDEX_NOT_EXIST;
+
+    name = string2upper(name);
+    LOAD* ptr = (LOAD*) get_device_pointer();
+    if(ptr==NULL) return INDEX_NOT_EXIST;
+
+    MODEL* model = NULL;
+    if(get_meter_type()=="LOAD LOAD MODEL INTERNAL VARIABLE")
+        model = ptr->get_load_model();
+    if(get_meter_type()=="LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE")
+        model = ptr->get_load_frequency_relay_model();
+    if(get_meter_type()=="LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE")
+        model = ptr->get_load_voltage_relay_model();
+
+    if(model==NULL) return INDEX_NOT_EXIST;
+    else            return model->get_model_variable_index(name);
+}
+
+size_t METER::get_internal_variable_index_with_name_as_generator(string name) const
+{
+    if(get_device_type()!="GENERATOR") return INDEX_NOT_EXIST;
+
+    name = string2upper(name);
+    GENERATOR* ptr = (GENERATOR*) get_device_pointer();
+    if(ptr==NULL) return INDEX_NOT_EXIST;
+
+    MODEL* model = NULL;
+    if(get_meter_type()=="GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE")
+        model = ptr->get_sync_generator_model();
+    if(get_meter_type()=="GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE")
+        model = ptr->get_compensator_model();
+    if(get_meter_type()=="GENERATOR EXCITER MODEL INTERNAL VARIABLE")
+        model = ptr->get_exciter_model();
+    if(get_meter_type()=="GENERATOR STABILIZER MODEL INTERNAL VARIABLE")
+        model = ptr->get_stabilizer_model();
+    if(get_meter_type()=="GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
+        model = ptr->get_turbine_governor_model();
+
+    if(model==NULL) return INDEX_NOT_EXIST;
+    else            return model->get_model_variable_index(name);
+}
+
+size_t METER::get_internal_variable_index_with_name_as_wt_generator(string name) const
+{
+    if(get_device_type()!="WT GENERATOR") return INDEX_NOT_EXIST;
+
+    name = string2upper(name);
+    WT_GENERATOR* ptr = (WT_GENERATOR*) get_device_pointer();
+    if(ptr==NULL) return INDEX_NOT_EXIST;
+
+    MODEL* model = NULL;
+    if(get_meter_type()=="WT GENERATOR MODEL INTERNAL VARIABLE")
+        model = ptr->get_wt_generator_model();
+    if(get_meter_type()=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
+        model = ptr->get_wt_aerodynamic_model();
+    if(get_meter_type()=="WT TURBINE MODEL INTERNAL VARIABLE")
+        model = ptr->get_wt_turbine_model();
+    if(get_meter_type()=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
+        model = ptr->get_wt_electrical_model();
+    if(get_meter_type()=="WT PITCH MODEL INTERNAL VARIABLE")
+        model = ptr->get_wt_pitch_model();
+    if(get_meter_type()=="WIND SPEED MODEL INTERNAL VARIABLE")
+        model = ptr->get_wind_speed_model();
+
+    if(model==NULL) return INDEX_NOT_EXIST;
+    else            return model->get_model_variable_index(name);
+}
+
+size_t METER::get_internal_variable_index_with_name_as_hvdc(string name) const
+{
+    if(get_device_type()!="HVDC") return INDEX_NOT_EXIST;
+
+    name = string2upper(name);
+    HVDC* ptr = (HVDC*) get_device_pointer();
+    if(ptr==NULL) return INDEX_NOT_EXIST;
+
+    MODEL* model = NULL;
+    if(get_meter_type()=="HVDC MODEL INTERNAL VARIABLE")
+        model = ptr->get_hvdc_model();
+
+    if(model==NULL) return INDEX_NOT_EXIST;
+    else            return model->get_model_variable_index(name);
+}
+
 void METER::set_meter_side_bus(size_t meter_side)
 {
     DEVICE* device = get_device_pointer();
@@ -348,6 +520,11 @@ size_t METER::get_internal_variable_index() const
     return internal_variable_index;
 }
 
+string METER::get_internal_variable_name() const
+{
+    return internal_variable_name;
+}
+
 DEVICE* METER::get_device_pointer() const
 {
     return device_pointer;
@@ -402,7 +579,8 @@ void METER::clear()
     device_pointer = NULL;
     meter_type = "";
     meter_side_bus = 0;
-    internal_variable_index = 0;
+    internal_variable_index = INDEX_NOT_EXIST;
+    internal_variable_name = "";
 
     set_buffer_size(1);
     buffer.clear();

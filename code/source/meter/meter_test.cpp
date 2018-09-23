@@ -448,7 +448,8 @@ void METER_TEST::test_set_get_meter_internal_variable_index()
 
     TEST_ASSERT(meter->get_internal_variable_index()==0);
 
-    meter->set_meter_type("BUS VOLTAGE IN PU",2);
+    meter->set_meter_type("BUS VOLTAGE IN PU");
+    meter->set_internal_variable_index(2);
 
     TEST_ASSERT(meter->get_internal_variable_index()==0);
 
@@ -459,7 +460,8 @@ void METER_TEST::test_set_get_meter_internal_variable_index()
     meter->set_device_id(did);
     meter->set_meter_type("GENERATOR ROTOR ANGLE IN DEG");
     TEST_ASSERT(meter->get_internal_variable_index()==0);
-    meter->set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE",2);
+    meter->set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE");
+    meter->set_internal_variable_index(2);
     TEST_ASSERT(meter->get_internal_variable_index()==2);
 
 }
@@ -637,12 +639,14 @@ void METER_TEST::test_equal()
     newmeter = (*meter);
     TEST_ASSERT(newmeter==(*meter));
 
-    meter->set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE", 2);
+    meter->set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE");
+    meter->set_internal_variable_index(2);
 
     newmeter = (*meter);
     TEST_ASSERT(newmeter==(*meter));
 
-    meter->set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE", 1);
+    meter->set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE");
+    meter->set_internal_variable_index(1);
     TEST_ASSERT(newmeter!=(*meter));
 
 
