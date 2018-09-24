@@ -40,6 +40,8 @@
 
 #include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_models.h"
 
+#include "header/model/energy_storage_model/energy_storage_models.h"
+
 #include "header/model/equivalent_model/ARXL.h"
 
 #endif // ALL_SUPPORTED_MODELS_H

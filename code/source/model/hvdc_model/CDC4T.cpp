@@ -510,39 +510,13 @@ string CDC4T::get_standard_model_string() const
 void CDC4T::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("", i); i++;
+    add_model_variable_name_and_index_pair("RECTIFIER ALPHA IN DEG", i); i++;
 }
 
 double CDC4T::get_variable_with_name(string var_name)
 {
-    /*
-    if(var_name == "EXCITATION VOLTAGE")
-        return get_excitation_voltage_in_pu();
-
-    if(var_name == "VOLTAGE REFERENCE")
-        return get_voltage_reference_in_pu();
-
-    if(var_name == "CDC4TENSATED VOLTAGE")
-        return get_compensated_voltage_in_pu();
-
-    if(var_name == "STABILIZING SIGNAL")
-        return get_stabilizing_signal_in_pu();
-
-    if(var_name == "STATE@SENSOR")
-        return sensor.get_state();
-
-    if(var_name == "STATE@REGULATOR")
-        return regulator.get_state();
-
-    if(var_name == "STATE@FEEDBACKER")
-        return feedbacker.get_state();
-
-    if(var_name == "STATE@EXCITER")
-        return exciter.get_state();
-    */
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
+    if(var_name == "RECTIFIER ALPHA IN DEG")
+        return get_converter_alpha_or_gamma_in_deg(RECTIFIER);
     return 0.0;
 }
 

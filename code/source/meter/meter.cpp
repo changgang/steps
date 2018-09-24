@@ -6,100 +6,99 @@
 #include <istream>
 #include <iostream>
 
-
 using namespace std;
 
-vector<string> bus_meters{ "BUS VOLTAGE IN PU",             "BUS VOLTAGE IN KV",
-                            "BUS ANGLE IN DEG",              "BUS ANGLE IN RAD",
-                            "BUS FREQUENCY IN PU",           "BUS FREQUENCY IN HZ",
-                            "BUS FREQUENCY DEVIATION IN PU", "BUS FREQUENCY DEVIATION IN HZ",
-                            "BUS ROCOV IN PU/S",             "BUS ROCOV IN KV/S",
-                            "BUS ROCOF IN PU/S",             "BUS ROCOF IN HZ/S"};
+vector<string> bus_meters{ "VOLTAGE IN PU",             "VOLTAGE IN KV",
+                            "ANGLE IN DEG",              "ANGLE IN RAD",
+                            "FREQUENCY IN PU",           "FREQUENCY IN HZ",
+                            "FREQUENCY DEVIATION IN PU", "FREQUENCY DEVIATION IN HZ",
+                            "ROCOV IN PU/S",             "ROCOV IN KV/S",
+                            "ROCOF IN PU/S",             "ROCOF IN HZ/S"};
 
 
-vector<string> line_meters{"LINE CURRENT AT SENDING SIDE IN KA",                    "LINE CURRENT AT RECEIVING SIDE IN KA",
-                            "LINE ACTIVE POWER AT SENDING SIDE IN MW",               "LINE ACTIVE POWER AT RECEIVING SIDE IN MW",
-                            "LINE REACTIVE POWER AT SENDING SIDE IN MVAR",           "LINE REACTIVE POWER AT RECEIVING SIDE IN MVAR",
-                            "LINE APPARENT IMPEDANCE AT SENDING SIDE IN OHM",        "LINE APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM",
-                            "LINE APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG",  "LINE APPARENT IMPEDANCE ANGLE AT RECEIVING SIDE IN DEG",
-                            "LINE CURRENT IN KA",
-                            "LINE ACTIVE POWER IN MW",
-                            "LINE REACTIVE POWER IN MVAR",
-                            "LINE APPARENT IMPEDANCE IN OHM",
-                            "LINE APPARENT IMPEDANCE ANGLE IN DEG",
-                            "LINE CURRENT IN PU",
-                            "LINE ACTIVE POWER IN PU",
-                            "LINE REACTIVE POWER IN PU",
-                            "LINE APPARENT IMPEDANCE IN PU",
-                            "LINE APPARENT IMPEDANCE ANGLE IN RAD"};
+vector<string> line_meters{"CURRENT AT SENDING SIDE IN KA",                    "CURRENT AT RECEIVING SIDE IN KA",
+                            "ACTIVE POWER AT SENDING SIDE IN MW",               "ACTIVE POWER AT RECEIVING SIDE IN MW",
+                            "REACTIVE POWER AT SENDING SIDE IN MVAR",           "REACTIVE POWER AT RECEIVING SIDE IN MVAR",
+                            "APPARENT IMPEDANCE AT SENDING SIDE IN OHM",        "APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM",
+                            "APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG",  "APPARENT IMPEDANCE ANGLE AT RECEIVING SIDE IN DEG",
+                            "CURRENT IN KA",
+                            "ACTIVE POWER IN MW",
+                            "REACTIVE POWER IN MVAR",
+                            "APPARENT IMPEDANCE IN OHM",
+                            "APPARENT IMPEDANCE ANGLE IN DEG",
+                            "CURRENT IN PU",
+                            "ACTIVE POWER IN PU",
+                            "REACTIVE POWER IN PU",
+                            "APPARENT IMPEDANCE IN PU",
+                            "APPARENT IMPEDANCE ANGLE IN RAD"};
 
 
-vector<string> transformer_meters{ "TRANSFORMER CURRENT AT PRIMARY WINDING IN KA",  "TRANSFORMER CURRENT AT SECONDARY WINDING IN KA",
-                                   "TRANSFORMER CURRENT AT TERTIARY WINDING IN KA",
-                                   "TRANSFORMER ACTIVE POWER AT PRIMARY WINDING IN MW",    "TRANSFORMER ACTIVE POWER AT SECONDARY WINDING IN MW",
-                                   "TRANSFORMER ACTIVE POWER AT TERTIARY WINDING IN MW",
-                                   "TRANSFORMER REACTIVE POWER AT PRIMARY WINDING IN MVAR", "TRANSFORMER REACTIVE POWER AT SECONDARY WINDING IN MVAR",
-                                   "TRANSFORMER REACTIVE POWER AT TERTIARY WINDING IN MVAR",
-                                   "TRANSFORMER CURRENT IN KA",
-                                   "TRANSFORMER ACTIVE POWER IN MW",
-                                   "TRANSFORMER REACTIVE POWER IN MVAR",
-                                   "TRANSFORMER CURRENT IN PU",
-                                   "TRANSFORMER ACTIVE POWER IN PU",
-                                   "TRANSFORMER REACTIVE POWER IN PU"};
+vector<string> transformer_meters{"CURRENT AT PRIMARY WINDING IN KA",  "CURRENT AT SECONDARY WINDING IN KA",
+                                   "CURRENT AT TERTIARY WINDING IN KA",
+                                   "ACTIVE POWER AT PRIMARY WINDING IN MW",    "ACTIVE POWER AT SECONDARY WINDING IN MW",
+                                   "ACTIVE POWER AT TERTIARY WINDING IN MW",
+                                   "REACTIVE POWER AT PRIMARY WINDING IN MVAR", "REACTIVE POWER AT SECONDARY WINDING IN MVAR",
+                                   "REACTIVE POWER AT TERTIARY WINDING IN MVAR",
+                                   "CURRENT IN KA",
+                                   "ACTIVE POWER IN MW",
+                                   "REACTIVE POWER IN MVAR",
+                                   "CURRENT IN PU",
+                                   "ACTIVE POWER IN PU",
+                                   "REACTIVE POWER IN PU"};
 
 
-vector<string> load_meters{"LOAD CURRENT IN KA",
-                            "LOAD CURRENT IN PU",
-                            "LOAD ACTIVE POWER IN MW", "LOAD REACTIVE POWER IN MVAR",
-                            "LOAD ACTIVE POWER IN PU", "LOAD REACTIVE POWER IN PU",
-                            "LOAD LOAD MODEL INTERNAL VARIABLE",
-                            "LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE",
-                            "LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE",
-                            "LOAD TOTAL SCALE IN PU", "LOAD MANUALLY SCALE IN PU",
-                            "LOAD RELAY SHED SCALE IN PU"};
+vector<string> load_meters{"CURRENT IN KA",
+                            "CURRENT IN PU",
+                            "ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR",
+                            "ACTIVE POWER IN PU", "REACTIVE POWER IN PU",
+                            "TOTAL SCALE IN PU", "MANUALLY SCALE IN PU",
+                            "RELAY SHED SCALE IN PU",
+                            "LOAD MODEL INTERNAL VARIABLE",
+                            "FREQUENCY RELAY MODEL INTERNAL VARIABLE",
+                            "VOLTAGE RELAY MODEL INTERNAL VARIABLE"};
 
-vector<string> generator_meters{   "GENERATOR ROTOR ANGLE IN DEG",
-                                    "GENERATOR ROTOR SPEED IN PU",               "GENERATOR ROTOR SPEED IN HZ",
-                                    "GENERATOR ROTOR SPEED DEVIATION IN PU",     "GENERATOR ROTOR SPEED DEVIATION IN HZ",
-                                    "GENERATOR INTERNAL VOLTAGE IN PU",
-                                    "GENERATOR TERMINAL CURRENT IN PU ON MBASE", "GENERATOR TERMINAL CURRENT IN PU ON SBASE",
-                                    "GENERATOR TERMINAL CURRENT IN KA",
-                                    "GENERATOR TERMINAL ACTIVE POWER IN PU ON MBASE", "GENERATOR TERMINAL ACTIVE POWER IN PU ON SBASE",
-                                    "GENERATOR TERMINAL ACTIVE POWER IN MW",
-                                    "GENERATOR TERMINAL REACTIVE POWER IN PU ON MBASE", "GENERATOR TERMINAL REACTIVE POWER IN PU ON SBASE",
-                                    "GENERATOR TERMINAL REACTIVE POWER IN MVAR",
-                                    "GENERATOR AIRGAP POWER IN PU ON MBASE", "GENERATOR AIRGAP POWER IN PU ON SBASE",
-                                    "GENERATOR AIRGAP POWER IN MW",
-                                    "GENERATOR ACCELERATING POWER IN PU ON MBASE", "GENERATOR ACCELERATING POWER IN PU ON SBASE",
-                                    "GENERATOR ACCELERATING POWER IN MW",
-                                    "GENERATOR MECHANICAL POWER IN PU ON MBASE",  "GENERATOR MECHANICAL POWER IN PU ON SBASE",
-                                    "GENERATOR MECHANICAL POWER IN MW",
-                                    "GENERATOR COMPENSATED VOLTAGE IN PU",
-                                    "GENERATOR STABILIZING SIGNAL IN PU",
-                                    "GENERATOR EXCITATION VOLTAGE IN PU",
-                                    "GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE",
-                                    "GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE",
-                                    "GENERATOR EXCITER MODEL INTERNAL VARIABLE",
-                                    "GENERATOR STABILIZER MODEL INTERNAL VARIABLE",
-                                    "GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE"};
+vector<string> generator_meters{"ROTOR ANGLE IN DEG",
+                                "ROTOR SPEED IN PU",               "ROTOR SPEED IN HZ",
+                                "ROTOR SPEED DEVIATION IN PU",     "ROTOR SPEED DEVIATION IN HZ",
+                                "INTERNAL VOLTAGE IN PU",
+                                "TERMINAL CURRENT IN PU ON MBASE", "TERMINAL CURRENT IN PU ON SBASE",
+                                "TERMINAL CURRENT IN KA",
+                                "TERMINAL ACTIVE POWER IN PU ON MBASE", "TERMINAL ACTIVE POWER IN PU ON SBASE",
+                                "TERMINAL ACTIVE POWER IN MW",
+                                "TERMINAL REACTIVE POWER IN PU ON MBASE", "TERMINAL REACTIVE POWER IN PU ON SBASE",
+                                "TERMINAL REACTIVE POWER IN MVAR",
+                                "AIRGAP POWER IN PU ON MBASE", "AIRGAP POWER IN PU ON SBASE",
+                                "AIRGAP POWER IN MW",
+                                "ACCELERATING POWER IN PU ON MBASE", "ACCELERATING POWER IN PU ON SBASE",
+                                "ACCELERATING POWER IN MW",
+                                "MECHANICAL POWER IN PU ON MBASE",  "MECHANICAL POWER IN PU ON SBASE",
+                                "MECHANICAL POWER IN MW",
+                                "COMPENSATED VOLTAGE IN PU",
+                                "STABILIZING SIGNAL IN PU",
+                                "EXCITATION VOLTAGE IN PU",
+                                "SYNC GENERATOR MODEL INTERNAL VARIABLE",
+                                "COMPENSATOR MODEL INTERNAL VARIABLE",
+                                "EXCITER MODEL INTERNAL VARIABLE",
+                                "STABILIZER MODEL INTERNAL VARIABLE",
+                                "TURBINE GOVERNOR MODEL INTERNAL VARIABLE"};
 
-vector<string> wt_generator_meters{"WT GENERATOR TERMINAL CURRENT IN PU", "WT GENERATOR TERMINAL CURRENT IN KA",
-                                    "WT GENERATOR TERMINAL ACTIVE POWER IN MW",
-                                    "WT GENERATOR TERMINAL REACTIVE POWER IN MVAR",
-                                    "WT GENERATOR MECHANICAL POWER IN MW", "WT GENERATOR MAX AVAILABLE MECHANICAL POWER IN MW",
-                                    "WT GENERATOR SPEED REFERENCE IN PU", "WT GENERATOR SPEED REFERENCE IN RAD/S",
-                                    "WT GENERATOR TURBINE SPEED DEVIATION IN PU", "WT GENERATOR TURBINE SPEED DEVIATION IN HZ",
-                                    "WT GENERATOR TURBINE SPEED IN PU",           "WT GENERATOR TURBINE SPEED IN HZ",
-                                    "WT GENERATOR ROTOR SPEED DEVIATION IN PU", "WT GENERATOR ROTOR SPEED DEVIATION IN HZ",
-                                    "WT GENERATOR ROTOR SPEED IN PU",           "WT GENERATOR ROTOR SPEED IN HZ",
-                                    "WT GENERATOR ROTOR ANGLE IN DEG",           "WT GENERATOR ROTOR ANGLE IN RAD",
-                                    "WT GENERATOR ACTIVE CURRENT COMMAND IN PU",
-                                    "WT GENERATOR REACTIVE CURRENT COMMAND IN PU",
-                                    "WT GENERATOR ACTIVE POWER COMMAND IN PU",
-                                    "WT GENERATOR REACTIVE POWER COMMAND IN PU",
-                                    "WT GENERATOR REACTIVE VOLTAGE COMMAND IN PU",
-                                    "WT GENERATOR PITCH ANGLE IN DEG",
-                                    "WT GENERATOR WIND SPEED IN PU", "WT GENERATOR WIND SPEED IN MPS",
+vector<string> wt_generator_meters{"TERMINAL CURRENT IN PU", "TERMINAL CURRENT IN KA",
+                                    "TERMINAL ACTIVE POWER IN MW",
+                                    "TERMINAL REACTIVE POWER IN MVAR",
+                                    "MECHANICAL POWER IN MW", "MAX AVAILABLE MECHANICAL POWER IN MW",
+                                    "SPEED REFERENCE IN PU", "SPEED REFERENCE IN RAD/S",
+                                    "TURBINE SPEED DEVIATION IN PU", "TURBINE SPEED DEVIATION IN HZ",
+                                    "TURBINE SPEED IN PU",           "TURBINE SPEED IN HZ",
+                                    "ROTOR SPEED DEVIATION IN PU", "ROTOR SPEED DEVIATION IN HZ",
+                                    "ROTOR SPEED IN PU",           "ROTOR SPEED IN HZ",
+                                    "ROTOR ANGLE IN DEG",           "ROTOR ANGLE IN RAD",
+                                    "ACTIVE CURRENT COMMAND IN PU",
+                                    "REACTIVE CURRENT COMMAND IN PU",
+                                    "ACTIVE POWER COMMAND IN PU",
+                                    "REACTIVE POWER COMMAND IN PU",
+                                    "REACTIVE VOLTAGE COMMAND IN PU",
+                                    "PITCH ANGLE IN DEG",
+                                    "WIND SPEED IN PU", "WIND SPEED IN MPS",
                                     "WT GENERATOR MODEL INTERNAL VARIABLE",
                                     "WT AERODYNAMIC MODEL INTERNAL VARIABLE",
                                     "WT TURBINE MODEL INTERNAL VARIABLE",
@@ -107,65 +106,79 @@ vector<string> wt_generator_meters{"WT GENERATOR TERMINAL CURRENT IN PU", "WT GE
                                     "WT PITCH MODEL INTERNAL VARIABLE",
                                     "WIND SPEED MODEL INTERNAL VARIABLE"};
 
-vector<string> hvdc_meters{"HVDC DC CURRENT IN KA",
-                            "HVDC RECTIFIER DC CURRENT IN KA",   "HVDC INVERTER DC CURRENT IN KA",
-                            "HVDC RECTIFIER AC CURRENT IN KA",   "HVDC INVERTER AC CURRENT IN KA",
-                            "HVDC RECTIFIER ALPHA IN DEG",       "HVDC INVERTER GAMMA IN DEG",
-                            "HVDC RECTIFIER MU IN DEG",          "HVDC INVERTER MU IN DEG",
-                            "HVDC RECTIFIER DC VOLTAGE IN KV",   "HVDC INVERTER DC VOLTAGE IN KV",
-                            "HVDC RECTIFIER AC VOLTAGE IN PU",   "HVDC INVERTER AC VOLTAGE IN PU",
-                            "HVDC RECTIFIER DC POWER IN MW",     "HVDC INVERTER DC POWER IN MW",
-                            "HVDC RECTIFIER AC ACTIVE POWER IN MW","HVDC INVERTER AC ACTIVE POWER IN MW",
-                            "HVDC RECTIFIER AC REACTIVE POWER IN MVAR","HVDC INVERTER AC REACTIVE POWER IN MVAR",
+vector<string> pv_unit_meters{"TERMINAL CURRENT IN PU", "TERMINAL CURRENT IN KA",
+                               "TERMINAL ACTIVE POWER IN MW",
+                               "TERMINAL REACTIVE POWER IN MVAR",
+                               "ACTIVE CURRENT COMMAND IN PU",
+                               "REACTIVE CURRENT COMMAND IN PU",
+                               "ACTIVE POWER COMMAND IN PU",
+                               "REACTIVE POWER COMMAND IN PU",
+                               "REACTIVE VOLTAGE COMMAND IN PU",
+                               "PV PANEL MODEL INTERNAL VARIABLE",
+                               "PV CONVERTER MODEL INTERNAL VARIABLE",
+                               "PV ELECTRICAL MODEL INTERNAL VARIABLE",
+                               "PV IRRADIANCE MODEL INTERNAL VARIABLE"};
+
+vector<string> energy_storage_meters{"STATE OF ENERGY IN PU",
+                                      "ACTIVE POWER IN MW",
+                                      "ACTIVE POWER IN PU",
+                                      "REACTIVE POWER IN MVAR",
+                                      "REACTIVE POWER IN PU",
+                                      "TERMINAL CURRENT IN KA",
+                                      "TERMINAL CURRENT IN PU",
+                                      "ENERGY STORAGE MODEL INTERNAL VARIABLE"};
+
+vector<string> hvdc_meters{"DC CURRENT IN KA",
+                            "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
+                            "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
+                            "RECTIFIER ALPHA IN DEG",       "INVERTER GAMMA IN DEG",
+                            "RECTIFIER MU IN DEG",          "INVERTER MU IN DEG",
+                            "RECTIFIER DC VOLTAGE IN KV",   "INVERTER DC VOLTAGE IN KV",
+                            "RECTIFIER AC VOLTAGE IN PU",   "INVERTER AC VOLTAGE IN PU",
+                            "RECTIFIER DC POWER IN MW",     "INVERTER DC POWER IN MW",
+                            "RECTIFIER AC ACTIVE POWER IN MW","INVERTER AC ACTIVE POWER IN MW",
+                            "RECTIFIER AC REACTIVE POWER IN MVAR","INVERTER AC REACTIVE POWER IN MVAR",
                             "HVDC MODEL INTERNAL VARIABLE"};
 
-vector<string> equivalent_device_meters{"EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAGE IN PU",
-                                         "EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",
-                                         "EQUIVALENT DEVICE VOLTAGE SOURCE RESISTANCE IN PU",
-                                         "EQUIVALENT DEVICE VOLTAGE SOURCE REACTANCE IN PU",
-                                         "EQUIVALENT DEVICE ACTIVE CONSTANT POWER LOAD IN MW",
-                                         "EQUIVALENT DEVICE REACTIVE CONSTANT POWER LOAD IN MVAR",
-                                         "EQUIVALENT DEVICE ACTIVE CONSTANT CURRENT LOAD IN MW",
-                                         "EQUIVALENT DEVICE REACTIVE CONSTANT CURRENT LOAD IN MVAR",
-                                         "EQUIVALENT DEVICE ACTIVE CONSTANT IMPEDANCE LOAD IN MW",
-                                         "EQUIVALENT DEVICE REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR",
-                                         "EQUIVALENT DEVICE ACTIVE POWER GENERATION IN MW",
-                                         "EQUIVALENT DEVICE REACTIVE POWER GENERATION IN MVAR",
-                                         "EQUIVALENT DEVICE ACTIVE POWER LOAD IN MW",
-                                         "EQUIVALENT DEVICE REACTIVE POWER LOAD IN MVAR",
-                                         "EQUIVALENT DEVICE ACTIVE POWER NET LOAD IN MW",
-                                         "EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN MVAR",
-                                         "EQUIVALENT DEVICE ACTIVE CONSTANT POWER LOAD IN PU",
-                                         "EQUIVALENT DEVICE REACTIVE CONSTANT POWER LOAD IN PU",
-                                         "EQUIVALENT DEVICE ACTIVE CONSTANT CURRENT LOAD IN PU",
-                                         "EQUIVALENT DEVICE REACTIVE CONSTANT CURRENT LOAD IN PU",
-                                         "EQUIVALENT DEVICE ACTIVE CONSTANT IMPEDANCE LOAD IN PU",
-                                         "EQUIVALENT DEVICE REACTIVE CONSTANT IMPEDANCE LOAD IN PU",
-                                         "EQUIVALENT DEVICE ACTIVE POWER GENERATION IN PU",
-                                         "EQUIVALENT DEVICE REACTIVE POWER GENERATION IN PU",
-                                         "EQUIVALENT DEVICE ACTIVE POWER LOAD IN PU",
-                                         "EQUIVALENT DEVICE REACTIVE POWER LOAD IN PU",
-                                         "EQUIVALENT DEVICE ACTIVE POWER NET LOAD IN PU",
-                                         "EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN PU"};
-
-vector<string> energy_storage_meters{"ENERGY STORAGE STATE OF ENERGY IN PU",
-                                      "ENERGY STORAGE ACTIVE POWER IN MW",
-                                      "ENERGY STORAGE ACTIVE POWER IN PU",
-                                      "ENERGY STORAGE REACTIVE POWER IN MVAR",
-                                      "ENERGY STORAGE REACTIVE POWER IN PU",
-                                      "ENERGY STORAGE TERMINAL CURRENT IN KA",
-                                      "ENERGY STORAGE TERMINAL CURRENT IN PU",
-                                      "ENERGY STORAGE MODEL INTERNAL VARIABLE"};
+vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
+                                         "VOLTAGE SOURCE VOLTAGE ANGLE IN DEG",
+                                         "VOLTAGE SOURCE RESISTANCE IN PU",
+                                         "VOLTAGE SOURCE REACTANCE IN PU",
+                                         "ACTIVE CONSTANT POWER LOAD IN MW",
+                                         "REACTIVE CONSTANT POWER LOAD IN MVAR",
+                                         "ACTIVE CONSTANT CURRENT LOAD IN MW",
+                                         "REACTIVE CONSTANT CURRENT LOAD IN MVAR",
+                                         "ACTIVE CONSTANT IMPEDANCE LOAD IN MW",
+                                         "REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR",
+                                         "ACTIVE POWER GENERATION IN MW",
+                                         "REACTIVE POWER GENERATION IN MVAR",
+                                         "ACTIVE POWER LOAD IN MW",
+                                         "REACTIVE POWER LOAD IN MVAR",
+                                         "ACTIVE POWER NET LOAD IN MW",
+                                         "REACTIVE POWER NET LOAD IN MVAR",
+                                         "ACTIVE CONSTANT POWER LOAD IN PU",
+                                         "REACTIVE CONSTANT POWER LOAD IN PU",
+                                         "ACTIVE CONSTANT CURRENT LOAD IN PU",
+                                         "REACTIVE CONSTANT CURRENT LOAD IN PU",
+                                         "ACTIVE CONSTANT IMPEDANCE LOAD IN PU",
+                                         "REACTIVE CONSTANT IMPEDANCE LOAD IN PU",
+                                         "ACTIVE POWER GENERATION IN PU",
+                                         "REACTIVE POWER GENERATION IN PU",
+                                         "ACTIVE POWER LOAD IN PU",
+                                         "REACTIVE POWER LOAD IN PU",
+                                         "ACTIVE POWER NET LOAD IN PU",
+                                         "REACTIVE POWER NET LOAD IN PU"};
 
 map<string, vector<string>> SUPPORTED_METERS{ {"BUS",         bus_meters},
                                                 {"LINE",        line_meters},
                                                 {"TRANSFORMER", transformer_meters},
                                                 {"LOAD",        load_meters},
                                                 {"GENERATOR",   generator_meters},
-                                                {"WT GENERATOR",    wt_generator_meters},
+                                                {"WT GENERATOR",wt_generator_meters},
+                                                {"PV UNIT",     pv_unit_meters},
+                                                {"ENERGY STORAGE", energy_storage_meters},
                                                 {"HVDC", hvdc_meters},
-                                                {"EQUIVALENT DEVICE", equivalent_device_meters},
-                                                {"ENERGY STORAGE", energy_storage_meters}};
+                                                {"EQUIVALENT DEVICE", equivalent_device_meters}};
 
 METER::METER(POWER_SYSTEM_DATABASE* psdb)
 {
@@ -194,10 +207,7 @@ void METER::copy_from_const_meter(const METER& meter)
     set_device_id(meter.get_device_id());
     set_meter_type(meter.get_meter_type());
     if(meter_type.find("INTERNAL VARIABLE") != string::npos)
-    {
-        set_internal_variable_index(meter.get_internal_variable_index());
         set_internal_variable_name(meter.get_internal_variable_name());
-    }
     set_meter_side_bus(meter.get_meter_side_bus());
 
     if(meter.get_device_pointer()!=NULL)
@@ -261,50 +271,25 @@ void METER::set_meter_type(string meter_type)
     }
 }
 
-void METER::set_internal_variable_index(size_t internal_variable_index)
+void METER::set_internal_variable_name(string name)
 {
     ostringstream osstream;
     if(not device_id.is_valid())
     {
-        osstream<<"Warning. Device id is invalid for setting up meter internal variable index. Set up proper device id first.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    if(meter_type.find("INTERNAL VARIABLE") != string::npos)
-        this->internal_variable_index = internal_variable_index;
-    else
-    {
-        osstream<<"Warning, Meter type '"<<meter_type<<"' is not valid Internal Variable Meter. No internal variable index will be set.";
-        show_information_with_leading_time_stamp(osstream);
-        this->internal_variable_index = 0;
-    }
-}
-
-void METER::set_internal_variable_name(string internal_variable_name)
-{
-    ostringstream osstream;
-    if(not device_id.is_valid())
-    {
-        osstream<<"Warning. Device id is invalid for setting up meter internal variable index. Set up proper device id first.";
+        osstream<<"Warning. Device id is invalid for setting up meter internal variable name. Set up proper device id first.";
         show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(meter_type.find("INTERNAL VARIABLE") != string::npos)
     {
-        size_t index = get_internal_variable_index_with_name(internal_variable_name);
-        if(index==INDEX_NOT_EXIST)
-        {
-            osstream<<"Warning, Internal variable name '"<<internal_variable_name<<"' is not valid. No internal variable name will be set.";
-            show_information_with_leading_time_stamp(osstream);
-            this->internal_variable_name = "";
-            this->internal_variable_index = INDEX_NOT_EXIST;
-        }
+        if(is_internal_variable_name_valid(name))
+            this->internal_variable_name = name;
         else
         {
-            this->internal_variable_name = internal_variable_name;
-            this->internal_variable_index = index;
+            osstream<<"Warning, Internal variable name '"<<name<<"' is not valid. No internal variable name will be set.";
+            show_information_with_leading_time_stamp(osstream);
+            this->internal_variable_name = "";
         }
     }
     else
@@ -312,123 +297,90 @@ void METER::set_internal_variable_name(string internal_variable_name)
         osstream<<"Warning, Meter type '"<<meter_type<<"' is not valid Internal Variable Meter. No internal variable name will be set.";
         show_information_with_leading_time_stamp(osstream);
         this->internal_variable_name = "";
-        this->internal_variable_index = INDEX_NOT_EXIST;
     }
 }
 
-
-
-size_t METER::get_internal_variable_index_with_name(string name) const
+bool METER::is_internal_variable_name_valid(string name) const
 {
-    if(get_meter_type().find("INTERNAL VARIABLE")==string::npos) return INDEX_NOT_EXIST;
+    if(get_device_pointer()==NULL)
+        return false;
 
-    size_t index=INDEX_NOT_EXIST;
+    name = string2upper(name);
+    string meter_type = get_meter_type();
+    MODEL* model=NULL;
     if(get_device_type()=="LOAD")
-        index = get_internal_variable_index_with_name_as_load(name);
+    {
+        LOAD* ptr = (LOAD*)get_device_pointer();
+        if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
+            model = ptr->get_load_model();
+        if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
+            model = ptr->get_load_frequency_relay_model();
+        if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
+            model = ptr->get_load_voltage_relay_model();
+    }
+    if(get_device_type()=="GENERATOR")
+    {
+        GENERATOR* ptr = (GENERATOR*)get_device_pointer();
+        if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
+            model = ptr->get_sync_generator_model();
+        if(meter_type=="COMPENSATOR MODEL INTERNAL VARIABLE")
+            model = ptr->get_compensator_model();
+        if(meter_type=="EXCITER MODEL INTERNAL VARIABLE")
+            model = ptr->get_exciter_model();
+        if(meter_type=="STABILIZER MODEL INTERNAL VARIABLE")
+            model = ptr->get_stabilizer_model();
+        if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
+            model = ptr->get_turbine_governor_model();
+    }
+    if(get_device_type()=="WT GENERATOR")
+    {
+        WT_GENERATOR* ptr = (WT_GENERATOR*)get_device_pointer();
+        if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
+            model = ptr->get_wt_generator_model();
+        if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
+            model = ptr->get_wt_aerodynamic_model();
+        if(meter_type=="WT TURBINE MODEL INTERNAL VARIABLE")
+            model = ptr->get_wt_turbine_model();
+        if(meter_type=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
+            model = ptr->get_wt_electrical_model();
+        if(meter_type=="WT PITCH MODEL INTERNAL VARIABLE")
+            model = ptr->get_wt_pitch_model();
+        if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
+            model = ptr->get_wind_speed_model();
+    }
+    if(get_device_type()=="PV UNIT")
+    {
+        PV_UNIT* ptr = (PV_UNIT*)get_device_pointer();
+        if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")
+            model = ptr->get_pv_panel_model();
+        if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
+            model = ptr->get_pv_converter_model();
+        if(meter_type=="PV ELECTRICAL MODEL INTERNAL VARIABLE")
+            model = ptr->get_pv_electrical_model();
+        if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
+            model = ptr->get_pv_irradiance_model();
+    }
+    if(get_device_type()=="ENERGY STORAGE")
+    {
+        ENERGY_STORAGE* ptr = (ENERGY_STORAGE*)get_device_pointer();
+        if(meter_type=="ENERGY STORAGE MODEL INTERNAL VARIABLE")
+            model = ptr->get_energy_storage_model();
+    }
+    if(get_device_type()=="HVDC")
+    {
+        HVDC* ptr = (HVDC*)get_device_pointer();
+        if(meter_type=="HVDC MODEL INTERNAL VARIABLE")
+            model = ptr->get_hvdc_model();
+    }
+    if(model!=NULL)
+        return model->is_model_variable_exist(name);
     else
     {
-        if(get_device_type()=="GENERATOR")
-            index = get_internal_variable_index_with_name_as_generator(name);
-        else
-        {
-            if(get_device_type()=="WT GENERATOR")
-                index = get_internal_variable_index_with_name_as_wt_generator(name);
-            else
-            {
-                if(get_device_type()=="HVDC")
-                    index = get_internal_variable_index_with_name_as_hvdc(name);
-                else
-                    index = INDEX_NOT_EXIST;
-            }
-        }
+        ostringstream osstream;
+        osstream<<"Warning. No dynamic model is found when check if internal variable name is valid.";
+        show_information_with_leading_time_stamp(osstream);
+        return false;
     }
-    return index;
-}
-
-size_t METER::get_internal_variable_index_with_name_as_load(string name) const
-{
-    if(get_device_type()!="LOAD") return INDEX_NOT_EXIST;
-
-    name = string2upper(name);
-    LOAD* ptr = (LOAD*) get_device_pointer();
-    if(ptr==NULL) return INDEX_NOT_EXIST;
-
-    MODEL* model = NULL;
-    if(get_meter_type()=="LOAD LOAD MODEL INTERNAL VARIABLE")
-        model = ptr->get_load_model();
-    if(get_meter_type()=="LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE")
-        model = ptr->get_load_frequency_relay_model();
-    if(get_meter_type()=="LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE")
-        model = ptr->get_load_voltage_relay_model();
-
-    if(model==NULL) return INDEX_NOT_EXIST;
-    else            return model->get_model_variable_index(name);
-}
-
-size_t METER::get_internal_variable_index_with_name_as_generator(string name) const
-{
-    if(get_device_type()!="GENERATOR") return INDEX_NOT_EXIST;
-
-    name = string2upper(name);
-    GENERATOR* ptr = (GENERATOR*) get_device_pointer();
-    if(ptr==NULL) return INDEX_NOT_EXIST;
-
-    MODEL* model = NULL;
-    if(get_meter_type()=="GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE")
-        model = ptr->get_sync_generator_model();
-    if(get_meter_type()=="GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE")
-        model = ptr->get_compensator_model();
-    if(get_meter_type()=="GENERATOR EXCITER MODEL INTERNAL VARIABLE")
-        model = ptr->get_exciter_model();
-    if(get_meter_type()=="GENERATOR STABILIZER MODEL INTERNAL VARIABLE")
-        model = ptr->get_stabilizer_model();
-    if(get_meter_type()=="GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
-        model = ptr->get_turbine_governor_model();
-
-    if(model==NULL) return INDEX_NOT_EXIST;
-    else            return model->get_model_variable_index(name);
-}
-
-size_t METER::get_internal_variable_index_with_name_as_wt_generator(string name) const
-{
-    if(get_device_type()!="WT GENERATOR") return INDEX_NOT_EXIST;
-
-    name = string2upper(name);
-    WT_GENERATOR* ptr = (WT_GENERATOR*) get_device_pointer();
-    if(ptr==NULL) return INDEX_NOT_EXIST;
-
-    MODEL* model = NULL;
-    if(get_meter_type()=="WT GENERATOR MODEL INTERNAL VARIABLE")
-        model = ptr->get_wt_generator_model();
-    if(get_meter_type()=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
-        model = ptr->get_wt_aerodynamic_model();
-    if(get_meter_type()=="WT TURBINE MODEL INTERNAL VARIABLE")
-        model = ptr->get_wt_turbine_model();
-    if(get_meter_type()=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
-        model = ptr->get_wt_electrical_model();
-    if(get_meter_type()=="WT PITCH MODEL INTERNAL VARIABLE")
-        model = ptr->get_wt_pitch_model();
-    if(get_meter_type()=="WIND SPEED MODEL INTERNAL VARIABLE")
-        model = ptr->get_wind_speed_model();
-
-    if(model==NULL) return INDEX_NOT_EXIST;
-    else            return model->get_model_variable_index(name);
-}
-
-size_t METER::get_internal_variable_index_with_name_as_hvdc(string name) const
-{
-    if(get_device_type()!="HVDC") return INDEX_NOT_EXIST;
-
-    name = string2upper(name);
-    HVDC* ptr = (HVDC*) get_device_pointer();
-    if(ptr==NULL) return INDEX_NOT_EXIST;
-
-    MODEL* model = NULL;
-    if(get_meter_type()=="HVDC MODEL INTERNAL VARIABLE")
-        model = ptr->get_hvdc_model();
-
-    if(model==NULL) return INDEX_NOT_EXIST;
-    else            return model->get_model_variable_index(name);
 }
 
 void METER::set_meter_side_bus(size_t meter_side)
@@ -515,11 +467,6 @@ string METER::get_device_type() const
     return device_id.get_device_type();
 }
 
-size_t METER::get_internal_variable_index() const
-{
-    return internal_variable_index;
-}
-
 string METER::get_internal_variable_name() const
 {
     return internal_variable_name;
@@ -540,7 +487,7 @@ string METER::get_meter_name() const
     {
         name = get_meter_type();
         if(meter_type.find("INTERNAL VARIABLE")!=string::npos)
-            name += " " + num2str(get_internal_variable_index());
+            name += " " + get_internal_variable_name();
 
         //name += " OF "+get_device_id().get_device_name()+" IN PS "+get_power_system_database()->get_system_name();
         name += " @ "+get_device_id().get_device_name();
@@ -579,7 +526,6 @@ void METER::clear()
     device_pointer = NULL;
     meter_type = "";
     meter_side_bus = 0;
-    internal_variable_index = INDEX_NOT_EXIST;
     internal_variable_name = "";
 
     set_buffer_size(1);
@@ -597,7 +543,7 @@ bool METER::operator==(const METER& meter)
             return true;
         else
         {
-            if(this->get_internal_variable_index() == meter.get_internal_variable_index())
+            if(this->get_internal_variable_name() == meter.get_internal_variable_name())
                 return true;
             else
                 return false;
@@ -656,14 +602,17 @@ void METER::set_device_pointer()
     if(device_type=="WT GENERATOR")
         deviceptr = (DEVICE*) psdb->get_wt_generator(device_id);
 
+    if(device_type=="PV UNIT")
+        deviceptr = (DEVICE*) psdb->get_pv_unit(device_id);
+
+    if(device_type=="ENERGY STORAGE")
+        deviceptr = (DEVICE*) psdb->get_energy_storage(device_id);
+
     if(device_type=="HVDC")
         deviceptr = (DEVICE*) psdb->get_hvdc(device_id);
 
     if(device_type=="EQUIVALENT DEVICE")
         deviceptr = (DEVICE*) psdb->get_equivalent_device(device_id);
-
-    if(device_type=="ENERGY STORAGE")
-        deviceptr = (DEVICE*) psdb->get_energy_storage(device_id);
 
     this->device_pointer = deviceptr;
     if(deviceptr==NULL)
@@ -754,19 +703,19 @@ double METER::get_meter_value_as_a_bus() const
     if(bus->get_bus_type()==OUT_OF_SERVICE)
         return 0.0;
 
-    if(meter_type=="BUS VOLTAGE IN PU")
+    if(meter_type=="VOLTAGE IN PU")
         return bus->get_voltage_in_pu();
-    if(meter_type=="BUS VOLTAGE IN KV")
+    if(meter_type=="VOLTAGE IN KV")
         return bus->get_voltage_in_pu();
-    if(meter_type=="BUS ANGLE IN DEG")
+    if(meter_type=="ANGLE IN DEG")
         return bus->get_angle_in_deg();
-    if(meter_type=="BUS FREQUENCY DEVIATION IN PU")
+    if(meter_type=="FREQUENCY DEVIATION IN PU")
         return bus->get_frequency_deviation_in_pu();
-    if(meter_type=="BUS FREQUENCY DEVIATION IN HZ")
+    if(meter_type=="FREQUENCY DEVIATION IN HZ")
         return bus->get_frequency_deviation_in_Hz();
-    if(meter_type=="BUS FREQUENCY IN PU")
+    if(meter_type=="FREQUENCY IN PU")
         return 1.0+bus->get_frequency_deviation_in_pu();
-    if(meter_type=="BUS FREQUENCY IN HZ")
+    if(meter_type=="FREQUENCY IN HZ")
         return bus->get_base_frequency_in_Hz()+bus->get_frequency_deviation_in_Hz();
 
     return 0.0;
@@ -782,14 +731,14 @@ double METER::get_meter_value_as_a_line() const
         return 0.0;
 
     size_t metered_bus = get_meter_side_bus();
-    if(meter_type=="LINE CURRENT IN KA")
+    if(meter_type=="CURRENT IN KA")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return steps_fast_complex_abs(line->get_line_complex_current_at_sending_side_in_kA());
         else
             return steps_fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_kA());
     }
-    if(meter_type=="LINE CURRENT IN PU")
+    if(meter_type=="CURRENT IN PU")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return steps_fast_complex_abs(line->get_line_complex_current_at_sending_side_in_pu());
@@ -797,7 +746,7 @@ double METER::get_meter_value_as_a_line() const
             return steps_fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_pu());
     }
 
-    if(meter_type=="LINE ACTIVE POWER IN MW")
+    if(meter_type=="ACTIVE POWER IN MW")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return (line->get_line_complex_power_at_sending_side_in_MVA()).real();
@@ -805,7 +754,7 @@ double METER::get_meter_value_as_a_line() const
             return (line->get_line_complex_power_at_receiving_side_in_MVA()).real();
     }
 
-    if(meter_type=="LINE ACTIVE POWER IN PU")
+    if(meter_type=="ACTIVE POWER IN PU")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return (line->get_line_complex_power_at_sending_side_in_pu()).real();
@@ -813,7 +762,7 @@ double METER::get_meter_value_as_a_line() const
             return (line->get_line_complex_power_at_receiving_side_in_pu()).real();
     }
 
-    if(meter_type=="LINE REACTIVE POWER IN MVAR")
+    if(meter_type=="REACTIVE POWER IN MVAR")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return (line->get_line_complex_power_at_sending_side_in_MVA()).imag();
@@ -821,7 +770,7 @@ double METER::get_meter_value_as_a_line() const
             return (line->get_line_complex_power_at_receiving_side_in_MVA()).imag();
     }
 
-    if(meter_type=="LINE REACTIVE POWER IN PU")
+    if(meter_type=="REACTIVE POWER IN PU")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return (line->get_line_complex_power_at_sending_side_in_pu()).imag();
@@ -829,7 +778,7 @@ double METER::get_meter_value_as_a_line() const
             return (line->get_line_complex_power_at_receiving_side_in_pu()).imag();
     }
 
-    if(meter_type=="LINE APPARENT IMPEDANCE IN OHM")
+    if(meter_type=="APPARENT IMPEDANCE IN OHM")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
@@ -837,7 +786,7 @@ double METER::get_meter_value_as_a_line() const
             return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
     }
 
-    if(meter_type=="LINE APPARENT IMPEDANCE IN PU")
+    if(meter_type=="APPARENT IMPEDANCE IN PU")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_pu());
@@ -845,7 +794,7 @@ double METER::get_meter_value_as_a_line() const
             return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_pu());
     }
 
-    if(meter_type=="LINE APPARENT IMPEDANCE ANGLE IN DEG")
+    if(meter_type=="APPARENT IMPEDANCE ANGLE IN DEG")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return rad2deg(steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm()));
@@ -853,7 +802,7 @@ double METER::get_meter_value_as_a_line() const
             return rad2deg(steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm()));
     }
 
-    if(meter_type=="LINE APPARENT IMPEDANCE ANGLE IN RAD")
+    if(meter_type=="APPARENT IMPEDANCE ANGLE IN RAD")
     {
         if(metered_bus!=line->get_receiving_side_bus())
             return steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
@@ -862,26 +811,26 @@ double METER::get_meter_value_as_a_line() const
     }
 
 
-    if(meter_type=="LINE CURRENT AT SENDING SIDE IN KA")
+    if(meter_type=="CURRENT AT SENDING SIDE IN KA")
         return steps_fast_complex_abs(line->get_line_complex_current_at_sending_side_in_kA());
-    if(meter_type=="LINE ACTIVE POWER AT SENDING SIDE IN MW")
+    if(meter_type=="ACTIVE POWER AT SENDING SIDE IN MW")
         return (line->get_line_complex_power_at_sending_side_in_MVA()).real();
-    if(meter_type=="LINE REACTIVE POWER AT SENDING SIDE IN MVAR")
+    if(meter_type=="REACTIVE POWER AT SENDING SIDE IN MVAR")
         return (line->get_line_complex_power_at_sending_side_in_MVA()).imag();
-    if(meter_type=="LINE CURRENT AT RECEIVING SIDE IN KA")
+    if(meter_type=="CURRENT AT RECEIVING SIDE IN KA")
         return steps_fast_complex_abs(line->get_line_complex_current_at_receiving_side_in_kA());
-    if(meter_type=="LINE ACTIVE POWER AT RECEIVING SIDE IN MW")
+    if(meter_type=="ACTIVE POWER AT RECEIVING SIDE IN MW")
         return (line->get_line_complex_power_at_receiving_side_in_MVA()).real();
-    if(meter_type=="LINE REACTIVE POWER AT RECEIVING SIDE IN MVAR")
+    if(meter_type=="REACTIVE POWER AT RECEIVING SIDE IN MVAR")
         return (line->get_line_complex_power_at_receiving_side_in_MVA()).imag();
 
-    if(meter_type=="LINE APPARENT IMPEDANCE AT SENDING SIDE IN OHM")
+    if(meter_type=="APPARENT IMPEDANCE AT SENDING SIDE IN OHM")
         return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm());
-    if(meter_type=="LINE APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG")
+    if(meter_type=="APPARENT IMPEDANCE ANGLE AT SENDING SIDE IN DEG")
         return rad2deg(steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_sending_side_in_ohm()));
-    if(meter_type=="LINE APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM")
+    if(meter_type=="APPARENT IMPEDANCE AT RECEIVING SIDE IN OHM")
         return steps_fast_complex_abs(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm());
-    if(meter_type=="LINE APPARENT IMPEDANCE ANGLE AT RECEIVING SIDE IN DEG")
+    if(meter_type=="APPARENT IMPEDANCE ANGLE AT RECEIVING SIDE IN DEG")
         return rad2deg(steps_fast_complex_arg(line->get_line_complex_apparent_impedance_at_receiving_side_in_ohm()));
 
     return 0.0;
@@ -895,7 +844,7 @@ double METER::get_meter_value_as_a_transformer() const
     size_t metered_bus = get_meter_side_bus();
     if(trans->is_two_winding_transformer())
     {
-        if(meter_type=="TRANSFORMER CURRENT IN KA")
+        if(meter_type=="CURRENT IN KA")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
                 return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
@@ -903,7 +852,7 @@ double METER::get_meter_value_as_a_transformer() const
                 return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
         }
 
-        if(meter_type=="TRANSFORMER CURRENT IN PU")
+        if(meter_type=="CURRENT IN PU")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
                 return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(PRIMARY_SIDE));
@@ -911,7 +860,7 @@ double METER::get_meter_value_as_a_transformer() const
                 return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(SECONDARY_SIDE));
         }
 
-        if(meter_type=="TRANSFORMER ACTIVE POWER IN MW")
+        if(meter_type=="ACTIVE POWER IN MW")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
                 return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).real();
@@ -919,7 +868,7 @@ double METER::get_meter_value_as_a_transformer() const
                 return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).real();
         }
 
-        if(meter_type=="TRANSFORMER ACTIVE POWER IN PU")
+        if(meter_type=="ACTIVE POWER IN PU")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
                 return (trans->get_winding_complex_power_in_pu(PRIMARY_SIDE)).real();
@@ -927,7 +876,7 @@ double METER::get_meter_value_as_a_transformer() const
                 return (trans->get_winding_complex_power_in_pu(SECONDARY_SIDE)).real();
         }
 
-        if(meter_type=="TRANSFORMER REACTIVE POWER IN MVAR")
+        if(meter_type=="REACTIVE POWER IN MVAR")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
                 return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).imag();
@@ -935,7 +884,7 @@ double METER::get_meter_value_as_a_transformer() const
                 return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).imag();
         }
 
-        if(meter_type=="TRANSFORMER REACTIVE POWER IN PU")
+        if(meter_type=="REACTIVE POWER IN PU")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE))
                 return (trans->get_winding_complex_power_in_pu(PRIMARY_SIDE)).imag();
@@ -945,7 +894,7 @@ double METER::get_meter_value_as_a_transformer() const
     }
     else
     {
-        if(meter_type=="TRANSFORMER CURRENT IN KA")
+        if(meter_type=="CURRENT IN KA")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
                 return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
@@ -958,7 +907,7 @@ double METER::get_meter_value_as_a_transformer() const
             }
         }
 
-        if(meter_type=="TRANSFORMER CURRENT IN PU")
+        if(meter_type=="CURRENT IN PU")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
                 return steps_fast_complex_abs(trans->get_winding_complex_current_in_pu(PRIMARY_SIDE));
@@ -971,7 +920,7 @@ double METER::get_meter_value_as_a_transformer() const
             }
         }
 
-        if(meter_type=="TRANSFORMER ACTIVE POWER IN MW")
+        if(meter_type=="ACTIVE POWER IN MW")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
                 return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).real();
@@ -984,7 +933,7 @@ double METER::get_meter_value_as_a_transformer() const
             }
         }
 
-        if(meter_type=="TRANSFORMER ACTIVE POWER IN PU")
+        if(meter_type=="ACTIVE POWER IN PU")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
                 return (trans->get_winding_complex_power_in_pu(PRIMARY_SIDE)).real();
@@ -997,7 +946,7 @@ double METER::get_meter_value_as_a_transformer() const
             }
         }
 
-        if(meter_type=="TRANSFORMER REACTIVE POWER IN MVAR")
+        if(meter_type=="REACTIVE POWER IN MVAR")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
                 return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).imag();
@@ -1010,7 +959,7 @@ double METER::get_meter_value_as_a_transformer() const
             }
         }
 
-        if(meter_type=="TRANSFORMER REACTIVE POWER IN PU")
+        if(meter_type=="REACTIVE POWER IN PU")
         {
             if(metered_bus!=trans->get_winding_bus(SECONDARY_SIDE) and metered_bus!=trans->get_winding_bus(TERTIARY_SIDE))
                 return (trans->get_winding_complex_power_in_pu(PRIMARY_SIDE)).imag();
@@ -1026,23 +975,23 @@ double METER::get_meter_value_as_a_transformer() const
 
 
 
-    if(meter_type=="TRANSFORMER CURRENT AT PRIMARY WINDING IN KA")
+    if(meter_type=="CURRENT AT PRIMARY WINDING IN KA")
         return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(PRIMARY_SIDE));
-    if(meter_type=="TRANSFORMER CURRENT AT SECONDARY WINDING IN KA")
+    if(meter_type=="CURRENT AT SECONDARY WINDING IN KA")
         return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(SECONDARY_SIDE));
-    if(meter_type=="TRANSFORMER CURRENT AT TERTIARY WINDING IN KA")
+    if(meter_type=="CURRENT AT TERTIARY WINDING IN KA")
         return steps_fast_complex_abs(trans->get_winding_complex_current_in_kA(TERTIARY_SIDE));
-    if(meter_type=="TRANSFORMER ACTIVE POWER AT PRIMARY WINDING IN MW")
+    if(meter_type=="ACTIVE POWER AT PRIMARY WINDING IN MW")
         return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).real();
-    if(meter_type=="TRANSFORMER ACTIVE POWER AT SECONDARY WINDING IN MW")
+    if(meter_type=="ACTIVE POWER AT SECONDARY WINDING IN MW")
         return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).real();
-    if(meter_type=="TRANSFORMER ACTIVE POWER AT TERTIARY WINDING IN MW")
+    if(meter_type=="ACTIVE POWER AT TERTIARY WINDING IN MW")
         return (trans->get_winding_complex_power_in_MVA(TERTIARY_SIDE)).real();
-    if(meter_type=="TRANSFORMER REACTIVE POWER AT PRIMARY WINDING IN MVAR")
+    if(meter_type=="REACTIVE POWER AT PRIMARY WINDING IN MVAR")
         return (trans->get_winding_complex_power_in_MVA(PRIMARY_SIDE)).imag();
-    if(meter_type=="TRANSFORMER REACTIVE POWER AT SECONDARY WINDING IN MVAR")
+    if(meter_type=="REACTIVE POWER AT SECONDARY WINDING IN MVAR")
         return (trans->get_winding_complex_power_in_MVA(SECONDARY_SIDE)).imag();
-    if(meter_type=="TRANSFORMER REACTIVE POWER AT TERTIARY WINDING IN MVAR")
+    if(meter_type=="REACTIVE POWER AT TERTIARY WINDING IN MVAR")
         return (trans->get_winding_complex_power_in_MVA(TERTIARY_SIDE)).imag();
 
     return 0.0;
@@ -1056,19 +1005,19 @@ double METER::get_meter_value_as_a_load() const
     if(load->get_status()==false)
         return 0.0;
 
-    if(meter_type=="LOAD ACTIVE POWER IN MW")
+    if(meter_type=="ACTIVE POWER IN MW")
         return (load->get_dynamic_load_in_MVA()).real();
 
-    if(meter_type=="LOAD ACTIVE POWER IN PU")
+    if(meter_type=="ACTIVE POWER IN PU")
         return (load->get_dynamic_load_in_pu()).real();
 
-    if(meter_type=="LOAD REACTIVE POWER IN MVAR")
+    if(meter_type=="REACTIVE POWER IN MVAR")
         return (load->get_dynamic_load_in_MVA()).imag();
 
-    if(meter_type=="LOAD REACTIVE POWER IN PU")
+    if(meter_type=="REACTIVE POWER IN PU")
         return (load->get_dynamic_load_in_pu()).imag();
 
-    if(meter_type=="LOAD CURRENT IN KA")
+    if(meter_type=="CURRENT IN KA")
     {
         POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
         double sbase = psdb->get_system_base_power_in_MVA();
@@ -1078,44 +1027,44 @@ double METER::get_meter_value_as_a_load() const
     }
 
 
-    if(meter_type=="LOAD CURRENT IN PU")
+    if(meter_type=="CURRENT IN PU")
     {
         return steps_fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
     }
 
-    if(meter_type=="LOAD LOAD MODEL INTERNAL VARIABLE")
+    if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
     {
         LOAD_MODEL* model = load->get_load_model();
         if(model==NULL)
             return 0.0;
         else
-            return model->get_variable_with_index(internal_variable_index);
+            return model->get_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE")
+    if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
     {
         LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
         if(model==NULL)
             return 0.0;
         else
-            return model->get_variable_with_index(internal_variable_index);
+            return model->get_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE")
+    if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
     {
         LOAD_VOLTAGE_RELAY_MODEL* model = load->get_load_voltage_relay_model();
         if(model==NULL)
             return 0.0;
         else
-            return model->get_variable_with_index(internal_variable_index);
+            return model->get_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="LOAD TOTAL SCALE IN PU")
+    if(meter_type=="TOTAL SCALE IN PU")
     {
         return load->get_load_total_scale_factor_in_pu();
     }
-    if(meter_type=="LOAD MANUALLY SCALE IN PU")
+    if(meter_type=="MANUALLY SCALE IN PU")
     {
         return load->get_load_manually_scale_factor_in_pu();
     }
-    if(meter_type=="LOAD RELAY SHED SCALE IN PU")
+    if(meter_type=="RELAY SHED SCALE IN PU")
     {
         return load->get_load_relay_shed_scale_factor_in_pu();
     }
@@ -1141,63 +1090,63 @@ double METER::get_meter_value_as_a_generator() const
     EXCITER_MODEL* exciter_model = generator->get_exciter_model();
     TURBINE_GOVERNOR_MODEL* turbine_governor_model = generator->get_turbine_governor_model();
 
-    if(meter_type=="GENERATOR ROTOR ANGLE IN DEG")
+    if(meter_type=="ROTOR ANGLE IN DEG")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_rotor_angle_in_deg();
     }
-    if(meter_type =="GENERATOR ROTOR SPEED IN PU")
+    if(meter_type =="ROTOR SPEED IN PU")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_rotor_speed_in_pu();
     }
-    if(meter_type =="GENERATOR ROTOR SPEED IN HZ")
+    if(meter_type =="ROTOR SPEED IN HZ")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return fbase*gen_model->get_rotor_speed_in_pu();
     }
-    if(meter_type =="GENERATOR ROTOR SPEED DEVIATION IN PU")
+    if(meter_type =="ROTOR SPEED DEVIATION IN PU")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_rotor_speed_deviation_in_pu();
     }
-    if(meter_type =="GENERATOR ROTOR SPEED DEVIATION IN HZ")
+    if(meter_type =="ROTOR SPEED DEVIATION IN HZ")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return fbase*gen_model->get_rotor_speed_deviation_in_pu();
     }
-    if(meter_type =="GENERATOR INTERNAL VOLTAGE IN PU")
+    if(meter_type =="INTERNAL VOLTAGE IN PU")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return steps_fast_complex_abs(gen_model->get_internal_voltage_in_pu_in_dq_axis());
     }
-    if(meter_type =="GENERATOR TERMINAL CURRENT IN PU ON MBASE")
+    if(meter_type =="TERMINAL CURRENT IN PU ON MBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_current_in_pu_based_on_mbase();
     }
-    if(meter_type =="GENERATOR TERMINAL CURRENT IN PU ON SBASE")
+    if(meter_type =="TERMINAL CURRENT IN PU ON SBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_current_in_pu_based_on_sbase();
     }
-    if(meter_type =="GENERATOR TERMINAL CURRENT IN KA")
+    if(meter_type =="TERMINAL CURRENT IN KA")
     {
         if(gen_model == NULL)
             return 0.0;
@@ -1208,166 +1157,166 @@ double METER::get_meter_value_as_a_generator() const
             return ibase*gen_model->get_terminal_current_in_pu_based_on_sbase();
         }
     }
-    if(meter_type =="GENERATOR TERMINAL ACTIVE POWER IN PU ON MBASE")
+    if(meter_type =="TERMINAL ACTIVE POWER IN PU ON MBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_active_power_in_MW()/mbase;
     }
-    if(meter_type =="GENERATOR TERMINAL ACTIVE POWER IN PU ON SBASE")
+    if(meter_type =="TERMINAL ACTIVE POWER IN PU ON SBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_active_power_in_MW()/sbase;
     }
-    if(meter_type =="GENERATOR TERMINAL ACTIVE POWER IN MW")
+    if(meter_type =="TERMINAL ACTIVE POWER IN MW")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_active_power_in_MW();
     }
-    if(meter_type =="GENERATOR TERMINAL REACTIVE POWER IN PU ON MBASE")
+    if(meter_type =="TERMINAL REACTIVE POWER IN PU ON MBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_reactive_power_in_MVar()/mbase;
     }
-    if(meter_type =="GENERATOR TERMINAL REACTIVE POWER IN PU ON SBASE")
+    if(meter_type =="TERMINAL REACTIVE POWER IN PU ON SBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_reactive_power_in_MVar()/sbase;
     }
-    if(meter_type =="GENERATOR TERMINAL REACTIVE POWER IN MVAR")
+    if(meter_type =="TERMINAL REACTIVE POWER IN MVAR")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_reactive_power_in_MVar();
     }
-    if(meter_type =="GENERATOR AIRGAP POWER IN PU ON MBASE")
+    if(meter_type =="AIRGAP POWER IN PU ON MBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_air_gap_power_in_pu_based_on_mbase();
     }
-    if(meter_type =="GENERATOR AIRGAP POWER IN PU ON SBASE")
+    if(meter_type =="AIRGAP POWER IN PU ON SBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_air_gap_power_in_MW()/sbase;
     }
-    if(meter_type =="GENERATOR AIRGAP POWER IN MW")
+    if(meter_type =="AIRGAP POWER IN MW")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_air_gap_power_in_MW();
     }
-    if(meter_type =="GENERATOR ACCELERATING POWER IN PU ON MBASE")
+    if(meter_type =="ACCELERATING POWER IN PU ON MBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_accelerating_power_in_pu_based_on_mbase();
     }
-    if(meter_type =="GENERATOR ACCELERATING POWER IN PU ON SBASE")
+    if(meter_type =="ACCELERATING POWER IN PU ON SBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_accelerating_power_in_MW()/sbase;
     }
-    if(meter_type =="GENERATOR ACCELERATING POWER IN MW")
+    if(meter_type =="ACCELERATING POWER IN MW")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_accelerating_power_in_MW();
     }
-    if(meter_type =="GENERATOR MECHANICAL POWER IN PU ON MBASE")
+    if(meter_type =="MECHANICAL POWER IN PU ON MBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_mechanical_power_in_pu_based_on_mbase();
     }
-    if(meter_type =="GENERATOR MECHANICAL POWER IN PU ON SBASE")
+    if(meter_type =="MECHANICAL POWER IN PU ON SBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_mechanical_power_in_MW()/sbase;
     }
-    if(meter_type =="GENERATOR MECHANICAL POWER IN MW")
+    if(meter_type =="MECHANICAL POWER IN MW")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_mechanical_power_in_MW();
     }
-    if(meter_type =="GENERATOR COMPENSATED VOLTAGE IN PU")
+    if(meter_type =="COMPENSATED VOLTAGE IN PU")
     {
         if(exciter_model == NULL)
             return 0.0;
         else
             return exciter_model->get_compensated_voltage_in_pu();
     }
-    if(meter_type =="GENERATOR STABILIZING SIGNAL IN PU")
+    if(meter_type =="STABILIZING SIGNAL IN PU")
     {
         if(exciter_model == NULL)
             return 0.0;
         else
             return exciter_model->get_stabilizing_signal_in_pu();
     }
-    if(meter_type =="GENERATOR EXCITATION VOLTAGE IN PU")
+    if(meter_type =="EXCITATION VOLTAGE IN PU")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_excitation_voltage_in_pu();
     }
-    if(meter_type=="GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE")
+    if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
     {
         if(gen_model==NULL)
             return 0.0;
         else
-            return gen_model->get_variable_with_index(internal_variable_index);
+            return gen_model->get_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE")
+    if(meter_type=="COMPENSATOR MODEL INTERNAL VARIABLE")
     {
         if(comp_model==NULL)
             return 0.0;
         else
-            return comp_model->get_variable_with_index(internal_variable_index);
+            return comp_model->get_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="GENERATOR STABILIZER MODEL INTERNAL VARIABLE")
+    if(meter_type=="STABILIZER MODEL INTERNAL VARIABLE")
     {
         if(stabilizer_model==NULL)
             return 0.0;
         else
-            return stabilizer_model->get_variable_with_index(internal_variable_index);
+            return stabilizer_model->get_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="GENERATOR EXCITER MODEL INTERNAL VARIABLE")
+    if(meter_type=="EXCITER MODEL INTERNAL VARIABLE")
     {
         if(exciter_model==NULL)
             return 0.0;
         else
-            return exciter_model->get_variable_with_index(internal_variable_index);
+            return exciter_model->get_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
+    if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
     {
         if(turbine_governor_model==NULL)
             return 0.0;
         else
-            return turbine_governor_model->get_variable_with_index(internal_variable_index);
+            return turbine_governor_model->get_variable_with_name(internal_variable_name);
     }
 
     return 0.0;
@@ -1397,7 +1346,7 @@ double METER::get_meter_value_as_a_wt_generator() const
     WT_PITCH_MODEL* pitch_model = generator->get_wt_pitch_model();
     WIND_SPEED_MODEL* windspeed_model = generator->get_wind_speed_model();
 
-    if(meter_type=="WT GENERATOR TERMINAL CURRENT IN PU")
+    if(meter_type=="TERMINAL CURRENT IN PU")
     {
         if(gen_model == NULL)
             return 0.0;
@@ -1405,7 +1354,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             return gen_model->get_terminal_current_in_pu_based_on_mbase();
     }
 
-    if(meter_type=="WT GENERATOR TERMINAL CURRENT IN KA")
+    if(meter_type=="TERMINAL CURRENT IN KA")
     {
         if(gen_model == NULL)
             return 0.0;
@@ -1416,28 +1365,28 @@ double METER::get_meter_value_as_a_wt_generator() const
             return gen_model->get_terminal_current_in_pu_based_on_mbase()*ibase;
         }
     }
-    if(meter_type=="WT GENERATOR TERMINAL ACTIVE POWER IN MW")
+    if(meter_type=="TERMINAL ACTIVE POWER IN MW")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_active_power_in_MW();
     }
-    if(meter_type=="WT GENERATOR TERMINAL REACTIVE POWER IN MVAR")
+    if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_reactive_power_in_MVar();
     }
-    if(meter_type=="WT GENERATOR MECHANICAL POWER IN MW")
+    if(meter_type=="MECHANICAL POWER IN MW")
     {
         if(aerd_model == NULL)
             return 0.0;
         else
             return aerd_model->get_turbine_mechanical_power_in_MW();
     }
-    if(meter_type=="WT GENERATOR MAX AVAILABLE MECHANICAL POWER IN MW")
+    if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN MW")
     {
         if(aerd_model == NULL)
             return 0.0;
@@ -1449,28 +1398,28 @@ double METER::get_meter_value_as_a_wt_generator() const
             return pmax*n;
         }
     }
-    if(meter_type=="WT GENERATOR SPEED REFERENCE IN PU")
+    if(meter_type=="SPEED REFERENCE IN PU")
     {
         if(aerd_model == NULL)
             return 0.0;
         else
             return aerd_model->get_turbine_reference_speed_in_pu();
     }
-    if(meter_type=="WT GENERATOR SPEED REFERENCE IN RAD/S")
+    if(meter_type=="SPEED REFERENCE IN RAD/S")
     {
         if(aerd_model == NULL)
             return 0.0;
         else
             return aerd_model->get_turbine_reference_speed_in_rad_per_s();
     }
-    if(meter_type=="WT GENERATOR TURBINE SPEED DEVIATION IN PU")
+    if(meter_type=="TURBINE SPEED DEVIATION IN PU")
     {
         if(turbine_model == NULL)
             return 0.0;
         else
             return turbine_model->get_turbine_speed_in_pu()-1.0;
     }
-    if(meter_type=="WT GENERATOR TURBINE SPEED DEVIATION IN HZ")
+    if(meter_type=="TURBINE SPEED DEVIATION IN HZ")
     {
         if(turbine_model == NULL)
             return 0.0;
@@ -1480,14 +1429,14 @@ double METER::get_meter_value_as_a_wt_generator() const
             return (turbine_model->get_turbine_speed_in_pu()-1.0)*fn;
         }
     }
-    if(meter_type=="WT GENERATOR TURBINE SPEED IN PU")
+    if(meter_type=="TURBINE SPEED IN PU")
     {
         if(turbine_model == NULL)
             return 0.0;
         else
             return turbine_model->get_turbine_speed_in_pu();
     }
-    if(meter_type=="WT GENERATOR TURBINE SPEED IN HZ")
+    if(meter_type=="TURBINE SPEED IN HZ")
     {
         if(turbine_model == NULL)
             return 0.0;
@@ -1497,14 +1446,14 @@ double METER::get_meter_value_as_a_wt_generator() const
             return turbine_model->get_turbine_speed_in_pu()*wn;
         }
     }
-    if(meter_type=="WT GENERATOR ROTOR SPEED DEVIATION IN PU")
+    if(meter_type=="ROTOR SPEED DEVIATION IN PU")
     {
         if(turbine_model == NULL)
             return 0.0;
         else
             return turbine_model->get_generator_speed_in_pu()-1.0;
     }
-    if(meter_type=="WT GENERATOR ROTOR SPEED DEVIATION IN HZ")
+    if(meter_type=="ROTOR SPEED DEVIATION IN HZ")
     {
         if(turbine_model == NULL)
             return 0.0;
@@ -1514,14 +1463,14 @@ double METER::get_meter_value_as_a_wt_generator() const
             return (turbine_model->get_generator_speed_in_pu()-1.0)*fn;
         }
     }
-    if(meter_type=="WT GENERATOR ROTOR SPEED IN PU")
+    if(meter_type=="ROTOR SPEED IN PU")
     {
         if(turbine_model == NULL)
             return 0.0;
         else
             return turbine_model->get_generator_speed_in_pu();
     }
-    if(meter_type=="WT GENERATOR ROTOR SPEED IN HZ")
+    if(meter_type=="ROTOR SPEED IN HZ")
     {
         if(turbine_model == NULL)
             return 0.0;
@@ -1531,70 +1480,70 @@ double METER::get_meter_value_as_a_wt_generator() const
             return turbine_model->get_generator_speed_in_pu()*fn;
         }
     }
-    if(meter_type=="WT GENERATOR ROTOR ANGLE IN DEG")
+    if(meter_type=="ROTOR ANGLE IN DEG")
     {
         if(turbine_model == NULL)
             return 0.0;
         else
             return turbine_model->get_rotor_angle_in_deg();
     }
-    if(meter_type=="WT GENERATOR ROTOR ANGLE IN RAD")
+    if(meter_type=="ROTOR ANGLE IN RAD")
     {
         if(turbine_model == NULL)
             return 0.0;
         else
             return turbine_model->get_rotor_angle_in_rad();
     }
-    if(meter_type=="WT GENERATOR ACTIVE CURRENT COMMAND IN PU")
+    if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
     {
         if(electrical_model == NULL)
             return gen_model->get_active_current_command_in_pu_based_on_mbase();
         else
             return electrical_model->get_active_current_command_in_pu_based_on_mbase();
     }
-    if(meter_type=="WT GENERATOR REACTIVE CURRENT COMMAND IN PU")
+    if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
     {
         if(electrical_model == NULL)
             return gen_model->get_reactive_current_command_in_pu_based_on_mbase();
         else
             return electrical_model->get_reactive_current_command_in_pu_based_on_mbase();
     }
-    if(meter_type=="WT GENERATOR ACTIVE POWER COMMAND IN PU")
+    if(meter_type=="ACTIVE POWER COMMAND IN PU")
     {
         if(electrical_model == NULL)
             return 0.0;
         else
             return electrical_model->get_active_power_command_in_pu_based_on_mbase();
     }
-    if(meter_type=="WT GENERATOR REACTIVE POWER COMMAND IN PU")
+    if(meter_type=="REACTIVE POWER COMMAND IN PU")
     {
         if(electrical_model == NULL)
             return 0.0;
         else
             return electrical_model->get_reactive_power_command_in_pu_based_on_mbase();
     }
-    if(meter_type=="WT GENERATOR REACTIVE VOLTAGE COMMAND IN PU")
+    if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
     {
         if(electrical_model == NULL)
             return 0.0;
         else
             return electrical_model->get_reactive_voltage_command_in_pu_based_on_mbase();
     }
-    if(meter_type=="WT GENERATOR PITCH ANGLE IN DEG")
+    if(meter_type=="PITCH ANGLE IN DEG")
     {
         if(pitch_model == NULL)
             return aerd_model->get_initial_pitch_angle_in_deg();
         else
             return pitch_model->get_pitch_angle_in_deg();
     }
-    if(meter_type=="WT GENERATOR WIND SPEED IN PU")
+    if(meter_type=="WIND SPEED IN PU")
     {
         if(windspeed_model == NULL)
             return aerd_model->get_wind_speed_in_mps()/aerd_model->get_nominal_wind_speed_in_mps();
         else
             return windspeed_model->get_wind_speed_in_pu();
     }
-    if(meter_type=="WT GENERATOR WIND SPEED IN MPS")
+    if(meter_type=="WIND SPEED IN MPS")
     {
         if(windspeed_model == NULL)
             return aerd_model->get_wind_speed_in_mps();
@@ -1606,42 +1555,42 @@ double METER::get_meter_value_as_a_wt_generator() const
         if(gen_model==NULL)
             return 0.0;
         else
-            return gen_model->get_variable_with_index(internal_variable_index);
+            return gen_model->get_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
     {
         if(aerd_model==NULL)
             return 0.0;
         else
-            return aerd_model->get_variable_with_index(internal_variable_index);
+            return aerd_model->get_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WT TURBINE MODEL INTERNAL VARIABLE")
     {
         if(turbine_model==NULL)
             return 0.0;
         else
-            return turbine_model->get_variable_with_index(internal_variable_index);
+            return turbine_model->get_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
     {
         if(electrical_model==NULL)
             return 0.0;
         else
-            return electrical_model->get_variable_with_index(internal_variable_index);
+            return electrical_model->get_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WT PITCH MODEL INTERNAL VARIABLE")
     {
         if(pitch_model==NULL)
             return 0.0;
         else
-            return pitch_model->get_variable_with_index(internal_variable_index);
+            return pitch_model->get_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
     {
         if(windspeed_model==NULL)
             return 0.0;
         else
-            return windspeed_model->get_variable_with_index(internal_variable_index);
+            return windspeed_model->get_variable_with_name(internal_variable_name);
     }
     return 0.0;
 }
@@ -1657,7 +1606,7 @@ double METER::get_meter_value_as_an_hvdc() const
 
     HVDC_MODEL* hvdc_model = hvdc->get_hvdc_model();
 
-    if(meter_type=="HVDC DC CURRENT IN KA")
+    if(meter_type=="DC CURRENT IN KA")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1665,7 +1614,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_dc_current_in_kA(RECTIFIER);
     }
 
-    if(meter_type=="HVDC RECTIFIER DC CURRENT IN KA")
+    if(meter_type=="RECTIFIER DC CURRENT IN KA")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1673,7 +1622,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_dc_current_in_kA(RECTIFIER);
     }
 
-    if(meter_type=="HVDC RECTIFIER AC CURRENT IN KA")
+    if(meter_type=="RECTIFIER AC CURRENT IN KA")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1681,14 +1630,14 @@ double METER::get_meter_value_as_an_hvdc() const
             return steps_fast_complex_abs(hvdc_model->get_converter_ac_current_in_kA(RECTIFIER));
     }
 
-    if(meter_type=="HVDC INVERTER DC CURRENT IN KA")
+    if(meter_type=="INVERTER DC CURRENT IN KA")
     {
         if(hvdc_model == NULL)
             return 0.0;
         else
             return hvdc_model->get_converter_dc_current_in_kA(INVERTER);
     }
-    if(meter_type=="HVDC INVERTER AC CURRENT IN KA")
+    if(meter_type=="INVERTER AC CURRENT IN KA")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1696,7 +1645,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return steps_fast_complex_abs(hvdc_model->get_converter_ac_current_in_kA(INVERTER));
     }
 
-    if(meter_type=="HVDC RECTIFIER ALPHA IN DEG")
+    if(meter_type=="RECTIFIER ALPHA IN DEG")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1704,7 +1653,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_alpha_or_gamma_in_deg(RECTIFIER);
     }
 
-    if(meter_type=="HVDC INVERTER GAMMA IN DEG")
+    if(meter_type=="INVERTER GAMMA IN DEG")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1712,7 +1661,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_alpha_or_gamma_in_deg(INVERTER);
     }
 
-    if(meter_type=="HVDC RECTIFIER MU IN DEG")
+    if(meter_type=="RECTIFIER MU IN DEG")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1720,7 +1669,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_commutation_overlap_angle_in_deg(RECTIFIER);
     }
 
-    if(meter_type=="HVDC INVERTER MU IN DEG")
+    if(meter_type=="INVERTER MU IN DEG")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1728,7 +1677,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_commutation_overlap_angle_in_deg(INVERTER);
     }
 
-    if(meter_type=="HVDC RECTIFIER DC VOLTAGE IN KV")
+    if(meter_type=="RECTIFIER DC VOLTAGE IN KV")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1736,7 +1685,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_dc_voltage_in_kV(RECTIFIER);
     }
 
-    if(meter_type=="HVDC INVERTER DC VOLTAGE IN KV")
+    if(meter_type=="INVERTER DC VOLTAGE IN KV")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1744,7 +1693,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_dc_voltage_in_kV(INVERTER);
     }
 
-    if(meter_type=="HVDC RECTIFIER AC VOLTAGE IN PU")
+    if(meter_type=="RECTIFIER AC VOLTAGE IN PU")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1752,7 +1701,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_ac_voltage_in_pu(RECTIFIER);
     }
 
-    if(meter_type=="HVDC INVERTER AC VOLTAGE IN PU")
+    if(meter_type=="INVERTER AC VOLTAGE IN PU")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1760,7 +1709,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_ac_voltage_in_pu(INVERTER);
     }
 
-    if(meter_type=="HVDC RECTIFIER DC POWER IN MW")
+    if(meter_type=="RECTIFIER DC POWER IN MW")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1768,7 +1717,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_dc_power_in_MW(RECTIFIER);
     }
 
-    if(meter_type=="HVDC INVERTER DC POWER IN MW")
+    if(meter_type=="INVERTER DC POWER IN MW")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1776,7 +1725,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_dc_power_in_MW(INVERTER);
     }
 
-    if(meter_type=="HVDC RECTIFIER AC ACTIVE POWER IN MW")
+    if(meter_type=="RECTIFIER AC ACTIVE POWER IN MW")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1784,7 +1733,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_ac_complex_power_in_MVA(RECTIFIER).real();
     }
 
-    if(meter_type=="HVDC INVERTER AC ACTIVE POWER IN MW")
+    if(meter_type=="INVERTER AC ACTIVE POWER IN MW")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1792,7 +1741,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_ac_complex_power_in_MVA(INVERTER).real();
     }
 
-    if(meter_type=="HVDC RECTIFIER AC REACTIVE POWER IN MVAR")
+    if(meter_type=="RECTIFIER AC REACTIVE POWER IN MVAR")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1800,7 +1749,7 @@ double METER::get_meter_value_as_an_hvdc() const
             return hvdc_model->get_converter_ac_complex_power_in_MVA(RECTIFIER).imag();
     }
 
-    if(meter_type=="HVDC INVERTER AC REACTIVE POWER IN MVAR")
+    if(meter_type=="INVERTER AC REACTIVE POWER IN MVAR")
     {
         if(hvdc_model == NULL)
             return 0.0;
@@ -1813,7 +1762,7 @@ double METER::get_meter_value_as_an_hvdc() const
         if(hvdc_model == NULL)
             return 0.0;
         else
-            return hvdc_model->get_variable_with_index(internal_variable_index);
+            return hvdc_model->get_variable_with_name(internal_variable_name);
     }
 
     return 0.0;
@@ -1825,7 +1774,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
     if(edevice == NULL)
         return 0.0;
 
-    if(meter_type=="EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAGE IN PU")
+    if(meter_type=="VOLTAGE SOURCE VOLTAGE IN PU")
     {
         return steps_fast_complex_abs(edevice->get_equivalent_voltage_source_voltage_in_pu());
         if(edevice->get_equivalent_voltage_source_status()==false)
@@ -1834,7 +1783,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return steps_fast_complex_abs(edevice->get_equivalent_voltage_source_voltage_in_pu());
     }
 
-    if(meter_type=="EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAGE ANGLE IN DEG")
+    if(meter_type=="VOLTAGE SOURCE VOLTAGE ANGLE IN DEG")
     {
         return rad2deg(steps_fast_complex_arg(edevice->get_equivalent_voltage_source_voltage_in_pu()));
         if(edevice->get_equivalent_voltage_source_status()==false)
@@ -1843,7 +1792,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return rad2deg(steps_fast_complex_arg(edevice->get_equivalent_voltage_source_voltage_in_pu()));
     }
 
-    if(meter_type=="EQUIVALENT DEVICE VOLTAGE SOURCE RESISTANCE IN PU")
+    if(meter_type=="VOLTAGE SOURCE RESISTANCE IN PU")
     {
         return edevice->get_equivalent_voltage_source_impedance_in_pu().real();
         if(edevice->get_equivalent_voltage_source_status()==false)
@@ -1852,7 +1801,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_voltage_source_impedance_in_pu().real();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE VOLTAGE SOURCE REACTANCE IN PU")
+    if(meter_type=="VOLTAGE SOURCE REACTANCE IN PU")
     {
         return edevice->get_equivalent_voltage_source_impedance_in_pu().imag();
         if(edevice->get_equivalent_voltage_source_status()==false)
@@ -1861,7 +1810,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_voltage_source_impedance_in_pu().imag();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE CONSTANT POWER LOAD IN MW")
+    if(meter_type=="ACTIVE CONSTANT POWER LOAD IN MW")
     {
         return edevice->get_equivalent_nominal_constant_power_load_in_MVA().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -1870,7 +1819,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_power_load_in_MVA().real();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE CONSTANT POWER LOAD IN MVAR")
+    if(meter_type=="REACTIVE CONSTANT POWER LOAD IN MVAR")
     {
         return edevice->get_equivalent_nominal_constant_power_load_in_MVA().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -1879,7 +1828,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_power_load_in_MVA().imag();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE CONSTANT CURRENT LOAD IN MW")
+    if(meter_type=="ACTIVE CONSTANT CURRENT LOAD IN MW")
     {
         return edevice->get_equivalent_nominal_constant_current_load_in_MVA().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -1888,7 +1837,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_current_load_in_MVA().real();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE CONSTANT CURRENT LOAD IN MVAR")
+    if(meter_type=="REACTIVE CONSTANT CURRENT LOAD IN MVAR")
     {
         return edevice->get_equivalent_nominal_constant_current_load_in_MVA().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -1897,7 +1846,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_current_load_in_MVA().imag();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE CONSTANT IMPEDANCE LOAD IN MW")
+    if(meter_type=="ACTIVE CONSTANT IMPEDANCE LOAD IN MW")
     {
         return edevice->get_equivalent_nominal_constant_impedance_load_in_MVA().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -1906,7 +1855,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_impedance_load_in_MVA().real();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR")
+    if(meter_type=="REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR")
     {
         return edevice->get_equivalent_nominal_constant_impedance_load_in_MVA().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -1915,7 +1864,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_impedance_load_in_MVA().imag();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE POWER GENERATION IN MW")
+    if(meter_type=="ACTIVE POWER GENERATION IN MW")
     {
         return edevice->get_equivalent_generation_in_MVA().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -1923,7 +1872,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_equivalent_generation_in_MVA().real();
     }
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE POWER GENERATION IN MVAR")
+    if(meter_type=="REACTIVE POWER GENERATION IN MVAR")
     {
         return edevice->get_equivalent_generation_in_MVA().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -1931,7 +1880,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_equivalent_generation_in_MVA().imag();
     }
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE POWER LOAD IN MW")
+    if(meter_type=="ACTIVE POWER LOAD IN MW")
     {
         return edevice->get_equivalent_load_in_MVA().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -1939,7 +1888,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_equivalent_load_in_MVA().real();
     }
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE POWER LOAD IN MVAR")
+    if(meter_type=="REACTIVE POWER LOAD IN MVAR")
     {
         return edevice->get_equivalent_load_in_MVA().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -1947,7 +1896,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_equivalent_load_in_MVA().imag();
     }
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE POWER NET LOAD IN MW")
+    if(meter_type=="ACTIVE POWER NET LOAD IN MW")
     {
         return edevice->get_total_equivalent_power_as_load_in_MVA().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -1955,7 +1904,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_total_equivalent_power_as_load_in_MVA().real();
     }
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN MVAR")
+    if(meter_type=="REACTIVE POWER NET LOAD IN MVAR")
     {
         return edevice->get_total_equivalent_power_as_load_in_MVA().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -1964,7 +1913,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_total_equivalent_power_as_load_in_MVA().imag();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE CONSTANT POWER LOAD IN PU")
+    if(meter_type=="ACTIVE CONSTANT POWER LOAD IN PU")
     {
         return edevice->get_equivalent_nominal_constant_power_load_in_pu().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -1973,7 +1922,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_power_load_in_pu().real();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE CONSTANT POWER LOAD IN PU")
+    if(meter_type=="REACTIVE CONSTANT POWER LOAD IN PU")
     {
         return edevice->get_equivalent_nominal_constant_power_load_in_pu().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -1982,7 +1931,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_power_load_in_pu().imag();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE CONSTANT CURRENT LOAD IN PU")
+    if(meter_type=="ACTIVE CONSTANT CURRENT LOAD IN PU")
     {
         return edevice->get_equivalent_nominal_constant_current_load_in_pu().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -1991,7 +1940,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_current_load_in_pu().real();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE CONSTANT CURRENT LOAD IN PU")
+    if(meter_type=="REACTIVE CONSTANT CURRENT LOAD IN PU")
     {
         return edevice->get_equivalent_nominal_constant_current_load_in_pu().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -2000,7 +1949,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_current_load_in_pu().imag();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE CONSTANT IMPEDANCE LOAD IN PU")
+    if(meter_type=="ACTIVE CONSTANT IMPEDANCE LOAD IN PU")
     {
         return edevice->get_equivalent_nominal_constant_impedance_load_in_pu().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -2009,7 +1958,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_impedance_load_in_pu().real();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE CONSTANT IMPEDANCE LOAD IN PU")
+    if(meter_type=="REACTIVE CONSTANT IMPEDANCE LOAD IN PU")
     {
         return edevice->get_equivalent_nominal_constant_impedance_load_in_pu().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -2018,7 +1967,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
             return edevice->get_equivalent_nominal_constant_impedance_load_in_pu().imag();
     }
 
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE POWER GENERATION IN PU")
+    if(meter_type=="ACTIVE POWER GENERATION IN PU")
     {
         return edevice->get_equivalent_generation_in_pu().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -2026,7 +1975,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_equivalent_generation_in_pu().real();
     }
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE POWER GENERATION IN PU")
+    if(meter_type=="REACTIVE POWER GENERATION IN PU")
     {
         return edevice->get_equivalent_generation_in_pu().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -2034,7 +1983,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_equivalent_generation_in_pu().imag();
     }
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE POWER LOAD IN PU")
+    if(meter_type=="ACTIVE POWER LOAD IN PU")
     {
         return edevice->get_equivalent_load_in_pu().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -2042,7 +1991,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_equivalent_load_in_pu().real();
     }
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE POWER LOAD IN PU")
+    if(meter_type=="REACTIVE POWER LOAD IN PU")
     {
         return edevice->get_equivalent_load_in_pu().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -2050,7 +1999,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_equivalent_load_in_pu().imag();
     }
-    if(meter_type=="EQUIVALENT DEVICE ACTIVE POWER NET LOAD IN PU")
+    if(meter_type=="ACTIVE POWER NET LOAD IN PU")
     {
         return edevice->get_total_equivalent_power_as_load_in_pu().real();
         if(edevice->get_equivalent_load_status()==false)
@@ -2058,7 +2007,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
         else
             return edevice->get_total_equivalent_power_as_load_in_pu().real();
     }
-    if(meter_type=="EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN PU")
+    if(meter_type=="REACTIVE POWER NET LOAD IN PU")
     {
         return edevice->get_total_equivalent_power_as_load_in_pu().imag();
         if(edevice->get_equivalent_load_status()==false)
@@ -2080,29 +2029,29 @@ double METER::get_meter_value_as_an_energy_storage() const
     if(model==NULL)
         return 0.0;
 
-    if(meter_type=="ENERGY STORAGE STATE OF ENERGY IN PU")
+    if(meter_type=="STATE OF ENERGY IN PU")
         return model->get_energy_state_in_pu();
 
-    if(meter_type=="ENERGY STORAGE ACTIVE POWER IN MW")
+    if(meter_type=="ACTIVE POWER IN MW")
         return model->get_terminal_active_power_in_MW();
 
-    if(meter_type=="ENERGY STORAGE ACTIVE POWER IN PU")
+    if(meter_type=="ACTIVE POWER IN PU")
         return model->get_terminal_active_power_in_pu_based_on_mbase();
 
-    if(meter_type=="ENERGY STORAGE REACTIVE POWER IN MVAR")
+    if(meter_type=="REACTIVE POWER IN MVAR")
         return model->get_terminal_reactive_power_in_MVar();
 
-    if(meter_type=="ENERGY STORAGE REACTIVE POWER IN PU")
+    if(meter_type=="REACTIVE POWER IN PU")
         return model->get_terminal_reactive_power_in_pu_based_on_mbase();
 
-    if(meter_type=="ENERGY STORAGE TERMINAL CURRENT IN KA")
+    if(meter_type=="TERMINAL CURRENT IN KA")
         return model->get_terminal_current_in_kA();
 
-    if(meter_type=="ENERGY STORAGE TERMINAL CURRENT IN PU")
+    if(meter_type=="TERMINAL CURRENT IN PU")
         return model->get_terminal_current_in_pu_based_on_mbase();
 
     if(meter_type=="ENERGY STORAGE MODEL INTERNAL VARIABLE")
-        return model->get_variable_with_index(internal_variable_index);
+        return model->get_variable_with_name(internal_variable_name);
 
 
     return 0.0;

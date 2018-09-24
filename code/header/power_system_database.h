@@ -103,6 +103,8 @@ class POWER_SYSTEM_DATABASE
         void append_zone(ZONE& zone);
         void append_owner(OWNER& owner);
 
+        void append_dynamic_model(const DEVICE_ID did, const MODEL* model);
+
         bool is_bus_exist(size_t bus) const;
         bool is_generator_exist(const DEVICE_ID& device_id) const;
         bool is_wt_generator_exist(const DEVICE_ID& device_id) const;
@@ -452,6 +454,13 @@ class POWER_SYSTEM_DATABASE
         void update_in_service_bus_count();
     private:
         void set_database_capacity();
+
+        void append_load_related_model(const DEVICE_ID did, const MODEL* model);
+        void append_generator_related_model(const DEVICE_ID did, const MODEL* model);
+        void append_wt_generator_related_model(const DEVICE_ID did, const MODEL* model);
+        void append_pv_unit_related_model(const DEVICE_ID did, const MODEL* model);
+        void append_energy_storage_related_model(const DEVICE_ID did, const MODEL* model);
+        void append_hvdc_related_model(const DEVICE_ID did, const MODEL* model);
 
         void check_source_status_for_out_of_service_bus(size_t bus);
         void check_load_status_for_out_of_service_bus(size_t bus);

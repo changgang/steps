@@ -329,22 +329,22 @@ string GENCLS::get_standard_model_string() const
 void GENCLS::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("GENERATOR ROTOR ANGLE IN DEG", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR ROTOR SPEED DEVIATION IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR AIR GAP POWER IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR AIR GAP POWER IN MW", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL P IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL P IN MW", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL Q IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL Q IN MVAR", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL S IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL S IN MVA", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN MW", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR EXCITATION VOLTAGE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR INTERNAL VOLTAGE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL CURRENT IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL CURRENT IN KA", i); i++;
+    add_model_variable_name_and_index_pair("ROTOR ANGLE IN DEG", i); i++;
+    add_model_variable_name_and_index_pair("ROTOR SPEED DEVIATION IN PU", i); i++;
+    add_model_variable_name_and_index_pair("AIR GAP POWER IN PU", i); i++;
+    add_model_variable_name_and_index_pair("AIR GAP POWER IN MW", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL P IN PU", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL P IN MW", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL Q IN PU", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL Q IN MVAR", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL S IN PU", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL S IN MVA", i); i++;
+    add_model_variable_name_and_index_pair("MECHANICAL POWER IN PU", i); i++;
+    add_model_variable_name_and_index_pair("MECHANICAL POWER IN MW", i); i++;
+    add_model_variable_name_and_index_pair("EXCITATION VOLTAGE IN PU", i); i++;
+    add_model_variable_name_and_index_pair("INTERNAL VOLTAGE IN PU", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL CURRENT IN PU", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL CURRENT IN KA", i); i++;
     add_model_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
 }

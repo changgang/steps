@@ -621,7 +621,6 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
 
     while(true)
     {
-        cout<<__FILE__<<" @ line "<<__LINE__<<endl;
         pitch_high = pitch_low+pitch_step;
         w_mppt_high = get_mppt_speed_in_rad_per_s(pitch_high);
 
@@ -641,7 +640,6 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     size_t iter = 0;
     while(true)
     {
-        cout<<__FILE__<<" @ line "<<__LINE__<<endl;
         double pitch = 0.5*(pitch_low+pitch_high);
         double w_mppt = get_mppt_speed_in_rad_per_s(pitch);
         double w = (w_mppt-wn)/wn;

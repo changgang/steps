@@ -76,7 +76,7 @@ METER METER_SETTER::prepare_bus_voltage_in_pu_meter(size_t bus)
         return meter;
     else
     {
-        meter.set_meter_type("BUS VOLTAGE IN PU");
+        meter.set_meter_type("VOLTAGE IN PU");
         return meter;
     }
 }
@@ -92,7 +92,7 @@ METER METER_SETTER::prepare_bus_voltage_in_kV_meter(size_t bus)
         return meter;
     else
     {
-        meter.set_meter_type("BUS VOLTAGE IN KV");
+        meter.set_meter_type("VOLTAGE IN KV");
         return meter;
     }
 }
@@ -109,7 +109,7 @@ METER METER_SETTER::prepare_bus_angle_in_deg_meter(size_t bus)
         return meter;
     else
     {
-       meter.set_meter_type("BUS ANGLE IN DEG");
+       meter.set_meter_type("ANGLE IN DEG");
         return meter;
     }
 }
@@ -126,7 +126,7 @@ METER METER_SETTER::prepare_bus_angle_in_rad_meter(size_t bus)
         return meter;
     else
     {
-       meter.set_meter_type("BUS ANGLE IN RAD");
+       meter.set_meter_type("ANGLE IN RAD");
         return meter;
     }
 }
@@ -140,7 +140,7 @@ METER METER_SETTER::prepare_bus_frequency_in_pu_meter(size_t bus)
     bool successful = prepare_bus_meter(meter, bus);
 
     if(successful)
-        meter.set_meter_type("BUS FREQUENCY IN PU");
+        meter.set_meter_type("FREQUENCY IN PU");
     return meter;
 }
 
@@ -153,7 +153,7 @@ METER METER_SETTER::prepare_bus_frequency_in_Hz_meter(size_t bus)
     bool successful = prepare_bus_meter(meter, bus);
 
     if(successful)
-        meter.set_meter_type("BUS FREQUENCY IN HZ");
+        meter.set_meter_type("FREQUENCY IN HZ");
     return meter;
 }
 
@@ -166,7 +166,7 @@ METER METER_SETTER::prepare_bus_frequency_deviation_in_pu_meter(size_t bus)
     bool successful = prepare_bus_meter(meter, bus);
 
     if(successful)
-        meter.set_meter_type("BUS FREQUENCY DEVIATION IN PU");
+        meter.set_meter_type("FREQUENCY DEVIATION IN PU");
     return meter;
 }
 
@@ -179,7 +179,7 @@ METER METER_SETTER::prepare_bus_frequency_deviation_in_Hz_meter(size_t bus)
     bool successful = prepare_bus_meter(meter, bus);
 
     if(successful)
-        meter.set_meter_type("BUS FREQUENCY DEVIATION IN HZ");
+        meter.set_meter_type("FREQUENCY DEVIATION IN HZ");
     return meter;
 }
 
@@ -192,7 +192,7 @@ METER METER_SETTER::prepare_bus_ROCOV_in_pu_per_s_meter(size_t bus)
     bool successful = prepare_bus_meter(meter, bus);
 
     if(successful)
-        meter.set_meter_type("BUS ROCOV IN PU/S");
+        meter.set_meter_type("ROCOV IN PU/S");
     return meter;
 }
 
@@ -205,7 +205,7 @@ METER METER_SETTER::prepare_bus_ROCOV_in_kV_per_s_meter(size_t bus)
     bool successful = prepare_bus_meter(meter, bus);
 
     if(successful)
-        meter.set_meter_type("BUS ROCOV IN KV/S");
+        meter.set_meter_type("ROCOV IN KV/S");
     return meter;
 }
 
@@ -218,7 +218,7 @@ METER METER_SETTER::prepare_bus_ROCOF_in_pu_per_s_meter(size_t bus)
     bool successful = prepare_bus_meter(meter, bus);
 
     if(successful)
-        meter.set_meter_type("BUS ROCOF IN PU/S");
+        meter.set_meter_type("ROCOF IN PU/S");
     return meter;
 }
 
@@ -231,7 +231,7 @@ METER METER_SETTER::prepare_bus_ROCOF_in_Hz_per_s_meter(size_t bus)
     bool successful = prepare_bus_meter(meter, bus);
 
     if(successful)
-        meter.set_meter_type("BUS ROCOF IN HZ/S");
+        meter.set_meter_type("ROCOF IN HZ/S");
     return meter;
 }
 
@@ -297,7 +297,7 @@ METER METER_SETTER::prepare_line_current_in_kA_meter(const DEVICE_ID& device_id,
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE CURRENT IN KA");
+        meter.set_meter_type("CURRENT IN KA");
     return meter;
 }
 
@@ -310,7 +310,7 @@ METER METER_SETTER::prepare_line_active_power_in_MW_meter(const DEVICE_ID& devic
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE ACTIVE POWER IN MW");
+        meter.set_meter_type("ACTIVE POWER IN MW");
 
     return meter;
 }
@@ -324,7 +324,7 @@ METER METER_SETTER::prepare_line_reactive_power_in_MVar_meter(const DEVICE_ID& d
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE REACTIVE POWER IN MVAR");
+        meter.set_meter_type("REACTIVE POWER IN MVAR");
 
     return meter;
 }
@@ -338,7 +338,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE APPARENT IMPEDANCE IN OHM");
+        meter.set_meter_type("APPARENT IMPEDANCE IN OHM");
 
     return meter;
 }
@@ -352,7 +352,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_angle_in_deg_meter(const DEV
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE APPARENT IMPEDANCE ANGLE IN DEG");
+        meter.set_meter_type("APPARENT IMPEDANCE ANGLE IN DEG");
 
     return meter;
 }
@@ -366,7 +366,7 @@ METER METER_SETTER::prepare_line_current_in_pu_meter(const DEVICE_ID& device_id,
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE CURRENT IN PU");
+        meter.set_meter_type("CURRENT IN PU");
     return meter;
 }
 
@@ -379,7 +379,7 @@ METER METER_SETTER::prepare_line_active_power_in_pu_meter(const DEVICE_ID& devic
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE ACTIVE POWER IN PU");
+        meter.set_meter_type("ACTIVE POWER IN PU");
 
     return meter;
 }
@@ -393,7 +393,7 @@ METER METER_SETTER::prepare_line_reactive_power_in_pu_meter(const DEVICE_ID& dev
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE REACTIVE POWER IN PU");
+        meter.set_meter_type("REACTIVE POWER IN PU");
 
     return meter;
 }
@@ -407,7 +407,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_in_pu_meter(const DEVICE_ID&
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE APPARENT IMPEDANCE IN PU");
+        meter.set_meter_type("APPARENT IMPEDANCE IN PU");
 
     return meter;
 }
@@ -421,7 +421,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_angle_in_rad_meter(const DEV
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("LINE APPARENT IMPEDANCE ANGLE IN RAD");
+        meter.set_meter_type("APPARENT IMPEDANCE ANGLE IN RAD");
 
     return meter;
 }
@@ -489,7 +489,7 @@ METER METER_SETTER::prepare_transformer_current_in_kA_meter(const DEVICE_ID& dev
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("TRANSFORMER CURRENT IN KA");
+        meter.set_meter_type("CURRENT IN KA");
 
     return meter;
 }
@@ -503,7 +503,7 @@ METER METER_SETTER::prepare_transformer_active_power_in_MW_meter(const DEVICE_ID
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("TRANSFORMER ACTIVE POWER IN MW");
+        meter.set_meter_type("ACTIVE POWER IN MW");
 
     return meter;
 }
@@ -517,7 +517,7 @@ METER METER_SETTER::prepare_transformer_reactive_power_in_MVar_meter(const DEVIC
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("TRANSFORMER REACTIVE POWER IN MVAR");
+        meter.set_meter_type("REACTIVE POWER IN MVAR");
 
     return meter;
 }
@@ -532,7 +532,7 @@ METER METER_SETTER::prepare_transformer_current_in_pu_meter(const DEVICE_ID& dev
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("TRANSFORMER CURRENT IN PU");
+        meter.set_meter_type("CURRENT IN PU");
 
     return meter;
 }
@@ -546,7 +546,7 @@ METER METER_SETTER::prepare_transformer_active_power_in_pu_meter(const DEVICE_ID
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("TRANSFORMER ACTIVE POWER IN PU");
+        meter.set_meter_type("ACTIVE POWER IN PU");
 
     return meter;
 }
@@ -560,7 +560,7 @@ METER METER_SETTER::prepare_transformer_reactive_power_in_pu_meter(const DEVICE_
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
     if(successful)
-        meter.set_meter_type("TRANSFORMER REACTIVE POWER IN PU");
+        meter.set_meter_type("REACTIVE POWER IN PU");
 
     return meter;
 }
@@ -614,7 +614,7 @@ METER METER_SETTER::prepare_load_current_in_kA_meter(const DEVICE_ID& device_id)
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD CURRENT IN KA");
+        meter.set_meter_type("CURRENT IN KA");
 
     return meter;
 }
@@ -628,7 +628,7 @@ METER METER_SETTER::prepare_load_active_power_in_MW_meter(const DEVICE_ID& devic
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD ACTIVE POWER IN MW");
+        meter.set_meter_type("ACTIVE POWER IN MW");
 
     return meter;
 }
@@ -642,7 +642,7 @@ METER METER_SETTER::prepare_load_reactive_power_in_MVar_meter(const DEVICE_ID& d
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD REACTIVE POWER IN MVAR");
+        meter.set_meter_type("REACTIVE POWER IN MVAR");
 
     return meter;
 }
@@ -656,7 +656,7 @@ METER METER_SETTER::prepare_load_current_in_pu_meter(const DEVICE_ID& device_id)
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD CURRENT IN PU");
+        meter.set_meter_type("CURRENT IN PU");
 
     return meter;
 }
@@ -670,7 +670,7 @@ METER METER_SETTER::prepare_load_active_power_in_pu_meter(const DEVICE_ID& devic
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD ACTIVE POWER IN PU");
+        meter.set_meter_type("ACTIVE POWER IN PU");
 
     return meter;
 }
@@ -684,7 +684,7 @@ METER METER_SETTER::prepare_load_reactive_power_in_pu_meter(const DEVICE_ID& dev
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD REACTIVE POWER IN PU");
+        meter.set_meter_type("REACTIVE POWER IN PU");
 
     return meter;
 }
@@ -698,7 +698,7 @@ METER METER_SETTER::prepare_load_total_scale_in_pu_meter(const DEVICE_ID& device
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD TOTAL SCALE IN PU");
+        meter.set_meter_type("TOTAL SCALE IN PU");
 
     return meter;
 }
@@ -712,7 +712,7 @@ METER METER_SETTER::prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& dev
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD MANUALLY SCALE IN PU");
+        meter.set_meter_type("MANUALLY SCALE IN PU");
 
     return meter;
 }
@@ -726,63 +726,10 @@ METER METER_SETTER::prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& d
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("LOAD RELAY SHED SCALE IN PU");
+        meter.set_meter_type("RELAY SHED SCALE IN PU");
 
     return meter;
 }
-
-METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_load_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("LOAD LOAD MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_load_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_load_voltage_relay_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_load_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-
 
 METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
@@ -794,7 +741,7 @@ METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE
 
     if(successful)
     {
-        meter.set_meter_type("LOAD LOAD MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("LOAD MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
     }
 
@@ -811,7 +758,7 @@ METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(c
 
     if(successful)
     {
-        meter.set_meter_type("LOAD FREQUENCY RELAY MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("FREQUENCY RELAY MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
     }
 
@@ -828,7 +775,7 @@ METER METER_SETTER::prepare_load_voltage_relay_model_internal_variable_meter(con
 
     if(successful)
     {
-        meter.set_meter_type("LOAD VOLTAGE RELAY MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("VOLTAGE RELAY MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
     }
 
@@ -874,6 +821,473 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
     return successful;
 }
 
+
+METER METER_SETTER::prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id)
+{
+
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ROTOR ANGLE IN DEG");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ROTOR SPEED IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ROTOR SPEED IN HZ");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ROTOR SPEED DEVIATION IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ROTOR SPEED DEVIATION IN HZ");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_internal_voltage_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("INTERNAL VOLTAGE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON SBASE");
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN KA");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN MVAR");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("AIRGAP POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("AIRGAP POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_airgap_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("AIRGAP POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACCELERATING POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACCELERATING POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_accelerating_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACCELERATING POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_excitation_voltage_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("EXCITATION VOLTAGE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_compensated_voltage_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("COMPENSATED VOLTAGE IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_stabilizing_signal_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("STABILIZING SIGNAL IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("COMPENSATOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("STABILIZER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("EXCITER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("TURBINE GOVERNOR MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
 bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& device_id)
 {
     bool successful = false;
@@ -913,558 +1327,6 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
     return successful;
 }
 
-METER METER_SETTER::prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id)
-{
-
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR ROTOR ANGLE IN DEG");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR ROTOR SPEED IN PU");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR ROTOR SPEED IN HZ");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR ROTOR SPEED DEVIATION IN PU");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR ROTOR SPEED DEVIATION IN HZ");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_internal_voltage_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR INTERNAL VOLTAGE IN PU");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL CURRENT IN PU ON MBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL CURRENT IN PU ON SBASE");
-
-    return meter;
-}
-
-
-METER METER_SETTER::prepare_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL CURRENT IN KA");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL ACTIVE POWER IN PU ON MBASE");
-
-    return meter;
-}
-
-
-METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL ACTIVE POWER IN PU ON SBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL ACTIVE POWER IN MW");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL REACTIVE POWER IN PU ON MBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL REACTIVE POWER IN PU ON SBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR TERMINAL REACTIVE POWER IN MVAR");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR AIRGAP POWER IN PU ON MBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR AIRGAP POWER IN PU ON SBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_airgap_power_in_MW_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR AIRGAP POWER IN MW");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR ACCELERATING POWER IN PU ON MBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR ACCELERATING POWER IN PU ON SBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_accelerating_power_in_MW_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR ACCELERATING POWER IN MW");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR MECHANICAL POWER IN PU ON MBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR MECHANICAL POWER IN PU ON SBASE");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR MECHANICAL POWER IN MW");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_excitation_voltage_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR EXCITATION VOLTAGE IN PU");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_compensated_voltage_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR COMPENSATED VOLTAGE IN PU");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_stabilizing_signal_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("GENERATOR STABILIZING SIGNAL IN PU");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR STABILIZER MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR EXCITER MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_name(name);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_name(name);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR STABILIZER MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_name(name);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR EXCITER MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_name(name);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_name(name);
-    }
-
-    return meter;
-}
-
-
 METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
 {
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -1474,7 +1336,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_meter(const DEVI
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR TERMINAL CURRENT IN PU");
+        meter.set_meter_type("TERMINAL CURRENT IN PU");
 
     return meter;
 }
@@ -1488,7 +1350,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_current_in_kA_meter(const DEVI
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR TERMINAL CURRENT IN KA");
+        meter.set_meter_type("TERMINAL CURRENT IN KA");
 
     return meter;
 }
@@ -1502,7 +1364,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_MW_meter(const
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR TERMINAL ACTIVE POWER IN MW");
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN MW");
 
     return meter;
 }
@@ -1516,7 +1378,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_MVar_meter(c
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR TERMINAL REACTIVE POWER IN MVAR");
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN MVAR");
 
     return meter;
 }
@@ -1530,7 +1392,7 @@ METER METER_SETTER::prepare_wt_generator_mechanical_power_in_MW_meter(const DEVI
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR MECHANICAL POWER IN MW");
+        meter.set_meter_type("MECHANICAL POWER IN MW");
 
     return meter;
 }
@@ -1544,7 +1406,7 @@ METER METER_SETTER::prepare_wt_generator_max_available_mechanical_power_in_MW_me
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR MAX AVAILABLE MECHANICAL POWER IN MW");
+        meter.set_meter_type("MAX AVAILABLE MECHANICAL POWER IN MW");
 
     return meter;
 }
@@ -1558,7 +1420,7 @@ METER METER_SETTER::prepare_wt_generator_speed_reference_in_pu_meter(const DEVIC
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR SPEED REFERENCE IN PU");
+        meter.set_meter_type("SPEED REFERENCE IN PU");
 
     return meter;
 }
@@ -1572,7 +1434,7 @@ METER METER_SETTER::prepare_wt_generator_speed_reference_in_rad_per_s_meter(cons
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR SPEED REFERENCE IN RAD/S");
+        meter.set_meter_type("SPEED REFERENCE IN RAD/S");
 
     return meter;
 }
@@ -1586,7 +1448,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_pu_meter(con
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR TURBINE SPEED DEVIATION IN PU");
+        meter.set_meter_type("TURBINE SPEED DEVIATION IN PU");
 
     return meter;
 }
@@ -1600,7 +1462,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(con
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR TURBINE SPEED DEVIATION IN HZ");
+        meter.set_meter_type("TURBINE SPEED DEVIATION IN HZ");
 
     return meter;
 }
@@ -1614,7 +1476,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_in_pu_meter(const DEVICE_
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR TURBINE SPEED IN PU");
+        meter.set_meter_type("TURBINE SPEED IN PU");
 
     return meter;
 }
@@ -1628,7 +1490,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_in_Hz_meter(const DEVICE_
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR TURBINE SPEED IN HZ");
+        meter.set_meter_type("TURBINE SPEED IN HZ");
 
     return meter;
 }
@@ -1642,7 +1504,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_pu_meter(const
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR ROTOR SPEED DEVIATION IN PU");
+        meter.set_meter_type("ROTOR SPEED DEVIATION IN PU");
 
     return meter;
 }
@@ -1656,7 +1518,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(const
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR ROTOR SPEED DEVIATION IN HZ");
+        meter.set_meter_type("ROTOR SPEED DEVIATION IN HZ");
 
     return meter;
 }
@@ -1670,7 +1532,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_in_pu_meter(const DEVICE_ID
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR ROTOR SPEED IN PU");
+        meter.set_meter_type("ROTOR SPEED IN PU");
 
     return meter;
 }
@@ -1684,7 +1546,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_in_Hz_meter(const DEVICE_ID
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR ROTOR SPEED IN HZ");
+        meter.set_meter_type("ROTOR SPEED IN HZ");
 
     return meter;
 }
@@ -1698,7 +1560,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_angle_in_deg_meter(const DEVICE_I
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR ROTOR ANGLE IN DEG");
+        meter.set_meter_type("ROTOR ANGLE IN DEG");
 
     return meter;
 }
@@ -1712,7 +1574,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_angle_in_rad_meter(const DEVICE_I
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR ROTOR ANGLE IN RAD");
+        meter.set_meter_type("ROTOR ANGLE IN RAD");
 
     return meter;
 }
@@ -1726,7 +1588,7 @@ METER METER_SETTER::prepare_wt_generator_active_current_command_in_pu_meter(cons
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR ACTIVE CURRENT COMMAND IN PU");
+        meter.set_meter_type("ACTIVE CURRENT COMMAND IN PU");
 
     return meter;
 }
@@ -1740,7 +1602,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_current_command_in_pu_meter(co
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR REACTIVE CURRENT COMMAND IN PU");
+        meter.set_meter_type("REACTIVE CURRENT COMMAND IN PU");
 
     return meter;
 }
@@ -1754,7 +1616,7 @@ METER METER_SETTER::prepare_wt_generator_active_power_command_in_pu_meter(const 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR ACTIVE POWER COMMAND IN PU");
+        meter.set_meter_type("ACTIVE POWER COMMAND IN PU");
 
     return meter;
 }
@@ -1768,7 +1630,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_power_command_in_pu_meter(cons
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR REACTIVE POWER COMMAND IN PU");
+        meter.set_meter_type("REACTIVE POWER COMMAND IN PU");
 
     return meter;
 }
@@ -1782,7 +1644,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_voltage_command_in_pu_meter(co
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR REACTIVE VOLTAGE COMMAND IN PU");
+        meter.set_meter_type("REACTIVE VOLTAGE COMMAND IN PU");
 
     return meter;
 }
@@ -1796,7 +1658,7 @@ METER METER_SETTER::prepare_wt_generator_pitch_angle_in_deg_meter(const DEVICE_I
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR PITCH ANGLE IN DEG");
+        meter.set_meter_type("PITCH ANGLE IN DEG");
 
     return meter;
 }
@@ -1810,7 +1672,7 @@ METER METER_SETTER::prepare_wt_generator_wind_speed_in_pu_meter(const DEVICE_ID&
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR WIND SPEED IN PU");
+        meter.set_meter_type("WIND SPEED IN PU");
 
     return meter;
 }
@@ -1824,113 +1686,10 @@ METER METER_SETTER::prepare_wt_generator_wind_speed_in_mps_meter(const DEVICE_ID
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("WT GENERATOR WIND SPEED IN MPS");
+        meter.set_meter_type("WIND SPEED IN MPS");
 
     return meter;
 }
-
-METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_wt_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("WT GENERATOR MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_wt_aerodynamic_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_wt_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("WT AERODYNAMIC MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_wt_turbine_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_wt_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("WT TURBINE MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_wt_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_wt_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("WT ELECTRICAL MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_wt_pitch_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_wt_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("WT PITCH MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_wind_speed_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_wt_generator_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("WIND SPEED MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
 
 METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
@@ -2034,6 +1793,398 @@ METER METER_SETTER::prepare_wind_speed_model_internal_variable_meter(const DEVIC
     return meter;
 }
 
+bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_id)
+{
+    bool successful = false;
+
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(psdb==NULL)
+    {
+        osstream<<"No power system database is set for METER_SETTER."<<endl
+          <<"PV unit meter cannot be prepared.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    string device_type = device_id.get_device_type();
+    if(device_type!="PV UNIT")
+    {
+        osstream<<"Warning. This device given ("<<device_type<<") is not a PV unit when trying to set up a PV unit meter. "
+          <<"No PV unit meter will be added.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    if(not psdb->is_pv_unit_exist(device_id))
+    {
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+          <<"No PV unit meter will be added.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    meter.set_device_id(device_id);
+
+    successful = true;
+
+    return successful;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN KA");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL ACTIVE POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL REACTIVE POWER IN MVAR");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_active_current_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACTIVE CURRENT COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_reactive_current_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("REACTIVE CURRENT COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_active_power_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACTIVE POWER COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("REACTIVE POWER COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_unit_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("REACTIVE VOLTAGE COMMAND IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_panel_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("PV PANEL MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("PV CONVERTER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("PV ELECTRICAL MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_pv_irradiance_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("PV IRRADIANCE MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+
+bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id)
+{
+    bool successful = false;
+
+    ostringstream osstream;
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    if(psdb==NULL)
+    {
+        osstream<<"No power system database is set for METER_SETTER."<<endl
+          <<"ENERGY STORAGE meter cannot be prepared.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    string device_type = device_id.get_device_type();
+    if(device_type!="ENERGY STORAGE")
+    {
+        osstream<<"Warning. This device given ("<<device_type<<") is not an energy storage when trying to set up an energy storage meter. "
+          <<"No energy storage meter will be added.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    if(not psdb->is_energy_storage_exist(device_id))
+    {
+        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
+          <<"No energy storage meter will be added.";
+        show_information_with_leading_time_stamp(osstream);
+        return successful;
+    }
+
+    meter.set_device_id(device_id);
+
+    successful = true;
+
+    return successful;
+}
+
+
+METER METER_SETTER::prepare_energy_storage_state_of_energy_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("STATE OF ENERGY IN PU");
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_energy_storage_active_power_in_MW_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACTIVE POWER IN MW");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_active_power_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("ACTIVE POWER IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("REACTIVE POWER IN MVAR");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_reactive_power_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("REACTIVE POWER IN PU");
+
+    return meter;
+}
+
+
+METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN KA");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN PU");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+
+    METER meter(psdb);
+
+    bool successful = prepare_energy_storage_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("ENERGY STORAGE MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
+
+
 
 bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 {
@@ -2083,7 +2234,7 @@ METER METER_SETTER::prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC DC CURRENT IN KA");
+        meter.set_meter_type("DC CURRENT IN KA");
 
     return meter;
 }
@@ -2097,7 +2248,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_I
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER DC CURRENT IN KA");
+        meter.set_meter_type("RECTIFIER DC CURRENT IN KA");
 
     return meter;
 }
@@ -2111,7 +2262,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER DC CURRENT IN KA");
+        meter.set_meter_type("INVERTER DC CURRENT IN KA");
 
     return meter;
 }
@@ -2125,7 +2276,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_I
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER DC VOLTAGE IN KV");
+        meter.set_meter_type("RECTIFIER DC VOLTAGE IN KV");
 
     return meter;
 }
@@ -2139,7 +2290,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_I
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER AC VOLTAGE IN PU");
+        meter.set_meter_type("RECTIFIER AC VOLTAGE IN PU");
 
     return meter;
 }
@@ -2153,7 +2304,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& d
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER ALPHA IN DEG");
+        meter.set_meter_type("RECTIFIER ALPHA IN DEG");
 
     return meter;
 }
@@ -2167,7 +2318,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& devi
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER MU IN DEG");
+        meter.set_meter_type("RECTIFIER MU IN DEG");
 
     return meter;
 }
@@ -2181,7 +2332,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID&
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER DC POWER IN MW");
+        meter.set_meter_type("RECTIFIER DC POWER IN MW");
 
     return meter;
 }
@@ -2195,7 +2346,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_active_power_in_MW_meter(const DEV
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER AC ACTIVE POWER IN MW");
+        meter.set_meter_type("RECTIFIER AC ACTIVE POWER IN MW");
 
     return meter;
 }
@@ -2209,7 +2360,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER AC REACTIVE POWER IN MVAR");
+        meter.set_meter_type("RECTIFIER AC REACTIVE POWER IN MVAR");
 
     return meter;
 }
@@ -2223,7 +2374,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_I
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC RECTIFIER AC CURRENT IN KA");
+        meter.set_meter_type("RECTIFIER AC CURRENT IN KA");
 
     return meter;
 }
@@ -2237,7 +2388,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER DC VOLTAGE IN KV");
+        meter.set_meter_type("INVERTER DC VOLTAGE IN KV");
 
     return meter;
 }
@@ -2251,7 +2402,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER AC VOLTAGE IN PU");
+        meter.set_meter_type("INVERTER AC VOLTAGE IN PU");
 
     return meter;
 }
@@ -2265,7 +2416,7 @@ METER METER_SETTER::prepare_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& de
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER GAMMA IN DEG");
+        meter.set_meter_type("INVERTER GAMMA IN DEG");
 
     return meter;
 }
@@ -2279,7 +2430,7 @@ METER METER_SETTER::prepare_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& devic
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER MU IN DEG");
+        meter.set_meter_type("INVERTER MU IN DEG");
 
     return meter;
 }
@@ -2293,7 +2444,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER DC POWER IN MW");
+        meter.set_meter_type("INVERTER DC POWER IN MW");
 
     return meter;
 }
@@ -2307,7 +2458,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_active_power_in_MW_meter(const DEVI
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER AC ACTIVE POWER IN MW");
+        meter.set_meter_type("INVERTER AC ACTIVE POWER IN MW");
 
     return meter;
 }
@@ -2321,7 +2472,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER AC REACTIVE POWER IN MVAR");
+        meter.set_meter_type("INVERTER AC REACTIVE POWER IN MVAR");
 
     return meter;
 }
@@ -2335,26 +2486,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID
     bool successful = prepare_hvdc_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("HVDC INVERTER AC CURRENT IN KA");
-
-    return meter;
-}
-
-
-
-METER METER_SETTER::prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_hvdc_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("HVDC MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
+        meter.set_meter_type("INVERTER AC CURRENT IN KA");
 
     return meter;
 }
@@ -2425,7 +2557,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_in_pu_meter
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAGE IN PU");
+        meter.set_meter_type("VOLTAGE SOURCE VOLTAGE IN PU");
 
     return meter;
 }
@@ -2439,7 +2571,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_angle_in_de
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE VOLTAGE SOURCE VOLTAGE ANGLE IN DEG");
+        meter.set_meter_type("VOLTAGE SOURCE VOLTAGE ANGLE IN DEG");
 
     return meter;
 }
@@ -2453,7 +2585,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_resistance_in_pu_me
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE VOLTAGE SOURCE RESISTANCE IN PU");
+        meter.set_meter_type("VOLTAGE SOURCE RESISTANCE IN PU");
 
     return meter;
 }
@@ -2467,7 +2599,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_reactance_in_pu_met
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE VOLTAGE SOURCE REACTANCE IN PU");
+        meter.set_meter_type("VOLTAGE SOURCE REACTANCE IN PU");
 
     return meter;
 }
@@ -2481,7 +2613,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE CONSTANT POWER LOAD IN MW");
+        meter.set_meter_type("ACTIVE CONSTANT POWER LOAD IN MW");
 
     return meter;
 }
@@ -2495,7 +2627,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_lo
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE CONSTANT POWER LOAD IN MVAR");
+        meter.set_meter_type("REACTIVE CONSTANT POWER LOAD IN MVAR");
 
     return meter;
 }
@@ -2509,7 +2641,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_lo
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE CONSTANT CURRENT LOAD IN MW");
+        meter.set_meter_type("ACTIVE CONSTANT CURRENT LOAD IN MW");
 
     return meter;
 }
@@ -2523,7 +2655,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE CONSTANT CURRENT LOAD IN MVAR");
+        meter.set_meter_type("REACTIVE CONSTANT CURRENT LOAD IN MVAR");
 
     return meter;
 }
@@ -2537,7 +2669,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE CONSTANT IMPEDANCE LOAD IN MW");
+        meter.set_meter_type("ACTIVE CONSTANT IMPEDANCE LOAD IN MW");
 
     return meter;
 }
@@ -2551,7 +2683,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedanc
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR");
+        meter.set_meter_type("REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR");
 
     return meter;
 }
@@ -2565,7 +2697,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_MW_mete
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE POWER GENERATION IN MW");
+        meter.set_meter_type("ACTIVE POWER GENERATION IN MW");
 
     return meter;
 }
@@ -2580,7 +2712,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_MVar_
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE POWER GENERATION IN MVAR");
+        meter.set_meter_type("REACTIVE POWER GENERATION IN MVAR");
 
     return meter;
 }
@@ -2594,7 +2726,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_load_in_MW_meter(cons
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE POWER LOAD IN MW");
+        meter.set_meter_type("ACTIVE POWER LOAD IN MW");
 
     return meter;
 }
@@ -2609,7 +2741,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_MVar_meter(
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE POWER LOAD IN MVAR");
+        meter.set_meter_type("REACTIVE POWER LOAD IN MVAR");
 
     return meter;
 }
@@ -2623,7 +2755,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_MW_meter(
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE POWER NET LOAD IN MW");
+        meter.set_meter_type("ACTIVE POWER NET LOAD IN MW");
 
     return meter;
 }
@@ -2638,7 +2770,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_MVar_me
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN MVAR");
+        meter.set_meter_type("REACTIVE POWER NET LOAD IN MVAR");
 
     return meter;
 }
@@ -2654,7 +2786,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE CONSTANT POWER LOAD IN PU");
+        meter.set_meter_type("ACTIVE CONSTANT POWER LOAD IN PU");
 
     return meter;
 }
@@ -2668,7 +2800,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_lo
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE CONSTANT POWER LOAD IN PU");
+        meter.set_meter_type("REACTIVE CONSTANT POWER LOAD IN PU");
 
     return meter;
 }
@@ -2682,7 +2814,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_lo
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE CONSTANT CURRENT LOAD IN PU");
+        meter.set_meter_type("ACTIVE CONSTANT CURRENT LOAD IN PU");
 
     return meter;
 }
@@ -2696,7 +2828,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE CONSTANT CURRENT LOAD IN PU");
+        meter.set_meter_type("REACTIVE CONSTANT CURRENT LOAD IN PU");
 
     return meter;
 }
@@ -2710,7 +2842,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE CONSTANT IMPEDANCE LOAD IN PU");
+        meter.set_meter_type("ACTIVE CONSTANT IMPEDANCE LOAD IN PU");
 
     return meter;
 }
@@ -2724,7 +2856,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedanc
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE CONSTANT IMPEDANCE LOAD IN PU");
+        meter.set_meter_type("REACTIVE CONSTANT IMPEDANCE LOAD IN PU");
 
     return meter;
 }
@@ -2738,7 +2870,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_pu_mete
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE POWER GENERATION IN PU");
+        meter.set_meter_type("ACTIVE POWER GENERATION IN PU");
 
     return meter;
 }
@@ -2753,7 +2885,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_pu_me
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE POWER GENERATION IN PU");
+        meter.set_meter_type("REACTIVE POWER GENERATION IN PU");
 
     return meter;
 }
@@ -2767,7 +2899,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_load_in_pu_meter(cons
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE POWER LOAD IN PU");
+        meter.set_meter_type("ACTIVE POWER LOAD IN PU");
 
     return meter;
 }
@@ -2782,7 +2914,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_pu_meter(co
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE POWER LOAD IN PU");
+        meter.set_meter_type("REACTIVE POWER LOAD IN PU");
 
     return meter;
 }
@@ -2796,7 +2928,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_pu_meter(
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE ACTIVE POWER NET LOAD IN PU");
+        meter.set_meter_type("ACTIVE POWER NET LOAD IN PU");
 
     return meter;
 }
@@ -2811,186 +2943,10 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_pu_mete
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("EQUIVALENT DEVICE REACTIVE POWER NET LOAD IN PU");
+        meter.set_meter_type("REACTIVE POWER NET LOAD IN PU");
 
     return meter;
 }
 
-
-
-bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id)
-{
-    bool successful = false;
-
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"ENERGY STORAGE meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
-
-    string device_type = device_id.get_device_type();
-    if(device_type!="ENERGY STORAGE")
-    {
-        osstream<<"Warning. This device given ("<<device_type<<") is not an energy storage when trying to set up an energy storage meter. "
-          <<"No energy storage meter will be added.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
-
-    if(not psdb->is_energy_storage_exist(device_id))
-    {
-        osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
-          <<"No energy storage meter will be added.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
-
-    meter.set_device_id(device_id);
-
-    successful = true;
-
-    return successful;
-}
-
-
-METER METER_SETTER::prepare_energy_storage_state_of_energy_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("ENERGY STORAGE STATE OF ENERGY IN PU");
-
-    return meter;
-}
-
-
-METER METER_SETTER::prepare_energy_storage_active_power_in_MW_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("ENERGY STORAGE ACTIVE POWER IN MW");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_energy_storage_active_power_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("ENERGY STORAGE ACTIVE POWER IN PU");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_energy_storage_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("ENERGY STORAGE REACTIVE POWER IN MVAR");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_energy_storage_reactive_power_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("ENERGY STORAGE REACTIVE POWER IN PU");
-
-    return meter;
-}
-
-
-METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("ENERGY STORAGE TERMINAL CURRENT IN KA");
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_energy_storage_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-        meter.set_meter_type("ENERGY STORAGE TERMINAL CURRENT IN PU");
-
-    return meter;
-}
-
-
-METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, size_t index)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("ENERGY STORAGE MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_index(index);
-    }
-
-    return meter;
-}
-
-METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
-{
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
-
-    bool successful = prepare_energy_storage_meter(meter, device_id);
-
-    if(successful)
-    {
-        meter.set_meter_type("ENERGY STORAGE MODEL INTERNAL VARIABLE");
-        meter.set_internal_variable_name(name);
-    }
-
-    return meter;
-}
 
 

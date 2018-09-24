@@ -584,10 +584,10 @@ string IEEEG1::get_standard_model_string() const
 void IEEEG1::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN MW", i); i++;
+    add_model_variable_name_and_index_pair("MECHANICAL POWER IN PU", i); i++;
+    add_model_variable_name_and_index_pair("MECHANICAL POWER IN MW", i); i++;
     add_model_variable_name_and_index_pair("MECHANICAL POWER REFERENCE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR ROTOR SPEED DEVIATION IN PU", i); i++;
+    add_model_variable_name_and_index_pair("ROTOR SPEED DEVIATION IN PU", i); i++;
     add_model_variable_name_and_index_pair("STATE@DROOP", i); i++;
     add_model_variable_name_and_index_pair("STATE@SERVO MOTOR", i); i++;
     add_model_variable_name_and_index_pair("STATE@DELAYER 1", i); i++;

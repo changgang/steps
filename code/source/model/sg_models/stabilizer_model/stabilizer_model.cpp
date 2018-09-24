@@ -79,17 +79,17 @@ double STABILIZER_MODEL::get_signal_value_of_slot(size_t slot) const
 size_t STABILIZER_MODEL::convert_signal_type_string_to_number(string signal_type) const
 {
     signal_type = string2upper(signal_type);
-    if(signal_type=="GENERATOR ROTOR SPEED DEVIATION IN PU")
+    if(signal_type=="ROTOR SPEED DEVIATION IN PU")
         return 1;
-    if(signal_type=="BUS FREQUENCY DEVIATION IN PU")
+    if(signal_type=="FREQUENCY DEVIATION IN PU")
         return 2;
-    if(signal_type=="GENERATOR TERMINAL ACTIVE POWER IN PU ON MBASE")
+    if(signal_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
         return 3;
-    if(signal_type=="GENERATOR ACCELERATING POWER IN PU ON MBASE")
+    if(signal_type=="ACCELERATING POWER IN PU ON MBASE")
         return 4;
-    if(signal_type=="BUS VOLTAGE IN PU")
+    if(signal_type=="VOLTAGE IN PU")
         return 5;
-    if(signal_type=="BUS ROCOV IN PU/S")
+    if(signal_type=="ROCOV IN PU/S")
         return 6;
     return INDEX_NOT_EXIST;
 }
@@ -99,17 +99,17 @@ string STABILIZER_MODEL::convert_signal_type_number_to_string(size_t signal_type
     switch(signal_type)
     {
         case 1:
-            return "GENERATOR ROTOR SPEED DEVIATION IN PU";
+            return "ROTOR SPEED DEVIATION IN PU";
         case 2:
-            return "BUS FREQUENCY DEVIATION IN PU";
+            return "FREQUENCY DEVIATION IN PU";
         case 3:
-            return "GENERATOR TERMINAL ACTIVE POWER IN PU ON MBASE";
+            return "TERMINAL ACTIVE POWER IN PU ON MBASE";
         case 4:
-            return "GENERATOR ACCELERATING POWER IN PU ON MBASE";
+            return "ACCELERATING POWER IN PU ON MBASE";
         case 5:
-            return "BUS VOLTAGE IN PU";
+            return "VOLTAGE IN PU";
         case 6:
-            return "BUS ROCOV IN PU/S";
+            return "ROCOV IN PU/S";
         default:
             return "";
     }

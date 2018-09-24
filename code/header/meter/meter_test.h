@@ -37,7 +37,7 @@ class METER_TEST : public Test::Suite
         void test_set_get_wt_generator_meter_type();
         void test_set_get_equivalent_device_meter_type();
         void test_set_get_energy_storage_meter_type();
-        void test_set_get_meter_internal_variable_index();
+        void test_set_get_meter_internal_variable_name();
         void test_set_get_device_pointer();
         void test_clear();
         void test_is_valid();

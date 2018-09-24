@@ -382,19 +382,14 @@ string FILEWIND::get_standard_model_string() const
 void FILEWIND::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR MECHANICAL POWER IN MW", i); i++;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER REFERENCE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR ROTOR SPEED DEVIATION IN PU", i); i++;
-    add_model_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@TURBINE", i); i++;
+    add_model_variable_name_and_index_pair("WIND SPEED IN M/S", i); i++;
 }
 
 double FILEWIND::get_variable_with_name(string var_name)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
+    var_name = string2upper(var_name);
+    if(var_name=="WIND SPEED IN M/S")
+        return get_wind_speed_in_mps();
     return 0.0;
 }
 

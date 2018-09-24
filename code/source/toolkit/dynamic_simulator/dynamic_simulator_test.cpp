@@ -237,7 +237,7 @@ void DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter()
     did.set_device_terminal(terminal);
 
     meter.set_device_id(did);
-    meter.set_meter_type("BUS VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
     simulator->append_meter(meter);
 
@@ -246,7 +246,7 @@ void DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter()
     meter = simulator->get_meter(0);
 
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="BUS VOLTAGE IN PU");
+    TEST_ASSERT(meter.get_meter_type()=="VOLTAGE IN PU");
 
     terminal.clear();
     did.set_device_type("BUS");
@@ -254,7 +254,7 @@ void DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter()
     did.set_device_terminal(terminal);
 
     meter.set_device_id(did);
-    meter.set_meter_type("BUS VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
     simulator->append_meter(meter);
 
@@ -263,7 +263,7 @@ void DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter()
     meter = simulator->get_meter(1);
 
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="BUS VOLTAGE IN PU");
+    TEST_ASSERT(meter.get_meter_type()=="VOLTAGE IN PU");
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_get_meter_count()
@@ -283,7 +283,7 @@ void DYNAMICS_SIMULATOR_TEST::test_get_meter_count()
     did.set_device_terminal(terminal);
 
     meter.set_device_id(did);
-    meter.set_meter_type("BUS VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
     simulator->append_meter(meter);
     TEST_ASSERT(simulator->get_meter_count()==1);
@@ -312,7 +312,7 @@ void DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value()
     did.set_device_terminal(terminal);
 
     meter.set_device_id(did);
-    meter.set_meter_type("BUS VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
     simulator->append_meter(meter);
 
@@ -322,7 +322,7 @@ void DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value()
     did.set_device_terminal(terminal);
 
     meter.set_device_id(did);
-    meter.set_meter_type("BUS VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
     simulator->append_meter(meter);
 
@@ -332,7 +332,7 @@ void DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value()
     did.set_device_terminal(terminal);
 
     meter.set_device_id(did);
-    meter.set_meter_type("BUS VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
     simulator->append_meter(meter);
 
@@ -371,7 +371,7 @@ void DYNAMICS_SIMULATOR_TEST::test_clear_meters()
     did.set_device_terminal(terminal);
 
     meter.set_device_id(did);
-    meter.set_meter_type("BUS VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
     simulator->append_meter(meter);
     simulator->append_meter(meter);

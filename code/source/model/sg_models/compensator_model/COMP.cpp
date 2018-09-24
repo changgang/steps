@@ -185,8 +185,8 @@ string COMP::get_standard_model_string() const
 void COMP::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL VOLTAGE", i); i++;
-    add_model_variable_name_and_index_pair("GENERATOR TERMINAL CURRENT", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL VOLTAGE", i); i++;
+    add_model_variable_name_and_index_pair("TERMINAL CURRENT", i); i++;
     add_model_variable_name_and_index_pair("COMPENSATED VOLTAGE", i); i++;
 }
 

@@ -18,8 +18,7 @@ class METER : public BASE
 
         void set_device_id(const DEVICE_ID& device_id);
         void set_meter_type(string meter_type);
-        void set_internal_variable_name(string var_name);
-        void set_internal_variable_index(size_t internal_variable_index);
+        void set_internal_variable_name(string name);
         void set_meter_side_bus(size_t meter_side);
 
         void change_device_id(DEVICE_ID did);
@@ -30,7 +29,6 @@ class METER : public BASE
         string get_device_type() const;
         string get_meter_type() const;
         size_t get_meter_side_bus() const;
-        size_t get_internal_variable_index() const;
         string get_internal_variable_name() const;
 
         string get_meter_name() const;
@@ -58,11 +56,7 @@ class METER : public BASE
         bool is_valid_meter_type(string meter_type) const;
         bool is_valid_meter_type_of_device(string meter_type, string device_type) const;
 
-        size_t get_internal_variable_index_with_name(string name) const;
-        size_t get_internal_variable_index_with_name_as_load(string name) const;
-        size_t get_internal_variable_index_with_name_as_generator(string name) const;
-        size_t get_internal_variable_index_with_name_as_wt_generator(string name) const;
-        size_t get_internal_variable_index_with_name_as_hvdc(string name) const;
+        bool is_internal_variable_name_valid(string name) const;
 
         double get_meter_value_as_a_bus() const;
         double get_meter_value_as_a_line() const;
@@ -81,7 +75,6 @@ class METER : public BASE
         string meter_type;
         size_t meter_side_bus;
         string internal_variable_name;
-        size_t internal_variable_index;
 
         CONTINUOUS_BUFFER buffer;
 };
@@ -93,9 +86,10 @@ extern vector<string> transformer_meters;
 extern vector<string> generator_meters;
 extern vector<string> load_meters;
 extern vector<string> wt_generator_meters;
+extern vector<string> pv_unit_meters;
+extern vector<string> energy_storage_meters;
 extern vector<string> hvdc_meters;
 extern vector<string> equivalent_device_meters;
-extern vector<string> energy_storage_meters;
 extern map<string, vector<string>> SUPPORTED_METERS;
 
 #endif // METER_H

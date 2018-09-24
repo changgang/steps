@@ -1246,6 +1246,120 @@ void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
     owner_index[owner.get_owner_number()]= owner_count;
 }
 
+void POWER_SYSTEM_DATABASE::append_dynamic_model(const DEVICE_ID did, const MODEL* model)
+{
+    if(did.get_device_type() != model->get_allowed_device_type())
+        return;
+    if(did.get_device_type()=="LOAD")
+    {
+        append_load_related_model(did, model);
+        return;
+    }
+    if(did.get_device_type()=="GENERATOR")
+    {
+        append_generator_related_model(did, model);
+        return;
+    }
+    if(did.get_device_type()=="WT GENERATOR")
+    {
+        append_wt_generator_related_model(did, model);
+        return;
+    }
+    if(did.get_device_type()=="PV UNIT")
+    {
+        append_pv_unit_related_model(did, model);
+        return;
+    }
+    if(did.get_device_type()=="ENERGY STORAGE")
+    {
+        append_energy_storage_related_model(did, model);
+        return;
+    }
+    if(did.get_device_type()=="HVDC")
+    {
+        append_hvdc_related_model(did, model);
+        return;
+    }
+    return;
+}
+
+
+void POWER_SYSTEM_DATABASE::append_load_related_model(const DEVICE_ID did, const MODEL* model)
+{
+    if(did.get_device_type() != model->get_allowed_device_type())
+        return;
+    if(did.get_device_type()=="LOAD")
+    {
+        LOAD* ptr = get_load(did);
+        if(ptr!=NULL)
+            ptr->set_model(model);
+        return;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::append_generator_related_model(const DEVICE_ID did, const MODEL* model)
+{
+    if(did.get_device_type() != model->get_allowed_device_type())
+        return;
+    if(did.get_device_type()=="GENERATOR")
+    {
+        GENERATOR* ptr = get_generator(did);
+        if(ptr!=NULL)
+            ptr->set_model(model);
+        return;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::append_wt_generator_related_model(const DEVICE_ID did, const MODEL* model)
+{
+    if(did.get_device_type() != model->get_allowed_device_type())
+        return;
+    if(did.get_device_type()=="WT GENERATOR")
+    {
+        WT_GENERATOR* ptr = get_wt_generator(did);
+        if(ptr!=NULL)
+            ptr->set_model(model);
+        return;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::append_pv_unit_related_model(const DEVICE_ID did, const MODEL* model)
+{
+    if(did.get_device_type() != model->get_allowed_device_type())
+        return;
+    if(did.get_device_type()=="PV UNIT")
+    {
+        PV_UNIT* ptr = get_pv_unit(did);
+        if(ptr!=NULL)
+            ptr->set_model(model);
+        return;
+    }
+}
+
+void POWER_SYSTEM_DATABASE::append_energy_storage_related_model(const DEVICE_ID did, const MODEL* model)
+{
+    if(did.get_device_type() != model->get_allowed_device_type())
+        return;
+    if(did.get_device_type()=="ENERGY STORAGE")
+    {
+        ENERGY_STORAGE* ptr = get_energy_storage(did);
+        if(ptr!=NULL)
+            ptr->set_model(model);
+        return;
+    }
+}
+void POWER_SYSTEM_DATABASE::append_hvdc_related_model(const DEVICE_ID did, const MODEL* model)
+{
+    if(did.get_device_type() != model->get_allowed_device_type())
+        return;
+    if(did.get_device_type()=="HVDC")
+    {
+        HVDC* ptr = get_hvdc(did);
+        if(ptr!=NULL)
+            ptr->set_model(model);
+        return;
+    }
+}
 
 bool POWER_SYSTEM_DATABASE::is_bus_exist(size_t bus) const
 {

@@ -585,14 +585,14 @@ string AERD0::get_standard_model_string() const
 void AERD0::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("", i); i++;
+    add_model_variable_name_and_index_pair("BLADE RADIUS IN M", i); i++;
 }
 
 double AERD0::get_variable_with_name(string var_name)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
+    var_name = string2upper(var_name);
+    if(var_name=="BLADE RADIUS IN M")
+        return get_turbine_blade_radius_in_m();
     return 0.0;
 }
 

@@ -478,11 +478,14 @@ string UFLS::get_standard_model_string() const
 void UFLS::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("", i); i++;
+    add_model_variable_name_and_index_pair("SHED SCALE IN PU", i); i++;
 }
 
 double UFLS::get_variable_with_name(string var_name)
 {
+    var_name = string2upper(var_name);
+    if(var_name=="SHED SCALE IN PU")
+        return get_total_shed_scale_factor_in_pu();
     return 0.0;
 }
 
