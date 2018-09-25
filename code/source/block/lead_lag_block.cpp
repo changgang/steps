@@ -9,6 +9,8 @@ using namespace std;
 LEAD_LAG_BLOCK::LEAD_LAG_BLOCK()
 {
     set_K(1.0);
+    set_T1_in_s(999.0);
+    set_T2_in_s(999.0);
 }
 
 LEAD_LAG_BLOCK::~LEAD_LAG_BLOCK()

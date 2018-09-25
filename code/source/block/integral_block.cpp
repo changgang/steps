@@ -8,7 +8,7 @@ using namespace std;
 
 INTEGRAL_BLOCK::INTEGRAL_BLOCK()
 {
-    set_T_in_s(0.0);
+    set_T_in_s(999.0);
 }
 
 INTEGRAL_BLOCK::~INTEGRAL_BLOCK()

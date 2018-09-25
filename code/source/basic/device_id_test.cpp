@@ -23,7 +23,7 @@ DEVICE_ID_TEST::DEVICE_ID_TEST()
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_vschvdc);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_facts);
     TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_multidc);
-    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_arbitrary);
+    TEST_ADD(DEVICE_ID_TEST::test_constructor_and_get_device_type_general);
     TEST_ADD(DEVICE_ID_TEST::test_set_get_device_identifier);
     TEST_ADD(DEVICE_ID_TEST::test_get_device_name);
     TEST_ADD(DEVICE_ID_TEST::test_is_valid);
@@ -292,19 +292,15 @@ void DEVICE_ID_TEST::test_constructor_and_get_device_type_multidc()
     TEST_ASSERT(terminal.get_bus_count()==100);
 }
 
-void DEVICE_ID_TEST::test_constructor_and_get_device_type_arbitrary()
+void DEVICE_ID_TEST::test_constructor_and_get_device_type_general()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DEVICE_ID_TEST");
 
-    ostringstream osstream;
-    osstream<<"Following will display error information of invalid device type \"ARB\". If not, error occurs.";
-    show_information_with_leading_time_stamp(osstream);
-
-    device_id->set_device_type("arb");
-    TEST_ASSERT(device_id->get_device_type()=="NONE");
+    device_id->set_device_type("general device");
+    TEST_ASSERT(device_id->get_device_type()=="GENERAL DEVICE");
 
     TEST_ASSERT(device_id->get_minimum_allowed_terminal_count()==0);
-    TEST_ASSERT(device_id->get_maximum_allowed_terminal_count()==0);
+    TEST_ASSERT(device_id->get_maximum_allowed_terminal_count()==100);
 }
 
 void DEVICE_ID_TEST::test_set_get_device_identifier()
@@ -443,8 +439,8 @@ void DEVICE_ID_TEST::test_is_valid()
 
     TEST_ASSERT(device_id->is_valid()==true);
 
-    device_id->set_device_type("");
-    TEST_ASSERT(device_id->is_valid()==false);
+    device_id->set_device_type("general device");
+    TEST_ASSERT(device_id->is_valid()==true);
 
     device_id->clear();
     TEST_ASSERT(device_id->is_valid()==false);

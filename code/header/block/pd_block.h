@@ -7,7 +7,7 @@
 
 class PD_BLOCK : public BLOCK
 {
-    // Kp+sKd/Td
+    // Kp+sKd/(1+sTd)
     public:
         PD_BLOCK();
         ~PD_BLOCK();

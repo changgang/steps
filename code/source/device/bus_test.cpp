@@ -278,6 +278,8 @@ void BUS_TEST::test_set_get_voltage_to_regulate()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
 
+    bus->set_bus_number(1);
+    bus->set_base_voltage_in_kV(100.0);
     bus->set_voltage_to_regulate_in_pu(1.0);
     TEST_ASSERT(bus->get_voltage_to_regulate_in_pu()==1.0);
     bus->set_voltage_to_regulate_in_pu(1.0);
@@ -429,6 +431,7 @@ void BUS_TEST::test_copy_with_operator_equal()
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
 
     bus->set_bus_number(2);
+    bus->set_base_voltage_in_kV(100.0);
     bus->set_bus_name("mybus");
     bus->set_bus_type(PV_TYPE);
     bus->set_voltage_in_pu(1.12);

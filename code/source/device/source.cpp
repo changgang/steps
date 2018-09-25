@@ -144,8 +144,8 @@ void SOURCE::set_bus_to_regulate(size_t bus)
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. Currently generators are not supposed to regulate voltage at bus ("<<bus<<") different from its terminal bus.\n"
-          <<"Terminal bus "<<get_source_bus()<<" will be set to regulate.";
+        osstream<<"Warning. Currently generators are not supposed to regulate voltage at bus different from its terminal bus.\n"
+                <<"Terminal bus "<<get_source_bus()<<" will be set to regulate. New bus "<<bus<<" is discarded.";
         show_information_with_leading_time_stamp(osstream);
         bus_to_regulate = get_source_bus();
     }

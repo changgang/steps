@@ -104,11 +104,20 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         return;
     }
 
+    if(device_type=="GENERAL DEVICE")
+    {
+        this->device_type = device_type;
+        set_minimum_allowed_terminal_count(0);
+        set_maximum_allowed_terminal_count(100);
+        allow_identifier = true;
+        return;
+    }
+
     ostringstream osstream;
     osstream<<"Device type '"<<device_type<<"' is not supported when building DEVICE_ID object."<<endl
       <<"Allowed device types are: "<<endl
       <<"GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
-      <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, MULTI DC, and EQUIVALENT DEVICE."<<endl
+      <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, MULTI DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
       <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
     show_information_with_leading_time_stamp(osstream);
     device_type = "";
@@ -227,12 +236,37 @@ string DEVICE_ID::get_device_name() const
         return device_name;
     }
 
+    if(name=="GENERAL DEVICE")
+    {
+        if(ident=="")
+            device_name = name + " ";
+        else
+            device_name = name + " "+ident+" ";
+        switch(bus_count)
+        {
+            case 0:
+                device_name += " AT SUPER CONTROL CENTER";
+                break;
+            case 1:
+                device_name += " AT BUS "+num2str(buses[0]);
+                break;
+            default:
+                device_name += " LINKING BUSES ("+num2str(buses[0]);
+                for(size_t i=1; i<bus_count; ++i)
+                    device_name += ", "+num2str(buses[i]);
+                device_name += ")";
+                break;
+        }
+        return device_name;
+    }
+
+
     return device_name;
 }
 
 bool DEVICE_ID::is_valid() const
 {
-    if(get_device_type()!="" and terminal.get_bus_count()!=0)
+    if(get_device_type()=="GENERAL DEVICE" or (get_device_type()!="" and terminal.get_bus_count()!=0))
         return true;
     else
         return false;
@@ -495,6 +529,22 @@ DEVICE_ID get_equivalent_device_id(size_t bus, string identifier)
 
     TERMINAL terminal;
     terminal.append_bus(bus);
+
+    did.set_device_terminal(terminal);
+
+    did.set_device_identifier(identifier);
+
+    return did;
+}
+DEVICE_ID get_general_device_id(vector<size_t> bus, string identifier)
+{
+    DEVICE_ID did;
+    did.set_device_type("GENERAL DEVICE");
+
+    TERMINAL terminal;
+    size_t n = bus.size();
+    for(size_t i=0; i<n; ++i)
+        terminal.append_bus(bus[i]);
 
     did.set_device_terminal(terminal);
 

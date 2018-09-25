@@ -9,6 +9,7 @@ using namespace std;
 FIRST_ORDER_BLOCK::FIRST_ORDER_BLOCK()
 {
     set_K(1.0);
+    set_T_in_s(999.0);
 }
 
 FIRST_ORDER_BLOCK::~FIRST_ORDER_BLOCK()

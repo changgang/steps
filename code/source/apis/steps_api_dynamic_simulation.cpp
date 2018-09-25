@@ -281,6 +281,26 @@ void api_prepare_wt_generator_related_meters()
     }
 }
 
+void api_prepare_pv_unit_related_meters()
+{
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        ds->prepare_pv_unit_related_meters();
+    }
+}
+
+void api_prepare_energy_storage_related_meters()
+{
+    DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();
+
+    if(ds!=NULL)
+    {
+        ds->prepare_energy_storage_related_meters();
+    }
+}
+
 void api_prepare_load_related_meters()
 {
     DYNAMICS_SIMULATOR* ds = get_default_dynamic_simulator();

@@ -59,6 +59,7 @@ DEVICE_ID get_line_device_id(size_t ibus, size_t jbus, string identifier);
 DEVICE_ID get_hvdc_device_id(size_t ibus, size_t jbus, string identifier);
 DEVICE_ID get_transformer_device_id(size_t ibus, size_t jbus, size_t kbus, string identifier);
 DEVICE_ID get_equivalent_device_id(size_t bus, string identifier);
+DEVICE_ID get_general_device_id(vector<size_t> bus, string identifier);
 
 namespace std
 {

@@ -315,6 +315,8 @@ EXPORT_STEPS_DLL void api_prepare_meters();
 EXPORT_STEPS_DLL void api_prepare_bus_related_meters();
 EXPORT_STEPS_DLL void api_prepare_generator_related_meters();
 EXPORT_STEPS_DLL void api_prepare_wt_generator_related_meters();
+EXPORT_STEPS_DLL void api_prepare_pv_unit_related_meters();
+EXPORT_STEPS_DLL void api_prepare_energy_storage_related_meters();
 EXPORT_STEPS_DLL void api_prepare_load_related_meters();
 EXPORT_STEPS_DLL void api_prepare_line_related_meters();
 EXPORT_STEPS_DLL void api_prepare_hvdc_related_meters();

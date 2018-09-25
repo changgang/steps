@@ -214,6 +214,8 @@ void DYNAMICS_SIMULATOR::prepare_meters()
     prepare_bus_related_meters();
     prepare_generator_related_meters();
     prepare_wt_generator_related_meters();
+    prepare_pv_unit_related_meters();
+    prepare_energy_storage_related_meters();
     prepare_load_related_meters();
     prepare_line_related_meters();
     prepare_hvdc_related_meters();
@@ -422,6 +424,17 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
         METER meter = setter.prepare_wt_generator_wind_speed_in_mps_meter(generator->get_device_id());
         append_meter(meter);
     }
+}
+
+
+void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
+{
+    return;
+}
+
+void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
+{
+    return;
 }
 
 void DYNAMICS_SIMULATOR::prepare_load_related_meters()

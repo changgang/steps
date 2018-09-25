@@ -11,6 +11,7 @@ PID_BLOCK::PID_BLOCK()
     set_Kp(1.0);
     set_Ki(1.0);
     set_Kd(1.0);
+    set_Td_in_s(999.0);
 }
 
 PID_BLOCK::~PID_BLOCK()

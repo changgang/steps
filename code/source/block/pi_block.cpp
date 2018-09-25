@@ -11,7 +11,7 @@ PI_BLOCK::PI_BLOCK()
     pid_block.set_Kp(1.0);
     pid_block.set_Ki(1.0);
     pid_block.set_Kd(0.0);
-    pid_block.set_Td_in_s(1.0);
+    pid_block.set_Td_in_s(999.0);
 }
 
 PI_BLOCK::~PI_BLOCK()
