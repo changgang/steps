@@ -45,9 +45,9 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::test_get_bus_voltage()
 
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = load->get_load_bus();
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
 
     busptr->set_voltage_in_pu(1.0);
     TEST_ASSERT(fabs(model->get_bus_voltage_in_pu()-1)<FLOAT_EPSILON);
@@ -96,7 +96,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
 
     redirect_stdout_to_file(outputfile);
 
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     ostringstream osstream;
 
@@ -109,7 +109,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
     STEPS::TIME = -delt*2.0;
 
     size_t bus = load->get_load_bus();
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     busptr->set_voltage_in_pu(1.0);
 
     model->initialize();

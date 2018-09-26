@@ -152,7 +152,7 @@ string PSSE_IMEXPORTER::trim_psse_comment(string str)
 
 void PSSE_IMEXPORTER::load_case_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(raw_data_in_ram.size()<2)
         return;
@@ -164,11 +164,11 @@ void PSSE_IMEXPORTER::load_case_data()
     {
         int appendCode = get_integer_data(data.front(),"0");
         data.erase(data.begin());
-        if(appendCode==0) psdb->clear_database(); // if not in appending mode, clear the database
+        if(appendCode==0) psdb.clear_database(); // if not in appending mode, clear the database
     }
     if(data.size()>0)
     {
-        psdb->set_system_base_power_in_MVA(get_double_data(data.front(),"100.0"));
+        psdb.set_system_base_power_in_MVA(get_double_data(data.front(),"100.0"));
         data.erase(data.begin());
     }
     if(data.size()>0)
@@ -186,8 +186,8 @@ void PSSE_IMEXPORTER::load_case_data()
     }
     data = raw_data_in_ram[1];
 
-    psdb->set_case_information(data[0]);
-    psdb->set_case_additional_information(data[1]);
+    psdb.set_case_information(data[0]);
+    psdb.set_case_additional_information(data[1]);
     //
 }
 
@@ -204,7 +204,7 @@ size_t PSSE_IMEXPORTER::get_data_version() const
 
 void PSSE_IMEXPORTER::load_bus_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(raw_data_in_ram.size()<3)
         return;
@@ -298,12 +298,12 @@ void PSSE_IMEXPORTER::load_bus_data()
             data.erase(data.begin());
         }
 
-        psdb->append_bus(bus);
+        psdb.append_bus(bus);
     }
 }
 void PSSE_IMEXPORTER::load_load_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(raw_data_in_ram.size()<4)
         return;
@@ -316,7 +316,7 @@ void PSSE_IMEXPORTER::load_load_data()
     for(size_t i=0; i!=ndata; ++i)
     {
         str = DATA[i];
-        LOAD load(psdb);
+        LOAD load;
 
         data = split_string(str,",");
         if(data.size()>0)
@@ -388,12 +388,12 @@ void PSSE_IMEXPORTER::load_load_data()
             data.erase(data.begin());
         }
 
-        psdb->append_load(load);
+        psdb.append_load(load);
     }
 }
 void PSSE_IMEXPORTER::load_fixed_shunt_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(raw_data_in_ram.size()<5)
         return;
@@ -407,7 +407,7 @@ void PSSE_IMEXPORTER::load_fixed_shunt_data()
     for(size_t i=0; i!=ndata; ++i)
     {
         str = DATA[i];
-        FIXED_SHUNT shunt(psdb);
+        FIXED_SHUNT shunt;
 
         data = split_string(str,",");
         if(data.size()>0)
@@ -440,7 +440,7 @@ void PSSE_IMEXPORTER::load_fixed_shunt_data()
         }
         shunt.set_nominal_impedance_shunt_in_MVA(complex<double>(p,-q));
 
-        psdb->append_fixed_shunt(shunt);
+        psdb.append_fixed_shunt(shunt);
     }
 }
 void PSSE_IMEXPORTER::load_source_data()
@@ -516,8 +516,8 @@ void PSSE_IMEXPORTER::load_source_data()
         }
     }
     /*
-    POWER_SYSTEM_DATABASE* db = get_default_power_system_database_pointer();
-    vector<SOURCE*> sources = db->get_all_sources();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<SOURCE*> sources = psdb.get_all_sources();
     for(size_t i=0; i<sources.size(); ++i)
         sources[i]->report();
     */
@@ -525,56 +525,56 @@ void PSSE_IMEXPORTER::load_source_data()
 
 void PSSE_IMEXPORTER::load_generator_data(vector<string>& data)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    GENERATOR generator(psdb);
+    GENERATOR generator;
 
     load_source_common_data(data, &generator);
 
-    psdb->append_generator(generator);
+    psdb.append_generator(generator);
 }
 
 void PSSE_IMEXPORTER::load_wt_generator_data(vector<string>& data)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    WT_GENERATOR wt_generator(psdb);
+    WT_GENERATOR wt_generator;
 
     load_source_common_data(data, &wt_generator);
     load_source_var_control_data(data, &wt_generator);
 
-    psdb->append_wt_generator(wt_generator);
+    psdb.append_wt_generator(wt_generator);
 }
 
 
 void PSSE_IMEXPORTER::load_pv_unit_data(vector<string>& data)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    PV_UNIT pv_unit(psdb);
+    PV_UNIT pv_unit;
 
     load_source_common_data(data, &pv_unit);
     load_source_var_control_data(data, &pv_unit);
 
-    psdb->append_pv_unit(pv_unit);
+    psdb.append_pv_unit(pv_unit);
 }
 
 
 void PSSE_IMEXPORTER::load_energy_storage_data(vector<string>& data)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    ENERGY_STORAGE estorage(psdb);
+    ENERGY_STORAGE estorage;
 
     load_source_common_data(data, &estorage);
     load_source_var_control_data(data, &estorage);
 
-    psdb->append_energy_storage(estorage);
+    psdb.append_energy_storage(estorage);
 }
 
 void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* source)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     double rs = 0.0, xs = 0.0;
     //double rt = 0.0, xt = 0.0, tt = 1.0;
@@ -622,7 +622,7 @@ void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* sour
     if(data.size()>0)
     {
         char mbase[100];
-        snprintf(mbase, 100, "%lf",psdb->get_system_base_power_in_MVA());
+        snprintf(mbase, 100, "%lf",psdb.get_system_base_power_in_MVA());
         source->set_mbase_in_MVA(get_double_data(data.front(),mbase));
         data.erase(data.begin());
     }
@@ -760,7 +760,7 @@ void PSSE_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE*
 
 void PSSE_IMEXPORTER::load_line_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(raw_data_in_ram.size()<7)
         return;
@@ -777,7 +777,7 @@ void PSSE_IMEXPORTER::load_line_data()
     for(size_t i=0; i!=ndata; ++i)
     {
         str = DATA[i];
-        LINE line(psdb);
+        LINE line;
 
         data = split_string(str,",");
 
@@ -910,7 +910,7 @@ void PSSE_IMEXPORTER::load_line_data()
         os.normalize();
         line.set_ownership(os);
 
-        psdb->append_line(line);
+        psdb.append_line(line);
     }
 }
 void PSSE_IMEXPORTER::load_transformer_data()
@@ -958,9 +958,9 @@ void PSSE_IMEXPORTER::load_transformer_data()
 
 void PSSE_IMEXPORTER::add_transformer_with_data(vector<string> trans_data)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    TRANSFORMER trans(psdb);
+    TRANSFORMER trans;
 
     string str_trans = trans_data[0];
     string str_z = trans_data[1];
@@ -1032,7 +1032,7 @@ void PSSE_IMEXPORTER::add_transformer_with_data(vector<string> trans_data)
     add_transformer_winding_data(trans, TERTIARY_SIDE, data_winding_t, winding_code);
     add_transformer_impedance_admittance_data(trans, data_z, impedance_code, magnetizing_code);
 
-    psdb->append_transformer(trans);
+    psdb.append_transformer(trans);
 }
 
 
@@ -1194,7 +1194,7 @@ void PSSE_IMEXPORTER::add_transformer_basic_data(TRANSFORMER& trans, vector<stri
 }
 void PSSE_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORMER_WINDING_SIDE winding, vector<string> data, TRANSFORMER_WINDING_TAP_CODE winding_code)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(data.size()<2)
         return;
@@ -1208,7 +1208,7 @@ void PSSE_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORME
         {
             case TAP_OFF_NOMINAL_TURN_RATIO_BASED_ON_WINDING_BUS_BASE_VOLTAGE:
             {
-                t *= psdb->get_bus_base_voltage_in_kV(trans.get_winding_bus(winding));
+                t *= psdb.get_bus_base_voltage_in_kV(trans.get_winding_bus(winding));
                 t /= trans.get_winding_nominal_voltage_in_kV(winding);
                 break;
             }
@@ -1299,7 +1299,7 @@ void PSSE_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORME
                 {
                     case TAP_OFF_NOMINAL_TURN_RATIO_BASED_ON_WINDING_BUS_BASE_VOLTAGE:
                     {
-                        tamax *= psdb->get_bus_base_voltage_in_kV(trans.get_winding_bus(winding));
+                        tamax *= psdb.get_bus_base_voltage_in_kV(trans.get_winding_bus(winding));
                         tamax /= trans.get_winding_nominal_voltage_in_kV(winding);
                         break;
                     }
@@ -1337,7 +1337,7 @@ void PSSE_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORME
                 {
                     case TAP_OFF_NOMINAL_TURN_RATIO_BASED_ON_WINDING_BUS_BASE_VOLTAGE:
                     {
-                        tamin *= psdb->get_bus_base_voltage_in_kV(trans.get_winding_bus(winding));
+                        tamin *= psdb.get_bus_base_voltage_in_kV(trans.get_winding_bus(winding));
                         tamin /= trans.get_winding_nominal_voltage_in_kV(winding);
                         break;
                     }
@@ -1424,12 +1424,12 @@ void PSSE_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORME
 
 void PSSE_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& trans, vector<string> data, TRANSFORMER_IMPEDANCE_CODE impedance_code, TRANSFORMER_ADMITTANCE_CODE magnetizing_code)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     double g = trans.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu().real();
     double b = trans.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu().imag();
 
-    double mvabase = psdb->get_system_base_power_in_MVA();
+    double mvabase = psdb.get_system_base_power_in_MVA();
     double vbase, sbase;
 
     double r = 0.0, x = 0.0, s = 0.0;
@@ -1552,8 +1552,8 @@ void PSSE_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tra
             sbase = trans.get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE);
             g = g/(vbase*vbase);
             b = b*sbase/(vbase*vbase);
-            sbase = psdb->get_system_base_power_in_MVA();
-            vbase = psdb->get_bus_base_voltage_in_kV(trans.get_winding_bus(PRIMARY_SIDE));
+            sbase = psdb.get_system_base_power_in_MVA();
+            vbase = psdb.get_bus_base_voltage_in_kV(trans.get_winding_bus(PRIMARY_SIDE));
             g = g/(sbase/(vbase*vbase));
             b = b/(sbase/(vbase*vbase));
             b = sqrt(b*b-g*g);
@@ -1567,7 +1567,7 @@ void PSSE_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tra
 
 void PSSE_IMEXPORTER::load_area_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(raw_data_in_ram.size()<9)
         return;
@@ -1583,7 +1583,7 @@ void PSSE_IMEXPORTER::load_area_data()
 
         data = split_string(DATA[i],",");
 
-        AREA area(psdb);
+        AREA area;
 
         area.set_area_number(get_integer_data(data[0],"0"));
         area.set_area_swing_bus(get_integer_data(data[1],"0"));
@@ -1591,7 +1591,7 @@ void PSSE_IMEXPORTER::load_area_data()
         area.set_area_power_mismatch_tolerance_in_MW(get_double_data(data[3],"10.0"));
         area.set_area_name(get_string_data(data[4],""));
 
-        psdb->append_area(area);
+        psdb.append_area(area);
     }
 }
 
@@ -1628,9 +1628,9 @@ void PSSE_IMEXPORTER::load_hvdc_data()
 
 void PSSE_IMEXPORTER::add_hvdc_with_data(vector<string> hvdc_data)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    HVDC hvdc(psdb);
+    HVDC hvdc;
 
     string str_hvdc = hvdc_data[0];
     string str_rec = hvdc_data[1];
@@ -1644,10 +1644,10 @@ void PSSE_IMEXPORTER::add_hvdc_with_data(vector<string> hvdc_data)
     add_hvdc_converter_data(hvdc, RECTIFIER, data_rec);
     add_hvdc_converter_data(hvdc, INVERTER, data_inv);
 
-    while(psdb->is_hvdc_exist(hvdc.get_device_id()))
+    while(psdb.is_hvdc_exist(hvdc.get_device_id()))
         hvdc.set_identifier(hvdc.get_identifier()+"#");
 
-    psdb->append_hvdc(hvdc);
+    psdb.append_hvdc(hvdc);
 }
 void PSSE_IMEXPORTER::add_hvdc_basic_data(HVDC& hvdc, vector<string> data)
 {
@@ -1824,7 +1824,7 @@ void PSSE_IMEXPORTER::load_multi_section_line_data()
 
 void PSSE_IMEXPORTER::load_zone_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(raw_data_in_ram.size()<15)
         return;
@@ -1840,12 +1840,12 @@ void PSSE_IMEXPORTER::load_zone_data()
 
         data = split_string(DATA[i],",");
 
-        ZONE zone(psdb);
+        ZONE zone;
 
         zone.set_zone_number(get_integer_data(data[0],"0"));
         zone.set_zone_name(get_string_data(data[1],""));
 
-        psdb->append_zone(zone);
+        psdb.append_zone(zone);
     }
 }
 
@@ -1856,7 +1856,7 @@ void PSSE_IMEXPORTER::load_interarea_transfer_data()
 
 void PSSE_IMEXPORTER::load_owner_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(raw_data_in_ram.size()<17)
         return;
@@ -1872,12 +1872,12 @@ void PSSE_IMEXPORTER::load_owner_data()
 
         data = split_string(DATA[i],",");
 
-        OWNER owner(psdb);
+        OWNER owner;
 
         owner.set_owner_number(get_integer_data(data[0],"0"));
         owner.set_owner_name(get_string_data(data[1],""));
 
-        psdb->append_owner(owner);
+        psdb.append_owner(owner);
     }
 }
 
@@ -1895,13 +1895,6 @@ void PSSE_IMEXPORTER::load_switched_shunt_data()
 void PSSE_IMEXPORTER::export_powerflow_data(string file)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No powerflow data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     ofstream ofs(file);
     if(!ofs)
@@ -1958,24 +1951,18 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file)
 string PSSE_IMEXPORTER::export_case_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No case data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     char buffer[1000];
-    vector<size_t> buses = psdb->get_all_buses_number();
+    vector<size_t> buses = psdb.get_all_buses_number();
     double fbase = 50.0;
     if(buses.size()!=0)
-        fbase = psdb->get_bus_base_frequency_in_Hz(buses[0]);
-    snprintf(buffer, 1000, "0, %f, 33, 0, 0, %f", psdb->get_system_base_power_in_MVA(), fbase);
+        fbase = psdb.get_bus_base_frequency_in_Hz(buses[0]);
+    snprintf(buffer, 1000, "0, %f, 33, 0, 0, %f", psdb.get_system_base_power_in_MVA(), fbase);
     osstream<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (psdb->get_case_information()).c_str());
+    snprintf(buffer, 1000, "%s", (psdb.get_case_information()).c_str());
     osstream<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (psdb->get_case_additional_information()).c_str());
+    snprintf(buffer, 1000, "%s", (psdb.get_case_additional_information()).c_str());
     osstream<<buffer<<endl;
     return osstream.str();
 }
@@ -1983,15 +1970,9 @@ string PSSE_IMEXPORTER::export_case_data() const
 string PSSE_IMEXPORTER::export_bus_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No bus data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<BUS*> buses = psdb->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t n = buses.size();
     char buffer[1000];
     for(size_t i=0; i!=n; ++i)
@@ -2042,15 +2023,9 @@ string PSSE_IMEXPORTER::export_bus_data() const
 string PSSE_IMEXPORTER::export_load_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No load data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<LOAD*> loads = psdb->get_all_loads();
+    vector<LOAD*> loads = psdb.get_all_loads();
     size_t n = loads.size();
     char buffer[1000];
     for(size_t i=0; i!=n; ++i)
@@ -2091,15 +2066,9 @@ string PSSE_IMEXPORTER::export_load_data() const
 string PSSE_IMEXPORTER::export_fixed_shunt_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No fixed shunt data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<FIXED_SHUNT*> fshunts = psdb->get_all_fixed_shunts();
+    vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
     size_t n = fshunts.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2133,15 +2102,9 @@ string PSSE_IMEXPORTER::export_source_data() const
 string PSSE_IMEXPORTER::export_generator_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No generator data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<GENERATOR*> generators = psdb->get_all_generators();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
     size_t n = generators.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2156,15 +2119,9 @@ string PSSE_IMEXPORTER::export_generator_data() const
 string PSSE_IMEXPORTER::export_wt_generator_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No WT generator data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<WT_GENERATOR*> wt_generators = psdb->get_all_wt_generators();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
     size_t n = wt_generators.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2181,15 +2138,9 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
 string PSSE_IMEXPORTER::export_pv_unit_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No PV unit data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<PV_UNIT*> pv_units = psdb->get_all_pv_units();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
     size_t n = pv_units.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2207,15 +2158,9 @@ string PSSE_IMEXPORTER::export_pv_unit_data() const
 string PSSE_IMEXPORTER::export_energy_storage_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No energy storage data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<ENERGY_STORAGE*> estorages = psdb->get_all_energy_storages();
+    vector<ENERGY_STORAGE*> estorages = psdb.get_all_energy_storages();
     size_t n = estorages.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2293,15 +2238,9 @@ string PSSE_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
 string PSSE_IMEXPORTER::export_line_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No line data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<LINE*> lines = psdb->get_all_lines();
+    vector<LINE*> lines = psdb.get_all_lines();
     size_t n = lines.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2341,15 +2280,9 @@ string PSSE_IMEXPORTER::export_line_data() const
 string PSSE_IMEXPORTER::export_transformer_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No transformer data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<TRANSFORMER*> transformers = psdb->get_all_transformers();
+    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
     size_t n = transformers.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2610,15 +2543,9 @@ string PSSE_IMEXPORTER::export_transformer_data() const
 string PSSE_IMEXPORTER::export_area_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<AREA*> areas = psdb->get_all_areas();
+    vector<AREA*> areas = psdb.get_all_areas();
     size_t n = areas.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2636,15 +2563,9 @@ string PSSE_IMEXPORTER::export_area_data() const
 string PSSE_IMEXPORTER::export_hvdc_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<HVDC*> hvdcs = psdb->get_all_hvdcs();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2738,15 +2659,9 @@ string PSSE_IMEXPORTER::export_multi_section_line_data() const
 string PSSE_IMEXPORTER::export_zone_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No zone data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<ZONE*> zones = psdb->get_all_zones();
+    vector<ZONE*> zones = psdb.get_all_zones();
     size_t n = zones.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2767,15 +2682,9 @@ string PSSE_IMEXPORTER::export_interarea_transfer_data() const
 string PSSE_IMEXPORTER::export_owner_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. PSSE imexporter is not connected to any power system database. No area data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<OWNER*> owners = psdb->get_all_owners();
+    vector<OWNER*> owners = psdb.get_all_owners();
     size_t n = owners.size();
     for(size_t i=0; i!=n; ++i)
     {

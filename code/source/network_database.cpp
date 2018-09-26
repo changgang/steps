@@ -15,9 +15,8 @@ class SUBLINE
 };
 
 
-NETWORK_DATABASE::NETWORK_DATABASE(POWER_SYSTEM_DATABASE* psdb)
+NETWORK_DATABASE::NETWORK_DATABASE()
 {
-    set_power_system_database(psdb);
     clear_database();
 }
 
@@ -36,25 +35,8 @@ void NETWORK_DATABASE::clear_database()
     inphno.clear();
 }
 
-bool NETWORK_DATABASE::is_power_system_database_set() const
-{
-    if(get_power_system_database()!=NULL)
-        return true;
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Error. Network database is not connected to any power system database."<<endl
-          <<"No operation on the network database will work.";
-        show_information_with_leading_time_stamp(osstream);
-        return false;
-    }
-}
-
 void NETWORK_DATABASE::build_network_matrix()
 {
-    if(not is_power_system_database_set())
-        return;
-
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
 
@@ -69,12 +51,6 @@ void NETWORK_DATABASE::build_network_matrix()
 
 SPARSE_MATRIX& NETWORK_DATABASE::get_network_matrix()
 {
-    if(not is_power_system_database_set())
-    {
-        network_Y_matrix.clear();
-        return network_Y_matrix;
-    }
-
     if(network_Y_matrix.matrix_in_triplet_form())
         build_network_matrix();
 
@@ -83,9 +59,6 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_network_matrix()
 
 void NETWORK_DATABASE::build_decoupled_network_matrix()
 {
-    if(not is_power_system_database_set())
-        return;
-
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
 
@@ -103,12 +76,6 @@ void NETWORK_DATABASE::build_decoupled_network_matrix()
 
 SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BP_matrix()
 {
-    if(not is_power_system_database_set())
-    {
-        network_BP_matrix.clear();
-        return network_BP_matrix;
-    }
-
     if(network_BP_matrix.matrix_in_triplet_form())
         build_decoupled_network_matrix();
 
@@ -117,12 +84,6 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BP_matrix()
 
 SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BQ_matrix()
 {
-    if(not is_power_system_database_set())
-    {
-        network_BQ_matrix.clear();
-        return network_BQ_matrix;
-    }
-
     if(network_BP_matrix.matrix_in_triplet_form())
         build_decoupled_network_matrix();
 
@@ -131,9 +92,6 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BQ_matrix()
 
 void NETWORK_DATABASE::build_dc_network_matrix()
 {
-    if(not is_power_system_database_set())
-        return;
-
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
 
@@ -147,12 +105,6 @@ void NETWORK_DATABASE::build_dc_network_matrix()
 
 SPARSE_MATRIX& NETWORK_DATABASE::get_dc_network_matrix()
 {
-    if(not is_power_system_database_set())
-    {
-        network_DC_B_matrix.clear();
-        return network_DC_B_matrix;
-    }
-
     if(network_DC_B_matrix.matrix_in_triplet_form())
         build_dc_network_matrix();
 
@@ -162,9 +114,6 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_dc_network_matrix()
 
 void NETWORK_DATABASE::build_dynamic_network_matrix()
 {
-    if(not is_power_system_database_set())
-        return;
-
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
 
@@ -190,8 +139,8 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_dynamic_network_matrix()
 
 void NETWORK_DATABASE::add_lines_to_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<LINE*> lines = psdb->get_all_lines();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
 
     size_t n = lines.size();
 
@@ -256,8 +205,8 @@ void NETWORK_DATABASE::add_line_to_network(const LINE& line)
 
 void NETWORK_DATABASE::add_transformers_to_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<TRANSFORMER*> transformers = psdb->get_all_transformers();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
     size_t n = transformers.size();
 
@@ -873,8 +822,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network_v2(const TRANSFORM
 
 void NETWORK_DATABASE::add_fixed_shunts_to_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<FIXED_SHUNT*> shunts = psdb->get_all_fixed_shunts();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
 
     size_t n = shunts.size();
 
@@ -905,8 +854,8 @@ void NETWORK_DATABASE::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
 
 void NETWORK_DATABASE::add_lines_to_decoupled_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<LINE*> lines = psdb->get_all_lines();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
 
     size_t n = lines.size();
 
@@ -999,8 +948,8 @@ void NETWORK_DATABASE::add_line_to_decoupled_network(const LINE& line)
 
 void NETWORK_DATABASE::add_transformers_to_decoupled_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<TRANSFORMER*> transformers = psdb->get_all_transformers();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
     size_t n = transformers.size();
 
@@ -1731,8 +1680,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
 
 void NETWORK_DATABASE::add_fixed_shunts_to_decoupled_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<FIXED_SHUNT*> shunts = psdb->get_all_fixed_shunts();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
 
     size_t n = shunts.size();
 
@@ -1767,8 +1716,8 @@ void NETWORK_DATABASE::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& s
 
 void NETWORK_DATABASE::add_lines_to_dc_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<LINE*> lines = psdb->get_all_lines();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
 
     size_t n = lines.size();
 
@@ -1809,8 +1758,8 @@ void NETWORK_DATABASE::add_line_to_dc_network(const LINE& line)
 
 void NETWORK_DATABASE::add_transformers_to_dc_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<TRANSFORMER*> transformers = psdb->get_all_transformers();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
     size_t n = transformers.size();
 
@@ -1964,8 +1913,8 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_dc_network(const TRANSFORM
 
 void NETWORK_DATABASE::add_bus_fault_to_dynamic_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<BUS*> buses = psdb->get_all_buses();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<BUS*> buses = psdb.get_all_buses();
 
     size_t n = buses.size();
 
@@ -1990,8 +1939,8 @@ void NETWORK_DATABASE::add_bus_fault_to_dynamic_network()
 
 void NETWORK_DATABASE::add_lines_to_dynamic_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<LINE*> lines = psdb->get_all_lines();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
 
     size_t n = lines.size();
 
@@ -2191,8 +2140,8 @@ void NETWORK_DATABASE::add_faulted_line_to_dynamic_network(const LINE& line)
 
 void NETWORK_DATABASE::add_generators_to_dynamic_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<GENERATOR*> generators = psdb->get_all_generators();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
 
     size_t n= generators.size();
 
@@ -2205,10 +2154,10 @@ void NETWORK_DATABASE::add_generator_to_dynamic_network(const GENERATOR& gen)
     if(gen.get_status()==false)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     complex<double> Z = gen.get_source_impedance_in_pu();
     double mbase = gen.get_mbase_in_MVA();
-    double mvabase = psdb->get_system_base_power_in_MVA();
+    double mvabase = psdb.get_system_base_power_in_MVA();
     Z = Z/mbase*mvabase;
 
     size_t bus = gen.get_generator_bus();
@@ -2218,8 +2167,8 @@ void NETWORK_DATABASE::add_generator_to_dynamic_network(const GENERATOR& gen)
 
 void NETWORK_DATABASE::add_wt_generators_to_dynamic_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<WT_GENERATOR*> generators = psdb->get_all_wt_generators();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<WT_GENERATOR*> generators = psdb.get_all_wt_generators();
 
     size_t n= generators.size();
 
@@ -2232,10 +2181,10 @@ void NETWORK_DATABASE::add_wt_generator_to_dynamic_network(const WT_GENERATOR& g
     if(gen.get_status()==false)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     complex<double> Z = gen.get_source_impedance_in_pu();
     double mbase = gen.get_mbase_in_MVA();
-    double mvabase = psdb->get_system_base_power_in_MVA();
+    double mvabase = psdb.get_system_base_power_in_MVA();
     Z = Z/mbase*mvabase;
 
     size_t bus = gen.get_generator_bus();
@@ -2245,9 +2194,6 @@ void NETWORK_DATABASE::add_wt_generator_to_dynamic_network(const WT_GENERATOR& g
 
 void NETWORK_DATABASE::optimize_network_ordering()
 {
-    if(not is_power_system_database_set())
-        return;
-
     initialize_physical_internal_bus_pair();
 
     build_network_matrix();
@@ -2262,9 +2208,9 @@ bool NETWORK_DATABASE::is_condition_ok() const
 
 void NETWORK_DATABASE::initialize_physical_internal_bus_pair()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    psdb->check_device_status_for_out_of_service_buses();
-    vector<BUS*> buses = psdb->get_all_buses();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.check_device_status_for_out_of_service_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
 
     size_t nbus = buses.size();
 
@@ -2327,10 +2273,7 @@ void NETWORK_DATABASE::reorder_physical_internal_bus_pair()
 
 void NETWORK_DATABASE::check_newtork_connectivity()
 {
-    if(not is_power_system_database_set())
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     vector< vector<size_t> > islands = get_islands_with_physical_bus_number();
 
@@ -2352,7 +2295,7 @@ void NETWORK_DATABASE::check_newtork_connectivity()
         for(size_t j=0; j!=nbus; ++j)
         {
             physical_bus = islands[i][j];
-            bus = psdb->get_bus(physical_bus);
+            bus = psdb.get_bus(physical_bus);
             if(bus->get_bus_type()==SLACK_TYPE)
             {
                 osstream<<physical_bus<<" (Slack bus)";
@@ -2377,18 +2320,15 @@ vector< vector<size_t> > NETWORK_DATABASE::get_islands_with_internal_bus_number(
 {
     vector< vector<size_t> > islands;
 
-    if(not is_power_system_database_set())
-        return islands;
-
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     build_network_matrix();
     network_Y_matrix.report_brief();
 
-    size_t nbus = psdb->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
 
     vector<bool> bus_searched_flag;
     bus_searched_flag.reserve(nbus);
@@ -2472,25 +2412,16 @@ vector< vector<size_t> > NETWORK_DATABASE::get_islands_with_physical_bus_number(
 
 size_t NETWORK_DATABASE::get_internal_bus_number_of_physical_bus(size_t bus) const
 {
-    if(not is_power_system_database_set())
-        return INDEX_NOT_EXIST;
-
     return inphno.get_internal_bus_number_of_physical_bus_number(bus);
 }
 
 size_t NETWORK_DATABASE::get_physical_bus_number_of_internal_bus(size_t bus) const
 {
-    if(is_power_system_database_set())
-        return inphno.get_physical_bus_number_of_internal_bus_number(bus);
-    else
-        return INDEX_NOT_EXIST;
+    return inphno.get_physical_bus_number_of_internal_bus_number(bus);
 }
 
 void NETWORK_DATABASE::report_network_matrix() const
 {
-    if(not is_power_system_database_set())
-        return;
-
     ostringstream osstream;
 
     osstream<<"Network Y matrix lists begin:";
@@ -2501,9 +2432,6 @@ void NETWORK_DATABASE::report_network_matrix() const
 
 void NETWORK_DATABASE::report_decoupled_network_matrix() const
 {
-    if(not is_power_system_database_set())
-        return;
-
     ostringstream osstream;
 
     osstream<<"Network decoupled B matrix lists begin:";
@@ -2548,9 +2476,6 @@ void NETWORK_DATABASE::report_decoupled_network_matrix() const
 
 void NETWORK_DATABASE::report_dc_network_matrix() const
 {
-    if(not is_power_system_database_set())
-        return;
-
     ostringstream osstream;
 
     osstream<<"DC network B matrix lists begin:";
@@ -2592,9 +2517,6 @@ void NETWORK_DATABASE::report_dc_network_matrix() const
 
 void NETWORK_DATABASE::report_dynamic_network_matrix() const
 {
-    if(not is_power_system_database_set())
-        return;
-
     ostringstream osstream;
 
     osstream<<"Network dynamic Y matrix lists begin:";
@@ -2792,9 +2714,6 @@ void NETWORK_DATABASE::save_network_matrix_common(ofstream& file) const
 
 void NETWORK_DATABASE::report_physical_internal_bus_number_pair() const
 {
-    if(not is_power_system_database_set())
-        return;
-
     inphno.report();
 }
 

@@ -383,9 +383,9 @@ double PSASPE13::get_excitation_voltage_in_pu() const
     if(gen_model==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = generator->get_generator_bus();
-    double Vt = psdb->get_bus_voltage_in_pu(bus);
+    double Vt = psdb.get_bus_voltage_in_pu(bus);
     double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 
     double Efd = regulator.get_output();

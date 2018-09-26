@@ -44,12 +44,13 @@ UTILITY_TEST::UTILITY_TEST()
 
 void UTILITY_TEST::setup()
 {
-    db = get_default_power_system_database_pointer();
+    ;
 }
 
 void UTILITY_TEST::tear_down()
 {
-    db->clear_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
 
     show_test_end_information();
 }

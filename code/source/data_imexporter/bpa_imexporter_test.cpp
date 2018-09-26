@@ -41,17 +41,16 @@ BPA_IMEXPORTER_TEST::BPA_IMEXPORTER_TEST()
 
 void BPA_IMEXPORTER_TEST::setup()
 {
-    db = get_default_power_system_database_pointer();
-    db->set_allowed_max_bus_number(100000);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(100000);
 
-    importer = new BPA_IMEXPORTER;
-    importer->load_powerflow_data("山东电网简化.dat");
+    importer.load_powerflow_data("山东电网简化.dat");
 }
 
 void BPA_IMEXPORTER_TEST::tear_down()
 {
-    delete importer;
-    db->clear_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
 
     show_test_end_information();
 }
@@ -66,8 +65,9 @@ void BPA_IMEXPORTER_TEST::test_load_case_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    TEST_ASSERT(db->get_system_base_power_in_MVA()==100.0);
-    TEST_ASSERT(importer->get_data_version()==31);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TEST_ASSERT(psdb.get_system_base_power_in_MVA()==100.0);
+    TEST_ASSERT(importer.get_data_version()==31);
 }
 
 
@@ -77,7 +77,8 @@ void BPA_IMEXPORTER_TEST::test_load_zone_data()
 
     ostringstream osstream;
 
-    vector<ZONE*> zones = db->get_all_zones();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<ZONE*> zones = psdb.get_all_zones();
 
     osstream<<"Zone count: "<<zones.size()<<endl;
     size_t n = zones.size();
@@ -92,7 +93,8 @@ void BPA_IMEXPORTER_TEST::test_load_owner_data()
 
     ostringstream osstream;
 
-    vector<OWNER*> owners = db->get_all_owners();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<OWNER*> owners = psdb.get_all_owners();
 
     osstream<<"Owner count: "<<owners.size()<<endl;
     size_t n = owners.size();
@@ -106,7 +108,8 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
 
     ostringstream osstream;
 
-    vector<BUS*> buses = db->get_all_buses();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<BUS*> buses = psdb.get_all_buses();
 
     osstream<<"Bus count: "<<buses.size()<<endl;
     show_information_with_leading_time_stamp(osstream);
@@ -120,7 +123,8 @@ void BPA_IMEXPORTER_TEST::test_load_area_data()
 
     ostringstream osstream;
 
-    vector<AREA*> areas = db->get_all_areas();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<AREA*> areas = psdb.get_all_areas();
 
     osstream<<"Area count: "<<areas.size()<<endl;
     size_t n = areas.size();
@@ -134,13 +138,13 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    vector<BUS*> buses = db->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t n = buses.size();
 
     TEST_ASSERT(n==42);
 
     BUS* bus;
-    bus = db->get_bus(101);
+    bus = psdb.get_bus(101);
     TEST_ASSERT(bus->get_bus_number()==101);
     TEST_ASSERT(bus->get_bus_name()=="NUC-A");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-21.6)<FLOAT_EPSILON);
@@ -151,7 +155,7 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==1);
     TEST_ASSERT(bus->get_owner_number()==1);
 
-    bus = db->get_bus(201);
+    bus = psdb.get_bus(201);
     TEST_ASSERT(bus->get_bus_number()==201);
     TEST_ASSERT(bus->get_bus_name()=="HYDRO");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-500.0)<FLOAT_EPSILON);
@@ -162,7 +166,7 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==7);
     TEST_ASSERT(bus->get_owner_number()==2);
 
-    bus = db->get_bus(3001);
+    bus = psdb.get_bus(3001);
     TEST_ASSERT(bus->get_bus_number()==3001);
     TEST_ASSERT(bus->get_bus_name()=="MINE");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-230.0)<FLOAT_EPSILON);
@@ -173,7 +177,7 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==6);
     TEST_ASSERT(bus->get_owner_number()==5);
 
-    bus = db->get_bus(93002);
+    bus = psdb.get_bus(93002);
     TEST_ASSERT(bus->get_bus_number()==93002);
     TEST_ASSERT(bus->get_bus_name()=="WINDBUS3");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-0.69)<FLOAT_EPSILON);
@@ -191,7 +195,8 @@ void BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data()
 
     ostringstream osstream;
 
-    vector<LOAD*> loads = db->get_all_loads();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<LOAD*> loads = psdb.get_all_loads();
 
     osstream<<"Load count: "<<loads.size()<<endl;
     show_information_with_leading_time_stamp(osstream);
@@ -199,7 +204,7 @@ void BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data()
     for(size_t i=0; i!=n; ++i)
         loads[i]->report();
 
-    vector<FIXED_SHUNT*> fshunts = db->get_all_fixed_shunts();
+    vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
 
     osstream<<"Fixed shunt count: "<<fshunts.size()<<endl;
     show_information_with_leading_time_stamp(osstream);
@@ -219,7 +224,8 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
 
     ostringstream osstream;
 
-    vector<GENERATOR*> generators = db->get_all_generators();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
 
     osstream<<"Generator count: "<<generators.size()<<endl;
     show_information_with_leading_time_stamp(osstream);
@@ -240,7 +246,7 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    GENERATOR* gen = db->get_generator(did);
+    GENERATOR* gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==101);
     TEST_ASSERT(gen->get_identifier()=="1");
     TEST_ASSERT(gen->get_status()==true);
@@ -256,7 +262,7 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
     terminal.append_bus(301);
     did.set_device_terminal(terminal);
     did.set_device_identifier("2");
-    gen = db->get_generator(did);
+    gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==301);
     TEST_ASSERT(gen->get_identifier()=="2");
     TEST_ASSERT(gen->get_status()==true);
@@ -272,7 +278,7 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
     terminal.append_bus(3018);
     did.set_device_terminal(terminal);
     did.set_device_identifier("2");
-    gen = db->get_generator(did);
+    gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==3018);
     TEST_ASSERT(gen->get_identifier()=="2");
     TEST_ASSERT(gen->get_status()==true);
@@ -291,7 +297,8 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
 
     ostringstream osstream;
 
-    vector<WT_GENERATOR*> wt_generators = db->get_all_wt_generators();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
     size_t n = wt_generators.size();
 
     TEST_ASSERT(n==3);
@@ -304,7 +311,7 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("W1");
 
-    WT_GENERATOR* wt_generator = db->get_wt_generator(did);
+    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==9154);
     TEST_ASSERT(wt_generator->get_identifier()=="W1");
     TEST_ASSERT(wt_generator->get_status()==true);
@@ -320,7 +327,7 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
     terminal.append_bus(93002);
     did.set_device_terminal(terminal);
     did.set_device_identifier("W3");
-    wt_generator = db->get_wt_generator(did);
+    wt_generator = psdb.get_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==93002);
     TEST_ASSERT(wt_generator->get_identifier()=="W3");
     TEST_ASSERT(wt_generator->get_status()==true);
@@ -339,7 +346,8 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
 
     ostringstream osstream;
 
-    vector<LINE*> lines = db->get_all_lines();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
 
     osstream<<"Line count: "<<lines.size()<<endl;
     show_information_with_leading_time_stamp(osstream);
@@ -360,7 +368,7 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    LINE* line = db->get_line(did);
+    LINE* line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==151);
     TEST_ASSERT(line->get_receiving_side_bus()==152);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -377,7 +385,7 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
     terminal.append_bus(214);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
-    line = db->get_line(did);
+    line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==213);
     TEST_ASSERT(line->get_receiving_side_bus()==214);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -394,7 +402,7 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
     terminal.append_bus(3009);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
-    line = db->get_line(did);
+    line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==3008);
     TEST_ASSERT(line->get_receiving_side_bus()==3009);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -413,7 +421,8 @@ void BPA_IMEXPORTER_TEST::test_load_transformer_data()
 
     ostringstream osstream;
 
-    vector<TRANSFORMER*> trans = db->get_all_transformers();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<TRANSFORMER*> trans = psdb.get_all_transformers();
 
     osstream<<"Transformer count: "<<trans.size()<<endl;
     show_information_with_leading_time_stamp(osstream);
@@ -428,7 +437,8 @@ void BPA_IMEXPORTER_TEST::test_load_hvdc_data()
 
     ostringstream osstream;
 
-    vector<HVDC*> hvdcs = db->get_all_hvdcs();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
 
     //TEST_ASSERT(n==2);
@@ -442,46 +452,46 @@ void BPA_IMEXPORTER_TEST::test_convert_data_into_bpa_format()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    TEST_ASSERT(importer->convert_data_into_bpa_format("ABC", "A3")=="ABC");
-    TEST_ASSERT(importer->convert_data_into_bpa_format("AB", "A3")=="AB ");
-    TEST_ASSERT(importer->convert_data_into_bpa_format("ABCD", "A3")=="ABC");
+    TEST_ASSERT(importer.convert_data_into_bpa_format("ABC", "A3")=="ABC");
+    TEST_ASSERT(importer.convert_data_into_bpa_format("AB", "A3")=="AB ");
+    TEST_ASSERT(importer.convert_data_into_bpa_format("ABCD", "A3")=="ABC");
 
-    TEST_ASSERT(importer->convert_data_into_bpa_format(size_t(1), "I3")=="  1");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(size_t(10), "I3")==" 10");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(size_t(999), "I3")=="999");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(size_t(1), "I3")=="  1");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(size_t(10), "I3")==" 10");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(size_t(999), "I3")=="999");
 
-    TEST_ASSERT(importer->convert_data_into_bpa_format(int(1), "I3")=="  1");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(int(10), "I3")==" 10");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(int(999), "I3")=="999");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(int(-1), "I3")==" -1");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(int(-10), "I3")=="-10");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(int(-99), "I3")=="-99");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(int(1), "I3")=="  1");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(int(10), "I3")==" 10");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(int(999), "I3")=="999");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(int(-1), "I3")==" -1");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(int(-10), "I3")=="-10");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(int(-99), "I3")=="-99");
 
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.0")==" 1.23");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.1")==" 1.23");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.2")==" 1.23");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.3")==" 1.23");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1.23, "F5.4")==" 1.23");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.0")==" 1.23");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.1")==" 1.23");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.2")==" 1.23");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.3")==" 1.23");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1.23, "F5.4")==" 1.23");
 
-    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.0")=="12.34");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.1")=="12.34");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.2")=="12.34");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.3")=="12.34");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(12.3456, "F5.4")=="12.34");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.0")=="12.34");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.1")=="12.34");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.2")=="12.34");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.3")=="12.34");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(12.3456, "F5.4")=="12.34");
 
-    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.0")=="123.4");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.1")=="123.4");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.2")=="123.4");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.3")=="123.4");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(123.456, "F5.4")=="123.4");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.0")=="123.4");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.1")=="123.4");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.2")=="123.4");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.3")=="123.4");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(123.456, "F5.4")=="123.4");
 
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.0")=="1234.");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.1")=="1234.");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.2")=="1234.");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.3")=="1234.");
-    TEST_ASSERT(importer->convert_data_into_bpa_format(1234.56, "F5.4")=="1234.");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.0")=="1234.");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.1")=="1234.");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.2")=="1234.");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.3")=="1234.");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(1234.56, "F5.4")=="1234.");
 
-    TEST_ASSERT(importer->convert_data_into_bpa_format(12345.6, "F5.0")=="12345");
+    TEST_ASSERT(importer.convert_data_into_bpa_format(12345.6, "F5.0")=="12345");
 }
 
 
@@ -489,8 +499,9 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    db->clear_database();
-    //importer->load_powerflow_data("")
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
+    //importer.load_powerflow_data("")
     PSSE_IMEXPORTER psse_importer;
     psse_importer.load_powerflow_data("bench_yunnan.raw");
 
@@ -498,12 +509,12 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
 
     //psse_importer.export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER.raw");
 
-    importer->export_powerflow_data("export_sd_model_with_BPA_IMEXPORTER.dat");
+    importer.export_powerflow_data("export_sd_model_with_BPA_IMEXPORTER.dat");
     psse_importer.export_powerflow_data("export_sd_model_with_PSSE_IMEXPORTER.raw");
 
-    db->clear_database();
-    importer->load_powerflow_data("云南网500kV简化网络.dat");
-    importer->export_powerflow_data("export_yn_model_with_BPA_IMEXPORTER.dat");
+    psdb.clear_database();
+    importer.load_powerflow_data("云南网500kV简化网络.dat");
+    importer.export_powerflow_data("export_yn_model_with_BPA_IMEXPORTER.dat");
     psse_importer.export_powerflow_data("export_yn_model_with_PSSE_IMEXPORTER.raw");
 
 }
@@ -512,14 +523,14 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_psse()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    importer->export_powerflow_data("export_sample_model_with_BPA_IMEXPORTER.raw");
+    importer.export_powerflow_data("export_sample_model_with_BPA_IMEXPORTER.raw");
 }
 
 void BPA_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_bpa()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    importer->export_powerflow_data("export_sample_model_with_BPA_IMEXPORTER.raw");
+    importer.export_powerflow_data("export_sample_model_with_BPA_IMEXPORTER.raw");
 }
 
 void BPA_IMEXPORTER_TEST::test_load_dynamic_data()

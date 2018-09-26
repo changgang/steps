@@ -14,11 +14,9 @@ using namespace std;
 class NETWORK_DATABASE : public BASE
 {
     public:
-        NETWORK_DATABASE(POWER_SYSTEM_DATABASE* psdb);
+        NETWORK_DATABASE();
         ~NETWORK_DATABASE();
         void clear_database();
-
-        bool is_power_system_database_set() const;
 
         void build_network_matrix();
         void build_decoupled_network_matrix();
@@ -95,7 +93,6 @@ class NETWORK_DATABASE : public BASE
         void report_network_matrix_common() const;
         void save_network_matrix_common(ofstream& file) const;
     private:
-        POWER_SYSTEM_DATABASE* db;
         SPARSE_MATRIX network_Y_matrix, network_BP_matrix, network_BQ_matrix, network_DC_B_matrix;
         INPHNO inphno;
     private:

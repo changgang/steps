@@ -310,10 +310,6 @@ void WT_AERODYNAMIC_MODEL::initialize()
     if(not genmodel->is_model_initialized())
         genmodel->initialize();
 
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return;
-
     set_cpmax_at_zero_pitch();
 
     initialize_wind_turbine_blade_radius_and_gear_ratio();
@@ -567,10 +563,6 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     if(gen==NULL)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return;
-
     double D = get_damping_in_pu();
     double mbase = get_mbase_in_MVA();
     complex<double> zsource = get_source_impedance_in_pu_based_on_mbase();
@@ -702,10 +694,6 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
         return;
 
     double D = get_damping_in_pu();

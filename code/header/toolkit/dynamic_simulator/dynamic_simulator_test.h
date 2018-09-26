@@ -25,8 +25,6 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         virtual void tear_down();
     private:
         void test_constructor();
-        void test_set_and_get_power_system_database();
-        void test_is_power_system_database_set();
 
         void test_set_get_csv_file_export_enable_flag();
         void test_set_get_json_file_export_enable_flag();
@@ -82,8 +80,6 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
 
     private:
         void run_single_machine_model_for_model_test();
-        POWER_SYSTEM_DATABASE* db;
-        DYNAMICS_SIMULATOR* simulator;
 };
 
 #endif//DYNAMICS_SIMULATOR_TEST_H

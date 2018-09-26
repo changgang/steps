@@ -12,15 +12,8 @@
 
 using namespace std;
 
-GENERATOR::GENERATOR(POWER_SYSTEM_DATABASE* psdb) : SOURCE(psdb)
+GENERATOR::GENERATOR() : SOURCE()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. GENERATOR object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
     clear();
 
     sync_generator_model = NULL;
@@ -170,7 +163,7 @@ void GENERATOR::set_sync_generator_model(const SYNC_GENERATOR_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         sync_generator_model = new_model;
     }
@@ -212,7 +205,7 @@ void GENERATOR::set_compensator_model(const COMPENSATOR_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         compensator_model = new_model;
     }
@@ -284,7 +277,7 @@ void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         exciter_model = new_model;
     }
@@ -326,7 +319,7 @@ void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         stabilizer_model = new_model;
     }
@@ -388,7 +381,7 @@ void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         turbine_governor_model = new_model;
     }
@@ -550,7 +543,6 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
     if(this==(&gen)) return *this;
 
     clear();
-    set_power_system_database(gen.get_power_system_database());
     set_generator_bus(gen.get_generator_bus());
     set_identifier(gen.get_identifier());
     set_status(gen.get_status());
@@ -587,18 +579,11 @@ complex<double> GENERATOR::get_source_dynamic_current_in_pu_based_on_system_base
     if(get_status()==false or generator_model==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"Source dynamic current in pu based on system base power be returned as 0.0.";
-        show_information_with_leading_time_stamp(osstream);
-        return 0.0;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     complex<double> I = generator_model->get_terminal_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
     I *= (mbase/sbase);
     return I;
 }

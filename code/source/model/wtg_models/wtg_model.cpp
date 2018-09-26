@@ -1,5 +1,5 @@
 #include "header/model/wtg_models/wtg_model.h"
-
+#include "header/basic/utility.h"
 #include "header/power_system_database.h"
 WTG_MODEL::WTG_MODEL()
 {
@@ -31,12 +31,10 @@ complex<double> WTG_MODEL::get_terminal_complex_voltage_in_pu() const
     if(gen==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = gen->get_generator_bus();
-    complex<double> Vxy = psdb->get_bus_complex_voltage_in_pu(bus);
+    complex<double> Vxy = psdb.get_bus_complex_voltage_in_pu(bus);
     return Vxy;
 }
 
@@ -62,11 +60,9 @@ double WTG_MODEL::get_bus_base_frequency_in_Hz() const
     if(gen==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    return psdb->get_bus_base_frequency_in_Hz(gen->get_generator_bus());
+    return psdb.get_bus_base_frequency_in_Hz(gen->get_generator_bus());
 }
 
 complex<double> WTG_MODEL::get_source_impedance_in_pu_based_on_mbase() const

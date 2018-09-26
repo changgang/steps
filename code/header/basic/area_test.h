@@ -34,7 +34,6 @@ class AREA_TEST : public Test::Suite
         void test_clear();
         void test_copy_with_operator_equal();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        AREA* area;
+        AREA area;
 };
 #endif // AREA_TEST_H

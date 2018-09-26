@@ -56,9 +56,9 @@ void PV_CONVERTER_MODEL_TEST::test_get_terminal_complex_voltage_in_pu()
 {
     PV_UNIT* pv_unit = get_test_pv_unit();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
-    POWER_SYSTEM_DATABASE* psdb = pv_unit->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = pv_unit->get_unit_bus();
-    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb->get_bus_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb.get_bus_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
 }
 
 void PV_CONVERTER_MODEL_TEST::test_get_number_of_lumped_pv_units()
@@ -79,8 +79,8 @@ void PV_CONVERTER_MODEL_TEST::test_get_nominal_frequency_in_Hz()
 {
     PV_UNIT* pv_unit = get_test_pv_unit();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
-    POWER_SYSTEM_DATABASE* psdb = pv_unit->get_power_system_database();
-    TEST_ASSERT(fabs(model->get_bus_base_frequency_in_Hz()-psdb->get_bus_base_frequency_in_Hz(pv_unit->get_unit_bus()))<FLOAT_EPSILON);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TEST_ASSERT(fabs(model->get_bus_base_frequency_in_Hz()-psdb.get_bus_base_frequency_in_Hz(pv_unit->get_unit_bus()))<FLOAT_EPSILON);
 }
 
 void PV_CONVERTER_MODEL_TEST::test_get_source_impedance_in_pu_based_on_mbase()
@@ -307,7 +307,7 @@ void PV_CONVERTER_MODEL_TEST::test_reactive_current_step_response_of_pv_converte
 
 void PV_CONVERTER_MODEL_TEST::test_bus_magnitude_step_response_of_pv_converter_model()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
     ostringstream osstream;
     if(model!=NULL)
@@ -341,7 +341,7 @@ void PV_CONVERTER_MODEL_TEST::test_bus_magnitude_step_response_of_pv_converter_m
             export_meter_values(time);
         }
 
-        BUS* bus = psdb->get_bus(get_test_pv_unit()->get_unit_bus());
+        BUS* bus = psdb.get_bus(get_test_pv_unit()->get_unit_bus());
         double vterm = bus->get_voltage_in_pu();
         bus->set_voltage_in_pu(vterm*0.99);
 
@@ -370,7 +370,7 @@ void PV_CONVERTER_MODEL_TEST::test_bus_magnitude_step_response_of_pv_converter_m
 
 void PV_CONVERTER_MODEL_TEST::test_bus_angle_step_response_of_pv_converter_model()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
     ostringstream osstream;
     if(model!=NULL)
@@ -404,7 +404,7 @@ void PV_CONVERTER_MODEL_TEST::test_bus_angle_step_response_of_pv_converter_model
             export_meter_values(time);
         }
 
-        BUS* bus = psdb->get_bus(get_test_pv_unit()->get_unit_bus());
+        BUS* bus = psdb.get_bus(get_test_pv_unit()->get_unit_bus());
         double angle = bus->get_angle_in_deg();
         bus->set_angle_in_deg(angle+10.0);
 

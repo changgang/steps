@@ -21,7 +21,7 @@ void GENROU::copy_from_const_model(const GENROU& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_power_system_database());
+    //this->set_power_system_database(model.get_default_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     this->set_Rs(model.get_Rs());
@@ -454,8 +454,8 @@ complex<double> GENROU::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Exy = get_internal_voltage_in_pu_in_xy_axis();
     complex<double> Z(get_Rs(), get_Xpp());
     double mbase = get_mbase_in_MVA();
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     return (Exy*mbase)/(Z*sbase);
 }
@@ -488,8 +488,8 @@ complex<double> GENROU::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     return Ixy*mbase/sbase;
 }
@@ -504,8 +504,8 @@ double GENROU::get_terminal_current_in_pu_based_on_sbase()
     double I = get_terminal_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     return I*mbase/sbase;
 }
@@ -624,10 +624,10 @@ double GENROU::get_variable_with_name(string var_name)
         return get_terminal_current_in_pu_based_on_mbase();
     if(var_name == "GENERATOR TERMINAL CURRENT IN KA")
     {
-        POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
         GENERATOR* generator = get_generator_pointer();
         size_t bus = generator->get_generator_bus();
-        double vbase = psdb->get_bus_base_voltage_in_kV(bus);
+        double vbase = psdb.get_bus_base_voltage_in_kV(bus);
         double mbase = generator->get_mbase_in_MVA();
         double ibase = mbase/sqrt(3.0)/vbase;
         return get_terminal_current_in_pu_based_on_mbase()*ibase;

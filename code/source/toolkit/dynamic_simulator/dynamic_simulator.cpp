@@ -10,16 +10,9 @@
 
 using namespace std;
 
-DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR(POWER_SYSTEM_DATABASE* psdb)
+DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR()
 {
-    if(psdb==NULL)
-        return;
-
-    psdb->set_dynamic_simulator(this);
-
-    set_power_system_database(psdb);
-
-    network_db = new NETWORK_DATABASE(psdb);
+    network_db = new NETWORK_DATABASE;
 
     clear();
 
@@ -57,23 +50,6 @@ void DYNAMICS_SIMULATOR::clear()
     set_rotor_angle_stability_survilliance_flag(false);
     set_rotor_angle_stability_threshold_in_deg(360.0);
     generators_in_islands.clear();
-}
-
-bool DYNAMICS_SIMULATOR::is_power_system_database_set() const
-{
-    ostringstream osstream;
-
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb!=NULL)
-        return true;
-    else
-    {
-        osstream<<"Error. Power system database is not set for the DYNAMICS_SIMULATOR."
-          <<"No operation on the dynamics simulator will work.";
-        show_information_with_leading_time_stamp(osstream);
-        return false;
-    }
 }
 
 NETWORK_DATABASE* DYNAMICS_SIMULATOR::get_network_database() const
@@ -192,9 +168,6 @@ double DYNAMICS_SIMULATOR::get_rotor_angle_stability_threshold_in_deg() const
 
 void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
 {
-    if(not is_power_system_database_set())
-        return;
-
     if(meter.is_valid())
     {
         meters.push_back(meter);
@@ -225,13 +198,12 @@ void DYNAMICS_SIMULATOR::prepare_meters()
 
 void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
 
-    size_t n = psdb->get_bus_count();
-    vector<BUS*> buses = psdb->get_all_buses();
+    size_t n = psdb.get_bus_count();
+    vector<BUS*> buses = psdb.get_all_buses();
     BUS* bus;
     for(size_t i=0; i!=n; ++i)
     {
@@ -262,15 +234,14 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
 
     size_t n;
 
-    n = psdb->get_generator_count();
-    vector<GENERATOR*> generators = psdb->get_all_generators();
+    n = psdb.get_generator_count();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
     GENERATOR* generator;
     for(size_t i=0; i!=n; ++i)
     {
@@ -312,15 +283,15 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     size_t n;
 
-    n = psdb->get_wt_generator_count();
-    vector<WT_GENERATOR*> generators = psdb->get_all_wt_generators();
+    n = psdb.get_wt_generator_count();
+    vector<WT_GENERATOR*> generators = psdb.get_all_wt_generators();
     WT_GENERATOR* generator;
     for(size_t i=0; i!=n; ++i)
     {
@@ -439,15 +410,15 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_load_related_meters()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     size_t n;
 
-    n = psdb->get_load_count();
-    vector<LOAD*> loads = psdb->get_all_loads();
+    n = psdb.get_load_count();
+    vector<LOAD*> loads = psdb.get_all_loads();
     LOAD* load;
     for(size_t i=0; i!=n; ++i)
     {
@@ -468,15 +439,15 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_line_related_meters()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     size_t n;
 
-    n = psdb->get_line_count();
-    vector<LINE*> lines = psdb->get_all_lines();
+    n = psdb.get_line_count();
+    vector<LINE*> lines = psdb.get_all_lines();
     LINE* line;
     for(size_t i=0; i!=n; ++i)
     {
@@ -494,15 +465,15 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     size_t n;
 
-    n = psdb->get_hvdc_count();
-    vector<HVDC*> hvdcs = psdb->get_all_hvdcs();
+    n = psdb.get_hvdc_count();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     HVDC* hvdc;
     for(size_t i=0; i!=n; ++i)
     {
@@ -566,15 +537,15 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     size_t n;
 
-    n = psdb->get_equivalent_device_count();
-    vector<EQUIVALENT_DEVICE*> edevices = psdb->get_all_equivalent_devices();
+    n = psdb.get_equivalent_device_count();
+    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     EQUIVALENT_DEVICE* edevice;
     for(size_t i=0; i!=n; ++i)
     {
@@ -603,9 +574,9 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
 void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(not psdb->is_bus_exist(bus))
+    if(not psdb.is_bus_exist(bus))
     {
         osstream<<"Warning. Meter of bus "<<bus<<" cannot be set since the given bus does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -613,7 +584,7 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
@@ -639,7 +610,7 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type
 void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(did.get_device_type()!="GENERATOR")
     {
@@ -648,7 +619,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
         return;
     }
 
-    if(not psdb->is_generator_exist(did))
+    if(not psdb.is_generator_exist(did))
     {
         osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -656,7 +627,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
@@ -696,7 +667,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
 void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(did.get_device_type()!="WT GENERATOR")
     {
@@ -705,7 +676,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
         return;
     }
 
-    if(not psdb->is_wt_generator_exist(did))
+    if(not psdb.is_wt_generator_exist(did))
     {
         osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -713,7 +684,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
@@ -777,7 +748,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
 void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(did.get_device_type()!="PV UNIT")
     {
@@ -786,7 +757,7 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
         return;
     }
 
-    if(not psdb->is_pv_unit_exist(did))
+    if(not psdb.is_pv_unit_exist(did))
     {
         osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -794,7 +765,7 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
@@ -858,7 +829,7 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
 void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(did.get_device_type()!="PV UNIT")
     {
@@ -867,7 +838,7 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
         return;
     }
 
-    if(not psdb->is_pv_unit_exist(did))
+    if(not psdb.is_pv_unit_exist(did))
     {
         osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -875,7 +846,7 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
@@ -939,7 +910,7 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
 void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(did.get_device_type()!="LOAD")
     {
@@ -948,7 +919,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
         return;
     }
 
-    if(not psdb->is_load_exist(did))
+    if(not psdb.is_load_exist(did))
     {
         osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -956,7 +927,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
@@ -984,7 +955,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
 void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(did.get_device_type()!="LINE")
     {
@@ -993,7 +964,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
         return;
     }
 
-    if(not psdb->is_line_exist(did))
+    if(not psdb.is_line_exist(did))
     {
         osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -1001,13 +972,13 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
     side = string2upper(side);
 
-    LINE* line = psdb->get_line(did);
+    LINE* line = psdb.get_line(did);
     size_t bus = 0;
     if(side=="SENDING" or side=="S")
         bus = line->get_sending_side_bus();
@@ -1034,7 +1005,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
 void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(did.get_device_type()!="HVDC")
     {
@@ -1043,7 +1014,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
         return;
     }
 
-    if(not psdb->is_hvdc_exist(did))
+    if(not psdb.is_hvdc_exist(did))
     {
         osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -1051,7 +1022,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
@@ -1113,7 +1084,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
 void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(did.get_device_type()!="EQUIVALENT DEVICE")
     {
@@ -1122,7 +1093,7 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
         return;
     }
 
-    if(not psdb->is_equivalent_device_exist(did))
+    if(not psdb.is_equivalent_device_exist(did))
     {
         osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
         show_information_with_leading_time_stamp(osstream);
@@ -1130,7 +1101,7 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
     }
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
+
 
     METER meter;
     meter_type = string2upper(meter_type);
@@ -1160,19 +1131,12 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
 
 size_t DYNAMICS_SIMULATOR::get_meter_count() const
 {
-    if(not is_power_system_database_set())
-        return 0;
-
     return meters.size();
 }
 
 METER DYNAMICS_SIMULATOR::get_meter(size_t i)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    METER voidmeter(psdb);
-
-    if(not is_power_system_database_set())
-        return voidmeter;
+    METER voidmeter;
 
     if(meters.size()==0)
         return voidmeter;
@@ -1187,9 +1151,6 @@ METER DYNAMICS_SIMULATOR::get_meter(size_t i)
 
 void DYNAMICS_SIMULATOR::update_all_meters_value()
 {
-    if(not is_power_system_database_set())
-        return;
-
     size_t n = meters.size();
     if(n==0)
         return;
@@ -1209,9 +1170,6 @@ vector<double> DYNAMICS_SIMULATOR::get_all_meters_value()
 
 void DYNAMICS_SIMULATOR::clear_meters()
 {
-    if(not is_power_system_database_set())
-        return;
-
     meters.clear();
     meter_values.clear();
 }
@@ -1473,8 +1431,8 @@ void DYNAMICS_SIMULATOR::stop()
 
 double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<GENERATOR*> gens = psdb->get_all_generators();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<GENERATOR*> gens = psdb.get_all_generators();
     size_t n = gens.size();
     GENERATOR* gen;
     SYNC_GENERATOR_MODEL* model;
@@ -1645,10 +1603,10 @@ void DYNAMICS_SIMULATOR::update()
 
 void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    size_t n = db->get_generator_count();
-    vector<GENERATOR*> generators = db->get_all_generators();
+    size_t n = psdb.get_generator_count();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
     GENERATOR* generator;
     //#pragma omp parallel for
     for(size_t i=0; i<n; ++i)
@@ -1659,8 +1617,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         generator->run(mode);
     }
 
-    n = db->get_wt_generator_count();
-    vector<WT_GENERATOR*> wtgens = db->get_all_wt_generators();
+    n = psdb.get_wt_generator_count();
+    vector<WT_GENERATOR*> wtgens = psdb.get_all_wt_generators();
     WT_GENERATOR* wtgen;
     //#pragma omp parallel for
     for(size_t i=0; i<n; ++i)
@@ -1671,8 +1629,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         wtgen->run(mode);
     }
 
-    n = db->get_load_count();
-    vector<LOAD*> loads = db->get_all_loads();
+    n = psdb.get_load_count();
+    vector<LOAD*> loads = psdb.get_all_loads();
     LOAD* load;
     //#pragma omp parallel for
     for(size_t i=0; i<n; ++i)
@@ -1683,8 +1641,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         load->run(mode);
     }
 
-    n = db->get_hvdc_count();
-    vector<HVDC*> hvdcs = db->get_all_hvdcs();
+    n = psdb.get_hvdc_count();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     HVDC* hvdc;
     //#pragma omp parallel for
     for(size_t i=0; i<n; ++i)
@@ -1693,8 +1651,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         hvdc->run(mode);
     }
 
-    n = db->get_equivalent_device_count();
-    vector<EQUIVALENT_DEVICE*> edevices = db->get_all_equivalent_devices();
+    n = psdb.get_equivalent_device_count();
+    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     EQUIVALENT_DEVICE* edevice;
     //#pragma omp parallel for
     for(size_t i=0; i<n; ++i)
@@ -1703,7 +1661,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         edevice->run(mode);
     }
 
-    vector<BUS*> buses = db->get_all_in_service_buses();
+    vector<BUS*> buses = psdb.get_all_in_service_buses();
     n = buses.size();
     BUS* bus;
     //#pragma omp parallel for
@@ -1729,8 +1687,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
 void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    vector<BUS*> buses = db->get_all_in_service_buses();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<BUS*> buses = psdb.get_all_in_service_buses();
     size_t n = buses.size();
     BUS* bus;
     //#pragma omp parallel for
@@ -1745,8 +1703,8 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
 }
 void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    vector<EQUIVALENT_DEVICE*> edevices = db->get_all_equivalent_devices();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     size_t n = edevices.size();
     EQUIVALENT_DEVICE* edevice;
     for(size_t i=0; i!=n; ++i)
@@ -1758,8 +1716,8 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 
 void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    vector<EQUIVALENT_DEVICE*> edevices = db->get_all_equivalent_devices();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     size_t n = edevices.size();
     EQUIVALENT_DEVICE* edevice;
     ostringstream osstream;
@@ -1776,14 +1734,14 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 bool DYNAMICS_SIMULATOR::solve_network()
 {
     ostringstream osstream;
-    //POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    //POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     //clock_t start = clock(), start0 = clock();
-    /*size_t nbus = psdb->get_in_service_bus_count();
+    /*size_t nbus = psdb.get_in_service_bus_count();
     for(int i=0; i!=nbus; ++i)
     {
         size_t bus = network_db->get_physical_bus_number_of_internal_bus(i);
-        complex<double> V = psdb->get_bus_complex_voltage_in_pu(bus);
+        complex<double> V = psdb.get_bus_complex_voltage_in_pu(bus);
         osstream<<"Initial voltage of bus %u: %f pu, %f deg",bus, steps_fast_complex_abs(V), rad2deg(steps_fast_complex_arg(V)));
         show_information_with_leading_time_stamp(osstream);
     }*/
@@ -1865,7 +1823,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     /*for(int i=0; i!=nbus; ++i)
     {
         size_t bus = network_db->get_physical_bus_number_of_internal_bus(i);
-        complex<double> V = psdb->get_bus_complex_voltage_in_pu(bus);
+        complex<double> V = psdb.get_bus_complex_voltage_in_pu(bus);
         osstream<<"Solved  voltage of bus %u: %f pu, %f deg",bus, steps_fast_complex_abs(V), rad2deg(steps_fast_complex_arg(V)));
         show_information_with_leading_time_stamp(osstream);
     }*/
@@ -1876,8 +1834,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
 void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    vector<HVDC*> hvdcs = psdb->get_all_hvdcs();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -1905,9 +1863,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     const SPARSE_MATRIX& Y = network_db->get_dynamic_network_matrix();
-    size_t nbus = psdb->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
 
 	if(I_mismatch.size()!=nbus)
 		I_mismatch.resize(nbus, 0.0);
@@ -1921,7 +1879,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     for(int column=0; column!=nsize; ++column)
     {
         size_t column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(column);
-		complex<double> voltage = psdb->get_bus_complex_voltage_in_pu(column_physical_bus);
+		complex<double> voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
 
         k_end = Y.get_starting_index_of_column(column+1);
         for(int k=k_start; k!=k_end; ++k)
@@ -1942,7 +1900,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     for(size_t i=0; i!=nbus; ++i)Warning. Network solution converged in
     {
         column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(i);
-        voltage = psdb->get_bus_complex_voltage_in_pu(column_physical_bus);
+        voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
         s = voltage*conj(bus_current[i]);
 
         osstream<<"%-8u %-10f %-10f %-10f %-10f",column_physical_bus, bus_current[i].real(), bus_current[i].imag(), s.real(), s.imag());
@@ -1953,11 +1911,11 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 
 void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t physical_bus, internal_bus;
 
-    vector<GENERATOR*> generators = psdb->get_all_generators();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
 
     GENERATOR* generator;
     SYNC_GENERATOR_MODEL* gen_model;
@@ -1998,11 +1956,11 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t physical_bus, internal_bus;
 
-    vector<WT_GENERATOR*> generators = psdb->get_all_wt_generators();
+    vector<WT_GENERATOR*> generators = psdb.get_all_wt_generators();
 
     WT_GENERATOR* generator;
     WT_GENERATOR_MODEL* gen_model;
@@ -2043,9 +2001,9 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<LOAD*> loads = psdb->get_all_loads();
+    vector<LOAD*> loads = psdb.get_all_loads();
 
     size_t nload = loads.size();
 
@@ -2068,11 +2026,11 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 }
 void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t physical_bus, internal_bus;
 
-    vector<HVDC*> hvdcs = psdb->get_all_hvdcs();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
 
     size_t nhvdc = hvdcs.size();
 
@@ -2106,13 +2064,13 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    double sbase = psdb->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     size_t physical_bus, internal_bus;
 
-    vector<EQUIVALENT_DEVICE*> edevices = psdb->get_all_equivalent_devices();
+    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
 
     size_t nedevice = edevices.size();
 
@@ -2129,7 +2087,7 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
         S = edevices[i]->get_total_equivalent_power_as_load_in_MVA()/sbase;
 
-        V = psdb->get_bus_complex_voltage_in_pu(physical_bus);
+        V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
 
         I_mismatch[internal_bus] -= conj(S/V);
     }
@@ -2153,8 +2111,8 @@ bool DYNAMICS_SIMULATOR::is_converged()
 
 void DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     S_mismatch = I_mismatch;
 
@@ -2164,7 +2122,7 @@ void DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA()
     for(size_t i= 0; i!=n; ++i)
     {
         physical_bus = network_db->get_physical_bus_number_of_internal_bus(i);
-        V = psdb->get_bus_complex_voltage_in_pu(physical_bus);
+        V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
         S_mismatch[i] = V*conj(S_mismatch[i])*sbase;
     }
 }
@@ -2206,7 +2164,7 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 
 void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t n = delta_V.size();
     n = n>>1;
@@ -2219,7 +2177,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     for(size_t i=0; i!=n; ++i)
     {
         physical_bus = network_db->get_physical_bus_number_of_internal_bus(i);
-        bus = psdb->get_bus(physical_bus);
+        bus = psdb.get_bus(physical_bus);
         vang0 = bus->get_angle_in_rad();
         V0 = bus->get_complex_voltage_in_pu();
 
@@ -2279,12 +2237,12 @@ void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step(double newDELT)
 
 void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT fault)
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    BUS* busptr = db->get_bus(bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(bus);
     double fault_b = fault.get_fault_shunt_in_pu().imag();
     double current_voltage = busptr->get_voltage_in_pu();
     double vbase = busptr->get_base_voltage_in_kV();
-    double sbase = db->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
     double zbase = vbase*vbase/sbase;
     double fault_x = -1.0/fault_b*zbase;
     if(fault_x<1)
@@ -2310,8 +2268,8 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT 
 
 void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, FAULT fault)
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    BUS* busptr = db->get_bus(bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(bus);
     double fault_b = fault.get_fault_shunt_in_pu().imag();
     double current_voltage = busptr->get_voltage_in_pu();
     busptr->set_voltage_in_pu(0.8);;
@@ -2349,10 +2307,10 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& 
     if(location <0.0 or location >1.0)
         return;
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     if(location>0.5)
     {
-        LINE* line = db->get_line(did);
+        LINE* line = psdb.get_line(did);
         if(line!=NULL)
         {
             if(not line->is_connected_to_bus(side_bus))
@@ -2370,7 +2328,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& 
     }
     else
     {
-        LINE* line = db->get_line(did);
+        LINE* line = psdb.get_line(did);
         if(line!=NULL)
         {
             if(not line->is_connected_to_bus(side_bus))
@@ -2400,10 +2358,10 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_
     if(location <0.0 or location >1.0)
         return;
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     if(location>0.5)
     {
-        LINE* line = db->get_line(did);
+        LINE* line = psdb.get_line(did);
         if(line!=NULL)
         {
             if(not line->is_connected_to_bus(side_bus))
@@ -2421,7 +2379,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_
     }
     else
     {
-        LINE* line = db->get_line(did);
+        LINE* line = psdb.get_line(did);
         if(line!=NULL)
         {
             if(not line->is_connected_to_bus(side_bus))
@@ -2450,7 +2408,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_
 void DYNAMICS_SIMULATOR::update_generators_in_islands()
 {
     NETWORK_DATABASE* network_db = get_network_database();
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     vector< vector<size_t> > islands = network_db->get_islands_with_physical_bus_number();
     if(islands.size()==generators_in_islands.size()) // won't update if islands doesn't change
@@ -2470,7 +2428,7 @@ void DYNAMICS_SIMULATOR::update_generators_in_islands()
         for(size_t j=0; j!=nisland; ++j)
         {
             size_t bus = island[j];
-            generators_at_bus = psdb->get_generators_connecting_to_bus(bus);
+            generators_at_bus = psdb.get_generators_connecting_to_bus(bus);
             size_t n = generators_at_bus.size();
             for(size_t k=0; k!=n; ++k)
             {
@@ -2549,8 +2507,8 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
 void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, complex<double> fault_shunt)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    BUS* busptr = db->get_bus(bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         if(steps_fast_complex_abs(fault_shunt)<FLOAT_EPSILON)
@@ -2585,8 +2543,8 @@ void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, complex<double> fault_shunt)
 
 void DYNAMICS_SIMULATOR::clear_bus_fault(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    BUS* busptr = db->get_bus(bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         ostringstream osstream;
@@ -2605,8 +2563,8 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(size_t bus)
 
 void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    BUS* busptr = db->get_bus(bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         if(busptr->get_bus_type()!=OUT_OF_SERVICE)
@@ -2616,7 +2574,7 @@ void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
             osstream<<"Bus "<<bus<<" will be tripped at time "<<get_dynamic_simulation_time_in_s()<<" s. Devices connecting to bus "<<bus<<" will also be tripped.";
             show_information_with_leading_time_stamp(osstream);
 
-            db->trip_bus(bus);
+            psdb.trip_bus(bus);
 
             network_db->optimize_network_ordering();
             network_db->build_dynamic_network_matrix();
@@ -2644,8 +2602,8 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bu
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LINE* lineptr = db->get_line(line_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE* lineptr = psdb.get_line(line_id);
     if(lineptr!=NULL)
     {
         if(not lineptr->is_connected_to_bus(side_bus))
@@ -2713,8 +2671,8 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, size_t side_
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LINE* lineptr = db->get_line(line_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE* lineptr = psdb.get_line(line_id);
     if(lineptr!=NULL)
     {
         if(not lineptr->is_connected_to_bus(side_bus))
@@ -2766,8 +2724,8 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LINE* lineptr = db->get_line(line_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE* lineptr = psdb.get_line(line_id);
     if(lineptr!=NULL)
     {
         if(lineptr->get_sending_side_breaker_status()==true or lineptr->get_receiving_side_breaker_status()==true)
@@ -2802,8 +2760,8 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, size_t side
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LINE* lineptr = db->get_line(line_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE* lineptr = psdb.get_line(line_id);
     if(lineptr!=NULL)
     {
         if(lineptr->get_sending_side_bus()==side_bus)
@@ -2854,8 +2812,8 @@ void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LINE* lineptr = db->get_line(line_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE* lineptr = psdb.get_line(line_id);
     if(lineptr!=NULL)
     {
         if(lineptr->get_sending_side_breaker_status()==false or lineptr->get_receiving_side_breaker_status()==false)
@@ -2890,8 +2848,8 @@ void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, size_t sid
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LINE* lineptr = db->get_line(line_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE* lineptr = psdb.get_line(line_id);
     if(lineptr!=NULL)
     {
         if(lineptr->get_sending_side_bus()==side_bus)
@@ -2940,8 +2898,8 @@ void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    TRANSFORMER* transptr = db->get_transformer(trans_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TRANSFORMER* transptr = psdb.get_transformer(trans_id);
     if(transptr!=NULL)
     {
         if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==true or transptr->get_winding_breaker_status(SECONDARY_SIDE)==true or
@@ -2980,8 +2938,8 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, siz
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    TRANSFORMER* transptr = db->get_transformer(trans_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TRANSFORMER* transptr = psdb.get_transformer(trans_id);
     if(transptr!=NULL)
     {
         if(transptr->get_winding_bus(PRIMARY_SIDE)==side_bus)
@@ -3048,8 +3006,8 @@ void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    TRANSFORMER* transptr = db->get_transformer(trans_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TRANSFORMER* transptr = psdb.get_transformer(trans_id);
     if(transptr!=NULL)
     {
         if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==false or transptr->get_winding_breaker_status(SECONDARY_SIDE)==false or
@@ -3088,8 +3046,8 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, si
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    TRANSFORMER* transptr = db->get_transformer(trans_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TRANSFORMER* transptr = psdb.get_transformer(trans_id);
     if(transptr!=NULL)
     {
         if(transptr->get_winding_bus(PRIMARY_SIDE)==side_bus)
@@ -3152,8 +3110,8 @@ void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    GENERATOR* generator = db->get_generator(gen_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator!=NULL)
     {
         if(generator->get_status()==true)
@@ -3187,8 +3145,8 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    GENERATOR* generator = db->get_generator(gen_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator!=NULL)
     {
         if(fabs(percent)<FLOAT_EPSILON)
@@ -3231,8 +3189,8 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    WT_GENERATOR* generator = db->get_wt_generator(gen_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    WT_GENERATOR* generator = psdb.get_wt_generator(gen_id);
     if(generator!=NULL)
     {
         if(generator->get_status()==true)
@@ -3285,8 +3243,8 @@ void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LOAD* load = db->get_load(load_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LOAD* load = psdb.get_load(load_id);
     if(load!=NULL)
     {
         if(load->get_status()==true)
@@ -3320,8 +3278,8 @@ void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LOAD* load = db->get_load(load_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LOAD* load = psdb.get_load(load_id);
     if(load!=NULL)
     {
         if(load->get_status()==false)
@@ -3355,8 +3313,8 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    LOAD* load = db->get_load(load_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LOAD* load = psdb.get_load(load_id);
     if(load!=NULL)
     {
         if(fabs(percent)<FLOAT_EPSILON)
@@ -3400,15 +3358,15 @@ void DYNAMICS_SIMULATOR::scale_all_load(double percent)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<DEVICE_ID> loads = db->get_all_loads_device_id();
+    vector<DEVICE_ID> loads = psdb.get_all_loads_device_id();
     DEVICE_ID load;
     size_t n = loads.size();
     for(size_t i=0; i!=n; ++i)
     {
         load = loads[i];
-        LOAD* loadptr = db->get_load(load);
+        LOAD* loadptr = psdb.get_load(load);
         if(loadptr==NULL)
             continue;
 
@@ -3432,8 +3390,8 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    FIXED_SHUNT* shunt = db->get_fixed_shunt(shunt_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    FIXED_SHUNT* shunt = psdb.get_fixed_shunt(shunt_id);
     if(shunt!=NULL)
     {
         if(shunt->get_status()==true)
@@ -3467,8 +3425,8 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    FIXED_SHUNT* shunt = db->get_fixed_shunt(shunt_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    FIXED_SHUNT* shunt = psdb.get_fixed_shunt(shunt_id);
     if(shunt!=NULL)
     {
         if(shunt->get_status()==false)
@@ -3495,8 +3453,8 @@ void DYNAMICS_SIMULATOR::manual_bypass_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    HVDC* hvdc = db->get_hvdc(hvdc_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
     if(hvdc!=NULL)
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
@@ -3514,8 +3472,8 @@ void DYNAMICS_SIMULATOR::manual_unbypass_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    HVDC* hvdc = db->get_hvdc(hvdc_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
     if(hvdc!=NULL)
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
@@ -3533,8 +3491,8 @@ void DYNAMICS_SIMULATOR::manual_block_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    HVDC* hvdc = db->get_hvdc(hvdc_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
     if(hvdc!=NULL)
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
@@ -3552,8 +3510,8 @@ void DYNAMICS_SIMULATOR::manual_unblock_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    HVDC* hvdc = db->get_hvdc(hvdc_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
     if(hvdc!=NULL)
     {
         HVDC_MODEL* model = hvdc->get_hvdc_model();
@@ -3570,8 +3528,8 @@ void DYNAMICS_SIMULATOR::manual_unblock_hvdc(const DEVICE_ID& hvdc_id)
 
 void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref)
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    GENERATOR* generator = db->get_generator(gen_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator != NULL)
     {
         EXCITER_MODEL* exciter = generator->get_exciter_model();
@@ -3582,8 +3540,8 @@ void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_I
 
 void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref)
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    GENERATOR* generator = db->get_generator(gen_id);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator != NULL)
     {
         TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
@@ -3594,8 +3552,8 @@ void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(const DEVICE_ID&
 
 void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
 {
-    POWER_SYSTEM_DATABASE* db = get_power_system_database();
-    vector<EQUIVALENT_DEVICE*> edevices = db->get_all_equivalent_devices();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     size_t n = edevices.size();
     ostringstream osstream;
     osstream<<"There are "<<n<<" equivalent devices to switch on";

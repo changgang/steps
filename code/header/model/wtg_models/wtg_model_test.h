@@ -20,7 +20,6 @@ class WTG_MODEL_TEST : public Test::Suite
 {
     public:
         WTG_MODEL_TEST();
-        POWER_SYSTEM_DATABASE* get_test_power_system_database();
         WT_GENERATOR* get_test_wt_generator();
         WT_GENERATOR_MODEL* get_test_wt_generator_model();
         WT_AERODYNAMIC_MODEL* get_test_wt_aerodynamic_model();
@@ -32,7 +31,6 @@ class WTG_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     private:
-        POWER_SYSTEM_DATABASE* psdb;
 };
 
 #endif//WTG_MODEL_TEST_H

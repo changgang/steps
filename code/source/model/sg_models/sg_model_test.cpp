@@ -18,9 +18,9 @@ SG_MODEL_TEST::SG_MODEL_TEST()
 
 void SG_MODEL_TEST::setup()
 {
-    db = get_default_power_system_database_pointer();
-    db->set_allowed_max_bus_number(100);
-    db->set_system_base_power_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(100);
+    psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
     bus.set_bus_number(1);
@@ -30,9 +30,9 @@ void SG_MODEL_TEST::setup()
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_rad(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
-    GENERATOR generator(db);
+    GENERATOR generator;
     generator.set_generator_bus(1);
     generator.set_identifier("#1");
     generator.set_status(true);
@@ -41,16 +41,13 @@ void SG_MODEL_TEST::setup()
     generator.set_p_generation_in_MW(100.0);
     generator.set_q_generation_in_MVar(30.0);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 }
 
 void SG_MODEL_TEST::tear_down()
 {
-    db->clear_database();
-}
-POWER_SYSTEM_DATABASE* SG_MODEL_TEST::get_test_power_system_database()
-{
-    return db;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
 }
 
 GENERATOR* SG_MODEL_TEST::get_test_generator()
@@ -62,7 +59,8 @@ GENERATOR* SG_MODEL_TEST::get_test_generator()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    return db->get_generator(did);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    return psdb.get_generator(did);
 }
 
 SYNC_GENERATOR_MODEL* SG_MODEL_TEST::get_test_sync_generator_model()

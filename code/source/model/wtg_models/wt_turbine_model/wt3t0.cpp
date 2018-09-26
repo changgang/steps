@@ -174,9 +174,7 @@ void WT3T0::initialize()
     if(gen==NULL)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-        return;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     WT_GENERATOR_MODEL* gen_model = gen->get_wt_generator_model();
     if(gen_model==NULL)
@@ -196,7 +194,7 @@ void WT3T0::initialize()
     double wbase = 2.0*PI*fbase;
 
     generator_rotor_angle_block.set_T_in_s(1.0/wbase);
-    generator_rotor_angle_block.set_output(psdb->get_bus_angle_in_rad(bus));
+    generator_rotor_angle_block.set_output(psdb.get_bus_angle_in_rad(bus));
     generator_rotor_angle_block.initialize();
 
     double speed = get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model();

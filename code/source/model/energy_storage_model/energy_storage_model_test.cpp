@@ -27,9 +27,9 @@ ENERGY_STORAGE_MODEL_TEST::ENERGY_STORAGE_MODEL_TEST()
 
 void ENERGY_STORAGE_MODEL_TEST::setup()
 {
-    db = get_default_power_system_database_pointer();
-    db->set_allowed_max_bus_number(100);
-    db->set_system_base_power_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(100);
+    psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
     bus.set_bus_number(1);
@@ -38,9 +38,9 @@ void ENERGY_STORAGE_MODEL_TEST::setup()
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_rad(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
-    ENERGY_STORAGE estorage(db);
+    ENERGY_STORAGE estorage;
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
     estorage.set_status(true);
@@ -49,18 +49,15 @@ void ENERGY_STORAGE_MODEL_TEST::setup()
     estorage.set_p_generation_in_MW(10.0);
     estorage.set_q_generation_in_MVar(0.0);
 
-    db->append_energy_storage(estorage);
+    psdb.append_energy_storage(estorage);
 }
 
 void ENERGY_STORAGE_MODEL_TEST::tear_down()
 {
-    db->clear_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
 }
 
-POWER_SYSTEM_DATABASE* ENERGY_STORAGE_MODEL_TEST::get_test_power_system_database()
-{
-    return db;
-}
 
 ENERGY_STORAGE* ENERGY_STORAGE_MODEL_TEST::get_test_energy_storage()
 {
@@ -71,7 +68,8 @@ ENERGY_STORAGE* ENERGY_STORAGE_MODEL_TEST::get_test_energy_storage()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    return db->get_energy_storage(did);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    return psdb.get_energy_storage(did);
 }
 
 ENERGY_STORAGE_MODEL* ENERGY_STORAGE_MODEL_TEST::get_test_energy_storage_model()
@@ -214,6 +212,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response()
 {
     ostringstream osstream;
 
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     ENERGY_STORAGE_MODEL* model = get_test_energy_storage_model();
     if(model!=NULL)
     {
@@ -246,7 +245,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response()
             export_meter_values();
         }
 
-        BUS* bus = db->get_bus(1);
+        BUS* bus = psdb.get_bus(1);
         bus->set_frequency_deviation_in_pu(-0.02);
         model->run(UPDATE_MODE);
 
@@ -275,6 +274,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response()
 {
     ostringstream osstream;
 
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     ENERGY_STORAGE_MODEL* model = get_test_energy_storage_model();
     if(model!=NULL)
     {
@@ -307,7 +307,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response()
             export_meter_values();
         }
 
-        BUS* bus = db->get_bus(1);
+        BUS* bus = psdb.get_bus(1);
         bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
         model->run(UPDATE_MODE);
 

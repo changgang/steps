@@ -20,7 +20,6 @@ class ENERGY_STORAGE_MODEL_TEST : public Test::Suite
 {
     public:
         ENERGY_STORAGE_MODEL_TEST();
-        POWER_SYSTEM_DATABASE* get_test_power_system_database();
         ENERGY_STORAGE* get_test_energy_storage();
         ENERGY_STORAGE_MODEL* get_test_energy_storage_model();
     protected:
@@ -44,7 +43,6 @@ class ENERGY_STORAGE_MODEL_TEST : public Test::Suite
         virtual void test_get_model_name() = 0;
         virtual void test_set_get_parameters() = 0;
     private:
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//ENERGY_STORAGE_MODEL_TEST_H

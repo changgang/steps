@@ -57,7 +57,6 @@ class UTILITY_TEST : public Test::Suite
         void test_set_get_dynamic_simulation_time_step();
         void test_set_get_dynamic_simulation_time();
     private:
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//UTILITY_TEST_H

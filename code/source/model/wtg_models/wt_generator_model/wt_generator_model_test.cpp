@@ -56,9 +56,9 @@ void WT_GENERATOR_MODEL_TEST::test_get_terminal_complex_voltage_in_pu()
 {
     WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-    POWER_SYSTEM_DATABASE* psdb = wt_gen->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = wt_gen->get_generator_bus();
-    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb->get_bus_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb.get_bus_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_get_number_of_lumped_wt_generators()
@@ -79,8 +79,8 @@ void WT_GENERATOR_MODEL_TEST::test_get_nominal_frequency_in_Hz()
 {
     WT_GENERATOR* wt_gen = get_test_wt_generator();
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
-    POWER_SYSTEM_DATABASE* psdb = wt_gen->get_power_system_database();
-    TEST_ASSERT(fabs(model->get_bus_base_frequency_in_Hz()-psdb->get_bus_base_frequency_in_Hz(wt_gen->get_generator_bus()))<FLOAT_EPSILON);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TEST_ASSERT(fabs(model->get_bus_base_frequency_in_Hz()-psdb.get_bus_base_frequency_in_Hz(wt_gen->get_generator_bus()))<FLOAT_EPSILON);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_get_source_impedance_in_pu_based_on_mbase()
@@ -307,7 +307,7 @@ void WT_GENERATOR_MODEL_TEST::test_reactive_current_step_response_of_wt_generato
 
 void WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_model()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
     ostringstream osstream;
     if(model!=NULL)
@@ -341,7 +341,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_m
             export_meter_values(time);
         }
 
-        BUS* bus = psdb->get_bus(get_test_wt_generator()->get_generator_bus());
+        BUS* bus = psdb.get_bus(get_test_wt_generator()->get_generator_bus());
         double vterm = bus->get_voltage_in_pu();
         bus->set_voltage_in_pu(vterm*0.99);
 
@@ -370,7 +370,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_m
 
 void WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
     ostringstream osstream;
     if(model!=NULL)
@@ -404,7 +404,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model
             export_meter_values(time);
         }
 
-        BUS* bus = psdb->get_bus(get_test_wt_generator()->get_generator_bus());
+        BUS* bus = psdb.get_bus(get_test_wt_generator()->get_generator_bus());
         double angle = bus->get_angle_in_deg();
         bus->set_angle_in_deg(angle+10.0);
 

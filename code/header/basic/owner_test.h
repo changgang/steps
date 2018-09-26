@@ -31,8 +31,7 @@ class OWNER_TEST : public Test::Suite
         void test_clear();
         void test_copy_with_operator_equal();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        OWNER* owner;
+        OWNER owner;
 };
 
 #endif

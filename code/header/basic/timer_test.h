@@ -30,8 +30,6 @@ class TIMER_TEST : public Test::Suite
         void test_is_valid();
         void test_copy_with_operator_equal();
     private:
-        TIMER* timer;
-        POWER_SYSTEM_DATABASE* psdb;
-        DYNAMICS_SIMULATOR* simulator;
+        TIMER timer;
 };
 #endif // TIMER_TEST_H

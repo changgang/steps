@@ -38,18 +38,16 @@ PSSE_IMEXPORTER_TEST::PSSE_IMEXPORTER_TEST()
 
 void PSSE_IMEXPORTER_TEST::setup()
 {
-    db = get_default_power_system_database_pointer();
-    db->set_allowed_max_bus_number(100000);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(100000);
 
-    importer = new PSSE_IMEXPORTER;
-    importer->load_powerflow_data("sample.raw");
+    importer.load_powerflow_data("sample.raw");
 }
 
 void PSSE_IMEXPORTER_TEST::tear_down()
 {
-    delete importer;
-    importer = NULL;
-    db->clear_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
 
     show_test_end_information();
 }
@@ -58,21 +56,23 @@ void PSSE_IMEXPORTER_TEST::test_load_case_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    TEST_ASSERT(db->get_system_base_power_in_MVA()==100.0);
-    TEST_ASSERT(importer->get_data_version()==31);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TEST_ASSERT(psdb.get_system_base_power_in_MVA()==100.0);
+    TEST_ASSERT(importer.get_data_version()==31);
 }
 
 void PSSE_IMEXPORTER_TEST::test_load_bus_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<BUS*> buses = db->get_all_buses();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t n = buses.size();
 
     TEST_ASSERT(n==42);
 
     BUS* bus;
-    bus = db->get_bus(101);
+    bus = psdb.get_bus(101);
     TEST_ASSERT(bus->get_bus_number()==101);
     TEST_ASSERT(bus->get_bus_name()=="NUC-A");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-21.6)<FLOAT_EPSILON);
@@ -83,7 +83,7 @@ void PSSE_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==1);
     TEST_ASSERT(bus->get_owner_number()==1);
 
-    bus = db->get_bus(201);
+    bus = psdb.get_bus(201);
     TEST_ASSERT(bus->get_bus_number()==201);
     TEST_ASSERT(bus->get_bus_name()=="HYDRO");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-500.0)<FLOAT_EPSILON);
@@ -94,7 +94,7 @@ void PSSE_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==7);
     TEST_ASSERT(bus->get_owner_number()==2);
 
-    bus = db->get_bus(3001);
+    bus = psdb.get_bus(3001);
     TEST_ASSERT(bus->get_bus_number()==3001);
     TEST_ASSERT(bus->get_bus_name()=="MINE");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-230.0)<FLOAT_EPSILON);
@@ -105,7 +105,7 @@ void PSSE_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_zone_number()==6);
     TEST_ASSERT(bus->get_owner_number()==5);
 
-    bus = db->get_bus(93002);
+    bus = psdb.get_bus(93002);
     TEST_ASSERT(bus->get_bus_number()==93002);
     TEST_ASSERT(bus->get_bus_name()=="WINDBUS3");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-0.69)<FLOAT_EPSILON);
@@ -121,7 +121,8 @@ void PSSE_IMEXPORTER_TEST::test_load_load_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<LOAD*> loads = db->get_all_loads();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<LOAD*> loads = psdb.get_all_loads();
     size_t n = loads.size();
 
     TEST_ASSERT(n==20);
@@ -134,7 +135,7 @@ void PSSE_IMEXPORTER_TEST::test_load_load_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    LOAD* load = db->get_load(did);
+    LOAD* load = psdb.get_load(did);
     TEST_ASSERT(load->get_load_bus()==152);
     TEST_ASSERT(load->get_identifier()=="1");
     TEST_ASSERT(load->get_status()==true);
@@ -146,7 +147,7 @@ void PSSE_IMEXPORTER_TEST::test_load_load_data()
     terminal.append_bus(215);
     did.set_device_terminal(terminal);
     did.set_device_identifier("U1");
-    load = db->get_load(did);
+    load = psdb.get_load(did);
     TEST_ASSERT(load->get_load_bus()==215);
     TEST_ASSERT(load->get_identifier()=="U1");
     TEST_ASSERT(load->get_status()==true);
@@ -158,7 +159,7 @@ void PSSE_IMEXPORTER_TEST::test_load_load_data()
     terminal.append_bus(3010);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
-    load = db->get_load(did);
+    load = psdb.get_load(did);
     TEST_ASSERT(load->get_load_bus()==3010);
     TEST_ASSERT(load->get_identifier()=="1");
     TEST_ASSERT(load->get_status()==true);
@@ -174,7 +175,8 @@ void PSSE_IMEXPORTER_TEST::test_load_fixed_shunt_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<FIXED_SHUNT*> shunts = db->get_all_fixed_shunts();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
     size_t n = shunts.size();
 
     TEST_ASSERT(n==13);
@@ -187,7 +189,7 @@ void PSSE_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("F1");
 
-    FIXED_SHUNT* shunt = db->get_fixed_shunt(did);
+    FIXED_SHUNT* shunt = psdb.get_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==151);
     TEST_ASSERT(shunt->get_identifier()=="F1");
     TEST_ASSERT(shunt->get_status()==true);
@@ -197,7 +199,7 @@ void PSSE_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     terminal.append_bus(201);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
-    shunt = db->get_fixed_shunt(did);
+    shunt = psdb.get_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==201);
     TEST_ASSERT(shunt->get_identifier()=="1");
     TEST_ASSERT(shunt->get_status()==true);
@@ -207,7 +209,7 @@ void PSSE_IMEXPORTER_TEST::test_load_fixed_shunt_data()
     terminal.append_bus(3022);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
-    shunt = db->get_fixed_shunt(did);
+    shunt = psdb.get_fixed_shunt(did);
     TEST_ASSERT(shunt->get_shunt_bus()==3022);
     TEST_ASSERT(shunt->get_identifier()=="1");
     TEST_ASSERT(shunt->get_status()==true);
@@ -218,7 +220,8 @@ void PSSE_IMEXPORTER_TEST::test_load_generator_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<GENERATOR*> generators = db->get_all_generators();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
     size_t n = generators.size();
 
     TEST_ASSERT(n==12);
@@ -231,7 +234,7 @@ void PSSE_IMEXPORTER_TEST::test_load_generator_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    GENERATOR* gen = db->get_generator(did);
+    GENERATOR* gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==101);
     TEST_ASSERT(gen->get_identifier()=="1");
     TEST_ASSERT(gen->get_status()==true);
@@ -247,7 +250,7 @@ void PSSE_IMEXPORTER_TEST::test_load_generator_data()
     terminal.append_bus(301);
     did.set_device_terminal(terminal);
     did.set_device_identifier("2");
-    gen = db->get_generator(did);
+    gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==301);
     TEST_ASSERT(gen->get_identifier()=="2");
     TEST_ASSERT(gen->get_status()==true);
@@ -263,7 +266,7 @@ void PSSE_IMEXPORTER_TEST::test_load_generator_data()
     terminal.append_bus(3018);
     did.set_device_terminal(terminal);
     did.set_device_identifier("2");
-    gen = db->get_generator(did);
+    gen = psdb.get_generator(did);
     TEST_ASSERT(gen->get_generator_bus()==3018);
     TEST_ASSERT(gen->get_identifier()=="2");
     TEST_ASSERT(gen->get_status()==true);
@@ -280,7 +283,8 @@ void PSSE_IMEXPORTER_TEST::test_load_wt_generator_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<WT_GENERATOR*> wt_generators = db->get_all_wt_generators();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
     size_t n = wt_generators.size();
 
     TEST_ASSERT(n==3);
@@ -293,7 +297,7 @@ void PSSE_IMEXPORTER_TEST::test_load_wt_generator_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("W1");
 
-    WT_GENERATOR* wt_generator = db->get_wt_generator(did);
+    WT_GENERATOR* wt_generator = psdb.get_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==9154);
     TEST_ASSERT(wt_generator->get_identifier()=="W1");
     TEST_ASSERT(wt_generator->get_status()==true);
@@ -309,7 +313,7 @@ void PSSE_IMEXPORTER_TEST::test_load_wt_generator_data()
     terminal.append_bus(93002);
     did.set_device_terminal(terminal);
     did.set_device_identifier("W3");
-    wt_generator = db->get_wt_generator(did);
+    wt_generator = psdb.get_wt_generator(did);
     TEST_ASSERT(wt_generator->get_source_bus()==93002);
     TEST_ASSERT(wt_generator->get_identifier()=="W3");
     TEST_ASSERT(wt_generator->get_status()==true);
@@ -326,7 +330,8 @@ void PSSE_IMEXPORTER_TEST::test_load_line_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<LINE*> lines = db->get_all_lines();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<LINE*> lines = psdb.get_all_lines();
     size_t n = lines.size();
 
     TEST_ASSERT(n==30);
@@ -340,7 +345,7 @@ void PSSE_IMEXPORTER_TEST::test_load_line_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    LINE* line = db->get_line(did);
+    LINE* line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==151);
     TEST_ASSERT(line->get_receiving_side_bus()==152);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -357,7 +362,7 @@ void PSSE_IMEXPORTER_TEST::test_load_line_data()
     terminal.append_bus(214);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
-    line = db->get_line(did);
+    line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==213);
     TEST_ASSERT(line->get_receiving_side_bus()==214);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -374,7 +379,7 @@ void PSSE_IMEXPORTER_TEST::test_load_line_data()
     terminal.append_bus(3009);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
-    line = db->get_line(did);
+    line = psdb.get_line(did);
     TEST_ASSERT(line->get_sending_side_bus()==3008);
     TEST_ASSERT(line->get_receiving_side_bus()==3009);
     TEST_ASSERT(line->get_identifier()=="1");
@@ -391,7 +396,8 @@ void PSSE_IMEXPORTER_TEST::test_load_transformer_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<TRANSFORMER*> trans = db->get_all_transformers();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<TRANSFORMER*> trans = psdb.get_all_transformers();
     size_t n = trans.size();
 
     TEST_ASSERT(n==18);
@@ -406,7 +412,7 @@ void PSSE_IMEXPORTER_TEST::test_load_transformer_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("T1");
 
-    TRANSFORMER* transptr = db->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     TEST_ASSERT(transptr!=NULL);
     TEST_ASSERT(fabs(transptr->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)-1200.0)<FLOAT_EPSILON);
 
@@ -417,7 +423,7 @@ void PSSE_IMEXPORTER_TEST::test_load_transformer_data()
     did.set_device_terminal(terminal);
     did.set_device_identifier("T2");
 
-    transptr = db->get_transformer(did);
+    transptr = psdb.get_transformer(did);
     TEST_ASSERT(transptr!=NULL);
     TEST_ASSERT(fabs(transptr->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)-1210.0)<FLOAT_EPSILON);
 
@@ -430,14 +436,15 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<AREA*> areas = db->get_all_areas();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<AREA*> areas = psdb.get_all_areas();
     size_t n = areas.size();
 
     TEST_ASSERT(n==6);
 
     AREA* area;
 
-    area = db->get_area(1);
+    area = psdb.get_area(1);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==1);
     TEST_ASSERT(area->get_area_swing_bus()==101);
@@ -446,7 +453,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(area->get_area_name()=="CENTRAL");
     cout<<"Area 1 name is :'"<<area->get_area_name()<<"'"<<endl;
 
-    area = db->get_area(2);
+    area = psdb.get_area(2);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==2);
     TEST_ASSERT(area->get_area_swing_bus()==206);
@@ -454,7 +461,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="EAST");
 
-    area = db->get_area(3);
+    area = psdb.get_area(3);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==3);
     TEST_ASSERT(area->get_area_swing_bus()==301);
@@ -462,7 +469,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-55.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="CENTRAL_DC");
 
-    area = db->get_area(4);
+    area = psdb.get_area(4);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==4);
     TEST_ASSERT(area->get_area_swing_bus()==401);
@@ -470,7 +477,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-15.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="EAST_COGEN1");
 
-    area = db->get_area(5);
+    area = psdb.get_area(5);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==5);
     TEST_ASSERT(area->get_area_swing_bus()==3011);
@@ -478,7 +485,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="WEST");
 
-    area = db->get_area(6);
+    area = psdb.get_area(6);
     TEST_ASSERT(area!=NULL);
     TEST_ASSERT(area->get_area_number()==6);
     TEST_ASSERT(area->get_area_swing_bus()==402);
@@ -494,7 +501,8 @@ void PSSE_IMEXPORTER_TEST::test_load_hvdc_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<HVDC*> hvdcs = db->get_all_hvdcs();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
 
     TEST_ASSERT(n==2);
@@ -507,54 +515,55 @@ void PSSE_IMEXPORTER_TEST::test_load_zone_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<ZONE*> zones = db->get_all_zones();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<ZONE*> zones = psdb.get_all_zones();
     size_t n = zones.size();
 
     TEST_ASSERT(n==9);
 
     ZONE* zone;
 
-    zone = db->get_zone(1);
+    zone = psdb.get_zone(1);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==1);
     TEST_ASSERT(zone->get_zone_name()=="NORTH_A1");
 
-    zone = db->get_zone(2);
+    zone = psdb.get_zone(2);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==2);
     TEST_ASSERT(zone->get_zone_name()=="MID_A1_A2_A5");
 
-    zone = db->get_zone(3);
+    zone = psdb.get_zone(3);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==3);
     TEST_ASSERT(zone->get_zone_name()=="DISCNT_IN_A1");
 
-    zone = db->get_zone(4);
+    zone = psdb.get_zone(4);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==4);
     TEST_ASSERT(zone->get_zone_name()=="SOUTH_A1_A5");
 
-    zone = db->get_zone(5);
+    zone = psdb.get_zone(5);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==5);
     TEST_ASSERT(zone->get_zone_name()=="ALL_A3");
 
-    zone = db->get_zone(6);
+    zone = psdb.get_zone(6);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==6);
     TEST_ASSERT(zone->get_zone_name()=="NORTH_A5");
 
-    zone = db->get_zone(7);
+    zone = psdb.get_zone(7);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==7);
     TEST_ASSERT(zone->get_zone_name()=="NORTH_A2");
 
-    zone = db->get_zone(8);
+    zone = psdb.get_zone(8);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==8);
     TEST_ASSERT(zone->get_zone_name()=="SOUTH_A2");
 
-    zone = db->get_zone(9);
+    zone = psdb.get_zone(9);
     TEST_ASSERT(zone!=NULL);
     TEST_ASSERT(zone->get_zone_number()==9);
     TEST_ASSERT(zone->get_zone_name()=="ALL_A4_A6");
@@ -567,34 +576,35 @@ void PSSE_IMEXPORTER_TEST::test_load_owner_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    vector<OWNER*> owners = db->get_all_owners();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<OWNER*> owners = psdb.get_all_owners();
     size_t n = owners.size();
 
     TEST_ASSERT(n==5);
 
     OWNER* owner;
 
-    owner = db->get_owner(1);
+    owner = psdb.get_owner(1);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==1);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 1");
 
-    owner = db->get_owner(2);
+    owner = psdb.get_owner(2);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==2);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 2");
 
-    owner = db->get_owner(3);
+    owner = psdb.get_owner(3);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==3);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 3");
 
-    owner = db->get_owner(4);
+    owner = psdb.get_owner(4);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==4);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 4");
 
-    owner = db->get_owner(5);
+    owner = psdb.get_owner(5);
     TEST_ASSERT(owner!=NULL);
     TEST_ASSERT(owner->get_owner_number()==5);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 5");
@@ -607,22 +617,23 @@ void PSSE_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_psse()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    importer->export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER_data_imported_with_PSSE_IMEXPORTER.raw");
+    importer.export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER_data_imported_with_PSSE_IMEXPORTER.raw");
 }
 
 void PSSE_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_bpa()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    importer->export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER_data_imported_with_BPA_IMEXPORTER.raw");
+    importer.export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER_data_imported_with_BPA_IMEXPORTER.raw");
 }
 
 void PSSE_IMEXPORTER_TEST::test_load_dynamic_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    db->clear_database();
-    importer->load_powerflow_data("ieee9.raw");
-    importer->load_dynamic_data("ieee9.dyr");
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
+    importer.load_powerflow_data("ieee9.raw");
+    importer.load_dynamic_data("ieee9.dyr");
 }
 

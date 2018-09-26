@@ -118,9 +118,7 @@ string STABILIZER_MODEL::convert_signal_type_number_to_string(size_t signal_type
 SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_type, size_t bus)
 {
     SIGNAL signal;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-        return signal;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     if(bus==0)
         return signal;
@@ -129,7 +127,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
     {
         case 1:
         {
-            vector<GENERATOR*> gens = psdb->get_generators_connecting_to_bus(bus);
+            vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
             if(gens.size()==0)
                 break;
             GENERATOR* gen = gens[0];
@@ -140,7 +138,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
         }
         case 2:
         {
-            BUS* busptr = psdb->get_bus(bus);
+            BUS* busptr = psdb.get_bus(bus);
             if(busptr==NULL)
                 break;
             DEVICE_ID did = busptr->get_device_id();
@@ -150,7 +148,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
         }
         case 3:
         {
-            vector<GENERATOR*> gens = psdb->get_generators_connecting_to_bus(bus);
+            vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
             if(gens.size()==0)
                 break;
             GENERATOR* gen = gens[0];
@@ -161,7 +159,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
         }
         case 4:
         {
-            vector<GENERATOR*> gens = psdb->get_generators_connecting_to_bus(bus);
+            vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
             if(gens.size()==0)
                 break;
             GENERATOR* gen = gens[0];
@@ -172,7 +170,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
         }
         case 5:
         {
-            BUS* busptr = psdb->get_bus(bus);
+            BUS* busptr = psdb.get_bus(bus);
             if(busptr==NULL)
                 break;
             DEVICE_ID did = busptr->get_device_id();
@@ -182,7 +180,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
         }
         case 6:
         {
-            BUS* busptr = psdb->get_bus(bus);
+            BUS* busptr = psdb.get_bus(bus);
             if(busptr==NULL)
                 break;
             DEVICE_ID did = busptr->get_device_id();

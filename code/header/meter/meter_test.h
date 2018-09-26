@@ -52,10 +52,8 @@ class METER_TEST : public Test::Suite
         void test_get_hvdc_meter_value();
         void test_get_equivalent_device_meter_value();
         void test_get_energy_storage_meter_value();
-
     private:
-        POWER_SYSTEM_DATABASE* db;
-        METER* meter;
+        METER meter;
 };
 
 #endif

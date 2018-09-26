@@ -5,16 +5,8 @@
 
 using namespace std;
 
-FIXED_SHUNT::FIXED_SHUNT(POWER_SYSTEM_DATABASE* psdb)
+FIXED_SHUNT::FIXED_SHUNT()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. FIXED_SHUNT object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    set_power_system_database(psdb);
     clear();
 }
 
@@ -36,20 +28,15 @@ void FIXED_SHUNT::set_shunt_bus(size_t shunt_bus)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    if(psdb.is_bus_exist(shunt_bus))
         this->bus = shunt_bus;
     else
     {
-        if(psdb->is_bus_exist(shunt_bus))
-            this->bus = shunt_bus;
-        else
-        {
-            osstream<<"Bus "<<shunt_bus<<" does not exist in the power system database '"<<psdb->get_system_name()<<"' for setting up fixed shunt."<<endl
-              <<"0 will be set to indicate invalid fixed shunt.";
-            show_information_with_leading_time_stamp(osstream);
-            this->bus = 0;
-        }
+        osstream<<"Bus "<<shunt_bus<<" does not exist in the power system database '"<<psdb.get_system_name()<<"' for setting up fixed shunt."<<endl
+          <<"0 will be set to indicate invalid fixed shunt.";
+        show_information_with_leading_time_stamp(osstream);
+        this->bus = 0;
     }
 }
 
@@ -95,17 +82,9 @@ complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    double mvabase = 100.0;
-    if(psdb==NULL)
-    {
-        osstream<<get_device_name()<<" is not assigned to any power system database. 100MVA will be used to get pu shunt impedance.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    else
-        mvabase = psdb->get_system_base_power_in_MVA();
-
+    double mvabase = psdb.get_system_base_power_in_MVA();
     return conj(mvabase/get_nominal_impedance_shunt_in_MVA());
 }
 
@@ -146,16 +125,11 @@ bool FIXED_SHUNT::is_connected_to_bus(size_t target_bus) const
 
 bool FIXED_SHUNT::is_in_area(size_t area) const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(get_shunt_bus());
+    if(busptr!=NULL)
     {
-        BUS* busptr = psdb->get_bus(get_shunt_bus());
-        if(busptr!=NULL)
-        {
-            return busptr->is_in_area(area);
-        }
-        else
-            return false;
+        return busptr->is_in_area(area);
     }
     else
         return false;
@@ -163,16 +137,11 @@ bool FIXED_SHUNT::is_in_area(size_t area) const
 
 bool FIXED_SHUNT::is_in_zone(size_t zone) const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(get_shunt_bus());
+    if(busptr!=NULL)
     {
-        BUS* busptr = psdb->get_bus(get_shunt_bus());
-        if(busptr!=NULL)
-        {
-            return busptr->is_in_zone(zone);
-        }
-        else
-            return false;
+        return busptr->is_in_zone(zone);
     }
     else
         return false;
@@ -204,7 +173,6 @@ FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)
 
     clear();
 
-    set_power_system_database(fixed_shunt.get_power_system_database());
     set_shunt_bus(fixed_shunt.get_shunt_bus());
     set_identifier(fixed_shunt.get_identifier());
     set_status(fixed_shunt.get_status());
@@ -241,27 +209,18 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 
     complex<double> S0 = get_nominal_impedance_shunt_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(psdb==NULL)
+    BUS* busptr = psdb.get_bus(get_shunt_bus());
+
+    if(busptr==NULL)
     {
-        osstream<<get_device_name()<<" is not assigned to any power system database. Nominal impedance shunt in MVA will be returned.";
+        osstream<<"Bus "<<get_shunt_bus()<<" is not found when getting the actual impedance shunt of "<<get_device_name()<<". Nominal impedance shunt in MVA will be returned.";
         show_information_with_leading_time_stamp(osstream);
         return S0;
     }
-    else
-    {
-        BUS* busptr = psdb->get_bus(get_shunt_bus());
-
-        if(busptr==NULL)
-        {
-            osstream<<"Bus "<<get_shunt_bus()<<" is not found when getting the actual impedance shunt of "<<get_device_name()<<". Nominal impedance shunt in MVA will be returned.";
-            show_information_with_leading_time_stamp(osstream);
-            return S0;
-        }
-        double v = busptr->get_voltage_in_pu();
-        return S0*v*v;
-    }
+    double v = busptr->get_voltage_in_pu();
+    return S0*v*v;
 }
 
 

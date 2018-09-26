@@ -168,13 +168,13 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency()
         WT_GENERATOR* gen = get_test_wt_generator();
         size_t bus = gen->get_generator_bus();
 
-        POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
-        BUS* busptrr = psdb->get_bus(bus);
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        BUS* busptrr = psdb.get_bus(bus);
 
-        TEST_ASSERT(fabs(model->get_bus_frequency_in_pu()-psdb->get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
+        TEST_ASSERT(fabs(model->get_bus_frequency_in_pu()-psdb.get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
         BUS_FREQUENCY_MODEL* freqmodel = busptrr->get_bus_frequency_model();
         freqmodel->set_frequency_deviation_in_pu(0.05);
-        TEST_ASSERT(fabs(model->get_bus_frequency_in_pu()-psdb->get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
+        TEST_ASSERT(fabs(model->get_bus_frequency_in_pu()-psdb.get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
     }
     else
         TEST_ASSERT(false);
@@ -190,13 +190,13 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency_deviation()
         WT_GENERATOR* gen = get_test_wt_generator();
         size_t bus = gen->get_generator_bus();
 
-        POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
-        BUS* busptrr = psdb->get_bus(bus);
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        BUS* busptrr = psdb.get_bus(bus);
 
-        TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu()-psdb->get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
+        TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu()-psdb.get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
         BUS_FREQUENCY_MODEL* freqmodel = busptrr->get_bus_frequency_model();
         freqmodel->set_frequency_deviation_in_pu(0.05);
-        TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu()-psdb->get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
+        TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu()-psdb.get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
     }
     else
         TEST_ASSERT(false);
@@ -321,10 +321,10 @@ void WT_PITCH_MODEL_TEST::apply_active_power_order_drop_of_5_percent()
 void WT_PITCH_MODEL_TEST::apply_frequency_drop_of_5_percent()
 {
     WT_GENERATOR* gen = get_test_wt_generator();
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = gen->get_generator_bus();
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
 
     BUS_FREQUENCY_MODEL* model = busptr->get_bus_frequency_model();
     model->set_frequency_deviation_in_pu(0.05);

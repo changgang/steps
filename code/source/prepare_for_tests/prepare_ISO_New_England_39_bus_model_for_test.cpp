@@ -2,30 +2,23 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-void prepare_ISO_New_England_39_bus_model(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model()
 {
-    ostringstream osstream;
-    if(db==NULL)
-    {
-        osstream<<"NULL power system database is provided for preparing ISO New England 39 bus model."<<endl
-          <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-    prepare_ISO_New_England_39_bus_model_buses(db);
-    prepare_ISO_New_England_39_bus_model_generators(db);
-    prepare_ISO_New_England_39_bus_model_loads(db);
-    prepare_ISO_New_England_39_bus_model_lines(db);
-    prepare_ISO_New_England_39_bus_model_transformers(db);
-    prepare_ISO_New_England_39_bus_model_areas(db);
-    prepare_ISO_New_England_39_bus_model_zones(db);
-    prepare_ISO_New_England_39_bus_model_owners(db);
+    prepare_ISO_New_England_39_bus_model_buses();
+    prepare_ISO_New_England_39_bus_model_generators();
+    prepare_ISO_New_England_39_bus_model_loads();
+    prepare_ISO_New_England_39_bus_model_lines();
+    prepare_ISO_New_England_39_bus_model_transformers();
+    prepare_ISO_New_England_39_bus_model_areas();
+    prepare_ISO_New_England_39_bus_model_zones();
+    prepare_ISO_New_England_39_bus_model_owners();
 }
 
-void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model_buses()
 {
-    db->set_allowed_max_bus_number(50);
-    db->set_system_base_power_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(50);
+    psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
     bus.set_bus_number(1);
@@ -39,14 +32,14 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0475);
     bus.set_angle_in_deg(-9.57);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(2);
     bus.set_bus_name("BUS_2");
     bus.set_bus_type(PQ_TYPE);
     bus.set_voltage_in_pu(1.0490);
     bus.set_angle_in_deg(-7.01);
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(3);
     bus.set_bus_name("BUS_3");
@@ -54,7 +47,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0304);
     bus.set_angle_in_deg(-9.86);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(4);
     bus.set_bus_name("BUS_4");
@@ -62,7 +55,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0038);
     bus.set_angle_in_deg(-10.65);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(5);
     bus.set_bus_name("BUS_5");
@@ -70,7 +63,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0050);
     bus.set_angle_in_deg(-9.47);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(6);
     bus.set_bus_name("BUS_6");
@@ -78,7 +71,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0074);
     bus.set_angle_in_deg(-8.77);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(7);
     bus.set_bus_name("BUS_7");
@@ -86,7 +79,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(0.9967);
     bus.set_angle_in_deg(-10.97);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(8);
     bus.set_bus_name("BUS_8");
@@ -94,7 +87,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(0.9957);
     bus.set_angle_in_deg(-11.48);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(9);
     bus.set_bus_name("BUS_9");
@@ -102,7 +95,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0281);
     bus.set_angle_in_deg(-11.30);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(10);
     bus.set_bus_name("BUS_10");
@@ -110,7 +103,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0170);
     bus.set_angle_in_deg(-6.38);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(11);
     bus.set_bus_name("BUS_11");
@@ -118,7 +111,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0125);
     bus.set_angle_in_deg(-7.2);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(12);
     bus.set_bus_name("BUS_12");
@@ -126,7 +119,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_deg(-7.21);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(13);
     bus.set_bus_name("BUS_4");
@@ -134,7 +127,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0142);
     bus.set_angle_in_deg(-7.1);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(14);
     bus.set_bus_name("BUS_14");
@@ -142,7 +135,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0117);
     bus.set_angle_in_deg(-8.76);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(15);
     bus.set_bus_name("BUS_15");
@@ -150,7 +143,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0158);
     bus.set_angle_in_deg(-9.18);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(16);
     bus.set_bus_name("BUS_16");
@@ -158,7 +151,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0322);
     bus.set_angle_in_deg(-7.78);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(17);
     bus.set_bus_name("BUS_17");
@@ -166,7 +159,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0339);
     bus.set_angle_in_deg(-8.77);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(18);
     bus.set_bus_name("BUS_18");
@@ -174,7 +167,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0313);
     bus.set_angle_in_deg(-9.62);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(19);
     bus.set_bus_name("BUS_19");
@@ -182,7 +175,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.05);
     bus.set_angle_in_deg(-3.15);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(20);
     bus.set_bus_name("BUS_20");
@@ -190,7 +183,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(0.9910);
     bus.set_angle_in_deg(-4.56);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(21);
     bus.set_bus_name("BUS_21");
@@ -198,7 +191,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0321);
     bus.set_angle_in_deg(-5.37);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(22);
     bus.set_bus_name("BUS_22");
@@ -206,7 +199,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.05);
     bus.set_angle_in_deg(-0.92);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(23);
     bus.set_bus_name("BUS_23");
@@ -214,7 +207,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.045);
     bus.set_angle_in_deg(-1.12);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(24);
     bus.set_bus_name("BUS_24");
@@ -222,7 +215,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0378);
     bus.set_angle_in_deg(-7.66);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(25);
     bus.set_bus_name("BUS_25");
@@ -230,7 +223,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0575);
     bus.set_angle_in_deg(-5.65);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(26);
     bus.set_bus_name("BUS_26");
@@ -238,7 +231,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0522);
     bus.set_angle_in_deg(-6.91);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(27);
     bus.set_bus_name("BUS_27");
@@ -246,7 +239,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0379);
     bus.set_angle_in_deg(-8.92);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(28);
     bus.set_bus_name("BUS_28");
@@ -254,7 +247,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0502);
     bus.set_angle_in_deg(-3.39);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(29);
     bus.set_bus_name("BUS_29");
@@ -262,7 +255,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.05);
     bus.set_angle_in_deg(-0.64);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(30);
     bus.set_bus_name("BUS_30");
@@ -270,7 +263,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0475);
     bus.set_angle_in_deg(-4.59);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(31);
     bus.set_bus_name("BUS_31");
@@ -278,7 +271,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(0.9820);
     bus.set_angle_in_deg(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(32);
     bus.set_bus_name("BUS_32");
@@ -286,7 +279,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(0.9831);
     bus.set_angle_in_deg(1.62);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(33);
     bus.set_bus_name("BUS_33");
@@ -294,7 +287,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(0.9972);
     bus.set_angle_in_deg(2.06);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(34);
     bus.set_bus_name("BUS_34");
@@ -302,7 +295,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0123);
     bus.set_angle_in_deg(0.63);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(35);
     bus.set_bus_name("BUS_35");
@@ -310,7 +303,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0493);
     bus.set_angle_in_deg(4.04);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(36);
     bus.set_bus_name("BUS_36");
@@ -318,7 +311,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0635);
     bus.set_angle_in_deg(6.73);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(37);
     bus.set_bus_name("BUS_37");
@@ -326,7 +319,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0278);
     bus.set_angle_in_deg(1.14);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(38);
     bus.set_bus_name("BUS_38");
@@ -334,7 +327,7 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0265);
     bus.set_angle_in_deg(6.43);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(39);
     bus.set_bus_name("BUS_39");
@@ -342,11 +335,12 @@ void prepare_ISO_New_England_39_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.03);
     bus.set_angle_in_deg(-11.11);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 }
-void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model_generators()
 {
-    GENERATOR generator(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    GENERATOR generator;
     complex<double> gen_z(0.0);
 
     generator.set_generator_bus(30);
@@ -364,7 +358,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_voltage_to_regulate_in_pu(1.0475);
     generator.set_bus_to_regulate(0);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
 
     generator.set_generator_bus(31);
@@ -373,7 +367,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(600.0);
     generator.set_voltage_to_regulate_in_pu(0.9820);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
 
     generator.set_generator_bus(32);
@@ -382,7 +376,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(700.0);
     generator.set_voltage_to_regulate_in_pu(0.9831);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
     generator.set_generator_bus(33);
     generator.set_p_generation_in_MW(632.0);
@@ -390,7 +384,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(700.0);
     generator.set_voltage_to_regulate_in_pu(0.9972);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
     generator.set_generator_bus(34);
     generator.set_p_generation_in_MW(508.0);
@@ -398,7 +392,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(600.0);
     generator.set_voltage_to_regulate_in_pu(1.0123);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
     generator.set_generator_bus(35);
     generator.set_p_generation_in_MW(650.0);
@@ -406,7 +400,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(700.0);
     generator.set_voltage_to_regulate_in_pu(1.0493);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
     generator.set_generator_bus(36);
     generator.set_p_generation_in_MW(560.0);
@@ -414,7 +408,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(600.0);
     generator.set_voltage_to_regulate_in_pu(1.0635);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
     generator.set_generator_bus(37);
     generator.set_p_generation_in_MW(540.0);
@@ -422,7 +416,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(600.0);
     generator.set_voltage_to_regulate_in_pu(1.0278);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
     generator.set_generator_bus(38);
     generator.set_p_generation_in_MW(830.0);
@@ -430,7 +424,7 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(900.0);
     generator.set_voltage_to_regulate_in_pu(1.0265);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
     generator.set_generator_bus(39);
     generator.set_p_generation_in_MW(1000.0);
@@ -438,12 +432,13 @@ void prepare_ISO_New_England_39_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_p_max_in_MW(1100.0);
     generator.set_voltage_to_regulate_in_pu(1.03);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
 }
-void prepare_ISO_New_England_39_bus_model_loads(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model_loads()
 {
-    LOAD load(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LOAD load;
     complex<double> s(0.0,0.0);
 
     load.set_load_bus(3);
@@ -455,120 +450,121 @@ void prepare_ISO_New_England_39_bus_model_loads(POWER_SYSTEM_DATABASE* db)
     load.set_nominal_constant_current_load_in_MVA(s);
     load.set_nominal_constant_impedance_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(4);
     s = complex<double>(500.0, 184.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(7);
     s = complex<double>(233.8, 84.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(8);
     s = complex<double>(522.0, 176.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(12);
     s = complex<double>(8.5, 88.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(15);
     s = complex<double>(320.0, 153.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(16);
     s = complex<double>(329.0, 32.3);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(18);
     s = complex<double>(158.0, 30.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(20);
     s = complex<double>(680.0, 103.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(21);
     s = complex<double>(274.0, 115.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(23);
     s = complex<double>(247.5, 84.6);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(24);
     s = complex<double>(308.6, -92.2);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(25);
     s = complex<double>(224.0, 47.2);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(26);
     s = complex<double>(139.0, 17.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(27);
     s = complex<double>(281.0, 75.5);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(28);
     s = complex<double>(206.0, 27.6);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(29);
     s = complex<double>(283.5, 26.9);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(31);
     s = complex<double>(9.2, 4.6);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(39);
     s = complex<double>(1104.0, 250.0);
     load.set_nominal_constant_power_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
 }
-void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model_lines()
 {
-    LINE line(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE line;
     complex<double> z(0.0), y(0.0);
 
     line.set_sending_side_bus(1);
@@ -582,7 +578,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(39);
@@ -592,7 +588,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(2);
     line.set_receiving_side_bus(3);
@@ -602,7 +598,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(2);
     line.set_receiving_side_bus(25);
@@ -612,7 +608,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(3);
     line.set_receiving_side_bus(4);
@@ -622,7 +618,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(3);
     line.set_receiving_side_bus(18);
@@ -632,7 +628,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(4);
     line.set_receiving_side_bus(5);
@@ -642,7 +638,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(4);
     line.set_receiving_side_bus(14);
@@ -652,7 +648,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(5);
     line.set_receiving_side_bus(6);
@@ -662,7 +658,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(5);
     line.set_receiving_side_bus(8);
@@ -672,7 +668,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(6);
     line.set_receiving_side_bus(7);
@@ -682,7 +678,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(6);
     line.set_receiving_side_bus(11);
@@ -692,7 +688,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(7);
     line.set_receiving_side_bus(8);
@@ -702,7 +698,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(8);
     line.set_receiving_side_bus(9);
@@ -712,7 +708,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(9);
     line.set_receiving_side_bus(39);
@@ -722,7 +718,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(10);
     line.set_receiving_side_bus(11);
@@ -732,7 +728,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(10);
     line.set_receiving_side_bus(13);
@@ -742,7 +738,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(13);
     line.set_receiving_side_bus(14);
@@ -752,7 +748,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(14);
     line.set_receiving_side_bus(15);
@@ -762,7 +758,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(15);
     line.set_receiving_side_bus(16);
@@ -772,7 +768,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(16);
     line.set_receiving_side_bus(17);
@@ -782,7 +778,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(16);
     line.set_receiving_side_bus(19);
@@ -792,7 +788,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(16);
     line.set_receiving_side_bus(21);
@@ -802,7 +798,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(16);
     line.set_receiving_side_bus(24);
@@ -812,7 +808,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(17);
     line.set_receiving_side_bus(18);
@@ -822,7 +818,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(17);
     line.set_receiving_side_bus(27);
@@ -832,7 +828,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(21);
     line.set_receiving_side_bus(22);
@@ -842,7 +838,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(22);
     line.set_receiving_side_bus(23);
@@ -852,7 +848,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(23);
     line.set_receiving_side_bus(24);
@@ -862,7 +858,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(25);
     line.set_receiving_side_bus(26);
@@ -872,7 +868,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(26);
     line.set_receiving_side_bus(27);
@@ -882,7 +878,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(26);
     line.set_receiving_side_bus(28);
@@ -892,7 +888,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(26);
     line.set_receiving_side_bus(29);
@@ -902,7 +898,7 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(28);
     line.set_receiving_side_bus(29);
@@ -912,12 +908,13 @@ void prepare_ISO_New_England_39_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 }
 
-void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model_transformers()
 {
-    TRANSFORMER trans(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TRANSFORMER trans;
     complex<double> z(0.0), y(0.0);
 
     trans.set_winding_bus(PRIMARY_SIDE, 2);
@@ -937,7 +934,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     trans.set_winding_angle_shift_in_deg(PRIMARY_SIDE, 0.0);
     trans.set_winding_angle_shift_in_deg(SECONDARY_SIDE, 0.0);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
 
     trans.set_winding_bus(PRIMARY_SIDE, 6);
@@ -947,7 +944,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0, 0.025);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 10);
     trans.set_winding_bus(SECONDARY_SIDE, 32);
@@ -956,7 +953,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0, 0.02);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 11);
     trans.set_winding_bus(SECONDARY_SIDE, 12);
@@ -965,7 +962,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0016, 0.0435);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 12);
     trans.set_winding_bus(SECONDARY_SIDE, 13);
@@ -974,7 +971,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0016, 0.0435);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 19);
     trans.set_winding_bus(SECONDARY_SIDE, 20);
@@ -983,7 +980,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0007, 0.0138);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 19);
     trans.set_winding_bus(SECONDARY_SIDE, 33);
@@ -992,7 +989,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0007, 0.0142);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 20);
     trans.set_winding_bus(SECONDARY_SIDE, 34);
@@ -1001,7 +998,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0009, 0.018);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 22);
     trans.set_winding_bus(SECONDARY_SIDE, 35);
@@ -1010,7 +1007,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0, 0.0143);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 23);
     trans.set_winding_bus(SECONDARY_SIDE, 36);
@@ -1019,7 +1016,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0005, 0.0272);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 25);
     trans.set_winding_bus(SECONDARY_SIDE, 37);
@@ -1028,7 +1025,7 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0006, 0.0232);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 29);
     trans.set_winding_bus(SECONDARY_SIDE, 38);
@@ -1037,36 +1034,39 @@ void prepare_ISO_New_England_39_bus_model_transformers(POWER_SYSTEM_DATABASE* db
     z = complex<double>(0.0008, 0.0156);
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 }
 
-void prepare_ISO_New_England_39_bus_model_areas(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model_areas()
 {
-    AREA area(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    AREA area;
 
     area.set_area_number(1);
     area.set_area_swing_bus(0);
     area.set_expected_power_leaving_area_in_MW(0.0);
     area.set_area_power_mismatch_tolerance_in_MW(10.0);
 
-    db->append_area(area);
+    psdb.append_area(area);
 }
 
-void prepare_ISO_New_England_39_bus_model_zones(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model_zones()
 {
-    ZONE zone(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    ZONE zone;
 
     zone.set_zone_number(1);
 
-    db->append_zone(zone);
+    psdb.append_zone(zone);
 }
 
-void prepare_ISO_New_England_39_bus_model_owners(POWER_SYSTEM_DATABASE* db)
+void prepare_ISO_New_England_39_bus_model_owners()
 {
-    OWNER owner(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    OWNER owner;
 
     owner.set_owner_number(1);
 
-    db->append_owner(owner);
+    psdb.append_owner(owner);
 }
 

@@ -2,30 +2,23 @@
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 
-void prepare_Arthur_R_Bergen_3_bus_model(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model()
 {
-    ostringstream osstream;
-    if(db==NULL)
-    {
-        osstream<<"NULL power system database is provided for preparing Arthur R. Bergen 3 bus model."<<endl
-          <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-    prepare_Arthur_R_Bergen_3_bus_model_buses(db);
-    prepare_Arthur_R_Bergen_3_bus_model_generators(db);
-    prepare_Arthur_R_Bergen_3_bus_model_loads(db);
-    prepare_Arthur_R_Bergen_3_bus_model_lines(db);
-    prepare_Arthur_R_Bergen_3_bus_model_transformers(db);
-    prepare_Arthur_R_Bergen_3_bus_model_areas(db);
-    prepare_Arthur_R_Bergen_3_bus_model_zones(db);
-    prepare_Arthur_R_Bergen_3_bus_model_owners(db);
+    prepare_Arthur_R_Bergen_3_bus_model_buses();
+    prepare_Arthur_R_Bergen_3_bus_model_generators();
+    prepare_Arthur_R_Bergen_3_bus_model_loads();
+    prepare_Arthur_R_Bergen_3_bus_model_lines();
+    prepare_Arthur_R_Bergen_3_bus_model_transformers();
+    prepare_Arthur_R_Bergen_3_bus_model_areas();
+    prepare_Arthur_R_Bergen_3_bus_model_zones();
+    prepare_Arthur_R_Bergen_3_bus_model_owners();
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_buses(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model_buses()
 {
-    db->set_allowed_max_bus_number(10);
-    db->set_system_base_power_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(10);
+    psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
     bus.set_bus_number(1);
@@ -39,7 +32,7 @@ void prepare_Arthur_R_Bergen_3_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_deg(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(2);
     bus.set_bus_name("BUS_2");
@@ -47,7 +40,7 @@ void prepare_Arthur_R_Bergen_3_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.05);
     bus.set_angle_in_deg(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(3);
     bus.set_bus_name("BUS_3");
@@ -55,12 +48,13 @@ void prepare_Arthur_R_Bergen_3_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_deg(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_generators(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model_generators()
 {
-    GENERATOR generator(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    GENERATOR generator;
     complex<double> gen_z(0.0);
 
     generator.set_generator_bus(1);
@@ -78,7 +72,7 @@ void prepare_Arthur_R_Bergen_3_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_voltage_to_regulate_in_pu(1.0);
     generator.set_bus_to_regulate(0);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
 
     generator.set_generator_bus(2);
@@ -89,12 +83,13 @@ void prepare_Arthur_R_Bergen_3_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_voltage_to_regulate_in_pu(1.05);
     generator.set_bus_to_regulate(0);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_loads(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model_loads()
 {
-    LOAD load(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LOAD load;
     complex<double> s(0.0,0.0);
 
     load.set_load_bus(3);
@@ -106,12 +101,13 @@ void prepare_Arthur_R_Bergen_3_bus_model_loads(POWER_SYSTEM_DATABASE* db)
     load.set_nominal_constant_current_load_in_MVA(s);
     load.set_nominal_constant_impedance_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_lines(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model_lines()
 {
-    LINE line(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE line;
     complex<double> z(0.0), y(0.0);
 
     line.set_sending_side_bus(1);
@@ -125,50 +121,54 @@ void prepare_Arthur_R_Bergen_3_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(3);
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(2);
     line.set_receiving_side_bus(3);
-    db->append_line(line);
+    psdb.append_line(line);
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_transformers(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model_transformers()
 {
-    //TRANSFORMER trans(db);
-    //db->append_transformer(trans);
+    //POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    //TRANSFORMER trans;
+    //psdb.append_transformer(trans);
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_areas(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model_areas()
 {
-    AREA area(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    AREA area;
 
     area.set_area_number(1);
     area.set_area_swing_bus(0);
     area.set_expected_power_leaving_area_in_MW(0.0);
     area.set_area_power_mismatch_tolerance_in_MW(10.0);
 
-    db->append_area(area);
+    psdb.append_area(area);
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_zones(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model_zones()
 {
-    ZONE zone(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    ZONE zone;
 
     zone.set_zone_number(1);
 
-    db->append_zone(zone);
+    psdb.append_zone(zone);
 }
 
-void prepare_Arthur_R_Bergen_3_bus_model_owners(POWER_SYSTEM_DATABASE* db)
+void prepare_Arthur_R_Bergen_3_bus_model_owners()
 {
-    OWNER owner(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    OWNER owner;
 
     owner.set_owner_number(1);
 
-    db->append_owner(owner);
+    psdb.append_owner(owner);
 }
 

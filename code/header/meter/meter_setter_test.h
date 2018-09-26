@@ -38,8 +38,7 @@ class METER_SETTER_TEST : public Test::Suite
         void test_prepare_equivalent_device_related_meters();
 
     private:
-        POWER_SYSTEM_DATABASE* db;
-        METER_SETTER* setter;
+        METER_SETTER setter;
 };
 
 #endif

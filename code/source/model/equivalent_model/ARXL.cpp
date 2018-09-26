@@ -16,8 +16,6 @@ void ARXL::copy_from_constant_model(const ARXL& model)
 {
     clear();
 
-    set_power_system_database(model.get_power_system_database());
-
     p_meters = model.get_P_meters();
     p_delays = model.get_P_delays();
     p_coefficients = model.get_P_coefficients();
@@ -102,15 +100,9 @@ void ARXL::set_output_line(DEVICE_ID did, size_t meter_side)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. Power system database is not set when setting up ARXL model.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    LINE* line = psdb->get_line(did);
+    LINE* line = psdb.get_line(did);
     if(line==NULL)
     {
         osstream<<"Warning. "<<did.get_device_name()<<" is not found in power system database when setting up ARXL model.";
@@ -129,8 +121,6 @@ void ARXL::set_output_line(DEVICE_ID did, size_t meter_side)
 
     METER_SETTER setter;
     METER meter;
-
-    setter.set_power_system_database(psdb);
 
     meter = setter.prepare_line_active_power_in_MW_meter(did, meter_side);
     add_P_input_item(meter, 0, 0.0);
@@ -454,9 +444,9 @@ complex<double> ARXL::get_equivalent_nominal_constant_impedance_load_in_MVA() co
 
 complex<double> ARXL::get_total_load_power_in_MVA() const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     EQUIVALENT_DEVICE* edevice = get_equivalent_device_pointer();
-    double vbus = psdb->get_bus_voltage_in_pu(edevice->get_equivalent_device_bus());
+    double vbus = psdb.get_bus_voltage_in_pu(edevice->get_equivalent_device_bus());
 
     return (get_equivalent_nominal_constant_power_load_in_MVA()+
             get_equivalent_nominal_constant_current_load_in_MVA()*vbus+
@@ -477,13 +467,13 @@ void ARXL::switch_output_to_equivalent_device()
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     double current_time = get_dynamic_simulation_time_in_s();
 
     DEVICE_ID did = p_meters[0].get_device_id();
 
-    LINE* line = psdb->get_line(did);
+    LINE* line = psdb.get_line(did);
     size_t arxl_bus;
     //size_t other_bus;
     complex<double> arxl_power, other_power;
@@ -496,7 +486,7 @@ void ARXL::switch_output_to_equivalent_device()
         arxl_power = line->get_line_complex_power_at_receiving_side_in_MVA();
 
     //enable equivalent device for arxl_power at arxl_bus
-    vector<EQUIVALENT_DEVICE*> pedevices = psdb->get_equivalent_devices_connecting_to_bus(arxl_bus);
+    vector<EQUIVALENT_DEVICE*> pedevices = psdb.get_equivalent_devices_connecting_to_bus(arxl_bus);
     if(pedevices.size()==0)
     {
         osstream<<"Warning. There is no EQUIVALENT DEVICE at bus "<<arxl_bus<<". Cannot switch output to equivalent device.";
@@ -525,7 +515,6 @@ void ARXL::switch_output_to_equivalent_device()
 
     // change 0-meters into equivalent device meters
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
 
     DEVICE_ID  edevice_did = edevice->get_device_id();
 
@@ -565,9 +554,9 @@ string ARXL::get_standard_model_string() const
 {
     string data;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = p_meters[0].get_device_id();
-    LINE* line = psdb->get_line(did);
+    LINE* line = psdb.get_line(did);
 
     data += "ARXL,"+num2str(line->get_sending_side_bus())+","+num2str(line->get_receiving_side_bus())+","+line->get_identifier()+",";
     data += num2str(p_meters[0].get_meter_side_bus())+"\n";;
@@ -642,9 +631,9 @@ string ARXL::get_line_meter_string(const METER& meter) const
                 if(meter.get_meter_type().find("ACTIVE POWER IN PU")!=string::npos)
                     data += "ACTIVE_POWER_PU,";
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    LINE* line = psdb->get_line(did);
+    LINE* line = psdb.get_line(did);
     data += num2str(line->get_sending_side_bus())+",";
     data += num2str(line->get_receiving_side_bus())+",";
     data += "\""+line->get_identifier()+"\",";
@@ -670,9 +659,9 @@ string ARXL::get_transformer_meter_string(const METER& meter) const
                 if(meter.get_meter_type().find("ACTIVE POWER IN PU")!=string::npos)
                     data += "ACTIVE_POWER_PU,";
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    TRANSFORMER* trans = psdb->get_transformer(did);
+    TRANSFORMER* trans = psdb.get_transformer(did);
     data += num2str(trans->get_winding_bus(PRIMARY_SIDE))+",";
     data += num2str(trans->get_winding_bus(SECONDARY_SIDE))+",";
     data += "\""+trans->get_identifier()+"\",";
@@ -696,9 +685,9 @@ string ARXL::get_bus_meter_string(const METER& meter) const
             data += "FREQUENCY_DEVIATION_PU,";
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    BUS* bus = psdb->get_bus(did);
+    BUS* bus = psdb.get_bus(did);
     data += num2str(bus->get_bus_number());
 
     return data;
@@ -721,9 +710,9 @@ string ARXL::get_generator_meter_string(const METER& meter) const
                     data += "MECHANICAL_POWER_MW,";
 
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    GENERATOR* gen = psdb->get_generator(did);
+    GENERATOR* gen = psdb.get_generator(did);
     data += num2str(gen->get_generator_bus())+",";
     data += "\""+gen->get_identifier()+"\",";
 
@@ -741,9 +730,9 @@ string ARXL::get_load_meter_string(const METER& meter) const
             data += "ACTIVE_POWER_MW,";
 
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = meter.get_device_id();
-    LOAD* load = psdb->get_load(did);
+    LOAD* load = psdb.get_load(did);
     data += num2str(load->get_load_bus())+",";
     data += "\""+load->get_identifier()+"\",";
 

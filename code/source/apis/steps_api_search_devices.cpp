@@ -13,14 +13,14 @@ STEPS_API_SEARCH_BUFFER api_search_buffer;
 
 size_t api_bus_name2bus_number(const char* bus_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    return psdb->bus_name2bus_number(bus_name);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    return psdb.bus_name2bus_number(bus_name);
 }
 
 const char* api_bus_number2bus_name(size_t bus_number)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    string name = psdb->bus_number2bus_name(bus_number);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    string name = psdb.bus_number2bus_name(bus_number);
 
     snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
     return STEPS::steps_char_buffer;
@@ -29,17 +29,17 @@ const char* api_bus_number2bus_name(size_t bus_number)
 
 void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    api_search_buffer.buses = psdb->get_buses_with_constraints(vbase_kV_min, vbase_kV_max, v_pu_min, v_pu_max, area, zone, owner);
+    api_search_buffer.buses = psdb.get_buses_with_constraints(vbase_kV_min, vbase_kV_max, v_pu_min, v_pu_max, area, zone, owner);
     api_search_buffer.bus_pointer = 0;
 }
 
 void api_initialize_all_bus_search()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    api_search_buffer.buses = psdb->get_all_buses();
+    api_search_buffer.buses = psdb.get_all_buses();
     api_search_buffer.bus_pointer = 0;
 }
 
@@ -64,96 +64,96 @@ void api_goto_next_bus()
 
 void api_initialize_device_search(const char* device_type, size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string DEVICE_TYPE = string2upper(device_type);
     if(DEVICE_TYPE=="GENERATOR")
     {
         if(bus==0)
-            api_search_buffer.generators = psdb->get_all_generators();
+            api_search_buffer.generators = psdb.get_all_generators();
         else
-            api_search_buffer.generators = psdb->get_generators_connecting_to_bus(bus);
+            api_search_buffer.generators = psdb.get_generators_connecting_to_bus(bus);
         api_search_buffer.generator_pointer = 0;
     }
 
     if(DEVICE_TYPE=="WT GENERATOR")
     {
         if(bus==0)
-            api_search_buffer.wt_generators = psdb->get_all_wt_generators();
+            api_search_buffer.wt_generators = psdb.get_all_wt_generators();
         else
-            api_search_buffer.wt_generators = psdb->get_wt_generators_connecting_to_bus(bus);
+            api_search_buffer.wt_generators = psdb.get_wt_generators_connecting_to_bus(bus);
         api_search_buffer.wt_generator_pointer = 0;
     }
 
     if(DEVICE_TYPE=="PV UNIT")
     {
         if(bus==0)
-            api_search_buffer.pv_units = psdb->get_all_pv_units();
+            api_search_buffer.pv_units = psdb.get_all_pv_units();
         else
-            api_search_buffer.pv_units = psdb->get_pv_units_connecting_to_bus(bus);
+            api_search_buffer.pv_units = psdb.get_pv_units_connecting_to_bus(bus);
         api_search_buffer.pv_unit_pointer = 0;
     }
 
     if(DEVICE_TYPE=="LOAD")
     {
         if(bus==0)
-            api_search_buffer.loads = psdb->get_all_loads();
+            api_search_buffer.loads = psdb.get_all_loads();
         else
-            api_search_buffer.loads = psdb->get_loads_connecting_to_bus(bus);
+            api_search_buffer.loads = psdb.get_loads_connecting_to_bus(bus);
         api_search_buffer.load_pointer = 0;
     }
 
     if(DEVICE_TYPE=="FIXED SHUNT")
     {
         if(bus==0)
-            api_search_buffer.fixed_shunts = psdb->get_all_fixed_shunts();
+            api_search_buffer.fixed_shunts = psdb.get_all_fixed_shunts();
         else
-            api_search_buffer.fixed_shunts = psdb->get_fixed_shunts_connecting_to_bus(bus);
+            api_search_buffer.fixed_shunts = psdb.get_fixed_shunts_connecting_to_bus(bus);
         api_search_buffer.fixed_shunt_pointer = 0;
     }
 
     if(DEVICE_TYPE=="LINE")
     {
         if(bus==0)
-            api_search_buffer.lines = psdb->get_all_lines();
+            api_search_buffer.lines = psdb.get_all_lines();
         else
-            api_search_buffer.lines = psdb->get_lines_connecting_to_bus(bus);
+            api_search_buffer.lines = psdb.get_lines_connecting_to_bus(bus);
         api_search_buffer.line_pointer = 0;
     }
 
     if(DEVICE_TYPE=="TRANSFORMER")
     {
         if(bus==0)
-            api_search_buffer.transformers = psdb->get_all_transformers();
+            api_search_buffer.transformers = psdb.get_all_transformers();
         else
-            api_search_buffer.transformers = psdb->get_transformers_connecting_to_bus(bus);
+            api_search_buffer.transformers = psdb.get_transformers_connecting_to_bus(bus);
         api_search_buffer.transformer_pointer = 0;
     }
 
     if(DEVICE_TYPE=="HVDC")
     {
         if(bus==0)
-            api_search_buffer.hvdcs = psdb->get_all_hvdcs();
+            api_search_buffer.hvdcs = psdb.get_all_hvdcs();
         else
-            api_search_buffer.hvdcs = psdb->get_hvdcs_connecting_to_bus(bus);
+            api_search_buffer.hvdcs = psdb.get_hvdcs_connecting_to_bus(bus);
         api_search_buffer.hvdc_pointer = 0;
     }
 
     if(DEVICE_TYPE=="EQUIVALENT DEVICE")
     {
         if(bus==0)
-            api_search_buffer.equivalent_devices = psdb->get_all_equivalent_devices();
+            api_search_buffer.equivalent_devices = psdb.get_all_equivalent_devices();
         else
-            api_search_buffer.equivalent_devices = psdb->get_equivalent_devices_connecting_to_bus(bus);
+            api_search_buffer.equivalent_devices = psdb.get_equivalent_devices_connecting_to_bus(bus);
         api_search_buffer.equivalent_device_pointer = 0;
     }
 
     if(DEVICE_TYPE=="ENERGY STORAGE")
     {
         if(bus==0)
-            api_search_buffer.energy_storages = psdb->get_all_energy_storages();
+            api_search_buffer.energy_storages = psdb.get_all_energy_storages();
         else
-            api_search_buffer.energy_storages = psdb->get_energy_storages_connecting_to_bus(bus);
+            api_search_buffer.energy_storages = psdb.get_energy_storages_connecting_to_bus(bus);
         api_search_buffer.energy_storage_pointer = 0;
     }
 }
@@ -523,9 +523,9 @@ void api_goto_next_device(const char* device_type)
 
 void api_initialize_area_search()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    api_search_buffer.areas = psdb->get_all_areas();
+    api_search_buffer.areas = psdb.get_all_areas();
     api_search_buffer.area_pointer = 0;
 }
 
@@ -549,9 +549,9 @@ void api_goto_next_area()
 
 void api_initialize_zone_search()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    api_search_buffer.zones = psdb->get_all_zones();
+    api_search_buffer.zones = psdb.get_all_zones();
     api_search_buffer.zone_pointer = 0;
 }
 
@@ -575,9 +575,9 @@ void api_goto_next_zone()
 
 void api_initialize_owner_search()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    api_search_buffer.owners = psdb->get_all_owners();
+    api_search_buffer.owners = psdb.get_all_owners();
     api_search_buffer.owner_pointer = 0;
 }
 

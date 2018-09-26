@@ -31,8 +31,7 @@ class PV_UNIT_TEST : public Test::Suite
         void test_get_device_id();
 
     private:
-        POWER_SYSTEM_DATABASE* db;
-        PV_UNIT* pv_unit;
+        PV_UNIT pv_unit;
 };
 
 #endif //PV_UNIT_TEST_H

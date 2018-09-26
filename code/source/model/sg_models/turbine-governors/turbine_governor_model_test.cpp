@@ -143,12 +143,10 @@ void TURBINE_GOVERNOR_MODEL_TEST::test_get_rotor_speed()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"TURBINE_GOVERNOR_MODEL_TEST");
 
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     GENERATOR* genptr = get_test_generator();
     SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
 
     TGOV1 model;
-    model.set_power_system_database(psdb);
     model.set_device_id(genptr->get_device_id());
 
     TEST_ASSERT(fabs(model.get_rotor_speed_deviation_in_pu_from_sync_generator_model()-genmodel->get_rotor_speed_deviation_in_pu())<FLOAT_EPSILON);

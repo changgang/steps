@@ -43,7 +43,6 @@ class PSSE_IMEXPORTER_TEST : public Test::Suite
 
         void test_load_dynamic_data();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        PSSE_IMEXPORTER* importer;
+        PSSE_IMEXPORTER importer;
 };
 #endif // PSSE_IMEXPORTER_TEST_H

@@ -10,31 +10,23 @@
 #include <iostream>
 using namespace std;
 
-void prepare_IEEE_9_bus_model(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model()
 {
-    ostringstream osstream;
-    if(db==NULL)
-    {
-        osstream<<"NULL power system database is provided for preparing IEEE 9 bus model."<<endl
-          <<"Model will not be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    prepare_IEEE_9_bus_model_buses(db);
-    prepare_IEEE_9_bus_model_generators(db);
-    prepare_IEEE_9_bus_model_loads(db);
-    prepare_IEEE_9_bus_model_lines(db);
-    prepare_IEEE_9_bus_model_transformers(db);
-    prepare_IEEE_9_bus_model_areas(db);
-    prepare_IEEE_9_bus_model_zones(db);
-    prepare_IEEE_9_bus_model_owners(db);
+    prepare_IEEE_9_bus_model_buses();
+    prepare_IEEE_9_bus_model_generators();
+    prepare_IEEE_9_bus_model_loads();
+    prepare_IEEE_9_bus_model_lines();
+    prepare_IEEE_9_bus_model_transformers();
+    prepare_IEEE_9_bus_model_areas();
+    prepare_IEEE_9_bus_model_zones();
+    prepare_IEEE_9_bus_model_owners();
 }
 
-void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_buses()
 {
-    db->set_allowed_max_bus_number(10);
-    db->set_system_base_power_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(10);
+    psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
     bus.set_bus_number(1);
@@ -48,7 +40,7 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.04);
     bus.set_angle_in_deg(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(2);
     bus.set_bus_name("BUS_2");
@@ -60,7 +52,7 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.025);
     bus.set_angle_in_deg(9.280008);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(3);
     bus.set_bus_name("BUS_3");
@@ -72,7 +64,7 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.025);
     bus.set_angle_in_deg(4.664753);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(4);
     bus.set_bus_name("BUS_4");
@@ -84,7 +76,7 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.025788);
     bus.set_angle_in_deg(-2.216789);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(5);
     bus.set_bus_name("BUS_5");
@@ -96,7 +88,7 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(0.9956308);
     bus.set_angle_in_deg(-3.988808);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(6);
     bus.set_bus_name("BUS_6");
@@ -108,7 +100,7 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.012654);
     bus.set_angle_in_deg(-3.687398);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(7);
     bus.set_bus_name("BUS_7");
@@ -120,7 +112,7 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.025769);
     bus.set_angle_in_deg(3.719703);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(8);
     bus.set_bus_name("BUS_8");
@@ -132,7 +124,7 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.015883);
     bus.set_angle_in_deg(0.7275363);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
     bus.set_bus_number(9);
     bus.set_bus_name("BUS_9");
@@ -144,11 +136,12 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
     bus.set_voltage_in_pu(1.032353);
     bus.set_angle_in_deg(1.966717);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 }
-void prepare_IEEE_9_bus_model_generators(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_generators()
 {
-    GENERATOR generator(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    GENERATOR generator;
     complex<double> gen_z(0.0);
 
     generator.set_generator_bus(1);
@@ -166,7 +159,7 @@ void prepare_IEEE_9_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_voltage_to_regulate_in_pu(1.04);
     generator.set_bus_to_regulate(0);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
 
     generator.set_generator_bus(2);
@@ -184,7 +177,7 @@ void prepare_IEEE_9_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_voltage_to_regulate_in_pu(1.025);
     generator.set_bus_to_regulate(0);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 
 
     generator.set_generator_bus(3);
@@ -202,11 +195,12 @@ void prepare_IEEE_9_bus_model_generators(POWER_SYSTEM_DATABASE* db)
     generator.set_voltage_to_regulate_in_pu(1.025);
     generator.set_bus_to_regulate(0);
 
-    db->append_generator(generator);
+    psdb.append_generator(generator);
 }
-void prepare_IEEE_9_bus_model_loads(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_loads()
 {
-    LOAD load(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LOAD load;
     complex<double> s(0.0,0.0);
 
     load.set_load_bus(5);
@@ -218,7 +212,7 @@ void prepare_IEEE_9_bus_model_loads(POWER_SYSTEM_DATABASE* db)
     load.set_nominal_constant_current_load_in_MVA(s);
     load.set_nominal_constant_impedance_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(6);
     load.set_identifier("1");
@@ -229,7 +223,7 @@ void prepare_IEEE_9_bus_model_loads(POWER_SYSTEM_DATABASE* db)
     load.set_nominal_constant_current_load_in_MVA(s);
     load.set_nominal_constant_impedance_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     load.set_load_bus(8);
     load.set_identifier("1");
@@ -240,11 +234,12 @@ void prepare_IEEE_9_bus_model_loads(POWER_SYSTEM_DATABASE* db)
     load.set_nominal_constant_current_load_in_MVA(s);
     load.set_nominal_constant_impedance_load_in_MVA(s);
 
-    db->append_load(load);
+    psdb.append_load(load);
 }
-void prepare_IEEE_9_bus_model_lines(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_lines()
 {
-    LINE line(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    LINE line;
     complex<double> z(0.0), y(0.0);
 
     line.set_sending_side_bus(4);
@@ -261,7 +256,7 @@ void prepare_IEEE_9_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     ownership.append_owner_and_its_fraction(1,1.0);
     line.set_ownership(ownership);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(4);
     line.set_receiving_side_bus(6);
@@ -274,7 +269,7 @@ void prepare_IEEE_9_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(5);
     line.set_receiving_side_bus(7);
@@ -287,7 +282,7 @@ void prepare_IEEE_9_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(6);
     line.set_receiving_side_bus(9);
@@ -300,7 +295,7 @@ void prepare_IEEE_9_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(7);
     line.set_receiving_side_bus(8);
@@ -313,7 +308,7 @@ void prepare_IEEE_9_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 
     line.set_sending_side_bus(8);
     line.set_receiving_side_bus(9);
@@ -326,12 +321,13 @@ void prepare_IEEE_9_bus_model_lines(POWER_SYSTEM_DATABASE* db)
     line.set_line_positive_sequence_z_in_pu(z);
     line.set_line_positive_sequence_y_in_pu(y);
 
-    db->append_line(line);
+    psdb.append_line(line);
 }
 
-void prepare_IEEE_9_bus_model_transformers(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_transformers()
 {
-    TRANSFORMER trans(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TRANSFORMER trans;
     complex<double> z(0.0), y(0.0);
 
     trans.set_winding_bus(PRIMARY_SIDE, 1);
@@ -362,7 +358,7 @@ void prepare_IEEE_9_bus_model_transformers(POWER_SYSTEM_DATABASE* db)
     //z = z/100.0*150.0;
     //trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
 */
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 2);
     trans.set_winding_bus(SECONDARY_SIDE, 7);
@@ -373,7 +369,7 @@ void prepare_IEEE_9_bus_model_transformers(POWER_SYSTEM_DATABASE* db)
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
     trans.set_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu(y);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 
     trans.set_winding_bus(PRIMARY_SIDE, 3);
     trans.set_winding_bus(SECONDARY_SIDE, 9);
@@ -384,47 +380,51 @@ void prepare_IEEE_9_bus_model_transformers(POWER_SYSTEM_DATABASE* db)
     trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, z);
     trans.set_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu(y);
 
-    db->append_transformer(trans);
+    psdb.append_transformer(trans);
 }
 
-void prepare_IEEE_9_bus_model_areas(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_areas()
 {
-    AREA area(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    AREA area;
 
     area.set_area_number(1);
     area.set_area_swing_bus(0);
     area.set_expected_power_leaving_area_in_MW(0.0);
     area.set_area_power_mismatch_tolerance_in_MW(10.0);
 
-    db->append_area(area);
+    psdb.append_area(area);
 
     area.set_area_number(2);
-    db->append_area(area);
+    psdb.append_area(area);
 
     area.set_area_number(3);
-    db->append_area(area);
+    psdb.append_area(area);
 }
 
-void prepare_IEEE_9_bus_model_zones(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_zones()
 {
-    ZONE zone(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    ZONE zone;
 
     zone.set_zone_number(1);
 
-    db->append_zone(zone);
+    psdb.append_zone(zone);
 }
 
-void prepare_IEEE_9_bus_model_owners(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_owners()
 {
-    OWNER owner(db);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    OWNER owner;
 
     owner.set_owner_number(1);
 
-    db->append_owner(owner);
+    psdb.append_owner(owner);
 }
 
-void prepare_IEEE_9_bus_model_dynamic_model(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_dynamic_model()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
     TERMINAL terminal;
@@ -437,7 +437,7 @@ void prepare_IEEE_9_bus_model_dynamic_model(POWER_SYSTEM_DATABASE* db)
     GENCLS gen1_model;
     gen1_model.set_H_in_s(9.5515);
 
-    generator = db->get_generator(did);
+    generator = psdb.get_generator(did);
     generator->set_model(&gen1_model);
 
     terminal.clear();
@@ -447,7 +447,7 @@ void prepare_IEEE_9_bus_model_dynamic_model(POWER_SYSTEM_DATABASE* db)
     GENCLS gen2_model;
     gen2_model.set_H_in_s(3.3333);
 
-    generator = db->get_generator(did);
+    generator = psdb.get_generator(did);
     generator->set_model(&gen2_model);
 
     terminal.clear();
@@ -457,7 +457,7 @@ void prepare_IEEE_9_bus_model_dynamic_model(POWER_SYSTEM_DATABASE* db)
     GENCLS gen3_model;
     gen3_model.set_H_in_s(2.3516);
 
-    generator = db->get_generator(did);
+    generator = psdb.get_generator(did);
     generator->set_model(&gen3_model);
 
     did.set_device_type("LOAD");
@@ -481,8 +481,8 @@ void prepare_IEEE_9_bus_model_dynamic_model(POWER_SYSTEM_DATABASE* db)
     load_model.set_Q_Kf(0.0);
     load_model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
-    vector<LOAD*> loads = db->get_all_loads();
-    size_t n = db->get_load_count();
+    vector<LOAD*> loads = psdb.get_all_loads();
+    size_t n = psdb.get_load_count();
     for(size_t i=0; i!=n; ++i)
     {
         loads[i]->set_model(&load_model);
@@ -490,8 +490,9 @@ void prepare_IEEE_9_bus_model_dynamic_model(POWER_SYSTEM_DATABASE* db)
 }
 
 
-void prepare_IEEE_9_bus_model_classical_dynamic_model(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_classical_dynamic_model()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
     TERMINAL terminal;
@@ -504,7 +505,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model(POWER_SYSTEM_DATABASE* db)
     GENCLS gen1_model;
     gen1_model.set_H_in_s(9.5515);
 
-    generator = db->get_generator(did);
+    generator = psdb.get_generator(did);
     generator->set_model(&gen1_model);
 
     complex<double> gen_z(0.0, 0.15048);
@@ -518,7 +519,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model(POWER_SYSTEM_DATABASE* db)
     GENCLS gen2_model;
     gen2_model.set_H_in_s(3.3333);
 
-    generator = db->get_generator(did);
+    generator = psdb.get_generator(did);
     generator->set_model(&gen2_model);
 
     gen_z = complex<double>(0.0, 0.230016);
@@ -532,7 +533,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model(POWER_SYSTEM_DATABASE* db)
     GENCLS gen3_model;
     gen3_model.set_H_in_s(2.3516);
 
-    generator = db->get_generator(did);
+    generator = psdb.get_generator(did);
     generator->set_model(&gen3_model);
 
     gen_z = complex<double>(0.0, 0.232064);
@@ -558,8 +559,8 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model(POWER_SYSTEM_DATABASE* db)
     load_model.set_Q_Kf(0.0);
     load_model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
-    vector<LOAD*> loads = db->get_all_loads();
-    size_t n = db->get_load_count();
+    vector<LOAD*> loads = psdb.get_all_loads();
+    size_t n = psdb.get_load_count();
     for(size_t i=0; i!=n; ++i)
     {
         loads[i]->set_model(&load_model);
@@ -567,7 +568,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model(POWER_SYSTEM_DATABASE* db)
 }
 
 
-void prepare_IEEE_9_bus_model_complete_dynamic_model(POWER_SYSTEM_DATABASE* db)
+void prepare_IEEE_9_bus_model_complete_dynamic_model()
 {
     PSSE_IMEXPORTER importer;
     importer.load_dynamic_data("ieee9.dyr");

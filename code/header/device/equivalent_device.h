@@ -8,12 +8,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class EQUIVALENT_DEVICE : public DEVICE
 {
     public:
-        EQUIVALENT_DEVICE(POWER_SYSTEM_DATABASE* db);
+        EQUIVALENT_DEVICE();
         virtual ~EQUIVALENT_DEVICE();
 
         void set_equivalent_device_bus(size_t bus);

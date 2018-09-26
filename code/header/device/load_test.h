@@ -55,10 +55,8 @@ class LOAD_TEST : public Test::Suite
         void test_set_get_load_model();
         void test_set_get_load_frequency_relay_model();
         void test_set_get_load_voltage_relay_model();
-
     private:
-        POWER_SYSTEM_DATABASE* db;
-        LOAD* load;
+        LOAD load;
 };
 
 #endif

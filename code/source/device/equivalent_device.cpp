@@ -7,16 +7,8 @@
 
 using namespace std;
 
-EQUIVALENT_DEVICE::EQUIVALENT_DEVICE(POWER_SYSTEM_DATABASE* psdb)
+EQUIVALENT_DEVICE::EQUIVALENT_DEVICE()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. EQUIVALENT_DEVICE object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    set_power_system_database(psdb);
     clear();
 
     equivalent_model = NULL;
@@ -45,22 +37,16 @@ void EQUIVALENT_DEVICE::set_equivalent_device_bus(size_t device_bus)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-        this->bus = device_bus;
-    else
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    if(not psdb.is_bus_exist(device_bus))
     {
-        if(not psdb->is_bus_exist(device_bus))
-        {
-            osstream<<"Bus "<<device_bus<<" does not exist for setting up equivalent device."<<endl
-              <<"0 will be set to indicate invalid equivalent device.";
-            show_information_with_leading_time_stamp(osstream);
-            this->bus = 0;
-            return;
-        }
-        this->bus = device_bus;
+        osstream<<"Bus "<<device_bus<<" does not exist for setting up equivalent device."<<endl
+          <<"0 will be set to indicate invalid equivalent device.";
+        show_information_with_leading_time_stamp(osstream);
+        this->bus = 0;
+        return;
     }
+    this->bus = device_bus;
 }
 
 void EQUIVALENT_DEVICE::set_identifier(string identifier)
@@ -195,9 +181,9 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_generation_in_MVA() const
     complex<double> E = get_equivalent_voltage_source_voltage_in_pu();
     complex<double> Z = get_equivalent_voltage_source_impedance_in_pu();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = get_equivalent_device_bus();
-    complex<double> V = psdb->get_bus_complex_voltage_in_pu(bus);
+    complex<double> V = psdb.get_bus_complex_voltage_in_pu(bus);
 
     complex<double> I = (E-V)/Z;
 
@@ -213,9 +199,9 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_MVA() const
     complex<double> SI = get_equivalent_nominal_constant_current_load_in_MVA();
     complex<double> SZ = get_equivalent_nominal_constant_impedance_load_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = get_equivalent_device_bus();
-    double V = psdb->get_bus_voltage_in_pu(bus);
+    double V = psdb.get_bus_voltage_in_pu(bus);
 
     return SP+SI*V+SZ*V*V;
 }
@@ -223,19 +209,19 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_MVA() const
 
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_power_load_in_pu() const
 {
-    double sbase = get_power_system_database()->get_system_base_power_in_MVA();
+    double sbase = get_default_power_system_database().get_system_base_power_in_MVA();
     return equivalent_load_s_constant_power_in_MVA/sbase;
 }
 
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_current_load_in_pu() const
 {
-    double sbase = get_power_system_database()->get_system_base_power_in_MVA();
+    double sbase = get_default_power_system_database().get_system_base_power_in_MVA();
     return equivalent_load_s_constant_current_in_MVA/sbase;
 }
 
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_impedance_load_in_pu() const
 {
-    double sbase = get_power_system_database()->get_system_base_power_in_MVA();
+    double sbase = get_default_power_system_database().get_system_base_power_in_MVA();
     return equivalent_load_s_constant_impedance_in_MVA/sbase;
 }
 
@@ -251,7 +237,7 @@ complex<double> EQUIVALENT_DEVICE::get_total_equivalent_power_as_load_in_pu() co
     if(get_equivalent_voltage_source_status()==true)
         S -= get_equivalent_generation_in_MVA();
 
-    double sbase = get_power_system_database()->get_system_base_power_in_MVA();
+    double sbase = get_default_power_system_database().get_system_base_power_in_MVA();
 
     return S/sbase;
 }
@@ -264,13 +250,13 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_generation_in_pu() const
     complex<double> E = get_equivalent_voltage_source_voltage_in_pu();
     complex<double> Z = get_equivalent_voltage_source_impedance_in_pu();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = get_equivalent_device_bus();
-    complex<double> V = psdb->get_bus_complex_voltage_in_pu(bus);
+    complex<double> V = psdb.get_bus_complex_voltage_in_pu(bus);
 
     complex<double> I = (E-V)/Z;
 
-    double sbase = psdb->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     return V*conj(I)/sbase;
 }
@@ -284,11 +270,11 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_pu() const
     complex<double> SI = get_equivalent_nominal_constant_current_load_in_MVA();
     complex<double> SZ = get_equivalent_nominal_constant_impedance_load_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = get_equivalent_device_bus();
-    double V = psdb->get_bus_voltage_in_pu(bus);
+    double V = psdb.get_bus_voltage_in_pu(bus);
 
-    double sbase = psdb->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     return (SP+SI*V+SZ*V*V)/sbase;
 }
@@ -340,34 +326,22 @@ bool EQUIVALENT_DEVICE::is_connected_to_bus(size_t target_bus) const
 
 bool EQUIVALENT_DEVICE::is_in_area(size_t area) const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
-    {
-        BUS* busptr = psdb->get_bus(get_equivalent_device_bus());
-        if(busptr!=NULL)
-        {
-            return busptr->is_in_area(area);
-        }
-        else
-            return false;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    BUS* busptr = psdb.get_bus(get_equivalent_device_bus());
+    if(busptr!=NULL)
+        return busptr->is_in_area(area);
     else
         return false;
 }
 
 bool EQUIVALENT_DEVICE::is_in_zone(size_t zone) const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
-    {
-        BUS* busptr = psdb->get_bus(get_equivalent_device_bus());
-        if(busptr!=NULL)
-        {
-            return busptr->is_in_zone(zone);
-        }
-        else
-            return false;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    BUS* busptr = psdb.get_bus(get_equivalent_device_bus());
+    if(busptr!=NULL)
+        return busptr->is_in_zone(zone);
     else
         return false;
 }
@@ -398,7 +372,6 @@ EQUIVALENT_DEVICE& EQUIVALENT_DEVICE::operator=(const EQUIVALENT_DEVICE& device)
     if(this==(&device)) return *this;
 
     clear();
-    set_power_system_database(device.get_power_system_database());
     set_equivalent_device_bus(device.get_equivalent_device_bus());
     set_identifier(device.get_identifier());
     set_status(device.get_status());
@@ -465,7 +438,7 @@ void EQUIVALENT_DEVICE::set_equivalent_model(const EQUIVALENT_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         equivalent_model = new_model;
     }

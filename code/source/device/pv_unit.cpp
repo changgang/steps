@@ -11,16 +11,8 @@
 
 using namespace std;
 
-PV_UNIT::PV_UNIT(POWER_SYSTEM_DATABASE* psdb) : SOURCE(psdb)
+PV_UNIT::PV_UNIT() : SOURCE()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. PV_UNIT object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    set_power_system_database(psdb);
     clear();
 
     pv_converter_model = NULL;
@@ -233,7 +225,7 @@ void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         pv_converter_model = new_model;
 
@@ -333,8 +325,6 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& gen)
     if(this==(&gen)) return *this;
 
     clear();
-
-    set_power_system_database(gen.get_power_system_database());
 
     set_unit_bus(gen.get_unit_bus());
     set_identifier(gen.get_identifier());

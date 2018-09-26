@@ -179,20 +179,6 @@ map<string, vector<string>> SUPPORTED_METERS{ {"BUS",         bus_meters},
                                                 {"ENERGY STORAGE", energy_storage_meters},
                                                 {"HVDC", hvdc_meters},
                                                 {"EQUIVALENT DEVICE", equivalent_device_meters}};
-
-METER::METER(POWER_SYSTEM_DATABASE* psdb)
-{
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. METER object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    set_power_system_database(psdb);
-    clear();
-}
-
 METER::METER()
 {
     clear();
@@ -202,7 +188,6 @@ void METER::copy_from_const_meter(const METER& meter)
 {
     clear();
 
-    set_power_system_database(meter.get_power_system_database());
     set_buffer_size(meter.get_buffer_size());
     set_device_id(meter.get_device_id());
     set_meter_type(meter.get_meter_type());
@@ -489,7 +474,7 @@ string METER::get_meter_name() const
         if(meter_type.find("INTERNAL VARIABLE")!=string::npos)
             name += " " + get_internal_variable_name();
 
-        //name += " OF "+get_device_id().get_device_name()+" IN PS "+get_power_system_database()->get_system_name();
+        //name += " OF "+get_device_id().get_device_name()+" IN PS "+get_default_power_system_database()->get_system_name();
         name += " @ "+get_device_id().get_device_name();
 
         string device_type = get_device_type();
@@ -535,8 +520,7 @@ void METER::clear()
 
 bool METER::operator==(const METER& meter)
 {
-    if(this->get_power_system_database()==meter.get_power_system_database() and
-       this->get_device_id() == meter.get_device_id() and
+    if(this->get_device_id() == meter.get_device_id() and
        this->get_meter_type() == meter.get_meter_type())
     {
         if(this->get_meter_type().find("INTERNAL VARIABLE") == string::npos)
@@ -568,16 +552,7 @@ void METER::set_device_pointer()
         return;
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER."<<endl
-          <<"Device pointer will be set as NULL to disable the meter.";
-        show_information_with_leading_time_stamp(osstream);
-        device_pointer = NULL;
-        return;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     DEVICE* deviceptr = NULL;
@@ -585,34 +560,34 @@ void METER::set_device_pointer()
     {
         TERMINAL terminal = device_id.get_device_terminal();
         vector<size_t> tbuses = terminal.get_buses();
-        deviceptr = (DEVICE*) psdb->get_bus(tbuses[0]);
+        deviceptr = (DEVICE*) psdb.get_bus(tbuses[0]);
     }
     if(device_type=="LINE")
-        deviceptr = (DEVICE*) psdb->get_line(device_id);
+        deviceptr = (DEVICE*) psdb.get_line(device_id);
 
     if(device_type=="TRANSFORMER")
-        deviceptr = (DEVICE*) psdb->get_transformer(device_id);
+        deviceptr = (DEVICE*) psdb.get_transformer(device_id);
 
     if(device_type=="LOAD")
-        deviceptr = (DEVICE*) psdb->get_load(device_id);
+        deviceptr = (DEVICE*) psdb.get_load(device_id);
 
     if(device_type=="GENERATOR")
-        deviceptr = (DEVICE*) psdb->get_generator(device_id);
+        deviceptr = (DEVICE*) psdb.get_generator(device_id);
 
     if(device_type=="WT GENERATOR")
-        deviceptr = (DEVICE*) psdb->get_wt_generator(device_id);
+        deviceptr = (DEVICE*) psdb.get_wt_generator(device_id);
 
     if(device_type=="PV UNIT")
-        deviceptr = (DEVICE*) psdb->get_pv_unit(device_id);
+        deviceptr = (DEVICE*) psdb.get_pv_unit(device_id);
 
     if(device_type=="ENERGY STORAGE")
-        deviceptr = (DEVICE*) psdb->get_energy_storage(device_id);
+        deviceptr = (DEVICE*) psdb.get_energy_storage(device_id);
 
     if(device_type=="HVDC")
-        deviceptr = (DEVICE*) psdb->get_hvdc(device_id);
+        deviceptr = (DEVICE*) psdb.get_hvdc(device_id);
 
     if(device_type=="EQUIVALENT DEVICE")
-        deviceptr = (DEVICE*) psdb->get_equivalent_device(device_id);
+        deviceptr = (DEVICE*) psdb.get_equivalent_device(device_id);
 
     this->device_pointer = deviceptr;
     if(deviceptr==NULL)
@@ -1019,9 +994,9 @@ double METER::get_meter_value_as_a_load() const
 
     if(meter_type=="CURRENT IN KA")
     {
-        POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
-        double sbase = psdb->get_system_base_power_in_MVA();
-        double vbase = psdb->get_bus_base_voltage_in_kV(load->get_load_bus());
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        double sbase = psdb.get_system_base_power_in_MVA();
+        double vbase = psdb.get_bus_base_voltage_in_kV(load->get_load_bus());
         double ibase = sbase/(sqrt(3.0)*vbase);
         return ibase* steps_fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
     }
@@ -1079,9 +1054,9 @@ double METER::get_meter_value_as_a_generator() const
     if(generator->get_status()==false)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = generator->get_power_system_database();
-    double fbase = psdb->get_bus_base_frequency_in_Hz(generator->get_generator_bus());
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
+    double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = generator->get_mbase_in_MVA();
 
     SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
@@ -1152,7 +1127,7 @@ double METER::get_meter_value_as_a_generator() const
             return 0.0;
         else
         {
-            double vbase = psdb->get_bus_base_voltage_in_kV(generator->get_generator_bus());
+            double vbase = psdb.get_bus_base_voltage_in_kV(generator->get_generator_bus());
             double ibase = sbase/(sqrt(3.0)*vbase);
             return ibase*gen_model->get_terminal_current_in_pu_based_on_sbase();
         }
@@ -1334,9 +1309,9 @@ double METER::get_meter_value_as_a_wt_generator() const
         return 0.0;
 
     size_t bus = generator->get_generator_bus();
-    POWER_SYSTEM_DATABASE* psdb = generator->get_power_system_database();
-    double fbase = psdb->get_bus_base_frequency_in_Hz(generator->get_generator_bus());
-    //double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
+    //double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = generator->get_mbase_in_MVA();
 
     WT_GENERATOR_MODEL* gen_model = generator->get_wt_generator_model();
@@ -1360,7 +1335,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             return 0.0;
         else
         {
-            double vbase = psdb->get_bus_base_voltage_in_kV(bus);
+            double vbase = psdb.get_bus_base_voltage_in_kV(bus);
             double ibase = mbase/(sqrt(3.0)*vbase);
             return gen_model->get_terminal_current_in_pu_based_on_mbase()*ibase;
         }

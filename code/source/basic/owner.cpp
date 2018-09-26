@@ -7,9 +7,8 @@
 using namespace std;
 
 
-OWNER::OWNER(POWER_SYSTEM_DATABASE* psdb)
+OWNER::OWNER()
 {
-    set_power_system_database(psdb);
     clear();
 }
 
@@ -78,8 +77,6 @@ void OWNER::report() const
 OWNER& OWNER::operator=(const OWNER& owner)
 {
     if(this==(&owner)) return *this;
-
-    OWNER(owner.get_power_system_database());
 
     if(owner.get_owner_number()!=0)
         set_owner_number(owner.get_owner_number());

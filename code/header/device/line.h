@@ -11,12 +11,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class LINE : public DEVICE
 {
     public:
-        LINE(POWER_SYSTEM_DATABASE* db);
+        LINE();
         virtual ~LINE();
 
         void set_sending_side_bus(size_t bus);

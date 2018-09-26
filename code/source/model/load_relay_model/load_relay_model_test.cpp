@@ -17,9 +17,9 @@ LOAD_RELAY_MODEL_TEST::LOAD_RELAY_MODEL_TEST()
 
 void LOAD_RELAY_MODEL_TEST::setup()
 {
-    db = get_default_power_system_database_pointer();
-    db->set_allowed_max_bus_number(100);
-    db->set_system_base_power_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(100);
+    psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
     bus.set_bus_number(1);
@@ -28,9 +28,9 @@ void LOAD_RELAY_MODEL_TEST::setup()
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_rad(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
-    LOAD load(db);
+    LOAD load;
     load.set_load_bus(1);
     load.set_identifier("#1");
     load.set_status(true);
@@ -38,7 +38,7 @@ void LOAD_RELAY_MODEL_TEST::setup()
     load.set_nominal_constant_current_load_in_MVA(complex<double>(100.0, 50.0));
     load.set_nominal_constant_impedance_load_in_MVA(complex<double>(100.0, 50.0));
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     DEVICE_ID did;
     did.set_device_type("LOAD");
@@ -47,15 +47,16 @@ void LOAD_RELAY_MODEL_TEST::setup()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    loadptr = db->get_load(did);
-
-    simulator  = new DYNAMICS_SIMULATOR(db);
+    loadptr = psdb.get_load(did);
 }
 
 void LOAD_RELAY_MODEL_TEST::tear_down()
 {
-    delete simulator;
-    db->clear_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
+
+    DYNAMICS_SIMULATOR& simulator = get_default_dynamic_simulator();
+    simulator.clear();
 
     show_test_end_information();
 }

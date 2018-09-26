@@ -44,8 +44,7 @@ class EQUIVALENT_DEVICE_TEST : public Test::Suite
 
         void test_get_device_id();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        EQUIVALENT_DEVICE* edevice;
+        EQUIVALENT_DEVICE edevice;
 };
 
 #endif

@@ -16,7 +16,7 @@ class JACOBIAN_BUILDER
         JACOBIAN_BUILDER();
         ~JACOBIAN_BUILDER();
 
-        void set_network_database(NETWORK_DATABASE* ndb);
+        void set_network_database(NETWORK_DATABASE& ndb);
         NETWORK_DATABASE* get_network_database() const;
 
         bool is_network_database_set() const;

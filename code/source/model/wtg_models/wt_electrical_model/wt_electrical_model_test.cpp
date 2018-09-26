@@ -125,11 +125,11 @@ void WT_ELECTRICAL_MODEL_TEST::test_get_terminal_bus_voltage()
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = genptr->get_generator_bus();
 
-    TEST_ASSERT(fabs(model->get_terminal_bus_voltage_in_pu()-psdb->get_bus_voltage_in_pu(bus))<FLOAT_EPSILON);
-    BUS* busptr = psdb->get_bus(bus);
+    TEST_ASSERT(fabs(model->get_terminal_bus_voltage_in_pu()-psdb.get_bus_voltage_in_pu(bus))<FLOAT_EPSILON);
+    BUS* busptr = psdb.get_bus(bus);
     busptr->set_voltage_in_pu(1.1);
     TEST_ASSERT(fabs(model->get_terminal_bus_voltage_in_pu()-1.1)<FLOAT_EPSILON);
 }
@@ -140,12 +140,12 @@ void WT_ELECTRICAL_MODEL_TEST::test_get_terminal_bus_frequency()
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = genptr->get_generator_bus();
 
-    TEST_ASSERT(fabs(model->get_terminal_bus_frequency_deviation_in_pu()-psdb->get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_terminal_bus_frequency_in_pu()-psdb->get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
-    BUS* busptr = psdb->get_bus(bus);
+    TEST_ASSERT(fabs(model->get_terminal_bus_frequency_deviation_in_pu()-psdb.get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_terminal_bus_frequency_in_pu()-psdb.get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
+    BUS* busptr = psdb.get_bus(bus);
     BUS_FREQUENCY_MODEL* freqmodel = busptr->get_bus_frequency_model();
     freqmodel->set_frequency_deviation_in_pu(0.1);
     TEST_ASSERT(fabs(model->get_terminal_bus_frequency_deviation_in_pu()-0.1)<FLOAT_EPSILON);
@@ -336,8 +336,8 @@ void WT_ELECTRICAL_MODEL_TEST::export_meter_title()
 
 void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
-    BUS* bus = psdb->get_bus(1);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* bus = psdb.get_bus(1);
 
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
@@ -359,15 +359,15 @@ void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
 
 void WT_ELECTRICAL_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
-    BUS* bus = psdb->get_bus(1);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* bus = psdb.get_bus(1);
     bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
 }
 
 void WT_ELECTRICAL_MODEL_TEST::apply_frequency_drop_of_5_percent()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
-    BUS* bus = psdb->get_bus(1);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* bus = psdb.get_bus(1);
     BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
     model->set_frequency_deviation_in_pu(0.05);
 }

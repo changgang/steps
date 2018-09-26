@@ -108,8 +108,8 @@ void EXCITER_MODEL_TEST::export_meter_title()
 
 void EXCITER_MODEL_TEST::export_meter_values(double time)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
-    BUS* bus = psdb->get_bus(1);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* bus = psdb.get_bus(1);
 
     EXCITER_MODEL* model = get_test_exciter_model();
 
@@ -124,8 +124,8 @@ void EXCITER_MODEL_TEST::export_meter_values(double time)
 
 void EXCITER_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
-    BUS* bus = psdb->get_bus(1);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* bus = psdb.get_bus(1);
 
     bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
 }

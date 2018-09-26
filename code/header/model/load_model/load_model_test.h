@@ -43,7 +43,6 @@ class LOAD_MODEL_TEST : public Test::Suite
         void export_meter_values(double time);
 
         LOAD* load_ptr;
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//LOAD_TEST_H

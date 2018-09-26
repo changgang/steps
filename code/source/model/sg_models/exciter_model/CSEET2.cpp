@@ -739,9 +739,9 @@ double CSEET2::get_excitation_voltage_in_pu() const
     double Vrmax = get_VRmax_in_pu();
     double Vrmin = get_VRmin_in_pu();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = generator->get_generator_bus();
-    double Vt = psdb->get_bus_voltage_in_pu(bus);
+    double Vt = psdb.get_bus_voltage_in_pu(bus);
 
     if(get_excitation_source()==SELF_EXCITATION)
     {

@@ -268,15 +268,8 @@ bool WT3G2::setup_model_with_psse_string(string data)
     pllmin = get_double_data(dyrdata[i],"0.0");
 
     DEVICE_ID did = get_wt_generator_device_id(ibus, id);
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
-               <<"No power system database is properly set.";
-        show_information_with_leading_time_stamp(osstream);
-        return is_successful;
-    }
-    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen==NULL)
     {
         osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
@@ -327,10 +320,6 @@ void WT3G2::initialize()
 
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = wt_generator->get_power_system_database();
-    if(psdb==NULL)
         return;
 
     size_t n_lumped = get_number_of_lumped_wt_generators();
@@ -421,10 +410,6 @@ void WT3G2::run(DYNAMIC_MODE mode)
     if(wt_generator==NULL)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = wt_generator->get_power_system_database();
-    if(psdb==NULL)
-        return;
-
     double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
@@ -500,8 +485,8 @@ void WT3G2::run(DYNAMIC_MODE mode)
 
 complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
@@ -555,8 +540,8 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
 complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
     return Ixy*sbase/mbase;
@@ -564,8 +549,8 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
 
 complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
@@ -693,10 +678,10 @@ double WT3G2::get_variable_with_name(string var_name)
         return get_terminal_current_in_pu_based_on_mbase();
     if(var_name == "TERMINAL CURRENT IN KA")
     {
-        POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
         WT_GENERATOR* generator = get_wt_generator_pointer();
         size_t bus = generator->get_generator_bus();
-        double vbase = psdb->get_bus_base_voltage_in_kV(bus);
+        double vbase = psdb.get_bus_base_voltage_in_kV(bus);
         double mbase = generator->get_mbase_in_MVA();
         double ibase = mbase/sqrt(3.0)/vbase;
         return get_terminal_current_in_pu_based_on_mbase()*ibase;
@@ -787,11 +772,6 @@ double WT3G2::get_pll_angle_in_deg()
 
 double WT3G2::get_pll_frequency_deviation_in_pu()
 {
-    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    POWER_SYSTEM_DATABASE* psdb = wt_generator->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
-
     double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
 
@@ -819,11 +799,6 @@ double WT3G2::get_pll_frequency_deviation_in_pu()
 
 double WT3G2::get_pll_frequency_deviation_in_Hz()
 {
-    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    POWER_SYSTEM_DATABASE* psdb = wt_generator->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
-
     double fbase = get_bus_base_frequency_in_Hz();
 
     return fbase*get_pll_frequency_deviation_in_pu();
@@ -836,11 +811,6 @@ double WT3G2::get_pll_frequency_in_pu()
 
 double WT3G2::get_pll_frequency_in_Hz()
 {
-    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    POWER_SYSTEM_DATABASE* psdb = wt_generator->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
-
     double fbase = get_bus_base_frequency_in_Hz();
 
     return fbase*get_pll_frequency_in_pu();
@@ -851,8 +821,8 @@ complex<double> WT3G2::get_internal_voltage_in_pu_in_xy_axis()
     complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Z = get_source_impedance_in_pu_based_on_mbase();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 
     Z = Z/mbase*sbase;

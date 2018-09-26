@@ -23,7 +23,6 @@ class HVDC_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     protected:
-        POWER_SYSTEM_DATABASE* get_test_power_system_database();
         HVDC* get_test_hvdc();
         HVDC_MODEL* get_test_hvdc_model();
         void test_initialize();
@@ -41,7 +40,6 @@ class HVDC_MODEL_TEST : public Test::Suite
     private:
         void export_meter_titles();
         void export_meter_values(double time);
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//HVDC_MODEL_TEST_H

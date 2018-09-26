@@ -8,12 +8,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class SOURCE : public DEVICE
 {
     public:
-        SOURCE(POWER_SYSTEM_DATABASE* db);
+        SOURCE();
         virtual ~SOURCE();
 
         void set_source_bus(size_t bus);

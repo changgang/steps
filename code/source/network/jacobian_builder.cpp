@@ -22,16 +22,9 @@ JACOBIAN_BUILDER::~JACOBIAN_BUILDER()
 }
 
 
-void JACOBIAN_BUILDER::set_network_database(NETWORK_DATABASE* ndb)
+void JACOBIAN_BUILDER::set_network_database(NETWORK_DATABASE& ndb)
 {
-    if(ndb!=NULL)
-        this->network_db = ndb;
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Error. Invalid network database (NULL) is given. Failed to connect JACOBIAN_BUILDER to NETWORK_DATABASE.";
-        show_information_with_leading_time_stamp(osstream);
-    }
+    this->network_db = &ndb;
 }
 
 
@@ -110,10 +103,10 @@ void JACOBIAN_BUILDER::update_seprate_jacobians()
 void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
 {
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    size_t nbus = db->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
     double der;
     complex<double> y;
     int k_start, k_end;
@@ -169,10 +162,10 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
 void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
 {
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    size_t nbus = db->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
     double der;
     complex<double> y;
     int k_start, k_end;
@@ -229,10 +222,10 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
 void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
 {
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    size_t nbus = db->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
     double der;
     complex<double> y;
 
@@ -289,10 +282,10 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
 void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
 {
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    size_t nbus = db->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
     double der;
     complex<double> y;
 
@@ -355,10 +348,10 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
     NETWORK_DATABASE* nw_db = get_network_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
-    complex<double> Vi = db->get_bus_complex_voltage_in_pu(IBUS), Vj;
+    complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
     complex<double> y;
     double g, b;
     double Vim, Vjm, anglei, anglej, dangle;
@@ -374,7 +367,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
         if(y!=0.0)
         {
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-            Vj = db->get_bus_complex_voltage_in_pu(JBUS);
+            Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
             Vjm = steps_fast_complex_abs(Vj);
             anglej = steps_fast_complex_arg(Vj);
             g = y.real();
@@ -399,7 +392,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
                 continue;
 
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-            Vj = db->get_bus_complex_voltage_in_pu(JBUS);
+            Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
             Vjm = steps_fast_complex_abs(Vj);
             anglej = steps_fast_complex_arg(Vj);
             g = y.real();
@@ -420,10 +413,10 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
     NETWORK_DATABASE* nw_db = get_network_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
-    complex<double> Vi = db->get_bus_complex_voltage_in_pu(IBUS), Vj;
+    complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
     complex<double> y;
     double g, b;
     double Vim, Vjm, anglei, anglej, dangle;
@@ -439,7 +432,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
         if(y!=0.0)
         {
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-            Vj = db->get_bus_complex_voltage_in_pu(JBUS);
+            Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
             Vjm = steps_fast_complex_abs(Vj);
             anglej = steps_fast_complex_arg(Vj);
             g = y.real();
@@ -461,7 +454,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
                 continue;
 
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-            Vj = db->get_bus_complex_voltage_in_pu(JBUS);
+            Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
             Vjm = steps_fast_complex_abs(Vj);
             anglej = steps_fast_complex_arg(Vj);
             g = y.real();
@@ -485,10 +478,10 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
     NETWORK_DATABASE* nw_db = get_network_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
-    complex<double> Vi = db->get_bus_complex_voltage_in_pu(IBUS), Vj;
+    complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
     complex<double> y;
     double g, b;
     double Vim, Vjm, anglei, anglej, dangle;
@@ -504,7 +497,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
         if(y!=0.0)
         {
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-            Vj = db->get_bus_complex_voltage_in_pu(JBUS);
+            Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
             Vjm = steps_fast_complex_abs(Vj);
             anglej = steps_fast_complex_arg(Vj);
             g = y.real();
@@ -529,7 +522,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
                 continue;
 
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-            Vj = db->get_bus_complex_voltage_in_pu(JBUS);
+            Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
             Vjm = steps_fast_complex_abs(Vj);
             anglej = steps_fast_complex_arg(Vj);
             g = y.real();
@@ -550,10 +543,10 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
     NETWORK_DATABASE* nw_db = get_network_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
-    complex<double> Vi = db->get_bus_complex_voltage_in_pu(IBUS), Vj;
+    complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
     complex<double> y;
     double g, b;
     double Vim, Vjm, anglei, anglej, dangle;
@@ -569,7 +562,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
         if(y!=0.0)
         {
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-            Vj = db->get_bus_complex_voltage_in_pu(JBUS);
+            Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
             Vjm = steps_fast_complex_abs(Vj);
             anglej = steps_fast_complex_arg(Vj);
             g = y.real();
@@ -591,7 +584,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
                 continue;
 
             JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-            Vj = db->get_bus_complex_voltage_in_pu(JBUS);
+            Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
             Vjm = steps_fast_complex_abs(Vj);
             anglej = steps_fast_complex_arg(Vj);
             g = y.real();
@@ -613,9 +606,9 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_physical_bus(size_t 
         return 0.0;
 
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(db->is_bus_exist(ibus) and db->is_bus_exist(jbus))
+    if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
     {
         size_t ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
         size_t jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
@@ -638,9 +631,9 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_physical_bus(size_
         return 0.0;
 
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(db->is_bus_exist(ibus) and db->is_bus_exist(jbus))
+    if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
     {
         size_t ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
         size_t jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
@@ -663,9 +656,9 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_physical_bus(size_t 
         return 0.0;
 
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(db->is_bus_exist(ibus) and db->is_bus_exist(jbus))
+    if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
     {
         size_t ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
         size_t jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
@@ -688,9 +681,9 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_
         return 0.0;
 
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(db->is_bus_exist(ibus) and db->is_bus_exist(jbus))
+    if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
     {
         size_t ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
         size_t jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
@@ -723,14 +716,14 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation
 
     NETWORK_DATABASE* nw_db = get_network_database();
     const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t n_internal_P_equation_buses = internal_P_equation_buses.size(),
            n_internal_Q_equation_buses = internal_Q_equation_buses.size();
 
     vector<bool> is_a_P_equation_bus, is_a_Q_equation_bus;
     vector<size_t> index_of_a_P_equation_bus, index_of_a_Q_equation_bus;
-    size_t n = db->get_in_service_bus_count();
+    size_t n = psdb.get_in_service_bus_count();
     is_a_P_equation_bus.reserve(n);
     is_a_Q_equation_bus.reserve(n);
     index_of_a_P_equation_bus.reserve(n);
@@ -897,7 +890,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_intern
     show_information_with_leading_time_stamp(osstream);
 
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     const SPARSE_MATRIX& BP = nw_db->get_decoupled_network_BP_matrix();
 
@@ -905,7 +898,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_intern
 
     vector<bool> is_a_P_equation_bus;
     vector<size_t> index_of_a_P_equation_bus;
-    size_t n = db->get_in_service_bus_count();
+    size_t n = psdb.get_in_service_bus_count();
     is_a_P_equation_bus.reserve(n);
     index_of_a_P_equation_bus.reserve(n);
     for(size_t i=0; i!=n; ++i)
@@ -969,7 +962,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_intern
     show_information_with_leading_time_stamp(osstream);
 
     NETWORK_DATABASE* nw_db = get_network_database();
-    POWER_SYSTEM_DATABASE* db = nw_db->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     const SPARSE_MATRIX& BQ = nw_db->get_decoupled_network_BQ_matrix();
 
@@ -977,7 +970,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_intern
 
     vector<bool> is_a_Q_equation_bus;
     vector<size_t> index_of_a_Q_equation_bus;
-    size_t n = db->get_in_service_bus_count();
+    size_t n = psdb.get_in_service_bus_count();
     is_a_Q_equation_bus.reserve(n);
     index_of_a_Q_equation_bus.reserve(n);
     for(size_t i=0; i!=n; ++i)

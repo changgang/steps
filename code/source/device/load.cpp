@@ -10,16 +10,8 @@ using namespace std;
 
 double LOAD::voltage_threshold_of_constant_power_load_in_pu = 0.7;
 
-LOAD::LOAD(POWER_SYSTEM_DATABASE* psdb)
+LOAD::LOAD()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. LOAD object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    set_power_system_database(psdb);
     clear();
 
     load_model = NULL;
@@ -54,22 +46,17 @@ void LOAD::set_load_bus(size_t load_bus)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(psdb==NULL)
-        this->bus = load_bus;
-    else
+    if(not psdb.is_bus_exist(load_bus))
     {
-        if(not psdb->is_bus_exist(load_bus))
-        {
-            osstream<<"Bus "<<load_bus<<" does not exist for setting up load."<<endl
-              <<"0 will be set to indicate invalid load.";
-            show_information_with_leading_time_stamp(osstream);
-            this->bus = 0;
-            return;
-        }
-        this->bus = load_bus;
+        osstream<<"Bus "<<load_bus<<" does not exist for setting up load."<<endl
+          <<"0 will be set to indicate invalid load.";
+        show_information_with_leading_time_stamp(osstream);
+        this->bus = 0;
+        return;
     }
+    this->bus = load_bus;
 }
 
 void LOAD::set_identifier(string load_id)
@@ -237,7 +224,6 @@ LOAD& LOAD::operator=(const LOAD& load)
     if(this==(&load)) return *this;
 
     clear();
-    set_power_system_database(load.get_power_system_database());
     set_load_bus(load.get_load_bus());
     set_identifier(load.get_identifier());
     set_status(load.get_status());
@@ -290,18 +276,12 @@ complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
 
     complex<double> S0 = get_nominal_constant_power_load_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<get_device_name()<<" is not assigned to any power system database. Actual constant power load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(osstream);
-        return S0;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(get_load_bus());
+    BUS* busptr = psdb.get_bus(get_load_bus());
     if(busptr==NULL)
     {
-        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
+        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
           <<get_device_name()<<" actual constant power load will be returned as it nominal power.";
         show_information_with_leading_time_stamp(osstream);
         return S0;
@@ -327,18 +307,12 @@ complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
 
     complex<double> S0 = get_nominal_constant_current_load_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<get_device_name()<<" is not assigned to any power system database. Actual constant current load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(osstream);
-        return S0;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(get_load_bus());
+    BUS* busptr = psdb.get_bus(get_load_bus());
     if(busptr==NULL)
     {
-        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
+        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
           <<get_device_name()<<" actual constant current load will be returned as it nominal power.";
         show_information_with_leading_time_stamp(osstream);
         return S0;
@@ -359,18 +333,12 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
 
     complex<double> S0 = get_nominal_constant_impedance_load_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<get_device_name()<<" is not assigned to any power system database. Actual constant impedance load will be returned as it nominal power.";
-        show_information_with_leading_time_stamp(osstream);
-        return S0;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(get_load_bus());
+    BUS* busptr = psdb.get_bus(get_load_bus());
     if(busptr==NULL)
     {
-        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb->get_system_name()<<"'."<<endl
+        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
           <<get_device_name()<<" actual constant impedance load will be returned as it nominal power.";
         show_information_with_leading_time_stamp(osstream);
         return S0;
@@ -439,7 +407,7 @@ void LOAD::set_load_model(const LOAD_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         load_model = new_model;
     }
@@ -481,7 +449,7 @@ void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* mode
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         load_frequency_relay_model = new_model;
     }
@@ -518,7 +486,7 @@ void LOAD::set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         load_voltage_relay_model = new_model;
     }
@@ -606,7 +574,7 @@ complex<double> LOAD::get_dynamic_load_in_MVA()
 
 complex<double> LOAD::get_dynamic_load_in_pu()
 {
-    double sbase = get_power_system_database()->get_system_base_power_in_MVA();
+    double sbase = get_default_power_system_database().get_system_base_power_in_MVA();
 
     return get_dynamic_load_in_MVA()/sbase;
 }
@@ -650,23 +618,12 @@ complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power
 {
     if(get_status())//==true
     {
-        POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-        if(psdb!=NULL)
-        {
-            complex<double> S = get_dynamic_load_in_MVA()/psdb->get_system_base_power_in_MVA();
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        complex<double> S = get_dynamic_load_in_MVA()/psdb.get_system_base_power_in_MVA();
 
-            complex<double> V = psdb->get_bus_complex_voltage_in_pu(get_load_bus());
+        complex<double> V = psdb.get_bus_complex_voltage_in_pu(get_load_bus());
 
-            return conj(S/V);
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<get_device_name()<<" is not assigned to any power system database."<<endl
-              <<"Dynamic load current will be returned as 0.0.";
-            show_information_with_leading_time_stamp(osstream);
-            return 0.0;
-        }
+        return conj(S/V);
     }
     else
         return 0.0;

@@ -40,8 +40,7 @@ class FIXED_SHUNT_TEST : public Test::Suite
 
         void test_get_actual_impedance_shunt();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        FIXED_SHUNT* fixed_shunt;
+        FIXED_SHUNT fixed_shunt;
 };
 
 #endif

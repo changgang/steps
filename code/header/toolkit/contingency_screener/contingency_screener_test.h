@@ -45,7 +45,6 @@ class CONTINGENCY_SCREENER_TEST : public Test::Suite
         void test_seach_cct_for_IEEE_9_bus_model_classic();
     private:
         void run_dynamics_with_cct(double cct);
-        POWER_SYSTEM_DATABASE* psdb;
         CONTINGENCY_SCREENER* searcher;
 };
 

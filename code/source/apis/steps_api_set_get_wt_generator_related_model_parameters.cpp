@@ -6,8 +6,8 @@ const char* api_get_wt_generator_related_model_name(size_t bus, char* identifier
 {
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    WT_GENERATOR* generator = psdb->get_wt_generator(did);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    WT_GENERATOR* generator = psdb.get_wt_generator(did);
     if(generator==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -64,8 +64,8 @@ const char* api_get_wt_generator_related_model_name(size_t bus, char* identifier
 double api_get_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name)
 {
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    WT_GENERATOR* generator = psdb->get_wt_generator(did);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    WT_GENERATOR* generator = psdb.get_wt_generator(did);
     if(generator==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
@@ -130,8 +130,8 @@ double api_get_wt_generator_related_model_float_parameter(size_t bus, char* iden
 void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value)
 {
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    WT_GENERATOR* generator = psdb->get_wt_generator(did);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    WT_GENERATOR* generator = psdb.get_wt_generator(did);
     if(generator==NULL)
     {
         show_device_not_exist_with_api(did, __FUNCTION__);

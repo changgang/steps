@@ -83,29 +83,6 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         void load_one_model(string data);
         string get_dynamic_model_name(string data);
 
-        void add_GENCLS_model(string data);
-        void add_GENROU_model(string data);
-        void add_GENSAL_model(string data);
-
-        void add_COMP_model(string data);
-
-        void add_IEE2ST_model(string data);
-
-        void add_SEXS_model(string data);
-        void add_IEEET1_model(string data);
-        void add_PSASPE1_model(string data);
-        void add_PSASPE2_model(string data);
-        void add_CSEET1_model(string data);
-        void add_CSEET2_model(string data);
-        void add_PSASPE13_model(string data);
-
-        void add_TGOV1_model(string data);
-        void add_IEEEG1_model(string data);
-        void add_IEEEG2_model(string data);
-        void add_IEEEG3_model(string data);
-
-
-        void add_IEEL_model(string data);
         vector<LOAD*> get_all_loads_of(string data);
         vector<LOAD*> remove_loads_with_different_identifier(vector<LOAD*> loads, string identifier);
 

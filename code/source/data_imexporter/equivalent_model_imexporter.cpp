@@ -10,36 +10,11 @@ using namespace std;
 
 EQUIVALENT_MODEL_IMEXPORTER::EQUIVALENT_MODEL_IMEXPORTER()
 {
-    psdb = NULL;
     data_in_ram.clear();
 }
 EQUIVALENT_MODEL_IMEXPORTER::~EQUIVALENT_MODEL_IMEXPORTER()
 {
     ;
-}
-
-void EQUIVALENT_MODEL_IMEXPORTER::set_power_system_database(POWER_SYSTEM_DATABASE* psdb)
-{
-    this->psdb = psdb;
-}
-
-POWER_SYSTEM_DATABASE* EQUIVALENT_MODEL_IMEXPORTER::get_power_system_database() const
-{
-    return psdb;
-}
-
-bool EQUIVALENT_MODEL_IMEXPORTER::is_power_system_database_set() const
-{
-    if(get_power_system_database()!=NULL)
-        return true;
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Error. Data imexporter is not connected to any target power system database."<<endl
-          <<"No operation on the imexporter will work.";
-        show_information_with_leading_time_stamp(osstream);
-        return false;
-    }
 }
 void EQUIVALENT_MODEL_IMEXPORTER::load_equivalent_model(string file)
 {
@@ -119,7 +94,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     if(n==0)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     ostringstream osstream;
 
@@ -128,12 +103,12 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     // new ARX model found
     size_t side_bus = get_integer_data(data_line[4],"0");
 
-    EQUIVALENT_DEVICE edevice(psdb);
+    EQUIVALENT_DEVICE edevice;
     edevice.set_equivalent_device_bus(side_bus);
     if(data_line[0]=="ARXL")
         edevice.set_identifier("ARXL");
 
-    psdb->append_equivalent_device(edevice);
+    psdb.append_equivalent_device(edevice);
 
     osstream<<"Equivalent device added: "<<edevice.get_device_name();
     show_information_with_leading_time_stamp(osstream);
@@ -143,9 +118,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
 
     METER meter;
 
@@ -340,7 +313,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     if(n==0)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     ostringstream osstream;
 
@@ -361,10 +334,9 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     did.set_device_terminal(terminal);
     did.set_device_identifier("ARXL");
 
-    EQUIVALENT_DEVICE* pedevice = psdb->get_equivalent_device(did);
+    EQUIVALENT_DEVICE* pedevice = psdb.get_equivalent_device(did);
 
     ARXL model;
-    model.set_power_system_database(psdb);
 
     did.set_device_type("LINE");
     terminal.clear();
@@ -376,7 +348,6 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     model.set_output_line(did, side_bus);
 
     METER_SETTER setter;
-    setter.set_power_system_database(psdb);
 
     METER meter;
     size_t delay = 0;

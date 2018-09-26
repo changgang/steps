@@ -43,8 +43,7 @@ class SOURCE_TEST : public Test::Suite
         void test_clear();
         void test_is_connected_to_bus();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        GENERATOR* generator;
+        GENERATOR generator;
 };
 
 #endif //GENERATOR_AND_SOURCE_TEST_H

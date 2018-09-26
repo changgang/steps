@@ -27,7 +27,6 @@ class EQUIVALENT_MODEL_IMEXPORTER_TEST : public Test::Suite
         void test_load_ieee9_arxl_data();
         void test_load_ieee39_arxl_data();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        EQUIVALENT_MODEL_IMEXPORTER* importer;
+        EQUIVALENT_MODEL_IMEXPORTER importer;
 };
 #endif // EQUIVALENT_MODEL_IMEXPORTER_TEST_H

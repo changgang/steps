@@ -21,9 +21,9 @@ LOAD_MODEL_TEST::LOAD_MODEL_TEST()
 
 void LOAD_MODEL_TEST::setup()
 {
-    db = get_default_power_system_database_pointer();
-    db->set_allowed_max_bus_number(100);
-    db->set_system_base_power_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(100);
+    psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
     bus.set_bus_number(1);
@@ -32,9 +32,9 @@ void LOAD_MODEL_TEST::setup()
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_rad(0.0);
 
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
-    LOAD load(db);
+    LOAD load;
     load.set_load_bus(1);
     load.set_identifier("#1");
     load.set_status(true);
@@ -42,7 +42,7 @@ void LOAD_MODEL_TEST::setup()
     load.set_nominal_constant_current_load_in_MVA(complex<double>(100.0, 50.0));
     load.set_nominal_constant_impedance_load_in_MVA(complex<double>(100.0, 50.0));
 
-    db->append_load(load);
+    psdb.append_load(load);
 
     DEVICE_ID did;
     did.set_device_type("LOAD");
@@ -51,12 +51,14 @@ void LOAD_MODEL_TEST::setup()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    load_ptr = db->get_load(did);
+    load_ptr = psdb.get_load(did);
 }
 
 void LOAD_MODEL_TEST::tear_down()
 {
-    db->clear_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    psdb.clear_database();
 
     show_test_end_information();
 }
@@ -83,7 +85,8 @@ void LOAD_MODEL_TEST::test_get_bus_voltage()
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
 
-    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu() - db->get_bus_voltage_in_pu(1))<FLOAT_EPSILON);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu() - psdb.get_bus_voltage_in_pu(1))<FLOAT_EPSILON);
 }
 
 void LOAD_MODEL_TEST::test_get_bus_frequency_deviation()
@@ -93,7 +96,8 @@ void LOAD_MODEL_TEST::test_get_bus_frequency_deviation()
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
 
-    TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu() - db->get_bus_frequency_deviation_in_pu(1))<FLOAT_EPSILON);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu() - psdb.get_bus_frequency_deviation_in_pu(1))<FLOAT_EPSILON);
 }
 
 void LOAD_MODEL_TEST::test_set_get_subsystem_type()
@@ -161,7 +165,7 @@ void LOAD_MODEL_TEST::export_meter_values(double time)
 void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
 {
     LOAD* load = get_load();
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     LOAD_MODEL* model = load->get_load_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
@@ -197,7 +201,7 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
         export_meter_values(TIME);
     }
 
-    BUS* busptr = psdb->get_bus(1);
+    BUS* busptr = psdb.get_bus(1);
     double rate = 0.1;
 
     while(true)
@@ -252,7 +256,7 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
 void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
 {
     LOAD* load = get_load();
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     LOAD_MODEL* model = load->get_load_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
@@ -288,7 +292,7 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
         export_meter_values(TIME);
     }
 
-    BUS* busptr = psdb->get_bus(1);
+    BUS* busptr = psdb.get_bus(1);
     BUS_FREQUENCY_MODEL* fmodel = busptr->get_bus_frequency_model();
 
     double rate = 0.1;

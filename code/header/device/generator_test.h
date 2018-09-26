@@ -41,8 +41,7 @@ class GENERATOR_TEST : public Test::Suite
         void test_get_device_id();
 
     private:
-        POWER_SYSTEM_DATABASE* db;
-        GENERATOR* generator;
+        GENERATOR generator;
 };
 
 #endif //GENERATOR_TEST_H

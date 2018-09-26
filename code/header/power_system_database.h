@@ -67,9 +67,6 @@ class POWER_SYSTEM_DATABASE
         void set_zone_capacity(size_t n);
         void set_owner_capacity(size_t n);
 
-        void set_dynamic_simulator(DYNAMICS_SIMULATOR* simulator);
-        //double get_dynamic_simulator_time_in_s() const;
-
         void set_system_name(const string& name);
         string get_system_name() const;
 
@@ -496,7 +493,5 @@ class POWER_SYSTEM_DATABASE
         DEVICE_INDEX_MAP generator_index, wt_generator_index, pv_unit_index, load_index, fixed_shunt_index, switched_shunt_index,
                             line_index, transformer_index, hvdc_index, equivalent_device_index, energy_storage_index;
         map<size_t,  size_t> area_index, zone_index, owner_index;
-
-        DYNAMICS_SIMULATOR* simulator;
 };
 #endif // POWER_SYSTEM_DATABASE_H

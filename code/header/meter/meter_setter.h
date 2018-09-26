@@ -11,9 +11,6 @@ class METER_SETTER
         METER_SETTER();
         ~METER_SETTER();
 
-        void set_power_system_database(POWER_SYSTEM_DATABASE* db);
-        POWER_SYSTEM_DATABASE* get_power_system_database() const;
-
         METER prepare_bus_voltage_in_pu_meter(size_t bus);
         METER prepare_bus_voltage_in_kV_meter(size_t bus);
         METER prepare_bus_angle_in_deg_meter(size_t bus);
@@ -207,7 +204,5 @@ class METER_SETTER
         bool prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_equivalent_device_meter(METER& meter, const DEVICE_ID& device_id);
-
-        POWER_SYSTEM_DATABASE* db;
 };
 #endif // METER_SETTER_H

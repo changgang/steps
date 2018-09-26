@@ -12,11 +12,7 @@ class POWERFLOW_SOLVER
         POWERFLOW_SOLVER();
         ~POWERFLOW_SOLVER();
 
-        void set_power_system_database(POWER_SYSTEM_DATABASE* db);
-        POWER_SYSTEM_DATABASE* get_power_system_database() const;
-        NETWORK_DATABASE* get_network_database() const;
-
-        bool is_power_system_database_set() const;
+        NETWORK_DATABASE& get_network_database();
 
         void initialize_powerflow_solver();
 
@@ -50,7 +46,7 @@ class POWERFLOW_SOLVER
         void save_powerflow_result_to_file(string filename) const;
         void save_extended_powerflow_result_to_file(string filename) const;
         void save_network_matrix_to_file(string filename) const;
-        void save_jacobian_matrix_to_file(string filename) const;
+        void save_jacobian_matrix_to_file(string filename);
         void save_bus_powerflow_result_to_file(string filename) const;
         size_t get_iteration_count() const;
     private:
@@ -115,7 +111,6 @@ class POWERFLOW_SOLVER
 
         size_t iteration_count, max_iteration;
     private:
-        POWER_SYSTEM_DATABASE*db ;
-        NETWORK_DATABASE* network_db;
+        NETWORK_DATABASE network_db;
 };
 #endif // POWERFLOW_SOLVER_H

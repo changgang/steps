@@ -8,16 +8,8 @@
 
 using namespace std;
 
-HVDC::HVDC(POWER_SYSTEM_DATABASE* psdb)
+HVDC::HVDC()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. HVDC object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    set_power_system_database(psdb);
     clear();
 }
 
@@ -55,23 +47,19 @@ void HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(psdb==NULL)
-        converter_bus[converter] = bus;
-    else
+    if(not psdb.is_bus_exist(bus))
     {
-        if(not psdb->is_bus_exist(bus))
-        {
-            osstream<<"Bus "<<bus<<" does not exist for setting up "<<converter_name<<" side bus of hvdc link."<<endl
-               <<"0 will be set to indicate invalid hvdc link.";
-            show_information_with_leading_time_stamp(osstream);
-            converter_bus[converter] = 0;
-            return;
-        }
-        converter_bus[converter] = bus;
+        osstream<<"Bus "<<bus<<" does not exist for setting up "<<converter_name<<" side bus of hvdc link."<<endl
+           <<"0 will be set to indicate invalid hvdc link.";
+        show_information_with_leading_time_stamp(osstream);
+        converter_bus[converter] = 0;
+        return;
     }
+    converter_bus[converter] = bus;
 }
+
 void HVDC::set_converter_valve_side_bus_name(HVDC_CONVERTER_SIDE converter, string name)
 {
     converter_valve_bus_name[converter] = trim_string(name);
@@ -347,19 +335,11 @@ void HVDC::set_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERTER
     {
         if(V == 0.0)
         {
-            POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+            POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-            if(psdb==NULL)
+            if(psdb.is_bus_exist(get_converter_bus(converter)))
             {
-                osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-                   <<converter_name<<" transformer grid side base voltage will be set as 0.0 in indicate as base voltage of "<<converter_name<<" bus.";
-                show_information_with_leading_time_stamp(osstream);
-                this->converter_transformer_grid_side_base_voltage_in_kV[converter] = 0.0;
-                return;
-            }
-            if(psdb->is_bus_exist(get_converter_bus(converter)))
-            {
-                double base_voltage = psdb->get_bus_base_voltage_in_kV(get_converter_bus(converter));
+                double base_voltage = psdb.get_bus_base_voltage_in_kV(get_converter_bus(converter));
                 this->converter_transformer_grid_side_base_voltage_in_kV[converter] = base_voltage;
             }
             else
@@ -563,17 +543,8 @@ double HVDC::get_converter_transformer_grid_side_base_voltage_in_kV(HVDC_CONVERT
     if(V != 0.0)
         return V;
 
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-    {
-        osstream<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<converter_name<<" transformer grid side base voltage will be returned as 0.0.";
-        show_information_with_leading_time_stamp(osstream);
-        return 0.0;
-    }
-    else
-        return psdb->get_bus_base_voltage_in_kV(get_converter_bus(converter));
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    return psdb.get_bus_base_voltage_in_kV(get_converter_bus(converter));
 }
 
 double HVDC::get_converter_transformer_converter_side_base_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const
@@ -945,22 +916,17 @@ bool HVDC::is_connected_to_bus(size_t bus) const
 
 bool HVDC::is_in_area(size_t area) const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr_rec = psdb.get_bus(get_converter_bus(RECTIFIER));
+    BUS* busptr_inv = psdb.get_bus(get_converter_bus(INVERTER));
+    if(busptr_rec!=NULL or busptr_inv!=NULL)
     {
-        BUS* busptr_rec = psdb->get_bus(get_converter_bus(RECTIFIER));
-        BUS* busptr_inv = psdb->get_bus(get_converter_bus(INVERTER));
-        if(busptr_rec!=NULL or busptr_inv!=NULL)
-        {
-            bool in_area = false;
-            if(busptr_rec!=NULL)
-                in_area = in_area or busptr_rec->is_in_area(area);
-            if(busptr_inv!=NULL)
-                in_area = in_area or busptr_inv->is_in_area(area);
-            return in_area;
-        }
-        else
-            return false;
+        bool in_area = false;
+        if(busptr_rec!=NULL)
+            in_area = in_area or busptr_rec->is_in_area(area);
+        if(busptr_inv!=NULL)
+            in_area = in_area or busptr_inv->is_in_area(area);
+        return in_area;
     }
     else
         return false;
@@ -968,22 +934,17 @@ bool HVDC::is_in_area(size_t area) const
 
 bool HVDC::is_in_zone(size_t zone) const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr_rec = psdb.get_bus(get_converter_bus(RECTIFIER));
+    BUS* busptr_inv = psdb.get_bus(get_converter_bus(INVERTER));
+    if(busptr_rec!=NULL or busptr_inv!=NULL)
     {
-        BUS* busptr_rec = psdb->get_bus(get_converter_bus(RECTIFIER));
-        BUS* busptr_inv = psdb->get_bus(get_converter_bus(INVERTER));
-        if(busptr_rec!=NULL or busptr_inv!=NULL)
-        {
-            bool in_zone = false;
-            if(busptr_rec!=NULL)
-                in_zone = in_zone or busptr_rec->is_in_zone(zone);
-            if(busptr_inv!=NULL)
-                in_zone = in_zone or busptr_inv->is_in_zone(zone);
-            return in_zone;
-        }
-        else
-            return false;
+        bool in_zone = false;
+        if(busptr_rec!=NULL)
+            in_zone = in_zone or busptr_rec->is_in_zone(zone);
+        if(busptr_inv!=NULL)
+            in_zone = in_zone or busptr_inv->is_in_zone(zone);
+        return in_zone;
     }
     else
         return false;
@@ -1092,7 +1053,7 @@ void HVDC::set_hvdc_model(const HVDC_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         hvdc_model = new_model;
     }
@@ -1127,7 +1088,7 @@ void HVDC::set_auxiliary_signal_model(const AUXILIARY_SIGNAL_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         auxiliary_signal_model = new_model;
     }
@@ -1202,7 +1163,6 @@ HVDC& HVDC::operator=(const HVDC& hvdc)
 
     clear();
 
-    set_power_system_database(hvdc.get_power_system_database());
     if(hvdc.get_converter_bus(RECTIFIER)!=0)
         set_converter_bus(RECTIFIER, hvdc.get_converter_bus(RECTIFIER));
 
@@ -1325,15 +1285,7 @@ void HVDC::show_solved_hvdc_steady_state() const
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"It is not solve and no steady state will be shown.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     osstream<<"Solved steady state of HVDC '"<<get_name()<<"':";
     show_information_with_leading_time_stamp(osstream);
@@ -1377,7 +1329,7 @@ void HVDC::show_solved_hvdc_steady_state() const
     show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Vdc = "<<get_converter_dc_voltage_in_kV(converter)<<" kV, "
-      <<"Vac = "<<psdb->get_bus_voltage_in_kV(get_converter_bus(converter))<<" kV";
+      <<"Vac = "<<psdb.get_bus_voltage_in_kV(get_converter_bus(converter))<<" kV";
     show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Transformer tap = "<<get_converter_transformer_tap_in_pu(converter)<<" pu.";
@@ -1432,7 +1384,7 @@ void HVDC::show_solved_hvdc_steady_state() const
     show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Vdc = "<<get_converter_dc_voltage_in_kV(converter)<<" kV, "
-      <<"Vac = "<<psdb->get_bus_voltage_in_kV(get_converter_bus(converter))<<" kV";
+      <<"Vac = "<<psdb.get_bus_voltage_in_kV(get_converter_bus(converter))<<" kV";
     show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Transformer tap = "<<get_converter_transformer_tap_in_pu(converter)<<" pu.";
@@ -1503,19 +1455,11 @@ double HVDC::get_converter_transformer_tap_in_pu(HVDC_CONVERTER_SIDE converter) 
 double HVDC::get_converter_commutating_overlap_angle_in_deg(HVDC_CONVERTER_SIDE converter) const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<get_converter_side_name(converter)<<" commutating overlap angle will be returned as 0.0.";
-        show_information_with_leading_time_stamp(osstream);
-        return 0.0;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     double TurnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
     double Tap = get_converter_transformer_tap_in_pu(converter);
-    double Vac = psdb->get_bus_voltage_in_kV(get_converter_bus(converter));
+    double Vac = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vac/TurnRatio/Tap;
 
     double Xc = get_converter_transformer_impedance_in_ohm(converter).imag();
@@ -1589,17 +1533,6 @@ double HVDC::get_converter_ac_reactive_power_in_MVar(HVDC_CONVERTER_SIDE convert
 
 double HVDC::get_converter_ac_apparent_power_in_MVA(HVDC_CONVERTER_SIDE converter) const
 {
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<get_converter_side_name(converter)<<" AC apparent power will be returned as 0.0.";
-        show_information_with_leading_time_stamp(osstream);
-        return 0.0;
-    }
-
     double Pac = get_converter_ac_active_power_in_MW(converter);
     double pf = get_converter_ac_power_factor(converter);
     if(pf==0.0)
@@ -1608,7 +1541,7 @@ double HVDC::get_converter_ac_apparent_power_in_MVA(HVDC_CONVERTER_SIDE converte
         return Pac/pf;
 /*
     double Iac = get_converter_ac_current_in_kA(converter);
-    double U = psdb->get_bus_voltage_in_kV(get_converter_bus(converter));
+    double U = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
     return sqrt(3.0)*U*Iac;
 
     double turnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
@@ -1709,16 +1642,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
 
 bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERTER_SIDE converter, double Vdc, double Idc)
 {
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"HVDC will not be solved with function "<<__FUNCTION__<<". 0.0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
-        return false;
-    }
+    //ostringstream osstream;
     //cout<<get_converter_side_name(converter)<<" desired Vdc = "<<Vdc<<"kV, Idc = "<<Idc<<endl;
     solve_best_converter_transformer_tap_with_min_angle(converter, Vdc, Idc);
     double Tap = get_converter_transformer_tap_in_pu(converter);
@@ -1772,15 +1696,7 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
 void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SIDE converter, double Vdc, double Idc)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"HVDC will not be solved with function "<<__FUNCTION__<<". 0.0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t N = get_converter_number_of_bridge(converter);
 
@@ -1804,7 +1720,7 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
     double angle_min = get_converter_min_alpha_or_gamma_in_deg(converter);
     angle_min = deg2rad(angle_min);
 
-    double Vbus = psdb->get_bus_voltage_in_kV(get_converter_bus(converter));
+    double Vbus = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
 
     double Eac_cosAngle = Vdc/N+3.0*Z.imag()/PI*Idc+2.0*Z.real()*Idc+Vdrop;
     Eac_cosAngle /= (3.0*sqrt(2.0)/PI);
@@ -1883,15 +1799,7 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
 void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"HVDC will not be solved with function "<<__FUNCTION__<<".";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     //os<<"Solve %s as constant power (R) + constant gamma (I) mode.",
     //              get_device_name().c_str());
@@ -1916,7 +1824,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 
     double VdcR, VdcI, Idc;
 
-    double VbusI = psdb->get_bus_voltage_in_kV(get_converter_bus(INVERTER));
+    double VbusI = psdb.get_bus_voltage_in_kV(get_converter_bus(INVERTER));
 
     double EacI, cosAlpha;
 
@@ -1976,16 +1884,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 
 void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
 {
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"HVDC will not be solved with function "<<__FUNCTION__<<".";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+    //ostringstream osstream;
     //os<<"Solve %s as constant current (R) + constant gamma (I) mode.",
     //              get_device_name().c_str());
     //show_information_with_leading_time_stamp(osstream);
@@ -2027,16 +1926,7 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
 
 void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
 {
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"HVDC will not be solved with function "<<__FUNCTION__<<".";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+    //ostringstream osstream;
     //os<<"Solve %s as constant alpha (R) + constant current (I) mode.",
     //              get_device_name().c_str());
     //show_information_with_leading_time_stamp(osstream);
@@ -2079,15 +1969,7 @@ void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
 void HVDC::solve_with_solved_tap_and_firing_angle()
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"HVDC will not be solved with function "<<__FUNCTION__<<".";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     //osstream<<"solving "<<get_device_name()<<" with solved tap rec "<<get_converter_transformer_tap_in_pu(RECTIFIER)<<", "
     //       <<"inv "<<get_converter_transformer_tap_in_pu(INVERTER)<<", angle rec "<<get_converter_alpha_or_gamma_in_deg(RECTIFIER)<<" deg, "
@@ -2113,8 +1995,8 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     size_t NR = get_converter_number_of_bridge(RECTIFIER);
     size_t NI = get_converter_number_of_bridge(INVERTER);
 
-    double VbusR = psdb->get_bus_voltage_in_kV(get_converter_bus(RECTIFIER));
-    double VbusI = psdb->get_bus_voltage_in_kV(get_converter_bus(INVERTER));
+    double VbusR = psdb.get_bus_voltage_in_kV(get_converter_bus(RECTIFIER));
+    double VbusI = psdb.get_bus_voltage_in_kV(get_converter_bus(INVERTER));
 
     double EacR = VbusR/TurnRatioR/TapR;
     double EacI = VbusI/TurnRatioI/TapI;
@@ -2151,15 +2033,7 @@ double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_an
 {
     // solve best alpha and gamma
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"HVDC will not be solved with function "<<__FUNCTION__<<". 0.0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
-        return 0.0;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     double Vdrop = get_converter_voltage_drop_per_bridge_in_kV(converter);
 
@@ -2169,7 +2043,7 @@ double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_an
 
     size_t N = get_converter_number_of_bridge(converter);
 
-    double Vbus = psdb->get_bus_voltage_in_kV(get_converter_bus(converter));
+    double Vbus = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/TurnRatio/Tap; // actual EacR
     double Eac_cosAngle = Vdc/N+3.0*Z.imag()/PI*Idc+2.0*Z.real()*Idc+Vdrop;
            Eac_cosAngle /= (3.0*sqrt(2.0)/PI);
@@ -2181,15 +2055,7 @@ double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_an
 double HVDC::solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_tap(HVDC_CONVERTER_SIDE converter, double Idc, double Tap)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. "<<get_device_name()<<" is not assigned to any power system database."<<endl
-          <<"HVDC will not be solved with function "<<__FUNCTION__<<". 0.0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
-        return 0.0;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     double Vdrop = get_converter_voltage_drop_per_bridge_in_kV(converter);
 
@@ -2202,7 +2068,7 @@ double HVDC::solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_ta
 
     size_t N = get_converter_number_of_bridge(converter);
 
-    double Vbus = psdb->get_bus_voltage_in_kV(get_converter_bus(converter));
+    double Vbus = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/TurnRatio/Tap;
     double Vdc = N*(3.0*sqrt(2.0)/PI*Eac*cos(angle_min)-3.0*Z.imag()/PI*Idc-2.0*Z.real()*Idc-Vdrop);
     return Vdc;

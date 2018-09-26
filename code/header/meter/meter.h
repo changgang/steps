@@ -10,7 +10,6 @@
 class METER : public BASE
 {
     public:
-        METER(POWER_SYSTEM_DATABASE* db);
         METER();
         METER(const METER& meter);
         METER& operator=(const METER& meter);

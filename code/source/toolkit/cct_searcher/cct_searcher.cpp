@@ -385,13 +385,12 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
     importer.load_dynamic_data(get_dynamic_data_filename());
 
     POWERFLOW_SOLVER solver;
-    solver.set_power_system_database(&psdb);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
     solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
     solver.set_flat_start_logic(false);
     solver.solve_with_full_Newton_Raphson_solution();
 
-    DYNAMICS_SIMULATOR simulator(&psdb);
+    DYNAMICS_SIMULATOR simulator;
     simulator.set_allowed_max_power_imbalance_in_MVA(get_simulator_allowed_max_power_imbalance_in_MVA());
     simulator.set_max_DAE_iteration(10);
     simulator.set_max_network_iteration(get_simulator_max_iteration());
@@ -450,7 +449,7 @@ void CCT_SEARCHER::prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator)
 
     NETWORK_DATABASE* network_db = simulator.get_network_database();
 
-    POWER_SYSTEM_DATABASE* psdb = simulator.get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     vector< vector<size_t> > islands = network_db->get_islands_with_physical_bus_number();
     size_t nislands = islands.size();
@@ -465,7 +464,7 @@ void CCT_SEARCHER::prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator)
         for(size_t j=0; j!=nisland; ++j)
         {
             size_t bus = island[j];
-            generators_at_bus = psdb->get_generators_connecting_to_bus(bus);
+            generators_at_bus = psdb.get_generators_connecting_to_bus(bus);
             size_t n = generators_at_bus.size();
             for(size_t k=0; k!=n; ++k)
             {

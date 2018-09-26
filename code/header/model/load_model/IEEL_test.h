@@ -29,7 +29,6 @@ class IEEL_TEST : public LOAD_MODEL_TEST
         virtual void test_get_detailed_model_name();
         virtual void test_set_get_parameters();
     private:
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//IEEL_TEST_H

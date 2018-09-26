@@ -21,7 +21,7 @@ void TGOV1::copy_from_const_model(const TGOV1& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_power_system_database());
+    //this->set_power_system_database(model.get_default_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     this->governor.set_limiter_type(WINDUP_LIMITER);

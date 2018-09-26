@@ -27,6 +27,7 @@ class TIMER
         bool is_valid() const;
         void check();
         void report() const;
+        void clear();
 
         TIMER& operator=(const TIMER& timer);
     private:

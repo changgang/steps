@@ -13,11 +13,9 @@ class POWER_SYSTEM_DATABASE;
 class DYNAMICS_SIMULATOR: public BASE
 {
     public:
-        DYNAMICS_SIMULATOR(POWER_SYSTEM_DATABASE* psdb);
+        DYNAMICS_SIMULATOR();
         ~DYNAMICS_SIMULATOR();
         virtual void clear();
-
-        bool is_power_system_database_set() const;
 
         NETWORK_DATABASE* get_network_database() const;
 

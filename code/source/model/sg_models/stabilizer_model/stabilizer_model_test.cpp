@@ -16,10 +16,8 @@ void STABILIZER_MODEL_TEST::setup()
     SG_MODEL_TEST::setup();
 
     GENERATOR* genptr = get_test_generator();
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
 
     SEXS exciter_model;
-    exciter_model.set_power_system_database(psdb);
 
     genptr->set_model(&exciter_model);
 
@@ -44,9 +42,8 @@ void STABILIZER_MODEL_TEST::test_set_get_input_signal()
     show_test_information_for_function_of_class(__FUNCTION__,"STABILIZER_MODEL_TEST");
 
     GENERATOR* generator = get_test_generator();
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
 
-    SIGNAL signal(psdb);
+    SIGNAL signal;
     signal.set_device_id(generator->get_device_id());
     signal.set_meter_type("ROTOR SPEED DEVIATION IN PU");
 

@@ -214,18 +214,12 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_nominal_turbine_speed()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
-        if(psdb!=NULL)
-        {
-            double fbase = model->get_bus_base_frequency_in_Hz();
-            size_t npole = model->get_number_of_pole_pairs();
-            double turn_ratio = model->get_generator_to_turbine_gear_ratio();
-            double w = 2*PI*fbase;
-            w = w/npole/turn_ratio;
-            TEST_ASSERT(fabs(model->get_nominal_turbine_speed_in_rad_per_s()-w)<FLOAT_EPSILON);
-        }
-        else
-            TEST_ASSERT(false);
+        double fbase = model->get_bus_base_frequency_in_Hz();
+        size_t npole = model->get_number_of_pole_pairs();
+        double turn_ratio = model->get_generator_to_turbine_gear_ratio();
+        double w = 2*PI*fbase;
+        w = w/npole/turn_ratio;
+        TEST_ASSERT(fabs(model->get_nominal_turbine_speed_in_rad_per_s()-w)<FLOAT_EPSILON);
     }
     else
         TEST_ASSERT(false);

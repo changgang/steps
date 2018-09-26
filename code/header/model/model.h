@@ -12,11 +12,8 @@ class DEVICE;
 class MODEL : public BASE
 {
     public:// common model level
-        //MODEL(POWER_SYSTEM_DATABASE* db, DEVICE_ID did);
         MODEL();
         virtual ~MODEL();
-
-        //double get_dynamic_simulator_time_in_s() const;
 
         void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type);
         string get_allowed_device_type() const;
@@ -27,7 +24,6 @@ class MODEL : public BASE
         bool is_model_variable_exist(string var_name) const;
         bool is_model_variable_exist(size_t var_index) const;
 
-        void set_power_system_database_and_attached_device(POWER_SYSTEM_DATABASE* psdb, DEVICE_ID did);
         void set_device_id(DEVICE_ID did);
         DEVICE* get_device_pointer() const;
         DEVICE_ID get_device_id() const;

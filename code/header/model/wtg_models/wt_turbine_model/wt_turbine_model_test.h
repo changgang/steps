@@ -48,8 +48,6 @@ class WT_TURBINE_MODEL_TEST : public WTG_MODEL_TEST
         void apply_10_percent_power_order_drop();
         void export_meter_title();
         void export_meter_values();
-
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//WT_TURBINE_MODEL_TEST_H

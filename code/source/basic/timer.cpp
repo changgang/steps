@@ -9,9 +9,7 @@ using namespace std;
 
 TIMER::TIMER()
 {
-    set_attached_device(NULL);
-    set_timer_interval_in_s(INFINITE_THRESHOLD);
-    reset();
+    clear();
 }
 
 TIMER::TIMER(const TIMER& timer)
@@ -23,6 +21,13 @@ TIMER::TIMER(const TIMER& timer)
 TIMER::~TIMER()
 {
     ;
+}
+
+void TIMER::clear()
+{
+    set_attached_device(NULL);
+    set_timer_interval_in_s(INFINITE_THRESHOLD);
+    reset();
 }
 
 void TIMER::set_attached_device(DEVICE* device)

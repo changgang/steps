@@ -1,5 +1,5 @@
 #include "header/model/energy_storage_model/energy_storage_model.h"
-
+#include "header/basic/utility.h"
 #include "header/power_system_database.h"
 ENERGY_STORAGE_MODEL::ENERGY_STORAGE_MODEL()
 {
@@ -36,12 +36,10 @@ complex<double> ENERGY_STORAGE_MODEL::get_terminal_bus_complex_voltage_in_pu() c
     if(estorage==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = estorage->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
-    return psdb->get_bus_complex_voltage_in_pu(bus);
+    return psdb.get_bus_complex_voltage_in_pu(bus);
 }
 
 double ENERGY_STORAGE_MODEL::get_terminal_bus_voltage_in_pu() const
@@ -50,12 +48,10 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_voltage_in_pu() const
     if(estorage==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = estorage->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
-    return psdb->get_bus_voltage_in_pu(bus);
+    return psdb.get_bus_voltage_in_pu(bus);
 }
 
 double ENERGY_STORAGE_MODEL::get_terminal_bus_angle_in_rad() const
@@ -64,12 +60,10 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_angle_in_rad() const
     if(estorage==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = estorage->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
-    return psdb->get_bus_angle_in_rad(bus);
+    return psdb.get_bus_angle_in_rad(bus);
 }
 
 
@@ -79,12 +73,10 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
     if(estorage==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = estorage->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
-    return psdb->get_bus_frequency_deviation_in_pu(bus);
+    return psdb.get_bus_frequency_deviation_in_pu(bus);
 }
 
 void ENERGY_STORAGE_MODEL::set_Pmax_in_pu(double p)

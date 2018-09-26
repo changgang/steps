@@ -253,8 +253,8 @@ bool UVLS::setup_model_with_bpa_string(string data)
 void UVLS::initialize()
 {
     LOAD* load = get_load_pointer();
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
-    double volt = psdb->get_bus_voltage_in_pu(load->get_load_bus());
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double volt = psdb.get_bus_voltage_in_pu(load->get_load_bus());
 
     for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
     {

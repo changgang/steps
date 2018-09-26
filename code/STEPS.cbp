@@ -312,7 +312,6 @@
 		<Unit filename="header/toolkit/contingency_screener/contingency_screener_test.h" />
 		<Unit filename="header/toolkit/dynamic_simulator/dynamic_simulator.h" />
 		<Unit filename="header/toolkit/dynamic_simulator/dynamic_simulator_test.h" />
-		<Unit filename="header/toolkit/dynamic_simulator/event_setter.h" />
 		<Unit filename="header/toolkit/powerflow_case_generator/powerflow_case_generator.h" />
 		<Unit filename="header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h" />
 		<Unit filename="header/toolkit/powerflow_solver/powerflow_solver.h" />

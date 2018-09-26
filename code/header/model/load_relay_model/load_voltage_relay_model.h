@@ -40,7 +40,6 @@ class LOAD_VOLTAGE_RELAY_MODEL : public LOAD_RELAY_MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
-
 };
 
 #endif // LOAD_RELAY_MODEL_H

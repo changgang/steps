@@ -14,9 +14,7 @@ void IEE2ST_TEST::setup()
     STABILIZER_MODEL_TEST::setup();
 
     GENERATOR* genptr = get_test_generator();
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
     IEE2ST model;
-    model.set_power_system_database(psdb);
     genptr->set_model(&model);
 }
 

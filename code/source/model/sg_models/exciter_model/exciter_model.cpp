@@ -42,7 +42,7 @@ double EXCITER_MODEL::get_initial_excitation_voltage_in_pu_from_sync_generator_m
 
 double EXCITER_MODEL::get_compensated_voltage_in_pu() const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
@@ -50,7 +50,7 @@ double EXCITER_MODEL::get_compensated_voltage_in_pu() const
     if(comp_model==NULL)
     {
         size_t bus = generator->get_generator_bus();
-        return psdb->get_bus_voltage_in_pu(bus);
+        return psdb.get_bus_voltage_in_pu(bus);
     }
     else
     {

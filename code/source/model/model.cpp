@@ -2,9 +2,11 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 
+#include <iostream>
+using namespace std;
+
 MODEL::MODEL()
 {
-    set_power_system_database(NULL);
     device_pointer = NULL;
 
     allowed_device_type = "";
@@ -84,12 +86,6 @@ double MODEL::get_variable_with_index(size_t index)
     else             return 0.0;
 }
 
-void MODEL::set_power_system_database_and_attached_device(POWER_SYSTEM_DATABASE* psdb, DEVICE_ID did)
-{
-    set_power_system_database(psdb);
-    set_device_id(did);
-}
-
 void MODEL::set_device_id(DEVICE_ID did)
 {
     ostringstream osstream;
@@ -109,19 +105,17 @@ void MODEL::set_device_id(DEVICE_ID did)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-        return;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(get_device_pointer()!=NULL)
+    /*if(get_device_pointer()!=NULL)
     {
         osstream<<"Warning. Valid device ("<<get_device_name()<<") has already been set for "<<get_model_type()<<" model '"<<get_model_name()<<"'."<<endl
           <<"New device ("<<did.get_device_name()<<") will be updated.";
         show_information_with_leading_time_stamp(osstream);
-    }
+    }*/
 
 
-    device_pointer = psdb->get_device(did);
+    device_pointer = psdb.get_device(did);
 
     if(device_pointer==NULL)
     {
@@ -201,7 +195,7 @@ bool MODEL::is_valid() const
     // should never be called
     return false;
 
-    /*POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    /*POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_device_id();
     if(psdb==NULL or (not did.is_valid()))
         return false;

@@ -10,9 +10,6 @@ using namespace std;
 
 POWERFLOW_SOLVER::POWERFLOW_SOLVER()
 {
-    db = NULL;
-    network_db = NULL;
-
     set_flat_start_logic(false);
     set_transformer_tap_adjustment_logic(true);
     set_non_divergent_solution_logic(true);
@@ -33,54 +30,12 @@ POWERFLOW_SOLVER::POWERFLOW_SOLVER()
 
 POWERFLOW_SOLVER::~POWERFLOW_SOLVER()
 {
-    if(network_db!=NULL)
-        delete network_db;
-
+    ;
 }
 
-
-void POWERFLOW_SOLVER::set_power_system_database(POWER_SYSTEM_DATABASE* psdb)
-{
-    if(psdb!=NULL)
-    {
-        this->db = psdb;
-        if(network_db!=NULL)
-        {
-            delete network_db;
-            network_db = NULL;
-        }
-        network_db = new NETWORK_DATABASE(psdb);
-    }
-    else
-    {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Error. Invalid power system database (NULL) is given. Failed to connect POWERFLOW_SOLVER to POWER_SYSTEM_DATABASE.");
-        show_information_with_leading_time_stamp(buffer);
-    }
-}
-
-POWER_SYSTEM_DATABASE* POWERFLOW_SOLVER::get_power_system_database() const
-{
-    return db;
-}
-
-NETWORK_DATABASE* POWERFLOW_SOLVER::get_network_database() const
+NETWORK_DATABASE& POWERFLOW_SOLVER::get_network_database()
 {
     return network_db;
-}
-
-bool POWERFLOW_SOLVER::is_power_system_database_set() const
-{
-    if(get_power_system_database()!=NULL)
-        return true;
-    else
-    {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Error. Powerflow solver is not connected to any power system database.\n"
-                "No operation on the powerflow solver will work.");
-        show_information_with_leading_time_stamp(buffer);
-        return false;
-    }
 }
 
 void POWERFLOW_SOLVER::set_max_iteration(size_t iteration)
@@ -176,11 +131,8 @@ bool POWERFLOW_SOLVER::get_non_divergent_solution_logic() const
 
 void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 {
-    if(not is_power_system_database_set())
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb->get_bus_count()==0)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    if(psdb.get_bus_count()==0)
         return;
 
 
@@ -195,8 +147,8 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
     JACOBIAN_BUILDER jacobian_builder;
     jacobian_builder.set_network_database(network_db);
 
-    network_db->build_network_matrix();
-    //network_db->report_network_matrix();
+    network_db.build_network_matrix();
+    //network_db.report_network_matrix();
 
     update_P_and_Q_equation_internal_buses();
     jacobian_builder.build_seprate_jacobians();
@@ -263,11 +215,8 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 
 void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 {
-    if(not is_power_system_database_set())
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb->get_bus_count()==0)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    if(psdb.get_bus_count()==0)
         return;
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -281,10 +230,10 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
     JACOBIAN_BUILDER jacobian_builder;
     jacobian_builder.set_network_database(network_db);
 
-    network_db->build_network_matrix();
+    network_db.build_network_matrix();
 
-    network_db->build_decoupled_network_matrix();
-    //const SPARSE_MATRIX& Y = network_db->get_network_matrix();
+    network_db.build_decoupled_network_matrix();
+    //const SPARSE_MATRIX& Y = network_db.get_network_matrix();
     //cout<<"Y matrix identity is: "<<get_sparse_matrix_identity(Y)<<endl;
 
     update_P_and_Q_equation_internal_buses();
@@ -345,8 +294,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         size_t n = internal_P_equation_buses.size();
         for(size_t i=0; i!=n; ++i)
         {
-            physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
-            P_power_mismatch[i] /= db->get_bus_voltage_in_pu(physical_bus);
+            physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
+            P_power_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
         }
         bus_delta_angle = P_power_mismatch/BP;
         //BP.report_brief();
@@ -355,7 +304,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         //for(size_t i=0; i<internal_P_equation_buses.size(); ++i)
         //{
         //    cout<<bus_delta_angle[i]<<endl;
-        //    //bus_delta_angle[i] /= abs(psdb->get_bus_complex_voltage_in_pu(network_db->get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
+        //    //bus_delta_angle[i] /= abs(psdb.get_bus_complex_voltage_in_pu(network_db.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
         //}
         update_bus_angle(bus_delta_angle);
 
@@ -368,8 +317,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         n = internal_Q_equation_buses.size();
         for(size_t i=0; i!=n; ++i)
         {
-            physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
-            Q_power_mismatch[i] /= db->get_bus_voltage_in_pu(physical_bus);
+            physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
+            Q_power_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
         }
         bus_delta_voltage = Q_power_mismatch/BQ;
 
@@ -382,29 +331,28 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
 void POWERFLOW_SOLVER::solve_with_modified_Gaussian_Seidel_solution()
 {
-    if(not is_power_system_database_set())
-        return;
+    return;
 }
 
 
 void POWERFLOW_SOLVER::initialize_powerflow_solver()
 {
-    if(not is_power_system_database_set())
-        return;
-
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Initializing powerflow solver.");
     show_information_with_leading_time_stamp(buffer);
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    psdb->update_in_service_bus_count();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.update_in_service_bus_count();
 
     initialize_bus_type();
     initialize_bus_voltage_to_regulate();
     initialize_bus_voltage();
+    cout<<__FILE__<<"@"<<__LINE__<<endl;
     optimize_bus_numbers();
+    cout<<__FILE__<<"@"<<__LINE__<<endl;
     iteration_count = 0;
     set_convergence_flag(false);
+    cout<<__FILE__<<"@"<<__LINE__<<endl;
 
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Done initializing powerflow solver.");
     show_information_with_leading_time_stamp(buffer);
@@ -412,9 +360,10 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
 
 void POWERFLOW_SOLVER::initialize_bus_type()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     bool flat_flag = get_flat_start_logic();
 
-    vector<BUS*> buses = db->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
 
     size_t nbus = buses.size();
     for(size_t i=0; i!=nbus; ++i)
@@ -426,7 +375,7 @@ void POWERFLOW_SOLVER::initialize_bus_type()
                 buses[i]->set_bus_type(PV_TYPE);
         if(btype==PV_TYPE)
         {
-            vector<SOURCE*> sources = db->get_sources_connecting_to_bus(buses[i]->get_bus_number());
+            vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(buses[i]->get_bus_number());
             size_t nsource = sources.size();
             size_t n_inservice = 0;
             for(size_t j=0; j!=nsource; ++j)
@@ -440,7 +389,8 @@ void POWERFLOW_SOLVER::initialize_bus_type()
 
 void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 {
-    vector<SOURCE*> sources = db->get_all_sources();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<SOURCE*> sources = psdb.get_all_sources();
     size_t nsource = sources.size();
     for(size_t i=0; i!=nsource; ++i)
     {
@@ -453,11 +403,11 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
         {
             size_t bus = sources[i]->get_bus_to_regulate();
             double vreg = sources[i]->get_voltage_to_regulate_in_pu();
-            BUS* busptr = db->get_bus(bus);
+            BUS* busptr = psdb.get_bus(bus);
             busptr->set_voltage_to_regulate_in_pu(vreg);
         }
     }
-    vector<BUS*> buses = db->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t nbus = buses.size();
     for(size_t i=0; i!=nbus; ++i)
     {
@@ -472,9 +422,11 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 
 void POWERFLOW_SOLVER::initialize_bus_voltage()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
     vector<BUS*> buses;
 
-    buses = db->get_all_buses();
+    buses = psdb.get_all_buses();
     size_t nbus = buses.size();
 
     if(get_flat_start_logic()==true)
@@ -512,16 +464,18 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
 
 void POWERFLOW_SOLVER::optimize_bus_numbers()
 {
-    network_db->optimize_network_ordering();
+    network_db.optimize_network_ordering();
 }
 
 void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Updating powerflow P equation buses and Q equation buses.");
     show_information_with_leading_time_stamp(buffer);
 
-    size_t nbus = db->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
 
     internal_P_equation_buses.clear();
     internal_Q_equation_buses.clear();
@@ -535,8 +489,8 @@ void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
     BUS* busptr;
     for(size_t i=0; i!=nbus; ++i)
     {
-        bus = network_db->get_physical_bus_number_of_internal_bus(i);
-        busptr = db->get_bus(bus);
+        bus = network_db.get_physical_bus_number_of_internal_bus(i);
+        busptr = psdb.get_bus(bus);
         btype = busptr->get_bus_type();
         if(btype!=OUT_OF_SERVICE and btype != SLACK_TYPE)
         {
@@ -551,7 +505,7 @@ void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
     size_t n = internal_P_equation_buses.size();
     for(size_t i=0; i!=n; ++i)
     {
-        osstream<<network_db->get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]) << endl;
+        osstream<<network_db.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]) << endl;
         show_information_with_leading_time_stamp(osstream);
     }
     osstream<<"Buses with Q equations (physical bus):"<<endl;
@@ -559,7 +513,7 @@ void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
     n = internal_Q_equation_buses.size();
     for(size_t i=0; i!=n; ++i)
     {
-        osstream<< network_db->get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]) << endl;
+        osstream<< network_db.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]) << endl;
         show_information_with_leading_time_stamp(osstream);
     }*/
 
@@ -574,25 +528,21 @@ void POWERFLOW_SOLVER::set_convergence_flag(bool flag)
 
 bool POWERFLOW_SOLVER::get_convergence_flag() const
 {
-    if(not is_power_system_database_set())
-        return false;
-
     return converged;
 }
 
 bool POWERFLOW_SOLVER::is_converged() const
 {
-    if(not is_power_system_database_set())
-        return false;
-
     return get_convergence_flag();
 }
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
     calculate_raw_bus_power_into_network();
 
-    size_t nbus = db->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
     for(size_t i=0; i!=nbus; ++i)
         bus_power[i] = -bus_power[i];
 
@@ -607,13 +557,13 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     show_information_with_leading_time_stamp(osstream);
 
     size_t bus;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     NETWORK_DATABASE* ntdb = get_network_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
     for(size_t i=0; i!=nbus; ++i)
     {
         bus = ntdb->get_physical_bus_number_of_internal_bus(i);
-        BUS_TYPE btype = psdb->get_bus(bus)->get_bus_type();
+        BUS_TYPE btype = psdb.get_bus(bus)->get_bus_type();
         double p = bus_power[i].real()*sbase;
         double q = bus_power[i].imag()*sbase;
         if(btype==PV_TYPE or btype == SLACK_TYPE)
@@ -628,9 +578,10 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     calculate_raw_bus_current_into_network();
 
-    size_t nbus = db->get_in_service_bus_count();
+    size_t nbus = psdb.get_in_service_bus_count();
 
     bus_power = bus_current;
 
@@ -639,8 +590,8 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
 
     for(size_t i=0; i!=nbus; ++i)
     {
-        physical_bus_number = network_db->get_physical_bus_number_of_internal_bus(i);
-        voltage = db->get_bus_complex_voltage_in_pu(physical_bus_number);
+        physical_bus_number = network_db.get_physical_bus_number_of_internal_bus(i);
+        voltage = psdb.get_bus_complex_voltage_in_pu(physical_bus_number);
 
         bus_power[i] = voltage*conj(bus_current[i]);
     }
@@ -663,9 +614,11 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
 
 void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
 {
-    const SPARSE_MATRIX& Y = network_db->get_network_matrix();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    size_t nbus = db->get_in_service_bus_count();
+    const SPARSE_MATRIX& Y = network_db.get_network_matrix();
+
+    size_t nbus = psdb.get_in_service_bus_count();
     bus_current.clear();
     bus_current.reserve(nbus);
     for(size_t i=0; i!=nbus; ++i)
@@ -680,8 +633,8 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
     int k_start=0, k_end=0;
     for(int column=0; column!=nsize; ++column)
     {
-        column_physical_bus = network_db->get_physical_bus_number_of_internal_bus(column);
-        voltage = db->get_bus_complex_voltage_in_pu(column_physical_bus);
+        column_physical_bus = network_db.get_physical_bus_number_of_internal_bus(column);
+        voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
 
         k_end = Y.get_starting_index_of_column(column+1);
         for(int k=k_start; k!=k_end; ++k)
@@ -709,7 +662,9 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
 }
 void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 {
-    double Sbase = db->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    double Sbase = psdb.get_system_base_power_in_MVA();
 
     size_t physical_bus, internal_bus;
 
@@ -719,7 +674,7 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 
     complex<double> Sgen;
 
-    vector<SOURCE*> sources = db->get_all_sources();
+    vector<SOURCE*> sources = psdb.get_all_sources();
 
     BUS* busptr;
 
@@ -733,7 +688,7 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 
         physical_bus = sources[i]->get_source_bus();
 
-        busptr = db->get_bus(physical_bus);
+        busptr = psdb.get_bus(physical_bus);
 
         btype = busptr->get_bus_type();
         if(btype == OUT_OF_SERVICE or btype == SLACK_TYPE)
@@ -744,20 +699,22 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
         else// PQ, PV2PQ
             Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), sources[i]->get_q_generation_in_MVar());
 
-        internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
+        internal_bus = network_db.get_internal_bus_number_of_physical_bus(physical_bus);
         bus_power[internal_bus] += (Sgen/Sbase);
     }
 }
 
 void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 {
-    double Sbase = db->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    double Sbase = psdb.get_system_base_power_in_MVA();
 
     size_t physical_bus, internal_bus;
 
     bool status;
 
-    vector<LOAD*> loads = db->get_all_loads();
+    vector<LOAD*> loads = psdb.get_all_loads();
 
     size_t nload = loads.size();
 
@@ -770,7 +727,7 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
             continue;
 
         physical_bus = loads[i]->get_load_bus();
-        internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
+        internal_bus = network_db.get_internal_bus_number_of_physical_bus(physical_bus);
 
         Sload = loads[i]->get_actual_total_load_in_MVA()/Sbase;
 
@@ -780,14 +737,16 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 
 void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 {
-    double Sbase = db->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    double Sbase = psdb.get_system_base_power_in_MVA();
 
     size_t physical_bus_rec, internal_bus_rec,
            physical_bus_inv, internal_bus_inv;
 
     bool status;
 
-    vector<HVDC*> hvdcs = db->get_all_hvdcs();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
 
     size_t nhvdc = hvdcs.size();
 
@@ -800,10 +759,10 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
             continue;
 
         physical_bus_rec = hvdcs[i]->get_converter_bus(RECTIFIER);
-        internal_bus_rec = network_db->get_internal_bus_number_of_physical_bus(physical_bus_rec);
+        internal_bus_rec = network_db.get_internal_bus_number_of_physical_bus(physical_bus_rec);
 
         physical_bus_inv = hvdcs[i]->get_converter_bus(INVERTER);
-        internal_bus_inv = network_db->get_internal_bus_number_of_physical_bus(physical_bus_inv);
+        internal_bus_inv = network_db.get_internal_bus_number_of_physical_bus(physical_bus_inv);
 
         hvdcs[i]->solve_steady_state();
         //hvdcs[i]->show_solved_hvdc_steady_state();
@@ -822,8 +781,7 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 
 double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
 {
-    if(not is_power_system_database_set())
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t nP = internal_P_equation_buses.size();
     size_t internal_bus, physical_bus;
@@ -835,13 +793,13 @@ double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
         internal_bus = internal_P_equation_buses[i];
         if(fabs(bus_power[internal_bus].real()) > max_P_error_in_pu)
         {
-            physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+            physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
             max_P_error_in_pu = fabs(bus_power[internal_bus].real());
             max_P_error_physical_bus = physical_bus;
         }
     }
 
-    max_P_error_in_MW = max_P_error_in_pu*db->get_system_base_power_in_MVA();
+    max_P_error_in_MW = max_P_error_in_pu*psdb.get_system_base_power_in_MVA();
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Maximum   active power mismatch found: %10.6fMW   at bus %lu.",
@@ -853,8 +811,7 @@ double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
 
 double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
 {
-    if(not is_power_system_database_set())
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t nQ = internal_Q_equation_buses.size();
     size_t internal_bus, physical_bus;
@@ -866,12 +823,12 @@ double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
         internal_bus = internal_Q_equation_buses[i];
         if(fabs(bus_power[internal_bus].imag()) > max_Q_error_in_pu)
         {
-            physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+            physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
             max_Q_error_in_pu = fabs(bus_power[internal_bus].imag());
             max_Q_error_physical_bus = physical_bus;
         }
     }
-    max_Q_error_in_MVar =  max_Q_error_in_pu*db->get_system_base_power_in_MVA();
+    max_Q_error_in_MVar =  max_Q_error_in_pu*psdb.get_system_base_power_in_MVA();
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Maximum reactive power mismatch found: %10.6fMVar at bus %lu.",
@@ -883,6 +840,8 @@ double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
 
 bool POWERFLOW_SOLVER::check_bus_type_constraints()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
     size_t physical_bus;
     BUS_TYPE btype;
 
@@ -891,7 +850,7 @@ bool POWERFLOW_SOLVER::check_bus_type_constraints()
     bool system_bus_type_changed = false;
     bool bus_type_changed;
 
-    vector<BUS*> buses = db->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
 
     size_t nbus = buses.size();
 
@@ -930,28 +889,29 @@ bool POWERFLOW_SOLVER::check_bus_type_constraints()
 
 void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(size_t physical_bus)
 {
-    BUS* bus = db->get_bus(physical_bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* bus = psdb.get_bus(physical_bus);
 
     if(bus->get_bus_type()!=SLACK_TYPE)
         return;
 
-    size_t internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
+    size_t internal_bus = network_db.get_internal_bus_number_of_physical_bus(physical_bus);
 
-    double sbase = db->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
     double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*sbase;
     double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*sbase;
 
-    double total_p_max_in_MW = db->get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
-    double total_p_min_in_MW = db->get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
-    double total_q_max_in_MVar = db->get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-    double total_q_min_in_MVar = db->get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+    double total_p_max_in_MW = psdb.get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
+    double total_p_min_in_MW = psdb.get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
+    double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
+    double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
     double P_loading_percentage = (bus_P_mismatch_in_MW-total_p_min_in_MW);
         P_loading_percentage /= (total_p_max_in_MW - total_p_min_in_MW);
     double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
         Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
 
-    vector<SOURCE*> sources = db->get_sources_connecting_to_bus(physical_bus);
+    vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
     size_t n;
     n = sources.size();
     for(size_t i=0; i!=n; ++i)
@@ -971,7 +931,8 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(size_t physica
 
 bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_bus)
 {
-    BUS* bus = db->get_bus(physical_bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* bus = psdb.get_bus(physical_bus);
 
     if(bus->get_bus_type()!=PV_TYPE)
         return false;
@@ -979,12 +940,12 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
 
     bool bus_type_changed = false;
-    size_t internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
+    size_t internal_bus = network_db.get_internal_bus_number_of_physical_bus(physical_bus);
 
-    double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*db->get_system_base_power_in_MVA();
+    double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
 
-    double total_q_max_in_MVar = db->get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-    double total_q_min_in_MVar = db->get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+    double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
+    double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
     if(total_q_max_in_MVar==total_q_min_in_MVar)
     {
@@ -1027,7 +988,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
     double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
     Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
 
-    vector<SOURCE*> sources = db->get_sources_connecting_to_bus(physical_bus);
+    vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
     n = sources.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -1042,7 +1003,8 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
 
 bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t physical_bus)
 {
-    BUS* bus = db->get_bus(physical_bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* bus = psdb.get_bus(physical_bus);
 
     if(bus->get_bus_type()!=PV_TO_PQ_TYPE_1 and
        bus->get_bus_type()!=PV_TO_PQ_TYPE_2 and
@@ -1054,8 +1016,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
 
     bool bus_type_changed = false;
 
-    double total_q_max_in_MVar = db->get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-    double total_q_min_in_MVar = db->get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+    double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
+    double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
     if(total_q_max_in_MVar == total_q_min_in_MVar)
     {
@@ -1076,12 +1038,12 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
 
     double bus_voltage = bus->get_voltage_in_pu();
 
-    double voltage_to_regulated = db->get_voltage_to_regulate_of_physical_bus_in_pu(physical_bus);
+    double voltage_to_regulated = psdb.get_voltage_to_regulate_of_physical_bus_in_pu(physical_bus);
 
-    double total_q_generation_in_MVar = db->get_total_regulating_q_generation_at_physical_bus_in_MVar(physical_bus);
+    double total_q_generation_in_MVar = psdb.get_total_regulating_q_generation_at_physical_bus_in_MVar(physical_bus);
 
-    size_t internal_bus = network_db->get_internal_bus_number_of_physical_bus(physical_bus);
-    double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*db->get_system_base_power_in_MVA();
+    size_t internal_bus = network_db.get_internal_bus_number_of_physical_bus(physical_bus);
+    double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
 
     //bus_Q_mismatch_in_MVar += total_q_generation_in_MVar;
 
@@ -1252,7 +1214,8 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
 
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(size_t physical_bus)
 {
-    vector<SOURCE*> sources = db->get_sources_connecting_to_bus(physical_bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
 
     size_t n = sources.size();
     for(size_t i=0; i!=n; ++i)
@@ -1260,7 +1223,8 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(size_t physical_
 }
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_bus)
 {
-    vector<SOURCE*> sources = db->get_sources_connecting_to_bus(physical_bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
 
     size_t n = sources.size();
     for(size_t i=0; i!=n; ++i)
@@ -1344,6 +1308,7 @@ vector<double> POWERFLOW_SOLVER::get_bus_Q_power_mismatch_vector_for_decoupled_s
 
 void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update)
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 /*    ostringstream osstream;
     osstream<<"Bus voltage and angle correction(equation index)");
     show_information_with_leading_time_stamp(osstream);
@@ -1380,9 +1345,9 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
     for(size_t i=0; i!=nP; ++i)
     {
         internal_bus = internal_P_equation_buses[i];
-        physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+        physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
 
-        bus = db->get_bus(physical_bus);
+        bus = psdb.get_bus(physical_bus);
 
         current_angle = bus->get_angle_in_rad();
 
@@ -1394,9 +1359,9 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
     for(size_t i=0; i!=nQ; ++i)
     {
         internal_bus = internal_Q_equation_buses[i];
-        physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+        physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
 
-        bus = db->get_bus(physical_bus);
+        bus = psdb.get_bus(physical_bus);
 
         current_voltage = bus->get_voltage_in_pu();
 
@@ -1421,9 +1386,9 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
                 for(size_t i=0; i!=nP; ++i)
                 {
                     internal_bus = internal_P_equation_buses[i];
-                    physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+                    physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
 
-                    bus = db->get_bus(physical_bus);
+                    bus = psdb.get_bus(physical_bus);
 
                     current_angle = bus->get_angle_in_rad();
 
@@ -1435,9 +1400,9 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
                 for(size_t i=0; i!=nQ; ++i)
                 {
                     internal_bus = internal_Q_equation_buses[i];
-                    physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+                    physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
 
-                    bus = db->get_bus(physical_bus);
+                    bus = psdb.get_bus(physical_bus);
 
                     current_voltage = bus->get_voltage_in_pu();
 
@@ -1467,6 +1432,8 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
 
 void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
     double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
 
     size_t nP = internal_P_equation_buses.size();
@@ -1486,9 +1453,9 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
     for(size_t i=0; i!=nQ; ++i)
     {
         internal_bus = internal_Q_equation_buses[i];
-        physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+        physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
 
-        bus = db->get_bus(physical_bus);
+        bus = psdb.get_bus(physical_bus);
 
         current_voltage = bus->get_voltage_in_pu();
 
@@ -1518,9 +1485,9 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
                 for(size_t i=0; i!=nQ; ++i)
                 {
                     internal_bus = internal_Q_equation_buses[i];
-                    physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+                    physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
 
-                    bus = db->get_bus(physical_bus);
+                    bus = psdb.get_bus(physical_bus);
 
                     current_voltage = bus->get_voltage_in_pu();
 
@@ -1541,6 +1508,8 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
 
 void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
     ostringstream osstream;
 
     double Perror0 = get_maximum_active_power_mismatch_in_MW();
@@ -1561,9 +1530,9 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
     for(size_t i=0; i!=nP; ++i)
     {
         internal_bus = internal_P_equation_buses[i];
-        physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+        physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
 
-        bus = db->get_bus(physical_bus);
+        bus = psdb.get_bus(physical_bus);
 
         current_angle = bus->get_angle_in_rad();
 
@@ -1594,9 +1563,9 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
                 for(size_t i=0; i!=nP; ++i)
                 {
                     internal_bus = internal_P_equation_buses[i];
-                    physical_bus = network_db->get_physical_bus_number_of_internal_bus(internal_bus);
+                    physical_bus = network_db.get_physical_bus_number_of_internal_bus(internal_bus);
 
-                    bus = db->get_bus(physical_bus);
+                    bus = psdb.get_bus(physical_bus);
 
                     current_angle = bus->get_angle_in_rad();
 
@@ -1616,8 +1585,7 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
 
 void POWERFLOW_SOLVER::show_powerflow_result() const
 {
-    if(not is_power_system_database_set())
-        return;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     ostringstream osstream;
 
@@ -1638,7 +1606,7 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      voltage(pu) angle(deg)");
     show_information_with_leading_time_stamp(buffer);
 
-    vector<BUS*> buses = db->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t nbus = buses.size();
     /*if(nbus>200)
         nbus = 200;*/
@@ -1655,7 +1623,7 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      id   P(MW)      Q(MVar)");
     show_information_with_leading_time_stamp(buffer);
 
-    vector<SOURCE*> sources = db->get_all_sources();
+    vector<SOURCE*> sources = psdb.get_all_sources();
     size_t nsource = sources.size();
     /*if(nsource>200)
         nsource = 200;*/
@@ -1669,8 +1637,7 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
 }
 void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
 {
-    if(not is_power_system_database_set())
-        return;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     ostringstream osstream;
 
@@ -1692,11 +1659,11 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
     file<<"% Powerflow result exported at "<<time_stamp<<endl;
-    snprintf(buffer, 1000, "%s", (db->get_case_information()).c_str());
+    snprintf(buffer, 1000, "%s", (psdb.get_case_information()).c_str());
     file<<"% "<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (db->get_case_additional_information()).c_str());
+    snprintf(buffer, 1000, "%s", (psdb.get_case_additional_information()).c_str());
     file<<"% "<<buffer<<endl;
-    vector<BUS*> buses = db->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t nbus = buses.size();
     if(nbus>0)
     {
@@ -1719,7 +1686,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
         file<<buffer<<endl;
     }
 
-    vector<GENERATOR*> generators = db->get_all_generators();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
     size_t ngen = generators.size();
     if(ngen>0)
     {
@@ -1736,11 +1703,11 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
         snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
                  generators[i]->get_generator_bus(),(generators[i]->get_identifier()).c_str(),
                  generators[i]->get_p_generation_in_MW(), generators[i]->get_q_generation_in_MVar(),
-                 db->get_bus_voltage_in_pu(bus));
+                 psdb.get_bus_voltage_in_pu(bus));
         file<<buffer<<endl;
     }
 
-    vector<WT_GENERATOR*> wt_generators = db->get_all_wt_generators();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
     size_t nsource = wt_generators.size();
     if(nsource>0)
     {
@@ -1757,11 +1724,11 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
         snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
                  wt_generators[i]->get_generator_bus(),(wt_generators[i]->get_identifier()).c_str(),
                  wt_generators[i]->get_p_generation_in_MW(), wt_generators[i]->get_q_generation_in_MVar(),
-                 db->get_bus_voltage_in_pu(bus));
+                 psdb.get_bus_voltage_in_pu(bus));
         file<<buffer<<endl;
     }
 
-    vector<LOAD*> loads = db->get_all_loads();
+    vector<LOAD*> loads = psdb.get_all_loads();
     size_t nload = loads.size();
     if(nload>0)
     {
@@ -1778,11 +1745,11 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
         snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
                  loads[i]->get_load_bus(),(loads[i]->get_identifier()).c_str(),
-                 s.real(), s.imag(), db->get_bus_voltage_in_pu(bus));
+                 s.real(), s.imag(), psdb.get_bus_voltage_in_pu(bus));
         file<<buffer<<endl;
     }
 
-    vector<LINE*> lines = db->get_all_lines();
+    vector<LINE*> lines = psdb.get_all_lines();
     size_t nline = lines.size();
     if(nline>0)
     {
@@ -1809,7 +1776,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
         file<<buffer<<endl;
     }
 
-    vector<TRANSFORMER*> transformers = db->get_all_transformers();
+    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
     size_t ntrans = transformers.size();
     if(ntrans>0)
     {
@@ -1846,7 +1813,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
         file<<buffer<<endl;
     }
 
-    vector<HVDC*> hvdcs = db->get_all_hvdcs();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t nhvdc = hvdcs.size();
     if(nhvdc>0)
     {
@@ -1882,8 +1849,8 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
                  hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER),
                  hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER),
                  hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER),
-                 db->get_bus_voltage_in_pu(busr),
-                 db->get_bus_voltage_in_pu(busi),
+                 psdb.get_bus_voltage_in_pu(busr),
+                 psdb.get_bus_voltage_in_pu(busi),
                  hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER),
                  hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER));
         file<<buffer<<endl;
@@ -1894,8 +1861,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
 
 void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) const
 {
-    if(not is_power_system_database_set())
-        return;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     ostringstream osstream;
 
@@ -1917,11 +1883,11 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
             local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
     file<<"% Powerflow result exported at "<<time_stamp<<endl;
-    snprintf(buffer, 1000, "%s", (db->get_case_information()).c_str());
+    snprintf(buffer, 1000, "%s", (psdb.get_case_information()).c_str());
     file<<"% "<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (db->get_case_additional_information()).c_str());
+    snprintf(buffer, 1000, "%s", (psdb.get_case_additional_information()).c_str());
     file<<"% "<<buffer<<endl;
-    vector<BUS*> buses = db->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t nbus = buses.size();
     if(nbus>0)
     {
@@ -1944,7 +1910,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
         file<<buffer<<endl;
     }
 
-    vector<GENERATOR*> generators = db->get_all_generators();
+    vector<GENERATOR*> generators = psdb.get_all_generators();
     size_t ngen = generators.size();
     if(ngen>0)
     {
@@ -1959,14 +1925,14 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
             <<setprecision(6)<<fixed<<generators[i]->get_q_generation_in_MVar()<<","
             <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
         snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
-                 bus,db->bus_number2bus_name(bus).c_str(),
+                 bus, psdb.bus_number2bus_name(bus).c_str(),
                  (generators[i]->get_identifier()).c_str(),
                  generators[i]->get_p_generation_in_MW(), generators[i]->get_q_generation_in_MVar(),
-                 db->get_bus_voltage_in_pu(bus));
+                 psdb.get_bus_voltage_in_pu(bus));
         file<<buffer<<endl;
     }
 
-    vector<WT_GENERATOR*> wt_generators = db->get_all_wt_generators();
+    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
     size_t nsource = wt_generators.size();
     if(nsource>0)
     {
@@ -1981,14 +1947,14 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
             <<setprecision(6)<<fixed<<wt_generators[i]->get_q_generation_in_MVar()<<","
             <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
         snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
-                 bus,db->bus_number2bus_name(bus).c_str(),
+                 bus, psdb.bus_number2bus_name(bus).c_str(),
                  (wt_generators[i]->get_identifier()).c_str(),
                  wt_generators[i]->get_p_generation_in_MW(), wt_generators[i]->get_q_generation_in_MVar(),
-                 db->get_bus_voltage_in_pu(bus));
+                 psdb.get_bus_voltage_in_pu(bus));
         file<<buffer<<endl;
     }
 
-    vector<LOAD*> loads = db->get_all_loads();
+    vector<LOAD*> loads = psdb.get_all_loads();
     size_t nload = loads.size();
     if(nload>0)
     {
@@ -2004,13 +1970,13 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
             <<setprecision(6)<<fixed<<s.imag()<<","
             <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
         snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
-                 bus,db->bus_number2bus_name(bus).c_str(),
+                 bus, psdb.bus_number2bus_name(bus).c_str(),
                  (loads[i]->get_identifier()).c_str(),
-                 s.real(), s.imag(), db->get_bus_voltage_in_pu(bus));
+                 s.real(), s.imag(), psdb.get_bus_voltage_in_pu(bus));
         file<<buffer<<endl;
     }
 
-    vector<LINE*> lines = db->get_all_lines();
+    vector<LINE*> lines = psdb.get_all_lines();
     size_t nline = lines.size();
     if(nline>0)
     {
@@ -2032,8 +1998,8 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
             <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;*/
 
         snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                 ibus, db->bus_number2bus_name(ibus).c_str(),
-                 jbus, db->bus_number2bus_name(jbus).c_str(),
+                 ibus, psdb.bus_number2bus_name(ibus).c_str(),
+                 jbus, psdb.bus_number2bus_name(jbus).c_str(),
                  (lines[i]->get_identifier()).c_str(),
                  si.real(), si.imag(),sj.real(), sj.imag(),
                  steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA()),
@@ -2041,7 +2007,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
         file<<buffer<<endl;
     }
 
-    vector<TRANSFORMER*> transformers = db->get_all_transformers();
+    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
     size_t ntrans = transformers.size();
     if(ntrans>0)
     {
@@ -2073,9 +2039,9 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
 
 
         snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                 ibus, db->bus_number2bus_name(ibus).c_str(),
-                 jbus, db->bus_number2bus_name(jbus).c_str(),
-                 kbus, db->bus_number2bus_name(kbus).c_str(),
+                 ibus, psdb.bus_number2bus_name(ibus).c_str(),
+                 jbus, psdb.bus_number2bus_name(jbus).c_str(),
+                 kbus, psdb.bus_number2bus_name(kbus).c_str(),
                  (transformers[i]->get_identifier()).c_str(),
                  sp.real(), sp.imag(), ss.real(), ss.imag(), st.real(), st.imag(),
                  transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE),
@@ -2084,7 +2050,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
         file<<buffer<<endl;
     }
 
-    vector<HVDC*> hvdcs = db->get_all_hvdcs();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t nhvdc = hvdcs.size();
     if(nhvdc>0)
     {
@@ -2110,8 +2076,8 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
             <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER)<<","
             <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER)<<endl;*/
         snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                 busr, db->bus_number2bus_name(busr).c_str(),
-                 busi, db->bus_number2bus_name(busi).c_str(),
+                 busr, psdb.bus_number2bus_name(busr).c_str(),
+                 busi, psdb.bus_number2bus_name(busi).c_str(),
                  (hvdcs[i]->get_identifier()).c_str(),
                  hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER),
                  hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER),
@@ -2122,8 +2088,8 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
                  hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER),
                  hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER),
                  hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER),
-                 db->get_bus_voltage_in_pu(busr),
-                 db->get_bus_voltage_in_pu(busi),
+                 psdb.get_bus_voltage_in_pu(busr),
+                 psdb.get_bus_voltage_in_pu(busi),
                  hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER),
                  hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER));
         file<<buffer<<endl;
@@ -2134,11 +2100,10 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
 
 void POWERFLOW_SOLVER::save_network_matrix_to_file(string filename) const
 {
-    if(network_db!=NULL)
-        network_db->save_network_matrix_to_file(filename);
+    network_db.save_network_matrix_to_file(filename);
 }
 
-void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(string filename) const
+void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(string filename)
 {
     JACOBIAN_BUILDER jacobian_builder;
     jacobian_builder.set_network_database(network_db);
@@ -2150,9 +2115,7 @@ void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(string filename) const
 
 void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(string filename) const
 {
-    if(not is_power_system_database_set())
-        return;
-
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     ostringstream osstream;
 
     ofstream file(filename);
@@ -2166,7 +2129,7 @@ void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(string filename) const
 
     file<<"BUS,VOLTAGE,ANGLE"<<endl;
 
-    vector<BUS*> buses = db->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t nbus = buses.size();
     for(size_t i=0; i!=nbus; ++i)
     {
@@ -2179,8 +2142,5 @@ void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(string filename) const
 
 size_t POWERFLOW_SOLVER::get_iteration_count() const
 {
-    if(not is_power_system_database_set())
-        return 0;
-
     return iteration_count;
 }

@@ -7,12 +7,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class FIXED_SHUNT : public DEVICE
 {
     public:
-        FIXED_SHUNT(POWER_SYSTEM_DATABASE* db);
+        FIXED_SHUNT();
         virtual ~FIXED_SHUNT();
 
         void set_shunt_bus(size_t bus);

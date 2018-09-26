@@ -10,12 +10,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class LOAD : public DEVICE
 {
     public:
-        LOAD(POWER_SYSTEM_DATABASE* db);
+        LOAD();
         virtual ~LOAD();
 
         void set_load_bus(size_t bus);

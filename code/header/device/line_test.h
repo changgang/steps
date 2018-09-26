@@ -54,8 +54,7 @@ class LINE_TEST : public Test::Suite
         void test_get_line_power_at_two_sides();
         void test_get_line_apparent_impedance_at_two_sides();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        LINE* line;
+        LINE line;
 };
 
 #endif //LINE_TEST_H

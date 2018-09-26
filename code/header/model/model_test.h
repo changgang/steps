@@ -33,8 +33,7 @@ class MODEL_TEST : public Test::Suite
 
         void test_activate_and_deactive_model();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        GENCLS* model;
+        GENCLS model;
 };
 
 #endif//MODEL_TEST_H

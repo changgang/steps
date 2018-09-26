@@ -12,12 +12,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class GENERATOR : public SOURCE
 {
     public:
-        GENERATOR(POWER_SYSTEM_DATABASE* db);
+        GENERATOR();
         ~GENERATOR();
 
         void set_generator_bus(size_t bus);

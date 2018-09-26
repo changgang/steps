@@ -11,12 +11,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class TRANSFORMER : public DEVICE
 {
     public:
-        TRANSFORMER(POWER_SYSTEM_DATABASE* db);
+        TRANSFORMER();
         virtual ~TRANSFORMER();
 
         void set_identifier(string identifier);

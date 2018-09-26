@@ -10,13 +10,10 @@ int main()
 {
     initialize_simulator(); // this function should be called first
 
-    POWER_SYSTEM_DATABASE* psdb_ptr = get_default_power_system_database_pointer();
-
     PSSE_IMEXPORTER importer;
     importer.load_powerflow_data("IEEE39.raw");
 
     POWERFLOW_SOLVER solver;
-    solver.set_power_system_database(psdb_ptr);
     solver.set_max_iteration(30);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
     solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);

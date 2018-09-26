@@ -18,8 +18,6 @@ PVP0_TEST::PVP0_TEST() : PV_PANEL_MODEL_TEST()
 void PVP0_TEST::setup()
 {
     PV_PANEL_MODEL_TEST::setup();
-
-    PV_UNIT* pv_unit = get_test_pv_unit();
 }
 
 void PVP0_TEST::tear_down()

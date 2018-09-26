@@ -20,7 +20,6 @@ class SG_MODEL_TEST : public Test::Suite
 {
     public:
         SG_MODEL_TEST();
-        POWER_SYSTEM_DATABASE* get_test_power_system_database();
         GENERATOR* get_test_generator();
         SYNC_GENERATOR_MODEL* get_test_sync_generator_model();
         EXCITER_MODEL* get_test_exciter_model();
@@ -31,7 +30,6 @@ class SG_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     private:
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//SG_MODEL_TEST_H

@@ -491,11 +491,11 @@ void CDC6T::check_blocking_logic()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
     size_t bus_i = hvdc->get_converter_bus(INVERTER);
-    double vac_r = psdb->get_bus_voltage_in_pu(bus_r);
-    double vac_i = psdb->get_bus_voltage_in_pu(bus_i);
+    double vac_r = psdb.get_bus_voltage_in_pu(bus_r);
+    double vac_i = psdb.get_bus_voltage_in_pu(bus_i);
 
     if(not is_blocked())
     {
@@ -690,7 +690,7 @@ void CDC6T::check_bypassing_logic()
 
     double TIME = get_dynamic_simulation_time_in_s();
 
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     ostringstream osstream;
 
     if(not is_bypassed())
@@ -714,7 +714,7 @@ void CDC6T::check_bypassing_logic()
                 bypass_logic = true;
             }
 
-            double vac_i = psdb->get_bus_voltage_in_pu(hvdc->get_converter_bus(INVERTER));
+            double vac_i = psdb.get_bus_voltage_in_pu(hvdc->get_converter_bus(INVERTER));
             double vaci_dbypass = get_inverter_ac_delayed_bypassing_voltage_in_pu();
             //double ti_dbypass = get_inverter_ac_delayed_bypassing_time_in_s();
             if(not inv_ac_bypassing_timer.is_started())
@@ -759,9 +759,9 @@ void CDC6T::check_bypassing_logic()
     }
     else
     {
-        POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
         size_t bus_i = hvdc->get_converter_bus(INVERTER);
-        double vac_i = psdb->get_bus_voltage_in_pu(bus_i);
+        double vac_i = psdb.get_bus_voltage_in_pu(bus_i);
 
         double vac_dunbypass = get_inverter_ac_delayed_unbypassing_voltage_in_pu();
         //double t_dunbypass = get_inverter_ac_delayed_unbypassing_time_in_s();

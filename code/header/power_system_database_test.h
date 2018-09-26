@@ -333,8 +333,6 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_get_total_q_generation_of_sources_at_physical_bus_in_MVar();
     private:
         void prepare_database_for_test();
-
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//POWER_SYSTEM_DATABASE_TEST_H

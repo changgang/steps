@@ -22,8 +22,6 @@ POWER_SYSTEM_DATABASE::POWER_SYSTEM_DATABASE()
 
     clear_database();
 
-    set_dynamic_simulator(NULL);
-
     update_in_service_bus_count();
 }
 
@@ -284,21 +282,6 @@ void POWER_SYSTEM_DATABASE::clear_database()
     update_in_service_bus_count();
 }
 
-
-void POWER_SYSTEM_DATABASE::set_dynamic_simulator(DYNAMICS_SIMULATOR* simulator)
-{
-    if(simulator!=NULL)
-        this->simulator = simulator;
-}
-
-/*double POWER_SYSTEM_DATABASE::get_dynamic_simulator_time_in_s() const
-{
-    if(simulator!=NULL)
-        return simulator->get_current_simulation_time_in_s();
-    else
-        return 0.0;
-}*/
-
 void POWER_SYSTEM_DATABASE::set_system_name(const string& name)
 {
     this->system_name = name;
@@ -427,17 +410,8 @@ void POWER_SYSTEM_DATABASE::append_generator(const GENERATOR& generator)
 {
     ostringstream osstream;
 
-    //if(generator.get_power_system_database()==NULL)
+    //if(generator.get_default_power_system_database()==NULL)
     //    generator.set_power_system_database(this);
-
-    if(this != generator.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = generator.get_power_system_database();
-        osstream<<"Warning. "<<generator.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not generator.is_valid())
     {
@@ -489,17 +463,8 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(const WT_GENERATOR& wt_generator
 {
     ostringstream osstream;
 
-    //if(wt_generator.get_power_system_database()==NULL)
+    //if(wt_generator.get_default_power_system_database()==NULL)
     //    wt_generator.set_power_system_database(this);
-
-    if(this != wt_generator.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = wt_generator.get_power_system_database();
-        osstream<<"Warning. "<<wt_generator.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not wt_generator.is_valid())
     {
@@ -552,17 +517,8 @@ void POWER_SYSTEM_DATABASE::append_pv_unit(const PV_UNIT& pv_unit)
 {
     ostringstream osstream;
 
-    //if(pv_unit.get_power_system_database()==NULL)
+    //if(pv_unit.get_default_power_system_database()==NULL)
     //    pv_unit.set_power_system_database(this);
-
-    if(this != pv_unit.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = pv_unit.get_power_system_database();
-        osstream<<"Warning. "<<pv_unit.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not pv_unit.is_valid())
     {
@@ -615,17 +571,8 @@ void POWER_SYSTEM_DATABASE::append_energy_storage(const ENERGY_STORAGE& estorage
 {
     ostringstream osstream;
 
-    //if(estorage.get_power_system_database()==NULL)
+    //if(estorage.get_default_power_system_database()==NULL)
     //    estorage.set_power_system_database(this);
-
-    if(this != estorage.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = estorage.get_power_system_database();
-        osstream<<"Warning. "<<estorage.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not estorage.is_valid())
     {
@@ -677,17 +624,8 @@ void POWER_SYSTEM_DATABASE::append_load(const LOAD& load)
 {
     ostringstream osstream;
 
-    //if(load.get_power_system_database()==NULL)
+    //if(load.get_default_power_system_database()==NULL)
     //    load.set_power_system_database(this);
-
-    if(this != load.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = load.get_power_system_database();
-        osstream<<"Warning. "<<load.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'. "
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not load.is_valid())
     {
@@ -739,17 +677,8 @@ void POWER_SYSTEM_DATABASE::append_line(const LINE& line)
 {
     ostringstream osstream;
 
-    //if(line.get_power_system_database()==NULL)
+    //if(line.get_default_power_system_database()==NULL)
     //    line.set_power_system_database(this);
-
-    if(this != line.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = line.get_power_system_database();
-        osstream<<"Warning. "<<line.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not line.is_valid())
     {
@@ -810,17 +739,8 @@ void POWER_SYSTEM_DATABASE::append_transformer(const TRANSFORMER& transformer)
 {
     ostringstream osstream;
 
-    //if(transformer.get_power_system_database()==NULL)
+    //if(transformer.get_default_power_system_database()==NULL)
     //    transformer.set_power_system_database(this);
-
-    if(this != transformer.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = transformer.get_power_system_database();
-        osstream<<"Warning. "<<transformer.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not transformer.is_valid())
     {
@@ -890,17 +810,8 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(const FIXED_SHUNT& shunt)
 {
     ostringstream osstream;
 
-    //if(shunt.get_power_system_database()==NULL)
+    //if(shunt.get_default_power_system_database()==NULL)
     //    shunt.set_power_system_database(this);
-
-    if(this != shunt.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = shunt.get_power_system_database();
-        osstream<<"Warning. "<<shunt.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not shunt.is_valid())
     {
@@ -952,17 +863,8 @@ void POWER_SYSTEM_DATABASE::append_hvdc(const HVDC& hvdc)
 {
     ostringstream osstream;
 
-    //if(hvdc.get_power_system_database()==NULL)
+    //if(hvdc.get_default_power_system_database()==NULL)
     //    hvdc.set_power_system_database(this);
-
-    if(this != hvdc.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = hvdc.get_power_system_database();
-        osstream<<"Warning. "<<hvdc.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not hvdc.is_valid())
     {
@@ -1023,17 +925,8 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(const EQUIVALENT_DEVICE& ed
 {
     ostringstream osstream;
 
-    //if(edevice.get_power_system_database()==NULL)
+    //if(edevice.get_default_power_system_database()==NULL)
     //    edevice.set_power_system_database(this);
-
-    if(this != edevice.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = edevice.get_power_system_database();
-        osstream<<"Warning. "<<edevice.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not edevice.is_valid())
     {
@@ -1085,17 +978,8 @@ void POWER_SYSTEM_DATABASE::append_area(const AREA& area)
 {
     ostringstream osstream;
 
-    //if(area.get_power_system_database()==NULL)
+    //if(area.get_default_power_system_database()==NULL)
     //    area.set_power_system_database(this);
-
-    if(this != area.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = area.get_power_system_database();
-        osstream<<"Warning. Area "<<area.get_area_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not area.is_valid())
     {
@@ -1128,19 +1012,6 @@ void POWER_SYSTEM_DATABASE::append_area(const AREA& area)
 void POWER_SYSTEM_DATABASE::append_zone(const ZONE& zone)
 {
     ostringstream osstream;
-
-    //if(zone.get_power_system_database()==NULL)
-    //    zone.set_power_system_database(this);
-
-    if(this != zone.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = zone.get_power_system_database();
-        osstream<<"Warning. Zone "<<zone.get_zone_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
     if(not zone.is_valid())
     {
         osstream<<"Warning. Failed to append invalid zone to power system database '"<<get_system_name()<<"'.";
@@ -1172,18 +1043,6 @@ void POWER_SYSTEM_DATABASE::append_zone(const ZONE& zone)
 void POWER_SYSTEM_DATABASE::append_owner(const OWNER& owner)
 {
     ostringstream osstream;
-
-    //if(owner.get_power_system_database()==NULL)
-    //    owner.set_power_system_database(this);
-
-    if(this != owner.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = owner.get_power_system_database();
-        osstream<<"Warning. Owner "<<owner.get_owner_number()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     if(not owner.is_valid())
     {

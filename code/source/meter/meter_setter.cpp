@@ -5,30 +5,12 @@
 
 METER_SETTER::METER_SETTER()
 {
-    db = NULL;
+    ;
 }
 
 METER_SETTER::~METER_SETTER()
 {
     ;
-}
-
-
-void METER_SETTER::set_power_system_database(POWER_SYSTEM_DATABASE* psdb)
-{
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Alert. Invalid power system database is provided for METER_SETTER object."<<endl
-          <<"No meter can be set without valid power system database.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    this->db = psdb;
-}
-
-POWER_SYSTEM_DATABASE* METER_SETTER::get_power_system_database() const
-{
-    return db;
 }
 
 
@@ -38,24 +20,17 @@ bool METER_SETTER::prepare_bus_meter(METER& meter, const size_t bus)
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(psdb==NULL)
+    if(not psdb.is_bus_exist(bus))
     {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"Bus meter cannot be prepared. Invalid meter will be returned.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
-    if(not psdb->is_bus_exist(bus))
-    {
-        osstream<<"Bus "<<bus<<" doesn't exist in power system database '"<<db->get_system_name()<<"'."<<endl
+        osstream<<"Bus "<<bus<<" doesn't exist in power system database '"<<psdb.get_system_name()<<"'."<<endl
           <<"Invalid meter will be returned.";
         show_information_with_leading_time_stamp(osstream);
         return successful;
     }
 
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     DEVICE_ID did = busptr->get_device_id();
 
     meter.set_device_id(did);
@@ -66,9 +41,7 @@ bool METER_SETTER::prepare_bus_meter(METER& meter, const size_t bus)
 
 METER METER_SETTER::prepare_bus_voltage_in_pu_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -82,9 +55,7 @@ METER METER_SETTER::prepare_bus_voltage_in_pu_meter(size_t bus)
 }
 METER METER_SETTER::prepare_bus_voltage_in_kV_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -99,9 +70,7 @@ METER METER_SETTER::prepare_bus_voltage_in_kV_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_angle_in_deg_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -116,9 +85,7 @@ METER METER_SETTER::prepare_bus_angle_in_deg_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_angle_in_rad_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -133,9 +100,7 @@ METER METER_SETTER::prepare_bus_angle_in_rad_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_frequency_in_pu_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -146,9 +111,7 @@ METER METER_SETTER::prepare_bus_frequency_in_pu_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_frequency_in_Hz_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -159,9 +122,7 @@ METER METER_SETTER::prepare_bus_frequency_in_Hz_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_frequency_deviation_in_pu_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -172,9 +133,7 @@ METER METER_SETTER::prepare_bus_frequency_deviation_in_pu_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_frequency_deviation_in_Hz_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -185,9 +144,7 @@ METER METER_SETTER::prepare_bus_frequency_deviation_in_Hz_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_ROCOV_in_pu_per_s_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -198,9 +155,7 @@ METER METER_SETTER::prepare_bus_ROCOV_in_pu_per_s_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_ROCOV_in_kV_per_s_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -211,9 +166,7 @@ METER METER_SETTER::prepare_bus_ROCOV_in_kV_per_s_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_ROCOF_in_pu_per_s_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -224,9 +177,7 @@ METER METER_SETTER::prepare_bus_ROCOF_in_pu_per_s_meter(size_t bus)
 
 METER METER_SETTER::prepare_bus_ROCOF_in_Hz_per_s_meter(size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_bus_meter(meter, bus);
 
@@ -242,15 +193,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"Line meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="LINE")
@@ -261,7 +204,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
         return successful;
     }
 
-    if(not psdb->is_line_exist(device_id))
+    if(not psdb.is_line_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No line meter will be added.";
@@ -271,7 +214,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
 
     meter.set_device_id(device_id);
 
-    LINE* lineptr = psdb->get_line(device_id);
+    LINE* lineptr = psdb.get_line(device_id);
 
     if(lineptr->is_connected_to_bus(side_bus))
         meter.set_meter_side_bus(side_bus);
@@ -290,9 +233,7 @@ bool METER_SETTER::prepare_line_meter(METER& meter, const DEVICE_ID& device_id, 
 
 METER METER_SETTER::prepare_line_current_in_kA_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -303,9 +244,7 @@ METER METER_SETTER::prepare_line_current_in_kA_meter(const DEVICE_ID& device_id,
 
 METER METER_SETTER::prepare_line_active_power_in_MW_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -317,9 +256,7 @@ METER METER_SETTER::prepare_line_active_power_in_MW_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_line_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -331,9 +268,7 @@ METER METER_SETTER::prepare_line_reactive_power_in_MVar_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -345,9 +280,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_in_Ohm_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_line_apparent_impedance_angle_in_deg_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -359,9 +292,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_angle_in_deg_meter(const DEV
 
 METER METER_SETTER::prepare_line_current_in_pu_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -372,9 +303,7 @@ METER METER_SETTER::prepare_line_current_in_pu_meter(const DEVICE_ID& device_id,
 
 METER METER_SETTER::prepare_line_active_power_in_pu_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -386,9 +315,7 @@ METER METER_SETTER::prepare_line_active_power_in_pu_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_line_reactive_power_in_pu_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -400,9 +327,7 @@ METER METER_SETTER::prepare_line_reactive_power_in_pu_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_line_apparent_impedance_in_pu_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -414,9 +339,7 @@ METER METER_SETTER::prepare_line_apparent_impedance_in_pu_meter(const DEVICE_ID&
 
 METER METER_SETTER::prepare_line_apparent_impedance_angle_in_rad_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_line_meter(meter, device_id, side_bus);
 
@@ -432,15 +355,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"Transformer meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="TRANSFORMER")
@@ -452,7 +367,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
     }
 
 
-    if(not psdb->is_transformer_exist(device_id))
+    if(not psdb.is_transformer_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No transformer meter will be added.";
@@ -462,7 +377,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
 
     meter.set_device_id(device_id);
 
-    TRANSFORMER* transptr = psdb->get_transformer(device_id);
+    TRANSFORMER* transptr = psdb.get_transformer(device_id);
 
     if(transptr->is_connected_to_bus(side_bus))
         meter.set_meter_side_bus(side_bus);
@@ -482,9 +397,7 @@ bool METER_SETTER::prepare_transformer_meter(METER& meter, const DEVICE_ID& devi
 
 METER METER_SETTER::prepare_transformer_current_in_kA_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -496,9 +409,7 @@ METER METER_SETTER::prepare_transformer_current_in_kA_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_transformer_active_power_in_MW_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -510,9 +421,7 @@ METER METER_SETTER::prepare_transformer_active_power_in_MW_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_transformer_reactive_power_in_MVar_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -525,9 +434,7 @@ METER METER_SETTER::prepare_transformer_reactive_power_in_MVar_meter(const DEVIC
 
 METER METER_SETTER::prepare_transformer_current_in_pu_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -539,9 +446,7 @@ METER METER_SETTER::prepare_transformer_current_in_pu_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_transformer_active_power_in_pu_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -553,9 +458,7 @@ METER METER_SETTER::prepare_transformer_active_power_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_transformer_reactive_power_in_pu_meter(const DEVICE_ID& device_id, size_t side_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_transformer_meter(meter, device_id, side_bus);
 
@@ -570,15 +473,7 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"Load meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="LOAD")
@@ -589,7 +484,7 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
         return successful;
     }
 
-    if(not psdb->is_load_exist(device_id))
+    if(not psdb.is_load_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No load meter will be added.";
@@ -607,9 +502,7 @@ bool METER_SETTER::prepare_load_meter(METER& meter, const DEVICE_ID& device_id)
 
 METER METER_SETTER::prepare_load_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -621,9 +514,7 @@ METER METER_SETTER::prepare_load_current_in_kA_meter(const DEVICE_ID& device_id)
 
 METER METER_SETTER::prepare_load_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -635,9 +526,7 @@ METER METER_SETTER::prepare_load_active_power_in_MW_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_load_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -649,9 +538,7 @@ METER METER_SETTER::prepare_load_reactive_power_in_MVar_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_load_current_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -663,9 +550,7 @@ METER METER_SETTER::prepare_load_current_in_pu_meter(const DEVICE_ID& device_id)
 
 METER METER_SETTER::prepare_load_active_power_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -677,9 +562,7 @@ METER METER_SETTER::prepare_load_active_power_in_pu_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_load_reactive_power_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+   METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -691,9 +574,7 @@ METER METER_SETTER::prepare_load_reactive_power_in_pu_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_load_total_scale_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -705,9 +586,7 @@ METER METER_SETTER::prepare_load_total_scale_in_pu_meter(const DEVICE_ID& device
 
 METER METER_SETTER::prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -719,9 +598,7 @@ METER METER_SETTER::prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -733,9 +610,7 @@ METER METER_SETTER::prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -750,9 +625,7 @@ METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE
 
 METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -767,9 +640,7 @@ METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(c
 
 METER METER_SETTER::prepare_load_voltage_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
@@ -787,15 +658,7 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"Generator meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="GENERATOR")
@@ -806,7 +669,7 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
         return successful;
     }
 
-    if(not psdb->is_generator_exist(device_id))
+    if(not psdb.is_generator_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No generator meter will be added.";
@@ -824,10 +687,7 @@ bool METER_SETTER::prepare_generator_meter(METER& meter, const DEVICE_ID& device
 
 METER METER_SETTER::prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
-
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -839,9 +699,7 @@ METER METER_SETTER::prepare_generator_rotor_angle_in_deg_meter(const DEVICE_ID& 
 
 METER METER_SETTER::prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -853,9 +711,7 @@ METER METER_SETTER::prepare_generator_rotor_speed_in_pu_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -867,9 +723,7 @@ METER METER_SETTER::prepare_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -881,9 +735,7 @@ METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_pu_meter(const DE
 
 METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -895,9 +747,7 @@ METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_Hz_meter(const DE
 
 METER METER_SETTER::prepare_generator_internal_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -909,9 +759,7 @@ METER METER_SETTER::prepare_generator_internal_voltage_in_pu_meter(const DEVICE_
 
 METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -923,9 +771,7 @@ METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_mbase_meter(cons
 
 METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -938,9 +784,7 @@ METER METER_SETTER::prepare_generator_terminal_current_in_pu_on_sbase_meter(cons
 
 METER METER_SETTER::prepare_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -952,9 +796,7 @@ METER METER_SETTER::prepare_generator_terminal_current_in_kA_meter(const DEVICE_
 
 METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -967,9 +809,7 @@ METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_mbase_meter
 
 METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -981,9 +821,7 @@ METER METER_SETTER::prepare_generator_terminal_active_power_in_pu_on_sbase_meter
 
 METER METER_SETTER::prepare_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -995,9 +833,7 @@ METER METER_SETTER::prepare_generator_terminal_active_power_in_MW_meter(const DE
 
 METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1009,9 +845,7 @@ METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_mbase_met
 
 METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1023,9 +857,7 @@ METER METER_SETTER::prepare_generator_terminal_reactive_power_in_pu_on_sbase_met
 
 METER METER_SETTER::prepare_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1037,9 +869,7 @@ METER METER_SETTER::prepare_generator_terminal_reactive_power_in_MVar_meter(cons
 
 METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1051,9 +881,7 @@ METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_mbase_meter(const DE
 
 METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1065,9 +893,7 @@ METER METER_SETTER::prepare_generator_airgap_power_in_pu_on_sbase_meter(const DE
 
 METER METER_SETTER::prepare_generator_airgap_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1079,9 +905,7 @@ METER METER_SETTER::prepare_generator_airgap_power_in_MW_meter(const DEVICE_ID& 
 
 METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1093,9 +917,7 @@ METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_mbase_meter(co
 
 METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1107,9 +929,7 @@ METER METER_SETTER::prepare_generator_accelerating_power_in_pu_on_sbase_meter(co
 
 METER METER_SETTER::prepare_generator_accelerating_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1121,9 +941,7 @@ METER METER_SETTER::prepare_generator_accelerating_power_in_MW_meter(const DEVIC
 
 METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1135,9 +953,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_mbase_meter(cons
 
 METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1149,9 +965,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_in_pu_on_sbase_meter(cons
 
 METER METER_SETTER::prepare_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1163,9 +977,7 @@ METER METER_SETTER::prepare_generator_mechanical_power_in_MW_meter(const DEVICE_
 
 METER METER_SETTER::prepare_generator_excitation_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1177,9 +989,7 @@ METER METER_SETTER::prepare_generator_excitation_voltage_in_pu_meter(const DEVIC
 
 METER METER_SETTER::prepare_generator_compensated_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1191,9 +1001,7 @@ METER METER_SETTER::prepare_generator_compensated_voltage_in_pu_meter(const DEVI
 
 METER METER_SETTER::prepare_generator_stabilizing_signal_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1205,9 +1013,7 @@ METER METER_SETTER::prepare_generator_stabilizing_signal_in_pu_meter(const DEVIC
 
 METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1222,9 +1028,7 @@ METER METER_SETTER::prepare_generator_sync_generator_model_internal_variable_met
 
 METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1239,9 +1043,7 @@ METER METER_SETTER::prepare_generator_compensator_model_internal_variable_meter(
 
 METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1256,9 +1058,7 @@ METER METER_SETTER::prepare_generator_stabilizer_model_internal_variable_meter(c
 
 METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1273,9 +1073,7 @@ METER METER_SETTER::prepare_generator_exciter_model_internal_variable_meter(cons
 
 METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_generator_meter(meter, device_id);
 
@@ -1293,15 +1091,7 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"WT generator meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="WT GENERATOR")
@@ -1312,7 +1102,7 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
         return successful;
     }
 
-    if(not psdb->is_wt_generator_exist(device_id))
+    if(not psdb.is_wt_generator_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No wt generator meter will be added.";
@@ -1329,9 +1119,7 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
 
 METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1343,9 +1131,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_meter(const DEVI
 
 METER METER_SETTER::prepare_wt_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1357,9 +1143,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_current_in_kA_meter(const DEVI
 
 METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1371,9 +1155,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_active_power_in_MW_meter(const
 
 METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1385,9 +1167,7 @@ METER METER_SETTER::prepare_wt_generator_terminal_reactive_power_in_MVar_meter(c
 
 METER METER_SETTER::prepare_wt_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1399,9 +1179,7 @@ METER METER_SETTER::prepare_wt_generator_mechanical_power_in_MW_meter(const DEVI
 
 METER METER_SETTER::prepare_wt_generator_max_available_mechanical_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1413,9 +1191,7 @@ METER METER_SETTER::prepare_wt_generator_max_available_mechanical_power_in_MW_me
 
 METER METER_SETTER::prepare_wt_generator_speed_reference_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1427,9 +1203,7 @@ METER METER_SETTER::prepare_wt_generator_speed_reference_in_pu_meter(const DEVIC
 
 METER METER_SETTER::prepare_wt_generator_speed_reference_in_rad_per_s_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1441,9 +1215,7 @@ METER METER_SETTER::prepare_wt_generator_speed_reference_in_rad_per_s_meter(cons
 
 METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1455,9 +1227,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_pu_meter(con
 
 METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1469,9 +1239,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_deviation_in_Hz_meter(con
 
 METER METER_SETTER::prepare_wt_generator_turbine_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1483,9 +1251,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_in_pu_meter(const DEVICE_
 
 METER METER_SETTER::prepare_wt_generator_turbine_speed_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1497,9 +1263,7 @@ METER METER_SETTER::prepare_wt_generator_turbine_speed_in_Hz_meter(const DEVICE_
 
 METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1511,9 +1275,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_pu_meter(const
 
 METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1525,9 +1287,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_deviation_in_Hz_meter(const
 
 METER METER_SETTER::prepare_wt_generator_rotor_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1539,9 +1299,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_wt_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1553,9 +1311,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_speed_in_Hz_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_wt_generator_rotor_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1567,9 +1323,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_angle_in_deg_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_wt_generator_rotor_angle_in_rad_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1581,9 +1335,7 @@ METER METER_SETTER::prepare_wt_generator_rotor_angle_in_rad_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_wt_generator_active_current_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1595,9 +1347,7 @@ METER METER_SETTER::prepare_wt_generator_active_current_command_in_pu_meter(cons
 
 METER METER_SETTER::prepare_wt_generator_reactive_current_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1609,9 +1359,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_current_command_in_pu_meter(co
 
 METER METER_SETTER::prepare_wt_generator_active_power_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1623,9 +1371,7 @@ METER METER_SETTER::prepare_wt_generator_active_power_command_in_pu_meter(const 
 
 METER METER_SETTER::prepare_wt_generator_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1637,9 +1383,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_power_command_in_pu_meter(cons
 
 METER METER_SETTER::prepare_wt_generator_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1651,9 +1395,7 @@ METER METER_SETTER::prepare_wt_generator_reactive_voltage_command_in_pu_meter(co
 
 METER METER_SETTER::prepare_wt_generator_pitch_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1665,9 +1407,7 @@ METER METER_SETTER::prepare_wt_generator_pitch_angle_in_deg_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_wt_generator_wind_speed_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1679,9 +1419,7 @@ METER METER_SETTER::prepare_wt_generator_wind_speed_in_pu_meter(const DEVICE_ID&
 
 METER METER_SETTER::prepare_wt_generator_wind_speed_in_mps_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1693,9 +1431,7 @@ METER METER_SETTER::prepare_wt_generator_wind_speed_in_mps_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1710,9 +1446,7 @@ METER METER_SETTER::prepare_wt_generator_model_internal_variable_meter(const DEV
 
 METER METER_SETTER::prepare_wt_aerodynamic_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1727,9 +1461,7 @@ METER METER_SETTER::prepare_wt_aerodynamic_model_internal_variable_meter(const D
 
 METER METER_SETTER::prepare_wt_turbine_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1744,9 +1476,7 @@ METER METER_SETTER::prepare_wt_turbine_model_internal_variable_meter(const DEVIC
 
 METER METER_SETTER::prepare_wt_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1761,9 +1491,7 @@ METER METER_SETTER::prepare_wt_electrical_model_internal_variable_meter(const DE
 
 METER METER_SETTER::prepare_wt_pitch_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1778,9 +1506,7 @@ METER METER_SETTER::prepare_wt_pitch_model_internal_variable_meter(const DEVICE_
 
 METER METER_SETTER::prepare_wind_speed_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
@@ -1798,15 +1524,7 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"PV unit meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="PV UNIT")
@@ -1817,7 +1535,7 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
         return successful;
     }
 
-    if(not psdb->is_pv_unit_exist(device_id))
+    if(not psdb.is_pv_unit_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No PV unit meter will be added.";
@@ -1834,9 +1552,7 @@ bool METER_SETTER::prepare_pv_unit_meter(METER& meter, const DEVICE_ID& device_i
 
 METER METER_SETTER::prepare_pv_unit_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1848,9 +1564,7 @@ METER METER_SETTER::prepare_pv_unit_terminal_current_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_pv_unit_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1862,9 +1576,7 @@ METER METER_SETTER::prepare_pv_unit_terminal_current_in_kA_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_pv_unit_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1876,9 +1588,7 @@ METER METER_SETTER::prepare_pv_unit_terminal_active_power_in_MW_meter(const DEVI
 
 METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1890,9 +1600,7 @@ METER METER_SETTER::prepare_pv_unit_terminal_reactive_power_in_MVar_meter(const 
 
 METER METER_SETTER::prepare_pv_unit_active_current_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1904,9 +1612,7 @@ METER METER_SETTER::prepare_pv_unit_active_current_command_in_pu_meter(const DEV
 
 METER METER_SETTER::prepare_pv_unit_reactive_current_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1918,9 +1624,7 @@ METER METER_SETTER::prepare_pv_unit_reactive_current_command_in_pu_meter(const D
 
 METER METER_SETTER::prepare_pv_unit_active_power_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1932,9 +1636,7 @@ METER METER_SETTER::prepare_pv_unit_active_power_command_in_pu_meter(const DEVIC
 
 METER METER_SETTER::prepare_pv_unit_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1946,9 +1648,7 @@ METER METER_SETTER::prepare_pv_unit_reactive_power_command_in_pu_meter(const DEV
 
 METER METER_SETTER::prepare_pv_unit_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1960,9 +1660,7 @@ METER METER_SETTER::prepare_pv_unit_reactive_voltage_command_in_pu_meter(const D
 
 METER METER_SETTER::prepare_pv_panel_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1977,9 +1675,7 @@ METER METER_SETTER::prepare_pv_panel_model_internal_variable_meter(const DEVICE_
 
 METER METER_SETTER::prepare_pv_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -1994,9 +1690,7 @@ METER METER_SETTER::prepare_pv_converter_model_internal_variable_meter(const DEV
 
 METER METER_SETTER::prepare_pv_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -2011,9 +1705,7 @@ METER METER_SETTER::prepare_pv_electrical_model_internal_variable_meter(const DE
 
 METER METER_SETTER::prepare_pv_irradiance_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_pv_unit_meter(meter, device_id);
 
@@ -2032,15 +1724,7 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"ENERGY STORAGE meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="ENERGY STORAGE")
@@ -2051,7 +1735,7 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
         return successful;
     }
 
-    if(not psdb->is_energy_storage_exist(device_id))
+    if(not psdb.is_energy_storage_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No energy storage meter will be added.";
@@ -2069,9 +1753,7 @@ bool METER_SETTER::prepare_energy_storage_meter(METER& meter, const DEVICE_ID& d
 
 METER METER_SETTER::prepare_energy_storage_state_of_energy_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2084,9 +1766,7 @@ METER METER_SETTER::prepare_energy_storage_state_of_energy_in_pu_meter(const DEV
 
 METER METER_SETTER::prepare_energy_storage_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2098,9 +1778,7 @@ METER METER_SETTER::prepare_energy_storage_active_power_in_MW_meter(const DEVICE
 
 METER METER_SETTER::prepare_energy_storage_active_power_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2112,9 +1790,7 @@ METER METER_SETTER::prepare_energy_storage_active_power_in_pu_meter(const DEVICE
 
 METER METER_SETTER::prepare_energy_storage_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2126,9 +1802,7 @@ METER METER_SETTER::prepare_energy_storage_reactive_power_in_MVar_meter(const DE
 
 METER METER_SETTER::prepare_energy_storage_reactive_power_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2141,9 +1815,7 @@ METER METER_SETTER::prepare_energy_storage_reactive_power_in_pu_meter(const DEVI
 
 METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2155,9 +1827,7 @@ METER METER_SETTER::prepare_energy_storage_terminal_current_in_kA_meter(const DE
 
 METER METER_SETTER::prepare_energy_storage_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2169,9 +1839,7 @@ METER METER_SETTER::prepare_energy_storage_terminal_current_in_pu_meter(const DE
 
 METER METER_SETTER::prepare_energy_storage_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_energy_storage_meter(meter, device_id);
 
@@ -2191,15 +1859,7 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"HVDC meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="HVDC")
@@ -2210,7 +1870,7 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
         return successful;
     }
 
-    if(not psdb->is_hvdc_exist(device_id))
+    if(not psdb.is_hvdc_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No hvdc meter will be added.";
@@ -2227,9 +1887,7 @@ bool METER_SETTER::prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id)
 
 METER METER_SETTER::prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2241,9 +1899,7 @@ METER METER_SETTER::prepare_hvdc_dc_current_in_kA_meter(const DEVICE_ID& device_
 
 METER METER_SETTER::prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2255,9 +1911,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_current_in_kA_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2269,9 +1923,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_current_in_kA_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2283,9 +1935,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_voltage_in_kV_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2297,9 +1947,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_voltage_in_pu_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2311,9 +1959,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_alpha_in_deg_meter(const DEVICE_ID& d
 
 METER METER_SETTER::prepare_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2325,9 +1971,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_mu_in_deg_meter(const DEVICE_ID& devi
 
 METER METER_SETTER::prepare_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2339,9 +1983,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_dc_power_in_MW_meter(const DEVICE_ID&
 
 METER METER_SETTER::prepare_hvdc_rectifier_ac_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2353,9 +1995,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_active_power_in_MW_meter(const DEV
 
 METER METER_SETTER::prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2367,9 +2007,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_reactive_power_in_MVar_meter(const
 
 METER METER_SETTER::prepare_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2381,9 +2019,7 @@ METER METER_SETTER::prepare_hvdc_rectifier_ac_current_in_kA_meter(const DEVICE_I
 
 METER METER_SETTER::prepare_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2395,9 +2031,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_voltage_in_kV_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2409,9 +2043,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_voltage_in_pu_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2423,9 +2055,7 @@ METER METER_SETTER::prepare_hvdc_inverter_gamma_in_deg_meter(const DEVICE_ID& de
 
 METER METER_SETTER::prepare_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2437,9 +2067,7 @@ METER METER_SETTER::prepare_hvdc_inverter_mu_in_deg_meter(const DEVICE_ID& devic
 
 METER METER_SETTER::prepare_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2451,9 +2079,7 @@ METER METER_SETTER::prepare_hvdc_inverter_dc_power_in_MW_meter(const DEVICE_ID& 
 
 METER METER_SETTER::prepare_hvdc_inverter_ac_active_power_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2465,9 +2091,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_active_power_in_MW_meter(const DEVI
 
 METER METER_SETTER::prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2479,9 +2103,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_reactive_power_in_MVar_meter(const 
 
 METER METER_SETTER::prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2493,9 +2115,7 @@ METER METER_SETTER::prepare_hvdc_inverter_ac_current_in_kA_meter(const DEVICE_ID
 
 METER METER_SETTER::prepare_hvdc_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_hvdc_meter(meter, device_id);
 
@@ -2514,15 +2134,7 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
     bool successful = false;
 
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    if(psdb==NULL)
-    {
-        osstream<<"No power system database is set for METER_SETTER."<<endl
-          <<"EQUIVALENT DEVICE meter cannot be prepared.";
-        show_information_with_leading_time_stamp(osstream);
-        return successful;
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string device_type = device_id.get_device_type();
     if(device_type!="EQUIVALENT DEVICE")
@@ -2533,7 +2145,7 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
         return successful;
     }
 
-    if(not psdb->is_equivalent_device_exist(device_id))
+    if(not psdb.is_equivalent_device_exist(device_id))
     {
         osstream<<"Warning. "<<device_id.get_device_name()<<" does not exist in current power system database. "
           <<"No equivalent device meter will be added.";
@@ -2550,9 +2162,7 @@ bool METER_SETTER::prepare_equivalent_device_meter(METER& meter, const DEVICE_ID
 
 METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2564,9 +2174,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_in_pu_meter
 
 METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_angle_in_deg_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2578,9 +2186,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_voltage_angle_in_de
 
 METER METER_SETTER::prepare_equivalent_device_voltage_source_resistance_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2592,9 +2198,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_resistance_in_pu_me
 
 METER METER_SETTER::prepare_equivalent_device_voltage_source_reactance_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2606,9 +2210,7 @@ METER METER_SETTER::prepare_equivalent_device_voltage_source_reactance_in_pu_met
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2620,9 +2222,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2634,9 +2234,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_lo
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2648,9 +2246,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_lo
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2662,9 +2258,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2676,9 +2270,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedance_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2690,9 +2282,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedanc
 
 METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2705,9 +2295,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_MW_mete
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2719,9 +2307,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_MVar_
 
 METER METER_SETTER::prepare_equivalent_device_active_power_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2734,9 +2320,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_load_in_MW_meter(cons
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2748,9 +2332,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_MVar_meter(
 
 METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_MW_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2763,9 +2345,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_MW_meter(
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_MVar_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2779,9 +2359,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_MVar_me
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2793,9 +2371,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_power_load
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2807,9 +2383,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_power_lo
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2821,9 +2395,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_current_lo
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2835,9 +2407,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_current_
 
 METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2849,9 +2419,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_active_constant_impedance_
 
 METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedance_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2863,9 +2431,7 @@ METER METER_SETTER::prepare_equivalent_device_nominal_reactive_constant_impedanc
 
 METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2878,9 +2444,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_generation_in_pu_mete
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2892,9 +2456,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_generation_in_pu_me
 
 METER METER_SETTER::prepare_equivalent_device_active_power_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2907,9 +2469,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_load_in_pu_meter(cons
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2921,9 +2481,7 @@ METER METER_SETTER::prepare_equivalent_device_reactive_power_load_in_pu_meter(co
 
 METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 
@@ -2936,9 +2494,7 @@ METER METER_SETTER::prepare_equivalent_device_active_power_net_load_in_pu_meter(
 
 METER METER_SETTER::prepare_equivalent_device_reactive_power_net_load_in_pu_meter(const DEVICE_ID& device_id)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-
-    METER meter(psdb);
+    METER meter;
 
     bool successful = prepare_equivalent_device_meter(meter, device_id);
 

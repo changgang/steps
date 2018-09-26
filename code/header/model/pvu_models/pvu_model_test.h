@@ -20,7 +20,6 @@ class PVU_MODEL_TEST : public Test::Suite
 {
     public:
         PVU_MODEL_TEST();
-        POWER_SYSTEM_DATABASE* get_test_power_system_database();
         PV_UNIT* get_test_pv_unit();
         PV_CONVERTER_MODEL* get_test_pv_converter_model();
         PV_PANEL_MODEL* get_test_pv_panel_model();
@@ -30,7 +29,6 @@ class PVU_MODEL_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     private:
-        POWER_SYSTEM_DATABASE* psdb;
 };
 
 #endif//PVU_MODEL_TEST_H

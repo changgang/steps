@@ -1,5 +1,5 @@
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
-
+#include "header/basic/utility.h"
 #include "header/device/wt_generator.h"
 #include "header/power_system_database.h"
 
@@ -42,12 +42,10 @@ complex<double> WT_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() co
     if(gen==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = gen->get_generator_bus();
-    return psdb->get_bus_complex_voltage_in_pu(bus);
+    return psdb.get_bus_complex_voltage_in_pu(bus);
 }
 
 double WT_ELECTRICAL_MODEL::get_terminal_bus_voltage_in_pu() const
@@ -68,12 +66,10 @@ double WT_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
     if(gen==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = gen->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = gen->get_generator_bus();
-    return psdb->get_bus_frequency_deviation_in_pu(bus);
+    return psdb.get_bus_frequency_deviation_in_pu(bus);
 }
 
 complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_complex_current_in_pu() const
@@ -118,15 +114,13 @@ void WT_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
     if(source==NULL)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
-    if(psdb==NULL)
-        return;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = get_bus_to_regulate();
     if(bus==0)
         bus = source->get_source_bus();
 
-    return set_voltage_reference_in_pu(psdb->get_bus_voltage_in_pu(bus));
+    return set_voltage_reference_in_pu(psdb.get_bus_voltage_in_pu(bus));
 }
 
 double WT_ELECTRICAL_MODEL::get_voltage_reference_in_pu() const

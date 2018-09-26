@@ -22,7 +22,7 @@ void IEE2ST::copy_from_const_model(const IEE2ST& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_power_system_database());
+    //this->set_power_system_database(model.get_default_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     for(size_t i=0; i!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
@@ -462,9 +462,9 @@ double IEE2ST::get_stabilizing_signal_in_pu() const
     double vcmax = get_Vcmax();
     double vcmin = get_Vcmin();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = get_device_id().get_device_terminal()[0];
-    double terminal_voltage = psdb->get_bus_voltage_in_pu(bus);
+    double terminal_voltage = psdb.get_bus_voltage_in_pu(bus);
     if(vcmax!=0.0 and terminal_voltage>vcmax)
         output=0.0;
     if(vcmin!=0.0 and terminal_voltage<vcmin)

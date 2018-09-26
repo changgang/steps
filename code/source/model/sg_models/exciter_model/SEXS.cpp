@@ -26,7 +26,7 @@ void SEXS::copy_from_const_model(const SEXS& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_power_system_database());
+    //this->set_power_system_database(model.get_default_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     this->set_TA_in_s(model.get_TA_in_s());

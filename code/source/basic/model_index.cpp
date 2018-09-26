@@ -19,7 +19,7 @@ void MODEL_INDEX::set_device_id(const DEVICE_ID& device_id)
 void MODEL_INDEX::set_device_index()
 {
     /*
-    POWER_SYSTEM_DATABASE* db;
+    POWER_SYSTEM_DATABASE db;
 
     device_index = -1;
 

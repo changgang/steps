@@ -74,12 +74,10 @@ double WT3E1::get_active_power_current_command_in_pu()
     if(source==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = source->get_source_bus();
-    double vterm = psdb->get_bus_voltage_in_pu(bus);
+    double vterm = psdb.get_bus_voltage_in_pu(bus);
 
     double IPcmd = power_order_integrator.get_output()/vterm;
 
@@ -95,15 +93,13 @@ double WT3E1::get_reactive_power_current_command_in_pu()
     if(source==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = source->get_power_system_database();
-    if(psdb==NULL)
-        return 0.0;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     double EQcmd = 0.0;
     if(get_voltage_flag()==0)
     {
         size_t bus = source->get_source_bus();
-        double vterm = psdb->get_bus_voltage_in_pu(bus);
+        double vterm = psdb.get_bus_voltage_in_pu(bus);
 
         EQcmd = Q_error_integrator.get_output()-vterm;
     }

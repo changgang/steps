@@ -8,9 +8,9 @@ int api_get_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    TRANSFORMER* transptr = psdb->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -82,9 +82,9 @@ void api_set_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, cha
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    TRANSFORMER* transptr = psdb->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -153,9 +153,9 @@ double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, cha
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    TRANSFORMER* transptr = psdb->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -287,9 +287,9 @@ void api_set_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char*
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    TRANSFORMER* transptr = psdb->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -455,11 +455,11 @@ const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbu
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    TRANSFORMER* transptr = psdb->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -494,9 +494,9 @@ void api_set_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    TRANSFORMER* transptr = psdb->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -529,9 +529,9 @@ bool api_get_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, cha
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    TRANSFORMER* transptr = psdb->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);
@@ -573,9 +573,9 @@ void api_set_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, cha
 {
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    TRANSFORMER* transptr = psdb->get_transformer(did);
+    TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
     {
         string SIDE = string2upper(side);

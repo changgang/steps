@@ -6,12 +6,12 @@
 
 void api_show_device_data(const char* device_type)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     string DEVICE_TYPE = string2upper(device_type);
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="BUS")
     {
-        vector<BUS*> buses = psdb->get_all_buses();
+        vector<BUS*> buses = psdb.get_all_buses();
         size_t n = buses.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -23,7 +23,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="GENERATOR")
     {
-        vector<GENERATOR*> gens = psdb->get_all_generators();
+        vector<GENERATOR*> gens = psdb.get_all_generators();
         size_t n = gens.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -35,7 +35,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="WT GENERATOR")
     {
-        vector<WT_GENERATOR*> sources = psdb->get_all_wt_generators();
+        vector<WT_GENERATOR*> sources = psdb.get_all_wt_generators();
         size_t n = sources.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -47,7 +47,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="LOAD")
     {
-        vector<LOAD*> loads = psdb->get_all_loads();
+        vector<LOAD*> loads = psdb.get_all_loads();
         size_t n = loads.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -59,7 +59,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="FIXED SHUNT")
     {
-        vector<FIXED_SHUNT*> shunts = psdb->get_all_fixed_shunts();
+        vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
         size_t n = shunts.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -71,7 +71,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="LINE")
     {
-        vector<LINE*> lines = psdb->get_all_lines();
+        vector<LINE*> lines = psdb.get_all_lines();
         size_t n = lines.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -83,7 +83,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="TRANSFORMER")
     {
-        vector<TRANSFORMER*> transes = psdb->get_all_transformers();
+        vector<TRANSFORMER*> transes = psdb.get_all_transformers();
         size_t n = transes.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -95,7 +95,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="HVDC")
     {
-        vector<HVDC*> hvdcs = psdb->get_all_hvdcs();
+        vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
         size_t n = hvdcs.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -107,7 +107,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="EQUIVALENT DEVICE")
     {
-        vector<EQUIVALENT_DEVICE*> eds = psdb->get_all_equivalent_devices();
+        vector<EQUIVALENT_DEVICE*> eds = psdb.get_all_equivalent_devices();
         size_t n = eds.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -118,7 +118,7 @@ void api_show_device_data(const char* device_type)
     }
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="AREA")
     {
-        vector<AREA*> areas = psdb->get_all_areas();
+        vector<AREA*> areas = psdb.get_all_areas();
         size_t n = areas.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -130,7 +130,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="ZONE")
     {
-        vector<ZONE*> zones = psdb->get_all_zones();
+        vector<ZONE*> zones = psdb.get_all_zones();
         size_t n = zones.size();
 
         for(size_t i=0; i!=n; ++i)
@@ -142,7 +142,7 @@ void api_show_device_data(const char* device_type)
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="OWNER")
     {
-        vector<OWNER*> owners = psdb->get_all_owners();
+        vector<OWNER*> owners = psdb.get_all_owners();
         size_t n = owners.size();
 
         for(size_t i=0; i!=n; ++i)

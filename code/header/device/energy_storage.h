@@ -8,12 +8,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class ENERGY_STORAGE : public SOURCE
 {
     public:
-        ENERGY_STORAGE(POWER_SYSTEM_DATABASE* db);
+        ENERGY_STORAGE();
         ~ENERGY_STORAGE();
 
         void set_energy_storage_bus(size_t bus);

@@ -6,9 +6,8 @@
 
 using namespace std;
 
-ZONE::ZONE(POWER_SYSTEM_DATABASE* psdb)
+ZONE::ZONE()
 {
-    set_power_system_database(psdb);
     clear();
 }
 
@@ -75,8 +74,6 @@ ZONE& ZONE::operator=(const ZONE& zone)
     if(this==(&zone)) return *this;
 
     clear();
-
-    set_power_system_database(zone.get_power_system_database());
 
     if(zone.get_zone_number()!=0)
         set_zone_number(zone.get_zone_number());

@@ -41,7 +41,7 @@ void WT3P0::copy_from_const_model(const WT3P0& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_power_system_database());
+    //this->set_power_system_database(model.get_default_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     set_Tspeed_in_s(model.get_Tspeed_in_s());

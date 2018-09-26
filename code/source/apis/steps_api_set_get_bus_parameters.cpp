@@ -8,9 +8,9 @@ int api_get_bus_integer_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(did);
+    BUS* busptr = psdb.get_bus(did);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -60,9 +60,9 @@ void api_set_bus_integer_data(size_t bus, char* parameter_name, int value)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -119,9 +119,9 @@ double api_get_bus_float_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -166,9 +166,9 @@ void api_set_bus_float_data(size_t bus, char* parameter_name, double value)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -209,11 +209,11 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -238,9 +238,9 @@ void api_set_bus_string_data(size_t bus, char* parameter_name, char* value)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -257,9 +257,9 @@ bool api_get_bus_boolean_data(size_t bus, char* parameter_name)
 {
     DEVICE_ID did = get_bus_device_id(bus);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

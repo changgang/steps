@@ -58,8 +58,7 @@ class TRANSFORMER_TEST : public Test::Suite
     private:
         void prepare_two_winding_transformer_bus_and_identifier();
         void prepare_three_winding_transformer_bus_and_identifier();
-        POWER_SYSTEM_DATABASE* db;
-        TRANSFORMER* transformer;
+        TRANSFORMER transformer;
 };
 
 #endif //TRANSFORMER_TEST_H

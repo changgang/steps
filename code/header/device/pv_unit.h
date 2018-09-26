@@ -11,12 +11,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class PV_UNIT : public SOURCE
 {
     public:
-        PV_UNIT(POWER_SYSTEM_DATABASE* db);
+        PV_UNIT();
         virtual ~PV_UNIT();
         virtual void clear();
     public:

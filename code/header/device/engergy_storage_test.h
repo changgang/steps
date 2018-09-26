@@ -38,8 +38,7 @@ class ENERGY_STORAGE_TEST : public Test::Suite
         void test_get_device_id();
 
     private:
-        POWER_SYSTEM_DATABASE* db;
-        ENERGY_STORAGE* energy_storage;
+        ENERGY_STORAGE energy_storage;
 };
 
 #endif //ENERGY_STORAGE_TEST_H

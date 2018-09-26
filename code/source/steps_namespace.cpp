@@ -4,7 +4,7 @@ namespace STEPS
 {
     POWER_SYSTEM_DATABASE default_power_system_db;
     POWERFLOW_SOLVER default_powerflow_solver;
-    DYNAMICS_SIMULATOR default_dynamic_simulator(&default_power_system_db);
+    DYNAMICS_SIMULATOR default_dynamic_simulator;
 
     double DELT = 0.01;
     double TIME;

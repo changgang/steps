@@ -5,12 +5,12 @@
 #include <string>
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
+
 
 class AREA : public BASE
 {
     public:
-        AREA(POWER_SYSTEM_DATABASE* db);
+        AREA();
         virtual ~AREA();
 
         void set_area_number(size_t area_number);

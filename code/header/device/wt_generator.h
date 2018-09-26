@@ -13,12 +13,10 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
-
 class WT_GENERATOR : public SOURCE
 {
     public:
-        WT_GENERATOR(POWER_SYSTEM_DATABASE* db);
+        WT_GENERATOR();
         virtual ~WT_GENERATOR();
         virtual void clear();
     public:

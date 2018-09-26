@@ -27,7 +27,7 @@ void ESTR0::copy_from_const_model(const ESTR0& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_power_system_database());
+    //this->set_power_system_database(model.get_default_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     this->set_Tp1_in_s(model.get_Tp1_in_s());
@@ -584,8 +584,8 @@ complex<double> ESTR0::get_terminal_complex_current_in_pu_based_on_sbase() const
     complex<double> I = get_terminal_complex_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     return I*mbase/sbase;
 }
@@ -600,8 +600,8 @@ complex<double> ESTR0::get_terminal_complex_current_in_kA() const
     ENERGY_STORAGE* estorage = (ENERGY_STORAGE*) get_device_pointer();
     size_t bus = estorage->get_energy_storage_bus();
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    double vbase = psdb->get_bus_base_voltage_in_kV(bus);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double vbase = psdb.get_bus_base_voltage_in_kV(bus);
 
     double ibase = mbase/(sqrt(3.0)*vbase);
 

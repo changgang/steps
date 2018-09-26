@@ -31,8 +31,8 @@ complex<double> COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
     else
     {
         size_t bus = generator->get_generator_bus();
-        POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-        return psdb->get_bus_complex_voltage_in_pu(bus);
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        return psdb.get_bus_complex_voltage_in_pu(bus);
     }
 }
 

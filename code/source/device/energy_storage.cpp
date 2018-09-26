@@ -8,15 +8,8 @@
 
 using namespace std;
 
-ENERGY_STORAGE::ENERGY_STORAGE(POWER_SYSTEM_DATABASE* psdb) : SOURCE(psdb)
+ENERGY_STORAGE::ENERGY_STORAGE() : SOURCE()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. ENERGY STORAGE object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
     clear();
     energy_storage_model = NULL;
 }
@@ -119,7 +112,7 @@ void ENERGY_STORAGE::set_energy_storage_model(const ENERGY_STORAGE_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         energy_storage_model = new_model;
     }
@@ -195,7 +188,6 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     if(this==(&estorage)) return *this;
 
     clear();
-    set_power_system_database(estorage.get_power_system_database());
     set_energy_storage_bus(estorage.get_energy_storage_bus());
     set_identifier(estorage.get_identifier());
     set_status(estorage.get_status());

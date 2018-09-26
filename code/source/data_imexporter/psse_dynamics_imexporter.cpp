@@ -252,7 +252,7 @@ DEVICE_ID PSSE_IMEXPORTER::get_hvdc_device_id_from_string(string data)
     DEVICE_ID did;
     did.set_device_type("HVDC");
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     vector<string> dyrdata = split_string(data,",");
     if(dyrdata.size()<2)
@@ -263,8 +263,8 @@ DEVICE_ID PSSE_IMEXPORTER::get_hvdc_device_id_from_string(string data)
     size_t i=0;
     hvdc_name = get_string_data(dyrdata[i], "0");
 
-    size_t n = psdb->get_hvdc_count();
-    vector<HVDC*> hvdcs = psdb->get_all_hvdcs();
+    size_t n = psdb.get_hvdc_count();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     for(size_t i=0; i!=n; ++i)
     {
         if(hvdc_name == hvdcs[i]->get_name())
@@ -317,10 +317,10 @@ void PSSE_IMEXPORTER::add_GENCLS_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENCLS model;
@@ -345,10 +345,10 @@ void PSSE_IMEXPORTER::add_GENROU_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENROU model;
@@ -373,10 +373,10 @@ void PSSE_IMEXPORTER::add_GENSAL_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENSAL model;
@@ -401,10 +401,10 @@ void PSSE_IMEXPORTER::add_COMP_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         COMP model;
@@ -429,14 +429,14 @@ void PSSE_IMEXPORTER::add_IEE2ST_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEE2ST model;
-        model.set_power_system_database(psdb);
+
         bool successful = model.setup_model_with_psse_string(data);
         if(successful)
             generator->set_model(&model);
@@ -458,10 +458,10 @@ void PSSE_IMEXPORTER::add_SEXS_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         SEXS model;
@@ -486,10 +486,10 @@ void PSSE_IMEXPORTER::add_IEEET1_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEET1 model;
@@ -514,10 +514,10 @@ void PSSE_IMEXPORTER::add_PSASPE1_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE1 model;
@@ -542,10 +542,10 @@ void PSSE_IMEXPORTER::add_PSASPE2_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE2 model;
@@ -570,10 +570,10 @@ void PSSE_IMEXPORTER::add_CSEET1_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         CSEET1 model;
@@ -598,10 +598,10 @@ void PSSE_IMEXPORTER::add_CSEET2_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         CSEET2 model;
@@ -626,10 +626,10 @@ void PSSE_IMEXPORTER::add_PSASPE13_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE13 model;
@@ -654,10 +654,10 @@ void PSSE_IMEXPORTER::add_TGOV1_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         TGOV1 model;
@@ -682,10 +682,10 @@ void PSSE_IMEXPORTER::add_IEEEG1_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG1 model;
@@ -710,10 +710,10 @@ void PSSE_IMEXPORTER::add_IEEEG2_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG2 model;
@@ -738,10 +738,10 @@ void PSSE_IMEXPORTER::add_IEEEG3_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG3 model;
@@ -767,10 +767,10 @@ void PSSE_IMEXPORTER::add_IEESGO_model(string data)
     if(dyrdata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
-    GENERATOR* generator = psdb->get_generator(did);
+    GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEESGO model;
@@ -802,7 +802,7 @@ vector<LOAD*> PSSE_IMEXPORTER::get_all_loads_of(string data)
        )
         return loads;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     vector<string> dyrdata = split_string(data,",");
     if(dyrdata.size()<3)
@@ -820,14 +820,14 @@ vector<LOAD*> PSSE_IMEXPORTER::get_all_loads_of(string data)
 
     if(model_subsystem_type=="AL")
     {
-        loads = psdb->get_all_loads();
+        loads = psdb.get_all_loads();
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;
     }
     if(model_subsystem_type=="AR")
     {
         size_t area_no = subsystem_number;
-        loads = psdb->get_all_loads();
+        loads = psdb.get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
             --iter;
@@ -841,7 +841,7 @@ vector<LOAD*> PSSE_IMEXPORTER::get_all_loads_of(string data)
     if(model_subsystem_type=="ZN")
     {
         size_t zone_no = subsystem_number;
-        loads = psdb->get_all_loads();
+        loads = psdb.get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
             --iter;
@@ -855,7 +855,7 @@ vector<LOAD*> PSSE_IMEXPORTER::get_all_loads_of(string data)
     if(model_subsystem_type=="BL")
     {
         size_t bus_no = subsystem_number;
-        loads = psdb->get_loads_connecting_to_bus(bus_no);
+        loads = psdb.get_loads_connecting_to_bus(bus_no);
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;
     }
@@ -954,10 +954,10 @@ void PSSE_IMEXPORTER::add_CDC4T_model(string data)
     if(dyrdata.size()<24)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_hvdc_device_id_from_string(data);
 
-    HVDC* hvdc = psdb->get_hvdc(did);
+    HVDC* hvdc = psdb.get_hvdc(did);
     if(hvdc != NULL)
     {
         CDC4T model;
@@ -984,10 +984,10 @@ void PSSE_IMEXPORTER::add_CDC6T_model(string data)
     if(dyrdata.size()<34)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_hvdc_device_id_from_string(data);
 
-    HVDC* hvdc = psdb->get_hvdc(did);
+    HVDC* hvdc = psdb.get_hvdc(did);
     if(hvdc != NULL)
     {
         CDC6T model;
@@ -1010,14 +1010,14 @@ void PSSE_IMEXPORTER::add_WT3G2_model(string data)
 
     vector<string> dyrdata = split_string(data,",");
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string(data);
 
-    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3G2 model;
-        model.set_power_system_database(psdb);
+
         bool successful = model.setup_model_with_psse_string(data);
         if(successful)
             gen->set_model(&model);
@@ -1037,10 +1037,10 @@ void PSSE_IMEXPORTER::add_AERD0_model(string data)
 
     vector<string> dyrdata = split_string(data,",");
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string(data);
 
-    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         AERD0 model;
@@ -1063,10 +1063,10 @@ void PSSE_IMEXPORTER::add_WT3T0_model(string data)
 
     vector<string> dyrdata = split_string(data,",");
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string(data);
 
-    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3T0 model;
@@ -1089,10 +1089,10 @@ void PSSE_IMEXPORTER::add_WT3E0_model(string data)
 
     vector<string> dyrdata = split_string(data,",");
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string(data);
 
-    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3E0 model;
@@ -1115,10 +1115,10 @@ void PSSE_IMEXPORTER::add_WT3P0_model(string data)
 
     vector<string> dyrdata = split_string(data,",");
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string(data);
 
-    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3P0 model;
@@ -1141,10 +1141,10 @@ void PSSE_IMEXPORTER::add_FILEWIND_model(string data)
 
     vector<string> dyrdata = split_string(data,",");
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string(data);
 
-    WT_GENERATOR* gen = psdb->get_wt_generator(did);
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         FILEWIND model;

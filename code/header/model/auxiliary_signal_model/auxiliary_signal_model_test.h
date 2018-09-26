@@ -37,7 +37,6 @@ class AUXILIARY_SIGNAL_MODEL_TEST : public Test::Suite
         virtual void test_get_standard_model_string() = 0;
     private:
         HVDC* hvdcptr;
-        POWER_SYSTEM_DATABASE* db;
 };
 
 #endif//AUXILIARY_SIGNAL_MODEL_TEST_H

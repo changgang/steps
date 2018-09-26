@@ -378,13 +378,12 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
     importer.load_dynamic_data(get_dynamic_data_filename());
 
     POWERFLOW_SOLVER solver;
-    solver.set_power_system_database(&psdb);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
     solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
     solver.set_flat_start_logic(false);
     solver.solve_with_full_Newton_Raphson_solution();
 
-    DYNAMICS_SIMULATOR simulator(&psdb);
+    DYNAMICS_SIMULATOR simulator;
     simulator.set_allowed_max_power_imbalance_in_MVA(get_simulator_allowed_max_power_imbalance_in_MVA());
     simulator.set_max_network_iteration(get_simulator_max_iteration());
     simulator.set_iteration_accelerator(get_simulator_iteration_accelerator());
@@ -443,7 +442,6 @@ DEVICE_ID CONTINGENCY_SCREENER::get_monitored_generator(size_t i) const
 void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
 {
     METER_SETTER setter;
-    setter.set_power_system_database(&psdb);
 
     simulator.clear_meters();
 

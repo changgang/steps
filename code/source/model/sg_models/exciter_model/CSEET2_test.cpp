@@ -23,7 +23,6 @@ void CSEET2_TEST::setup()
     CSEET2 model;
 
     GENERATOR* genptr = get_test_generator();
-    model.set_power_system_database(genptr->get_power_system_database());
     model.set_device_id(genptr->get_device_id());
 
     model.set_excitation_source(SELF_EXCITATION);

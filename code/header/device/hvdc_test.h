@@ -84,8 +84,7 @@ class HVDC_TEST : public Test::Suite
 
     private:
         void prepare_hvdc_buses();
-        POWER_SYSTEM_DATABASE* db;
-        HVDC* hvdc;
+        HVDC hvdc;
 };
 
 #endif //HVDC_TEST_H

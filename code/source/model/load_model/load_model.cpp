@@ -25,21 +25,21 @@ string LOAD_MODEL::get_model_type() const
 
 double LOAD_MODEL::get_bus_voltage_in_pu() const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
 
-    return psdb->get_bus_voltage_in_pu(bus);
+    return psdb.get_bus_voltage_in_pu(bus);
 }
 double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
 
-    return psdb->get_bus_frequency_deviation_in_pu(bus);
+    return psdb.get_bus_frequency_deviation_in_pu(bus);
 }
 
 void LOAD_MODEL::set_subsystem_type(SUBSYSTEM_TYPE subtype)

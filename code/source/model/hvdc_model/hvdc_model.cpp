@@ -804,7 +804,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
     //osstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
     //show_information_with_leading_time_stamp(osstream);
 
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
     size_t bus_i = hvdc->get_converter_bus(INVERTER);
@@ -845,8 +845,8 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 
     double margin = hvdc->get_current_power_margin();
 
-    double vac_r = psdb->get_bus_voltage_in_kV(bus_r);
-    double vac_i = psdb->get_bus_voltage_in_kV(bus_i);
+    double vac_r = psdb.get_bus_voltage_in_kV(bus_r);
+    double vac_i = psdb.get_bus_voltage_in_kV(bus_i);
 
     double eac_r = vac_r/tap_r*ebase_converter_r/ebase_grid_r;
     double eac_i = vac_i/tap_i*ebase_converter_i/ebase_grid_i;
@@ -1044,7 +1044,7 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
     if(not is_bypassed())
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
     //size_t bus_i = hvdc->get_converter_bus(INVERTER);
@@ -1087,8 +1087,8 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
 
     //double margin = hvdc->get_current_power_margin();
 
-    double vac_r = psdb->get_bus_voltage_in_kV(bus_r);
-    //double vac_i = psdb->get_bus_voltage_in_kV(bus_i);
+    double vac_r = psdb.get_bus_voltage_in_kV(bus_r);
+    //double vac_i = psdb.get_bus_voltage_in_kV(bus_i);
 
     double eac_r = vac_r/tap_r*ebase_converter_r/ebase_grid_r;
     //double eac_i = vac_i/tap_i*ebase_converter_i/ebase_grid_i;
@@ -1144,7 +1144,7 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
     if(is_blocked())
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
     size_t bus_i = hvdc->get_converter_bus(INVERTER);
@@ -1178,8 +1178,8 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
     double Rdc = hvdc->get_line_resistance_in_ohm();
     double Rcomp = hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
 
-    double vac_r = psdb->get_bus_voltage_in_pu(bus_r);
-    double vac_i = psdb->get_bus_voltage_in_pu(bus_i);
+    double vac_r = psdb.get_bus_voltage_in_pu(bus_r);
+    double vac_i = psdb.get_bus_voltage_in_pu(bus_i);
 
     double eac_r = vac_r/tap_r*ebase_converter_r/ebase_grid_r;
     double eac_i = vac_i/tap_i*ebase_converter_i/ebase_grid_i;
@@ -1346,12 +1346,12 @@ double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER
     if(converter==INVERTER and is_bypassed())
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     double angle = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
     double idc = get_converter_dc_current_in_kA(converter);
     double xc = hvdc->get_converter_transformer_impedance_in_ohm(converter).imag();
-    double vac = psdb->get_bus_voltage_in_kV(hvdc->get_converter_bus(converter));
+    double vac = psdb.get_bus_voltage_in_kV(hvdc->get_converter_bus(converter));
     double vbase_grid = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter);
     double vbase_converter = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter);
     double tap = hvdc->get_converter_transformer_tap_in_pu(converter);
@@ -1409,7 +1409,7 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
         return 0.0;
 
     /*
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t bus = hvdc->get_converter_bus(converter);
     double tap = hvdc->get_converter_transformer_tap_in_pu(converter);
@@ -1419,7 +1419,7 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
 
     size_t N = hvdc->get_converter_number_of_bridge(converter);
 
-    double vac = psdb->get_bus_voltage_in_pu(bus);
+    double vac = psdb.get_bus_voltage_in_pu(bus);
 
     double eac = vac/tap*ebase_converter/ebase_grid;
 
@@ -1453,12 +1453,12 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE c
     if(converter==INVERTER and is_bypassed())
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     complex<double> S = get_converter_ac_complex_power_in_MVA(converter)/sbase;
 
-    complex<double> V = psdb->get_bus_complex_voltage_in_pu(hvdc->get_converter_bus(converter));
+    complex<double> V = psdb.get_bus_complex_voltage_in_pu(hvdc->get_converter_bus(converter));
 
     return conj(S/V);
 }
@@ -1477,9 +1477,9 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE c
 
     complex<double> I = get_converter_ac_current_in_pu(converter);
     size_t bus = hvdc->get_converter_bus(converter);
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
-    double vbase = psdb->get_bus_base_voltage_in_kV(bus);
-    double sbase = psdb->get_system_base_power_in_MVA();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double vbase = psdb.get_bus_base_voltage_in_kV(bus);
+    double sbase = psdb.get_system_base_power_in_MVA();
     double ibase = sbase/(sqrt(3.0)*vbase);
 
     return I*ibase;
@@ -1492,7 +1492,7 @@ double HVDC_MODEL::get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter)
     if(hvdc==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE* psdb = hvdc->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    return psdb->get_bus_voltage_in_pu(hvdc->get_converter_bus(converter));
+    return psdb.get_bus_voltage_in_pu(hvdc->get_converter_bus(converter));
 }

@@ -18,9 +18,9 @@ WTG_MODEL_TEST::WTG_MODEL_TEST()
 
 void WTG_MODEL_TEST::setup()
 {
-    psdb = get_default_power_system_database_pointer();
-    psdb->set_allowed_max_bus_number(100);
-    psdb->set_system_base_power_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(100);
+    psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
     bus.set_bus_number(1);
@@ -29,9 +29,9 @@ void WTG_MODEL_TEST::setup()
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_deg(30.0);
 
-    psdb->append_bus(bus);
+    psdb.append_bus(bus);
 
-    WT_GENERATOR wt_generator(psdb);
+    WT_GENERATOR wt_generator;
     wt_generator.set_generator_bus(1);
     wt_generator.set_identifier("#1");
     wt_generator.set_status(true);
@@ -42,17 +42,13 @@ void WTG_MODEL_TEST::setup()
     wt_generator.set_number_of_lumped_wt_generators(50);
     wt_generator.set_rated_power_per_wt_generator_in_MW(2.0);
 
-    psdb->append_wt_generator(wt_generator);
+    psdb.append_wt_generator(wt_generator);
 }
 
 void WTG_MODEL_TEST::tear_down()
 {
-    psdb->clear_database();
-}
-
-POWER_SYSTEM_DATABASE* WTG_MODEL_TEST::get_test_power_system_database()
-{
-    return psdb;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
 }
 
 WT_GENERATOR* WTG_MODEL_TEST::get_test_wt_generator()
@@ -64,7 +60,8 @@ WT_GENERATOR* WTG_MODEL_TEST::get_test_wt_generator()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    return psdb->get_wt_generator(did);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    return psdb.get_wt_generator(did);
 }
 
 

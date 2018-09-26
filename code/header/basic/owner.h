@@ -5,11 +5,11 @@
 
 #include <string>
 using namespace std;
-class POWER_SYSTEM_DATABASE;
+
 class OWNER : public BASE
 {
     public:
-        OWNER(POWER_SYSTEM_DATABASE* db);
+        OWNER();
         virtual ~OWNER();
 
         void set_owner_number(size_t owner_number);

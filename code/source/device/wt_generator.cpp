@@ -12,16 +12,8 @@
 
 using namespace std;
 
-WT_GENERATOR::WT_GENERATOR(POWER_SYSTEM_DATABASE* psdb) : SOURCE(psdb)
+WT_GENERATOR::WT_GENERATOR() : SOURCE()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. WT_GENERATOR object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    set_power_system_database(psdb);
     clear();
 
     wt_generator_model = NULL;
@@ -271,7 +263,7 @@ void WT_GENERATOR::set_wt_generator_model(const WT_GENERATOR_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         wt_generator_model = new_model;
 
@@ -316,7 +308,7 @@ void WT_GENERATOR::set_wt_aerodynamic_model(const WT_AERODYNAMIC_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         wt_aerodynamic_model = new_model;
     }
@@ -357,7 +349,7 @@ void WT_GENERATOR::set_wt_turbine_model(const WT_TURBINE_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         wt_turbine_model = new_model;
     }
@@ -399,7 +391,7 @@ void WT_GENERATOR::set_wt_electrical_model(const WT_ELECTRICAL_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         wt_electrical_model = new_model;
     }
@@ -440,7 +432,7 @@ void WT_GENERATOR::set_wt_pitch_model(const WT_PITCH_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         wt_pitch_model = new_model;
     }
@@ -481,7 +473,7 @@ void WT_GENERATOR::set_wind_speed_model(const WIND_SPEED_MODEL* model)
 
     if(new_model!=NULL)
     {
-        new_model->set_power_system_database(get_power_system_database());
+
         new_model->set_device_id(get_device_id());
         wind_speed_model = new_model;
     }
@@ -581,8 +573,6 @@ WT_GENERATOR& WT_GENERATOR::operator=(const WT_GENERATOR& gen)
     if(this==(&gen)) return *this;
 
     clear();
-
-    set_power_system_database(gen.get_power_system_database());
 
     set_generator_bus(gen.get_generator_bus());
     set_identifier(gen.get_identifier());

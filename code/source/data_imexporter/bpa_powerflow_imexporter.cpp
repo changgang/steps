@@ -439,7 +439,7 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
 
 void BPA_IMEXPORTER::load_area_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -453,13 +453,13 @@ void BPA_IMEXPORTER::load_area_data()
 
             string area_name = data.substr(3,10);
 
-            size_t area_number = psdb->area_name2area_number(area_name);
+            size_t area_number = psdb.area_name2area_number(area_name);
             if(area_number == 0)
             {
-                AREA area(psdb);
+                AREA area;
                 area.set_area_name(area_name);
 
-                size_t area_count = psdb->get_area_count();
+                size_t area_count = psdb.get_area_count();
                 area.set_area_number(area_count+1);
 
                 string area_schedule_str = data.substr(26, 8);
@@ -468,7 +468,7 @@ void BPA_IMEXPORTER::load_area_data()
 
                 area.set_expected_power_leaving_area_in_MW(area_schedule);
 
-                psdb->append_area(area);
+                psdb.append_area(area);
             }
         }
     }
@@ -476,7 +476,7 @@ void BPA_IMEXPORTER::load_area_data()
 
 void BPA_IMEXPORTER::load_zone_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -494,15 +494,15 @@ void BPA_IMEXPORTER::load_zone_data()
             data = grow_string_to_at_least_size(data, 80);
 
             string zone_name = data.substr(18,2);
-            size_t zone_number = psdb->zone_name2zone_number(zone_name);
+            size_t zone_number = psdb.zone_name2zone_number(zone_name);
             if(zone_number == 0)
             {
-                ZONE zone(psdb);
+                ZONE zone;
                 zone.set_zone_name(zone_name);
 
-                size_t zone_count = psdb->get_zone_count();
+                size_t zone_count = psdb.get_zone_count();
                 zone.set_zone_number(zone_count+1);
-                psdb->append_zone(zone);
+                psdb.append_zone(zone);
             }
         }
     }
@@ -510,7 +510,7 @@ void BPA_IMEXPORTER::load_zone_data()
 
 void BPA_IMEXPORTER::load_owner_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -530,15 +530,15 @@ void BPA_IMEXPORTER::load_owner_data()
             data = grow_string_to_at_least_size(data, 80);
 
             string owner_name = data.substr(3,3);
-            size_t owner_number = psdb->owner_name2owner_number(owner_name);
+            size_t owner_number = psdb.owner_name2owner_number(owner_name);
             if(owner_number == 0)
             {
-                OWNER owner(psdb);
+                OWNER owner;
                 owner.set_owner_name(owner_name);
 
-                size_t owner_count = psdb->get_owner_count();
+                size_t owner_count = psdb.get_owner_count();
                 owner.set_owner_number(owner_count+1);
-                psdb->append_owner(owner);
+                psdb.append_owner(owner);
             }
         }
     }
@@ -546,7 +546,7 @@ void BPA_IMEXPORTER::load_owner_data()
 
 void BPA_IMEXPORTER::load_bus_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -563,7 +563,7 @@ void BPA_IMEXPORTER::load_bus_data()
         {
             BUS bus;
 
-            size_t bus_count = psdb->get_bus_count();
+            size_t bus_count = psdb.get_bus_count();
             bus.set_bus_number(bus_count+1);
 
             data = grow_string_to_at_least_size(data, 80);
@@ -577,11 +577,11 @@ void BPA_IMEXPORTER::load_bus_data()
             bus.set_base_voltage_in_kV(base_voltage);
 
             string owner_name = data.substr(3,3);
-            size_t owner_number = psdb->owner_name2owner_number(owner_name);
+            size_t owner_number = psdb.owner_name2owner_number(owner_name);
             bus.set_owner_number(owner_number);
 
             string zone_name = data.substr(18,2);
-            size_t zone_number = psdb->zone_name2zone_number(zone_name);
+            size_t zone_number = psdb.zone_name2zone_number(zone_name);
             bus.set_zone_number(zone_number);
 
             string voltage_str = data.substr(57, 4);
@@ -624,7 +624,7 @@ void BPA_IMEXPORTER::load_bus_data()
                 double angle = get_double_data(angle_str, "0.0");
                 bus.set_angle_in_deg(angle);
             }
-            psdb->append_bus(bus);
+            psdb.append_bus(bus);
         }
     }
     set_bus_area();
@@ -633,11 +633,11 @@ void BPA_IMEXPORTER::load_bus_data()
 
 void BPA_IMEXPORTER::set_bus_area()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
-    vector<BUS*> buses = psdb->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
 
     for(size_t i=0; i<n; ++i)
     {
@@ -650,18 +650,18 @@ void BPA_IMEXPORTER::set_bus_area()
 
             string area_name = data.substr(3,10);
 
-            size_t area_number = psdb->area_name2area_number(area_name);
+            size_t area_number = psdb.area_name2area_number(area_name);
             if(area_number == 0)
                 continue;
 
             for(size_t j=0; j<20; ++j)
             {
                 string zone_name = data.substr(35+j*3, 2);
-                size_t zone_number = psdb->zone_name2zone_number(zone_name);
+                size_t zone_number = psdb.zone_name2zone_number(zone_name);
                 if(zone_number == 0)
                     continue;
 
-                size_t bus_count = psdb->get_bus_count();
+                size_t bus_count = psdb.get_bus_count();
                 for(size_t k=0; k<bus_count; ++k)
                 {
                     if(buses[k]->get_zone_number() == zone_number)
@@ -674,7 +674,7 @@ void BPA_IMEXPORTER::set_bus_area()
 
 void BPA_IMEXPORTER::set_area_swing_bus()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -688,19 +688,19 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
             string area_name = data.substr(3,10);
 
-            size_t area_number = psdb->area_name2area_number(area_name);
-            AREA* area = psdb->get_area(area_number);
+            size_t area_number = psdb.area_name2area_number(area_name);
+            AREA* area = psdb.get_area(area_number);
             if(area !=NULL)
             {
                 string slack_bus_name = data.substr(13, 8);
-                size_t slack_bus_number = psdb->bus_name2bus_number(slack_bus_name);
+                size_t slack_bus_number = psdb.bus_name2bus_number(slack_bus_name);
 
                 area->set_area_swing_bus(slack_bus_number);
             }
         }
     }
 
-    vector<BUS*> buses = psdb->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
 
     for(size_t i=0; i<n; ++i)
     {
@@ -713,18 +713,18 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
             string area_name = data.substr(3,10);
 
-            size_t area_number = psdb->area_name2area_number(area_name);
+            size_t area_number = psdb.area_name2area_number(area_name);
             if(area_number == 0)
                 continue;
 
             for(size_t j=0; j<20; ++j)
             {
                 string zone_name = data.substr(35+j*3, 2);
-                size_t zone_number = psdb->zone_name2zone_number(zone_name);
+                size_t zone_number = psdb.zone_name2zone_number(zone_name);
                 if(zone_number == 0)
                     continue;
 
-                size_t bus_count = psdb->get_bus_count();
+                size_t bus_count = psdb.get_bus_count();
                 for(size_t k=0; k<bus_count; ++k)
                 {
                     if(buses[k]->get_zone_number() == zone_number)
@@ -737,7 +737,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
 void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -752,12 +752,12 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
            card_type == "BL" or // PV
            card_type=="BS")
         {
-            LOAD load(psdb);
+            LOAD load;
 
             data = grow_string_to_at_least_size(data, 80);
 
             string bus_name = data.substr(6, 8);
-            size_t bus_number = psdb->bus_name2bus_number(bus_name);
+            size_t bus_number = psdb.bus_name2bus_number(bus_name);
             if(bus_number==0)
                 continue;
             load.set_load_bus(bus_number);
@@ -766,10 +766,10 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             load.set_status(true);
 
             string owner_name = data.substr(3,3);
-            size_t owner_number = psdb->owner_name2owner_number(owner_name);
+            size_t owner_number = psdb.owner_name2owner_number(owner_name);
             load.set_owner_number(owner_number);
 
-            BUS* bus = psdb->get_bus(bus_number);
+            BUS* bus = psdb.get_bus(bus_number);
             if(bus==NULL)
                 continue;
 
@@ -795,7 +795,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
 
             load.set_nominal_constant_impedance_load_in_MVA(complex<double>(P, -Q));
 
-            psdb->append_load(load);
+            psdb.append_load(load);
         }
     }
 
@@ -809,7 +809,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             data = grow_string_to_at_least_size(data, 80);
 
             string bus_name = data.substr(6, 8);
-            size_t bus_number = psdb->bus_name2bus_number(bus_name);
+            size_t bus_number = psdb.bus_name2bus_number(bus_name);
             if(bus_number==0)
                 continue;
 
@@ -820,7 +820,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             did.set_device_terminal(terminal);
             did.set_device_identifier("1");
 
-            LOAD* load = psdb->get_load(did);
+            LOAD* load = psdb.get_load(did);
             if(load==NULL)
                 continue;
 
@@ -859,7 +859,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
     while(true)
     {
         bool load_cleared = false;
-        vector<LOAD*> loads = psdb->get_all_loads();
+        vector<LOAD*> loads = psdb.get_all_loads();
         for(size_t i=0; i<loads.size(); ++i)
         {
             complex<double> S_p = loads[i]->get_nominal_constant_power_load_in_MVA();
@@ -868,7 +868,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             if(S_p==0.0 and S_i==0.0 and S_z==0.0)
             {
                 DEVICE_ID did = loads[i]->get_device_id();
-                psdb->clear_load(did);
+                psdb.clear_load(did);
                 load_cleared = true;
                 break;
             }
@@ -876,15 +876,15 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             {
                 if(S_p==0.0 and S_i==0.0)
                 {
-                    FIXED_SHUNT fshunt(psdb);
+                    FIXED_SHUNT fshunt;
                     fshunt.set_shunt_bus(loads[i]->get_load_bus());
                     fshunt.set_identifier(loads[i]->get_identifier());
                     fshunt.set_status(true);
                     fshunt.set_nominal_impedance_shunt_in_MVA(S_z);
-                    psdb->append_fixed_shunt(fshunt);
+                    psdb.append_fixed_shunt(fshunt);
 
                     DEVICE_ID did = loads[i]->get_device_id();
-                    psdb->clear_load(did);
+                    psdb.clear_load(did);
                     load_cleared = true;
                     break;
                 }
@@ -908,7 +908,7 @@ void BPA_IMEXPORTER::load_source_data()
 
 void BPA_IMEXPORTER::load_generator_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -927,7 +927,7 @@ void BPA_IMEXPORTER::load_generator_data()
 
             string owner_name = data.substr(3,3);
             string bus_name = data.substr(6, 8);
-            size_t bus_number = psdb->bus_name2bus_number(bus_name);
+            size_t bus_number = psdb.bus_name2bus_number(bus_name);
             if(bus_number==0)
                 continue;
 
@@ -940,13 +940,13 @@ void BPA_IMEXPORTER::load_generator_data()
             string qmin_str = data.substr(52, 5);
             string v_schedule_str = data.substr(57, 4);
 
-            GENERATOR generator(psdb);
+            GENERATOR generator;
 
             generator.set_generator_bus(bus_number);
             generator.set_bus_to_regulate(bus_number);
             generator.set_identifier("1");
             generator.set_status(true);
-            generator.set_mbase_in_MVA(psdb->get_system_base_power_in_MVA());
+            generator.set_mbase_in_MVA(psdb.get_system_base_power_in_MVA());
 
             pgen_str = format_bpa_data_to_readable_data(pgen_str, "F5.0");
             double pgen = get_double_data(pgen_str, "0.0");
@@ -973,7 +973,7 @@ void BPA_IMEXPORTER::load_generator_data()
             double v_schedule = get_double_data(v_schedule_str, "1.0");
             generator.set_voltage_to_regulate_in_pu(v_schedule);
 
-            psdb->append_generator(generator);
+            psdb.append_generator(generator);
         }
     }
 }
@@ -990,7 +990,7 @@ void BPA_IMEXPORTER::load_source_common_data()
 }
 void BPA_IMEXPORTER::load_line_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -1016,10 +1016,10 @@ void BPA_IMEXPORTER::load_line_data()
             string b_half_str = data.substr(56, 6);
             string length_str = data.substr(62, 4);
 
-            size_t owner = psdb->owner_name2owner_number(owner_name);
+            size_t owner = psdb.owner_name2owner_number(owner_name);
 
-            size_t ibus = psdb->bus_name2bus_number(ibus_name);
-            size_t jbus = psdb->bus_name2bus_number(jbus_name);
+            size_t ibus = psdb.bus_name2bus_number(ibus_name);
+            size_t jbus = psdb.bus_name2bus_number(jbus_name);
 
             identifier = get_string_data(identifier, "");
 
@@ -1037,13 +1037,13 @@ void BPA_IMEXPORTER::load_line_data()
 
             rate_current_in_A = format_bpa_data_to_readable_data(rate_current_in_A, "F4.0");
             double rate = get_double_data(rate_current_in_A, "0.0");
-            double base_voltage = psdb->get_bus_base_voltage_in_kV(ibus);
+            double base_voltage = psdb.get_bus_base_voltage_in_kV(ibus);
             rate = sqrt(3.0)*rate/1000.0*base_voltage;
 
             length_str = format_bpa_data_to_readable_data(length_str, "F4.1");
             double length = get_double_data(length_str,"0.0");
 
-            LINE line(psdb);
+            LINE line;
 
             line.set_sending_side_bus(ibus);
             line.set_receiving_side_bus(jbus);
@@ -1078,8 +1078,8 @@ void BPA_IMEXPORTER::load_line_data()
                     owner = line.get_owner_of_index(0);
                     if(owner!=0)
                     {
-                        BUS* ibus_ptr = psdb->get_bus(ibus);
-                        BUS* jbus_ptr = psdb->get_bus(jbus);
+                        BUS* ibus_ptr = psdb.get_bus(ibus);
+                        BUS* jbus_ptr = psdb.get_bus(jbus);
                         if(ibus_ptr!=NULL and jbus_ptr!=NULL)
                         {
                             size_t iowner = ibus_ptr->get_owner_of_index(0);
@@ -1102,9 +1102,9 @@ void BPA_IMEXPORTER::load_line_data()
                     }
                 }
             }
-            while(psdb->is_line_exist(line.get_device_id()))
+            while(psdb.is_line_exist(line.get_device_id()))
                 line.set_identifier(line.get_identifier()+"#");
-            psdb->append_line(line);
+            psdb.append_line(line);
         }
     }
 
@@ -1132,10 +1132,10 @@ void BPA_IMEXPORTER::load_line_data()
             string jg_str = data.substr(62, 6);
             string jb_str = data.substr(68, 6);
 
-            size_t owner = psdb->owner_name2owner_number(owner_name);
+            size_t owner = psdb.owner_name2owner_number(owner_name);
 
-            size_t ibus = psdb->bus_name2bus_number(ibus_name);
-            size_t jbus = psdb->bus_name2bus_number(jbus_name);
+            size_t ibus = psdb.bus_name2bus_number(ibus_name);
+            size_t jbus = psdb.bus_name2bus_number(jbus_name);
 
             r_str = format_bpa_data_to_readable_data(r_str, "F6.5");
             double r = get_double_data(r_str, "0.0");
@@ -1157,10 +1157,10 @@ void BPA_IMEXPORTER::load_line_data()
 
             rate_current_in_A = format_bpa_data_to_readable_data(rate_current_in_A, "F4.0");
             double rate = get_double_data(rate_current_in_A, "0.0");
-            double base_voltage = psdb->get_bus_base_voltage_in_kV(ibus);
+            double base_voltage = psdb.get_bus_base_voltage_in_kV(ibus);
             rate = sqrt(3.0)*rate*base_voltage;
 
-            LINE line(psdb);
+            LINE line;
 
             line.set_sending_side_bus(ibus);
             line.set_receiving_side_bus(jbus);
@@ -1194,8 +1194,8 @@ void BPA_IMEXPORTER::load_line_data()
                     owner = line.get_owner_of_index(0);
                     if(owner!=0)
                     {
-                        BUS* ibus_ptr = psdb->get_bus(ibus);
-                        BUS* jbus_ptr = psdb->get_bus(jbus);
+                        BUS* ibus_ptr = psdb.get_bus(ibus);
+                        BUS* jbus_ptr = psdb.get_bus(jbus);
                         if(ibus_ptr!=NULL and jbus_ptr!=NULL)
                         {
                             size_t iowner = ibus_ptr->get_owner_of_index(0);
@@ -1218,11 +1218,11 @@ void BPA_IMEXPORTER::load_line_data()
                     }
                 }
             }
-            psdb->append_line(line);
+            psdb.append_line(line);
         }
     }
 
-    double sbase = psdb->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     for(size_t i=0; i<n; ++i)
     {
@@ -1241,8 +1241,8 @@ void BPA_IMEXPORTER::load_line_data()
             string imvar_str = data.substr(33, 5);
             string jmvar_str = data.substr(43, 5);
 
-            size_t ibus = psdb->bus_name2bus_number(ibus_name);
-            size_t jbus = psdb->bus_name2bus_number(jbus_name);
+            size_t ibus = psdb.bus_name2bus_number(ibus_name);
+            size_t jbus = psdb.bus_name2bus_number(jbus_name);
             if(ibus==0 or jbus==0)
                 continue;
 
@@ -1260,7 +1260,7 @@ void BPA_IMEXPORTER::load_line_data()
             did.set_device_terminal(terminal);
             did.set_device_identifier(identifier);
 
-            LINE* line = psdb->get_line(did);
+            LINE* line = psdb.get_line(did);
             if(line==NULL)
                 continue;
 
@@ -1272,7 +1272,7 @@ void BPA_IMEXPORTER::load_line_data()
 
 void BPA_IMEXPORTER::load_transformer_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -1302,13 +1302,13 @@ void BPA_IMEXPORTER::load_transformer_data()
             string phase_shift_between_primary_and_secondary_str=data.substr(62,5);
 
             owner_name=format_bpa_data_to_readable_data(owner_name,"A3");
-            size_t owner = psdb->owner_name2owner_number(owner_name);
+            size_t owner = psdb.owner_name2owner_number(owner_name);
 
             primary_bus_name=format_bpa_data_to_readable_data(primary_bus_name,"A8");
-            size_t primary_bus = psdb->bus_name2bus_number(primary_bus_name);
+            size_t primary_bus = psdb.bus_name2bus_number(primary_bus_name);
 
             secondary_bus_name=format_bpa_data_to_readable_data(secondary_bus_name,"A8");
-            size_t secondary_bus = psdb->bus_name2bus_number(secondary_bus_name);
+            size_t secondary_bus = psdb.bus_name2bus_number(secondary_bus_name);
 
             if(primary_bus==0 or secondary_bus==0)
                 continue;
@@ -1346,7 +1346,7 @@ void BPA_IMEXPORTER::load_transformer_data()
             phase_shift_between_primary_and_secondary_str=format_bpa_data_to_readable_data(phase_shift_between_primary_and_secondary_str,"F5.2");
             double phase_shift_between_primary_and_secondary = get_double_data(phase_shift_between_primary_and_secondary_str,"0.0");
 
-            TRANSFORMER trans(psdb);
+            TRANSFORMER trans;
 
             trans.set_identifier(identifier);
             if(owner != 0)
@@ -1367,8 +1367,8 @@ void BPA_IMEXPORTER::load_transformer_data()
                     owner = trans.get_owner_of_index(0);
                     if(owner!=0)
                     {
-                        BUS* primary_bus_ptr = psdb->get_bus(primary_bus);
-                        BUS* secondary_bus_ptr = psdb->get_bus(secondary_bus);
+                        BUS* primary_bus_ptr = psdb.get_bus(primary_bus);
+                        BUS* secondary_bus_ptr = psdb.get_bus(secondary_bus);
                         if(primary_bus_ptr!=NULL and secondary_bus_ptr!=NULL)
                         {
                             size_t primary_bus_owner = primary_bus_ptr->get_owner_of_index(0);
@@ -1406,7 +1406,7 @@ void BPA_IMEXPORTER::load_transformer_data()
 
             trans.set_winding_nominal_capacity_in_MVA(PRIMARY_SIDE,SECONDARY_SIDE,primary_and_secondary_nominal_capacity);
 
-            double sbase_MVA = psdb->get_system_base_power_in_MVA();
+            double sbase_MVA = psdb.get_system_base_power_in_MVA();
             complex<double> impedance_between_primary_and_secondary_based_on_bus_base_voltage_and_system_base_power_in_pu(resistance_between_primary_and_secondary,reactance_between_primary_and_secondary);
             complex <double> impedance_between_primary_and_secondary_based_on_winding_nominals_in_pu = impedance_between_primary_and_secondary_based_on_bus_base_voltage_and_system_base_power_in_pu * (primary_and_secondary_nominal_capacity/sbase_MVA);
             trans.set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE,SECONDARY_SIDE,impedance_between_primary_and_secondary_based_on_winding_nominals_in_pu);
@@ -1432,7 +1432,7 @@ void BPA_IMEXPORTER::load_transformer_data()
            trans.set_winding_rating_in_MVA(PRIMARY_SIDE,rating);
            trans.set_winding_rating_in_MVA(SECONDARY_SIDE,rating);
 
-           psdb->append_transformer(trans);
+           psdb.append_transformer(trans);
         }
     }
 
@@ -1466,8 +1466,8 @@ void BPA_IMEXPORTER::load_transformer_data()
             double secondary_winding_nominal_voltage = secondary_bus_base_voltage;
 
 
-            size_t primary_bus = psdb->bus_name2bus_number(primary_bus_name);
-            size_t secondary_bus = psdb->bus_name2bus_number(secondary_bus_name);
+            size_t primary_bus = psdb.bus_name2bus_number(primary_bus_name);
+            size_t secondary_bus = psdb.bus_name2bus_number(secondary_bus_name);
             if(primary_bus==0 or secondary_bus==0)
                 continue;
 
@@ -1479,7 +1479,7 @@ void BPA_IMEXPORTER::load_transformer_data()
             did.set_device_terminal(terminal);
             did.set_device_identifier(identifier);
 
-            TRANSFORMER* trans = psdb->get_transformer(did);
+            TRANSFORMER* trans = psdb.get_transformer(did);
             if(trans==NULL)
                 continue;
 
@@ -1601,7 +1601,7 @@ void BPA_IMEXPORTER::load_transformer_data()
 
 void BPA_IMEXPORTER::load_hvdc_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -1672,8 +1672,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
             nominal_dc_voltage_per_pole_in_kV_str=format_bpa_data_to_readable_data(nominal_dc_voltage_per_pole_in_kV_str,"F5.1");
             double nominal_dc_voltage_per_pole_in_kV=get_double_data(nominal_dc_voltage_per_pole_in_kV_str,"0.0");
 
-            size_t rectifier_grid_side_bus = psdb->bus_name2bus_number(rectifier_grid_side_bus_name);
-            size_t inverter_grid_side_bus = psdb->bus_name2bus_number(inverter_grid_side_bus_name);
+            size_t rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
+            size_t inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
             DEVICE_ID did;
             did.set_device_type("HVDC");
@@ -1682,7 +1682,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             terminal.append_bus(inverter_grid_side_bus);
             did.set_device_terminal(terminal);
 
-            HVDC* hvdc_ptr = psdb->get_hvdc(did);
+            HVDC* hvdc_ptr = psdb.get_hvdc(did);
 
             string bus_names_of_two_converters = rectifier_grid_side_bus_name+","+inverter_grid_side_bus_name;
             if( hvdc_ptr != NULL)
@@ -1690,7 +1690,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             else
                 from_converter_grid_bus_name_to_pole_number[bus_names_of_two_converters] = 1;
 
-            HVDC hvdc(psdb);
+            HVDC hvdc;
 
             hvdc.set_converter_bus(RECTIFIER,rectifier_grid_side_bus);
             hvdc.set_converter_bus(INVERTER,inverter_grid_side_bus);
@@ -1711,12 +1711,12 @@ void BPA_IMEXPORTER::load_hvdc_data()
             hvdc.set_nominal_dc_voltage_per_pole_in_kV(nominal_dc_voltage_per_pole_in_kV);
 
 
-            while(psdb->is_hvdc_exist(hvdc.get_device_id()))
+            while(psdb.is_hvdc_exist(hvdc.get_device_id()))
                 hvdc.set_identifier(hvdc.get_identifier()+"#");
 
-            string hvdc_name = "DC-"+num2str(psdb->get_hvdc_count()+1);
+            string hvdc_name = "DC-"+num2str(psdb.get_hvdc_count()+1);
             hvdc.set_name(hvdc_name);
-            psdb->append_hvdc(hvdc);
+            psdb.append_hvdc(hvdc);
         }
     }
 
@@ -1748,11 +1748,11 @@ void BPA_IMEXPORTER::load_hvdc_data()
             double line_smooting_inductance_in_mH=get_double_data(line_smooting_inductance_in_mH_str,"0.0");
 
 
-            size_t converter_grid_side_bus_number = psdb->bus_name2bus_number(converter_grid_side_bus_name);
+            size_t converter_grid_side_bus_number = psdb.bus_name2bus_number(converter_grid_side_bus_name);
             if(converter_grid_side_bus_number==0)
                 continue;
 
-            vector<HVDC*> hvdcs = psdb->get_hvdcs_connecting_to_bus(converter_grid_side_bus_number);
+            vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_grid_side_bus_number);
             HVDC_CONVERTER_SIDE converter_side_type;
             for(size_t j=0; j<hvdcs.size(); ++j)
             {
@@ -1788,8 +1788,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 inverter_grid_side_bus_name=from_valve_side_bus_name_to_grid_side_bus_name[inverter_valve_side_bus_name];
             }
 
-            size_t rectifier_grid_side_bus = psdb->bus_name2bus_number(rectifier_grid_side_bus_name);
-            size_t inverter_grid_side_bus = psdb->bus_name2bus_number(inverter_grid_side_bus_name);
+            size_t rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
+            size_t inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
 
             DEVICE_ID did;
@@ -1799,7 +1799,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             terminal.append_bus(inverter_grid_side_bus);
             did.set_device_terminal(terminal);
 
-            HVDC* hvdc_ptr = psdb->get_hvdc(did);   //
+            HVDC* hvdc_ptr = psdb.get_hvdc(did);   //
 
             if(hvdc_ptr == NULL)
                 continue;
@@ -1835,8 +1835,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
             secondary_bus_base_voltage_str=format_bpa_data_to_readable_data(secondary_bus_base_voltage_str,"F4.0");
             double secondary_bus_base_voltage=get_double_data(secondary_bus_base_voltage_str,"0.0");
 
-            size_t primary_bus_number = psdb->bus_name2bus_number(primary_bus_name);
-            size_t secondary_bus_number = psdb->bus_name2bus_number(secondary_bus_name);
+            size_t primary_bus_number = psdb.bus_name2bus_number(primary_bus_name);
+            size_t secondary_bus_number = psdb.bus_name2bus_number(secondary_bus_name);
             if((primary_bus_number==0 and secondary_bus_number==0) or
                (primary_bus_number!=0 and secondary_bus_number!=0)) // invalid trans or common trans
                 continue;
@@ -1857,7 +1857,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             susceptance_str=format_bpa_data_to_readable_data(susceptance_str,"F6.5");
             double susceptance=get_double_data(susceptance_str,"0.0");
 
-            double sbase_MVA = psdb->get_system_base_power_in_MVA();
+            double sbase_MVA = psdb.get_system_base_power_in_MVA();
 
             double z_base_based_on_converter_valve_bus_nominal=valve_bus_base_voltage*valve_bus_base_voltage/sbase_MVA;
 
@@ -1871,7 +1871,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             complex <double> impedance_in_ohm(resistance_in_ohm,reactance_in_ohm);
             complex <double> admittance_in_siemens(conductance_in_siemens,susceptance_in_siemens);
 
-            vector<HVDC*> hvdcs = psdb->get_hvdcs_connecting_to_bus(converter_bus);
+            vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_bus);
 
             HVDC_CONVERTER_SIDE converter_side_type;
             for(size_t j=0; j<hvdcs.size(); ++j)
@@ -1912,8 +1912,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
                     inverter_grid_side_bus_name=from_valve_side_bus_name_to_grid_side_bus_name[inverter_valve_side_bus_name];
                 }
 
-                size_t rectifier_grid_side_bus = psdb->bus_name2bus_number(rectifier_grid_side_bus_name);
-                size_t inverter_grid_side_bus = psdb->bus_name2bus_number(inverter_grid_side_bus_name);
+                size_t rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
+                size_t inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
                 DEVICE_ID did;
                 did.set_device_type("HVDC");
@@ -1922,7 +1922,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 terminal.append_bus(inverter_grid_side_bus);
                 did.set_device_terminal(terminal);
 
-                HVDC* hvdc_ptr = psdb->get_hvdc(did);
+                HVDC* hvdc_ptr = psdb.get_hvdc(did);
 
                 if( hvdc_ptr==NULL)
                     continue;
@@ -1967,15 +1967,15 @@ void BPA_IMEXPORTER::load_hvdc_data()
             tap_number_str=format_bpa_data_to_readable_data(tap_number_str,"I2");
             size_t tap_number=get_integer_data(tap_number_str,"0");
 
-            size_t primary_bus_number = psdb->bus_name2bus_number(primary_bus_name);
-            size_t secondary_bus_number = psdb->bus_name2bus_number(secondary_bus_name);
+            size_t primary_bus_number = psdb.bus_name2bus_number(primary_bus_name);
+            size_t secondary_bus_number = psdb.bus_name2bus_number(secondary_bus_name);
             if((primary_bus_number==0 and secondary_bus_number==0) or
                (primary_bus_number!=0 and secondary_bus_number!=0)) // invalid trans or common trans
                 continue;
 
             size_t converter_bus = (primary_bus_number!=0 ? primary_bus_number:secondary_bus_number);
 
-            vector<HVDC*> hvdcs = psdb->get_hvdcs_connecting_to_bus(converter_bus);
+            vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_bus);
 
             HVDC_CONVERTER_SIDE converter_side_type;
             for(size_t j=0; j<hvdcs.size(); ++j)
@@ -2015,8 +2015,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
                     inverter_valve_side_bus_name=from_rectifier_valve_side_bus_name_to_inverter_valve_side_bus_name[secondary_bus_name];
                     inverter_grid_side_bus_name=from_valve_side_bus_name_to_grid_side_bus_name[inverter_valve_side_bus_name];
                 }
-                size_t rectifier_grid_side_bus = psdb->bus_name2bus_number(rectifier_grid_side_bus_name);
-                size_t inverter_grid_side_bus = psdb->bus_name2bus_number(inverter_grid_side_bus_name);
+                size_t rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
+                size_t inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
                 DEVICE_ID did;
                 did.set_device_type("HVDC");
@@ -2025,7 +2025,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 terminal.append_bus(inverter_grid_side_bus);
                 did.set_device_terminal(terminal);
 
-                HVDC* hvdc_ptr = psdb->get_hvdc(did);
+                HVDC* hvdc_ptr = psdb.get_hvdc(did);
 
                 if(hvdc_ptr==NULL)
                     continue;
@@ -2040,12 +2040,12 @@ void BPA_IMEXPORTER::load_hvdc_data()
 
 /*
     HVDC_POLE hvdc_pole_number;
-    vector <BUS*> bus_ptr_vector=psdb->get_all_buses();
+    vector <BUS*> bus_ptr_vector=psdb.get_all_buses();
     size_t m=bus_ptr_vector.size();
     vector <HVDC*> hvdc_ptr_vector;
     for(size_t i=0; i<m; ++i)
     {
-        hvdc_ptr_vector=psdb->get_hvdcs_connecting_to_bus(bus_ptr_vector[i]->get_bus_number());
+        hvdc_ptr_vector=psdb.get_hvdcs_connecting_to_bus(bus_ptr_vector[i]->get_bus_number());
 
         size_t hvdc_number = hvdc_ptr_vector.size();
 
@@ -2054,10 +2054,10 @@ void BPA_IMEXPORTER::load_hvdc_data()
             HVDC* hvdc_ptr = hvdc_ptr_vector[j];
 
             size_t rectifier_grid_side_bus=hvdc_ptr->get_converter_bus(RECTIFIER);
-            string rectifier_grid_side_bus_name=psdb->bus_number2bus_name(rectifier_grid_side_bus);
+            string rectifier_grid_side_bus_name=psdb.bus_number2bus_name(rectifier_grid_side_bus);
 
             size_t inverter_grid_side_bus=hvdc_ptr->get_converter_bus(INVERTER);
-            string inverter_grid_side_bus_name=psdb->bus_number2bus_name(inverter_grid_side_bus);
+            string inverter_grid_side_bus_name=psdb.bus_number2bus_name(inverter_grid_side_bus);
 
             int pole_number=from_converter_grid_bus_name_to_pole_number[rectifier_grid_side_bus_name+","+inverter_grid_side_bus_name];
 
@@ -2073,13 +2073,6 @@ void BPA_IMEXPORTER::load_hvdc_data()
 void BPA_IMEXPORTER::export_powerflow_data(string file)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. BPA imexporter is not connected to any power system database. No powerflow data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
 
     ofstream ofs(file);
     if(!ofs)
@@ -2351,15 +2344,9 @@ string BPA_IMEXPORTER::export_case_data() const
 string BPA_IMEXPORTER::export_bus_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. BPA imexporter is not connected to any power system database. No bus data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<BUS*> buses = psdb->get_all_buses();
+    vector<BUS*> buses = psdb.get_all_buses();
     size_t n = buses.size();
     for(size_t i=0; i<n; ++i)
     {
@@ -2377,7 +2364,7 @@ string BPA_IMEXPORTER::export_bus_data() const
 
         osstream<<"."<<endl<<". Bus "<<bus_number<<": "<<bus_name<<endl;
 
-        vector<LOAD*> loads = psdb->get_loads_connecting_to_bus(bus_number);
+        vector<LOAD*> loads = psdb.get_loads_connecting_to_bus(bus_number);
 
         double constant_power_load_P = 0.0, constant_power_load_Q = 0.0;
         for(size_t j=0; j<loads.size(); ++j)
@@ -2410,7 +2397,7 @@ string BPA_IMEXPORTER::export_bus_data() const
             constant_impedance_load_Q += load->get_nominal_constant_impedance_load_in_MVA().imag();
         }
 
-        vector<SOURCE*> sources = psdb->get_sources_connecting_to_bus(bus_number);
+        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(bus_number);
         double pmax = 0.0, pgen = 0.0, qgen = 0.0, qmax = 0.0, qmin = 0.0, v_schedule = 1.0;
 
         for(size_t j=0; j<sources.size(); ++j)
@@ -2447,7 +2434,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         osstream<<" ";
 
         string owner_name = "";
-        OWNER* owner = psdb->get_owner(owner_number);
+        OWNER* owner = psdb.get_owner(owner_number);
         if(owner!=NULL)
             owner_name = owner->get_owner_name();
 
@@ -2456,7 +2443,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         osstream<<convert_data_into_bpa_format(base_voltage,"F4.0");
 
         string zone_name = "";
-        ZONE* zone = psdb->get_zone(zone_number);
+        ZONE* zone = psdb.get_zone(zone_number);
         if(zone!=NULL)
             zone_name = zone->get_zone_name();
 
@@ -2548,18 +2535,12 @@ string BPA_IMEXPORTER::export_bus_data() const
 string BPA_IMEXPORTER::export_line_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. BPA imexporter is not connected to any power system database. No line data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<LINE*> lines = psdb->get_all_lines();
+    vector<LINE*> lines = psdb.get_all_lines();
     size_t n = lines.size();
 
-    double sbase_MVA = psdb->get_system_base_power_in_MVA();
+    double sbase_MVA = psdb.get_system_base_power_in_MVA();
 
     for(size_t i=0; i<n; ++i)
     {
@@ -2586,11 +2567,11 @@ string BPA_IMEXPORTER::export_line_data() const
         double y_shunt_receiving = line->get_shunt_positive_sequence_y_at_receiving_side_in_pu().imag();
 
         string owner_name = "";
-        OWNER* owner = psdb->get_owner(owner_number);
+        OWNER* owner = psdb.get_owner(owner_number);
         if(owner!=NULL)
             owner_name = owner->get_owner_name();
 
-        BUS* bus = psdb->get_bus(sending_side_bus_number);
+        BUS* bus = psdb.get_bus(sending_side_bus_number);
         if(bus==NULL)
             return "";
 
@@ -2601,7 +2582,7 @@ string BPA_IMEXPORTER::export_line_data() const
         if(meter_end_bus==receiving_side_bus_number)
             meter_end = 2;
 
-        bus = psdb->get_bus(receiving_side_bus_number);
+        bus = psdb.get_bus(receiving_side_bus_number);
         if(bus==NULL)
             return "";
 
@@ -2659,15 +2640,9 @@ string BPA_IMEXPORTER::export_line_data() const
 string BPA_IMEXPORTER::export_transformer_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. BPA imexporter is not connected to any power system database. No transformer data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<TRANSFORMER*> transformers = psdb->get_all_transformers();
+    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
     size_t n;
     n = transformers.size();
@@ -2692,21 +2667,19 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
     if(trans->is_three_winding_transformer())
         return export_three_winding_transformer(trans);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-        return "";
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t primary_bus = trans->get_winding_bus(PRIMARY_SIDE);
     size_t secondary_bus = trans->get_winding_bus(SECONDARY_SIDE);
 
-    string primary_bus_name = psdb->bus_number2bus_name(primary_bus);
-    string secondary_bus_name = psdb->bus_number2bus_name(secondary_bus);
+    string primary_bus_name = psdb.bus_number2bus_name(primary_bus);
+    string secondary_bus_name = psdb.bus_number2bus_name(secondary_bus);
 
-    double primary_base_voltage = psdb->get_bus_base_voltage_in_kV(primary_bus);
-    double secondary_base_voltage = psdb->get_bus_base_voltage_in_kV(secondary_bus);
+    double primary_base_voltage = psdb.get_bus_base_voltage_in_kV(primary_bus);
+    double secondary_base_voltage = psdb.get_bus_base_voltage_in_kV(secondary_bus);
 
     size_t owner = trans->get_owner_of_index(0);
-    string owner_name = psdb->owner_number2owner_name(owner);
+    string owner_name = psdb.owner_number2owner_name(owner);
 
     size_t non_metered_bus = trans->get_non_metered_end_bus();
     size_t meter_flag = 0;
@@ -2725,7 +2698,7 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
                    trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE);
     Z = Z*zbase;
 
-    double sbase = psdb->get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
     zbase = primary_base_voltage*primary_base_voltage/sbase;
 
     Z /= zbase;
@@ -2805,13 +2778,13 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
 
             TRANSFORMER_WINDING_CONTROL_MODE winding_control_mode=trans->get_winding_control_mode(winding);
             size_t winding_bus=trans->get_winding_bus(winding);
-            string adjustable_winding_bus_name=psdb->bus_number2bus_name(winding_bus);
-            double adjustable_winding_bus_base_voltage=psdb->get_bus_base_voltage_in_kV(winding_bus);
+            string adjustable_winding_bus_name=psdb.bus_number2bus_name(winding_bus);
+            double adjustable_winding_bus_base_voltage=psdb.get_bus_base_voltage_in_kV(winding_bus);
             double adjustable_winding_nominal_voltage=trans->get_winding_nominal_voltage_in_kV(winding);
 
             size_t winding2_bus=trans->get_winding_bus(winding2);
-            string controlled_winding_bus_name=psdb->bus_number2bus_name(winding2_bus);
-            double controlled_winding_bus_base_voltage=psdb->get_bus_base_voltage_in_kV(winding2_bus);
+            string controlled_winding_bus_name=psdb.bus_number2bus_name(winding2_bus);
+            double controlled_winding_bus_base_voltage=psdb.get_bus_base_voltage_in_kV(winding2_bus);
 
             size_t adjustable_flag=1;
 
@@ -2885,23 +2858,20 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     if(trans->is_two_winding_transformer())
         return export_two_winding_transformer(trans);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-
-    if(psdb==NULL)
-        return "";
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     string transformer_name=trans->get_transformer_name();
     string neutral_point_name="&" + transformer_name;
     double neutral_voltage_in_kv=1.0;
     size_t owner = trans->get_owner_of_index(0);
-    string owner_name = psdb->owner_number2owner_name(owner);
+    string owner_name = psdb.owner_number2owner_name(owner);
 
     complex<double> Z_between_primary_and_secondary = trans->get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
     complex<double> Z_between_primary_and_tertiary = trans->get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, TERTIARY_SIDE);
     complex<double> Z_between_secondary_and_tertiary = trans->get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
     complex<double> Y = trans->get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu();
 
-    //double sbase = psdb->get_system_base_power_in_MVA();
+    //double sbase = psdb.get_system_base_power_in_MVA();
     complex<double> Z_primary=(Z_between_primary_and_secondary+Z_between_primary_and_tertiary-Z_between_secondary_and_tertiary)/2.0;
     complex<double> Z_secondary=(Z_between_primary_and_secondary+Z_between_secondary_and_tertiary-Z_between_primary_and_tertiary)/2.0;
     complex<double> Z_tertiary=(Z_between_primary_and_tertiary+Z_between_secondary_and_tertiary-Z_between_primary_and_secondary)/2.0;
@@ -2935,9 +2905,9 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
 
         size_t winding_bus = trans->get_winding_bus(winding);
 
-        string winding_bus_name = psdb->bus_number2bus_name(winding_bus);
+        string winding_bus_name = psdb.bus_number2bus_name(winding_bus);
 
-        double winding_base_voltage = psdb->get_bus_base_voltage_in_kV(winding_bus);
+        double winding_base_voltage = psdb.get_bus_base_voltage_in_kV(winding_bus);
 
         size_t non_metered_bus = trans->get_non_metered_end_bus();
 
@@ -3012,8 +2982,8 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
         size_t number_of_taps=trans->get_winding_number_of_taps(winding);
         // control voltage
         size_t controlled_bus=trans->get_winding_controlled_bus(winding);
-        string controlled_bus_name = psdb->bus_number2bus_name(controlled_bus);
-        double controlled_bus_base_voltage = psdb->get_bus_base_voltage_in_kV(controlled_bus);
+        string controlled_bus_name = psdb.bus_number2bus_name(controlled_bus);
+        double controlled_bus_base_voltage = psdb.get_bus_base_voltage_in_kV(controlled_bus);
 
         double winding_max_tap = trans->get_winding_max_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)*winding_base_voltage;
         double winding_min_tap = trans->get_winding_min_turn_ratio_based_on_winding_nominal_voltage_in_pu(winding)*winding_base_voltage;
@@ -3086,18 +3056,12 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
 string BPA_IMEXPORTER::export_hvdc_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    if(psdb==NULL)
-    {
-        osstream<<"Warning. BPA imexporter is not connected to any power system database. No hvdc data will be exported.";
-        show_information_with_leading_time_stamp(osstream);
-        return "";
-    }
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<HVDC*> hvdcs = psdb->get_all_hvdcs();
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
 
-    double sbase_MVA = psdb->get_system_base_power_in_MVA();
+    double sbase_MVA = psdb.get_system_base_power_in_MVA();
 
     for(size_t i=0; i<n; ++i)
     {
@@ -3108,8 +3072,8 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         size_t rectifier_grid_bus_number=hvdc->get_converter_bus(RECTIFIER);
         size_t inverter_grid_bus_number=hvdc->get_converter_bus(INVERTER);
 
-        BUS* rectifier_grid_bus = psdb->get_bus(rectifier_grid_bus_number);
-        BUS* inverter_grid_bus = psdb->get_bus(inverter_grid_bus_number);
+        BUS* rectifier_grid_bus = psdb.get_bus(rectifier_grid_bus_number);
+        BUS* inverter_grid_bus = psdb.get_bus(inverter_grid_bus_number);
 
         if(rectifier_grid_bus==NULL||inverter_grid_bus==NULL)
             continue;

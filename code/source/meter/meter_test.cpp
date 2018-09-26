@@ -40,82 +40,79 @@ METER_TEST::METER_TEST()
 
 void METER_TEST::setup()
 {
-    db = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
     bus.set_bus_type(PQ_TYPE);
-    db->append_bus(bus);
+    psdb.append_bus(bus);
     bus.set_bus_number(2);
     bus.set_base_voltage_in_kV(110.0);
-    db->append_bus(bus);
+    psdb.append_bus(bus);
     bus.set_bus_number(3);
     bus.set_base_voltage_in_kV(110.0);
-    db->append_bus(bus);
+    psdb.append_bus(bus);
 
-    LINE line(db);
+    LINE line;
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
     line.set_identifier("#1");
-    db->append_line(line);
+    psdb.append_line(line);
 
-    TRANSFORMER transformer(db);
+    TRANSFORMER transformer;
     transformer.set_winding_bus(PRIMARY_SIDE, 1);
     transformer.set_winding_bus(SECONDARY_SIDE, 2);
     transformer.set_identifier("#1");
-    db->append_transformer(transformer);
+    psdb.append_transformer(transformer);
 
     transformer.set_winding_bus(TERTIARY_SIDE, 3);
-    db->append_transformer(transformer);
+    psdb.append_transformer(transformer);
 
-    GENERATOR generator(db);
+    GENERATOR generator;
     generator.set_generator_bus(1);
     generator.set_identifier("#1");
-    db->append_generator(generator);
+    psdb.append_generator(generator);
     GENCLS model;
     model.set_H_in_s(3.0);
-    db->append_dynamic_model(get_generator_device_id(1,"#1"),&model);
+    psdb.append_dynamic_model(get_generator_device_id(1,"#1"),&model);
 
-    LOAD load(db);
+    LOAD load;
     load.set_load_bus(1);
     load.set_identifier("#1");
-    db->append_load(load);
+    psdb.append_load(load);
 
-    WT_GENERATOR wt_generator(db);
+    WT_GENERATOR wt_generator;
     wt_generator.set_source_bus(1);
     wt_generator.set_identifier("#1");
-    db->append_wt_generator(wt_generator);
+    psdb.append_wt_generator(wt_generator);
 
-    HVDC hvdc(db);
+    HVDC hvdc;
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("#1");
-    db->append_hvdc(hvdc);
+    psdb.append_hvdc(hvdc);
 
-    EQUIVALENT_DEVICE edevice(db);
+    EQUIVALENT_DEVICE edevice;
     edevice.set_equivalent_device_bus(1);
     edevice.set_identifier("#1");
     edevice.set_status(true);
-    db->append_equivalent_device(edevice);
+    psdb.append_equivalent_device(edevice);
 
 
-    ENERGY_STORAGE estorage(db);
+    ENERGY_STORAGE estorage;
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
     estorage.set_status(true);
-    db->append_energy_storage(estorage);
-
-
-    meter = new METER(db);
+    psdb.append_energy_storage(estorage);
 }
 
 void METER_TEST::tear_down()
 {
-    delete meter;
-    meter = NULL;
+    meter.clear();
 
-    db->clear_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.clear_database();
 
     show_test_end_information();
 }
@@ -124,10 +121,10 @@ void METER_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
-    TEST_ASSERT(meter->get_device_type()=="NONE");
-    TEST_ASSERT(meter->get_meter_type()=="");
-    TEST_ASSERT(meter->get_device_pointer()==NULL);
-    TEST_ASSERT(meter->is_valid()==false);
+    TEST_ASSERT(meter.get_device_type()=="NONE");
+    TEST_ASSERT(meter.get_meter_type()=="");
+    TEST_ASSERT(meter.get_device_pointer()==NULL);
+    TEST_ASSERT(meter.is_valid()==false);
 }
 
 void METER_TEST::test_set_get_device_id_and_type()
@@ -139,16 +136,16 @@ void METER_TEST::test_set_get_device_id_and_type()
     TERMINAL terminal;
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
-    meter->set_device_id(did);
-    TEST_ASSERT(meter->get_device_type()=="BUS");
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()=="BUS");
 
     did.set_device_type("LOAD");
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    meter->set_device_id(did);
-    TEST_ASSERT(meter->get_device_type()=="LOAD");
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()=="LOAD");
 
     did.set_device_type("LINE");
     terminal.clear();
@@ -156,8 +153,8 @@ void METER_TEST::test_set_get_device_id_and_type()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    meter->set_device_id(did);
-    TEST_ASSERT(meter->get_device_type()=="LINE");
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()=="LINE");
 
     did.set_device_type("TRANSFORMER");
     terminal.clear();
@@ -165,24 +162,24 @@ void METER_TEST::test_set_get_device_id_and_type()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    meter->set_device_id(did);
-    TEST_ASSERT(meter->get_device_type()=="TRANSFORMER");
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()=="TRANSFORMER");
 
     did.set_device_type("GENERATOR");
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    meter->set_device_id(did);
-    TEST_ASSERT(meter->get_device_type()=="GENERATOR");
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()=="GENERATOR");
 
     did.set_device_type("WT GENERATOR");
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    meter->set_device_id(did);
-    TEST_ASSERT(meter->get_device_type()=="WT GENERATOR");
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()=="WT GENERATOR");
 
     did.set_device_type("HVDC");
     terminal.clear();
@@ -190,18 +187,18 @@ void METER_TEST::test_set_get_device_id_and_type()
     terminal.append_bus(2);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
-    meter->set_device_id(did);
-    TEST_ASSERT(meter->get_device_type()=="HVDC");
+    meter.set_device_id(did);
+    TEST_ASSERT(meter.get_device_type()=="HVDC");
 }
 
 void METER_TEST::test_set_get_buffer_size()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
 
-    TEST_ASSERT(meter->get_buffer_size()==1);
+    TEST_ASSERT(meter.get_buffer_size()==1);
 
-    meter->set_buffer_size(10);
-    TEST_ASSERT(meter->get_buffer_size()==10);
+    meter.set_buffer_size(10);
+    TEST_ASSERT(meter.get_buffer_size()==10);
 }
 
 void METER_TEST::test_set_get_bus_meter_type()
@@ -216,14 +213,14 @@ void METER_TEST::test_set_get_bus_meter_type()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = bus_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = bus_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -241,14 +238,14 @@ void METER_TEST::test_set_get_line_meter_type()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = line_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = line_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -266,26 +263,26 @@ void METER_TEST::test_set_get_transformer_meter_type()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = transformer_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = transformer_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 
     terminal.append_bus(3);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = transformer_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -302,14 +299,14 @@ void METER_TEST::test_set_get_generator_meter_type()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = generator_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = generator_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -326,14 +323,14 @@ void METER_TEST::test_set_get_load_meter_type()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = load_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = load_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -351,14 +348,14 @@ void METER_TEST::test_set_get_hvdc_meter_type()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = hvdc_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = hvdc_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -376,14 +373,14 @@ void METER_TEST::test_set_get_wt_generator_meter_type()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = wt_generator_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = wt_generator_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -400,14 +397,14 @@ void METER_TEST::test_set_get_equivalent_device_meter_type()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = equivalent_device_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = equivalent_device_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -425,14 +422,14 @@ void METER_TEST::test_set_get_energy_storage_meter_type()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
     size_t n = energy_storage_meters.size();
     for(size_t i=0; i!=n; ++i)
     {
         meter_type = energy_storage_meters[i];
-        meter->set_meter_type(meter_type);
-        TEST_ASSERT(meter->get_meter_type()==meter_type);
+        meter.set_meter_type(meter_type);
+        TEST_ASSERT(meter.get_meter_type()==meter_type);
     }
 }
 
@@ -446,28 +443,28 @@ void METER_TEST::test_set_get_meter_internal_variable_name()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
-    meter->set_meter_type("VOLTAGE IN PU");
+    meter.set_device_id(did);
+    meter.set_meter_type("VOLTAGE IN PU");
 
-    TEST_ASSERT(meter->get_internal_variable_name()=="");
+    TEST_ASSERT(meter.get_internal_variable_name()=="");
 
-    meter->set_meter_type("VOLTAGE IN PU");
-    //meter->set_internal_variable_name("abc");
+    meter.set_meter_type("VOLTAGE IN PU");
+    //meter.set_internal_variable_name("abc");
 
-    TEST_ASSERT(meter->get_internal_variable_name()=="");
+    TEST_ASSERT(meter.get_internal_variable_name()=="");
 
     did.set_device_type("GENERATOR");
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
-    meter->set_meter_type("ROTOR ANGLE IN DEG");
-    TEST_ASSERT(meter->get_internal_variable_name()=="");
-    meter->set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
-    meter->set_internal_variable_name("ROTOR ANGLE IN DEG");
-    TEST_ASSERT(meter->get_internal_variable_name()=="ROTOR ANGLE IN DEG");
-    meter->set_internal_variable_name("STATE@ROTOR ANGLE BLOCK");
-    TEST_ASSERT(meter->get_internal_variable_name()=="STATE@ROTOR ANGLE BLOCK");
+    meter.set_device_id(did);
+    meter.set_meter_type("ROTOR ANGLE IN DEG");
+    TEST_ASSERT(meter.get_internal_variable_name()=="");
+    meter.set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
+    meter.set_internal_variable_name("ROTOR ANGLE IN DEG");
+    TEST_ASSERT(meter.get_internal_variable_name()=="ROTOR ANGLE IN DEG");
+    meter.set_internal_variable_name("STATE@ROTOR ANGLE BLOCK");
+    TEST_ASSERT(meter.get_internal_variable_name()=="STATE@ROTOR ANGLE BLOCK");
 
 }
 
@@ -482,14 +479,14 @@ void METER_TEST::test_set_get_device_pointer()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
 
 
-    TEST_ASSERT(meter->get_device_pointer()!=NULL);
-    TEST_ASSERT(meter->get_device_pointer()->get_device_id()==did);
+    TEST_ASSERT(meter.get_device_pointer()!=NULL);
+    TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
-    meter->clear();
+    meter.clear();
     did.set_device_type("LINE");
     terminal.clear();
     terminal.append_bus(1);
@@ -497,13 +494,13 @@ void METER_TEST::test_set_get_device_pointer()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
 
-    TEST_ASSERT(meter->get_device_pointer()!=NULL);
-    TEST_ASSERT(meter->get_device_pointer()->get_device_id()==did);
+    TEST_ASSERT(meter.get_device_pointer()!=NULL);
+    TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
-    meter->clear();
+    meter.clear();
     did.set_device_type("TRANSFORMER");
     terminal.clear();
     terminal.append_bus(1);
@@ -511,36 +508,36 @@ void METER_TEST::test_set_get_device_pointer()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
-    TEST_ASSERT(meter->get_device_pointer()!=NULL);
-    TEST_ASSERT(meter->get_device_pointer()->get_device_id()==did);
+    TEST_ASSERT(meter.get_device_pointer()!=NULL);
+    TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
-    meter->clear();
+    meter.clear();
     did.set_device_type("GENERATOR");
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
-    TEST_ASSERT(meter->get_device_pointer()!=NULL);
-    TEST_ASSERT(meter->get_device_pointer()->get_device_id()==did);
+    TEST_ASSERT(meter.get_device_pointer()!=NULL);
+    TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
-    meter->clear();
+    meter.clear();
     did.set_device_type("WT GENERATOR");
     terminal.clear();
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
-    TEST_ASSERT(meter->get_device_pointer()!=NULL);
-    TEST_ASSERT(meter->get_device_pointer()->get_device_id()==did);
+    TEST_ASSERT(meter.get_device_pointer()!=NULL);
+    TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 
-    meter->clear();
+    meter.clear();
     did.set_device_type("HVDC");
     terminal.clear();
     terminal.append_bus(1);
@@ -548,10 +545,10 @@ void METER_TEST::test_set_get_device_pointer()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
-    TEST_ASSERT(meter->get_device_pointer()!=NULL);
-    TEST_ASSERT(meter->get_device_pointer()->get_device_id()==did);
+    TEST_ASSERT(meter.get_device_pointer()!=NULL);
+    TEST_ASSERT(meter.get_device_pointer()->get_device_id()==did);
 }
 
 void METER_TEST::test_clear()
@@ -564,16 +561,16 @@ void METER_TEST::test_clear()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
-    meter->set_meter_type("VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
-    TEST_ASSERT(meter->get_meter_type()=="VOLTAGE IN PU");
+    TEST_ASSERT(meter.get_meter_type()=="VOLTAGE IN PU");
 
-    meter->clear();
+    meter.clear();
 
-    TEST_ASSERT(meter->get_device_pointer()==NULL);
-    TEST_ASSERT(meter->get_meter_type()=="");
+    TEST_ASSERT(meter.get_device_pointer()==NULL);
+    TEST_ASSERT(meter.get_meter_type()=="");
 }
 
 void METER_TEST::test_is_valid()
@@ -586,13 +583,13 @@ void METER_TEST::test_is_valid()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
-    meter->set_meter_type("VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
-    TEST_ASSERT(meter->is_valid()==true);
-    meter->set_meter_type("");
-    TEST_ASSERT(meter->is_valid()==false);
+    TEST_ASSERT(meter.is_valid()==true);
+    meter.set_meter_type("");
+    TEST_ASSERT(meter.is_valid()==false);
 }
 
 void METER_TEST::test_copy_with_operator_equal()
@@ -605,15 +602,17 @@ void METER_TEST::test_copy_with_operator_equal()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
-    meter->set_meter_type("VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
-    METER newmeter = (*meter);
+    METER newmeter = meter;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     TEST_ASSERT(newmeter.get_device_id()==did);
     TEST_ASSERT(newmeter.get_device_type()=="BUS");
-    TEST_ASSERT(newmeter.get_device_pointer()==(DEVICE*) db->get_bus(1));
+    TEST_ASSERT(newmeter.get_device_pointer()==(DEVICE*) psdb.get_bus(1));
     TEST_ASSERT(newmeter.get_meter_type()=="VOLTAGE IN PU");
 }
 
@@ -627,32 +626,32 @@ void METER_TEST::test_equal()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
-    meter->set_meter_type("VOLTAGE IN PU");
+    meter.set_device_id(did);
+    meter.set_meter_type("VOLTAGE IN PU");
 
-    METER newmeter = (*meter);
+    METER newmeter = meter;
 
-    TEST_ASSERT(newmeter==(*meter));
+    TEST_ASSERT(newmeter==meter);
 
     did.set_device_type("GENERATOR");
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    meter->set_device_id(did);
-    meter->set_meter_type("ROTOR ANGLE IN DEG");
+    meter.set_device_id(did);
+    meter.set_meter_type("ROTOR ANGLE IN DEG");
 
-    newmeter = (*meter);
-    TEST_ASSERT(newmeter==(*meter));
+    newmeter = meter;
+    TEST_ASSERT(newmeter==meter);
 
-    meter->set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
-    meter->set_internal_variable_name("STATE@ROTOR ANGLE BLOCK");
+    meter.set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
+    meter.set_internal_variable_name("STATE@ROTOR ANGLE BLOCK");
 
-    newmeter = (*meter);
-    TEST_ASSERT(newmeter==(*meter));
+    newmeter = meter;
+    TEST_ASSERT(newmeter==meter);
 
-    meter->set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
-    meter->set_internal_variable_name("STATE@ROTOR SPEED BLOCK");
-    TEST_ASSERT(newmeter!=(*meter));
+    meter.set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
+    meter.set_internal_variable_name("STATE@ROTOR SPEED BLOCK");
+    TEST_ASSERT(newmeter!=meter);
 }
 
 void METER_TEST::test_get_bus_meter_value()
@@ -665,13 +664,14 @@ void METER_TEST::test_get_bus_meter_value()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
-    meter->set_meter_type("VOLTAGE IN PU");
+    meter.set_meter_type("VOLTAGE IN PU");
 
-    BUS* busptr = db->get_bus(1);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(1);
     busptr->set_voltage_in_pu(1.05);
-    TEST_ASSERT(fabs(meter->get_meter_value()-1.05)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(meter.get_meter_value()-1.05)<FLOAT_EPSILON);
 }
 
 void METER_TEST::test_get_line_meter_value()
@@ -714,7 +714,8 @@ void METER_TEST::test_get_equivalent_device_meter_value()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    EQUIVALENT_DEVICE* edevice = db->get_equivalent_device(did);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    EQUIVALENT_DEVICE* edevice = psdb.get_equivalent_device(did);
     TEST_ASSERT(edevice!=NULL);
 
     edevice->set_equivalent_voltage_source_status(true);
@@ -726,56 +727,56 @@ void METER_TEST::test_get_equivalent_device_meter_value()
     edevice->set_equivalent_nominal_constant_current_load_in_MVA(complex<double>(10.0, 50.0));
     edevice->set_equivalent_nominal_constant_impedance_load_in_MVA(complex<double>(100.0, 500.0));
 
-    meter->set_device_id(did);
+    meter.set_device_id(did);
 
 
-    meter->set_meter_type("VOLTAGE SOURCE VOLTAGE IN PU");
-    TEST_ASSERT(fabs(meter->get_meter_value()-abs(edevice->get_equivalent_voltage_source_voltage_in_pu()))<FLOAT_EPSILON);
+    meter.set_meter_type("VOLTAGE SOURCE VOLTAGE IN PU");
+    TEST_ASSERT(fabs(meter.get_meter_value()-abs(edevice->get_equivalent_voltage_source_voltage_in_pu()))<FLOAT_EPSILON);
 
-    meter->set_meter_type("VOLTAGE SOURCE VOLTAGE ANGLE IN DEG");
-    TEST_ASSERT(fabs(meter->get_meter_value()-rad2deg(arg(edevice->get_equivalent_voltage_source_voltage_in_pu())))<FLOAT_EPSILON);
+    meter.set_meter_type("VOLTAGE SOURCE VOLTAGE ANGLE IN DEG");
+    TEST_ASSERT(fabs(meter.get_meter_value()-rad2deg(arg(edevice->get_equivalent_voltage_source_voltage_in_pu())))<FLOAT_EPSILON);
 
-    meter->set_meter_type("VOLTAGE SOURCE RESISTANCE IN PU");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_voltage_source_impedance_in_pu().real())<FLOAT_EPSILON);
+    meter.set_meter_type("VOLTAGE SOURCE RESISTANCE IN PU");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_voltage_source_impedance_in_pu().real())<FLOAT_EPSILON);
 
-    meter->set_meter_type("VOLTAGE SOURCE REACTANCE IN PU");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_voltage_source_impedance_in_pu().imag())<FLOAT_EPSILON);
+    meter.set_meter_type("VOLTAGE SOURCE REACTANCE IN PU");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_voltage_source_impedance_in_pu().imag())<FLOAT_EPSILON);
 
-    meter->set_meter_type("ACTIVE CONSTANT POWER LOAD IN MW");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_nominal_constant_power_load_in_MVA().real())<FLOAT_EPSILON);
+    meter.set_meter_type("ACTIVE CONSTANT POWER LOAD IN MW");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_nominal_constant_power_load_in_MVA().real())<FLOAT_EPSILON);
 
-    meter->set_meter_type("REACTIVE CONSTANT POWER LOAD IN MVAR");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_nominal_constant_power_load_in_MVA().imag())<FLOAT_EPSILON);
+    meter.set_meter_type("REACTIVE CONSTANT POWER LOAD IN MVAR");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_nominal_constant_power_load_in_MVA().imag())<FLOAT_EPSILON);
 
-    meter->set_meter_type("ACTIVE CONSTANT CURRENT LOAD IN MW");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_nominal_constant_current_load_in_MVA().real())<FLOAT_EPSILON);
+    meter.set_meter_type("ACTIVE CONSTANT CURRENT LOAD IN MW");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_nominal_constant_current_load_in_MVA().real())<FLOAT_EPSILON);
 
-    meter->set_meter_type("REACTIVE CONSTANT CURRENT LOAD IN MVAR");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_nominal_constant_current_load_in_MVA().imag())<FLOAT_EPSILON);
+    meter.set_meter_type("REACTIVE CONSTANT CURRENT LOAD IN MVAR");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_nominal_constant_current_load_in_MVA().imag())<FLOAT_EPSILON);
 
-    meter->set_meter_type("ACTIVE CONSTANT IMPEDANCE LOAD IN MW");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_nominal_constant_impedance_load_in_MVA().real())<FLOAT_EPSILON);
+    meter.set_meter_type("ACTIVE CONSTANT IMPEDANCE LOAD IN MW");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_nominal_constant_impedance_load_in_MVA().real())<FLOAT_EPSILON);
 
-    meter->set_meter_type("REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_nominal_constant_impedance_load_in_MVA().imag())<FLOAT_EPSILON);
+    meter.set_meter_type("REACTIVE CONSTANT IMPEDANCE LOAD IN MVAR");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_nominal_constant_impedance_load_in_MVA().imag())<FLOAT_EPSILON);
 
-    meter->set_meter_type("ACTIVE POWER GENERATION IN MW");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_generation_in_MVA().real())<FLOAT_EPSILON);
+    meter.set_meter_type("ACTIVE POWER GENERATION IN MW");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_generation_in_MVA().real())<FLOAT_EPSILON);
 
-    meter->set_meter_type("REACTIVE POWER GENERATION IN MVAR");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_generation_in_MVA().imag())<FLOAT_EPSILON);
+    meter.set_meter_type("REACTIVE POWER GENERATION IN MVAR");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_generation_in_MVA().imag())<FLOAT_EPSILON);
 
-    meter->set_meter_type("ACTIVE POWER LOAD IN MW");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_load_in_MVA().real())<FLOAT_EPSILON);
+    meter.set_meter_type("ACTIVE POWER LOAD IN MW");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_load_in_MVA().real())<FLOAT_EPSILON);
 
-    meter->set_meter_type("REACTIVE POWER LOAD IN MVAR");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_equivalent_load_in_MVA().imag())<FLOAT_EPSILON);
+    meter.set_meter_type("REACTIVE POWER LOAD IN MVAR");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_equivalent_load_in_MVA().imag())<FLOAT_EPSILON);
 
-    meter->set_meter_type("ACTIVE POWER NET LOAD IN MW");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_total_equivalent_power_as_load_in_MVA().real())<FLOAT_EPSILON);
+    meter.set_meter_type("ACTIVE POWER NET LOAD IN MW");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_total_equivalent_power_as_load_in_MVA().real())<FLOAT_EPSILON);
 
-    meter->set_meter_type("REACTIVE POWER NET LOAD IN MVAR");
-    TEST_ASSERT(fabs(meter->get_meter_value()-edevice->get_total_equivalent_power_as_load_in_MVA().imag())<FLOAT_EPSILON);
+    meter.set_meter_type("REACTIVE POWER NET LOAD IN MVAR");
+    TEST_ASSERT(fabs(meter.get_meter_value()-edevice->get_total_equivalent_power_as_load_in_MVA().imag())<FLOAT_EPSILON);
 }
 
 

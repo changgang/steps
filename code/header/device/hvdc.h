@@ -13,13 +13,12 @@
 
 using namespace std;
 
-class POWER_SYSTEM_DATABASE;
 class HVDC_MODEL;
 
 class HVDC : public DEVICE
 {
     public:
-        HVDC(POWER_SYSTEM_DATABASE* db);
+        HVDC();
         virtual ~HVDC();
 
 

@@ -26,8 +26,6 @@ class LOAD_RELAY_MODEL_TEST : public Test::Suite
         virtual void tear_down();
         LOAD* get_load();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        DYNAMICS_SIMULATOR* simulator;
         LOAD* loadptr;
 };
 

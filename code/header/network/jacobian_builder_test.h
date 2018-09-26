@@ -30,9 +30,8 @@ class JACOBIAN_BUILDER_TEST : public Test::Suite
         void test_get_decoupled_B_jacobian_for_P_equations();
         void test_get_decoupled_B_jacobian_for_Q_equations();
     private:
-        POWER_SYSTEM_DATABASE* db;
-        NETWORK_DATABASE* network_db;
-        JACOBIAN_BUILDER* jacobian_builder;
+        NETWORK_DATABASE network_db;
+        JACOBIAN_BUILDER jacobian_builder;
 };
 
 #endif

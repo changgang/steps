@@ -7,9 +7,8 @@
 
 using namespace std;
 
-SOURCE::SOURCE(POWER_SYSTEM_DATABASE* psdb)
+SOURCE::SOURCE()
 {
-    set_power_system_database(psdb);
     clear();
 }
 SOURCE::~SOURCE()
@@ -30,21 +29,16 @@ void SOURCE::set_source_bus(size_t bus)
         return;
     }
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
-        source_bus = bus;
-    else
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    if(not psdb.is_bus_exist(bus))
     {
-        if(not psdb->is_bus_exist(bus))
-        {
-            osstream<<"Bus "<<bus<<" does not exist for setting up power source."<<endl
-              <<"0 will be set to indicate invalid power source.";
-            show_information_with_leading_time_stamp(osstream);
-            source_bus = 0;
-            return;
-        }
-        source_bus = bus;
+        osstream<<"Bus "<<bus<<" does not exist for setting up power source."<<endl
+          <<"0 will be set to indicate invalid power source.";
+        show_information_with_leading_time_stamp(osstream);
+        source_bus = 0;
+        return;
     }
+    source_bus = bus;
 }
 
 void SOURCE::set_identifier(string id)
@@ -74,12 +68,8 @@ void SOURCE::set_mbase_in_MVA(double mbase)
         this->mbase_MVA = mbase;
     else
     {
-        POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-        double mvabase = 100.0;
-        if(psdb==NULL)
-            mvabase = 100.0;
-        else
-            mvabase = psdb->get_system_base_power_in_MVA();
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        double mvabase = psdb.get_system_base_power_in_MVA();
         if(mbase == 0.0)
             this->mbase_MVA = mvabase;
         else
@@ -176,11 +166,8 @@ double SOURCE::get_mbase_in_MVA() const
 {
     if(mbase_MVA==0.0)
     {
-        POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-        if(psdb==NULL)
-            return 100.0;
-        else
-            return psdb->get_system_base_power_in_MVA();
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        return psdb.get_system_base_power_in_MVA();
     }
     else
         return mbase_MVA;
@@ -242,27 +229,17 @@ complex<double> SOURCE::get_source_impedance_in_pu() const
 double SOURCE::get_base_voltage_in_kV() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(psdb==NULL)
-    {
-        osstream<<"Source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<" is not assigned to any power system database."<<endl
-          <<"Its base voltage will be returned as 0.0.";
-        show_information_with_leading_time_stamp(osstream);
-        return 0.0;
-    }
+    BUS* bus = psdb.get_bus(get_source_bus());
+    if(bus!=NULL)
+        return bus->get_base_voltage_in_kV();
     else
     {
-        BUS* bus = psdb->get_bus(get_source_bus());
-        if(bus!=NULL)
-            return bus->get_base_voltage_in_kV();
-        else
-        {
-            osstream<<"No bus "<<get_source_bus()<<" is found in power system database '"<<psdb->get_system_name()<<"'."<<endl
-              <<"Base voltage of source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<" will be returned as 0.0.";
-            show_information_with_leading_time_stamp(osstream);
-            return 0.0;
-        }
+        osstream<<"No bus "<<get_source_bus()<<" is found in power system database '"<<psdb.get_system_name()<<"'."<<endl
+          <<"Base voltage of source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<" will be returned as 0.0.";
+        show_information_with_leading_time_stamp(osstream);
+        return 0.0;
     }
 }
 
@@ -283,11 +260,8 @@ void SOURCE::clear()
     set_identifier("");
     set_status(false);
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
-        set_mbase_in_MVA(psdb->get_system_base_power_in_MVA());
-    else
-        set_mbase_in_MVA(100.0);
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    set_mbase_in_MVA(psdb.get_system_base_power_in_MVA());
 
     set_p_generation_in_MW(0.0);
     set_q_generation_in_MVar(0.0);
@@ -308,16 +282,11 @@ bool SOURCE::is_connected_to_bus(size_t bus) const
 
 bool SOURCE::is_in_area(size_t area) const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(get_source_bus());
+    if(busptr!=NULL)
     {
-        BUS* busptr = psdb->get_bus(get_source_bus());
-        if(busptr!=NULL)
-        {
-            return busptr->is_in_area(area);
-        }
-        else
-            return false;
+        return busptr->is_in_area(area);
     }
     else
         return false;
@@ -325,16 +294,11 @@ bool SOURCE::is_in_area(size_t area) const
 
 bool SOURCE::is_in_zone(size_t zone) const
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    BUS* busptr = psdb.get_bus(get_source_bus());
+    if(busptr!=NULL)
     {
-        BUS* busptr = psdb->get_bus(get_source_bus());
-        if(busptr!=NULL)
-        {
-            return busptr->is_in_zone(zone);
-        }
-        else
-            return false;
+        return busptr->is_in_zone(zone);
     }
     else
         return false;

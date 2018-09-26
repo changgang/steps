@@ -31,8 +31,7 @@ class WT_GENERATOR_TEST : public Test::Suite
         void test_get_device_id();
 
     private:
-        POWER_SYSTEM_DATABASE* db;
-        WT_GENERATOR* wt_generator;
+        WT_GENERATOR wt_generator;
 };
 
 #endif //WT_GENERATOR_TEST_H

@@ -8,9 +8,9 @@ int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
 {
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    LINE* lineptr = psdb->get_line(did);
+    LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -41,9 +41,9 @@ void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char*
 {
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    LINE* lineptr = psdb->get_line(did);
+    LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -70,9 +70,9 @@ double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char*
 {
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    LINE* lineptr = psdb->get_line(did);
+    LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -168,9 +168,9 @@ void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* p
 {
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    LINE* lineptr = psdb->get_line(did);
+    LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -307,11 +307,11 @@ const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier,
 {
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
-    LINE* lineptr = psdb->get_line(did);
+    LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -336,9 +336,9 @@ void api_set_line_string_data(size_t ibus, size_t jbus, char* identifier, char* 
 {
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    LINE* lineptr = psdb->get_line(did);
+    LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -355,9 +355,9 @@ bool api_get_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char*
 {
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    LINE* lineptr = psdb->get_line(did);
+    LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);
@@ -383,9 +383,9 @@ void api_set_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char*
 {
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    LINE* lineptr = psdb->get_line(did);
+    LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
     {
         string PARAMETER_NAME = string2upper(parameter_name);

@@ -344,7 +344,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE* psdb = get_test_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     SYNC_GENERATOR_MODEL* model = get_test_sync_generator_model();
     if(model!=NULL)
     {
@@ -377,7 +377,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
             export_meter_values(TIME);
         }
 
-        BUS* bus = psdb->get_bus(1);
+        BUS* bus = psdb.get_bus(1);
         double vterm = bus->get_voltage_in_pu();
         bus->set_voltage_in_pu(vterm*0.99);
 

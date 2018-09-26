@@ -207,7 +207,6 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
     }
 
     POWERFLOW_SOLVER solver;
-    solver.set_power_system_database(&psdb);
     solver.set_flat_start_logic(false);
     solver.set_max_iteration(100);
 

@@ -5,11 +5,11 @@
 
 #include <string>
 using namespace std;
-class POWER_SYSTEM_DATABASE;
+
 class ZONE : public BASE
 {
     public:
-        ZONE(POWER_SYSTEM_DATABASE* db);
+        ZONE();
         virtual ~ZONE();
 
         void set_zone_number(size_t zone_number);

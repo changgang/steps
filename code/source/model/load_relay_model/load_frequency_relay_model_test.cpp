@@ -45,9 +45,9 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::test_get_bus_frequency()
 
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     size_t bus = load->get_load_bus();
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
 
     BUS_FREQUENCY_MODEL* bus_model = busptr->get_bus_frequency_model();
 
@@ -101,8 +101,8 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
 
     redirect_stdout_to_file(outputfile);
 
-    POWER_SYSTEM_DATABASE* psdb = load->get_power_system_database();
-    double fbase = psdb->get_bus_base_frequency_in_Hz(load->get_load_bus());
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double fbase = psdb.get_bus_base_frequency_in_Hz(load->get_load_bus());
 
     ostringstream osstream;
 
@@ -115,7 +115,7 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
     STEPS::TIME = -delt*2.0;
 
     size_t bus = load->get_load_bus();
-    BUS* busptr = psdb->get_bus(bus);
+    BUS* busptr = psdb.get_bus(bus);
     BUS_FREQUENCY_MODEL* freq_model = busptr->get_bus_frequency_model();
 
     freq_model->initialize();

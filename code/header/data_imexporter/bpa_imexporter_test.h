@@ -49,7 +49,6 @@ class BPA_IMEXPORTER_TEST : public Test::Suite
         void test_load_dynamic_data();
 
     private:
-        POWER_SYSTEM_DATABASE* db;
-        BPA_IMEXPORTER* importer;
+        BPA_IMEXPORTER importer;
 };
 #endif // BPA_IMEXPORTER_TEST_H

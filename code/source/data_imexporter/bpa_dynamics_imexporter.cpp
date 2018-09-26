@@ -437,28 +437,6 @@ void BPA_IMEXPORTER::load_one_model(string data)
     string model_name = get_dynamic_model_name(data);
     if(model_name=="")
         return;
-    if(model_name=="GENCLS") { add_GENCLS_model(data); return;}
-    if(model_name=="GENROU") { add_GENROU_model(data); return;}
-    if(model_name=="GENSAL") { add_GENSAL_model(data); return;}
-
-    if(model_name=="COMP") { add_COMP_model(data); return;}
-
-    if(model_name=="SEXS") { add_SEXS_model(data); return;}
-    if(model_name=="IEEET1") { add_IEEET1_model(data); return;}
-    if(model_name=="PSASPE1") { add_PSASPE1_model(data); return;}
-    if(model_name=="PSASPE2") { add_PSASPE2_model(data); return;}
-    if(model_name=="CSEET1") { add_CSEET1_model(data); return;}
-    if(model_name=="CSEET2") { add_CSEET2_model(data); return;}
-    if(model_name=="PSASPE13") { add_PSASPE13_model(data); return;}
-
-    if(model_name=="TGOV1") { add_TGOV1_model(data); return;}
-    if(model_name=="IEEEG1") { add_IEEEG1_model(data); return;}
-    if(model_name=="IEEEG2") { add_IEEEG2_model(data); return;}
-    if(model_name=="IEEEG3") { add_IEEEG3_model(data); return;}
-
-
-    if(model_name=="IEELAL" or model_name=="IEELAR" or model_name=="IEELZN" or
-       model_name=="IEELOW" or model_name=="IEELBL") { add_IEEL_model(data); return;}
 
     osstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__<<".";
     show_information_with_leading_time_stamp(osstream);
@@ -603,359 +581,6 @@ DEVICE_ID BPA_IMEXPORTER::get_transformer_device_id_from_string(string data)
     return did;
 }
 
-void BPA_IMEXPORTER::add_GENCLS_model(string data)
-{
-    if(get_dynamic_model_name(data) != "GENCLS")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        GENCLS model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_GENROU_model(string data)
-{
-    if(get_dynamic_model_name(data) != "GENROU")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        GENROU model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_GENSAL_model(string data)
-{
-    if(get_dynamic_model_name(data) != "GENSAL")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        GENSAL model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_COMP_model(string data)
-{
-    if(get_dynamic_model_name(data) != "COMP")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        COMP model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_IEE2ST_model(string data)
-{
-    if(get_dynamic_model_name(data) != "IEEE2ST")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        IEE2ST model;
-        model.set_power_system_database(psdb);
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_SEXS_model(string data)
-{
-    if(get_dynamic_model_name(data) != "SEXS")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        SEXS model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_IEEET1_model(string data)
-{
-    if(get_dynamic_model_name(data) != "IEEET1")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        IEEET1 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_PSASPE1_model(string data)
-{
-    if(get_dynamic_model_name(data) != "PSASPE1")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        PSASPE1 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_PSASPE2_model(string data)
-{
-    if(get_dynamic_model_name(data) != "PSASPE2")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        PSASPE2 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_CSEET1_model(string data)
-{
-    if(get_dynamic_model_name(data) != "CSEET1")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        CSEET1 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_CSEET2_model(string data)
-{
-    if(get_dynamic_model_name(data) != "CSEET2")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        CSEET2 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_PSASPE13_model(string data)
-{
-    if(get_dynamic_model_name(data) != "PSASPE13")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        PSASPE13 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_TGOV1_model(string data)
-{
-    if(get_dynamic_model_name(data) != "TGOV1")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        TGOV1 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_IEEEG1_model(string data)
-{
-    if(get_dynamic_model_name(data) != "IEEEG1")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        IEEEG1 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_IEEEG2_model(string data)
-{
-    if(get_dynamic_model_name(data) != "IEEEG2")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        IEEEG2 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
-void BPA_IMEXPORTER::add_IEEEG3_model(string data)
-{
-    if(get_dynamic_model_name(data) != "IEEEG3")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
-
-    GENERATOR* generator = psdb->get_generator(did);
-    if(generator != NULL)
-    {
-        IEEEG3 model;
-        bool successful = model.setup_model_with_psse_string(data);
-        if(successful)
-            generator->set_model(&model);
-    }
-}
-
 vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
 {
     vector<LOAD*> loads;
@@ -967,7 +592,7 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
        model_name!="CIM5BL")
         return loads;
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<9)
@@ -982,14 +607,14 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
 
     if(model_name=="IEELAL" or model_name=="CIM5AL")
     {
-        loads = psdb->get_all_loads();
+        loads = psdb.get_all_loads();
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;
     }
     if(model_name=="IEELAR" or model_name=="CIM5AR")
     {
         size_t area_no = subsystem_number;
-        loads = psdb->get_all_loads();
+        loads = psdb.get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
             --iter;
@@ -1003,7 +628,7 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
     if(model_name=="IEELZN" or model_name=="CIM5ZN")
     {
         size_t zone_no = subsystem_number;
-        loads = psdb->get_all_loads();
+        loads = psdb.get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
             --iter;
@@ -1017,7 +642,7 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
     if(model_name=="IEELBL" or model_name=="CIM5BL")
     {
         size_t bus_no = subsystem_number;
-        loads = psdb->get_loads_connecting_to_bus(bus_no);
+        loads = psdb.get_loads_connecting_to_bus(bus_no);
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;
     }
@@ -1039,27 +664,6 @@ vector<LOAD*> BPA_IMEXPORTER::remove_loads_with_different_identifier(vector<LOAD
     return loads;
 }
 
-void BPA_IMEXPORTER::add_IEEL_model(string data)
-{
-    string model_name = get_dynamic_model_name(data);
-    if(model_name!="IEELAL" and model_name!="IEELAR" and model_name!="IEELZN" and
-       model_name!="IEELBL")
-        return;
-
-    vector<string> swidata = split_string(data,",");
-    if(swidata.size()<3)
-        return;
-
-    IEEL model;
-    bool successful = model.setup_model_with_psse_string(data);
-    if(successful)
-    {
-        vector<LOAD*> loads = get_all_loads_of(data);
-        size_t n = loads.size();
-        for(size_t i=0; i!=n; ++i)
-            loads[i]->set_model(&model);
-    }
-}
 
 
 void BPA_IMEXPORTER::export_dynamic_data(string file)
