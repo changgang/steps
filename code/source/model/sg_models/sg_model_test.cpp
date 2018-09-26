@@ -22,10 +22,11 @@ void SG_MODEL_TEST::setup()
     db->set_allowed_max_bus_number(100);
     db->set_system_base_power_in_MVA(100.0);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_bus_type(PV_TYPE);
     bus.set_base_voltage_in_kV(21.0);
+    bus.set_base_frequency_in_Hz(50.0);
     bus.set_voltage_in_pu(1.0);
     bus.set_angle_in_rad(0.0);
 

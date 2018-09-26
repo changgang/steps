@@ -40,7 +40,7 @@ void FIXED_SHUNT_TEST::setup()
     db->set_system_base_power_in_MVA(100.0);
     db->set_allowed_max_bus_number(10);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_type(PQ_TYPE);

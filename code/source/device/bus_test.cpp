@@ -56,8 +56,7 @@ void BUS_TEST::setup()
     db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100);
 
-    bus = new BUS(db);
-    bus->set_power_system_database(db);
+    bus = new BUS;
 }
 
 void BUS_TEST::tear_down()
@@ -96,7 +95,7 @@ void BUS_TEST::test_set_get_bus_number()
     bus->set_bus_number(0);
     TEST_ASSERT(bus->get_bus_number()==0);
     bus->set_bus_number(1000);
-    TEST_ASSERT(bus->get_bus_number()==0);
+    TEST_ASSERT(bus->get_bus_number()==1000);
     bus->set_bus_number(2);
     TEST_ASSERT(bus->get_bus_number()==2);
 }

@@ -17,7 +17,7 @@ void prepare_basic_buses(POWER_SYSTEM_DATABASE* db)
 
     db->set_allowed_max_bus_number(10);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_bus_name("bus 1");
     bus.set_base_voltage_in_kV(123.0);

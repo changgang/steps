@@ -28,7 +28,7 @@ void TIMER_TEST::setup()
     simulator = new DYNAMICS_SIMULATOR(psdb);
 
     psdb->set_allowed_max_bus_number(1000);
-    BUS bus(psdb);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_bus_name("bus");
     bus.set_base_voltage_in_kV(100.0);

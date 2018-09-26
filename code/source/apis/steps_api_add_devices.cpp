@@ -12,7 +12,7 @@ void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV)
     {
         if(not psdb->is_bus_exist(bus_number))
         {
-            BUS newbus(psdb);
+            BUS newbus;
             newbus.set_bus_number(bus_number);
             newbus.set_bus_name(bus_name);
             newbus.set_base_voltage_in_kV(base_voltage_in_kV);

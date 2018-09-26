@@ -56,7 +56,7 @@ void LOAD_TEST::setup()
     db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_type(PQ_TYPE);

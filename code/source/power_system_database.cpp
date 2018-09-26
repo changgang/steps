@@ -384,18 +384,6 @@ void POWER_SYSTEM_DATABASE::append_bus(const BUS& bus)
 {
     ostringstream osstream;
 
-    //if(bus.get_power_system_database()==NULL)
-    //    bus.set_power_system_database(this);
-
-    if(this != bus.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = bus.get_power_system_database();
-        osstream<<"Warning. "<<bus.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
     if(not bus.is_valid())
     {
         osstream<<"Warning. Failed to append invalid bus "<<bus.get_bus_number()<<" due to either 0 bus number of 0 base voltage.";

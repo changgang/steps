@@ -23,7 +23,7 @@ void HVDC_MODEL_TEST::setup()
     db->set_allowed_max_bus_number(100);
     db->set_system_base_power_in_MVA(100.0);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_bus_name("RECBUS");
     bus.set_bus_type(PQ_TYPE);

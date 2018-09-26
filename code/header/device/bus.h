@@ -21,7 +21,7 @@ class POWER_SYSTEM_DATABASE;
 class BUS : public DEVICE
 {
     public:
-        BUS(POWER_SYSTEM_DATABASE* db);
+        BUS();
         BUS(const BUS& bus);
         virtual ~BUS();
 

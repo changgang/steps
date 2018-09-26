@@ -29,7 +29,7 @@ void prepare_psse_sample_model_buses(POWER_SYSTEM_DATABASE* db)
 {
     db->set_allowed_max_bus_number(100000);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(101);
     bus.set_bus_name("NUC-A");
     bus.set_base_voltage_in_kV(21.6);

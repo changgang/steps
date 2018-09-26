@@ -226,7 +226,7 @@ void PSSE_IMEXPORTER::load_bus_data()
     for(size_t i=0; i!=ndata; ++i)
     {
         str = DATA[i];
-        BUS bus(psdb);
+        BUS bus;
         bus.set_base_frequency_in_Hz(common_base_frequency_in_Hz);
 
         data.clear();

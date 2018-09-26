@@ -335,7 +335,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     db->set_allowed_max_bus_number(100);
 
     {
-        BUS bus(db);
+        BUS bus;
         bus.set_bus_number(1);
         bus.set_bus_name("BUS A");
         bus.set_base_voltage_in_kV(110.0);
@@ -1108,7 +1108,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
 
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
@@ -1173,7 +1173,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
     bus.set_voltage_in_pu(1.0);
@@ -1225,7 +1225,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
     bus.set_voltage_in_pu(1.0);
@@ -1278,7 +1278,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
     bus.set_voltage_in_pu(1.0);
@@ -1330,7 +1330,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(35.0);
     bus.set_voltage_in_pu(1.0);
@@ -1382,7 +1382,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
     db->append_bus(bus);
@@ -1446,7 +1446,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(525.0);
     db->append_bus(bus);
@@ -1523,7 +1523,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
     db->append_bus(bus);
@@ -1574,7 +1574,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(525.0);
     db->append_bus(bus);
@@ -1638,7 +1638,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(525.0);
     db->append_bus(bus);
@@ -1687,7 +1687,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(525.0);
     db->append_bus(bus);
@@ -1736,7 +1736,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area()
 
     db->set_allowed_max_bus_number(100);
 
-    BUS bus(db);
+    BUS bus;
     bus.set_bus_number(1);
     bus.set_area_number(1);
     bus.set_base_voltage_in_kV(525.0);

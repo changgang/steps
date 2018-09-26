@@ -570,7 +570,7 @@ void BPA_IMEXPORTER::load_bus_data()
            card_type == "BL" or // PV
            card_type=="BS")
         {
-            BUS bus(psdb);
+            BUS bus;
 
             size_t bus_count = psdb->get_bus_count();
             bus.set_bus_number(bus_count+1);

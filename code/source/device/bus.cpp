@@ -8,16 +8,8 @@
 
 using namespace std;
 
-BUS::BUS(POWER_SYSTEM_DATABASE* psdb)
+BUS::BUS()
 {
-    ostringstream osstream;
-    if(psdb==NULL)
-    {
-        osstream<<"Error. BUS object cannot be constructed since NULL power system database is given."<<endl
-          <<"Operations on the object is unpredictable.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-    set_power_system_database(psdb);
     clear();
 
     bus_frequency_model.set_bus_pointer(this);
@@ -36,29 +28,13 @@ BUS::~BUS()
 
 void BUS::set_bus_number(size_t number)
 {
-    ostringstream osstream;
-    if(number==0)
-    {
-        osstream<<"0 is not allowed for setting up a bus number. 0 will be set to indicate invalid bus.";
-        bus_number = 0;
-        return;
-    }
-
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb==NULL)
+    if(number!=0)
         bus_number = number;
     else
     {
-        if(psdb->is_bus_in_allowed_range(number))
-            bus_number = number;
-        else
-        {
-            osstream<<"Error. Bus "<<number<<" is not in the allowed range [1, "<<psdb->get_allowed_max_bus_number()<<"] "
-              <<"when setting up bus number."<<endl
-              <<"0 will be set to indicate invalid bus.";
-            show_information_with_leading_time_stamp(osstream);
-            bus_number = 0;
-        }
+        ostringstream osstream;
+        osstream<<"0 is not allowed for setting up a bus number. 0 will be set to indicate invalid bus.";
+        bus_number = 0;
     }
 }
 
@@ -337,6 +313,7 @@ void BUS::clear()
     bus_number = 0;
     set_bus_name("");
     base_voltage_in_kV = 0.0;
+    set_base_frequency_in_Hz(50.0);
     set_bus_type(OUT_OF_SERVICE);
     set_area_number(0);
     set_zone_number(0);
@@ -346,17 +323,6 @@ void BUS::clear()
     set_voltage_upper_limit_in_pu(1.1);
     set_voltage_lower_limit_in_pu(0.9);
     set_voltage_to_regulate_in_pu(0.0);
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
-    if(psdb!=NULL)
-    {
-        vector<size_t> buses = psdb->get_all_buses_number();
-        if(buses.size()!=0)
-            set_base_frequency_in_Hz(psdb->get_bus_base_frequency_in_Hz(buses[0]));
-        else
-            set_base_frequency_in_Hz(50.0);
-    }
-    else
-        set_base_frequency_in_Hz(50.0);
 
     fault.clear();
 }
@@ -468,10 +434,10 @@ void BUS::copy_from_const_bus(const BUS& bus)
 {
     clear();
 
-    set_power_system_database(bus.get_power_system_database());
     set_bus_number(bus.get_bus_number());
     set_bus_name(bus.get_bus_name());
     set_base_voltage_in_kV(bus.get_base_voltage_in_kV());
+    set_base_frequency_in_Hz(bus.get_base_frequency_in_Hz());
     set_bus_type(bus.get_bus_type());
     set_area_number(bus.get_area_number());
     set_zone_number(bus.get_zone_number());
@@ -479,7 +445,6 @@ void BUS::copy_from_const_bus(const BUS& bus)
     set_voltage_in_pu(bus.get_voltage_in_pu());
     set_angle_in_rad(bus.get_angle_in_rad());
     set_voltage_to_regulate_in_pu(bus.get_voltage_to_regulate_in_pu());
-    set_base_frequency_in_Hz(bus.get_base_frequency_in_Hz());
 
     if(bus.is_faulted())
     {
