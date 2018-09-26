@@ -35,12 +35,12 @@ void prepare_IEEE_9_bus_model_buses(POWER_SYSTEM_DATABASE* db)
 {
     db->set_allowed_max_bus_number(10);
     db->set_system_base_power_in_MVA(100.0);
-    db->set_system_base_frequency_in_Hz(60.0);
 
     BUS bus(db);
     bus.set_bus_number(1);
     bus.set_bus_name("BUS_1");
     bus.set_base_voltage_in_kV(16.5);
+    bus.set_base_frequency_in_Hz(60.0);
     bus.set_area_number(1);
     bus.set_zone_number(1);
     bus.set_owner_number(1);

@@ -53,7 +53,7 @@ LOAD_TEST::LOAD_TEST()
 
 void LOAD_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100);
 
     BUS bus(db);
@@ -73,8 +73,7 @@ void LOAD_TEST::tear_down()
 {
     delete load;
     load = NULL;
-    delete db;
-    db = NULL;
+    db->clear_database();
 
     show_test_end_information();
 }

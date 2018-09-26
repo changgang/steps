@@ -40,7 +40,7 @@ METER_TEST::METER_TEST()
 
 void METER_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
 
     BUS bus(db);
     bus.set_bus_number(1);
@@ -115,8 +115,7 @@ void METER_TEST::tear_down()
     delete meter;
     meter = NULL;
 
-    delete db;
-    db = NULL;
+    db->clear_database();
 
     show_test_end_information();
 }

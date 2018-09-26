@@ -25,7 +25,7 @@ NETWORK_DATABASE_TEST::NETWORK_DATABASE_TEST()
 
 void NETWORK_DATABASE_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
 
     prepare_IEEE_9_bus_model(db);
 
@@ -35,7 +35,7 @@ void NETWORK_DATABASE_TEST::setup()
 void NETWORK_DATABASE_TEST::tear_down()
 {
     delete network_db;
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }

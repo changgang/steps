@@ -188,8 +188,10 @@ void BUS::set_voltage_lower_limit_in_pu(double voltage)
 
 void BUS::set_base_frequency_in_Hz(double fn)
 {
+    if(fn<0.0)
+        fn = -fn;
     if(fn==0.0)
-        fn = get_power_system_database()->get_system_base_frequency_in_Hz();
+        fn = 50.0;
     fn_Hz = fn;
 }
 
@@ -346,7 +348,15 @@ void BUS::clear()
     set_voltage_to_regulate_in_pu(0.0);
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
     if(psdb!=NULL)
-        set_base_frequency_in_Hz(psdb->get_system_base_frequency_in_Hz());
+    {
+        vector<size_t> buses = psdb->get_all_buses_number();
+        if(buses.size()!=0)
+            set_base_frequency_in_Hz(psdb->get_bus_base_frequency_in_Hz(buses[0]));
+        else
+            set_base_frequency_in_Hz(50.0);
+    }
+    else
+        set_base_frequency_in_Hz(50.0);
 
     fault.clear();
 }

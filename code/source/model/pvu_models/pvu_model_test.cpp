@@ -18,9 +18,8 @@ PVU_MODEL_TEST::PVU_MODEL_TEST()
 
 void PVU_MODEL_TEST::setup()
 {
-    psdb = new POWER_SYSTEM_DATABASE;
+    psdb = get_default_power_system_database();
     psdb->set_allowed_max_bus_number(100);
-    psdb->set_system_base_frequency_in_Hz(50.0);
     psdb->set_system_base_power_in_MVA(100.0);
 
     BUS bus(psdb);
@@ -48,7 +47,7 @@ void PVU_MODEL_TEST::setup()
 
 void PVU_MODEL_TEST::tear_down()
 {
-    delete psdb;
+    psdb->clear_database();
 }
 
 POWER_SYSTEM_DATABASE* PVU_MODEL_TEST::get_test_power_system_database()

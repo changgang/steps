@@ -80,7 +80,7 @@ HVDC_TEST::HVDC_TEST()
 
 void HVDC_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_system_base_power_in_MVA(100.0);
     db->set_allowed_max_bus_number(100);
 
@@ -102,8 +102,7 @@ void HVDC_TEST::tear_down()
     delete hvdc;
     hvdc = NULL;
 
-    delete db;
-    db = NULL;
+    db->clear_database();
 
     show_test_end_information();
 }

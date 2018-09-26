@@ -15,7 +15,6 @@ POWER_SYSTEM_DATABASE::POWER_SYSTEM_DATABASE()
 {
     set_system_name("");
     set_system_base_power_in_MVA(100.0);
-    set_system_base_frequency_in_Hz(50.0);
 
     set_allowed_max_bus_number(1000);
 
@@ -269,8 +268,8 @@ void POWER_SYSTEM_DATABASE::set_owner_capacity(size_t n)
 
 void POWER_SYSTEM_DATABASE::clear_database()
 {
-    set_case_title_1("");
-    set_case_title_2("");
+    set_case_information("");
+    set_case_additional_information("");
     clear_all_buses();
     clear_all_sources();
     clear_all_loads();
@@ -342,7 +341,7 @@ double POWER_SYSTEM_DATABASE::get_system_base_power_in_MVA() const
 {
     return system_base_power_in_MVA;
 }
-
+/*
 void POWER_SYSTEM_DATABASE::set_system_base_frequency_in_Hz(const double f)
 {
     if(f>0.0)
@@ -360,33 +359,33 @@ double POWER_SYSTEM_DATABASE::get_system_base_frequency_in_Hz() const
 {
     return system_base_fequency_in_Hz;
 }
-
-void POWER_SYSTEM_DATABASE::set_case_title_1(string title)
+*/
+void POWER_SYSTEM_DATABASE::set_case_information(string title)
 {
-    case_title_1 = title;
+    case_information = title;
 }
 
-void POWER_SYSTEM_DATABASE::set_case_title_2(string title)
+void POWER_SYSTEM_DATABASE::set_case_additional_information(string title)
 {
-    case_title_2 = title;
+    case_additional_information = title;
 }
 
-string POWER_SYSTEM_DATABASE::get_case_title_1() const
+string POWER_SYSTEM_DATABASE::get_case_information() const
 {
-    return case_title_1;
+    return case_information;
 }
 
-string POWER_SYSTEM_DATABASE::get_case_title_2() const
+string POWER_SYSTEM_DATABASE::get_case_additional_information() const
 {
-    return case_title_2;
+    return case_additional_information;
 }
 
-void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
+void POWER_SYSTEM_DATABASE::append_bus(const BUS& bus)
 {
     ostringstream osstream;
 
-    if(bus.get_power_system_database()==NULL)
-        bus.set_power_system_database(this);
+    //if(bus.get_power_system_database()==NULL)
+    //    bus.set_power_system_database(this);
 
     if(this != bus.get_power_system_database())
     {
@@ -436,14 +435,12 @@ void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
     update_in_service_bus_count();
 }
 
-void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
+void POWER_SYSTEM_DATABASE::append_generator(const GENERATOR& generator)
 {
     ostringstream osstream;
 
-    if(generator.get_power_system_database()==NULL)
-    {
-        generator.set_power_system_database(this);
-    }
+    //if(generator.get_power_system_database()==NULL)
+    //    generator.set_power_system_database(this);
 
     if(this != generator.get_power_system_database())
     {
@@ -500,14 +497,12 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
     generator_index.set_device_index(device_id, generator_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
+void POWER_SYSTEM_DATABASE::append_wt_generator(const WT_GENERATOR& wt_generator)
 {
     ostringstream osstream;
 
-    if(wt_generator.get_power_system_database()==NULL)
-    {
-        wt_generator.set_power_system_database(this);
-    }
+    //if(wt_generator.get_power_system_database()==NULL)
+    //    wt_generator.set_power_system_database(this);
 
     if(this != wt_generator.get_power_system_database())
     {
@@ -565,14 +560,12 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
     wt_generator_index.set_device_index(device_id, wt_generator_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
+void POWER_SYSTEM_DATABASE::append_pv_unit(const PV_UNIT& pv_unit)
 {
     ostringstream osstream;
 
-    if(pv_unit.get_power_system_database()==NULL)
-    {
-        pv_unit.set_power_system_database(this);
-    }
+    //if(pv_unit.get_power_system_database()==NULL)
+    //    pv_unit.set_power_system_database(this);
 
     if(this != pv_unit.get_power_system_database())
     {
@@ -630,14 +623,74 @@ void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
     pv_unit_index.set_device_index(device_id, pv_unit_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
+void POWER_SYSTEM_DATABASE::append_energy_storage(const ENERGY_STORAGE& estorage)
 {
     ostringstream osstream;
 
-    if(load.get_power_system_database()==NULL)
+    //if(estorage.get_power_system_database()==NULL)
+    //    estorage.set_power_system_database(this);
+
+    if(this != estorage.get_power_system_database())
     {
-        load.set_power_system_database(this);
+        POWER_SYSTEM_DATABASE* db = estorage.get_power_system_database();
+        osstream<<"Warning. "<<estorage.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
+          <<"It cannot be appended into the new power system database '";
+        show_information_with_leading_time_stamp(osstream);
+        return;
     }
+
+    if(not estorage.is_valid())
+    {
+        osstream<<"Warning. Failed to append invalid energy storage to power system database '"<<get_system_name()<<"'.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    size_t bus = estorage.get_energy_storage_bus();
+
+    if(not this->is_bus_in_allowed_range(bus))
+    {
+        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<estorage.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
+          <<"Energy storage will not be appended into the database.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    string identifier = estorage.get_identifier();
+    DEVICE_ID device_id;
+    device_id.set_device_type("ENERGY STORAGE");
+    TERMINAL terminal;
+    terminal.append_bus(bus);
+    device_id.set_device_terminal(terminal);
+    device_id.set_device_identifier(identifier);
+
+    if(this->is_energy_storage_exist(device_id))
+    {
+        osstream<<"Warning. "<<estorage.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Energy_storage.\n"
+          <<"Duplicate copy is not allowed.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    if(Energy_storage.capacity()==Energy_storage.size())
+    {
+        osstream<<"Warning. Capacity limit ("<<Energy_storage.capacity()<<") reached when appending energy storage to power system database '"<<get_system_name()<<"'."<<endl
+          <<"Increase capacity by modified steps_config.json.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    size_t energy_storage_count = get_energy_storage_count();
+    Energy_storage.push_back(estorage);
+    energy_storage_index.set_device_index(device_id, energy_storage_count);
+ }
+
+void POWER_SYSTEM_DATABASE::append_load(const LOAD& load)
+{
+    ostringstream osstream;
+
+    //if(load.get_power_system_database()==NULL)
+    //    load.set_power_system_database(this);
 
     if(this != load.get_power_system_database())
     {
@@ -694,14 +747,12 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
     load_index.set_device_index(device_id, load_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_line(LINE& line)
+void POWER_SYSTEM_DATABASE::append_line(const LINE& line)
 {
     ostringstream osstream;
 
-    if(line.get_power_system_database()==NULL)
-    {
-        line.set_power_system_database(this);
-    }
+    //if(line.get_power_system_database()==NULL)
+    //    line.set_power_system_database(this);
 
     if(this != line.get_power_system_database())
     {
@@ -767,14 +818,12 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
     line_index.set_device_index(device_id, line_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
+void POWER_SYSTEM_DATABASE::append_transformer(const TRANSFORMER& transformer)
 {
     ostringstream osstream;
 
-    if(transformer.get_power_system_database()==NULL)
-    {
-        transformer.set_power_system_database(this);
-    }
+    //if(transformer.get_power_system_database()==NULL)
+    //    transformer.set_power_system_database(this);
 
     if(this != transformer.get_power_system_database())
     {
@@ -849,14 +898,12 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
     transformer_index.set_device_index(device_id, transformer_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
+void POWER_SYSTEM_DATABASE::append_fixed_shunt(const FIXED_SHUNT& shunt)
 {
     ostringstream osstream;
 
-    if(shunt.get_power_system_database()==NULL)
-    {
-        shunt.set_power_system_database(this);
-    }
+    //if(shunt.get_power_system_database()==NULL)
+    //    shunt.set_power_system_database(this);
 
     if(this != shunt.get_power_system_database())
     {
@@ -913,14 +960,12 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
     fixed_shunt_index.set_device_index(device_id, shunt_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
+void POWER_SYSTEM_DATABASE::append_hvdc(const HVDC& hvdc)
 {
     ostringstream osstream;
 
-    if(hvdc.get_power_system_database()==NULL)
-    {
-        hvdc.set_power_system_database(this);
-    }
+    //if(hvdc.get_power_system_database()==NULL)
+    //    hvdc.set_power_system_database(this);
 
     if(this != hvdc.get_power_system_database())
     {
@@ -986,14 +1031,12 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
     hvdc_index.set_device_index(device_id, hvdc_count);
 }
 
-void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
+void POWER_SYSTEM_DATABASE::append_equivalent_device(const EQUIVALENT_DEVICE& edevice)
 {
     ostringstream osstream;
 
-    if(edevice.get_power_system_database()==NULL)
-    {
-        edevice.set_power_system_database(this);
-    }
+    //if(edevice.get_power_system_database()==NULL)
+    //    edevice.set_power_system_database(this);
 
     if(this != edevice.get_power_system_database())
     {
@@ -1050,76 +1093,12 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
     equivalent_device_index.set_device_index(device_id, equivalent_device_count);
  }
 
-void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
+void POWER_SYSTEM_DATABASE::append_area(const AREA& area)
 {
     ostringstream osstream;
 
-    if(estorage.get_power_system_database()==NULL)
-    {
-        estorage.set_power_system_database(this);
-    }
-
-    if(this != estorage.get_power_system_database())
-    {
-        POWER_SYSTEM_DATABASE* db = estorage.get_power_system_database();
-        osstream<<"Warning. "<<estorage.get_device_name()<<" was assigned to power system database '"<<db->get_system_name()<<"'."<<endl
-          <<"It cannot be appended into the new power system database '";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    if(not estorage.is_valid())
-    {
-        osstream<<"Warning. Failed to append invalid energy storage to power system database '"<<get_system_name()<<"'.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    size_t bus = estorage.get_energy_storage_bus();
-
-    if(not this->is_bus_in_allowed_range(bus))
-    {
-        osstream<<"Warning. Bus "<<bus<<" is not in the allowed range [1, "<<get_allowed_max_bus_number()<<"] when appending "<<estorage.get_device_name()<<" to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Energy storage will not be appended into the database.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    string identifier = estorage.get_identifier();
-    DEVICE_ID device_id;
-    device_id.set_device_type("ENERGY STORAGE");
-    TERMINAL terminal;
-    terminal.append_bus(bus);
-    device_id.set_device_terminal(terminal);
-    device_id.set_device_identifier(identifier);
-
-    if(this->is_energy_storage_exist(device_id))
-    {
-        osstream<<"Warning. "<<estorage.get_device_name()<<" already exists in power system database '"<<get_system_name()<<"': Energy_storage.\n"
-          <<"Duplicate copy is not allowed.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    if(Energy_storage.capacity()==Energy_storage.size())
-    {
-        osstream<<"Warning. Capacity limit ("<<Energy_storage.capacity()<<") reached when appending energy storage to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Increase capacity by modified steps_config.json.";
-        show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    size_t energy_storage_count = get_energy_storage_count();
-    Energy_storage.push_back(estorage);
-    energy_storage_index.set_device_index(device_id, energy_storage_count);
- }
-
-void POWER_SYSTEM_DATABASE::append_area(AREA& area)
-{
-    ostringstream osstream;
-
-    if(area.get_power_system_database()==NULL)
-        area.set_power_system_database(this);
+    //if(area.get_power_system_database()==NULL)
+    //    area.set_power_system_database(this);
 
     if(this != area.get_power_system_database())
     {
@@ -1158,12 +1137,12 @@ void POWER_SYSTEM_DATABASE::append_area(AREA& area)
     area_index[area.get_area_number()]= area_count;
 }
 
-void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
+void POWER_SYSTEM_DATABASE::append_zone(const ZONE& zone)
 {
     ostringstream osstream;
 
-    if(zone.get_power_system_database()==NULL)
-        zone.set_power_system_database(this);
+    //if(zone.get_power_system_database()==NULL)
+    //    zone.set_power_system_database(this);
 
     if(this != zone.get_power_system_database())
     {
@@ -1202,12 +1181,12 @@ void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
     zone_index[zone.get_zone_number()]= zone_count;
 }
 
-void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
+void POWER_SYSTEM_DATABASE::append_owner(const OWNER& owner)
 {
     ostringstream osstream;
 
-    if(owner.get_power_system_database()==NULL)
-        owner.set_power_system_database(this);
+    //if(owner.get_power_system_database()==NULL)
+    //    owner.set_power_system_database(this);
 
     if(this != owner.get_power_system_database())
     {
@@ -1359,6 +1338,13 @@ void POWER_SYSTEM_DATABASE::append_hvdc_related_model(const DEVICE_ID did, const
             ptr->set_model(model);
         return;
     }
+}
+
+void POWER_SYSTEM_DATABASE::update_all_bus_base_frequency(double fbase_Hz)
+{
+    size_t n = Bus.size();
+    for(size_t i=0; i<n; ++i)
+        Bus[i].set_base_frequency_in_Hz(fbase_Hz);
 }
 
 bool POWER_SYSTEM_DATABASE::is_bus_exist(size_t bus) const

@@ -1692,9 +1692,9 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
     file<<"% Powerflow result exported at "<<time_stamp<<endl;
-    snprintf(buffer, 1000, "%s", (db->get_case_title_1()).c_str());
+    snprintf(buffer, 1000, "%s", (db->get_case_information()).c_str());
     file<<"% "<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (db->get_case_title_2()).c_str());
+    snprintf(buffer, 1000, "%s", (db->get_case_additional_information()).c_str());
     file<<"% "<<buffer<<endl;
     vector<BUS*> buses = db->get_all_buses();
     size_t nbus = buses.size();
@@ -1917,9 +1917,9 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
             local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
     file<<"% Powerflow result exported at "<<time_stamp<<endl;
-    snprintf(buffer, 1000, "%s", (db->get_case_title_1()).c_str());
+    snprintf(buffer, 1000, "%s", (db->get_case_information()).c_str());
     file<<"% "<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (db->get_case_title_2()).c_str());
+    snprintf(buffer, 1000, "%s", (db->get_case_additional_information()).c_str());
     file<<"% "<<buffer<<endl;
     vector<BUS*> buses = db->get_all_buses();
     size_t nbus = buses.size();

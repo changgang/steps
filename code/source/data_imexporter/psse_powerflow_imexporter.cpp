@@ -17,6 +17,8 @@ PSSE_IMEXPORTER::PSSE_IMEXPORTER()
 {
     raw_data_in_ram.clear();
     dyr_data_in_ram.clear();
+
+    common_base_frequency_in_Hz = 50.0;
 }
 
 PSSE_IMEXPORTER::~PSSE_IMEXPORTER()
@@ -186,13 +188,13 @@ void PSSE_IMEXPORTER::load_case_data()
     data.erase(data.begin()); // line rating
     if(data.size()>0)
     {
-        psdb->set_system_base_frequency_in_Hz(get_double_data(data.front(),"50.0"));
+        common_base_frequency_in_Hz = get_double_data(data.front(),"50.0");
         data.erase(data.begin());
     }
     data = raw_data_in_ram[1];
 
-    psdb->set_case_title_1(data[0]);
-    psdb->set_case_title_2(data[1]);
+    psdb->set_case_information(data[0]);
+    psdb->set_case_additional_information(data[1]);
     //
 }
 
@@ -225,6 +227,7 @@ void PSSE_IMEXPORTER::load_bus_data()
     {
         str = DATA[i];
         BUS bus(psdb);
+        bus.set_base_frequency_in_Hz(common_base_frequency_in_Hz);
 
         data.clear();
         data = split_string(str,",");
@@ -1974,11 +1977,15 @@ string PSSE_IMEXPORTER::export_case_data() const
     }
 
     char buffer[1000];
-    snprintf(buffer, 1000, "0, %f, 33, 0, 0, %f", psdb->get_system_base_power_in_MVA(), psdb->get_system_base_frequency_in_Hz());
+    vector<size_t> buses = psdb->get_all_buses_number();
+    double fbase = 50.0;
+    if(buses.size()!=0)
+        fbase = psdb->get_bus_base_frequency_in_Hz(buses[0]);
+    snprintf(buffer, 1000, "0, %f, 33, 0, 0, %f", psdb->get_system_base_power_in_MVA(), fbase);
     osstream<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (psdb->get_case_title_1()).c_str());
+    snprintf(buffer, 1000, "%s", (psdb->get_case_information()).c_str());
     osstream<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (psdb->get_case_title_2()).c_str());
+    snprintf(buffer, 1000, "%s", (psdb->get_case_additional_information()).c_str());
     osstream<<buffer<<endl;
     return osstream.str();
 }

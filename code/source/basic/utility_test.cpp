@@ -44,12 +44,12 @@ UTILITY_TEST::UTILITY_TEST()
 
 void UTILITY_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
 }
 
 void UTILITY_TEST::tear_down()
 {
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }

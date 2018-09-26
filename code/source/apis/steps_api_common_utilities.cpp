@@ -410,8 +410,6 @@ double api_get_package_float_data(char* parameter_name)
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="FBASE")
-        return psdb->get_system_base_frequency_in_Hz();
     if(PARAMETER_NAME=="SBASE")
         return psdb->get_system_base_power_in_MVA();
 
@@ -424,8 +422,6 @@ void api_set_package_float_data(char* parameter_name, double value)
     POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="FBASE")
-        return psdb->set_system_base_frequency_in_Hz(value);
     if(PARAMETER_NAME=="SBASE")
         return psdb->set_system_base_power_in_MVA(value);
 

@@ -16,7 +16,6 @@ POWERFLOW_CASE_GENERATOR::POWERFLOW_CASE_GENERATOR()
 {
     set_power_system_database_maximum_bus_number(10000);
     psdb.set_system_base_power_in_MVA(100.0);
-    psdb.set_system_base_frequency_in_Hz(50.0);
 
     set_dynamic_simulation_time_step_in_s(0.01);
 
@@ -232,7 +231,7 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
         filename = filename+"_power_flow_not_converged";
     filename = filename+".raw";
 
-    string randoms_info = psdb.get_case_title_2()+"  PS:LOAD RANDOMS ARE: ";
+    string randoms_info = psdb.get_case_additional_information()+"  PS:LOAD RANDOMS ARE: ";
     for(size_t i=0; i!=nload; ++i)
     {
         load = loads[i];
@@ -240,7 +239,7 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
         randoms_info += num2str(scale)+"  ";
     }
 
-    psdb.set_case_title_2(randoms_info);
+    psdb.set_case_additional_information(randoms_info);
 
 
     imexporter.export_powerflow_data(filename);

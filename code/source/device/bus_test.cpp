@@ -53,9 +53,8 @@ BUS_TEST::BUS_TEST()
 
 void BUS_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100);
-    db->set_system_base_frequency_in_Hz(50.0);
 
     bus = new BUS(db);
     bus->set_power_system_database(db);
@@ -63,8 +62,7 @@ void BUS_TEST::setup()
 
 void BUS_TEST::tear_down()
 {
-    delete db;
-    db = NULL;
+    db->clear_database();
 
     show_test_end_information();
 }

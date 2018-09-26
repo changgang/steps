@@ -15,7 +15,6 @@ CCT_SEARCHER::CCT_SEARCHER()
 {
     set_power_system_database_maximum_bus_number(10000);
     psdb.set_system_base_power_in_MVA(100.0);
-    psdb.set_system_base_frequency_in_Hz(50.0);
 
     set_dynamic_simulation_time_step_in_s(0.01);
 

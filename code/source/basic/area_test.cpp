@@ -24,7 +24,7 @@ AREA_TEST::AREA_TEST()
 
 void AREA_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100);
 
     BUS bus(db);
@@ -49,7 +49,7 @@ void AREA_TEST::tear_down()
 {
     delete area;
 
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }

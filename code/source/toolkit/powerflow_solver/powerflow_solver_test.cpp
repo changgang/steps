@@ -47,7 +47,7 @@ POWERFLOW_SOLVER_TEST::POWERFLOW_SOLVER_TEST()
 
 void POWERFLOW_SOLVER_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     powerflow_solver = new POWERFLOW_SOLVER;
     powerflow_solver->set_power_system_database(db);
 }
@@ -55,7 +55,7 @@ void POWERFLOW_SOLVER_TEST::setup()
 void POWERFLOW_SOLVER_TEST::tear_down()
 {
     delete powerflow_solver;
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }

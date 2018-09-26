@@ -21,7 +21,7 @@ ZONE_TEST::ZONE_TEST()
 
 void ZONE_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
 
     zone = new ZONE(db);
 }
@@ -30,7 +30,7 @@ void ZONE_TEST::tear_down()
 {
     delete zone;
 
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }

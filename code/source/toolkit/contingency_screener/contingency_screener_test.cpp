@@ -39,9 +39,8 @@ CONTINGENCY_SCREENER_TEST::CONTINGENCY_SCREENER_TEST()
 
 void CONTINGENCY_SCREENER_TEST::setup()
 {
-    psdb = new POWER_SYSTEM_DATABASE;
+    psdb = get_default_power_system_database();
     psdb->set_allowed_max_bus_number(1000);
-    psdb->set_system_base_frequency_in_Hz(50.0);
     psdb->set_system_base_power_in_MVA(100.0);
 
     searcher = new CONTINGENCY_SCREENER;
@@ -50,7 +49,7 @@ void CONTINGENCY_SCREENER_TEST::setup()
 void CONTINGENCY_SCREENER_TEST::tear_down()
 {
     delete searcher;
-    delete psdb;
+    psdb->clear_database();
 
     show_test_end_information();
 }

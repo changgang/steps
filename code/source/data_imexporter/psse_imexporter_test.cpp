@@ -38,7 +38,7 @@ PSSE_IMEXPORTER_TEST::PSSE_IMEXPORTER_TEST()
 
 void PSSE_IMEXPORTER_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100000);
 
     importer = new PSSE_IMEXPORTER;
@@ -49,9 +49,8 @@ void PSSE_IMEXPORTER_TEST::setup()
 void PSSE_IMEXPORTER_TEST::tear_down()
 {
     delete importer;
-    delete db;
     importer = NULL;
-    db = NULL;
+    db->clear_database();
 
     show_test_end_information();
 }
@@ -60,7 +59,6 @@ void PSSE_IMEXPORTER_TEST::test_load_case_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSSE_IMEXPORTER_TEST");
 
-    TEST_ASSERT(db->get_system_base_frequency_in_Hz()==60.0);
     TEST_ASSERT(db->get_system_base_power_in_MVA()==100.0);
     TEST_ASSERT(importer->get_data_version()==31);
 }

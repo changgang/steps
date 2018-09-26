@@ -44,7 +44,6 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_is_bus_in_allowed_range();
 
         void test_set_get_system_base_power();
-        void test_set_get_system_base_frequency();
 
         void test_append_and_get_bus();
         void test_append_and_get_generator();

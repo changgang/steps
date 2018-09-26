@@ -27,7 +27,7 @@ WT_GENERATOR_TEST::WT_GENERATOR_TEST()
 
 void WT_GENERATOR_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
 
     db->set_system_base_power_in_MVA(100.0);
     db->set_allowed_max_bus_number(100);
@@ -50,8 +50,7 @@ void WT_GENERATOR_TEST::tear_down()
     delete wt_generator;
     wt_generator = NULL;
 
-    delete db;
-    db=NULL;
+    db->clear_database();
 
     show_test_end_information();
 }

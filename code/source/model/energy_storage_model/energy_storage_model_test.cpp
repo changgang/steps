@@ -27,9 +27,8 @@ ENERGY_STORAGE_MODEL_TEST::ENERGY_STORAGE_MODEL_TEST()
 
 void ENERGY_STORAGE_MODEL_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100);
-    db->set_system_base_frequency_in_Hz(50.0);
     db->set_system_base_power_in_MVA(100.0);
 
     BUS bus(db);
@@ -55,7 +54,7 @@ void ENERGY_STORAGE_MODEL_TEST::setup()
 
 void ENERGY_STORAGE_MODEL_TEST::tear_down()
 {
-    delete db;
+    db->clear_database();
 }
 
 POWER_SYSTEM_DATABASE* ENERGY_STORAGE_MODEL_TEST::get_test_power_system_database()

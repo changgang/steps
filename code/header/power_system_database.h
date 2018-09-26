@@ -79,31 +79,31 @@ class POWER_SYSTEM_DATABASE
 
         void set_system_base_power_in_MVA(const double s);
         double get_system_base_power_in_MVA() const;
-        void set_system_base_frequency_in_Hz(const double f);
-        double get_system_base_frequency_in_Hz() const;
 
-        void set_case_title_1(string title);
-        void set_case_title_2(string title);
+        void set_case_information(string title);
+        void set_case_additional_information(string title);
 
-        string get_case_title_1() const;
-        string get_case_title_2() const;
+        string get_case_information() const;
+        string get_case_additional_information() const;
 
-        void append_bus(BUS& bus);
-        void append_generator(GENERATOR& generator);
-        void append_wt_generator(WT_GENERATOR& wt_generator);
-        void append_pv_unit(PV_UNIT& pv_unit);
-        void append_load(LOAD& load);
-        void append_line(LINE& line);
-        void append_transformer(TRANSFORMER& transformer);
-        void append_fixed_shunt(FIXED_SHUNT& shunt);
-        void append_hvdc(HVDC& hvdc);
-        void append_equivalent_device(EQUIVALENT_DEVICE& edevice);
-        void append_energy_storage(ENERGY_STORAGE& estorage);
-        void append_area(AREA& area);
-        void append_zone(ZONE& zone);
-        void append_owner(OWNER& owner);
+        void append_bus(const BUS& bus);
+        void append_generator(const GENERATOR& generator);
+        void append_wt_generator(const WT_GENERATOR& wt_generator);
+        void append_pv_unit(const PV_UNIT& pv_unit);
+        void append_energy_storage(const ENERGY_STORAGE& estorage);
+        void append_load(const LOAD& load);
+        void append_line(const LINE& line);
+        void append_transformer(const TRANSFORMER& transformer);
+        void append_fixed_shunt(const FIXED_SHUNT& shunt);
+        void append_hvdc(const HVDC& hvdc);
+        void append_equivalent_device(const EQUIVALENT_DEVICE& edevice);
+        void append_area(const AREA& area);
+        void append_zone(const ZONE& zone);
+        void append_owner(const OWNER& owner);
 
         void append_dynamic_model(const DEVICE_ID did, const MODEL* model);
+
+        void update_all_bus_base_frequency(double fbase_Hz);
 
         bool is_bus_exist(size_t bus) const;
         bool is_generator_exist(const DEVICE_ID& device_id) const;
@@ -472,9 +472,8 @@ class POWER_SYSTEM_DATABASE
 
         string system_name;
         double system_base_power_in_MVA;
-        double system_base_fequency_in_Hz;
 
-        string case_title_1, case_title_2;
+        string case_information, case_additional_information;
 
         vector<BUS> Bus;
         vector<GENERATOR> Generator;

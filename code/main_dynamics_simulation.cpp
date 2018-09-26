@@ -15,7 +15,7 @@ int main()
     POWER_SYSTEM_DATABASE* db;
     DYNAMICS_SIMULATOR* simulator;
 
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     simulator = new DYNAMICS_SIMULATOR(db);
 
     db->set_allowed_max_bus_number(1000);
@@ -108,7 +108,7 @@ int main()
 
     delete simulator;
 
-    delete db;
+    db->clear_database();
 
     terminate_simulator();
 

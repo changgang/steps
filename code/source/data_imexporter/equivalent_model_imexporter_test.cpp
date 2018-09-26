@@ -26,7 +26,7 @@ EQUIVALENT_MODEL_IMEXPORTER_TEST::EQUIVALENT_MODEL_IMEXPORTER_TEST()
 
 void EQUIVALENT_MODEL_IMEXPORTER_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100000);
 
     importer = new EQUIVALENT_MODEL_IMEXPORTER;
@@ -36,11 +36,8 @@ void EQUIVALENT_MODEL_IMEXPORTER_TEST::setup()
 void EQUIVALENT_MODEL_IMEXPORTER_TEST::tear_down()
 {
     delete importer;
-
-    delete db;
-
     importer = NULL;
-    db = NULL;
+    db->clear_database();
 
     show_test_end_information();
 }

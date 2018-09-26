@@ -19,9 +19,8 @@ HVDC_MODEL_TEST::HVDC_MODEL_TEST()
 
 void HVDC_MODEL_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_allowed_max_bus_number(100);
-    db->set_system_base_frequency_in_Hz(50.0);
     db->set_system_base_power_in_MVA(100.0);
 
     BUS bus(db);
@@ -87,7 +86,7 @@ void HVDC_MODEL_TEST::setup()
 
 void HVDC_MODEL_TEST::tear_down()
 {
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }

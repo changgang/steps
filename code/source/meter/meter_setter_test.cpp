@@ -28,7 +28,7 @@ METER_SETTER_TEST::METER_SETTER_TEST()
 
 void METER_SETTER_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
 
     setter = new METER_SETTER;
     setter->set_power_system_database(db);
@@ -39,8 +39,7 @@ void METER_SETTER_TEST::tear_down()
     delete setter;
     setter = NULL;
 
-    delete db;
-    db = NULL;
+    db->clear_database();
 
     show_test_end_information();
 }

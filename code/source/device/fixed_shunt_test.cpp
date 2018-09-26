@@ -36,7 +36,7 @@ FIXED_SHUNT_TEST::FIXED_SHUNT_TEST()
 
 void FIXED_SHUNT_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     db->set_system_base_power_in_MVA(100.0);
     db->set_allowed_max_bus_number(10);
 
@@ -54,8 +54,7 @@ void FIXED_SHUNT_TEST::tear_down()
     delete fixed_shunt;
     fixed_shunt = NULL;
 
-    delete db;
-    db = NULL;
+    db->clear_database();
 
     show_test_end_information();
 }

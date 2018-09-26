@@ -19,7 +19,7 @@ JACOBIAN_BUILDER_TEST::JACOBIAN_BUILDER_TEST()
 
 void JACOBIAN_BUILDER_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     network_db = new NETWORK_DATABASE(db);
 
     jacobian_builder = new JACOBIAN_BUILDER;
@@ -32,7 +32,7 @@ void JACOBIAN_BUILDER_TEST::tear_down()
 {
     delete jacobian_builder;
     delete network_db;
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }

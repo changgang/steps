@@ -34,7 +34,6 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_bus_in_allowed_range);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_system_base_power);
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_system_base_frequency);
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_is_bus_exist);
@@ -305,12 +304,12 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
 void POWER_SYSTEM_DATABASE_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
 }
 
 void POWER_SYSTEM_DATABASE_TEST::tear_down()
 {
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }
@@ -334,13 +333,13 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
     // Zone: 1, 2, 3
     // Owner: 1, 2, 3
     db->set_allowed_max_bus_number(100);
-    db->set_system_base_frequency_in_Hz(50.0);
 
     {
         BUS bus(db);
         bus.set_bus_number(1);
         bus.set_bus_name("BUS A");
         bus.set_base_voltage_in_kV(110.0);
+        bus.set_base_frequency_in_Hz(50.0);
         bus.set_bus_type(SLACK_TYPE);
         bus.set_area_number(1);
         bus.set_zone_number(1);
@@ -1101,16 +1100,6 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_system_base_power()
     TEST_ASSERT(fabs(db->get_system_base_power_in_MVA()-100.0)<FLOAT_EPSILON);
     db->set_system_base_power_in_MVA(1000.0);
     TEST_ASSERT(fabs(db->get_system_base_power_in_MVA()-1000.0)<FLOAT_EPSILON);
-}
-
-void POWER_SYSTEM_DATABASE_TEST::test_set_get_system_base_frequency()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
-
-    db->set_system_base_frequency_in_Hz(50.0);
-    TEST_ASSERT(fabs(db->get_system_base_frequency_in_Hz()-50.0)<FLOAT_EPSILON);
-    db->set_system_base_frequency_in_Hz(60.0);
-    TEST_ASSERT(fabs(db->get_system_base_frequency_in_Hz()-60.0)<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()

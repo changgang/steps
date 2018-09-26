@@ -17,12 +17,11 @@ void prepare_training_load_scale_case()
     POWER_SYSTEM_DATABASE* db;
     DYNAMICS_SIMULATOR* simulator;
 
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     simulator = new DYNAMICS_SIMULATOR(db);
 
     db->set_allowed_max_bus_number(1000);
     db->set_system_base_power_in_MVA(100.0);
-    db->set_system_base_frequency_in_Hz(60.0);
 
     simulator->set_allowed_max_power_imbalance_in_MVA(0.0001);
     set_dynamic_simulation_time_step_in_s(0.001);
@@ -65,7 +64,7 @@ void prepare_training_load_scale_case()
 
     delete simulator;
 
-    delete db;
+    db->clear_database();
 }
 
 void prepare_training_generation_shed_case()
@@ -73,12 +72,11 @@ void prepare_training_generation_shed_case()
     POWER_SYSTEM_DATABASE* db;
     DYNAMICS_SIMULATOR* simulator;
 
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     simulator = new DYNAMICS_SIMULATOR(db);
 
     db->set_allowed_max_bus_number(1000);
     db->set_system_base_power_in_MVA(100.0);
-    db->set_system_base_frequency_in_Hz(60.0);
 
     simulator->set_allowed_max_power_imbalance_in_MVA(0.0001);
     set_dynamic_simulation_time_step_in_s(0.001);
@@ -121,7 +119,7 @@ void prepare_training_generation_shed_case()
 
     delete simulator;
 
-    delete db;
+    db->clear_database();
 }
 
 
@@ -136,12 +134,11 @@ int main()
     POWER_SYSTEM_DATABASE* db;
     DYNAMICS_SIMULATOR* simulator;
 
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     simulator = new DYNAMICS_SIMULATOR(db);
 
     db->set_allowed_max_bus_number(1000);
     db->set_system_base_power_in_MVA(100.0);
-    db->set_system_base_frequency_in_Hz(60.0);
 
     set_dynamic_simulation_time_step_in_s(0.001);
     simulator->set_allowed_max_power_imbalance_in_MVA(0.01);
@@ -208,7 +205,7 @@ int main()
 
     delete simulator;
 
-    delete db;
+    db->clear_database();
 
     terminate_simulator();
 

@@ -321,7 +321,6 @@ EXPORT_STEPS_DLL void api_prepare_load_related_meters();
 EXPORT_STEPS_DLL void api_prepare_line_related_meters();
 EXPORT_STEPS_DLL void api_prepare_hvdc_related_meters();
 EXPORT_STEPS_DLL void api_prepare_equivalent_device_related_meters();
-EXPORT_STEPS_DLL void api_prepare_energy_storage_related_meters();
 
 EXPORT_STEPS_DLL void api_prepare_bus_related_meter(size_t bus, char* meter_type);
 EXPORT_STEPS_DLL void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type, string var_name);

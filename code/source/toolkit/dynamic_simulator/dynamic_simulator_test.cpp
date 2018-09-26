@@ -73,7 +73,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 
 void DYNAMICS_SIMULATOR_TEST::setup()
 {
-    db = new POWER_SYSTEM_DATABASE;
+    db = get_default_power_system_database();
     simulator = new DYNAMICS_SIMULATOR(db);
 
     set_dynamic_simulation_time_step_in_s(0.01);
@@ -83,7 +83,7 @@ void DYNAMICS_SIMULATOR_TEST::setup()
 void DYNAMICS_SIMULATOR_TEST::tear_down()
 {
     delete simulator;
-    delete db;
+    db->clear_database();
 
     show_test_end_information();
 }
