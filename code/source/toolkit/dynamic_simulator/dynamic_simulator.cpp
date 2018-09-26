@@ -636,7 +636,7 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_generator_related_meter(DEVICE_ID did, string meter_type, string var_name)
+void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -693,7 +693,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(DEVICE_ID did, string m
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(DEVICE_ID did, string meter_type, string var_name)
+void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -774,7 +774,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(DEVICE_ID did, strin
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(DEVICE_ID did, string meter_type, string var_name)
+void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -855,7 +855,7 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(DEVICE_ID did, string met
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(DEVICE_ID did, string meter_type, string var_name)
+void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -936,7 +936,7 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(DEVICE_ID did, str
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_load_related_meter(DEVICE_ID did, string meter_type, string var_name)
+void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -981,7 +981,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(DEVICE_ID did, string meter_
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_line_related_meter(DEVICE_ID did, string meter_type, string side, string var_name)
+void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -1031,7 +1031,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(DEVICE_ID did, string meter_
 }
 
 
-void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(DEVICE_ID did, string meter_type, string side, string var_name)
+void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -1110,7 +1110,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(DEVICE_ID did, string meter_
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(DEVICE_ID did, string meter_type, string var_name)
+void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
@@ -1894,7 +1894,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     size_t n = I_mismatch.size();
     //#pragma omp parallel for
     for(size_t i = 0; i<n; ++i)
-        I_mismatch[i] = -I_mismatch[i];
+        I_mismatch[i] *= (-1.0);
 
     add_generators_to_bus_current_mismatch();
     add_wt_generators_to_bus_current_mismatch();
@@ -2214,15 +2214,14 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     size_t physical_bus;
     BUS* bus;
     complex<double> V0, delta_v, V;
-    double vmag0, vang0, vmag_new, vang_new, delta_vang;
+    double vang0, vmag_new, vang_new, delta_vang;
 
     for(size_t i=0; i!=n; ++i)
     {
         physical_bus = network_db->get_physical_bus_number_of_internal_bus(i);
         bus = psdb->get_bus(physical_bus);
-        vmag0 = bus->get_voltage_in_pu();
         vang0 = bus->get_angle_in_rad();
-        V0 = complex<double>(cos(vang0), sin(vang0))*vmag0;
+        V0 = bus->get_complex_voltage_in_pu();
 
         delta_v = complex<double>(delta_V[i], delta_V[i+n]);
 
@@ -2345,7 +2344,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, FA
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(DEVICE_ID did, size_t side_bus, double location, FAULT fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, size_t side_bus, double location, FAULT fault)
 {
     if(location <0.0 or location >1.0)
         return;
@@ -2396,7 +2395,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(DEVICE_ID did, si
     }
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(DEVICE_ID did, size_t side_bus, double location, FAULT fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, size_t side_bus, double location, FAULT fault)
 {
     if(location <0.0 or location >1.0)
         return;
@@ -2633,7 +2632,7 @@ void DYNAMICS_SIMULATOR::trip_buses(const vector<size_t> buses)
         trip_bus(buses[i]);
 }
 
-void DYNAMICS_SIMULATOR::set_line_fault(DEVICE_ID line_id, size_t side_bus, double location, complex<double> fault_shunt)
+void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, complex<double> fault_shunt)
 {
     ostringstream osstream;
 
@@ -2702,7 +2701,7 @@ void DYNAMICS_SIMULATOR::set_line_fault(DEVICE_ID line_id, size_t side_bus, doub
     }
 }
 
-void DYNAMICS_SIMULATOR::clear_line_fault(DEVICE_ID line_id, size_t side_bus, double location)
+void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location)
 {
     ostringstream osstream;
 
@@ -2755,7 +2754,7 @@ void DYNAMICS_SIMULATOR::clear_line_fault(DEVICE_ID line_id, size_t side_bus, do
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_line(DEVICE_ID line_id)
+void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
 {
     ostringstream osstream;
 
@@ -2791,7 +2790,7 @@ void DYNAMICS_SIMULATOR::trip_line(DEVICE_ID line_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_line_breaker(DEVICE_ID line_id, size_t side_bus)
+void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, size_t side_bus)
 {
     ostringstream osstream;
 
@@ -2843,7 +2842,7 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(DEVICE_ID line_id, size_t side_bus)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_line(DEVICE_ID line_id)
+void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
 {
     ostringstream osstream;
 
@@ -2879,7 +2878,7 @@ void DYNAMICS_SIMULATOR::close_line(DEVICE_ID line_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_line_breaker(DEVICE_ID line_id, size_t side_bus)
+void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, size_t side_bus)
 {
     ostringstream osstream;
 
@@ -2929,7 +2928,7 @@ void DYNAMICS_SIMULATOR::close_line_breaker(DEVICE_ID line_id, size_t side_bus)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_transformer(DEVICE_ID trans_id)
+void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
 {
     ostringstream osstream;
 
@@ -2969,7 +2968,7 @@ void DYNAMICS_SIMULATOR::trip_transformer(DEVICE_ID trans_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_transformer_breaker(DEVICE_ID trans_id, size_t side_bus)
+void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus)
 {
     ostringstream osstream;
 
@@ -3037,7 +3036,7 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(DEVICE_ID trans_id, size_t sid
     }
 }
 
-void DYNAMICS_SIMULATOR::close_transformer(DEVICE_ID trans_id)
+void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
 {
     ostringstream osstream;
 
@@ -3077,7 +3076,7 @@ void DYNAMICS_SIMULATOR::close_transformer(DEVICE_ID trans_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_transformer_breaker(DEVICE_ID trans_id, size_t side_bus)
+void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus)
 {
     ostringstream osstream;
 
@@ -3141,7 +3140,7 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(DEVICE_ID trans_id, size_t si
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_generator(DEVICE_ID gen_id)
+void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
 {
     ostringstream osstream;
 
@@ -3176,7 +3175,7 @@ void DYNAMICS_SIMULATOR::trip_generator(DEVICE_ID gen_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::shed_generator(DEVICE_ID gen_id,double percent)
+void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 {
     ostringstream osstream;
 
@@ -3220,7 +3219,7 @@ void DYNAMICS_SIMULATOR::shed_generator(DEVICE_ID gen_id,double percent)
 }
 
 
-void DYNAMICS_SIMULATOR::trip_wt_generator(DEVICE_ID gen_id, size_t n)
+void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
 {
     ostringstream osstream;
 
@@ -3274,7 +3273,7 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(DEVICE_ID gen_id, size_t n)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_load(DEVICE_ID load_id)
+void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 {
     ostringstream osstream;
 
@@ -3309,7 +3308,7 @@ void DYNAMICS_SIMULATOR::trip_load(DEVICE_ID load_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_load(DEVICE_ID load_id)
+void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
 {
     ostringstream osstream;
 
@@ -3344,7 +3343,7 @@ void DYNAMICS_SIMULATOR::close_load(DEVICE_ID load_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::scale_load(DEVICE_ID load_id, double percent)
+void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
 {
     ostringstream osstream;
 
@@ -3421,7 +3420,7 @@ void DYNAMICS_SIMULATOR::scale_all_load(double percent)
 }
 
 
-void DYNAMICS_SIMULATOR::trip_fixed_shunt(DEVICE_ID shunt_id)
+void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
 {
     ostringstream osstream;
 
@@ -3456,7 +3455,7 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(DEVICE_ID shunt_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_fixed_shunt(DEVICE_ID shunt_id)
+void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 {
     ostringstream osstream;
 
@@ -3492,7 +3491,7 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(DEVICE_ID shunt_id)
 }
 
 
-void DYNAMICS_SIMULATOR::manual_bypass_hvdc(DEVICE_ID hvdc_id)
+void DYNAMICS_SIMULATOR::manual_bypass_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
@@ -3511,7 +3510,7 @@ void DYNAMICS_SIMULATOR::manual_bypass_hvdc(DEVICE_ID hvdc_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_unbypass_hvdc(DEVICE_ID hvdc_id)
+void DYNAMICS_SIMULATOR::manual_unbypass_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
@@ -3530,7 +3529,7 @@ void DYNAMICS_SIMULATOR::manual_unbypass_hvdc(DEVICE_ID hvdc_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_block_hvdc(DEVICE_ID hvdc_id)
+void DYNAMICS_SIMULATOR::manual_block_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
@@ -3549,7 +3548,7 @@ void DYNAMICS_SIMULATOR::manual_block_hvdc(DEVICE_ID hvdc_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::manual_unblock_hvdc(DEVICE_ID hvdc_id)
+void DYNAMICS_SIMULATOR::manual_unblock_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
@@ -3569,7 +3568,7 @@ void DYNAMICS_SIMULATOR::manual_unblock_hvdc(DEVICE_ID hvdc_id)
 }
 
 
-void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(DEVICE_ID gen_id, double vref)
+void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref)
 {
     POWER_SYSTEM_DATABASE* db = get_power_system_database();
     GENERATOR* generator = db->get_generator(gen_id);
@@ -3581,7 +3580,7 @@ void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(DEVICE_ID gen_
     }
 }
 
-void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(DEVICE_ID gen_id, double Pref)
+void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref)
 {
     POWER_SYSTEM_DATABASE* db = get_power_system_database();
     GENERATOR* generator = db->get_generator(gen_id);

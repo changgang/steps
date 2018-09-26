@@ -13,6 +13,7 @@ using namespace std;
 
 CCT_SEARCHER::CCT_SEARCHER()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     set_power_system_database_maximum_bus_number(10000);
     psdb.set_system_base_power_in_MVA(100.0);
 
@@ -45,6 +46,7 @@ CCT_SEARCHER::~CCT_SEARCHER()
 
 void CCT_SEARCHER::set_power_system_database_maximum_bus_number(size_t number)
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     psdb.set_allowed_max_bus_number(number);
 }
 
@@ -138,6 +140,7 @@ void CCT_SEARCHER::set_simulator_iteration_accelerator(double iter_alpha)
 
 size_t CCT_SEARCHER::get_power_system_database_maximum_bus_number() const
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     return psdb.get_allowed_max_bus_number();
 }
 
@@ -373,10 +376,10 @@ bool CCT_SEARCHER::is_searcher_is_properly_set() const
 
 bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     psdb.clear_database();
 
     PSSE_IMEXPORTER importer;
-    importer.set_power_system_database(&psdb);
 
     importer.load_powerflow_data(get_powerflow_data_filename());
     importer.load_dynamic_data(get_dynamic_data_filename());

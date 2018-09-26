@@ -274,27 +274,27 @@ void api_initialize_package()
 
 void api_initialize_powerflow_solver()
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     solver->set_power_system_database(psdb);
 }
 
 size_t api_get_allowed_maximum_bus_number()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->get_allowed_max_bus_number();
 }
 
 void api_set_allowed_maximum_bus_number(size_t max_bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     psdb->set_allowed_max_bus_number(max_bus);
 }
 
 
 size_t api_get_device_capacity(const char* device_type)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     string DEVICE_TYPE = string2upper(device_type);
 
     if(DEVICE_TYPE=="BUS")
@@ -327,26 +327,26 @@ size_t api_get_device_capacity(const char* device_type)
 
 size_t api_get_area_capacity()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->get_area_capacity();
 }
 
 size_t api_get_zone_capacity()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->get_zone_capacity();
 }
 
 size_t api_get_owner_capacity()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->get_owner_capacity();
 }
 
 
 void api_set_device_capacity(const char* device_type, size_t cap)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     string DEVICE_TYPE = string2upper(device_type);
 
     if(DEVICE_TYPE=="BUS")
@@ -377,26 +377,26 @@ void api_set_device_capacity(const char* device_type, size_t cap)
 
 void api_set_area_capacity(size_t cap)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->set_area_capacity(cap);
 }
 
 void api_set_zone_capacity(size_t cap)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->set_zone_capacity(cap);
 }
 
 void api_set_owner_capacity(size_t cap)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->set_owner_capacity(cap);
 }
 
 void api_clear_package()
 {
-    get_default_power_system_database()->clear_database();
-    get_default_dynamic_simulator()->clear();
+    get_default_power_system_database_pointer()->clear_database();
+    get_default_dynamic_simulator_pointer()->clear();
 
 }
 
@@ -407,7 +407,7 @@ void api_terminate_package()
 
 double api_get_package_float_data(char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="SBASE")
@@ -419,7 +419,7 @@ double api_get_package_float_data(char* parameter_name)
 
 void api_set_package_float_data(char* parameter_name, double value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="SBASE")

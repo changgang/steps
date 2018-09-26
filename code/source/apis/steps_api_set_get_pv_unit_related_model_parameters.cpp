@@ -6,7 +6,7 @@ const char* api_get_pv_unit_related_model_name(size_t bus, char* identifier, cha
 {
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     PV_UNIT* pv_unit = psdb->get_pv_unit(did);
     if(pv_unit==NULL)
     {
@@ -50,7 +50,7 @@ const char* api_get_pv_unit_related_model_name(size_t bus, char* identifier, cha
 double api_get_pv_unit_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name)
 {
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     PV_UNIT* pv_unit = psdb->get_pv_unit(did);
     if(pv_unit==NULL)
     {
@@ -100,7 +100,7 @@ double api_get_pv_unit_related_model_float_parameter(size_t bus, char* identifie
 void api_set_pv_unit_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value)
 {
     DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     PV_UNIT* pv_unit = psdb->get_pv_unit(did);
     if(pv_unit==NULL)
     {

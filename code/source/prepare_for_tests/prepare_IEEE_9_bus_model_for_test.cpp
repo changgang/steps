@@ -570,7 +570,6 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model(POWER_SYSTEM_DATABASE* db)
 void prepare_IEEE_9_bus_model_complete_dynamic_model(POWER_SYSTEM_DATABASE* db)
 {
     PSSE_IMEXPORTER importer;
-    importer.set_power_system_database(db);
     importer.load_dynamic_data("ieee9.dyr");
 }
 

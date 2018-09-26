@@ -12,18 +12,16 @@ int main()
 {
     initialize_simulator(); // this function should be called first
 
-    POWER_SYSTEM_DATABASE psdb;
-    POWER_SYSTEM_DATABASE* psdb_ptr = (&psdb);
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     PSSE_IMEXPORTER importer;
 
-    importer.set_power_system_database(psdb_ptr);
     importer.load_powerflow_data("IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1_UFLS.dyr");
 
     POWERFLOW_SOLVER solver;
 
-    solver.set_power_system_database(psdb_ptr);
+    solver.set_power_system_database(psdb);
 
     solver.set_max_iteration(30);
     solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -33,7 +31,7 @@ int main()
 
     solver.solve_with_fast_decoupled_solution();
 
-    DYNAMICS_SIMULATOR simulator(psdb_ptr);
+    DYNAMICS_SIMULATOR simulator(psdb);
     set_dynamic_simulation_time_step_in_s(0.01);
 
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
@@ -47,7 +45,7 @@ int main()
 
     // change spinning reserve
     double SR = 0.0001;
-    vector<GENERATOR*> generators = psdb.get_all_generators();
+    vector<GENERATOR*> generators = psdb->get_all_generators();
     size_t n = generators.size();
     GENERATOR* gen;
     for(size_t i=0; i!=n; ++i)

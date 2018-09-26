@@ -6,7 +6,7 @@
 
 int api_get_zone_integer_data(size_t zone, char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     ZONE* zoneptr = psdb->get_zone(zone);
     if(zoneptr!=NULL)
@@ -27,7 +27,7 @@ int api_get_zone_integer_data(size_t zone, char* parameter_name)
 
 void api_set_zone_integer_data(size_t zone, char* parameter_name, int value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     ZONE* zoneptr = psdb->get_zone(zone);
     if(zoneptr!=NULL)
@@ -45,7 +45,7 @@ void api_set_zone_integer_data(size_t zone, char* parameter_name, int value)
 
 double api_get_zone_float_data(size_t zone, char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     ZONE* zoneptr = psdb->get_zone(zone);
     if(zoneptr!=NULL)
@@ -73,7 +73,7 @@ void api_set_zone_float_data(size_t zone, char* parameter_name, double value)
 
 const char* api_get_zone_string_data(size_t zone, char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
@@ -100,7 +100,7 @@ const char* api_get_zone_string_data(size_t zone, char* parameter_name)
 
 void api_set_zone_string_data(size_t zone, char* parameter_name, char* value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     string BLANK = "";
     ZONE* zoneptr = psdb->get_zone(zone);
@@ -118,7 +118,7 @@ void api_set_zone_string_data(size_t zone, char* parameter_name, char* value)
 
 bool api_get_zone_boolean_data(size_t zone, char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     ZONE* zoneptr = psdb->get_zone(zone);
     if(zoneptr!=NULL)

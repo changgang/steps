@@ -38,11 +38,10 @@ PSSE_IMEXPORTER_TEST::PSSE_IMEXPORTER_TEST()
 
 void PSSE_IMEXPORTER_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     db->set_allowed_max_bus_number(100000);
 
     importer = new PSSE_IMEXPORTER;
-    importer->set_power_system_database(db);
     importer->load_powerflow_data("sample.raw");
 }
 

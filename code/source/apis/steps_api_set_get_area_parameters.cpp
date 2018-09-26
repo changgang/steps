@@ -6,7 +6,7 @@
 
 int api_get_area_integer_data(size_t area, char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     AREA* areaptr = psdb->get_area(area);
     if(areaptr!=NULL)
@@ -30,7 +30,7 @@ int api_get_area_integer_data(size_t area, char* parameter_name)
 
 void api_set_area_integer_data(size_t area, char* parameter_name, int value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     AREA* areaptr = psdb->get_area(area);
     if(areaptr!=NULL)
@@ -51,7 +51,7 @@ void api_set_area_integer_data(size_t area, char* parameter_name, int value)
 
 double api_get_area_float_data(size_t area, char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     AREA* areaptr = psdb->get_area(area);
     if(areaptr!=NULL)
@@ -75,7 +75,7 @@ double api_get_area_float_data(size_t area, char* parameter_name)
 
 void api_set_area_float_data(size_t area, char* parameter_name, double value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     AREA* areaptr = psdb->get_area(area);
     if(areaptr!=NULL)
@@ -95,7 +95,7 @@ void api_set_area_float_data(size_t area, char* parameter_name, double value)
 
 const char* api_get_area_string_data(size_t area, char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     AREA* areaptr = psdb->get_area(area);
@@ -121,7 +121,7 @@ const char* api_get_area_string_data(size_t area, char* parameter_name)
 
 void api_set_area_string_data(size_t area, char* parameter_name, char* value)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     string BLANK = "";
     AREA* areaptr = psdb->get_area(area);
@@ -139,7 +139,7 @@ void api_set_area_string_data(size_t area, char* parameter_name, char* value)
 
 bool api_get_area_boolean_data(size_t area, char* parameter_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     AREA* areaptr = psdb->get_area(area);
     if(areaptr!=NULL)

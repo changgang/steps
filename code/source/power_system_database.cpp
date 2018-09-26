@@ -299,7 +299,7 @@ void POWER_SYSTEM_DATABASE::set_dynamic_simulator(DYNAMICS_SIMULATOR* simulator)
         return 0.0;
 }*/
 
-void POWER_SYSTEM_DATABASE::set_system_name(const string name)
+void POWER_SYSTEM_DATABASE::set_system_name(const string& name)
 {
     this->system_name = name;
 }
@@ -360,12 +360,12 @@ double POWER_SYSTEM_DATABASE::get_system_base_frequency_in_Hz() const
     return system_base_fequency_in_Hz;
 }
 */
-void POWER_SYSTEM_DATABASE::set_case_information(string title)
+void POWER_SYSTEM_DATABASE::set_case_information(const string& title)
 {
     case_information = title;
 }
 
-void POWER_SYSTEM_DATABASE::set_case_additional_information(string title)
+void POWER_SYSTEM_DATABASE::set_case_additional_information(const string& title)
 {
     case_additional_information = title;
 }
@@ -1213,7 +1213,7 @@ void POWER_SYSTEM_DATABASE::append_owner(const OWNER& owner)
     owner_index[owner.get_owner_number()]= owner_count;
 }
 
-void POWER_SYSTEM_DATABASE::append_dynamic_model(const DEVICE_ID did, const MODEL* model)
+void POWER_SYSTEM_DATABASE::append_dynamic_model(const DEVICE_ID& did, const MODEL* model)
 {
     if(did.get_device_type() != model->get_allowed_device_type())
         return;
@@ -1251,7 +1251,7 @@ void POWER_SYSTEM_DATABASE::append_dynamic_model(const DEVICE_ID did, const MODE
 }
 
 
-void POWER_SYSTEM_DATABASE::append_load_related_model(const DEVICE_ID did, const MODEL* model)
+void POWER_SYSTEM_DATABASE::append_load_related_model(const DEVICE_ID& did, const MODEL* model)
 {
     if(did.get_device_type() != model->get_allowed_device_type())
         return;
@@ -1264,7 +1264,7 @@ void POWER_SYSTEM_DATABASE::append_load_related_model(const DEVICE_ID did, const
     }
 }
 
-void POWER_SYSTEM_DATABASE::append_generator_related_model(const DEVICE_ID did, const MODEL* model)
+void POWER_SYSTEM_DATABASE::append_generator_related_model(const DEVICE_ID& did, const MODEL* model)
 {
     if(did.get_device_type() != model->get_allowed_device_type())
         return;
@@ -1277,7 +1277,7 @@ void POWER_SYSTEM_DATABASE::append_generator_related_model(const DEVICE_ID did, 
     }
 }
 
-void POWER_SYSTEM_DATABASE::append_wt_generator_related_model(const DEVICE_ID did, const MODEL* model)
+void POWER_SYSTEM_DATABASE::append_wt_generator_related_model(const DEVICE_ID& did, const MODEL* model)
 {
     if(did.get_device_type() != model->get_allowed_device_type())
         return;
@@ -1290,7 +1290,7 @@ void POWER_SYSTEM_DATABASE::append_wt_generator_related_model(const DEVICE_ID di
     }
 }
 
-void POWER_SYSTEM_DATABASE::append_pv_unit_related_model(const DEVICE_ID did, const MODEL* model)
+void POWER_SYSTEM_DATABASE::append_pv_unit_related_model(const DEVICE_ID& did, const MODEL* model)
 {
     if(did.get_device_type() != model->get_allowed_device_type())
         return;
@@ -1303,7 +1303,7 @@ void POWER_SYSTEM_DATABASE::append_pv_unit_related_model(const DEVICE_ID did, co
     }
 }
 
-void POWER_SYSTEM_DATABASE::append_energy_storage_related_model(const DEVICE_ID did, const MODEL* model)
+void POWER_SYSTEM_DATABASE::append_energy_storage_related_model(const DEVICE_ID& did, const MODEL* model)
 {
     if(did.get_device_type() != model->get_allowed_device_type())
         return;
@@ -1315,7 +1315,7 @@ void POWER_SYSTEM_DATABASE::append_energy_storage_related_model(const DEVICE_ID 
         return;
     }
 }
-void POWER_SYSTEM_DATABASE::append_hvdc_related_model(const DEVICE_ID did, const MODEL* model)
+void POWER_SYSTEM_DATABASE::append_hvdc_related_model(const DEVICE_ID& did, const MODEL* model)
 {
     if(did.get_device_type() != model->get_allowed_device_type())
         return;
@@ -1612,7 +1612,7 @@ void POWER_SYSTEM_DATABASE::change_bus_number(size_t original_bus_number, size_t
     }
 }
 
-DEVICE* POWER_SYSTEM_DATABASE::get_device(DEVICE_ID& device_id)
+DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id)
 {
     // this function is not tested
     if(not device_id.is_valid())
@@ -3614,7 +3614,7 @@ size_t POWER_SYSTEM_DATABASE::get_owner_index(const size_t no) const
     else                        return iter->second;
 }
 
-size_t POWER_SYSTEM_DATABASE::bus_name2bus_number(const string name) const
+size_t POWER_SYSTEM_DATABASE::bus_name2bus_number(const string&name) const
 {
     string trimmed_name = string2upper(trim_string(name));
     size_t n = get_bus_count();
@@ -3626,7 +3626,7 @@ size_t POWER_SYSTEM_DATABASE::bus_name2bus_number(const string name) const
     return 0;
 }
 
-size_t POWER_SYSTEM_DATABASE::area_name2area_number(const string name) const
+size_t POWER_SYSTEM_DATABASE::area_name2area_number(const string& name) const
 {
     string trimmed_name = trim_string(name);
     size_t n = get_area_count();
@@ -3638,7 +3638,7 @@ size_t POWER_SYSTEM_DATABASE::area_name2area_number(const string name) const
     return 0;
 }
 
-size_t POWER_SYSTEM_DATABASE::zone_name2zone_number(const string name) const
+size_t POWER_SYSTEM_DATABASE::zone_name2zone_number(const string& name) const
 {
     string trimmed_name = trim_string(name);
     size_t n = get_zone_count();
@@ -3650,7 +3650,7 @@ size_t POWER_SYSTEM_DATABASE::zone_name2zone_number(const string name) const
     return 0;
 }
 
-size_t POWER_SYSTEM_DATABASE::owner_name2owner_number(const string name) const
+size_t POWER_SYSTEM_DATABASE::owner_name2owner_number(const string& name) const
 {
     string trimmed_name = trim_string(name);
     size_t n = get_owner_count();
@@ -3980,7 +3980,7 @@ void POWER_SYSTEM_DATABASE::check_equivalent_device_related_dynamic_data()
     }
 }
 
-void POWER_SYSTEM_DATABASE::scale_load_power(DEVICE_ID did, double scale)
+void POWER_SYSTEM_DATABASE::scale_load_power(const DEVICE_ID& did, double scale)
 {
     LOAD* load = get_load(did);
     if(load!=NULL)
@@ -4028,7 +4028,7 @@ void POWER_SYSTEM_DATABASE::scale_loads_power_in_zone(size_t zone_number, double
 
 
 
-void POWER_SYSTEM_DATABASE::scale_source_power(DEVICE_ID did, double scale)
+void POWER_SYSTEM_DATABASE::scale_source_power(const DEVICE_ID& did, double scale)
 {
     SOURCE* source = get_source(did);
     if(source!=NULL)
@@ -4098,7 +4098,7 @@ void POWER_SYSTEM_DATABASE::scale_sources_power_in_zone(size_t zone_number, doub
         scale_source_power(sources[i], scale);
 }
 
-void POWER_SYSTEM_DATABASE::scale_generator_power(DEVICE_ID did, double scale)
+void POWER_SYSTEM_DATABASE::scale_generator_power(const DEVICE_ID& did, double scale)
 {
     scale_source_power(did, scale);
 }
@@ -4135,7 +4135,7 @@ void POWER_SYSTEM_DATABASE::scale_generators_power_in_zone(size_t zone_number, d
         scale_generator_power(generators[i], scale);
 }
 
-void POWER_SYSTEM_DATABASE::scale_wt_generator_power(DEVICE_ID did, double scale)
+void POWER_SYSTEM_DATABASE::scale_wt_generator_power(const DEVICE_ID& did, double scale)
 {
     scale_source_power(did, scale);
 }
@@ -4173,7 +4173,7 @@ void POWER_SYSTEM_DATABASE::scale_wt_generators_power_in_zone(size_t zone_number
 }
 
 
-void POWER_SYSTEM_DATABASE::scale_pv_unit_power(DEVICE_ID did, double scale)
+void POWER_SYSTEM_DATABASE::scale_pv_unit_power(const DEVICE_ID& did, double scale)
 {
     scale_source_power(did, scale);
 }
@@ -4210,7 +4210,7 @@ void POWER_SYSTEM_DATABASE::scale_pv_units_power_in_zone(size_t zone_number, dou
         scale_pv_unit_power(pv_units[i], scale);
 }
 
-void POWER_SYSTEM_DATABASE::scale_energy_storage_power(DEVICE_ID did, double scale)
+void POWER_SYSTEM_DATABASE::scale_energy_storage_power(const DEVICE_ID& did, double scale)
 {
     scale_source_power(did, scale);
 }
@@ -4297,7 +4297,7 @@ void POWER_SYSTEM_DATABASE::clear_all_buses()
 }
 
 
-void POWER_SYSTEM_DATABASE::clear_generator(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_generator(const DEVICE_ID& device_id)
 {
     if(not is_generator_exist(device_id)) return;
 
@@ -4338,7 +4338,7 @@ void POWER_SYSTEM_DATABASE::clear_all_generators()
 }
 
 
-void POWER_SYSTEM_DATABASE::clear_wt_generator(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_wt_generator(const DEVICE_ID& device_id)
 {
     if(not is_wt_generator_exist(device_id)) return;
 
@@ -4377,7 +4377,7 @@ void POWER_SYSTEM_DATABASE::clear_all_wt_generators()
     wt_generator_index.clear();
 }
 
-void POWER_SYSTEM_DATABASE::clear_pv_unit(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_pv_unit(const DEVICE_ID& device_id)
 {
     if(not is_pv_unit_exist(device_id)) return;
 
@@ -4433,7 +4433,7 @@ void POWER_SYSTEM_DATABASE::clear_all_sources()
     clear_all_energy_storages();
 }
 
-void POWER_SYSTEM_DATABASE::clear_load(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_load(const DEVICE_ID& device_id)
 {
     if(not is_load_exist(device_id)) return;
 
@@ -4475,7 +4475,7 @@ void POWER_SYSTEM_DATABASE::clear_all_loads()
 }
 
 
-void POWER_SYSTEM_DATABASE::clear_line(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_line(const DEVICE_ID& device_id)
 {
     if(not is_line_exist(device_id)) return;
 
@@ -4517,7 +4517,7 @@ void POWER_SYSTEM_DATABASE::clear_all_lines()
     line_index.clear();
 }
 
-void POWER_SYSTEM_DATABASE::clear_transformer(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_transformer(const DEVICE_ID& device_id)
 {
     if(not is_transformer_exist(device_id)) return;
 
@@ -4561,7 +4561,7 @@ void POWER_SYSTEM_DATABASE::clear_all_transformers()
 }
 
 
-void POWER_SYSTEM_DATABASE::clear_fixed_shunt(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_fixed_shunt(const DEVICE_ID& device_id)
 {
     if(not is_fixed_shunt_exist(device_id))
         return;
@@ -4607,7 +4607,7 @@ void POWER_SYSTEM_DATABASE::clear_all_fixed_shunts()
     fixed_shunt_index.clear();
 }
 
-void POWER_SYSTEM_DATABASE::clear_hvdc(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_hvdc(const DEVICE_ID& device_id)
 {
     if(not is_hvdc_exist(device_id)) return;
 
@@ -4649,7 +4649,7 @@ void POWER_SYSTEM_DATABASE::clear_all_hvdcs()
     hvdc_index.clear();
 }
 
-void POWER_SYSTEM_DATABASE::clear_equivalent_device(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_equivalent_device(const DEVICE_ID& device_id)
 {
     if(not is_equivalent_device_exist(device_id)) return;
 
@@ -4691,7 +4691,7 @@ void POWER_SYSTEM_DATABASE::clear_all_equivalent_devices()
 }
 
 
-void POWER_SYSTEM_DATABASE::clear_energy_storage(DEVICE_ID& device_id)
+void POWER_SYSTEM_DATABASE::clear_energy_storage(const DEVICE_ID& device_id)
 {
     if(not is_energy_storage_exist(device_id)) return;
 
@@ -5042,12 +5042,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_complex_voltage_in_pu(size_t bus)
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
-    {
-        double Vm = busptr->get_voltage_in_pu();
-        double angle = busptr->get_angle_in_rad();
-
-        return complex<double>(Vm*cos(angle), Vm*sin(angle));
-    }
+        return busptr->get_complex_voltage_in_pu();
     else
         return 0.0;
 
@@ -5057,12 +5052,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_complex_voltage_in_kV(size_t bus)
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
-    {
-        double Vm = busptr->get_voltage_in_kV();
-        double angle = busptr->get_angle_in_rad();
-
-        return complex<double>(Vm*cos(angle), Vm*sin(angle));
-    }
+        return busptr->get_complex_voltage_in_kV();
     else
         return 0.0;
 }

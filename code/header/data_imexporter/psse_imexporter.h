@@ -151,7 +151,6 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         size_t data_version;
         vector< vector<string> > raw_data_in_ram;
         vector<string> dyr_data_in_ram;
-        double common_base_frequency_in_Hz;
 };
 
 #endif // POWERFLOW_ASSEMBLER_H

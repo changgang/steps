@@ -12,10 +12,8 @@ class DATA_IMEXPORTER
         DATA_IMEXPORTER();
         virtual ~DATA_IMEXPORTER();
 
-        void set_power_system_database(POWER_SYSTEM_DATABASE* db);
-        POWER_SYSTEM_DATABASE* get_power_system_database() const;
-
-        bool is_power_system_database_set() const;
+        void set_base_frequency_in_Hz(double fbase);
+        double get_base_frequency_in_Hz() const;
 
         virtual void load_powerflow_data(string pf_source) = 0;
         virtual void load_dynamic_data(string dy_source) = 0;
@@ -25,7 +23,7 @@ class DATA_IMEXPORTER
         virtual void export_dynamic_data(string file) = 0;
         virtual void export_sequence_data(string file) = 0;
     private:
-        POWER_SYSTEM_DATABASE* db;
+        double base_frequency_in_Hz;
 };
 
 #endif // DATA_IMEXPORTER_H

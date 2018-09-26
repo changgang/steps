@@ -369,10 +369,10 @@ bool CONTINGENCY_SCREENER::is_searcher_is_properly_set() const
 
 bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing_time)
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     psdb.clear_database();
 
     PSSE_IMEXPORTER importer;
-    importer.set_power_system_database(&psdb);
 
     importer.load_powerflow_data(get_powerflow_data_filename());
     importer.load_dynamic_data(get_dynamic_data_filename());

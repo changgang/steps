@@ -57,14 +57,14 @@ class DYNAMICS_SIMULATOR: public BASE
         void prepare_equivalent_device_related_meters();
 
         void prepare_bus_related_meter(size_t bus, string meter_type);
-        void prepare_generator_related_meter(DEVICE_ID did, string meter_type, string var_name="");
-        void prepare_wt_generator_related_meter(DEVICE_ID did, string meter_type, string var_name="");
-        void prepare_pv_unit_related_meter(DEVICE_ID did, string meter_type, string var_name="");
-        void prepare_energy_storage_related_meter(DEVICE_ID did, string meter_type, string var_name="");
-        void prepare_load_related_meter(DEVICE_ID did, string meter_type, string var_name="");
-        void prepare_line_related_meter(DEVICE_ID did, string meter_type, string side, string var_name="");
-        void prepare_hvdc_related_meter(DEVICE_ID did, string meter_type, string side, string var_name="");
-        void prepare_equivalent_device_related_meter(DEVICE_ID did, string meter_type, string var_name="");
+        void prepare_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
+        void prepare_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
+        void prepare_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
+        void prepare_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
+        void prepare_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
+        void prepare_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
+        void prepare_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
+        void prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
 
         void append_meter(const METER& meter);
         size_t get_meter_count() const;
@@ -95,39 +95,39 @@ class DYNAMICS_SIMULATOR: public BASE
         void trip_bus(size_t bus);
         void trip_buses(const vector<size_t> buses);
 
-        void set_line_fault(DEVICE_ID line_id, size_t side_bus, double location, complex<double> fault_shunt);
-        void clear_line_fault(DEVICE_ID line_id, size_t side_bus, double location);
-        void trip_line(DEVICE_ID line_id);
-        void trip_line_breaker(DEVICE_ID line_id, size_t side_bus);
-        void close_line(DEVICE_ID line_id);
-        void close_line_breaker(DEVICE_ID line_id, size_t side_bus);
+        void set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, complex<double> fault_shunt);
+        void clear_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location);
+        void trip_line(const DEVICE_ID& line_id);
+        void trip_line_breaker(const DEVICE_ID& line_id, size_t side_bus);
+        void close_line(const DEVICE_ID& line_id);
+        void close_line_breaker(const DEVICE_ID& line_id, size_t side_bus);
 
-        void trip_transformer(DEVICE_ID trans_id);
-        void trip_transformer_breaker(DEVICE_ID trans_id, size_t side_bus);
-        void close_transformer(DEVICE_ID trans_id);
-        void close_transformer_breaker(DEVICE_ID trans_id, size_t side_bus);
+        void trip_transformer(const DEVICE_ID& trans_id);
+        void trip_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus);
+        void close_transformer(const DEVICE_ID& trans_id);
+        void close_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus);
 
-        void trip_generator(DEVICE_ID gen_id);
-        void shed_generator(DEVICE_ID gen_id,double percent);
+        void trip_generator(const DEVICE_ID& gen_id);
+        void shed_generator(const DEVICE_ID& gen_id,double percent);
 
-        void trip_wt_generator(DEVICE_ID gen_id, size_t n);
+        void trip_wt_generator(const DEVICE_ID& gen_id, size_t n);
 
-        void trip_load(DEVICE_ID load_id);
-        void close_load(DEVICE_ID load_id);
-        void scale_load(DEVICE_ID load_id, double percent);
+        void trip_load(const DEVICE_ID& load_id);
+        void close_load(const DEVICE_ID& load_id);
+        void scale_load(const DEVICE_ID& load_id, double percent);
         void scale_all_load(double percent);
 
-        void trip_fixed_shunt(DEVICE_ID shunt_id);
-        void close_fixed_shunt(DEVICE_ID shunt_id);
+        void trip_fixed_shunt(const DEVICE_ID& shunt_id);
+        void close_fixed_shunt(const DEVICE_ID& shunt_id);
 
 
-        void manual_bypass_hvdc(DEVICE_ID hvdc_id);
-        void manual_block_hvdc(DEVICE_ID hvdc_id);
-        void manual_unbypass_hvdc(DEVICE_ID hvdc_id);
-        void manual_unblock_hvdc(DEVICE_ID hvdc_id);
+        void manual_bypass_hvdc(const DEVICE_ID& hvdc_id);
+        void manual_block_hvdc(const DEVICE_ID& hvdc_id);
+        void manual_unbypass_hvdc(const DEVICE_ID& hvdc_id);
+        void manual_unblock_hvdc(const DEVICE_ID& hvdc_id);
 
-        void change_generator_voltage_reference_in_pu(DEVICE_ID gen_id, double vref);
-        void change_generator_power_reference_in_MW(DEVICE_ID gen_id, double Pref);
+        void change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref);
+        void change_generator_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref);
 
         void switch_on_equivalent_device();
 
@@ -177,8 +177,8 @@ class DYNAMICS_SIMULATOR: public BASE
         void guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT fault);
         void guess_bus_voltage_with_bus_fault_cleared(size_t bus, FAULT fault);
 
-        void guess_bus_voltage_with_line_fault_set(DEVICE_ID did, size_t side_bus, double location, FAULT fault);
-        void guess_bus_voltage_with_line_fault_cleared(DEVICE_ID did, size_t side_bus, double location, FAULT fault);
+        void guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, size_t side_bus, double location, FAULT fault);
+        void guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, size_t side_bus, double location, FAULT fault);
 
         void update_generators_in_islands();
         bool is_system_angular_stable() const;

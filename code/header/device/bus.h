@@ -64,6 +64,8 @@ class BUS : public DEVICE
         double get_voltage_lower_limit_in_pu() const;
         double get_base_frequency_in_Hz() const;
         double get_voltage_to_regulate_in_pu() const;
+        complex<double> get_complex_voltage_in_pu() const;
+        complex<double> get_complex_voltage_in_kV() const;
 
         virtual bool is_valid() const;
         virtual void check();
@@ -93,6 +95,7 @@ class BUS : public DEVICE
         size_t bus_number;
         string bus_name;
         double base_voltage_in_kV;
+        double fn_Hz;
         BUS_TYPE bus_type;
         size_t area_number;
         size_t zone_number;
@@ -100,6 +103,7 @@ class BUS : public DEVICE
 
         double voltage_in_pu;
         double angle_in_rad;
+        complex<double> Euler_complex_number;
 
         double normal_voltage_upper_limit_in_pu;
         double normal_voltage_lower_limit_in_pu;
@@ -114,7 +118,6 @@ class BUS : public DEVICE
     private:
         void copy_from_const_bus(const BUS& bus);
         virtual void set_model(const MODEL* model);
-        double fn_Hz;
 };
 
 #endif // BUS_H

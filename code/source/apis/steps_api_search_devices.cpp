@@ -13,13 +13,13 @@ STEPS_API_SEARCH_BUFFER api_search_buffer;
 
 size_t api_bus_name2bus_number(const char* bus_name)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->bus_name2bus_number(bus_name);
 }
 
 const char* api_bus_number2bus_name(size_t bus_number)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     string name = psdb->bus_number2bus_name(bus_number);
 
     snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
@@ -29,7 +29,7 @@ const char* api_bus_number2bus_name(size_t bus_number)
 
 void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     api_search_buffer.buses = psdb->get_buses_with_constraints(vbase_kV_min, vbase_kV_max, v_pu_min, v_pu_max, area, zone, owner);
     api_search_buffer.bus_pointer = 0;
@@ -37,7 +37,7 @@ void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double 
 
 void api_initialize_all_bus_search()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     api_search_buffer.buses = psdb->get_all_buses();
     api_search_buffer.bus_pointer = 0;
@@ -64,7 +64,7 @@ void api_goto_next_bus()
 
 void api_initialize_device_search(const char* device_type, size_t bus)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     string DEVICE_TYPE = string2upper(device_type);
     if(DEVICE_TYPE=="GENERATOR")
@@ -523,7 +523,7 @@ void api_goto_next_device(const char* device_type)
 
 void api_initialize_area_search()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     api_search_buffer.areas = psdb->get_all_areas();
     api_search_buffer.area_pointer = 0;
@@ -549,7 +549,7 @@ void api_goto_next_area()
 
 void api_initialize_zone_search()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     api_search_buffer.zones = psdb->get_all_zones();
     api_search_buffer.zone_pointer = 0;
@@ -575,7 +575,7 @@ void api_goto_next_zone()
 
 void api_initialize_owner_search()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     api_search_buffer.owners = psdb->get_all_owners();
     api_search_buffer.owner_pointer = 0;

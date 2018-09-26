@@ -10,9 +10,6 @@ using namespace std;
 
 void BPA_IMEXPORTER::load_dynamic_data(string file)
 {
-    if(not is_power_system_database_set())
-        return;
-
     ostringstream osstream;
     osstream<<"Loading dynamic data from BPA file: "<<file;
     show_information_with_leading_time_stamp(osstream);
@@ -615,7 +612,7 @@ void BPA_IMEXPORTER::add_GENCLS_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -637,7 +634,7 @@ void BPA_IMEXPORTER::add_GENROU_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -659,7 +656,7 @@ void BPA_IMEXPORTER::add_GENSAL_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -681,7 +678,7 @@ void BPA_IMEXPORTER::add_COMP_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -703,7 +700,7 @@ void BPA_IMEXPORTER::add_IEE2ST_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -726,7 +723,7 @@ void BPA_IMEXPORTER::add_SEXS_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -748,7 +745,7 @@ void BPA_IMEXPORTER::add_IEEET1_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -770,7 +767,7 @@ void BPA_IMEXPORTER::add_PSASPE1_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -792,7 +789,7 @@ void BPA_IMEXPORTER::add_PSASPE2_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -814,7 +811,7 @@ void BPA_IMEXPORTER::add_CSEET1_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -836,7 +833,7 @@ void BPA_IMEXPORTER::add_CSEET2_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -858,7 +855,7 @@ void BPA_IMEXPORTER::add_PSASPE13_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -880,7 +877,7 @@ void BPA_IMEXPORTER::add_TGOV1_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -902,7 +899,7 @@ void BPA_IMEXPORTER::add_IEEEG1_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -924,7 +921,7 @@ void BPA_IMEXPORTER::add_IEEEG2_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -946,7 +943,7 @@ void BPA_IMEXPORTER::add_IEEEG3_model(string data)
     if(swidata.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     DEVICE_ID did = get_generator_device_id_from_string(data);
 
     GENERATOR* generator = psdb->get_generator(did);
@@ -970,7 +967,7 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
        model_name!="CIM5BL")
         return loads;
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<9)

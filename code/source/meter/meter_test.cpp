@@ -40,7 +40,7 @@ METER_TEST::METER_TEST()
 
 void METER_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
 
     BUS bus;
     bus.set_bus_number(1);

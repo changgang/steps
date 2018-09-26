@@ -8,7 +8,7 @@ int api_get_fixed_shunt_integer_data(size_t bus, char* identifier, char* paramet
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -29,7 +29,7 @@ void api_set_fixed_shunt_integer_data(size_t bus, char* identifier, char* parame
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -47,7 +47,7 @@ double api_get_fixed_shunt_float_data(size_t bus, char* identifier, char* parame
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -85,7 +85,7 @@ void api_set_fixed_shunt_float_data(size_t bus, char* identifier, char* paramete
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     double sbase = psdb->get_system_base_power_in_MVA();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
@@ -145,7 +145,7 @@ const char* api_get_fixed_shunt_string_data(size_t bus, char* identifier, char* 
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
@@ -169,7 +169,7 @@ void api_set_fixed_shunt_string_data(size_t bus, char* identifier, char* paramet
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -186,7 +186,7 @@ bool api_get_fixed_shunt_boolean_data(size_t bus, char* identifier, char* parame
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -211,7 +211,7 @@ void api_set_fixed_shunt_boolean_data(size_t bus, char* identifier, char* parame
 {
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     FIXED_SHUNT* shuntptr = psdb->get_fixed_shunt(did);
     if(shuntptr!=NULL)

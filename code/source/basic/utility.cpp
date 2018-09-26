@@ -521,18 +521,35 @@ bool is_file_exist(const string file)
 }
 
 
-POWER_SYSTEM_DATABASE* get_default_power_system_database()
+POWER_SYSTEM_DATABASE& get_default_power_system_database()
+{
+    return STEPS::default_power_system_db;
+}
+
+
+POWERFLOW_SOLVER& get_default_powerflow_solver()
+{
+    return STEPS::default_powerflow_solver;
+}
+
+DYNAMICS_SIMULATOR& get_default_dynamic_simulator()
+{
+    return STEPS::default_dynamic_simulator;
+}
+
+
+POWER_SYSTEM_DATABASE* get_default_power_system_database_pointer()
 {
     return &(STEPS::default_power_system_db);
 }
 
 
-POWERFLOW_SOLVER* api_get_default_powerflow_solver()
+POWERFLOW_SOLVER* get_default_powerflow_solver_pointer()
 {
     return &STEPS::default_powerflow_solver;
 }
 
-DYNAMICS_SIMULATOR* get_default_dynamic_simulator()
+DYNAMICS_SIMULATOR* get_default_dynamic_simulator_pointer()
 {
     return &STEPS::default_dynamic_simulator;
 }

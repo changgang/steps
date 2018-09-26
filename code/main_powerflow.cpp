@@ -10,11 +10,9 @@ int main()
 {
     initialize_simulator(); // this function should be called first
 
-    POWER_SYSTEM_DATABASE psdb;
-    POWER_SYSTEM_DATABASE* psdb_ptr = (&psdb);
+    POWER_SYSTEM_DATABASE* psdb_ptr = get_default_power_system_database_pointer();
 
     PSSE_IMEXPORTER importer;
-    importer.set_power_system_database(psdb_ptr);
     importer.load_powerflow_data("IEEE39.raw");
 
     POWERFLOW_SOLVER solver;

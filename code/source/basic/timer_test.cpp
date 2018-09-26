@@ -24,7 +24,7 @@ TIMER_TEST::TIMER_TEST()
 void TIMER_TEST::setup()
 {
     timer = new TIMER;
-    psdb = get_default_power_system_database();
+    psdb = get_default_power_system_database_pointer();
     simulator = new DYNAMICS_SIMULATOR(psdb);
 
     psdb->set_allowed_max_bus_number(1000);

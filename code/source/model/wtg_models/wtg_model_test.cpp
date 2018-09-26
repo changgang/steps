@@ -18,7 +18,7 @@ WTG_MODEL_TEST::WTG_MODEL_TEST()
 
 void WTG_MODEL_TEST::setup()
 {
-    psdb = get_default_power_system_database();
+    psdb = get_default_power_system_database_pointer();
     psdb->set_allowed_max_bus_number(100);
     psdb->set_system_base_power_in_MVA(100.0);
 

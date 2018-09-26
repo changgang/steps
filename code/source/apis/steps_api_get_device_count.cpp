@@ -6,7 +6,7 @@
 
 size_t api_get_device_count(const char* device_type)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     string DEVICE_TYPE = string2upper(device_type);
 
     if(DEVICE_TYPE=="BUS")
@@ -38,19 +38,19 @@ size_t api_get_device_count(const char* device_type)
 
 size_t api_get_area_count()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->get_area_count();
 }
 
 size_t api_get_zone_count()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->get_zone_count();
 }
 
 size_t api_get_owner_count()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     return psdb->get_owner_count();
 }
 

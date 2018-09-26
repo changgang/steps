@@ -97,7 +97,6 @@ vector< vector<double> > POWERFLOW_CASE_GENERATOR::generate_load_scale_randoms()
     psdb.clear_database();
 
     PSSE_IMEXPORTER imexporter;
-    imexporter.set_power_system_database(&psdb);
 
     string pf_file = get_base_powerflow_data_filename();
     imexporter.load_powerflow_data(pf_file);
@@ -149,7 +148,6 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
     psdb.clear_database();
 
     PSSE_IMEXPORTER imexporter;
-    imexporter.set_power_system_database(&psdb);
 
     string pf_file = get_base_powerflow_data_filename();
     imexporter.load_powerflow_data(pf_file);

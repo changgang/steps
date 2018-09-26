@@ -14,14 +14,13 @@ int main()
 
     set_dynamic_simulation_time_step_in_s(0.01);
 
-    POWER_SYSTEM_DATABASE psdb; // create a new database
-    psdb.set_allowed_max_bus_number(1000); // set the max bus number of the database
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer(); // create a new database
+    psdb->set_allowed_max_bus_number(1000); // set the max bus number of the database
 
     PSSE_IMEXPORTER importer; // create an imexporter
-    importer.set_power_system_database(&psdb); // assign database to the importer
 
     importer.load_powerflow_data("IEEE9_classical.raw"); // load powerflow
-    vector<DEVICE_ID> lines = psdb.get_all_lines_device_id(); // the powerflow data is only used for get line device id
+    vector<DEVICE_ID> lines = psdb->get_all_lines_device_id(); // the powerflow data is only used for get line device id
     size_t n_lines = lines.size();
 
     vector<DEVICE_ID> fault_lines;// the three vectors are used to store searching result

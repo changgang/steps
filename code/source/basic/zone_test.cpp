@@ -21,7 +21,7 @@ ZONE_TEST::ZONE_TEST()
 
 void ZONE_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
 
     zone = new ZONE(db);
 }

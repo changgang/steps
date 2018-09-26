@@ -50,7 +50,7 @@ LINE_TEST::LINE_TEST()
 
 void LINE_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     db->set_system_base_power_in_MVA(100.0);
     db->set_allowed_max_bus_number(100);
 

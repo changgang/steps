@@ -17,7 +17,7 @@ void prepare_training_load_scale_case()
     POWER_SYSTEM_DATABASE* db;
     DYNAMICS_SIMULATOR* simulator;
 
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     simulator = new DYNAMICS_SIMULATOR(db);
 
     db->set_allowed_max_bus_number(1000);
@@ -28,7 +28,6 @@ void prepare_training_load_scale_case()
 
     PSSE_IMEXPORTER importer;
 
-    importer.set_power_system_database(db);
     importer.load_powerflow_data("IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
@@ -72,7 +71,7 @@ void prepare_training_generation_shed_case()
     POWER_SYSTEM_DATABASE* db;
     DYNAMICS_SIMULATOR* simulator;
 
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     simulator = new DYNAMICS_SIMULATOR(db);
 
     db->set_allowed_max_bus_number(1000);
@@ -83,7 +82,6 @@ void prepare_training_generation_shed_case()
 
     PSSE_IMEXPORTER importer;
 
-    importer.set_power_system_database(db);
     importer.load_powerflow_data("IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
@@ -134,7 +132,7 @@ int main()
     POWER_SYSTEM_DATABASE* db;
     DYNAMICS_SIMULATOR* simulator;
 
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     simulator = new DYNAMICS_SIMULATOR(db);
 
     db->set_allowed_max_bus_number(1000);
@@ -149,7 +147,6 @@ int main()
 
     PSSE_IMEXPORTER importer;
 
-    importer.set_power_system_database(db);
     importer.load_powerflow_data("IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
 

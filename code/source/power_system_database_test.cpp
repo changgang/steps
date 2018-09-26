@@ -304,7 +304,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
 void POWER_SYSTEM_DATABASE_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
 }
 
 void POWER_SYSTEM_DATABASE_TEST::tear_down()

@@ -4,7 +4,7 @@
 
 size_t api_get_powerflow_solver_integer_parameter(char* parameter_name)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="MAX ITERATION")
@@ -19,7 +19,7 @@ size_t api_get_powerflow_solver_integer_parameter(char* parameter_name)
 
 void api_set_powerflow_solver_integer_parameter(char* parameter_name, int value)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="MAX ITERATION")
@@ -36,7 +36,7 @@ void api_set_powerflow_solver_integer_parameter(char* parameter_name, int value)
 
 double api_get_powerflow_solver_float_parameter(char* parameter_name)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     POWER_SYSTEM_DATABASE* psdb = solver->get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -60,7 +60,7 @@ double api_get_powerflow_solver_float_parameter(char* parameter_name)
 
 void api_set_powerflow_solver_float_parameter(char* parameter_name, double value)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     POWER_SYSTEM_DATABASE* psdb = solver->get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -98,7 +98,7 @@ void api_set_powerflow_solver_float_parameter(char* parameter_name, double value
 
 bool api_get_powerflow_solver_boolean_parameter(char* parameter_name)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="FLAT START LOGIC")
@@ -117,7 +117,7 @@ bool api_get_powerflow_solver_boolean_parameter(char* parameter_name)
 
 void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="FLAT START LOGIC")
@@ -144,7 +144,7 @@ void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value
 
 void api_solve_powerflow(char* method)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     string string_method = string2upper(method);
 
@@ -175,35 +175,35 @@ void api_solve_powerflow(char* method)
 
 bool api_is_powerflow_converged()
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     return solver->is_converged();
 }
 
 void api_show_powerflow_result()
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     solver->show_powerflow_result();
 }
 
 void api_save_powerflow_result(char* file)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     solver->save_powerflow_result_to_file(file);
 }
 
 void api_save_extended_powerflow_result(char* file)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
 
     solver->save_extended_powerflow_result_to_file(file);
 }
 
 void api_save_jacobian_matrix(char* file)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     solver->save_jacobian_matrix_to_file(file);
 }
 
@@ -211,28 +211,28 @@ void api_save_jacobian_matrix(char* file)
 
 void api_build_network_matrix()
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->build_network_matrix();
 }
 
 void api_build_decoupled_network_matrix()
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->build_decoupled_network_matrix();
 }
 
 void api_build_dc_network_matrix()
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->build_dc_network_matrix();
 }
 
 void api_build_dynamic_network_matrix()
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->build_dynamic_network_matrix();
 }
@@ -240,7 +240,7 @@ void api_build_dynamic_network_matrix()
 
 void api_save_network_matrix(char* file)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->save_network_matrix_to_file(file);
 }
@@ -248,7 +248,7 @@ void api_save_network_matrix(char* file)
 
 void api_save_decoupled_network_matrix(char* file)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->save_decoupled_network_matrix_to_file(file);
 }
@@ -256,7 +256,7 @@ void api_save_decoupled_network_matrix(char* file)
 
 void api_save_dc_network_matrix(char* file)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->save_dc_network_matrix_to_file(file);
 }
@@ -264,7 +264,7 @@ void api_save_dc_network_matrix(char* file)
 
 void api_save_dynamic_network_matrix(char* file)
 {
-    POWERFLOW_SOLVER* solver = api_get_default_powerflow_solver();
+    POWERFLOW_SOLVER* solver = get_default_powerflow_solver_pointer();
     NETWORK_DATABASE* ntdb = solver->get_network_database();
     ntdb->save_dynamic_network_matrix_to_file(file);
 }

@@ -20,7 +20,7 @@ OWNER_TEST::OWNER_TEST()
 
 void OWNER_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
 
     owner = new OWNER(db);
 }

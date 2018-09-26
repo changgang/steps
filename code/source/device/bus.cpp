@@ -110,6 +110,7 @@ void BUS::set_voltage_in_kV(double voltage)
 void BUS::set_angle_in_rad(double angle)
 {
     angle_in_rad = angle;
+    Euler_complex_number = complex<double>(cos(angle_in_rad), sin(angle_in_rad));
 }
 
 void BUS::set_angle_in_deg(double angle)
@@ -288,6 +289,16 @@ double BUS::get_base_frequency_in_Hz() const
 double BUS::get_voltage_to_regulate_in_pu() const
 {
     return voltage_to_regulate_in_pu;
+}
+
+complex<double> BUS::get_complex_voltage_in_pu() const
+{
+    return Euler_complex_number*voltage_in_pu;
+}
+
+complex<double> BUS::get_complex_voltage_in_kV() const
+{
+    return Euler_complex_number*voltage_in_pu*base_voltage_in_kV;
 }
 
 bool BUS::is_valid() const

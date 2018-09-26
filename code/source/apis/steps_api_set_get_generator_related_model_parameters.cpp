@@ -8,7 +8,7 @@ const char* api_get_generator_related_model_name(size_t bus, char* identifier, c
 {
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_generator_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     GENERATOR* generator = psdb->get_generator(did);
     if(generator==NULL)
     {
@@ -59,7 +59,7 @@ const char* api_get_generator_related_model_name(size_t bus, char* identifier, c
 double api_get_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name)
 {
     DEVICE_ID did = get_generator_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     GENERATOR* generator = psdb->get_generator(did);
     if(generator==NULL)
     {
@@ -116,7 +116,7 @@ double api_get_generator_related_model_float_parameter(size_t bus, char* identif
 void api_set_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value)
 {
     DEVICE_ID did = get_generator_device_id(bus, identifier);
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     GENERATOR* generator = psdb->get_generator(did);
     if(generator==NULL)
     {

@@ -92,8 +92,6 @@ class CCT_SEARCHER
         double delt;
 
         vector< vector<GENERATOR*> > generators_in_islands;
-
-        POWER_SYSTEM_DATABASE psdb;
     private:
         virtual bool is_valid() const;
         virtual void check();

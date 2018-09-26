@@ -8,7 +8,7 @@ int api_get_load_integer_data(size_t bus, char* identifier, char* parameter_name
 {
     DEVICE_ID did = get_load_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     LOAD* loadptr = psdb->get_load(did);
     if(loadptr!=NULL)
@@ -38,7 +38,7 @@ void api_set_load_integer_data(size_t bus, char* identifier, char* parameter_nam
 {
     DEVICE_ID did = get_load_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     LOAD* loadptr = psdb->get_load(did);
     if(loadptr!=NULL)
@@ -65,7 +65,7 @@ double api_get_load_float_data(size_t bus, char* identifier, char* parameter_nam
 {
     DEVICE_ID did = get_load_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     LOAD* loadptr = psdb->get_load(did);
     if(loadptr!=NULL)
@@ -133,7 +133,7 @@ void api_set_load_float_data(size_t bus, char* identifier, char* parameter_name,
 {
     DEVICE_ID did = get_load_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     LOAD* loadptr = psdb->get_load(did);
     if(loadptr!=NULL)
@@ -186,7 +186,7 @@ const char* api_get_load_string_data(size_t bus, char* identifier, char* paramet
 {
     DEVICE_ID did = get_load_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
@@ -210,7 +210,7 @@ void api_set_load_string_data(size_t bus, char* identifier, char* parameter_name
 {
     DEVICE_ID did = get_load_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     LOAD* loadptr = psdb->get_load(did);
     if(loadptr!=NULL)
@@ -227,7 +227,7 @@ bool api_get_load_boolean_data(size_t bus, char* identifier, char* parameter_nam
 {
     DEVICE_ID did = get_load_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     LOAD* loadptr = psdb->get_load(did);
     if(loadptr!=NULL)
@@ -252,7 +252,7 @@ void api_set_load_boolean_data(size_t bus, char* identifier, char* parameter_nam
 {
     DEVICE_ID did = get_load_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     LOAD* loadptr = psdb->get_load(did);
     if(loadptr!=NULL)

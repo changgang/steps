@@ -26,7 +26,7 @@ EQUIVALENT_MODEL_IMEXPORTER_TEST::EQUIVALENT_MODEL_IMEXPORTER_TEST()
 
 void EQUIVALENT_MODEL_IMEXPORTER_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     db->set_allowed_max_bus_number(100000);
 
     importer = new EQUIVALENT_MODEL_IMEXPORTER;
@@ -49,7 +49,6 @@ void EQUIVALENT_MODEL_IMEXPORTER_TEST::test_load_ieee9_arxl_data()
     ostringstream osstream;
 
     PSSE_IMEXPORTER psse_assember;
-    psse_assember.set_power_system_database(db);
     psse_assember.load_powerflow_data("ieee9.raw");
     importer->load_equivalent_model("ieee9_arxl_model_demo.eqv");
 
@@ -71,7 +70,6 @@ void EQUIVALENT_MODEL_IMEXPORTER_TEST::test_load_ieee39_arxl_data()
     ostringstream osstream;
 
     PSSE_IMEXPORTER psse_assember;
-    psse_assember.set_power_system_database(db);
     psse_assember.load_powerflow_data("ieee39.raw");
     importer->load_equivalent_model("ieee39_arxl_model_demo.eqv");
 

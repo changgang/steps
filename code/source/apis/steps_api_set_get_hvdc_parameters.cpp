@@ -8,7 +8,7 @@ int api_get_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
 {
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -71,7 +71,7 @@ void api_set_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char*
 {
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -133,7 +133,7 @@ double api_get_hvdc_float_data(size_t ibus, size_t jbus, char* identifier, char*
 
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -294,7 +294,7 @@ void api_set_hvdc_float_data(size_t ibus, size_t jbus, char* identifier, char* s
 
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -431,7 +431,7 @@ const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier,
 {
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
 	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
@@ -475,7 +475,7 @@ void api_set_hvdc_string_data(size_t ibus, size_t jbus, char* identifier, char* 
 {
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -507,7 +507,7 @@ bool api_get_hvdc_boolean_data(size_t ibus, size_t jbus, char* identifier, char*
 {
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -539,7 +539,7 @@ void api_set_hvdc_boolean_data(size_t ibus, size_t jbus, char* identifier, char*
 {
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     HVDC* hvdcptr = psdb->get_hvdc(did);
     if(hvdcptr!=NULL)

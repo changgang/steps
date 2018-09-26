@@ -19,7 +19,7 @@ JACOBIAN_BUILDER_TEST::JACOBIAN_BUILDER_TEST()
 
 void JACOBIAN_BUILDER_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     network_db = new NETWORK_DATABASE(db);
 
     jacobian_builder = new JACOBIAN_BUILDER;

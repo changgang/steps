@@ -24,7 +24,7 @@ AREA_TEST::AREA_TEST()
 
 void AREA_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     db->set_allowed_max_bus_number(100);
 
     BUS bus;

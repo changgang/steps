@@ -91,9 +91,6 @@ string BPA_IMEXPORTER::grow_string_to_at_least_size(string data, size_t least_si
 
 void BPA_IMEXPORTER::load_powerflow_data(string file)
 {
-    if(not is_power_system_database_set())
-        return;
-
     ostringstream osstream;
     osstream<<"Loading powerflow data from BPA file: "<<file;
     show_information_with_leading_time_stamp(osstream);
@@ -129,9 +126,6 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
 
 void BPA_IMEXPORTER::load_sequence_data(string sq_source)
 {
-    if(not is_power_system_database_set())
-        return;
-
     sq_source = string2upper(sq_source);
 }
 
@@ -410,9 +404,6 @@ void BPA_IMEXPORTER::set_data_version(size_t version)
 
 size_t BPA_IMEXPORTER::get_data_version() const
 {
-    if(not is_power_system_database_set())
-        return 0;
-
     return data_version;
 }
 
@@ -448,7 +439,7 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
 
 void BPA_IMEXPORTER::load_area_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -485,7 +476,7 @@ void BPA_IMEXPORTER::load_area_data()
 
 void BPA_IMEXPORTER::load_zone_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -519,7 +510,7 @@ void BPA_IMEXPORTER::load_zone_data()
 
 void BPA_IMEXPORTER::load_owner_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -555,7 +546,7 @@ void BPA_IMEXPORTER::load_owner_data()
 
 void BPA_IMEXPORTER::load_bus_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -642,7 +633,7 @@ void BPA_IMEXPORTER::load_bus_data()
 
 void BPA_IMEXPORTER::set_bus_area()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -683,7 +674,7 @@ void BPA_IMEXPORTER::set_bus_area()
 
 void BPA_IMEXPORTER::set_area_swing_bus()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -746,7 +737,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
 void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -917,7 +908,7 @@ void BPA_IMEXPORTER::load_source_data()
 
 void BPA_IMEXPORTER::load_generator_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -999,7 +990,7 @@ void BPA_IMEXPORTER::load_source_common_data()
 }
 void BPA_IMEXPORTER::load_line_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -1281,7 +1272,7 @@ void BPA_IMEXPORTER::load_line_data()
 
 void BPA_IMEXPORTER::load_transformer_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -1610,7 +1601,7 @@ void BPA_IMEXPORTER::load_transformer_data()
 
 void BPA_IMEXPORTER::load_hvdc_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -2082,7 +2073,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
 void BPA_IMEXPORTER::export_powerflow_data(string file)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     if(psdb==NULL)
     {
         osstream<<"Warning. BPA imexporter is not connected to any power system database. No powerflow data will be exported.";
@@ -2360,7 +2351,7 @@ string BPA_IMEXPORTER::export_case_data() const
 string BPA_IMEXPORTER::export_bus_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     if(psdb==NULL)
     {
         osstream<<"Warning. BPA imexporter is not connected to any power system database. No bus data will be exported.";
@@ -2557,7 +2548,7 @@ string BPA_IMEXPORTER::export_bus_data() const
 string BPA_IMEXPORTER::export_line_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     if(psdb==NULL)
     {
         osstream<<"Warning. BPA imexporter is not connected to any power system database. No line data will be exported.";
@@ -2668,7 +2659,7 @@ string BPA_IMEXPORTER::export_line_data() const
 string BPA_IMEXPORTER::export_transformer_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     if(psdb==NULL)
     {
         osstream<<"Warning. BPA imexporter is not connected to any power system database. No transformer data will be exported.";
@@ -2701,7 +2692,7 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
     if(trans->is_three_winding_transformer())
         return export_three_winding_transformer(trans);
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     if(psdb==NULL)
         return "";
 
@@ -2894,7 +2885,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     if(trans->is_two_winding_transformer())
         return export_two_winding_transformer(trans);
 
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
 
     if(psdb==NULL)
         return "";
@@ -3095,7 +3086,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
 string BPA_IMEXPORTER::export_hvdc_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE* psdb = get_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     if(psdb==NULL)
     {
         osstream<<"Warning. BPA imexporter is not connected to any power system database. No hvdc data will be exported.";

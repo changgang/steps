@@ -44,7 +44,7 @@ UTILITY_TEST::UTILITY_TEST()
 
 void UTILITY_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
 }
 
 void UTILITY_TEST::tear_down()

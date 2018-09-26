@@ -41,11 +41,10 @@ BPA_IMEXPORTER_TEST::BPA_IMEXPORTER_TEST()
 
 void BPA_IMEXPORTER_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
     db->set_allowed_max_bus_number(100000);
 
     importer = new BPA_IMEXPORTER;
-    importer->set_power_system_database(db);
     importer->load_powerflow_data("山东电网简化.dat");
 }
 
@@ -493,7 +492,6 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
     db->clear_database();
     //importer->load_powerflow_data("")
     PSSE_IMEXPORTER psse_importer;
-    psse_importer.set_power_system_database(db);
     psse_importer.load_powerflow_data("bench_yunnan.raw");
 
     //psse_importer.load_powerflow_data("sample.raw");

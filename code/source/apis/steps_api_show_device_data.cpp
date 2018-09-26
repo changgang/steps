@@ -6,7 +6,7 @@
 
 void api_show_device_data(const char* device_type)
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     string DEVICE_TYPE = string2upper(device_type);
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="BUS")

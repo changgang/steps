@@ -25,7 +25,7 @@ NETWORK_DATABASE_TEST::NETWORK_DATABASE_TEST()
 
 void NETWORK_DATABASE_TEST::setup()
 {
-    db = get_default_power_system_database();
+    db = get_default_power_system_database_pointer();
 
     prepare_IEEE_9_bus_model(db);
 

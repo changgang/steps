@@ -70,7 +70,7 @@ class POWER_SYSTEM_DATABASE
         void set_dynamic_simulator(DYNAMICS_SIMULATOR* simulator);
         //double get_dynamic_simulator_time_in_s() const;
 
-        void set_system_name(const string name);
+        void set_system_name(const string& name);
         string get_system_name() const;
 
         void set_allowed_max_bus_number(size_t max_bus_num);
@@ -80,8 +80,8 @@ class POWER_SYSTEM_DATABASE
         void set_system_base_power_in_MVA(const double s);
         double get_system_base_power_in_MVA() const;
 
-        void set_case_information(string title);
-        void set_case_additional_information(string title);
+        void set_case_information(const string& title);
+        void set_case_additional_information(const string& title);
 
         string get_case_information() const;
         string get_case_additional_information() const;
@@ -101,7 +101,7 @@ class POWER_SYSTEM_DATABASE
         void append_zone(const ZONE& zone);
         void append_owner(const OWNER& owner);
 
-        void append_dynamic_model(const DEVICE_ID did, const MODEL* model);
+        void append_dynamic_model(const DEVICE_ID& did, const MODEL* model);
 
         void update_all_bus_base_frequency(double fbase_Hz);
 
@@ -122,7 +122,7 @@ class POWER_SYSTEM_DATABASE
 
         void change_bus_number(size_t original_bus_number, size_t new_bus_number);
 
-        DEVICE* get_device(DEVICE_ID& device_id);
+        DEVICE* get_device(const DEVICE_ID& device_id);
         BUS* get_bus(size_t bus);
         BUS* get_bus(const DEVICE_ID & device_id);
         GENERATOR* get_generator(const DEVICE_ID & device_id);
@@ -292,10 +292,10 @@ class POWER_SYSTEM_DATABASE
         size_t get_zone_index(const size_t no) const;
         size_t get_owner_index(const size_t no) const;
 
-        size_t bus_name2bus_number(const string name) const;
-        size_t area_name2area_number(const string name) const;
-        size_t zone_name2zone_number(const string name) const;
-        size_t owner_name2owner_number(const string name) const;
+        size_t bus_name2bus_number(const string& name) const;
+        size_t area_name2area_number(const string& name) const;
+        size_t zone_name2zone_number(const string& name) const;
+        size_t owner_name2owner_number(const string& name) const;
         string bus_number2bus_name(size_t number);
         string area_number2area_name(size_t number);
         string zone_number2zone_name(size_t number);
@@ -329,37 +329,37 @@ class POWER_SYSTEM_DATABASE
         void check_equivalent_device_related_dynamic_data();
 
 
-        void scale_load_power(DEVICE_ID did, double scale);
+        void scale_load_power(const DEVICE_ID& did, double scale);
         void scale_all_loads_power(double scale);
         void scale_loads_power_at_bus(size_t bus, double scale);
         void scale_loads_power_in_area(size_t area_number, double scale);
         void scale_loads_power_in_zone(size_t zone_number, double scale);
 
-        void scale_source_power(DEVICE_ID did, double scale);
+        void scale_source_power(const DEVICE_ID& did, double scale);
         void scale_all_sources_power(double scale);
         void scale_sources_power_at_bus(size_t bus, double scale);
         void scale_sources_power_in_area(size_t area_number, double scale);
         void scale_sources_power_in_zone(size_t zone_number, double scale);
 
-        void scale_generator_power(DEVICE_ID did, double scale);
+        void scale_generator_power(const DEVICE_ID& did, double scale);
         void scale_all_generators_power(double scale);
         void scale_generators_power_at_bus(size_t bus, double scale);
         void scale_generators_power_in_area(size_t area_number, double scale);
         void scale_generators_power_in_zone(size_t zone_number, double scale);
 
-        void scale_wt_generator_power(DEVICE_ID did, double scale);
+        void scale_wt_generator_power(const DEVICE_ID& did, double scale);
         void scale_all_wt_generators_power(double scale);
         void scale_wt_generators_power_at_bus(size_t bus, double scale);
         void scale_wt_generators_power_in_area(size_t area_number, double scale);
         void scale_wt_generators_power_in_zone(size_t zone_number, double scale);
 
-        void scale_pv_unit_power(DEVICE_ID did, double scale);
+        void scale_pv_unit_power(const DEVICE_ID& did, double scale);
         void scale_all_pv_units_power(double scale);
         void scale_pv_units_power_at_bus(size_t bus, double scale);
         void scale_pv_units_power_in_area(size_t area_number, double scale);
         void scale_pv_units_power_in_zone(size_t zone_number, double scale);
 
-        void scale_energy_storage_power(DEVICE_ID did, double scale);
+        void scale_energy_storage_power(const DEVICE_ID& did, double scale);
         void scale_all_energy_storages_power(double scale);
         void scale_energy_storages_power_at_bus(size_t bus, double scale);
         void scale_energy_storages_power_in_area(size_t area_number, double scale);
@@ -368,46 +368,46 @@ class POWER_SYSTEM_DATABASE
         void clear_bus(size_t bus);
         void clear_all_buses();
 
-        void clear_generator(DEVICE_ID& device_id);
+        void clear_generator(const DEVICE_ID& device_id);
         void clear_generators_connecting_to_bus(const size_t bus);
         void clear_all_generators();
 
-        void clear_wt_generator(DEVICE_ID& device_id);
+        void clear_wt_generator(const DEVICE_ID& device_id);
         void clear_wt_generators_connecting_to_bus(const size_t bus);
         void clear_all_wt_generators();
 
-        void clear_pv_unit(DEVICE_ID& device_id);
+        void clear_pv_unit(const DEVICE_ID& device_id);
         void clear_pv_units_connecting_to_bus(const size_t bus);
         void clear_all_pv_units();
 
         void clear_sources_connecting_to_bus(const size_t bus);
         void clear_all_sources();
 
-        void clear_load(DEVICE_ID& device_id);
+        void clear_load(const DEVICE_ID& device_id);
         void clear_loads_connecting_to_bus(const size_t bus);
         void clear_all_loads();
 
-        void clear_line(DEVICE_ID& device_id);
+        void clear_line(const DEVICE_ID& device_id);
         void clear_lines_connecting_to_bus(const size_t bus);
         void clear_all_lines();
 
-        void clear_transformer(DEVICE_ID& device_id);
+        void clear_transformer(const DEVICE_ID& device_id);
         void clear_transformers_connecting_to_bus(const size_t bus);
         void clear_all_transformers();
 
-        void clear_fixed_shunt(DEVICE_ID& device_id);
+        void clear_fixed_shunt(const DEVICE_ID& device_id);
         void clear_fixed_shunts_connecting_to_bus(const size_t bus);
         void clear_all_fixed_shunts();
 
-        void clear_hvdc(DEVICE_ID& device_id);
+        void clear_hvdc(const DEVICE_ID& device_id);
         void clear_hvdcs_connecting_to_bus(const size_t bus);
         void clear_all_hvdcs();
 
-        void clear_equivalent_device(DEVICE_ID& device_id);
+        void clear_equivalent_device(const DEVICE_ID& device_id);
         void clear_equivalent_devices_connecting_to_bus(const size_t bus);
         void clear_all_equivalent_devices();
 
-        void clear_energy_storage(DEVICE_ID& device_id);
+        void clear_energy_storage(const DEVICE_ID& device_id);
         void clear_energy_storages_connecting_to_bus(const size_t bus);
         void clear_all_energy_storages();
 
@@ -455,12 +455,12 @@ class POWER_SYSTEM_DATABASE
     private:
         void set_database_capacity();
 
-        void append_load_related_model(const DEVICE_ID did, const MODEL* model);
-        void append_generator_related_model(const DEVICE_ID did, const MODEL* model);
-        void append_wt_generator_related_model(const DEVICE_ID did, const MODEL* model);
-        void append_pv_unit_related_model(const DEVICE_ID did, const MODEL* model);
-        void append_energy_storage_related_model(const DEVICE_ID did, const MODEL* model);
-        void append_hvdc_related_model(const DEVICE_ID did, const MODEL* model);
+        void append_load_related_model(const DEVICE_ID& did, const MODEL* model);
+        void append_generator_related_model(const DEVICE_ID& did, const MODEL* model);
+        void append_wt_generator_related_model(const DEVICE_ID& did, const MODEL* model);
+        void append_pv_unit_related_model(const DEVICE_ID& did, const MODEL* model);
+        void append_energy_storage_related_model(const DEVICE_ID& did, const MODEL* model);
+        void append_hvdc_related_model(const DEVICE_ID& did, const MODEL* model);
 
         void check_source_status_for_out_of_service_bus(size_t bus);
         void check_load_status_for_out_of_service_bus(size_t bus);

@@ -3,12 +3,12 @@
 
 void api_check_database()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     psdb->check_database();
 }
 
 void api_check_dynamic_data()
 {
-    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE* psdb = get_default_power_system_database_pointer();
     psdb->check_dynamic_data();
 }
