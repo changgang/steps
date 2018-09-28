@@ -20,14 +20,10 @@ PI_BLOCK_TEST::PI_BLOCK_TEST()
 void PI_BLOCK_TEST::setup()
 {
     set_dynamic_simulation_time_step_in_s(0.01);
-
-    block = new PI_BLOCK;
 }
 
 void PI_BLOCK_TEST::tear_down()
 {
-    delete block;
-
     show_test_end_information();
 }
 
@@ -35,29 +31,29 @@ void PI_BLOCK_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PI_BLOCK_TEST");
 
-    TEST_ASSERT(block->get_limiter_type()==NO_LIMITER);
+    TEST_ASSERT(block.get_limiter_type()==NO_LIMITER);
 }
 
 void PI_BLOCK_TEST::test_set_get_Kp()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PI_BLOCK_TEST");
 
-    block->set_Kp(1.5);
-    TEST_ASSERT(block->get_Kp()==1.5);
+    block.set_Kp(1.5);
+    TEST_ASSERT(block.get_Kp()==1.5);
 
-    block->set_Kp(-1.5);
-    TEST_ASSERT(block->get_Kp()==-1.5);
+    block.set_Kp(-1.5);
+    TEST_ASSERT(block.get_Kp()==-1.5);
 }
 
 void PI_BLOCK_TEST::test_set_get_Ki()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PI_BLOCK_TEST");
 
-    block->set_Ki(1.5);
-    TEST_ASSERT(fabs(block->get_Ki()-1.5)<FLOAT_EPSILON);
+    block.set_Ki(1.5);
+    TEST_ASSERT(fabs(block.get_Ki()-1.5)<FLOAT_EPSILON);
 
-    block->set_Ki(-1.5);
-    TEST_ASSERT(fabs(block->get_Ki()-(-1.5))<FLOAT_EPSILON);
+    block.set_Ki(-1.5);
+    TEST_ASSERT(fabs(block.get_Ki()-(-1.5))<FLOAT_EPSILON);
 }
 
 void PI_BLOCK_TEST::test_step_response_without_limiter()
@@ -69,8 +65,8 @@ void PI_BLOCK_TEST::test_step_response_without_limiter()
 
     double Kp = 10.0;
     double Ki = 2.0;
-    block->set_Kp(Kp);
-    block->set_Ki(Ki);
+    block.set_Kp(Kp);
+    block.set_Ki(Ki);
 
     double t = 5.0*h;
     // transfer function is
@@ -84,11 +80,11 @@ void PI_BLOCK_TEST::test_step_response_without_limiter()
 
 
     double output = 10.0;
-    block->set_output(output);
-    block->initialize();
-    TEST_ASSERT(block->get_state()==output);
+    block.set_output(output);
+    block.initialize();
+    TEST_ASSERT(block.get_state()==output);
 
-    double input = block->get_input();
+    double input = block.get_input();
 
     TEST_ASSERT(input == 0.0);
 
@@ -96,17 +92,17 @@ void PI_BLOCK_TEST::test_step_response_without_limiter()
     double y;
 
     input = input+1.0;
-    block->set_input(input);
-    block->run(UPDATE_MODE);
+    block.set_input(input);
+    block.run(UPDATE_MODE);
     y = 1.0*Kp+10.0;
-    TEST_ASSERT(fabs(block->get_output()-y)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(block.get_output()-y)<FLOAT_EPSILON);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block->run(INTEGRATE_MODE);
-        block->run(UPDATE_MODE);
+        block.run(INTEGRATE_MODE);
+        block.run(UPDATE_MODE);
         y = 10.0;
         y += Kp*1.0;
         y += Ki*1.0*t;
-        TEST_ASSERT(fabs(block->get_output()-y)<FLOAT_EPSILON);
+        TEST_ASSERT(fabs(block.get_output()-y)<FLOAT_EPSILON);
     }
 }

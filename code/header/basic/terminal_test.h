@@ -32,7 +32,7 @@ class TERMINAL_TEST : public Test::Suite
         void test_copy_with_operator_equal();
         void test_operator_bracket();
     private:
-        TERMINAL* terminal;
+        TERMINAL terminal;
 };
 
 #endif//TERMINAL_TEST_H

@@ -32,7 +32,7 @@ class RATING_TEST : public Test::Suite
         void test_clear();
 
     private:
-        RATING* rating;
+        RATING rating;
 };
 
 #endif // RATING_TEST_H

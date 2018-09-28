@@ -32,6 +32,6 @@ class LEAD_LAG_BLOCK_TEST : public Test::Suite
         void test_step_response_without_limiter_when_T1_is_zero();
         void test_step_response_without_limiter_when_T1_and_T2_are_zero();
     private:
-        LEAD_LAG_BLOCK* block;
+        LEAD_LAG_BLOCK block;
 };
 #endif // LEAD_LAG_BLOCK_TEST_H

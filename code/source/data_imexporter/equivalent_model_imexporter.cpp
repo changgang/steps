@@ -56,6 +56,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_data_into_ram(string file)
     {
         osstream<<"equivalent model file cannot be open"<<endl;
         show_information_with_leading_time_stamp(osstream);
+        return;
     }
 
     char buffer[1024];

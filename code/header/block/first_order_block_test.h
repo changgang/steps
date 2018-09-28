@@ -31,6 +31,6 @@ class FIRST_ORDER_BLOCK_TEST : public Test::Suite
         void test_step_response_with_limiter();
         void test_step_response_without_limiter_when_T_is_zero();
     private:
-        FIRST_ORDER_BLOCK* block;
+        FIRST_ORDER_BLOCK block;
 };
 #endif // FIRST_ORDER_BLOCK_TEST_H

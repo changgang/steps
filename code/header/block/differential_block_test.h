@@ -28,6 +28,6 @@ class DIFFERENTIAL_BLOCK_TEST : public Test::Suite
         void test_set_get_T();
         void test_step_response_without_limiter();
     private:
-        DIFFERENTIAL_BLOCK* block;
+        DIFFERENTIAL_BLOCK block;
 };
 #endif // DIFFERENTIAL_BLOCK_TEST_H

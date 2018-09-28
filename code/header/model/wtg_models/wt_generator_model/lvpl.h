@@ -1,7 +1,6 @@
 #ifndef LVPL_H
 #define LVPL_H
 
-#include "header/model/source_model/source_model.h"
 #include "header/block/integral_block.h"
 #include "header/block/saturation_block.h"
 

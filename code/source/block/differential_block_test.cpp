@@ -20,14 +20,10 @@ DIFFERENTIAL_BLOCK_TEST::DIFFERENTIAL_BLOCK_TEST()
 void DIFFERENTIAL_BLOCK_TEST::setup()
 {
     set_dynamic_simulation_time_step_in_s(0.01);
-
-    block = new DIFFERENTIAL_BLOCK;
 }
 
 void DIFFERENTIAL_BLOCK_TEST::tear_down()
 {
-    delete block;
-
     show_test_end_information();
 }
 
@@ -35,29 +31,29 @@ void DIFFERENTIAL_BLOCK_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DIFFERENTIAL_BLOCK_TEST");
 
-    TEST_ASSERT(block->get_limiter_type()==NO_LIMITER);
+    TEST_ASSERT(block.get_limiter_type()==NO_LIMITER);
 }
 
 void DIFFERENTIAL_BLOCK_TEST::test_set_get_K()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DIFFERENTIAL_BLOCK_TEST");
 
-    block->set_K(1.5);
-    TEST_ASSERT(fabs(block->get_K()-1.5)<FLOAT_EPSILON);
+    block.set_K(1.5);
+    TEST_ASSERT(fabs(block.get_K()-1.5)<FLOAT_EPSILON);
 
-    block->set_K(-1.5);
-    TEST_ASSERT(fabs(block->get_K()-(-1.5))<FLOAT_EPSILON);
+    block.set_K(-1.5);
+    TEST_ASSERT(fabs(block.get_K()-(-1.5))<FLOAT_EPSILON);
 }
 
 void DIFFERENTIAL_BLOCK_TEST::test_set_get_T()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DIFFERENTIAL_BLOCK_TEST");
 
-    block->set_T_in_s(0.2);
-    TEST_ASSERT(fabs(block->get_T_in_s()-0.2)<FLOAT_EPSILON);
+    block.set_T_in_s(0.2);
+    TEST_ASSERT(fabs(block.get_T_in_s()-0.2)<FLOAT_EPSILON);
 
-    block->set_T_in_s(0.5);
-    TEST_ASSERT(fabs(block->get_T_in_s()-0.5)<FLOAT_EPSILON);
+    block.set_T_in_s(0.5);
+    TEST_ASSERT(fabs(block.get_T_in_s()-0.5)<FLOAT_EPSILON);
 }
 
 void DIFFERENTIAL_BLOCK_TEST::test_step_response_without_limiter()
@@ -68,8 +64,8 @@ void DIFFERENTIAL_BLOCK_TEST::test_step_response_without_limiter()
 
     double K = 2.0;
     double T = 5.0;
-    block->set_K(K);
-    block->set_T_in_s(T);
+    block.set_K(K);
+    block.set_T_in_s(T);
 
 
     double t = 5.0*h;
@@ -80,22 +76,22 @@ void DIFFERENTIAL_BLOCK_TEST::test_step_response_without_limiter()
     // y = K/T*e^(-t/T)
 
     double input = 10.0;
-    block->set_input(input);
-    block->initialize();
-    TEST_ASSERT(fabs(block->get_state()-(K/T*input))<FLOAT_EPSILON);
+    block.set_input(input);
+    block.initialize();
+    TEST_ASSERT(fabs(block.get_state()-(K/T*input))<FLOAT_EPSILON);
 
     double y;
 
     input = input+1.0;
-    block->set_input(input);
-    block->run(UPDATE_MODE);
+    block.set_input(input);
+    block.run(UPDATE_MODE);
     y = 1.0*K/T;
-    TEST_ASSERT(fabs(block->get_output()-y)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(block.get_output()-y)<FLOAT_EPSILON);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block->run(INTEGRATE_MODE);
-        block->run(UPDATE_MODE);
+        block.run(INTEGRATE_MODE);
+        block.run(UPDATE_MODE);
         y =1.0*K/T*exp(-t/T);
-        TEST_ASSERT(fabs(block->get_output()-y)<1e-8);
+        TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }
 }

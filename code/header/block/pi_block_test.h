@@ -29,6 +29,6 @@ class PI_BLOCK_TEST : public Test::Suite
         void test_set_get_Ki();
         void test_step_response_without_limiter();
     private:
-        PI_BLOCK* block;
+        PI_BLOCK block;
 };
 #endif // PI_BLOCK_TEST_H

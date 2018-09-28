@@ -64,8 +64,6 @@
 		<Unit filename="header/basic/fault_test.h" />
 		<Unit filename="header/basic/inphno.h" />
 		<Unit filename="header/basic/inphno_test.h" />
-		<Unit filename="header/basic/model_index.h" />
-		<Unit filename="header/basic/model_index_test.h" />
 		<Unit filename="header/basic/owner.h" />
 		<Unit filename="header/basic/owner_test.h" />
 		<Unit filename="header/basic/ownership.h" />
@@ -368,14 +366,6 @@
 		<Unit filename="source/basic/fault_test.cpp" />
 		<Unit filename="source/basic/inphno.cpp" />
 		<Unit filename="source/basic/inphno_test.cpp" />
-		<Unit filename="source/basic/model_index.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
-		<Unit filename="source/basic/model_index_test.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
 		<Unit filename="source/basic/owner.cpp" />
 		<Unit filename="source/basic/owner_test.cpp" />
 		<Unit filename="source/basic/ownership.cpp" />

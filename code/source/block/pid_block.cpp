@@ -86,47 +86,6 @@ double PID_BLOCK::get_Td_in_s() const
     return d_block.get_T_in_s();
 }
 
-
-void PID_BLOCK::set_input(double x)
-{
-    p_block.set_input(x);
-    i_block.set_input(x);
-    d_block.set_input(x);
-}
-
-void PID_BLOCK::set_output(double y)
-{
-    p_block.set_output(0.0);
-    i_block.set_output(y);
-    d_block.set_input(0.0);
-}
-
-double PID_BLOCK::get_input() const
-{
-    return p_block.get_input();
-}
-
-double PID_BLOCK::get_output() const
-{
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double y = p_block.get_output() + i_block.get_output() + d_block.get_output();
-    if(limiter != NO_LIMITER)
-    {
-        if(y>vmax)
-            y = vmax;
-        else
-        {
-            if(y<vmin)
-                y = vmin;
-        }
-    }
-    return y;
-}
-
-
 double PID_BLOCK::get_integrator_state() const
 {
     return i_block.get_state();
@@ -193,9 +152,15 @@ void PID_BLOCK::initialize()
 {
     ostringstream osstream;
 
+    p_block.set_output(0.0);
+    i_block.set_output(get_output());
+    d_block.set_input(0.0);
+
     p_block.initialize();
     i_block.initialize();
     d_block.initialize();
+
+    set_input(p_block.get_input());
 
     LIMITER_TYPE limiter = get_limiter_type();
     double vmax = get_upper_limit();
@@ -223,10 +188,33 @@ void PID_BLOCK::initialize()
 
 void PID_BLOCK::run(DYNAMIC_MODE mode)
 {
+    double x = get_input();
+
+    p_block.set_input(x);
+    i_block.set_input(x);
+    d_block.set_input(x);
+
     if(mode==INTEGRATE_MODE)
         integrate();
     else
         update();
+
+    LIMITER_TYPE limiter = get_limiter_type();
+    double vmax = get_upper_limit();
+    double vmin = get_lower_limit();
+
+    double y = p_block.get_output() + i_block.get_output() + d_block.get_output();
+    if(limiter != NO_LIMITER)
+    {
+        if(y>vmax)
+            y = vmax;
+        else
+        {
+            if(y<vmin)
+                y = vmin;
+        }
+    }
+    set_output(y);
 }
 
 void PID_BLOCK::integrate()

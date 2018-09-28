@@ -56,7 +56,7 @@ class SPARSE_MATRIX_TEST : public Test::Suite
         void test_save_matrix_to_file();
     private:
         void prepare_basic_matrix();
-        SPARSE_MATRIX* matrix;
+        SPARSE_MATRIX matrix;
 };
 
 #endif // SPARSE_MATRIX_TEST_H

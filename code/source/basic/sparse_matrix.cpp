@@ -289,8 +289,8 @@ void SPARSE_MATRIX::transpose()
 
 int SPARSE_MATRIX::get_matrix_size() const
 {
-    if(matrix_real!=NULL or matrix_imag != NULL) return matrix_real->n;
-    else                                         return 0;
+    if(matrix_real!=NULL) return matrix_real->n;
+    else                  return 0;
 }
 
 int SPARSE_MATRIX::get_matrix_entry_count() const
@@ -514,7 +514,8 @@ vector<double> SPARSE_MATRIX::solve_Ax_eq_b(vector<double> b)
 void SPARSE_MATRIX::solve_Lx_eq_b(vector<double>& b)
 {
     ostringstream osstream;
-    double* bb = (double*)malloc(b.size()*sizeof(double));
+    size_t n = b.size();
+    double* bb = (double*)malloc(n*sizeof(double));
     if(bb==NULL)
     {
         osstream<<"Error. Failed to allocate temporary array for solving Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
@@ -523,7 +524,6 @@ void SPARSE_MATRIX::solve_Lx_eq_b(vector<double>& b)
         return; // failed to allocate array bb
     }
 
-    size_t n = b.size();
     for(size_t i=0; i!=n; ++i) bb[i]=b[i]; // set bb
 
     cs_ipvec(LU->pinv, bb, LU_workspace, matrix_real->n) ;       /* x = b(p) */
@@ -546,7 +546,9 @@ void SPARSE_MATRIX::solve_xU_eq_b(vector<double>& b)
 {
     string buffer;
     char cbuffer[1000];
-    double* bb = (double*)malloc(b.size()*sizeof(double));
+
+    size_t n = b.size();
+    double* bb = (double*)malloc(n*sizeof(double));
     if(bb==NULL)
     {
         snprintf(cbuffer, 1000, "Error. Failed to allocate temporary array for solving xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
@@ -554,8 +556,6 @@ void SPARSE_MATRIX::solve_xU_eq_b(vector<double>& b)
         show_information_with_leading_time_stamp(buffer);
         return; // failed to allocate array bb
     }
-
-    size_t n = b.size();
     for(size_t i=0; i!=n; ++i) LU_workspace[i]=b[i]; // set bb
     int OK = cs_usolve(LU->U, LU_workspace) ;               /* x = U\x */
     cs_ipvec(LU_symbolic->q, LU_workspace, bb, matrix_real->n) ;          /* b(q) = x */

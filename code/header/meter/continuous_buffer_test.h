@@ -36,7 +36,7 @@ class CONTINUOUS_BUFFER_TEST : public Test::Suite
         void test_get_buffer_value_at_time();
         void test_get_delay_index_of_time();
     private:
-        CONTINUOUS_BUFFER* buffer;
+        CONTINUOUS_BUFFER buffer;
 };
 
 #endif

@@ -17,13 +17,6 @@ class PI_BLOCK : public BLOCK
         double get_Kp() const;
         double get_Ki() const;
 
-
-        void set_input(double input);
-        void set_output(double output);
-
-        double get_input() const;
-        double get_output() const;
-
         double get_state() const;
         double get_new_state() const;
         double get_dstate() const;

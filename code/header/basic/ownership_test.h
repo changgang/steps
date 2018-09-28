@@ -38,7 +38,7 @@ class OWNERSHIP_TEST : public Test::Suite
         void test_clear();
         void test_copy_with_operator_equal();
     private:
-        OWNERSHIP* ownership;
+        OWNERSHIP ownership;
 };
 
 #endif // OWNERSHIP_TEST_H

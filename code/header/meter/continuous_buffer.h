@@ -39,8 +39,8 @@ class CONTINUOUS_BUFFER
 
         size_t index_of_buffer_head;
 
-        double * time_buffer;
-        double * value_buffer;
+        vector<double> time_buffer;
+        vector<double> value_buffer;
 };
 
 #endif // CONTINUOUS_BUFFER_H

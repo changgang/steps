@@ -46,7 +46,7 @@ class DEVICE_INDEX_MAP_TEST : public Test::Suite
         TERMINAL prepare_terminal(size_t ibus,size_t jbus);
         TERMINAL prepare_terminal(size_t ibus,size_t jbus, size_t kbus);
     private:
-        DEVICE_INDEX_MAP* device_index_map;
+        DEVICE_INDEX_MAP device_index_map;
 };
 
 #endif //DEVICE_INDEX_MAP_TEST_H

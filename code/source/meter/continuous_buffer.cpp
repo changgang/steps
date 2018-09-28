@@ -35,26 +35,19 @@ data:          T+8   T+7t  T+6t  T+5t  T+4t  T+3t  T+2t  T+9t
 
 CONTINUOUS_BUFFER::CONTINUOUS_BUFFER()
 {
-    buffer_size = 1;
+    set_buffer_size(1);
     index_of_buffer_head = 0;
-    time_buffer = NULL;
-    value_buffer = NULL;
 }
 
 CONTINUOUS_BUFFER::CONTINUOUS_BUFFER(const CONTINUOUS_BUFFER& buffer)
 {
-    buffer_size = 1;
-    index_of_buffer_head = 0;
-    time_buffer = NULL;
-    value_buffer = NULL;
-
-    set_buffer_size(buffer.get_buffer_size());
     clear();
     copy_from_constant_buffer(buffer);
 }
 
 CONTINUOUS_BUFFER& CONTINUOUS_BUFFER::operator=(const CONTINUOUS_BUFFER& buffer)
 {
+    clear();
     if(this==&buffer)
         return *this;
     copy_from_constant_buffer(buffer);
@@ -66,7 +59,6 @@ void CONTINUOUS_BUFFER::copy_from_constant_buffer(const CONTINUOUS_BUFFER& buffe
 {
     index_of_buffer_head = 0;
     set_buffer_size(buffer.get_buffer_size());
-    clear();
 
     size_t from_buffer_size = buffer.get_buffer_size();
     size_t N = min(buffer_size, from_buffer_size);
@@ -80,8 +72,8 @@ void CONTINUOUS_BUFFER::copy_from_constant_buffer(const CONTINUOUS_BUFFER& buffe
 
 CONTINUOUS_BUFFER::~CONTINUOUS_BUFFER()
 {
-    delete [] time_buffer;
-    delete [] value_buffer;
+    time_buffer.clear();
+    value_buffer.clear();
 }
 
 void CONTINUOUS_BUFFER::clear()
@@ -96,22 +88,11 @@ void CONTINUOUS_BUFFER::clear()
 
 void CONTINUOUS_BUFFER::set_buffer_size(size_t buffer_size)
 {
-    if(time_buffer!=NULL)
-    {
-        delete [] time_buffer;
-        time_buffer = NULL;
-    }
-    if(value_buffer!=NULL)
-    {
-        delete [] value_buffer;
-        value_buffer = NULL;
-    }
-
     if(buffer_size==0)
         buffer_size = 1;
     this->buffer_size = buffer_size;
-    time_buffer = new double[buffer_size];
-    value_buffer = new double[buffer_size];
+    time_buffer.resize(buffer_size, 0.0);
+    value_buffer.resize(buffer_size, 0.0);
 }
 
 size_t CONTINUOUS_BUFFER::get_buffer_size() const

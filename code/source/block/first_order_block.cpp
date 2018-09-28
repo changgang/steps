@@ -46,78 +46,76 @@ double FIRST_ORDER_BLOCK::get_T_in_s() const
 
 void FIRST_ORDER_BLOCK::initialize()
 {
+    double k = get_K();
     double t = get_T_in_s();
     if(t==0.0)
     {
-        proportional_block.set_limiter_type(this->get_limiter_type());
-        proportional_block.set_upper_limit(this->get_upper_limit());
-        proportional_block.set_lower_limit(this->get_lower_limit());
-        proportional_block.set_K(this->get_K());
-
-        proportional_block.set_output(this->get_output());
-        proportional_block.initialize();
-
-        this->set_state(0.0);
-        this->set_store(0.0);
-        this->set_dstate(0.0);
-        this->set_input(proportional_block.get_input());
-        return;
-    }
-
-    ostringstream osstream;
-
-    double h = get_dynamic_simulation_time_step_in_s();
-
-    double k = get_K();
-
-    LIMITER_TYPE limiter_type = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double y = get_output();
-    if(k==0.0)
-    {
-        y=0.0;
-        set_output(0.0);
-    }
-
-    double s, ds, z, x;
-
-    if(t!=0.0)
-    {
-        s = y;
-        //z = y-(1.0-2.0*t/h)*s;
-        z =2.0*t*s/h;
-    }
-    else
-    {
-        s = 0.0;
-        z = 0.0;
-    }
-    ds = 0.0;
-    if(k==0)
-        x = 0.0;
-    else
-        x = y/k;
-
-    set_state(s);
-    set_store(z);
-    set_dstate(ds);
-    set_input(x);
-
-    if(limiter_type != NO_LIMITER)
-    {
-        if(s>vmax)
+        set_state(0.0);
+        set_store(0.0);
+        set_dstate(0.0);
+        if(k!=0.0)
+            set_input(get_output()/get_K());
+        else
         {
-            osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(osstream);
+            set_output(0.0);
+            set_input(0.0);
+        }
+    }
+    else
+    {
+        ostringstream osstream;
+
+        double h = get_dynamic_simulation_time_step_in_s();
+
+        LIMITER_TYPE limiter_type = get_limiter_type();
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
+
+        double y = get_output();
+        if(k==0.0)
+        {
+            y=0.0;
+            set_output(0.0);
+        }
+
+        double s, ds, z, x;
+
+        if(t!=0.0)
+        {
+            s = y;
+            //z = y-(1.0-2.0*t/h)*s;
+            z =2.0*t*s/h;
         }
         else
         {
-            if(s<vmin)
+            s = 0.0;
+            z = 0.0;
+        }
+        ds = 0.0;
+        if(k==0)
+            x = 0.0;
+        else
+            x = y/k;
+
+        set_state(s);
+        set_store(z);
+        set_dstate(ds);
+        set_input(x);
+
+        if(limiter_type != NO_LIMITER)
+        {
+            if(s>vmax)
             {
-                osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
+                osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
                 show_information_with_leading_time_stamp(osstream);
+            }
+            else
+            {
+                if(s<vmin)
+                {
+                    osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
+                    show_information_with_leading_time_stamp(osstream);
+                }
             }
         }
     }
@@ -125,21 +123,10 @@ void FIRST_ORDER_BLOCK::initialize()
 
 void FIRST_ORDER_BLOCK::run(DYNAMIC_MODE mode)
 {
-    double t = get_T_in_s();
-    if(t==0.0)
-    {
-        proportional_block.set_input(this->get_input());
-        proportional_block.run(mode);
-
-        this->set_output(proportional_block.get_output());
-    }
+    if(mode==INTEGRATE_MODE)
+        integrate();
     else
-    {
-        if(mode==INTEGRATE_MODE)
-            integrate();
-        else
-            update();
-    }
+        update();
 }
 
 void FIRST_ORDER_BLOCK::integrate()

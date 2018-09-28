@@ -62,45 +62,6 @@ double PD_BLOCK::get_Td_in_s() const
     return d_block.get_T_in_s();
 }
 
-
-void PD_BLOCK::set_input(double x)
-{
-    p_block.set_input(x);
-    d_block.set_input(x);
-}
-
-void PD_BLOCK::set_output(double y)
-{
-    p_block.set_output(y);
-    d_block.set_input(0.0);
-}
-
-double PD_BLOCK::get_input() const
-{
-    return p_block.get_input();
-}
-
-double PD_BLOCK::get_output() const
-{
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double y = p_block.get_output() + d_block.get_output();
-    if(limiter != NO_LIMITER)
-    {
-        if(y>vmax)
-            y = vmax;
-        else
-        {
-            if(y<vmin)
-                y = vmin;
-        }
-    }
-    return y;
-}
-
-
 double PD_BLOCK::get_differentiator_state() const
 {
     return d_block.get_state();
@@ -123,16 +84,43 @@ double PD_BLOCK::get_differentiator_store() const
 
 void PD_BLOCK::initialize()
 {
+    double y = get_output();
+    p_block.set_output(y);
+    d_block.set_input(0.0);
+
     p_block.initialize();
     d_block.initialize();
+
+    set_input(p_block.get_input());
 }
 
 void PD_BLOCK::run(DYNAMIC_MODE mode)
 {
+    double x = get_input();
+    p_block.set_input(x);
+    d_block.set_input(x);
+
     if(mode==INTEGRATE_MODE)
         integrate();
     else
         update();
+
+    LIMITER_TYPE limiter = get_limiter_type();
+    double vmax = get_upper_limit();
+    double vmin = get_lower_limit();
+
+    double y = p_block.get_output() + d_block.get_output();
+    if(limiter != NO_LIMITER)
+    {
+        if(y>vmax)
+            y = vmax;
+        else
+        {
+            if(y<vmin)
+                y = vmin;
+        }
+    }
+    set_output(y);
 }
 
 void PD_BLOCK::integrate()

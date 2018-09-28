@@ -25,6 +25,5 @@ class FIRST_ORDER_BLOCK : public BLOCK
         virtual void integrate();
         virtual void update();
         double K, T;
-        PROPORTIONAL_BLOCK proportional_block;
 };
 #endif // FIRST_ORDER_BLOCK_H

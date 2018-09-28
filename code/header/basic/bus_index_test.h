@@ -30,7 +30,7 @@ class BUS_INDEX_TEST : public Test::Suite
         void test_clear_index();
         void test_get_index_of_bus_and_operator_bracket();
     private:
-        BUS_INDEX* bus_index;
+        BUS_INDEX bus_index;
 };
 
 #endif //BUS_INDEX_TEST_H

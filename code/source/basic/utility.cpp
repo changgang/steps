@@ -266,9 +266,16 @@ string string2csv(string str)
     str = replace_string_contents(str, " ,", ",");
 
     size_t n = str.size();
+    size_t n2 = n<<1;
 
-    char* csv = (char*) malloc(sizeof(char)*n*2);
-    size_t n2 = n*2;
+    char* csv = (char*) malloc(sizeof(char)*n2);
+    if(csv==NULL)
+    {
+        ostringstream sstream;
+        sstream<<"Warning. Failed to allocate memory for "<<__FUNCTION__<<"().";
+        show_information_with_leading_time_stamp(sstream);
+        return "";
+    }
     for(size_t i=0; i!=n2; ++i)
         csv[i]='\0';
 
@@ -535,23 +542,6 @@ POWERFLOW_SOLVER& get_default_powerflow_solver()
 DYNAMICS_SIMULATOR& get_default_dynamic_simulator()
 {
     return STEPS::default_dynamic_simulator;
-}
-
-
-POWER_SYSTEM_DATABASE* get_default_power_system_database_pointer()
-{
-    return &(STEPS::default_power_system_db);
-}
-
-
-POWERFLOW_SOLVER* get_default_powerflow_solver_pointer()
-{
-    return &STEPS::default_powerflow_solver;
-}
-
-DYNAMICS_SIMULATOR* get_default_dynamic_simulator_pointer()
-{
-    return &STEPS::default_dynamic_simulator;
 }
 
 void set_dynamic_simulation_time_step_in_s(double delt)

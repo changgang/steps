@@ -394,8 +394,8 @@ void api_set_owner_capacity(size_t cap)
 
 void api_clear_package()
 {
-    get_default_power_system_database_pointer()->clear_database();
-    get_default_dynamic_simulator_pointer()->clear();
+    get_default_power_system_database().clear_database();
+    get_default_dynamic_simulator().clear();
 
 }
 

@@ -324,25 +324,7 @@ double POWER_SYSTEM_DATABASE::get_system_base_power_in_MVA() const
 {
     return system_base_power_in_MVA;
 }
-/*
-void POWER_SYSTEM_DATABASE::set_system_base_frequency_in_Hz(const double f)
-{
-    if(f>0.0)
-        system_base_fequency_in_Hz = f;
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Error. Non positive frequency ("<<f<<" Hz) is not allowed for setting system base frequency."<<endl
-          <<"System base frequency will not be set. Original frequency is "<<get_system_base_frequency_in_Hz()<<" Hz.";
-        show_information_with_leading_time_stamp(osstream);
-    }
-}
 
-double POWER_SYSTEM_DATABASE::get_system_base_frequency_in_Hz() const
-{
-    return system_base_fequency_in_Hz;
-}
-*/
 void POWER_SYSTEM_DATABASE::set_case_information(const string& title)
 {
     case_information = title;

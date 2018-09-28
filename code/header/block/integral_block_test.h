@@ -30,6 +30,6 @@ class INTEGRAL_BLOCK_TEST : public Test::Suite
         void test_step_response_without_limiter();
         void test_step_response_with_limiter();
     private:
-        INTEGRAL_BLOCK* block;
+        INTEGRAL_BLOCK block;
 };
 #endif // INTEGRAL_BLOCK_TEST_H

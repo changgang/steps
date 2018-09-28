@@ -17,7 +17,7 @@ class DYNAMICS_SIMULATOR: public BASE
         ~DYNAMICS_SIMULATOR();
         virtual void clear();
 
-        NETWORK_DATABASE* get_network_database() const;
+        NETWORK_DATABASE* get_network_database();
 
         void set_csv_file_export_enable_flag(bool flag);
         void set_json_file_export_enable_flag(bool flag);
@@ -195,7 +195,7 @@ class DYNAMICS_SIMULATOR: public BASE
 
         SPARSE_MATRIX jacobian;
 
-        NETWORK_DATABASE* network_db;
+        NETWORK_DATABASE network_db;
 
         vector<METER> meters;
         vector<double> meter_values;

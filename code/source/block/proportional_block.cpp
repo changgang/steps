@@ -78,65 +78,39 @@ void PROPORTIONAL_BLOCK::initialize()
 
 void PROPORTIONAL_BLOCK::run(DYNAMIC_MODE mode)
 {
-    if(mode==INTEGRATE_MODE)
-        integrate();
-    else
-        update();
+    double k = get_K();
+    if(fabs(k)<FLOAT_EPSILON)
+        return;
+
+    LIMITER_TYPE limiter = get_limiter_type();
+    double vmax = get_upper_limit();
+    double vmin = get_lower_limit();
+
+    double x = get_input();
+
+    double y = k*x;
+
+    if(limiter!=NO_LIMITER)
+    {
+        if(y>vmax)
+            y = vmax;
+        else
+        {
+            if(y<vmin)
+                y = vmin;
+        }
+    }
+    set_output(y);
 }
 
 void PROPORTIONAL_BLOCK::integrate()
 {
-    double k = get_K();
-    if(fabs(k)<FLOAT_EPSILON)
-        return;
-
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double x = get_input();
-
-    double y = k*x;
-
-    if(limiter!=NO_LIMITER)
-    {
-        if(y>vmax)
-            y = vmax;
-        else
-        {
-            if(y<vmin)
-                y = vmin;
-        }
-    }
-    set_output(y);
+    ;
 }
 
 void PROPORTIONAL_BLOCK::update()
 {
-    double k = get_K();
-    if(fabs(k)<FLOAT_EPSILON)
-        return;
-
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double x = get_input();
-
-    double y = k*x;
-
-    if(limiter!=NO_LIMITER)
-    {
-        if(y>vmax)
-            y = vmax;
-        else
-        {
-            if(y<vmin)
-                y = vmin;
-        }
-    }
-
-    set_output(y);
+    ;
 }
 
 void PROPORTIONAL_BLOCK::check()

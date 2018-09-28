@@ -21,14 +21,10 @@ PD_BLOCK_TEST::PD_BLOCK_TEST()
 void PD_BLOCK_TEST::setup()
 {
     set_dynamic_simulation_time_step_in_s(0.01);
-
-    block = new PD_BLOCK;
 }
 
 void PD_BLOCK_TEST::tear_down()
 {
-    delete block;
-
     show_test_end_information();
 }
 
@@ -36,40 +32,40 @@ void PD_BLOCK_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PD_BLOCK_TEST");
 
-    TEST_ASSERT(block->get_limiter_type()==NO_LIMITER);
+    TEST_ASSERT(block.get_limiter_type()==NO_LIMITER);
 }
 
 void PD_BLOCK_TEST::test_set_get_Kp()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PD_BLOCK_TEST");
 
-    block->set_Kp(1.5);
-    TEST_ASSERT(block->get_Kp()==1.5);
+    block.set_Kp(1.5);
+    TEST_ASSERT(block.get_Kp()==1.5);
 
-    block->set_Kp(-1.5);
-    TEST_ASSERT(block->get_Kp()==-1.5);
+    block.set_Kp(-1.5);
+    TEST_ASSERT(block.get_Kp()==-1.5);
 }
 
 void PD_BLOCK_TEST::test_set_get_Kd()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PD_BLOCK_TEST");
 
-    block->set_Kd(1.5);
-    TEST_ASSERT(block->get_Kd()==1.5);
+    block.set_Kd(1.5);
+    TEST_ASSERT(block.get_Kd()==1.5);
 
-    block->set_Kd(-1.5);
-    TEST_ASSERT(block->get_Kd()==-1.5);
+    block.set_Kd(-1.5);
+    TEST_ASSERT(block.get_Kd()==-1.5);
 }
 
 void PD_BLOCK_TEST::test_set_get_Td()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PD_BLOCK_TEST");
 
-    block->set_Td_in_s(0.2);
-    TEST_ASSERT(block->get_Td_in_s()==0.2);
+    block.set_Td_in_s(0.2);
+    TEST_ASSERT(block.get_Td_in_s()==0.2);
 
-    block->set_Td_in_s(0.5);
-    TEST_ASSERT(block->get_Td_in_s()==0.5);
+    block.set_Td_in_s(0.5);
+    TEST_ASSERT(block.get_Td_in_s()==0.5);
 }
 
 void PD_BLOCK_TEST::test_step_response_without_limiter()
@@ -82,9 +78,9 @@ void PD_BLOCK_TEST::test_step_response_without_limiter()
     double Kp = 10.0;
     double Kd = 2.0;
     double Td = 5.0;
-    block->set_Kp(Kp);
-    block->set_Kd(Kd);
-    block->set_Td_in_s(Td);
+    block.set_Kp(Kp);
+    block.set_Kd(Kd);
+    block.set_Td_in_s(Td);
 
     double t = 5.0*h;
     // transfer function is
@@ -96,29 +92,29 @@ void PD_BLOCK_TEST::test_step_response_without_limiter()
     // Kp+Kd/Td*e^(-t/Td)
 
     double output=0.0;
-    block->set_output(output);
-    block->initialize();
-    TEST_ASSERT(block->get_differentiator_state()==0.0);
-    TEST_ASSERT(block->get_input()==0.0);
+    block.set_output(output);
+    block.initialize();
+    TEST_ASSERT(block.get_differentiator_state()==0.0);
+    TEST_ASSERT(block.get_input()==0.0);
 
-    double input = block->get_input();
+    double input = block.get_input();
 
     TEST_ASSERT(input == 0.0);
 
     input = 1.0;
-    block->set_input(input);
-    block->run(UPDATE_MODE);
+    block.set_input(input);
+    block.run(UPDATE_MODE);
 
     double y;
     y=Kp;
     y += Kd/Td;
-    TEST_ASSERT(fabs(block->get_output()-y)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(block.get_output()-y)<FLOAT_EPSILON);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block->run(INTEGRATE_MODE);
-        block->run(UPDATE_MODE);
+        block.run(INTEGRATE_MODE);
+        block.run(UPDATE_MODE);
         y = Kp;
         y += Kd/Td*exp(-t/Td);
-        TEST_ASSERT(fabs(block->get_output()-y)<1e-8);
+        TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }
 }

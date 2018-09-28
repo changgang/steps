@@ -23,13 +23,6 @@ class PID_BLOCK : public BLOCK
         double get_Kd() const;
         double get_Td_in_s() const;
 
-
-        void set_input(double input);
-        void set_output(double output);
-
-        double get_input() const;
-        double get_output() const;
-
         double get_integrator_state() const;
         double get_differentiator_state() const;
         double get_integrator_new_state() const;

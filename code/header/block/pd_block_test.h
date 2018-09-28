@@ -30,6 +30,6 @@ class PD_BLOCK_TEST : public Test::Suite
         void test_set_get_Td();
         void test_step_response_without_limiter();
     private:
-        PD_BLOCK* block;
+        PD_BLOCK block;
 };
 #endif // PD_BLOCK_TEST_H

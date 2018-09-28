@@ -30,7 +30,7 @@ class INPHNO_TEST : public Test::Suite
         void test_is_emtpy();
         void test_clear();
     private:
-        INPHNO* inphno;
+        INPHNO inphno;
 };
 
 #endif //INPHNO_TEST_H

@@ -29,6 +29,6 @@ class PROPORTIONAL_BLOCK_TEST : public Test::Suite
         void test_step_response_without_limiter();
         void test_step_response_with_limiter();
     private:
-        PROPORTIONAL_BLOCK* block;
+        PROPORTIONAL_BLOCK block;
 };
 #endif // PROPORTIONAL_BLOCK_TEST_H

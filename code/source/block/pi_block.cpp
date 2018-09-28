@@ -53,43 +53,6 @@ double PI_BLOCK::get_Ki() const
     return pid_block.get_Ki();
 }
 
-
-void PI_BLOCK::set_input(double x)
-{
-    pid_block.set_input(x);
-}
-
-void PI_BLOCK::set_output(double y)
-{
-    pid_block.set_output(y);
-}
-
-double PI_BLOCK::get_input() const
-{
-    return pid_block.get_input();
-}
-
-double PI_BLOCK::get_output() const
-{
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double y = pid_block.get_output();
-    if(limiter != NO_LIMITER)
-    {
-        if(y>vmax)
-            y = vmax;
-        else
-        {
-            if(y<vmin)
-                y = vmin;
-        }
-    }
-    return y;
-}
-
-
 double PI_BLOCK::get_state() const
 {
     return pid_block.get_integrator_state();
@@ -116,7 +79,11 @@ void PI_BLOCK::initialize()
 {
     ostringstream osstream;
 
+    pid_block.set_output(get_output());
+
     pid_block.initialize();
+
+    set_input(pid_block.get_input());
 
     LIMITER_TYPE limiter = get_limiter_type();
     double vmax = get_upper_limit();
@@ -143,10 +110,29 @@ void PI_BLOCK::initialize()
 }
 void PI_BLOCK::run(DYNAMIC_MODE mode)
 {
+    pid_block.set_input(get_input());
+
     if(mode==INTEGRATE_MODE)
         integrate();
     else
         update();
+
+    LIMITER_TYPE limiter = get_limiter_type();
+    double vmax = get_upper_limit();
+    double vmin = get_lower_limit();
+
+    double y = pid_block.get_output();
+    if(limiter != NO_LIMITER)
+    {
+        if(y>vmax)
+            y = vmax;
+        else
+        {
+            if(y<vmin)
+                y = vmin;
+        }
+    }
+    set_output(y);
 }
 
 void PI_BLOCK::integrate()

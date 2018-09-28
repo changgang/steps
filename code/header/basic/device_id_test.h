@@ -64,7 +64,7 @@ class DEVICE_ID_TEST : public Test::Suite
         void test_compare_equal_not_equal();
 
     private:
-        DEVICE_ID* device_id;
+        DEVICE_ID device_id;
         TERMINAL terminal_1_bus, terminal_2_bus, terminal_3_bus, terminal_4_bus, terminal_100_bus, terminal_101_bus;
 };
 

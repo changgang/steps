@@ -14,6 +14,9 @@
 class STEPS_API_SEARCH_BUFFER
 {
 public:
+    STEPS_API_SEARCH_BUFFER();
+    ~STEPS_API_SEARCH_BUFFER();
+
     vector<BUS*> buses;
     size_t bus_pointer;
     vector<GENERATOR*> generators;

@@ -22,14 +22,10 @@ FIRST_ORDER_BLOCK_TEST::FIRST_ORDER_BLOCK_TEST()
 void FIRST_ORDER_BLOCK_TEST::setup()
 {
     set_dynamic_simulation_time_step_in_s(0.01);
-
-    block = new FIRST_ORDER_BLOCK;
 }
 
 void FIRST_ORDER_BLOCK_TEST::tear_down()
 {
-    delete block;
-
     show_test_end_information();
 }
 
@@ -37,29 +33,29 @@ void FIRST_ORDER_BLOCK_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FIRST_ORDER_BLOCK_TEST");
 
-    TEST_ASSERT(block->get_limiter_type()==NO_LIMITER);
+    TEST_ASSERT(block.get_limiter_type()==NO_LIMITER);
 }
 
 void FIRST_ORDER_BLOCK_TEST::test_set_get_K()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FIRST_ORDER_BLOCK_TEST");
 
-    block->set_K(2.0);
-    TEST_ASSERT(block->get_K()==2.0);
+    block.set_K(2.0);
+    TEST_ASSERT(block.get_K()==2.0);
 
-    block->set_K(5.0);
-    TEST_ASSERT(block->get_K()==5.0);
+    block.set_K(5.0);
+    TEST_ASSERT(block.get_K()==5.0);
 }
 
 void FIRST_ORDER_BLOCK_TEST::test_set_get_T()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FIRST_ORDER_BLOCK_TEST");
 
-    block->set_T_in_s(0.2);
-    TEST_ASSERT(block->get_T_in_s()==0.2);
+    block.set_T_in_s(0.2);
+    TEST_ASSERT(block.get_T_in_s()==0.2);
 
-    block->set_T_in_s(0.5);
-    TEST_ASSERT(block->get_T_in_s()==0.5);
+    block.set_T_in_s(0.5);
+    TEST_ASSERT(block.get_T_in_s()==0.5);
 }
 
 void FIRST_ORDER_BLOCK_TEST::test_step_response_without_limiter()
@@ -71,8 +67,8 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_without_limiter()
 
     double K = 2.0;
     double T = 5.0;
-    block->set_K(K);
-    block->set_T_in_s(T);
+    block.set_K(K);
+    block.set_T_in_s(T);
 
     double t = 5.0*h;
 
@@ -84,19 +80,19 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_without_limiter()
     // y = 10+K*(1-e^(-t/T))
 
     double output = 10.0;
-    block->set_output(output);
-    block->initialize();
+    block.set_output(output);
+    block.initialize();
     double y;
 
-    double input = block->get_input();
-    block->set_input(input+1.0);
-    block->run(UPDATE_MODE);
+    double input = block.get_input();
+    block.set_input(input+1.0);
+    block.run(UPDATE_MODE);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block->run(INTEGRATE_MODE);
-        block->run(UPDATE_MODE);
+        block.run(INTEGRATE_MODE);
+        block.run(UPDATE_MODE);
         y = 10.0+K*(1.0-exp(-t/T));
-        TEST_ASSERT(fabs(block->get_output()-y)<1e-8);
+        TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }
 }
 void FIRST_ORDER_BLOCK_TEST::test_step_response_with_limiter()
@@ -108,11 +104,11 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_with_limiter()
 
     double K = 2.0;
     double T = 5.0;
-    block->set_K(K);
-    block->set_T_in_s(T);
-    block->set_limiter_type(WINDUP_LIMITER);
-    block->set_upper_limit(11.0);
-    block->set_lower_limit(0.0);
+    block.set_K(K);
+    block.set_T_in_s(T);
+    block.set_limiter_type(WINDUP_LIMITER);
+    block.set_upper_limit(11.0);
+    block.set_lower_limit(0.0);
 
 
     double t = 5.0*h;
@@ -125,21 +121,21 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_with_limiter()
     // y = 10+K*(1-e^(-t/T))
 
     double output = 10.0;
-    block->set_output(output);
-    block->initialize();
+    block.set_output(output);
+    block.initialize();
     double y;
 
-    double input = block->get_input();
-    block->set_input(input+1.0);
-    block->run(UPDATE_MODE);
+    double input = block.get_input();
+    block.set_input(input+1.0);
+    block.run(UPDATE_MODE);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block->run(INTEGRATE_MODE);
-        block->run(UPDATE_MODE);
+        block.run(INTEGRATE_MODE);
+        block.run(UPDATE_MODE);
         y = 10.0+K*(1.0-exp(-t/T));
         if(y>11.0)
             y = 11.0;
-        TEST_ASSERT(fabs(block->get_output()-y)<1e-8);
+        TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }
 
 }
@@ -154,8 +150,8 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_without_limiter_when_T_is_zero()
 
     double K = 2.0;
     double T = 0.0;
-    block->set_K(K);
-    block->set_T_in_s(T);
+    block.set_K(K);
+    block.set_T_in_s(T);
 
     double t = 5.0*h;
 
@@ -167,18 +163,18 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_without_limiter_when_T_is_zero()
     // y = 10+K*(1-e^(-t/T))
 
     double output = 10.0;
-    block->set_output(output);
-    block->initialize();
+    block.set_output(output);
+    block.initialize();
     double y;
 
-    double input = block->get_input();
-    block->set_input(input+1.0);
-    block->run(UPDATE_MODE);
+    double input = block.get_input();
+    block.set_input(input+1.0);
+    block.run(UPDATE_MODE);
     for(t=h; t<=10.0000001; t +=h)
     {
-        block->run(INTEGRATE_MODE);
-        block->run(UPDATE_MODE);
+        block.run(INTEGRATE_MODE);
+        block.run(UPDATE_MODE);
         y = 10.0+K*1.0;
-        TEST_ASSERT(fabs(block->get_output()-y)<1e-8);
+        TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }
 }
