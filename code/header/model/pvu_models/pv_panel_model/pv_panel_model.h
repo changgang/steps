@@ -24,7 +24,7 @@ class PV_PANEL_MODEL : public PVU_MODEL
         PV_PANEL_MODEL();
         PV_PANEL_MODEL(const PV_PANEL_MODEL& model);
         virtual ~PV_PANEL_MODEL();
-        PV_PANEL_MODEL& operator=(const PV_PANEL_MODEL& model);
+        virtual PV_PANEL_MODEL& operator=(const PV_PANEL_MODEL& model);
         void copy_from_const_model(const PV_PANEL_MODEL& model);
     public:
         virtual string get_model_type() const;

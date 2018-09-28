@@ -12,7 +12,7 @@ class ENERGY_STORAGE : public SOURCE
 {
     public:
         ENERGY_STORAGE();
-        ~ENERGY_STORAGE();
+        virtual ~ENERGY_STORAGE();
 
         void set_energy_storage_bus(size_t bus);
         void set_energy_storage_impedance_in_pu(complex<double> z_pu);
@@ -38,7 +38,7 @@ class ENERGY_STORAGE : public SOURCE
         virtual void report() const;
         virtual void save() const;
 
-        ENERGY_STORAGE& operator=(const ENERGY_STORAGE& estorage);
+        virtual ENERGY_STORAGE& operator=(const ENERGY_STORAGE& estorage);
 
     private:
         ENERGY_STORAGE_MODEL* energy_storage_model;

@@ -58,7 +58,7 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
         else
         {
             char tempc;
-            size_t total_bits, decimal_bits;
+            size_t total_bits=0, decimal_bits=0;
             sscanf(format.c_str(),"%c%lu.%lu",&tempc, &total_bits, &decimal_bits);
 
             data = original_data.substr(0, total_bits-decimal_bits)+"."+ original_data.substr(total_bits-decimal_bits, decimal_bits);

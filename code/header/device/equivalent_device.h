@@ -70,7 +70,7 @@ class EQUIVALENT_DEVICE : public DEVICE
         virtual void save() const;
 
 
-        EQUIVALENT_DEVICE& operator=(const EQUIVALENT_DEVICE& load);
+        virtual EQUIVALENT_DEVICE& operator=(const EQUIVALENT_DEVICE& load);
 
         virtual DEVICE_ID get_device_id() const;
         ////virtual string get_device_name() const;

@@ -13,26 +13,26 @@ class COMPLEX
         COMPLEX(const COMPLEX& z);
         COMPLEX& operator=(const COMPLEX& z);
         void copy_from_const_complex(const COMPLEX& z);
-        COMPLEX& operator=(const double x);
+        virtual COMPLEX& operator=(const double x);
         virtual ~COMPLEX();
 
-        COMPLEX& operator+(const COMPLEX& z);
-        COMPLEX& operator+(const double x);
+        virtual COMPLEX& operator+(const COMPLEX& z);
+        virtual COMPLEX& operator+(const double x);
 
-        COMPLEX& operator+=(const COMPLEX& z);
-        COMPLEX& operator+=(const double x);
+        virtual COMPLEX& operator+=(const COMPLEX& z);
+        virtual COMPLEX& operator+=(const double x);
 
-        COMPLEX& operator-(const COMPLEX& z);
-        COMPLEX& operator-(const double x);
+        virtual COMPLEX& operator-(const COMPLEX& z);
+        virtual COMPLEX& operator-(const double x);
 
-        COMPLEX& operator-=(const COMPLEX& z);
-        COMPLEX& operator-=(const double x);
+        virtual COMPLEX& operator-=(const COMPLEX& z);
+        virtual COMPLEX& operator-=(const double x);
 
-        COMPLEX& operator*(const COMPLEX& z);
-        COMPLEX& operator*(const double x);
+        virtual COMPLEX& operator*(const COMPLEX& z);
+        virtual COMPLEX& operator*(const double x);
 
-        COMPLEX& operator/(const COMPLEX& z);
-        COMPLEX& operator/(const double x);
+        virtual COMPLEX& operator/(const COMPLEX& z);
+        virtual COMPLEX& operator/(const double x);
 
         double real() const;
         double imag() const;

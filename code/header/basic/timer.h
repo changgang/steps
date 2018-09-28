@@ -29,7 +29,7 @@ class TIMER
         void report() const;
         void clear();
 
-        TIMER& operator=(const TIMER& timer);
+        virtual TIMER& operator=(const TIMER& timer);
     private:
         double time_interval_in_s;
         double time_when_timer_is_started_in_s;

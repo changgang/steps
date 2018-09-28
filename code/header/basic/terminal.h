@@ -10,14 +10,14 @@ class TERMINAL
 {
     public:
         TERMINAL();
-        ~TERMINAL();
+        virtual ~TERMINAL();
         void append_bus(size_t bus);
         bool has_bus(size_t bus);
         size_t get_bus_count() const;
         vector<size_t> get_buses();
         void clear();
 
-        TERMINAL& operator= (const TERMINAL& terminal);
+        virtual TERMINAL& operator= (const TERMINAL& terminal);
         size_t operator[] (size_t index) const;
     private:
         void reject_to_append_non_positive_bus(size_t bus);

@@ -30,7 +30,7 @@ class AREA : public BASE
         virtual void clear();
         void report() const;
 
-        AREA& operator=(const AREA& area);
+        virtual AREA& operator=(const AREA& area);
         //double get_actual_power_leaving_area_in_MW() const;
     private:
         void set_area_swing_bus_with_zero_input();

@@ -10,7 +10,7 @@ class PVP0 : public PV_PANEL_MODEL
         PVP0();
         PVP0(const PVP0& model);
         virtual ~PVP0();
-        PVP0& operator=(const PVP0& model);
+        virtual PVP0& operator=(const PVP0& model);
     public:
         virtual string get_model_name() const;
 

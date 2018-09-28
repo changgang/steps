@@ -10,7 +10,7 @@ class AERD0 : public WT_AERODYNAMIC_MODEL
         AERD0();
         AERD0(const AERD0& model);
         virtual ~AERD0();
-        AERD0& operator=(const AERD0& model);
+        virtual AERD0& operator=(const AERD0& model);
     public:
         void set_C1(double c);
         void set_C2(double c);

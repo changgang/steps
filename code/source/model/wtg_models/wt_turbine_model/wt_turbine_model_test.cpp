@@ -462,9 +462,14 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 void WT_TURBINE_MODEL_TEST::apply_1deg_pitch_angle_increase()
 {
     WT_AERODYNAMIC_MODEL* aero_model = get_test_wt_aerodynamic_model();
-    if(aero_model==NULL)
-        cout<<"Fatal error. No WT_AERODYNAMIC_MODEL is found in "<<__FUNCTION__<<endl;
-    aero_model->set_initial_pitch_angle_in_deg(aero_model->get_initial_pitch_angle_in_deg()+1.0);
+	if (aero_model != NULL)
+		aero_model->set_initial_pitch_angle_in_deg(aero_model->get_initial_pitch_angle_in_deg() + 1.0);
+	else
+	{
+		cout << "Fatal error. No WT_AERODYNAMIC_MODEL is found in " << __FUNCTION__ << endl;
+		return;
+	}
+    
 }
 
 void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode()

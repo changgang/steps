@@ -22,7 +22,7 @@ class ZONE : public BASE
         virtual void check();
         virtual void clear();
         void report() const;
-        ZONE& operator=(const ZONE& zone);
+        virtual ZONE& operator=(const ZONE& zone);
     private:
 
         size_t zone_number;

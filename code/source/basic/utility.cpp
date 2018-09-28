@@ -40,7 +40,7 @@ int str2int(string str)
 
 double str2double(string str)
 {
-    double num;
+    double num = 0.0;
     sscanf(str.c_str(),"%lf", &num);
     return num;
 }

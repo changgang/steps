@@ -10,7 +10,7 @@ class FAULT
 {
     public:
         FAULT();
-        ~FAULT();
+        virtual ~FAULT();
 
         void set_fault_type(FAULT_TYPE fault_type);
 
@@ -24,7 +24,7 @@ class FAULT
         bool is_faulted() const;
         void clear();
 
-        FAULT& operator=(const FAULT& fault);
+        virtual FAULT& operator=(const FAULT& fault);
 
     private:
         FAULT_TYPE fault_type;

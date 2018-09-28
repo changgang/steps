@@ -29,7 +29,7 @@ class DEVICE_ID
         bool is_valid() const;
 
         void clear();
-        DEVICE_ID& operator= (const DEVICE_ID& device_id);
+        virtual DEVICE_ID& operator= (const DEVICE_ID& device_id);
         bool operator< (const DEVICE_ID& device_id) const;
         bool operator==(const DEVICE_ID& device_id) const;
         bool operator!=(const DEVICE_ID& device_id) const;

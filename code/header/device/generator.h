@@ -16,7 +16,7 @@ class GENERATOR : public SOURCE
 {
     public:
         GENERATOR();
-        ~GENERATOR();
+        virtual ~GENERATOR();
 
         void set_generator_bus(size_t bus);
         void set_generator_impedance_in_pu(complex<double> z_pu);
@@ -54,7 +54,7 @@ class GENERATOR : public SOURCE
         virtual void report() const;
         virtual void save() const;
 
-        GENERATOR& operator=(const GENERATOR& gen);
+        virtual GENERATOR& operator=(const GENERATOR& gen);
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();

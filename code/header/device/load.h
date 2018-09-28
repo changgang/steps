@@ -49,7 +49,7 @@ class LOAD : public DEVICE
         virtual void save() const;
 
 
-        LOAD& operator=(const LOAD& load);
+        virtual LOAD& operator=(const LOAD& load);
 
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_device_name() const;

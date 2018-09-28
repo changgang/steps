@@ -35,7 +35,7 @@ class FIXED_SHUNT : public DEVICE
         virtual void save() const;
         virtual void set_model(const MODEL* model);
 
-        FIXED_SHUNT& operator=(const FIXED_SHUNT& load);
+        virtual FIXED_SHUNT& operator=(const FIXED_SHUNT& load);
 
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_device_name() const;

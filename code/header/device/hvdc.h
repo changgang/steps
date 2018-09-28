@@ -122,7 +122,7 @@ class HVDC : public DEVICE
 
         virtual void run(DYNAMIC_MODE mode);
 
-        HVDC& operator=(const HVDC& hvdc);
+        virtual HVDC& operator=(const HVDC& hvdc);
 
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_device_name() const;

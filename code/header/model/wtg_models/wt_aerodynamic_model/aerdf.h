@@ -10,7 +10,7 @@ class AERDF : public WT_AERODYNAMIC_MODEL
         AERDF();
         AERDF(const AERDF& model);
         virtual ~AERDF();
-        AERDF& operator=(const AERDF& model);
+        virtual AERDF& operator=(const AERDF& model);
     public:
         void set_Cp_file(string file);
         string get_Cp_file() const;

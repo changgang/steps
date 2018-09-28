@@ -15,7 +15,7 @@ class FILEWIND : public WIND_SPEED_MODEL
         FILEWIND();
         FILEWIND(const FILEWIND& model);
         virtual ~FILEWIND();
-        FILEWIND& operator=(const FILEWIND& model);
+        virtual FILEWIND& operator=(const FILEWIND& model);
 
         // inputs
         void set_wind_speed_serial_file(string file);

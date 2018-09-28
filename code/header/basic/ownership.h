@@ -9,6 +9,7 @@ class OWNERSHIP
 {
     public:
         OWNERSHIP();
+        virtual ~OWNERSHIP();
         OWNERSHIP(const OWNERSHIP& ownership);
 
         void append_owner_and_its_fraction(size_t owner, double fraction);
@@ -26,7 +27,7 @@ class OWNERSHIP
 
         void clear();
 
-        OWNERSHIP& operator=(const OWNERSHIP& ownership);
+        virtual OWNERSHIP& operator=(const OWNERSHIP& ownership);
 
     private:
         void copy_from_const_ownership(const OWNERSHIP& ownership);

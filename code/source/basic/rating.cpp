@@ -13,6 +13,10 @@ RATING::RATING()
     set_rating_B_MVA(0.0);
     set_rating_C_MVA(0.0);
 }
+RATING::~RATING()
+{
+    ;
+}
 
 void RATING::set_rating_A_MVA(double rate)
 {

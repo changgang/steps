@@ -22,7 +22,7 @@ class OWNER : public BASE
         virtual void check();
         virtual void clear();
         void report() const;
-        OWNER& operator=(const OWNER& owner);
+        virtual OWNER& operator=(const OWNER& owner);
     private:
         size_t owner_number;
         string owner_name;

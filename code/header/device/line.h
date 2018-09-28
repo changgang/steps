@@ -75,7 +75,7 @@ class LINE : public DEVICE
 
         virtual void set_model(const MODEL* model);
 
-        LINE& operator=(const LINE& line);
+        virtual LINE& operator=(const LINE& line);
 
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_device_name() const;

@@ -5,6 +5,7 @@ class RATING
 {
     public:
         RATING();
+        virtual ~RATING();
 
         void set_rating_A_MVA(double rate);
         void set_rating_B_MVA(double rate);
@@ -15,7 +16,7 @@ class RATING
         double get_rating_C_MVA() const;
 
         double operator[](char index) const;
-        RATING& operator= (const RATING& rating);
+        virtual RATING& operator= (const RATING& rating);
 
         void clear();
 

@@ -24,7 +24,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         WT_AERODYNAMIC_MODEL();
         WT_AERODYNAMIC_MODEL(const WT_AERODYNAMIC_MODEL& model);
         virtual ~WT_AERODYNAMIC_MODEL();
-        WT_AERODYNAMIC_MODEL& operator=(const WT_AERODYNAMIC_MODEL& model);
+        virtual WT_AERODYNAMIC_MODEL& operator=(const WT_AERODYNAMIC_MODEL& model);
         void copy_from_const_model(const WT_AERODYNAMIC_MODEL& model);
     public:
         virtual string get_model_type() const;

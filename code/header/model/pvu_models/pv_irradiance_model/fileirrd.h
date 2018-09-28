@@ -8,7 +8,7 @@ class FILEIRRAD : public PV_IRRADIANCE_MODEL
         FILEIRRAD();
         FILEIRRAD(const FILEIRRAD& model);
         virtual ~FILEIRRAD();
-        FILEIRRAD& operator=(const FILEIRRAD& model);
+        virtual FILEIRRAD& operator=(const FILEIRRAD& model);
 
         // inputs
         void set_solar_irradiance_serial_file(string file);

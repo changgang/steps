@@ -12,7 +12,7 @@ class SPARSE_MATRIX
 public:
     SPARSE_MATRIX();
     SPARSE_MATRIX(const SPARSE_MATRIX& matrix);
-    ~SPARSE_MATRIX();
+    virtual ~SPARSE_MATRIX();
 
     void add_entry(int row, int col, double value);
     void add_entry(int row, int col, complex<double> value);
@@ -53,7 +53,7 @@ public:
     void save_matrix_to_file(string filename) const;
 
     //SPARSE_MATRIX& operator=(const SPARSE_MATRIX& matrix);
-    SPARSE_MATRIX& operator=(const SPARSE_MATRIX& matrix);
+    virtual SPARSE_MATRIX& operator=(const SPARSE_MATRIX& matrix);
 private:
     double get_real_entry_value(int index) const;
     double get_imag_entry_value(int index) const;
