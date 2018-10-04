@@ -2,7 +2,7 @@
 #define UTILITY_H
 
 #include "header/power_system_database.h"
-#include "header/network_database.h"
+#include "header/network/network_matrix.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 #include <complex>

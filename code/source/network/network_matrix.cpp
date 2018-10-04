@@ -1,4 +1,4 @@
-#include "header/network_database.h"
+#include "header/network/network_matrix.h"
 #include "header/basic/utility.h"
 #include <fstream>
 
@@ -15,18 +15,18 @@ class SUBLINE
 };
 
 
-NETWORK_DATABASE::NETWORK_DATABASE()
+NETWORK_MATRIX::NETWORK_MATRIX()
 {
     clear_database();
 }
 
 
-NETWORK_DATABASE::~NETWORK_DATABASE()
+NETWORK_MATRIX::~NETWORK_MATRIX()
 {
     clear_database();
 }
 
-void NETWORK_DATABASE::clear_database()
+void NETWORK_MATRIX::clear_database()
 {
     network_Y_matrix.clear();
     network_BP_matrix.clear();
@@ -35,7 +35,7 @@ void NETWORK_DATABASE::clear_database()
     inphno.clear();
 }
 
-void NETWORK_DATABASE::build_network_matrix()
+void NETWORK_MATRIX::build_network_matrix()
 {
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -49,7 +49,7 @@ void NETWORK_DATABASE::build_network_matrix()
     network_Y_matrix.compress_and_merge_duplicate_entries();
 }
 
-SPARSE_MATRIX& NETWORK_DATABASE::get_network_matrix()
+SPARSE_MATRIX& NETWORK_MATRIX::get_network_matrix()
 {
     if(network_Y_matrix.matrix_in_triplet_form())
         build_network_matrix();
@@ -57,7 +57,7 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_network_matrix()
     return network_Y_matrix;
 }
 
-void NETWORK_DATABASE::build_decoupled_network_matrix()
+void NETWORK_MATRIX::build_decoupled_network_matrix()
 {
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -74,7 +74,7 @@ void NETWORK_DATABASE::build_decoupled_network_matrix()
 
 }
 
-SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BP_matrix()
+SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BP_matrix()
 {
     if(network_BP_matrix.matrix_in_triplet_form())
         build_decoupled_network_matrix();
@@ -82,7 +82,7 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BP_matrix()
     return network_BP_matrix;
 }
 
-SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BQ_matrix()
+SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BQ_matrix()
 {
     if(network_BP_matrix.matrix_in_triplet_form())
         build_decoupled_network_matrix();
@@ -90,7 +90,7 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_decoupled_network_BQ_matrix()
     return network_BQ_matrix;
 }
 
-void NETWORK_DATABASE::build_dc_network_matrix()
+void NETWORK_MATRIX::build_dc_network_matrix()
 {
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -103,7 +103,7 @@ void NETWORK_DATABASE::build_dc_network_matrix()
     network_DC_B_matrix.compress_and_merge_duplicate_entries();
 }
 
-SPARSE_MATRIX& NETWORK_DATABASE::get_dc_network_matrix()
+SPARSE_MATRIX& NETWORK_MATRIX::get_dc_network_matrix()
 {
     if(network_DC_B_matrix.matrix_in_triplet_form())
         build_dc_network_matrix();
@@ -112,7 +112,7 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_dc_network_matrix()
 }
 
 
-void NETWORK_DATABASE::build_dynamic_network_matrix()
+void NETWORK_MATRIX::build_dynamic_network_matrix()
 {
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -129,7 +129,7 @@ void NETWORK_DATABASE::build_dynamic_network_matrix()
     network_Y_matrix.compress_and_merge_duplicate_entries();
 }
 
-SPARSE_MATRIX& NETWORK_DATABASE::get_dynamic_network_matrix()
+SPARSE_MATRIX& NETWORK_MATRIX::get_dynamic_network_matrix()
 {
     if(network_Y_matrix.matrix_in_triplet_form())
         build_dynamic_network_matrix();
@@ -137,7 +137,7 @@ SPARSE_MATRIX& NETWORK_DATABASE::get_dynamic_network_matrix()
     return network_Y_matrix;
 }
 
-void NETWORK_DATABASE::add_lines_to_network()
+void NETWORK_MATRIX::add_lines_to_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
@@ -149,7 +149,7 @@ void NETWORK_DATABASE::add_lines_to_network()
 }
 
 
-void NETWORK_DATABASE::add_line_to_network(const LINE& line)
+void NETWORK_MATRIX::add_line_to_network(const LINE& line)
 {
     if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==false)
         return;
@@ -203,7 +203,7 @@ void NETWORK_DATABASE::add_line_to_network(const LINE& line)
     }
 }
 
-void NETWORK_DATABASE::add_transformers_to_network()
+void NETWORK_MATRIX::add_transformers_to_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
@@ -214,7 +214,7 @@ void NETWORK_DATABASE::add_transformers_to_network()
         add_transformer_to_network(*(transformers[i]));
 }
 
-void NETWORK_DATABASE::add_transformer_to_network(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_transformer_to_network(const TRANSFORMER& trans)
 {
     if(trans.is_two_winding_transformer())
         add_two_winding_transformer_to_network_v2(trans);
@@ -222,7 +222,7 @@ void NETWORK_DATABASE::add_transformer_to_network(const TRANSFORMER& trans)
         add_three_winding_transformer_to_network(trans);
 }
 
-void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_two_winding_transformer_to_network(const TRANSFORMER& trans)
 {
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
         return;
@@ -441,7 +441,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network(const TRANSFORMER&
     }
 }
 
-void NETWORK_DATABASE::add_three_winding_transformer_to_network(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER& trans)
 {
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and
        trans.get_winding_breaker_status(SECONDARY_SIDE)==false and
@@ -717,7 +717,7 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_network(const TRANSFORME
     }
 }
 
-void NETWORK_DATABASE::add_two_winding_transformer_to_network_v2(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_two_winding_transformer_to_network_v2(const TRANSFORMER& trans)
 {
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
         return;
@@ -820,7 +820,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_network_v2(const TRANSFORM
 }
 
 
-void NETWORK_DATABASE::add_fixed_shunts_to_network()
+void NETWORK_MATRIX::add_fixed_shunts_to_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
@@ -831,7 +831,7 @@ void NETWORK_DATABASE::add_fixed_shunts_to_network()
         add_fixed_shunt_to_network(*(shunts[i]));
 }
 
-void NETWORK_DATABASE::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
+void NETWORK_MATRIX::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
 {
     if(shunt.get_status()==false)
         return;
@@ -852,7 +852,7 @@ void NETWORK_DATABASE::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
     return;
 }
 
-void NETWORK_DATABASE::add_lines_to_decoupled_network()
+void NETWORK_MATRIX::add_lines_to_decoupled_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
@@ -863,7 +863,7 @@ void NETWORK_DATABASE::add_lines_to_decoupled_network()
         add_line_to_decoupled_network(*(lines[i]));
 }
 
-void NETWORK_DATABASE::add_line_to_decoupled_network(const LINE& line)
+void NETWORK_MATRIX::add_line_to_decoupled_network(const LINE& line)
 {
     if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==false)
         return;
@@ -946,7 +946,7 @@ void NETWORK_DATABASE::add_line_to_decoupled_network(const LINE& line)
 }
 
 
-void NETWORK_DATABASE::add_transformers_to_decoupled_network()
+void NETWORK_MATRIX::add_transformers_to_decoupled_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
@@ -957,7 +957,7 @@ void NETWORK_DATABASE::add_transformers_to_decoupled_network()
         add_transformer_to_decoupled_network(*(transformers[i]));
 }
 
-void NETWORK_DATABASE::add_transformer_to_decoupled_network(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_transformer_to_decoupled_network(const TRANSFORMER& trans)
 {
     if(trans.is_two_winding_transformer())
         add_two_winding_transformer_to_decoupled_network_v2(trans);
@@ -965,7 +965,7 @@ void NETWORK_DATABASE::add_transformer_to_decoupled_network(const TRANSFORMER& t
         add_three_winding_transformer_to_decoupled_network(trans);
 }
 
-void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TRANSFORMER& trans)
 {
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and
        trans.get_winding_breaker_status(SECONDARY_SIDE)==false and
@@ -1519,7 +1519,7 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_decoupled_network(const 
     }
 }
 
-void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const TRANSFORMER& trans)
 {
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
         return;
@@ -1678,7 +1678,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_decoupled_network_v2(const
     }
 }
 
-void NETWORK_DATABASE::add_fixed_shunts_to_decoupled_network()
+void NETWORK_MATRIX::add_fixed_shunts_to_decoupled_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
@@ -1690,7 +1690,7 @@ void NETWORK_DATABASE::add_fixed_shunts_to_decoupled_network()
 }
 
 
-void NETWORK_DATABASE::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& shunt)
+void NETWORK_MATRIX::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& shunt)
 {
     if(shunt.get_status()==false)
         return;
@@ -1714,7 +1714,7 @@ void NETWORK_DATABASE::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& s
 
 
 
-void NETWORK_DATABASE::add_lines_to_dc_network()
+void NETWORK_MATRIX::add_lines_to_dc_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
@@ -1725,7 +1725,7 @@ void NETWORK_DATABASE::add_lines_to_dc_network()
         add_line_to_dc_network(*(lines[i]));
 }
 
-void NETWORK_DATABASE::add_line_to_dc_network(const LINE& line)
+void NETWORK_MATRIX::add_line_to_dc_network(const LINE& line)
 {
     if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==false)
         return;
@@ -1756,7 +1756,7 @@ void NETWORK_DATABASE::add_line_to_dc_network(const LINE& line)
 }
 
 
-void NETWORK_DATABASE::add_transformers_to_dc_network()
+void NETWORK_MATRIX::add_transformers_to_dc_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
@@ -1767,7 +1767,7 @@ void NETWORK_DATABASE::add_transformers_to_dc_network()
         add_transformer_to_dc_network(*(transformers[i]));
 }
 
-void NETWORK_DATABASE::add_transformer_to_dc_network(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_transformer_to_dc_network(const TRANSFORMER& trans)
 {
     if(trans.is_two_winding_transformer())
         add_two_winding_transformer_to_dc_network(trans);
@@ -1775,7 +1775,7 @@ void NETWORK_DATABASE::add_transformer_to_dc_network(const TRANSFORMER& trans)
         add_three_winding_transformer_to_dc_network(trans);
 }
 
-void NETWORK_DATABASE::add_three_winding_transformer_to_dc_network(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_three_winding_transformer_to_dc_network(const TRANSFORMER& trans)
 {
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and
        trans.get_winding_breaker_status(SECONDARY_SIDE)==false and
@@ -1878,7 +1878,7 @@ void NETWORK_DATABASE::add_three_winding_transformer_to_dc_network(const TRANSFO
     }
 }
 
-void NETWORK_DATABASE::add_two_winding_transformer_to_dc_network(const TRANSFORMER& trans)
+void NETWORK_MATRIX::add_two_winding_transformer_to_dc_network(const TRANSFORMER& trans)
 {
     if(trans.get_winding_breaker_status(PRIMARY_SIDE)==false and trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
         return;
@@ -1911,7 +1911,7 @@ void NETWORK_DATABASE::add_two_winding_transformer_to_dc_network(const TRANSFORM
 }
 
 
-void NETWORK_DATABASE::add_bus_fault_to_dynamic_network()
+void NETWORK_MATRIX::add_bus_fault_to_dynamic_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<BUS*> buses = psdb.get_all_buses();
@@ -1937,7 +1937,7 @@ void NETWORK_DATABASE::add_bus_fault_to_dynamic_network()
 }
 
 
-void NETWORK_DATABASE::add_lines_to_dynamic_network()
+void NETWORK_MATRIX::add_lines_to_dynamic_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
@@ -1953,7 +1953,7 @@ void NETWORK_DATABASE::add_lines_to_dynamic_network()
     }
 }
 
-void NETWORK_DATABASE::add_faulted_line_to_dynamic_network(const LINE& line)
+void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
 {
     if(line.get_sending_side_breaker_status()==false and line.get_receiving_side_breaker_status()==false)
         return;
@@ -2138,7 +2138,7 @@ void NETWORK_DATABASE::add_faulted_line_to_dynamic_network(const LINE& line)
 
 }
 
-void NETWORK_DATABASE::add_generators_to_dynamic_network()
+void NETWORK_MATRIX::add_generators_to_dynamic_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<GENERATOR*> generators = psdb.get_all_generators();
@@ -2149,7 +2149,7 @@ void NETWORK_DATABASE::add_generators_to_dynamic_network()
         add_generator_to_dynamic_network(*(generators[i]));
 }
 
-void NETWORK_DATABASE::add_generator_to_dynamic_network(const GENERATOR& gen)
+void NETWORK_MATRIX::add_generator_to_dynamic_network(const GENERATOR& gen)
 {
     if(gen.get_status()==false)
         return;
@@ -2165,7 +2165,7 @@ void NETWORK_DATABASE::add_generator_to_dynamic_network(const GENERATOR& gen)
     network_Y_matrix.add_entry(i,i,1.0/Z);
 }
 
-void NETWORK_DATABASE::add_wt_generators_to_dynamic_network()
+void NETWORK_MATRIX::add_wt_generators_to_dynamic_network()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     vector<WT_GENERATOR*> generators = psdb.get_all_wt_generators();
@@ -2176,7 +2176,7 @@ void NETWORK_DATABASE::add_wt_generators_to_dynamic_network()
         add_wt_generator_to_dynamic_network(*(generators[i]));
 }
 
-void NETWORK_DATABASE::add_wt_generator_to_dynamic_network(const WT_GENERATOR& gen)
+void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(const WT_GENERATOR& gen)
 {
     if(gen.get_status()==false)
         return;
@@ -2192,7 +2192,7 @@ void NETWORK_DATABASE::add_wt_generator_to_dynamic_network(const WT_GENERATOR& g
     network_Y_matrix.add_entry(i,i,1.0/Z);
 }
 
-void NETWORK_DATABASE::optimize_network_ordering()
+void NETWORK_MATRIX::optimize_network_ordering()
 {
     initialize_physical_internal_bus_pair();
 
@@ -2201,12 +2201,12 @@ void NETWORK_DATABASE::optimize_network_ordering()
     reorder_physical_internal_bus_pair();
 }
 
-bool NETWORK_DATABASE::is_condition_ok() const
+bool NETWORK_MATRIX::is_condition_ok() const
 {
     return true;
 }
 
-void NETWORK_DATABASE::initialize_physical_internal_bus_pair()
+void NETWORK_MATRIX::initialize_physical_internal_bus_pair()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     psdb.check_device_status_for_out_of_service_buses();
@@ -2231,7 +2231,7 @@ void NETWORK_DATABASE::initialize_physical_internal_bus_pair()
     }
 }
 
-void NETWORK_DATABASE::reorder_physical_internal_bus_pair()
+void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
 {
     vector<size_t> permutation = network_Y_matrix.get_reorder_permutation();
     inphno.update_with_new_internal_bus_permutation(permutation);
@@ -2271,7 +2271,7 @@ void NETWORK_DATABASE::reorder_physical_internal_bus_pair()
 
 }
 
-void NETWORK_DATABASE::check_newtork_connectivity()
+void NETWORK_MATRIX::check_newtork_connectivity()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -2316,7 +2316,7 @@ void NETWORK_DATABASE::check_newtork_connectivity()
     }
 }
 
-vector< vector<size_t> > NETWORK_DATABASE::get_islands_with_internal_bus_number()
+vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
 {
     vector< vector<size_t> > islands;
 
@@ -2395,7 +2395,7 @@ vector< vector<size_t> > NETWORK_DATABASE::get_islands_with_internal_bus_number(
 }
 
 
-vector< vector<size_t> > NETWORK_DATABASE::get_islands_with_physical_bus_number()
+vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_physical_bus_number()
 {
     vector< vector<size_t> > islands = get_islands_with_internal_bus_number();
 
@@ -2410,17 +2410,17 @@ vector< vector<size_t> > NETWORK_DATABASE::get_islands_with_physical_bus_number(
     return islands;
 }
 
-size_t NETWORK_DATABASE::get_internal_bus_number_of_physical_bus(size_t bus) const
+size_t NETWORK_MATRIX::get_internal_bus_number_of_physical_bus(size_t bus) const
 {
     return inphno.get_internal_bus_number_of_physical_bus_number(bus);
 }
 
-size_t NETWORK_DATABASE::get_physical_bus_number_of_internal_bus(size_t bus) const
+size_t NETWORK_MATRIX::get_physical_bus_number_of_internal_bus(size_t bus) const
 {
     return inphno.get_physical_bus_number_of_internal_bus_number(bus);
 }
 
-void NETWORK_DATABASE::report_network_matrix() const
+void NETWORK_MATRIX::report_network_matrix() const
 {
     ostringstream osstream;
 
@@ -2430,7 +2430,7 @@ void NETWORK_DATABASE::report_network_matrix() const
     report_network_matrix_common();
 }
 
-void NETWORK_DATABASE::report_decoupled_network_matrix() const
+void NETWORK_MATRIX::report_decoupled_network_matrix() const
 {
     ostringstream osstream;
 
@@ -2474,7 +2474,7 @@ void NETWORK_DATABASE::report_decoupled_network_matrix() const
     show_information_with_leading_time_stamp(osstream);
 }
 
-void NETWORK_DATABASE::report_dc_network_matrix() const
+void NETWORK_MATRIX::report_dc_network_matrix() const
 {
     ostringstream osstream;
 
@@ -2515,7 +2515,7 @@ void NETWORK_DATABASE::report_dc_network_matrix() const
     show_information_with_leading_time_stamp(osstream);
 }
 
-void NETWORK_DATABASE::report_dynamic_network_matrix() const
+void NETWORK_MATRIX::report_dynamic_network_matrix() const
 {
     ostringstream osstream;
 
@@ -2525,7 +2525,7 @@ void NETWORK_DATABASE::report_dynamic_network_matrix() const
 	report_network_matrix_common();
 }
 
-void NETWORK_DATABASE::report_network_matrix_common() const
+void NETWORK_MATRIX::report_network_matrix_common() const
 {
     ostringstream osstream;
 
@@ -2562,7 +2562,7 @@ void NETWORK_DATABASE::report_network_matrix_common() const
 }
 
 
-void NETWORK_DATABASE::save_network_matrix_to_file(string filename) const
+void NETWORK_MATRIX::save_network_matrix_to_file(string filename) const
 {
     ostringstream osstream;
 
@@ -2580,7 +2580,7 @@ void NETWORK_DATABASE::save_network_matrix_to_file(string filename) const
 }
 
 
-void NETWORK_DATABASE::save_decoupled_network_matrix_to_file(string filename) const
+void NETWORK_MATRIX::save_decoupled_network_matrix_to_file(string filename) const
 {
     ostringstream osstream;
 
@@ -2623,7 +2623,7 @@ void NETWORK_DATABASE::save_decoupled_network_matrix_to_file(string filename) co
     file.close();
 }
 
-void NETWORK_DATABASE::save_dc_network_matrix_to_file(string filename) const
+void NETWORK_MATRIX::save_dc_network_matrix_to_file(string filename) const
 {
     ostringstream osstream;
 
@@ -2664,7 +2664,7 @@ void NETWORK_DATABASE::save_dc_network_matrix_to_file(string filename) const
     file.close();
 }
 
-void NETWORK_DATABASE::save_dynamic_network_matrix_to_file(string filename) const
+void NETWORK_MATRIX::save_dynamic_network_matrix_to_file(string filename) const
 {
     ostringstream osstream;
 
@@ -2681,7 +2681,7 @@ void NETWORK_DATABASE::save_dynamic_network_matrix_to_file(string filename) cons
 }
 
 
-void NETWORK_DATABASE::save_network_matrix_common(ofstream& file) const
+void NETWORK_MATRIX::save_network_matrix_common(ofstream& file) const
 {
     file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
 
@@ -2712,7 +2712,7 @@ void NETWORK_DATABASE::save_network_matrix_common(ofstream& file) const
 }
 
 
-void NETWORK_DATABASE::report_physical_internal_bus_number_pair() const
+void NETWORK_MATRIX::report_physical_internal_bus_number_pair() const
 {
     inphno.report();
 }
@@ -2720,15 +2720,15 @@ void NETWORK_DATABASE::report_physical_internal_bus_number_pair() const
 
 
 
-bool NETWORK_DATABASE::is_valid() const
+bool NETWORK_MATRIX::is_valid() const
 {
     return true; // disabled.
 }
-void NETWORK_DATABASE::check()
+void NETWORK_MATRIX::check()
 {
     ;// disabled.
 }
-void NETWORK_DATABASE::clear()
+void NETWORK_MATRIX::clear()
 {
     ; // disabled
 }

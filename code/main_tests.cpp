@@ -45,7 +45,7 @@
 #include "header/data_imexporter/bpa_imexporter_test.h"
 #include "header/data_imexporter/equivalent_model_imexporter_test.h"
 
-#include "header/network_database_test.h"
+#include "header/network/network_matrix_test.h"
 #include "header/network/jacobian_builder_test.h"
 
 #include "header/toolkit/powerflow_solver/powerflow_solver_test.h"
@@ -235,7 +235,7 @@ int main(int argc, char* argv[])
         //ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_MODEL_IMEXPORTER_TEST));
 
 
-        ts.add(unique_ptr<Test::Suite>(new NETWORK_DATABASE_TEST));
+        ts.add(unique_ptr<Test::Suite>(new NETWORK_MATRIX_TEST));
 
 
         ts.add(unique_ptr<Test::Suite>(new JACOBIAN_BUILDER_TEST));

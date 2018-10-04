@@ -6,7 +6,7 @@
 #include "header/device/fixed_shunt.h"
 
 #include "header/basic/sparse_matrix.h"
-#include "header/network_database.h"
+#include "header/network/network_matrix.h"
 
 #include <ctime>
 
@@ -16,10 +16,10 @@ class JACOBIAN_BUILDER
         JACOBIAN_BUILDER();
         ~JACOBIAN_BUILDER();
 
-        void set_network_database(NETWORK_DATABASE& ndb);
-        NETWORK_DATABASE* get_network_database() const;
+        void set_network_matrix(NETWORK_MATRIX& network_matrix);
+        NETWORK_MATRIX* get_network_matrix() const;
 
-        bool is_network_database_set() const;
+        bool is_network_matrix_set() const;
 
         void build_seprate_jacobians();
         void update_seprate_jacobians();
@@ -45,7 +45,7 @@ class JACOBIAN_BUILDER
         void show_seprate_jacobians();
         void save_jacobian_matrix_to_file(string filename) const;
     private:
-        NETWORK_DATABASE* network_db;
+        NETWORK_MATRIX* network_matrix;
         void update_jacobian_delta_p_over_angle();
         void update_jacobian_delta_p_over_voltage();
         void update_jacobian_delta_q_over_angle();

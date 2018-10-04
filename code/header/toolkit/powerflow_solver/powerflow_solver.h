@@ -4,7 +4,7 @@
 #include "header/device/bus.h"
 #include "header/device/source.h"
 #include "header/basic/sparse_matrix.h"
-#include "header/network_database.h"
+#include "header/network/network_matrix.h"
 
 class POWERFLOW_SOLVER
 {
@@ -12,7 +12,7 @@ class POWERFLOW_SOLVER
         POWERFLOW_SOLVER();
         ~POWERFLOW_SOLVER();
 
-        NETWORK_DATABASE& get_network_database();
+        NETWORK_MATRIX& get_network_matrix();
 
         void initialize_powerflow_solver();
 
@@ -111,6 +111,6 @@ class POWERFLOW_SOLVER
 
         size_t iteration_count, max_iteration;
     private:
-        NETWORK_DATABASE network_db;
+        NETWORK_MATRIX network_matrix;
 };
 #endif // POWERFLOW_SOLVER_H

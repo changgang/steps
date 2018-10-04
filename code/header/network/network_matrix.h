@@ -1,5 +1,5 @@
-#ifndef NETWORK_DATABASE_H
-#define NETWORK_DATABASE_H
+#ifndef NETWORK_MATRIX_H
+#define NETWORK_MATRIX_H
 
 #include "header/basic/base.h"
 #include "header/power_system_database.h"
@@ -11,11 +11,11 @@
 
 using namespace std;
 
-class NETWORK_DATABASE : public BASE
+class NETWORK_MATRIX : public BASE
 {
     public:
-        NETWORK_DATABASE();
-        ~NETWORK_DATABASE();
+        NETWORK_MATRIX();
+        ~NETWORK_MATRIX();
         void clear_database();
 
         void build_network_matrix();
@@ -100,4 +100,4 @@ class NETWORK_DATABASE : public BASE
         virtual void check();
         virtual void clear();
 };
-#endif // NETWORK_DATABASE_H
+#endif // NETWORK_MATRIX_H

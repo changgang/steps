@@ -276,7 +276,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
 
     redirect_stdout_to_file("test_log/test_solve_ISO_New_England_39_bus_model_with_full_Newton_Raphson_solution.txt");
 
-    NETWORK_DATABASE& network_db = powerflow_solver.get_network_database();
+    NETWORK_MATRIX& network_matrix = powerflow_solver.get_network_matrix();
 
     psdb.set_allowed_max_bus_number(200);
     PSSE_IMEXPORTER importer;
@@ -300,7 +300,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_ISO_New_England_39_bus_model_with_full_Ne
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
     TEST_ASSERT(powerflow_solver.is_converged());
 
-    network_db.report_network_matrix();
+    network_matrix.report_network_matrix();
     check_ISO_New_England_39_bus_model_powerflow_result();
 
 
@@ -373,7 +373,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_NPCC_140_bus_model_with_full_Newton_Raphs
 
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
     TEST_ASSERT(powerflow_solver.is_converged());
-    //network_db.report_network_matrix();
+    //network_matrix.report_network_matrix();
 
     check_NPCC_140_bus_model_powerflow_result();
     //recover_stdout();
@@ -422,7 +422,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_full_Newton_
 
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
     TEST_ASSERT(powerflow_solver.is_converged());
-    //network_db.report_network_matrix();
+    //network_matrix.report_network_matrix();
 
 
     /*os<< "Test 2: Solve var limit powerflow with flat start logic enable.");

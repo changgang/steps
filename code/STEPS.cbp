@@ -298,8 +298,8 @@
 		<Unit filename="header/model/wtg_models/wtg_model_test.h" />
 		<Unit filename="header/network/jacobian_builder.h" />
 		<Unit filename="header/network/jacobian_builder_test.h" />
-		<Unit filename="header/network_database.h" />
-		<Unit filename="header/network_database_test.h" />
+		<Unit filename="header/network/network_matrix.h" />
+		<Unit filename="header/network/network_matrix_test.h" />
 		<Unit filename="header/power_system_database.h" />
 		<Unit filename="header/power_system_database_test.h" />
 		<Unit filename="header/prepare_for_tests/prepare_models_for_test.h" />
@@ -571,8 +571,8 @@
 		<Unit filename="source/model/wtg_models/wtg_model_test.cpp" />
 		<Unit filename="source/network/jacobian_builder.cpp" />
 		<Unit filename="source/network/jacobian_builder_test.cpp" />
-		<Unit filename="source/network_database.cpp" />
-		<Unit filename="source/network_database_test.cpp" />
+		<Unit filename="source/network/network_matrix.cpp" />
+		<Unit filename="source/network/network_matrix_test.cpp" />
 		<Unit filename="source/power_system_database.cpp" />
 		<Unit filename="source/power_system_database_test.cpp" />
 		<Unit filename="source/prepare_for_tests/prepare_Arthur_R_Bergen_3_bus_model_for_test.cpp" />

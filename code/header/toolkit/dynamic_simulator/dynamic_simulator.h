@@ -5,7 +5,7 @@
 #include "header/meter/meter.h"
 #include "header/basic/sparse_matrix.h"
 //#include "header/power_system_database.h"
-#include "header/network_database.h"
+#include "header/network/network_matrix.h"
 #include <fstream>
 
 class POWER_SYSTEM_DATABASE;
@@ -17,7 +17,7 @@ class DYNAMICS_SIMULATOR: public BASE
         ~DYNAMICS_SIMULATOR();
         virtual void clear();
 
-        NETWORK_DATABASE* get_network_database();
+        NETWORK_MATRIX* get_network_matrix();
 
         void set_csv_file_export_enable_flag(bool flag);
         void set_json_file_export_enable_flag(bool flag);
@@ -195,7 +195,7 @@ class DYNAMICS_SIMULATOR: public BASE
 
         SPARSE_MATRIX jacobian;
 
-        NETWORK_DATABASE network_db;
+        NETWORK_MATRIX network_matrix;
 
         vector<METER> meters;
         vector<double> meter_values;

@@ -1,5 +1,5 @@
-#ifndef NETWORK_DATABASE_TEST_H
-#define NETWORK_DATABASE_TEST_H
+#ifndef NETWORK_MATRIX_TEST_H
+#define NETWORK_MATRIX_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -12,14 +12,14 @@
 
 #include "thirdparty/cpptest/cpptest.h"
 
-#include "header/network_database.h"
+#include "header/network/network_matrix.h"
 
 using namespace std;
 
-class NETWORK_DATABASE_TEST : public Test::Suite
+class NETWORK_MATRIX_TEST : public Test::Suite
 {
     public:
-        NETWORK_DATABASE_TEST();
+        NETWORK_MATRIX_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -33,7 +33,7 @@ class NETWORK_DATABASE_TEST : public Test::Suite
         void test_save_network_matrix_to_file();
         void test_build_network_with_bus_out_of_service();
     private:
-        NETWORK_DATABASE network_db;
+        NETWORK_MATRIX network_matrix;
 };
 
-#endif//NETWORK_DATABASE_TEST_H
+#endif//NETWORK_MATRIX_TEST_H

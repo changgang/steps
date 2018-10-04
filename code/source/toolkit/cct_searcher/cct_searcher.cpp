@@ -449,8 +449,8 @@ void CCT_SEARCHER::prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator)
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    NETWORK_DATABASE* network_db = simulator.get_network_database();
-    vector< vector<size_t> > islands = network_db->get_islands_with_physical_bus_number();
+    NETWORK_MATRIX* network_matrix = simulator.get_network_matrix();
+    vector< vector<size_t> > islands = network_matrix->get_islands_with_physical_bus_number();
     size_t nislands = islands.size();
     for(size_t i=0; i!=nislands; ++i)
     {

@@ -212,59 +212,59 @@ void api_save_jacobian_matrix(char* file)
 void api_build_network_matrix()
 {
     POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    NETWORK_DATABASE& ntdb = solver.get_network_database();
-    ntdb.build_network_matrix();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_network_matrix();
 }
 
 void api_build_decoupled_network_matrix()
 {
     POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    NETWORK_DATABASE& ntdb = solver.get_network_database();
-    ntdb.build_decoupled_network_matrix();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_decoupled_network_matrix();
 }
 
 void api_build_dc_network_matrix()
 {
     POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    NETWORK_DATABASE& ntdb = solver.get_network_database();
-    ntdb.build_dc_network_matrix();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_dc_network_matrix();
 }
 
 void api_build_dynamic_network_matrix()
 {
     POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    NETWORK_DATABASE& ntdb = solver.get_network_database();
-    ntdb.build_dynamic_network_matrix();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.build_dynamic_network_matrix();
 }
 
 
 void api_save_network_matrix(char* file)
 {
     POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    NETWORK_DATABASE& ntdb = solver.get_network_database();
-    ntdb.save_network_matrix_to_file(file);
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_network_matrix_to_file(file);
 }
 
 
 void api_save_decoupled_network_matrix(char* file)
 {
     POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    NETWORK_DATABASE& ntdb = solver.get_network_database();
-    ntdb.save_decoupled_network_matrix_to_file(file);
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_decoupled_network_matrix_to_file(file);
 }
 
 
 void api_save_dc_network_matrix(char* file)
 {
     POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    NETWORK_DATABASE& ntdb = solver.get_network_database();
-    ntdb.save_dc_network_matrix_to_file(file);
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_dc_network_matrix_to_file(file);
 }
 
 
 void api_save_dynamic_network_matrix(char* file)
 {
     POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    NETWORK_DATABASE& ntdb = solver.get_network_database();
-    ntdb.save_dynamic_network_matrix_to_file(file);
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_dynamic_network_matrix_to_file(file);
 }
