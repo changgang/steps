@@ -13407,7 +13407,7 @@
 	<cstdio>
 	<cmath>
 
-1538657089 source:/home/changgang/steps/code/main_tests.cpp
+1538659866 source:/home/changgang/steps/code/main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -13443,7 +13443,7 @@
 	"header/data_imexporter/psse_imexporter_test.h"
 	"header/data_imexporter/bpa_imexporter_test.h"
 	"header/data_imexporter/equivalent_model_imexporter_test.h"
-	"header/network_matrix_test.h"
+	"header/network/network_matrix_test.h"
 	"header/network/jacobian_builder_test.h"
 	"header/toolkit/powerflow_solver/powerflow_solver_test.h"
 	"header/block/proportional_block_test.h"
@@ -13778,7 +13778,7 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1538273553 /home/changgang/steps/code//header/basic/constants.h
+1538968006 /home/changgang/steps/code//header/basic/constants.h
 
 1538273690 /home/changgang/steps/code//header/meter/meter.h
 	"header/basic/constants.h"
@@ -14040,7 +14040,7 @@
 	"header/basic/utility.h"
 	"header/power_system_database.h"
 
-1538657661 /home/changgang/steps/code//header/basic/utility.h
+1538659866 /home/changgang/steps/code//header/basic/utility.h
 	"header/power_system_database.h"
 	"header/network/network_matrix.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -14071,13 +14071,13 @@
 1538273553 /home/changgang/steps/code//header/basic/inphno.h
 	<vector>
 
-1538657661 /home/changgang/steps/code//header/toolkit/powerflow_solver/powerflow_solver.h
+1538659866 /home/changgang/steps/code//header/toolkit/powerflow_solver/powerflow_solver.h
 	"header/device/bus.h"
 	"header/device/source.h"
 	"header/basic/sparse_matrix.h"
 	"header/network/network_matrix.h"
 
-1538657662 /home/changgang/steps/code//header/toolkit/dynamic_simulator/dynamic_simulator.h
+1538659866 /home/changgang/steps/code//header/toolkit/dynamic_simulator/dynamic_simulator.h
 	"header/basic/base.h"
 	"header/meter/meter.h"
 	"header/basic/sparse_matrix.h"
@@ -14299,7 +14299,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/network_database.h"
 
-1538657238 /home/changgang/steps/code/header/network/jacobian_builder_test.h
+1538659866 /home/changgang/steps/code/header/network/jacobian_builder_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -14307,7 +14307,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/network/jacobian_builder.h"
 
-1538657662 /home/changgang/steps/code//header/network/jacobian_builder.h
+1538659866 /home/changgang/steps/code//header/network/jacobian_builder.h
 	"header/device/line.h"
 	"header/device/transformer.h"
 	"header/device/fixed_shunt.h"
@@ -15052,20 +15052,20 @@
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 	<string>
 
-1538657662 /home/changgang/steps/code/header/toolkit/dynamic_simulator/dynamic_simulator.h
+1538659866 /home/changgang/steps/code/header/toolkit/dynamic_simulator/dynamic_simulator.h
 	"header/basic/base.h"
 	"header/meter/meter.h"
 	"header/basic/sparse_matrix.h"
 	"header/network/network_matrix.h"
 	<fstream>
 
-1538657661 /home/changgang/steps/code/header/toolkit/powerflow_solver/powerflow_solver.h
+1538659866 /home/changgang/steps/code/header/toolkit/powerflow_solver/powerflow_solver.h
 	"header/device/bus.h"
 	"header/device/source.h"
 	"header/basic/sparse_matrix.h"
 	"header/network/network_matrix.h"
 
-1538657661 /home/changgang/steps/code/header/basic/utility.h
+1538659866 /home/changgang/steps/code/header/basic/utility.h
 	"header/power_system_database.h"
 	"header/network/network_matrix.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -15205,7 +15205,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1538273690 /home/changgang/steps/code//header/apis/steps_api.h
+1538971306 /home/changgang/steps/code//header/apis/steps_api.h
 	"header/power_system_database.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
@@ -15217,12 +15217,12 @@
 	"header/basic/constants.h"
 	<ctime>
 
-1538273690 source:/home/changgang/steps/code/source/apis/steps_api_common_utilities.cpp
+1538970389 source:/home/changgang/steps/code/source/apis/steps_api_common_utilities.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1538273690 source:/home/changgang/steps/code/source/apis/steps_api_data_import_export.cpp
+1538970463 source:/home/changgang/steps/code/source/apis/steps_api_data_import_export.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -15242,7 +15242,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1538657485 source:/home/changgang/steps/code/source/apis/steps_api_powerflow.cpp
+1538659866 source:/home/changgang/steps/code/source/apis/steps_api_powerflow.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -15473,7 +15473,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/fault.h"
 
-1538273553 source:/home/changgang/steps/code/source/basic/inphno.cpp
+1538970477 source:/home/changgang/steps/code/source/basic/inphno.cpp
 	"header/basic/inphno.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -17373,7 +17373,7 @@
 	<cstdio>
 	<cmath>
 
-1538657484 source:/home/changgang/steps/code/source/network/jacobian_builder.cpp
+1538659866 source:/home/changgang/steps/code/source/network/jacobian_builder.cpp
 	"header/network/jacobian_builder.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -17381,14 +17381,14 @@
 	<iostream>
 	<fstream>
 
-1538657238 source:/home/changgang/steps/code/source/network/jacobian_builder_test.cpp
+1538659866 source:/home/changgang/steps/code/source/network/jacobian_builder_test.cpp
 	"header/network/jacobian_builder_test.h"
 	"header/basic/utility.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/steps_namespace.h"
 	<cstdio>
 
-1538657238 /home/changgang/steps/code//header/network/jacobian_builder_test.h
+1538659866 /home/changgang/steps/code//header/network/jacobian_builder_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -17630,7 +17630,7 @@
 1538273690 source:/home/changgang/steps/code/source/steps_namespace.cpp
 	"header/steps_namespace.h"
 
-1538657238 source:/home/changgang/steps/code/source/toolkit/cct_searcher/cct_searcher.cpp
+1538659866 source:/home/changgang/steps/code/source/toolkit/cct_searcher/cct_searcher.cpp
 	"header/toolkit/cct_searcher/cct_searcher.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/data_imexporter/psse_imexporter.h"
@@ -17706,7 +17706,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/toolkit/contingency_screener/contingency_screener.h"
 
-1538657238 source:/home/changgang/steps/code/source/toolkit/dynamic_simulator/dynamic_simulator.cpp
+1538659866 source:/home/changgang/steps/code/source/toolkit/dynamic_simulator/dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -17775,7 +17775,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/toolkit/powerflow_case_generator/powerflow_case_generator.h"
 
-1538657485 source:/home/changgang/steps/code/source/toolkit/powerflow_solver/powerflow_solver.cpp
+1538970676 source:/home/changgang/steps/code/source/toolkit/powerflow_solver/powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -17785,7 +17785,7 @@
 	<iostream>
 	<fstream>
 
-1538657238 source:/home/changgang/steps/code/source/toolkit/powerflow_solver/powerflow_solver_test.cpp
+1538659866 source:/home/changgang/steps/code/source/toolkit/powerflow_solver/powerflow_solver_test.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver_test.h"
 	"header/basic/utility.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
@@ -18641,10 +18641,44 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/network_matrix.h"
 
-1538657014 /home/changgang/steps/code//header/network/network_matrix.h
+1538659866 /home/changgang/steps/code//header/network/network_matrix.h
 	"header/basic/base.h"
 	"header/power_system_database.h"
 	"header/basic/sparse_matrix.h"
 	"header/basic/inphno.h"
 	<string>
+
+1538659866 /home/changgang/steps/code/header/network/network_matrix_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"thirdparty/cpptest/cpptest.h"
+	"header/network/network_matrix.h"
+
+1538970647 source:/home/changgang/steps/code/source/network/network_matrix.cpp
+	"header/network/network_matrix.h"
+	"header/basic/utility.h"
+	<fstream>
+	<iostream>
+
+1538659866 source:/home/changgang/steps/code/source/network/network_matrix_test.cpp
+	"header/network/network_matrix_test.h"
+	"header/basic/utility.h"
+	"header/prepare_for_tests/prepare_models_for_test.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1538659866 /home/changgang/steps/code//header/network/network_matrix_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"thirdparty/cpptest/cpptest.h"
+	"header/network/network_matrix.h"
 

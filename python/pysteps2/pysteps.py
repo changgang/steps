@@ -1256,42 +1256,42 @@ class STEPS():
         self.libsteps.api_prepare_bus_related_meter(bus, meter_type)
         return
 
-    def prepare_generator_meter(self, generator, meter_type, var_name=0):
+    def prepare_generator_meter(self, generator, meter_type, var_name=""):
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
         self.libsteps.api_prepare_generator_related_meter(bus, ickt, meter_type, var_name)
         return
 
-    def prepare_wt_generator_meter(self, generator, meter_type, var_name=0):
+    def prepare_wt_generator_meter(self, generator, meter_type, var_name=""):
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
         self.libsteps.api_prepare_wt_generator_related_meter(bus, ickt, meter_type, var_name)
         return
 
-    def prepare_pv_unit_meter(self, pvunit, meter_type, var_name=0):
+    def prepare_pv_unit_meter(self, pvunit, meter_type, var_name=""):
         bus, ickt = self.__extract_single_bus_device_id(pvunit)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
         self.libsteps.api_prepare_pv_unit_related_meter(bus, ickt, meter_type, var_name)
         return
 
-    def prepare_energy_storage_meter(self, estorage, meter_type, var_name=0):
+    def prepare_energy_storage_meter(self, estorage, meter_type, var_name=""):
         bus, ickt = self.__extract_single_bus_device_id(estorage)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
         self.libsteps.api_prepare_energy_storage_related_meter(bus, ickt, meter_type, var_name)
         return
 
-    def prepare_load_meter(self, load, meter_type, var_name=0):
+    def prepare_load_meter(self, load, meter_type, var_name=""):
         bus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
         self.libsteps.api_prepare_load_related_meter(bus, ickt, meter_type, var_name)
         return
 
-    def prepare_line_meter(self, line, meter_type, side, var_name=0):
+    def prepare_line_meter(self, line, meter_type, side, var_name=""):
         ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
@@ -1299,14 +1299,14 @@ class STEPS():
         self.libsteps.api_prepare_line_related_meter(ibus, jbus, ickt, meter_type, side, var_name)
         return
 
-    def prepare_hvdc_meter(self, hvdc, meter_type, side, var_name=0):
+    def prepare_hvdc_meter(self, hvdc, meter_type, side, var_name=""):
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
         self.libsteps.api_prepare_hvdc_related_meter(ibus, jbus, ickt, meter_type, side, var_name)
         return
 
-    def prepare_equivalent_device_meter(self, edevice, meter_type, var_name=0):
+    def prepare_equivalent_device_meter(self, edevice, meter_type, var_name=""):
         bus, ickt = self.__extract_single_bus_device_id(equivalent_device)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)

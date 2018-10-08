@@ -1,6 +1,8 @@
 #include "header/network/network_matrix.h"
 #include "header/basic/utility.h"
 #include <fstream>
+#include <iostream>
+using namespace std;
 
 class SUBLINE
 {
@@ -2195,9 +2197,7 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(const WT_GENERATOR& gen
 void NETWORK_MATRIX::optimize_network_ordering()
 {
     initialize_physical_internal_bus_pair();
-
     build_network_matrix();
-
     reorder_physical_internal_bus_pair();
 }
 
@@ -2235,7 +2235,6 @@ void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
 {
     vector<size_t> permutation = network_Y_matrix.get_reorder_permutation();
     inphno.update_with_new_internal_bus_permutation(permutation);
-
     ostringstream osstream;
     osstream<<"Network internal bus numbers are optimized.";
     show_information_with_leading_time_stamp(osstream);

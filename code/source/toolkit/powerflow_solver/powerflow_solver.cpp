@@ -347,12 +347,9 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     initialize_bus_type();
     initialize_bus_voltage_to_regulate();
     initialize_bus_voltage();
-    cout<<__FILE__<<"@"<<__LINE__<<endl;
     optimize_bus_numbers();
-    cout<<__FILE__<<"@"<<__LINE__<<endl;
     iteration_count = 0;
     set_convergence_flag(false);
-    cout<<__FILE__<<"@"<<__LINE__<<endl;
 
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Done initializing powerflow solver.");
     show_information_with_leading_time_stamp(buffer);

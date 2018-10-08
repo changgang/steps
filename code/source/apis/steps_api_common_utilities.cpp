@@ -268,8 +268,6 @@ void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double 
 void api_initialize_package()
 {
     initialize_simulator();
-
-    api_initialize_powerflow_solver();
 }
 
 void api_initialize_powerflow_solver()

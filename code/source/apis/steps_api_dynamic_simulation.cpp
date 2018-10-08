@@ -264,7 +264,7 @@ void api_prepare_bus_related_meter(size_t bus, char* meter_type)
     ds.prepare_bus_related_meter(bus, meter_type);
 }
 
-void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type, string var_name)
+void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type, char* var_name)
 {
     DYNAMICS_SIMULATOR& ds = get_default_dynamic_simulator();
     DEVICE_ID did = get_generator_device_id(bus, id);
@@ -272,49 +272,49 @@ void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type,
 }
 
 
-void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type, string var_name)
+void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type, char* var_name)
 {
     DYNAMICS_SIMULATOR& ds = get_default_dynamic_simulator();
     DEVICE_ID did = get_wt_generator_device_id(bus, id);
     ds.prepare_wt_generator_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_pv_unit_related_meter(size_t bus, char* id, char* meter_type, string var_name)
+void api_prepare_pv_unit_related_meter(size_t bus, char* id, char* meter_type, char* var_name)
 {
     DYNAMICS_SIMULATOR& ds = get_default_dynamic_simulator();
     DEVICE_ID did = get_pv_unit_device_id(bus, id);
     ds.prepare_pv_unit_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_energy_storage_related_meter(size_t bus, char* id, char* meter_type, string var_name)
+void api_prepare_energy_storage_related_meter(size_t bus, char* id, char* meter_type, char* var_name)
 {
     DYNAMICS_SIMULATOR& ds = get_default_dynamic_simulator();
     DEVICE_ID did = get_energy_storage_device_id(bus, id);
     ds.prepare_energy_storage_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type, string var_name)
+void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type, char* var_name)
 {
     DYNAMICS_SIMULATOR& ds = get_default_dynamic_simulator();
     DEVICE_ID did = get_load_device_id(bus, id);
     ds.prepare_load_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, string var_name)
+void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name)
 {
     DYNAMICS_SIMULATOR& ds = get_default_dynamic_simulator();
     DEVICE_ID did = get_line_device_id(ibus, jbus, id);
     ds.prepare_line_related_meter(did, meter_type, side, var_name);
 }
 
-void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, string var_name)
+void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name)
 {
     DYNAMICS_SIMULATOR& ds = get_default_dynamic_simulator();
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, id);
     ds.prepare_hvdc_related_meter(did, meter_type, side, var_name);
 }
 
-void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type, string var_name)
+void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type, char* var_name)
 {
     DYNAMICS_SIMULATOR& ds = get_default_dynamic_simulator();
     DEVICE_ID did = get_equivalent_device_id(bus, id);
