@@ -242,7 +242,6 @@ void WT3P0::set_model_data_with_index(size_t index, double value)
 void WT3P0::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    par_name = string2upper(par_name);
 
     size_t index = 1;
     if(par_name == "HOLD SPEED FLAG")

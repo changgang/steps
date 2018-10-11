@@ -70,18 +70,102 @@ double GENSAL::get_model_data_with_name(string par_name) const
 }
 
 void GENSAL::set_model_data_with_index(size_t index, double value)
+
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    switch(index)
+    {
+        case 1:
+            return set_H_in_s(value);
+        case 2:
+            return set_D(value);
+        case 3:
+            return set_Xd(value);
+        case 4:
+            return set_Xq(value);
+        case 5:
+            return set_Xdp(value);
+        case 6:
+            return set_Xdpp(value);
+        case 7:
+            return set_Xqpp(value);
+        case 8:
+            return set_Xl(value);
+        case 9:
+            return set_Td0p_in_s(value);
+        case 10:
+            return set_Td0pp_in_s(value);
+        case 11:
+            return set_Tq0pp_in_s(value);
+        case 12:
+            return set_saturation_at_1(value);
+        case 13:
+            return set_saturation_at_1p2(value);
+        default:
+        {
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return;
+        }
+    }
     return;
 }
 
 void GENSAL::set_model_data_with_name(string par_name, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    par_name = string2upper(par_name);
+
+    size_t index = 1;
+    if(par_name == "H")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "D")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "XD")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "XQ")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "XD'")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "XD\"")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "XQ\"")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "XL")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "TD0'")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "TD0\"")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "TQ0\"")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "S1")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "S1.2")
+        return set_model_data_with_index(index, value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

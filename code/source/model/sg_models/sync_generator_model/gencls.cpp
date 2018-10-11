@@ -67,19 +67,37 @@ double GENCLS::get_model_data_with_name(string par_name) const
 
 void GENCLS::set_model_data_with_index(size_t index, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    switch(index)
+    {
+        case 1:
+            return set_H_in_s(value);
+        case 2:
+            return set_D(value);
+        default:
+        {
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return;
+        }
+    }
     return;
 }
 
 void GENCLS::set_model_data_with_name(string par_name, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    par_name = string2upper(par_name);
+
+    size_t index = 1;
+    if(par_name == "H")
+        return set_model_data_with_index(index, value);
+
+    index++;
+    if(par_name == "D")
+        return set_model_data_with_index(index, value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
+
 
 void GENCLS::update_source_impedance()
 {
