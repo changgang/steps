@@ -830,6 +830,7 @@ string PUFLS::get_standard_model_string() const
       <<setprecision(4)<<fixed<<get_continuous_frequency_threshold_in_Hz()<<", "
       <<setprecision(4)<<fixed<<get_scale_K_in_pu_per_Hz()<<", "
       <<setprecision(4)<<fixed<<get_time_delay_in_s()<<", "
+      <<setprecision(4)<<fixed<<get_maximum_continuous_shed_scale_in_pu()<<", "
       <<setprecision(4)<<fixed<<get_additional_stage_frequency_threshold_in_Hz()<<", "
       <<setprecision(4)<<fixed<<get_additional_stage_time_delay_in_s()<<", "
       <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()<<", "
