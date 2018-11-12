@@ -57,7 +57,8 @@ class STEPS():
         return
 
     def terminate_package(self):
-        self.libsteps.api_terminate_package()
+        self.libsteps = None
+        #self.libsteps.api_terminate_package()
         return
 
     def get_package_float_data(self, dataname):
