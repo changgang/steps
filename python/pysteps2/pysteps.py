@@ -1303,6 +1303,7 @@ class STEPS():
         ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
+        side = self.__get_c_char_p_of_string(side)
         self.libsteps.api_prepare_hvdc_related_meter(ibus, jbus, ickt, meter_type, side, var_name)
         return
 
