@@ -586,7 +586,6 @@ void GENSAL::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@Q-AXIS TRANSIENT BLOCK", i); i++;
-    add_model_variable_name_and_index_pair("STATE@D-AXIS SUBTRANSIENT BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@Q-AXIS SUBTRANSIENT BLOCK", i); i++;
 }
 
@@ -594,41 +593,44 @@ double GENSAL::get_variable_with_name(string var_name)
 {
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
+    INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+    INTEGRAL_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
+    INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
     var_name = string2upper(var_name);
-    if(var_name == "GENERATOR ROTOR ANGLE IN DEG")
+    if(var_name == "ROTOR ANGLE IN DEG")
         return get_rotor_angle_in_deg();
-    if(var_name == "GENERATOR ROTOR SPEED DEVIATION IN PU")
+    if(var_name == "ROTOR SPEED DEVIATION IN PU")
         return get_rotor_speed_deviation_in_pu();
-    if(var_name == "GENERATOR AIR GAP POWER IN PU")
+    if(var_name == "AIR GAP POWER IN PU")
         return get_air_gap_power_in_pu_based_on_mbase();
-    if(var_name == "GENERATOR AIR GAP POWER IN MW")
+    if(var_name == "AIR GAP POWER IN MW")
         return get_air_gap_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "GENERATOR TERMINAL P IN PU")
+    if(var_name == "TERMINAL P IN PU")
         return get_terminal_active_power_in_pu_based_on_mbase();
-    if(var_name == "GENERATOR TERMINAL P IN MW")
+    if(var_name == "TERMINAL P IN MW")
         return get_terminal_active_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "GENERATOR TERMINAL Q IN PU")
+    if(var_name == "TERMINAL Q IN PU")
         return get_terminal_reactive_power_in_pu_based_on_mbase();
-    if(var_name == "GENERATOR TERMINAL Q IN MW")
+    if(var_name == "TERMINAL Q IN MW")
         return get_terminal_reactive_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "GENERATOR TERMINAL S IN PU")
+    if(var_name == "TERMINAL S IN PU")
         return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
-    if(var_name == "GENERATOR TERMINAL S IN MVA")
+    if(var_name == "TERMINAL S IN MVA")
         return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
-    if(var_name == "GENERATOR MECHANICAL POWER IN PU")
+    if(var_name == "MECHANICAL POWER IN PU")
         return get_mechanical_power_in_pu_based_on_mbase();
-    if(var_name == "GENERATOR MECHANICAL POWER IN MW")
+    if(var_name == "MECHANICAL POWER IN MW")
         return get_mechanical_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "GENERATOR EXCITATION VOLTAGE IN PU")
+    if(var_name == "EXCITATION VOLTAGE IN PU")
         return get_excitation_voltage_in_pu();
     if(var_name == "FIELD CURRENT IN PU")
         return get_field_current_in_pu_based_on_mbase();
-    if(var_name == "GENERATOR INTERNAL VOLTAGE IN PU")
+    if(var_name == "INTERNAL VOLTAGE IN PU")
         return steps_fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
-    if(var_name == "GENERATOR TERMINAL CURRENT IN PU")
+    if(var_name == "TERMINAL CURRENT IN PU")
         return get_terminal_current_in_pu_based_on_mbase();
-    if(var_name == "GENERATOR TERMINAL CURRENT IN KA")
+    if(var_name == "TERMINAL CURRENT IN KA")
     {
         POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
         GENERATOR* generator = get_generator_pointer();
@@ -642,6 +644,12 @@ double GENSAL::get_variable_with_name(string var_name)
         return rotor_angle_block->get_state();
     if(var_name == "STATE@ROTOR SPEED BLOCK")
         return rotor_speed_block->get_state();
+    if(var_name == "STATE@D-AXIS TRANSIENT BLOCK")
+        return transient_block_d_axis->get_state();
+    if(var_name == "STATE@Q-AXIS TRANSIENT BLOCK")
+        return transient_block_q_axis->get_state();
+    if(var_name == "STATE@Q-AXIS SUBTRANSIENT BLOCK")
+        return subtransient_block_q_axis->get_state();
 
     return 0.0;
 }
