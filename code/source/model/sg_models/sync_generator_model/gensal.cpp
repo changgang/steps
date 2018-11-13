@@ -585,7 +585,7 @@ void GENSAL::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
-    add_model_variable_name_and_index_pair("STATE@Q-AXIS TRANSIENT BLOCK", i); i++;
+    add_model_variable_name_and_index_pair("STATE@D-AXIS SUBTRANSIENT BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@Q-AXIS SUBTRANSIENT BLOCK", i); i++;
 }
 
@@ -594,7 +594,7 @@ double GENSAL::get_variable_with_name(string var_name)
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
     INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
-    INTEGRAL_BLOCK* transient_block_q_axis = get_q_axis_transient_block();
+    INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
     INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
     var_name = string2upper(var_name);
@@ -646,8 +646,8 @@ double GENSAL::get_variable_with_name(string var_name)
         return rotor_speed_block->get_state();
     if(var_name == "STATE@D-AXIS TRANSIENT BLOCK")
         return transient_block_d_axis->get_state();
-    if(var_name == "STATE@Q-AXIS TRANSIENT BLOCK")
-        return transient_block_q_axis->get_state();
+    if(var_name == "STATE@D-AXIS SUBTRANSIENT BLOCK")
+        return subtransient_block_d_axis->get_state();
     if(var_name == "STATE@Q-AXIS SUBTRANSIENT BLOCK")
         return subtransient_block_q_axis->get_state();
 
