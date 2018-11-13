@@ -638,15 +638,15 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
         meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
     if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
         meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
-    if(meter_type=="GENERATOR SYNC GENERATOR MODEL INTERNAL VARIABLE")
+    if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
         meter = setter.prepare_generator_sync_generator_model_internal_variable_meter(did, var_name);
-    if(meter_type=="GENERATOR COMPENSATOR MODEL INTERNAL VARIABLE")
+    if(meter_type=="COMPENSATOR MODEL INTERNAL VARIABLE")
         meter = setter.prepare_generator_compensator_model_internal_variable_meter(did, var_name);
-    if(meter_type=="GENERATOR EXCITER MODEL INTERNAL VARIABLE")
+    if(meter_type=="EXCITER MODEL INTERNAL VARIABLE")
         meter = setter.prepare_generator_exciter_model_internal_variable_meter(did, var_name);
-    if(meter_type=="GENERATOR STABILIZER MODEL INTERNAL VARIABLE")
+    if(meter_type=="STABILIZER MODEL INTERNAL VARIABLE")
         meter = setter.prepare_generator_stabilizer_model_internal_variable_meter(did, var_name);
-    if(meter_type=="GENERATOR TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
+    if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
         meter = setter.prepare_generator_turbine_governor_model_internal_variable_meter(did, var_name);
 
     if(meter.is_valid())
