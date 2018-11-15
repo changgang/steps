@@ -79,7 +79,7 @@ void ARXL::set_model_data_with_name(string par_name, double value)
 
 void ARXL::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     p_meters.clear();
     q_meters.clear();
@@ -739,14 +739,14 @@ string ARXL::get_load_meter_string(const METER& meter) const
     return data;
 }
 
-void ARXL::prepare_model_variable_table()
+void ARXL::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
     add_model_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;
 }
 
-double ARXL::get_variable_with_name(string var_name)
+double ARXL::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "TOTAL ACTIVE POWER LOAD IN MW")

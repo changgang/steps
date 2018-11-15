@@ -1507,7 +1507,7 @@ void WT3E0::check()
 
 void WT3E0::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     voltage_regulator_integrator.set_limiter_type(NON_WINDUP_LIMITER);
     Q_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
@@ -1615,7 +1615,7 @@ string WT3E0::get_standard_model_string() const
     return osstream.str();
 }
 
-void WT3E0::prepare_model_variable_table()
+void WT3E0::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
@@ -1625,7 +1625,7 @@ void WT3E0::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@SECONDARY FREQUENCY CONTROL", i); i++;
 }
 
-double WT3E0::get_variable_with_name(string var_name)
+double WT3E0::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 

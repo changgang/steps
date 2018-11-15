@@ -16,7 +16,7 @@ COMP::~COMP()
 
 void COMP::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 }
 
 void COMP::copy_from_const_model(const COMP& model)
@@ -182,12 +182,12 @@ string COMP::get_standard_model_string() const
     return osstream.str();
 }
 
-void COMP::prepare_model_variable_table()
+void COMP::prepare_internal_variable_table()
 {
     size_t i=0;
 }
 
-double COMP::get_variable_with_name(string var_name)
+double COMP::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 

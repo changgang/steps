@@ -17,7 +17,7 @@ FILEWIND::~FILEWIND()
 
 void FILEWIND::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     time.clear();
     wind_speed.clear();
@@ -379,13 +379,13 @@ string FILEWIND::get_standard_model_string() const
     return osstream.str();
 }
 
-void FILEWIND::prepare_model_variable_table()
+void FILEWIND::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("WIND SPEED IN M/S", i); i++;
 }
 
-double FILEWIND::get_variable_with_name(string var_name)
+double FILEWIND::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name=="WIND SPEED IN M/S")

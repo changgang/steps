@@ -17,7 +17,7 @@ FILEIRRAD::~FILEIRRAD()
 
 void FILEIRRAD::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 }
 
 void FILEIRRAD::copy_from_const_model(const FILEIRRAD& model)
@@ -162,13 +162,13 @@ string FILEIRRAD::get_standard_model_string() const
     return "";
 }
 
-void FILEIRRAD::prepare_model_variable_table()
+void FILEIRRAD::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("", i); i++;
 }
 
-double FILEIRRAD::get_variable_with_name(string var_name)
+double FILEIRRAD::get_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_name is provided: "<<var_name;

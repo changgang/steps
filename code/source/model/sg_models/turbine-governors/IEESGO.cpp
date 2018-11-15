@@ -12,7 +12,7 @@ IEESGO::~IEESGO()
 
 void IEESGO::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     governor_tuner.set_limiter_type(NO_LIMITER);
     governor.set_limiter_type(NO_LIMITER);
@@ -420,7 +420,7 @@ string IEESGO::get_standard_model_string() const
     return osstream.str();
 }
 
-void IEESGO::prepare_model_variable_table()
+void IEESGO::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("STATE@GOVERNOR TUNER", i); i++;
@@ -430,7 +430,7 @@ void IEESGO::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@LOW TURBINE", i); i++;
 }
 
-double IEESGO::get_variable_with_name(string var_name)
+double IEESGO::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@GOVERNOR TUNER")

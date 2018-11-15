@@ -1027,7 +1027,7 @@ double METER::get_meter_value_as_a_load() const
         if(model==NULL)
             return 0.0;
         else
-            return model->get_variable_with_name(internal_variable_name);
+            return model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
     {
@@ -1035,7 +1035,7 @@ double METER::get_meter_value_as_a_load() const
         if(model==NULL)
             return 0.0;
         else
-            return model->get_variable_with_name(internal_variable_name);
+            return model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
     {
@@ -1043,7 +1043,7 @@ double METER::get_meter_value_as_a_load() const
         if(model==NULL)
             return 0.0;
         else
-            return model->get_variable_with_name(internal_variable_name);
+            return model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="TOTAL SCALE IN PU")
     {
@@ -1338,35 +1338,35 @@ double METER::get_meter_value_as_a_generator() const
         if(gen_model==NULL)
             return 0.0;
         else
-            return gen_model->get_variable_with_name(internal_variable_name);
+            return gen_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="COMPENSATOR MODEL INTERNAL VARIABLE")
     {
         if(comp_model==NULL)
             return 0.0;
         else
-            return comp_model->get_variable_with_name(internal_variable_name);
+            return comp_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="STABILIZER MODEL INTERNAL VARIABLE")
     {
         if(stabilizer_model==NULL)
             return 0.0;
         else
-            return stabilizer_model->get_variable_with_name(internal_variable_name);
+            return stabilizer_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="EXCITER MODEL INTERNAL VARIABLE")
     {
         if(exciter_model==NULL)
             return 0.0;
         else
-            return exciter_model->get_variable_with_name(internal_variable_name);
+            return exciter_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
     {
         if(turbine_governor_model==NULL)
             return 0.0;
         else
-            return turbine_governor_model->get_variable_with_name(internal_variable_name);
+            return turbine_governor_model->get_internal_variable_with_name(internal_variable_name);
     }
 
     return 0.0;
@@ -1711,42 +1711,42 @@ double METER::get_meter_value_as_a_wt_generator() const
         if(gen_model==NULL)
             return 0.0;
         else
-            return gen_model->get_variable_with_name(internal_variable_name);
+            return gen_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
     {
         if(aerd_model==NULL)
             return 0.0;
         else
-            return aerd_model->get_variable_with_name(internal_variable_name);
+            return aerd_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WT TURBINE MODEL INTERNAL VARIABLE")
     {
         if(turbine_model==NULL)
             return 0.0;
         else
-            return turbine_model->get_variable_with_name(internal_variable_name);
+            return turbine_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
     {
         if(electrical_model==NULL)
             return 0.0;
         else
-            return electrical_model->get_variable_with_name(internal_variable_name);
+            return electrical_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WT PITCH MODEL INTERNAL VARIABLE")
     {
         if(pitch_model==NULL)
             return 0.0;
         else
-            return pitch_model->get_variable_with_name(internal_variable_name);
+            return pitch_model->get_internal_variable_with_name(internal_variable_name);
     }
     if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
     {
         if(windspeed_model==NULL)
             return 0.0;
         else
-            return windspeed_model->get_variable_with_name(internal_variable_name);
+            return windspeed_model->get_internal_variable_with_name(internal_variable_name);
     }
     return 0.0;
 }
@@ -1918,7 +1918,7 @@ double METER::get_meter_value_as_an_hvdc() const
         if(hvdc_model == NULL)
             return 0.0;
         else
-            return hvdc_model->get_variable_with_name(internal_variable_name);
+            return hvdc_model->get_internal_variable_with_name(internal_variable_name);
     }
 
     return 0.0;
@@ -2207,7 +2207,7 @@ double METER::get_meter_value_as_an_energy_storage() const
         return model->get_terminal_current_in_pu_based_on_mbase();
 
     if(meter_type=="ENERGY STORAGE MODEL INTERNAL VARIABLE")
-        return model->get_variable_with_name(internal_variable_name);
+        return model->get_internal_variable_with_name(internal_variable_name);
 
 
     return 0.0;

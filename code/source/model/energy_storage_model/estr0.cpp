@@ -16,7 +16,7 @@ ESTR0::~ESTR0()
 
 void ESTR0::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     active_power_filter.set_limiter_type(WINDUP_LIMITER);
     reactive_integral_block.set_limiter_type(WINDUP_LIMITER);
@@ -682,7 +682,7 @@ string ESTR0::get_standard_model_string() const
     return osstream.str();
 }
 
-void ESTR0::prepare_model_variable_table()
+void ESTR0::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("TERMINAL P IN PU", i); i++;
@@ -696,7 +696,7 @@ void ESTR0::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE OF ENERGY", i); i++;
 }
 
-double ESTR0::get_variable_with_name(string var_name)
+double ESTR0::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "TERMINAL P IN MW")

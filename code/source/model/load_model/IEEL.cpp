@@ -13,7 +13,7 @@ IEEL::~IEEL()
 
 void IEEL::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 }
 
 void IEEL::copy_from_const_model(const IEEL& model)
@@ -429,7 +429,7 @@ string IEEL::get_standard_model_string() const
     return osstream.str();
 }
 
-void IEEL::prepare_model_variable_table()
+void IEEL::prepare_internal_variable_table()
 {
     size_t i=0;
 
@@ -439,7 +439,7 @@ void IEEL::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("INITIAL REACTIVE POWER LOAD IN MVAR", i); i++;
 }
 
-double IEEL::get_variable_with_name(string var_name)
+double IEEL::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "TOTAL ACTIVE POWER LOAD IN MW")

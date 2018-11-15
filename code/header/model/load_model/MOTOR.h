@@ -28,7 +28,7 @@ class MOTOR : public LOAD_MODEL
         virtual void report();
         virtual void save();
 
-        virtual double get_variable_with_name(string var_name);
+        virtual double get_internal_variable_with_name(string var_name);
 
         virtual complex<double> get_load_actual_power_in_MVA() const;
 

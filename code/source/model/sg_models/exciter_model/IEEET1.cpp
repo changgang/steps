@@ -17,7 +17,7 @@ IEEET1::~IEEET1()
 
 void IEEET1::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     regulator.set_limiter_type(WINDUP_LIMITER);
     saturation_block.set_saturation_type(QUADRATIC_SATURATION_TYPE);
@@ -443,7 +443,7 @@ string IEEET1::get_standard_model_string() const
     return osstream.str();
 }
 
-void IEEET1::prepare_model_variable_table()
+void IEEET1::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("STATE@SENSOR", i); i++;
@@ -452,7 +452,7 @@ void IEEET1::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@EXCITER", i); i++;
 }
 
-double IEEET1::get_variable_with_name(string var_name)
+double IEEET1::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@SENSOR")

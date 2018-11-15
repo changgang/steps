@@ -18,7 +18,7 @@ PUFLS::~PUFLS()
 
 void PUFLS::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     set_frequency_sensor_time_in_s(1.0);
     set_continuous_frequency_threshold_in_Hz(0.0);
@@ -843,13 +843,13 @@ string PUFLS::get_standard_model_string() const
     return osstream.str();
 }
 
-void PUFLS::prepare_model_variable_table()
+void PUFLS::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("", i); i++;
 }
 
-double PUFLS::get_variable_with_name(string var_name)
+double PUFLS::get_internal_variable_with_name(string var_name)
 {
     return 0.0;
 }

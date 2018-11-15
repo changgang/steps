@@ -18,7 +18,7 @@ CDC6T::~CDC6T()
 
 void CDC6T::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
     set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
@@ -916,12 +916,12 @@ string CDC6T::get_standard_model_string() const
 }
 
 
-void CDC6T::prepare_model_variable_table()
+void CDC6T::prepare_internal_variable_table()
 {
     size_t i=0;
 }
 
-double CDC6T::get_variable_with_name(string var_name)
+double CDC6T::get_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;

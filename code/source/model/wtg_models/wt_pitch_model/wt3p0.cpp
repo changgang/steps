@@ -17,7 +17,7 @@ WT3P0::~WT3P0()
 
 void WT3P0::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     set_hold_wtg_speed_flag(false);
 
@@ -682,7 +682,7 @@ string WT3P0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<tp<<" /";
     return osstream.str();
 }
-void WT3P0::prepare_model_variable_table()
+void WT3P0::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
@@ -692,7 +692,7 @@ void WT3P0::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@PITCH INTEGRATOR", i); i++;
 }
 
-double WT3P0::get_variable_with_name(string var_name)
+double WT3P0::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@SPEED REFERENCE SENSOR")

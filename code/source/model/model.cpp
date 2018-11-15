@@ -82,7 +82,7 @@ bool MODEL::is_model_variable_exist(size_t var_index) const
 double MODEL::get_variable_with_index(size_t index)
 {
     string var_name = get_model_variable_name(index);
-    if(var_name!="") return get_variable_with_name(var_name);
+    if(var_name!="") return get_internal_variable_with_name(var_name);
     else             return 0.0;
 }
 

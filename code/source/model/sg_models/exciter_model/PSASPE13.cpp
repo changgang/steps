@@ -16,7 +16,7 @@ PSASPE13::~PSASPE13()
 }
 void PSASPE13::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     sensor.set_limiter_type(NO_LIMITER);
     sensor.set_K(1.0);
@@ -458,7 +458,7 @@ string PSASPE13::get_standard_model_string() const
 }
 
 
-void PSASPE13::prepare_model_variable_table()
+void PSASPE13::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("STATE@SENSOR", i); i++;
@@ -467,7 +467,7 @@ void PSASPE13::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
 }
 
-double PSASPE13::get_variable_with_name(string var_name)
+double PSASPE13::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@SENSOR")

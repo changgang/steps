@@ -17,7 +17,7 @@ PVCV0::~PVCV0()
 
 void PVCV0::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     set_current_source_flag(true);
 
@@ -622,7 +622,7 @@ string PVCV0::get_standard_model_string() const
     return osstream.str();
 }
 
-void PVCV0::prepare_model_variable_table()
+void PVCV0::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
@@ -633,7 +633,7 @@ void PVCV0::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@LVPL VOLTAGE SENSOR", i); i++;
 }
 
-double PVCV0::get_variable_with_name(string var_name)
+double PVCV0::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "PLL ANGLE IN DEG")

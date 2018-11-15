@@ -42,8 +42,8 @@ class EQUIVALENT_MODEL : public MODEL
         virtual string get_standard_model_string() const = 0;
         virtual void switch_output_to_equivalent_device() = 0;
 
-        virtual void prepare_model_variable_table() = 0;
-        virtual double get_variable_with_name(string var_name)= 0;
+        virtual void prepare_internal_variable_table() = 0;
+        virtual double get_internal_variable_with_name(string var_name)= 0;
 
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;

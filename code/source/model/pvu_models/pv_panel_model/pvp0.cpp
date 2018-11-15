@@ -103,7 +103,7 @@ void PVP0::check()
 
 void PVP0::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 }
 
 void PVP0::report()
@@ -121,13 +121,13 @@ string PVP0::get_standard_model_string() const
     return "";
 }
 
-void PVP0::prepare_model_variable_table()
+void PVP0::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("", i); i++;
 }
 
-double PVP0::get_variable_with_name(string var_name)
+double PVP0::get_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;

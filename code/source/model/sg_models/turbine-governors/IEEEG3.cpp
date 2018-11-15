@@ -14,7 +14,7 @@ IEEEG3::~IEEEG3()
 }
 void IEEEG3::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 
     governor.set_limiter_type(NON_WINDUP_LIMITER);
     servo_motor.set_limiter_type(NON_WINDUP_LIMITER);
@@ -478,7 +478,7 @@ string IEEEG3::get_standard_model_string() const
     return osstream.str();
 }
 
-void IEEEG3::prepare_model_variable_table()
+void IEEEG3::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
@@ -487,7 +487,7 @@ void IEEEG3::prepare_model_variable_table()
     add_model_variable_name_and_index_pair("STATE@WATER HAMMER", i); i++;
 }
 
-double IEEEG3::get_variable_with_name(string var_name)
+double IEEEG3::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@GOVERNOR")

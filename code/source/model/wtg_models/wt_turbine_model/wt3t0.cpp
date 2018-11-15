@@ -13,7 +13,7 @@ WT3T0::~WT3T0()
 
 void WT3T0::clear()
 {
-    prepare_model_variable_table();
+    prepare_internal_variable_table();
 }
 
 void WT3T0::copy_from_const_model(const WT3T0& model)
@@ -343,14 +343,14 @@ string WT3T0::get_standard_model_string() const
     return osstream.str();
 }
 
-void WT3T0::prepare_model_variable_table()
+void WT3T0::prepare_internal_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
     add_model_variable_name_and_index_pair("STATE@TURBINE", i); i++;
 }
 
-double WT3T0::get_variable_with_name(string var_name)
+double WT3T0::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 
