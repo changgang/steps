@@ -552,7 +552,6 @@ string IEE2ST::get_standard_model_string() const
 void IEE2ST::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STABILIZING SIGNAL", i); i++;
     add_model_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
     add_model_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
     add_model_variable_name_and_index_pair("STATE@SENSOR 1", i); i++;
@@ -566,10 +565,6 @@ void IEE2ST::prepare_model_variable_table()
 double IEE2ST::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-
-    if(var_name == "STABILIZING SIGNAL")
-        return get_stabilizing_signal_in_pu();
-
     if(var_name == "SIGNAL@SLOT 1")
         return get_signal_value_of_slot(0);
 

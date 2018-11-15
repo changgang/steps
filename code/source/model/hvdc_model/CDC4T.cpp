@@ -510,13 +510,10 @@ string CDC4T::get_standard_model_string() const
 void CDC4T::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("RECTIFIER ALPHA IN DEG", i); i++;
 }
 
 double CDC4T::get_variable_with_name(string var_name)
 {
-    if(var_name == "RECTIFIER ALPHA IN DEG")
-        return get_converter_alpha_or_gamma_in_deg(RECTIFIER);
     return 0.0;
 }
 

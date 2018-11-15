@@ -653,23 +653,6 @@ string GENROU::get_standard_model_string() const
 void GENROU::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("ROTOR ANGLE IN DEG", i); i++;
-    add_model_variable_name_and_index_pair("ROTOR SPEED DEVIATION IN PU", i); i++;
-    add_model_variable_name_and_index_pair("AIR GAP POWER IN PU", i); i++;
-    add_model_variable_name_and_index_pair("AIR GAP POWER IN MW", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL P IN PU", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL P IN MW", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL Q IN PU", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL Q IN MVAR", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL S IN PU", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL S IN MVA", i); i++;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER IN PU", i); i++;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER IN MW", i); i++;
-    add_model_variable_name_and_index_pair("EXCITATION VOLTAGE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("FIELD CURRENT IN PU", i); i++;
-    add_model_variable_name_and_index_pair("INTERNAL VOLTAGE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL CURRENT IN PU", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL CURRENT IN KA", i); i++;
     add_model_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
@@ -688,48 +671,6 @@ double GENROU::get_variable_with_name(string var_name)
     INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
     var_name = string2upper(var_name);
-    if(var_name == "ROTOR ANGLE IN DEG")
-        return get_rotor_angle_in_deg();
-    if(var_name == "ROTOR SPEED DEVIATION IN PU")
-        return get_rotor_speed_deviation_in_pu();
-    if(var_name == "AIR GAP POWER IN PU")
-        return get_air_gap_power_in_pu_based_on_mbase();
-    if(var_name == "AIR GAP POWER IN MW")
-        return get_air_gap_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "TERMINAL P IN PU")
-        return get_terminal_active_power_in_pu_based_on_mbase();
-    if(var_name == "TERMINAL P IN MW")
-        return get_terminal_active_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "TERMINAL Q IN PU")
-        return get_terminal_reactive_power_in_pu_based_on_mbase();
-    if(var_name == "TERMINAL Q IN MW")
-        return get_terminal_reactive_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "TERMINAL S IN PU")
-        return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
-    if(var_name == "TERMINAL S IN MVA")
-        return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
-    if(var_name == "MECHANICAL POWER IN PU")
-        return get_mechanical_power_in_pu_based_on_mbase();
-    if(var_name == "MECHANICAL POWER IN MW")
-        return get_mechanical_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "EXCITATION VOLTAGE IN PU")
-        return get_excitation_voltage_in_pu();
-    if(var_name == "FIELD CURRENT IN PU")
-        return get_field_current_in_pu_based_on_mbase();
-    if(var_name == "INTERNAL VOLTAGE IN PU")
-        return steps_fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
-    if(var_name == "TERMINAL CURRENT IN PU")
-        return get_terminal_current_in_pu_based_on_mbase();
-    if(var_name == "TERMINAL CURRENT IN KA")
-    {
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-        GENERATOR* generator = get_generator_pointer();
-        size_t bus = generator->get_generator_bus();
-        double vbase = psdb.get_bus_base_voltage_in_kV(bus);
-        double mbase = generator->get_mbase_in_MVA();
-        double ibase = mbase/sqrt(3.0)/vbase;
-        return get_terminal_current_in_pu_based_on_mbase()*ibase;
-    }
     if(var_name == "STATE@ROTOR ANGLE BLOCK")
         return rotor_angle_block->get_state();
     if(var_name == "STATE@ROTOR SPEED BLOCK")

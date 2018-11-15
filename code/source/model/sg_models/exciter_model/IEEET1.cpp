@@ -446,10 +446,6 @@ string IEEET1::get_standard_model_string() const
 void IEEET1::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("EXCITATION VOLTAGE", i); i++;
-    add_model_variable_name_and_index_pair("VOLTAGE REFERENCE", i); i++;
-    add_model_variable_name_and_index_pair("COMPENSATED VOLTAGE", i); i++;
-    add_model_variable_name_and_index_pair("STABILIZING SIGNAL", i); i++;
     add_model_variable_name_and_index_pair("STATE@SENSOR", i); i++;
     add_model_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
     add_model_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
@@ -458,18 +454,7 @@ void IEEET1::prepare_model_variable_table()
 
 double IEEET1::get_variable_with_name(string var_name)
 {
-    if(var_name == "EXCITATION VOLTAGE")
-        return get_excitation_voltage_in_pu();
-
-    if(var_name == "VOLTAGE REFERENCE")
-        return get_voltage_reference_in_pu();
-
-    if(var_name == "COMPENSATED VOLTAGE")
-        return get_compensated_voltage_in_pu();
-
-    if(var_name == "STABILIZING SIGNAL")
-        return get_stabilizing_signal_in_pu();
-
+    var_name = string2upper(var_name);
     if(var_name == "STATE@SENSOR")
         return sensor.get_state();
 

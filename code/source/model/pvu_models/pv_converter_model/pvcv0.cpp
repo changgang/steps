@@ -626,18 +626,6 @@ void PVCV0::prepare_model_variable_table()
 {
     size_t i=0;
     add_model_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL P IN PU ON MBASE", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL P IN MW", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL Q IN PU ON MBASE", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL Q IN MVAR", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL S IN PU ON MBASE", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL S IN MVA", i); i++;
-    add_model_variable_name_and_index_pair("INTERNAL VOLTAGE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL CURRENT IN PU", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL CURRENT IN KA", i); i++;
-    add_model_variable_name_and_index_pair("ACTIVE CURRENT COMMAND IN PU", i); i++;
-    add_model_variable_name_and_index_pair("REACTIVE CURRENT COMMAND IN PU", i); i++;
-    add_model_variable_name_and_index_pair("REACTIVE VOLTAGE COMMAND IN PU", i); i++;
     add_model_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
     add_model_variable_name_and_index_pair("STATE@PLL FREQUENCY BLOCK", i); i++;
@@ -650,41 +638,6 @@ double PVCV0::get_variable_with_name(string var_name)
     var_name = string2upper(var_name);
     if(var_name == "PLL ANGLE IN DEG")
         return get_pll_angle_in_deg();
-    if(var_name == "TERMINAL P IN PU ON MBASE")
-        return get_terminal_active_power_in_pu_based_on_mbase();
-    if(var_name == "TERMINAL P IN MW")
-        return get_terminal_active_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "TERMINAL Q IN PU ON MBASE")
-        return get_terminal_reactive_power_in_pu_based_on_mbase();
-    if(var_name == "TERMINAL Q IN MW")
-        return get_terminal_reactive_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
-    if(var_name == "TERMINAL S IN PU ON MBASE")
-        return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase());
-    if(var_name == "TERMINAL S IN MVA")
-        return steps_fast_complex_abs(get_terminal_complex_power_in_pu_based_on_mbase())*get_mbase_in_MVA();
-    if(var_name == "ACTIVE CURRENT COMMAND IN PU")
-        return get_active_current_command_in_pu_based_on_mbase();
-    if(var_name == "REACTIVE CURRENT COMMAND IN PU")
-        return get_reactive_current_command_in_pu_based_on_mbase();
-    if(var_name == "REACTIVE VOLTAGE COMMAND IN PU")
-    {
-        double Xeq = get_source_impedance_in_pu_based_on_mbase().imag();
-        return get_reactive_current_command_in_pu_based_on_mbase()*(-Xeq);
-    }
-    if(var_name == "INTERNAL VOLTAGE IN PU")
-        return steps_fast_complex_abs(get_internal_voltage_in_pu_in_xy_axis());
-    if(var_name == "TERMINAL CURRENT IN PU")
-        return get_terminal_current_in_pu_based_on_mbase();
-    if(var_name == "TERMINAL CURRENT IN KA")
-    {
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-        PV_UNIT* pv_unit = get_pv_unit_pointer();
-        size_t bus = pv_unit->get_unit_bus();
-        double vbase = psdb.get_bus_base_voltage_in_kV(bus);
-        double mbase = pv_unit->get_mbase_in_MVA();
-        double ibase = mbase/sqrt(3.0)/vbase;
-        return get_terminal_current_in_pu_based_on_mbase()*ibase;
-    }
     if(var_name == "STATE@ACTIVE CURRENT COMMAND BLOCK")
         return active_current_commander.get_state();
     if(var_name == "STATE@REACTIVE VOLTAGE COMMAND BLOCK")

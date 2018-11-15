@@ -324,28 +324,13 @@ string SEXS::get_standard_model_string() const
 void SEXS::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("EXCITATION VOLTAGE", i); i++;
-    add_model_variable_name_and_index_pair("VOLTAGE REFERENCE", i); i++;
-    add_model_variable_name_and_index_pair("SEXSENSATED VOLTAGE", i); i++;
-    add_model_variable_name_and_index_pair("STABILIZING SIGNAL", i); i++;
     add_model_variable_name_and_index_pair("STATE@PHASE TUNER", i); i++;
     add_model_variable_name_and_index_pair("STATE@EXCITER", i); i++;
 }
 
 double SEXS::get_variable_with_name(string var_name)
 {
-    if(var_name == "EXCITATION VOLTAGE")
-        return get_excitation_voltage_in_pu();
-
-    if(var_name == "VOLTAGE REFERENCE")
-        return get_voltage_reference_in_pu();
-
-    if(var_name == "SEXSENSATED VOLTAGE")
-        return get_compensated_voltage_in_pu();
-
-    if(var_name == "STABILIZING SIGNAL")
-        return get_stabilizing_signal_in_pu();
-
+    var_name = string2upper(var_name);
     if(var_name == "STATE@PHASE TUNER")
         return phase_tuner.get_state();
 

@@ -47,11 +47,12 @@ vector<string> transformer_meters{"CURRENT AT PRIMARY WINDING IN KA",  "CURRENT 
                                    "REACTIVE POWER IN PU"};
 
 
-vector<string> load_meters{"CURRENT IN KA",
+vector<string> load_meters{ "CURRENT IN KA",
                             "CURRENT IN PU",
                             "ACTIVE POWER IN MW", "REACTIVE POWER IN MVAR",
                             "ACTIVE POWER IN PU", "REACTIVE POWER IN PU",
-                            "TOTAL SCALE IN PU", "MANUALLY SCALE IN PU",
+                            "TOTAL SCALE IN PU",
+                            "MANUALLY SCALE IN PU",
                             "RELAY SHED SCALE IN PU",
                             "LOAD MODEL INTERNAL VARIABLE",
                             "FREQUENCY RELAY MODEL INTERNAL VARIABLE",
@@ -67,13 +68,18 @@ vector<string> generator_meters{"ROTOR ANGLE IN DEG",
                                 "TERMINAL ACTIVE POWER IN MW",
                                 "TERMINAL REACTIVE POWER IN PU ON MBASE", "TERMINAL REACTIVE POWER IN PU ON SBASE",
                                 "TERMINAL REACTIVE POWER IN MVAR",
+                                "TERMINAL APPRAENT POWER IN PU ON MBASE", "TERMINAL APPRAENT POWER IN PU ON SBASE",
+                                "TERMINAL APPRAENT POWER IN MVA",
                                 "AIRGAP POWER IN PU ON MBASE", "AIRGAP POWER IN PU ON SBASE",
                                 "AIRGAP POWER IN MW",
                                 "ACCELERATING POWER IN PU ON MBASE", "ACCELERATING POWER IN PU ON SBASE",
                                 "ACCELERATING POWER IN MW",
                                 "MECHANICAL POWER IN PU ON MBASE",  "MECHANICAL POWER IN PU ON SBASE",
                                 "MECHANICAL POWER IN MW",
+                                "MECHANICAL POWER REFERENCE IN PU ON MBASE",  "MECHANICAL POWER REFERENCE IN PU ON SBASE",
+                                "MECHANICAL POWER REFERENCE IN MW",
                                 "COMPENSATED VOLTAGE IN PU",
+                                "VOLTAGE REFERENCE IN PU",
                                 "STABILIZING SIGNAL IN PU",
                                 "EXCITATION VOLTAGE IN PU",
                                 "SYNC GENERATOR MODEL INTERNAL VARIABLE",
@@ -82,10 +88,18 @@ vector<string> generator_meters{"ROTOR ANGLE IN DEG",
                                 "STABILIZER MODEL INTERNAL VARIABLE",
                                 "TURBINE GOVERNOR MODEL INTERNAL VARIABLE"};
 
-vector<string> wt_generator_meters{"TERMINAL CURRENT IN PU", "TERMINAL CURRENT IN KA",
+vector<string> wt_generator_meters{ "TERMINAL CURRENT IN PU ON MBASE",  "TERMINAL CURRENT IN PU ON SBASE"
+                                    "TERMINAL CURRENT IN KA",
+                                    "TERMINAL ACTIVE POWER IN PU ON MBASE", "TERMINAL ACTIVE POWER IN PU ON SBASE",
                                     "TERMINAL ACTIVE POWER IN MW",
+                                    "TERMINAL REACTIVE POWER IN PU ON MBASE", "TERMINAL REACTIVE POWER IN PU ON SBASE",
                                     "TERMINAL REACTIVE POWER IN MVAR",
-                                    "MECHANICAL POWER IN MW", "MAX AVAILABLE MECHANICAL POWER IN MW",
+                                    "TERMINAL APPRAENT POWER IN PU ON MBASE", "TERMINAL APPRAENT POWER IN PU ON SBASE",
+                                    "TERMINAL APPRAENT POWER IN MVA",
+                                    "MECHANICAL POWER IN PU ON MBASE", "MECHANICAL POWER IN PU ON SBASE",
+                                    "MECHANICAL POWER IN MW",
+                                    "MAX AVAILABLE MECHANICAL POWER IN PU ON MBASE", "MAX AVAILABLE MECHANICAL POWER IN PU ON SBASE",
+                                    "MAX AVAILABLE MECHANICAL POWER IN MW",
                                     "SPEED REFERENCE IN PU", "SPEED REFERENCE IN RAD/S",
                                     "TURBINE SPEED DEVIATION IN PU", "TURBINE SPEED DEVIATION IN HZ",
                                     "TURBINE SPEED IN PU",           "TURBINE SPEED IN HZ",
@@ -106,7 +120,7 @@ vector<string> wt_generator_meters{"TERMINAL CURRENT IN PU", "TERMINAL CURRENT I
                                     "WT PITCH MODEL INTERNAL VARIABLE",
                                     "WIND SPEED MODEL INTERNAL VARIABLE"};
 
-vector<string> pv_unit_meters{"TERMINAL CURRENT IN PU", "TERMINAL CURRENT IN KA",
+vector<string> pv_unit_meters{ "TERMINAL CURRENT IN PU", "TERMINAL CURRENT IN KA",
                                "TERMINAL ACTIVE POWER IN MW",
                                "TERMINAL REACTIVE POWER IN MVAR",
                                "ACTIVE CURRENT COMMAND IN PU",
@@ -128,7 +142,7 @@ vector<string> energy_storage_meters{"STATE OF ENERGY IN PU",
                                       "TERMINAL CURRENT IN PU",
                                       "ENERGY STORAGE MODEL INTERNAL VARIABLE"};
 
-vector<string> hvdc_meters{"DC CURRENT IN KA",
+vector<string> hvdc_meters{ "DC CURRENT IN KA",
                             "RECTIFIER DC CURRENT IN KA",   "INVERTER DC CURRENT IN KA",
                             "RECTIFIER AC CURRENT IN KA",   "INVERTER AC CURRENT IN KA",
                             "RECTIFIER ALPHA IN DEG",       "INVERTER GAMMA IN DEG",
@@ -1174,6 +1188,39 @@ double METER::get_meter_value_as_a_generator() const
         else
             return gen_model->get_terminal_reactive_power_in_MVar();
     }
+    if(meter_type =="TERMINAL APPRAENT POWER IN PU ON MBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+        {
+            double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
+            double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
+            return sqrt(p*p+q*q);
+        }
+    }
+    if(meter_type =="TERMINAL APPRAENT POWER IN PU ON SBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+        {
+            double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
+            double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
+            return sqrt(p*p+q*q)*mbase/sbase;
+        }
+    }
+    if(meter_type =="TERMINAL APPRAENT POWER IN MVA")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+        {
+            double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
+            double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
+            return sqrt(p*p+q*q)*mbase;
+        }
+    }
     if(meter_type =="AIRGAP POWER IN PU ON MBASE")
     {
         if(gen_model == NULL)
@@ -1237,12 +1284,40 @@ double METER::get_meter_value_as_a_generator() const
         else
             return gen_model->get_mechanical_power_in_MW();
     }
+    if(meter_type =="MECHANICAL POWER REFERENCE IN PU ON MBASE")
+    {
+        if(turbine_governor_model == NULL)
+            return 0.0;
+        else
+            return turbine_governor_model->get_mechanical_power_reference_in_pu_based_on_mbase();
+    }
+    if(meter_type =="MECHANICAL POWER REFERENCE IN PU ON SBASE")
+    {
+        if(turbine_governor_model == NULL)
+            return 0.0;
+        else
+            return turbine_governor_model->get_mechanical_power_reference_in_pu_based_on_mbase()*mbase/sbase;
+    }
+    if(meter_type =="MECHANICAL POWER REFERENCE IN MW")
+    {
+        if(turbine_governor_model == NULL)
+            return 0.0;
+        else
+            return turbine_governor_model->get_mechanical_power_reference_in_pu_based_on_mbase()*mbase;
+    }
     if(meter_type =="COMPENSATED VOLTAGE IN PU")
     {
         if(exciter_model == NULL)
             return 0.0;
         else
             return exciter_model->get_compensated_voltage_in_pu();
+    }
+    if(meter_type =="VOLTAGE REFERENCE IN PU")
+    {
+        if(exciter_model == NULL)
+            return 0.0;
+        else
+            return exciter_model->get_voltage_reference_in_pu();
     }
     if(meter_type =="STABILIZING SIGNAL IN PU")
     {
@@ -1311,7 +1386,7 @@ double METER::get_meter_value_as_a_wt_generator() const
     size_t bus = generator->get_generator_bus();
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
-    //double sbase = psdb.get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = generator->get_mbase_in_MVA();
 
     WT_GENERATOR_MODEL* gen_model = generator->get_wt_generator_model();
@@ -1321,12 +1396,19 @@ double METER::get_meter_value_as_a_wt_generator() const
     WT_PITCH_MODEL* pitch_model = generator->get_wt_pitch_model();
     WIND_SPEED_MODEL* windspeed_model = generator->get_wind_speed_model();
 
-    if(meter_type=="TERMINAL CURRENT IN PU")
+    if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_current_in_pu_based_on_mbase();
+    }
+    if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+            return gen_model->get_terminal_current_in_pu_based_on_mbase()*mbase/sbase;
     }
 
     if(meter_type=="TERMINAL CURRENT IN KA")
@@ -1340,12 +1422,40 @@ double METER::get_meter_value_as_a_wt_generator() const
             return gen_model->get_terminal_current_in_pu_based_on_mbase()*ibase;
         }
     }
+    if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+            return gen_model->get_terminal_active_power_in_pu_based_on_mbase();
+    }
+    if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+            return gen_model->get_terminal_active_power_in_MW()/sbase;
+    }
     if(meter_type=="TERMINAL ACTIVE POWER IN MW")
     {
         if(gen_model == NULL)
             return 0.0;
         else
             return gen_model->get_terminal_active_power_in_MW();
+    }
+    if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+            return gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
+    }
+    if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+            return gen_model->get_terminal_reactive_power_in_MVar()/sbase;
     }
     if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
     {
@@ -1354,12 +1464,83 @@ double METER::get_meter_value_as_a_wt_generator() const
         else
             return gen_model->get_terminal_reactive_power_in_MVar();
     }
+    if(meter_type=="TERMINAL APPARENT POWER IN PU ON MBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+        {
+            double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
+            double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
+            return sqrt(p*p+q*q);
+        }
+    }
+    if(meter_type=="TERMINAL APPARENT POWER IN PU ON SBASE")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+        {
+            double p = gen_model->get_terminal_active_power_in_MW()/sbase;
+            double q = gen_model->get_terminal_reactive_power_in_MVar()/sbase;
+            return sqrt(p*p+q*q);
+        }
+    }
+    if(meter_type=="TERMINAL APPARENT POWER IN MVAR")
+    {
+        if(gen_model == NULL)
+            return 0.0;
+        else
+        {
+            double p = gen_model->get_terminal_active_power_in_MW();
+            double q = gen_model->get_terminal_reactive_power_in_MVar();
+            return sqrt(p*p+q*q);
+        }
+    }
+    if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
+    {
+        if(aerd_model == NULL)
+            return 0.0;
+        else
+            return aerd_model->get_turbine_mechanical_power_in_MW()/mbase;
+    }
+    if(meter_type=="MECHANICAL POWER IN PU ON SBASE")
+    {
+        if(aerd_model == NULL)
+            return 0.0;
+        else
+            return aerd_model->get_turbine_mechanical_power_in_MW()/sbase;
+    }
     if(meter_type=="MECHANICAL POWER IN MW")
     {
         if(aerd_model == NULL)
             return 0.0;
         else
             return aerd_model->get_turbine_mechanical_power_in_MW();
+    }
+    if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN PU ON MBASE")
+    {
+        if(aerd_model == NULL)
+            return 0.0;
+        else
+        {
+            double vwind = aerd_model->get_wind_speed_in_mps();
+            double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
+            size_t n = generator->get_number_of_lumped_wt_generators();
+            return pmax*n/mbase;
+        }
+    }
+    if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN PU ON SBASE")
+    {
+        if(aerd_model == NULL)
+            return 0.0;
+        else
+        {
+            double vwind = aerd_model->get_wind_speed_in_mps();
+            double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
+            size_t n = generator->get_number_of_lumped_wt_generators();
+            return pmax*n/sbase;
+        }
     }
     if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN MW")
     {

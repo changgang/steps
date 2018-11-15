@@ -685,10 +685,6 @@ string WT3P0::get_standard_model_string() const
 void WT3P0::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("PITCH ANGLE IN DEG", i); i++;
-    add_model_variable_name_and_index_pair("SPEED IN PU", i); i++;
-    add_model_variable_name_and_index_pair("SPEED REFERENCE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("FREQUENCY DEVIATION IN PU", i); i++;
     add_model_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
     add_model_variable_name_and_index_pair("STATE@SPEED REGULATOR", i); i++;
     add_model_variable_name_and_index_pair("STATE@FREQUENCY SENSOR", i); i++;
@@ -699,15 +695,6 @@ void WT3P0::prepare_model_variable_table()
 double WT3P0::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-
-    if(var_name == "PITCH ANGLE IN DEG")
-        return get_pitch_angle_in_deg();
-    if(var_name == "SPEED IN PU")
-        return get_wt_generator_speed_in_pu();
-    if(var_name == "SPEED REFERENCE IN PU")
-        return get_wt_generator_reference_speed_in_pu();
-    if(var_name == "FREQUENCY DEVIATION IN PU")
-        return get_bus_frequency_deviation_in_pu();
     if(var_name == "STATE@SPEED REFERENCE SENSOR")
         return speed_reference_sensor.get_state();
     if(var_name == "STATE@SPEED REGULATOR")

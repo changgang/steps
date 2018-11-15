@@ -305,10 +305,6 @@ string TGOV1::get_standard_model_string() const
 void TGOV1::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER IN PU", i); i++;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER IN MW", i); i++;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER REFERENCE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("ROTOR SPEED DEVIATION IN PU", i); i++;
     add_model_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
     add_model_variable_name_and_index_pair("STATE@TURBINE", i); i++;
 }
@@ -316,22 +312,6 @@ void TGOV1::prepare_model_variable_table()
 double TGOV1::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-
-    if(var_name == "GENERATOR MECHANICAL POWER IN PU")
-        return get_mechanical_power_in_pu_based_on_mbase();
-
-    if(var_name == "GENERATOR MECHANICAL POWER IN MW")
-    {
-        GENERATOR* generator = get_generator_pointer();
-        return get_mechanical_power_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
-    }
-
-    if(var_name == "MECHANICAL POWER REFERENCE IN PU")
-        return get_mechanical_power_reference_in_pu_based_on_mbase();
-
-    if(var_name == "GENERATOR ROTOR SPEED DEVIATION IN PU")
-        return get_rotor_speed_deviation_in_pu_from_sync_generator_model();
-
     if(var_name == "STATE@GOVERNOR")
         return governor.get_state();
 

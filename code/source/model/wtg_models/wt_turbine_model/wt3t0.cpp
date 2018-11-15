@@ -346,10 +346,6 @@ string WT3T0::get_standard_model_string() const
 void WT3T0::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER IN PU", i); i++;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER IN MW", i); i++;
-    add_model_variable_name_and_index_pair("MECHANICAL POWER REFERENCE IN PU", i); i++;
-    add_model_variable_name_and_index_pair("ROTOR SPEED DEVIATION IN PU", i); i++;
     add_model_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
     add_model_variable_name_and_index_pair("STATE@TURBINE", i); i++;
 }
@@ -357,9 +353,6 @@ void WT3T0::prepare_model_variable_table()
 double WT3T0::get_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-
-    if(var_name == "GENERATOR MECHANICAL POWER IN PU")
-        return 0.0;
 
     return 0.0;
 }

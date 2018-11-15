@@ -185,21 +185,11 @@ string COMP::get_standard_model_string() const
 void COMP::prepare_model_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("TERMINAL VOLTAGE", i); i++;
-    add_model_variable_name_and_index_pair("TERMINAL CURRENT", i); i++;
-    add_model_variable_name_and_index_pair("COMPENSATED VOLTAGE", i); i++;
 }
 
 double COMP::get_variable_with_name(string var_name)
 {
-    if(var_name == "GENERATOR TERMINAL VOLTAGE")
-        return steps_fast_complex_abs(get_generator_terminal_voltage_in_pu());
-
-    if(var_name == "GENERATOR TERMINAL CURRENT")
-        return steps_fast_complex_abs(get_generator_terminal_current_in_pu());
-
-    if(var_name == "COMPENSATED VOLTAGE")
-        return get_compensated_voltage_in_pu();
+    var_name = string2upper(var_name);
 
     return 0.0;
 }
