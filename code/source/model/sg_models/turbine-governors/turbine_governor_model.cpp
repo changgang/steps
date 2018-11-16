@@ -49,12 +49,27 @@ double TURBINE_GOVERNOR_MODEL::get_initial_mechanical_power_in_pu_based_on_mbase
     }
 }
 
-void TURBINE_GOVERNOR_MODEL::set_mechanical_power_reference_in_pu_based_on_mbase(double P)
+void TURBINE_GOVERNOR_MODEL::set_initial_mechanical_power_reference_in_pu_based_on_mbase(double P)
 {
-    mechanical_power_reference_in_pu = P;
+    initial_mechanical_power_reference_in_pu = P;
+}
+
+double TURBINE_GOVERNOR_MODEL::get_initial_mechanical_power_reference_in_pu_based_on_mbase() const
+{
+    return initial_mechanical_power_reference_in_pu;
 }
 
 double TURBINE_GOVERNOR_MODEL::get_mechanical_power_reference_in_pu_based_on_mbase() const
 {
-    return mechanical_power_reference_in_pu;
+    GENERATOR* generator = get_generator_pointer();
+    if(generator!=NULL)
+    {
+        TURBINE_LOAD_CONTROLLER_MODEL* model =generator->get_turbine_load_controller_model();
+        if(model!=NULL)
+            return model->get_mechanical_power_reference_in_pu_based_on_mbase();
+        else
+            return get_initial_mechanical_power_reference_in_pu_based_on_mbase();
+    }
+    else
+        return get_initial_mechanical_power_reference_in_pu_based_on_mbase();
 }

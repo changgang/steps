@@ -26,6 +26,7 @@ class SG_MODEL_TEST : public Test::Suite
         STABILIZER_MODEL* get_test_stabilizer_model();
         COMPENSATOR_MODEL* get_test_compensator_model();
         TURBINE_GOVERNOR_MODEL* get_test_turbine_governor_model();
+        TURBINE_LOAD_CONTROLLER_MODEL* get_test_turbine_load_controller_model();
     protected:
         virtual void setup();
         virtual void tear_down();

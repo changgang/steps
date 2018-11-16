@@ -3486,7 +3486,7 @@ void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(const DEVICE_ID&
     {
         TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
         if(tg!=NULL)
-            tg->set_mechanical_power_reference_in_pu_based_on_mbase(Pref);
+            tg->set_initial_mechanical_power_reference_in_pu_based_on_mbase(Pref);
     }
 }
 

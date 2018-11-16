@@ -446,7 +446,7 @@ void IEEEG1::initialize()
     delayer3.initialize();
     delayer4.initialize();
 
-    set_mechanical_power_reference_in_pu_based_on_mbase(valve);
+    set_initial_mechanical_power_reference_in_pu_based_on_mbase(valve);
 
     set_flag_model_initialized_as_true();
 }

@@ -94,6 +94,8 @@
 #include "header/model/sg_models/turbine_governor_model/IEEEG3_test.h"
 #include "header/model/sg_models/turbine_governor_model/IEESGO_test.h"
 
+#include "header/model/sg_models/turbine_load_controller_model/lcfb1_test.h"
+
 #include "header/model/load_model/load_model_test.h"
 #include "header/model/load_model/IEEL_test.h"
 
@@ -282,6 +284,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new IEEEG2_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEEEG3_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEESGO_TEST));
+
+        ts.add(unique_ptr<Test::Suite>(new LCFB1_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new IEEL_TEST));
         ts.add(unique_ptr<Test::Suite>(new UVLS_TEST));

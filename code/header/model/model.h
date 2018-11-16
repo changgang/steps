@@ -84,7 +84,7 @@ class MODEL : public BASE
 
         bool flag_model_active;
 
-        MODEL_VAR_TABLE variable_table;
+        MODEL_VAR_TABLE internal_variable_table;
 };
 
 #endif // MODEL_H

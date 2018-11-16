@@ -9,6 +9,7 @@
 #include "header/model/sg_models/exciter_model/exciter_model.h"
 #include "header/model/sg_models/stabilizer_model/stabilizer_model.h"
 #include "header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
+#include "header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 
 using namespace std;
 
@@ -36,18 +37,21 @@ class GENERATOR : public SOURCE
         void set_exciter_model(const EXCITER_MODEL* model);
         void set_stabilizer_model(const STABILIZER_MODEL* model);
         void set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model);
+        void set_turbine_load_controller_model(const TURBINE_LOAD_CONTROLLER_MODEL* model);
 
         void clear_sync_generator_model();
         void clear_compensator_model();
         void clear_exciter_model();
         void clear_stabilizer_model();
         void clear_turbine_governor_model();
+        void clear_turbine_load_controller_model();
 
         SYNC_GENERATOR_MODEL* get_sync_generator_model() const;
         COMPENSATOR_MODEL* get_compensator_model() const;
         EXCITER_MODEL* get_exciter_model() const;
         STABILIZER_MODEL* get_stabilizer_model() const;
         TURBINE_GOVERNOR_MODEL* get_turbine_governor_model() const;
+        TURBINE_LOAD_CONTROLLER_MODEL* get_turbine_load_controller_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
 
@@ -64,5 +68,6 @@ class GENERATOR : public SOURCE
         EXCITER_MODEL* exciter_model;
         STABILIZER_MODEL* stabilizer_model;
         TURBINE_GOVERNOR_MODEL* turbine_governor_model;
+        TURBINE_LOAD_CONTROLLER_MODEL* turbine_load_controller_model;
 };
 #endif // GENERATOR_H

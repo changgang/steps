@@ -219,7 +219,7 @@ void TGOV1::initialize()
     governor.set_output(pmech0);
     governor.initialize();
 
-    set_mechanical_power_reference_in_pu_based_on_mbase(pmech0*get_R());
+    set_initial_mechanical_power_reference_in_pu_based_on_mbase(pmech0*get_R());
 
     set_flag_model_initialized_as_true();
 }

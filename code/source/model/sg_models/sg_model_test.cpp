@@ -108,3 +108,12 @@ TURBINE_GOVERNOR_MODEL* SG_MODEL_TEST::get_test_turbine_governor_model()
         return NULL;
 }
 
+TURBINE_LOAD_CONTROLLER_MODEL* SG_MODEL_TEST::get_test_turbine_load_controller_model()
+{
+    GENERATOR* genptr = get_test_generator();
+    if(genptr!=NULL)
+        return genptr->get_turbine_load_controller_model();
+    else
+        return NULL;
+}
+

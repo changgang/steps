@@ -56,27 +56,27 @@ string MODEL::get_allowed_device_type() const
 
 void MODEL::add_model_variable_name_and_index_pair(string var_name, size_t var_index)
 {
-    variable_table.add_variable_name_index_pair(var_name, var_index);
+    internal_variable_table.add_variable_name_index_pair(var_name, var_index);
 }
 
 size_t MODEL::get_model_variable_index(string var_name) const
 {
-    return variable_table[var_name];
+    return internal_variable_table[var_name];
 }
 
 string MODEL::get_model_variable_name(size_t var_index) const
 {
-    return variable_table[var_index];
+    return internal_variable_table[var_index];
 }
 
 bool MODEL::is_model_variable_exist(string var_name) const
 {
-    return variable_table[var_name]!=INDEX_NOT_EXIST;
+    return internal_variable_table[var_name]!=INDEX_NOT_EXIST;
 }
 
 bool MODEL::is_model_variable_exist(size_t var_index) const
 {
-    return variable_table[var_index]!="";
+    return internal_variable_table[var_index]!="";
 }
 
 double MODEL::get_variable_with_index(size_t index)

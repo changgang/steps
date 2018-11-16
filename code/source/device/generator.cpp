@@ -6,6 +6,7 @@
 #include "header/model/sg_models/exciter_model/exciter_models.h"
 #include "header/model/sg_models/stabilizer_model/stabilizer_models.h"
 #include "header/model/sg_models/turbine_governor_model/turbine_governor_models.h"
+#include "header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h"
 
 #include <istream>
 #include <iostream>
@@ -21,6 +22,7 @@ GENERATOR::GENERATOR() : SOURCE()
     exciter_model = NULL;
     stabilizer_model = NULL;
     turbine_governor_model = NULL;
+    turbine_load_controller_model = NULL;
 }
 
 GENERATOR::~GENERATOR()
@@ -40,6 +42,9 @@ GENERATOR::~GENERATOR()
 
     if(turbine_governor_model!=NULL)
         delete turbine_governor_model;
+
+    if(turbine_load_controller_model!=NULL)
+        delete turbine_load_controller_model;
 }
 
 void GENERATOR::set_generator_bus(size_t bus)
@@ -116,6 +121,11 @@ void GENERATOR::set_model(const MODEL* model)
     if(model->get_model_type()=="TURBINE GOVERNOR")
     {
         set_turbine_governor_model((TURBINE_GOVERNOR_MODEL*) model);
+        return;
+    }
+    if(model->get_model_type()=="TURBINE LOAD CONTROLLER")
+    {
+        set_turbine_load_controller_model((TURBINE_LOAD_CONTROLLER_MODEL*) model);
         return;
     }
     ostringstream osstream;
@@ -393,6 +403,47 @@ void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
     }
 }
 
+void GENERATOR::set_turbine_load_controller_model(const TURBINE_LOAD_CONTROLLER_MODEL* model)
+{
+    if(model==NULL)
+        return;
+
+    if(model->get_model_type()!="TURBINE LOAD CONTROLLER")
+    {
+        ostringstream osstream;
+        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up turbine load controller model.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    TURBINE_LOAD_CONTROLLER_MODEL* oldmodel = get_turbine_load_controller_model();
+    if(oldmodel!=NULL)
+    {
+        delete oldmodel;
+        turbine_load_controller_model=NULL;
+    }
+
+    TURBINE_LOAD_CONTROLLER_MODEL *new_model = NULL;
+    string model_name = model->get_model_name();
+    if(model_name=="LCFB1")
+    {
+        LCFB1* smodel = (LCFB1*) (model);
+        new_model = (TURBINE_LOAD_CONTROLLER_MODEL*) new LCFB1(*smodel);
+    }
+
+    if(new_model!=NULL)
+    {
+        new_model->set_device_id(get_device_id());
+        turbine_load_controller_model = new_model;
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append turbine load controller model of "<<get_device_name();
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
 
 void GENERATOR::clear_sync_generator_model()
 {
@@ -434,6 +485,14 @@ void GENERATOR::clear_turbine_governor_model()
         turbine_governor_model = NULL;
     }
 }
+void GENERATOR::clear_turbine_load_controller_model()
+{
+    if(turbine_load_controller_model!=NULL)
+    {
+        delete turbine_load_controller_model;
+        turbine_load_controller_model = NULL;
+    }
+}
 
 SYNC_GENERATOR_MODEL* GENERATOR::get_sync_generator_model() const
 {
@@ -458,6 +517,11 @@ STABILIZER_MODEL* GENERATOR::get_stabilizer_model() const
 TURBINE_GOVERNOR_MODEL* GENERATOR::get_turbine_governor_model() const
 {
     return turbine_governor_model;
+}
+
+TURBINE_LOAD_CONTROLLER_MODEL* GENERATOR::get_turbine_load_controller_model() const
+{
+    return turbine_load_controller_model;
 }
 
 void GENERATOR::run(DYNAMIC_MODE mode)
@@ -490,6 +554,10 @@ void GENERATOR::run(DYNAMIC_MODE mode)
             if(tg!=NULL)
                 tg->initialize();
 
+            TURBINE_LOAD_CONTROLLER_MODEL* tlc = get_turbine_load_controller_model();
+            if(tlc!=NULL)
+                tlc->initialize();
+
             break;
         }
         default:
@@ -505,6 +573,10 @@ void GENERATOR::run(DYNAMIC_MODE mode)
             EXCITER_MODEL* exciter = get_exciter_model();
             if(exciter!=NULL)
                 exciter->run(mode);
+
+            TURBINE_LOAD_CONTROLLER_MODEL* tlc = get_turbine_load_controller_model();
+            if(tlc!=NULL)
+                tlc->run(mode);
 
             TURBINE_GOVERNOR_MODEL* tg = get_turbine_governor_model();
             if(tg!=NULL)

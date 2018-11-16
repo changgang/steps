@@ -259,7 +259,7 @@ void IEEEG2::initialize()
     water_hammer.set_output(pmech0);
     water_hammer.initialize();
 
-    set_mechanical_power_reference_in_pu_based_on_mbase(pmech0);
+    set_initial_mechanical_power_reference_in_pu_based_on_mbase(pmech0);
 
     set_flag_model_initialized_as_true();
 }

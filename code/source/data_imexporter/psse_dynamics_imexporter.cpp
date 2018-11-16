@@ -113,6 +113,8 @@ void PSSE_IMEXPORTER::load_one_model(string data)
     if(model_name=="IEEEG3") { add_IEEEG3_model(data); return;}
     if(model_name=="IEESGO") { add_IEESGO_model(data); return;}
 
+    if(model_name=="LCFB1") { add_LCFB1_model(data); return;}
+
 
     if(model_name=="IEELAL" or model_name=="IEELAR" or model_name=="IEELZN" or
        model_name=="IEELOW" or model_name=="IEELBL") { add_IEEL_model(data); return;}
@@ -781,6 +783,34 @@ void PSSE_IMEXPORTER::add_IEESGO_model(string data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEESGO model is built, but will not be set for "<<generator->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void PSSE_IMEXPORTER::add_LCFB1_model(string data)
+{
+    if(get_dynamic_model_name(data) != "LCFB1")
+        return;
+
+    vector<string> dyrdata = split_string(data,",");
+    if(dyrdata.size()<12)
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_generator_device_id_from_string(data);
+
+    GENERATOR* generator = psdb.get_generator(did);
+    if(generator != NULL)
+    {
+        LCFB1 model;
+        bool successful = model.setup_model_with_psse_string(data);
+        if(successful)
+            generator->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid LCFB1 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(osstream);
         }
     }

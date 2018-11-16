@@ -114,6 +114,8 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void add_IEEEG3_model(string data);
         void add_IEESGO_model(string data);
 
+        void add_LCFB1_model(string data);
+
 
         vector<LOAD*> get_all_loads_of(string data);
         vector<LOAD*> remove_loads_with_different_identifier(vector<LOAD*> loads, string identifier);

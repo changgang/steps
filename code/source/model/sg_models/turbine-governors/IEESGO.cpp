@@ -289,7 +289,7 @@ void IEESGO::initialize()
     governor_tuner.set_output(0.0);
     governor_tuner.initialize();
 
-    set_mechanical_power_reference_in_pu_based_on_mbase(pmech0);
+    set_initial_mechanical_power_reference_in_pu_based_on_mbase(pmech0);
 
     double pmax = get_Pmax_in_pu();
     double pmin = get_Pmin_in_pu();

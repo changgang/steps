@@ -97,7 +97,7 @@ void TGOV1_TEST::test_set_get_mechanical_power_reference()
 
     TGOV1* model = (TGOV1*) get_test_turbine_governor_model();
 
-    model->set_mechanical_power_reference_in_pu_based_on_mbase(1.5);
+    model->set_initial_mechanical_power_reference_in_pu_based_on_mbase(1.5);
     TEST_ASSERT(fabs(model->get_mechanical_power_reference_in_pu_based_on_mbase()-1.5)<FLOAT_EPSILON);
 }
 

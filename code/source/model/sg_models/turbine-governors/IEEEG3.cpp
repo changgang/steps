@@ -373,7 +373,7 @@ void IEEEG3::initialize()
 
     double Pref = get_sigma()*valve;
 
-    set_mechanical_power_reference_in_pu_based_on_mbase(Pref);
+    set_initial_mechanical_power_reference_in_pu_based_on_mbase(Pref);
 
     set_flag_model_initialized_as_true();
 }

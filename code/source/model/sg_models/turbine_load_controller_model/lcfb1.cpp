@@ -1,0 +1,470 @@
+#include "header/model/sg_models/turbine_load_controller_model/lcfb1.h"
+#include "header/basic/constants.h"
+#include <cstdio>
+#include "header/basic/utility.h"
+#include <vector>
+LCFB1::LCFB1()
+{
+    clear();
+}
+
+LCFB1::~LCFB1()
+{
+    clear();
+}
+
+void LCFB1::clear()
+{
+    set_frequency_regulation_flag(false);
+    set_power_regulation_flag(false);
+
+    Fb = 0.0;
+    db = 0.0;
+    Emax = INFINITE_THRESHOLD;
+
+    Pelec_sensor.set_limiter_type(NO_LIMITER);
+    error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    error_integrator.set_upper_limit(INFINITE_THRESHOLD);
+    error_integrator.set_lower_limit(-INFINITE_THRESHOLD);
+
+    set_Pref0(0.0);
+    set_Pelec0(0.0);
+
+    prepare_internal_variable_table();
+}
+
+void LCFB1::copy_from_const_model(const LCFB1& model)
+{
+    clear();
+
+    this->set_frequency_regulation_flag(model.get_frequency_regulation_flag());
+    this->set_power_regulation_flag(model.get_power_regulation_flag());
+    this->set_Fb(model.get_Fb());
+    this->set_Tpelec_in_s(model.get_Tpelec_in_s());
+    this->set_db(model.get_db());
+    this->set_Emax(model.get_Emax());
+    this->set_Kp(model.get_Kp());
+    this->set_Ki(model.get_Ki());
+    this->set_Irmax(model.get_Irmax());
+}
+
+LCFB1::LCFB1(const LCFB1& model) : TURBINE_LOAD_CONTROLLER_MODEL()
+{
+    copy_from_const_model(model);
+}
+
+LCFB1& LCFB1::operator=(const LCFB1& model)
+{
+    if(this==&model)
+        return *this;
+
+    copy_from_const_model(model);
+
+    return (*this);
+}
+
+
+string LCFB1::get_model_name() const
+{
+    return "LCFB1";
+}
+
+double LCFB1::get_model_data_with_index(size_t index) const
+{
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
+    show_information_with_leading_time_stamp(osstream);
+    return 0.0;
+}
+
+double LCFB1::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="")
+        return 0.0;
+
+    return 0.0;
+}
+
+void LCFB1::set_model_data_with_index(size_t index, double value)
+{
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
+}
+
+void LCFB1::set_model_data_with_name(string par_name, double value)
+{
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
+    show_information_with_leading_time_stamp(osstream);
+    return;
+}
+
+void LCFB1::set_frequency_regulation_flag(bool flag)
+{
+    frequency_regulation_flag = flag;
+}
+void LCFB1::set_power_regulation_flag(bool flag)
+{
+    power_regulation_flag = flag;
+}
+
+void LCFB1::set_Fb(double f)
+{
+    Fb = f;
+}
+
+void LCFB1::set_Tpelec_in_s(double t)
+{
+    Pelec_sensor.set_T_in_s(t);
+}
+
+void LCFB1::set_db(double db)
+{
+    if(db<0.0)
+        db = -db;
+
+    this->db = db;
+}
+
+void LCFB1::set_Emax(double e)
+{
+    if(e<0.0)
+        e = -e;
+    this->Emax = e;
+}
+
+void LCFB1::set_Kp(double k)
+{
+    this->Kp = k;
+}
+
+void LCFB1::set_Ki(double k)
+{
+    error_integrator.set_T_in_s(1.0/k);
+}
+
+void LCFB1::set_Irmax(double i)
+{
+    error_integrator.set_upper_limit(i);
+    error_integrator.set_lower_limit(-i);
+}
+
+bool LCFB1::get_frequency_regulation_flag() const
+{
+    return frequency_regulation_flag;
+}
+
+bool LCFB1::get_power_regulation_flag() const
+{
+    return power_regulation_flag;
+}
+
+double LCFB1::get_Fb() const
+{
+    return Fb;
+}
+
+double LCFB1::get_Tpelec_in_s() const
+{
+    return Pelec_sensor.get_T_in_s();
+}
+double LCFB1::get_db() const
+{
+    return db;
+}
+double LCFB1::get_Emax() const
+{
+    return Emax;
+}
+double LCFB1::get_Kp() const
+{
+    return Kp;
+}
+double LCFB1::get_Ki() const
+{
+    return 1.0/error_integrator.get_T_in_s();
+}
+double LCFB1::get_Irmax() const
+{
+    return error_integrator.get_upper_limit();
+}
+
+
+void LCFB1::set_Pref0(double p)
+{
+    Pref0 = p;
+}
+
+void LCFB1::set_Pelec0(double p)
+{
+    Pelec0 = p;
+}
+
+double LCFB1::get_Pref0() const
+{
+    return Pref0;
+}
+
+double LCFB1::get_Pelec0() const
+{
+    return Pelec0;
+}
+
+bool LCFB1::setup_model_with_steps_string(string data)
+{
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
+            <<data;
+    show_information_with_leading_time_stamp(osstream);
+    return false;
+}
+
+bool LCFB1::setup_model_with_psse_string(string data)
+{
+    bool is_successful = false;
+    vector<string> dyrdata = split_string(data,",");
+    if(dyrdata.size()<12)
+        is_successful = false;
+
+    string model_name = get_string_data(dyrdata[1],"");
+    if(model_name!=get_model_name())
+        return is_successful;
+
+    size_t frequency_flag, power_flag;
+    double fb, tpelec, db, emax, kp, ki, irmax;
+
+    size_t i=3;
+    frequency_flag = get_integer_data(dyrdata[i],"0"); i++;
+    power_flag = get_integer_data(dyrdata[i],"0"); i++;
+
+    fb = get_double_data(dyrdata[i],"0.0"); i++;
+    tpelec = get_double_data(dyrdata[i],"0.0"); i++;
+    db = get_double_data(dyrdata[i],"0.0"); i++;
+    emax = get_double_data(dyrdata[i],"0.0"); i++;
+    kp = get_double_data(dyrdata[i],"0.0"); i++;
+    ki = get_double_data(dyrdata[i],"0.0"); i++;
+    irmax = get_double_data(dyrdata[i],"0.0");
+
+    set_frequency_regulation_flag((frequency_flag==0?false:true));
+    set_power_regulation_flag((power_flag==0?false:true));
+    set_Fb(fb);
+    set_Tpelec_in_s(tpelec);
+    set_db(db);
+    set_Emax(emax);
+    set_Kp(kp);
+    set_Ki(ki);
+    set_Irmax(irmax);
+
+    is_successful = true;
+
+    return is_successful;
+}
+
+bool LCFB1::setup_model_with_bpa_string(string data)
+{
+    ostringstream osstream;
+    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
+            <<data;
+    show_information_with_leading_time_stamp(osstream);
+    return false;
+}
+
+
+void LCFB1::initialize()
+{
+    ostringstream osstream;
+
+    GENERATOR* generator = get_generator_pointer();
+    if(generator==NULL)
+    {
+        deactivate_model();
+        set_flag_model_initialized_as_true();
+        return;
+    }
+
+    double pref = get_initial_mechanical_power_reference_in_pu_based_on_mbase_from_turbine_governor_model();
+    set_Pref0(pref);
+
+    error_integrator.set_output(0.0);
+    error_integrator.initialize();
+
+    double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();
+    Pelec_sensor.set_output(pelec);
+    Pelec_sensor.initialize();
+
+    set_Pelec0(pelec);
+
+    set_flag_model_initialized_as_true();
+}
+
+void LCFB1::run(DYNAMIC_MODE mode)
+{
+    if(not is_model_active())
+        return;
+
+    double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();
+    if(get_power_regulation_flag()==true)
+    {
+        Pelec_sensor.set_input(pelec);
+        Pelec_sensor.run(mode);
+    }
+    double speed = get_rotor_speed_deviation_in_pu_from_generator_model();
+
+    double error = get_Pelec0();
+    if(get_frequency_regulation_flag()==true)
+        error -= (speed*get_Fb());
+    error -= Pelec_sensor.get_output();
+
+    double db = get_db();
+    double emax = get_Emax();
+
+    if(error>=-db or error<=db)
+        error = 0.0;
+    else
+    {
+        if(error>db)
+        {
+            error -= db;
+            if(error>emax) error = emax;
+        }
+        else
+        {
+            error -= (-db);
+            if(error<-emax) error = -emax;
+        }
+    }
+
+    error_integrator.set_input(error);
+    error_integrator.run(mode);
+
+    if(mode==UPDATE_MODE)
+        set_flag_model_updated_as_true();
+}
+
+double LCFB1::get_mechanical_power_reference_in_pu_based_on_mbase() const
+{
+    double speed = get_rotor_speed_deviation_in_pu_from_generator_model();
+
+    double error = get_Pelec0();
+    if(get_frequency_regulation_flag()==true)
+        error -= (speed*get_Fb());
+    error -= Pelec_sensor.get_output();
+
+    double db = get_db();
+    double emax = get_Emax();
+
+    if(error>=-db or error<=db)
+        error = 0.0;
+    else
+    {
+        if(error>db)
+        {
+            error -= db;
+            if(error>emax) error = emax;
+        }
+        else
+        {
+            error -= (-db);
+            if(error<-emax) error = -emax;
+        }
+    }
+
+    double preg = get_Kp()*error+error_integrator.get_output();
+    double irmax = get_Irmax();
+    if(preg>irmax) preg = irmax;
+    else
+        if(preg<-irmax) preg = -irmax;
+
+    return preg+get_Pref0();
+}
+
+void LCFB1::check()
+{
+    ;
+}
+
+void LCFB1::report()
+{
+    ostringstream osstream;
+    osstream<<get_standard_model_string();
+    show_information_with_leading_time_stamp(osstream);
+}
+
+void LCFB1::save()
+{
+    string model = get_standard_model_string();
+    return;
+}
+
+string LCFB1::get_standard_model_string() const
+{
+    ostringstream osstream;
+
+    bool fflag = get_frequency_regulation_flag();
+    bool pflag = get_power_regulation_flag();
+    double fb = get_Fb();
+    double tpelec = get_Tpelec_in_s();
+    double db = get_db();
+    double emax = get_Emax();
+    double kp = get_Kp();
+    double ki = get_Ki();
+    double irmax = get_Irmax();
+
+    DEVICE_ID did = get_device_id();
+    size_t bus = did.get_device_terminal().get_buses()[0];
+    string identifier = did.get_device_identifier();
+
+    osstream<<setw(8)<<bus<<", "
+      <<"'"<<get_model_name()<<"', "
+      <<"'"<<identifier<<"', "
+      <<setw(4)<<(fflag==false?0:1)<<", "
+      <<setw(8)<<(pflag==false?0:1)<<", "
+      <<setw(8)<<setprecision(6)<<fb<<", "
+      <<setw(8)<<setprecision(6)<<tpelec<<", "
+      <<setw(8)<<setprecision(6)<<db<<", "
+      <<setw(8)<<setprecision(6)<<emax<<", "
+      <<setw(8)<<setprecision(6)<<kp<<", "
+      <<setw(8)<<setprecision(6)<<ki<<", "
+      <<setw(8)<<setprecision(6)<<irmax<<"  /";
+
+    return osstream.str();
+}
+
+void LCFB1::prepare_internal_variable_table()
+{
+    size_t i=0;
+    add_model_variable_name_and_index_pair("STATE@POWER SENSOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@ERROR INTEGRATOR", i);
+}
+
+double LCFB1::get_internal_variable_with_name(string var_name)
+{
+    var_name = string2upper(var_name);
+    if(var_name == "STATE@POWER SENSOR")
+        return Pelec_sensor.get_state();
+
+    if(var_name == "STATE@ERROR INTEGRATOR")
+        return error_integrator.get_state();
+
+    return 0.0;
+}
+
+
+
+string LCFB1::get_dynamic_data_in_psse_format() const
+{
+    return "";
+}
+
+string LCFB1::get_dynamic_data_in_bpa_format() const
+{
+    return get_dynamic_data_in_psse_format();
+}
+
+string LCFB1::get_dynamic_data_in_steps_format() const
+{
+    return get_dynamic_data_in_psse_format();
+}

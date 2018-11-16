@@ -12,6 +12,8 @@
 
 #include "header/model/sg_models/turbine_governor_model/turbine_governor_models.h"
 
+#include "header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h"
+
 #include "header/model/load_model/load_models.h"
 
 #include "header/model/load_relay_model/load_voltage_relay_models.h"

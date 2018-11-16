@@ -13407,7 +13407,7 @@
 	<cstdio>
 	<cmath>
 
-1541764759 source:/home/changgang/steps/code/main_tests.cpp
+1542362392 source:/home/changgang/steps/code/main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -13480,6 +13480,7 @@
 	"header/model/sg_models/turbine_governor_model/IEEEG2_test.h"
 	"header/model/sg_models/turbine_governor_model/IEEEG3_test.h"
 	"header/model/sg_models/turbine_governor_model/IEESGO_test.h"
+	"header/model/sg_models/turbine_load_controller_model/lcfb1_test.h"
 	"header/model/load_model/load_model_test.h"
 	"header/model/load_model/IEEL_test.h"
 	"header/model/load_relay_model/UVLS_test.h"
@@ -13708,7 +13709,7 @@
 1541764759 /home/changgang/steps/code//header/basic/steps_enum.h
 	<iso646.h>
 
-1542268060 /home/changgang/steps/code//header/model/model.h
+1542355491 /home/changgang/steps/code//header/model/model.h
 	"header/basic/base.h"
 	"header/basic/device_id.h"
 	"header/block/block.h"
@@ -13732,7 +13733,7 @@
 1528246946 /home/changgang/steps/code//header/block/differential_block.h
 	"header/block/block.h"
 
-1541764759 /home/changgang/steps/code//header/device/generator.h
+1542358913 /home/changgang/steps/code//header/device/generator.h
 	<string>
 	<complex>
 	"header/device/source.h"
@@ -13741,6 +13742,7 @@
 	"header/model/sg_models/exciter_model/exciter_model.h"
 	"header/model/sg_models/stabilizer_model/stabilizer_model.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
 
 1541764759 /home/changgang/steps/code//header/device/source.h
 	<string>
@@ -13791,7 +13793,7 @@
 	"header/device/device.h"
 	<cstdlib>
 
-1542268058 /home/changgang/steps/code//header/model/sg_models/turbine_governor_model/turbine_governor_model.h
+1542358428 /home/changgang/steps/code//header/model/sg_models/turbine_governor_model/turbine_governor_model.h
 	"header/model/sg_models/sg_model.h"
 
 1541764759 /home/changgang/steps/code//header/device/wt_generator.h
@@ -14252,7 +14254,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1541764759 /home/changgang/steps/code//header/data_imexporter/psse_imexporter.h
+1542362464 /home/changgang/steps/code//header/data_imexporter/psse_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -14465,7 +14467,7 @@
 	"header/model/sg_models/sync_generator_model/gencls.h"
 	"header/power_system_database.h"
 
-1541764759 /home/changgang/steps/code//header/model/sg_models/sg_model_test.h
+1542361260 /home/changgang/steps/code//header/model/sg_models/sg_model_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -15072,7 +15074,7 @@
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	<complex>
 
-1541764759 /home/changgang/steps/code/header/data_imexporter/psse_imexporter.h
+1542362464 /home/changgang/steps/code/header/data_imexporter/psse_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -15129,12 +15131,13 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/model/all_supported_models.h"
 
-1541764759 /home/changgang/steps/code/header/model/all_supported_models.h
+1542358941 /home/changgang/steps/code/header/model/all_supported_models.h
 	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
 	"header/model/sg_models/compensator_model/compensator_models.h"
 	"header/model/sg_models/exciter_model/exciter_models.h"
 	"header/model/sg_models/stabilizer_model/stabilizer_models.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_models.h"
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h"
 	"header/model/load_model/load_models.h"
 	"header/model/load_relay_model/load_voltage_relay_models.h"
 	"header/model/load_relay_model/load_frequency_relay_models.h"
@@ -15229,7 +15232,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1541765611 source:/home/changgang/steps/code/source/apis/steps_api_dynamic_simulation.cpp
+1542358388 source:/home/changgang/steps/code/source/apis/steps_api_dynamic_simulation.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/toolkit/cct_searcher/cct_searcher.h"
@@ -15944,12 +15947,13 @@
 	<iostream>
 	<fstream>
 
-1541764759 /home/changgang/steps/code//header/model/all_supported_models.h
+1542358941 /home/changgang/steps/code//header/model/all_supported_models.h
 	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
 	"header/model/sg_models/compensator_model/compensator_models.h"
 	"header/model/sg_models/exciter_model/exciter_models.h"
 	"header/model/sg_models/stabilizer_model/stabilizer_models.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_models.h"
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h"
 	"header/model/load_model/load_models.h"
 	"header/model/load_relay_model/load_voltage_relay_models.h"
 	"header/model/load_relay_model/load_frequency_relay_models.h"
@@ -16041,7 +16045,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/data_imexporter/equivalent_model_imexporter.h"
 
-1541764759 source:/home/changgang/steps/code/source/data_imexporter/psse_dynamics_imexporter.cpp
+1542362497 source:/home/changgang/steps/code/source/data_imexporter/psse_dynamics_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -16177,7 +16181,7 @@
 	"header/device/fixed_shunt.h"
 	"header/power_system_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/device/generator.cpp
+1542358976 source:/home/changgang/steps/code/source/device/generator.cpp
 	"header/device/generator.h"
 	"header/basic/utility.h"
 	"header/model/sg_models/sync_generator_model/sync_generator_models.h"
@@ -16185,6 +16189,7 @@
 	"header/model/sg_models/exciter_model/exciter_models.h"
 	"header/model/sg_models/stabilizer_model/stabilizer_models.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_models.h"
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h"
 	<istream>
 	<iostream>
 
@@ -16460,7 +16465,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/meter/continuous_buffer.h"
 
-1538273690 source:/home/changgang/steps/code/source/meter/meter.cpp
+1542358388 source:/home/changgang/steps/code/source/meter/meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -16524,7 +16529,7 @@
 	<istream>
 	<iostream>
 
-1541764759 source:/home/changgang/steps/code/source/model/equivalent_model/ARXL.cpp
+1542268057 source:/home/changgang/steps/code/source/model/equivalent_model/ARXL.cpp
 	"header/model/equivalent_model/ARXL.h"
 	"header/basic/utility.h"
 	"header/meter/meter_setter.h"
@@ -16536,7 +16541,7 @@
 	"header/basic/utility.h"
 	<cstdio>
 
-1541764759 source:/home/changgang/steps/code/source/model/hvdc_model/CDC4T.cpp
+1542268057 source:/home/changgang/steps/code/source/model/hvdc_model/CDC4T.cpp
 	"header/model/hvdc_model/CDC4T.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -16558,7 +16563,7 @@
 	"header/model/hvdc_model/CDC4T.h"
 	"header/model/hvdc_model/hvdc_model_test.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/hvdc_model/CDC6T.cpp
+1542268057 source:/home/changgang/steps/code/source/model/hvdc_model/CDC6T.cpp
 	"header/model/hvdc_model/CDC6T.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -16615,7 +16620,7 @@
 	"header/power_system_database.h"
 	"header/model/hvdc_model/vdcol.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/load_model/IEEL.cpp
+1542268057 source:/home/changgang/steps/code/source/model/load_model/IEEL.cpp
 	"header/model/load_model/IEEL.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -16683,7 +16688,7 @@
 	"header/basic/utility.h"
 	"header/power_system_database.h"
 
-1541765611 source:/home/changgang/steps/code/source/model/load_relay_model/PUFLS.cpp
+1542268059 source:/home/changgang/steps/code/source/model/load_relay_model/PUFLS.cpp
 	"header/model/load_relay_model/PUFLS.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -16710,7 +16715,7 @@
 	"header/model/load_relay_model/PUFLS.h"
 	"header/power_system_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/load_relay_model/UFLS.cpp
+1542268060 source:/home/changgang/steps/code/source/model/load_relay_model/UFLS.cpp
 	"header/model/load_relay_model/UFLS.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -16737,7 +16742,7 @@
 	"header/model/load_relay_model/UFLS.h"
 	"header/power_system_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/model.cpp
+1542355487 source:/home/changgang/steps/code/source/model/model.cpp
 	"header/model/model.h"
 	<cstdio>
 	"header/basic/utility.h"
@@ -16757,7 +16762,7 @@
 	"header/power_system_database.h"
 	"header/model/sg_models/sync_generator_model/gencls.h"
 
-1542254058 source:/home/changgang/steps/code/source/model/sg_models/compensator_model/COMP.cpp
+1542268057 source:/home/changgang/steps/code/source/model/sg_models/compensator_model/COMP.cpp
 	"header/model/sg_models/compensator_model/COMP.h"
 	"header/basic/utility.h"
 	<istream>
@@ -16794,7 +16799,7 @@
 
 1527518554 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/ac_exciters.cpp
 
-1542254007 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/CSEET1.cpp
+1542268060 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/CSEET1.cpp
 	"header/model/sg_models/exciter_model/CSEET1.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -16814,7 +16819,7 @@
 	"header/model/sg_models/exciter_model/CSEET1.h"
 	"header/model/sg_models/exciter_model/exciter_model_test.h"
 
-1542253989 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/CSEET2.cpp
+1542268059 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/CSEET2.cpp
 	"header/model/sg_models/exciter_model/CSEET2.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -16855,7 +16860,7 @@
 	"header/model/sg_models/stabilizer_model/IEE2ST.h"
 	"header/model/sg_models/sync_generator_model/gencls.h"
 
-1542253973 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/IEEET1.cpp
+1542268060 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/IEEET1.cpp
 	"header/model/sg_models/exciter_model/IEEET1.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -16875,14 +16880,14 @@
 	"header/model/sg_models/exciter_model/IEEET1.h"
 	"header/model/sg_models/exciter_model/exciter_model_test.h"
 
-1542253959 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/PSASPE1.cpp
+1542268060 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/PSASPE1.cpp
 	"header/model/sg_models/exciter_model/PSASPE1.h"
 	"header/basic/utility.h"
 	<cstdio>
 	<istream>
 	<iostream>
 
-1542253943 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/PSASPE13.cpp
+1542268058 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/PSASPE13.cpp
 	"header/model/sg_models/exciter_model/PSASPE13.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -16915,7 +16920,7 @@
 	"header/model/sg_models/exciter_model/PSASPE1.h"
 	"header/model/sg_models/exciter_model/exciter_model_test.h"
 
-1542253904 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/PSASPE2.cpp
+1542268060 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/PSASPE2.cpp
 	"header/model/sg_models/exciter_model/PSASPE2.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -16935,7 +16940,7 @@
 	"header/model/sg_models/exciter_model/PSASPE2.h"
 	"header/model/sg_models/exciter_model/exciter_model_test.h"
 
-1542253736 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/SEXS.cpp
+1542268059 source:/home/changgang/steps/code/source/model/sg_models/exciter_model/SEXS.cpp
 	"header/model/sg_models/exciter_model/SEXS.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -16962,7 +16967,7 @@
 	"header/basic/utility.h"
 	"header/power_system_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/sg_models/sg_model_test.cpp
+1542361299 source:/home/changgang/steps/code/source/model/sg_models/sg_model_test.cpp
 	"header/model/sg_models/sg_model_test.h"
 	"header/basic/utility.h"
 	<cstdlib>
@@ -16972,7 +16977,7 @@
 	<cstdio>
 	<cmath>
 
-1542254026 source:/home/changgang/steps/code/source/model/sg_models/stabilizer_model/IEE2ST.cpp
+1542268058 source:/home/changgang/steps/code/source/model/sg_models/stabilizer_model/IEE2ST.cpp
 	"header/model/sg_models/stabilizer_model/IEE2ST.h"
 	"header/basic/constants.h"
 	<cstdio>
@@ -17006,7 +17011,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1542250630 source:/home/changgang/steps/code/source/model/sg_models/sync_generator_model/gencls.cpp
+1542268058 source:/home/changgang/steps/code/source/model/sg_models/sync_generator_model/gencls.cpp
 	"header/model/sg_models/sync_generator_model/gencls.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -17031,7 +17036,7 @@
 	"header/model/sg_models/sync_generator_model/sync_generator_model_test.h"
 	"header/model/sg_models/sync_generator_model/gencls.h"
 
-1542253322 source:/home/changgang/steps/code/source/model/sg_models/sync_generator_model/genrou.cpp
+1542268057 source:/home/changgang/steps/code/source/model/sg_models/sync_generator_model/genrou.cpp
 	"header/model/sg_models/sync_generator_model/genrou.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -17057,7 +17062,7 @@
 	"header/model/sg_models/sync_generator_model/sync_generator_model_test.h"
 	"header/model/sg_models/sync_generator_model/genrou.h"
 
-1542253337 source:/home/changgang/steps/code/source/model/sg_models/sync_generator_model/gensal.cpp
+1542268059 source:/home/changgang/steps/code/source/model/sg_models/sync_generator_model/gensal.cpp
 	"header/model/sg_models/sync_generator_model/gensal.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -17098,13 +17103,13 @@
 	<cstdio>
 	<cmath>
 
-1542253563 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG1.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG1.cpp
 	"header/model/sg_models/turbine_governor_model/IEEEG1.h"
 	"header/basic/utility.h"
 	<istream>
 	<iostream>
 
-1541764759 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG1_test.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG1_test.cpp
 	"header/model/sg_models/turbine_governor_model/IEEEG1_test.h"
 	"header/basic/utility.h"
 
@@ -17116,13 +17121,13 @@
 	"header/model/sg_models/turbine_governor_model/IEEEG1.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h"
 
-1542253587 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG2.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG2.cpp
 	"header/model/sg_models/turbine_governor_model/IEEEG2.h"
 	"header/basic/utility.h"
 	<istream>
 	<iostream>
 
-1541764759 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG2_test.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG2_test.cpp
 	"header/model/sg_models/turbine_governor_model/IEEEG2_test.h"
 	"header/basic/utility.h"
 
@@ -17134,13 +17139,13 @@
 	"header/model/sg_models/turbine_governor_model/IEEEG2.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h"
 
-1542253604 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG3.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG3.cpp
 	"header/model/sg_models/turbine_governor_model/IEEEG3.h"
 	"header/basic/utility.h"
 	<istream>
 	<iostream>
 
-1541764759 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG3_test.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEEEG3_test.cpp
 	"header/model/sg_models/turbine_governor_model/IEEEG3_test.h"
 	"header/basic/utility.h"
 
@@ -17152,11 +17157,11 @@
 	"header/model/sg_models/turbine_governor_model/IEEEG3.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h"
 
-1542253618 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEESGO.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEESGO.cpp
 	"header/model/sg_models/turbine_governor_model/IEESGO.h"
 	"header/basic/utility.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEESGO_test.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/IEESGO_test.cpp
 	"header/model/sg_models/turbine_governor_model/IEESGO_test.h"
 	"header/basic/utility.h"
 
@@ -17168,11 +17173,11 @@
 	"header/model/sg_models/turbine_governor_model/IEESGO.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h"
 
-1542253632 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/TGOV1.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/TGOV1.cpp
 	"header/model/sg_models/turbine_governor_model/TGOV1.h"
 	"header/basic/utility.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/TGOV1_test.cpp
+1542358388 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/TGOV1_test.cpp
 	"header/model/sg_models/turbine_governor_model/TGOV1_test.h"
 	"header/basic/utility.h"
 
@@ -17184,7 +17189,7 @@
 	"header/model/sg_models/turbine_governor_model/TGOV1.h"
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/turbine_governor_model.cpp
+1542359152 source:/home/changgang/steps/code/source/model/sg_models/turbine-governors/turbine_governor_model.cpp
 	"header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
 	"header/model/sg_models/sync_generator_model/sync_generator_model.h"
 	"header/device/generator.h"
@@ -17198,7 +17203,7 @@
 	"header/model/sg_models/turbine_governor_model/TGOV1.h"
 	"header/model/sg_models/sync_generator_model/gencls.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wind_speed_model/filewind.cpp
+1542268057 source:/home/changgang/steps/code/source/model/wtg_models/wind_speed_model/filewind.cpp
 	"header/model/wtg_models/wind_speed_model/filewind.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -17210,7 +17215,7 @@
 	"header/basic/utility.h"
 	<fstream>
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_aerodynamic_model/aerd0.cpp
+1542268059 source:/home/changgang/steps/code/source/model/wtg_models/wt_aerodynamic_model/aerd0.cpp
 	"header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -17221,14 +17226,14 @@
 	"header/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.h"
 	"header/basic/utility.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt3e0.cpp
+1542268059 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt3e0.cpp
 	"header/model/wtg_models/wt_electrical_model/wt3e0.h"
 	"header/device/wt_generator.h"
 	"header/power_system_database.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt3e1.cpp
+1542268058 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt3e1.cpp
 	"header/model/wtg_models/wt_electrical_model/wt3e1.h"
 	"header/device/wt_generator.h"
 	"header/power_system_database.h"
@@ -17286,7 +17291,7 @@
 	"header/basic/constants.h"
 	<cmath>
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g2.cpp
+1542268057 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g2.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -17331,7 +17336,7 @@
 	<cstdio>
 	<cmath>
 
-1541765611 source:/home/changgang/steps/code/source/model/wtg_models/wt_pitch_model/wt3p0.cpp
+1542268059 source:/home/changgang/steps/code/source/model/wtg_models/wt_pitch_model/wt3p0.cpp
 	"header/model/wtg_models/wt_pitch_model/wt3p0.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -17348,7 +17353,7 @@
 	"header/basic/utility.h"
 	<cstdio>
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_turbine_model/wt3t0.cpp
+1542268059 source:/home/changgang/steps/code/source/model/wtg_models/wt_turbine_model/wt3t0.cpp
 	"header/model/wtg_models/wt_turbine_model/wt3t0.h"
 	"header/basic/utility.h"
 
@@ -17706,7 +17711,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/toolkit/contingency_screener/contingency_screener.h"
 
-1542194768 source:/home/changgang/steps/code/source/toolkit/dynamic_simulator/dynamic_simulator.cpp
+1542358324 source:/home/changgang/steps/code/source/toolkit/dynamic_simulator/dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -18133,7 +18138,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/power_system_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/energy_storage_model/estr0.cpp
+1542268060 source:/home/changgang/steps/code/source/model/energy_storage_model/estr0.cpp
 	"header/model/energy_storage_model/estr0.h"
 	"header/basic/utility.h"
 	<cstdio>
@@ -18208,7 +18213,7 @@
 	"header/model/load_relay_model/load_relay_model_test.h"
 	"header/power_system_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/load_relay_model/UVLS.cpp
+1542268058 source:/home/changgang/steps/code/source/model/load_relay_model/UVLS.cpp
 	"header/model/load_relay_model/UVLS.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -18383,7 +18388,7 @@
 	<istream>
 	<iostream>
 
-1541764759 source:/home/changgang/steps/code/source/model/pvu_models/pv_converter_model/pvcv0.cpp
+1542268057 source:/home/changgang/steps/code/source/model/pvu_models/pv_converter_model/pvcv0.cpp
 	"header/model/pvu_models/pv_converter_model/pvcv0.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -18409,14 +18414,14 @@
 	"header/model/pvu_models/pv_converter_model/pv_converter_model_test.h"
 	"header/model/pvu_models/pv_converter_model/pvcv0.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/pvu_models/pv_irradiance_model/fileirrd.cpp
+1542268059 source:/home/changgang/steps/code/source/model/pvu_models/pv_irradiance_model/fileirrd.cpp
 	"header/model/pvu_models/pv_irradiance_model/fileirrd.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	<istream>
 	<iostream>
 
-1541764759 /home/changgang/steps/code//header/model/pvu_models/pv_irradiance_model/fileirrd.h
+1542268059 /home/changgang/steps/code//header/model/pvu_models/pv_irradiance_model/fileirrd.h
 	"header/model/pvu_models/pv_irradiance_model/pv_irradiance_model.h"
 
 1541764759 source:/home/changgang/steps/code/source/model/pvu_models/pv_irradiance_model/fileirrd_test.cpp
@@ -18475,7 +18480,7 @@
 	"header/model/pvu_models/pvu_model_test.h"
 	"header/power_system_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/pvu_models/pv_panel_model/pvp0.cpp
+1542268057 source:/home/changgang/steps/code/source/model/pvu_models/pv_panel_model/pvp0.cpp
 	"header/model/pvu_models/pv_panel_model/pvp0.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -18562,14 +18567,14 @@
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_aerodynamic_model/aerdf.cpp
+1542268058 source:/home/changgang/steps/code/source/model/wtg_models/wt_aerodynamic_model/aerdf.cpp
 	"header/model/wtg_models/wt_aerodynamic_model/aerdf.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 	<istream>
 	<iostream>
 
-1541764759 /home/changgang/steps/code//header/model/wtg_models/wt_aerodynamic_model/aerdf.h
+1542268059 /home/changgang/steps/code//header/model/wtg_models/wt_aerodynamic_model/aerdf.h
 	"header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model.h"
 	<cstdlib>
 
@@ -18681,4 +18686,67 @@
 	<iostream>
 	"thirdparty/cpptest/cpptest.h"
 	"header/network/network_matrix.h"
+
+1542359675 /home/changgang/steps/code//header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h
+	"header/model/sg_models/sg_model.h"
+	"header/block/integral_block.h"
+	"header/basic/constants.h"
+	"header/meter/meter.h"
+
+1542362309 /home/changgang/steps/code/header/model/sg_models/turbine_load_controller_model/lcfb1_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.h"
+	"header/model/sg_models/turbine_load_controller_model/lcfb1.h"
+	"header/power_system_database.h"
+
+1542361147 /home/changgang/steps/code//header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/sg_model_test.h"
+	"header/model/sg_models/turbine_load_controller_model/lcfb1.h"
+	"header/power_system_database.h"
+
+1542360899 /home/changgang/steps/code//header/model/sg_models/turbine_load_controller_model/lcfb1.h
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
+	"header/block/first_order_block.h"
+	"header/block/differential_block.h"
+
+1542359019 /home/changgang/steps/code//header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h
+	"header/model/sg_models/turbine_load_controller_model/lcfb1.h"
+
+1542363255 source:/home/changgang/steps/code/source/model/sg_models/turbine_load_controller_model/lcfb1.cpp
+	"header/model/sg_models/turbine_load_controller_model/lcfb1.h"
+	"header/basic/constants.h"
+	<cstdio>
+	"header/basic/utility.h"
+	<vector>
+
+1542362253 source:/home/changgang/steps/code/source/model/sg_models/turbine_load_controller_model/lcfb1_test.cpp
+	"header/model/sg_models/turbine_load_controller_model/lcfb1_test.h"
+	"header/basic/utility.h"
+
+1542362309 /home/changgang/steps/code//header/model/sg_models/turbine_load_controller_model/lcfb1_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.h"
+	"header/model/sg_models/turbine_load_controller_model/lcfb1.h"
+	"header/power_system_database.h"
+
+1542359700 source:/home/changgang/steps/code/source/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.cpp
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h"
+	<cstdio>
+	"header/basic/utility.h"
+
+1542361497 source:/home/changgang/steps/code/source/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.cpp
+	"header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.h"
+	"header/model/sg_models/turbine_governor_model/IEEEG1.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
 
