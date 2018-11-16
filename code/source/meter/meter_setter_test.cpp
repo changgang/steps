@@ -607,6 +607,11 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@DELAYER 4");
+
+    meter = setter.prepare_generator_turbine_load_controller_model_internal_variable_meter(did, "STATE@BLOCK 1");
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_internal_variable_name()=="STATE@BLOCK 1");
 }
 
 void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()

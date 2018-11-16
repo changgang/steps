@@ -87,6 +87,7 @@ class METER_SETTER
         METER prepare_generator_stabilizer_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_generator_exciter_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_generator_turbine_load_controller_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
         METER prepare_wt_generator_terminal_current_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_wt_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id);

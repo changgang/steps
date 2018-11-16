@@ -86,7 +86,8 @@ vector<string> generator_meters{"ROTOR ANGLE IN DEG",
                                 "COMPENSATOR MODEL INTERNAL VARIABLE",
                                 "EXCITER MODEL INTERNAL VARIABLE",
                                 "STABILIZER MODEL INTERNAL VARIABLE",
-                                "TURBINE GOVERNOR MODEL INTERNAL VARIABLE"};
+                                "TURBINE GOVERNOR MODEL INTERNAL VARIABLE",
+                                "TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE"};
 
 vector<string> wt_generator_meters{ "TERMINAL CURRENT IN PU ON MBASE",  "TERMINAL CURRENT IN PU ON SBASE"
                                     "TERMINAL CURRENT IN KA",
@@ -330,6 +331,8 @@ bool METER::is_internal_variable_name_valid(string name) const
             model = ptr->get_stabilizer_model();
         if(meter_type=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE")
             model = ptr->get_turbine_governor_model();
+        if(meter_type=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE")
+            model = ptr->get_turbine_load_controller_model();
     }
     if(get_device_type()=="WT GENERATOR")
     {
@@ -1078,6 +1081,7 @@ double METER::get_meter_value_as_a_generator() const
     STABILIZER_MODEL* stabilizer_model = generator->get_stabilizer_model();
     EXCITER_MODEL* exciter_model = generator->get_exciter_model();
     TURBINE_GOVERNOR_MODEL* turbine_governor_model = generator->get_turbine_governor_model();
+    TURBINE_LOAD_CONTROLLER_MODEL* turbine_lfc_model = generator->get_turbine_load_controller_model();
 
     if(meter_type=="ROTOR ANGLE IN DEG")
     {
@@ -1367,6 +1371,13 @@ double METER::get_meter_value_as_a_generator() const
             return 0.0;
         else
             return turbine_governor_model->get_internal_variable_with_name(internal_variable_name);
+    }
+    if(meter_type=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE")
+    {
+        if(turbine_lfc_model==NULL)
+            return 0.0;
+        else
+            return turbine_lfc_model->get_internal_variable_with_name(internal_variable_name);
     }
 
     return 0.0;

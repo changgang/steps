@@ -1085,6 +1085,20 @@ METER METER_SETTER::prepare_generator_turbine_governor_model_internal_variable_m
 
     return meter;
 }
+METER METER_SETTER::prepare_generator_turbine_load_controller_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+{
+    METER meter;
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+    {
+        meter.set_meter_type("TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE");
+        meter.set_internal_variable_name(name);
+    }
+
+    return meter;
+}
 
 bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& device_id)
 {
