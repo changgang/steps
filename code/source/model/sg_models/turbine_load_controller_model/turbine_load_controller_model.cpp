@@ -27,8 +27,11 @@ double TURBINE_LOAD_CONTROLLER_MODEL::get_initial_mechanical_power_reference_in_
                 turbine->initialize();
             return turbine->get_initial_mechanical_power_reference_in_pu_based_on_mbase();
         }
+        else
+            return 0.0;
     }
-    return 0.0;
+    else
+        return 0.0;
 }
 
 double TURBINE_LOAD_CONTROLLER_MODEL::get_terminal_active_power_in_pu_based_on_mbase_from_generator_model() const

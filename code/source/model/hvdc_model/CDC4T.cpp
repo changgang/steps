@@ -510,11 +510,18 @@ string CDC4T::get_standard_model_string() const
 void CDC4T::prepare_internal_variable_table()
 {
     size_t i=0;
+    add_model_variable_name_and_index_pair("STATE@INVERTER DC VOLTAGE SENSOR", i); i++;
+    add_model_variable_name_and_index_pair("STATE@DC CURRENT SENSOR", i); i++;
 }
 
 double CDC4T::get_internal_variable_with_name(string var_name)
 {
     return 0.0;
+    if(var_name == "STATE@INVERTER DC VOLTAGE SENSOR")
+        return inverter_dc_voltage_sensor.get_state();
+
+    if(var_name == "STATE@DC CURRENT SENSOR")
+        return dc_current_sensor.get_state();
 }
 
 

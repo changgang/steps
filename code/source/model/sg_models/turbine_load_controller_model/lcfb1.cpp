@@ -306,22 +306,22 @@ void LCFB1::run(DYNAMIC_MODE mode)
         return;
 
     double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();
-    if(get_power_regulation_flag()==true)
-    {
-        Pelec_sensor.set_input(pelec);
-        Pelec_sensor.run(mode);
-    }
+    Pelec_sensor.set_input(pelec);
+    Pelec_sensor.run(mode);
+
     double speed = get_rotor_speed_deviation_in_pu_from_generator_model();
 
-    double error = get_Pelec0();
+    double error = 0.0;
+    if(get_power_regulation_flag()==true)
+        error = get_Pelec0() - Pelec_sensor.get_output();
+
     if(get_frequency_regulation_flag()==true)
         error -= (speed*get_Fb());
-    error -= Pelec_sensor.get_output();
 
     double db = get_db();
     double emax = get_Emax();
 
-    if(error>=-db or error<=db)
+    if(error>=-db and error<=db)
         error = 0.0;
     else
     {
@@ -348,10 +348,12 @@ double LCFB1::get_mechanical_power_reference_in_pu_based_on_mbase() const
 {
     double speed = get_rotor_speed_deviation_in_pu_from_generator_model();
 
-    double error = get_Pelec0();
+    double error = 0.0;
+    if(get_power_regulation_flag()==true)
+        error = get_Pelec0() - Pelec_sensor.get_output();
+
     if(get_frequency_regulation_flag()==true)
         error -= (speed*get_Fb());
-    error -= Pelec_sensor.get_output();
 
     double db = get_db();
     double emax = get_Emax();

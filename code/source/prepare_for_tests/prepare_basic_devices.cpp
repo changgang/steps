@@ -42,6 +42,7 @@ void prepare_basic_generators()
     COMP comp_model;
     IEE2ST pss_model;
     IEEEG1 turbine_model;
+    LCFB1 turbine_load_controller_model;
 
     generator.set_generator_bus(1);
     generator.set_identifier("1#");
@@ -60,6 +61,7 @@ void prepare_basic_generators()
     psdb.append_dynamic_model(did, &comp_model);
     psdb.append_dynamic_model(did, &pss_model);
     psdb.append_dynamic_model(did, &turbine_model);
+    psdb.append_dynamic_model(did, &turbine_load_controller_model);
 
     generator.set_generator_bus(2);
     psdb.append_generator(generator);
@@ -69,6 +71,7 @@ void prepare_basic_generators()
     psdb.append_dynamic_model(did, &comp_model);
     psdb.append_dynamic_model(did, &pss_model);
     psdb.append_dynamic_model(did, &turbine_model);
+    psdb.append_dynamic_model(did, &turbine_load_controller_model);
 
     generator.set_generator_bus(3);
     psdb.append_generator(generator);
@@ -78,6 +81,7 @@ void prepare_basic_generators()
     psdb.append_dynamic_model(did, &comp_model);
     psdb.append_dynamic_model(did, &pss_model);
     psdb.append_dynamic_model(did, &turbine_model);
+    psdb.append_dynamic_model(did, &turbine_load_controller_model);
 
     generator.set_generator_bus(1);
     generator.set_identifier("2#");
@@ -88,6 +92,7 @@ void prepare_basic_generators()
     psdb.append_dynamic_model(did, &comp_model);
     psdb.append_dynamic_model(did, &pss_model);
     psdb.append_dynamic_model(did, &turbine_model);
+    psdb.append_dynamic_model(did, &turbine_load_controller_model);
 
     generator.set_identifier("3#");
     psdb.append_generator(generator);
@@ -97,6 +102,7 @@ void prepare_basic_generators()
     psdb.append_dynamic_model(did, &comp_model);
     psdb.append_dynamic_model(did, &pss_model);
     psdb.append_dynamic_model(did, &turbine_model);
+    psdb.append_dynamic_model(did, &turbine_load_controller_model);
 }
 
 void prepare_basic_wt_generators()

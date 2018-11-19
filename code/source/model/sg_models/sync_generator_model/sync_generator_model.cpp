@@ -3,6 +3,7 @@
 #include "header/basic/constants.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
+#include <iostream>
 
 SYNC_GENERATOR_MODEL::SYNC_GENERATOR_MODEL()
 {

@@ -454,6 +454,7 @@ void IEEEG1::initialize()
 void IEEEG1::run(DYNAMIC_MODE mode)
 {
     double Pref = get_mechanical_power_reference_in_pu_based_on_mbase();
+
     double speed = get_rotor_speed_deviation_in_pu_from_sync_generator_model();
 
     droop.set_input(speed);

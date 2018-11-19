@@ -55,7 +55,8 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1);*/
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB1);/*
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_without_UFLS);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS);
@@ -1111,6 +1112,67 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
     simulator.trip_line(did);
 
     simulator.run_to(5.0);
+
+    recover_stdout();
+}
+
+void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB1()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    DYNAMICS_SIMULATOR& simulator = get_default_dynamic_simulator();
+
+    string file = "test_log/";
+    file += __FUNCTION__;
+    file += ".txt";
+    redirect_stdout_to_file(file);
+
+    PSSE_IMEXPORTER importer;
+
+    importer.load_powerflow_data("IEEE39.raw");
+    importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1_LCFB1.dyr");
+
+    POWERFLOW_SOLVER powerflow_solver;
+
+    powerflow_solver.set_max_iteration(30);
+    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
+    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
+    powerflow_solver.set_flat_start_logic(false);
+    powerflow_solver.set_transformer_tap_adjustment_logic(true);
+
+    powerflow_solver.solve_with_fast_decoupled_solution();
+
+    simulator.prepare_meters();
+
+    simulator.set_output_file("test_log/IEEE_39_bus_model_dynamic_test_result_GENROU_SEXS_IEEEG1_LCFB1");
+
+    simulator.start();
+    simulator.run_to(1.0);
+
+    DEVICE_ID did;
+    did.set_device_type("GENERATOR");
+    TERMINAL terminal;
+    terminal.append_bus(39);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+    simulator.trip_generator(did);
+
+    terminal.clear();
+    terminal.append_bus(38);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+    simulator.trip_generator(did);
+
+    terminal.clear();
+    terminal.append_bus(37);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+    simulator.trip_generator(did);
+
+    simulator.run_to(50);
 
     recover_stdout();
 }

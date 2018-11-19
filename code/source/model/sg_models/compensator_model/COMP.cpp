@@ -185,11 +185,15 @@ string COMP::get_standard_model_string() const
 void COMP::prepare_internal_variable_table()
 {
     size_t i=0;
+    add_model_variable_name_and_index_pair("COMPENSATED VOLTAGE IN PU", i); i++;
 }
 
 double COMP::get_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
+
+    if(var_name == "COMPENSATED VOLTAGE IN PU")
+        return get_compensated_voltage_in_pu();
 
     return 0.0;
 }

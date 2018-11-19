@@ -588,10 +588,10 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     TEST_ASSERT(meter.get_meter_type()=="SYNC GENERATOR MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@ROTOR SPEED BLOCK");
 
-    meter = setter.prepare_generator_compensator_model_internal_variable_meter(did, "COMPENSATED VOLTAGE");
+    meter = setter.prepare_generator_compensator_model_internal_variable_meter(did, "COMPENSATED VOLTAGE IN PU");
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="COMPENSATOR MODEL INTERNAL VARIABLE");
-    TEST_ASSERT(meter.get_internal_variable_name()=="COMPENSATED VOLTAGE");
+    TEST_ASSERT(meter.get_internal_variable_name()=="COMPENSATED VOLTAGE IN PU");
 
     meter = setter.prepare_generator_stabilizer_model_internal_variable_meter(did, "STATE@PHASE TUNER 3");
     TEST_ASSERT(meter.get_device_id()==did);
@@ -608,10 +608,10 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     TEST_ASSERT(meter.get_meter_type()=="TURBINE GOVERNOR MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@DELAYER 4");
 
-    meter = setter.prepare_generator_turbine_load_controller_model_internal_variable_meter(did, "STATE@BLOCK 1");
+    meter = setter.prepare_generator_turbine_load_controller_model_internal_variable_meter(did, "STATE@POWER SENSOR");
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE");
-    TEST_ASSERT(meter.get_internal_variable_name()=="STATE@BLOCK 1");
+    TEST_ASSERT(meter.get_internal_variable_name()=="STATE@POWER SENSOR");
 }
 
 void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
@@ -629,9 +629,13 @@ void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1#");
 
-    meter = setter.prepare_wt_generator_terminal_current_in_pu_meter(did);
+    meter = setter.prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="TERMINAL CURRENT IN PU");
+    TEST_ASSERT(meter.get_meter_type()=="TERMINAL CURRENT IN PU ON MBASE");
+
+    meter = setter.prepare_wt_generator_terminal_current_in_pu_on_sbase_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="TERMINAL CURRENT IN PU ON SBASE");
 
     meter = setter.prepare_wt_generator_terminal_current_in_kA_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -969,10 +973,10 @@ void METER_SETTER_TEST::test_prepare_hvdc_related_meters()
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="INVERTER AC REACTIVE POWER IN MVAR");
 
-    meter = setter.prepare_hvdc_model_internal_variable_meter(did, "RECTIFIER ALPHA IN DEG");
+    meter = setter.prepare_hvdc_model_internal_variable_meter(did, "STATE@INVERTER DC VOLTAGE SENSOR");
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="HVDC MODEL INTERNAL VARIABLE");
-    TEST_ASSERT(meter.get_internal_variable_name()=="RECTIFIER ALPHA IN DEG");
+    TEST_ASSERT(meter.get_internal_variable_name()=="STATE@INVERTER DC VOLTAGE SENSOR");
 }
 
 void METER_SETTER_TEST::test_prepare_equivalent_device_related_meters()

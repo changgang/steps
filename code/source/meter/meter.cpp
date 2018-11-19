@@ -89,7 +89,7 @@ vector<string> generator_meters{"ROTOR ANGLE IN DEG",
                                 "TURBINE GOVERNOR MODEL INTERNAL VARIABLE",
                                 "TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE"};
 
-vector<string> wt_generator_meters{ "TERMINAL CURRENT IN PU ON MBASE",  "TERMINAL CURRENT IN PU ON SBASE"
+vector<string> wt_generator_meters{ "TERMINAL CURRENT IN PU ON MBASE",  "TERMINAL CURRENT IN PU ON SBASE",
                                     "TERMINAL CURRENT IN KA",
                                     "TERMINAL ACTIVE POWER IN PU ON MBASE", "TERMINAL ACTIVE POWER IN PU ON SBASE",
                                     "TERMINAL ACTIVE POWER IN MW",
@@ -184,7 +184,7 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "ACTIVE POWER NET LOAD IN PU",
                                          "REACTIVE POWER NET LOAD IN PU"};
 
-map<string, vector<string>> SUPPORTED_METERS{ {"BUS",         bus_meters},
+map<string, vector<string>> SUPPORTED_METERS{   {"BUS",         bus_meters},
                                                 {"LINE",        line_meters},
                                                 {"TRANSFORMER", transformer_meters},
                                                 {"LOAD",        load_meters},

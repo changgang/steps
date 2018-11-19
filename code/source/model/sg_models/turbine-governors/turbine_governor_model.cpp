@@ -4,6 +4,7 @@
 
 #include "header/basic/utility.h"
 #include <cstdio>
+#include <iostream>
 
 TURBINE_GOVERNOR_MODEL::TURBINE_GOVERNOR_MODEL()
 {
@@ -30,7 +31,7 @@ double TURBINE_GOVERNOR_MODEL::get_rotor_speed_deviation_in_pu_from_sync_generat
     if(gen_model==NULL)
         return 0.0;
     else
-        return gen_model->get_internal_variable_with_name("GENERATOR ROTOR SPEED DEVIATION IN PU");
+        return gen_model->get_rotor_speed_deviation_in_pu();
 
 
 }

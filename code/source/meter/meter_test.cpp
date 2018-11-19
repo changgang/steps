@@ -462,7 +462,7 @@ void METER_TEST::test_set_get_meter_internal_variable_name()
     TEST_ASSERT(meter.get_internal_variable_name()=="");
     meter.set_meter_type("SYNC GENERATOR MODEL INTERNAL VARIABLE");
     meter.set_internal_variable_name("ROTOR ANGLE IN DEG");
-    TEST_ASSERT(meter.get_internal_variable_name()=="ROTOR ANGLE IN DEG");
+    TEST_ASSERT(meter.get_internal_variable_name()=="");
     meter.set_internal_variable_name("STATE@ROTOR ANGLE BLOCK");
     TEST_ASSERT(meter.get_internal_variable_name()=="STATE@ROTOR ANGLE BLOCK");
 

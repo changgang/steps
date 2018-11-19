@@ -975,6 +975,42 @@ METER METER_SETTER::prepare_generator_mechanical_power_in_MW_meter(const DEVICE_
     return meter;
 }
 
+METER METER_SETTER::prepare_generator_mechanical_power_reference_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter;
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER REFERENCE IN PU ON MBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_mechanical_power_reference_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter;
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER REFERENCE IN PU ON SBASE");
+
+    return meter;
+}
+
+METER METER_SETTER::prepare_generator_mechanical_power_reference_in_MW_meter(const DEVICE_ID& device_id)
+{
+    METER meter;
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("MECHANICAL POWER REFERENCE IN MW");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_generator_excitation_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
     METER meter;
@@ -1131,14 +1167,25 @@ bool METER_SETTER::prepare_wt_generator_meter(METER& meter, const DEVICE_ID& dev
     return successful;
 }
 
-METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id)
 {
     METER meter;
 
     bool successful = prepare_wt_generator_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("TERMINAL CURRENT IN PU");
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON MBASE");
+
+    return meter;
+}
+METER METER_SETTER::prepare_wt_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id)
+{
+    METER meter;
+
+    bool successful = prepare_wt_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL CURRENT IN PU ON SBASE");
 
     return meter;
 }

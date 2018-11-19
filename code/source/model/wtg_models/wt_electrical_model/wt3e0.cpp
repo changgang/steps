@@ -1509,6 +1509,8 @@ void WT3E0::clear()
 {
     prepare_internal_variable_table();
 
+    set_voltage_flag(0);
+
     voltage_regulator_integrator.set_limiter_type(NON_WINDUP_LIMITER);
     Q_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
     V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);

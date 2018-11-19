@@ -79,6 +79,9 @@ class METER_SETTER
         METER prepare_generator_mechanical_power_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
         METER prepare_generator_mechanical_power_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
         METER prepare_generator_mechanical_power_in_MW_meter(const DEVICE_ID& device_id);
+        METER prepare_generator_mechanical_power_reference_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
+        METER prepare_generator_mechanical_power_reference_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
+        METER prepare_generator_mechanical_power_reference_in_MW_meter(const DEVICE_ID& device_id);
         METER prepare_generator_compensated_voltage_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_generator_excitation_voltage_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_generator_stabilizing_signal_in_pu_meter(const DEVICE_ID& device_id);
@@ -89,7 +92,8 @@ class METER_SETTER
         METER prepare_generator_turbine_governor_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_generator_turbine_load_controller_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 
-        METER prepare_wt_generator_terminal_current_in_pu_meter(const DEVICE_ID& device_id);
+        METER prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
+        METER prepare_wt_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id);
         METER prepare_wt_generator_terminal_current_in_kA_meter(const DEVICE_ID& device_id);
         METER prepare_wt_generator_terminal_active_power_in_MW_meter(const DEVICE_ID& device_id);
         METER prepare_wt_generator_terminal_reactive_power_in_MVar_meter(const DEVICE_ID& device_id);
