@@ -13,7 +13,7 @@ GENSAL::~GENSAL()
 
 void GENSAL::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 }
 
 void GENSAL::copy_from_const_model(const GENSAL& model)
@@ -562,17 +562,17 @@ string GENSAL::get_standard_model_string() const
     return osstream.str();
 }
 
-void GENSAL::prepare_internal_variable_table()
+void GENSAL::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
-    add_model_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
-    add_model_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
-    add_model_variable_name_and_index_pair("STATE@D-AXIS SUBTRANSIENT BLOCK", i); i++;
-    add_model_variable_name_and_index_pair("STATE@Q-AXIS SUBTRANSIENT BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@D-AXIS SUBTRANSIENT BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@Q-AXIS SUBTRANSIENT BLOCK", i); i++;
 }
 
-double GENSAL::get_internal_variable_with_name(string var_name)
+double GENSAL::get_model_internal_variable_with_name(string var_name)
 {
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();

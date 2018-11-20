@@ -12,7 +12,7 @@ TGOV1::~TGOV1()
 
 void TGOV1::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
     governor.set_limiter_type(WINDUP_LIMITER);
     turbine.set_K(1.0);
 }
@@ -302,14 +302,14 @@ string TGOV1::get_standard_model_string() const
     return osstream.str();
 }
 
-void TGOV1::prepare_internal_variable_table()
+void TGOV1::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@TURBINE", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TURBINE", i); i++;
 }
 
-double TGOV1::get_internal_variable_with_name(string var_name)
+double TGOV1::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@GOVERNOR")

@@ -12,7 +12,7 @@ CSEET2::CSEET2()
 
 void CSEET2::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     set_stabilizer_slot(AT_VOLTAGE_ERROR);
     set_excitation_source(SEPARATE_EXCITATION);
@@ -891,17 +891,17 @@ string CSEET2::get_standard_model_string() const
     return osstream.str();
 }
 
-void CSEET2::prepare_internal_variable_table()
+void CSEET2::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@SENSOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@TUNER1", i); i++;
-    add_model_variable_name_and_index_pair("STATE@TUNER2", i); i++;
-    add_model_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TUNER1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TUNER2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
 }
 
-double CSEET2::get_internal_variable_with_name(string var_name)
+double CSEET2::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@SENSOR")

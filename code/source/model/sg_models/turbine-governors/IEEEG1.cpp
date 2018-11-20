@@ -14,7 +14,7 @@ IEEEG1::~IEEEG1()
 }
 void IEEEG1::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     servo_motor.set_limiter_type(NON_WINDUP_LIMITER);
     servo_motor.set_T_in_s(1.0);
@@ -582,18 +582,18 @@ string IEEEG1::get_standard_model_string() const
     return osstream.str();
 }
 
-void IEEEG1::prepare_internal_variable_table()
+void IEEEG1::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@DROOP", i); i++;
-    add_model_variable_name_and_index_pair("STATE@SERVO MOTOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@DELAYER 1", i); i++;
-    add_model_variable_name_and_index_pair("STATE@DELAYER 2", i); i++;
-    add_model_variable_name_and_index_pair("STATE@DELAYER 3", i); i++;
-    add_model_variable_name_and_index_pair("STATE@DELAYER 4", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@DROOP", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SERVO MOTOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 3", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 4", i); i++;
 }
 
-double IEEEG1::get_internal_variable_with_name(string var_name)
+double IEEEG1::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@DROOP")

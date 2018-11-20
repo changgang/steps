@@ -50,14 +50,14 @@ class WT3P1 : public WT_PITCH_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual double get_internal_variable_with_name(string var_name);
+        virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const WT3P1& model);
-        virtual void prepare_internal_variable_table();
+        virtual void prepare_model_internal_variable_table();
         PI_BLOCK speed_controller;
         PI_BLOCK power_controller;
         INTEGRAL_BLOCK pitch_integrator;

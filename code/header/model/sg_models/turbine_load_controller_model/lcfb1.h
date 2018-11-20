@@ -54,14 +54,18 @@ class LCFB1 : public TURBINE_LOAD_CONTROLLER_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual double get_internal_variable_with_name(string var_name);
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
+
+        virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const LCFB1& model);
-        virtual void prepare_internal_variable_table();
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
 
         void set_Pref0(double p);
         void set_Pelec0(double p);

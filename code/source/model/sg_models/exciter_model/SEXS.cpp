@@ -17,7 +17,7 @@ SEXS::~SEXS()
 
 void SEXS::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     exciter.set_limiter_type(WINDUP_LIMITER);
 }
@@ -321,14 +321,14 @@ string SEXS::get_standard_model_string() const
     return osstream.str();
 }
 
-void SEXS::prepare_internal_variable_table()
+void SEXS::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@PHASE TUNER", i); i++;
-    add_model_variable_name_and_index_pair("STATE@EXCITER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@EXCITER", i); i++;
 }
 
-double SEXS::get_internal_variable_with_name(string var_name)
+double SEXS::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@PHASE TUNER")

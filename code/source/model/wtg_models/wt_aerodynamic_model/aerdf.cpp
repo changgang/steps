@@ -482,7 +482,7 @@ void AERDF::check()
 
 void AERDF::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     cp_file_name = "";
     pitch_angles.clear();
@@ -544,13 +544,13 @@ string AERDF::get_standard_model_string() const
     return osstream.str();
 }
 
-void AERDF::prepare_internal_variable_table()
+void AERDF::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("", i); i++;
+    add_model_inernal_variable_name_and_index_pair("", i); i++;
 }
 
-double AERDF::get_internal_variable_with_name(string var_name)
+double AERDF::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;

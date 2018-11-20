@@ -62,7 +62,7 @@ class IEEL : public LOAD_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual double get_internal_variable_with_name(string var_name);
+        virtual double get_model_internal_variable_with_name(string var_name);
 
         complex<double> get_initial_load_power_in_MVA() const;
 
@@ -71,7 +71,7 @@ class IEEL : public LOAD_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const IEEL& model);
-        virtual void prepare_internal_variable_table();
+        virtual void prepare_model_internal_variable_table();
 
         double P0, Q0;
         double P_alpha_1, P_alpha_2, P_alpha_3, Q_alpha_1, Q_alpha_2, Q_alpha_3;

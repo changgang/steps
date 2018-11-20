@@ -54,35 +54,79 @@ string MODEL::get_allowed_device_type() const
 }
 
 
-void MODEL::add_model_variable_name_and_index_pair(string var_name, size_t var_index)
+void MODEL::add_model_data_name_and_index_pair(string var_name, size_t var_index)
 {
-    internal_variable_table.add_variable_name_index_pair(var_name, var_index);
+    model_data_table.add_variable_name_index_pair(var_name, var_index);
 }
 
-size_t MODEL::get_model_variable_index(string var_name) const
+size_t MODEL::get_model_data_index(string var_name) const
 {
-    return internal_variable_table[var_name];
+    return model_data_table[var_name];
 }
 
-string MODEL::get_model_variable_name(size_t var_index) const
+string MODEL::get_model_data_name(size_t var_index) const
 {
-    return internal_variable_table[var_index];
+    return model_data_table[var_index];
 }
 
-bool MODEL::is_model_variable_exist(string var_name) const
+bool MODEL::is_model_data_exist(string var_name) const
 {
-    return internal_variable_table[var_name]!=INDEX_NOT_EXIST;
+    return model_data_table[var_name]!=INDEX_NOT_EXIST;
 }
 
-bool MODEL::is_model_variable_exist(size_t var_index) const
+bool MODEL::is_model_data_exist(size_t var_index) const
 {
-    return internal_variable_table[var_index]!="";
+    return model_data_table[var_index]!="";
 }
 
-double MODEL::get_variable_with_index(size_t index)
+void MODEL::set_model_data_with_index(size_t index, double value)
 {
-    string var_name = get_model_variable_name(index);
-    if(var_name!="") return get_internal_variable_with_name(var_name);
+    string var_name = get_model_data_name(index);
+    if(var_name!="")
+    {
+        set_model_data_with_name(var_name, value);
+        return;
+    }
+    else
+        return;
+}
+
+double MODEL::get_model_data_with_index(size_t index)
+{
+    string var_name = get_model_data_name(index);
+    if(var_name!="") return get_model_data_with_name(var_name);
+    else             return 0.0;
+}
+
+void MODEL::add_model_inernal_variable_name_and_index_pair(string var_name, size_t var_index)
+{
+    model_internal_variable_table.add_variable_name_index_pair(var_name, var_index);
+}
+
+size_t MODEL::get_model_inernal_variable_index(string var_name) const
+{
+    return model_internal_variable_table[var_name];
+}
+
+string MODEL::get_model_inernal_variable_name(size_t var_index) const
+{
+    return model_internal_variable_table[var_index];
+}
+
+bool MODEL::is_model_inernal_variable_exist(string var_name) const
+{
+    return model_internal_variable_table[var_name]!=INDEX_NOT_EXIST;
+}
+
+bool MODEL::is_model_inernal_variable_exist(size_t var_index) const
+{
+    return model_internal_variable_table[var_index]!="";
+}
+
+double MODEL::get_model_internal_variable_with_index(size_t index)
+{
+    string var_name = get_model_inernal_variable_name(index);
+    if(var_name!="") return get_model_internal_variable_with_name(var_name);
     else             return 0.0;
 }
 

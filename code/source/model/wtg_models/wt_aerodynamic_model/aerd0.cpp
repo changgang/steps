@@ -518,7 +518,7 @@ void AERD0::check()
 
 void AERD0::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 }
 
 void AERD0::report()
@@ -582,13 +582,13 @@ string AERD0::get_standard_model_string() const
     return osstream.str();
 }
 
-void AERD0::prepare_internal_variable_table()
+void AERD0::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("BLADE RADIUS IN M", i); i++;
+    add_model_inernal_variable_name_and_index_pair("BLADE RADIUS IN M", i); i++;
 }
 
-double AERD0::get_internal_variable_with_name(string var_name)
+double AERD0::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name=="BLADE RADIUS IN M")

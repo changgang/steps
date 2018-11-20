@@ -33,7 +33,7 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual double get_internal_variable_with_name(string var_name);
+        virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
         virtual string get_dynamic_data_in_bpa_format() const;
@@ -73,7 +73,7 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
 
     private:
         void copy_from_const_model(const UFLS& model);
-        virtual void prepare_internal_variable_table();
+        virtual void prepare_model_internal_variable_table();
 
         FIRST_ORDER_BLOCK frequency_sensor;
 

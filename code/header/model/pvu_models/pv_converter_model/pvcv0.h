@@ -63,7 +63,7 @@ class PVCV0 : public PV_CONVERTER_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
-        virtual double get_internal_variable_with_name(string var_name);
+        virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual complex<double> get_terminal_complex_power_in_pu_based_on_mbase();
         virtual complex<double> get_terminal_complex_power_in_MVA();
@@ -90,7 +90,7 @@ class PVCV0 : public PV_CONVERTER_MODEL
         void set_pll_angle_in_deg(double angle);
     private:
         void copy_from_const_model(const PVCV0& model);
-        virtual void prepare_internal_variable_table();
+        virtual void prepare_model_internal_variable_table();
 
         INTEGRAL_BLOCK active_current_commander;
         double LVPL_active_power_change_rate;

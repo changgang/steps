@@ -18,21 +18,22 @@ class MODEL : public BASE
         void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type);
         string get_allowed_device_type() const;
 
-        void add_model_variable_name_and_index_pair(string var_name, size_t var_index);
-        size_t get_model_variable_index(string var_name) const;
-        string get_model_variable_name(size_t var_index) const;
-        bool is_model_variable_exist(string var_name) const;
-        bool is_model_variable_exist(size_t var_index) const;
+        void add_model_data_name_and_index_pair(string var_name, size_t var_index);
+        size_t get_model_data_index(string var_name) const;
+        string get_model_data_name(size_t var_index) const;
+        bool is_model_data_exist(string var_name) const;
+        bool is_model_data_exist(size_t var_index) const;
+
+        void add_model_inernal_variable_name_and_index_pair(string var_name, size_t var_index);
+        size_t get_model_inernal_variable_index(string var_name) const;
+        string get_model_inernal_variable_name(size_t var_index) const;
+        bool is_model_inernal_variable_exist(string var_name) const;
+        bool is_model_inernal_variable_exist(size_t var_index) const;
 
         void set_device_id(DEVICE_ID did);
         DEVICE* get_device_pointer() const;
         DEVICE_ID get_device_id() const;
         string get_device_name() const;
-
-        virtual double get_model_data_with_index(size_t index) const = 0;
-        virtual double get_model_data_with_name(string par_name) const = 0;
-        virtual void set_model_data_with_index(size_t index, double value) = 0;
-        virtual void set_model_data_with_name(string par_name, double value) = 0;
 
         void set_flag_model_initialized_as_false();
         void set_flag_model_initialized_as_true();
@@ -65,9 +66,15 @@ class MODEL : public BASE
         virtual void save() = 0;
         virtual string get_standard_model_string() const = 0;
 
-        virtual void prepare_internal_variable_table() = 0;
-        virtual double get_internal_variable_with_name(string var_name)= 0;
-        double get_variable_with_index(size_t index);
+        virtual void prepare_model_data_table() = 0;
+        virtual double get_model_data_with_name(string par_name) const = 0;
+        virtual void set_model_data_with_name(string par_name, double value) = 0;
+        void set_model_data_with_index(size_t index, double value);
+        double get_model_data_with_index(size_t index);
+
+        virtual void prepare_model_internal_variable_table() = 0;
+        virtual double get_model_internal_variable_with_name(string var_name)= 0;
+        double get_model_internal_variable_with_index(size_t index);
 
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
@@ -84,7 +91,7 @@ class MODEL : public BASE
 
         bool flag_model_active;
 
-        MODEL_VAR_TABLE internal_variable_table;
+        MODEL_VAR_TABLE model_data_table, model_internal_variable_table;
 };
 
 #endif // MODEL_H

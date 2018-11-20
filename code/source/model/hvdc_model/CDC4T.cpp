@@ -18,7 +18,7 @@ CDC4T::~CDC4T()
 
 void CDC4T::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
     set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
@@ -507,14 +507,14 @@ string CDC4T::get_standard_model_string() const
 }
 
 
-void CDC4T::prepare_internal_variable_table()
+void CDC4T::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@INVERTER DC VOLTAGE SENSOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@DC CURRENT SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@INVERTER DC VOLTAGE SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@DC CURRENT SENSOR", i); i++;
 }
 
-double CDC4T::get_internal_variable_with_name(string var_name)
+double CDC4T::get_model_internal_variable_with_name(string var_name)
 {
     return 0.0;
     if(var_name == "STATE@INVERTER DC VOLTAGE SENSOR")

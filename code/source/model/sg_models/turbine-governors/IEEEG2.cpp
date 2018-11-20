@@ -14,7 +14,7 @@ IEEEG2::~IEEEG2()
 }
 void IEEEG2::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     droop.set_limiter_type(NO_LIMITER);
     tuner.set_limiter_type(NO_LIMITER);
@@ -363,15 +363,15 @@ string IEEEG2::get_standard_model_string() const
     return osstream.str();
 }
 
-void IEEEG2::prepare_internal_variable_table()
+void IEEEG2::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@DROOP", i); i++;
-    add_model_variable_name_and_index_pair("STATE@TUNER", i); i++;
-    add_model_variable_name_and_index_pair("STATE@WATER HAMMER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@DROOP", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TUNER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@WATER HAMMER", i); i++;
 }
 
-double IEEEG2::get_internal_variable_with_name(string var_name)
+double IEEEG2::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@DROOP")

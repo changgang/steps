@@ -16,7 +16,7 @@ GENCLS::~GENCLS()
 
 void GENCLS::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 }
 void GENCLS::copy_from_const_model(const GENCLS& model)
 {
@@ -59,8 +59,15 @@ double GENCLS::get_model_data_with_index(size_t index) const
 double GENCLS::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
+    size_t index = 1;
+    if(par_name == "H")
+        return get_H_in_s();
+
+    index++;
+    if(par_name == "D")
+        return get_D();
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 
     return 0.0;
 }
@@ -344,14 +351,14 @@ string GENCLS::get_standard_model_string() const
     return osstream.str();
 }
 
-void GENCLS::prepare_internal_variable_table()
+void GENCLS::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
-    add_model_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
 }
 
-double GENCLS::get_internal_variable_with_name(string var_name)
+double GENCLS::get_model_internal_variable_with_name(string var_name)
 {
     INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();

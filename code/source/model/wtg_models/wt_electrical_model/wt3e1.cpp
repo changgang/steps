@@ -883,7 +883,7 @@ void WT3E1::check()
 
 void WT3E1::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     set_transformer_from_bus(0);
     set_transformer_to_bus(0);
@@ -1000,13 +1000,13 @@ string WT3E1::get_standard_model_string() const
     return osstream.str();
 }
 
-void WT3E1::prepare_internal_variable_table()
+void WT3E1::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
+    add_model_inernal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
 }
 
-double WT3E1::get_internal_variable_with_name(string var_name)
+double WT3E1::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;

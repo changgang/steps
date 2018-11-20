@@ -16,7 +16,7 @@ COMP::~COMP()
 
 void COMP::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 }
 
 void COMP::copy_from_const_model(const COMP& model)
@@ -182,13 +182,13 @@ string COMP::get_standard_model_string() const
     return osstream.str();
 }
 
-void COMP::prepare_internal_variable_table()
+void COMP::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("COMPENSATED VOLTAGE IN PU", i); i++;
+    add_model_inernal_variable_name_and_index_pair("COMPENSATED VOLTAGE IN PU", i); i++;
 }
 
-double COMP::get_internal_variable_with_name(string var_name)
+double COMP::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 

@@ -17,7 +17,7 @@ PSASPE2::~PSASPE2()
 
 void PSASPE2::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     sensor.set_limiter_type(NO_LIMITER);
     tuner1_lead_lag.set_limiter_type(NO_LIMITER);
@@ -521,16 +521,16 @@ string PSASPE2::get_standard_model_string() const
 }
 
 
-void PSASPE2::prepare_internal_variable_table()
+void PSASPE2::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@SENSOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@TUNER1", i); i++;
-    add_model_variable_name_and_index_pair("STATE@TUNER2", i); i++;
-    add_model_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TUNER1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TUNER2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
 }
 
-double PSASPE2::get_internal_variable_with_name(string var_name)
+double PSASPE2::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "STATE@SENSOR")

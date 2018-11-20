@@ -30,7 +30,7 @@ void LCFB1::clear()
     set_Pref0(0.0);
     set_Pelec0(0.0);
 
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 }
 
 void LCFB1::copy_from_const_model(const LCFB1& model)
@@ -88,17 +88,68 @@ double LCFB1::get_model_data_with_name(string par_name) const
 
 void LCFB1::set_model_data_with_index(size_t index, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    string par_name;
+    switch(index)
+    {
+        case 1:
+            par_name="F_FLAG";
+            break;
+        case 2:
+            par_name="P_FLAG";
+            break;
+        case 3:
+            par_name="FB";
+            break;
+        case 4:
+            par_name="TPELEC";
+            break;
+        case 5:
+            par_name="DB";
+            break;
+        case 6:
+            par_name="EMAX";
+            break;
+        case 7:
+            par_name="KP";
+            break;
+        case 8:
+            par_name="KI";
+            break;
+        case 9:
+            par_name="IRMAX";
+            break;
+        default:
+            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+            return;
+    }
+    set_model_data_with_name(par_name, value);
     return;
 }
 
 void LCFB1::set_model_data_with_name(string par_name, double value)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
+    par_name = string2upper(par_name);
+
+    if(par_name == "F_FLAG")
+        return set_frequency_regulation_flag(bool(value));
+    if(par_name == "P_FLAG")
+        return set_power_regulation_flag(bool(value));
+    if(par_name=="FB")
+        return set_Fb(value);
+    if(par_name=="TPELEC")
+        return set_Tpelec_in_s(value);
+    if(par_name=="DB")
+        return set_db(value);
+    if(par_name=="EMAX")
+        return set_Emax(value);
+    if(par_name=="KP")
+        return set_Kp(value);
+    if(par_name=="KI")
+        return set_Ki(value);
+    if(par_name=="IRMAX")
+        return set_Irmax(value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 
@@ -435,16 +486,24 @@ string LCFB1::get_standard_model_string() const
     return osstream.str();
 }
 
-void LCFB1::prepare_internal_variable_table()
+void LCFB1::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@POWER SENSOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@ERROR INTEGRATOR", i);
+    add_model_inernal_variable_name_and_index_pair("PREF0", i); i++;
+    add_model_inernal_variable_name_and_index_pair("PELEC0", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@POWER SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@ERROR INTEGRATOR", i);
 }
 
-double LCFB1::get_internal_variable_with_name(string var_name)
+double LCFB1::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
+    if(var_name == "PREF0")
+        return get_Pref0();
+
+    if(var_name == "PELEC0")
+        return get_Pelec0();
+
     if(var_name == "STATE@POWER SENSOR")
         return Pelec_sensor.get_state();
 

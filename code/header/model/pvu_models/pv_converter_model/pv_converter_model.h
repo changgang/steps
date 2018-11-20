@@ -61,8 +61,8 @@ class PV_CONVERTER_MODEL : public PVU_MODEL
         virtual void save() = 0;
         virtual string get_standard_model_string() const = 0;
 
-        virtual void prepare_internal_variable_table() = 0;
-        virtual double get_internal_variable_with_name(string var_name)= 0;
+        virtual void prepare_model_internal_variable_table() = 0;
+        virtual double get_model_internal_variable_with_name(string var_name)= 0;
 
         virtual complex<double> get_terminal_complex_power_in_pu_based_on_mbase() = 0;
         virtual complex<double> get_terminal_complex_power_in_MVA() = 0;

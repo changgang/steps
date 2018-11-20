@@ -15,7 +15,7 @@ IEE2ST::~IEE2ST()
 
 void IEE2ST::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 }
 
 void IEE2ST::copy_from_const_model(const IEE2ST& model)
@@ -549,20 +549,20 @@ string IEE2ST::get_standard_model_string() const
     return osstream.str();
 }
 
-void IEE2ST::prepare_internal_variable_table()
+void IEE2ST::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
-    add_model_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
-    add_model_variable_name_and_index_pair("STATE@SENSOR 1", i); i++;
-    add_model_variable_name_and_index_pair("STATE@SENSOR 2", i); i++;
-    add_model_variable_name_and_index_pair("STATE@FILTER", i); i++;
-    add_model_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;
-    add_model_variable_name_and_index_pair("STATE@PHASE TUNER 2", i); i++;
-    add_model_variable_name_and_index_pair("STATE@PHASE TUNER 3", i); i++;
+    add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SENSOR 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SENSOR 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@FILTER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 3", i); i++;
 }
 
-double IEE2ST::get_internal_variable_with_name(string var_name)
+double IEE2ST::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "SIGNAL@SLOT 1")

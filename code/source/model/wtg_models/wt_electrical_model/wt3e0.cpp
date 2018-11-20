@@ -1507,7 +1507,7 @@ void WT3E0::check()
 
 void WT3E0::clear()
 {
-    prepare_internal_variable_table();
+    prepare_model_internal_variable_table();
 
     set_voltage_flag(0);
 
@@ -1617,17 +1617,17 @@ string WT3E0::get_standard_model_string() const
     return osstream.str();
 }
 
-void WT3E0::prepare_internal_variable_table()
+void WT3E0::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@TORQUE REGULATOR", i); i++;
-    add_model_variable_name_and_index_pair("STATE@VIRTUAL INERTIA CONTROL", i); i++;
-    add_model_variable_name_and_index_pair("STATE@PRIMARY FREQUENCY CONTROL", i); i++;
-    add_model_variable_name_and_index_pair("STATE@SECONDARY FREQUENCY CONTROL", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TORQUE REGULATOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@VIRTUAL INERTIA CONTROL", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@PRIMARY FREQUENCY CONTROL", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SECONDARY FREQUENCY CONTROL", i); i++;
 }
 
-double WT3E0::get_internal_variable_with_name(string var_name)
+double WT3E0::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
 
