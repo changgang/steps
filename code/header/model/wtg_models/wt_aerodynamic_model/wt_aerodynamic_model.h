@@ -83,11 +83,6 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
     public:
         virtual string get_model_name() const = 0;
 
-        virtual double get_model_data_with_index(size_t index) const = 0;
-        virtual double get_model_data_with_name(string par_name) const = 0;
-        virtual void set_model_data_with_index(size_t index, double value) = 0;
-        virtual void set_model_data_with_name(string par_name, double value) = 0;
-
         virtual bool setup_model_with_steps_string(string data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
@@ -100,6 +95,10 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         virtual void report() = 0;
         virtual void save() = 0;
         virtual string get_standard_model_string() const = 0;
+
+        virtual void prepare_model_data_table() = 0;
+        virtual double get_model_data_with_name(string par_name) const = 0;
+        virtual void set_model_data_with_name(string par_name, double value) = 0;
 
         virtual void prepare_model_internal_variable_table() = 0;
         virtual double get_model_internal_variable_with_name(string var_name)= 0;

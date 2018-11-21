@@ -28,6 +28,8 @@ class MOTOR : public LOAD_MODEL
         virtual void report();
         virtual void save();
 
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual complex<double> get_load_actual_power_in_MVA() const;
@@ -93,6 +95,7 @@ class MOTOR : public LOAD_MODEL
         void convert_to_equivalent_circuit_model();
 
     private:
+        virtual void prepare_model_data_table();
         bool is_in_flux_linkage_model_type() const;
         bool is_in_equivalent_circuit_model_type() const;
         complex<double> get_motor_power_with_slip(double slip);

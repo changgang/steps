@@ -18,6 +18,7 @@ PUFLS::~PUFLS()
 
 void PUFLS::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     set_frequency_sensor_time_in_s(1.0);
@@ -80,39 +81,6 @@ PUFLS& PUFLS::operator=(const PUFLS& model)
 string PUFLS::get_model_name() const
 {
     return "PUFLS";
-}
-
-double PUFLS::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double PUFLS::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
-
-    return 0.0;
-}
-
-void PUFLS::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void PUFLS::set_model_data_with_name(string par_name, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
 }
 
 void PUFLS::set_frequency_sensor_time_in_s(double t)
@@ -841,6 +809,30 @@ string PUFLS::get_standard_model_string() const
 
     osstream<<"  /";
     return osstream.str();
+}
+
+void PUFLS::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("A", i); i++;
+}
+
+double PUFLS::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return 0.0;
+
+    return 0.0;
+}
+
+void PUFLS::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return;
+
+    return;
 }
 
 void PUFLS::prepare_model_internal_variable_table()

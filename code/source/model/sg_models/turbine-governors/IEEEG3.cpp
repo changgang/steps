@@ -14,6 +14,7 @@ IEEEG3::~IEEEG3()
 }
 void IEEEG3::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     governor.set_limiter_type(NON_WINDUP_LIMITER);
@@ -64,42 +65,6 @@ IEEEG3& IEEEG3::operator=(const IEEEG3& model)
 string IEEEG3::get_model_name() const
 {
     return "IEEEG3";
-}
-
-double IEEEG3::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double IEEEG3::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="PMAX")
-        return get_Pmax_in_pu();
-    if(par_name=="PMIN")
-        return get_Pmin_in_pu();
-
-    return 0.0;
-}
-
-void IEEEG3::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void IEEEG3::set_model_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-    if(par_name=="PMAX")
-        return set_Pmax_in_pu(value);
-    if(par_name=="PMIN")
-        return set_Pmin_in_pu(value);
 }
 
 void IEEEG3::set_TG_in_s(double T)
@@ -476,6 +441,33 @@ string IEEEG3::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<a21<<", "
       <<setw(8)<<setprecision(6)<<a23<<"  /";
     return osstream.str();
+}
+
+void IEEEG3::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("PMAX", i); i++;
+    add_model_data_name_and_index_pair("PMIN", i); i++;
+}
+
+double IEEEG3::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="PMAX")
+        return get_Pmax_in_pu();
+    if(par_name=="PMIN")
+        return get_Pmin_in_pu();
+
+    return 0.0;
+}
+
+void IEEEG3::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="PMAX")
+        return set_Pmax_in_pu(value);
+    if(par_name=="PMIN")
+        return set_Pmin_in_pu(value);
 }
 
 void IEEEG3::prepare_model_internal_variable_table()

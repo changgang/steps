@@ -17,6 +17,7 @@ SEXS::~SEXS()
 
 void SEXS::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     exciter.set_limiter_type(WINDUP_LIMITER);
@@ -55,39 +56,6 @@ SEXS& SEXS::operator=(const SEXS& model)
 string SEXS::get_model_name() const
 {
     return "SEXS";
-}
-
-double SEXS::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double SEXS::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
-
-    return 0.0;
-}
-
-void SEXS::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void SEXS::set_model_data_with_name(string par_name, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
 }
 
 void SEXS::set_TA_in_s(double T)
@@ -319,6 +287,30 @@ string SEXS::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<Efdmax<<", "
       <<setw(8)<<setprecision(6)<<Efdmin<<"  /";
     return osstream.str();
+}
+
+void SEXS::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("A", i); i++;
+}
+
+double SEXS::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return 0.0;
+
+    return 0.0;
+}
+
+void SEXS::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return;
+
+    return;
 }
 
 void SEXS::prepare_model_internal_variable_table()

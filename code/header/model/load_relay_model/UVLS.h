@@ -15,10 +15,6 @@ class UVLS : public LOAD_VOLTAGE_RELAY_MODEL
         virtual UVLS& operator=(const UVLS& model);
 
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
 
         virtual bool setup_model_with_steps_string(string data);
         virtual bool setup_model_with_psse_string(string data);
@@ -33,6 +29,8 @@ class UVLS : public LOAD_VOLTAGE_RELAY_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -74,6 +72,7 @@ class UVLS : public LOAD_VOLTAGE_RELAY_MODEL
 
     private:
         void copy_from_const_model(const UVLS& model);
+        virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
         FIRST_ORDER_BLOCK voltage_sensor;

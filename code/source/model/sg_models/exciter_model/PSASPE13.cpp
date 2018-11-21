@@ -16,6 +16,7 @@ PSASPE13::~PSASPE13()
 }
 void PSASPE13::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     sensor.set_limiter_type(NO_LIMITER);
@@ -60,39 +61,6 @@ PSASPE13& PSASPE13::operator=(const PSASPE13& model)
 string PSASPE13::get_model_name() const
 {
     return "PSASPE13";
-}
-
-double PSASPE13::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double PSASPE13::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
-
-    return 0.0;
-}
-
-void PSASPE13::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void PSASPE13::set_model_data_with_name(string par_name, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
 }
 
 void PSASPE13::set_TR_in_s(double T)
@@ -455,6 +423,30 @@ string PSASPE13::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<KC<<"  /";
 
     return osstream.str();
+}
+
+void PSASPE13::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("A", i); i++;
+}
+
+double PSASPE13::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return 0.0;
+
+    return 0.0;
+}
+
+void PSASPE13::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return;
+
+    return;
 }
 
 

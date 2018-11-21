@@ -13,6 +13,7 @@ GENSAL::~GENSAL()
 
 void GENSAL::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
 
@@ -50,123 +51,6 @@ GENSAL& GENSAL::operator=(const GENSAL& model)
 string GENSAL::get_model_name() const
 {
     return "GENSAL";
-}
-
-double GENSAL::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double GENSAL::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
-
-    return 0.0;
-}
-
-void GENSAL::set_model_data_with_index(size_t index, double value)
-
-{
-    switch(index)
-    {
-        case 1:
-            return set_H_in_s(value);
-        case 2:
-            return set_D(value);
-        case 3:
-            return set_Xd(value);
-        case 4:
-            return set_Xq(value);
-        case 5:
-            return set_Xdp(value);
-        case 6:
-            return set_Xdpp(value);
-        case 7:
-            return set_Xqpp(value);
-        case 8:
-            return set_Xl(value);
-        case 9:
-            return set_Td0p_in_s(value);
-        case 10:
-            return set_Td0pp_in_s(value);
-        case 11:
-            return set_Tq0pp_in_s(value);
-        case 12:
-            return set_saturation_at_1(value);
-        case 13:
-            return set_saturation_at_1p2(value);
-        default:
-        {
-            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
-            return;
-        }
-    }
-    return;
-}
-
-void GENSAL::set_model_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-
-    size_t index = 1;
-    if(par_name == "H")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "D")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "XD")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "XQ")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "XD'")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "XD\"")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "XQ\"")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "XL")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "TD0'")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "TD0\"")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "TQ0\"")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "S1")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "S1.2")
-        return set_model_data_with_index(index, value);
-
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-    return;
 }
 
 void GENSAL::update_source_impedance()
@@ -561,6 +445,123 @@ string GENSAL::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<get_saturation_at_1p2()<<"  /";
     return osstream.str();
 }
+
+void GENSAL::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("H", i); i++;
+    add_model_data_name_and_index_pair("D", i); i++;
+    add_model_data_name_and_index_pair("XD", i); i++;
+    add_model_data_name_and_index_pair("XQ", i); i++;
+    add_model_data_name_and_index_pair("XD'", i); i++;
+    add_model_data_name_and_index_pair("XD\"", i); i++;
+    add_model_data_name_and_index_pair("XQ\"", i); i++;
+    add_model_data_name_and_index_pair("XL", i); i++;
+    add_model_data_name_and_index_pair("TD0'", i); i++;
+    add_model_data_name_and_index_pair("TD0\"", i); i++;
+    add_model_data_name_and_index_pair("TQ0\"", i); i++;
+    add_model_data_name_and_index_pair("S1", i); i++;
+    add_model_data_name_and_index_pair("S1.2", i);
+}
+
+double GENSAL::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="H")
+        return get_H_in_s();
+
+    if(par_name=="D")
+        return get_D();
+
+    if(par_name == "XD")
+        return get_Xd();
+
+    if(par_name == "XQ")
+        return get_Xq();
+
+    if(par_name == "XD'")
+        return get_Xdp();
+
+    if(par_name == "XD\"")
+        return get_Xdpp();
+
+    if(par_name == "XQ\"")
+        return get_Xqpp();
+
+    if(par_name == "XL")
+        return get_Xl();
+
+    if(par_name == "TD0'")
+        return get_Td0p_in_s();
+
+    if(par_name == "TQ0'")
+        return get_Tq0p_in_s();
+
+    if(par_name == "TD0\"")
+        return get_Td0pp_in_s();
+
+    if(par_name == "TQ0\"")
+        return get_Tq0pp_in_s();
+
+    if(par_name == "S1")
+        return get_saturation_at_1();
+
+    if(par_name == "S1.2")
+        return get_saturation_at_1p2();
+
+    return 0.0;
+}
+
+void GENSAL::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+
+    if(par_name == "H")
+        return set_H_in_s(value);
+
+    if(par_name == "D")
+        return set_D(value);
+
+    if(par_name == "XD")
+        return set_Xd(value);
+
+    if(par_name == "XQ")
+        return set_Xq(value);
+
+    if(par_name == "XD'")
+        return set_Xdp(value);
+
+    if(par_name == "XD\"")
+        return set_Xdpp(value);
+
+    if(par_name == "XQ\"")
+        return set_Xqpp(value);
+
+    if(par_name == "XL")
+        return set_Xl(value);
+
+    if(par_name == "TD0'")
+        return set_Td0p_in_s(value);
+
+    if(par_name == "TQ0'")
+        return set_Tq0p_in_s(value);
+
+    if(par_name == "TD0\"")
+        return set_Td0pp_in_s(value);
+
+    if(par_name == "TQ0\"")
+        return set_Tq0pp_in_s(value);
+
+    if(par_name == "S1")
+        return set_saturation_at_1(value);
+
+    if(par_name == "S1.2")
+        return set_saturation_at_1p2(value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    return;
+}
+
 
 void GENSAL::prepare_model_internal_variable_table()
 {

@@ -13,10 +13,6 @@ class GENCLS : public SYNC_GENERATOR_MODEL
         virtual GENCLS& operator=(const GENCLS&);
 
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
 
         virtual void update_source_impedance();
 

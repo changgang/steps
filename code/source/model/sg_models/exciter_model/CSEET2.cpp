@@ -12,6 +12,7 @@ CSEET2::CSEET2()
 
 void CSEET2::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     set_stabilizer_slot(AT_VOLTAGE_ERROR);
@@ -114,39 +115,6 @@ CSEET2& CSEET2::operator=(const CSEET2& model)
 string CSEET2::get_model_name() const
 {
     return "CSEET2";
-}
-
-double CSEET2::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double CSEET2::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
-
-    return 0.0;
-}
-
-void CSEET2::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void CSEET2::set_model_data_with_name(string par_name, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
 }
 
 void CSEET2::set_excitation_source(AVR_EXCITATION_SOURCE source)
@@ -889,6 +857,30 @@ string CSEET2::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<KC<<"  /";
 
     return osstream.str();
+}
+
+void CSEET2::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("A", i); i++;
+}
+
+double CSEET2::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return 0.0;
+
+    return 0.0;
+}
+
+void CSEET2::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return;
+
+    return;
 }
 
 void CSEET2::prepare_model_internal_variable_table()

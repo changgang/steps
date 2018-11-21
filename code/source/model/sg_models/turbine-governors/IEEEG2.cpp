@@ -14,6 +14,7 @@ IEEEG2::~IEEEG2()
 }
 void IEEEG2::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     droop.set_limiter_type(NO_LIMITER);
@@ -54,42 +55,6 @@ IEEEG2& IEEEG2::operator=(const IEEEG2& model)
 string IEEEG2::get_model_name() const
 {
     return "IEEEG2";
-}
-
-double IEEEG2::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double IEEEG2::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="PMAX")
-        return get_Pmax_in_pu();
-    if(par_name=="PMIN")
-        return get_Pmin_in_pu();
-
-    return 0.0;
-}
-
-void IEEEG2::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void IEEEG2::set_model_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-    if(par_name=="PMAX")
-        return set_Pmax_in_pu(value);
-    if(par_name=="PMIN")
-        return set_Pmin_in_pu(value);
 }
 
 void IEEEG2::set_K(double K)
@@ -361,6 +326,34 @@ string IEEEG2::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<T4<<"  /";
 
     return osstream.str();
+}
+
+void IEEEG2::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("PMAX", i); i++;
+    add_model_data_name_and_index_pair("PMIN", i); i++;
+}
+
+double IEEEG2::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+
+    if(par_name=="PMAX")
+        return get_Pmax_in_pu();
+    if(par_name=="PMIN")
+        return get_Pmin_in_pu();
+
+    return 0.0;
+}
+
+void IEEEG2::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="PMAX")
+        return set_Pmax_in_pu(value);
+    if(par_name=="PMIN")
+        return set_Pmin_in_pu(value);
 }
 
 void IEEEG2::prepare_model_internal_variable_table()

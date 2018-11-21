@@ -245,157 +245,6 @@ string AERDF::get_model_name() const
     return "AERDF";
 }
 
-double AERDF::get_model_data_with_index(size_t index) const
-{
-    switch(index)
-    {
-        case 1:
-            return get_turbine_speed_mode();
-        case 2:
-            return get_number_of_pole_pairs();
-        case 3:
-            return get_nominal_wind_speed_in_mps();
-        case 4:
-            return get_gear_efficiency();
-        case 5:
-            return get_nominal_air_density_in_kgpm3();
-        case 6:
-            return get_min_steady_state_turbine_speed_in_pu();
-        case 7:
-            return get_max_steady_state_turbine_speed_in_pu();
-        case 8:
-            return get_air_density_in_kgpm3();
-        default:
-        {
-            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
-            return 0.0;
-        }
-    }
-}
-
-double AERDF::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    size_t index = 1;
-    if(par_name=="SPEED MODE")
-        return get_model_data_with_index(index);
-
-    index++;
-    if(par_name=="POLE PAIR")
-        return get_model_data_with_index(index);
-
-    index++;
-    if(par_name=="NOMINAL WIND SPEED IN M/S")
-        return get_model_data_with_index(index);
-
-    index++;
-    if(par_name=="GEAR EFFICIENCY")
-        return get_model_data_with_index(index);
-
-    index++;
-    if(par_name=="NOMINAL AIR DENSITY IN KG/M3")
-        return get_model_data_with_index(index);
-
-    index++;
-    if(par_name=="MIN TURBINE SPEED IN PU")
-        return get_model_data_with_index(index);
-
-    index++;
-    if(par_name=="MAX TURBINE SPEED IN PU")
-        return get_model_data_with_index(index);
-
-    index++;
-    if(par_name=="AIR DENSITY IN KG/M3")
-        return get_model_data_with_index(index);
-
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-    return 0.0;
-}
-
-void AERDF::set_model_data_with_index(size_t index, double value)
-{
-    switch(index)
-    {
-        case 1:
-        {
-            int ivalue = int(value);
-            WTG_TURBINE_SPEED_MODE mode = WT_MPPT_MODE;
-            switch(ivalue)
-            {
-                case 1:
-                    mode = WT_OVERSPEED_MODE;
-                    break;
-                case -1:
-                    mode = WT_UNDERSPEED_MODE;
-                    break;
-                case 0:
-                default:
-                    mode = WT_MPPT_MODE;
-                    break;
-            }
-            return set_turbine_speed_mode(mode);
-        }
-        case 2:
-            return set_number_of_pole_pairs(size_t(value));
-        case 3:
-            return set_nominal_wind_speed_in_mps(value);
-        case 4:
-            return set_gear_efficiency(value);
-        case 5:
-            return set_nominal_air_density_in_kgpm3(value);
-        case 6:
-            return set_min_steady_state_turbine_speed_in_pu(value);
-        case 7:
-            return set_max_steady_state_turbine_speed_in_pu(value);
-        case 8:
-            return set_air_density_in_kgpm3(value);
-        default:
-        {
-            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
-            return;
-        }
-    }
-}
-
-void AERDF::set_model_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-    size_t index = 1;
-    if(par_name=="SPEED MODE")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name=="POLE PAIR")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name=="NOMINAL WIND SPEED IN M/S")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name=="GEAR EFFICIENCY")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name=="NOMINAL AIR DENSITY IN KG/M3")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name=="MIN TURBINE SPEED IN PU")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name=="MAX TURBINE SPEED IN PU")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name=="AIR DENSITY IN KG/M3")
-        return set_model_data_with_index(index, value);
-
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-    return;
-}
-
 bool AERDF::setup_model_with_steps_string(string data)
 {
     ostringstream osstream;
@@ -482,6 +331,7 @@ void AERDF::check()
 
 void AERDF::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     cp_file_name = "";
@@ -544,10 +394,116 @@ string AERDF::get_standard_model_string() const
     return osstream.str();
 }
 
+void AERDF::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("A", i); i++;
+}
+
+double AERDF::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+
+    if(par_name=="SPEED MODE")
+    {
+        WTG_TURBINE_SPEED_MODE mode = get_turbine_speed_mode();
+        switch(mode)
+        {
+            case WT_OVERSPEED_MODE:
+                return 1;
+            case WT_UNDERSPEED_MODE:
+                return -1;
+            case WT_MPPT_MODE:
+            default:
+                return 0;
+        }
+    }
+
+    if(par_name=="POLE PAIR")
+        return get_number_of_pole_pairs();
+
+    if(par_name=="NOMINAL WIND SPEED IN M/S")
+        return get_nominal_wind_speed_in_mps();
+
+    if(par_name=="GEAR EFFICIENCY")
+        return get_gear_efficiency();
+
+    if(par_name=="NOMINAL AIR DENSITY IN KG/M3")
+        return get_nominal_air_density_in_kgpm3();
+
+    if(par_name=="MIN TURBINE SPEED IN PU")
+        return get_min_steady_state_turbine_speed_in_pu();
+
+    if(par_name=="MAX TURBINE SPEED IN PU")
+        return get_max_steady_state_turbine_speed_in_pu();
+
+    if(par_name=="AIR DENSITY IN KG/M3")
+        return get_air_density_in_kgpm3();
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    return 0.0;
+}
+
+void AERDF::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="SPEED MODE")
+    {
+        int ivalue = int(value);
+        WTG_TURBINE_SPEED_MODE mode;
+        switch(ivalue)
+        {
+            case 1:
+                mode = WT_OVERSPEED_MODE;
+                break;
+            case -1:
+                mode = WT_UNDERSPEED_MODE;
+                break;
+            case 0:
+            default:
+                mode = WT_MPPT_MODE;
+                break;
+        }
+        set_turbine_speed_mode(mode);
+        return;
+    }
+
+    if(par_name=="POLE PAIR")
+        return set_number_of_pole_pairs(value);
+
+    if(par_name=="NOMINAL WIND SPEED IN M/S")
+        return set_nominal_wind_speed_in_mps(value);
+
+    if(par_name=="GEAR EFFICIENCY")
+        return set_gear_efficiency(value);
+
+    if(par_name=="NOMINAL AIR DENSITY IN KG/M3")
+        return set_nominal_air_density_in_kgpm3(value);
+
+    if(par_name=="MIN TURBINE SPEED IN PU")
+        return set_min_steady_state_turbine_speed_in_pu(value);
+
+    if(par_name=="MAX TURBINE SPEED IN PU")
+        return set_max_steady_state_turbine_speed_in_pu(value);
+
+    if(par_name=="AIR DENSITY IN KG/M3")
+        return set_air_density_in_kgpm3(value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    return;
+}
+
 void AERDF::prepare_model_internal_variable_table()
 {
     size_t i=0;
-    add_model_inernal_variable_name_and_index_pair("", i); i++;
+    add_model_data_name_and_index_pair("SPEED MODE", i); i++;
+    add_model_data_name_and_index_pair("POLE PAIR", i); i++;
+    add_model_data_name_and_index_pair("NOMINAL WIND SPEED IN M/S", i); i++;
+    add_model_data_name_and_index_pair("GEAR EFFICIENCY", i); i++;
+    add_model_data_name_and_index_pair("NOMINAL AIR DENSITY IN KG/M3", i); i++;
+    add_model_data_name_and_index_pair("MIN TURBINE SPEED IN PU", i); i++;
+    add_model_data_name_and_index_pair("MAX TURBINE SPEED IN PU", i); i++;
+    add_model_data_name_and_index_pair("AIR DENSITY IN KG/M3", i); i++;
 }
 
 double AERDF::get_model_internal_variable_with_name(string var_name)

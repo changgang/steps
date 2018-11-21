@@ -23,13 +23,7 @@ class WT3T0 : public WT_TURBINE_MODEL
         double get_Hgenerator_in_s() const;
         double get_Kshaft_in_pu() const;
         double get_Dshaft_in_pu() const;
-
     public:
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
-
         virtual bool setup_model_with_steps_string(string data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
@@ -46,6 +40,8 @@ class WT3T0 : public WT_TURBINE_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -53,6 +49,7 @@ class WT3T0 : public WT_TURBINE_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const WT3T0& model);
+        virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
         INTEGRAL_BLOCK shaft_twist_block;

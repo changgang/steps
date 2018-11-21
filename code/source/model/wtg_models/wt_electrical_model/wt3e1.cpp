@@ -114,38 +114,6 @@ double WT3E1::get_reactive_power_current_command_in_pu()
     return IQcmd;
 }
 
-double WT3E1::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double WT3E1::get_model_data_with_name(string par_name) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-void WT3E1::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void WT3E1::set_model_data_with_name(string par_name, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
 void WT3E1::set_transformer_from_bus(size_t bus)
 {
     transformer_from_bus = bus;
@@ -883,6 +851,7 @@ void WT3E1::check()
 
 void WT3E1::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     set_transformer_from_bus(0);
@@ -998,6 +967,30 @@ string WT3E1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<wp100<<"  /";
 
     return osstream.str();
+}
+
+void WT3E1::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("A", i); i++;
+}
+
+double WT3E1::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return 0.0;
+
+    return 0.0;
+}
+
+void WT3E1::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return;
+
+    return;
 }
 
 void WT3E1::prepare_model_internal_variable_table()

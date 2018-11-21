@@ -17,10 +17,6 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         virtual PUFLS& operator=(const PUFLS& model);
 
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
 
         virtual bool setup_model_with_steps_string(string data);
         virtual bool setup_model_with_psse_string(string data);
@@ -35,6 +31,8 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -66,6 +64,7 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         double get_discrete_stage_shed_scale_in_pu(size_t stage) const;
     private:
         void copy_from_const_model(const PUFLS& model);
+        virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
         void append_new_minimum_frequency();

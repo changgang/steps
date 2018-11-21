@@ -88,11 +88,6 @@ class WT3E0: public WT_ELECTRICAL_MODEL
 
         void set_speed_reference_bias_in_pu(double bias);
         double get_speed_reference_bias_in_pu() const;
-
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
     public:
 
         virtual bool setup_model_with_steps_string(string data);
@@ -114,6 +109,8 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -121,6 +118,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const WT3E0& model);
+        virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
         double Xcomp;

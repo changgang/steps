@@ -13,6 +13,7 @@ WT3T0::~WT3T0()
 
 void WT3T0::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
 
@@ -86,36 +87,6 @@ double WT3T0::get_Kshaft_in_pu() const
 double WT3T0::get_Dshaft_in_pu() const
 {
     return Dshaft;
-}
-
-double WT3T0::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double WT3T0::get_model_data_with_name(string par_name) const
-{
-    if(par_name=="")
-        return 0.0;
-    return 0.0;
-}
-
-void WT3T0::set_model_data_with_index(size_t index, double value)
-{
-    return;
-}
-
-void WT3T0::set_model_data_with_name(string par_name, double value)
-{
-    if(par_name=="DAMPING")
-    {
-        set_damping_in_pu(value);
-        return;
-    }
-    return;
 }
 
 bool WT3T0::setup_model_with_steps_string(string data)
@@ -343,16 +314,70 @@ string WT3T0::get_standard_model_string() const
     return osstream.str();
 }
 
+void WT3T0::prepare_model_data_table()
+{
+    size_t i=1;
+    add_model_data_name_and_index_pair("TURBINE INERTIA", i); i++; /*1*/
+    add_model_data_name_and_index_pair("GENERATOR INERTIA", i); i++; /*2*/
+    add_model_data_name_and_index_pair("SHAFT K", i); i++; /*3*/
+    add_model_data_name_and_index_pair("SHAFT DAMPING", i); i++; /*4*/
+    add_model_data_name_and_index_pair("GENERATOR DAMPING", i); i++; /*5*/
+}
+
+double WT3T0::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name=="TURBINE INERTIA") return get_Hturbine_in_s();
+        if(par_name=="GENERATOR INERTIA") return get_Hgenerator_in_s();
+        if(par_name=="SHAFT K")           return get_Kshaft_in_pu();
+        if(par_name=="SHAFT DAMPING")     return get_Dshaft_in_pu();
+        if(par_name=="GENERATOR DAMPING") return get_damping_in_pu();
+        return 0.0;
+    }
+    else
+    {
+        show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+        return 0.0;
+    }
+}
+
+void WT3T0::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name=="TURBINE INERTIA") return set_Hturbine_in_s(value);
+        if(par_name=="GENERATOR INERTIA") return set_Hgenerator_in_s(value);
+        if(par_name=="SHAFT K")           return set_Kshaft_in_pu(value);
+        if(par_name=="SHAFT DAMPING")     return set_Dshaft_in_pu(value);
+        if(par_name=="GENERATOR DAMPING") return set_damping_in_pu(value);
+    }
+    else
+    {
+        show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+        return;
+    }
+}
+
+
 void WT3T0::prepare_model_internal_variable_table()
 {
-    size_t i=0;
-    add_model_inernal_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@TURBINE", i); i++;
+    size_t i=1;
+    add_model_inernal_variable_name_and_index_pair("STATE@TURBINE SPEED BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@GENERATOR SPEED BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SHAFT TORSION BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
 }
 
 double WT3T0::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
+    if(var_name=="STATE@TURBINE SPEED BLOCK") return turbine_inertia_block.get_state();
+    if(var_name=="STATE@GENERATOR SPEED BLOCK") return generator_inertia_block.get_state();
+    if(var_name=="STATE@SHAFT TORSION BLOCK") return shaft_twist_block.get_state();
+    if(var_name=="STATE@ROTOR ANGLE BLOCK") return generator_rotor_angle_block.get_state();
 
     return 0.0;
 }

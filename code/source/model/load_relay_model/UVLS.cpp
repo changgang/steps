@@ -17,6 +17,7 @@ UVLS::~UVLS()
 
 void UVLS::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     voltage_sensor.set_limiter_type(NO_LIMITER);
@@ -71,39 +72,6 @@ UVLS& UVLS::operator=(const UVLS& model)
 string UVLS::get_model_name() const
 {
     return "UVLS";
-}
-
-double UVLS::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double UVLS::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
-
-    return 0.0;
-}
-
-void UVLS::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void UVLS::set_model_data_with_name(string par_name, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
 }
 
 void UVLS::set_voltage_sensor_time_in_s(double t)
@@ -474,6 +442,30 @@ string UVLS::get_standard_model_string() const
     }
     osstream<<"  /";
     return osstream.str();
+}
+
+void UVLS::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("A", i); i++;
+}
+
+double UVLS::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return 0.0;
+
+    return 0.0;
+}
+
+void UVLS::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return;
+
+    return;
 }
 
 void UVLS::prepare_model_internal_variable_table()

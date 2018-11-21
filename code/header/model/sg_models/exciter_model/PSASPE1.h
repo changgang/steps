@@ -15,10 +15,6 @@ class PSASPE1: public EXCITER_MODEL
         virtual PSASPE1& operator=(const PSASPE1& model);
     public: // specific exciter
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_KR(double K);
         void set_TR_in_s(double T);
@@ -53,6 +49,8 @@ class PSASPE1: public EXCITER_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -60,6 +58,7 @@ class PSASPE1: public EXCITER_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const PSASPE1& model);
+        virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
         void set_VAmax_in_pu(double vmax);

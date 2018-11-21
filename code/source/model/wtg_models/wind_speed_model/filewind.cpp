@@ -17,6 +17,7 @@ FILEWIND::~FILEWIND()
 
 void FILEWIND::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     time.clear();
@@ -65,39 +66,6 @@ void FILEWIND::set_wind_speed_serial_file(string file)
 string FILEWIND::get_wind_speed_serial_file() const
 {
     return wind_speed_file;
-}
-
-
-double FILEWIND::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double FILEWIND::get_model_data_with_name(string par_name) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input par_name is provided: "<<par_name;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-void FILEWIND::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void FILEWIND::set_model_data_with_name(string par_name, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (par_name, value) is provided: ("<<par_name<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
 }
 
 bool FILEWIND::setup_model_with_steps_string(string data)
@@ -377,6 +345,30 @@ string FILEWIND::get_standard_model_string() const
       <<"'"<<file<<"'"
       <<"  /";
     return osstream.str();
+}
+
+void FILEWIND::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("A", i); i++;
+}
+
+double FILEWIND::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return 0.0;
+
+    return 0.0;
+}
+
+void FILEWIND::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="A")
+        return;
+
+    return;
 }
 
 void FILEWIND::prepare_model_internal_variable_table()

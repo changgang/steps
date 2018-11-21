@@ -14,10 +14,6 @@ class LCFB1 : public TURBINE_LOAD_CONTROLLER_MODEL
         virtual LCFB1& operator=(const LCFB1& model);
 
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
     public:
         void set_frequency_regulation_flag(bool flag);
         void set_power_regulation_flag(bool flag);

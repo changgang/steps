@@ -16,6 +16,7 @@ ESTR0::~ESTR0()
 
 void ESTR0::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     active_power_filter.set_limiter_type(WINDUP_LIMITER);
@@ -256,47 +257,6 @@ double ESTR0::get_Kq() const
 double ESTR0::get_Dq() const
 {
     return this->Dq;
-}
-
-double ESTR0::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double ESTR0::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="PMAX")
-        return get_Pmax_in_pu();
-    if(par_name=="ENOMINAL")
-        return get_En_in_MWh();
-    if(par_name=="E0")
-        return get_E0_in_pu();
-
-    return 0.0;
-}
-
-void ESTR0::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void ESTR0::set_model_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-    if(par_name=="PMAX")
-        return set_Pmax_in_pu(value);
-    if(par_name=="ENOMINAL")
-        return set_En_in_MWh(value);
-    if(par_name=="E0")
-        return set_E0_in_pu(value);
-    return;
 }
 
 bool ESTR0::setup_model_with_steps_string(string data)
@@ -681,6 +641,40 @@ string ESTR0::get_standard_model_string() const
 
     return osstream.str();
 }
+
+void ESTR0::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("PMAX", i); i++;
+    add_model_data_name_and_index_pair("ENOMINAL", i); i++;
+    add_model_data_name_and_index_pair("E0", i); i++;
+}
+
+double ESTR0::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="PMAX")
+        return get_Pmax_in_pu();
+    if(par_name=="ENOMINAL")
+        return get_En_in_MWh();
+    if(par_name=="E0")
+        return get_E0_in_pu();
+
+    return 0.0;
+}
+
+void ESTR0::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="PMAX")
+        return set_Pmax_in_pu(value);
+    if(par_name=="ENOMINAL")
+        return set_En_in_MWh(value);
+    if(par_name=="E0")
+        return set_E0_in_pu(value);
+    return;
+}
+
 
 void ESTR0::prepare_model_internal_variable_table()
 {

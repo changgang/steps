@@ -83,19 +83,21 @@ void MODEL::set_model_data_with_index(size_t index, double value)
 {
     string var_name = get_model_data_name(index);
     if(var_name!="")
-    {
         set_model_data_with_name(var_name, value);
-        return;
-    }
     else
-        return;
+        show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
 }
 
 double MODEL::get_model_data_with_index(size_t index)
 {
     string var_name = get_model_data_name(index);
-    if(var_name!="") return get_model_data_with_name(var_name);
-    else             return 0.0;
+    if(var_name!="")
+        return get_model_data_with_name(var_name);
+    else
+    {
+        show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+        return 0.0;
+    }
 }
 
 void MODEL::add_model_inernal_variable_name_and_index_pair(string var_name, size_t var_index)

@@ -14,10 +14,6 @@ class GENSAL : public SYNC_GENERATOR_MODEL
         virtual GENSAL& operator=(const GENSAL& model);
 
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
 
         virtual void update_source_impedance();
 
@@ -42,7 +38,7 @@ class GENSAL : public SYNC_GENERATOR_MODEL
         virtual string get_standard_model_string() const;
 
         virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_name(string par_name, double value)；
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual double get_air_gap_power_in_pu_based_on_mbase();

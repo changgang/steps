@@ -13,10 +13,6 @@ class WT3T1 : public WT_TURBINE_MODEL
         virtual WT3T1& operator=(const WT3T1& model);
     public: // specific model level
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_Htotal_in_s(double H);
         void set_Damp_in_pu(double D);
@@ -52,6 +48,8 @@ class WT3T1 : public WT_TURBINE_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -59,6 +57,7 @@ class WT3T1 : public WT_TURBINE_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const WT3T1& model);
+        virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
         INTEGRAL_BLOCK shaft_twist;

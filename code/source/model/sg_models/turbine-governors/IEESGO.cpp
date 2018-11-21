@@ -12,6 +12,7 @@ IEESGO::~IEESGO()
 
 void IEESGO::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     governor_tuner.set_limiter_type(NO_LIMITER);
@@ -58,42 +59,6 @@ IEESGO& IEESGO::operator=(const IEESGO& model)
 string IEESGO::get_model_name() const
 {
     return "IEESGO";
-}
-
-double IEESGO::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double IEESGO::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="PMAX")
-        return get_Pmax_in_pu();
-    if(par_name=="PMIN")
-        return get_Pmin_in_pu();
-
-    return 0.0;
-}
-
-void IEESGO::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void IEESGO::set_model_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-    if(par_name=="PMAX")
-        return set_Pmax_in_pu(value);
-    if(par_name=="PMIN")
-        return set_Pmin_in_pu(value);
 }
 
 void IEESGO::set_K1(double K)
@@ -418,6 +383,33 @@ string IEESGO::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<pmax<<", "
       <<setw(8)<<setprecision(6)<<pmin<<"  /";
     return osstream.str();
+}
+
+void IEESGO::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("PMAX", i); i++;
+    add_model_data_name_and_index_pair("PMIN", i); i++;
+}
+
+double IEESGO::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="PMAX")
+        return get_Pmax_in_pu();
+    if(par_name=="PMIN")
+        return get_Pmin_in_pu();
+
+    return 0.0;
+}
+
+void IEESGO::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="PMAX")
+        return set_Pmax_in_pu(value);
+    if(par_name=="PMIN")
+        return set_Pmin_in_pu(value);
 }
 
 void IEESGO::prepare_model_internal_variable_table()

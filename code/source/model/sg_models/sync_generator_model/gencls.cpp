@@ -16,6 +16,7 @@ GENCLS::~GENCLS()
 
 void GENCLS::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
 void GENCLS::copy_from_const_model(const GENCLS& model)
@@ -47,64 +48,6 @@ string GENCLS::get_model_name() const
 {
     return "GENCLS";
 }
-
-double GENCLS::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double GENCLS::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    size_t index = 1;
-    if(par_name == "H")
-        return get_H_in_s();
-
-    index++;
-    if(par_name == "D")
-        return get_D();
-
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-
-    return 0.0;
-}
-
-void GENCLS::set_model_data_with_index(size_t index, double value)
-{
-    switch(index)
-    {
-        case 1:
-            return set_H_in_s(value);
-        case 2:
-            return set_D(value);
-        default:
-        {
-            show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
-            return;
-        }
-    }
-    return;
-}
-
-void GENCLS::set_model_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-
-    size_t index = 1;
-    if(par_name == "H")
-        return set_model_data_with_index(index, value);
-
-    index++;
-    if(par_name == "D")
-        return set_model_data_with_index(index, value);
-
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-    return;
-}
-
 
 void GENCLS::update_source_impedance()
 {
@@ -350,6 +293,40 @@ string GENCLS::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<get_D()<<"  /";
     return osstream.str();
 }
+
+void GENCLS::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("H", i); i++;
+    add_model_data_name_and_index_pair("D", i);
+}
+
+double GENCLS::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="H")
+        return get_H_in_s();
+
+    if(par_name=="D")
+        return get_D();
+
+    return 0.0;
+}
+
+void GENCLS::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+
+    if(par_name == "H")
+        return set_H_in_s(value);
+
+    if(par_name == "D")
+        return set_D(value);
+
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    return;
+}
+
 
 void GENCLS::prepare_model_internal_variable_table()
 {

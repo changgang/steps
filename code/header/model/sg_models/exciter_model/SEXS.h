@@ -13,10 +13,6 @@ class SEXS: public EXCITER_MODEL
         virtual SEXS& operator=(const SEXS& model);
     public: // specific exciter
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
-        virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
-        virtual void set_model_data_with_name(string par_name, double value);
 
         void set_TA_in_s(double T);
         void set_TB_in_s(double T);
@@ -45,6 +41,8 @@ class SEXS: public EXCITER_MODEL
         virtual void save();
         virtual string get_standard_model_string() const;
 
+        virtual double get_model_data_with_name(string par_name) const;
+        virtual void set_model_data_with_name(string par_name, double value);
         virtual double get_model_internal_variable_with_name(string var_name);
 
         virtual string get_dynamic_data_in_psse_format() const;
@@ -52,6 +50,7 @@ class SEXS: public EXCITER_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const SEXS& model);
+        virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
         LEAD_LAG_BLOCK phase_tuner;

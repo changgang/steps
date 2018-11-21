@@ -12,7 +12,9 @@ TGOV1::~TGOV1()
 
 void TGOV1::clear()
 {
+    prepare_model_data_table();
     prepare_model_internal_variable_table();
+
     governor.set_limiter_type(WINDUP_LIMITER);
     turbine.set_K(1.0);
 }
@@ -52,42 +54,6 @@ TGOV1& TGOV1::operator=(const TGOV1& model)
 string TGOV1::get_model_name() const
 {
     return "TGOV1";
-}
-
-double TGOV1::get_model_data_with_index(size_t index) const
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input index is provided: "<<index;
-    show_information_with_leading_time_stamp(osstream);
-    return 0.0;
-}
-
-double TGOV1::get_model_data_with_name(string par_name) const
-{
-    par_name = string2upper(par_name);
-    if(par_name=="VMAX")
-        return get_Valvemax_in_pu();
-    if(par_name=="VMIN")
-        return get_Valvemin_in_pu();
-
-    return 0.0;
-}
-
-void TGOV1::set_model_data_with_index(size_t index, double value)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input (index, value) is provided: ("<<index<<", "<<value<<").";
-    show_information_with_leading_time_stamp(osstream);
-    return;
-}
-
-void TGOV1::set_model_data_with_name(string par_name, double value)
-{
-    par_name = string2upper(par_name);
-    if(par_name=="VMAX")
-        return set_Valvemax_in_pu(value);
-    if(par_name=="VMIN")
-        return set_Valvemin_in_pu(value);
 }
 
 void TGOV1::set_R(double R)
@@ -300,6 +266,34 @@ string TGOV1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<T3<<", "
       <<setw(8)<<setprecision(6)<<D<<"  /";
     return osstream.str();
+}
+
+void TGOV1::prepare_model_data_table()
+{
+    size_t i=0;
+    add_model_data_name_and_index_pair("VMAX", i); i++;
+    add_model_data_name_and_index_pair("VMIN", i); i++;
+}
+
+
+double TGOV1::get_model_data_with_name(string par_name) const
+{
+    par_name = string2upper(par_name);
+    if(par_name=="VMAX")
+        return get_Valvemax_in_pu();
+    if(par_name=="VMIN")
+        return get_Valvemin_in_pu();
+
+    return 0.0;
+}
+
+void TGOV1::set_model_data_with_name(string par_name, double value)
+{
+    par_name = string2upper(par_name);
+    if(par_name=="VMAX")
+        return set_Valvemax_in_pu(value);
+    if(par_name=="VMIN")
+        return set_Valvemin_in_pu(value);
 }
 
 void TGOV1::prepare_model_internal_variable_table()
