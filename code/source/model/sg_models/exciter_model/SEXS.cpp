@@ -292,45 +292,62 @@ string SEXS::get_standard_model_string() const
 void SEXS::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    size_t i=1;
+    add_model_data_name_and_index_pair("TA", i); i++;
+    add_model_data_name_and_index_pair("TB", i); i++;
+    add_model_data_name_and_index_pair("K", i); i++;
+    add_model_data_name_and_index_pair("TE", i); i++;
+    add_model_data_name_and_index_pair("EMAX", i); i++;
+    add_model_data_name_and_index_pair("EMIN", i);
 }
 
 double SEXS::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
-
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name=="TA") return get_TA_in_s();
+        if(par_name=="TB") return get_TB_in_s();
+        if(par_name=="K") return get_K();
+        if(par_name=="TE") return get_TE_in_s();
+        if(par_name=="EMAX") return get_Efdmax_in_pu();
+        if(par_name=="EMIN") return get_Efdmin_in_pu();
+    }
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
 void SEXS::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
-
-    return;
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name=="TA") return set_TA_in_s(value);
+        if(par_name=="TB") return set_TB_in_s(value);
+        if(par_name=="K") return set_K(value);
+        if(par_name=="TE") return set_TE_in_s(value);
+        if(par_name=="EMAX") return set_Efdmax_in_pu(value);
+        if(par_name=="EMIN") return set_Efdmin_in_pu(value);
+    }
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
 void SEXS::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
-    add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER", i); i++;
+    size_t i=1;
+    add_model_inernal_variable_name_and_index_pair("STATE@TUNER", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@EXCITER", i); i++;
 }
 
 double SEXS::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
-    if(var_name == "STATE@PHASE TUNER")
-        return phase_tuner.get_state();
-
-    if(var_name == "STATE@EXCITER")
-        return exciter.get_state();
-
+    if(is_model_inernal_variable_exist(var_name))
+    {
+        if(var_name == "STATE@TUNER") return phase_tuner.get_state();
+        if(var_name == "STATE@EXCITER") return exciter.get_state();
+    }
     return 0.0;
 }
 
