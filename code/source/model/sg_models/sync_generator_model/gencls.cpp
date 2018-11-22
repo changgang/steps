@@ -296,7 +296,8 @@ string GENCLS::get_standard_model_string() const
 
 void GENCLS::prepare_model_data_table()
 {
-    size_t i=0;
+    clear_model_data_table();
+    size_t i=1;
     add_model_data_name_and_index_pair("H", i); i++;
     add_model_data_name_and_index_pair("D", i);
 }
@@ -304,33 +305,31 @@ void GENCLS::prepare_model_data_table()
 double GENCLS::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="H")
-        return get_H_in_s();
-
-    if(par_name=="D")
-        return get_D();
-
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name=="H")  return get_H_in_s();
+        if(par_name=="D")  return get_D();
+    }
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
 void GENCLS::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-
-    if(par_name == "H")
-        return set_H_in_s(value);
-
-    if(par_name == "D")
-        return set_D(value);
-
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name == "H") return set_H_in_s(value);
+        if(par_name == "D") return set_D(value);
+    }
     show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-    return;
 }
 
 
 void GENCLS::prepare_model_internal_variable_table()
 {
-    size_t i=0;
+    clear_model_internal_variable_table();
+    size_t i=1;
     add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
 }

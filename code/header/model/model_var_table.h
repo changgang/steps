@@ -11,7 +11,7 @@ class MODEL_VAR_TABLE
     public:
         MODEL_VAR_TABLE();
         virtual ~MODEL_VAR_TABLE();
-
+        void clear();
         void add_variable_name_index_pair(string var_name, size_t var_index);
 
         size_t operator[](const string var_name) const;

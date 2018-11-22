@@ -316,6 +316,7 @@ string WT3T0::get_standard_model_string() const
 
 void WT3T0::prepare_model_data_table()
 {
+    clear_model_data_table();
     size_t i=1;
     add_model_data_name_and_index_pair("TURBINE INERTIA", i); i++; /*1*/
     add_model_data_name_and_index_pair("GENERATOR INERTIA", i); i++; /*2*/
@@ -364,6 +365,7 @@ void WT3T0::set_model_data_with_name(string par_name, double value)
 
 void WT3T0::prepare_model_internal_variable_table()
 {
+    clear_model_internal_variable_table();
     size_t i=1;
     add_model_inernal_variable_name_and_index_pair("STATE@TURBINE SPEED BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@GENERATOR SPEED BLOCK", i); i++;

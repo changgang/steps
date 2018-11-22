@@ -885,6 +885,7 @@ string CDC6T::get_standard_model_string() const
 
 void CDC6T::prepare_model_data_table()
 {
+    clear_model_data_table();
     size_t i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
@@ -910,6 +911,7 @@ void CDC6T::set_model_data_with_name(string par_name, double value)
 
 void CDC6T::prepare_model_internal_variable_table()
 {
+    clear_model_internal_variable_table();
     size_t i=0;
 }
 

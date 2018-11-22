@@ -593,6 +593,7 @@ string WT3G2::get_standard_model_string() const
 
 void WT3G2::prepare_model_data_table()
 {
+    clear_model_data_table();
     size_t i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
@@ -617,6 +618,7 @@ void WT3G2::set_model_data_with_name(string par_name, double value)
 
 void WT3G2::prepare_model_internal_variable_table()
 {
+    clear_model_internal_variable_table();
     size_t i=0;
     add_model_inernal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;

@@ -152,41 +152,39 @@ string COMP::get_standard_model_string() const
 
 void COMP::prepare_model_data_table()
 {
+    clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("XE", i); i++;
 }
 
 double COMP::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
-
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name=="XE") return get_Xe();
+    }
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
 void COMP::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
-
+    {
+        if(par_name=="XE") return set_Xe(value);
+    }
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 
 void COMP::prepare_model_internal_variable_table()
 {
-    size_t i=0;
-    add_model_inernal_variable_name_and_index_pair("COMPENSATED VOLTAGE IN PU", i); i++;
+    clear_model_internal_variable_table();
 }
 
 double COMP::get_model_internal_variable_with_name(string var_name)
 {
-    var_name = string2upper(var_name);
-
-    if(var_name == "COMPENSATED VOLTAGE IN PU")
-        return get_compensated_voltage_in_pu();
-
     return 0.0;
 }
 

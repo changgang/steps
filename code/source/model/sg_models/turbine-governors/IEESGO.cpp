@@ -387,6 +387,7 @@ string IEESGO::get_standard_model_string() const
 
 void IEESGO::prepare_model_data_table()
 {
+    clear_model_data_table();
     size_t i=0;
     add_model_data_name_and_index_pair("PMAX", i); i++;
     add_model_data_name_and_index_pair("PMIN", i); i++;
@@ -414,6 +415,7 @@ void IEESGO::set_model_data_with_name(string par_name, double value)
 
 void IEESGO::prepare_model_internal_variable_table()
 {
+    clear_model_internal_variable_table();
     size_t i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@GOVERNOR TUNER", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;

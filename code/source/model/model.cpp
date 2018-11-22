@@ -53,6 +53,10 @@ string MODEL::get_allowed_device_type() const
     return allowed_device_type;
 }
 
+void MODEL::clear_model_data_table()
+{
+    model_data_table.clear();
+}
 
 void MODEL::add_model_data_name_and_index_pair(string var_name, size_t var_index)
 {
@@ -98,6 +102,11 @@ double MODEL::get_model_data_with_index(size_t index)
         show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
         return 0.0;
     }
+}
+
+void MODEL::clear_model_internal_variable_table()
+{
+    model_internal_variable_table.clear();
 }
 
 void MODEL::add_model_inernal_variable_name_and_index_pair(string var_name, size_t var_index)

@@ -448,18 +448,18 @@ string GENSAL::get_standard_model_string() const
 
 void GENSAL::prepare_model_data_table()
 {
-    size_t i=0;
+    clear_model_data_table();
+    size_t i=1;
+    add_model_data_name_and_index_pair("TD0'", i); i++;
+    add_model_data_name_and_index_pair("TD0\"", i); i++;
+    add_model_data_name_and_index_pair("TQ0\"", i); i++;
     add_model_data_name_and_index_pair("H", i); i++;
     add_model_data_name_and_index_pair("D", i); i++;
     add_model_data_name_and_index_pair("XD", i); i++;
     add_model_data_name_and_index_pair("XQ", i); i++;
     add_model_data_name_and_index_pair("XD'", i); i++;
-    add_model_data_name_and_index_pair("XD\"", i); i++;
-    add_model_data_name_and_index_pair("XQ\"", i); i++;
+    add_model_data_name_and_index_pair("X\"", i); i++;
     add_model_data_name_and_index_pair("XL", i); i++;
-    add_model_data_name_and_index_pair("TD0'", i); i++;
-    add_model_data_name_and_index_pair("TD0\"", i); i++;
-    add_model_data_name_and_index_pair("TQ0\"", i); i++;
     add_model_data_name_and_index_pair("S1", i); i++;
     add_model_data_name_and_index_pair("S1.2", i);
 }
@@ -467,48 +467,22 @@ void GENSAL::prepare_model_data_table()
 double GENSAL::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="H")
-        return get_H_in_s();
-
-    if(par_name=="D")
-        return get_D();
-
-    if(par_name == "XD")
-        return get_Xd();
-
-    if(par_name == "XQ")
-        return get_Xq();
-
-    if(par_name == "XD'")
-        return get_Xdp();
-
-    if(par_name == "XD\"")
-        return get_Xdpp();
-
-    if(par_name == "XQ\"")
-        return get_Xqpp();
-
-    if(par_name == "XL")
-        return get_Xl();
-
-    if(par_name == "TD0'")
-        return get_Td0p_in_s();
-
-    if(par_name == "TQ0'")
-        return get_Tq0p_in_s();
-
-    if(par_name == "TD0\"")
-        return get_Td0pp_in_s();
-
-    if(par_name == "TQ0\"")
-        return get_Tq0pp_in_s();
-
-    if(par_name == "S1")
-        return get_saturation_at_1();
-
-    if(par_name == "S1.2")
-        return get_saturation_at_1p2();
-
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name == "TD0'") return get_Td0p_in_s();
+        if(par_name == "TD0\"") return get_Td0pp_in_s();
+        if(par_name == "TQ0\"") return get_Tq0pp_in_s();
+        if(par_name=="H") return get_H_in_s();
+        if(par_name=="D") return get_D();
+        if(par_name == "XD") return get_Xd();
+        if(par_name == "XQ") return get_Xq();
+        if(par_name == "XD'") return get_Xdp();
+        if(par_name == "X\"") return get_Xpp();
+        if(par_name == "XL")   return get_Xl();
+        if(par_name == "S1")    return get_saturation_at_1();
+        if(par_name == "S1.2")  return get_saturation_at_1p2();
+    }
+    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -516,61 +490,35 @@ void GENSAL::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
 
-    if(par_name == "H")
-        return set_H_in_s(value);
-
-    if(par_name == "D")
-        return set_D(value);
-
-    if(par_name == "XD")
-        return set_Xd(value);
-
-    if(par_name == "XQ")
-        return set_Xq(value);
-
-    if(par_name == "XD'")
-        return set_Xdp(value);
-
-    if(par_name == "XD\"")
-        return set_Xdpp(value);
-
-    if(par_name == "XQ\"")
-        return set_Xqpp(value);
-
-    if(par_name == "XL")
-        return set_Xl(value);
-
-    if(par_name == "TD0'")
-        return set_Td0p_in_s(value);
-
-    if(par_name == "TQ0'")
-        return set_Tq0p_in_s(value);
-
-    if(par_name == "TD0\"")
-        return set_Td0pp_in_s(value);
-
-    if(par_name == "TQ0\"")
-        return set_Tq0pp_in_s(value);
-
-    if(par_name == "S1")
-        return set_saturation_at_1(value);
-
-    if(par_name == "S1.2")
-        return set_saturation_at_1p2(value);
-
+    if(is_model_data_exist(par_name))
+    {
+        if(par_name == "TD0'") return set_Td0p_in_s(value);
+        if(par_name == "TD0\"") return set_Td0pp_in_s(value);
+        if(par_name == "TQ0\"") return set_Tq0pp_in_s(value);
+        if(par_name == "H") return set_H_in_s(value);
+        if(par_name == "D") return set_D(value);
+        if(par_name == "XD") return set_Xd(value);
+        if(par_name == "XQ") return set_Xq(value);
+        if(par_name == "XD'") return set_Xdp(value);
+        if(par_name == "X\"") return set_Xpp(value);
+        if(par_name == "XL")   return set_Xl(value);
+        if(par_name == "S1")    return set_saturation_at_1(value);
+        if(par_name == "S1.2")  return set_saturation_at_1p2(value);
+    }
     show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-    return;
 }
 
 
 void GENSAL::prepare_model_internal_variable_table()
 {
-    size_t i=0;
+    clear_model_internal_variable_table();
+    size_t i=1;
     add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@D-AXIS SUBTRANSIENT BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@Q-AXIS SUBTRANSIENT BLOCK", i); i++;
+    add_model_inernal_variable_name_and_index_pair("SATURATION", i); i++;
 }
 
 double GENSAL::get_model_internal_variable_with_name(string var_name)
@@ -582,16 +530,28 @@ double GENSAL::get_model_internal_variable_with_name(string var_name)
     INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
 
     var_name = string2upper(var_name);
-    if(var_name == "STATE@ROTOR ANGLE BLOCK")
-        return rotor_angle_block->get_state();
-    if(var_name == "STATE@ROTOR SPEED BLOCK")
-        return rotor_speed_block->get_state();
-    if(var_name == "STATE@D-AXIS TRANSIENT BLOCK")
-        return transient_block_d_axis->get_state();
-    if(var_name == "STATE@D-AXIS SUBTRANSIENT BLOCK")
-        return subtransient_block_d_axis->get_state();
-    if(var_name == "STATE@Q-AXIS SUBTRANSIENT BLOCK")
-        return subtransient_block_q_axis->get_state();
+    if(var_name == "STATE@ROTOR ANGLE BLOCK") return rotor_angle_block->get_state();
+    if(var_name == "STATE@ROTOR SPEED BLOCK") return rotor_speed_block->get_state();
+    if(var_name == "STATE@D-AXIS TRANSIENT BLOCK") return transient_block_d_axis->get_state();
+    if(var_name == "STATE@D-AXIS SUBTRANSIENT BLOCK")  return subtransient_block_d_axis->get_state();
+    if(var_name == "STATE@Q-AXIS SUBTRANSIENT BLOCK")  return subtransient_block_q_axis->get_state();
+    if(var_name == "SATURATION")
+    {
+        INTEGRAL_BLOCK* transient_block_d_axis = get_d_axis_transient_block();
+        INTEGRAL_BLOCK* subtransient_block_d_axis = get_d_axis_subtransient_block();
+        INTEGRAL_BLOCK* subtransient_block_q_axis = get_q_axis_subtransient_block();
+
+        double xdp = get_Xdp();
+        double xpp = get_Xpp();
+        double xl = get_Xl();
+
+        double fluxd = transient_block_d_axis->get_output()*(xpp-xl)/(xdp-xl) + subtransient_block_d_axis->get_output()*(xdp-xpp)/(xdp-xl);
+        double fluxq = -subtransient_block_q_axis->get_output();
+        complex<double> Flux_dq(fluxd, fluxq);
+
+        return get_saturation_with_flux(steps_fast_complex_abs(Flux_dq));
+    }
+
 
     return 0.0;
 }

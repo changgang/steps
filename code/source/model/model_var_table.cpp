@@ -3,11 +3,15 @@
 
 MODEL_VAR_TABLE::MODEL_VAR_TABLE()
 {
-    var_index2name_map.clear();
-    var_name2index_map.clear();
+    clear();
 }
 
 MODEL_VAR_TABLE::~MODEL_VAR_TABLE()
+{
+    clear();
+}
+
+void MODEL_VAR_TABLE::clear()
 {
     var_index2name_map.clear();
     var_name2index_map.clear();

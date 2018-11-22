@@ -460,6 +460,7 @@ string WT3P0::get_standard_model_string() const
 
 void WT3P0::prepare_model_data_table()
 {
+    clear_model_data_table();
     size_t i=0;
     add_model_data_name_and_index_pair("HOLD SPEED FLAG", i); i++; /*1*/
     add_model_data_name_and_index_pair("T SPEED IN S", i); i++; /*2*/
@@ -535,6 +536,7 @@ void WT3P0::set_model_data_with_name(string par_name, double value)
 
 void WT3P0::prepare_model_internal_variable_table()
 {
+    clear_model_internal_variable_table();
     size_t i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SPEED REGULATOR", i); i++;

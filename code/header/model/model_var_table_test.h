@@ -24,6 +24,7 @@ class MODEL_VAR_TABLE_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     protected:
+        void test_clear();
         void test_add_get_variable_name_index_pair();
     private:
         MODEL_VAR_TABLE* table;
