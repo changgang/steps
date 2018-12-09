@@ -8,9 +8,9 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
-#include "header/basic/sparse_matrix.h"
+#include "header/basic/sparse_matrix_define.h"
 
 using namespace std;
 
@@ -56,7 +56,7 @@ class SPARSE_MATRIX_TEST : public Test::Suite
         void test_save_matrix_to_file();
     private:
         void prepare_basic_matrix();
-        SPARSE_MATRIX matrix;
+        STEPS_SPARSE_MATRIX matrix;
 };
 
 #endif // SPARSE_MATRIX_TEST_H

@@ -3,9 +3,9 @@
 
 #include "header/basic/base.h"
 #include "header/meter/meter.h"
-#include "header/basic/sparse_matrix.h"
 //#include "header/power_system_database.h"
 #include "header/network/network_matrix.h"
+#include "header/basic/sparse_matrix_define.h"
 #include <fstream>
 
 class POWER_SYSTEM_DATABASE;
@@ -193,7 +193,7 @@ class DYNAMICS_SIMULATOR: public BASE
 
         vector<double> delta_V;
 
-        SPARSE_MATRIX jacobian;
+        STEPS_SPARSE_MATRIX jacobian;
 
         NETWORK_MATRIX network_matrix;
 
@@ -212,4 +212,5 @@ class DYNAMICS_SIMULATOR: public BASE
         virtual bool is_valid() const;
         virtual void check();
 };
+
 #endif // DYNAMICS_SIMULATOR_H

@@ -11,7 +11,7 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
 #include "header/model/wtg_models/wt_electrical_model/wt3e1.h"
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h"

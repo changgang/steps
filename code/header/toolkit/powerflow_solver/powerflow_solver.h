@@ -3,8 +3,8 @@
 
 #include "header/device/bus.h"
 #include "header/device/source.h"
-#include "header/basic/sparse_matrix.h"
 #include "header/network/network_matrix.h"
+#include "header/basic/sparse_matrix_define.h"
 
 class POWERFLOW_SOLVER
 {
@@ -94,7 +94,7 @@ class POWERFLOW_SOLVER
         void set_convergence_flag(bool flag);
 
 
-        SPARSE_MATRIX jacobian, BP, BQ;
+        STEPS_SPARSE_MATRIX jacobian, BP, BQ;
 
         vector<double> bus_active_power_mismatch_in_pu, bus_reactive_power_mismatch_in_pu;
 
@@ -113,4 +113,5 @@ class POWERFLOW_SOLVER
     private:
         NETWORK_MATRIX network_matrix;
 };
+
 #endif // POWERFLOW_SOLVER_H

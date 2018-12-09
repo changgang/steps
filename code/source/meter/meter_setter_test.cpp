@@ -591,7 +591,7 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     meter = setter.prepare_generator_compensator_model_internal_variable_meter(did, "COMPENSATED VOLTAGE IN PU");
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="COMPENSATOR MODEL INTERNAL VARIABLE");
-    TEST_ASSERT(meter.get_internal_variable_name()=="COMPENSATED VOLTAGE IN PU");
+    TEST_ASSERT(meter.get_internal_variable_name()=="");
 
     meter = setter.prepare_generator_stabilizer_model_internal_variable_meter(did, "STATE@PHASE TUNER 3");
     TEST_ASSERT(meter.get_device_id()==did);
@@ -747,10 +747,10 @@ void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
     TEST_ASSERT(meter.get_meter_type()=="WT AERODYNAMIC MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="BLADE RADIUS IN M");
 
-    meter = setter.prepare_wt_turbine_model_internal_variable_meter(did, "STATE@TURBINE");
+    meter = setter.prepare_wt_turbine_model_internal_variable_meter(did, "STATE@TURBINE SPEED BLOCK");
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="WT TURBINE MODEL INTERNAL VARIABLE");
-    TEST_ASSERT(meter.get_internal_variable_name()=="STATE@TURBINE");
+    TEST_ASSERT(meter.get_internal_variable_name()=="STATE@TURBINE SPEED BLOCK");
 
     meter = setter.prepare_wt_electrical_model_internal_variable_meter(did, "STATE@PRIMARY FREQUENCY CONTROL");
     TEST_ASSERT(meter.get_device_id()==did);

@@ -5,8 +5,8 @@
 #include "header/device/transformer.h"
 #include "header/device/fixed_shunt.h"
 
-#include "header/basic/sparse_matrix.h"
 #include "header/network/network_matrix.h"
+#include "header/basic/sparse_matrix_define.h"
 
 #include <ctime>
 
@@ -34,12 +34,12 @@ class JACOBIAN_BUILDER
         double get_jacobian_delta_q_over_angle_of_physical_bus(size_t ibus, size_t jbus);
         double get_jacobian_delta_q_over_voltage_of_physical_bus(size_t ibus, size_t jbus);
 
-        SPARSE_MATRIX& get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(const vector<size_t> internal_P_equation_buses,
+        STEPS_SPARSE_MATRIX& get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(const vector<size_t> internal_P_equation_buses,
                                                                                     const vector<size_t> internal_Q_equation_buses);
 
-        SPARSE_MATRIX& get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses);
+        STEPS_SPARSE_MATRIX& get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses);
 
-        SPARSE_MATRIX& get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses);
+        STEPS_SPARSE_MATRIX& get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses);
 
 
         void show_seprate_jacobians();
@@ -51,11 +51,10 @@ class JACOBIAN_BUILDER
         void update_jacobian_delta_q_over_angle();
         void update_jacobian_delta_q_over_voltage();
 
-        SPARSE_MATRIX jacobian_delta_p_over_angle,
+        STEPS_SPARSE_MATRIX jacobian_delta_p_over_angle,
                       jacobian_delta_p_over_voltage,
                       jacobian_delta_q_over_angle,
                       jacobian_delta_q_over_voltage;
 };
-
 
 #endif // JACOBIAN_BUILDER_H

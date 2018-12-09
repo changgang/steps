@@ -2,7 +2,7 @@
 	#pragma warning (disable: 4290)
 #endif
 #include <cmath>
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"

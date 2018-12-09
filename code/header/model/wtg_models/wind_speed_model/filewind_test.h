@@ -10,7 +10,7 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
 #include "header/model/wtg_models/wind_speed_model/wind_speed_model_test.h"
 using namespace std;

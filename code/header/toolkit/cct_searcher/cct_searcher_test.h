@@ -10,7 +10,7 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
 #include "header/toolkit/cct_searcher/cct_searcher.h"
 

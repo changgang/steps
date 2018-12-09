@@ -10,7 +10,7 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
 #include "header/model/sg_models/compensator_model/COMP.h"
 #include "header/model/sg_models/compensator_model/compensator_model_test.h"

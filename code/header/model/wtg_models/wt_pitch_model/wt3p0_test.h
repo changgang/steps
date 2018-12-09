@@ -10,7 +10,7 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
 #include "header/model/wtg_models/wt_pitch_model/wt3p0.h"
 #include "header/model/wtg_models/wt_pitch_model/wt_pitch_model_test.h"

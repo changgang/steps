@@ -10,7 +10,7 @@
 	#pragma warning (disable: 4290)
 #endif
 
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
 #include "header/model/load_relay_model/load_frequency_relay_model.h"
 #include "header/model/load_relay_model/load_relay_model_test.h"

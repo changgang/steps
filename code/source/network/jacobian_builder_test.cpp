@@ -88,7 +88,7 @@ void JACOBIAN_BUILDER_TEST::test_get_full_jacobian_for_coupled_P_and_Q_equations
 
     internal_Q_equation_buses = internal_P_equation_buses;
 
-    SPARSE_MATRIX J = jacobian_builder.get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses, internal_Q_equation_buses);
+    STEPS_SPARSE_MATRIX J = jacobian_builder.get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses, internal_Q_equation_buses);
 
 
     osstream<<"Full Jacobian with initial voltage from Arthur R. Arthur_R_Bergen";
@@ -129,7 +129,7 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_P_equations()
     internal_P_equation_buses.push_back(1);
     internal_P_equation_buses.push_back(2);
 
-    SPARSE_MATRIX B = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
+    STEPS_SPARSE_MATRIX B = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
 
 
     osstream<<"Decoupled B Jacobian for P equations from Arthur R. Arthur_R_Bergen";
@@ -153,7 +153,7 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_Q_equations()
     internal_Q_equation_buses.push_back(1);
     internal_Q_equation_buses.push_back(2);
 
-    SPARSE_MATRIX B = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
+    STEPS_SPARSE_MATRIX B = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
 
 
     osstream<<"Decoupled B Jacobian for Q equations from Arthur R. Arthur_R_Bergen";

@@ -3,9 +3,8 @@
 
 #include "header/basic/base.h"
 #include "header/power_system_database.h"
-#include "header/basic/sparse_matrix.h"
+#include "header/basic/sparse_matrix_define.h"
 #include "header/basic/inphno.h"
-
 #include <string>
 
 
@@ -23,11 +22,11 @@ class NETWORK_MATRIX : public BASE
         void build_dc_network_matrix();
         void build_dynamic_network_matrix();
 
-        SPARSE_MATRIX& get_network_matrix();
-        SPARSE_MATRIX& get_decoupled_network_BP_matrix();
-        SPARSE_MATRIX& get_decoupled_network_BQ_matrix();
-        SPARSE_MATRIX& get_dc_network_matrix();
-        SPARSE_MATRIX& get_dynamic_network_matrix();
+        STEPS_SPARSE_MATRIX& get_network_matrix();
+        STEPS_SPARSE_MATRIX& get_decoupled_network_BP_matrix();
+        STEPS_SPARSE_MATRIX& get_decoupled_network_BQ_matrix();
+        STEPS_SPARSE_MATRIX& get_dc_network_matrix();
+        STEPS_SPARSE_MATRIX& get_dynamic_network_matrix();
 
         void optimize_network_ordering();
         void check_newtork_connectivity();
@@ -93,7 +92,7 @@ class NETWORK_MATRIX : public BASE
         void report_network_matrix_common() const;
         void save_network_matrix_common(ofstream& file) const;
     private:
-        SPARSE_MATRIX network_Y_matrix, network_BP_matrix, network_BQ_matrix, network_DC_B_matrix;
+        STEPS_SPARSE_MATRIX network_Y_matrix, network_BP_matrix, network_BQ_matrix, network_DC_B_matrix;
         INPHNO inphno;
     private:
         virtual bool is_valid() const;

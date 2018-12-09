@@ -51,7 +51,7 @@ void NETWORK_MATRIX::build_network_matrix()
     network_Y_matrix.compress_and_merge_duplicate_entries();
 }
 
-SPARSE_MATRIX& NETWORK_MATRIX::get_network_matrix()
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_network_matrix()
 {
     if(network_Y_matrix.matrix_in_triplet_form())
         build_network_matrix();
@@ -76,7 +76,7 @@ void NETWORK_MATRIX::build_decoupled_network_matrix()
 
 }
 
-SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BP_matrix()
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BP_matrix()
 {
     if(network_BP_matrix.matrix_in_triplet_form())
         build_decoupled_network_matrix();
@@ -84,7 +84,7 @@ SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BP_matrix()
     return network_BP_matrix;
 }
 
-SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BQ_matrix()
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BQ_matrix()
 {
     if(network_BP_matrix.matrix_in_triplet_form())
         build_decoupled_network_matrix();
@@ -105,7 +105,7 @@ void NETWORK_MATRIX::build_dc_network_matrix()
     network_DC_B_matrix.compress_and_merge_duplicate_entries();
 }
 
-SPARSE_MATRIX& NETWORK_MATRIX::get_dc_network_matrix()
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_dc_network_matrix()
 {
     if(network_DC_B_matrix.matrix_in_triplet_form())
         build_dc_network_matrix();
@@ -131,7 +131,7 @@ void NETWORK_MATRIX::build_dynamic_network_matrix()
     network_Y_matrix.compress_and_merge_duplicate_entries();
 }
 
-SPARSE_MATRIX& NETWORK_MATRIX::get_dynamic_network_matrix()
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_dynamic_network_matrix()
 {
     if(network_Y_matrix.matrix_in_triplet_form())
         build_dynamic_network_matrix();

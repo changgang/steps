@@ -61,7 +61,7 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
     double der;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     int n = Y.get_matrix_entry_count();
     int row, column;
@@ -104,7 +104,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
 {
     NETWORK_MATRIX* nw_db = get_network_matrix();
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
     double der;
@@ -163,7 +163,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
 {
     NETWORK_MATRIX* nw_db = get_network_matrix();
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
     double der;
@@ -223,7 +223,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
 {
     NETWORK_MATRIX* nw_db = get_network_matrix();
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
     double der;
@@ -283,7 +283,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
 {
     NETWORK_MATRIX* nw_db = get_network_matrix();
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
     double der;
@@ -346,7 +346,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
         return 0.0;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -411,7 +411,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
         return 0.0;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -476,7 +476,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
         return 0.0;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -541,7 +541,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
         return 0.0;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -700,7 +700,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_
     }
 }
 
-SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(
+STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(
                                                                 const vector<size_t> internal_P_equation_buses,
                                                                 const vector<size_t> internal_Q_equation_buses)
 {
@@ -715,7 +715,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation
     //show_information_with_leading_time_stamp(osstream);
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    const SPARSE_MATRIX& Y = nw_db->get_network_matrix();
+    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     size_t n_internal_P_equation_buses = internal_P_equation_buses.size(),
@@ -750,7 +750,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation
     }
 
 
-    static SPARSE_MATRIX full_jacobian;
+    static STEPS_SPARSE_MATRIX full_jacobian;
 
     full_jacobian.clear();
 
@@ -817,7 +817,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation
     complex<double>cvalue;
     double rvalue;
 
-    static SPARSE_MATRIX full_jacobian;
+    static STEPS_SPARSE_MATRIX full_jacobian;
 
     full_jacobian.clear();
 
@@ -877,7 +877,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation
     */
 }
 
-SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses)
+STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses)
 {
     ostringstream osstream;
     if(not is_network_matrix_set())
@@ -892,7 +892,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_intern
     NETWORK_MATRIX* nw_db = get_network_matrix();
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    const SPARSE_MATRIX& BP = nw_db->get_decoupled_network_BP_matrix();
+    const STEPS_SPARSE_MATRIX& BP = nw_db->get_decoupled_network_BP_matrix();
 
     size_t n_internal_P_equation_buses = internal_P_equation_buses.size();
 
@@ -915,7 +915,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_intern
     }
 
 
-    static SPARSE_MATRIX B_jacobian;
+    static STEPS_SPARSE_MATRIX B_jacobian;
 
     B_jacobian.clear();
 
@@ -949,7 +949,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_intern
     return B_jacobian;
 }
 
-SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses)
+STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses)
 {
     ostringstream osstream;
     if(not is_network_matrix_set())
@@ -964,7 +964,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_intern
     NETWORK_MATRIX* nw_db = get_network_matrix();
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    const SPARSE_MATRIX& BQ = nw_db->get_decoupled_network_BQ_matrix();
+    const STEPS_SPARSE_MATRIX& BQ = nw_db->get_decoupled_network_BQ_matrix();
 
     size_t n_internal_Q_equation_buses = internal_Q_equation_buses.size();
 
@@ -987,7 +987,7 @@ SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_intern
     }
 
 
-    static SPARSE_MATRIX B_jacobian;
+    static STEPS_SPARSE_MATRIX B_jacobian;
 
     B_jacobian.clear();
 

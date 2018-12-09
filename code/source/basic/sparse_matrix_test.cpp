@@ -82,7 +82,7 @@ void SPARSE_MATRIX_TEST::test_add_entry()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
 
-    SPARSE_MATRIX mat;
+    STEPS_SPARSE_MATRIX mat;
     mat.add_entry(0,0,1);
     mat.add_entry(1,0,complex<double>(1.0, 2.0));
     mat.add_entry(0,1,complex<double>(2.0, 3.0));
@@ -392,7 +392,7 @@ void SPARSE_MATRIX_TEST::test_copy_with_operator_equal()
     // [0  2  4]  + j [0  5  9]
     // [1  0  1]      [0  0  2]
 
-    SPARSE_MATRIX newmatrix;
+    STEPS_SPARSE_MATRIX newmatrix;
     newmatrix = matrix;  // here , operator = is called
 
     TEST_ASSERT(newmatrix.get_matrix_size()==3);
@@ -419,7 +419,7 @@ void SPARSE_MATRIX_TEST::test_copy_with_copy_constructor()
     // [0  2  4]  + j [0  5  9]
     // [1  0  1]      [0  0  2]
 
-    SPARSE_MATRIX newmatrix = matrix; //here, copy constructor is called
+    STEPS_SPARSE_MATRIX newmatrix = matrix; //here, copy constructor is called
 
     TEST_ASSERT(newmatrix.get_matrix_size()==3);
 

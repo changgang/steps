@@ -47,7 +47,7 @@ void NETWORK_MATRIX_TEST::test_build_and_get_network_matrix()
 
     network_matrix.build_network_matrix();
 
-    SPARSE_MATRIX& Y = network_matrix.get_network_matrix();
+    STEPS_SPARSE_MATRIX& Y = network_matrix.get_network_matrix();
 
     osstream<<"Network Y matrix with initial physical bus : internal bus pair:";
     show_information_with_leading_time_stamp(osstream);
@@ -69,8 +69,8 @@ void NETWORK_MATRIX_TEST::test_build_and_get_decoupled_network_matrix()
 
     network_matrix.build_decoupled_network_matrix();
 
-    SPARSE_MATRIX& BP = network_matrix.get_decoupled_network_BP_matrix();
-    SPARSE_MATRIX& BQ = network_matrix.get_decoupled_network_BQ_matrix();
+    STEPS_SPARSE_MATRIX& BP = network_matrix.get_decoupled_network_BP_matrix();
+    STEPS_SPARSE_MATRIX& BQ = network_matrix.get_decoupled_network_BQ_matrix();
 
     network_matrix.report_decoupled_network_matrix();
 
@@ -92,7 +92,7 @@ void NETWORK_MATRIX_TEST::test_build_and_get_dynamic_network_matrix()
 
     network_matrix.build_dynamic_network_matrix();
 
-    SPARSE_MATRIX Y = network_matrix.get_dynamic_network_matrix();
+    STEPS_SPARSE_MATRIX Y = network_matrix.get_dynamic_network_matrix();
 
     osstream<<"Dynamic network Y matrix with initial physical bus : internal bus pair:";
     show_information_with_leading_time_stamp(osstream);

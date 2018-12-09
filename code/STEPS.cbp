@@ -32,7 +32,9 @@
 					<Add option="-std=c++14" />
 					<Add option="-fPIC" />
 					<Add option="-Og" />
-					<Add directory="/home/changgang/steps/code/" />
+					<Add directory="../code" />
+					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
+					<Add directory="thirdparty/cpptest" />
 				</Compiler>
 				<Linker>
 					<Add option="-static-libstdc++" />
@@ -71,7 +73,10 @@
 		<Unit filename="header/basic/rating.h" />
 		<Unit filename="header/basic/rating_test.h" />
 		<Unit filename="header/basic/sparse_matrix.h" />
+		<Unit filename="header/basic/sparse_matrix_csparse.h" />
+		<Unit filename="header/basic/sparse_matrix_define.h" />
 		<Unit filename="header/basic/sparse_matrix_test.h" />
+		<Unit filename="header/basic/sparse_matrix_umfpack.h" />
 		<Unit filename="header/basic/steps_enum.h" />
 		<Unit filename="header/basic/terminal.h" />
 		<Unit filename="header/basic/terminal_test.h" />
@@ -378,7 +383,9 @@
 		<Unit filename="source/basic/rating.cpp" />
 		<Unit filename="source/basic/rating_test.cpp" />
 		<Unit filename="source/basic/sparse_matrix.cpp" />
+		<Unit filename="source/basic/sparse_matrix_csparse.cpp" />
 		<Unit filename="source/basic/sparse_matrix_test.cpp" />
+		<Unit filename="source/basic/sparse_matrix_umfpack.cpp" />
 		<Unit filename="source/basic/terminal.cpp" />
 		<Unit filename="source/basic/terminal_test.cpp" />
 		<Unit filename="source/basic/timer.cpp" />
@@ -600,6 +607,160 @@
 		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator_test.cpp" />
 		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver.cpp" />
 		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver_test.cpp" />
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Include/cs.h" />
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_add.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_amd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_chol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_cholsol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_compress.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_counts.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_cumsum.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_dfs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_dmperm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_droptol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_dropzeros.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_dupl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_entry.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_ereach.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_etree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_fkeep.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_gaxpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_happly.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_house.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_ipvec.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_leaf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_load.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_lsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_ltsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_lu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_lusol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_malloc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_maxtrans.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_multiply.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_norm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_permute.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_pinv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_post.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_print.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_pvec.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_qr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_qrsol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_randperm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_reach.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_scatter.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_scc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_schol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_spsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_sqr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_symperm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_tdfs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_transpose.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_updown.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_usolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_utsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="thirdparty/cpptest/collectoroutput.cpp" />
 		<Unit filename="thirdparty/cpptest/compileroutput.cpp" />
 		<Unit filename="thirdparty/cpptest/cpptest-assert.h" />
@@ -621,10 +782,6 @@
 		<Unit filename="thirdparty/cpptest/time.cpp" />
 		<Unit filename="thirdparty/cpptest/utils.cpp" />
 		<Unit filename="thirdparty/cpptest/utils.h" />
-		<Unit filename="thirdparty/csparse/CSparse.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="thirdparty/csparse/CSparse.h" />
 		<Unit filename="thirdparty/rapidjson/allocators.h" />
 		<Unit filename="thirdparty/rapidjson/cursorstreamwrapper.h" />
 		<Unit filename="thirdparty/rapidjson/document.h" />

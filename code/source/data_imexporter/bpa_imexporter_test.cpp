@@ -2,7 +2,7 @@
 	#pragma warning (disable: 4290)
 #endif
 #include <cmath>
-#include "thirdparty/cpptest/cpptest.h"
+#include "cpptest.h"
 
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter_test.h"
