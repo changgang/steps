@@ -115,15 +115,3 @@ clock_t SPARSE_MATRIX::get_clock_when_LU_factorization_is_performed() const
 {
     return clock_when_LU_factorization_is_performed;
 }
-
-vector<double> SPARSE_MATRIX::solve_Ax_eq_b(vector<double> b)
-{
-    if(not LU_factorization_is_performed())
-        LU_factorization(1, 1e-6);
-
-    solve_Lx_eq_b(b);
-
-    solve_xU_eq_b(b);
-
-    return b;
-}

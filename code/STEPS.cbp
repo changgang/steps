@@ -35,10 +35,16 @@
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 					<Add directory="thirdparty/cpptest" />
+					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
+					<Add directory="thirdparty/SuiteSparse/SuiteSparse_config" />
+					<Add directory="thirdparty/SuiteSparse/AMD/Include" />
 				</Compiler>
 				<Linker>
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
+					<Add option="-lgfortran" />
+					<Add library="../build/bin/Release/libBLAS.a" />
+					<Add library="../build/bin/Release/libSuiteSparse.a" />
 				</Linker>
 			</Target>
 		</Build>

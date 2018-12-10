@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="BLAS" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../build/bin/Release/BLAS" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="../build/obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gfortran" />
+				<Option createDefFile="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add directory="thirdparty/BLAS" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="thirdparty/BLAS/caxpy.f" />
+		<Unit filename="thirdparty/BLAS/ccopy.f" />
+		<Unit filename="thirdparty/BLAS/cdotc.f" />
+		<Unit filename="thirdparty/BLAS/cdotu.f" />
+		<Unit filename="thirdparty/BLAS/cgbmv.f" />
+		<Unit filename="thirdparty/BLAS/cgemm.f" />
+		<Unit filename="thirdparty/BLAS/cgemv.f" />
+		<Unit filename="thirdparty/BLAS/cgerc.f" />
+		<Unit filename="thirdparty/BLAS/cgeru.f" />
+		<Unit filename="thirdparty/BLAS/chbmv.f" />
+		<Unit filename="thirdparty/BLAS/chemm.f" />
+		<Unit filename="thirdparty/BLAS/chemv.f" />
+		<Unit filename="thirdparty/BLAS/cher.f" />
+		<Unit filename="thirdparty/BLAS/cher2.f" />
+		<Unit filename="thirdparty/BLAS/cher2k.f" />
+		<Unit filename="thirdparty/BLAS/cherk.f" />
+		<Unit filename="thirdparty/BLAS/chpmv.f" />
+		<Unit filename="thirdparty/BLAS/chpr.f" />
+		<Unit filename="thirdparty/BLAS/chpr2.f" />
+		<Unit filename="thirdparty/BLAS/crotg.f" />
+		<Unit filename="thirdparty/BLAS/cscal.f" />
+		<Unit filename="thirdparty/BLAS/csrot.f" />
+		<Unit filename="thirdparty/BLAS/csscal.f" />
+		<Unit filename="thirdparty/BLAS/cswap.f" />
+		<Unit filename="thirdparty/BLAS/csymm.f" />
+		<Unit filename="thirdparty/BLAS/csyr2k.f" />
+		<Unit filename="thirdparty/BLAS/csyrk.f" />
+		<Unit filename="thirdparty/BLAS/ctbmv.f" />
+		<Unit filename="thirdparty/BLAS/ctbsv.f" />
+		<Unit filename="thirdparty/BLAS/ctpmv.f" />
+		<Unit filename="thirdparty/BLAS/ctpsv.f" />
+		<Unit filename="thirdparty/BLAS/ctrmm.f" />
+		<Unit filename="thirdparty/BLAS/ctrmv.f" />
+		<Unit filename="thirdparty/BLAS/ctrsm.f" />
+		<Unit filename="thirdparty/BLAS/ctrsv.f" />
+		<Unit filename="thirdparty/BLAS/dasum.f" />
+		<Unit filename="thirdparty/BLAS/daxpy.f" />
+		<Unit filename="thirdparty/BLAS/dcabs1.f" />
+		<Unit filename="thirdparty/BLAS/dcopy.f" />
+		<Unit filename="thirdparty/BLAS/ddot.f" />
+		<Unit filename="thirdparty/BLAS/dgbmv.f" />
+		<Unit filename="thirdparty/BLAS/dgemm.f" />
+		<Unit filename="thirdparty/BLAS/dgemv.f" />
+		<Unit filename="thirdparty/BLAS/dger.f" />
+		<Unit filename="thirdparty/BLAS/dnrm2.f" />
+		<Unit filename="thirdparty/BLAS/drot.f" />
+		<Unit filename="thirdparty/BLAS/drotg.f" />
+		<Unit filename="thirdparty/BLAS/drotm.f" />
+		<Unit filename="thirdparty/BLAS/drotmg.f" />
+		<Unit filename="thirdparty/BLAS/dsbmv.f" />
+		<Unit filename="thirdparty/BLAS/dscal.f" />
+		<Unit filename="thirdparty/BLAS/dsdot.f" />
+		<Unit filename="thirdparty/BLAS/dspmv.f" />
+		<Unit filename="thirdparty/BLAS/dspr.f" />
+		<Unit filename="thirdparty/BLAS/dspr2.f" />
+		<Unit filename="thirdparty/BLAS/dswap.f" />
+		<Unit filename="thirdparty/BLAS/dsymm.f" />
+		<Unit filename="thirdparty/BLAS/dsymv.f" />
+		<Unit filename="thirdparty/BLAS/dsyr.f" />
+		<Unit filename="thirdparty/BLAS/dsyr2.f" />
+		<Unit filename="thirdparty/BLAS/dsyr2k.f" />
+		<Unit filename="thirdparty/BLAS/dsyrk.f" />
+		<Unit filename="thirdparty/BLAS/dtbmv.f" />
+		<Unit filename="thirdparty/BLAS/dtbsv.f" />
+		<Unit filename="thirdparty/BLAS/dtpmv.f" />
+		<Unit filename="thirdparty/BLAS/dtpsv.f" />
+		<Unit filename="thirdparty/BLAS/dtrmm.f" />
+		<Unit filename="thirdparty/BLAS/dtrmv.f" />
+		<Unit filename="thirdparty/BLAS/dtrsm.f" />
+		<Unit filename="thirdparty/BLAS/dtrsv.f" />
+		<Unit filename="thirdparty/BLAS/dzasum.f" />
+		<Unit filename="thirdparty/BLAS/dznrm2.f" />
+		<Unit filename="thirdparty/BLAS/icamax.f" />
+		<Unit filename="thirdparty/BLAS/idamax.f" />
+		<Unit filename="thirdparty/BLAS/isamax.f" />
+		<Unit filename="thirdparty/BLAS/izamax.f" />
+		<Unit filename="thirdparty/BLAS/lsame.f" />
+		<Unit filename="thirdparty/BLAS/sasum.f" />
+		<Unit filename="thirdparty/BLAS/saxpy.f" />
+		<Unit filename="thirdparty/BLAS/scabs1.f" />
+		<Unit filename="thirdparty/BLAS/scasum.f" />
+		<Unit filename="thirdparty/BLAS/scnrm2.f" />
+		<Unit filename="thirdparty/BLAS/scopy.f" />
+		<Unit filename="thirdparty/BLAS/sdot.f" />
+		<Unit filename="thirdparty/BLAS/sdsdot.f" />
+		<Unit filename="thirdparty/BLAS/sgbmv.f" />
+		<Unit filename="thirdparty/BLAS/sgemm.f" />
+		<Unit filename="thirdparty/BLAS/sgemv.f" />
+		<Unit filename="thirdparty/BLAS/sger.f" />
+		<Unit filename="thirdparty/BLAS/snrm2.f" />
+		<Unit filename="thirdparty/BLAS/srot.f" />
+		<Unit filename="thirdparty/BLAS/srotg.f" />
+		<Unit filename="thirdparty/BLAS/srotm.f" />
+		<Unit filename="thirdparty/BLAS/srotmg.f" />
+		<Unit filename="thirdparty/BLAS/ssbmv.f" />
+		<Unit filename="thirdparty/BLAS/sscal.f" />
+		<Unit filename="thirdparty/BLAS/sspmv.f" />
+		<Unit filename="thirdparty/BLAS/sspr.f" />
+		<Unit filename="thirdparty/BLAS/sspr2.f" />
+		<Unit filename="thirdparty/BLAS/sswap.f" />
+		<Unit filename="thirdparty/BLAS/ssymm.f" />
+		<Unit filename="thirdparty/BLAS/ssymv.f" />
+		<Unit filename="thirdparty/BLAS/ssyr.f" />
+		<Unit filename="thirdparty/BLAS/ssyr2.f" />
+		<Unit filename="thirdparty/BLAS/ssyr2k.f" />
+		<Unit filename="thirdparty/BLAS/ssyrk.f" />
+		<Unit filename="thirdparty/BLAS/stbmv.f" />
+		<Unit filename="thirdparty/BLAS/stbsv.f" />
+		<Unit filename="thirdparty/BLAS/stpmv.f" />
+		<Unit filename="thirdparty/BLAS/stpsv.f" />
+		<Unit filename="thirdparty/BLAS/strmm.f" />
+		<Unit filename="thirdparty/BLAS/strmv.f" />
+		<Unit filename="thirdparty/BLAS/strsm.f" />
+		<Unit filename="thirdparty/BLAS/strsv.f" />
+		<Unit filename="thirdparty/BLAS/xerbla.f" />
+		<Unit filename="thirdparty/BLAS/xerbla_array.f" />
+		<Unit filename="thirdparty/BLAS/zaxpy.f" />
+		<Unit filename="thirdparty/BLAS/zcopy.f" />
+		<Unit filename="thirdparty/BLAS/zdotc.f" />
+		<Unit filename="thirdparty/BLAS/zdotu.f" />
+		<Unit filename="thirdparty/BLAS/zdrot.f" />
+		<Unit filename="thirdparty/BLAS/zdscal.f" />
+		<Unit filename="thirdparty/BLAS/zgbmv.f" />
+		<Unit filename="thirdparty/BLAS/zgemm.f" />
+		<Unit filename="thirdparty/BLAS/zgemv.f" />
+		<Unit filename="thirdparty/BLAS/zgerc.f" />
+		<Unit filename="thirdparty/BLAS/zgeru.f" />
+		<Unit filename="thirdparty/BLAS/zhbmv.f" />
+		<Unit filename="thirdparty/BLAS/zhemm.f" />
+		<Unit filename="thirdparty/BLAS/zhemv.f" />
+		<Unit filename="thirdparty/BLAS/zher.f" />
+		<Unit filename="thirdparty/BLAS/zher2.f" />
+		<Unit filename="thirdparty/BLAS/zher2k.f" />
+		<Unit filename="thirdparty/BLAS/zherk.f" />
+		<Unit filename="thirdparty/BLAS/zhpmv.f" />
+		<Unit filename="thirdparty/BLAS/zhpr.f" />
+		<Unit filename="thirdparty/BLAS/zhpr2.f" />
+		<Unit filename="thirdparty/BLAS/zrotg.f" />
+		<Unit filename="thirdparty/BLAS/zscal.f" />
+		<Unit filename="thirdparty/BLAS/zswap.f" />
+		<Unit filename="thirdparty/BLAS/zsymm.f" />
+		<Unit filename="thirdparty/BLAS/zsyr2k.f" />
+		<Unit filename="thirdparty/BLAS/zsyrk.f" />
+		<Unit filename="thirdparty/BLAS/ztbmv.f" />
+		<Unit filename="thirdparty/BLAS/ztbsv.f" />
+		<Unit filename="thirdparty/BLAS/ztpmv.f" />
+		<Unit filename="thirdparty/BLAS/ztpsv.f" />
+		<Unit filename="thirdparty/BLAS/ztrmm.f" />
+		<Unit filename="thirdparty/BLAS/ztrmv.f" />
+		<Unit filename="thirdparty/BLAS/ztrsm.f" />
+		<Unit filename="thirdparty/BLAS/ztrsv.f" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

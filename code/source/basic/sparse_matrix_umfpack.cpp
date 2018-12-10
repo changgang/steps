@@ -1,6 +1,7 @@
 #include "header/basic/sparse_matrix_umfpack.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
+#include "umfpack.h"
 #include <string>
 #include <istream>
 #include <ostream>
@@ -10,127 +11,143 @@
 #include <fstream>
 using namespace std;
 
-SPARSE_MATRIX_UMFPACK::SPARSE_MATRIX_UMFPACK()
+SPARSE_MATRIX_UMFPACK::SPARSE_MATRIX_UMFPACK():SPARSE_MATRIX()
 {
     //constructor
-    update_clock_when_LU_factorization_is_performed();
+    n_row = 0;
+    n_column = 0;
+    triplet_row_index.clear();
+    triplet_column_index.clear();
+    triplet_matrix_real.clear();
+    triplet_matrix_imag.clear();
 
-    matrix_real = cs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
-    matrix_imag = cs_spalloc(1,1,1,1,1);
-    LU = NULL;
-    LU_symbolic = NULL;
-    LU_workspace = NULL;
+    compressed_column_starting_index = NULL;
+    compressed_row_index = NULL;
+    compressed_matrix_real = NULL;
+    compressed_matrix_imag = NULL;
 
-    update_clock_when_matrix_is_changed();
+    flag_matrix_in_triplet_form = true;
+
+    clear();
 }
 
 SPARSE_MATRIX_UMFPACK::SPARSE_MATRIX_UMFPACK(const SPARSE_MATRIX_UMFPACK& matrix)
 {
-    update_clock_when_LU_factorization_is_performed();
+    n_row = 0;
+    n_column = 0;
 
-    matrix_real = cs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
-    matrix_imag = cs_spalloc(1,1,1,1,1);
-    LU = NULL;
-    LU_symbolic = NULL;
-    LU_workspace = NULL;
+    triplet_row_index.clear();
+    triplet_column_index.clear();
+    triplet_matrix_real.clear();
+    triplet_matrix_imag.clear();
 
-    int n = matrix.get_matrix_entry_count();
+    compressed_column_starting_index = NULL;
+    compressed_row_index = NULL;
+    compressed_matrix_real = NULL;
+    compressed_matrix_imag = NULL;
+
+    flag_matrix_in_triplet_form = true;
+    clear();
+
+    copy_from_const_matrix(matrix);
+}
+
+SPARSE_MATRIX_UMFPACK& SPARSE_MATRIX_UMFPACK::operator=(const SPARSE_MATRIX_UMFPACK& matrix)
+{
+    if(this==(&matrix)) return *this;
+
+    copy_from_const_matrix(matrix);
+
+    return *this;
+}
+
+void SPARSE_MATRIX_UMFPACK::copy_from_const_matrix(const SPARSE_MATRIX_UMFPACK& matrix)
+{
+    clear();
+
+    int nz = matrix.get_matrix_entry_count();
+
     complex<double> value;
     int row, col;
-    for(int k=0; k!=n; ++k)
+    for(int k=0; k!=nz; ++k)
     {
         row = matrix.get_row_number_of_entry_index(k);
         col = matrix.get_column_number_of_entry_index(k);
         value = matrix.get_entry_value(k);
 
-        this->add_entry(row, col, value);
+        add_entry(row, col, value);
     }
     if(matrix.matrix_in_compressed_column_form())
-        this->compress_and_merge_duplicate_entries();
+        compress_and_merge_duplicate_entries();
 
     update_clock_when_matrix_is_changed();
 }
 
+
 SPARSE_MATRIX_UMFPACK::~SPARSE_MATRIX_UMFPACK()
 {
     // destructor
-    if(matrix_real!=NULL) cs_spfree(matrix_real);
-    if(matrix_imag!=NULL) cs_spfree(matrix_imag);
-    if(LU!=NULL)          cs_nfree(LU);
-    if(LU_symbolic!=NULL) cs_sfree(LU_symbolic);
-    if(LU_workspace!=NULL) free(LU_workspace);
+    triplet_row_index.clear();
+    triplet_column_index.clear();
+    triplet_matrix_real.clear();
+    triplet_matrix_imag.clear();
 
-    matrix_real = NULL;
-    matrix_imag = NULL;
-    LU = NULL;
-    LU_symbolic = NULL;
-    LU_workspace = NULL;
+    if(compressed_column_starting_index!=NULL) free(compressed_column_starting_index);
+    if(compressed_row_index!=NULL) free(compressed_row_index);
+    if(compressed_matrix_real!=NULL) free(compressed_matrix_real);
+    if(compressed_matrix_imag!=NULL) free(compressed_matrix_imag);
 
-    update_clock_when_matrix_is_changed();
+    compressed_column_starting_index = NULL;
+    compressed_row_index = NULL;
+    compressed_matrix_real = NULL;
+    compressed_matrix_imag = NULL;
 }
 
 void SPARSE_MATRIX_UMFPACK::clear()
 {
     // clear function
-    if(matrix_real!=NULL) cs_spfree(matrix_real);
-    if(matrix_imag!=NULL) cs_spfree(matrix_imag);
-    if(LU!=NULL)          cs_nfree(LU);
-    if(LU_symbolic!=NULL) cs_sfree(LU_symbolic);
-    if(LU_workspace!=NULL) free(LU_workspace);
+    update_clock_when_LU_factorization_is_performed();
 
-    matrix_real = NULL;
-    matrix_imag = NULL;
-    LU = NULL;
-    LU_symbolic = NULL;
-    LU_workspace = NULL;
+    n_row = 0;
+    n_column = 0;
 
-/*
-    // when perform clear, cs_spfree is not required. only the following parameters need to be reset
-    // without the cs_spfree(), the allocated memory for matrix_real and matrix_imag will be not freed to save time
-    matrix_real->m = 1;// m: number of rows
-    matrix_real->n = 1;//n: number of columns
-    matrix_real->nz = 0; // nz:set as 0 to indicate triplet form, and the number of entries is 0
-    matrix_real->nzmax = 1; // nzmax: number of max entries
+    triplet_row_index.clear();
+    triplet_column_index.clear();
+    triplet_matrix_real.clear();
+    triplet_matrix_imag.clear();
 
-    matrix_imag->m = 1;
-    matrix_imag->n = 1;
-    matrix_imag->nz = 0;
-    matrix_imag->nzmax = 1;
+    if(compressed_column_starting_index!=NULL) free(compressed_column_starting_index);
+    if(compressed_row_index!=NULL) free(compressed_row_index);
+    if(compressed_matrix_real!=NULL) free(compressed_matrix_real);
+    if(compressed_matrix_imag!=NULL) free(compressed_matrix_imag);
 
-*/
-    matrix_real = cs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
-    matrix_imag = cs_spalloc(1,1,1,1,1);
+    compressed_column_starting_index = NULL;
+    compressed_row_index = NULL;
+    compressed_matrix_real = NULL;
+    compressed_matrix_imag = NULL;
+
+    flag_matrix_in_triplet_form = true;
 
     update_clock_when_matrix_is_changed();
 }
 
 bool SPARSE_MATRIX_UMFPACK::matrix_in_triplet_form() const
 {
-    if(matrix_real->nz != -1) return true;
-    else return false;
+    return flag_matrix_in_triplet_form;
 }
 
-bool SPARSE_MATRIX_UMFPACK::matrix_in_compressed_column_form() const
-{
-    return not matrix_in_triplet_form();
-}
-
-void SPARSE_MATRIX_UMFPACK::add_entry(int row, int col, double value)
-{
-    add_entry(row, col, complex<double>(value,0.0));
-}
 
 void SPARSE_MATRIX_UMFPACK::add_entry(int row, int col, complex<double> value)
 {
-    //if(value==0.0)
-    //    return;
-
     if(matrix_in_triplet_form())
     {
+        triplet_row_index.push_back(row);
+        triplet_column_index.push_back(col);
+        triplet_matrix_real.push_back(value.real());
+        triplet_matrix_imag.push_back(value.imag());
 
-        cs_entry(matrix_real, row, col, value.real());
-        cs_entry(matrix_imag, row, col, value.imag());
-
+        if(row+1>n_row) n_row = row+1;
+        if(col+1>n_column) n_column = col+1;
         update_clock_when_matrix_is_changed();
     }
     else
@@ -144,8 +161,12 @@ void SPARSE_MATRIX_UMFPACK::add_entry(int row, int col, complex<double> value)
         else
         {
             convert_to_triplet_form();
-            cs_entry(matrix_real, row, col, value.real());
-            cs_entry(matrix_imag, row, col, value.imag());
+            triplet_row_index.push_back(row);
+            triplet_column_index.push_back(col);
+            triplet_matrix_real.push_back(value.real());
+            triplet_matrix_imag.push_back(value.imag());
+            if(row+1>n_row) n_row = row+1;
+            if(col+1>n_column) n_column = col+1;
             compress_and_merge_duplicate_entries();
         }
     }
@@ -156,46 +177,25 @@ void SPARSE_MATRIX_UMFPACK::convert_to_triplet_form()
     if(matrix_in_triplet_form())
         return;
 
-    cs *mat_real; // temp mat
-    cs *mat_imag; // temp mat
-    csi *tempi; // temp index
-    double *tempd; // temp value
+    triplet_row_index.clear();
+    triplet_column_index.clear();
+    triplet_matrix_real.clear();
+    triplet_matrix_imag.clear();
 
-    // copy
-    mat_real = cs_spalloc(1,1,1,1,1);
-    mat_imag = cs_spalloc(1,1,1,1,1);
     int n = get_matrix_entry_count();
     int row, col;
     for(int k=0; k!=n; ++k)
     {
         row = get_row_number_of_entry_index(k);
         col = get_column_number_of_entry_index(k);
-        cs_entry(mat_real, row, col, get_real_entry_value(k));
-        cs_entry(mat_imag, row, col, get_imag_entry_value(k));
+        triplet_row_index.push_back(row);
+        triplet_column_index.push_back(col);
+        triplet_matrix_real.push_back(get_real_entry_value(k));
+        triplet_matrix_imag.push_back(get_imag_entry_value(k));
     }
-    // swap
-    matrix_real->nzmax = mat_real->nzmax;
-    matrix_real->m = mat_real->m;
-    matrix_real->n = mat_real->n;
-    matrix_real->nz = mat_real->nz;
-    tempi = matrix_real->p; matrix_real->p = mat_real->p; mat_real->p = tempi;
-    tempi = matrix_real->i; matrix_real->i = mat_real->i; mat_real->i = tempi;
-    tempd = matrix_real->x; matrix_real->x = mat_real->x; mat_real->x = tempd;
-    // free temp mat
-    cs_spfree(mat_real);
-
-    // swap
-    matrix_imag->nzmax = mat_imag->nzmax;
-    matrix_imag->m = mat_imag->m;
-    matrix_imag->n = mat_imag->n;
-    matrix_imag->nz = mat_imag->nz;
-    tempi = matrix_imag->p; matrix_imag->p = mat_imag->p; mat_imag->p = tempi;
-    tempi = matrix_imag->i; matrix_imag->i = mat_imag->i; mat_imag->i = tempi;
-    tempd = matrix_imag->x; matrix_imag->x = mat_imag->x; mat_imag->x = tempd;
-    // free temp mat
-    cs_spfree(mat_imag);
-
     update_clock_when_matrix_is_changed();
+
+    flag_matrix_in_triplet_form = true;
 }
 
 void SPARSE_MATRIX_UMFPACK::compress_and_merge_duplicate_entries()
@@ -203,45 +203,38 @@ void SPARSE_MATRIX_UMFPACK::compress_and_merge_duplicate_entries()
     // compress the sparse matrix
     if(matrix_in_compressed_column_form()) return;
 
-    cs *mat; // temp mat
-    csi *tempi; // temp index
-    double *tempd; // temp value
-
+    size_t nz = triplet_matrix_real.size();
+    int* row_index = (int*)calloc(nz, sizeof(int));
+    int* col_index = (int*)calloc(nz, sizeof(int));
+    double* vreal = (double*)calloc(nz, sizeof(double));
+    double* vimag = (double*)calloc(nz, sizeof(double));
+    for(size_t i=0; i<nz; ++i)
+    {
+        row_index[i] = triplet_row_index[i];
+        col_index[i] = triplet_column_index[i];
+        vreal[i]=triplet_matrix_real[i];
+        vimag[i]=triplet_matrix_imag[i];
+    }
+    compressed_column_starting_index = (int*)calloc(n_column+1, sizeof(int));
+    compressed_row_index = (int*)calloc(nz, sizeof(int));
     // real part
-    // compress the matrix
-    mat = cs_compress(matrix_real);
-    // swap
-    matrix_real->nzmax = mat->nzmax;
-    matrix_real->m = mat->m;
-    matrix_real->n = mat->n;
-    matrix_real->nz = mat->nz;
-    tempi = matrix_real->p; matrix_real->p = mat->p; mat->p = tempi;
-    tempi = matrix_real->i; matrix_real->i = mat->i; mat->i = tempi;
-    tempd = matrix_real->x; matrix_real->x = mat->x; mat->x = tempd;
-    // free temp mat
-    cs_spfree(mat);
+    compressed_matrix_real = (double*)calloc(nz, sizeof(double));
+    umfpack_di_triplet_to_col (n_row, n_column, nz, row_index, col_index, vreal,
+                               compressed_column_starting_index, compressed_row_index, compressed_matrix_real, (int *) NULL) ;
+    // imaginary part
+    compressed_matrix_imag = (double*)calloc(nz, sizeof(double));
+    umfpack_di_triplet_to_col (n_row, n_column, nz, row_index, col_index, vimag,
+                               compressed_column_starting_index, compressed_row_index, compressed_matrix_imag, (int *) NULL) ;
+    triplet_row_index.clear();
+    triplet_column_index.clear();
+    triplet_matrix_real.clear();
+    triplet_matrix_imag.clear();
+    flag_matrix_in_triplet_form = false;
 
-    cs_dupl(matrix_real); // merge duplicate entries
-
-    //  imaginary part
-    // compress the matrix
-    mat = cs_compress(matrix_imag);
-    // swap
-    matrix_imag->nzmax = mat->nzmax;
-    matrix_imag->m = mat->m;
-    matrix_imag->n = mat->n;
-    matrix_imag->nz = mat->nz;
-    tempi = matrix_imag->p; matrix_imag->p = mat->p; mat->p = tempi;
-    tempi = matrix_imag->i; matrix_imag->i = mat->i; mat->i = tempi;
-    tempd = matrix_imag->x; matrix_imag->x = mat->x; mat->x = tempd;
-    // free temp mat
-    cs_spfree(mat);
-
-    cs_dupl(matrix_imag); // merge duplicate entries
-
-    // at last, transpose twice
-    transpose();
-    transpose();
+    free(row_index);
+    free(col_index);
+    free(vreal);
+    free(vimag);
 
     update_clock_when_matrix_is_changed();
 }
@@ -252,88 +245,52 @@ void SPARSE_MATRIX_UMFPACK::transpose()
     if(matrix_in_triplet_form()) // if in triplet format, convert to compressed format
         compress_and_merge_duplicate_entries(); // convert
 
+    size_t nz = triplet_matrix_real.size();
 
-    cs *mat; // temp mat
-    csi *tempi; // temp index
-    double *tempd; // temp value
-
+    int *temp_column_starting_index = (int *) calloc ((n_column+1), sizeof (int)) ;
+    int *temp_row_index = (int *) calloc (nz, sizeof (int)) ;
     // transpose real part
-    mat = cs_transpose(matrix_real, 1);
-    // swap
-    matrix_real->nzmax = mat->nzmax;
-    matrix_real->m = mat->m;
-    matrix_real->n = mat->n;
-    matrix_real->nz = mat->nz;
-    tempi = matrix_real->p; matrix_real->p = mat->p; mat->p = tempi;
-    tempi = matrix_real->i; matrix_real->i = mat->i; mat->i = tempi;
-    tempd = matrix_real->x; matrix_real->x = mat->x; mat->x = tempd;
-    // free temp mat
-    cs_spfree(mat);
-
-
+    umfpack_di_transpose (n_row, n_column, compressed_column_starting_index, compressed_row_index, compressed_matrix_real,
+                                   (int *) NULL,  (int *) NULL, (int *) NULL, (int *) NULL, compressed_matrix_real) ;
     // transpose imaginary part
-    mat = cs_transpose(matrix_imag, 1);
-    // swap
-    matrix_imag->nzmax = mat->nzmax;
-    matrix_imag->m = mat->m;
-    matrix_imag->n = mat->n;
-    matrix_imag->nz = mat->nz;
-    tempi = matrix_imag->p; matrix_imag->p = mat->p; mat->p = tempi;
-    tempi = matrix_imag->i; matrix_imag->i = mat->i; mat->i = tempi;
-    tempd = matrix_imag->x; matrix_imag->x = mat->x; mat->x = tempd;
-    // free temp mat
-    cs_spfree(mat);
+    umfpack_di_transpose (n_row, n_column, compressed_column_starting_index, compressed_row_index, compressed_matrix_imag,
+                                   (int *) NULL,  (int *) NULL, compressed_column_starting_index, compressed_row_index, compressed_matrix_imag) ;
+
+    free(temp_column_starting_index);
+    free(temp_row_index);
 
     update_clock_when_matrix_is_changed();
 }
 
 int SPARSE_MATRIX_UMFPACK::get_matrix_size() const
 {
-    if(matrix_real!=NULL) return matrix_real->n;
-    else                  return 0;
+    return n_column;
 }
 
 int SPARSE_MATRIX_UMFPACK::get_matrix_entry_count() const
 {
-    return matrix_real->nzmax;
+    if(matrix_in_triplet_form())
+        return int(triplet_matrix_real.size());
+    else
+        return compressed_column_starting_index[n_column];
 }
 
 int SPARSE_MATRIX_UMFPACK::get_starting_index_of_column(int col) const
 {
-    if(col>=0 and col<=get_matrix_size()) return matrix_real->p[col];
+    if(col>=0 and col<=get_matrix_size()) return compressed_column_starting_index[col];
     else                                  return INDEX_NOT_EXIST;
 }
 
 int SPARSE_MATRIX_UMFPACK::get_row_number_of_entry_index(int index) const
 {
     int n = get_matrix_size();
-    if(index<=get_starting_index_of_column(n))  return matrix_real->i[index];
+    if(index<=get_starting_index_of_column(n))  return compressed_row_index[index];
     else                                        return INDEX_NOT_EXIST;
-}
-
-int SPARSE_MATRIX_UMFPACK::get_column_number_of_entry_index(int index) const
-{
-    int n = get_matrix_size();
-    if(index<=get_starting_index_of_column(n))
-    {
-        int k_start, k_end;
-        for(int col = 0; col!=n; ++col)
-        {
-            k_start = get_starting_index_of_column(col);
-            k_end = get_starting_index_of_column(col+1)-1;
-            if(index>=k_start and index<=k_end)
-                return col;
-        }
-        return INDEX_NOT_EXIST;
-    }
-    else
-        return INDEX_NOT_EXIST;
 }
 
 int SPARSE_MATRIX_UMFPACK::get_entry_index(int row, int col) const
 {
     // return entry index of compressed matrix
-
     if(row >= 0 and col >= 0)
     {
         if(not matrix_in_compressed_column_form())
@@ -348,10 +305,10 @@ int SPARSE_MATRIX_UMFPACK::get_entry_index(int row, int col) const
 
         if(row < get_matrix_size() and col < get_matrix_size())
         {
-            for(int k=matrix_real->p[col]; k!=matrix_real->p[col+1]; ++k)
+            for(int k=compressed_column_starting_index[col]; k!=compressed_column_starting_index[col+1]; ++k)
             {
-                if(matrix_real->i[k] > row) break; // if no entry of (row, col)
-                if(matrix_real->i[k] == row)
+                if(compressed_row_index[k] > row) break; // if no entry of (row, col)
+                if(compressed_row_index[k] == row)
                 {
                     index = k;
                     break;
@@ -364,20 +321,11 @@ int SPARSE_MATRIX_UMFPACK::get_entry_index(int row, int col) const
         return INDEX_NOT_EXIST;
 }
 
-complex<double> SPARSE_MATRIX_UMFPACK::get_entry_value(int row, int col) const
-{
-    return get_entry_value(get_entry_index(row, col));
-}
-
-complex<double> SPARSE_MATRIX_UMFPACK::get_entry_value(int index) const
-{
-    return complex<double>(get_real_entry_value(index), get_imag_entry_value(index));
-}
 
 double SPARSE_MATRIX_UMFPACK::get_real_entry_value(int index) const
 {
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
-        return matrix_real->x[index];
+        return compressed_matrix_real[index];
     else
         return 0.0;
 }
@@ -385,53 +333,26 @@ double SPARSE_MATRIX_UMFPACK::get_real_entry_value(int index) const
 double SPARSE_MATRIX_UMFPACK::get_imag_entry_value(int index) const
 {
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
-        return matrix_imag->x[index];
+        return compressed_matrix_imag[index];
     else
         return 0.0;
-}
-
-void SPARSE_MATRIX_UMFPACK::change_entry_value(int row, int col, double value)
-{
-    change_entry_value(row, col, complex<double>(value, 0.0));
-}
-
-void SPARSE_MATRIX_UMFPACK::change_entry_value(int index, double value)
-{
-    change_entry_value(index, complex<double>(value, 0.0));
-}
-
-void SPARSE_MATRIX_UMFPACK::change_entry_value(int row, int col, complex<double> value)
-{
-    // get entry index of a compress matrix
-    int index = get_entry_index(row, col); // if it is triplet format, will be converted into compressed format
-    change_entry_value(index, value);
-}
-
-void SPARSE_MATRIX_UMFPACK::change_entry_value(int index, complex<double> value)
-{
-    if(index != INDEX_NOT_EXIST)
-    {
-        change_real_entry_value(index, value.real());
-        change_imag_entry_value(index, value.imag());
-    }
 }
 
 void SPARSE_MATRIX_UMFPACK::change_real_entry_value(int index, double value)
 {
     if(index != INDEX_NOT_EXIST and index>=0 and index<get_starting_index_of_column(get_matrix_size()))
     {
-        matrix_real->x[index]=value; // found
+       compressed_matrix_real[index]=value; // found
 
         update_clock_when_matrix_is_changed();
     }
 }
 
-
 void SPARSE_MATRIX_UMFPACK::change_imag_entry_value(int index, double value)
 {
     if(index != INDEX_NOT_EXIST and index>=0 and index<get_starting_index_of_column(get_matrix_size()))
     {
-        matrix_imag->x[index]=value; // found
+        compressed_matrix_imag[index]=value; // found
 
         update_clock_when_matrix_is_changed();
     }
@@ -440,15 +361,7 @@ void SPARSE_MATRIX_UMFPACK::change_imag_entry_value(int index, double value)
 
 vector<size_t> SPARSE_MATRIX_UMFPACK::get_reorder_permutation()
 {
-    csi* p = cs_amd(1,matrix_real); // use the real part for re-ordering
-
     vector<size_t> permutation;
-    permutation.reserve(get_matrix_size());
-    int n = get_matrix_size();
-    for(int i = 0; i!=n; ++i)
-        permutation.push_back(size_t(p[i]));
-
-    free(p);
 
     return permutation;
 }
@@ -458,123 +371,22 @@ void SPARSE_MATRIX_UMFPACK::LU_factorization(int order, double tolerance)
     //if(LU_factorization_is_performed()) return;
 
     char buffer[256];
-
-    cs_nfree(LU); // free LU (csn *)
-    cs_sfree(LU_symbolic);
-    csi n, ok ;
-    if (!CS_CSC (matrix_real))/* check inputs */
-    {
-        snprintf(buffer, 256, "No real matrix is set for LU factorization. Return. (line %d in file %s)\n",__LINE__,__FILE__);
-        show_information_with_leading_time_stamp(buffer);
-        return;
-    }
-    n = matrix_real->n ;
-    LU_symbolic = cs_sqr (order, matrix_real, 0) ;              /* ordering and symbolic analysis */
-    LU = cs_lu (matrix_real, LU_symbolic, tolerance) ;                 /* numeric LU factorization */
-    ok = (LU_symbolic && LU) ; // check
-    if(ok!=1)
-    {
-        snprintf(buffer, 256, "ALERT!  LU factorization for sparse matrix failed! (line %d in file %s)\n",__LINE__,__FILE__);
-        show_information_with_leading_time_stamp(buffer);
-        return;
-    }
-    // reset working space
-    if(LU_workspace!=NULL) free(LU_workspace);
-    LU_workspace = (double *)cs_malloc(n, sizeof (double)) ;  // get workspace
-    if(LU_workspace == NULL)
-    {
-        snprintf(buffer, 256, "Global variable LU_workspace was not successfully set. No workspace for LU solution. (line %d in file %s)\n",__LINE__,__FILE__);
-        show_information_with_leading_time_stamp(buffer);
-    }
+    umfpack_di_symbolic (n_row, n_column, compressed_column_starting_index, compressed_row_index, compressed_matrix_real, &Symbolic, NULL, NULL) ;
+    umfpack_di_numeric (compressed_column_starting_index, compressed_row_index, compressed_matrix_real, Symbolic, &Numeric, NULL, NULL) ;
 
     update_clock_when_LU_factorization_is_performed(); // mark the clock when finish the LU decomposition
     return;
 }
 
-bool SPARSE_MATRIX_UMFPACK::LU_factorization_is_performed() const
-{
-    if(get_clock_when_LU_factorization_is_performed() > get_clock_when_matrix_is_changed())
-        return true;
-    else
-        return false;
-}
-
 vector<double> SPARSE_MATRIX_UMFPACK::solve_Ax_eq_b(vector<double> b)
 {
-    if(not LU_factorization_is_performed())
-        LU_factorization(1, 1e-6);
-
-    solve_Lx_eq_b(b);
-
-    solve_xU_eq_b(b);
-
+    double * x = (double*)calloc(b.size(), sizeof(double));
+    for(size_t i=0; i<n_row; ++i) x[i] = b[i];
+    umfpack_di_solve (UMFPACK_A, compressed_column_starting_index, compressed_row_index, compressed_matrix_real,
+                      x, x, Numeric, NULL, NULL) ;
+    for(size_t i=0; i<n_row; ++i) b[i] = x[i];
     return b;
 }
-
-void SPARSE_MATRIX_UMFPACK::solve_Lx_eq_b(vector<double>& b)
-{
-    ostringstream osstream;
-    size_t n = b.size();
-    double* bb = (double*)malloc(n*sizeof(double));
-    if(bb==NULL)
-    {
-        osstream<<"Error. Failed to allocate temporary array for solving Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
-        show_information_with_leading_time_stamp(osstream);
-
-        return; // failed to allocate array bb
-    }
-
-    for(size_t i=0; i!=n; ++i) bb[i]=b[i]; // set bb
-
-    cs_ipvec(LU->pinv, bb, LU_workspace, matrix_real->n) ;       /* x = b(p) */
-    int OK = cs_lsolve (LU->L, LU_workspace) ;               /* x = L\x */
-    if(OK != 1)
-    {
-        osstream<<"Error. Failed to solve Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
-        show_information_with_leading_time_stamp(osstream);
-        return; // failed to solve equation
-    }
-    // now solution is OK
-    for(size_t i=0; i!=n; ++i) b[i]=LU_workspace[i]; // now reset b with bb
-
-    free(bb);
-
-    return;
-}
-
-void SPARSE_MATRIX_UMFPACK::solve_xU_eq_b(vector<double>& b)
-{
-    string buffer;
-    char cbuffer[1000];
-
-    size_t n = b.size();
-    double* bb = (double*)malloc(n*sizeof(double));
-    if(bb==NULL)
-    {
-        snprintf(cbuffer, 1000, "Error. Failed to allocate temporary array for solving xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
-        buffer = cbuffer;
-        show_information_with_leading_time_stamp(buffer);
-        return; // failed to allocate array bb
-    }
-    for(size_t i=0; i!=n; ++i) LU_workspace[i]=b[i]; // set bb
-    int OK = cs_usolve(LU->U, LU_workspace) ;               /* x = U\x */
-    cs_ipvec(LU_symbolic->q, LU_workspace, bb, matrix_real->n) ;          /* b(q) = x */
-
-    if(OK != 1)
-    {
-        snprintf(cbuffer, 1000, "Error. Failed to solve xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
-        buffer = cbuffer;
-        show_information_with_leading_time_stamp(buffer);
-        return; // failed to solve equation
-    }
-    // now solution is OK
-    for(size_t i=0; i!=n; ++i) b[i]=bb[i]; // now reset b with bb
-
-    free(bb);
-
-    return;
-}
-
 
 void SPARSE_MATRIX_UMFPACK::report_brief() const
 {
@@ -592,14 +404,11 @@ void SPARSE_MATRIX_UMFPACK::report_brief() const
     int n = get_matrix_size();
     for(j=0;j!=n;++j)
     {
-        for(k=matrix_real->p[j];k<matrix_real->p[j+1];++k)
+        for(k=compressed_column_starting_index[j];k<compressed_column_starting_index[j+1];++k)
         {
-            i=matrix_real->i[k];
+            i=compressed_row_index[k];
 
-            if(matrix_imag->n==0)
-                snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f\n",i,j,matrix_real->x[k]);
-            else
-                snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f, % 10.6f\n",i,j,matrix_real->x[k],matrix_imag->x[k]);
+            snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f, % 10.6f\n",i,j,compressed_matrix_real[k],compressed_matrix_imag[k]);
 
             buffer = cbuffer;
             show_information_with_leading_time_stamp(buffer);
@@ -622,8 +431,8 @@ void SPARSE_MATRIX_UMFPACK::save_matrix_to_file(string filename) const
 
     if(not file.is_open())
     {
-        osstream<<"File '"<<filename<<"' cannot be opened for saving sparse matrix contents."<<endl
-          <<"No sparse matrix will be exported.";
+        osstream<<"File '"<<filename<<"' cannot be opened for saving sparse matrix(CSparse) contents."<<endl
+          <<"No sparse matrix(CSparse) will be exported.";
         show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -635,67 +444,19 @@ void SPARSE_MATRIX_UMFPACK::save_matrix_to_file(string filename) const
 	int n = get_matrix_size();
     for(j=0;j!=n;++j)
     {
-        for(k=matrix_real->p[j];k<matrix_real->p[j+1];++k)
+        for(k=compressed_column_starting_index[j];k<compressed_column_starting_index[j+1];++k)
         {
-            i=matrix_real->i[k];
+            i=compressed_row_index[k];
 
-            if(matrix_imag->n==0)
-                file<<i<<","<<j<<","
-                    <<setprecision(6)<<fixed<<matrix_real->x[k]<<",0.0"<<endl;
-            else
-                file<<i<<","<<j<<","
-                    <<setprecision(6)<<fixed<<matrix_real->x[k]<<","
-                    <<setprecision(6)<<fixed<<matrix_imag->x[k]<<endl;
+            file<<i<<","<<j<<","
+                <<setprecision(6)<<fixed<<compressed_matrix_real[k]<<","
+                <<setprecision(6)<<fixed<<compressed_matrix_imag[k]<<endl;
         }
     }
     file.close();
 }
 
-
-SPARSE_MATRIX_UMFPACK& SPARSE_MATRIX_UMFPACK::operator=(const SPARSE_MATRIX_UMFPACK& matrix)
-{
-    //ostringstream osstream;
-
-    //os<<"go copying matrix");
-    //show_information_with_leading_time_stamp(osstream);
-
-    if(this==(&matrix)) return *this;
-
-    update_clock_when_LU_factorization_is_performed();
-
-    int nz = matrix.get_matrix_entry_count();
-
-    clear();
-
-    complex<double> value;
-    int row, col;
-    for(int k=0; k!=nz; ++k)
-    {
-        row = matrix.get_row_number_of_entry_index(k);
-        col = matrix.get_column_number_of_entry_index(k);
-        value = matrix.get_entry_value(k);
-
-        add_entry(row, col, value);
-    }
-
-
-    //os<<"done copying matrix, nz = %d", nz);
-    //show_information_with_leading_time_stamp(osstream);
-
-    if(matrix.matrix_in_compressed_column_form())
-        compress_and_merge_duplicate_entries();
-
-    //os<<"done compressing matrix");
-    //show_information_with_leading_time_stamp(osstream);
-
-    update_clock_when_matrix_is_changed();
-    return *this;
-}
-
-
 vector<double> operator/(vector<double>b, SPARSE_MATRIX_UMFPACK& A)
 {
     return A.solve_Ax_eq_b(b);
 }
-
-

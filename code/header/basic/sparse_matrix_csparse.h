@@ -48,14 +48,15 @@ public:
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-6);
 
-    virtual void solve_Lx_eq_b(vector<double>& b);
-    virtual void solve_xU_eq_b(vector<double>& b);
+    virtual vector<double> solve_Ax_eq_b(vector<double> b);
 
     virtual void report_brief()  const;
     virtual void report_full()  const;
     virtual void save_matrix_to_file(string filename)  const;
 
 private:
+    void solve_Lx_eq_b(vector<double>& b);
+    void solve_xU_eq_b(vector<double>& b);
     void copy_from_const_matrix(const SPARSE_MATRIX_CSPARSE& matrix);
     cs     *matrix_real; // real components
     cs     *matrix_imag; // imaginary components , not used for real matrix

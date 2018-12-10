@@ -434,6 +434,18 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
     return;
 }
 
+vector<double> SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double> b)
+{
+    if(not LU_factorization_is_performed())
+        LU_factorization(1, 1e-6);
+
+    solve_Lx_eq_b(b);
+
+    solve_xU_eq_b(b);
+
+    return b;
+}
+
 void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
 {
     ostringstream osstream;
