@@ -33,11 +33,9 @@
 					<Add option="-fPIC" />
 					<Add option="-Og" />
 					<Add directory="../code" />
+					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 					<Add directory="thirdparty/cpptest" />
-					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
-					<Add directory="thirdparty/SuiteSparse/SuiteSparse_config" />
-					<Add directory="thirdparty/SuiteSparse/AMD/Include" />
 				</Compiler>
 				<Linker>
 					<Add option="-static-libstdc++" />
@@ -46,6 +44,7 @@
 					<Add library="../build/bin/Release/libUMFPACK.a" />
 					<Add library="../build/bin/Release/libBLAS.a" />
 					<Add library="../build/bin/Release/libCSparse.a" />
+					<Add library="../build/bin/Release/libCpptest.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -614,63 +613,6 @@
 		<Unit filename="source/toolkit/powerflow_case_generator/powerflow_case_generator_test.cpp" />
 		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver.cpp" />
 		<Unit filename="source/toolkit/powerflow_solver/powerflow_solver_test.cpp" />
-		<Unit filename="thirdparty/cpptest/collectoroutput.cpp" />
-		<Unit filename="thirdparty/cpptest/compileroutput.cpp" />
-		<Unit filename="thirdparty/cpptest/cpptest-assert.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-collectoroutput.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-compileroutput.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-htmloutput.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-output.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-source.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-suite.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-textoutput.h" />
-		<Unit filename="thirdparty/cpptest/cpptest-time.h" />
-		<Unit filename="thirdparty/cpptest/cpptest.h" />
-		<Unit filename="thirdparty/cpptest/htmloutput.cpp" />
-		<Unit filename="thirdparty/cpptest/missing.cpp" />
-		<Unit filename="thirdparty/cpptest/missing.h" />
-		<Unit filename="thirdparty/cpptest/source_cpptest.cpp" />
-		<Unit filename="thirdparty/cpptest/suite.cpp" />
-		<Unit filename="thirdparty/cpptest/textoutput.cpp" />
-		<Unit filename="thirdparty/cpptest/time.cpp" />
-		<Unit filename="thirdparty/cpptest/utils.cpp" />
-		<Unit filename="thirdparty/cpptest/utils.h" />
-		<Unit filename="thirdparty/rapidjson/allocators.h" />
-		<Unit filename="thirdparty/rapidjson/cursorstreamwrapper.h" />
-		<Unit filename="thirdparty/rapidjson/document.h" />
-		<Unit filename="thirdparty/rapidjson/encodedstream.h" />
-		<Unit filename="thirdparty/rapidjson/encodings.h" />
-		<Unit filename="thirdparty/rapidjson/error/en.h" />
-		<Unit filename="thirdparty/rapidjson/error/error.h" />
-		<Unit filename="thirdparty/rapidjson/filereadstream.h" />
-		<Unit filename="thirdparty/rapidjson/filewritestream.h" />
-		<Unit filename="thirdparty/rapidjson/fwd.h" />
-		<Unit filename="thirdparty/rapidjson/internal/biginteger.h" />
-		<Unit filename="thirdparty/rapidjson/internal/diyfp.h" />
-		<Unit filename="thirdparty/rapidjson/internal/dtoa.h" />
-		<Unit filename="thirdparty/rapidjson/internal/ieee754.h" />
-		<Unit filename="thirdparty/rapidjson/internal/itoa.h" />
-		<Unit filename="thirdparty/rapidjson/internal/meta.h" />
-		<Unit filename="thirdparty/rapidjson/internal/pow10.h" />
-		<Unit filename="thirdparty/rapidjson/internal/regex.h" />
-		<Unit filename="thirdparty/rapidjson/internal/stack.h" />
-		<Unit filename="thirdparty/rapidjson/internal/strfunc.h" />
-		<Unit filename="thirdparty/rapidjson/internal/strtod.h" />
-		<Unit filename="thirdparty/rapidjson/internal/swap.h" />
-		<Unit filename="thirdparty/rapidjson/istreamwrapper.h" />
-		<Unit filename="thirdparty/rapidjson/memorybuffer.h" />
-		<Unit filename="thirdparty/rapidjson/memorystream.h" />
-		<Unit filename="thirdparty/rapidjson/msinttypes/inttypes.h" />
-		<Unit filename="thirdparty/rapidjson/msinttypes/stdint.h" />
-		<Unit filename="thirdparty/rapidjson/ostreamwrapper.h" />
-		<Unit filename="thirdparty/rapidjson/pointer.h" />
-		<Unit filename="thirdparty/rapidjson/prettywriter.h" />
-		<Unit filename="thirdparty/rapidjson/rapidjson.h" />
-		<Unit filename="thirdparty/rapidjson/reader.h" />
-		<Unit filename="thirdparty/rapidjson/schema.h" />
-		<Unit filename="thirdparty/rapidjson/stream.h" />
-		<Unit filename="thirdparty/rapidjson/stringbuffer.h" />
-		<Unit filename="thirdparty/rapidjson/writer.h" />
 		<Unit filename="version.h" />
 		<Extensions>
 			<code_completion />

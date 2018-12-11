@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="cpptest" />
+		<Option makefile="makefile" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../build/bin/Release/Cpptest" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="../build/obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option parameters="--compiler " />
+				<Compiler>
+					<Add option="-march=corei7-avx" />
+					<Add option="-O3" />
+					<Add option="-Wnon-virtual-dtor" />
+					<Add option="-Winit-self" />
+					<Add option="-Wredundant-decls" />
+					<Add option="-Wcast-align" />
+					<Add option="-Winline" />
+					<Add option="-Wunreachable-code" />
+					<Add option="-Wmissing-declarations" />
+					<Add option="-Wmissing-include-dirs" />
+					<Add option="-pedantic-errors" />
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-std=c++14" />
+					<Add option="-fPIC" />
+					<Add option="-Og" />
+					<Add directory="../code" />
+					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
+					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-lgfortran" />
+					<Add library="../build/bin/Release/libUMFPACK.a" />
+					<Add library="../build/bin/Release/libBLAS.a" />
+					<Add library="../build/bin/Release/libCSparse.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions -fopenmp" />
+		</Compiler>
+		<Linker>
+			<Add option="-fopenmp" />
+		</Linker>
+		<Unit filename="thirdparty/cpptest/collectoroutput.cpp" />
+		<Unit filename="thirdparty/cpptest/compileroutput.cpp" />
+		<Unit filename="thirdparty/cpptest/cpptest-assert.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-collectoroutput.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-compileroutput.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-htmloutput.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-output.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-source.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-suite.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-textoutput.h" />
+		<Unit filename="thirdparty/cpptest/cpptest-time.h" />
+		<Unit filename="thirdparty/cpptest/cpptest.h" />
+		<Unit filename="thirdparty/cpptest/htmloutput.cpp" />
+		<Unit filename="thirdparty/cpptest/missing.cpp" />
+		<Unit filename="thirdparty/cpptest/missing.h" />
+		<Unit filename="thirdparty/cpptest/source_cpptest.cpp" />
+		<Unit filename="thirdparty/cpptest/suite.cpp" />
+		<Unit filename="thirdparty/cpptest/textoutput.cpp" />
+		<Unit filename="thirdparty/cpptest/time.cpp" />
+		<Unit filename="thirdparty/cpptest/utils.cpp" />
+		<Unit filename="thirdparty/cpptest/utils.h" />
+		<Unit filename="version.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" use_define="0" update_manifest="0" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="./" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
