@@ -36,6 +36,8 @@
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 					<Add directory="thirdparty/cpptest" />
+					<Add directory="thirdparty/SuiteSparse/SuiteSparse_config" />
+					<Add directory="thirdparty/SuiteSparse/AMD/Include" />
 				</Compiler>
 				<Linker>
 					<Add option="-static-libstdc++" />

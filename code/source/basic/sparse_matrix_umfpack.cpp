@@ -143,6 +143,18 @@ void SPARSE_MATRIX_UMFPACK::add_entry(int row, int col, complex<double> value)
 {
     if(matrix_in_triplet_form())
     {
+        size_t nz = get_matrix_entry_count();
+        for(size_t i=0; i<nz; ++i)
+        {
+            size_t r = triplet_row_index[i];
+            size_t c = triplet_column_index[i];
+            if(r==row and c==col)
+            {
+                triplet_matrix_real[i] += value.real();
+                triplet_matrix_imag[i] += value.imag();
+                return;
+            }
+        }
         triplet_row_index.push_back(row);
         triplet_column_index.push_back(col);
         triplet_matrix_real.push_back(value.real());
@@ -178,15 +190,15 @@ void SPARSE_MATRIX_UMFPACK::convert_to_triplet_form()
 {
     if(matrix_in_triplet_form())
         return;
-
+    cout<<"convert to triplet form"<<endl;
     triplet_row_index.clear();
     triplet_column_index.clear();
     triplet_matrix_real.clear();
     triplet_matrix_imag.clear();
 
-    int n = get_matrix_entry_count();
     int row, col;
-    for(int k=0; k!=n; ++k)
+    size_t nz = get_matrix_entry_count();
+    for(int k=0; k!=nz; ++k)
     {
         row = get_row_number_of_entry_index(k);
         col = get_column_number_of_entry_index(k);
@@ -198,6 +210,11 @@ void SPARSE_MATRIX_UMFPACK::convert_to_triplet_form()
     update_clock_when_matrix_is_changed();
 
     flag_matrix_in_triplet_form = true;
+
+    if(compressed_column_starting_index!=NULL) free(compressed_column_starting_index);
+    if(compressed_row_index!=NULL) free(compressed_row_index);
+    if(compressed_matrix_real!=NULL) free(compressed_matrix_real);
+    if(compressed_matrix_imag!=NULL) free(compressed_matrix_imag);
 }
 
 void SPARSE_MATRIX_UMFPACK::compress_and_merge_duplicate_entries()
@@ -216,6 +233,7 @@ void SPARSE_MATRIX_UMFPACK::compress_and_merge_duplicate_entries()
         col_index[i] = triplet_column_index[i];
         vreal[i]=triplet_matrix_real[i];
         vimag[i]=triplet_matrix_imag[i];
+        //cout<<row_index[i]<<", "<<col_index[i]<<": "<<vreal[i]<<"+j"<<vimag[i]<<endl;
     }
     compressed_column_starting_index = (int*)calloc(n_column+1, sizeof(int));
     compressed_row_index = (int*)calloc(nz, sizeof(int));
@@ -247,19 +265,43 @@ void SPARSE_MATRIX_UMFPACK::transpose()
     if(matrix_in_triplet_form()) // if in triplet format, convert to compressed format
         compress_and_merge_duplicate_entries(); // convert
 
-    size_t nz = triplet_matrix_real.size();
+    size_t nz = get_matrix_entry_count();
 
     int *temp_column_starting_index = (int *) calloc ((n_column+1), sizeof (int)) ;
     int *temp_row_index = (int *) calloc (nz, sizeof (int)) ;
+    double *temp_rvalue = (double *) calloc (nz, sizeof (double)) ;
+    double *temp_ivalue = (double *) calloc (nz, sizeof (double)) ;
+    int *itemp;
+    double *dtemp;
     // transpose real part
     umfpack_di_transpose (n_row, n_column, compressed_column_starting_index, compressed_row_index, compressed_matrix_real,
-                                   (int *) NULL,  (int *) NULL, (int *) NULL, (int *) NULL, compressed_matrix_real) ;
+                                   (int *) NULL,  (int *) NULL, temp_column_starting_index, temp_row_index, temp_rvalue) ;
+    dtemp = compressed_matrix_real;
+    compressed_matrix_real = temp_rvalue;
+    temp_rvalue = dtemp;
+
     // transpose imaginary part
     umfpack_di_transpose (n_row, n_column, compressed_column_starting_index, compressed_row_index, compressed_matrix_imag,
-                                   (int *) NULL,  (int *) NULL, compressed_column_starting_index, compressed_row_index, compressed_matrix_imag) ;
+                                   (int *) NULL,  (int *) NULL, temp_column_starting_index, temp_row_index, temp_ivalue) ;
+    dtemp = compressed_matrix_imag;
+    compressed_matrix_imag = temp_ivalue;
+    temp_ivalue = dtemp;
+    itemp = compressed_column_starting_index;
+    compressed_column_starting_index = temp_column_starting_index;
+    temp_column_starting_index = itemp;
+    itemp = compressed_row_index;
+    compressed_row_index = temp_row_index;
+    temp_row_index = itemp;
 
     free(temp_column_starting_index);
     free(temp_row_index);
+    free(temp_rvalue);
+    free(temp_ivalue);
+
+    size_t stemp;
+    stemp = n_row;
+    n_row = n_column;
+    n_column = stemp;
 
     update_clock_when_matrix_is_changed();
 }
@@ -382,10 +424,12 @@ void SPARSE_MATRIX_UMFPACK::LU_factorization(int order, double tolerance)
 
 vector<double> SPARSE_MATRIX_UMFPACK::solve_Ax_eq_b(vector<double> b)
 {
+    if(not LU_factorization_is_performed())   LU_factorization();
     double * x = (double*)calloc(b.size(), sizeof(double));
-    for(size_t i=0; i<n_row; ++i) x[i] = b[i];
+    double * B = (double*)calloc(b.size(), sizeof(double));
+    for(size_t i=0; i<n_row; ++i) B[i] = b[i];
     umfpack_di_solve (UMFPACK_A, compressed_column_starting_index, compressed_row_index, compressed_matrix_real,
-                      x, x, Numeric, NULL, NULL) ;
+                      x, B, Numeric, NULL, NULL) ;
     for(size_t i=0; i<n_row; ++i) b[i] = x[i];
     return b;
 }
