@@ -1,10 +1,5 @@
 #ifndef SPARSE_MATRIX_UMFPACK_H
 #define SPARSE_MATRIX_UMFPACK_H
-
-extern "C"
-{
-    #include "cs.h"
-}
 #include <vector>
 #include <ctime>
 #include <complex>

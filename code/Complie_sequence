@@ -1,0 +1,4 @@
+1, Compile BLAS as static library
+2, Compile UMFPACK as static library
+3, Compile CSparse as static library
+4, Compile STEPS as dynamic library or exectuable file. Include libUMFPACK.a, libBLAS.a, and libCSparse.a. Put libBLAS.a after libUMFPACK.a.

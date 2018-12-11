@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="csparse" />
+		<Option makefile="makefile" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../build/bin/Release/CSparse" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="../build/obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Option parameters="--compiler " />
+				<Compiler>
+					<Add option="-march=corei7-avx" />
+					<Add option="-O3" />
+					<Add option="-Wnon-virtual-dtor" />
+					<Add option="-Winit-self" />
+					<Add option="-Wredundant-decls" />
+					<Add option="-Wcast-align" />
+					<Add option="-Winline" />
+					<Add option="-Wunreachable-code" />
+					<Add option="-Wmissing-declarations" />
+					<Add option="-Wmissing-include-dirs" />
+					<Add option="-pedantic-errors" />
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
+					<Add option="-std=c++14" />
+					<Add option="-fPIC" />
+					<Add option="-Og" />
+					<Add directory="../code" />
+					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
+					<Add directory="thirdparty/cpptest" />
+					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
+					<Add directory="thirdparty/SuiteSparse/SuiteSparse_config" />
+					<Add directory="thirdparty/SuiteSparse/AMD/Include" />
+				</Compiler>
+				<Linker>
+					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="-lgfortran" />
+					<Add library="../build/bin/Release/libSuiteSparse.a" />
+					<Add library="../build/bin/Release/libBLAS.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions -fopenmp" />
+		</Compiler>
+		<Linker>
+			<Add option="-fopenmp" />
+		</Linker>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Include/cs.h" />
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_add.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_amd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_chol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_cholsol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_compress.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_counts.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_cumsum.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_dfs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_dmperm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_droptol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_dropzeros.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_dupl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_entry.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_ereach.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_etree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_fkeep.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_gaxpy.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_happly.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_house.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_ipvec.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_leaf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_load.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_lsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_ltsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_lu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_lusol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_malloc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_maxtrans.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_multiply.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_norm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_permute.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_pinv.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_post.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_print.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_pvec.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_qr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_qrsol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_randperm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_reach.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_scatter.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_scc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_schol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_spsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_sqr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_symperm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_tdfs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_transpose.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_updown.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_usolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/CSparse/Source/cs_utsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="1" date_declarations="1" use_define="0" update_manifest="0" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="./" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

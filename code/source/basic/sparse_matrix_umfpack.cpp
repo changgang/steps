@@ -1,7 +1,9 @@
 #include "header/basic/sparse_matrix_umfpack.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
+
 #include "umfpack.h"
+
 #include <string>
 #include <istream>
 #include <ostream>
@@ -342,7 +344,7 @@ void SPARSE_MATRIX_UMFPACK::change_real_entry_value(int index, double value)
 {
     if(index != INDEX_NOT_EXIST and index>=0 and index<get_starting_index_of_column(get_matrix_size()))
     {
-       compressed_matrix_real[index]=value; // found
+        compressed_matrix_real[index]=value; // found
 
         update_clock_when_matrix_is_changed();
     }
