@@ -12,11 +12,6 @@
 
 #include "header/basic/sparse_matrix_define.h"
 
-#ifdef STEPS_SPARSE_MATRIX
-#undef STEPS_SPARSE_MATRIX
-#endif
-#define STEPS_SPARSE_MATRIX SPARSE_MATRIX_UMFPACK
-
 using namespace std;
 
 class SPARSE_MATRIX_TEST : public Test::Suite
@@ -64,5 +59,4 @@ class SPARSE_MATRIX_TEST : public Test::Suite
         STEPS_SPARSE_MATRIX matrix;
 };
 
-#undef STEPS_SPARSE_MATRIX
 #endif // SPARSE_MATRIX_TEST_H

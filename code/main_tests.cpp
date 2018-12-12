@@ -195,16 +195,16 @@ int main(int argc, char* argv[])
 	{
         Test::Suite ts;
 
-        /*ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
+        ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
         ts.add(unique_ptr<Test::Suite>(new AREA_TEST));
         ts.add(unique_ptr<Test::Suite>(new ZONE_TEST));
         ts.add(unique_ptr<Test::Suite>(new OWNER_TEST));
         ts.add(unique_ptr<Test::Suite>(new OWNERSHIP_TEST));
         ts.add(unique_ptr<Test::Suite>(new RATING_TEST));
-        ts.add(unique_ptr<Test::Suite>(new UTILITY_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new UTILITY_TEST));
         ts.add(unique_ptr<Test::Suite>(new SPARSE_MATRIX_TEST));
-        /*ts.add(unique_ptr<Test::Suite>(new FAULT_TEST));
+        ts.add(unique_ptr<Test::Suite>(new FAULT_TEST));
         ts.add(unique_ptr<Test::Suite>(new BUS_INDEX_TEST));
         ts.add(unique_ptr<Test::Suite>(new DEVICE_INDEX_MAP_TEST));
         ts.add(unique_ptr<Test::Suite>(new INPHNO_TEST));
@@ -303,7 +303,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
         ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
 

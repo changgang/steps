@@ -405,16 +405,24 @@ void SPARSE_MATRIX_UMFPACK::change_imag_entry_value(int index, double value)
 
 vector<size_t> SPARSE_MATRIX_UMFPACK::get_reorder_permutation()
 {
+    if(matrix_in_triplet_form())
+        compress_and_merge_duplicate_entries();
+
     vector<size_t> permutation;
+    permutation.reserve(n_column);
+    int *P = (int*) calloc(n_column, sizeof(int));
+    amd_order (n_column, compressed_column_starting_index, compressed_row_index, P, (double *) NULL, (double *) NULL) ;
+    for(size_t i=0; i<n_column; ++i)
+        permutation[i]=P[i];
+    free(P);
 
     return permutation;
 }
 
 void SPARSE_MATRIX_UMFPACK::LU_factorization(int order, double tolerance)
 {
-    //if(LU_factorization_is_performed()) return;
+    if(LU_factorization_is_performed()) return;
 
-    char buffer[256];
     umfpack_di_symbolic (n_row, n_column, compressed_column_starting_index, compressed_row_index, compressed_matrix_real, &Symbolic, NULL, NULL) ;
     umfpack_di_numeric (compressed_column_starting_index, compressed_row_index, compressed_matrix_real, Symbolic, &Numeric, NULL, NULL) ;
 

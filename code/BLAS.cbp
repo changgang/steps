@@ -14,7 +14,7 @@
 				<Option compiler="gfortran" />
 				<Option createDefFile="1" />
 				<Compiler>
-					<Add option="-O2" />
+					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add directory="thirdparty/BLAS" />
 				</Compiler>

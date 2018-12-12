@@ -9,10 +9,6 @@
 
 using namespace std;
 
-#ifdef STEPS_SPARSE_MATRIX
-#undef STEPS_SPARSE_MATRIX
-#endif
-#define STEPS_SPARSE_MATRIX SPARSE_MATRIX_UMFPACK
 SPARSE_MATRIX_TEST::SPARSE_MATRIX_TEST()
 {
     TEST_ADD(SPARSE_MATRIX_TEST::test_constructor);
@@ -30,7 +26,7 @@ SPARSE_MATRIX_TEST::SPARSE_MATRIX_TEST()
     TEST_ADD(SPARSE_MATRIX_TEST::test_get_entry_value_with_index);
     TEST_ADD(SPARSE_MATRIX_TEST::test_change_entry_value);
     TEST_ADD(SPARSE_MATRIX_TEST::test_clear);
-    //TEST_ADD(SPARSE_MATRIX_TEST::test_get_reorder_permutation);
+    TEST_ADD(SPARSE_MATRIX_TEST::test_get_reorder_permutation);
     TEST_ADD(SPARSE_MATRIX_TEST::test_slove_Ax_equal_b);
     TEST_ADD(SPARSE_MATRIX_TEST::test_solve_Ax_equal_b_with_operator_slash);
 
@@ -452,4 +448,3 @@ void SPARSE_MATRIX_TEST::test_save_matrix_to_file()
 
     matrix.save_matrix_to_file("sparse_matrix_contents.csv");
 }
-#undef STEPS_SPARSE_MATRIX

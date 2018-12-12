@@ -1142,7 +1142,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    simulator.prepare_meters();
+    //simulator.prepare_meters();
 
     simulator.set_output_file("test_log/IEEE_39_bus_model_dynamic_test_result_GENROU_SEXS_IEEEG1_LCFB1");
 
@@ -1384,7 +1384,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    simulator.prepare_meters();
+    //simulator.prepare_meters();
 
     simulator.set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
