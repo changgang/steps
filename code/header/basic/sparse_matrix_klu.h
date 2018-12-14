@@ -1,18 +1,19 @@
-#ifndef SPARSE_MATRIX_UMFPACK_H
-#define SPARSE_MATRIX_UMFPACK_H
+#ifndef SPARSE_MATRIX_KLU_H
+#define SPARSE_MATRIX_KLU_H
 #include <vector>
 #include <ctime>
 #include <complex>
 #include "sparse_matrix.h"
+#include "klu.h"
 using namespace std;
 
-class SPARSE_MATRIX_UMFPACK : public SPARSE_MATRIX
+class SPARSE_MATRIX_KLU : public SPARSE_MATRIX
 {
 public:
-    SPARSE_MATRIX_UMFPACK();
-    SPARSE_MATRIX_UMFPACK(const SPARSE_MATRIX_UMFPACK& matrix);
-    virtual SPARSE_MATRIX_UMFPACK& operator=(const SPARSE_MATRIX_UMFPACK& matrix);
-    virtual ~SPARSE_MATRIX_UMFPACK();
+    SPARSE_MATRIX_KLU();
+    SPARSE_MATRIX_KLU(const SPARSE_MATRIX_KLU& matrix);
+    virtual SPARSE_MATRIX_KLU& operator=(const SPARSE_MATRIX_KLU& matrix);
+    virtual ~SPARSE_MATRIX_KLU();
 
     virtual void add_entry(int row, int col, complex<double> value);
 
@@ -49,7 +50,7 @@ public:
     virtual void save_matrix_to_file(string filename)  const;
 
 private:
-    void copy_from_const_matrix(const SPARSE_MATRIX_UMFPACK& matrix);
+    void copy_from_const_matrix(const SPARSE_MATRIX_KLU& matrix);
     vector<size_t> triplet_row_index, triplet_column_index;
     vector<double> triplet_matrix_real, triplet_matrix_imag;
     size_t n_row, n_column;
@@ -59,9 +60,11 @@ private:
 
     bool flag_matrix_in_triplet_form;
 
-    void *Symbolic, *Numeric ;
+    klu_symbolic *Symbolic;
+    klu_numeric *Numeric ;
+    klu_common Common;
 };
 
 
-vector<double> operator/(vector<double>& b, SPARSE_MATRIX_UMFPACK& A);
-#endif // SPARSE_MATRIX_UMFPACK_H
+vector<double> operator/(vector<double>&b, SPARSE_MATRIX_KLU& A);
+#endif // SPARSE_MATRIX_KLU_H

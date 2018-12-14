@@ -14,13 +14,12 @@
 				<Option compiler="gfortran" />
 				<Option createDefFile="1" />
 				<Compiler>
+					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="-no-pie" />
 					<Add directory="thirdparty/BLAS" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="-no-pie" />
 				</Linker>
 			</Target>

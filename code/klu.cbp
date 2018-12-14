@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="KLU" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Release">
+				<Option output="../build/bin/Release/KLU" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="../build/obj/Release/" />
+				<Option type="2" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O3" />
+					<Add option="-no-pie" />
+					<Add directory="thirdparty/SuiteSparse/AMD/Include" />
+					<Add directory="thirdparty/SuiteSparse/SuiteSparse_config" />
+					<Add directory="thirdparty/SuiteSparse/COLAMD/Include" />
+					<Add directory="thirdparty/SuiteSparse/BTF/Include" />
+					<Add directory="thirdparty/SuiteSparse/KLU/Include" />
+				</Compiler>
+				<Linker>
+					<Add option="-no-pie" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Include/amd.h" />
+		<Unit filename="thirdparty/SuiteSparse/AMD/Include/amd_internal.h" />
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_2.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_aat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_control.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_defaults.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_dump.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_global.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_info.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_order.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_post_tree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_postorder.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_preprocess.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/AMD/Source/amd_valid.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/BTF/Include/btf.h" />
+		<Unit filename="thirdparty/SuiteSparse/BTF/Include/btf_internal.h" />
+		<Unit filename="thirdparty/SuiteSparse/BTF/Source/btf_maxtrans.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/BTF/Source/btf_order.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/BTF/Source/btf_strongcomp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/COLAMD/Include/colamd.h" />
+		<Unit filename="thirdparty/SuiteSparse/COLAMD/Source/colamd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Include/klu.h" />
+		<Unit filename="thirdparty/SuiteSparse/KLU/Include/klu_internal.h" />
+		<Unit filename="thirdparty/SuiteSparse/KLU/Include/klu_version.h" />
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_analyze.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_analyze_given.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_defaults.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_diagnostics.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_dump.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_extract.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_factor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_free_numeric.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_free_symbolic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_kernel.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_memory.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_refactor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_scale.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_solve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_sort.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/KLU/Source/klu_tsolve.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/SuiteSparse_config/SuiteSparse_config.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="thirdparty/SuiteSparse/SuiteSparse_config/SuiteSparse_config.h" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

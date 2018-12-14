@@ -434,7 +434,7 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
     return;
 }
 
-vector<double> SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double> b)
+vector<double> SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
 {
     if(not LU_factorization_is_performed())
         LU_factorization(1, 1e-6);
@@ -586,7 +586,7 @@ void SPARSE_MATRIX_CSPARSE::save_matrix_to_file(string filename) const
     file.close();
 }
 
-vector<double> operator/(vector<double>b, SPARSE_MATRIX_CSPARSE& A)
+vector<double> operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A)
 {
     return A.solve_Ax_eq_b(b);
 }

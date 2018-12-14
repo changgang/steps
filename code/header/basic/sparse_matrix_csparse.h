@@ -48,7 +48,7 @@ public:
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-6);
 
-    virtual vector<double> solve_Ax_eq_b(vector<double> b);
+    virtual vector<double> solve_Ax_eq_b(vector<double>& b);
 
     virtual void report_brief()  const;
     virtual void report_full()  const;
@@ -66,5 +66,5 @@ private:
 };
 
 
-vector<double> operator/(vector<double>b, SPARSE_MATRIX_CSPARSE& A);
+vector<double> operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A);
 #endif // SPARSE_MATRIX_CSPARSE_H

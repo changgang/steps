@@ -13,7 +13,7 @@
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-pg" />
+					<Add option="-O3" />
 					<Add option="-no-pie" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
@@ -29,7 +29,6 @@
 					<Add directory="thirdparty/SuiteSparse/metis-5.1.0/libmetis/" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="-no-pie" />
 				</Linker>
 			</Target>

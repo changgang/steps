@@ -15,15 +15,14 @@
 				<Option compiler="gcc" />
 				<Option parameters="--compiler " />
 				<Compiler>
+					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-pg" />
 					<Add option="-no-pie" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 				</Compiler>
 				<Linker>
-					<Add option="-pg" />
 					<Add option="-no-pie" />
 				</Linker>
 			</Target>

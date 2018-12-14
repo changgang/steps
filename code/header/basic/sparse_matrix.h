@@ -64,7 +64,7 @@ public:
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-6) = 0;
 
-    virtual vector<double> solve_Ax_eq_b(vector<double> b) = 0;
+    virtual vector<double> solve_Ax_eq_b(vector<double>& b) = 0;
 
     virtual void report_brief()  const = 0;
     virtual void report_full()  const = 0;

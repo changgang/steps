@@ -1,8 +1,7 @@
-#include "header/basic/sparse_matrix_umfpack.h"
+#include "header/basic/sparse_matrix_klu.h"
+#include "umfpack.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
-
-#include "umfpack.h"
 
 #include <string>
 #include <istream>
@@ -13,7 +12,7 @@
 #include <fstream>
 using namespace std;
 
-SPARSE_MATRIX_UMFPACK::SPARSE_MATRIX_UMFPACK():SPARSE_MATRIX()
+SPARSE_MATRIX_KLU::SPARSE_MATRIX_KLU():SPARSE_MATRIX()
 {
     //constructor
     n_row = 0;
@@ -36,7 +35,7 @@ SPARSE_MATRIX_UMFPACK::SPARSE_MATRIX_UMFPACK():SPARSE_MATRIX()
     clear();
 }
 
-SPARSE_MATRIX_UMFPACK::SPARSE_MATRIX_UMFPACK(const SPARSE_MATRIX_UMFPACK& matrix)
+SPARSE_MATRIX_KLU::SPARSE_MATRIX_KLU(const SPARSE_MATRIX_KLU& matrix)
 {
     n_row = 0;
     n_column = 0;
@@ -60,7 +59,7 @@ SPARSE_MATRIX_UMFPACK::SPARSE_MATRIX_UMFPACK(const SPARSE_MATRIX_UMFPACK& matrix
     copy_from_const_matrix(matrix);
 }
 
-SPARSE_MATRIX_UMFPACK& SPARSE_MATRIX_UMFPACK::operator=(const SPARSE_MATRIX_UMFPACK& matrix)
+SPARSE_MATRIX_KLU& SPARSE_MATRIX_KLU::operator=(const SPARSE_MATRIX_KLU& matrix)
 {
     if(this==(&matrix)) return *this;
 
@@ -69,7 +68,7 @@ SPARSE_MATRIX_UMFPACK& SPARSE_MATRIX_UMFPACK::operator=(const SPARSE_MATRIX_UMFP
     return *this;
 }
 
-void SPARSE_MATRIX_UMFPACK::copy_from_const_matrix(const SPARSE_MATRIX_UMFPACK& matrix)
+void SPARSE_MATRIX_KLU::copy_from_const_matrix(const SPARSE_MATRIX_KLU& matrix)
 {
     clear();
 
@@ -92,13 +91,13 @@ void SPARSE_MATRIX_UMFPACK::copy_from_const_matrix(const SPARSE_MATRIX_UMFPACK& 
 }
 
 
-SPARSE_MATRIX_UMFPACK::~SPARSE_MATRIX_UMFPACK()
+SPARSE_MATRIX_KLU::~SPARSE_MATRIX_KLU()
 {
     // destructor
     clear();
 }
 
-void SPARSE_MATRIX_UMFPACK::clear()
+void SPARSE_MATRIX_KLU::clear()
 {
     // clear function
     update_clock_when_LU_factorization_is_performed();
@@ -121,8 +120,8 @@ void SPARSE_MATRIX_UMFPACK::clear()
     compressed_matrix_real = NULL;
     compressed_matrix_imag = NULL;
 
-    if(Symbolic!=NULL) umfpack_di_free_symbolic (&Symbolic);
-    if(Numeric!=NULL) umfpack_di_free_numeric(&Numeric);
+    if(Symbolic!=NULL) klu_free_symbolic (&Symbolic, &Common);
+    if(Numeric!=NULL) klu_free_numeric (&Numeric, &Common);
 
     Symbolic = NULL;
     Numeric = NULL;
@@ -132,13 +131,13 @@ void SPARSE_MATRIX_UMFPACK::clear()
     update_clock_when_matrix_is_changed();
 }
 
-bool SPARSE_MATRIX_UMFPACK::matrix_in_triplet_form() const
+bool SPARSE_MATRIX_KLU::matrix_in_triplet_form() const
 {
     return flag_matrix_in_triplet_form;
 }
 
 
-void SPARSE_MATRIX_UMFPACK::add_entry(int row, int col, complex<double> value)
+void SPARSE_MATRIX_KLU::add_entry(int row, int col, complex<double> value)
 {
     if(matrix_in_triplet_form())
     {
@@ -185,7 +184,7 @@ void SPARSE_MATRIX_UMFPACK::add_entry(int row, int col, complex<double> value)
     }
 }
 
-void SPARSE_MATRIX_UMFPACK::convert_to_triplet_form()
+void SPARSE_MATRIX_KLU::convert_to_triplet_form()
 {
     if(matrix_in_triplet_form())
         return;
@@ -216,7 +215,7 @@ void SPARSE_MATRIX_UMFPACK::convert_to_triplet_form()
     if(compressed_matrix_imag!=NULL) free(compressed_matrix_imag);
 }
 
-void SPARSE_MATRIX_UMFPACK::compress_and_merge_duplicate_entries()
+void SPARSE_MATRIX_KLU::compress_and_merge_duplicate_entries()
 {
     // compress the sparse matrix
     if(matrix_in_compressed_column_form()) return;
@@ -258,7 +257,7 @@ void SPARSE_MATRIX_UMFPACK::compress_and_merge_duplicate_entries()
     update_clock_when_matrix_is_changed();
 }
 
-void SPARSE_MATRIX_UMFPACK::transpose()
+void SPARSE_MATRIX_KLU::transpose()
 {
     // transpose a compress format matrix
     if(matrix_in_triplet_form()) // if in triplet format, convert to compressed format
@@ -305,12 +304,12 @@ void SPARSE_MATRIX_UMFPACK::transpose()
     update_clock_when_matrix_is_changed();
 }
 
-int SPARSE_MATRIX_UMFPACK::get_matrix_size() const
+int SPARSE_MATRIX_KLU::get_matrix_size() const
 {
     return n_column;
 }
 
-int SPARSE_MATRIX_UMFPACK::get_matrix_entry_count() const
+int SPARSE_MATRIX_KLU::get_matrix_entry_count() const
 {
     if(matrix_in_triplet_form())
         return int(triplet_matrix_real.size());
@@ -318,20 +317,20 @@ int SPARSE_MATRIX_UMFPACK::get_matrix_entry_count() const
         return compressed_column_starting_index[n_column];
 }
 
-int SPARSE_MATRIX_UMFPACK::get_starting_index_of_column(int col) const
+int SPARSE_MATRIX_KLU::get_starting_index_of_column(int col) const
 {
     if(col>=0 and col<=get_matrix_size()) return compressed_column_starting_index[col];
     else                                  return INDEX_NOT_EXIST;
 }
 
-int SPARSE_MATRIX_UMFPACK::get_row_number_of_entry_index(int index) const
+int SPARSE_MATRIX_KLU::get_row_number_of_entry_index(int index) const
 {
     int n = get_matrix_size();
     if(index<=get_starting_index_of_column(n))  return compressed_row_index[index];
     else                                        return INDEX_NOT_EXIST;
 }
 
-int SPARSE_MATRIX_UMFPACK::get_entry_index(int row, int col) const
+int SPARSE_MATRIX_KLU::get_entry_index(int row, int col) const
 {
     // return entry index of compressed matrix
     if(row >= 0 and col >= 0)
@@ -365,7 +364,7 @@ int SPARSE_MATRIX_UMFPACK::get_entry_index(int row, int col) const
 }
 
 
-double SPARSE_MATRIX_UMFPACK::get_real_entry_value(int index) const
+double SPARSE_MATRIX_KLU::get_real_entry_value(int index) const
 {
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
         return compressed_matrix_real[index];
@@ -373,7 +372,7 @@ double SPARSE_MATRIX_UMFPACK::get_real_entry_value(int index) const
         return 0.0;
 }
 
-double SPARSE_MATRIX_UMFPACK::get_imag_entry_value(int index) const
+double SPARSE_MATRIX_KLU::get_imag_entry_value(int index) const
 {
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
         return compressed_matrix_imag[index];
@@ -381,7 +380,7 @@ double SPARSE_MATRIX_UMFPACK::get_imag_entry_value(int index) const
         return 0.0;
 }
 
-void SPARSE_MATRIX_UMFPACK::change_real_entry_value(int index, double value)
+void SPARSE_MATRIX_KLU::change_real_entry_value(int index, double value)
 {
     if(index != INDEX_NOT_EXIST and index>=0 and index<get_starting_index_of_column(get_matrix_size()))
     {
@@ -391,7 +390,7 @@ void SPARSE_MATRIX_UMFPACK::change_real_entry_value(int index, double value)
     }
 }
 
-void SPARSE_MATRIX_UMFPACK::change_imag_entry_value(int index, double value)
+void SPARSE_MATRIX_KLU::change_imag_entry_value(int index, double value)
 {
     if(index != INDEX_NOT_EXIST and index>=0 and index<get_starting_index_of_column(get_matrix_size()))
     {
@@ -402,7 +401,7 @@ void SPARSE_MATRIX_UMFPACK::change_imag_entry_value(int index, double value)
 }
 
 
-vector<size_t> SPARSE_MATRIX_UMFPACK::get_reorder_permutation()
+vector<size_t> SPARSE_MATRIX_KLU::get_reorder_permutation()
 {
     if(matrix_in_triplet_form())
         compress_and_merge_duplicate_entries();
@@ -418,35 +417,34 @@ vector<size_t> SPARSE_MATRIX_UMFPACK::get_reorder_permutation()
     return permutation;
 }
 
-void SPARSE_MATRIX_UMFPACK::LU_factorization(int order, double tolerance)
+void SPARSE_MATRIX_KLU::LU_factorization(int order, double tolerance)
 {
     if(LU_factorization_is_performed()) return;
 
-    umfpack_di_symbolic (n_row, n_column, compressed_column_starting_index, compressed_row_index, compressed_matrix_real, &Symbolic, NULL, NULL) ;
-    umfpack_di_numeric (compressed_column_starting_index, compressed_row_index, compressed_matrix_real, Symbolic, &Numeric, NULL, NULL) ;
+    if(Symbolic!=NULL) klu_free_symbolic(&Symbolic, &Common);
+    if(Numeric!=NULL) klu_free_numeric(&Numeric, &Common);
+
+    Symbolic = klu_analyze (n_column, compressed_column_starting_index, compressed_row_index, &Common) ;
+    Numeric = klu_factor (compressed_column_starting_index, compressed_row_index, compressed_matrix_real, Symbolic, &Common) ;
 
     update_clock_when_LU_factorization_is_performed(); // mark the clock when finish the LU decomposition
     return;
 }
 
-vector<double> SPARSE_MATRIX_UMFPACK::solve_Ax_eq_b(vector<double>& b)
+vector<double> SPARSE_MATRIX_KLU::solve_Ax_eq_b(vector<double>& b)
 {
     if(not LU_factorization_is_performed())   LU_factorization();
-    double * x = (double*)calloc(b.size(), sizeof(double));
     double * B = (double*)calloc(b.size(), sizeof(double));
     for(size_t i=0; i<n_row; ++i) B[i] = b[i];
-    double Control[UMFPACK_CONTROL];
-    Control[UMFPACK_IRSTEP] = 0;
 
-    umfpack_di_solve (UMFPACK_A, compressed_column_starting_index, compressed_row_index, compressed_matrix_real,
-                      x, B, Numeric, Control, NULL) ;
-    for(size_t i=0; i<n_row; ++i) b[i] = x[i];
-    free(x);
+    klu_solve (Symbolic, Numeric, n_row, 1, B, &Common) ;
+
+    for(size_t i=0; i<n_row; ++i) b[i] = B[i];
     free(B);
     return b;
 }
 
-void SPARSE_MATRIX_UMFPACK::report_brief() const
+void SPARSE_MATRIX_KLU::report_brief() const
 {
     string buffer;
     char cbuffer[1000];
@@ -475,12 +473,12 @@ void SPARSE_MATRIX_UMFPACK::report_brief() const
 }
 
 
-void SPARSE_MATRIX_UMFPACK::report_full() const
+void SPARSE_MATRIX_KLU::report_full() const
 {
     string buffer;
 }
 
-void SPARSE_MATRIX_UMFPACK::save_matrix_to_file(string filename) const
+void SPARSE_MATRIX_KLU::save_matrix_to_file(string filename) const
 {
     ostringstream osstream;
 
@@ -514,7 +512,7 @@ void SPARSE_MATRIX_UMFPACK::save_matrix_to_file(string filename) const
     file.close();
 }
 
-vector<double> operator/(vector<double>&b, SPARSE_MATRIX_UMFPACK& A)
+vector<double> operator/(vector<double>&b, SPARSE_MATRIX_KLU& A)
 {
     return A.solve_Ax_eq_b(b);
 }

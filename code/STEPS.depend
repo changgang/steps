@@ -13407,7 +13407,7 @@
 	<cstdio>
 	<cmath>
 
-1544708016 source:/home/changgang/steps/code/main_tests.cpp
+1544775532 source:/home/changgang/steps/code/main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -18663,7 +18663,7 @@
 	"cpptest.h"
 	"header/network/network_matrix.h"
 
-1544403720 source:/home/changgang/steps/code/source/network/network_matrix.cpp
+1544773569 source:/home/changgang/steps/code/source/network/network_matrix.cpp
 	"header/network/network_matrix.h"
 	"header/basic/utility.h"
 	<fstream>
@@ -18779,7 +18779,7 @@
 	<complex>
 	"sparse_matrix.h"
 
-1544440144 source:/home/changgang/steps/code/source/basic/sparse_matrix_csparse.cpp
+1544772154 source:/home/changgang/steps/code/source/basic/sparse_matrix_csparse.cpp
 	"header/basic/sparse_matrix_csparse.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -18791,7 +18791,7 @@
 	<iostream>
 	<fstream>
 
-1544758463 source:/home/changgang/steps/code/source/basic/sparse_matrix_umfpack.cpp
+1544772173 source:/home/changgang/steps/code/source/basic/sparse_matrix_umfpack.cpp
 	"header/basic/sparse_matrix_umfpack.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -19204,11 +19204,12 @@
 	"header/basic/inphno.h"
 	<string>
 
-1544592263 /home/changgang/steps/code/header/basic/sparse_matrix_define.h
+1544775430 /home/changgang/steps/code/header/basic/sparse_matrix_define.h
 	"header/basic/sparse_matrix_csparse.h"
 	"header/basic/sparse_matrix_umfpack.h"
+	"header/basic/sparse_matrix_klu.h"
 
-1544440169 /home/changgang/steps/code/header/basic/sparse_matrix_csparse.h
+1544772130 /home/changgang/steps/code/header/basic/sparse_matrix_csparse.h
 	"cs.h"
 	<vector>
 	<ctime>
@@ -19223,13 +19224,13 @@
 	<stddef.h>
 	"mex.h"
 
-1544440160 /home/changgang/steps/code/header/basic/sparse_matrix.h
+1544772033 /home/changgang/steps/code/header/basic/sparse_matrix.h
 	"cs.h"
 	<vector>
 	<ctime>
 	<complex>
 
-1544524476 /home/changgang/steps/code/header/basic/sparse_matrix_umfpack.h
+1544772138 /home/changgang/steps/code/header/basic/sparse_matrix_umfpack.h
 	<vector>
 	<ctime>
 	<complex>
@@ -20271,7 +20272,7 @@
 
 1459374117 /home/changgang/steps/code/thirdparty/SuiteSparse/UMFPACK/Include/umfpack_global.h
 
-1544765284 source:/home/changgang/steps/code/main_gprof.cpp
+1544771005 source:/home/changgang/steps/code/main_gprof.cpp
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
@@ -20286,4 +20287,36 @@
 	<cstdio>
 	<cmath>
 	<ctime>
+
+1544774903 source:/home/changgang/steps/code/source/basic/sparse_matrix_klu.cpp
+	"header/basic/sparse_matrix_klu.h"
+	"umfpack.h"
+	"header/basic/constants.h"
+	"header/basic/utility.h"
+	<string>
+	<istream>
+	<ostream>
+	<sstream>
+	<iomanip>
+	<iostream>
+	<fstream>
+
+1544772144 /home/changgang/steps/code/header/basic/sparse_matrix_klu.h
+	<vector>
+	<ctime>
+	<complex>
+	"sparse_matrix.h"
+	"klu.h"
+
+1520889539 /home/changgang/steps/code/thirdparty/SuiteSparse/KLU/Include/klu.h
+	"amd.h"
+	"colamd.h"
+	"btf.h"
+
+1462390989 /home/changgang/steps/code/thirdparty/SuiteSparse/COLAMD/Include/colamd.h
+	<stdlib.h>
+	"SuiteSparse_config.h"
+
+1462384894 /home/changgang/steps/code/thirdparty/SuiteSparse/BTF/Include/btf.h
+	"SuiteSparse_config.h"
 
