@@ -15,44 +15,23 @@
 				<Option compiler="gcc" />
 				<Option parameters="--compiler " />
 				<Compiler>
-					<Add option="-march=corei7-avx" />
-					<Add option="-O3" />
-					<Add option="-Wnon-virtual-dtor" />
-					<Add option="-Winit-self" />
-					<Add option="-Wredundant-decls" />
-					<Add option="-Wcast-align" />
-					<Add option="-Winline" />
-					<Add option="-Wunreachable-code" />
-					<Add option="-Wmissing-declarations" />
-					<Add option="-Wmissing-include-dirs" />
-					<Add option="-pedantic-errors" />
-					<Add option="-pedantic" />
-					<Add option="-Wextra" />
 					<Add option="-Wall" />
-					<Add option="-std=c++14" />
-					<Add option="-fPIC" />
-					<Add option="-Og" />
+					<Add option="-pg" />
+					<Add option="-no-pie" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 				</Compiler>
 				<Linker>
-					<Add option="-static-libstdc++" />
-					<Add option="-static-libgcc" />
-					<Add option="-lgfortran" />
-					<Add library="../build/bin/Release/libUMFPACK.a" />
-					<Add library="../build/bin/Release/libBLAS.a" />
-					<Add library="../build/bin/Release/libCSparse.a" />
+					<Add option="-pg" />
+					<Add option="-no-pie" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add option="-fexceptions -fopenmp" />
+			<Add option="-fexceptions" />
 		</Compiler>
-		<Linker>
-			<Add option="-fopenmp" />
-		</Linker>
 		<Unit filename="thirdparty/cpptest/collectoroutput.cpp" />
 		<Unit filename="thirdparty/cpptest/compileroutput.cpp" />
 		<Unit filename="thirdparty/cpptest/cpptest-assert.h" />

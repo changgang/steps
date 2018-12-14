@@ -89,20 +89,7 @@ void SPARSE_MATRIX_UMFPACK::copy_from_const_matrix(const SPARSE_MATRIX_UMFPACK& 
 SPARSE_MATRIX_UMFPACK::~SPARSE_MATRIX_UMFPACK()
 {
     // destructor
-    triplet_row_index.clear();
-    triplet_column_index.clear();
-    triplet_matrix_real.clear();
-    triplet_matrix_imag.clear();
-
-    if(compressed_column_starting_index!=NULL) free(compressed_column_starting_index);
-    if(compressed_row_index!=NULL) free(compressed_row_index);
-    if(compressed_matrix_real!=NULL) free(compressed_matrix_real);
-    if(compressed_matrix_imag!=NULL) free(compressed_matrix_imag);
-
-    compressed_column_starting_index = NULL;
-    compressed_row_index = NULL;
-    compressed_matrix_real = NULL;
-    compressed_matrix_imag = NULL;
+    clear();
 }
 
 void SPARSE_MATRIX_UMFPACK::clear()
@@ -436,9 +423,14 @@ vector<double> SPARSE_MATRIX_UMFPACK::solve_Ax_eq_b(vector<double> b)
     double * x = (double*)calloc(b.size(), sizeof(double));
     double * B = (double*)calloc(b.size(), sizeof(double));
     for(size_t i=0; i<n_row; ++i) B[i] = b[i];
+    double Control[UMFPACK_CONTROL];
+    Control[UMFPACK_IRSTEP] = 0;
+
     umfpack_di_solve (UMFPACK_A, compressed_column_starting_index, compressed_row_index, compressed_matrix_real,
-                      x, B, Numeric, NULL, NULL) ;
+                      x, B, Numeric, Control, NULL) ;
     for(size_t i=0; i<n_row; ++i) b[i] = x[i];
+    free(x);
+    free(B);
     return b;
 }
 

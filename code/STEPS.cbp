@@ -15,24 +15,9 @@
 				<Option use_console_runner="0" />
 				<Option parameters="--compiler " />
 				<Compiler>
-					<Add option="-march=corei7-avx" />
-					<Add option="-O3" />
-					<Add option="-Wnon-virtual-dtor" />
-					<Add option="-Winit-self" />
-					<Add option="-Wredundant-decls" />
-					<Add option="-Wcast-align" />
-					<Add option="-Winline" />
-					<Add option="-Wunreachable-code" />
-					<Add option="-Wmissing-declarations" />
-					<Add option="-Wmissing-include-dirs" />
-					<Add option="-pedantic-errors" />
-					<Add option="-pedantic" />
-					<Add option="-Wextra" />
 					<Add option="-Wall" />
-					<Add option="-std=c++14" />
 					<Add option="-pg" />
-					<Add option="-fPIC" />
-					<Add option="-Og" />
+					<Add option="-no-pie" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
@@ -42,9 +27,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-pg" />
-					<Add option="-static-libstdc++" />
-					<Add option="-static-libgcc" />
-					<Add option="-lgfortran" />
+					<Add option="-lgfortran -no-pie" />
 					<Add library="../build/bin/Release/libUMFPACK.a" />
 					<Add library="../build/bin/Release/libBLAS.a" />
 					<Add library="../build/bin/Release/libCSparse.a" />
@@ -52,13 +35,6 @@
 				</Linker>
 			</Target>
 		</Build>
-		<Compiler>
-			<Add option="-Wall" />
-			<Add option="-fexceptions -fopenmp" />
-		</Compiler>
-		<Linker>
-			<Add option="-fopenmp" />
-		</Linker>
 		<Unit filename="header/apis/steps_api.h" />
 		<Unit filename="header/basic/area.h" />
 		<Unit filename="header/basic/area_test.h" />
@@ -343,10 +319,13 @@
 		<Unit filename="main_dynamics_simulation.cpp">
 			<Option link="0" />
 		</Unit>
+		<Unit filename="main_gprof.cpp" />
 		<Unit filename="main_powerflow.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_tests.cpp" />
+		<Unit filename="main_tests.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_ufls_simulation.cpp">
 			<Option link="0" />
 		</Unit>

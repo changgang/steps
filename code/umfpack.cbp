@@ -13,8 +13,8 @@
 				<Option type="2" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-march=corei7" />
-					<Add option="-O3" />
+					<Add option="-pg" />
+					<Add option="-no-pie" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/AMD/Include" />
@@ -29,7 +29,8 @@
 					<Add directory="thirdparty/SuiteSparse/metis-5.1.0/libmetis/" />
 				</Compiler>
 				<Linker>
-					<Add option="-s" />
+					<Add option="-pg" />
+					<Add option="-no-pie" />
 				</Linker>
 			</Target>
 		</Build>
