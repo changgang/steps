@@ -342,6 +342,14 @@ int SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
         return INDEX_NOT_EXIST;
 }
 
+complex<double> SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index)  const
+{
+    //if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
+    if(index>=0 && index<=matrix_real->p[matrix_real->n]) // this condition is equivalent to previous line
+        return complex<double>(matrix_real->x[index], matrix_imag->x[index]);
+    else
+        return 0.0;
+}
 
 double SPARSE_MATRIX_CSPARSE::get_real_entry_value(int index) const
 {

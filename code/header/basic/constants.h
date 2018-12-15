@@ -5,6 +5,22 @@
     #define PI 3.141592653589793
 #endif // PI
 
+#ifndef PI2
+    #define PI2 PI*2.0
+#endif // PI2
+
+#ifndef HALF_PI
+    #define HALF_PI PI*0.5
+#endif // HALF_PI
+
+#ifndef QUARTER_PI
+    #define QUARTER_PI PI*0.25
+#endif // QUARTER_PI
+
+#ifndef THIRD_PI
+    #define THIRD_PI PI/3.0
+#endif // THIRD_PI
+
 #ifndef FLOAT_EPSILON
     #define FLOAT_EPSILON 1e-10
 #endif // FLOAT_EPSILON

@@ -31,6 +31,7 @@ public:
 
     virtual int    get_entry_index(int row, int col)  const;
 
+    virtual complex<double> get_complex_entry_value(int index)  const;
     virtual double get_real_entry_value(int index)  const;
     virtual double get_imag_entry_value(int index)  const;
 

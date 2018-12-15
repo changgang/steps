@@ -14,6 +14,9 @@ using namespace std;
 streambuf * stdout_backup = NULL;
 ofstream output_file;
 
+double four_over_pi = 4.0/PI;
+double four_over_pi2 = 4.0/(PI*PI);
+
 string num2str(int number)
 {
     char str[1000];
@@ -221,6 +224,61 @@ double steps_fast_pow(double base, double exp)
 	if (fabs(exp - 3.0) < FLOAT_EPSILON)
 		return base*base*base;
 	return pow(base, exp);
+}
+
+double steps_fast_sine(double angle_in_rad)
+{
+    double x = angle_in_rad;
+    // round to [-PI, PI]
+    while(true)
+    {
+        if(x<-PI) x+=PI2;
+        else
+        {
+            if(x>PI) x-=PI2;
+        }
+        if(x>=-PI and x<=PI)
+            break;
+    }
+    //compute sine
+    double sin = 0.0;
+    if (x< 0)
+    {
+        sin= four_over_pi* x + four_over_pi2 * x* x;
+        if (sin< 0) sin= 0.225*(sin*(-sin)- sin)+ sin;
+        else        sin= 0.225*(sin*  sin - sin)+ sin;
+    }
+    else
+    {
+        sin= four_over_pi * x-four_over_pi2 * x* x;
+        if (sin< 0) sin= 0.225 * (sin*(-sin)- sin) + sin;
+        else        sin= 0.225 * (sin*  sin-  sin) + sin;
+    }
+    return sin;
+}
+double steps_fast_arcsine(double angle_in_rad)
+{
+    return 0.0;
+}
+double steps_fast_cosine(double angle_in_rad)
+{
+    angle_in_rad+= HALF_PI;
+    return steps_fast_sine(angle_in_rad);
+}
+
+double steps_fast_arccosine(double angle_in_rad)
+{
+    return 0.0;
+}
+
+double steps_fast_tangent(double angle_in_rad)
+{
+    return 0.0;
+}
+
+double steps_fast_arctangent(double angle_in_rad)
+{
+    return 0.0;
 }
 
 string trim_string(string str)

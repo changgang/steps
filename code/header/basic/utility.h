@@ -32,6 +32,13 @@ double round_angle_in_rad_to_PI(double angle);
 double steps_fast_complex_abs(complex<double> z);
 double steps_fast_complex_arg(complex<double> z);
 double steps_fast_pow(double base, double exp);
+double steps_fast_sine(double angle_in_rad);
+double steps_fast_arcsine(double angle_in_rad);
+double steps_fast_cosine(double angle_in_rad);
+double steps_fast_arccosine(double angle_in_rad);
+double steps_fast_tangent(double angle_in_rad);
+double steps_fast_arctangent(double angle_in_rad);
+
 string trim_string(string str);
 string replace_string_contents(string str, string source, string destination);
 string shrink_sucessive_blanks(string str);

@@ -325,13 +325,13 @@
 		<Unit filename="main_dynamics_simulation.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_gprof.cpp">
-			<Option link="0" />
-		</Unit>
+		<Unit filename="main_gprof.cpp" />
 		<Unit filename="main_powerflow.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_tests.cpp" />
+		<Unit filename="main_tests.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_ufls_simulation.cpp">
 			<Option link="0" />
 		</Unit>

@@ -75,7 +75,6 @@ int main()
     simulator.run_to(5.0);
     recover_stdout();
 
-
     clock_t stop = clock();
 
     cout<<"time elapse: "<<double(stop-start)*1e-6<<" s"<<endl;

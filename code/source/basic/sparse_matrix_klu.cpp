@@ -363,6 +363,14 @@ int SPARSE_MATRIX_KLU::get_entry_index(int row, int col) const
         return INDEX_NOT_EXIST;
 }
 
+complex<double> SPARSE_MATRIX_KLU::get_complex_entry_value(int index)  const
+{
+    //if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
+    if(index>=0 && index<=compressed_column_starting_index[n_column])
+        return complex<double>(compressed_matrix_real[index], compressed_matrix_imag[index]);
+    else
+        return 0.0;
+}
 
 double SPARSE_MATRIX_KLU::get_real_entry_value(int index) const
 {
