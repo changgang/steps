@@ -17,7 +17,7 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-no-pie" />
+					<Add option="-std=c++1z" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
@@ -31,12 +31,8 @@
 				<Linker>
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
-					<Add option="-lgfortran -no-pie" />
-					<Add library="../build/bin/Release/libUMFPACK.a" />
-					<Add library="../build/bin/Release/libBLAS.a" />
 					<Add library="../build/bin/Release/libCSparse.a" />
 					<Add library="../build/bin/Release/libCpptest.a" />
-					<Add library="../build/bin/Release/libKLU.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -381,9 +377,13 @@
 		<Unit filename="source/basic/rating_test.cpp" />
 		<Unit filename="source/basic/sparse_matrix.cpp" />
 		<Unit filename="source/basic/sparse_matrix_csparse.cpp" />
-		<Unit filename="source/basic/sparse_matrix_klu.cpp" />
+		<Unit filename="source/basic/sparse_matrix_klu.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="source/basic/sparse_matrix_test.cpp" />
-		<Unit filename="source/basic/sparse_matrix_umfpack.cpp" />
+		<Unit filename="source/basic/sparse_matrix_umfpack.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="source/basic/terminal.cpp" />
 		<Unit filename="source/basic/terminal_test.cpp" />
 		<Unit filename="source/basic/timer.cpp" />

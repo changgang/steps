@@ -17,14 +17,11 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-no-pie" />
+					<Add option="-std=c++1z" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 				</Compiler>
-				<Linker>
-					<Add option="-no-pie" />
-				</Linker>
 			</Target>
 		</Build>
 		<Compiler>

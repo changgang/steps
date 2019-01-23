@@ -3,3 +3,6 @@
 3, Compile CSparse as static library
 4, Compile CppTest as static library
 5, Compile STEPS as dynamic library or exectuable file. Include libUMFPACK.a, libBLAS.a, libCSparse.a, and libCpptest.a. Put libBLAS.a after libUMFPACK.a.
+
+6, when compiling in Windows, remove -no-pie and -lgfortran options
+remove libKLU.a, libBLAS.a, libUMFPACK.a

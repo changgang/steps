@@ -117,3 +117,102 @@
 	"missing.h"
 	"utils.h"
 
+1548252377 source:e:\users\cli\steps\code\thirdparty\cpptest\collectoroutput.cpp
+	"../win/winconfig.h"
+	"config.h"
+	"cpptest-collectoroutput.h"
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\cpptest-collectoroutput.h
+	<list>
+	<string>
+	<vector>
+	"cpptest-output.h"
+	"cpptest-source.h"
+	"cpptest-time.h"
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\cpptest-output.h
+	<string>
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\cpptest-source.h
+	<string>
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\cpptest-time.h
+	<istream>
+	<iostream>
+	<string>
+
+1548252377 source:e:\users\cli\steps\code\thirdparty\cpptest\compileroutput.cpp
+	<cstring>
+	<sstream>
+	"cpptest-compileroutput.h"
+	"cpptest-source.h"
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\cpptest-compileroutput.h
+	<istream>
+	<iostream>
+	<stdexcept>
+	"cpptest-output.h"
+
+1548252377 source:e:\users\cli\steps\code\thirdparty\cpptest\htmloutput.cpp
+	<algorithm>
+	<sstream>
+	"../win/winconfig.h"
+	"config.h"
+	"cpptest-htmloutput.h"
+	"utils.h"
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\cpptest-htmloutput.h
+	<istream>
+	<iostream>
+	<string>
+	"cpptest-collectoroutput.h"
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\utils.h
+
+1548252377 source:e:\users\cli\steps\code\thirdparty\cpptest\missing.cpp
+	"../win/winconfig.h"
+	"config.h"
+	"missing.h"
+	<windows.h>
+	<cmath>
+	<math.h>
+	<cassert>
+	<ctime>
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\missing.h
+	"../win/winconfig.h"
+	"config.h"
+
+1548252377 source:e:\users\cli\steps\code\thirdparty\cpptest\source_cpptest.cpp
+	"cpptest-source.h"
+
+1548252377 source:e:\users\cli\steps\code\thirdparty\cpptest\textoutput.cpp
+	<algorithm>
+	"../win/winconfig.h"
+	"config.h"
+	"cpptest-textoutput.h"
+	"cpptest-time.h"
+	"utils.h"
+
+1548252377 e:\users\cli\steps\code\thirdparty\cpptest\cpptest-textoutput.h
+	<istream>
+	<iostream>
+	<list>
+	"cpptest-source.h"
+	"cpptest-output.h"
+
+1548252377 source:e:\users\cli\steps\code\thirdparty\cpptest\time.cpp
+	"../win/winconfig.h"
+	"config.h"
+	<istream>
+	"missing.h"
+	"cpptest-time.h"
+	<sys/time.h>
+	<time.h>
+
+1548252377 source:e:\users\cli\steps\code\thirdparty\cpptest\utils.cpp
+	"../win/winconfig.h"
+	"config.h"
+	"missing.h"
+	"utils.h"
+
