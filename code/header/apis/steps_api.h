@@ -106,6 +106,24 @@ EXPORT_STEPS_DLL void api_add_area(size_t area_number, char* area_name);
 EXPORT_STEPS_DLL void api_add_zone(size_t zone_number, char* zone_name);
 EXPORT_STEPS_DLL void api_add_owner(size_t owner_number, char* owner_name);
 
+
+EXPORT_STEPS_DLL void api_remove_bus(size_t bus_number);
+EXPORT_STEPS_DLL void api_remove_generator(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_wt_generator(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_pv_unit(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_load(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_fixed_shunt(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_line(size_t sending_side_bus_number, size_t receiving_side_bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_transformer(size_t primary_side_bus_number, size_t secondary_side_bus_number, size_t tertiary_side_bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_equivalent_device(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_energy_storage(size_t bus_number, char* identifier);
+EXPORT_STEPS_DLL void api_remove_area(size_t area_number);
+EXPORT_STEPS_DLL void api_remove_zone(size_t zone_number);
+EXPORT_STEPS_DLL void api_remove_owner(size_t owner_number);
+
+
+
 EXPORT_STEPS_DLL bool api_is_bus_exist(size_t bus);
 EXPORT_STEPS_DLL bool api_is_generator_exist(size_t bus, char* ickt);
 EXPORT_STEPS_DLL bool api_is_wt_generator_exist(size_t bus, char* ickt);
@@ -249,6 +267,8 @@ EXPORT_STEPS_DLL const char* api_get_owner_string_data(size_t owner, char* param
 EXPORT_STEPS_DLL void api_set_owner_string_data(size_t owner, char* parameter_name, char* value);
 EXPORT_STEPS_DLL bool api_get_owner_boolean_data(size_t owner, char* parameter_name);
 EXPORT_STEPS_DLL void api_set_owner_boolean_data(size_t owner, char* parameter_name, bool value);
+
+EXPORT_STEPS_DLL void api_set_dynamic_model(char* model_string, char* file_type);
 
 EXPORT_STEPS_DLL const char* api_get_generator_related_model_name(size_t bus, char* identifier, char* model_type);
 EXPORT_STEPS_DLL double api_get_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name);

@@ -4573,6 +4573,10 @@ void POWER_SYSTEM_DATABASE::clear_all_energy_storages()
     energy_storage_index.clear();
 }
 
+void POWER_SYSTEM_DATABASE::clear_area(size_t area)
+{
+    ;
+}
 
 void POWER_SYSTEM_DATABASE::clear_all_areas()
 {
@@ -4580,10 +4584,20 @@ void POWER_SYSTEM_DATABASE::clear_all_areas()
     area_index.clear();
 }
 
+void POWER_SYSTEM_DATABASE::clear_zone(size_t zone)
+{
+    ;
+}
+
 void POWER_SYSTEM_DATABASE::clear_all_zones()
 {
     Zone.clear();
     zone_index.clear();
+}
+
+void POWER_SYSTEM_DATABASE::clear_owner(size_t owner)
+{
+    ;
 }
 
 void POWER_SYSTEM_DATABASE::clear_all_owners()

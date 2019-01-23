@@ -255,6 +255,81 @@ class STEPS():
         self.libsteps.api_add_owner(ownernumber, ownername)
         return
 
+    def remove_bus(self, busnumber):
+        self.libsteps.api_remove_bus(busnumber)
+        return
+
+    def remove_generator(self, generator):
+        bus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_generator(bus, ickt)
+        return
+
+    def remove_wt_generator(self, generator):
+        bus, ickt = self.__extract_single_bus_device_id(generator)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_wt_generator(bus, ickt)
+
+    def remove_pv_unit(self, unit):
+        bus, ickt = self.__extract_single_bus_device_id(unit)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_pv_unit(bus, ickt)
+        return
+
+    def remove_load(self, load):
+        bus, ickt = self.__extract_single_bus_device_id(load)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_load(bus, ickt)
+        return
+
+    def remove_fixed_shunt(self, shunt):
+        bus, ickt = self.__extract_single_bus_device_id(shunt)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_fixed_shunt(bus, ickt)
+        return
+
+    def remove_line(self, line):
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_line(ibus, jbus, ickt)
+        return
+
+    def remove_hvdc(self, hvdc):
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_hvdc(ibus, jbus, ickt)
+        return
+
+    def remove_transformer(self, transformer):
+        ibus, jbus, kbus, ickt = self.__extract_triple_bus_device_id(transformer)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_transformer(ibus, jbus, kbus, ickt)
+        return
+
+    def remove_equivalent_device(self, device):
+        bus, ickt = self.__extract_single_bus_device_id(device)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_equivalent_device(bus, ickt)
+        return
+
+    def remove_energy_storage(self, storage):
+        bus, ickt = self.__extract_single_bus_device_id(storage)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        self.libsteps.api_remove_energy_storage(bus, ickt)
+        return
+
+    def remove_area(self, areanumber):
+        self.libsteps.api_remove_area(areanumber)
+        return
+
+    def remove_zone(self, zonenumber):
+        self.libsteps.api_remove_zone(zonenumber)
+        return
+
+    def remove_owner(self, ownernumber):
+        self.libsteps.api_remove_owner(ownernumber)
+        return
+    
     def get_bus_count(self):
         device = self.__get_c_char_p_of_string("BUS")
         return self.libsteps.api_get_device_count(device)
@@ -993,6 +1068,12 @@ class STEPS():
             return self.libsteps.api_set_owner_string_data(owner, par_name, value)
         return
 
+    def load_dynamic_model(self, data, file_type):
+        data = self.__get_c_char_p_of_string(data)
+        file_type = self.__get_c_char_p_of_string(file_type)        
+        self.libsteps.api_set_dynamic_model(data, file_type)
+        return
+    
     def get_generator_related_model_name(self, generator, model_type):
         ibus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)

@@ -343,7 +343,9 @@
 		<Unit filename="source/apis/steps_api_get_device_count.cpp" />
 		<Unit filename="source/apis/steps_api_is_device_exist.cpp" />
 		<Unit filename="source/apis/steps_api_powerflow.cpp" />
+		<Unit filename="source/apis/steps_api_remove_devices.cpp" />
 		<Unit filename="source/apis/steps_api_search_devices.cpp" />
+		<Unit filename="source/apis/steps_api_set_dynamic_models.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_area_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_bus_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_fixed_shunt_parameters.cpp" />

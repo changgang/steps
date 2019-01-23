@@ -15031,7 +15031,7 @@
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/data_imexporter/equivalent_model_imexporter.h"
 
-1541764759 /home/changgang/steps/code/header/power_system_database.h
+1548236099 /home/changgang/steps/code/header/power_system_database.h
 	"header/device/bus.h"
 	"header/device/generator.h"
 	"header/device/wt_generator.h"
@@ -15074,7 +15074,7 @@
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	<complex>
 
-1544403709 /home/changgang/steps/code/header/data_imexporter/psse_imexporter.h
+1548212108 /home/changgang/steps/code/header/data_imexporter/psse_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -15581,7 +15581,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/basic/rating.h"
 
-1544440127 source:/home/changgang/steps/code/source/basic/sparse_matrix.cpp
+1544864299 source:/home/changgang/steps/code/source/basic/sparse_matrix.cpp
 	"header/basic/sparse_matrix.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -17436,7 +17436,7 @@
 	"thirdparty/cpptest/cpptest.h"
 	"header/network_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/power_system_database.cpp
+1548236188 source:/home/changgang/steps/code/source/power_system_database.cpp
 	"header/power_system_database.h"
 	"header/basic/utility.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
@@ -18779,7 +18779,7 @@
 	<complex>
 	"sparse_matrix.h"
 
-1544864125 source:/home/changgang/steps/code/source/basic/sparse_matrix_csparse.cpp
+1544864362 source:/home/changgang/steps/code/source/basic/sparse_matrix_csparse.cpp
 	"header/basic/sparse_matrix_csparse.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -19244,7 +19244,7 @@
 	<string>
 	<fstream>
 
-1541764759 /home/changgang/steps/code/header/data_imexporter/bpa_imexporter.h
+1548212331 /home/changgang/steps/code/header/data_imexporter/bpa_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -19641,7 +19641,7 @@
 	"header/meter/meter.h"
 	<complex>
 
-1541765611 /home/changgang/steps/code/header/apis/steps_api.h
+1548235682 /home/changgang/steps/code/header/apis/steps_api.h
 	"header/power_system_database.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
@@ -20319,4 +20319,17 @@
 
 1462384894 /home/changgang/steps/code/thirdparty/SuiteSparse/BTF/Include/btf.h
 	"SuiteSparse_config.h"
+
+1548236009 source:/home/changgang/steps/code/source/apis/steps_api_remove_devices.cpp
+	"header/apis/steps_api.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/data_imexporter/psse_imexporter.h"
+	"header/data_imexporter/bpa_imexporter.h"
+
+1548235609 source:/home/changgang/steps/code/source/apis/steps_api_set_dynamic_models.cpp
+	"header/apis/steps_api.h"
+	"header/basic/utility.h"
+	"header/data_imexporter/psse_imexporter.h"
+	"header/data_imexporter/bpa_imexporter.h"
 

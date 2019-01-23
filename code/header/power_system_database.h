@@ -408,10 +408,13 @@ class POWER_SYSTEM_DATABASE
         void clear_energy_storages_connecting_to_bus(const size_t bus);
         void clear_all_energy_storages();
 
+        void clear_area(size_t area);
         void clear_all_areas();
 
+        void clear_zone(size_t zone);
         void clear_all_zones();
 
+        void clear_owner(size_t owner);
         void clear_all_owners();
 
         void trip_bus(size_t bus);
