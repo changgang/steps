@@ -213,6 +213,35 @@ def load_library(parallel_flag=False):
     libsteps.api_add_owner.restype = None
     libsteps.api_add_owner.argtypes = (c_uint, c_char_p)
 
+    libsteps.api_remove_bus.restype = None
+    libsteps.api_remove_bus.argtypes = (c_uint, )
+    libsteps.api_remove_generator.restype = None
+    libsteps.api_remove_generator.argtypes = (c_uint, c_char_p)
+    libsteps.api_remove_wt_generator.restype = None
+    libsteps.api_remove_wt_generator.argtypes = (c_uint, c_char_p)
+    libsteps.api_remove_pv_unit.restype = None
+    libsteps.api_remove_pv_unit.argtypes = (c_uint, c_char_p)
+    libsteps.api_remove_energy_storage.restype = None
+    libsteps.api_remove_energy_storage.argtypes = (c_uint, c_char_p)
+    libsteps.api_remove_load.restype = None
+    libsteps.api_remove_load.argtypes = (c_uint, c_char_p)
+    libsteps.api_remove_fixed_shunt.restype = None
+    libsteps.api_remove_fixed_shunt.argtypes = (c_uint, c_char_p)
+    libsteps.api_remove_line.restype = None
+    libsteps.api_remove_line.argtypes = (c_uint, c_uint, c_char_p)
+    libsteps.api_remove_hvdc.restype = None
+    libsteps.api_remove_hvdc.argtypes = (c_uint, c_uint, c_char_p)
+    libsteps.api_remove_transformer.restype = None
+    libsteps.api_remove_transformer.argtypes = (c_uint, c_uint, c_uint, c_char_p)
+    libsteps.api_remove_equivalent_device.restype = None
+    libsteps.api_remove_equivalent_device.argtypes = (c_uint, c_char_p)
+    libsteps.api_remove_area.restype = None
+    libsteps.api_remove_area.argtypes = (c_uint,)
+    libsteps.api_remove_zone.restype = None
+    libsteps.api_remove_zone.argtypes = (c_uint,)
+    libsteps.api_remove_owner.restype = None
+    libsteps.api_remove_owner.argtypes = (c_uint,)
+
 
 
 
@@ -362,6 +391,9 @@ def load_library(parallel_flag=False):
     libsteps.api_set_owner_string_data.restype = None
     libsteps.api_set_owner_string_data.argtypes = (c_uint, c_char_p, c_char_p)
 
+    libsteps.api_set_dynamic_model.restype = None
+    libsteps.api_set_dynamic_model.argtypes = (c_char_p, c_char_p)
+    
     libsteps.api_get_generator_related_model_name.restype = c_char_p
     libsteps.api_get_generator_related_model_name.argtypes = (c_uint, c_char_p, c_char_p)
     libsteps.api_get_generator_related_model_float_parameter.restype = c_double

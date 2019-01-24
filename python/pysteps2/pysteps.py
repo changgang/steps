@@ -1068,7 +1068,7 @@ class STEPS():
             return self.libsteps.api_set_owner_string_data(owner, par_name, value)
         return
 
-    def load_dynamic_model(self, data, file_type):
+    def set_dynamic_model(self, data, file_type):
         data = self.__get_c_char_p_of_string(data)
         file_type = self.__get_c_char_p_of_string(file_type)        
         self.libsteps.api_set_dynamic_model(data, file_type)
