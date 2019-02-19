@@ -14,6 +14,7 @@ using namespace std;
 
 POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 {
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_zero_impedance_threshold);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_bus_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_generator_capacity);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_set_get_wt_generator_capacity);
@@ -182,6 +183,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_bus_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_in_service_bus_count);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_generator_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_count);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_get_pv_unit_count);
@@ -867,6 +869,21 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         psdb.append_owner(owner);
     }
 }
+
+void POWER_SYSTEM_DATABASE_TEST::test_set_get_zero_impedance_threshold()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    psdb.set_zero_impedance_threshold_in_pu(0.01);
+    TEST_ASSERT(fabs(psdb.get_zero_impedance_threshold_in_pu()-0.01)<FLOAT_EPSILON);
+    psdb.set_zero_impedance_threshold_in_pu(0.001);
+    TEST_ASSERT(fabs(psdb.get_zero_impedance_threshold_in_pu()-0.001)<FLOAT_EPSILON);
+    psdb.set_zero_impedance_threshold_in_pu(0.0001);
+    TEST_ASSERT(fabs(psdb.get_zero_impedance_threshold_in_pu()-0.0001)<FLOAT_EPSILON);
+}
+
 
 void POWER_SYSTEM_DATABASE_TEST::test_set_get_bus_capacity()
 {
@@ -5375,6 +5392,236 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_in_service_bus_count()
 
     psdb.trip_bus(2);
     TEST_ASSERT(psdb.get_in_service_bus_count()==2);
+}
+
+void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    psdb.set_zero_impedance_threshold_in_pu(0.001);
+
+    psdb.set_allowed_max_bus_number(100);
+
+    {
+        BUS bus;
+        bus.set_bus_number(1);
+        bus.set_bus_name("BUS A");
+        bus.set_base_voltage_in_kV(110.0);
+        bus.set_base_frequency_in_Hz(50.0);
+        bus.set_bus_type(SLACK_TYPE);
+        bus.set_area_number(1);
+        bus.set_zone_number(1);
+        bus.set_owner_number(1);
+        psdb.append_bus(bus);
+
+        bus.set_bus_number(2);
+        bus.set_bus_name("BUS B");
+        bus.set_base_voltage_in_kV(220.0);
+        bus.set_bus_type(PV_TYPE);
+        bus.set_area_number(2);
+        bus.set_zone_number(2);
+        bus.set_owner_number(2);
+        psdb.append_bus(bus);
+
+        bus.set_bus_number(3);
+        bus.set_bus_name("BUS C");
+        bus.set_base_voltage_in_kV(330.0);
+        bus.set_bus_type(PQ_TYPE);
+        bus.set_area_number(3);
+        bus.set_zone_number(3);
+        bus.set_owner_number(3);
+        psdb.append_bus(bus);
+
+        bus.set_bus_number(4);
+        bus.set_bus_name("BUS D");
+        bus.set_base_voltage_in_kV(330.0);
+        bus.set_bus_type(PQ_TYPE);
+        bus.set_area_number(3);
+        bus.set_zone_number(3);
+        bus.set_owner_number(3);
+        psdb.append_bus(bus);
+
+        bus.set_bus_number(5);
+        bus.set_bus_name("BUS E");
+        bus.set_base_voltage_in_kV(330.0);
+        bus.set_bus_type(PQ_TYPE);
+        bus.set_area_number(3);
+        bus.set_zone_number(3);
+        bus.set_owner_number(3);
+        psdb.append_bus(bus);
+    }
+
+    {
+        //1-2-3-5-4-1
+        LINE line;
+        line.set_sending_side_bus(1);
+        line.set_receiving_side_bus(2);
+        line.set_identifier("#1");
+        line.set_sending_side_breaker_status(true);
+        line.set_receiving_side_breaker_status(true);
+        psdb.append_line(line);
+
+        line.set_sending_side_bus(2);
+        line.set_receiving_side_bus(3);
+        line.set_identifier("#1");
+        psdb.append_line(line);
+
+        line.set_sending_side_bus(3);
+        line.set_receiving_side_bus(5);
+        line.set_identifier("#1");
+        psdb.append_line(line);
+
+
+        line.set_sending_side_bus(5);
+        line.set_receiving_side_bus(4);
+        line.set_identifier("#1");
+        psdb.append_line(line);
+
+        line.set_sending_side_bus(4);
+        line.set_receiving_side_bus(1);
+        line.set_identifier("#1");
+        psdb.append_line(line);
+    }
+    DEVICE_ID did;
+    did.set_device_type("LINE");
+    did.set_device_identifier("#1");
+
+    TERMINAL terminal;
+
+    //1-2-3-5-4-1: zero loop
+    terminal.append_bus(1);
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+
+    LINE* lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
+
+    terminal.clear();
+    terminal.append_bus(2);
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
+
+    terminal.clear();
+    terminal.append_bus(3);
+    terminal.append_bus(5);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
+
+    terminal.clear();
+    terminal.append_bus(5);
+    terminal.append_bus(4);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
+
+    terminal.clear();
+    terminal.append_bus(4);
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.001));
+
+    psdb.update_overshadowed_bus_count();
+    TEST_ASSERT(psdb.get_overshadowed_bus_count()==4);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(1)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(2)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(3)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(4)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(5)==1);
+
+    //1-2-3-5-4-1: zero loop 4-1 not zero
+    terminal.clear();
+    terminal.append_bus(4);
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
+
+    psdb.update_overshadowed_bus_count();
+    TEST_ASSERT(psdb.get_overshadowed_bus_count()==4);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(1)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(2)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(3)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(4)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(5)==1);
+
+    //1-2 3-5-4 1:  4-1 2-3 not zero
+    terminal.clear();
+    terminal.append_bus(2);
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
+
+    psdb.update_overshadowed_bus_count();
+    TEST_ASSERT(psdb.get_overshadowed_bus_count()==3);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(1)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(2)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(3)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(4)==3);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(5)==3);
+
+    //1-2 3 5-4 1:  4-1 2-3 5-3 not zero
+    terminal.clear();
+    terminal.append_bus(5);
+    terminal.append_bus(3);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
+
+    psdb.update_overshadowed_bus_count();
+    TEST_ASSERT(psdb.get_overshadowed_bus_count()==2);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(1)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(2)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(3)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(4)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(5)==4);
+
+    //1-2 3 5 4 1:  4-1 2-3 5-3 5-4 not zero
+    terminal.clear();
+    terminal.append_bus(5);
+    terminal.append_bus(4);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
+
+    psdb.update_overshadowed_bus_count();
+    TEST_ASSERT(psdb.get_overshadowed_bus_count()==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(1)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(2)==1);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(3)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(4)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(5)==0);
+
+    //1 2 3 5 4 1:  all not zero
+    terminal.clear();
+    terminal.append_bus(1);
+    terminal.append_bus(2);
+    did.set_device_terminal(terminal);
+
+    lineptr = psdb.get_line(did);
+    lineptr->set_line_positive_sequence_z_in_pu(complex<double>(0.0, 0.01));
+
+    psdb.update_overshadowed_bus_count();
+    TEST_ASSERT(psdb.get_overshadowed_bus_count()==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(1)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(2)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(3)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(4)==0);
+    TEST_ASSERT(psdb.get_equivalent_bus_of_bus(5)==0);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_generator_count()

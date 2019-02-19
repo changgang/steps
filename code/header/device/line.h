@@ -56,6 +56,8 @@ class LINE : public DEVICE
         size_t get_meter_end_bus() const;
         double get_length() const;
 
+        bool is_zero_impedance_line() const;
+
         void set_fault(size_t to_bus, double location, FAULT& fault);
         double get_fault_location_of_fault(size_t index) const;
         FAULT get_fault_at_location(size_t to_bus, double location) const;

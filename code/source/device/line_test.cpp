@@ -30,6 +30,7 @@ LINE_TEST::LINE_TEST()
     TEST_ADD(LINE_TEST::test_set_get_meter_end_bus);
     TEST_ADD(LINE_TEST::test_set_get_length);
     TEST_ADD(LINE_TEST::test_set_get_ownership);
+    TEST_ADD(LINE_TEST::test_is_zero_impedance_line);
     TEST_ADD(LINE_TEST::test_set_get_fault);
     TEST_ADD(LINE_TEST::test_clear_fault);
     TEST_ADD(LINE_TEST::test_get_fault_count);
@@ -269,6 +270,35 @@ void LINE_TEST::test_set_get_ownership()
     TEST_ASSERT(fabs(os1.get_fraction_of_owner_of_index(0)-0.5)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(os1.get_fraction_of_owner_of_index(1)-0.3)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(os1.get_fraction_of_owner_of_index(2)-0.2)<FLOAT_EPSILON);
+}
+
+void LINE_TEST::test_is_zero_impedance_line()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"LINE_TEST");
+
+    line.set_sending_side_bus(1);
+    line.set_receiving_side_bus(2);
+    line.set_identifier("1#");
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    complex<double> z(0.0, 0.001), y(0.0, 0.002);
+    line.set_line_positive_sequence_z_in_pu(z);
+    line.set_line_positive_sequence_y_in_pu(y);
+
+    psdb.set_zero_impedance_threshold_in_pu(0.001);
+    TEST_ASSERT(line.is_zero_impedance_line()==false);
+    psdb.set_zero_impedance_threshold_in_pu(0.01);
+    TEST_ASSERT(line.is_zero_impedance_line()==false);
+
+    line.set_line_positive_sequence_y_in_pu(0.0);
+
+    psdb.set_zero_impedance_threshold_in_pu(0.0001);
+    TEST_ASSERT(line.is_zero_impedance_line()==false);
+    psdb.set_zero_impedance_threshold_in_pu(0.001);
+    TEST_ASSERT(line.is_zero_impedance_line()==true);
+    psdb.set_zero_impedance_threshold_in_pu(0.01);
+    TEST_ASSERT(line.is_zero_impedance_line()==true);
 }
 
 void LINE_TEST::test_set_get_fault()

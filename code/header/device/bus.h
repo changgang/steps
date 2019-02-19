@@ -67,6 +67,12 @@ class BUS : public DEVICE
         complex<double> get_complex_voltage_in_pu() const;
         complex<double> get_complex_voltage_in_kV() const;
 
+        void set_equivalent_bus_number(size_t number);
+        size_t get_equivalent_bus_number() const;
+
+        bool is_bus_overshadowed() const;
+
+
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
@@ -111,6 +117,8 @@ class BUS : public DEVICE
         double emergency_voltage_lower_limit_in_pu;
 
         double voltage_to_regulate_in_pu;
+
+        size_t equivalent_bus_number;
 
         BUS_FREQUENCY_MODEL bus_frequency_model;
 

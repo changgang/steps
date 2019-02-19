@@ -1,5 +1,5 @@
-pysteps_version = "0.5"
-pysteps_date = "2018/08/23"
+pysteps_version = "0.5.1"
+pysteps_date = "2019/01/29"
 pysteps_author = (("Changgang Li", "lichangang@sdu.edu.cn"),("Yue Wu","sduyuewu2018@163.com"))
 
 from .libsteps import pylibsteps
@@ -369,6 +369,10 @@ class STEPS():
         return self.libsteps.api_get_zone_count()
     def get_owner_count(self):
         return self.libsteps.api_get_owner_count()
+    def get_in_service_bus_count(self):
+        return self.libsteps.api_get_in_service_bus_count()
+    def get_overshadowed_bus_count(self):
+        return self.libsteps.api_get_overshadowed_bus_count()
 
     def is_bus_exist(self, bus):
         return self.libsteps.api_is_bus_exist(bus)

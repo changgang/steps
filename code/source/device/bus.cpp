@@ -301,6 +301,25 @@ complex<double> BUS::get_complex_voltage_in_kV() const
     return Euler_complex_number*voltage_in_pu*base_voltage_in_kV;
 }
 
+
+void BUS::set_equivalent_bus_number(size_t number)
+{
+    equivalent_bus_number = number;
+}
+
+size_t BUS::get_equivalent_bus_number() const
+{
+    return equivalent_bus_number;
+}
+
+bool BUS::is_bus_overshadowed() const
+{
+    if(get_equivalent_bus_number()!=0 and get_equivalent_bus_number()!=get_bus_number())
+        return true;
+    else
+        return false;
+}
+
 bool BUS::is_valid() const
 {
     if(get_bus_number()!=0 and get_base_voltage_in_kV()>0.0)
@@ -334,6 +353,8 @@ void BUS::clear()
     set_voltage_upper_limit_in_pu(1.1);
     set_voltage_lower_limit_in_pu(0.9);
     set_voltage_to_regulate_in_pu(0.0);
+
+    set_equivalent_bus_number(0);
 
     fault.clear();
 }

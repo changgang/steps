@@ -20,6 +20,8 @@ POWER_SYSTEM_DATABASE::POWER_SYSTEM_DATABASE()
 
     set_database_capacity();
 
+    set_zero_impedance_threshold_in_pu(0.0001);
+
     clear_database();
 
     update_in_service_bus_count();
@@ -29,6 +31,16 @@ POWER_SYSTEM_DATABASE::POWER_SYSTEM_DATABASE()
 POWER_SYSTEM_DATABASE::~POWER_SYSTEM_DATABASE()
 {
     clear_database();
+}
+
+void POWER_SYSTEM_DATABASE::set_zero_impedance_threshold_in_pu(double z)
+{
+    zero_impedance_threshold = z;
+}
+
+double POWER_SYSTEM_DATABASE::get_zero_impedance_threshold_in_pu() const
+{
+    return zero_impedance_threshold;
 }
 
 void POWER_SYSTEM_DATABASE::set_database_capacity()
@@ -3299,6 +3311,84 @@ void POWER_SYSTEM_DATABASE::update_in_service_bus_count()
     }
 
     in_service_bus_count = n-n_out_of_service;
+}
+
+size_t POWER_SYSTEM_DATABASE::get_overshadowed_bus_count() const
+{
+    return overshadowed_bus_count;
+}
+
+void POWER_SYSTEM_DATABASE::update_overshadowed_bus_count()
+{
+    overshadowed_bus_count = 0;
+    size_t n = Bus.size();
+    for(size_t i=0; i!=n; ++i)
+        Bus[i].set_equivalent_bus_number(0);
+
+    n = Line.size();
+    while(true)
+    {
+        bool new_bus_is_overshadowed = false;
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(Line[i].is_zero_impedance_line())
+            {
+                bool istatus = Line[i].get_sending_side_breaker_status();
+                bool jstatus = Line[i].get_receiving_side_breaker_status();
+                if(istatus==false or jstatus==false)
+                    continue;
+                else
+                {
+                    size_t ibus = Line[i].get_sending_side_bus();
+                    size_t jbus = Line[i].get_receiving_side_bus();
+
+                    size_t iequvilent_bus = get_equivalent_bus_of_bus(ibus);
+                    size_t jequvilent_bus = get_equivalent_bus_of_bus(jbus);
+
+                    if(iequvilent_bus==0)
+                        iequvilent_bus = ibus;
+                    if(jequvilent_bus==0)
+                        jequvilent_bus = jbus;
+
+                    if(iequvilent_bus==jequvilent_bus)
+                        continue;
+                    else
+                    {
+                        if(iequvilent_bus<jequvilent_bus)
+                        {
+                            BUS* busptr = get_bus(jbus);
+                            busptr->set_equivalent_bus_number(iequvilent_bus);
+                        }
+                        else
+                        {
+                            BUS* busptr = get_bus(ibus);
+                            busptr->set_equivalent_bus_number(jequvilent_bus);
+                        }
+                        if(new_bus_is_overshadowed==false)
+                            new_bus_is_overshadowed = true;
+                    }
+                }
+            }
+        }
+        if(new_bus_is_overshadowed==false)
+            break;
+    }
+
+    n = Bus.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        if(Bus[i].is_bus_overshadowed())
+            ++overshadowed_bus_count;
+    }
+}
+
+size_t POWER_SYSTEM_DATABASE::get_equivalent_bus_of_bus(size_t bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_equivalent_bus_number();
+    else
+        return 0;
 }
 
 size_t POWER_SYSTEM_DATABASE::get_generator_count() const

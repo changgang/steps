@@ -36,6 +36,8 @@ class POWER_SYSTEM_DATABASE
         POWER_SYSTEM_DATABASE();
         ~POWER_SYSTEM_DATABASE();
         void clear_database();
+        void set_zero_impedance_threshold_in_pu(double z);
+        double get_zero_impedance_threshold_in_pu() const;
 
         size_t get_bus_capacity() const;
         size_t get_generator_capacity() const;
@@ -258,6 +260,7 @@ class POWER_SYSTEM_DATABASE
 
         size_t get_bus_count() const;
         size_t get_in_service_bus_count() const;
+        size_t get_overshadowed_bus_count() const;
         size_t get_generator_count() const;
         size_t get_wt_generator_count() const;
         size_t get_pv_unit_count() const;
@@ -452,6 +455,8 @@ class POWER_SYSTEM_DATABASE
 
 
         void update_in_service_bus_count();
+        void update_overshadowed_bus_count();
+        size_t get_equivalent_bus_of_bus(size_t bus);
     private:
         void set_database_capacity();
 
@@ -490,7 +495,10 @@ class POWER_SYSTEM_DATABASE
         vector<ZONE> Zone;
         vector<OWNER> Owner;
 
+        double zero_impedance_threshold;
+
         size_t in_service_bus_count;
+        size_t overshadowed_bus_count;
 
         BUS_INDEX bus_index;
         DEVICE_INDEX_MAP generator_index, wt_generator_index, pv_unit_index, load_index, fixed_shunt_index, switched_shunt_index,

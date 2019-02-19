@@ -54,3 +54,16 @@ size_t api_get_owner_count()
     return psdb.get_owner_count();
 }
 
+size_t api_get_in_service_bus_count()
+{
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    return psdb.get_in_service_bus_count();
+}
+
+size_t api_get_overshadowed_bus_count()
+{
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.update_overshadowed_bus_count();
+    return psdb.get_overshadowed_bus_count();
+}
+

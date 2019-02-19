@@ -37,6 +37,7 @@ class LINE_TEST : public Test::Suite
         void test_set_get_meter_end_bus();
         void test_set_get_length();
         void test_set_get_ownership();
+        void test_is_zero_impedance_line();
         void test_set_get_fault();
         void test_clear_fault();
         void test_get_fault_count();

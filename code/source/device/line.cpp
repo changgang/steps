@@ -219,6 +219,17 @@ double LINE::get_length() const
     return length;
 }
 
+bool LINE::is_zero_impedance_line() const
+{
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double z_th = psdb.get_zero_impedance_threshold_in_pu();
+    double y = abs(get_line_positive_sequence_y_in_pu());
+    double z= abs(get_line_positive_sequence_z_in_pu());
+    if(y<FLOAT_EPSILON and (z<=z_th or (z-z_th)<FLOAT_EPSILON))
+        return true;
+    else
+        return false;
+}
 
 void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
 {

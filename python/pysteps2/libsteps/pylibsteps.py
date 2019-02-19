@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.4"
-libsteps_date = "2018/08/15"
+libsteps_version = "0.4.1"
+libsteps_date = "2019/02/19"
 
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -102,6 +102,10 @@ def load_library(parallel_flag=False):
     libsteps.api_get_zone_count.argtypes = None
     libsteps.api_get_owner_count.restype = c_uint
     libsteps.api_get_owner_count.argtypes = None
+    libsteps.api_get_in_service_bus_count.restype = c_uint
+    libsteps.api_get_in_service_bus_count.argtypes = None
+    libsteps.api_get_overshadowed_bus_count.restype = c_uint
+    libsteps.api_get_overshadowed_bus_count.argtypes = None
 
     libsteps.api_is_bus_exist.restype = c_bool
     libsteps.api_is_bus_exist.argtypes = (c_uint, )

@@ -24,6 +24,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     private:
+        void test_set_get_zero_impedance_threshold();
         void test_set_get_bus_capacity();
         void test_set_get_generator_capacity();
         void test_set_get_wt_generator_capacity();
@@ -208,6 +209,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
 
         void test_get_bus_count();
         void test_get_in_service_bus_count();
+        void test_get_overshadowed_bus_count();
         void test_get_generator_count();
         void test_get_wt_generator_count();
         void test_get_pv_unit_count();

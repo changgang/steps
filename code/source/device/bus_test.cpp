@@ -36,6 +36,8 @@ BUS_TEST::BUS_TEST()
     TEST_ADD(BUS_TEST::test_set_get_emergency_voltage_lower_limit);
     TEST_ADD(BUS_TEST::test_set_get_voltage_upper_limit);
     TEST_ADD(BUS_TEST::test_set_get_voltage_lower_limit);
+    TEST_ADD(BUS_TEST::test_set_get_equivalent_bus_number);
+    TEST_ADD(BUS_TEST::test_is_bus_overshadowed);
     TEST_ADD(BUS_TEST::test_set_get_base_frequency);
     TEST_ADD(BUS_TEST::test_set_get_voltage_to_regulate);
     TEST_ADD(BUS_TEST::test_is_valid);
@@ -261,6 +263,38 @@ void BUS_TEST::test_set_get_voltage_lower_limit()
     TEST_ASSERT(fabs(bus.get_voltage_lower_limit_in_pu()-0.9)<FLOAT_EPSILON);
     bus.set_voltage_lower_limit_in_pu(0.75);
     TEST_ASSERT(fabs(bus.get_voltage_lower_limit_in_pu()-0.75)<FLOAT_EPSILON);
+}
+
+void BUS_TEST::test_set_get_equivalent_bus_number()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
+
+    TEST_ASSERT(bus.get_equivalent_bus_number()==0);
+
+    bus.set_equivalent_bus_number(1);
+    TEST_ASSERT(bus.get_equivalent_bus_number()==1);
+
+    bus.set_equivalent_bus_number(2);
+    TEST_ASSERT(bus.get_equivalent_bus_number()==2);
+
+    bus.set_equivalent_bus_number(0);
+    TEST_ASSERT(bus.get_equivalent_bus_number()==0);
+}
+
+void BUS_TEST::test_is_bus_overshadowed()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
+
+    TEST_ASSERT(bus.is_bus_overshadowed()==false);
+
+    bus.set_equivalent_bus_number(1);
+    TEST_ASSERT(bus.is_bus_overshadowed()==true);
+
+    bus.set_equivalent_bus_number(2);
+    TEST_ASSERT(bus.is_bus_overshadowed()==true);
+
+    bus.set_equivalent_bus_number(0);
+    TEST_ASSERT(bus.is_bus_overshadowed()==false);
 }
 
 void BUS_TEST::test_set_get_base_frequency()
