@@ -2082,6 +2082,13 @@ void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedan
         return;
     }
 
+    set_export_zero_impedance_line_logic(export_zero_impedance_line);
+
+    if(export_zero_impedance_line==false)
+        psdb.update_overshadowed_bus_count();
+    else
+        psdb.set_all_buses_un_overshadowed();
+
     ofs<<". Here goes basic case data"<<endl;
     ofs<<export_case_data();
 

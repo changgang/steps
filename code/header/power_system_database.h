@@ -455,6 +455,7 @@ class POWER_SYSTEM_DATABASE
 
 
         void update_in_service_bus_count();
+        void set_all_buses_un_overshadowed();
         void update_overshadowed_bus_count();
         size_t get_equivalent_bus_of_bus(size_t bus);
     private:

@@ -1895,6 +1895,7 @@ void PSSE_IMEXPORTER::load_switched_shunt_data()
 void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     ofstream ofs(file);
     if(!ofs)
@@ -1905,6 +1906,11 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
     }
 
     set_export_zero_impedance_line_logic(export_zero_impedance_line);
+
+    if(export_zero_impedance_line==false)
+        psdb.update_overshadowed_bus_count();
+    else
+        psdb.set_all_buses_un_overshadowed();
 
     ofs<<export_case_data();
     ofs<<export_bus_data();

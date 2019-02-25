@@ -3318,14 +3318,19 @@ size_t POWER_SYSTEM_DATABASE::get_overshadowed_bus_count() const
     return overshadowed_bus_count;
 }
 
-void POWER_SYSTEM_DATABASE::update_overshadowed_bus_count()
+void POWER_SYSTEM_DATABASE::set_all_buses_un_overshadowed()
 {
-    overshadowed_bus_count = 0;
     size_t n = Bus.size();
     for(size_t i=0; i!=n; ++i)
         Bus[i].set_equivalent_bus_number(0);
+}
 
-    n = Line.size();
+void POWER_SYSTEM_DATABASE::update_overshadowed_bus_count()
+{
+    set_all_buses_un_overshadowed();
+
+    overshadowed_bus_count = 0;
+    size_t n = Line.size();
     while(true)
     {
         bool new_bus_is_overshadowed = false;
