@@ -370,7 +370,13 @@ class STEPS():
     def get_owner_count(self):
         return self.libsteps.api_get_owner_count()
     def get_in_service_bus_count(self):
-        return self.libsteps.api_get_in_service_bus_count()
+        self.libsteps.api_get_in_service_bus_count()
+        return
+    def update_overshadowed_buses(self):
+        return self.libsteps.api_update_overshadowed_buses()
+    def set_all_buses_un_overshadowed(self):
+        self.libsteps.api_set_all_buses_un_overshadowed()
+        return
     def get_overshadowed_bus_count(self):
         return self.libsteps.api_get_overshadowed_bus_count()
 

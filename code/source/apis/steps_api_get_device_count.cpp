@@ -60,6 +60,19 @@ size_t api_get_in_service_bus_count()
     return psdb.get_in_service_bus_count();
 }
 
+
+void api_update_overshadowed_buses()
+{
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.update_overshadowed_bus_count();
+}
+
+void api_set_all_buses_un_overshadowed()
+{
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_all_buses_un_overshadowed();
+}
+
 size_t api_get_overshadowed_bus_count()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();

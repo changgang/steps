@@ -13,6 +13,17 @@
 #include <iostream>
 using namespace std;
 
+char current_alphabeta = 'A';
+char get_next_alphabeta()
+{
+    char this_alphabeta = current_alphabeta;
+
+    current_alphabeta ++;
+    if(current_alphabeta>'Z')
+        current_alphabeta = 'A';
+    return this_alphabeta;
+}
+
 PSSE_IMEXPORTER::PSSE_IMEXPORTER()
 {
     raw_data_in_ram.clear();
@@ -1952,6 +1963,9 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
     ofs<<"Q";
 
     ofs.close();
+
+    if(export_zero_impedance_line==false)
+        psdb.set_all_buses_un_overshadowed();//recover
 }
 
 
@@ -1997,25 +2011,9 @@ string PSSE_IMEXPORTER::export_bus_data() const
            bus_type == PV_TO_PQ_TYPE_3 or bus_type == PV_TO_PQ_TYPE_4) type = -2;
         if(bus_type == SLACK_TYPE) type = 3;
         if(bus_type == OUT_OF_SERVICE) type = 4;
+        if(type == 4)
+            continue;
 
-        /*osstream<<right
-              <<setw(8)<<setprecision(0)<<bus->get_bus_number()<<", "
-              <<"\""
-              <<left
-              <<setw(16)<<bus->get_bus_name()
-              <<"\""<<", "
-              <<right
-              <<setw(8)<<setprecision(2)<<fixed<<bus->get_base_voltage_in_kV()<<", "
-              <<setw(2)<<setprecision(0)<<type<<", "
-              <<setw(4)<<setprecision(0)<<bus->get_area_number()<<", "
-              <<setw(4)<<setprecision(0)<<bus->get_zone_number()<<", "
-              <<setw(4)<<setprecision(0)<<bus->get_owner_number()<<", "
-              <<setw(10)<<setprecision(6)<<fixed<<bus->get_voltage_in_pu()<<", "
-              <<setw(10)<<setprecision(6)<<fixed<<bus->get_angle_in_deg()<<", "
-              <<setw(6)<<setprecision(4)<<fixed<<bus->get_normal_voltage_upper_limit_in_pu()<<", "
-              <<setw(6)<<setprecision(4)<<fixed<<bus->get_normal_voltage_lower_limit_in_pu()<<", "
-              <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_upper_limit_in_pu()<<", "
-              <<setw(6)<<setprecision(4)<<fixed<<bus->get_emergency_voltage_lower_limit_in_pu()<<endl;*/
         snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
                  bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,
                  bus->get_area_number(), bus->get_zone_number(), bus->get_owner_number(),
@@ -2024,7 +2022,6 @@ string PSSE_IMEXPORTER::export_bus_data() const
                  bus->get_emergency_voltage_upper_limit_in_pu(), bus->get_emergency_voltage_lower_limit_in_pu(),
                  bus->get_base_frequency_in_Hz());
         osstream<<buffer<<endl;
-
     }
 
     return osstream.str();
@@ -2066,7 +2063,7 @@ string PSSE_IMEXPORTER::export_load_data() const
         if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
         {
             bus = psdb.get_equivalent_bus_of_bus(bus);
-            ickt = ickt + "eqv";
+            ickt = ickt + get_next_alphabeta();
         }
 
         snprintf(buffer, 1000, "%lu, \"%s\", %d, %4lu, %4lu, %12.6f, %12.6f, %12.6f, %12.6f, %12.6f, %12.6f, %4lu, 1, %2d",
@@ -2097,7 +2094,7 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data() const
         if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
         {
             bus = psdb.get_equivalent_bus_of_bus(bus);
-            ickt = ickt + "eqv";
+            ickt = ickt + get_next_alphabeta();
         }
 
         osstream<<right
@@ -2211,7 +2208,7 @@ string PSSE_IMEXPORTER::export_source_common_data(SOURCE* source) const
     if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
     {
         bus = psdb.get_equivalent_bus_of_bus(bus);
-        ickt = ickt + "eqv";
+        ickt = ickt + get_next_alphabeta();
         if(bus_to_regulate!=0)
             bus_to_regulate = psdb.get_equivalent_bus_of_bus(bus_to_regulate);
     }
@@ -2293,8 +2290,10 @@ string PSSE_IMEXPORTER::export_line_data() const
                 ibus = psdb.get_equivalent_bus_of_bus(ibus);
             if(psdb.get_equivalent_bus_of_bus(jbus)!=0)
                 jbus = psdb.get_equivalent_bus_of_bus(jbus);
-            ickt = ickt + "eqv";
+            ickt = ickt + get_next_alphabeta();
         }
+        if(ibus==jbus)
+            continue;
 
         size_t meterend = 1;
         if(line->get_meter_end_bus()==line->get_receiving_side_bus())
@@ -2351,7 +2350,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
                 jbus = psdb.get_equivalent_bus_of_bus(jbus);
             if(psdb.get_equivalent_bus_of_bus(kbus)!=0)
                 kbus = psdb.get_equivalent_bus_of_bus(kbus);
-            ickt = ickt + "eqv";
+            ickt = ickt + get_next_alphabeta();
         }
 
         size_t nonmeterend = 2;
@@ -2406,7 +2405,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
               <<setw(8)<<jbus<<", "
               <<setw(8)<<kbus<<", "
               <<"\""<<left
-              <<setw(2)<<trans->get_identifier()<<"\", "
+              <<setw(2)<<ickt<<"\", "
               <<right
               <<TAP_OFF_NOMINAL_TURN_RATIO_BASED_ON_WINDING_NOMNAL_VOLTAGE<<", "
               <<IMPEDANCE_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE<<", "
@@ -2525,9 +2524,9 @@ string PSSE_IMEXPORTER::export_transformer_data() const
             for(size_t j=1; j!=4; ++j)
             {
                 TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
-                if(j==0) winding = PRIMARY_SIDE;
-                if(j==1) winding = SECONDARY_SIDE;
-                if(j==2) winding = TERTIARY_SIDE;
+                if(j==1) winding = PRIMARY_SIDE;
+                if(j==2) winding = SECONDARY_SIDE;
+                if(j==3) winding = TERTIARY_SIDE;
 
                 size_t control_mode;
                 switch(trans->get_winding_control_mode(winding))
@@ -2653,7 +2652,7 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
                 rbus = psdb.get_equivalent_bus_of_bus(rbus);
             if(psdb.get_equivalent_bus_of_bus(ibus)!=0)
                 ibus = psdb.get_equivalent_bus_of_bus(ibus);
-            ickt = ickt + "eqv";
+            ickt = ickt + get_next_alphabeta();
         }
 
         osstream<<"\""<<left

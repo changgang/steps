@@ -141,6 +141,8 @@ EXPORT_STEPS_DLL size_t api_get_area_count();
 EXPORT_STEPS_DLL size_t api_get_zone_count();
 EXPORT_STEPS_DLL size_t api_get_owner_count();
 EXPORT_STEPS_DLL size_t api_get_in_service_bus_count();
+EXPORT_STEPS_DLL void api_update_overshadowed_buses();
+EXPORT_STEPS_DLL void api_set_all_buses_un_overshadowed();
 EXPORT_STEPS_DLL size_t api_get_overshadowed_bus_count();
 EXPORT_STEPS_DLL void api_show_device_data(const char* device_type);
 

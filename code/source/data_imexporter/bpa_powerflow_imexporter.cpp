@@ -2073,6 +2073,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
 void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     ofstream ofs(file);
     if(!ofs)
@@ -2105,6 +2106,9 @@ void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedan
     ofs<<export_hvdc_data();
 
     ofs.close();
+
+    if(export_zero_impedance_line==false)
+        psdb.set_all_buses_un_overshadowed();//recover
 }
 
 

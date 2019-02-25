@@ -104,6 +104,10 @@ def load_library(parallel_flag=False):
     libsteps.api_get_owner_count.argtypes = None
     libsteps.api_get_in_service_bus_count.restype = c_uint
     libsteps.api_get_in_service_bus_count.argtypes = None
+    libsteps.api_update_overshadowed_buses.restype = None
+    libsteps.api_update_overshadowed_buses.argtypes = None
+    libsteps.api_set_all_buses_un_overshadowed.restype = None
+    libsteps.api_set_all_buses_un_overshadowed.argtypes = None
     libsteps.api_get_overshadowed_bus_count.restype = c_uint
     libsteps.api_get_overshadowed_bus_count.argtypes = None
 

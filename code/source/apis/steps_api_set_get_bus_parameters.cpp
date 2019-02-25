@@ -37,6 +37,9 @@ int api_get_bus_integer_data(size_t bus, char* parameter_name)
             }
         }
 
+        if(PARAMETER_NAME=="EQUIVALENT BUS" or PARAMETER_NAME=="EQUIVALENT BUS NUMBER")
+            return busptr->get_equivalent_bus_number();
+
         if(PARAMETER_NAME=="AREA" or PARAMETER_NAME=="AREA NUMBER")
             return busptr->get_area_number();
 
