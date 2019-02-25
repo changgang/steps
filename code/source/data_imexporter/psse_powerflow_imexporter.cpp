@@ -1892,7 +1892,7 @@ void PSSE_IMEXPORTER::load_switched_shunt_data()
 }
 
 
-void PSSE_IMEXPORTER::export_powerflow_data(string file)
+void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
 
@@ -1903,6 +1903,8 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file)
         show_information_with_leading_time_stamp(osstream);
         return;
     }
+
+    set_export_zero_impedance_line_logic(export_zero_impedance_line);
 
     ofs<<export_case_data();
     ofs<<export_bus_data();
@@ -1978,6 +1980,8 @@ string PSSE_IMEXPORTER::export_bus_data() const
     for(size_t i=0; i!=n; ++i)
     {
         BUS* bus = buses[i];
+        if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus->get_bus_number())!=0)
+            continue;
 
         BUS_TYPE bus_type = bus->get_bus_type();
         int type = 4;
@@ -2051,8 +2055,16 @@ string PSSE_IMEXPORTER::export_load_data() const
           <<setw(2)<<fixed<<1<<", "
           <<setw(2)<<load->get_flag_interruptable()<<endl;*/
 
+        size_t bus = load->get_load_bus();
+        string ickt = load->get_identifier();
+        if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
+        {
+            bus = psdb.get_equivalent_bus_of_bus(bus);
+            ickt = ickt + "eqv";
+        }
+
         snprintf(buffer, 1000, "%lu, \"%s\", %d, %4lu, %4lu, %12.6f, %12.6f, %12.6f, %12.6f, %12.6f, %12.6f, %4lu, 1, %2d",
-                load->get_load_bus(), (load->get_identifier()).c_str(), (load->get_status()==true)?1:0,
+                bus, ickt.c_str(), (load->get_status()==true)?1:0,
                 load->get_area_number(), load->get_zone_number(),
                 load->get_nominal_constant_power_load_in_MVA().real(), load->get_nominal_constant_power_load_in_MVA().imag(),
                 load->get_nominal_constant_current_load_in_MVA().real(), load->get_nominal_constant_current_load_in_MVA().imag(),
@@ -2074,11 +2086,19 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data() const
     {
         FIXED_SHUNT* shunt = fshunts[i];
 
+        size_t bus = shunt->get_shunt_bus();
+        string ickt = shunt->get_identifier();
+        if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
+        {
+            bus = psdb.get_equivalent_bus_of_bus(bus);
+            ickt = ickt + "eqv";
+        }
+
         osstream<<right
-                <<setw(8)<<shunt->get_shunt_bus()<<", "
+                <<setw(8)<<bus<<", "
                 <<"\""
                 <<left
-                <<setw(2)<<shunt->get_identifier()
+                <<setw(2)<<ickt
                 <<"\""<<", "
                 <<right
                 <<shunt->get_status()<<", "
@@ -2177,11 +2197,23 @@ string PSSE_IMEXPORTER::export_energy_storage_data() const
 string PSSE_IMEXPORTER::export_source_common_data(SOURCE* source) const
 {
     ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    size_t bus = source->get_source_bus();
+    size_t bus_to_regulate = source->get_bus_to_regulate();
+    string ickt = source->get_identifier();
+    if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
+    {
+        bus = psdb.get_equivalent_bus_of_bus(bus);
+        ickt = ickt + "eqv";
+        if(bus_to_regulate!=0)
+            bus_to_regulate = psdb.get_equivalent_bus_of_bus(bus_to_regulate);
+    }
 
     osstream<<right
-           <<setw(8)<<source->get_source_bus()<<", "
+           <<setw(8)<<bus<<", "
            <<"\""<<left
-           <<setw(2)<<source->get_identifier()<<"\""<<", "
+           <<setw(2)<<ickt<<"\""<<", "
            <<right
            <<setw(12)<<setprecision(6)<<fixed<<source->get_p_generation_in_MW()<<", "
            <<setw(12)<<setprecision(6)<<fixed<<source->get_q_generation_in_MVar()<<", "
@@ -2191,7 +2223,7 @@ string PSSE_IMEXPORTER::export_source_common_data(SOURCE* source) const
     if(source->get_bus_to_regulate()==source->get_source_bus())
         osstream<<setw(8)<<0<<", ";
     else
-        osstream<<setw(8)<<source->get_bus_to_regulate()<<", ";
+        osstream<<setw(8)<<bus_to_regulate<<", ";
     osstream<<setw(10)<<setprecision(4)<<fixed<<source->get_mbase_in_MVA()<<", "
            <<setw(9)<<setprecision(6)<<fixed<<source->get_source_impedance_in_pu().real()<<", "
            <<setw(9)<<setprecision(6)<<fixed<<source->get_source_impedance_in_pu().imag()<<", "
@@ -2246,13 +2278,25 @@ string PSSE_IMEXPORTER::export_line_data() const
     {
         LINE* line = lines[i];
 
+        size_t ibus = line->get_sending_side_bus();
+        size_t jbus = line->get_receiving_side_bus();
+        string ickt = line->get_identifier();
+        if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(ibus)!=0 or psdb.get_equivalent_bus_of_bus(jbus)!=0))
+        {
+            if(psdb.get_equivalent_bus_of_bus(ibus)!=0)
+                ibus = psdb.get_equivalent_bus_of_bus(ibus);
+            if(psdb.get_equivalent_bus_of_bus(jbus)!=0)
+                jbus = psdb.get_equivalent_bus_of_bus(jbus);
+            ickt = ickt + "eqv";
+        }
+
         size_t meterend = 1;
         if(line->get_meter_end_bus()==line->get_receiving_side_bus())
             meterend = 2;
 
         osstream<<right
-                <<setw(8)<<line->get_sending_side_bus()<<", "
-                <<setw(8)<<line->get_receiving_side_bus()<<", "
+                <<setw(8)<<ibus<<", "
+                <<setw(8)<<jbus<<", "
                 <<"\""<<left
                 <<setw(2)<<line->get_identifier()<<"\""<<", "
                 <<right
@@ -2287,6 +2331,23 @@ string PSSE_IMEXPORTER::export_transformer_data() const
     for(size_t i=0; i!=n; ++i)
     {
         TRANSFORMER* trans = transformers[i];
+
+
+        size_t ibus = trans->get_winding_bus(PRIMARY_SIDE);
+        size_t jbus = trans->get_winding_bus(SECONDARY_SIDE);
+        size_t kbus = trans->get_winding_bus(TERTIARY_SIDE);
+        string ickt = trans->get_identifier();
+        if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(ibus)!=0 or psdb.get_equivalent_bus_of_bus(jbus)!=0 or psdb.get_equivalent_bus_of_bus(kbus)!=0))
+        {
+            if(psdb.get_equivalent_bus_of_bus(ibus)!=0)
+                ibus = psdb.get_equivalent_bus_of_bus(ibus);
+            if(psdb.get_equivalent_bus_of_bus(jbus)!=0)
+                jbus = psdb.get_equivalent_bus_of_bus(jbus);
+            if(psdb.get_equivalent_bus_of_bus(kbus)!=0)
+                kbus = psdb.get_equivalent_bus_of_bus(kbus);
+            ickt = ickt + "eqv";
+        }
+
         size_t nonmeterend = 2;
         if(trans->is_two_winding_transformer())
         {
@@ -2335,9 +2396,9 @@ string PSSE_IMEXPORTER::export_transformer_data() const
             }
         }
         osstream<<right
-              <<setw(8)<<trans->get_winding_bus(PRIMARY_SIDE)<<", "
-              <<setw(8)<<trans->get_winding_bus(SECONDARY_SIDE)<<", "
-              <<setw(8)<<trans->get_winding_bus(TERTIARY_SIDE)<<", "
+              <<setw(8)<<ibus<<", "
+              <<setw(8)<<jbus<<", "
+              <<setw(8)<<kbus<<", "
               <<"\""<<left
               <<setw(2)<<trans->get_identifier()<<"\", "
               <<right
@@ -2551,8 +2612,14 @@ string PSSE_IMEXPORTER::export_area_data() const
     {
         AREA* area = areas[i];
 
+        size_t bus = area->get_area_swing_bus();
+        if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
+        {
+            bus = psdb.get_equivalent_bus_of_bus(bus);
+        }
+
         osstream<<setw(8)<<area->get_area_number()<<", "
-          <<area->get_area_swing_bus()<<", "
+          <<bus<<", "
           <<setprecision(3)<<area->get_expected_power_leaving_area_in_MW()<<", "
           <<setprecision(3)<<area->get_area_power_mismatch_tolerance_in_MW()<<", "
           <<"\""<<area->get_area_name()<<"\""<<endl;
@@ -2570,6 +2637,18 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
     for(size_t i=0; i!=n; ++i)
     {
         HVDC* hvdc = hvdcs[i];
+
+        size_t rbus = hvdc->get_converter_bus(RECTIFIER);
+        size_t ibus = hvdc->get_converter_bus(INVERTER);
+        string ickt = hvdc->get_identifier();
+        if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(rbus)!=0 or psdb.get_equivalent_bus_of_bus(ibus)!=0))
+        {
+            if(psdb.get_equivalent_bus_of_bus(rbus)!=0)
+                rbus = psdb.get_equivalent_bus_of_bus(rbus);
+            if(psdb.get_equivalent_bus_of_bus(ibus)!=0)
+                ibus = psdb.get_equivalent_bus_of_bus(ibus);
+            ickt = ickt + "eqv";
+        }
 
         osstream<<"\""<<left
                <<setw(16)<<hvdc->get_name()<<"\""<<", ";
@@ -2609,10 +2688,12 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
         for(size_t j=0; j!=2; ++j)
         {
             HVDC_CONVERTER_SIDE converter=RECTIFIER;
+            size_t bus = rbus;
             if(j==0) converter = RECTIFIER;
-            if(j==1) converter = INVERTER;
+            if(j==1){converter = INVERTER; bus = ibus;}
 
-            osstream<<setw(8)<<hvdc->get_converter_bus(converter)<<", ";
+
+            osstream<<setw(8)<<bus<<", ";
             osstream<<hvdc->get_converter_number_of_bridge(converter)<<", ";
             osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_max_alpha_or_gamma_in_deg(converter)<<", ";
             osstream<<setw(6)<<setprecision(2)<<fixed<<hvdc->get_converter_min_alpha_or_gamma_in_deg(converter)<<", ";

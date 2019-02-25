@@ -337,7 +337,7 @@ void NETWORK_MATRIX_TEST::test_save_network_matrix_to_file()
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_MATRIX_TEST");
 
     network_matrix.build_network_matrix();
-    network_matrix.save_network_matrix_to_file("network_matrix_exported.csv");
+    network_matrix.save_network_matrix_to_file("test_log/network_matrix_exported.csv");
 }
 
 
@@ -350,11 +350,11 @@ void NETWORK_MATRIX_TEST::test_build_network_with_bus_out_of_service()
     busptr->set_bus_type(OUT_OF_SERVICE);
 
     network_matrix.build_network_matrix();
-    network_matrix.save_network_matrix_to_file("network_matrix_with_bus_out_of_service_exported.csv");
+    network_matrix.save_network_matrix_to_file("test_log/network_matrix_with_bus_out_of_service_exported.csv");
 
     network_matrix.optimize_network_ordering();
     network_matrix.build_network_matrix();
-    network_matrix.save_network_matrix_to_file("network_matrix_with_bus_out_of_service_optimized_exported.csv");
+    network_matrix.save_network_matrix_to_file("test_log/network_matrix_with_bus_out_of_service_optimized_exported.csv");
 
     network_matrix.check_newtork_connectivity();
 }

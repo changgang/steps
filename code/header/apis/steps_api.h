@@ -86,7 +86,7 @@ EXPORT_STEPS_DLL void api_set_package_float_data(char* parameter_name, double va
 
 
 EXPORT_STEPS_DLL void api_load_powerflow_data_from_file(char* file, char* file_type);
-EXPORT_STEPS_DLL void api_save_powerflow_data_to_file(char* file, char* file_type);
+EXPORT_STEPS_DLL void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line=true);
 EXPORT_STEPS_DLL void api_load_dynamic_data_from_file(char* file, char* file_type);
 EXPORT_STEPS_DLL void api_save_dynamic_data_to_file(char* file, char* file_type);
 

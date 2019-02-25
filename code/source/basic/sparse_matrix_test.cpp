@@ -446,5 +446,5 @@ void SPARSE_MATRIX_TEST::test_save_matrix_to_file()
     // [0  2  4]  + j [0  5  9]
     // [1  0  1]      [0  0  2]
 
-    matrix.save_matrix_to_file("sparse_matrix_contents.csv");
+    matrix.save_matrix_to_file("test_log/sparse_matrix_contents.csv");
 }

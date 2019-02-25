@@ -202,9 +202,9 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_full_Newton_Raphson
 
     check_IEEE_9_bus_model_powerflow_result();
 
-    powerflow_solver.save_network_matrix_to_file("IEEE9_network_matrix.csv");
-    powerflow_solver.save_bus_powerflow_result_to_file("IEEE9_bus_powerflow_result.csv");
-    powerflow_solver.save_jacobian_matrix_to_file("IEEE9_jacobian_matrix.csv");
+    powerflow_solver.save_network_matrix_to_file("test_log/IEEE9_network_matrix.csv");
+    powerflow_solver.save_bus_powerflow_result_to_file("test_log/IEEE9_bus_powerflow_result.csv");
+    powerflow_solver.save_jacobian_matrix_to_file("test_log/IEEE9_jacobian_matrix.csv");
 
 
     osstream<<"Test 2: Solution with flat start option";
@@ -1314,7 +1314,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_benchmark_100_bus_model_with_HVD
     TEST_ASSERT(powerflow_solver.is_converged());
 
     BPA_IMEXPORTER exporter;
-    exporter.export_powerflow_data("bench_shandong.dat");
+    exporter.export_powerflow_data("test_log/bench_shandong.dat");
 
     recover_stdout();
 }
@@ -1345,7 +1345,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Northwest_benchmark_100_bus_model_with_HV
     TEST_ASSERT(powerflow_solver.is_converged());
 
     BPA_IMEXPORTER exporter;
-    exporter.export_powerflow_data("bench_northwest.dat");
+    exporter.export_powerflow_data("test_log/bench_northwest.dat");
 
     recover_stdout();
 }
@@ -1379,7 +1379,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Yunnan_benchmark_100_bus_model_with_HVDC_
     TEST_ASSERT(not powerflow_solver.is_converged());
 
     BPA_IMEXPORTER exporter;
-    exporter.export_powerflow_data("bench_yunnan.dat");
+    exporter.export_powerflow_data("test_log/bench_yunnan.dat");
 
     recover_stdout();
 }

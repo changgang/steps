@@ -509,13 +509,13 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
 
     //psse_importer.export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER.raw");
 
-    importer.export_powerflow_data("export_sd_model_with_BPA_IMEXPORTER.dat");
-    psse_importer.export_powerflow_data("export_sd_model_with_PSSE_IMEXPORTER.raw");
+    importer.export_powerflow_data("test_log/export_sd_model_with_BPA_IMEXPORTER.dat");
+    psse_importer.export_powerflow_data("test_log/export_sd_model_with_PSSE_IMEXPORTER.raw");
 
     psdb.clear_database();
     importer.load_powerflow_data("ÔÆÄÏÍø500kV¼ò»¯ÍøÂç.dat");
-    importer.export_powerflow_data("export_yn_model_with_BPA_IMEXPORTER.dat");
-    psse_importer.export_powerflow_data("export_yn_model_with_PSSE_IMEXPORTER.raw");
+    importer.export_powerflow_data("test_log/export_yn_model_with_BPA_IMEXPORTER.dat");
+    psse_importer.export_powerflow_data("test_log/export_yn_model_with_PSSE_IMEXPORTER.raw");
 
 }
 
@@ -523,14 +523,14 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_psse()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    importer.export_powerflow_data("export_sample_model_with_BPA_IMEXPORTER.raw");
+    importer.export_powerflow_data("test_log/export_sample_model_with_BPA_IMEXPORTER.raw");
 }
 
 void BPA_IMEXPORTER_TEST::test_export_powerflow_data_imported_from_bpa()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    importer.export_powerflow_data("export_sample_model_with_BPA_IMEXPORTER.raw");
+    importer.export_powerflow_data("test_log/export_sample_model_with_BPA_IMEXPORTER.raw");
 }
 
 void BPA_IMEXPORTER_TEST::test_load_dynamic_data()

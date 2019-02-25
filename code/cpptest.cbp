@@ -18,6 +18,7 @@
 					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-std=c++1z" />
+					<Add option="-fPIC" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />

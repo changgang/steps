@@ -2070,7 +2070,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     */
 }
 
-void BPA_IMEXPORTER::export_powerflow_data(string file)
+void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
 

@@ -80,10 +80,10 @@ class STEPS():
         ftype = self.__get_c_char_p_of_string(ftype)
         self.libsteps.api_load_powerflow_data_from_file(file, ftype)
 
-    def save_powerflow_data(self, file, ftype):
+    def save_powerflow_data(self, file, ftype, export_zero_line=True):
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
-        self.libsteps.api_save_powerflow_data_to_file(file, ftype)
+        self.libsteps.api_save_powerflow_data_to_file(file, ftype, export_zero_line)
         
     def load_dynamic_data(self, file, ftype):
         file = self.__get_c_char_p_of_string(file)
