@@ -2303,7 +2303,7 @@ string PSSE_IMEXPORTER::export_line_data() const
                 <<setw(8)<<ibus<<", "
                 <<setw(8)<<jbus<<", "
                 <<"\""<<left
-                <<setw(2)<<line->get_identifier()<<"\""<<", "
+                <<setw(2)<<ickt<<"\""<<", "
                 <<right
                 <<setw(12)<<setprecision(6)<<fixed<<line->get_line_positive_sequence_z_in_pu().real()<<","
                 <<setw(12)<<setprecision(6)<<fixed<<line->get_line_positive_sequence_z_in_pu().imag()<<", "
