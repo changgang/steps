@@ -25,7 +25,7 @@ void prepare_training_load_scale_case()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE39.raw");
+    importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
@@ -74,7 +74,7 @@ void prepare_training_generation_shed_case()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE39.raw");
+    importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
@@ -133,7 +133,7 @@ int main()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE39.raw");
+    importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
     EQUIVALENT_MODEL_IMEXPORTER eqimporter;

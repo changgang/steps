@@ -60,6 +60,9 @@ class POWERFLOW_SOLVER_TEST : public Test::Suite
         void test_solve_Shandong_benchmark_100_bus_model_with_HVDC_with_fast_decoupled_solution();
         void test_solve_Northwest_benchmark_100_bus_model_with_HVDC_with_fast_decoupled_solution();
         void test_solve_Yunnan_benchmark_100_bus_model_with_HVDC_with_fast_decoupled_solution();
+
+        void test_solve_IEEE_9_bus_model_with_WTG_with_full_Newton_Raphson_solution();
+        void test_solve_IEEE_39_bus_model_with_WTG_with_full_Newton_Raphson_solution();
     private:
 };
 

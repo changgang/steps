@@ -476,7 +476,6 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     double lvpl_order = lvpl.get_LVPL_order(LVPL_voltage_sensor.get_output());
     if(Ip>lvpl_order)
         Ip =lvpl_order;
-
     Ip = Ip*(V-V_LVACR_low)/(V_LVACR_high-V_LVACR_low);
 
     // high voltage reactive current logic
@@ -528,7 +527,6 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sb
     complex<double> Ixy_norton = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     complex<double> Ixy_term = Ixy_norton - Vxy/Zsource;
-    //cout<<"based on MBASE, Ixy norton = "<<Ixy_norton<<", Ishunt = "<<Vxy/Zsource<<", Iterminal = "<<Ixy_term<<endl;
     return Ixy_term;
 }
 
@@ -651,7 +649,6 @@ complex<double> WT3G2::get_terminal_complex_power_in_pu_based_on_mbase()
 {
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-    //cout<<"at time "<<STEPS::TIME<<" terminal Ixy  based on mbase = "<<Ixy<<", Vxy = "<<Vxy<<", S = "<<Vxy*conj(Ixy)*get_mbase_in_MVA()<<endl;
 
     complex<double> S = Vxy*conj(Ixy);
     return S;

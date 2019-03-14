@@ -73,6 +73,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_without_UFLS();
         void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS();
         void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS();
+        void test_run_IEEE_39_bus_model_with_wind();
         void test_get_admittance_matrix_from_IEEE_39_bus_model_GENROU();
         void test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T();
 

@@ -11,7 +11,7 @@ int main()
     initialize_simulator(); // this function should be called first
 
     PSSE_IMEXPORTER importer;
-    importer.load_powerflow_data("IEEE39.raw");
+    importer.load_powerflow_data("../../../bench/IEEE39.raw");
 
     POWERFLOW_SOLVER solver;
     solver.set_max_iteration(30);

@@ -766,7 +766,6 @@ void PSSE_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE*
             }
         }
     }
-
 }
 
 void PSSE_IMEXPORTER::load_line_data()

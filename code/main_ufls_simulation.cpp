@@ -16,8 +16,8 @@ int main()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1_UFLS.dyr");
+    importer.load_powerflow_data("../../../bench/IEEE39.raw");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1_UFLS.dyr");
 
     POWERFLOW_SOLVER solver;
 

@@ -341,6 +341,7 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Initializing powerflow solver.");
     show_information_with_leading_time_stamp(buffer);
 
+
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     psdb.update_in_service_bus_count();
 
@@ -1609,8 +1610,8 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
         nbus = 200;*/
     for(size_t i=0; i!=nbus; ++i)
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f",
-                 buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg());
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f %s",
+                 buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
         show_information_with_leading_time_stamp(buffer);
     }
 
@@ -1626,9 +1627,9 @@ void POWERFLOW_SOLVER::show_powerflow_result() const
         nsource = 200;*/
     for(size_t i=0; i!=nsource; ++i)
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%2s'%10.6f %10.6f",
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%2s'  %10.6f  %10.6f  %s(%s)",
                  sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
-                 sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar());
+                 sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
         show_information_with_leading_time_stamp(buffer);
     }
 }

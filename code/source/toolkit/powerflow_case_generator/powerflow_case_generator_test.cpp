@@ -140,7 +140,7 @@ void POWERFLOW_CASE_GENERATOR_TEST::test_generate_cases()
     generator->set_power_system_database_maximum_bus_number(1000);
     generator->set_uniform_load_scale(0.05);
     generator->set_random_load_scale(0.01);
-    generator->set_base_powerflow_data_filename("bench_shandong.raw");
+    generator->set_base_powerflow_data_filename("../../../bench/bench_shandong.raw");
     generator->set_maximum_case_count_to_generate(10);
 
     generator->generate_cases();

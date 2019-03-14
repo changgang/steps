@@ -25,7 +25,7 @@ int main()
 
     PSSE_IMEXPORTER importer;
 
-    //importer.load_powerflow_data("IEEE39.raw");
+    //importer.load_powerflow_data("../../../bench/IEEE39.raw");
     //importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
     importer.load_powerflow_data("bench_shandong_v2.raw");
     importer.load_dynamic_data("bench_shandong_v2.dyr");

@@ -503,7 +503,7 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
     psdb.clear_database();
     //importer.load_powerflow_data("")
     PSSE_IMEXPORTER psse_importer;
-    psse_importer.load_powerflow_data("bench_yunnan.raw");
+    psse_importer.load_powerflow_data("../../../bench/bench_yunnan.raw");
 
     //psse_importer.load_powerflow_data("sample.raw");
 
