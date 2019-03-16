@@ -298,8 +298,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new CDC6T_TEST));
 */
         ts.add(unique_ptr<Test::Suite>(new WT3G1_TEST));
-        /*ts.add(unique_ptr<Test::Suite>(new WT3G2_TEST));
-        ts.add(unique_ptr<Test::Suite>(new AERD0_TEST));
+        ts.add(unique_ptr<Test::Suite>(new WT3G2_TEST));
+        /*ts.add(unique_ptr<Test::Suite>(new AERD0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3T0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3E0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));

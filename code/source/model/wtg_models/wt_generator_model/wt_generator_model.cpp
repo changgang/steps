@@ -38,6 +38,16 @@ bool WT_GENERATOR_MODEL::get_current_source_flag() const
     return current_source_flag;
 }
 
+bool WT_GENERATOR_MODEL::is_current_source() const
+{
+    return current_source_flag;
+}
+
+bool WT_GENERATOR_MODEL::is_voltage_source() const
+{
+    return !current_source_flag;
+}
+
 void WT_GENERATOR_MODEL::set_initial_active_current_command_in_pu_based_on_mbase(double ip_command)
 {
     IP_command0 = ip_command;

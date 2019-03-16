@@ -21,6 +21,7 @@ WT_GENERATOR_MODEL_TEST::WT_GENERATOR_MODEL_TEST()
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_get_model_type);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_get_model_name);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_set_get_parameters);
+    TEST_ADD(WT_GENERATOR_MODEL_TEST::test_current_source_flag);
 
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_set_get_initial_active_current_command);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_set_get_initial_reactive_current_command);
@@ -607,4 +608,26 @@ void WT_GENERATOR_MODEL_TEST::test_get_standard_model_string()
     }
     else
         TEST_ASSERT(false);
+}
+
+void WT_GENERATOR_MODEL_TEST::test_current_source_flag()
+{
+    WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        model->set_current_source_flag(true);
+        TEST_ASSERT(model->get_current_source_flag()==true);
+        TEST_ASSERT(model->is_current_source()==true);
+        TEST_ASSERT(model->is_voltage_source()==false);
+
+        model->set_current_source_flag(false);
+        TEST_ASSERT(model->get_current_source_flag()==false);
+        TEST_ASSERT(model->is_current_source()==false);
+        TEST_ASSERT(model->is_voltage_source()==true);
+    }
+    else
+        TEST_ASSERT(false);
+
 }

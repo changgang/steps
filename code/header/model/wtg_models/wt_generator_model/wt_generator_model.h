@@ -26,6 +26,8 @@ class WT_GENERATOR_MODEL : public WTG_MODEL
     public:
         void set_current_source_flag(bool flag);
         bool get_current_source_flag() const;
+        bool is_current_source() const;
+        bool is_voltage_source() const;
         // set initial active and reactive current commands
         void set_initial_active_current_command_in_pu_based_on_mbase(double ip_command);
         double get_initial_active_current_command_in_pu_based_on_mbase() const;

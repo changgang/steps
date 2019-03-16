@@ -2178,20 +2178,33 @@ void NETWORK_MATRIX::add_wt_generators_to_dynamic_network()
         add_wt_generator_to_dynamic_network(*(generators[i]));
 }
 
-void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(const WT_GENERATOR& gen)
+void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
 {
     if(gen.get_status()==false)
         return;
+    WT_GENERATOR_MODEL* genmodel = gen.get_wt_generator_model();
+    if(genmodel==NULL)
+    {
+        ostringstream osstream;
+        osstream<<"Error. No WT_GENERATOR_MODEL is provided for "<<gen.get_device_name()<<endl
+                <<"Its source impedance will not be added to network matrix.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    if(genmodel->is_current_source())
+        return;
+    else // is voltage source
+    {
+        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        complex<double> Z = gen.get_source_impedance_in_pu();
+        double mbase = gen.get_mbase_in_MVA();
+        double mvabase = psdb.get_system_base_power_in_MVA();
+        Z = Z/mbase*mvabase;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    complex<double> Z = gen.get_source_impedance_in_pu();
-    double mbase = gen.get_mbase_in_MVA();
-    double mvabase = psdb.get_system_base_power_in_MVA();
-    Z = Z/mbase*mvabase;
-
-    size_t bus = gen.get_generator_bus();
-    size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
-    network_Y_matrix.add_entry(i,i,1.0/Z);
+        size_t bus = gen.get_generator_bus();
+        size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        network_Y_matrix.add_entry(i,i,1.0/Z);
+    }
 }
 
 void NETWORK_MATRIX::optimize_network_ordering()

@@ -39,7 +39,6 @@ void WT3G2::clear()
 void WT3G2::copy_from_const_model(const WT3G2& model)
 {
     clear();
-    set_current_source_flag(model.get_current_source_flag());
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
     set_LVPL_max_rate_of_active_current_change(model.get_LVPL_max_rate_of_active_current_change());
     set_LVPL_voltage_sensor_T_in_s(model.get_LVPL_voltage_sensor_T_in_s());
@@ -321,10 +320,12 @@ void WT3G2::initialize()
     double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
     // ignore voltage angle
     complex<double> Ixy = conj(S/Vxy);
-    complex<double> Isource = Ixy + Vxy/Zsource;
+    /*complex<double> Isource = Ixy + Vxy/Zsource;
 
     double Ix = Isource.real();
-    double Iy = Isource.imag();
+    double Iy = Isource.imag();*/
+    double Ix = Ixy.real();
+    double Iy = Ixy.imag();
 
     double IP = Ix*cos(angle_in_rad) + Iy*sin(angle_in_rad);
     double IQ =-Ix*sin(angle_in_rad) + Iy*cos(angle_in_rad);
@@ -336,9 +337,12 @@ void WT3G2::initialize()
 
     active_current_commander.set_output(IP);
     active_current_commander.initialize();
+    set_initial_active_current_command_in_pu_based_on_mbase(IP);
 
     reactive_voltage_commander.set_output(EQ);
     reactive_voltage_commander.initialize();
+    set_initial_reactive_voltage_command_in_pu(EQ);
+    set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
 
     if(kipll!=0.0)
     {
@@ -352,24 +356,21 @@ void WT3G2::initialize()
     LVPL_voltage_sensor.set_output(V);
     LVPL_voltage_sensor.initialize();
 
-    set_initial_active_current_command_in_pu_based_on_mbase(IP);
-    set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
-    set_initial_reactive_voltage_command_in_pu(EQ);
-
     set_flag_model_initialized_as_true();
 
     oosstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
             <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
             <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
-            <<"(3) States of blocks"<<endl
+            <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
+            <<"(4) States of blocks"<<endl
             <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
             <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
             <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
             <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
             <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
-            <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
-            <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
-            <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
+            <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
+            <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
+            <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
     show_information_with_leading_time_stamp(oosstream);
 }
 
@@ -381,10 +382,8 @@ void WT3G2::run(DYNAMIC_MODE mode)
 
     double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
-    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    double Xeq = Zsource.imag();
-
-    //complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+    /*complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
+    double Xeq = Zsource.imag();*/
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     double V = steps_fast_complex_abs(Vxy);
@@ -410,9 +409,8 @@ void WT3G2::run(DYNAMIC_MODE mode)
     active_current_commander.set_input(input);
     active_current_commander.run(mode);
 
-    double IQ = get_reactive_current_command_in_pu_based_on_mbase();
+    double EQ = get_reactive_voltage_command_in_pu();
 
-    double EQ = IQ*(-Xeq);
     reactive_voltage_commander.set_input(EQ);
     reactive_voltage_commander.run(mode);
 
@@ -516,17 +514,19 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
 
 complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    /*POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 
     complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
     Zsource /= mbase;
-    Zsource *= sbase;
+    Zsource *= sbase;*/
 
     complex<double> Ixy_norton = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+    /*complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     complex<double> Ixy_term = Ixy_norton - Vxy/Zsource;
+    return Ixy_term;*/
+    complex<double> Ixy_term = Ixy_norton;
     return Ixy_term;
 }
 

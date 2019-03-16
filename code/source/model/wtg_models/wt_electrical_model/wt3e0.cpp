@@ -969,6 +969,7 @@ double WT3E0::get_active_power_command_in_pu_based_on_mbase() const
 
 double WT3E0::get_reactive_current_command_in_pu_based_on_mbase() const
 {
+    return 0.0;
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
         return 0.0;

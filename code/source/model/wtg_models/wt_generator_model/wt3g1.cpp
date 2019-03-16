@@ -41,7 +41,6 @@ void WT3G1::clear()
 void WT3G1::copy_from_const_model(const WT3G1& model)
 {
     clear();
-    set_current_source_flag(model.get_current_source_flag());
     set_Xeq_in_pu(model.get_Xeq_in_pu());
     set_KPLL(model.get_KPLL());
     set_KIPLL(model.get_KIPLL());
