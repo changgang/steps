@@ -1,18 +1,18 @@
-#ifndef WT3G2_H
-#define WT3G2_H
+#ifndef WT3G0_H
+#define WT3G0_H
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 #include "header/model/wtg_models/wt_generator_model/lvpl.h"
 #include "header/block/integral_block.h"
 #include "header/block/first_order_block.h"
 
-class WT3G2 : public WT_GENERATOR_MODEL
+class WT3G0 : public WT_GENERATOR_MODEL
 {
     public:
-        WT3G2();
-        WT3G2(const WT3G2& model);
-        virtual ~WT3G2();
-        virtual WT3G2& operator=(const WT3G2&);
+        WT3G0();
+        WT3G0(const WT3G0& model);
+        virtual ~WT3G0();
+        virtual WT3G0& operator=(const WT3G0&);
 
         void set_converter_activer_current_command_T_in_s(double t);
         void set_converter_reactiver_voltage_command_T_in_s(double t);
@@ -84,10 +84,10 @@ class WT3G2 : public WT_GENERATOR_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     public:
-        // the following function are used to model WT3G2 as ideal voltage source
+        // the following function are used to model WT3G0 as ideal voltage source
         void set_pll_angle_in_deg(double angle);
     private:
-        void copy_from_const_model(const WT3G2& model);
+        void copy_from_const_model(const WT3G0& model);
         virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 

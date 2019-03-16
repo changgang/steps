@@ -1,7 +1,7 @@
 #include "header/model/wtg_models/wind_speed_model/wind_speed_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
-#include "header/model/wtg_models/wt_generator_model/wt3g2.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g0.h"
 #include "header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 #include "header/model/wtg_models/wt_turbine_model/wt3t0.h"
 #include <cstdlib>

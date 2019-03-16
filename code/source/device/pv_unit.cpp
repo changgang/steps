@@ -219,8 +219,8 @@ void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
     string model_name = model->get_model_name();
     if(model_name=="XXX")
     {
-        //WT3G2* smodel = (WT3G2*) (model);
-        //new_model = (PV_UNIT_MODEL*) new WT3G2(*smodel);
+        //WT3G0* smodel = (WT3G0*) (model);
+        //new_model = (PV_UNIT_MODEL*) new WT3G0(*smodel);
     }
 
     if(new_model!=NULL)

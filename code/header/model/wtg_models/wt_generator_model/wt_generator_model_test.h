@@ -12,7 +12,7 @@
 
 #include "header/model/wtg_models/wtg_model_test.h"
 
-#include "header/model/wtg_models/wt_generator_model/wt3g2.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g0.h"
 #include "header/power_system_database.h"
 
 using namespace std;

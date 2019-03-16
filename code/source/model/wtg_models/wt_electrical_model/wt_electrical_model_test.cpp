@@ -2,7 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-#include "header/model/wtg_models/wt_generator_model/wt3g2.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g0.h"
 #include "header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 #include "header/model/wtg_models/wt_turbine_model/wt3t0.h"
 
@@ -40,7 +40,7 @@ void WT_ELECTRICAL_MODEL_TEST::setup()
     wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
     wt_gen->set_number_of_lumped_wt_generators(20);
 
-    WT3G2 genmodel;
+    WT3G0 genmodel;
     genmodel.set_converter_activer_current_command_T_in_s(0.2);
     genmodel.set_converter_reactiver_voltage_command_T_in_s(0.2);
     genmodel.set_KPLL(20.0);

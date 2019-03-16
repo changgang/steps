@@ -1,5 +1,5 @@
-#ifndef WT3G2_TEST_H
-#define WT3G2_TEST_H
+#ifndef WT3G0_TEST_H
+#define WT3G0_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -12,15 +12,15 @@
 
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model_test.h"
 
-#include "header/model/wtg_models/wt_generator_model/wt3g2.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g0.h"
 
 
 using namespace std;
 
-class WT3G2_TEST : public WT_GENERATOR_MODEL_TEST
+class WT3G0_TEST : public WT_GENERATOR_MODEL_TEST
 {
     public:
-        WT3G2_TEST();
+        WT3G0_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -32,4 +32,4 @@ class WT3G2_TEST : public WT_GENERATOR_MODEL_TEST
     private:
 };
 
-#endif//WT3G2_TEST_H
+#endif//WT3G0_TEST_H

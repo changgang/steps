@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_generator_model/wt3g2.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g0.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <cstdio>
@@ -6,17 +6,17 @@
 #include <iostream>
 using namespace std;
 
-WT3G2::WT3G2()
+WT3G0::WT3G0()
 {
     clear();
 }
 
-WT3G2::~WT3G2()
+WT3G0::~WT3G0()
 {
     clear();
 }
 
-void WT3G2::clear()
+void WT3G0::clear()
 {
     prepare_model_data_table();
     prepare_model_internal_variable_table();
@@ -36,7 +36,7 @@ void WT3G2::clear()
     LVPL_voltage_sensor.set_K(1.0);
 }
 
-void WT3G2::copy_from_const_model(const WT3G2& model)
+void WT3G0::copy_from_const_model(const WT3G0& model)
 {
     clear();
     set_converter_activer_current_command_T_in_s(model.get_converter_activer_current_command_T_in_s());
@@ -54,12 +54,12 @@ void WT3G2::copy_from_const_model(const WT3G2& model)
     set_PLLmin(model.get_PLLmin());
 }
 
-WT3G2::WT3G2(const WT3G2& model):WT_GENERATOR_MODEL()
+WT3G0::WT3G0(const WT3G0& model):WT_GENERATOR_MODEL()
 {
     copy_from_const_model(model);
 }
 
-WT3G2& WT3G2::operator=(const WT3G2& model)
+WT3G0& WT3G0::operator=(const WT3G0& model)
 {
     if(this==&model)
         return *this;
@@ -69,123 +69,123 @@ WT3G2& WT3G2::operator=(const WT3G2& model)
     return (*this);
 }
 
-void WT3G2::set_converter_activer_current_command_T_in_s(double t)
+void WT3G0::set_converter_activer_current_command_T_in_s(double t)
 {
     active_current_commander.set_T_in_s(t);
 }
 
-void WT3G2::set_converter_reactiver_voltage_command_T_in_s(double t)
+void WT3G0::set_converter_reactiver_voltage_command_T_in_s(double t)
 {
     reactive_voltage_commander.set_T_in_s(t);
 }
 
-void WT3G2::set_KPLL(double K)
+void WT3G0::set_KPLL(double K)
 {
     KPLL = K;
 }
 
-void WT3G2::set_KIPLL(double K)
+void WT3G0::set_KIPLL(double K)
 {
     PLL_frequency_integrator.set_T_in_s(1.0/K);
 }
 
-void WT3G2::set_PLLmax(double pmax)
+void WT3G0::set_PLLmax(double pmax)
 {
     PLL_frequency_integrator.set_upper_limit(pmax);
 }
 
-void WT3G2::set_PLLmin(double pmin)
+void WT3G0::set_PLLmin(double pmin)
 {
     PLL_frequency_integrator.set_lower_limit(pmin);
 }
 
-void WT3G2::set_LVPL(const LVPL& lvpl)
+void WT3G0::set_LVPL(const LVPL& lvpl)
 {
     this->lvpl = lvpl;
 }
 
-void WT3G2::set_HVRC_voltage_in_pu(double v)
+void WT3G0::set_HVRC_voltage_in_pu(double v)
 {
     HVRCR_voltage = v;
 }
 
-void WT3G2::set_HVRC_current_in_pu(double i)
+void WT3G0::set_HVRC_current_in_pu(double i)
 {
     HVRCR_current = i;
 }
 
-void WT3G2::set_LVPL_max_rate_of_active_current_change(double rate)
+void WT3G0::set_LVPL_max_rate_of_active_current_change(double rate)
 {
     LVPL_active_power_change_rate = rate;
 }
 
-void WT3G2::set_LVPL_voltage_sensor_T_in_s(double t)
+void WT3G0::set_LVPL_voltage_sensor_T_in_s(double t)
 {
     LVPL_voltage_sensor.set_T_in_s(t);
 }
 
-double WT3G2::get_converter_activer_current_command_T_in_s() const
+double WT3G0::get_converter_activer_current_command_T_in_s() const
 {
     return active_current_commander.get_T_in_s();
 }
 
-double WT3G2::get_converter_reactiver_voltage_command_T_in_s() const
+double WT3G0::get_converter_reactiver_voltage_command_T_in_s() const
 {
     return reactive_voltage_commander.get_T_in_s();
 }
 
-double WT3G2::get_KPLL() const
+double WT3G0::get_KPLL() const
 {
     return KPLL;
 }
 
-double WT3G2::get_KIPLL() const
+double WT3G0::get_KIPLL() const
 {
     return 1.0/PLL_frequency_integrator.get_T_in_s();
 }
 
-double WT3G2::get_PLLmax() const
+double WT3G0::get_PLLmax() const
 {
     return PLL_frequency_integrator.get_upper_limit();
 }
 
-double WT3G2::get_PLLmin() const
+double WT3G0::get_PLLmin() const
 {
     return PLL_frequency_integrator.get_lower_limit();
 }
 
-LVPL WT3G2::get_LVPL() const
+LVPL WT3G0::get_LVPL() const
 {
     return lvpl;
 }
 
-double WT3G2::get_HVRC_voltage_in_pu() const
+double WT3G0::get_HVRC_voltage_in_pu() const
 {
     return HVRCR_voltage;
 }
 
-double WT3G2::get_HVRC_current_in_pu() const
+double WT3G0::get_HVRC_current_in_pu() const
 {
     return HVRCR_current;
 }
 
-double WT3G2::get_LVPL_max_rate_of_active_current_change() const
+double WT3G0::get_LVPL_max_rate_of_active_current_change() const
 {
     return LVPL_active_power_change_rate;
 }
 
-double WT3G2::get_LVPL_voltage_sensor_T_in_s() const
+double WT3G0::get_LVPL_voltage_sensor_T_in_s() const
 {
     return LVPL_voltage_sensor.get_T_in_s();
 }
 
 
-string WT3G2::get_model_name() const
+string WT3G0::get_model_name() const
 {
-    return "WT3G2";
+    return "WT3G0";
 }
 
-bool WT3G2::setup_model_with_steps_string(string data)
+bool WT3G0::setup_model_with_steps_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -194,7 +194,7 @@ bool WT3G2::setup_model_with_steps_string(string data)
     return false;
 }
 
-bool WT3G2::setup_model_with_psse_string(string data)
+bool WT3G0::setup_model_with_psse_string(string data)
 {
     ostringstream osstream;
 
@@ -270,7 +270,7 @@ bool WT3G2::setup_model_with_psse_string(string data)
     return is_successful;
 }
 
-bool WT3G2::setup_model_with_bpa_string(string data)
+bool WT3G0::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
@@ -279,7 +279,7 @@ bool WT3G2::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void WT3G2::initialize()
+void WT3G0::initialize()
 {
     ostringstream oosstream;
     if(is_model_initialized())
@@ -374,7 +374,7 @@ void WT3G2::initialize()
     show_information_with_leading_time_stamp(oosstream);
 }
 
-void WT3G2::run(DYNAMIC_MODE mode)
+void WT3G0::run(DYNAMIC_MODE mode)
 {
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
@@ -449,7 +449,7 @@ void WT3G2::run(DYNAMIC_MODE mode)
         set_flag_model_updated_as_true();
 }
 
-complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
+complex<double> WT3G0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
@@ -503,7 +503,7 @@ complex<double> WT3G2::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     return Ixy*mbase/sbase;
 }
 
-complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
+complex<double> WT3G0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
@@ -512,7 +512,7 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
     return Ixy*sbase/mbase;
 }
 
-complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
+complex<double> WT3G0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
     /*POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
@@ -530,35 +530,35 @@ complex<double> WT3G2::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sb
     return Ixy_term;
 }
 
-double WT3G2::get_terminal_current_in_pu_based_on_mbase()
+double WT3G0::get_terminal_current_in_pu_based_on_mbase()
 {
     return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase());
 }
 
-double WT3G2::get_terminal_current_in_pu_based_on_sbase()
+double WT3G0::get_terminal_current_in_pu_based_on_sbase()
 {
     return steps_fast_complex_abs(get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase());
 }
 
 
-void WT3G2::check()
+void WT3G0::check()
 {
     ;
 }
 
-void WT3G2::report()
+void WT3G0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
     show_information_with_leading_time_stamp(osstream);
 }
 
-void WT3G2::save()
+void WT3G0::save()
 {
     ;
 }
 
-string WT3G2::get_standard_model_string() const
+string WT3G0::get_standard_model_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
@@ -589,14 +589,14 @@ string WT3G2::get_standard_model_string() const
     return osstream.str();
 }
 
-void WT3G2::prepare_model_data_table()
+void WT3G0::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
 
-double WT3G2::get_model_data_with_name(string par_name) const
+double WT3G0::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
     if(par_name=="A")
@@ -605,7 +605,7 @@ double WT3G2::get_model_data_with_name(string par_name) const
     return 0.0;
 }
 
-void WT3G2::set_model_data_with_name(string par_name, double value)
+void WT3G0::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
     if(par_name=="A")
@@ -614,7 +614,7 @@ void WT3G2::set_model_data_with_name(string par_name, double value)
     return;
 }
 
-void WT3G2::prepare_model_internal_variable_table()
+void WT3G0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
     size_t i=0;
@@ -626,7 +626,7 @@ void WT3G2::prepare_model_internal_variable_table()
     add_model_inernal_variable_name_and_index_pair("STATE@LVPL VOLTAGE SENSOR", i); i++;
 }
 
-double WT3G2::get_model_internal_variable_with_name(string var_name)
+double WT3G0::get_model_internal_variable_with_name(string var_name)
 {
     var_name = string2upper(var_name);
     if(var_name == "PLL ANGLE IN DEG")
@@ -645,7 +645,7 @@ double WT3G2::get_model_internal_variable_with_name(string var_name)
     return 0.0;
 }
 
-complex<double> WT3G2::get_terminal_complex_power_in_pu_based_on_mbase()
+complex<double> WT3G0::get_terminal_complex_power_in_pu_based_on_mbase()
 {
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
@@ -654,37 +654,37 @@ complex<double> WT3G2::get_terminal_complex_power_in_pu_based_on_mbase()
     return S;
 }
 
-complex<double> WT3G2::get_terminal_complex_power_in_MVA()
+complex<double> WT3G0::get_terminal_complex_power_in_MVA()
 {
     return get_terminal_complex_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
 }
 
-double WT3G2::get_terminal_active_power_in_pu_based_on_mbase()
+double WT3G0::get_terminal_active_power_in_pu_based_on_mbase()
 {
     return get_terminal_complex_power_in_pu_based_on_mbase().real();
 }
 
-double WT3G2::get_terminal_active_power_in_MW()
+double WT3G0::get_terminal_active_power_in_MW()
 {
     return get_terminal_complex_power_in_MVA().real();
 }
 
-double WT3G2::get_terminal_reactive_power_in_pu_based_on_mbase()
+double WT3G0::get_terminal_reactive_power_in_pu_based_on_mbase()
 {
     return get_terminal_complex_power_in_pu_based_on_mbase().imag();
 }
 
-double WT3G2::get_terminal_reactive_power_in_MVar()
+double WT3G0::get_terminal_reactive_power_in_MVar()
 {
     return get_terminal_complex_power_in_MVA().imag();
 }
 
-double WT3G2::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
+double WT3G0::get_active_power_generation_including_stator_loss_in_pu_based_on_mbase()
 {
     return get_active_power_generation_including_stator_loss_in_MW()/get_mbase_in_MVA();
 }
 
-double WT3G2::get_active_power_generation_including_stator_loss_in_MW()
+double WT3G0::get_active_power_generation_including_stator_loss_in_MW()
 {
     double pterm = get_terminal_active_power_in_MW();
     double rsource = get_source_impedance_in_pu_based_on_mbase().real();
@@ -694,7 +694,7 @@ double WT3G2::get_active_power_generation_including_stator_loss_in_MW()
     return pterm+rsource*iterm*iterm*mbase;
 }
 
-double WT3G2::get_pll_angle_in_rad()
+double WT3G0::get_pll_angle_in_rad()
 {
     double kpll = get_KPLL();
     double kipll = get_KIPLL();
@@ -708,12 +708,12 @@ double WT3G2::get_pll_angle_in_rad()
         return PLL_angle_integrator.get_output();
 }
 
-double WT3G2::get_pll_angle_in_deg()
+double WT3G0::get_pll_angle_in_deg()
 {
     return rad2deg(get_pll_angle_in_rad());
 }
 
-double WT3G2::get_pll_frequency_deviation_in_pu()
+double WT3G0::get_pll_frequency_deviation_in_pu()
 {
     double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
@@ -740,26 +740,26 @@ double WT3G2::get_pll_frequency_deviation_in_pu()
     }
 }
 
-double WT3G2::get_pll_frequency_deviation_in_Hz()
+double WT3G0::get_pll_frequency_deviation_in_Hz()
 {
     double fbase = get_bus_base_frequency_in_Hz();
 
     return fbase*get_pll_frequency_deviation_in_pu();
 }
 
-double WT3G2::get_pll_frequency_in_pu()
+double WT3G0::get_pll_frequency_in_pu()
 {
     return 1.0+get_pll_frequency_deviation_in_pu();
 }
 
-double WT3G2::get_pll_frequency_in_Hz()
+double WT3G0::get_pll_frequency_in_Hz()
 {
     double fbase = get_bus_base_frequency_in_Hz();
 
     return fbase*get_pll_frequency_in_pu();
 }
 
-complex<double> WT3G2::get_internal_voltage_in_pu_in_xy_axis()
+complex<double> WT3G0::get_internal_voltage_in_pu_in_xy_axis()
 {
     complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Z = get_source_impedance_in_pu_based_on_mbase();
@@ -775,24 +775,24 @@ complex<double> WT3G2::get_internal_voltage_in_pu_in_xy_axis()
 
 
 
-void WT3G2::set_pll_angle_in_deg(double angle)
+void WT3G0::set_pll_angle_in_deg(double angle)
 {
     PLL_angle_integrator.set_output(deg2rad(angle));
     PLL_angle_integrator.initialize();// the initialize function is used to update STORE
 }
 
 
-string WT3G2::get_dynamic_data_in_psse_format() const
+string WT3G0::get_dynamic_data_in_psse_format() const
 {
     return "";
 }
 
-string WT3G2::get_dynamic_data_in_bpa_format() const
+string WT3G0::get_dynamic_data_in_bpa_format() const
 {
     return get_dynamic_data_in_psse_format();
 }
 
-string WT3G2::get_dynamic_data_in_steps_format() const
+string WT3G0::get_dynamic_data_in_steps_format() const
 {
     return get_dynamic_data_in_psse_format();
 }

@@ -112,7 +112,7 @@ void prepare_basic_wt_generators()
         prepare_basic_buses();
 
     WT_GENERATOR wt_generator;
-    WT3G2 gen_model;
+    WT3G0 gen_model;
     AERD0 aerd_model;
     WT3T0 turbine_model;
     WT3E0 elec_model;

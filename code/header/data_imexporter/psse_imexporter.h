@@ -130,7 +130,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void add_CDC6T_model(string data);
 
         void add_WT3G1_model(string data);
-        void add_WT3G2_model(string data);
+        void add_WT3G0_model(string data);
         void add_AERD0_model(string data);
         void add_WT3T0_model(string data);
         void add_WT3E0_model(string data);

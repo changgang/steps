@@ -1,4 +1,4 @@
-#include "header/model/wtg_models/wt_generator_model/wt3g2_test.h"
+#include "header/model/wtg_models/wt_generator_model/wt3g0_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
 #include <cstring>
@@ -9,20 +9,20 @@
 
 using namespace std;
 
-WT3G2_TEST::WT3G2_TEST() : WT_GENERATOR_MODEL_TEST()
+WT3G0_TEST::WT3G0_TEST() : WT_GENERATOR_MODEL_TEST()
 {
-    TEST_ADD(WT3G2_TEST::test_get_model_name);
-    TEST_ADD(WT3G2_TEST::test_set_get_parameters);
-    TEST_ADD(WT3G2_TEST::test_set_get_pll_angle);
+    TEST_ADD(WT3G0_TEST::test_get_model_name);
+    TEST_ADD(WT3G0_TEST::test_set_get_parameters);
+    TEST_ADD(WT3G0_TEST::test_set_get_pll_angle);
 }
 
-void WT3G2_TEST::setup()
+void WT3G0_TEST::setup()
 {
     WT_GENERATOR_MODEL_TEST::setup();
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
-    WT3G2 model;
+    WT3G0 model;
     wt_gen->set_number_of_lumped_wt_generators(50);
     wt_gen->set_rated_power_per_wt_generator_in_MW(2.0);
     model.set_converter_activer_current_command_T_in_s(0.2);
@@ -44,7 +44,7 @@ void WT3G2_TEST::setup()
     wt_gen->set_model(&model);
 }
 
-void WT3G2_TEST::tear_down()
+void WT3G0_TEST::tear_down()
 {
     WT_GENERATOR_MODEL_TEST::tear_down();
 
@@ -52,21 +52,21 @@ void WT3G2_TEST::tear_down()
 }
 
 
-void WT3G2_TEST::test_get_model_name()
+void WT3G0_TEST::test_get_model_name()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"WT3G0_TEST");
 
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
 
-    TEST_ASSERT(model->get_model_name()=="WT3G2");
+    TEST_ASSERT(model->get_model_name()=="WT3G0");
 }
 
-void WT3G2_TEST::test_set_get_parameters()
+void WT3G0_TEST::test_set_get_parameters()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"WT3G0_TEST");
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
-    WT3G2* model = (WT3G2*) get_test_wt_generator_model();
+    WT3G0* model = (WT3G0*) get_test_wt_generator_model();
 
     wt_gen->set_number_of_lumped_wt_generators(5);
     model->set_converter_activer_current_command_T_in_s(0.1);
@@ -104,9 +104,9 @@ void WT3G2_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_LVPL_voltage_sensor_T_in_s()-0.1)<FLOAT_EPSILON);
 }
 
-void WT3G2_TEST::test_initialize_and_get_initialized_inputs()
+void WT3G0_TEST::test_initialize_and_get_initialized_inputs()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"WT3G0_TEST");
 
     ostringstream osstream;
 
@@ -114,7 +114,7 @@ void WT3G2_TEST::test_initialize_and_get_initialized_inputs()
 
     //complex<double> V=db->get_bus_complex_voltage_in_pu(1);
 
-    WT3G2* model = (WT3G2*) get_test_wt_generator_model();
+    WT3G0* model = (WT3G0*) get_test_wt_generator_model();
 
     //complex<double> Z=wt_generator->get_source_impedance_in_pu();
     complex<double> S(wt_gen->get_p_generation_in_MW(), wt_gen->get_q_generation_in_MVar());
@@ -125,18 +125,18 @@ void WT3G2_TEST::test_initialize_and_get_initialized_inputs()
     //model->set_D(1.0);
 
     model->initialize();
-    osstream<<"WT3G2 model after initialized:"<<endl;
+    osstream<<"WT3G0 model after initialized:"<<endl;
     osstream<<"PLL angle = "<<model->get_pll_angle_in_deg()<<" deg, PLL frequency = "<<model->get_pll_frequency_in_Hz()<<endl;
     osstream<<"Terminal P = "<<model->get_terminal_active_power_in_MW()<<" MW, Q = "<<model->get_terminal_reactive_power_in_MVar()<<" MVar"<<endl;
     show_information_with_leading_time_stamp(osstream);
 }
 
 
-void WT3G2_TEST::test_set_get_pll_angle()
+void WT3G0_TEST::test_set_get_pll_angle()
 {
-    show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
+    show_test_information_for_function_of_class(__FUNCTION__,"WT3G0_TEST");
 
-    WT3G2* model = (WT3G2*) get_test_wt_generator_model();
+    WT3G0* model = (WT3G0*) get_test_wt_generator_model();
 
     model->set_pll_angle_in_deg(10.0);
     TEST_ASSERT(fabs(model->get_pll_angle_in_deg()-10.0)<FLOAT_EPSILON);
