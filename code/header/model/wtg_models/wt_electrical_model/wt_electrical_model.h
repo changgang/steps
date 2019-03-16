@@ -74,7 +74,7 @@ class WT_ELECTRICAL_MODEL : public WTG_MODEL
         virtual double get_active_power_command_in_pu_based_on_mbase() const = 0;
         virtual double get_reactive_current_command_in_pu_based_on_mbase() const = 0;
         virtual double get_reactive_power_command_in_pu_based_on_mbase() const = 0;
-        virtual double get_reactive_voltage_command_in_pu_based_on_mbase() const = 0;
+        virtual double get_reactive_voltage_command_in_pu() const = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;

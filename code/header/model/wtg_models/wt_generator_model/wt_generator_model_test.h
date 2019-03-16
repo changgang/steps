@@ -38,6 +38,7 @@ class WT_GENERATOR_MODEL_TEST : public WTG_MODEL_TEST
         void test_get_standard_model_string();
 
         void test_active_current_step_response_of_wt_generator_model();
+        void test_reactive_voltage_step_response_of_wt_generator_model();
         void test_reactive_current_step_response_of_wt_generator_model();
         void test_bus_magnitude_step_response_of_wt_generator_model();
         void test_bus_angle_step_response_of_wt_generator_model();

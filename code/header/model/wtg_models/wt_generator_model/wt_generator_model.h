@@ -32,9 +32,13 @@ class WT_GENERATOR_MODEL : public WTG_MODEL
 
         void set_initial_reactive_current_command_in_pu_based_on_mbase(double iq_command);
         double get_initial_reactive_current_command_in_pu_based_on_mbase() const;
+
+        void set_initial_reactive_voltage_command_in_pu(double eq_command);
+        double get_initial_reactive_voltage_command_in_pu() const;
         // get inputs for dynamics run
         double get_active_current_command_in_pu_based_on_mbase() const;
         double get_reactive_current_command_in_pu_based_on_mbase() const;
+        double get_reactive_voltage_command_in_pu() const;
     public: // specific sync generator model
         virtual string get_model_name() const = 0;
 
@@ -86,7 +90,7 @@ class WT_GENERATOR_MODEL : public WTG_MODEL
 
     private:
         bool current_source_flag;
-        double IP_command0, IQ_command0;
+        double IP_command0, IQ_command0, EQ_command0;
 };
 
 #endif // WT_GENERATOR_MODEL_H

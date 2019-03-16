@@ -785,7 +785,7 @@ void WT3E0::initialize()
             <<"(10) torque PI regulator state: "<<torque_PI_regulator.get_state()<<endl
             <<"(11) virtual inertia regulator state: "<<virtual_inertia_emulator.get_state()<<endl
             <<"(12) frequency droop regulator state: "<<frequency_droop_controller.get_state()<<endl
-            <<"(13) reactive voltage command: "<<get_reactive_voltage_command_in_pu_based_on_mbase()<<endl
+            <<"(13) reactive voltage command: "<<get_reactive_voltage_command_in_pu()<<endl
             <<"(14) active current command: "<<get_active_current_command_in_pu_based_on_mbase()<<endl
             <<"(15) reactive current command: "<<get_reactive_current_command_in_pu_based_on_mbase();
     show_information_with_leading_time_stamp(osstream);
@@ -975,7 +975,7 @@ double WT3E0::get_reactive_current_command_in_pu_based_on_mbase() const
 
     double xeq = gen->get_source_impedance_in_pu().imag();
 
-    double eqcmd = get_reactive_voltage_command_in_pu_based_on_mbase();
+    double eqcmd = get_reactive_voltage_command_in_pu();
 
     return eqcmd/(-xeq);
 }
@@ -1005,7 +1005,7 @@ double WT3E0::get_reactive_power_command_in_pu_based_on_mbase() const
     }
 }
 
-double WT3E0::get_reactive_voltage_command_in_pu_based_on_mbase() const
+double WT3E0::get_reactive_voltage_command_in_pu() const
 {
     size_t voltage_flag = get_voltage_flag();
     if(voltage_flag==0)

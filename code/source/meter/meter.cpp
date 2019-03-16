@@ -1694,7 +1694,7 @@ double METER::get_meter_value_as_a_wt_generator() const
         if(electrical_model == NULL)
             return 0.0;
         else
-            return electrical_model->get_reactive_voltage_command_in_pu_based_on_mbase();
+            return electrical_model->get_reactive_voltage_command_in_pu();
     }
     if(meter_type=="PITCH ANGLE IN DEG")
     {

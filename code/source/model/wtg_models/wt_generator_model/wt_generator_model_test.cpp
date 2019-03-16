@@ -27,6 +27,7 @@ WT_GENERATOR_MODEL_TEST::WT_GENERATOR_MODEL_TEST()
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_get_standard_model_string);
 
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_active_current_step_response_of_wt_generator_model);
+    TEST_ADD(WT_GENERATOR_MODEL_TEST::test_reactive_voltage_step_response_of_wt_generator_model);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_reactive_current_step_response_of_wt_generator_model);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_model);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model);
@@ -169,6 +170,7 @@ void WT_GENERATOR_MODEL_TEST::export_meter_values(double time)
     double angle = model->get_pll_angle_in_deg();
     double ipcmd = model->get_active_current_command_in_pu_based_on_mbase();
     double iqcmd = model->get_reactive_current_command_in_pu_based_on_mbase();
+    double eqcmd = model->get_reactive_voltage_command_in_pu();
     double pelec = model->get_terminal_active_power_in_MW();
     double qelec = model->get_terminal_reactive_power_in_MVar();
 
@@ -179,6 +181,7 @@ void WT_GENERATOR_MODEL_TEST::export_meter_values(double time)
       <<setw(10)<<setprecision(6)<<fixed<<angle<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<ipcmd<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<iqcmd<<"\t"
+      <<setw(10)<<setprecision(6)<<fixed<<eqcmd<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<pelec<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<qelec;
 
@@ -222,6 +225,66 @@ void WT_GENERATOR_MODEL_TEST::test_active_current_step_response_of_wt_generator_
 
         double ipcmd = model->get_initial_active_current_command_in_pu_based_on_mbase();
         model->set_initial_active_current_command_in_pu_based_on_mbase(ipcmd*0.99);
+        model->run(UPDATE_MODE);
+
+        export_meter_values(time);
+
+        while(true)
+        {
+            time += delt;
+
+            if(time>6.0+FLOAT_EPSILON)
+            {
+                time -=delt;
+                break;
+            }
+
+            run_a_step();
+            export_meter_values(time);
+        }
+        recover_stdout();
+    }
+    else
+        TEST_ASSERT(false);
+}
+
+void WT_GENERATOR_MODEL_TEST::test_reactive_voltage_step_response_of_wt_generator_model()
+{
+    WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
+    ostringstream osstream;
+    if(model!=NULL)
+    {
+        show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+
+        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        show_information_with_leading_time_stamp(osstream);
+
+        double delt = 0.001;
+        set_dynamic_simulation_time_step_in_s(delt);
+
+        double time = -delt*2.0;
+
+        model->initialize();
+
+        export_meter_title();
+        export_meter_values(time);
+
+        while(true)
+        {
+            time += delt;
+            if(time>1.0+FLOAT_EPSILON)
+            {
+                time -=delt;
+                break;
+            }
+            run_a_step();
+            export_meter_values(time);
+        }
+
+        double eqcmd = model->get_initial_reactive_voltage_command_in_pu();
+        model->set_initial_reactive_voltage_command_in_pu(eqcmd*0.99);
         model->run(UPDATE_MODE);
 
         export_meter_values(time);

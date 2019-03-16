@@ -127,6 +127,7 @@ void PSSE_IMEXPORTER::load_one_model(string data)
     if(model_name=="CDC4T") { add_CDC4T_model(data); return;}
     if(model_name=="CDC6T") { add_CDC6T_model(data); return;}
 
+    if(model_name=="WT3G1") { add_WT3G1_model(data); return;}
     if(model_name=="WT3G2") { add_WT3G2_model(data); return;}
     if(model_name=="AERD0") { add_AERD0_model(data); return;}
     if(model_name=="WT3T0") { add_WT3T0_model(data); return;}
@@ -1032,6 +1033,34 @@ void PSSE_IMEXPORTER::add_CDC6T_model(string data)
         }
     }
 }
+
+void PSSE_IMEXPORTER::add_WT3G1_model(string data)
+{
+    if(get_dynamic_model_name(data) != "WT3G1")
+        return;
+
+    vector<string> dyrdata = split_string(data,",");
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
+    if(gen != NULL)
+    {
+        WT3G1 model;
+
+        bool successful = model.setup_model_with_psse_string(data);
+        if(successful)
+            gen->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid WT3G1 model is built, but will not be set for "<<gen->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
 
 void PSSE_IMEXPORTER::add_WT3G2_model(string data)
 {

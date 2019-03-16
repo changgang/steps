@@ -274,6 +274,8 @@
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h" />
 		<Unit filename="header/model/wtg_models/wt_electrical_model/wt_electrical_models.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/lvpl.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g1.h" />
+		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g1_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g2.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt3g2_test.h" />
 		<Unit filename="header/model/wtg_models/wt_generator_model/wt_generator_model.h" />
@@ -570,6 +572,8 @@
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model.cpp" />
 		<Unit filename="source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/lvpl.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g1.cpp" />
+		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g1_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g2.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt3g2_test.cpp" />
 		<Unit filename="source/model/wtg_models/wt_generator_model/wt_generator_model.cpp" />

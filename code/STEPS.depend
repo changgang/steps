@@ -27225,7 +27225,7 @@
 	"header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
 	"header/model/wtg_models/wind_speed_model/wind_speed_models.h"
 
-1544403709 /home/changgang/steps/code/header/model/wtg_models/wt_generator_model/wt_generator_model.h
+1552633282 /home/changgang/steps/code/header/model/wtg_models/wt_generator_model/wt_generator_model.h
 	"header/model/wtg_models/wtg_model.h"
 	"header/block/integral_block.h"
 	"header/block/saturation_block.h"
@@ -27249,13 +27249,13 @@
 	"header/model/wtg_models/wt_electrical_model/wt3e0.h"
 	"header/model/wtg_models/wt_electrical_model/wt3e1.h"
 
-1544403709 /home/changgang/steps/code/header/model/wtg_models/wt_electrical_model/wt3e0.h
+1552633343 /home/changgang/steps/code/header/model/wtg_models/wt_electrical_model/wt3e0.h
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model.h"
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 	"header/block/integral_block.h"
 
-1544403709 /home/changgang/steps/code/header/model/wtg_models/wt_electrical_model/wt_electrical_model.h
+1552633326 /home/changgang/steps/code/header/model/wtg_models/wt_electrical_model/wt_electrical_model.h
 	"header/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.h"
 	"header/model/wtg_models/wtg_model.h"
 	<complex>
@@ -27549,7 +27549,7 @@
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	<complex>
 
-1551095919 /home/changgang/steps/code/header/data_imexporter/psse_imexporter.h
+1552634575 /home/changgang/steps/code/header/data_imexporter/psse_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -27627,7 +27627,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1552568050 source:/home/changgang/steps/code/main_tests.cpp
+1552634457 source:/home/changgang/steps/code/main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -27709,6 +27709,7 @@
 	"header/model/hvdc_model/vdcol_test.h"
 	"header/model/hvdc_model/CDC4T_test.h"
 	"header/model/hvdc_model/CDC6T_test.h"
+	"header/model/wtg_models/wt_generator_model/wt3g1_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g2_test.h"
 	"header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h"
 	"header/model/wtg_models/wt_turbine_model/wt3t0_test.h"
@@ -28668,7 +28669,7 @@
 	"header/model/wtg_models/wt_generator_model/wt_generator_model_test.h"
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 
-1541764759 /home/changgang/steps/code/header/model/wtg_models/wt_generator_model/wt_generator_model_test.h
+1552723330 /home/changgang/steps/code/header/model/wtg_models/wt_generator_model/wt_generator_model_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -28877,7 +28878,8 @@
 	"header/model/hvdc_model/CDC4T.h"
 	"header/model/hvdc_model/CDC6T.h"
 
-1541764759 /home/changgang/steps/code/header/model/wtg_models/wt_generator_model/wt_generator_models.h
+1552631382 /home/changgang/steps/code/header/model/wtg_models/wt_generator_model/wt_generator_models.h
+	"header/model/wtg_models/wt_generator_model/wt3g1.h"
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 
 1541764759 /home/changgang/steps/code/header/model/pvu_models/pv_converter_model/pv_converter_models.h
@@ -29780,7 +29782,7 @@
 	<iostream>
 	<cstdio>
 
-1544403709 source:/home/changgang/steps/code/source/data_imexporter/psse_dynamics_imexporter.cpp
+1552634559 source:/home/changgang/steps/code/source/data_imexporter/psse_dynamics_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -30046,7 +30048,7 @@
 	<iostream>
 	<cstdio>
 
-1541764759 source:/home/changgang/steps/code/source/device/wt_generator.cpp
+1552634629 source:/home/changgang/steps/code/source/device/wt_generator.cpp
 	"header/device/wt_generator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -30090,7 +30092,7 @@
 	<cstdio>
 	<cmath>
 
-1544403709 source:/home/changgang/steps/code/source/meter/meter.cpp
+1552633928 source:/home/changgang/steps/code/source/meter/meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -30993,7 +30995,7 @@
 	"header/model/wtg_models/wt_electrical_model/wind_turbine_power_speed_lookup_table.h"
 	"header/basic/utility.h"
 
-1544403709 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt3e0.cpp
+1552633367 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt3e0.cpp
 	"header/model/wtg_models/wt_electrical_model/wt3e0.h"
 	"header/device/wt_generator.h"
 	"header/power_system_database.h"
@@ -31031,7 +31033,7 @@
 	"header/device/wt_generator.h"
 	"header/power_system_database.h"
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp
+1552633956 source:/home/changgang/steps/code/source/model/wtg_models/wt_electrical_model/wt_electrical_model_test.cpp
 	"header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -31044,7 +31046,7 @@
 	"header/basic/constants.h"
 	<cmath>
 
-1544403709 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g2.cpp
+1552633448 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g2.cpp
 	"header/model/wtg_models/wt_generator_model/wt3g2.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -31062,7 +31064,7 @@
 	<cstdio>
 	<cmath>
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt_generator_model.cpp
+1552633988 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt_generator_model.cpp
 	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -31071,7 +31073,7 @@
 	<istream>
 	<iostream>
 
-1541764759 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp
+1552723543 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt_generator_model_test.cpp
 	"header/model/wtg_models/wt_generator_model/wt_generator_model_test.h"
 	"header/basic/utility.h"
 	<cstdlib>
@@ -31576,4 +31578,36 @@
 	<cstdio>
 	<istream>
 	<iostream>
+
+1552631994 /home/changgang/steps/code/header/model/wtg_models/wt_generator_model/wt3g1.h
+	"header/model/wtg_models/wt_generator_model/wt_generator_model.h"
+	"header/model/wtg_models/wt_generator_model/lvpl.h"
+	"header/block/integral_block.h"
+	"header/block/first_order_block.h"
+
+1552723637 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g1.cpp
+	"header/model/wtg_models/wt_generator_model/wt3g1.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1552634309 source:/home/changgang/steps/code/source/model/wtg_models/wt_generator_model/wt3g1_test.cpp
+	"header/model/wtg_models/wt_generator_model/wt3g1_test.h"
+	"header/basic/utility.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
+
+1552633930 /home/changgang/steps/code/header/model/wtg_models/wt_generator_model/wt3g1_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/wtg_models/wt_generator_model/wt_generator_model_test.h"
+	"header/model/wtg_models/wt_generator_model/wt3g1.h"
 

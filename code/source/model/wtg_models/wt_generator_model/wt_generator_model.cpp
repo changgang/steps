@@ -58,6 +58,16 @@ double WT_GENERATOR_MODEL::get_initial_reactive_current_command_in_pu_based_on_m
     return IQ_command0;
 }
 
+void WT_GENERATOR_MODEL::set_initial_reactive_voltage_command_in_pu(double eq_command)
+{
+    EQ_command0 = eq_command;
+}
+
+double WT_GENERATOR_MODEL::get_initial_reactive_voltage_command_in_pu() const
+{
+    return EQ_command0;
+}
+
 double WT_GENERATOR_MODEL::get_active_current_command_in_pu_based_on_mbase() const
 {
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
@@ -82,4 +92,17 @@ double WT_GENERATOR_MODEL::get_reactive_current_command_in_pu_based_on_mbase() c
         return model->get_reactive_current_command_in_pu_based_on_mbase();
     else
         return get_initial_reactive_current_command_in_pu_based_on_mbase();
+}
+
+double WT_GENERATOR_MODEL::get_reactive_voltage_command_in_pu() const
+{
+    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
+    if(wt_generator==NULL)
+        return 0.0;
+
+    WT_ELECTRICAL_MODEL* model = wt_generator->get_wt_electrical_model();
+    if(model!=NULL and model->is_model_initialized())
+        return model->get_reactive_voltage_command_in_pu();
+    else
+        return get_initial_reactive_voltage_command_in_pu();
 }

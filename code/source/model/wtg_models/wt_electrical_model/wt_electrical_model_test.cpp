@@ -351,7 +351,7 @@ void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
             <<setw(10)<<setprecision(6)<<fixed<<freq<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<model->get_active_current_command_in_pu_based_on_mbase()<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<model->get_reactive_current_command_in_pu_based_on_mbase()<<"\t"
-            <<setw(10)<<setprecision(6)<<fixed<<model->get_reactive_voltage_command_in_pu_based_on_mbase()<<"\t"
+            <<setw(10)<<setprecision(6)<<fixed<<model->get_reactive_voltage_command_in_pu()<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<genmodel->get_terminal_active_power_in_MW()<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<genmodel->get_terminal_reactive_power_in_MVar();
     show_information_with_leading_time_stamp(oosstream);

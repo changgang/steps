@@ -100,7 +100,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         virtual double get_active_power_command_in_pu_based_on_mbase() const;
         virtual double get_reactive_current_command_in_pu_based_on_mbase() const;
         virtual double get_reactive_power_command_in_pu_based_on_mbase() const;
-        virtual double get_reactive_voltage_command_in_pu_based_on_mbase() const;
+        virtual double get_reactive_voltage_command_in_pu() const;
 
 
         virtual void check();
