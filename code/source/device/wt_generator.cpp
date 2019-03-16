@@ -265,6 +265,11 @@ void WT_GENERATOR::set_wt_generator_model(const WT_GENERATOR_MODEL* model)
         WT3G0* smodel = (WT3G0*) (model);
         new_model = (WT_GENERATOR_MODEL*) new WT3G0(*smodel);
     }
+    if(model_name=="WT3G2")
+    {
+        WT3G2* smodel = (WT3G2*) (model);
+        new_model = (WT_GENERATOR_MODEL*) new WT3G2(*smodel);
+    }
 
     if(new_model!=NULL)
     {
