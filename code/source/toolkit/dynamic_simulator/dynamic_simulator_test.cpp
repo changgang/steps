@@ -16,7 +16,7 @@ using namespace std;
 
 DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 {
-/*
+
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_csv_file_export_enable_flag);
@@ -56,23 +56,25 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB1);*/
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind);/*
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB1);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_without_UFLS);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFLS);
-*/
-    //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
 
-    //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T);
 
-    //TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models);
+
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models);
 
 
 }
 
 void DYNAMICS_SIMULATOR_TEST::setup()
 {
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    psdb.set_allowed_max_bus_number(10000);
     DYNAMICS_SIMULATOR& simulator = get_default_dynamic_simulator();
     set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.00001);
@@ -534,8 +536,8 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_GENCLS_IEEL()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("sm_test_model.raw");
-    importer.load_dynamic_data("sm_test_model_GENCLS_IEELAL.dyr");
+    importer.load_powerflow_data("../../../bench/sm_test_model.raw");
+    importer.load_dynamic_data("../../../bench/sm_test_model_GENCLS_IEELAL.dyr");
 
     string output_file = "test_log/";
     output_file += __FUNCTION__;
@@ -559,8 +561,8 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_GENROU()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("sm_test_model.raw");
-    importer.load_dynamic_data("sm_test_model_GENROU_GENCLS_IEELAL.dyr");
+    importer.load_powerflow_data("../../../bench/sm_test_model.raw");
+    importer.load_dynamic_data("../../../bench/sm_test_model_GENROU_GENCLS_IEELAL.dyr");
 
     string output_file = "test_log/";
     output_file += __FUNCTION__;
@@ -584,8 +586,8 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEET1()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("sm_test_model.raw");
-    importer.load_dynamic_data("sm_test_model_GENROU_GENCLS_IEELAL_IEEET1.dyr");
+    importer.load_powerflow_data("../../../bench/sm_test_model.raw");
+    importer.load_dynamic_data("../../../bench/sm_test_model_GENROU_GENCLS_IEELAL_IEEET1.dyr");
 
     string output_file = "test_log/";
     output_file += __FUNCTION__;
@@ -609,8 +611,8 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEEG1()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("sm_test_model.raw");
-    importer.load_dynamic_data("sm_test_model_GENROU_GENCLS_IEELAL_IEEET1_IEEEG1.dyr");
+    importer.load_powerflow_data("../../../bench/sm_test_model.raw");
+    importer.load_dynamic_data("../../../bench/sm_test_model_GENROU_GENCLS_IEELAL_IEEET1_IEEEG1.dyr");
 
     string output_file = "test_log/";
     output_file += __FUNCTION__;
@@ -635,8 +637,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE9_classical.raw");
-    importer.load_dynamic_data("IEEE9_classical.dyr");
+    importer.load_powerflow_data("../../../bench/IEEE9_classical.raw");
+    importer.load_dynamic_data("../../../bench/IEEE9_classical.dyr");
 
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
@@ -681,8 +683,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE9_classical.raw");
-    importer.load_dynamic_data("IEEE9_classical.dyr");
+    importer.load_powerflow_data("../../../bench/IEEE9_classical.raw");
+    importer.load_dynamic_data("../../../bench/IEEE9_classical.dyr");
 
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
@@ -741,8 +743,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE9_classical.raw");
-    importer.load_dynamic_data("IEEE9_classical.dyr");
+    importer.load_powerflow_data("../../../bench/IEEE9_classical.raw");
+    importer.load_dynamic_data("../../../bench/IEEE9_classical.dyr");
 
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
@@ -804,7 +806,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU()
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -858,7 +860,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL()
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENSAL.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENSAL.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -914,7 +916,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1()
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU_IEEET1.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU_IEEET1.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -969,7 +971,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1()
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU_IEEEG1.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU_IEEEG1.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -1024,7 +1026,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1()
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -1078,7 +1080,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -1131,7 +1133,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1_LCFB1.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1_LCFB1.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -1193,7 +1195,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_with
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -1308,7 +1310,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFL
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1_PUFLS.dyr");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1_PUFLS.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
 
@@ -1406,8 +1408,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 
     psdb.set_allowed_max_bus_number(1000);
 
-    importer.load_powerflow_data("bench_shandong_change.raw");
-    importer.load_dynamic_data("bench_shandong_change_with_gov.dyr");
+    importer.load_powerflow_data("../../../bench/bench_shandong_change.raw");
+    importer.load_dynamic_data("../../../bench/bench_shandong_change_with_gov.dyr");
 
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
@@ -1424,7 +1426,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    //simulator.prepare_meters();
+    simulator.prepare_meters();
+    simulator.set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
 
     simulator.set_output_file("test_log/bench_shandong_100_bus_model_dynamic_test_result_GENROU_CDC4T");
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
@@ -1471,8 +1474,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE9_wind.raw");
-    importer.load_dynamic_data("IEEE9_wt3_models.dyr");
+    importer.load_powerflow_data("../../../bench/IEEE9_wind.raw");
+    importer.load_dynamic_data("../../../bench/IEEE9_wt3_models.dyr");
 
     DEVICE_ID gendid = get_wt_generator_device_id(3, "1");
     WT_GENERATOR* gen = psdb.get_wt_generator(gendid);
@@ -1580,8 +1583,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
 
     PSSE_IMEXPORTER importer;
 
-    importer.load_powerflow_data("IEEE9_all_wind.raw");
-    importer.load_dynamic_data("IEEE9_all_wt3_models.dyr");
+    importer.load_powerflow_data("../../../bench/IEEE9_all_wind.raw");
+    importer.load_dynamic_data("../../../bench/IEEE9_all_wt3_models.dyr");
 
     vector<WT_GENERATOR*> gens = psdb.get_all_wt_generators();
     for(size_t i=0; i<gens.size(); ++i)

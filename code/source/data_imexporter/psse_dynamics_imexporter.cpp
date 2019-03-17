@@ -64,6 +64,8 @@ void PSSE_IMEXPORTER::load_dynamic_data_into_ram(string file)
         {
             sbuffer = trim_psse_comment(buffer);
             sbuffer = trim_string(sbuffer);
+            if(sbuffer=="")
+                continue;
             data_of_one_type = data_of_one_type +" "+sbuffer;
 
             data_of_one_type = string2csv(data_of_one_type);
@@ -87,8 +89,11 @@ void PSSE_IMEXPORTER::load_all_models()
 void PSSE_IMEXPORTER::load_one_model(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
+    //for(size_t i=0; i<record.size();++i)
+    //    cout<<record[i]<<endl;
     STEPS_IMEXPORTER importer;
     importer.load_one_model(record);
+    //cout<<"done. Now go to next one"<<endl;
 }
 
 void PSSE_IMEXPORTER::export_dynamic_data(string file)

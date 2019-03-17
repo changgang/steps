@@ -41,7 +41,7 @@ void PSSE_IMEXPORTER_TEST::setup()
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
-    importer.load_powerflow_data("sample.raw");
+    importer.load_powerflow_data("../../../bench/sample.raw");
 }
 
 void PSSE_IMEXPORTER_TEST::tear_down()

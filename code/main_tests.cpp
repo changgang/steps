@@ -41,6 +41,7 @@
 
 #include "header/power_system_database_test.h"
 
+#include "header/data_imexporter/steps_imexporter_test.h"
 #include "header/data_imexporter/psse_imexporter_test.h"
 #include "header/data_imexporter/bpa_imexporter_test.h"
 #include "header/data_imexporter/equivalent_model_imexporter_test.h"
@@ -230,11 +231,13 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new POWER_SYSTEM_DATABASE_TEST));
 
+*/
+        ts.add(unique_ptr<Test::Suite>(new STEPS_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new BPA_IMEXPORTER_TEST));
-
+/*
         //ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_MODEL_IMEXPORTER_TEST));
 
 

@@ -134,7 +134,7 @@ int main()
     PSSE_IMEXPORTER importer;
 
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
-    importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
+    importer.load_dynamic_data("../../../IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
     EQUIVALENT_MODEL_IMEXPORTER eqimporter;
     eqimporter.load_equivalent_model("C:/Users/charles/Desktop/arx/arx_model.eqv");

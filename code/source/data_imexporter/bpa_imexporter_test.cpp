@@ -505,7 +505,7 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
     PSSE_IMEXPORTER psse_importer;
     psse_importer.load_powerflow_data("../../../bench/bench_yunnan.raw");
 
-    //psse_importer.load_powerflow_data("sample.raw");
+    //psse_importer.load_powerflow_data("../../../bench/sample.raw");
 
     //psse_importer.export_powerflow_data("export_sample_model_with_PSSE_IMEXPORTER.raw");
 
