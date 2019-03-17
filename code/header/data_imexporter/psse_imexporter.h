@@ -21,47 +21,31 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true);
         virtual void export_dynamic_data(string file);
         virtual void export_sequence_data(string file);
-
-        size_t get_data_version() const;
-
     private:
         string trim_psse_comment(string str);
-        void set_data_version(size_t version);
 
         void load_powerflow_data_into_ram(string file);
-        vector<vector<string> > convert_psse_raw_data_into_steps_format() const;
+        vector<vector<vector<string> > > convert_psse_raw_data2steps_vector() const;
 
-        void load_case_data();
-        void load_bus_data();
-        void load_load_data();
-        void load_fixed_shunt_data();
-        void load_source_data();
-        void load_generator_data(vector<string>& data);
-        void load_wt_generator_data(vector<string>& data);
-        void load_pv_unit_data(vector<string>& data);
-        void load_energy_storage_data(vector<string>& data);
-        void load_source_common_data(vector<string>& data, SOURCE* source);
-        void load_source_var_control_data(vector<string>& data, SOURCE* source);
-        void load_line_data();
-        void load_transformer_data();
-        void add_transformer_with_data(vector<string> trans_data);
-        void add_transformer_basic_data(TRANSFORMER& trans, vector<string> data);
-        void add_transformer_winding_data(TRANSFORMER&trans, TRANSFORMER_WINDING_SIDE winding, vector<string> data, TRANSFORMER_WINDING_TAP_CODE winding_code);
-        void add_transformer_impedance_admittance_data(TRANSFORMER& trans, vector<string> data, TRANSFORMER_IMPEDANCE_CODE impedance_code, TRANSFORMER_ADMITTANCE_CODE magnetizing_code);
-        void load_area_data();
-        void load_hvdc_data();
-        void add_hvdc_with_data(vector<string> hvdc_data);
-        void add_hvdc_basic_data(HVDC& hvdc, vector<string> data);
-        void add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE converter, vector<string> data);
-        void load_vsc_hvdc_data();
-        void load_transformer_impedance_correction_table_data();
-        void load_multi_terminal_hvdc_data();
-        void load_multi_section_line_data();
-        void load_zone_data();
-        void load_interarea_transfer_data();
-        void load_owner_data();
-        void load_facts_data();
-        void load_switched_shunt_data();
+        vector<vector<string> > convert_i_th_type_data2steps_vector(size_t i) const;
+        vector<vector<string> > convert_case_data2steps_vector() const;
+        vector<vector<string> > convert_bus_data2steps_vector() const;
+        vector<vector<string> > convert_load_data2steps_vector() const;
+        vector<vector<string> > convert_fixed_shunt_data2steps_vector() const;
+        vector<vector<string> > convert_source_data2steps_vector() const;
+        vector<vector<string> > convert_line_data2steps_vector() const;
+        vector<vector<string> > convert_transformer_data2steps_vector() const;
+        vector<vector<string> > convert_hvdc_data2steps_vector() const;
+        vector<vector<string> > convert_area_data2steps_vector() const;
+        vector<vector<string> > convert_vsc_hvdc_data2steps_vector() const;
+        vector<vector<string> > convert_transformer_inpedance_correction_table_data2steps_vector() const;
+        vector<vector<string> > convert_multi_terminal_hvdc_data2steps_vector() const;
+        vector<vector<string> > convert_multi_section_line_data2steps_vector() const;
+        vector<vector<string> > convert_zone_data2steps_vector() const;
+        vector<vector<string> > convert_interarea_transfer_data2steps_vector() const;
+        vector<vector<string> > convert_owner_data2steps_vector() const;
+        vector<vector<string> > convert_facts_data2steps_vector() const;
+        vector<vector<string> > convert_switched_shunt_data2steps_vector() const;
 
         string export_case_data() const;
         string export_bus_data() const;

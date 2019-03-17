@@ -67,6 +67,7 @@ void STEPS_IMEXPORTER::load_all_devices()
     load_facts_data();
     load_switched_shunt_data();
 }
+
 void STEPS_IMEXPORTER::load_sequence_data(string sq_source)
 {
     sq_source = string2upper(sq_source);

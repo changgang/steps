@@ -58,7 +58,6 @@ void PSSE_IMEXPORTER_TEST::test_load_case_data()
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     TEST_ASSERT(psdb.get_system_base_power_in_MVA()==100.0);
-    TEST_ASSERT(importer.get_data_version()==31);
 }
 
 void PSSE_IMEXPORTER_TEST::test_load_bus_data()
