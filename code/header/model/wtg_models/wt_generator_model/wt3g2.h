@@ -19,7 +19,6 @@ class WT3G2 : public WT_GENERATOR_MODEL
         void set_KPLL(double K);
         void set_KIPLL(double K);
         void set_PLLmax(double pmax);
-        void set_PLLmin(double pmax);
         void set_LVPL(const LVPL& lvpl);
         void set_HVRC_voltage_in_pu(double v);
         void set_HVRC_current_in_pu(double i);
@@ -31,7 +30,6 @@ class WT3G2 : public WT_GENERATOR_MODEL
         double get_KPLL() const;
         double get_KIPLL() const;
         double get_PLLmax() const;
-        double get_PLLmin() const;
         LVPL get_LVPL() const;
         double get_HVRC_voltage_in_pu() const;
         double get_HVRC_current_in_pu() const;

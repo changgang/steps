@@ -320,18 +320,11 @@ void WT3G0::initialize()
     double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
     // ignore voltage angle
     complex<double> Ixy = conj(S/Vxy);
-    /*complex<double> Isource = Ixy + Vxy/Zsource;
-
-    double Ix = Isource.real();
-    double Iy = Isource.imag();*/
     double Ix = Ixy.real();
     double Iy = Ixy.imag();
 
     double IP = Ix*cos(angle_in_rad) + Iy*sin(angle_in_rad);
     double IQ =-Ix*sin(angle_in_rad) + Iy*cos(angle_in_rad);
-    //complex<double> IPQ = xy2dq_with_angle_in_rad(Isource, angle_in_rad);
-    //double IP = IPQ.real();
-    //double IQ = IPQ.imag();
 
     double EQ = IQ*(-xeq);
 
@@ -382,8 +375,6 @@ void WT3G0::run(DYNAMIC_MODE mode)
 
     double fbase = get_bus_base_frequency_in_Hz();
     double wbase = 2.0*PI*fbase;
-    /*complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    double Xeq = Zsource.imag();*/
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     double V = steps_fast_complex_abs(Vxy);
@@ -514,18 +505,7 @@ complex<double> WT3G0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
 
 complex<double> WT3G0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    /*POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
-    double mbase = get_mbase_in_MVA();
-
-    complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
-    Zsource /= mbase;
-    Zsource *= sbase;*/
-
     complex<double> Ixy_norton = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-    /*complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    complex<double> Ixy_term = Ixy_norton - Vxy/Zsource;
-    return Ixy_term;*/
     complex<double> Ixy_term = Ixy_norton;
     return Ixy_term;
 }
