@@ -259,23 +259,13 @@ double ESTR0::get_Dq() const
     return this->Dq;
 }
 
-bool ESTR0::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool ESTR0::setup_model_with_psse_string(string data)
+bool ESTR0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<24)
+    if(data.size()<24)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -284,28 +274,28 @@ bool ESTR0::setup_model_with_psse_string(string data)
     double tq1, tq2, tq3, tq4, kq, dq;
 
     size_t i=3;
-    tp1 = get_double_data(dyrdata[i],"0.0"); i++;
-    tp2 = get_double_data(dyrdata[i],"0.0"); i++;
-    tp3 = get_double_data(dyrdata[i],"0.0"); i++;
-    tp4 = get_double_data(dyrdata[i],"0.0"); i++;
-    kpp = get_double_data(dyrdata[i],"0.0"); i++;
-    kip = get_double_data(dyrdata[i],"0.0"); i++;
-    kdp = get_double_data(dyrdata[i],"0.0"); i++;
-    tdp = get_double_data(dyrdata[i],"0.0"); i++;
-    pmax = get_double_data(dyrdata[i],"0.0"); i++;
-    tr = get_double_data(dyrdata[i],"0.0"); i++;
-    iacmax = get_double_data(dyrdata[i],"0.0"); i++;
-    kin = get_double_data(dyrdata[i],"0.0"); i++;
-    kout = get_double_data(dyrdata[i],"0.0"); i++;
-    e0 = get_double_data(dyrdata[i],"0.0"); i++;
-    en = get_double_data(dyrdata[i],"0.0"); i++;
+    tp1 = get_double_data(data[i],"0.0"); i++;
+    tp2 = get_double_data(data[i],"0.0"); i++;
+    tp3 = get_double_data(data[i],"0.0"); i++;
+    tp4 = get_double_data(data[i],"0.0"); i++;
+    kpp = get_double_data(data[i],"0.0"); i++;
+    kip = get_double_data(data[i],"0.0"); i++;
+    kdp = get_double_data(data[i],"0.0"); i++;
+    tdp = get_double_data(data[i],"0.0"); i++;
+    pmax = get_double_data(data[i],"0.0"); i++;
+    tr = get_double_data(data[i],"0.0"); i++;
+    iacmax = get_double_data(data[i],"0.0"); i++;
+    kin = get_double_data(data[i],"0.0"); i++;
+    kout = get_double_data(data[i],"0.0"); i++;
+    e0 = get_double_data(data[i],"0.0"); i++;
+    en = get_double_data(data[i],"0.0"); i++;
 
-    tq1 = get_double_data(dyrdata[i],"0.0"); i++;
-    tq2 = get_double_data(dyrdata[i],"0.0"); i++;
-    tq3 = get_double_data(dyrdata[i],"0.0"); i++;
-    tq4 = get_double_data(dyrdata[i],"0.0"); i++;
-    kq = get_double_data(dyrdata[i],"0.0"); i++;
-    dq = get_double_data(dyrdata[i],"0.0");
+    tq1 = get_double_data(data[i],"0.0"); i++;
+    tq2 = get_double_data(data[i],"0.0"); i++;
+    tq3 = get_double_data(data[i],"0.0"); i++;
+    tq4 = get_double_data(data[i],"0.0"); i++;
+    kq = get_double_data(data[i],"0.0"); i++;
+    dq = get_double_data(data[i],"0.0");
 
     set_Tp1_in_s(tp1);
     set_Tp2_in_s(tp2);
@@ -333,6 +323,12 @@ bool ESTR0::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool ESTR0::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool ESTR0::setup_model_with_bpa_string(string data)

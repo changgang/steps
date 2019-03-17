@@ -37,7 +37,7 @@ class WT_PITCH_MODEL : public WTG_MODEL
     public: // specific model level
         virtual string get_model_name() const = 0;
 
-        virtual bool setup_model_with_steps_string(string data) = 0;
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
 

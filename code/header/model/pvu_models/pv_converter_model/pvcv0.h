@@ -41,7 +41,7 @@ class PVCV0 : public PV_CONVERTER_MODEL
 
         virtual string get_model_name() const;
 
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

@@ -408,23 +408,13 @@ double CSEET2::get_KC() const
 }
 
 
-bool CSEET2::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool CSEET2::setup_model_with_psse_string(string data)
+bool CSEET2::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<21)
+    if(data.size()<21)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -440,10 +430,10 @@ bool CSEET2::setup_model_with_psse_string(string data)
     double ka, ta, vamax, vamin, kf, tf, vrmax, vrmin, kc;
 
     size_t i=3;
-    excitation_source = get_integer_data(dyrdata[i],"0"); i++; if(excitation_source!=0) excitation_source = 1;
-    stabilizer_slot = get_integer_data(dyrdata[i],"0"); i++; if(stabilizer_slot!=0) stabilizer_slot = 1;
-    tuner_type = get_integer_data(dyrdata[i],"0"); i++; if(tuner_type!=0) tuner_type = 1;
-    tr = get_double_data(dyrdata[i],"1.0"); i++;
+    excitation_source = get_integer_data(data[i],"0"); i++; if(excitation_source!=0) excitation_source = 1;
+    stabilizer_slot = get_integer_data(data[i],"0"); i++; if(stabilizer_slot!=0) stabilizer_slot = 1;
+    tuner_type = get_integer_data(data[i],"0"); i++; if(tuner_type!=0) tuner_type = 1;
+    tr = get_double_data(data[i],"1.0"); i++;
 
     if(excitation_source==0)
         set_excitation_source(SELF_EXCITATION);
@@ -465,14 +455,14 @@ bool CSEET2::setup_model_with_psse_string(string data)
 
     if(tuner_type==0) // serial
     {
-        serial_k = get_double_data(dyrdata[i],"1.0"); i++;
-        serial_kv = get_integer_data(dyrdata[i],"1"); i++;
-        t1 = get_double_data(dyrdata[i],"1.0"); i++;
-        t2 = get_double_data(dyrdata[i],"1.0"); i++;
-        va1max = get_double_data(dyrdata[i],"999.0"); i++;
-        va1min = get_double_data(dyrdata[i],"-999.0"); i++;
-        t3 = get_double_data(dyrdata[i],"1.0"); i++;
-        t4 = get_double_data(dyrdata[i],"1.0"); i++;
+        serial_k = get_double_data(data[i],"1.0"); i++;
+        serial_kv = get_integer_data(data[i],"1"); i++;
+        t1 = get_double_data(data[i],"1.0"); i++;
+        t2 = get_double_data(data[i],"1.0"); i++;
+        va1max = get_double_data(data[i],"999.0"); i++;
+        va1min = get_double_data(data[i],"-999.0"); i++;
+        t3 = get_double_data(data[i],"1.0"); i++;
+        t4 = get_double_data(data[i],"1.0"); i++;
 
         set_serial_tuner_K(serial_k);
         set_serial_tuner_KV(serial_kv);
@@ -485,14 +475,14 @@ bool CSEET2::setup_model_with_psse_string(string data)
     }
     else
     {
-        parallel_kp = get_double_data(dyrdata[i],"1.0"); i++;
-        parallel_ki = get_double_data(dyrdata[i],"1.0"); i++;
-        vimax = get_double_data(dyrdata[i],"999.0"); i++;
-        vimin = get_double_data(dyrdata[i],"-999.0"); i++;
-        parallel_kd = get_double_data(dyrdata[i],"1.0"); i++;
-        parallel_td = get_double_data(dyrdata[i],"1.0"); i++;
-        vdmax = get_double_data(dyrdata[i],"999.0"); i++;
-        vdmin = get_double_data(dyrdata[i],"-999.0"); i++;
+        parallel_kp = get_double_data(data[i],"1.0"); i++;
+        parallel_ki = get_double_data(data[i],"1.0"); i++;
+        vimax = get_double_data(data[i],"999.0"); i++;
+        vimin = get_double_data(data[i],"-999.0"); i++;
+        parallel_kd = get_double_data(data[i],"1.0"); i++;
+        parallel_td = get_double_data(data[i],"1.0"); i++;
+        vdmax = get_double_data(data[i],"999.0"); i++;
+        vdmin = get_double_data(data[i],"-999.0"); i++;
 
         set_parallel_tuner_KP(parallel_kp);
         set_parallel_tuner_KI(parallel_ki);
@@ -504,15 +494,15 @@ bool CSEET2::setup_model_with_psse_string(string data)
         set_parallel_tuner_VDmin_in_pu(vdmin);
     }
 
-    ka = get_double_data(dyrdata[i],"1.0"); i++;
-    ta = get_double_data(dyrdata[i],"0.0"); i++;
-    vamax = get_double_data(dyrdata[i],"0.0"); i++;
-    vamin = get_double_data(dyrdata[i],"0.0"); i++;
-    kf = get_double_data(dyrdata[i],"0.0"); i++;
-    tf = get_double_data(dyrdata[i],"0.0"); i++;
-    vrmax = get_double_data(dyrdata[i],"0.0"); i++;
-    vrmin = get_double_data(dyrdata[i],"0.0"); i++;
-    kc = get_double_data(dyrdata[i],"0.0"); i++;
+    ka = get_double_data(data[i],"1.0"); i++;
+    ta = get_double_data(data[i],"0.0"); i++;
+    vamax = get_double_data(data[i],"0.0"); i++;
+    vamin = get_double_data(data[i],"0.0"); i++;
+    kf = get_double_data(data[i],"0.0"); i++;
+    tf = get_double_data(data[i],"0.0"); i++;
+    vrmax = get_double_data(data[i],"0.0"); i++;
+    vrmin = get_double_data(data[i],"0.0"); i++;
+    kc = get_double_data(data[i],"0.0"); i++;
 
     set_KA(ka);
     set_TA_in_s(ta);
@@ -527,6 +517,12 @@ bool CSEET2::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool CSEET2::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool CSEET2::setup_model_with_bpa_string(string data)

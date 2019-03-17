@@ -40,8 +40,8 @@ class UTILITY_TEST : public Test::Suite
 
         void test_round_angle_to_PI();
 
-		void test_steps_fast_complex_abs();
-		void test_steps_fast_complex_arg();
+        void test_steps_fast_complex_abs();
+        void test_steps_fast_complex_arg();
 
         void test_radps2hz();
         void test_hz2radps();
@@ -51,6 +51,7 @@ class UTILITY_TEST : public Test::Suite
         void test_shrink_sucessive_blanks();
         void test_string2csv();
         void test_split_string();
+        void test_string_vector2csv();
 
         void test_redirect_and_recover_stdout();
 

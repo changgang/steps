@@ -45,7 +45,7 @@ class IEEL : public LOAD_MODEL
         double get_Q_n_power_3() const;
         double get_Q_Kf() const;
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

@@ -34,6 +34,7 @@ UTILITY_TEST::UTILITY_TEST()
     TEST_ADD(UTILITY_TEST::test_shrink_sucessive_blanks);
     TEST_ADD(UTILITY_TEST::test_string2csv);
     TEST_ADD(UTILITY_TEST::test_split_string);
+    TEST_ADD(UTILITY_TEST::test_string_vector2csv);
 
     TEST_ADD(UTILITY_TEST::test_redirect_and_recover_stdout);
 
@@ -277,6 +278,21 @@ void UTILITY_TEST::test_split_string()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
+}
+void UTILITY_TEST::test_string_vector2csv()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
+    vector<string> vec;
+    vec.push_back("a");
+    vec.push_back("b");
+    vec.push_back("c");
+    vec.push_back("d");
+    vec.push_back("");
+    vec.push_back("e");
+    vec.push_back(" ");
+    vec.push_back("f");
+    vec.push_back("g");
+    TEST_ASSERT(string_vector2csv(vec)=="a, b, c, d, ,e,  , f, g");
 }
 
 void UTILITY_TEST::test_redirect_and_recover_stdout()

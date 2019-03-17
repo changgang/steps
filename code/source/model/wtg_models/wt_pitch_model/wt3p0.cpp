@@ -202,23 +202,13 @@ double WT3P0::get_Tp_in_s() const
     return pitch_integrator.get_T_in_s();
 }
 
-bool WT3P0::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool WT3P0::setup_model_with_psse_string(string data)
+bool WT3P0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<18)
+    if(data.size()<18)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -226,21 +216,21 @@ bool WT3P0::setup_model_with_psse_string(string data)
     double tp, kps, kis, tf, fup, flow, kpf, kif, kdf, tdf, rpmax, pmax, pmin, tspeed;
 
     size_t i=3;
-    hold_speed_flag = get_integer_data(dyrdata[i],"0"); i++;
-    tspeed = get_double_data(dyrdata[i],"0.0"); i++;
-    kps = get_double_data(dyrdata[i],"0.0"); i++;
-    kis = get_double_data(dyrdata[i],"0.0"); i++;
-    tf = get_double_data(dyrdata[i],"0.0"); i++;
-    flow = get_double_data(dyrdata[i],"1.0"); i++;
-    fup = get_double_data(dyrdata[i],"1.0"); i++;
-    kpf = get_double_data(dyrdata[i],"0.0"); i++;
-    kif = get_double_data(dyrdata[i],"0.0"); i++;
-    kdf = get_double_data(dyrdata[i],"0.0"); i++;
-    tdf = get_double_data(dyrdata[i],"0.0"); i++;
-    rpmax = get_double_data(dyrdata[i],"0.0"); i++;
-    pmin = get_double_data(dyrdata[i],"0.0"); i++;
-    pmax = get_double_data(dyrdata[i],"0.0"); i++;
-    tp = get_double_data(dyrdata[i],"0.0");
+    hold_speed_flag = get_integer_data(data[i],"0"); i++;
+    tspeed = get_double_data(data[i],"0.0"); i++;
+    kps = get_double_data(data[i],"0.0"); i++;
+    kis = get_double_data(data[i],"0.0"); i++;
+    tf = get_double_data(data[i],"0.0"); i++;
+    flow = get_double_data(data[i],"1.0"); i++;
+    fup = get_double_data(data[i],"1.0"); i++;
+    kpf = get_double_data(data[i],"0.0"); i++;
+    kif = get_double_data(data[i],"0.0"); i++;
+    kdf = get_double_data(data[i],"0.0"); i++;
+    tdf = get_double_data(data[i],"0.0"); i++;
+    rpmax = get_double_data(data[i],"0.0"); i++;
+    pmin = get_double_data(data[i],"0.0"); i++;
+    pmax = get_double_data(data[i],"0.0"); i++;
+    tp = get_double_data(data[i],"0.0");
 
     if(hold_speed_flag==0)
         set_hold_wtg_speed_flag(false);
@@ -265,6 +255,12 @@ bool WT3P0::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool WT3P0::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool WT3P0::setup_model_with_bpa_string(string data)

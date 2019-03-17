@@ -225,23 +225,13 @@ double IEE2ST::get_Vcmin() const
 }
 
 
-bool IEE2ST::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool IEE2ST::setup_model_with_psse_string(string data)
+bool IEE2ST::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<23)
+    if(data.size()<23)
         is_successful = false;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -250,10 +240,10 @@ bool IEE2ST::setup_model_with_psse_string(string data)
            lsmax, lsmin, vcl, vcu;
 
     size_t i=3;
-    signal_type[0] = get_integer_data(dyrdata[i],"0"); i++;
-    bus[0] = get_integer_data(dyrdata[i],"0"); i++;
-    signal_type[1] = get_integer_data(dyrdata[i],"0"); i++;
-    bus[1] = get_integer_data(dyrdata[i],"0"); i++;
+    signal_type[0] = get_integer_data(data[i],"0"); i++;
+    bus[0] = get_integer_data(data[i],"0"); i++;
+    signal_type[1] = get_integer_data(data[i],"0"); i++;
+    bus[1] = get_integer_data(data[i],"0"); i++;
 
     for(size_t i=0; i<2; ++i)
     {
@@ -262,22 +252,22 @@ bool IEE2ST::setup_model_with_psse_string(string data)
             set_input_signal_at_slot(i, signal);
     }
 
-    k1 = get_double_data(dyrdata[i],"0.0"); i++;
-    k2 = get_double_data(dyrdata[i],"0.0"); i++;
-    t1 = get_double_data(dyrdata[i],"0.0"); i++;
-    t2 = get_double_data(dyrdata[i],"0.0"); i++;
-    t3 = get_double_data(dyrdata[i],"0.0"); i++;
-    t4 = get_double_data(dyrdata[i],"0.0"); i++;
-    t5 = get_double_data(dyrdata[i],"0.0"); i++;
-    t6 = get_double_data(dyrdata[i],"0.0"); i++;
-    t7 = get_double_data(dyrdata[i],"0.0"); i++;
-    t8 = get_double_data(dyrdata[i],"0.0"); i++;
-    t9 = get_double_data(dyrdata[i],"0.0"); i++;
-    t10 = get_double_data(dyrdata[i],"0.0"); i++;
-    lsmax = get_double_data(dyrdata[i],"0.0"); i++;
-    lsmin = get_double_data(dyrdata[i],"0.0"); i++;
-    vcu = get_double_data(dyrdata[i],"0.0"); i++;
-    vcl = get_double_data(dyrdata[i],"0.0"); i++;
+    k1 = get_double_data(data[i],"0.0"); i++;
+    k2 = get_double_data(data[i],"0.0"); i++;
+    t1 = get_double_data(data[i],"0.0"); i++;
+    t2 = get_double_data(data[i],"0.0"); i++;
+    t3 = get_double_data(data[i],"0.0"); i++;
+    t4 = get_double_data(data[i],"0.0"); i++;
+    t5 = get_double_data(data[i],"0.0"); i++;
+    t6 = get_double_data(data[i],"0.0"); i++;
+    t7 = get_double_data(data[i],"0.0"); i++;
+    t8 = get_double_data(data[i],"0.0"); i++;
+    t9 = get_double_data(data[i],"0.0"); i++;
+    t10 = get_double_data(data[i],"0.0"); i++;
+    lsmax = get_double_data(data[i],"0.0"); i++;
+    lsmin = get_double_data(data[i],"0.0"); i++;
+    vcu = get_double_data(data[i],"0.0"); i++;
+    vcl = get_double_data(data[i],"0.0"); i++;
 
     set_K1(k1);
     set_K2(k2);
@@ -299,6 +289,12 @@ bool IEE2ST::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool IEE2ST::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool IEE2ST::setup_model_with_bpa_string(string data)

@@ -44,7 +44,7 @@ class IEEET1: public EXCITER_MODEL
         double get_E2_in_pu() const;
         double get_SE2_in_pu() const;
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

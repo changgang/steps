@@ -192,43 +192,33 @@ double IEEET1::get_SE2_in_pu() const
 }
 
 
-bool IEEET1::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool IEEET1::setup_model_with_psse_string(string data)
+bool IEEET1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<17)
+    if(data.size()<17)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
     double tr, ka, ta, vrmax, vrmin, ke, te, kf, tf, e1, se1, e2, se2;
 
     size_t i=3;
-    tr = get_double_data(dyrdata[i],"0.0"); i++;
-    ka = get_double_data(dyrdata[i],"0.0"); i++;
-    ta = get_double_data(dyrdata[i],"0.0"); i++;
-    vrmax = get_double_data(dyrdata[i],"0.0"); i++;
-    vrmin = get_double_data(dyrdata[i],"0.0"); i++;
-    ke = get_double_data(dyrdata[i],"0.0"); i++;
-    te = get_double_data(dyrdata[i],"0.0"); i++;
-    kf = get_double_data(dyrdata[i],"0.0"); i++;
-    tf = get_double_data(dyrdata[i],"0.0"); i++;
-    /*double temp = get_double_data(dyrdata[i],"0.0");*/ i++;
-    e1 = get_double_data(dyrdata[i],"0.0"); i++;
-    se1 = get_double_data(dyrdata[i],"0.0"); i++;
-    e2 = get_double_data(dyrdata[i],"0.0"); i++;
-    se2 = get_double_data(dyrdata[i],"0.0");
+    tr = get_double_data(data[i],"0.0"); i++;
+    ka = get_double_data(data[i],"0.0"); i++;
+    ta = get_double_data(data[i],"0.0"); i++;
+    vrmax = get_double_data(data[i],"0.0"); i++;
+    vrmin = get_double_data(data[i],"0.0"); i++;
+    ke = get_double_data(data[i],"0.0"); i++;
+    te = get_double_data(data[i],"0.0"); i++;
+    kf = get_double_data(data[i],"0.0"); i++;
+    tf = get_double_data(data[i],"0.0"); i++;
+    /*double temp = get_double_data(data[i],"0.0");*/ i++;
+    e1 = get_double_data(data[i],"0.0"); i++;
+    se1 = get_double_data(data[i],"0.0"); i++;
+    e2 = get_double_data(data[i],"0.0"); i++;
+    se2 = get_double_data(data[i],"0.0");
 
     set_TR_in_s(tr);
     set_KA(ka);
@@ -247,6 +237,12 @@ bool IEEET1::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool IEEET1::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool IEEET1::setup_model_with_bpa_string(string data)

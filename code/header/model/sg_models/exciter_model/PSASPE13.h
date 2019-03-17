@@ -45,7 +45,7 @@ class PSASPE13: public EXCITER_MODEL
         double get_Efdmin_in_pu() const;
         double get_KC() const;
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

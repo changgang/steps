@@ -171,23 +171,13 @@ string AERD0::get_model_name() const
     return "AERD0";
 }
 
-bool AERD0::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return true;
-}
-
-bool AERD0::setup_model_with_psse_string(string data)
+bool AERD0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<19)
+    if(data.size()<19)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -198,22 +188,22 @@ bool AERD0::setup_model_with_psse_string(string data)
     double c1, c2, c3, c4, c5, c6, c7, c8;
 
     size_t i=3;
-    speed_mode_flag = get_integer_data(dyrdata[i],"0"); i++;
-    n = size_t(get_integer_data(dyrdata[i],"1")); i++;
-    vwind0 = get_double_data(dyrdata[i],"0.0"); i++;
-    gear_eta = get_double_data(dyrdata[i],"0.0"); i++;
-    rou0_air = get_double_data(dyrdata[i],"0.0"); i++;
-    min_speed = get_double_data(dyrdata[i],"0.6"); i++;
-    max_speed = get_double_data(dyrdata[i],"1.2"); i++;
-    rou_air = get_double_data(dyrdata[i],"0.0"); i++;
-    c1 = get_double_data(dyrdata[i],"0.0"); i++;
-    c2 = get_double_data(dyrdata[i],"0.0"); i++;
-    c3 = get_double_data(dyrdata[i],"0.0"); i++;
-    c4 = get_double_data(dyrdata[i],"0.0"); i++;
-    c5 = get_double_data(dyrdata[i],"0.0"); i++;
-    c6 = get_double_data(dyrdata[i],"0.0");i++;
-    c7 = get_double_data(dyrdata[i],"0.0");i++;
-    c8 = get_double_data(dyrdata[i],"0.0");
+    speed_mode_flag = get_integer_data(data[i],"0"); i++;
+    n = size_t(get_integer_data(data[i],"1")); i++;
+    vwind0 = get_double_data(data[i],"0.0"); i++;
+    gear_eta = get_double_data(data[i],"0.0"); i++;
+    rou0_air = get_double_data(data[i],"0.0"); i++;
+    min_speed = get_double_data(data[i],"0.6"); i++;
+    max_speed = get_double_data(data[i],"1.2"); i++;
+    rou_air = get_double_data(data[i],"0.0"); i++;
+    c1 = get_double_data(data[i],"0.0"); i++;
+    c2 = get_double_data(data[i],"0.0"); i++;
+    c3 = get_double_data(data[i],"0.0"); i++;
+    c4 = get_double_data(data[i],"0.0"); i++;
+    c5 = get_double_data(data[i],"0.0"); i++;
+    c6 = get_double_data(data[i],"0.0");i++;
+    c7 = get_double_data(data[i],"0.0");i++;
+    c8 = get_double_data(data[i],"0.0");
 
     switch(speed_mode_flag)
     {
@@ -252,6 +242,12 @@ bool AERD0::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool AERD0::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool AERD0::setup_model_with_bpa_string(string data)

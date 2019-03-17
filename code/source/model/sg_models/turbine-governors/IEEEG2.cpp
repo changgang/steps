@@ -128,37 +128,26 @@ double IEEEG2::get_T4_in_s() const
     return -water_hammer.get_T1_in_s();
 }
 
-bool IEEEG2::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool IEEEG2::setup_model_with_psse_string(string data)
+bool IEEEG2::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-
-    if(dyrdata.size()<10)
+    if(data.size()<10)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
     double k, t1, t2, t3, pmax, pmin, t4;
 
     size_t i=3;
-    k = get_double_data(dyrdata[i],"0.0"); i++;
-    t1 = get_double_data(dyrdata[i],"0.0"); i++;
-    t2 = get_double_data(dyrdata[i],"0.0"); i++;
-    t3 = get_double_data(dyrdata[i],"0.0"); i++;
-    pmax = get_double_data(dyrdata[i],"0.0"); i++;
-    pmin = get_double_data(dyrdata[i],"0.0"); i++;
-    t4 = get_double_data(dyrdata[i],"0.0"); i++;
+    k = get_double_data(data[i],"0.0"); i++;
+    t1 = get_double_data(data[i],"0.0"); i++;
+    t2 = get_double_data(data[i],"0.0"); i++;
+    t3 = get_double_data(data[i],"0.0"); i++;
+    pmax = get_double_data(data[i],"0.0"); i++;
+    pmin = get_double_data(data[i],"0.0"); i++;
+    t4 = get_double_data(data[i],"0.0"); i++;
 
     set_K(k);
     set_T1_in_s(t1);
@@ -171,6 +160,12 @@ bool IEEEG2::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool IEEEG2::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool IEEEG2::setup_model_with_bpa_string(string data)

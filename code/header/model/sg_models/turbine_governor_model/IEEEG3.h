@@ -48,7 +48,7 @@ class IEEEG3 : public TURBINE_GOVERNOR_MODEL
         double get_a23() const;
 
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

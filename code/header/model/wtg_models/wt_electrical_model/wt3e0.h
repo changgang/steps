@@ -90,7 +90,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double get_speed_reference_bias_in_pu() const;
     public:
 
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

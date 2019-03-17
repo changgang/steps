@@ -207,44 +207,33 @@ double IEEL::get_Q_Kf() const
 }
 
 
-bool IEEL::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool IEEL::setup_model_with_psse_string(string data)
+bool IEEL::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-
-    if(dyrdata.size()<17)
+    if(data.size()<17)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!="IEELBL" and model_name!="IEELAR" and model_name!="IEELZN" and model_name!="IEELOW" and model_name!="IEELAL")
         return is_successful;
 
     double ap1, ap2, ap3, aq1, aq2, aq3, kfp, kfq, np1, np2, np3, nq1, nq2, nq3;
 
     size_t i=3;
-    ap1 = get_double_data(dyrdata[i],"0.0"); i++;
-    ap2 = get_double_data(dyrdata[i],"0.0"); i++;
-    ap3 = get_double_data(dyrdata[i],"0.0"); i++;
-    aq1 = get_double_data(dyrdata[i],"0.0"); i++;
-    aq2 = get_double_data(dyrdata[i],"0.0"); i++;
-    aq3 = get_double_data(dyrdata[i],"0.0"); i++;
-    kfp = get_double_data(dyrdata[i],"0.0"); i++;
-    kfq = get_double_data(dyrdata[i],"0.0"); i++;
-    np1 = get_double_data(dyrdata[i],"0.0"); i++;
-    np2 = get_double_data(dyrdata[i],"0.0"); i++;
-    np3 = get_double_data(dyrdata[i],"0.0"); i++;
-    nq1 = get_double_data(dyrdata[i],"0.0"); i++;
-    nq2 = get_double_data(dyrdata[i],"0.0"); i++;
-    nq3 = get_double_data(dyrdata[i],"0.0"); i++;
+    ap1 = get_double_data(data[i],"0.0"); i++;
+    ap2 = get_double_data(data[i],"0.0"); i++;
+    ap3 = get_double_data(data[i],"0.0"); i++;
+    aq1 = get_double_data(data[i],"0.0"); i++;
+    aq2 = get_double_data(data[i],"0.0"); i++;
+    aq3 = get_double_data(data[i],"0.0"); i++;
+    kfp = get_double_data(data[i],"0.0"); i++;
+    kfq = get_double_data(data[i],"0.0"); i++;
+    np1 = get_double_data(data[i],"0.0"); i++;
+    np2 = get_double_data(data[i],"0.0"); i++;
+    np3 = get_double_data(data[i],"0.0"); i++;
+    nq1 = get_double_data(data[i],"0.0"); i++;
+    nq2 = get_double_data(data[i],"0.0"); i++;
+    nq3 = get_double_data(data[i],"0.0"); i++;
 
     set_P_alpha_1(ap1);
     set_P_alpha_2(ap2);
@@ -281,6 +270,12 @@ bool IEEL::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool IEEL::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool IEEL::setup_model_with_bpa_string(string data)

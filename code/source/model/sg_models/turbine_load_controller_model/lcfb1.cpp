@@ -182,23 +182,13 @@ double LCFB1::get_Pelec0() const
     return Pelec0;
 }
 
-bool LCFB1::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool LCFB1::setup_model_with_psse_string(string data)
+bool LCFB1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<12)
+    if(data.size()<12)
         is_successful = false;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -206,16 +196,16 @@ bool LCFB1::setup_model_with_psse_string(string data)
     double fb, tpelec, db, emax, kp, ki, irmax;
 
     size_t i=3;
-    frequency_flag = get_integer_data(dyrdata[i],"0"); i++;
-    power_flag = get_integer_data(dyrdata[i],"0"); i++;
+    frequency_flag = get_integer_data(data[i],"0"); i++;
+    power_flag = get_integer_data(data[i],"0"); i++;
 
-    fb = get_double_data(dyrdata[i],"0.0"); i++;
-    tpelec = get_double_data(dyrdata[i],"0.0"); i++;
-    db = get_double_data(dyrdata[i],"0.0"); i++;
-    emax = get_double_data(dyrdata[i],"0.0"); i++;
-    kp = get_double_data(dyrdata[i],"0.0"); i++;
-    ki = get_double_data(dyrdata[i],"0.0"); i++;
-    irmax = get_double_data(dyrdata[i],"0.0");
+    fb = get_double_data(data[i],"0.0"); i++;
+    tpelec = get_double_data(data[i],"0.0"); i++;
+    db = get_double_data(data[i],"0.0"); i++;
+    emax = get_double_data(data[i],"0.0"); i++;
+    kp = get_double_data(data[i],"0.0"); i++;
+    ki = get_double_data(data[i],"0.0"); i++;
+    irmax = get_double_data(data[i],"0.0");
 
     set_frequency_regulation_flag((frequency_flag==0?false:true));
     set_power_regulation_flag((power_flag==0?false:true));
@@ -230,6 +220,12 @@ bool LCFB1::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool LCFB1::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool LCFB1::setup_model_with_bpa_string(string data)

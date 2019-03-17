@@ -63,32 +63,21 @@ void GENCLS::update_source_impedance()
 }
 
 
-bool GENCLS::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool GENCLS::setup_model_with_psse_string(string data)
+bool GENCLS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-
-    if(dyrdata.size()<5)
+    if(data.size()<5)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
     double H, D;
 
     size_t i=3;
-    H = get_double_data(dyrdata[i],"0.0"); i++;
-    D = get_double_data(dyrdata[i],"0.0");
+    H = get_double_data(data[i],"0.0"); i++;
+    D = get_double_data(data[i],"0.0");
 
     set_H_in_s(H);
     set_D(D);
@@ -96,6 +85,12 @@ bool GENCLS::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool GENCLS::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool GENCLS::setup_model_with_bpa_string(string data)

@@ -15,14 +15,14 @@ using namespace std;
 
 STEPS_IMEXPORTER::STEPS_IMEXPORTER()
 {
-    raw_data_in_ram.clear();
-    dyr_data_in_ram.clear();
+    splitted_sraw_data_in_ram.clear();
+    splitted_sdyr_data_in_ram.clear();
 }
 
 STEPS_IMEXPORTER::~STEPS_IMEXPORTER()
 {
-    raw_data_in_ram.clear();
-    dyr_data_in_ram.clear();
+    splitted_sraw_data_in_ram.clear();
+    splitted_sdyr_data_in_ram.clear();
 }
 
 void STEPS_IMEXPORTER::load_powerflow_data(string file)
@@ -32,7 +32,7 @@ void STEPS_IMEXPORTER::load_powerflow_data(string file)
     show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
-    if(raw_data_in_ram.size()==0)
+    if(splitted_sraw_data_in_ram.size()==0)
     {
         osstream<<"No data in the given STEPS file: "<<file<<endl
           <<"Please check if the file exist or not.";
@@ -40,6 +40,14 @@ void STEPS_IMEXPORTER::load_powerflow_data(string file)
 
         return;
     }
+    load_all_devices();
+
+    osstream<<"Done loading powerflow data.";
+    show_information_with_leading_time_stamp(osstream);
+}
+
+void STEPS_IMEXPORTER::load_all_devices()
+{
     load_case_data();
     load_bus_data();
     load_load_data();
@@ -58,27 +66,38 @@ void STEPS_IMEXPORTER::load_powerflow_data(string file)
     load_owner_data();
     load_facts_data();
     load_switched_shunt_data();
-
-    osstream<<"Done loading powerflow data.";
-    show_information_with_leading_time_stamp(osstream);
 }
-
 void STEPS_IMEXPORTER::load_sequence_data(string sq_source)
 {
     sq_source = string2upper(sq_source);
 }
 
 
+void STEPS_IMEXPORTER::load_powerflow_data_from_steps_vector(vector<vector<vector<string> > >& data)
+{
+    splitted_sraw_data_in_ram = data;
+    if(splitted_sraw_data_in_ram.size()==0)
+    {
+        ostringstream osstream;
+        osstream<<"No data in the given STEPS powerflow vector <splitted_sraw_data_in_ram>."<<endl
+                <<"Please check if the vector contents exist or not.";
+        show_information_with_leading_time_stamp(osstream);
+
+        return;
+    }
+    load_all_devices();
+}
+
 void STEPS_IMEXPORTER::load_powerflow_data_into_ram(string file)
 {
     ostringstream osstream;
 
-    raw_data_in_ram.clear();
+    splitted_sraw_data_in_ram.clear();
 
     FILE* fid = fopen(file.c_str(),"rt");
     if(fid == NULL)
     {
-        osstream<<"STEPS raw file '"<<file<<"' is not accessible. Loading STEPS raw data is failed.";
+        osstream<<"STEPS sraw file '"<<file<<"' is not accessible. Loading STEPS sraw data is failed.";
         show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -86,52 +105,65 @@ void STEPS_IMEXPORTER::load_powerflow_data_into_ram(string file)
     char buffer[10240];
     string sbuffer;
 
-    vector<string> data_of_one_type;
-    data_of_one_type.clear();
+    vector<string> splitted_buffer;
+    vector< vector<string> > splitted_data_of_one_type;
+    splitted_data_of_one_type.clear();
 
     if(fgets(buffer, 1024, fid)==NULL)
+    {
+        fclose(fid);
         return;
-    sbuffer = trim_psse_comment(buffer);
-    data_of_one_type.push_back(trim_string(sbuffer));
+    }
 
-    raw_data_in_ram.push_back(data_of_one_type);
+    sbuffer = trim_steps_comment(buffer);
+    sbuffer = trim_string(sbuffer);
+    splitted_buffer = split_string(sbuffer, ",");
+    splitted_data_of_one_type.push_back(splitted_buffer);
 
-    data_of_one_type.clear();
-
+    splitted_buffer.clear();
     for(size_t i=0; i!=2; ++i)
     {
         if(fgets(buffer, 1024, fid)==NULL)
+        {
+            fclose(fid);
             return;
-        sbuffer = trim_psse_comment(buffer);
-        data_of_one_type.push_back(trim_string(sbuffer));
+        }
+        sbuffer = trim_steps_comment(buffer);
+        sbuffer = trim_string(sbuffer);
+        splitted_buffer.push_back(sbuffer);
     }
-    raw_data_in_ram.push_back(data_of_one_type);
+    splitted_data_of_one_type.push_back(splitted_buffer);
+    splitted_sraw_data_in_ram.push_back(splitted_data_of_one_type);
 
-    data_of_one_type.clear();
+    splitted_buffer.clear();
+    splitted_data_of_one_type.clear();
 
     while(true)
     {
         if(fgets(buffer, 1024, fid)==NULL)
         {
-            if(data_of_one_type.size()!=0)
+            if(splitted_data_of_one_type.size()!=0)
             {
-                raw_data_in_ram.push_back(data_of_one_type);
-                data_of_one_type.clear();
+                splitted_sraw_data_in_ram.push_back(splitted_data_of_one_type);
+                splitted_buffer.clear();
+                splitted_data_of_one_type.clear();
             }
             break;
         }
-        sbuffer = trim_psse_comment(buffer);
+        sbuffer = trim_steps_comment(buffer);
         sbuffer = trim_string(sbuffer);
         if(sbuffer.size()!=0)
         {
             if(sbuffer != "0")
             {
-                data_of_one_type.push_back(sbuffer);
+                splitted_buffer = split_string(sbuffer, ",");
+                splitted_data_of_one_type.push_back(splitted_buffer);
             }
             else
             {
-                raw_data_in_ram.push_back(data_of_one_type);
-                data_of_one_type.clear();
+                splitted_sraw_data_in_ram.push_back(splitted_data_of_one_type);
+                splitted_buffer.clear();
+                splitted_data_of_one_type.clear();
             }
         }
         else
@@ -140,7 +172,7 @@ void STEPS_IMEXPORTER::load_powerflow_data_into_ram(string file)
     fclose(fid);
 }
 
-string STEPS_IMEXPORTER::trim_psse_comment(string str)
+string STEPS_IMEXPORTER::trim_steps_comment(string str)
 {
     if(str.size()==0)
         return str;
@@ -154,12 +186,11 @@ void STEPS_IMEXPORTER::load_case_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(raw_data_in_ram.size()<2)
+    if(splitted_sraw_data_in_ram.size()<1)
         return;
-    vector<string> data = raw_data_in_ram[0];
-    string case_str = data[0];
+    vector< vector<string> > DATA = splitted_sraw_data_in_ram[0];
+    vector<string> data = DATA[0];
 
-    data = split_string(case_str,",");
     if(data.size()>0)
     {
         int appendCode = get_integer_data(data.front(),"0");
@@ -184,11 +215,10 @@ void STEPS_IMEXPORTER::load_case_data()
         set_base_frequency_in_Hz(f);
         data.erase(data.begin());
     }
-    data = raw_data_in_ram[1];
+    data = DATA[1];
 
     psdb.set_case_information(data[0]);
     psdb.set_case_additional_information(data[1]);
-    //
 }
 
 
@@ -206,21 +236,17 @@ void STEPS_IMEXPORTER::load_bus_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(raw_data_in_ram.size()<3)
+    if(splitted_sraw_data_in_ram.size()<2)
         return;
-    vector<string> DATA = raw_data_in_ram[2];
-    string str;
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[1];
     vector<string> data;
 
     size_t ndata = DATA.size();
     for(size_t i=0; i!=ndata; ++i)
     {
-        str = DATA[i];
+        data = DATA[i];
         BUS bus;
         bus.set_base_frequency_in_Hz(get_base_frequency_in_Hz());
-
-        data.clear();
-        data = split_string(str,",");
 
         if(data.size()>0)
         {
@@ -297,7 +323,6 @@ void STEPS_IMEXPORTER::load_bus_data()
             bus.set_base_frequency_in_Hz(get_double_data(data.front(),"0.0"));
             data.erase(data.begin());
         }
-
         psdb.append_bus(bus);
     }
 }
@@ -305,20 +330,18 @@ void STEPS_IMEXPORTER::load_load_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(raw_data_in_ram.size()<4)
+    if(splitted_sraw_data_in_ram.size()<3)
         return;
-    vector<string> DATA = raw_data_in_ram[3];
-    string str;
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[2];
     vector<string> data;
 
     size_t ndata = DATA.size();
     double p = 0.0, q = 0.0;
     for(size_t i=0; i!=ndata; ++i)
     {
-        str = DATA[i];
+        data = DATA[i];
         LOAD load;
 
-        data = split_string(str,",");
         if(data.size()>0)
         {
             load.set_load_bus(get_integer_data(data.front(),"0"));
@@ -395,10 +418,9 @@ void STEPS_IMEXPORTER::load_fixed_shunt_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(raw_data_in_ram.size()<5)
+    if(splitted_sraw_data_in_ram.size()<4)
         return;
-    vector<string> DATA = raw_data_in_ram[4];
-    string str, strval;
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[3];
     vector<string> data;
 
     size_t ndata = DATA.size();
@@ -406,10 +428,9 @@ void STEPS_IMEXPORTER::load_fixed_shunt_data()
     double p = 0.0, q = 0.0;
     for(size_t i=0; i!=ndata; ++i)
     {
-        str = DATA[i];
+        data = DATA[i];
         FIXED_SHUNT shunt;
 
-        data = split_string(str,",");
         if(data.size()>0)
         {
             shunt.set_shunt_bus(get_integer_data(data[n],"0"));
@@ -445,10 +466,9 @@ void STEPS_IMEXPORTER::load_fixed_shunt_data()
 }
 void STEPS_IMEXPORTER::load_source_data()
 {
-    if(raw_data_in_ram.size()<6)
+    if(splitted_sraw_data_in_ram.size()<5)
         return;
-    vector<string> DATA = raw_data_in_ram[5];
-    string str, strval;
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[4];
     vector<string> data;
 
     size_t ndata = DATA.size();
@@ -456,8 +476,7 @@ void STEPS_IMEXPORTER::load_source_data()
     size_t SOURCE_TYPE_INDEX = 28;
     for(size_t i=0; i!=ndata; ++i)
     {
-        str = DATA[i];
-        data = split_string(str,",");
+        data = DATA[i];
 
         size_t n = data.size();
 
@@ -509,7 +528,7 @@ void STEPS_IMEXPORTER::load_source_data()
             default:
             {
                 char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid source type is detected in STEPS raw file of line:\n%s",str.c_str());
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid source type is detected in STEPS sraw file of line:\n%s",string_vector2csv(data).c_str());
                 show_information_with_leading_time_stamp(buffer);
                 break;
             }
@@ -761,10 +780,9 @@ void STEPS_IMEXPORTER::load_line_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(raw_data_in_ram.size()<7)
+    if(splitted_sraw_data_in_ram.size()<6)
         return;
-    vector<string> DATA = raw_data_in_ram[6];
-    string str, strval;
+    vector<vector<string> >DATA = splitted_sraw_data_in_ram[5];
     vector<string> data;
 
     size_t ndata = DATA.size();
@@ -775,10 +793,8 @@ void STEPS_IMEXPORTER::load_line_data()
     int meterend;
     for(size_t i=0; i!=ndata; ++i)
     {
-        str = DATA[i];
+        data = DATA[i];
         LINE line;
-
-        data = split_string(str,",");
 
         if(data.size()>0)
         {
@@ -914,64 +930,66 @@ void STEPS_IMEXPORTER::load_line_data()
 }
 void STEPS_IMEXPORTER::load_transformer_data()
 {
-    if(raw_data_in_ram.size()<8)
+    if(splitted_sraw_data_in_ram.size()<7)
         return;
-    vector<string> DATA = raw_data_in_ram[7];
+    vector<vector<string> >DATA = splitted_sraw_data_in_ram[6];
 
     vector<string> data;
 
     size_t ndata = DATA.size();
 
-    vector<string> trans_data;
+    vector<vector<string> > trans_data;
     for(size_t i=0; i!=ndata; ++i)
     {
         trans_data.clear();
 
-        data = split_string(DATA[i],",");
-        trans_data.push_back(DATA[i]);
+        data = DATA[i];
+        string kbus = data[2];
+        trans_data.push_back(data);
         ++i;
         if(i>=ndata)
             break;
-        trans_data.push_back(DATA[i]);
+        data = DATA[i];
+        trans_data.push_back(data);
         ++i;
         if(i>=ndata)
             break;
-        trans_data.push_back(DATA[i]);
+        data = DATA[i];
+        trans_data.push_back(data);
         ++i;
         if(i>=ndata)
             break;
-        trans_data.push_back(DATA[i]);
+        data = DATA[i];
+        trans_data.push_back(data);
 
-        if(data[2]=="" or data[2]=="0")
-            trans_data.push_back("");
+        if(kbus=="" or kbus=="0")
+        {
+            data.clear();
+            trans_data.push_back(data);
+        }
         else
         {
             ++i;
             if(i>=ndata)
                 break;
-            trans_data.push_back(DATA[i]);
+            data = DATA[i];
+            trans_data.push_back(data);
         }
         add_transformer_with_data(trans_data);
     }
 }
 
-void STEPS_IMEXPORTER::add_transformer_with_data(vector<string> trans_data)
+void STEPS_IMEXPORTER::add_transformer_with_data(vector<vector<string> > trans_data)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     TRANSFORMER trans;
 
-    string str_trans = trans_data[0];
-    string str_z = trans_data[1];
-    string str_winding_p = trans_data[2];
-    string str_winding_s = trans_data[3];
-    string str_winding_t = trans_data[4];
-
-    vector<string> data_trans = split_string(str_trans,",");
-    vector<string> data_z = split_string(str_z,",");
-    vector<string> data_winding_p = split_string(str_winding_p,",");
-    vector<string> data_winding_s = split_string(str_winding_s,",");
-    vector<string> data_winding_t = split_string(str_winding_t,",");
+    vector<string> data_trans = trans_data[0];
+    vector<string> data_z = trans_data[1];
+    vector<string> data_winding_p = trans_data[2];
+    vector<string> data_winding_s = trans_data[3];
+    vector<string> data_winding_t = trans_data[4];
 
     //string str, strval;
     //vector<string> data;
@@ -1568,9 +1586,9 @@ void STEPS_IMEXPORTER::load_area_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(raw_data_in_ram.size()<9)
+    if(splitted_sraw_data_in_ram.size()<8)
         return;
-    vector<string> DATA = raw_data_in_ram[8];
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[7];
 
     vector<string> data;
 
@@ -1578,9 +1596,7 @@ void STEPS_IMEXPORTER::load_area_data()
 
     for(size_t i=0; i!=ndata; ++i)
     {
-        data.clear();
-
-        data = split_string(DATA[i],",");
+        data = DATA[i];
 
         AREA area;
 
@@ -1596,48 +1612,46 @@ void STEPS_IMEXPORTER::load_area_data()
 
 void STEPS_IMEXPORTER::load_hvdc_data()
 {
-    if(raw_data_in_ram.size()<10)
+    if(splitted_sraw_data_in_ram.size()<9)
         return;
-    vector<string> DATA = raw_data_in_ram[9];
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[8];
 
     vector<string> data;
 
     size_t ndata = DATA.size();
     RATING rating;
 
-    vector<string> hvdc_data;
+    vector<vector<string> > hvdc_data;
     for(size_t i=0; i!=ndata; ++i)
     {
         hvdc_data.clear();
 
-        data = split_string(DATA[i],",");
-        hvdc_data.push_back(DATA[i]);
+        data = DATA[i];
+        hvdc_data.push_back(data);
         i++;
         if(i>=ndata)
             break;
-        hvdc_data.push_back(DATA[i]);
+        data = DATA[i];
+        hvdc_data.push_back(data);
         i++;
         if(i>=ndata)
             break;
-        hvdc_data.push_back(DATA[i]);
+        data = DATA[i];
+        hvdc_data.push_back(data);
 
         add_hvdc_with_data(hvdc_data);
     }
 }
 
-void STEPS_IMEXPORTER::add_hvdc_with_data(vector<string> hvdc_data)
+void STEPS_IMEXPORTER::add_hvdc_with_data(vector<vector<string> > hvdc_data)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     HVDC hvdc;
 
-    string str_hvdc = hvdc_data[0];
-    string str_rec = hvdc_data[1];
-    string str_inv = hvdc_data[2];
-
-    vector<string> data_hvdc = split_string(str_hvdc,",");
-    vector<string> data_rec = split_string(str_rec,",");
-    vector<string> data_inv = split_string(str_inv,",");
+    vector<string> data_hvdc = hvdc_data[0];
+    vector<string> data_rec = hvdc_data[1];
+    vector<string> data_inv = hvdc_data[2];
 
     add_hvdc_basic_data(hvdc, data_hvdc);
     add_hvdc_converter_data(hvdc, RECTIFIER, data_rec);
@@ -1825,9 +1839,9 @@ void STEPS_IMEXPORTER::load_zone_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(raw_data_in_ram.size()<15)
+    if(splitted_sraw_data_in_ram.size()<14)
         return;
-    vector<string> DATA = raw_data_in_ram[14];
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[13];
 
     vector<string> data;
 
@@ -1835,9 +1849,7 @@ void STEPS_IMEXPORTER::load_zone_data()
 
     for(size_t i=0; i!=ndata; ++i)
     {
-        data.clear();
-
-        data = split_string(DATA[i],",");
+        data = DATA[i];
 
         ZONE zone;
 
@@ -1857,9 +1869,9 @@ void STEPS_IMEXPORTER::load_owner_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    if(raw_data_in_ram.size()<17)
+    if(splitted_sraw_data_in_ram.size()<16)
         return;
-    vector<string> DATA = raw_data_in_ram[16];
+    vector<vector<string> > DATA = splitted_sraw_data_in_ram[15];
 
     vector<string> data;
 
@@ -1867,9 +1879,7 @@ void STEPS_IMEXPORTER::load_owner_data()
 
     for(size_t i=0; i!=ndata; ++i)
     {
-        data.clear();
-
-        data = split_string(DATA[i],",");
+        data = DATA[i];
 
         OWNER owner;
 
@@ -1899,7 +1909,7 @@ void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_imped
     ofstream ofs(file);
     if(!ofs)
     {
-        osstream<<"Warning. STEPS raw file "<<file<<" cannot be opened for exporting powerflow data.";
+        osstream<<"Warning. STEPS sraw file "<<file<<" cannot be opened for exporting powerflow data.";
         show_information_with_leading_time_stamp(osstream);
         return;
     }

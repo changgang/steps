@@ -185,26 +185,14 @@ string PVCV0::get_model_name() const
     return "PVCV0";
 }
 
-bool PVCV0::setup_model_with_steps_string(string data)
+bool PVCV0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool PVCV0::setup_model_with_psse_string(string data)
-{
-    ostringstream osstream;
-
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-
-    if(dyrdata.size()<18)
+    if(data.size()<18)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -214,25 +202,25 @@ bool PVCV0::setup_model_with_psse_string(string data)
     double t_EQcmd, t_IPcmd, kpll, kipll, pllmax, pllmin, prate, lvpl_v1, lvpl_v2, lvpl_g,
            hvrc_v, hvrc_i, lvpl_rate, t_lvpl;
 
-    ibus = size_t(get_integer_data(dyrdata[0],"0"));
-    id = get_string_data(dyrdata[2],"");
+    ibus = size_t(get_integer_data(data[1],"0"));
+    id = get_string_data(data[2],"");
 
     size_t i=3;
-    n_lumped_turbine = size_t(get_integer_data(dyrdata[i],"1")); i++;
-    prate = get_double_data(dyrdata[i],"0.0"); i++;
-    t_IPcmd = get_double_data(dyrdata[i],"0.0"); i++;
-    lvpl_rate = get_double_data(dyrdata[i],"0.0"); i++;
-    t_lvpl = get_double_data(dyrdata[i],"0.0"); i++;
-    lvpl_v1 = get_double_data(dyrdata[i],"0.0"); i++;
-    lvpl_v2 = get_double_data(dyrdata[i],"0.0"); i++;
-    lvpl_g = get_double_data(dyrdata[i],"0.0"); i++;
-    t_EQcmd = get_double_data(dyrdata[i],"0.0"); i++;
-    hvrc_v = get_double_data(dyrdata[i],"0.0"); i++;
-    hvrc_i = get_double_data(dyrdata[i],"0.0"); i++;
-    kpll = get_double_data(dyrdata[i],"0.0"); i++;
-    kipll = get_double_data(dyrdata[i],"0.0"); i++;
-    pllmax = get_double_data(dyrdata[i],"0.0"); i++;
-    pllmin = get_double_data(dyrdata[i],"0.0");
+    n_lumped_turbine = size_t(get_integer_data(data[i],"1")); i++;
+    prate = get_double_data(data[i],"0.0"); i++;
+    t_IPcmd = get_double_data(data[i],"0.0"); i++;
+    lvpl_rate = get_double_data(data[i],"0.0"); i++;
+    t_lvpl = get_double_data(data[i],"0.0"); i++;
+    lvpl_v1 = get_double_data(data[i],"0.0"); i++;
+    lvpl_v2 = get_double_data(data[i],"0.0"); i++;
+    lvpl_g = get_double_data(data[i],"0.0"); i++;
+    t_EQcmd = get_double_data(data[i],"0.0"); i++;
+    hvrc_v = get_double_data(data[i],"0.0"); i++;
+    hvrc_i = get_double_data(data[i],"0.0"); i++;
+    kpll = get_double_data(data[i],"0.0"); i++;
+    kipll = get_double_data(data[i],"0.0"); i++;
+    pllmax = get_double_data(data[i],"0.0"); i++;
+    pllmin = get_double_data(data[i],"0.0");
 
     DEVICE_ID did = get_pv_unit_device_id(ibus, id);
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -268,6 +256,12 @@ bool PVCV0::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool PVCV0::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool PVCV0::setup_model_with_bpa_string(string data)

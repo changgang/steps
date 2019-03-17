@@ -420,6 +420,33 @@ vector<string> split_string(string str, const string sep)
     return splitted_str;
 }
 
+string string_vector2csv(const vector<string>& vec)
+{
+    string str="";
+    size_t n = vec.size();
+    if(n!=0)
+    {
+        str = vec[0];
+        for(size_t i=1; i<n; ++i)
+            str = str+", "+vec[i];
+    }
+    return str;
+}
+
+string swap_data_in_csv_string(string& data, size_t i, size_t j)
+{
+    vector<string> record = split_string(data,",");
+    size_t n = record.size();
+    if(i>n or j>n)
+        return data;
+    else
+    {
+        string temp = record[i];
+        record[i]=record[j];
+        record[j]=temp;
+        return string_vector2csv(record);
+    }
+}
 
 void redirect_stdout_to_file(string file)
 {
@@ -630,4 +657,18 @@ void set_dynamic_simulation_time_in_s(double time)
 double get_dynamic_simulation_time_in_s()
 {
     return STEPS::TIME;
+}
+
+vector<string> psse_dyr_string2steps_string_vector(string& data)
+{
+    vector<string> record = split_string(data,",");
+    string temp = record[0];
+    record[0]=record[1];
+    record[1]=temp;
+    return record;
+}
+
+string psse_dyr_string2steps_string(string& data)
+{
+    return swap_data_in_csv_string(data, 1, 2);
 }

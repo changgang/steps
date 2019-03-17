@@ -91,7 +91,7 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
 
         virtual void update_source_impedance() = 0;
 
-        virtual bool setup_model_with_steps_string(string data) = 0;
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
 

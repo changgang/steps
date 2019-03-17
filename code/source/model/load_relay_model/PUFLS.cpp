@@ -200,26 +200,15 @@ double PUFLS::get_discrete_stage_shed_scale_in_pu(size_t stage) const
         return 0.0;
 }
 
-bool PUFLS::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool PUFLS::setup_model_with_psse_string(string data)
+bool PUFLS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-
-    size_t n = dyrdata.size();
+    size_t n = data.size();
 
     if(n<12)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!="PUFLSAL" and model_name!="PUFLSAR" and model_name!="PUFLSZN" and model_name!="PUFLSBL")
         return is_successful;
 
@@ -228,12 +217,12 @@ bool PUFLS::setup_model_with_psse_string(string data)
     double fth_additional, additional_scale, additional_time_delay;
 
     size_t i=3;
-    signal_flag = get_integer_data(dyrdata[i], "0"); i++;
-    t_freq = get_double_data(dyrdata[i],"0.0"); i++;
-    fth_continuous = get_double_data(dyrdata[i],"0.0"); i++;
-    K_scale = get_double_data(dyrdata[i],"0.0"); i++;
-    tdelay = get_double_data(dyrdata[i],"0.0"); i++;
-    max_scale = get_double_data(dyrdata[i],"0.0"); i++;
+    signal_flag = get_integer_data(data[i], "0"); i++;
+    t_freq = get_double_data(data[i],"0.0"); i++;
+    fth_continuous = get_double_data(data[i],"0.0"); i++;
+    K_scale = get_double_data(data[i],"0.0"); i++;
+    tdelay = get_double_data(data[i],"0.0"); i++;
+    max_scale = get_double_data(data[i],"0.0"); i++;
 
     set_frequency_sensor_time_in_s(t_freq);
     set_continuous_frequency_threshold_in_Hz(fth_continuous);
@@ -241,9 +230,9 @@ bool PUFLS::setup_model_with_psse_string(string data)
     set_scale_K_in_pu_per_Hz(K_scale);
     set_maximum_continuous_shed_scale_in_pu(max_scale);
 
-    fth_additional = get_double_data(dyrdata[i],"0.0"); i++;
-    additional_time_delay = get_double_data(dyrdata[i],"0.0"); i++;
-    additional_scale = get_double_data(dyrdata[i],"0.0"); i++;
+    fth_additional = get_double_data(data[i],"0.0"); i++;
+    additional_time_delay = get_double_data(data[i],"0.0"); i++;
+    additional_scale = get_double_data(data[i],"0.0"); i++;
 
     if(signal_flag==0)
         set_additional_stage_trigger_signal(REALTIME_FREQUENCY);
@@ -255,12 +244,12 @@ bool PUFLS::setup_model_with_psse_string(string data)
 
     if(n>=12)
     {
-        tdelay = get_double_data(dyrdata[i],"0.0"); i++;
+        tdelay = get_double_data(data[i],"0.0"); i++;
         set_discrete_stage_time_delay_in_s(tdelay);
 
         for(size_t stage=0; i!=n and stage!=MAX_LOAD_RELAY_STAGE; ++i, ++stage)
         {
-            double scale = get_double_data(dyrdata[i],"0.0");
+            double scale = get_double_data(data[i],"0.0");
             set_discrete_stage_shed_scale_in_pu(stage, scale);
         }
     }
@@ -286,6 +275,12 @@ bool PUFLS::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool PUFLS::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool PUFLS::setup_model_with_bpa_string(string data)

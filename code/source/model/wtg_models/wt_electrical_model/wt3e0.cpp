@@ -435,23 +435,13 @@ double WT3E0::get_speed_reference_bias_in_pu() const
     return speedref_bias;
 }
 
-bool WT3E0::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool WT3E0::setup_model_with_psse_string(string data)
+bool WT3E0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<38)
+    if(data.size()<38)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -463,41 +453,41 @@ bool WT3E0::setup_model_with_psse_string(string data)
            kvi, tvi, kdroop, tdroop, fupper, flower, kint;
 
     size_t i=3;
-    bus = get_integer_data(dyrdata[i],"0"); i++;
-    var_control_flag = get_integer_data(dyrdata[i],"0"); i++;
-    voltage_flag = size_t(get_integer_data(dyrdata[i],"0")); i++;
-    xc = get_double_data(dyrdata[i],"0.0"); i++;
-    trv = get_double_data(dyrdata[i],"0.0"); i++;
-    fn = get_double_data(dyrdata[i],"0.0"); i++;
-    kpv = get_double_data(dyrdata[i],"0.0"); i++;
-    tv = get_double_data(dyrdata[i],"0.0"); i++;
-    kiv = get_double_data(dyrdata[i],"0.0"); i++;
-    qmin = get_double_data(dyrdata[i],"0.0"); i++;
-    qmax = get_double_data(dyrdata[i],"0.0"); i++;
-    tfv = get_double_data(dyrdata[i],"0.0"); i++;
-    tp = get_double_data(dyrdata[i],"0.0"); i++;
-    kqi = get_double_data(dyrdata[i],"0.0"); i++;
-    vmin = get_double_data(dyrdata[i],"0.0"); i++;
-    vmax = get_double_data(dyrdata[i],"0.0"); i++;
-    kqv = get_double_data(dyrdata[i],"0.0"); i++;
-    eqmin = get_double_data(dyrdata[i],"0.0"); i++;
-    eqmax = get_double_data(dyrdata[i],"0.0"); i++;
-    tspeed = get_double_data(dyrdata[i],"0.0"); i++;
-    kpp = get_double_data(dyrdata[i],"0.0"); i++;
-    kip = get_double_data(dyrdata[i],"0.0"); i++;
-    kvi = get_double_data(dyrdata[i],"0.0"); i++;
-    tvi = get_double_data(dyrdata[i],"0.0"); i++;
-    kdroop = get_double_data(dyrdata[i],"0.0"); i++;
-    tdroop = get_double_data(dyrdata[i],"0.0"); i++;
-    flower = get_double_data(dyrdata[i],"0.0"); i++;
-    fupper = get_double_data(dyrdata[i],"0.0"); i++;
-    kint = get_double_data(dyrdata[i],"0.0"); i++;
-    rpmin = get_double_data(dyrdata[i],"0.0"); i++;
-    rpmax = get_double_data(dyrdata[i],"0.0"); i++;
-    tfp = get_double_data(dyrdata[i],"0.0"); i++;
-    pmin = get_double_data(dyrdata[i],"0.0"); i++;
-    pmax = get_double_data(dyrdata[i],"0.0"); i++;
-    ipmax = get_double_data(dyrdata[i],"0.0");
+    bus = get_integer_data(data[i],"0"); i++;
+    var_control_flag = get_integer_data(data[i],"0"); i++;
+    voltage_flag = size_t(get_integer_data(data[i],"0")); i++;
+    xc = get_double_data(data[i],"0.0"); i++;
+    trv = get_double_data(data[i],"0.0"); i++;
+    fn = get_double_data(data[i],"0.0"); i++;
+    kpv = get_double_data(data[i],"0.0"); i++;
+    tv = get_double_data(data[i],"0.0"); i++;
+    kiv = get_double_data(data[i],"0.0"); i++;
+    qmin = get_double_data(data[i],"0.0"); i++;
+    qmax = get_double_data(data[i],"0.0"); i++;
+    tfv = get_double_data(data[i],"0.0"); i++;
+    tp = get_double_data(data[i],"0.0"); i++;
+    kqi = get_double_data(data[i],"0.0"); i++;
+    vmin = get_double_data(data[i],"0.0"); i++;
+    vmax = get_double_data(data[i],"0.0"); i++;
+    kqv = get_double_data(data[i],"0.0"); i++;
+    eqmin = get_double_data(data[i],"0.0"); i++;
+    eqmax = get_double_data(data[i],"0.0"); i++;
+    tspeed = get_double_data(data[i],"0.0"); i++;
+    kpp = get_double_data(data[i],"0.0"); i++;
+    kip = get_double_data(data[i],"0.0"); i++;
+    kvi = get_double_data(data[i],"0.0"); i++;
+    tvi = get_double_data(data[i],"0.0"); i++;
+    kdroop = get_double_data(data[i],"0.0"); i++;
+    tdroop = get_double_data(data[i],"0.0"); i++;
+    flower = get_double_data(data[i],"0.0"); i++;
+    fupper = get_double_data(data[i],"0.0"); i++;
+    kint = get_double_data(data[i],"0.0"); i++;
+    rpmin = get_double_data(data[i],"0.0"); i++;
+    rpmax = get_double_data(data[i],"0.0"); i++;
+    tfp = get_double_data(data[i],"0.0"); i++;
+    pmin = get_double_data(data[i],"0.0"); i++;
+    pmax = get_double_data(data[i],"0.0"); i++;
+    ipmax = get_double_data(data[i],"0.0");
 
     set_bus_to_regulate(bus);
     PE_VAR_CONTROL_MODE mode;
@@ -566,6 +556,12 @@ bool WT3E0::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool WT3E0::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool WT3E0::setup_model_with_bpa_string(string data)

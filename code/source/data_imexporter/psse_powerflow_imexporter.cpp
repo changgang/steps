@@ -63,6 +63,12 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     show_information_with_leading_time_stamp(osstream);
 }
 
+vector<vector<string> > PSSE_IMEXPORTER::convert_psse_raw_data_into_steps_format() const
+{
+    vector<vector<string> > data;
+    return data;
+}
+
 void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
 {
     sq_source = string2upper(sq_source);
@@ -90,9 +96,13 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
     data_of_one_type.clear();
 
     if(fgets(buffer, 1024, fid)==NULL)
+    {
+        fclose(fid);
         return;
+    }
     sbuffer = trim_psse_comment(buffer);
-    data_of_one_type.push_back(trim_string(sbuffer));
+    sbuffer = trim_string(sbuffer);
+    data_of_one_type.push_back(sbuffer);
 
     raw_data_in_ram.push_back(data_of_one_type);
 
@@ -101,9 +111,13 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
     for(size_t i=0; i!=2; ++i)
     {
         if(fgets(buffer, 1024, fid)==NULL)
+        {
+            fclose(fid);
             return;
+        }
         sbuffer = trim_psse_comment(buffer);
-        data_of_one_type.push_back(trim_string(sbuffer));
+        sbuffer = trim_string(sbuffer);
+        data_of_one_type.push_back(sbuffer);
     }
     raw_data_in_ram.push_back(data_of_one_type);
 

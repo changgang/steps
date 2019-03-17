@@ -29,6 +29,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void set_data_version(size_t version);
 
         void load_powerflow_data_into_ram(string file);
+        vector<vector<string> > convert_psse_raw_data_into_steps_format() const;
 
         void load_case_data();
         void load_bus_data();
@@ -91,67 +92,6 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void load_dynamic_data_into_ram(string file);
 
         void load_all_models();
-        string get_dynamic_model_name(string data);
-
-        void add_GENCLS_model(string data);
-        void add_GENROU_model(string data);
-        void add_GENSAL_model(string data);
-
-        void add_COMP_model(string data);
-
-        void add_IEE2ST_model(string data);
-
-        void add_SEXS_model(string data);
-        void add_IEEET1_model(string data);
-        void add_PSASPE1_model(string data);
-        void add_PSASPE2_model(string data);
-        void add_CSEET1_model(string data);
-        void add_CSEET2_model(string data);
-        void add_PSASPE13_model(string data);
-
-        void add_TGOV1_model(string data);
-        void add_IEEEG1_model(string data);
-        void add_IEEEG2_model(string data);
-        void add_IEEEG3_model(string data);
-        void add_IEESGO_model(string data);
-
-        void add_LCFB1_model(string data);
-
-
-        vector<LOAD*> get_all_loads_of(string data);
-        vector<LOAD*> remove_loads_with_different_identifier(vector<LOAD*> loads, string identifier);
-
-        void add_IEEL_model(string data);
-
-        void add_UFLS_model(string data);
-        void add_PUFLS_model(string data);
-
-        void add_CDC4T_model(string data);
-        void add_CDC6T_model(string data);
-
-        void add_WT3G1_model(string data);
-        void add_WT3G0_model(string data);
-        void add_WT3G2_model(string data);
-        void add_AERD0_model(string data);
-        void add_WT3T0_model(string data);
-        void add_WT3E0_model(string data);
-        void add_WT3P0_model(string data);
-        void add_FILEWIND_model(string data);
-
-        DEVICE_ID get_generator_device_id_from_string(string data);
-        DEVICE_ID get_wt_generator_device_id_from_string(string data);
-        DEVICE_ID get_load_device_id_from_string(string data);
-        DEVICE_ID get_line_device_id_from_string(string data);
-        DEVICE_ID get_hvdc_device_id_from_string(string data);
-        DEVICE_ID get_transformer_device_id_from_string(string data);
-
-
-        void load_source_dynamic_data();
-        void load_exciter_dynamic_data();
-        void load_stabilizer_dynamic_data();
-        void load_turbine_governor_dynamic_data();
-        void load_load_dynamic_data();
-        void load_line_dynamic_data();
 
         size_t data_version;
         vector< vector<string> > raw_data_in_ram;

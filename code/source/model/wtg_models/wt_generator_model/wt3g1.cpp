@@ -107,26 +107,15 @@ string WT3G1::get_model_name() const
     return "WT3G1";
 }
 
-bool WT3G1::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool WT3G1::setup_model_with_psse_string(string data)
+bool WT3G1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     ostringstream osstream;
 
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-
-    if(dyrdata.size()<8)
+    if(data.size()<8)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -135,15 +124,15 @@ bool WT3G1::setup_model_with_psse_string(string data)
     size_t n_lumped_turbine;
     double xeq, kpll, kipll, pllmax, prate;
 
-    ibus = size_t(get_integer_data(dyrdata[0],"0"));
-    id = get_string_data(dyrdata[2],"");
+    ibus = size_t(get_integer_data(data[1],"0"));
+    id = get_string_data(data[2],"");
 
     size_t i=3;
-    xeq = get_double_data(dyrdata[i],"0.0"); i++;
-    kpll = get_double_data(dyrdata[i],"0.0"); i++;
-    kipll = get_double_data(dyrdata[i],"0.0"); i++;
-    pllmax = get_double_data(dyrdata[i],"0.0"); i++;
-    prate = get_double_data(dyrdata[i],"0.0");
+    xeq = get_double_data(data[i],"0.0"); i++;
+    kpll = get_double_data(data[i],"0.0"); i++;
+    kipll = get_double_data(data[i],"0.0"); i++;
+    pllmax = get_double_data(data[i],"0.0"); i++;
+    prate = get_double_data(data[i],"0.0");
 
     DEVICE_ID did = get_wt_generator_device_id(ibus, id);
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -189,6 +178,12 @@ bool WT3G1::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool WT3G1::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool WT3G1::setup_model_with_bpa_string(string data)

@@ -36,7 +36,7 @@ class PSASPE1: public EXCITER_MODEL
         double get_KF() const;
         double get_TF_in_s() const;
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

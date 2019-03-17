@@ -18,7 +18,7 @@ class MOTOR : public LOAD_MODEL
         virtual void set_model_data_with_index(size_t index, double value);
         virtual void set_model_data_with_name(string par_name, double value);
 
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

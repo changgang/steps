@@ -208,44 +208,33 @@ double IEEEG3::get_a23() const
 }
 
 
-bool IEEEG3::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool IEEEG3::setup_model_with_psse_string(string data)
+bool IEEEG3::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-
-    if(dyrdata.size()<17)
+    if(data.size()<17)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
     double tg, tp, uo, uc, pmax, pmin, sigma, delta, tr, tw, a11, a13, a21, a23;
 
     size_t i=3;
-    tg = get_double_data(dyrdata[i],"0.0"); i++;
-    tp = get_double_data(dyrdata[i],"0.0"); i++;
-    uo = get_double_data(dyrdata[i],"0.0"); i++;
-    uc = get_double_data(dyrdata[i],"0.0"); i++;
-    pmax = get_double_data(dyrdata[i],"0.0"); i++;
-    pmin = get_double_data(dyrdata[i],"0.0"); i++;
-    sigma = get_double_data(dyrdata[i],"0.0"); i++;
-    delta = get_double_data(dyrdata[i],"0.0"); i++;
-    tr = get_double_data(dyrdata[i],"0.0"); i++;
-    tw = get_double_data(dyrdata[i],"0.0"); i++;
-    a11 = get_double_data(dyrdata[i],"0.0"); i++;
-    a13 = get_double_data(dyrdata[i],"0.0"); i++;
-    a21 = get_double_data(dyrdata[i],"0.0"); i++;
-    a23 = get_double_data(dyrdata[i],"0.0"); i++;
+    tg = get_double_data(data[i],"0.0"); i++;
+    tp = get_double_data(data[i],"0.0"); i++;
+    uo = get_double_data(data[i],"0.0"); i++;
+    uc = get_double_data(data[i],"0.0"); i++;
+    pmax = get_double_data(data[i],"0.0"); i++;
+    pmin = get_double_data(data[i],"0.0"); i++;
+    sigma = get_double_data(data[i],"0.0"); i++;
+    delta = get_double_data(data[i],"0.0"); i++;
+    tr = get_double_data(data[i],"0.0"); i++;
+    tw = get_double_data(data[i],"0.0"); i++;
+    a11 = get_double_data(data[i],"0.0"); i++;
+    a13 = get_double_data(data[i],"0.0"); i++;
+    a21 = get_double_data(data[i],"0.0"); i++;
+    a23 = get_double_data(data[i],"0.0"); i++;
 
     set_TG_in_s(tg);
     set_TP_in_s(tp);
@@ -265,6 +254,12 @@ bool IEEEG3::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool IEEEG3::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool IEEEG3::setup_model_with_bpa_string(string data)

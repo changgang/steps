@@ -168,23 +168,13 @@ double PSASPE1::get_TF_in_s() const
     return feedbacker.get_T_in_s();
 }
 
-bool PSASPE1::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool PSASPE1::setup_model_with_psse_string(string data)
+bool PSASPE1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<12)
+    if(data.size()<12)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -192,15 +182,15 @@ bool PSASPE1::setup_model_with_psse_string(string data)
     double kr, tr, ka, ta, te, kf, tf, efdmax, efdmin;
 
     size_t i=3;
-    kr = get_double_data(dyrdata[i],"1.0"); i++;
-    tr = get_double_data(dyrdata[i],"0.0"); i++;
-    ka = get_double_data(dyrdata[i],"0.0"); i++;
-    ta = get_double_data(dyrdata[i],"0.0"); i++;
-    te = get_double_data(dyrdata[i],"0.0"); i++;
-    kf = get_double_data(dyrdata[i],"0.0"); i++;
-    tf = get_double_data(dyrdata[i],"0.0"); i++;
-    efdmax = get_double_data(dyrdata[i],"0.0"); i++;
-    efdmin = get_double_data(dyrdata[i],"0.0"); i++;
+    kr = get_double_data(data[i],"1.0"); i++;
+    tr = get_double_data(data[i],"0.0"); i++;
+    ka = get_double_data(data[i],"0.0"); i++;
+    ta = get_double_data(data[i],"0.0"); i++;
+    te = get_double_data(data[i],"0.0"); i++;
+    kf = get_double_data(data[i],"0.0"); i++;
+    tf = get_double_data(data[i],"0.0"); i++;
+    efdmax = get_double_data(data[i],"0.0"); i++;
+    efdmin = get_double_data(data[i],"0.0"); i++;
 
     set_KR(kr);
     set_TR_in_s(tr);
@@ -215,6 +205,12 @@ bool PSASPE1::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool PSASPE1::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool PSASPE1::setup_model_with_bpa_string(string data)

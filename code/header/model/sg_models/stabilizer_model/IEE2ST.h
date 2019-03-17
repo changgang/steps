@@ -51,7 +51,7 @@ class IEE2ST : public STABILIZER_MODEL
         double get_Vcmin() const;
 
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

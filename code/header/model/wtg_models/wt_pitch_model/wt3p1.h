@@ -33,7 +33,7 @@ class WT3P1 : public WT_PITCH_MODEL
         double get_Pitchmin_in_deg() const;
         double get_ratePitchmax_in_deg_per_s() const;
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

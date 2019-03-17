@@ -36,7 +36,7 @@ class LCFB1 : public TURBINE_LOAD_CONTROLLER_MODEL
         double get_Irmax() const;
 
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

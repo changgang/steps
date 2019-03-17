@@ -45,6 +45,8 @@ string replace_string_contents(string str, string source, string destination);
 string shrink_sucessive_blanks(string str);
 string string2csv(string str);
 vector<string> split_string(string str, const string sep);
+string string_vector2csv(const vector<string>& vec);
+string swap_data_in_csv_string(const string& data, size_t i, size_t j);
 
 void redirect_stdout_to_file(string file);
 void recover_stdout();
@@ -75,4 +77,7 @@ void set_dynamic_simulation_time_step_in_s(double delt);
 double get_dynamic_simulation_time_step_in_s();
 void set_dynamic_simulation_time_in_s(double time);
 double get_dynamic_simulation_time_in_s();
+vector<string> psse_dyr_string2steps_string_vector(string& data);
+string psse_dyr_string2steps_string(string& data);
+
 #endif // UTILITY_H

@@ -24,7 +24,7 @@ class WT3T0 : public WT_TURBINE_MODEL
         double get_Kshaft_in_pu() const;
         double get_Dshaft_in_pu() const;
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

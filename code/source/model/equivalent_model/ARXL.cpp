@@ -229,22 +229,19 @@ vector< vector<double> > ARXL::get_Q_coefficients() const
     return q_coefficients;
 }
 
-bool ARXL::setup_model_with_steps_string(string data)
+bool ARXL::setup_model_with_steps_string_vector(vector<string>& data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
+            <<string_vector2csv(data);
     show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 bool ARXL::setup_model_with_psse_string(string data)
 {
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool ARXL::setup_model_with_bpa_string(string data)

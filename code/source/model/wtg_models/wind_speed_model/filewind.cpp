@@ -68,33 +68,29 @@ string FILEWIND::get_wind_speed_serial_file() const
     return wind_speed_file;
 }
 
-bool FILEWIND::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool FILEWIND::setup_model_with_psse_string(string data)
+bool FILEWIND::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<4)
+    if(data.size()<4)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
     string file;
-    file = get_string_data(dyrdata[3],"0.0");
+    file = get_string_data(data[3],"0.0");
 
     set_wind_speed_serial_file(file);
 
     is_successful = true;
     return is_successful;
+}
+
+bool FILEWIND::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool FILEWIND::setup_model_with_bpa_string(string data)

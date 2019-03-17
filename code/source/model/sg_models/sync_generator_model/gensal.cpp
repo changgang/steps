@@ -73,23 +73,13 @@ void GENSAL::update_source_impedance()
     }
 }
 
-bool GENSAL::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool GENSAL::setup_model_with_psse_string(string data)
+bool GENSAL::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<15)
+    if(data.size()<15)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -98,18 +88,18 @@ bool GENSAL::setup_model_with_psse_string(string data)
     double s1, s1p2;
 
     size_t i=3;
-    td0p = get_double_data(dyrdata[i],"0.0"); i++;
-    td0pp = get_double_data(dyrdata[i],"0.0"); i++;
-    tq0pp = get_double_data(dyrdata[i],"0.0"); i++;
-    H = get_double_data(dyrdata[i],"0.0"); i++;
-    D = get_double_data(dyrdata[i],"0.0"); i++;
-    xd = get_double_data(dyrdata[i],"0.0"); i++;
-    xq = get_double_data(dyrdata[i],"0.0"); i++;
-    xdp = get_double_data(dyrdata[i],"0.0"); i++;
-    xpp = get_double_data(dyrdata[i],"0.0"); i++;
-    xl = get_double_data(dyrdata[i],"0.0"); i++;
-    s1 = get_double_data(dyrdata[i],"0.0"); i++;
-    s1p2 = get_double_data(dyrdata[i],"0.0");
+    td0p = get_double_data(data[i],"0.0"); i++;
+    td0pp = get_double_data(data[i],"0.0"); i++;
+    tq0pp = get_double_data(data[i],"0.0"); i++;
+    H = get_double_data(data[i],"0.0"); i++;
+    D = get_double_data(data[i],"0.0"); i++;
+    xd = get_double_data(data[i],"0.0"); i++;
+    xq = get_double_data(data[i],"0.0"); i++;
+    xdp = get_double_data(data[i],"0.0"); i++;
+    xpp = get_double_data(data[i],"0.0"); i++;
+    xl = get_double_data(data[i],"0.0"); i++;
+    s1 = get_double_data(data[i],"0.0"); i++;
+    s1p2 = get_double_data(data[i],"0.0");
 
     set_Xd(xd);
     set_Xq(xq);
@@ -128,6 +118,12 @@ bool GENSAL::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool GENSAL::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool GENSAL::setup_model_with_bpa_string(string data)

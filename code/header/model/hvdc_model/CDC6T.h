@@ -56,7 +56,7 @@ class CDC6T: public HVDC_MODEL
         double get_inverter_ac_delayed_unbypassing_voltage_in_pu() const;
         double get_inverter_ac_delayed_unbypassing_time_in_s() const;
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

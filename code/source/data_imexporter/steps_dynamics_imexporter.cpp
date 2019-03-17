@@ -21,11 +21,17 @@ void STEPS_IMEXPORTER::load_dynamic_data(string file)
     show_information_with_leading_time_stamp(osstream);
 }
 
+void STEPS_IMEXPORTER::load_dynamic_data_from_steps_vector(vector<vector<string> >& data)
+{
+    splitted_sdyr_data_in_ram = data;
+    load_all_models();
+}
+
 void STEPS_IMEXPORTER::load_dynamic_data_into_ram(string file)
 {
     ostringstream osstream;
 
-    dyr_data_in_ram.clear();
+    splitted_sdyr_data_in_ram.clear();
 
     FILE* fid = fopen(file.c_str(),"rt");
     if(fid == NULL)
@@ -47,7 +53,7 @@ void STEPS_IMEXPORTER::load_dynamic_data_into_ram(string file)
             if(data_of_one_type.size()!=0)
             {
                 data_of_one_type = string2csv(data_of_one_type);
-                dyr_data_in_ram.push_back(data_of_one_type);
+                splitted_sdyr_data_in_ram.push_back(split_string(data_of_one_type,","));
                 data_of_one_type.clear();
             }
             break;
@@ -61,30 +67,29 @@ void STEPS_IMEXPORTER::load_dynamic_data_into_ram(string file)
         }
         else
         {
-            sbuffer = trim_psse_comment(buffer);
+            sbuffer = trim_steps_comment(buffer);
             sbuffer = trim_string(sbuffer);
             data_of_one_type = data_of_one_type +" "+sbuffer;
 
             data_of_one_type = string2csv(data_of_one_type);
-            dyr_data_in_ram.push_back(data_of_one_type);
+            splitted_sdyr_data_in_ram.push_back(split_string(data_of_one_type,","));
             data_of_one_type.clear();
         }
     }
     fclose(fid);
 
-    //for(size_t i=0; i<dyr_data_in_ram.size(); ++i)
-    //    cout<<dyr_data_in_ram[i]<<endl;
+    //for(size_t i=0; i<sdyr_data_in_ram.size(); ++i)
+    //    cout<<sdyr_data_in_ram[i]<<endl;
 }
 
 void STEPS_IMEXPORTER::load_all_models()
 {
-    size_t n = dyr_data_in_ram.size();
+    size_t n = splitted_sdyr_data_in_ram.size();
     for(size_t i=0; i!=n; ++i)
-        load_one_model(dyr_data_in_ram[i]);
-
+        load_one_model(splitted_sdyr_data_in_ram[i]);
 }
 
-void STEPS_IMEXPORTER::load_one_model(string data)
+void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
 {
     ostringstream osstream;
     //osstream<< "Now go parsing dynamic data: "<<data;
@@ -141,12 +146,31 @@ void STEPS_IMEXPORTER::load_one_model(string data)
     show_information_with_leading_time_stamp(osstream);
 
 }
-string STEPS_IMEXPORTER::get_dynamic_model_name(string data)
+
+void STEPS_IMEXPORTER::load_one_model(string& data)
 {
-    vector<string> splitted_data = split_string(data, ",");
-    if(splitted_data.size()>=2)
+    vector<string> vecstr = split_string(data,",");
+    load_one_model(vecstr);
+}
+
+void STEPS_IMEXPORTER::load_dynamic_data_from_psse_string(vector<string>& data)
+{
+    size_t n = data.size();
+    for(size_t i=0; i<n; ++i)
     {
-        string model_name = splitted_data[1];
+        vector<string> record = split_string(data[i], ",");
+        string temp = record[0];
+        record[0]=record[1];
+        record[1]=temp;
+        load_one_model(record);
+    }
+}
+
+string STEPS_IMEXPORTER::get_dynamic_model_name(vector<string>& data)
+{
+    if(data.size()>0)
+    {
+        string model_name = data[0];
         model_name = get_string_data(model_name, "");
         return model_name;
     }
@@ -154,21 +178,20 @@ string STEPS_IMEXPORTER::get_dynamic_model_name(string data)
         return "";
 }
 
-DEVICE_ID STEPS_IMEXPORTER::get_generator_device_id_from_string(string data)
+DEVICE_ID STEPS_IMEXPORTER::get_generator_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return did;
 
     size_t bus;
     string identifier;
 
-    size_t i=0;
-    bus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
-    identifier = get_string_data(dyrdata[i],"");
+    size_t i=1;
+    bus = get_integer_data(data[i], "0"); ++i;
+    identifier = get_string_data(data[i],"");
 
     TERMINAL terminal;
     terminal.append_bus(bus);
@@ -178,21 +201,20 @@ DEVICE_ID STEPS_IMEXPORTER::get_generator_device_id_from_string(string data)
     return did;
 }
 
-DEVICE_ID STEPS_IMEXPORTER::get_wt_generator_device_id_from_string(string data)
+DEVICE_ID STEPS_IMEXPORTER::get_wt_generator_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
     did.set_device_type("WT GENERATOR");
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return did;
 
     size_t bus;
     string identifier;
 
-    size_t i=0;
-    bus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
-    identifier = get_string_data(dyrdata[i],"");
+    size_t i=1;
+    bus = get_integer_data(data[i], "0"); ++i;
+    identifier = get_string_data(data[i],"");
 
     TERMINAL terminal;
     terminal.append_bus(bus);
@@ -202,21 +224,20 @@ DEVICE_ID STEPS_IMEXPORTER::get_wt_generator_device_id_from_string(string data)
     return did;
 }
 
-DEVICE_ID STEPS_IMEXPORTER::get_load_device_id_from_string(string data)
+DEVICE_ID STEPS_IMEXPORTER::get_load_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
     did.set_device_type("LOAD");
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return did;
 
     size_t bus;
     string identifier;
 
-    size_t i=0;
-    bus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
-    identifier = get_string_data(dyrdata[i],"");
+    size_t i=1;
+    bus = get_integer_data(data[i], "0"); ++i;
+    identifier = get_string_data(data[i],"");
 
     TERMINAL terminal;
     terminal.append_bus(bus);
@@ -226,22 +247,21 @@ DEVICE_ID STEPS_IMEXPORTER::get_load_device_id_from_string(string data)
     return did;
 }
 
-DEVICE_ID STEPS_IMEXPORTER::get_line_device_id_from_string(string data)
+DEVICE_ID STEPS_IMEXPORTER::get_line_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
     did.set_device_type("LINE");
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<4)
+    if(data.size()<4)
         return did;
 
     size_t ibus, jbus;
     string identifier;
 
-    size_t i=0;
-    ibus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
-    jbus = get_integer_data(dyrdata[i], "0"); ++i;
-    identifier = get_string_data(dyrdata[i],"");
+    size_t i=1;
+    ibus = get_integer_data(data[i], "0"); ++i;
+    jbus = get_integer_data(data[i], "0"); ++i;
+    identifier = get_string_data(data[i],"");
 
     TERMINAL terminal;
     terminal.append_bus(ibus);
@@ -251,21 +271,20 @@ DEVICE_ID STEPS_IMEXPORTER::get_line_device_id_from_string(string data)
 
     return did;
 }
-DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string(string data)
+DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
     did.set_device_type("HVDC");
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<2)
+    if(data.size()<2)
         return did;
 
     string hvdc_name;
 
-    size_t i=0;
-    hvdc_name = get_string_data(dyrdata[i], "0");
+    size_t i=1;
+    hvdc_name = get_string_data(data[i], "0");
 
     size_t n = psdb.get_hvdc_count();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
@@ -284,23 +303,22 @@ DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string(string data)
 
     return did;
 }
-DEVICE_ID STEPS_IMEXPORTER::get_transformer_device_id_from_string(string data)
+DEVICE_ID STEPS_IMEXPORTER::get_transformer_device_id_from_string_vector(vector<string>& data)
 {
     DEVICE_ID did;
     did.set_device_type("TRANSFORMER");
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<4)
+    if(data.size()<4)
         return did;
 
     size_t ibus, jbus, kbus;
     string identifier;
 
     size_t i=0;
-    ibus = get_integer_data(dyrdata[i], "0"); ++i; ++i;
-    jbus = get_integer_data(dyrdata[i], "0"); ++i;
-    kbus = get_integer_data(dyrdata[i], "0"); ++i;
-    identifier = get_string_data(dyrdata[i],"");
+    ibus = get_integer_data(data[i], "0"); ++i; ++i;
+    jbus = get_integer_data(data[i], "0"); ++i;
+    kbus = get_integer_data(data[i], "0"); ++i;
+    identifier = get_string_data(data[i],"");
 
     TERMINAL terminal;
     terminal.append_bus(ibus);
@@ -312,23 +330,22 @@ DEVICE_ID STEPS_IMEXPORTER::get_transformer_device_id_from_string(string data)
     return did;
 }
 
-void STEPS_IMEXPORTER::add_GENCLS_model(string data)
+void STEPS_IMEXPORTER::add_GENCLS_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "GENCLS")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENCLS model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -340,23 +357,22 @@ void STEPS_IMEXPORTER::add_GENCLS_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_GENROU_model(string data)
+void STEPS_IMEXPORTER::add_GENROU_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "GENROU")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENROU model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -368,23 +384,22 @@ void STEPS_IMEXPORTER::add_GENROU_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_GENSAL_model(string data)
+void STEPS_IMEXPORTER::add_GENSAL_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "GENSAL")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENSAL model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -396,23 +411,22 @@ void STEPS_IMEXPORTER::add_GENSAL_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_COMP_model(string data)
+void STEPS_IMEXPORTER::add_COMP_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "COMP")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         COMP model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -424,24 +438,23 @@ void STEPS_IMEXPORTER::add_COMP_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_IEE2ST_model(string data)
+void STEPS_IMEXPORTER::add_IEE2ST_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "IEE2ST")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEE2ST model;
 
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -453,23 +466,22 @@ void STEPS_IMEXPORTER::add_IEE2ST_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_SEXS_model(string data)
+void STEPS_IMEXPORTER::add_SEXS_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "SEXS")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         SEXS model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -481,23 +493,22 @@ void STEPS_IMEXPORTER::add_SEXS_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_IEEET1_model(string data)
+void STEPS_IMEXPORTER::add_IEEET1_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "IEEET1")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEET1 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -509,23 +520,22 @@ void STEPS_IMEXPORTER::add_IEEET1_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_PSASPE1_model(string data)
+void STEPS_IMEXPORTER::add_PSASPE1_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "PSASPE1")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE1 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -537,23 +547,22 @@ void STEPS_IMEXPORTER::add_PSASPE1_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_PSASPE2_model(string data)
+void STEPS_IMEXPORTER::add_PSASPE2_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "PSASPE2")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE2 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -565,23 +574,22 @@ void STEPS_IMEXPORTER::add_PSASPE2_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_CSEET1_model(string data)
+void STEPS_IMEXPORTER::add_CSEET1_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "CSEET1")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         CSEET1 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -593,23 +601,22 @@ void STEPS_IMEXPORTER::add_CSEET1_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_CSEET2_model(string data)
+void STEPS_IMEXPORTER::add_CSEET2_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "CSEET2")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         CSEET2 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -621,23 +628,22 @@ void STEPS_IMEXPORTER::add_CSEET2_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_PSASPE13_model(string data)
+void STEPS_IMEXPORTER::add_PSASPE13_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "PSASPE13")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE13 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -649,23 +655,22 @@ void STEPS_IMEXPORTER::add_PSASPE13_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_TGOV1_model(string data)
+void STEPS_IMEXPORTER::add_TGOV1_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "TGOV1")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         TGOV1 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -677,23 +682,22 @@ void STEPS_IMEXPORTER::add_TGOV1_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_IEEEG1_model(string data)
+void STEPS_IMEXPORTER::add_IEEEG1_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "IEEEG1")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG1 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -705,23 +709,22 @@ void STEPS_IMEXPORTER::add_IEEEG1_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_IEEEG2_model(string data)
+void STEPS_IMEXPORTER::add_IEEEG2_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "IEEEG2")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG2 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -733,23 +736,22 @@ void STEPS_IMEXPORTER::add_IEEEG2_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_IEEEG3_model(string data)
+void STEPS_IMEXPORTER::add_IEEEG3_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "IEEEG3")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG3 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -762,23 +764,22 @@ void STEPS_IMEXPORTER::add_IEEEG3_model(string data)
 }
 
 
-void STEPS_IMEXPORTER::add_IEESGO_model(string data)
+void STEPS_IMEXPORTER::add_IEESGO_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "IEESGO")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEESGO model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -790,23 +791,22 @@ void STEPS_IMEXPORTER::add_IEESGO_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_LCFB1_model(string data)
+void STEPS_IMEXPORTER::add_LCFB1_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "LCFB1")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<12)
+    if(data.size()<12)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_generator_device_id_from_string(data);
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         LCFB1 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
         else
@@ -818,7 +818,7 @@ void STEPS_IMEXPORTER::add_LCFB1_model(string data)
     }
 }
 
-vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(string data)
+vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
 {
     vector<LOAD*> loads;
 
@@ -836,16 +836,15 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(string data)
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return loads;
 
     size_t subsystem_number;
     string identifier;
 
     size_t i=0;
-    subsystem_number = get_integer_data(dyrdata[i], "0");  ++i; ++i;
-    identifier = get_string_data(dyrdata[i],""); ++i;
+    subsystem_number = get_integer_data(data[i], "0");  ++i; ++i;
+    identifier = get_string_data(data[i],""); ++i;
 
     size_t model_name_size = model_name.size();
     string model_subsystem_type = model_name.substr(model_name_size-2,2);
@@ -909,19 +908,18 @@ vector<LOAD*> STEPS_IMEXPORTER::remove_loads_with_different_identifier(vector<LO
     return loads;
 }
 
-void STEPS_IMEXPORTER::add_IEEL_model(string data)
+void STEPS_IMEXPORTER::add_IEEL_model(vector<string>& data)
 {
     string model_name = get_dynamic_model_name(data);
     if(model_name!="IEELAL" and model_name!="IEELAR" and model_name!="IEELZN" and
        model_name!="IEELBL")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     IEEL model;
-    bool successful = model.setup_model_with_psse_string(data);
+    bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
         vector<LOAD*> loads = get_all_loads_of(data);
@@ -931,20 +929,19 @@ void STEPS_IMEXPORTER::add_IEEL_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_UFLS_model(string data)
+void STEPS_IMEXPORTER::add_UFLS_model(vector<string>& data)
 {
     string model_name = get_dynamic_model_name(data);
     if(model_name!="UFLSAL" and model_name!="UFLSAR" and model_name!="UFLSZN" and
        model_name!="UFLSBL")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     UFLS model;
 
-    bool successful = model.setup_model_with_psse_string(data);
+    bool successful = model.setup_model_with_steps_string_vector(data);
 
     if(successful)
     {
@@ -955,19 +952,18 @@ void STEPS_IMEXPORTER::add_UFLS_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_PUFLS_model(string data)
+void STEPS_IMEXPORTER::add_PUFLS_model(vector<string>& data)
 {
     string model_name = get_dynamic_model_name(data);
     if(model_name!="PUFLSAL" and model_name!="PUFLSAR" and model_name!="PUFLSZN" and
        model_name!="PUFLSBL")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<3)
+    if(data.size()<3)
         return;
 
     PUFLS model;
-    bool successful = model.setup_model_with_psse_string(data);
+    bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
         vector<LOAD*> loads = get_all_loads_of(data);
@@ -977,23 +973,23 @@ void STEPS_IMEXPORTER::add_PUFLS_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_CDC4T_model(string data)
+void STEPS_IMEXPORTER::add_CDC4T_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "CDC4T")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<24)
+
+    if(data.size()<24)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_hvdc_device_id_from_string(data);
+    DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
 
     HVDC* hvdc = psdb.get_hvdc(did);
     if(hvdc != NULL)
     {
         CDC4T model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             hvdc->set_model(&model);
         else
@@ -1003,27 +999,25 @@ void STEPS_IMEXPORTER::add_CDC4T_model(string data)
             show_information_with_leading_time_stamp(osstream);
         }
     }
-
 }
 
 
-void STEPS_IMEXPORTER::add_CDC6T_model(string data)
+void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "CDC6T")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<34)
+    if(data.size()<34)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_hvdc_device_id_from_string(data);
+    DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
 
     HVDC* hvdc = psdb.get_hvdc(did);
     if(hvdc != NULL)
     {
         CDC6T model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             hvdc->set_model(&model);
         else
@@ -1035,22 +1029,20 @@ void STEPS_IMEXPORTER::add_CDC6T_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_WT3G1_model(string data)
+void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WT3G1")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3G1 model;
 
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
         else
@@ -1063,22 +1055,20 @@ void STEPS_IMEXPORTER::add_WT3G1_model(string data)
 }
 
 
-void STEPS_IMEXPORTER::add_WT3G0_model(string data)
+void STEPS_IMEXPORTER::add_WT3G0_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WT3G0")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3G0 model;
 
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
         else
@@ -1091,22 +1081,20 @@ void STEPS_IMEXPORTER::add_WT3G0_model(string data)
 }
 
 
-void STEPS_IMEXPORTER::add_WT3G2_model(string data)
+void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WT3G2")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3G2 model;
 
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
         else
@@ -1118,21 +1106,19 @@ void STEPS_IMEXPORTER::add_WT3G2_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_AERD0_model(string data)
+void STEPS_IMEXPORTER::add_AERD0_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "AERD0")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         AERD0 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
         else
@@ -1144,21 +1130,19 @@ void STEPS_IMEXPORTER::add_AERD0_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_WT3T0_model(string data)
+void STEPS_IMEXPORTER::add_WT3T0_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WT3T0")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3T0 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
         else
@@ -1170,21 +1154,19 @@ void STEPS_IMEXPORTER::add_WT3T0_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_WT3E0_model(string data)
+void STEPS_IMEXPORTER::add_WT3E0_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WT3E0")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3E0 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
         else
@@ -1196,21 +1178,19 @@ void STEPS_IMEXPORTER::add_WT3E0_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_WT3P0_model(string data)
+void STEPS_IMEXPORTER::add_WT3P0_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WT3P0")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3P0 model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
         else
@@ -1222,21 +1202,19 @@ void STEPS_IMEXPORTER::add_WT3P0_model(string data)
     }
 }
 
-void STEPS_IMEXPORTER::add_FILEWIND_model(string data)
+void STEPS_IMEXPORTER::add_FILEWIND_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "FILEWIND")
         return;
 
-    vector<string> dyrdata = split_string(data,",");
-
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DEVICE_ID did = get_wt_generator_device_id_from_string(data);
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         FILEWIND model;
-        bool successful = model.setup_model_with_psse_string(data);
+        bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
         else

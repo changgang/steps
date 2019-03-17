@@ -60,7 +60,7 @@ class ESTR0 : public ENERGY_STORAGE_MODEL
         double get_Dq() const;
 
     public:
-        virtual bool setup_model_with_steps_string(string data);
+        virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 

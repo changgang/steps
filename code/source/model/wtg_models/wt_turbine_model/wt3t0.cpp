@@ -89,34 +89,24 @@ double WT3T0::get_Dshaft_in_pu() const
     return Dshaft;
 }
 
-bool WT3T0::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool WT3T0::setup_model_with_psse_string(string data)
+bool WT3T0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<8)
+    if(data.size()<8)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
     double ht, hg, damp, kshaft, dshaft;
 
     size_t i=3;
-    ht = get_double_data(dyrdata[i],"0.0"); i++;
-    hg = get_double_data(dyrdata[i],"0.0"); i++;
-    kshaft = get_double_data(dyrdata[i],"0.0"); i++;
-    dshaft = get_double_data(dyrdata[i],"0.0"); i++;
-    damp = get_double_data(dyrdata[i],"0.0");
+    ht = get_double_data(data[i],"0.0"); i++;
+    hg = get_double_data(data[i],"0.0"); i++;
+    kshaft = get_double_data(data[i],"0.0"); i++;
+    dshaft = get_double_data(data[i],"0.0"); i++;
+    damp = get_double_data(data[i],"0.0");
 
     set_Hturbine_in_s(ht);
     set_Hgenerator_in_s(hg);
@@ -127,6 +117,12 @@ bool WT3T0::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool WT3T0::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool WT3T0::setup_model_with_bpa_string(string data)

@@ -132,23 +132,13 @@ double CDC4T::get_inverter_ac_instantaneous_unbypassing_voltage_in_pu() const
 }
 
 
-bool CDC4T::setup_model_with_steps_string(string data)
-{
-    ostringstream osstream;
-    osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
-            <<data;
-    show_information_with_leading_time_stamp(osstream);
-    return false;
-}
-
-bool CDC4T::setup_model_with_psse_string(string data)
+bool CDC4T::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    vector<string> dyrdata = split_string(data,",");
-    if(dyrdata.size()<24)
+    if(data.size()<24)
         return is_successful;
 
-    string model_name = get_string_data(dyrdata[1],"");
+    string model_name = get_string_data(data[0],"");
     if(model_name!=get_model_name())
         return is_successful;
 
@@ -163,28 +153,28 @@ bool CDC4T::setup_model_with_psse_string(string data)
 
 
     size_t i=2;
-    min_alpha = get_double_data(dyrdata[i],"0.0"); i++;
-    min_gamma = get_double_data(dyrdata[i],"0.0"); i++;
-    tvdci = get_double_data(dyrdata[i],"0.0"); i++;
-    tidc = get_double_data(dyrdata[i],"0.0"); i++;
-    vac_iblock = get_double_data(dyrdata[i],"0.0"); i++;
-    vac_iunblock = get_double_data(dyrdata[i],"0.0"); i++;
-    t_block = get_double_data(dyrdata[i],"0.0"); i++;
-    vdc_ibypass = get_double_data(dyrdata[i],"0.0"); i++;
-    vac_iunbypass = get_double_data(dyrdata[i],"0.0"); i++;
-    t_bypass = get_double_data(dyrdata[i],"0.0"); i++;
-    vdcmin_unblock = get_double_data(dyrdata[i],"0.0"); i++;
-    idcmin_unblock = get_double_data(dyrdata[i],"0.0"); i++;
-    vdc_ramp = get_double_data(dyrdata[i],"0.0"); i++;
-    idc_ramp = get_double_data(dyrdata[i],"0.0"); i++;
-    c0 = get_double_data(dyrdata[i],"0.0"); i++;
-    v1 = get_double_data(dyrdata[i],"0.0"); i++;
-    c1 = get_double_data(dyrdata[i],"0.0"); i++;
-    v2 = get_double_data(dyrdata[i],"0.0"); i++;
-    c2 = get_double_data(dyrdata[i],"0.0"); i++;
-    v3 = get_double_data(dyrdata[i],"0.0"); i++;
-    c3 = get_double_data(dyrdata[i],"0.0"); i++;
-    t_switched = get_double_data(dyrdata[i],"0.0");
+    min_alpha = get_double_data(data[i],"0.0"); i++;
+    min_gamma = get_double_data(data[i],"0.0"); i++;
+    tvdci = get_double_data(data[i],"0.0"); i++;
+    tidc = get_double_data(data[i],"0.0"); i++;
+    vac_iblock = get_double_data(data[i],"0.0"); i++;
+    vac_iunblock = get_double_data(data[i],"0.0"); i++;
+    t_block = get_double_data(data[i],"0.0"); i++;
+    vdc_ibypass = get_double_data(data[i],"0.0"); i++;
+    vac_iunbypass = get_double_data(data[i],"0.0"); i++;
+    t_bypass = get_double_data(data[i],"0.0"); i++;
+    vdcmin_unblock = get_double_data(data[i],"0.0"); i++;
+    idcmin_unblock = get_double_data(data[i],"0.0"); i++;
+    vdc_ramp = get_double_data(data[i],"0.0"); i++;
+    idc_ramp = get_double_data(data[i],"0.0"); i++;
+    c0 = get_double_data(data[i],"0.0"); i++;
+    v1 = get_double_data(data[i],"0.0"); i++;
+    c1 = get_double_data(data[i],"0.0"); i++;
+    v2 = get_double_data(data[i],"0.0"); i++;
+    c2 = get_double_data(data[i],"0.0"); i++;
+    v3 = get_double_data(data[i],"0.0"); i++;
+    c3 = get_double_data(data[i],"0.0"); i++;
+    t_switched = get_double_data(data[i],"0.0");
 
     set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, min_alpha);
     set_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER, min_gamma);
@@ -213,6 +203,12 @@ bool CDC4T::setup_model_with_psse_string(string data)
     is_successful = true;
 
     return is_successful;
+}
+
+bool CDC4T::setup_model_with_psse_string(string data)
+{
+    vector<string> record = psse_dyr_string2steps_string_vector(data);
+    return setup_model_with_steps_string_vector(record);
 }
 
 bool CDC4T::setup_model_with_bpa_string(string data)
