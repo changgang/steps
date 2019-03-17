@@ -7,6 +7,7 @@
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 #include <complex>
 
+char get_next_alphabeta();
 string num2str(int number);
 string num2str(size_t number);
 string num2str(double number);

@@ -55,6 +55,40 @@ void UTILITY_TEST::tear_down()
     show_test_end_information();
 }
 
+void UTILITY_TEST::test_get_next_alphabeta()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
+
+    TEST_ASSERT(get_next_alphabeta()=='A');
+    TEST_ASSERT(get_next_alphabeta()=='B');
+    TEST_ASSERT(get_next_alphabeta()=='C');
+    TEST_ASSERT(get_next_alphabeta()=='D');
+    TEST_ASSERT(get_next_alphabeta()=='E');
+    TEST_ASSERT(get_next_alphabeta()=='F');
+    TEST_ASSERT(get_next_alphabeta()=='G');
+    TEST_ASSERT(get_next_alphabeta()=='H');
+    TEST_ASSERT(get_next_alphabeta()=='I');
+    TEST_ASSERT(get_next_alphabeta()=='J');
+    TEST_ASSERT(get_next_alphabeta()=='K');
+    TEST_ASSERT(get_next_alphabeta()=='L');
+    TEST_ASSERT(get_next_alphabeta()=='M');
+    TEST_ASSERT(get_next_alphabeta()=='N');
+    TEST_ASSERT(get_next_alphabeta()=='O');
+    TEST_ASSERT(get_next_alphabeta()=='P');
+    TEST_ASSERT(get_next_alphabeta()=='Q');
+    TEST_ASSERT(get_next_alphabeta()=='R');
+    TEST_ASSERT(get_next_alphabeta()=='S');
+    TEST_ASSERT(get_next_alphabeta()=='T');
+    TEST_ASSERT(get_next_alphabeta()=='U');
+    TEST_ASSERT(get_next_alphabeta()=='V');
+    TEST_ASSERT(get_next_alphabeta()=='W');
+    TEST_ASSERT(get_next_alphabeta()=='X');
+    TEST_ASSERT(get_next_alphabeta()=='Y');
+    TEST_ASSERT(get_next_alphabeta()=='Z');
+    TEST_ASSERT(get_next_alphabeta()=='A');
+    TEST_ASSERT(get_next_alphabeta()=='B');
+}
+
 void UTILITY_TEST::test_num2str()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");

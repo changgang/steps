@@ -101,6 +101,8 @@
 		<Unit filename="header/data_imexporter/equivalent_model_imexporter_test.h" />
 		<Unit filename="header/data_imexporter/psse_imexporter.h" />
 		<Unit filename="header/data_imexporter/psse_imexporter_test.h" />
+		<Unit filename="header/data_imexporter/steps_imexporter.h" />
+		<Unit filename="header/data_imexporter/steps_imexporter_test.h" />
 		<Unit filename="header/device/bus.h" />
 		<Unit filename="header/device/bus_test.h" />
 		<Unit filename="header/device/device.h" />
@@ -425,6 +427,9 @@
 		<Unit filename="source/data_imexporter/psse_dynamics_imexporter.cpp" />
 		<Unit filename="source/data_imexporter/psse_imexporter_test.cpp" />
 		<Unit filename="source/data_imexporter/psse_powerflow_imexporter.cpp" />
+		<Unit filename="source/data_imexporter/steps_dynamics_imexporter.cpp" />
+		<Unit filename="source/data_imexporter/steps_imexporter_test.cpp" />
+		<Unit filename="source/data_imexporter/steps_powerflow_imexporter.cpp" />
 		<Unit filename="source/device/bus.cpp" />
 		<Unit filename="source/device/bus_test.cpp" />
 		<Unit filename="source/device/device.cpp" />

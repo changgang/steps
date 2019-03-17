@@ -16,6 +16,15 @@ ofstream output_file;
 
 double four_over_pi = 4.0/PI;
 double four_over_pi2 = 4.0/(PI*PI);
+char current_alphabeta = 'Z';
+
+char get_next_alphabeta()
+{
+    current_alphabeta ++;
+    if(current_alphabeta>'Z')
+        current_alphabeta = 'A';
+    return current_alphabeta;
+}
 
 string num2str(int number)
 {
@@ -585,12 +594,10 @@ bool is_file_exist(const string file)
     }
 }
 
-
 POWER_SYSTEM_DATABASE& get_default_power_system_database()
 {
     return STEPS::default_power_system_db;
 }
-
 
 POWERFLOW_SOLVER& get_default_powerflow_solver()
 {

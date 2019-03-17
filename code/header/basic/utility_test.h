@@ -24,6 +24,7 @@ class UTILITY_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     private:
+        void test_get_next_alphabeta();
         void test_num2str();
         void test_str2int();
         void test_str2double();

@@ -1,4 +1,4 @@
-#include "header/data_imexporter/psse_imexporter.h"
+#include "header/data_imexporter/steps_imexporter.h"
 #include "header/basic/utility.h"
 #include "header/device/bus.h"
 #include "header/device/load.h"
@@ -13,28 +13,28 @@
 #include <iostream>
 using namespace std;
 
-PSSE_IMEXPORTER::PSSE_IMEXPORTER()
+STEPS_IMEXPORTER::STEPS_IMEXPORTER()
 {
     raw_data_in_ram.clear();
     dyr_data_in_ram.clear();
 }
 
-PSSE_IMEXPORTER::~PSSE_IMEXPORTER()
+STEPS_IMEXPORTER::~STEPS_IMEXPORTER()
 {
     raw_data_in_ram.clear();
     dyr_data_in_ram.clear();
 }
 
-void PSSE_IMEXPORTER::load_powerflow_data(string file)
+void STEPS_IMEXPORTER::load_powerflow_data(string file)
 {
     ostringstream osstream;
-    osstream<<"Loading powerflow data from PSS/E file: "<<file;
+    osstream<<"Loading powerflow data from STEPS file: "<<file;
     show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
     if(raw_data_in_ram.size()==0)
     {
-        osstream<<"No data in the given PSS/E file: "<<file<<endl
+        osstream<<"No data in the given STEPS file: "<<file<<endl
           <<"Please check if the file exist or not.";
         show_information_with_leading_time_stamp(osstream);
 
@@ -63,13 +63,13 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     show_information_with_leading_time_stamp(osstream);
 }
 
-void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
+void STEPS_IMEXPORTER::load_sequence_data(string sq_source)
 {
     sq_source = string2upper(sq_source);
 }
 
 
-void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
+void STEPS_IMEXPORTER::load_powerflow_data_into_ram(string file)
 {
     ostringstream osstream;
 
@@ -78,7 +78,7 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
     FILE* fid = fopen(file.c_str(),"rt");
     if(fid == NULL)
     {
-        osstream<<"PSS/E raw file '"<<file<<"' is not accessible. Loading PSS/E raw data is failed.";
+        osstream<<"STEPS raw file '"<<file<<"' is not accessible. Loading STEPS raw data is failed.";
         show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -140,7 +140,7 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
     fclose(fid);
 }
 
-string PSSE_IMEXPORTER::trim_psse_comment(string str)
+string STEPS_IMEXPORTER::trim_psse_comment(string str)
 {
     if(str.size()==0)
         return str;
@@ -150,7 +150,7 @@ string PSSE_IMEXPORTER::trim_psse_comment(string str)
     return str;
 }
 
-void PSSE_IMEXPORTER::load_case_data()
+void STEPS_IMEXPORTER::load_case_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -192,17 +192,17 @@ void PSSE_IMEXPORTER::load_case_data()
 }
 
 
-void PSSE_IMEXPORTER::set_data_version(size_t version)
+void STEPS_IMEXPORTER::set_data_version(size_t version)
 {
     data_version = version;
 }
 
-size_t PSSE_IMEXPORTER::get_data_version() const
+size_t STEPS_IMEXPORTER::get_data_version() const
 {
     return data_version;
 }
 
-void PSSE_IMEXPORTER::load_bus_data()
+void STEPS_IMEXPORTER::load_bus_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -301,7 +301,7 @@ void PSSE_IMEXPORTER::load_bus_data()
         psdb.append_bus(bus);
     }
 }
-void PSSE_IMEXPORTER::load_load_data()
+void STEPS_IMEXPORTER::load_load_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -391,7 +391,7 @@ void PSSE_IMEXPORTER::load_load_data()
         psdb.append_load(load);
     }
 }
-void PSSE_IMEXPORTER::load_fixed_shunt_data()
+void STEPS_IMEXPORTER::load_fixed_shunt_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -443,7 +443,7 @@ void PSSE_IMEXPORTER::load_fixed_shunt_data()
         psdb.append_fixed_shunt(shunt);
     }
 }
-void PSSE_IMEXPORTER::load_source_data()
+void STEPS_IMEXPORTER::load_source_data()
 {
     if(raw_data_in_ram.size()<6)
         return;
@@ -509,7 +509,7 @@ void PSSE_IMEXPORTER::load_source_data()
             default:
             {
                 char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid source type is detected in PSS/E raw file of line:\n%s",str.c_str());
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid source type is detected in STEPS raw file of line:\n%s",str.c_str());
                 show_information_with_leading_time_stamp(buffer);
                 break;
             }
@@ -523,7 +523,7 @@ void PSSE_IMEXPORTER::load_source_data()
     */
 }
 
-void PSSE_IMEXPORTER::load_generator_data(vector<string>& data)
+void STEPS_IMEXPORTER::load_generator_data(vector<string>& data)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -534,7 +534,7 @@ void PSSE_IMEXPORTER::load_generator_data(vector<string>& data)
     psdb.append_generator(generator);
 }
 
-void PSSE_IMEXPORTER::load_wt_generator_data(vector<string>& data)
+void STEPS_IMEXPORTER::load_wt_generator_data(vector<string>& data)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -547,7 +547,7 @@ void PSSE_IMEXPORTER::load_wt_generator_data(vector<string>& data)
 }
 
 
-void PSSE_IMEXPORTER::load_pv_unit_data(vector<string>& data)
+void STEPS_IMEXPORTER::load_pv_unit_data(vector<string>& data)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -560,7 +560,7 @@ void PSSE_IMEXPORTER::load_pv_unit_data(vector<string>& data)
 }
 
 
-void PSSE_IMEXPORTER::load_energy_storage_data(vector<string>& data)
+void STEPS_IMEXPORTER::load_energy_storage_data(vector<string>& data)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -572,7 +572,7 @@ void PSSE_IMEXPORTER::load_energy_storage_data(vector<string>& data)
     psdb.append_energy_storage(estorage);
 }
 
-void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* source)
+void STEPS_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* source)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -705,7 +705,7 @@ void PSSE_IMEXPORTER::load_source_common_data(vector<string>& data, SOURCE* sour
     source->set_ownership(os);
 }
 
-void PSSE_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE* source)
+void STEPS_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE* source)
 {
     double pgen = source->get_p_generation_in_MW();
 
@@ -757,7 +757,7 @@ void PSSE_IMEXPORTER::load_source_var_control_data(vector<string>& data, SOURCE*
     }
 }
 
-void PSSE_IMEXPORTER::load_line_data()
+void STEPS_IMEXPORTER::load_line_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -912,7 +912,7 @@ void PSSE_IMEXPORTER::load_line_data()
         psdb.append_line(line);
     }
 }
-void PSSE_IMEXPORTER::load_transformer_data()
+void STEPS_IMEXPORTER::load_transformer_data()
 {
     if(raw_data_in_ram.size()<8)
         return;
@@ -955,7 +955,7 @@ void PSSE_IMEXPORTER::load_transformer_data()
     }
 }
 
-void PSSE_IMEXPORTER::add_transformer_with_data(vector<string> trans_data)
+void STEPS_IMEXPORTER::add_transformer_with_data(vector<string> trans_data)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -1035,7 +1035,7 @@ void PSSE_IMEXPORTER::add_transformer_with_data(vector<string> trans_data)
 }
 
 
-void PSSE_IMEXPORTER::add_transformer_basic_data(TRANSFORMER& trans, vector<string> data)
+void STEPS_IMEXPORTER::add_transformer_basic_data(TRANSFORMER& trans, vector<string> data)
 {
     double gm = 0.0, bm = 0.0;
     if(data.size()>0)
@@ -1191,7 +1191,7 @@ void PSSE_IMEXPORTER::add_transformer_basic_data(TRANSFORMER& trans, vector<stri
     os.normalize();
     trans.set_ownership(os);
 }
-void PSSE_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORMER_WINDING_SIDE winding, vector<string> data, TRANSFORMER_WINDING_TAP_CODE winding_code)
+void STEPS_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORMER_WINDING_SIDE winding, vector<string> data, TRANSFORMER_WINDING_TAP_CODE winding_code)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -1421,7 +1421,7 @@ void PSSE_IMEXPORTER::add_transformer_winding_data(TRANSFORMER&trans, TRANSFORME
     }
 }
 
-void PSSE_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& trans, vector<string> data, TRANSFORMER_IMPEDANCE_CODE impedance_code, TRANSFORMER_ADMITTANCE_CODE magnetizing_code)
+void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& trans, vector<string> data, TRANSFORMER_IMPEDANCE_CODE impedance_code, TRANSFORMER_ADMITTANCE_CODE magnetizing_code)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -1564,7 +1564,7 @@ void PSSE_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tra
     }
 }
 
-void PSSE_IMEXPORTER::load_area_data()
+void STEPS_IMEXPORTER::load_area_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -1594,7 +1594,7 @@ void PSSE_IMEXPORTER::load_area_data()
     }
 }
 
-void PSSE_IMEXPORTER::load_hvdc_data()
+void STEPS_IMEXPORTER::load_hvdc_data()
 {
     if(raw_data_in_ram.size()<10)
         return;
@@ -1625,7 +1625,7 @@ void PSSE_IMEXPORTER::load_hvdc_data()
     }
 }
 
-void PSSE_IMEXPORTER::add_hvdc_with_data(vector<string> hvdc_data)
+void STEPS_IMEXPORTER::add_hvdc_with_data(vector<string> hvdc_data)
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -1648,7 +1648,7 @@ void PSSE_IMEXPORTER::add_hvdc_with_data(vector<string> hvdc_data)
 
     psdb.append_hvdc(hvdc);
 }
-void PSSE_IMEXPORTER::add_hvdc_basic_data(HVDC& hvdc, vector<string> data)
+void STEPS_IMEXPORTER::add_hvdc_basic_data(HVDC& hvdc, vector<string> data)
 {
     if(data.size()>0)
     {
@@ -1726,7 +1726,7 @@ void PSSE_IMEXPORTER::add_hvdc_basic_data(HVDC& hvdc, vector<string> data)
     }
 }
 
-void PSSE_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE converter, vector<string> data)
+void STEPS_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE converter, vector<string> data)
 {
     if(data.size()>0)
     {
@@ -1801,27 +1801,27 @@ void PSSE_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE co
     }
 }
 
-void PSSE_IMEXPORTER::load_vsc_hvdc_data()
+void STEPS_IMEXPORTER::load_vsc_hvdc_data()
 {
     ;
 }
 
-void PSSE_IMEXPORTER::load_transformer_impedance_correction_table_data()
+void STEPS_IMEXPORTER::load_transformer_impedance_correction_table_data()
 {
     ;
 }
 
-void PSSE_IMEXPORTER::load_multi_terminal_hvdc_data()
+void STEPS_IMEXPORTER::load_multi_terminal_hvdc_data()
 {
     ;
 }
 
-void PSSE_IMEXPORTER::load_multi_section_line_data()
+void STEPS_IMEXPORTER::load_multi_section_line_data()
 {
     ;
 }
 
-void PSSE_IMEXPORTER::load_zone_data()
+void STEPS_IMEXPORTER::load_zone_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -1848,12 +1848,12 @@ void PSSE_IMEXPORTER::load_zone_data()
     }
 }
 
-void PSSE_IMEXPORTER::load_interarea_transfer_data()
+void STEPS_IMEXPORTER::load_interarea_transfer_data()
 {
     ;
 }
 
-void PSSE_IMEXPORTER::load_owner_data()
+void STEPS_IMEXPORTER::load_owner_data()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
@@ -1880,18 +1880,18 @@ void PSSE_IMEXPORTER::load_owner_data()
     }
 }
 
-void PSSE_IMEXPORTER::load_facts_data()
+void STEPS_IMEXPORTER::load_facts_data()
 {
     ;
 }
 
-void PSSE_IMEXPORTER::load_switched_shunt_data()
+void STEPS_IMEXPORTER::load_switched_shunt_data()
 {
     ;
 }
 
 
-void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
+void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -1899,7 +1899,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
     ofstream ofs(file);
     if(!ofs)
     {
-        osstream<<"Warning. PSS/E raw file "<<file<<" cannot be opened for exporting powerflow data.";
+        osstream<<"Warning. STEPS raw file "<<file<<" cannot be opened for exporting powerflow data.";
         show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1958,7 +1958,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
 
 
 
-string PSSE_IMEXPORTER::export_case_data() const
+string STEPS_IMEXPORTER::export_case_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -1977,7 +1977,7 @@ string PSSE_IMEXPORTER::export_case_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_bus_data() const
+string STEPS_IMEXPORTER::export_bus_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2015,7 +2015,7 @@ string PSSE_IMEXPORTER::export_bus_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_load_data() const
+string STEPS_IMEXPORTER::export_load_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2066,7 +2066,7 @@ string PSSE_IMEXPORTER::export_load_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_fixed_shunt_data() const
+string STEPS_IMEXPORTER::export_fixed_shunt_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2099,7 +2099,7 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_source_data() const
+string STEPS_IMEXPORTER::export_source_data() const
 {
     ostringstream osstream;
     osstream<<export_generator_data();
@@ -2110,7 +2110,7 @@ string PSSE_IMEXPORTER::export_source_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_generator_data() const
+string STEPS_IMEXPORTER::export_generator_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2127,7 +2127,7 @@ string PSSE_IMEXPORTER::export_generator_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_wt_generator_data() const
+string STEPS_IMEXPORTER::export_wt_generator_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2146,7 +2146,7 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
 }
 
 
-string PSSE_IMEXPORTER::export_pv_unit_data() const
+string STEPS_IMEXPORTER::export_pv_unit_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2166,7 +2166,7 @@ string PSSE_IMEXPORTER::export_pv_unit_data() const
 }
 
 
-string PSSE_IMEXPORTER::export_energy_storage_data() const
+string STEPS_IMEXPORTER::export_energy_storage_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2185,7 +2185,7 @@ string PSSE_IMEXPORTER::export_energy_storage_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_source_common_data(SOURCE* source) const
+string STEPS_IMEXPORTER::export_source_common_data(SOURCE* source) const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2236,7 +2236,7 @@ string PSSE_IMEXPORTER::export_source_common_data(SOURCE* source) const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
+string STEPS_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
 {
     ostringstream osstream;
     double p = source->get_p_generation_in_MW();
@@ -2258,7 +2258,7 @@ string PSSE_IMEXPORTER::export_source_var_control_data(SOURCE* source) const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_line_data() const
+string STEPS_IMEXPORTER::export_line_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2314,7 +2314,7 @@ string PSSE_IMEXPORTER::export_line_data() const
     }
     return osstream.str();
 }
-string PSSE_IMEXPORTER::export_transformer_data() const
+string STEPS_IMEXPORTER::export_transformer_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2594,7 +2594,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
     }
     return osstream.str();
 }
-string PSSE_IMEXPORTER::export_area_data() const
+string STEPS_IMEXPORTER::export_area_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2620,7 +2620,7 @@ string PSSE_IMEXPORTER::export_area_data() const
 
     return osstream.str();
 }
-string PSSE_IMEXPORTER::export_hvdc_data() const
+string STEPS_IMEXPORTER::export_hvdc_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2710,27 +2710,27 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_vsc_hvdc_data() const
+string STEPS_IMEXPORTER::export_vsc_hvdc_data() const
 {
     return "";
 }
 
-string PSSE_IMEXPORTER::export_transformer_impedance_correction_table_data() const
+string STEPS_IMEXPORTER::export_transformer_impedance_correction_table_data() const
 {
     return "";
 }
 
-string PSSE_IMEXPORTER::export_multi_terminal_hvdc_data() const
+string STEPS_IMEXPORTER::export_multi_terminal_hvdc_data() const
 {
     return "";
 }
 
-string PSSE_IMEXPORTER::export_multi_section_line_data() const
+string STEPS_IMEXPORTER::export_multi_section_line_data() const
 {
     return "";
 }
 
-string PSSE_IMEXPORTER::export_zone_data() const
+string STEPS_IMEXPORTER::export_zone_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2748,12 +2748,12 @@ string PSSE_IMEXPORTER::export_zone_data() const
     return osstream.str();
 }
 
-string PSSE_IMEXPORTER::export_interarea_transfer_data() const
+string STEPS_IMEXPORTER::export_interarea_transfer_data() const
 {
     return "";
 }
 
-string PSSE_IMEXPORTER::export_owner_data() const
+string STEPS_IMEXPORTER::export_owner_data() const
 {
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -2770,18 +2770,18 @@ string PSSE_IMEXPORTER::export_owner_data() const
 
     return osstream.str();
 }
-string PSSE_IMEXPORTER::export_facts_data() const
+string STEPS_IMEXPORTER::export_facts_data() const
 {
     return "";
 }
 
-string PSSE_IMEXPORTER::export_switched_shunt_data() const
+string STEPS_IMEXPORTER::export_switched_shunt_data() const
 {
     return "";
 }
 
 
-void PSSE_IMEXPORTER::export_sequence_data(string file)
+void STEPS_IMEXPORTER::export_sequence_data(string file)
 {
     ofstream fid(file);
     fid.close();
