@@ -12,19 +12,11 @@ class HVDC;
 
 class HVDC_MODEL : public MODEL
 {
-    /*
-    Exciter model
-    Inputs:
-        Generator terminal voltage
-        Stabilizer stabilizing signal
-    Output:
-        Excitation voltage
-    */
     public:
         HVDC_MODEL();
         virtual ~HVDC_MODEL();
         HVDC* get_hvdc_pointer() const;
-    public: // exciter common
+    public: // hvdc common
         virtual string get_model_type() const;
         // get input for initialization
         double get_initial_alpha_in_deg() const;

@@ -27,8 +27,10 @@ int main()
 
     //importer.load_powerflow_data("../../../bench/IEEE39.raw");
     //importer.load_dynamic_data("IEEE39_GENROU_SEXS_IEEEG1.dyr");
-    importer.load_powerflow_data("bench_shandong_v2.raw");
-    importer.load_dynamic_data("bench_shandong_v2.dyr");
+    //importer.load_powerflow_data("bench_shandong_v2.raw");
+    //importer.load_dynamic_data("bench_shandong_v2.dyr");
+    importer.load_powerflow_data("IEEE9_wind.raw");
+    importer.load_dynamic_data("IEEE9_wind.dyr");
     //importer.load_dynamic_data("bench_shandong_with_avr.dyr");
 
     POWERFLOW_SOLVER powerflow_solver;
@@ -48,8 +50,9 @@ int main()
     //simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_generation_scale_down_at_bus_38_by_10%");
     //simulator.set_output_file("test_log/IEEE_39_bus_model_GENROU_SEXS_IEEEG1_trip_bus_");
     //simulator.set_output_file("test_log/bench_shandong_with_avr_fault_at_line_82_60");
-    simulator.set_output_file("test_log/bench_shandong_with_avr_fault_at_line_82_80");
+    //simulator.set_output_file("test_log/bench_shandong_with_avr_fault_at_line_82_80");
     //simulator.set_output_file("test_log/bench_shandong_with_avr_trip_mac_140");
+    simulator.set_output_file("test_log/IEEE9_wind");
 
     simulator.start();
     simulator.run_to(1.0);
@@ -73,7 +76,7 @@ int main()
     simulator.shed_generator(did, 0.1);
     */
 
-
+/*
     DEVICE_ID did;
     did.set_device_type("LINE");
     TERMINAL terminal;
@@ -86,7 +89,7 @@ int main()
 
     simulator.run_to(1.35);
 
-    simulator.clear_line_fault(did, 82, 0.0);
+    simulator.clear_line_fault(did, 82, 0.0);*/
 /*
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
@@ -98,7 +101,16 @@ int main()
     simulator.trip_generator(did);
 */
 
-    simulator.run_to(5.0);
+    DEVICE_ID did;
+    did.set_device_type("GENERATOR");
+    TERMINAL terminal;
+    terminal.append_bus(1);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+    simulator.shed_generator(did, 0.2);
+
+    simulator.run_to(20.0);
 
     psdb.clear_database();
     simulator.clear();
