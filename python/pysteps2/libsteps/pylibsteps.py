@@ -59,6 +59,10 @@ def load_library(parallel_flag=False):
     libsteps.api_get_package_float_data.argtypes = (c_char_p, )
     libsteps.api_set_package_float_data.restype = None
     libsteps.api_set_package_float_data.argtypes = (c_char_p, c_double)
+    libsteps.api_get_package_string_data.restype = c_char_p
+    libsteps.api_get_package_string_data.argtypes = (c_char_p, )
+    libsteps.api_set_package_string_data.restype = None
+    libsteps.api_set_package_string_data.argtypes = (c_char_p, c_char_p)
 
     libsteps.api_load_powerflow_data_from_file.restype = None
     libsteps.api_load_powerflow_data_from_file.argtypes = (c_char_p, c_char_p)

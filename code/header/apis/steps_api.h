@@ -83,6 +83,8 @@ EXPORT_STEPS_DLL void api_clear_package();
 EXPORT_STEPS_DLL void api_terminate_package();
 EXPORT_STEPS_DLL double api_get_package_float_data(char* parameter_name);
 EXPORT_STEPS_DLL void api_set_package_float_data(char* parameter_name, double value);
+EXPORT_STEPS_DLL const char* api_get_package_string_data(char* parameter_name);
+EXPORT_STEPS_DLL void api_set_package_string_data(char* parameter_name, char* value);
 
 
 EXPORT_STEPS_DLL void api_load_powerflow_data_from_file(char* file, char* file_type);

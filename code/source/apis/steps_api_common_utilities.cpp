@@ -425,3 +425,39 @@ void api_set_package_float_data(char* parameter_name, double value)
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
 }
 
+
+const char* api_get_package_string_data(char* parameter_name)
+{
+    snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="CASE INFORMATION")
+    {
+        snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_information()).c_str());
+        return STEPS::steps_char_buffer;
+    }
+    if(PARAMETER_NAME=="CASE ADDITIONAL INFORMATION")
+    {
+        snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_additional_information()).c_str());
+        return STEPS::steps_char_buffer;
+    }
+
+    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
+    return STEPS::steps_char_buffer;
+}
+
+void api_set_package_string_data(char* parameter_name, char* value)
+{
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="CASE INFORMATION")
+        return psdb.set_case_information(value);
+    if(PARAMETER_NAME=="CASE ADDITIONAL INFORMATION")
+        return psdb.set_case_additional_information(value);
+
+    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
+    return;
+}
+
