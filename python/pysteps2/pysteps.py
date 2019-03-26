@@ -70,10 +70,10 @@ class STEPS():
         return self.libsteps.api_set_package_float_data(dataname, value)
     
     def get_system_base_power_in_MVA(self):
-        return get_package_float_data("SBASE")
+        return self.get_package_float_data("SBASE")
     
     def set_system_base_power_in_MVA(self, sbase):
-        return set_package_float_data("SBASE", sbase)
+        return self.set_package_float_data("SBASE", sbase)
     
     def get_package_string_data(self, dataname):
         dataname = self.__get_c_char_p_of_string(dataname)
@@ -85,16 +85,16 @@ class STEPS():
         return self.libsteps.api_set_package_string_data(dataname, value)
     
     def get_case_information(self):
-        return get_package_string_data("CASE INFORMATION")
+        return self.get_package_string_data("CASE INFORMATION")
     
     def get_case_additional_information(self):
-        return get_package_string_data("CASE ADDITIONAL INFORMATION")
+        return self.get_package_string_data("CASE ADDITIONAL INFORMATION")
     
     def set_case_information(self, value):
-        return set_package_string_data("CASE INFORMATION", value)
+        return self.set_package_string_data("CASE INFORMATION", value)
     
     def set_case_additional_information(self, value):
-        return set_package_string_data("CASE ADDITIONAL INFORMATION", value)    
+        return self.set_package_string_data("CASE ADDITIONAL INFORMATION", value)    
 
 
     def get_allowed_maximum_bus_number(self):
