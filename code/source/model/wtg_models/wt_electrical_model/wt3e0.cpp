@@ -425,6 +425,16 @@ double WT3E0::get_IPmax_in_pu() const
     return IPmax;
 }
 
+bool WT3E0::is_frequency_regulation_enabled() const
+{
+    return frequency_regulation_enabled;
+}
+void WT3E0::trip_frequency_regulation()
+{
+    if(frequency_regulation_enabled==true)
+        frequency_regulation_enabled = false;
+}
+
 void WT3E0::set_speed_reference_bias_in_pu(double bias)
 {
     speedref_bias =  bias;
@@ -845,11 +855,37 @@ void WT3E0::run(DYNAMIC_MODE mode)
     frequency_integral_controller.run(mode);
 
     //osstream<<"speed = "<<speed<<endl;
-    input = torque_PI_regulator.get_output()*speed
-            +virtual_inertia_emulator.get_output()
-            +frequency_droop_controller.get_output()
-            +frequency_integral_controller.get_output()
-            -power_order_integrator.get_output();
+    if(mode==UPDATE_MODE and is_frequency_regulation_enabled())
+    {
+        WT_AERODYNAMIC_MODEL* aerd = wt_generator->get_wt_aerodynamic_model();
+        double wmin = aerd->get_min_steady_state_turbine_speed_in_pu();
+        double wmax = aerd->get_max_steady_state_turbine_speed_in_pu();
+        WT_TURBINE_MODEL* turb = wt_generator->get_wt_turbine_model();
+        double w = turb->get_generator_speed_in_pu();
+        if(w<wmin or w>wmax*1.1)
+        {
+            osstream<<"Frequency regulation logic of "<<get_device_name()<<" is tripped at time "<<get_dynamic_simulation_time_in_s()<<"s due to ";
+            if(w<wmin)
+                osstream<<"rotor w<wmin: "<<w<<"<"<<wmin<<" pu";
+            else
+                osstream<<"rotor w>wmax*1.1: "<<w<<">"<<wmax*1.1<<" pu";
+            show_information_with_leading_time_stamp(osstream);
+            trip_frequency_regulation();
+        }
+    }
+    if(is_frequency_regulation_enabled())
+    {
+        input = torque_PI_regulator.get_output()*speed
+                +virtual_inertia_emulator.get_output()
+                +frequency_droop_controller.get_output()
+                +frequency_integral_controller.get_output()
+                -power_order_integrator.get_output();
+    }
+    else
+    {
+        input = torque_PI_regulator.get_output()*speed
+                -power_order_integrator.get_output();
+    }
 	//osstream << "at time " << STEPS::TIME << "s, active power rate is: " << input << endl;
 	//show_information_with_leading_time_stamp(osstream);
     if(input>get_rPmax_in_pu())
@@ -1032,6 +1068,8 @@ void WT3E0::clear()
 
     power_order_integrator.set_limiter_type(NON_WINDUP_LIMITER);
     frequency_integral_controller.set_limiter_type(NO_LIMITER);
+
+    frequency_regulation_enabled = true;
 }
 
 void WT3E0::report()

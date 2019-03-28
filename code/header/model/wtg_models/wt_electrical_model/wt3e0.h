@@ -86,10 +86,11 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double get_Pmin_in_pu() const;
         double get_IPmax_in_pu() const;
 
+        bool is_frequency_regulation_enabled() const;
+
         void set_speed_reference_bias_in_pu(double bias);
         double get_speed_reference_bias_in_pu() const;
     public:
-
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
@@ -120,6 +121,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         void copy_from_const_model(const WT3E0& model);
         virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
+        void trip_frequency_regulation();
 
         double Xcomp;
         FIRST_ORDER_BLOCK voltage_sensor;
@@ -143,6 +145,8 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double max_torque_rate, min_torque_rate;
         INTEGRAL_BLOCK power_order_integrator;
         double IPmax;
+
+        bool frequency_regulation_enabled;
 
         double speedref_bias;
 };
