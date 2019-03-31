@@ -121,6 +121,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_IEEEG2_model(vector<string>& data);
         void add_IEEEG3_model(vector<string>& data);
         void add_IEESGO_model(vector<string>& data);
+        void add_IEEEG1SB_model(vector<string>& data);
 
         void add_LCFB1_model(vector<string>& data);
 

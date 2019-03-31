@@ -117,6 +117,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="IEEEG2") { add_IEEEG2_model(data); return;}
     if(model_name=="IEEEG3") { add_IEEEG3_model(data); return;}
     if(model_name=="IEESGO") { add_IEESGO_model(data); return;}
+    if(model_name=="IEEEG1SB") { add_IEEEG1SB_model(data); return;}
 
     if(model_name=="LCFB1") { add_LCFB1_model(data); return;}
 
@@ -786,6 +787,33 @@ void STEPS_IMEXPORTER::add_IEESGO_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEESGO model is built, but will not be set for "<<generator->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_IEEEG1SB_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "IEEEG1SB")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
+
+    GENERATOR* generator = psdb.get_generator(did);
+    if(generator != NULL)
+    {
+        IEEEG1SB model;
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            generator->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid IEEEG1SB model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(osstream);
         }
     }

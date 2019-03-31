@@ -388,6 +388,11 @@ void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
         IEESGO* smodel = (IEESGO*) (model);
         new_model = (TURBINE_GOVERNOR_MODEL*) new IEESGO(*smodel);
     }
+    if(model_name=="IEEEG1SB")
+    {
+        IEEEG1SB* smodel = (IEEEG1SB*) (model);
+        new_model = (TURBINE_GOVERNOR_MODEL*) new IEEEG1SB(*smodel);
+    }
 
     if(new_model!=NULL)
     {

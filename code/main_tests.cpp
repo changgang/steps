@@ -94,6 +94,7 @@
 #include "header/model/sg_models/turbine_governor_model/IEEEG2_test.h"
 #include "header/model/sg_models/turbine_governor_model/IEEEG3_test.h"
 #include "header/model/sg_models/turbine_governor_model/IEESGO_test.h"
+#include "header/model/sg_models/turbine_governor_model/IEEEG1SB_test.h"
 
 #include "header/model/sg_models/turbine_load_controller_model/lcfb1_test.h"
 
@@ -287,7 +288,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new IEEEG1_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEEEG2_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEEEG3_TEST));
-        ts.add(unique_ptr<Test::Suite>(new IEESGO_TEST));
+        ts.add(unique_ptr<Test::Suite>(new IEESGO_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new IEEEG1SB_TEST));/*
 
         ts.add(unique_ptr<Test::Suite>(new LCFB1_TEST));
 
@@ -300,15 +302,15 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new CDC4T_TEST));
         ts.add(unique_ptr<Test::Suite>(new CDC6T_TEST));
 */
-        ts.add(unique_ptr<Test::Suite>(new WT3G1_TEST));
+        /*ts.add(unique_ptr<Test::Suite>(new WT3G1_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3G0_TEST));
-        /*ts.add(unique_ptr<Test::Suite>(new AERD0_TEST));
+        ts.add(unique_ptr<Test::Suite>(new AERD0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3T0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3E0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
-        ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
+        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));*/
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
 

@@ -43,7 +43,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::apply_speed_drop_of_1_percent()
 void TURBINE_GOVERNOR_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
-    osstream<<"TIME\tSPEED\tPMECH";
+    osstream<<"TIME\tSPEED\tPMECH\tPRESSURE";
     show_information_with_leading_time_stamp(osstream);
 }
 
@@ -59,7 +59,8 @@ void TURBINE_GOVERNOR_MODEL_TEST::export_meter_values(double time)
 
     osstream<<setw(6)<<setprecision(3)<<fixed<<time<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<speed<<"\t"
-      <<setw(10)<<setprecision(6)<<fixed<<pmech;
+      <<setw(10)<<setprecision(6)<<fixed<<pmech<<"\t"
+      <<setw(10)<<setprecision(6)<<fixed<<model->get_model_internal_variable_with_name("STEAM PRESSURE");
     show_information_with_leading_time_stamp(osstream);
 }
 

@@ -8,10 +8,11 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="../build/bin/Release/libSTEPS" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/bin/Release/STEPS" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../build/obj/Release/" />
-				<Option type="3" />
+				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
 				<Option parameters="--compiler " />
 				<Compiler>
 					<Add option="-O3" />
@@ -237,6 +238,8 @@
 		<Unit filename="header/model/sg_models/sync_generator_model/sync_generator_model_test.h" />
 		<Unit filename="header/model/sg_models/sync_generator_model/sync_generator_models.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1SB.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1SB_test.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1_test.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG2.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG2_test.h" />
@@ -332,9 +335,7 @@
 		<Unit filename="main_powerflow.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_tests.cpp">
-			<Option link="0" />
-		</Unit>
+		<Unit filename="main_tests.cpp" />
 		<Unit filename="main_ufls_simulation.cpp">
 			<Option link="0" />
 		</Unit>
@@ -547,6 +548,8 @@
 		<Unit filename="source/model/sg_models/sync_generator_model/sync_generator_model.cpp" />
 		<Unit filename="source/model/sg_models/sync_generator_model/sync_generator_model_test.cpp" />
 		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1SB.cpp" />
+		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1SB_test.cpp" />
 		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1_test.cpp" />
 		<Unit filename="source/model/sg_models/turbine-governors/IEEEG2.cpp" />
 		<Unit filename="source/model/sg_models/turbine-governors/IEEEG2_test.cpp" />
