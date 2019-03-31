@@ -35,13 +35,13 @@ void IEEEG1SB_TEST::setup()
     model.set_K3(0.3);
     model.set_T6_in_s(1.0);
     model.set_K5(0.4);
-    model.set_KP(0.4);
-    model.set_KI(0.5);
-    model.set_Tfuel_in_s(30.0);
-    model.set_TFD1_in_s(5.0);
+    model.set_KP(0.5);
+    model.set_KI(0.02);
+    model.set_Tfuel_in_s(60.0);
+    model.set_TFD1_in_s(27.0);
     model.set_TFD2_in_s(5.0);
-    model.set_Cb_in_s(60.0);
-    model.set_Kb(0.5);
+    model.set_Cb_in_s(200.0);
+    model.set_Kb(0.2);
 
     genptr->set_model(&model);
 }
@@ -95,13 +95,13 @@ void IEEEG1SB_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_K6()-0.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_K7()-0.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_K8()-0.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_KP()-0.4)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_KI()-0.5)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_Tfuel_in_s()-30.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_TFD1_in_s()-5.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_KP()-0.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_KI()-0.02)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_Tfuel_in_s()-60.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_TFD1_in_s()-27.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_TFD2_in_s()-5.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_Cb_in_s()-60.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_Kb()-0.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_Cb_in_s()-200.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_Kb()-0.2)<FLOAT_EPSILON);
 }
 
 void IEEEG1SB_TEST::test_initialize()

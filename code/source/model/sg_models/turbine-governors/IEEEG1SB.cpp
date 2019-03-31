@@ -30,6 +30,13 @@ void IEEEG1SB::clear()
     set_K6(0.0);
     set_K7(0.0);
     set_K8(0.0);
+    set_KP(0.0);
+    set_KI(1.0);
+    set_Tfuel_in_s(30.0);
+    set_TFD1_in_s(5.0);
+    set_TFD2_in_s(5.0);
+    set_Cb_in_s(60.0);
+    set_Kb(0.2);
 }
 void IEEEG1SB::copy_from_const_model(const IEEEG1SB& model)
 {
@@ -55,6 +62,13 @@ void IEEEG1SB::copy_from_const_model(const IEEEG1SB& model)
     this->set_K6(model.get_K6());
     this->set_K7(model.get_K7());
     this->set_K8(model.get_K8());
+    this->set_KP(model.get_KP());
+    this->set_KI(model.get_KI());
+    this->set_Tfuel_in_s(model.get_Tfuel_in_s());
+    this->set_TFD1_in_s(model.get_TFD1_in_s());
+    this->set_TFD2_in_s(model.get_TFD2_in_s());
+    this->set_Cb_in_s(model.get_Cb_in_s());
+    this->set_Kb(model.get_Kb());
 }
 
 IEEEG1SB::IEEEG1SB(const IEEEG1SB&model) : TURBINE_GOVERNOR_MODEL()
