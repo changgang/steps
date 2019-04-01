@@ -2337,8 +2337,8 @@ vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    build_network_matrix();
-    network_Y_matrix.report_brief();
+    //build_network_matrix();
+    //network_Y_matrix.report_brief();
 
     size_t nbus = psdb.get_in_service_bus_count();
 
@@ -2416,7 +2416,9 @@ vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_physical_bus_number()
     {
         size_t nbus_in_island = islands[i].size();
         for(size_t j=0; j!=nbus_in_island; ++j)
+        {
             islands[i][j] = get_physical_bus_number_of_internal_bus(islands[i][j]);
+        }
     }
 
     return islands;

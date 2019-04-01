@@ -2354,10 +2354,12 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_
 
 void DYNAMICS_SIMULATOR::update_generators_in_islands()
 {
+    ostringstream osstream;
+
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     vector< vector<size_t> > islands = network_matrix.get_islands_with_physical_bus_number();
-    if(islands.size()==generators_in_islands.size()) // won't update if islands doesn't change
+    /*if(islands.size()==generators_in_islands.size()) // won't update if islands doesn't change
         return;
 
     generators_in_islands.clear();
@@ -2384,7 +2386,7 @@ void DYNAMICS_SIMULATOR::update_generators_in_islands()
         }
 
         generators_in_islands.push_back(generators_in_island);
-    }
+    }*/
 }
 
 bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
