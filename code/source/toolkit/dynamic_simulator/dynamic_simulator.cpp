@@ -1370,17 +1370,18 @@ void DYNAMICS_SIMULATOR::start()
 
     network_matrix.optimize_network_ordering();
 
-    if(get_rotor_angle_stability_survilliance_flag()==true)
-        update_generators_in_islands();
-
     run_all_models(INITIALIZE_MODE);
 
     network_matrix.build_dynamic_network_matrix();
+    build_jacobian();
+
     //const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_matrix();
     //Y.report_brief();
     //network_matrix.report_physical_internal_bus_number_pair();
 
-    build_jacobian();
+
+    if(get_rotor_angle_stability_survilliance_flag()==true)
+        update_generators_in_islands();
 
     ITER_DAE = 0;
     ITER_NET = 0;
