@@ -4,7 +4,10 @@ from multiprocessing import Pool, Process
 import func
    
 if __name__ =='__main__':   
-    for i in range(1,100):
+    processes = []
+    for i in range(1,10):
         p = Process(target=func.run, args=(i,))
+        processes.append(p)
         p.start()
-    p.join()
+    for p in processes: # wait all processes to finish before execute new codes
+        p.join()
