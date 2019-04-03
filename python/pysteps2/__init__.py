@@ -1,2 +1,2 @@
-from .pysteps import STEPS, pSTEPS
-__all__ = ['STEPS', 'pSTEPS']
+from .pysteps import STEPS
+__all__ = ['STEPS']
