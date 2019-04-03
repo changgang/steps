@@ -511,7 +511,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             generators.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(generators)
@@ -527,7 +527,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             wt_generators.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(wt_generators)
@@ -543,7 +543,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             pv_units.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(pv_units)
@@ -559,7 +559,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             loads.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(loads)
@@ -575,7 +575,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             fixed_shunts.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(fixed_shunts)
@@ -591,7 +591,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             equivalent_devices.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(equivalent_devices)
@@ -607,7 +607,7 @@ class STEPS():
             if bus==0:
                 break
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             energy_storages.append((int(bus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(energy_storages)
@@ -625,7 +625,7 @@ class STEPS():
                 break
             jbus = self.libsteps.api_get_current_device_bus_number(device, recv_side)
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             lines.append((int(ibus), int(jbus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(lines)
@@ -645,7 +645,7 @@ class STEPS():
             jbus = self.libsteps.api_get_current_device_bus_number(device, sec_side)
             kbus = self.libsteps.api_get_current_device_bus_number(device, ter_side)
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             transformers.append((int(ibus), int(jbus), int(kbus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(transformers)
@@ -663,7 +663,7 @@ class STEPS():
                 break
             jbus = self.libsteps.api_get_current_device_bus_number(device, inv_side)
             id = self.libsteps.api_get_current_device_identifier(device)
-            id = str(id)
+            id = id.decode('utf-8')
             hvdcs.append((int(ibus), int(jbus), id))
             self.libsteps.api_goto_next_device(device)
         return tuple(hvdcs)
@@ -1380,6 +1380,7 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
         self.libsteps.api_prepare_generator_related_meter(bus, ickt, meter_type, var_name)
         return
 
@@ -1387,6 +1388,7 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(generator)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
         self.libsteps.api_prepare_wt_generator_related_meter(bus, ickt, meter_type, var_name)
         return
 
@@ -1394,6 +1396,7 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(pvunit)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
         self.libsteps.api_prepare_pv_unit_related_meter(bus, ickt, meter_type, var_name)
         return
 
@@ -1401,6 +1404,7 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(estorage)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
         self.libsteps.api_prepare_energy_storage_related_meter(bus, ickt, meter_type, var_name)
         return
 
@@ -1408,6 +1412,7 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
         self.libsteps.api_prepare_load_related_meter(bus, ickt, meter_type, var_name)
         return
 
@@ -1416,6 +1421,7 @@ class STEPS():
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
         side = self.__get_c_char_p_of_string(side)
+        var_name = self.__get_c_char_p_of_string(var_name)
         self.libsteps.api_prepare_line_related_meter(ibus, jbus, ickt, meter_type, side, var_name)
         return
 
@@ -1424,6 +1430,7 @@ class STEPS():
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
         side = self.__get_c_char_p_of_string(side)
+        var_name = self.__get_c_char_p_of_string(var_name)
         self.libsteps.api_prepare_hvdc_related_meter(ibus, jbus, ickt, meter_type, side, var_name)
         return
 
@@ -1431,6 +1438,7 @@ class STEPS():
         bus, ickt = self.__extract_single_bus_device_id(equivalent_device)
         ickt = self.__get_c_char_p_of_string(ickt)
         meter_type = self.__get_c_char_p_of_string(meter_type)
+        var_name = self.__get_c_char_p_of_string(var_name)
         self.libsteps.api_prepare_equivalent_device_related_meter(bus, ickt, meter_type, var_name)
         return
 

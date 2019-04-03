@@ -243,7 +243,24 @@ void WT3T0::run(DYNAMIC_MODE mode)
     generator_rotor_angle_block.run(mode);
 
     if(mode==UPDATE_MODE)
+    {
         set_flag_model_updated_as_true();
+        WT_AERODYNAMIC_MODEL* aerd = wtgen->get_wt_aerodynamic_model();
+        double wmin = aerd->get_min_steady_state_turbine_speed_in_pu();
+        double wmax = aerd->get_max_steady_state_turbine_speed_in_pu();
+        double w = get_generator_speed_in_pu();
+        if(w<wmin or w>wmax*1.1)
+        {
+            ostringstream osstream;
+            osstream<<get_device_name()<<" is tripped at time "<<get_dynamic_simulation_time_in_s()<<"s due to ";
+            if(w<wmin)
+                osstream<<"rotor w<wmin: "<<w<<"<"<<wmin<<" pu";
+            else
+                osstream<<"rotor w>wmax*1.1: "<<w<<">"<<wmax*1.1<<" pu";
+            show_information_with_leading_time_stamp(osstream);
+            wtgen->set_status(false);
+        }
+    }
 }
 
 double WT3T0::get_turbine_speed_in_pu() const
