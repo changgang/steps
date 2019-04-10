@@ -29,7 +29,7 @@ void IEEEG3_TEST::setup()
     model.set_Pmax_in_pu(1.0);
     model.set_Pmin_in_pu(0.0);
     model.set_sigma(0.05);
-    model.set_delta(0.05);
+    model.set_delta(0.3);
     model.set_TR_in_s(3.0);
     model.set_TW_in_s(2.0);
     model.set_a11(0.5);
@@ -76,7 +76,7 @@ void IEEEG3_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_Pmax_in_pu()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_Pmin_in_pu()-0.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_sigma()-0.05)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_delta()-0.05)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_delta()-0.3)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_TR_in_s()-3.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_TW_in_s()-2.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_a11()-0.5)<FLOAT_EPSILON);

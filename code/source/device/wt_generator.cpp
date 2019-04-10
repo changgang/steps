@@ -2,10 +2,12 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include "header/model/wtg_models/wt_generator_model/wt_generator_models.h"
+#include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_models.h"
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_models.h"
 #include "header/model/wtg_models/wt_turbine_model/wt_turbine_models.h"
 #include "header/model/wtg_models/wt_pitch_model/wt_pitch_models.h"
 #include "header/model/wtg_models/wind_speed_model/wind_speed_models.h"
+#include "header/model/wtg_models/wt_relay_model/wt_relay_models.h"
 
 #include <istream>
 #include <iostream>
@@ -22,6 +24,7 @@ WT_GENERATOR::WT_GENERATOR() : SOURCE()
     wt_electrical_model = NULL;
     wt_pitch_model = NULL;
     wind_speed_model = NULL;
+    wt_relay_model = NULL;
 }
 
 WT_GENERATOR::~WT_GENERATOR()
@@ -95,6 +98,7 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
     WT_ELECTRICAL_MODEL* elec = get_wt_electrical_model();
     WT_PITCH_MODEL* pitch = get_wt_pitch_model();
     WIND_SPEED_MODEL* wind = get_wind_speed_model();
+    WT_RELAY_MODEL* relay = get_wt_relay_model();
 
     switch(mode)
     {
@@ -134,10 +138,17 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             if(pitch!=NULL)
                 pitch->initialize();
 
+            if(relay!=NULL)
+                relay->initialize();
+
             break;
         }
-        default:
+        case INTEGRATE_MODE:
+        case UPDATE_MODE:
         {
+            if(relay!=NULL)
+                relay->run(mode);
+
             if(pitch!=NULL)
                 pitch->run(mode);
 
@@ -159,6 +170,11 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             if(gen!=NULL)
                 gen->run(mode);
             break;
+        }
+        case RELAY_MODE:
+        {
+            if(relay!=NULL)
+                relay->run(mode);
         }
     }
 }
@@ -225,6 +241,12 @@ void WT_GENERATOR::set_model(const MODEL* model)
     if(model->get_model_type()=="WIND SPEED")
     {
         set_wind_speed_model((WIND_SPEED_MODEL*) model);
+        return;
+    }
+
+    if(model->get_model_type()=="WT RELAY")
+    {
+        set_wt_relay_model((WT_RELAY_MODEL*) model);
         return;
     }
 
@@ -494,6 +516,51 @@ void WT_GENERATOR::set_wind_speed_model(const WIND_SPEED_MODEL* model)
     }
 }
 
+
+void WT_GENERATOR::set_wt_relay_model(const WT_RELAY_MODEL* model)
+{
+    ostringstream osstream;
+    if(model==NULL)
+        return;
+
+    if(model->get_model_type()!="WT RELAY")
+    {
+        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up wt relay model.";
+        show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    WT_RELAY_MODEL* oldmodel = get_wt_relay_model();
+    if(oldmodel!=NULL)
+    {
+        delete oldmodel;
+        wt_relay_model = NULL;
+    }
+
+    WT_RELAY_MODEL *new_model = NULL;
+    string model_name = model->get_model_name();
+    if(model_name=="WTRLY0")
+    {
+        WTRLY0* smodel = (WTRLY0*) (model);
+        new_model = (WT_RELAY_MODEL*) new WTRLY0(*smodel);
+    }
+
+    if(new_model!=NULL)
+    {
+
+        new_model->set_device_id(get_device_id());
+        wt_relay_model = new_model;
+        osstream<<"wt relay model is set";
+        show_information_with_leading_time_stamp(osstream);
+    }
+    else
+    {
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append wt relay model of "<<get_device_name()<<".";
+        show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+
 WT_GENERATOR_MODEL* WT_GENERATOR::get_wt_generator_model()
 {
     return wt_generator_model;
@@ -522,6 +589,11 @@ WT_PITCH_MODEL* WT_GENERATOR::get_wt_pitch_model()
 WIND_SPEED_MODEL* WT_GENERATOR::get_wind_speed_model()
 {
     return wind_speed_model;
+}
+
+WT_RELAY_MODEL* WT_GENERATOR::get_wt_relay_model()
+{
+    return wt_relay_model;
 }
 
 void WT_GENERATOR::clear_wt_generator_model()
@@ -575,6 +647,15 @@ void WT_GENERATOR::clear_wind_speed_model()
     {
         delete wind_speed_model;
         wind_speed_model = NULL;
+    }
+}
+
+void WT_GENERATOR::clear_wt_relay_model()
+{
+    if(wt_relay_model!=NULL)
+    {
+        delete wt_relay_model;
+        wt_relay_model = NULL;
     }
 }
 

@@ -769,8 +769,8 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
 
         if(fabs(pnew-pmech)<FLOAT_EPSILON)
         {
-            //osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
-            //show_information_with_leading_time_stamp(osstream);
+            osstream<<__FUNCTION__<<"() takes "<<iter_count<<" iterations.";
+            show_information_with_leading_time_stamp(osstream);
             break;
         }
         if(pnew>pmech)

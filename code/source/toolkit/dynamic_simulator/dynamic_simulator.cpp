@@ -431,7 +431,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
         append_meter(meter);
         meter = setter.prepare_load_manually_scale_in_pu_meter(load->get_device_id());
         append_meter(meter);
-        meter = setter.prepare_load_relay_shed_scale_in_pu_meter(load->get_device_id());
+        meter = setter.prepare_load_shedding_shed_scale_in_pu_meter(load->get_device_id());
         append_meter(meter);
     }
 
@@ -940,8 +940,8 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
         meter = setter.prepare_load_total_scale_in_pu_meter(did);
     if(meter_type=="MANUALLY SCALE IN PU")
         meter = setter.prepare_load_manually_scale_in_pu_meter(did);
-    if(meter_type=="RELAY SHED SCALE IN PU")
-        meter = setter.prepare_load_relay_shed_scale_in_pu_meter(did);
+    if(meter_type=="SHEDDING SHED SCALE IN PU")
+        meter = setter.prepare_load_shedding_shed_scale_in_pu_meter(did);
 
     if(meter.is_valid())
         append_meter(meter);
@@ -1522,12 +1522,15 @@ void DYNAMICS_SIMULATOR::run_a_step()
             show_information_with_leading_time_stamp(osstream);
         }*/
         double max_angle_difference_new = get_system_max_angle_difference_in_deg();
-        if(fabs(max_angle_difference_new-max_angle_difference_old)<FLOAT_EPSILON) // DAE solution converged
+        //cout<<"max angle difference new: "<<max_angle_difference_new<<", old: "<<max_angle_difference_old<<", diff="<<max_angle_difference_new-max_angle_difference_old<<endl;
+        if(fabs(max_angle_difference_new-max_angle_difference_old)<1e-8) // DAE solution converged
             break;
         else
             max_angle_difference_old = max_angle_difference_new;
     }
     update();
+    update_relay_models();
+    save_meter_values();
 }
 
 void DYNAMICS_SIMULATOR::update_with_event()
@@ -1562,9 +1565,9 @@ void DYNAMICS_SIMULATOR::update_with_event()
         else
             break;
     }
-
     update_bus_frequency_blocks();
     update();
+    save_meter_values();
 }
 
 void DYNAMICS_SIMULATOR::integrate()
@@ -1598,8 +1601,16 @@ void DYNAMICS_SIMULATOR::update()
     }
     update_bus_frequency_blocks();
 
-    save_meter_values();
     //cout<<"    elapsed time for export meters: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
+}
+
+void DYNAMICS_SIMULATOR::update_relay_models()
+{
+    disable_relay_action_flag();
+    run_all_models(RELAY_MODE);
+
+    if(get_relay_actiion_flag()==true)
+        update();
 }
 
 void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
@@ -1662,25 +1673,28 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         edevice->run(mode);
     }
 
-    vector<BUS*> buses = psdb.get_all_in_service_buses();
-    n = buses.size();
-    BUS* bus;
-    //#pragma omp parallel for
-    for(size_t i=0; i<n; ++i)
+    if(mode==INITIALIZE_MODE or mode==INTEGRATE_MODE or mode==UPDATE_MODE)
     {
-        bus = buses[i];
-        BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
-        switch(mode)
+        vector<BUS*> buses = psdb.get_all_in_service_buses();
+        n = buses.size();
+        BUS* bus;
+        //#pragma omp parallel for
+        for(size_t i=0; i<n; ++i)
         {
-            case INITIALIZE_MODE:
+            bus = buses[i];
+            BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
+            switch(mode)
             {
-                model->initialize();
-                break;
-            }
-            default:
-            {
-                model->run(mode);
-                break;
+                case INITIALIZE_MODE:
+                {
+                    model->initialize();
+                    break;
+                }
+                default:
+                {
+                    model->run(mode);
+                    break;
+                }
             }
         }
     }
@@ -1702,6 +1716,22 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
         model->update_for_applying_event();
     }
 }
+
+void DYNAMICS_SIMULATOR::enable_relay_action_flag()
+{
+    relay_action_flag = true;
+}
+
+void DYNAMICS_SIMULATOR::disable_relay_action_flag()
+{
+    relay_action_flag = false;
+}
+
+bool DYNAMICS_SIMULATOR::get_relay_actiion_flag() const
+{
+    return relay_action_flag;
+}
+
 void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
@@ -1800,7 +1830,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     size_t n = I_mismatch.size();
     //#pragma omp parallel for
     for(size_t i = 0; i<n; ++i)
-        I_mismatch[i] *= (-1.0);
+        I_mismatch[i] = -I_mismatch[i];
 
     add_generators_to_bus_current_mismatch();
     add_wt_generators_to_bus_current_mismatch();
@@ -1932,8 +1962,11 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
         if(gen_model==NULL)
             continue;
 
-        //I = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-        I = gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+        if(gen_model->is_current_source())
+            I = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+        else
+            I = gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+        //cout<<generator->get_device_name()<<" terminal or Norton current is: "<<I<<endl;
 
         I_mismatch[internal_bus] += I;
 
@@ -2049,6 +2082,7 @@ bool DYNAMICS_SIMULATOR::is_converged()
     double smax = get_max_power_mismatch_in_MVA();
 
     double s_allowed = get_allowed_max_power_imbalance_in_MVA();
+    //cout<<"maximum power mismatch at time "<<get_dynamic_simulation_time_in_s()<<"s is "<<smax<<"MVA ги"<<s_allowed<<")"<<endl;
 
     //cout<<"    time for getting maximum power mismatch: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
     if(smax<s_allowed)
@@ -2079,7 +2113,7 @@ double DYNAMICS_SIMULATOR::get_max_power_mismatch_in_MVA()
 {
     double smax = 0.0;
     //complex<double> smax_complex;
-    //size_t smax_bus = 0;
+    size_t smax_bus = 0;
     size_t n = S_mismatch.size();
     for(size_t i=0; i!=n; ++i)
     {
@@ -2087,11 +2121,12 @@ double DYNAMICS_SIMULATOR::get_max_power_mismatch_in_MVA()
         if(s>smax)
         {
             smax = s;
-            //smax_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+            smax_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
             //smax_complex = S_mismatch[i];
         }
     }
-    //os<<"AT TIME %f, Max power mismatch found: %f (%f + j%f) MVA at bus %u.", TIME, smax, smax_complex.real(), smax_complex.imag(), smax_bus);
+    //ostringstream osstream;
+    //osstream<<"AT TIME "<<get_dynamic_simulation_time_in_s()<<"s, max power mismatch found: "<<smax<<"MVA at bus "<<smax_bus;
     //show_information_with_leading_time_stamp(osstream);
     return smax;
 

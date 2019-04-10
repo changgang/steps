@@ -1,4 +1,5 @@
 #include "header/model/wtg_models/wind_speed_model/filewind_test.h"
+#include "header/model/wtg_models/wind_speed_model/filewind.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <cstdlib>

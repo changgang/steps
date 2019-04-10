@@ -83,7 +83,7 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 
     if(mode==INTEGRATE_MODE)
         integrate();
-    else
+    if(mode==UPDATE_MODE)
         update();
 }
 
@@ -100,6 +100,10 @@ void INTEGRAL_BLOCK::integrate()
     double vmin = get_lower_limit();
 
     double x = get_input();
+
+    double ds = x/t;
+    if(fabs(ds)<FLOAT_EPSILON)
+        return;
 
     double s, z, y;
 

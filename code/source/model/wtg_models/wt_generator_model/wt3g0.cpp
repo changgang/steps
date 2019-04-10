@@ -477,6 +477,7 @@ complex<double> WT3G0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
         Iq = -hvrc_i;
 
     double pll_angle = get_pll_angle_in_rad();
+    //cout<<get_device_name()<<" model "<<get_model_name()<<": Ip= "<<Ip<<", Iq="<<Iq<<", Pllangle = "<<pll_angle<<endl;
 
     //complex<double> Ipq(Ip, Iq);
     //complex<double> Ixy = dq2xy_with_angle_in_rad(Ipq, pll_angle);

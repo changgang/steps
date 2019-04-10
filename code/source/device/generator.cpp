@@ -565,7 +565,8 @@ void GENERATOR::run(DYNAMIC_MODE mode)
 
             break;
         }
-        default:
+        case INTEGRATE_MODE:
+        case UPDATE_MODE:
         {
             COMPENSATOR_MODEL* comp = get_compensator_model();
             if(comp!=NULL)
@@ -590,6 +591,10 @@ void GENERATOR::run(DYNAMIC_MODE mode)
             SYNC_GENERATOR_MODEL* gen = get_sync_generator_model();
             if(gen!=NULL)
                 gen->run(mode);
+            break;
+        }
+        case RELAY_MODE:
+        {
             break;
         }
     }

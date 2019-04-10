@@ -3,6 +3,9 @@
 #include "header/power_system_database.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include <iostream>
+
+using namespace std;
 
 WT3E0::WT3E0()
 {
@@ -855,7 +858,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
     frequency_integral_controller.run(mode);
 
     //osstream<<"speed = "<<speed<<endl;
-    if(mode==UPDATE_MODE and is_frequency_regulation_enabled())
+/*    if(mode==UPDATE_MODE and is_frequency_regulation_enabled())
     {
         WT_AERODYNAMIC_MODEL* aerd = wt_generator->get_wt_aerodynamic_model();
         double wmin = aerd->get_min_steady_state_turbine_speed_in_pu();
@@ -872,7 +875,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
             show_information_with_leading_time_stamp(osstream);
             trip_frequency_regulation();
         }
-    }
+    }*/
     if(is_frequency_regulation_enabled())
     {
         input = torque_PI_regulator.get_output()*speed
@@ -1047,7 +1050,9 @@ double WT3E0::get_reactive_voltage_command_in_pu() const
         return Q_error_integrator.get_output()-vterm;
     }
     else
+    {
         return V_error_integrator.get_output();
+    }
 }
 
 void WT3E0::check()

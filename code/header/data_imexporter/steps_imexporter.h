@@ -145,6 +145,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_WT3E0_model(vector<string>& data);
         void add_WT3P0_model(vector<string>& data);
         void add_FILEWIND_model(vector<string>& data);
+        void add_WTRLY0_model(vector<string>& data);
 
         DEVICE_ID get_generator_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_wt_generator_device_id_from_string_vector(vector<string>& data);

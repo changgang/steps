@@ -70,7 +70,7 @@ void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
 {
     if(mode==INTEGRATE_MODE)
         integrate();
-    else
+    if(mode==UPDATE_MODE)
         update();
 }
 
@@ -88,6 +88,10 @@ void DIFFERENTIAL_BLOCK::integrate()
 
     s = (z+k/t*x)/(1.0+2.0*t/h);
     y = k/t*x-s;
+
+    double ds = (k/t*x-s)/t;
+    if(fabs(ds)<FLOAT_EPSILON)
+        return;
 
     set_state(s);
     set_output(y);

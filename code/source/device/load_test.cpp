@@ -47,8 +47,8 @@ LOAD_TEST::LOAD_TEST()
     TEST_ADD(LOAD_TEST::test_get_actual_constant_impedance_load);
 
     TEST_ADD(LOAD_TEST::test_set_get_load_model);
-    TEST_ADD(LOAD_TEST::test_set_get_load_frequency_relay_model);
-    TEST_ADD(LOAD_TEST::test_set_get_load_voltage_relay_model);
+    TEST_ADD(LOAD_TEST::test_set_get_load_frequency_shedding_model);
+    TEST_ADD(LOAD_TEST::test_set_get_load_voltage_shedding_model);
 }
 
 void LOAD_TEST::setup()
@@ -402,12 +402,12 @@ void LOAD_TEST::test_set_get_load_model()
     TEST_ASSERT(fabs(smodelptr->get_Q_alpha_1()-0.6)<FLOAT_EPSILON);
 }
 
-void LOAD_TEST::test_set_get_load_frequency_relay_model()
+void LOAD_TEST::test_set_get_load_frequency_shedding_model()
 {
     ;
 }
 
-void LOAD_TEST::test_set_get_load_voltage_relay_model()
+void LOAD_TEST::test_set_get_load_voltage_shedding_model()
 {
     ;
 }

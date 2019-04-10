@@ -86,9 +86,15 @@ void BUS::set_voltage_in_pu(double voltage)
         ostringstream osstream;
         osstream<<"Warning. Non-positive voltage ("<<voltage<<" pu) is not allowed for setting up voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
-               <<"0 will be set automatically.";
+               <<"0 will be set automatically. [current dynamic simulation time is: "<<get_dynamic_simulation_time_in_s()<<"s]";
         show_information_with_leading_time_stamp(osstream);
         voltage_in_pu = 0.0;
+        if(isnan(voltage))
+        {
+            osstream<<"STEPS will exit abnormally.";
+            show_information_with_leading_time_stamp(osstream);
+            exit(1);
+        }
     }
 }
 

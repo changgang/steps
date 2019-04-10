@@ -114,7 +114,7 @@ void PI_BLOCK::run(DYNAMIC_MODE mode)
 
     if(mode==INTEGRATE_MODE)
         integrate();
-    else
+    if(mode==UPDATE_MODE)
         update();
 
     LIMITER_TYPE limiter = get_limiter_type();

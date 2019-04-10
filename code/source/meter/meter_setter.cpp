@@ -596,14 +596,14 @@ METER METER_SETTER::prepare_load_manually_scale_in_pu_meter(const DEVICE_ID& dev
     return meter;
 }
 
-METER METER_SETTER::prepare_load_relay_shed_scale_in_pu_meter(const DEVICE_ID& device_id)
+METER METER_SETTER::prepare_load_shedding_shed_scale_in_pu_meter(const DEVICE_ID& device_id)
 {
     METER meter;
 
     bool successful = prepare_load_meter(meter, device_id);
 
     if(successful)
-        meter.set_meter_type("RELAY SHED SCALE IN PU");
+        meter.set_meter_type("SHEDDING SHED SCALE IN PU");
 
     return meter;
 }
@@ -623,7 +623,7 @@ METER METER_SETTER::prepare_load_load_model_internal_variable_meter(const DEVICE
     return meter;
 }
 
-METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+METER METER_SETTER::prepare_load_frequency_shedding_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
     METER meter;
 
@@ -631,14 +631,14 @@ METER METER_SETTER::prepare_load_frequency_relay_model_internal_variable_meter(c
 
     if(successful)
     {
-        meter.set_meter_type("FREQUENCY RELAY MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("FREQUENCY SHEDDING MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
     }
 
     return meter;
 }
 
-METER METER_SETTER::prepare_load_voltage_relay_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
+METER METER_SETTER::prepare_load_voltage_shedding_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
     METER meter;
 
@@ -646,7 +646,7 @@ METER METER_SETTER::prepare_load_voltage_relay_model_internal_variable_meter(con
 
     if(successful)
     {
-        meter.set_meter_type("VOLTAGE RELAY MODEL INTERNAL VARIABLE");
+        meter.set_meter_type("VOLTAGE SHEDDING MODEL INTERNAL VARIABLE");
         meter.set_internal_variable_name(name);
     }
 

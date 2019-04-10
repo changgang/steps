@@ -119,3 +119,11 @@ WIND_SPEED_MODEL* WTG_MODEL_TEST::get_test_wind_speed_model()
         return genptr->get_wind_speed_model();
 }
 
+WT_RELAY_MODEL* WTG_MODEL_TEST::get_test_wt_relay_model()
+{
+    WT_GENERATOR* genptr = get_test_wt_generator();
+    if(genptr==NULL)
+        return NULL;
+    else
+        return genptr->get_wt_relay_model();
+}

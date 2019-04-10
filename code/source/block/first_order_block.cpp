@@ -125,7 +125,7 @@ void FIRST_ORDER_BLOCK::run(DYNAMIC_MODE mode)
 {
     if(mode==INTEGRATE_MODE)
         integrate();
-    else
+    if(mode==UPDATE_MODE)
         update();
 }
 
@@ -153,6 +153,11 @@ void FIRST_ORDER_BLOCK::integrate()
         //s = (z+k*x)/(1.0+2.0*t/h);
         s = h*(z+k*x)/(h+2.0*t);
         y = s;
+
+        double ds = (k*x-s)/t;
+        if(fabs(ds)<FLOAT_EPSILON)
+            return;
+
         if(limiter_type != NO_LIMITER)
         {
             if(limiter_type == WINDUP_LIMITER)

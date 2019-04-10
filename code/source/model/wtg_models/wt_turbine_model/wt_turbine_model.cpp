@@ -1,5 +1,4 @@
 #include "header/model/wtg_models/wt_turbine_model/wt_turbine_model.h"
-#include "header/device/generator.h"
 
 #include "header/basic/utility.h"
 #include <cstdio>

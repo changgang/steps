@@ -113,7 +113,7 @@ void LEAD_LAG_BLOCK::run(DYNAMIC_MODE mode)
     {
         if(mode==INTEGRATE_MODE)
             integrate();
-        else
+        if(mode==UPDATE_MODE)
             update();
     }
 }
@@ -139,6 +139,10 @@ void LEAD_LAG_BLOCK::integrate()
     // (1+h/(2*t2))*s = z+h/(2.0*t2)*k*x
     s = (z+h/(2.0*t2)*k*x)/(1.0+h/(2.0*t2));
     y = t1/t2*(k*x+(t2/t1-1.0)*s);
+
+    double ds = (k*x-s)/t2;
+    if(fabs(ds)<FLOAT_EPSILON)
+        return;
 
     set_state(s);
     set_output(y);

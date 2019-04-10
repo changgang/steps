@@ -83,8 +83,11 @@ class DYNAMICS_SIMULATOR: public BASE
         void update_bus_frequency_blocks();
         void update_equivalent_devices_buffer();
         void update_equivalent_devices_output();
-
-
+    public:
+        void enable_relay_action_flag();
+    private:
+        void disable_relay_action_flag();
+        bool get_relay_actiion_flag() const;
     public: // events
         void change_dynamic_simulator_time_step(double newDELT);
 
@@ -132,6 +135,7 @@ class DYNAMICS_SIMULATOR: public BASE
     private:
         void integrate();
         void update();
+        void update_relay_models();
         double get_system_max_angle_difference_in_deg();
 
         void open_meter_output_files();
@@ -208,6 +212,8 @@ class DYNAMICS_SIMULATOR: public BASE
         ofstream csv_output_file, json_output_file;
 
         bool csv_file_export_enabled, json_file_export_enabled;
+
+        bool relay_action_flag;
     private:
         virtual bool is_valid() const;
         virtual void check();

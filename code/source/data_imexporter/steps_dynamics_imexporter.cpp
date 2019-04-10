@@ -141,6 +141,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="WT3E0") { add_WT3E0_model(data); return;}
     if(model_name=="WT3P0") { add_WT3P0_model(data); return;}
     if(model_name=="FILEWIND") { add_FILEWIND_model(data); return;}
+    if(model_name=="WTRLY0") { add_WTRLY0_model(data); return;}
 
 
     osstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__;
@@ -1249,6 +1250,30 @@ void STEPS_IMEXPORTER::add_FILEWIND_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid FILEWIND model is built, but will not be set for "<<gen->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_WTRLY0_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "WTRLY0")
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
+
+    WT_GENERATOR* gen = psdb.get_wt_generator(did);
+    if(gen != NULL)
+    {
+        WTRLY0 model;
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            gen->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid WTRLY0 model is built, but will not be set for "<<gen->get_device_name();
             show_information_with_leading_time_stamp(osstream);
         }
     }

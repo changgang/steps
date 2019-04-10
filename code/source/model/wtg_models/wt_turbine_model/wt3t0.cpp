@@ -245,7 +245,7 @@ void WT3T0::run(DYNAMIC_MODE mode)
     if(mode==UPDATE_MODE)
     {
         set_flag_model_updated_as_true();
-        WT_AERODYNAMIC_MODEL* aerd = wtgen->get_wt_aerodynamic_model();
+        /*WT_AERODYNAMIC_MODEL* aerd = wtgen->get_wt_aerodynamic_model();
         double wmin = aerd->get_min_steady_state_turbine_speed_in_pu();
         double wmax = aerd->get_max_steady_state_turbine_speed_in_pu();
         double w = get_generator_speed_in_pu();
@@ -259,7 +259,7 @@ void WT3T0::run(DYNAMIC_MODE mode)
                 osstream<<"rotor w>wmax*1.1: "<<w<<">"<<wmax*1.1<<" pu";
             show_information_with_leading_time_stamp(osstream);
             wtgen->set_status(false);
-        }
+        }*/
     }
 }
 

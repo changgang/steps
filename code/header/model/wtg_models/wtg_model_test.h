@@ -27,6 +27,7 @@ class WTG_MODEL_TEST : public Test::Suite
         WT_TURBINE_MODEL* get_test_wt_turbine_model();
         WT_PITCH_MODEL* get_test_wt_pitch_model();
         WIND_SPEED_MODEL* get_test_wind_speed_model();
+        WT_RELAY_MODEL* get_test_wt_relay_model();
     protected:
         virtual void setup();
         virtual void tear_down();

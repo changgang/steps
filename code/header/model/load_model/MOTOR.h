@@ -58,8 +58,8 @@ class MOTOR : public LOAD_MODEL
         void set_damping_D(double d);
         void set_damping_E(double e);
         void set_nominal_torque_for_motor_starting_in_pu(double Tnom);
-        void set_voltage_threshold_of_under_voltage_relay_in_pu(double V);
-        void set_timer_of_under_voltage_relay_in_s(double T);
+        void set_voltage_threshold_of_under_voltage_shedding_in_pu(double V);
+        void set_timer_of_under_voltage_shedding_in_s(double T);
         void set_timer_of_breaker_in_s(double T);
         void set_slip_in_pu(double slip);
 
@@ -86,8 +86,8 @@ class MOTOR : public LOAD_MODEL
         double get_damping_D() const;
         double get_damping_E() const;
         double get_nominal_torque_for_motor_starting_in_pu() const;
-        double get_voltage_threshold_of_under_voltage_relay_in_pu() const;
-        double get_timer_of_under_voltage_relay_in_s() const;
+        double get_voltage_threshold_of_under_voltage_shedding_in_pu() const;
+        double get_timer_of_under_voltage_shedding_in_s() const;
         double get_timer_of_breaker_in_s() const;
         double get_slip_in_pu() const;
 

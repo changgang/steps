@@ -103,7 +103,8 @@ enum DYNAMIC_MODE
 {
     INITIALIZE_MODE = 1,
     INTEGRATE_MODE = 2,
-    UPDATE_MODE = 3
+    UPDATE_MODE = 3,
+    RELAY_MODE = 4
 };
 
 enum FAULT_TYPE
