@@ -1,4 +1,4 @@
-#include "header/model/load_shedding_model/PUFLS.h"
+#include "header/model/load_relay_model/PUFLS.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <istream>
@@ -34,7 +34,7 @@ void PUFLS::clear()
 
     flag_additional_stage_is_tripped = false;
 
-    for(size_t stage=0; stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
     {
         discrete_stage_shed_scale_in_pu[stage] = 0.0;
         discrete_stage_timer[stage].reset();
@@ -59,11 +59,11 @@ void PUFLS::copy_from_const_model(const PUFLS& model)
     set_additional_stage_time_delay_in_s(model.get_additional_stage_time_delay_in_s());
 
     set_discrete_stage_time_delay_in_s(model.get_discrete_stage_time_delay_in_s());
-    for(size_t stage =0; stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage =0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
         set_discrete_stage_shed_scale_in_pu(stage, model.get_discrete_stage_shed_scale_in_pu(stage));
  }
 
-PUFLS::PUFLS(const PUFLS& model) : LOAD_FREQUENCY_SHEDDING_MODEL()
+PUFLS::PUFLS(const PUFLS& model) : LOAD_FREQUENCY_RELAY_MODEL()
 {
     copy_from_const_model(model);
 }
@@ -130,7 +130,7 @@ void PUFLS::set_additional_stage_shed_scale_in_pu(double scale)
 
 void PUFLS::set_discrete_stage_time_delay_in_s(double t)
 {
-    for(size_t stage=0; stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
     {
         discrete_stage_timer[stage].set_timer_interval_in_s(t);
     }
@@ -138,7 +138,7 @@ void PUFLS::set_discrete_stage_time_delay_in_s(double t)
 
 void PUFLS::set_discrete_stage_shed_scale_in_pu(size_t stage, double scale)
 {
-    if(stage<MAX_LOAD_SHEDDING_STAGE)
+    if(stage<MAX_LOAD_RELAY_STAGE)
         discrete_stage_shed_scale_in_pu[stage] = scale;
 }
 
@@ -194,7 +194,7 @@ double PUFLS::get_discrete_stage_time_delay_in_s() const
 
 double PUFLS::get_discrete_stage_shed_scale_in_pu(size_t stage) const
 {
-    if(stage<MAX_LOAD_SHEDDING_STAGE)
+    if(stage<MAX_LOAD_RELAY_STAGE)
         return discrete_stage_shed_scale_in_pu[stage];
     else
         return 0.0;
@@ -247,7 +247,7 @@ bool PUFLS::setup_model_with_steps_string_vector(vector<string>& data)
         tdelay = get_double_data(data[i],"0.0"); i++;
         set_discrete_stage_time_delay_in_s(tdelay);
 
-        for(size_t stage=0; i!=n and stage!=MAX_LOAD_SHEDDING_STAGE; ++i, ++stage)
+        for(size_t stage=0; i!=n and stage!=MAX_LOAD_RELAY_STAGE; ++i, ++stage)
         {
             double scale = get_double_data(data[i],"0.0");
             set_discrete_stage_shed_scale_in_pu(stage, scale);
@@ -301,7 +301,7 @@ void PUFLS::initialize()
     double fbase = get_bus_base_frequency_in_Hz();
 
     additional_stage_timer.set_attached_device(load);
-    for(size_t stage=0; stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
         discrete_stage_timer[stage].set_attached_device(load);
 
     double t_delay = get_time_delay_in_s();
@@ -318,7 +318,7 @@ void PUFLS::initialize()
     additional_stage_timer.reset();
     flag_additional_stage_is_tripped = false;
 
-    for(size_t stage=0; stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
     {
         discrete_stage_timer[stage].reset();
         flag_discrete_stage_is_tripped[stage] = false;
@@ -455,7 +455,7 @@ double PUFLS::get_continuous_shed_command_in_pu() const
 double PUFLS::get_total_discrete_shed_scale_in_pu() const
 {
     double scale = 0.0;
-    for(size_t stage=0; stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
     {
         if(is_discrete_stage_tipped(stage))
             scale += discrete_stage_shed_scale_in_pu[stage];
@@ -476,7 +476,7 @@ size_t PUFLS::get_number_of_discrete_stage_to_meet_total_continuous_shed_scale()
 
     size_t N=0;
     double total_to_shed = 0.0;
-    for(size_t stage=0; stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
     {
         double shed_scale_of_stage = get_discrete_stage_shed_scale_in_pu(stage);
 
@@ -491,7 +491,7 @@ size_t PUFLS::get_number_of_discrete_stage_to_meet_total_continuous_shed_scale()
 double PUFLS::get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(size_t n) const
 {
     double total = 0.0;
-    for(size_t stage=0; stage!=n and stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage=0; stage!=n and stage!=MAX_LOAD_RELAY_STAGE; ++stage)
     {
         total += get_discrete_stage_shed_scale_in_pu(stage);
     }
@@ -500,12 +500,12 @@ double PUFLS::get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(size_t n) c
 
 double PUFLS::get_total_shed_scale_of_all_discrete_stages_in_pu() const
 {
-    return get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(MAX_LOAD_SHEDDING_STAGE);
+    return get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(MAX_LOAD_RELAY_STAGE);
 }
 
 bool PUFLS::is_discrete_stage_tipped(size_t stage) const
 {
-    if(stage<MAX_LOAD_SHEDDING_STAGE)
+    if(stage<MAX_LOAD_RELAY_STAGE)
         return flag_discrete_stage_is_tripped[stage];
     else
         return false;
@@ -513,7 +513,7 @@ bool PUFLS::is_discrete_stage_tipped(size_t stage) const
 
 bool PUFLS::is_discrete_stage_timer_timed_out(size_t stage)
 {
-    if(stage<MAX_LOAD_SHEDDING_STAGE)
+    if(stage<MAX_LOAD_RELAY_STAGE)
         return discrete_stage_timer[stage].is_timed_out();
     else
         return false;
@@ -521,7 +521,7 @@ bool PUFLS::is_discrete_stage_timer_timed_out(size_t stage)
 
 void PUFLS::trip_discrete_stage(size_t stage)
 {
-    if(stage<MAX_LOAD_SHEDDING_STAGE)
+    if(stage<MAX_LOAD_RELAY_STAGE)
     {
         if(not is_discrete_stage_tipped(stage))
         {
@@ -533,7 +533,7 @@ void PUFLS::trip_discrete_stage(size_t stage)
 
 bool PUFLS::is_discrete_stage_timer_started(size_t stage) const
 {
-    if(stage<MAX_LOAD_SHEDDING_STAGE)
+    if(stage<MAX_LOAD_RELAY_STAGE)
         return discrete_stage_timer[stage].is_started();
     else
         return false;
@@ -541,7 +541,7 @@ bool PUFLS::is_discrete_stage_timer_started(size_t stage) const
 
 void PUFLS::start_discrete_stage_timer_of_stage(size_t stage)
 {
-    if(stage<MAX_LOAD_SHEDDING_STAGE)
+    if(stage<MAX_LOAD_RELAY_STAGE)
     {
         if(not is_discrete_stage_timer_started(stage))
             discrete_stage_timer[stage].start();
@@ -550,7 +550,7 @@ void PUFLS::start_discrete_stage_timer_of_stage(size_t stage)
 
 void PUFLS::reset_discrete_stage_timer_of_stage(size_t stage)
 {
-    if(stage<MAX_LOAD_SHEDDING_STAGE)
+    if(stage<MAX_LOAD_RELAY_STAGE)
     {
         if(is_discrete_stage_timer_started(stage))
             discrete_stage_timer[stage].reset();
@@ -797,7 +797,7 @@ string PUFLS::get_standard_model_string() const
       <<setprecision(4)<<fixed<<get_additional_stage_time_delay_in_s()<<", "
       <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()<<", "
       <<setprecision(4)<<fixed<<get_discrete_stage_time_delay_in_s();
-    for(size_t stage=0; stage!=MAX_LOAD_SHEDDING_STAGE; ++stage)
+    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
         osstream<<", "
           <<setprecision(4)<<fixed<<get_discrete_stage_shed_scale_in_pu(stage);
 

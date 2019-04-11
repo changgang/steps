@@ -440,23 +440,23 @@ void METER_SETTER_TEST::test_prepare_load_related_meters()
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="MANUALLY SCALE IN PU");
 
-    meter = setter.prepare_load_shedding_shed_scale_in_pu_meter(did);
+    meter = setter.prepare_load_relay_shed_scale_in_pu_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="SHEDDING SHED SCALE IN PU");
+    TEST_ASSERT(meter.get_meter_type()=="RELAY SHED SCALE IN PU");
 
     meter = setter.prepare_load_load_model_internal_variable_meter(did,"TOTAL ACTIVE POWER LOAD IN MW");
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="LOAD MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="TOTAL ACTIVE POWER LOAD IN MW");
 
-    meter = setter.prepare_load_frequency_shedding_model_internal_variable_meter(did,"SHED SCALE IN PU");
+    meter = setter.prepare_load_frequency_relay_model_internal_variable_meter(did,"SHED SCALE IN PU");
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="FREQUENCY SHEDDING MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_meter_type()=="FREQUENCY RELAY MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="SHED SCALE IN PU");
 
-    meter = setter.prepare_load_voltage_shedding_model_internal_variable_meter(did,"SHED SCALE IN PU");
+    meter = setter.prepare_load_voltage_relay_model_internal_variable_meter(did,"SHED SCALE IN PU");
     TEST_ASSERT(meter.get_device_id()==did);
-    TEST_ASSERT(meter.get_meter_type()=="VOLTAGE SHEDDING MODEL INTERNAL VARIABLE");
+    TEST_ASSERT(meter.get_meter_type()=="VOLTAGE RELAY MODEL INTERNAL VARIABLE");
     TEST_ASSERT(meter.get_internal_variable_name()=="SHED SCALE IN PU");
 }
 

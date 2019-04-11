@@ -1,12 +1,12 @@
 #ifndef UVLS_H
 #define UVLS_H
 
-#include "header/model/load_shedding_model/load_voltage_shedding_model.h"
+#include "header/model/load_relay_model/load_voltage_relay_model.h"
 #include "header/basic/constants.h"
 #include "header/basic/timer.h"
 #include "header/block/first_order_block.h"
 
-class UVLS : public LOAD_VOLTAGE_SHEDDING_MODEL
+class UVLS : public LOAD_VOLTAGE_RELAY_MODEL
 {
     public:
         UVLS();
@@ -77,12 +77,12 @@ class UVLS : public LOAD_VOLTAGE_SHEDDING_MODEL
 
         FIRST_ORDER_BLOCK voltage_sensor;
 
-        double voltage_threshold_in_pu[MAX_LOAD_SHEDDING_STAGE];
-        double scale_in_pu[MAX_LOAD_SHEDDING_STAGE];
+        double voltage_threshold_in_pu[MAX_LOAD_RELAY_STAGE];
+        double scale_in_pu[MAX_LOAD_RELAY_STAGE];
 
-        TIMER stage_timer[MAX_LOAD_SHEDDING_STAGE];
-        TIMER breaker_timer[MAX_LOAD_SHEDDING_STAGE];
-        bool flag_stage_is_tripped[MAX_LOAD_SHEDDING_STAGE];
+        TIMER stage_timer[MAX_LOAD_RELAY_STAGE];
+        TIMER breaker_timer[MAX_LOAD_RELAY_STAGE];
+        bool flag_stage_is_tripped[MAX_LOAD_RELAY_STAGE];
 };
 
 #endif // UVLS_H

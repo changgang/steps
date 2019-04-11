@@ -1,8 +1,8 @@
 #include "header/device/load.h"
 #include "header/basic/utility.h"
 #include "header/model/load_model/load_models.h"
-#include "header/model/load_shedding_model/load_frequency_shedding_models.h"
-#include "header/model/load_shedding_model/load_voltage_shedding_models.h"
+#include "header/model/load_relay_model/load_frequency_relay_models.h"
+#include "header/model/load_relay_model/load_voltage_relay_models.h"
 #include <istream>
 #include <iostream>
 
@@ -15,8 +15,8 @@ LOAD::LOAD()
     clear();
 
     load_model = NULL;
-    load_voltage_shedding_model = NULL;
-    load_frequency_shedding_model = NULL;
+    load_voltage_relay_model = NULL;
+    load_frequency_relay_model = NULL;
 }
 
 LOAD::~LOAD()
@@ -26,11 +26,11 @@ LOAD::~LOAD()
     if(load_model != NULL)
         delete load_model;
 
-    if(load_voltage_shedding_model != NULL)
-        delete load_voltage_shedding_model;
+    if(load_voltage_relay_model != NULL)
+        delete load_voltage_relay_model;
 
-    if(load_frequency_shedding_model != NULL)
-        delete load_frequency_shedding_model;
+    if(load_frequency_relay_model != NULL)
+        delete load_frequency_relay_model;
 }
 
 void LOAD::set_load_bus(size_t load_bus)
@@ -373,14 +373,14 @@ void LOAD::set_model(const MODEL* model)
         set_load_model((LOAD_MODEL*) model);
         return;
     }
-    if(model->get_model_type()=="LOAD VOLTAGE SHEDDING")
+    if(model->get_model_type()=="LOAD VOLTAGE RELAY")
     {
-        set_load_voltage_shedding_model((LOAD_VOLTAGE_SHEDDING_MODEL*) model);
+        set_load_voltage_relay_model((LOAD_VOLTAGE_RELAY_MODEL*) model);
         return;
     }
-    if(model->get_model_type()=="LOAD FREQUENCY SHEDDING")
+    if(model->get_model_type()=="LOAD FREQUENCY RELAY")
     {
-        set_load_frequency_shedding_model((LOAD_FREQUENCY_SHEDDING_MODEL*) model);
+        set_load_frequency_relay_model((LOAD_FREQUENCY_RELAY_MODEL*) model);
         return;
     }
 }
@@ -419,38 +419,38 @@ void LOAD::set_load_model(const LOAD_MODEL* model)
     }
 }
 
-void LOAD::set_load_frequency_shedding_model(const LOAD_FREQUENCY_SHEDDING_MODEL* model)
+void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* model)
 {
     if(model == NULL)
         return;
 
-    if(model->get_model_type()!="LOAD FREQUENCY SHEDDING")
+    if(model->get_model_type()!="LOAD FREQUENCY RELAY")
         return;
 
-    LOAD_FREQUENCY_SHEDDING_MODEL* oldmodel = get_load_frequency_shedding_model();
+    LOAD_FREQUENCY_RELAY_MODEL* oldmodel = get_load_frequency_relay_model();
     if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
     {
         delete oldmodel;
-        load_frequency_shedding_model = NULL;
+        load_frequency_relay_model = NULL;
     }
 
-    LOAD_FREQUENCY_SHEDDING_MODEL *new_model = NULL;
+    LOAD_FREQUENCY_RELAY_MODEL *new_model = NULL;
     string model_name = model->get_model_name();
     if(model_name=="UFLS")
     {
         UFLS* smodel = (UFLS*) (model);
-        new_model = (LOAD_FREQUENCY_SHEDDING_MODEL*) new UFLS(*smodel);
+        new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new UFLS(*smodel);
     }
     if(model_name=="PUFLS")
     {
         PUFLS* smodel = (PUFLS*) (model);
-        new_model = (LOAD_FREQUENCY_SHEDDING_MODEL*) new PUFLS(*smodel);
+        new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new PUFLS(*smodel);
     }
 
     if(new_model!=NULL)
     {
         new_model->set_device_id(get_device_id());
-        load_frequency_shedding_model = new_model;
+        load_frequency_relay_model = new_model;
         //ostringstream osstream;
         //osstream<<new_model->get_model_name()<<" is added.";
         //show_information_with_leading_time_stamp(osstream);
@@ -458,44 +458,44 @@ void LOAD::set_load_frequency_shedding_model(const LOAD_FREQUENCY_SHEDDING_MODEL
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load frequency shedding model of "<<get_device_name()<<".";
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load frequency relay model of "<<get_device_name()<<".";
         show_information_with_leading_time_stamp(osstream);
     }
 }
 
-void LOAD::set_load_voltage_shedding_model(const LOAD_VOLTAGE_SHEDDING_MODEL* model)
+void LOAD::set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model)
 {
     if(model == NULL)
         return;
 
-    if(model->get_model_type()!="LOAD VOLTAGE SHEDDING")
+    if(model->get_model_type()!="LOAD VOLTAGE RELAY")
         return;
 
-    LOAD_VOLTAGE_SHEDDING_MODEL* oldmodel = get_load_voltage_shedding_model();
+    LOAD_VOLTAGE_RELAY_MODEL* oldmodel = get_load_voltage_relay_model();
     if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
     {
         delete oldmodel;
-        load_voltage_shedding_model = NULL;
+        load_voltage_relay_model = NULL;
     }
 
-    LOAD_VOLTAGE_SHEDDING_MODEL *new_model = NULL;
+    LOAD_VOLTAGE_RELAY_MODEL *new_model = NULL;
     string model_name = model->get_model_name();
     if(model_name=="UVLS")
     {
         UVLS* smodel = (UVLS*) (model);
-        new_model = (LOAD_VOLTAGE_SHEDDING_MODEL*) new UVLS(*smodel);
+        new_model = (LOAD_VOLTAGE_RELAY_MODEL*) new UVLS(*smodel);
     }
 
     if(new_model!=NULL)
     {
 
         new_model->set_device_id(get_device_id());
-        load_voltage_shedding_model = new_model;
+        load_voltage_relay_model = new_model;
     }
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load voltage shedding model of "<<get_device_name()<<".";
+        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load voltage relay model of "<<get_device_name()<<".";
         show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -506,14 +506,14 @@ LOAD_MODEL* LOAD::get_load_model() const
     return load_model;
 }
 
-LOAD_FREQUENCY_SHEDDING_MODEL* LOAD::get_load_frequency_shedding_model() const
+LOAD_FREQUENCY_RELAY_MODEL* LOAD::get_load_frequency_relay_model() const
 {
-    return load_frequency_shedding_model;
+    return load_frequency_relay_model;
 }
 
-LOAD_VOLTAGE_SHEDDING_MODEL* LOAD::get_load_voltage_shedding_model() const
+LOAD_VOLTAGE_RELAY_MODEL* LOAD::get_load_voltage_relay_model() const
 {
-    return load_voltage_shedding_model;
+    return load_voltage_relay_model;
 }
 
 void LOAD::run(DYNAMIC_MODE mode)
@@ -530,11 +530,11 @@ void LOAD::run(DYNAMIC_MODE mode)
                 return;
             load->initialize();
 
-            LOAD_VOLTAGE_SHEDDING_MODEL* uvls = get_load_voltage_shedding_model();
+            LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
             if(uvls!=NULL)
                 uvls->initialize();
 
-            LOAD_FREQUENCY_SHEDDING_MODEL* ufls = get_load_frequency_shedding_model();
+            LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
             if(ufls!=NULL)
                 ufls->initialize();
 
@@ -543,11 +543,11 @@ void LOAD::run(DYNAMIC_MODE mode)
         case INTEGRATE_MODE:
         case UPDATE_MODE:
         {
-            LOAD_VOLTAGE_SHEDDING_MODEL* uvls = get_load_voltage_shedding_model();
+            LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
             if(uvls!=NULL)
                 uvls->run(mode);
 
-            LOAD_FREQUENCY_SHEDDING_MODEL* ufls = get_load_frequency_shedding_model();
+            LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
             if(ufls!=NULL)
                 ufls->run(mode);
 
@@ -558,11 +558,11 @@ void LOAD::run(DYNAMIC_MODE mode)
         }
         case RELAY_MODE:
         {
-            LOAD_VOLTAGE_SHEDDING_MODEL* uvls = get_load_voltage_shedding_model();
+            LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
             if(uvls!=NULL)
                 uvls->run(mode);
 
-            LOAD_FREQUENCY_SHEDDING_MODEL* ufls = get_load_frequency_shedding_model();
+            LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
             if(ufls!=NULL)
                 ufls->run(mode);
         }
@@ -594,7 +594,7 @@ complex<double> LOAD::get_dynamic_load_in_pu()
 
 double LOAD::get_load_total_scale_factor_in_pu() const
 {
-    double scale = get_load_manually_scale_factor_in_pu()-get_load_shedding_shed_scale_factor_in_pu();
+    double scale = get_load_manually_scale_factor_in_pu()-get_load_relay_shed_scale_factor_in_pu();
     if(scale<-1.0)
         scale = -1.0;
     return scale;
@@ -605,20 +605,20 @@ double LOAD::get_load_manually_scale_factor_in_pu() const
     return manually_scale_in_pu;
 }
 
-double LOAD::get_load_shedding_shed_scale_factor_in_pu() const
+double LOAD::get_load_relay_shed_scale_factor_in_pu() const
 {
     if(get_status())//==true
     {
-        LOAD_FREQUENCY_SHEDDING_MODEL* fshedding = get_load_frequency_shedding_model();
-        LOAD_VOLTAGE_SHEDDING_MODEL* vshedding = get_load_voltage_shedding_model();
+        LOAD_FREQUENCY_RELAY_MODEL* frelay = get_load_frequency_relay_model();
+        LOAD_VOLTAGE_RELAY_MODEL* vrelay = get_load_voltage_relay_model();
 
         double total_shed = 0.0;
 
-        if(fshedding!=NULL)
-            total_shed += fshedding->get_total_shed_scale_factor_in_pu();
+        if(frelay!=NULL)
+            total_shed += frelay->get_total_shed_scale_factor_in_pu();
 
-        if(vshedding!=NULL)
-            total_shed += vshedding->get_total_shed_scale_factor_in_pu();
+        if(vrelay!=NULL)
+            total_shed += vrelay->get_total_shed_scale_factor_in_pu();
 
         return total_shed;
     }

@@ -1,5 +1,5 @@
-#ifndef LOAD_SHEDDING_MODEL_TEST_H
-#define LOAD_SHEDDING_MODEL_TEST_H
+#ifndef LOAD_RELAY_MODEL_TEST_H
+#define LOAD_RELAY_MODEL_TEST_H
 
 #include <istream>
 #include <cstdlib>
@@ -13,14 +13,14 @@
 #include "cpptest.h"
 
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
-#include "header/model/load_shedding_model/load_shedding_model.h"
+#include "header/model/load_relay_model/load_relay_model.h"
 #include "header/power_system_database.h"
 using namespace std;
 
-class LOAD_SHEDDING_MODEL_TEST : public Test::Suite
+class LOAD_RELAY_MODEL_TEST : public Test::Suite
 {
     public:
-        LOAD_SHEDDING_MODEL_TEST();
+        LOAD_RELAY_MODEL_TEST();
     protected:
         virtual void setup();
         virtual void tear_down();
@@ -29,4 +29,4 @@ class LOAD_SHEDDING_MODEL_TEST : public Test::Suite
         LOAD* loadptr;
 };
 
-#endif//LOAD_SHEDDING_MODEL_TEST_H
+#endif//LOAD_RELAY_MODEL_TEST_H

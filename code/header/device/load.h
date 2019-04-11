@@ -3,8 +3,8 @@
 
 #include "header/device/device.h"
 #include "header/model/load_model/load_model.h"
-#include "header/model/load_shedding_model/load_voltage_shedding_model.h"
-#include "header/model/load_shedding_model/load_frequency_shedding_model.h"
+#include "header/model/load_relay_model/load_voltage_relay_model.h"
+#include "header/model/load_relay_model/load_frequency_relay_model.h"
 #include <string>
 #include <complex>
 
@@ -66,19 +66,19 @@ class LOAD : public DEVICE
         virtual void set_model(const MODEL* model);
 
         void set_load_model(const LOAD_MODEL* model);
-        void set_load_frequency_shedding_model(const LOAD_FREQUENCY_SHEDDING_MODEL* model);
-        void set_load_voltage_shedding_model(const LOAD_VOLTAGE_SHEDDING_MODEL* model);
+        void set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* model);
+        void set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model);
 
         LOAD_MODEL* get_load_model() const;
-        LOAD_FREQUENCY_SHEDDING_MODEL* get_load_frequency_shedding_model() const;
-        LOAD_VOLTAGE_SHEDDING_MODEL* get_load_voltage_shedding_model() const;
+        LOAD_FREQUENCY_RELAY_MODEL* get_load_frequency_relay_model() const;
+        LOAD_VOLTAGE_RELAY_MODEL* get_load_voltage_relay_model() const;
 
         virtual void run(DYNAMIC_MODE mode);
         complex<double> get_dynamic_load_in_MVA();
         complex<double> get_dynamic_load_in_pu();
         double get_load_total_scale_factor_in_pu() const;
         double get_load_manually_scale_factor_in_pu() const;
-        double get_load_shedding_shed_scale_factor_in_pu() const;
+        double get_load_relay_shed_scale_factor_in_pu() const;
         complex<double> get_dynamics_load_current_in_pu_based_on_system_base_power();
     private:
         size_t bus;
@@ -95,7 +95,7 @@ class LOAD : public DEVICE
         double manually_scale_in_pu;
 
         LOAD_MODEL* load_model;
-        LOAD_VOLTAGE_SHEDDING_MODEL* load_voltage_shedding_model;
-        LOAD_FREQUENCY_SHEDDING_MODEL* load_frequency_shedding_model;
+        LOAD_VOLTAGE_RELAY_MODEL* load_voltage_relay_model;
+        LOAD_FREQUENCY_RELAY_MODEL* load_frequency_relay_model;
 };
 #endif // LOAD_H

@@ -1,4 +1,4 @@
-#include "header/model/load_shedding_model/load_voltage_shedding_model_test.h"
+#include "header/model/load_relay_model/load_frequency_relay_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <cstdlib>
@@ -9,39 +9,39 @@
 #include <cmath>
 
 using namespace std;
-LOAD_VOLTAGE_SHEDDING_MODEL_TEST::LOAD_VOLTAGE_SHEDDING_MODEL_TEST() : LOAD_SHEDDING_MODEL_TEST()
+LOAD_FREQUENCY_RELAY_MODEL_TEST::LOAD_FREQUENCY_RELAY_MODEL_TEST() : LOAD_RELAY_MODEL_TEST()
 {
-    TEST_ADD(LOAD_VOLTAGE_SHEDDING_MODEL_TEST::test_model_type);
-    TEST_ADD(LOAD_VOLTAGE_SHEDDING_MODEL_TEST::test_get_bus_voltage);
-    TEST_ADD(LOAD_VOLTAGE_SHEDDING_MODEL_TEST::test_run);
+    TEST_ADD(LOAD_FREQUENCY_RELAY_MODEL_TEST::test_model_type);
+    TEST_ADD(LOAD_FREQUENCY_RELAY_MODEL_TEST::test_get_bus_frequency);
+    TEST_ADD(LOAD_FREQUENCY_RELAY_MODEL_TEST::test_run);
 }
 
 
 
-void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::setup()
+void LOAD_FREQUENCY_RELAY_MODEL_TEST::setup()
 {
-    LOAD_SHEDDING_MODEL_TEST::setup();
+    LOAD_RELAY_MODEL_TEST::setup();
 }
 
-void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::tear_down()
+void LOAD_FREQUENCY_RELAY_MODEL_TEST::tear_down()
 {
-    LOAD_SHEDDING_MODEL_TEST::tear_down();
+    LOAD_RELAY_MODEL_TEST::tear_down();
 }
 
-void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::test_model_type()
+void LOAD_FREQUENCY_RELAY_MODEL_TEST::test_model_type()
 {
     LOAD* load = get_load();
-    LOAD_VOLTAGE_SHEDDING_MODEL* model = load->get_load_voltage_shedding_model();
+    LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
 
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    TEST_ASSERT(model->get_model_type()=="LOAD VOLTAGE SHEDDING");
+    TEST_ASSERT(model->get_model_type()=="LOAD FREQUENCY RELAY");
 }
 
-void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::test_get_bus_voltage()
+void LOAD_FREQUENCY_RELAY_MODEL_TEST::test_get_bus_frequency()
 {
     LOAD* load = get_load();
-    LOAD_VOLTAGE_SHEDDING_MODEL* model = load->get_load_voltage_shedding_model();
+    LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
 
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
@@ -49,54 +49,60 @@ void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::test_get_bus_voltage()
     size_t bus = load->get_load_bus();
     BUS* busptr = psdb.get_bus(bus);
 
-    busptr->set_voltage_in_pu(1.0);
-    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu()-1)<FLOAT_EPSILON);
+    BUS_FREQUENCY_MODEL* bus_model = busptr->get_bus_frequency_model();
 
-    busptr->set_voltage_in_pu(1.1);
-    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu()-1.1)<FLOAT_EPSILON);
+    bus_model->set_frequency_deviation_in_pu(0.0);
+    TEST_ASSERT(fabs(model->get_bus_frequency_in_Hz()-50.0*(1.0-0.0))<FLOAT_EPSILON);
 
-    busptr->set_voltage_in_pu(0.5);
-    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu()-0.5)<FLOAT_EPSILON);
+    bus_model->set_frequency_deviation_in_pu(-0.01);
+    TEST_ASSERT(fabs(model->get_bus_frequency_in_Hz()-50.0*(1.0-0.01))<FLOAT_EPSILON);
+
+    bus_model->set_frequency_deviation_in_pu(-0.05);
+    TEST_ASSERT(fabs(model->get_bus_frequency_in_Hz()-50.0*(1.0-0.05))<FLOAT_EPSILON);
+
+    bus_model->set_frequency_deviation_in_pu(0.05);
+    TEST_ASSERT(fabs(model->get_bus_frequency_in_Hz()-50.0*(1.0+0.05))<FLOAT_EPSILON);
 }
 
 
-void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::export_meter_title()
+void LOAD_FREQUENCY_RELAY_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
-    osstream<<"TIME\tVOLT\tSHED_SCALE";
+    osstream<<"TIME\tFREQ\tSHED_SCALE";
     show_information_with_leading_time_stamp(osstream);
 }
 
-void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::export_meter_values()
+void LOAD_FREQUENCY_RELAY_MODEL_TEST::export_meter_values()
 {
     LOAD* load = get_load();
-    LOAD_VOLTAGE_SHEDDING_MODEL* model = load->get_load_voltage_shedding_model();
+    LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
 
     ostringstream osstream;
     osstream<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
-      <<setprecision(6)<<fixed<<model->get_bus_voltage_in_pu()<<"\t"
+      <<setprecision(6)<<fixed<<model->get_bus_frequency_in_Hz()<<"\t"
       <<setprecision(6)<<fixed<<model->get_total_shed_scale_factor_in_pu()<<endl;
     show_information_with_leading_time_stamp(osstream);
 }
 
 
-void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::test_run()
+void LOAD_FREQUENCY_RELAY_MODEL_TEST::test_run()
 {
     LOAD* load = get_load();
-    LOAD_VOLTAGE_SHEDDING_MODEL* model = load->get_load_voltage_shedding_model();
+    LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
 
-    string outputfile = "test_log/voltage_ramp_response_of_"+model->get_model_name()+"_model.txt";
+    string outputfile = "test_log/frequency_ramp_response_of_"+model->get_model_name()+"_model.txt";
     run_model(outputfile);
 }
 
-void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::run_model(string outputfile)
+void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
 {
     LOAD* load = get_load();
-    LOAD_VOLTAGE_SHEDDING_MODEL* model = load->get_load_voltage_shedding_model();
+    LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
 
     redirect_stdout_to_file(outputfile);
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    double fbase = psdb.get_bus_base_frequency_in_Hz(load->get_load_bus());
 
     ostringstream osstream;
 
@@ -110,7 +116,9 @@ void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::run_model(string outputfile)
 
     size_t bus = load->get_load_bus();
     BUS* busptr = psdb.get_bus(bus);
-    busptr->set_voltage_in_pu(1.0);
+    BUS_FREQUENCY_MODEL* freq_model = busptr->get_bus_frequency_model();
+
+    freq_model->initialize();
 
     model->initialize();
     export_meter_title();
@@ -130,8 +138,8 @@ void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::run_model(string outputfile)
         export_meter_values();
     }
 
-    double volt = busptr->get_voltage_in_pu();
-    double rate = 0.2; // pu/s
+    double freq = freq_model->get_frequency_in_Hz();
+    double rate = 0.5; // Hz/s
 
     while(true)
     {
@@ -142,8 +150,8 @@ void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::run_model(string outputfile)
             STEPS::TIME -=delt;
             break;
         }
-        volt -= (rate*delt);
-        busptr->set_voltage_in_pu(volt);
+        freq -= (rate*delt);
+        freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
 
         model->run(INTEGRATE_MODE);
         model->run(UPDATE_MODE);
@@ -159,8 +167,8 @@ void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::run_model(string outputfile)
             STEPS::TIME -=delt;
             break;
         }
-        volt += (rate*delt);
-        busptr->set_voltage_in_pu(volt);
+        freq += (rate*delt);
+        freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
 
         model->run(INTEGRATE_MODE);
         model->run(UPDATE_MODE);
@@ -175,8 +183,8 @@ void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::run_model(string outputfile)
             STEPS::TIME -=delt;
             break;
         }
-        volt -= (rate*delt);
-        busptr->set_voltage_in_pu(volt);
+        freq -= (rate*delt);
+        freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
 
         model->run(INTEGRATE_MODE);
         model->run(UPDATE_MODE);
@@ -201,14 +209,14 @@ void LOAD_VOLTAGE_SHEDDING_MODEL_TEST::run_model(string outputfile)
     while(true)
     {
         STEPS::TIME += delt;
-        volt += (rate*delt);
-        busptr->set_voltage_in_pu(volt);
+        freq += (rate*delt);
+        freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
 
         if(STEPS::TIME>18.0+FLOAT_EPSILON)
         {
             STEPS::TIME -=delt;
-            volt -= (rate*delt);
-            busptr->set_voltage_in_pu(volt);
+            freq -= (rate*delt);
+            freq_model->set_frequency_deviation_in_pu(freq/fbase-1.0);
             break;
         }
         model->run(INTEGRATE_MODE);

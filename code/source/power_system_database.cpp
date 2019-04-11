@@ -3861,11 +3861,11 @@ void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
         if(loadmodel!=NULL)
             loadmodel->check();
 
-        LOAD_VOLTAGE_SHEDDING_MODEL* uvlsmodel = load->get_load_voltage_shedding_model();
+        LOAD_VOLTAGE_RELAY_MODEL* uvlsmodel = load->get_load_voltage_relay_model();
         if(uvlsmodel!=NULL)
             uvlsmodel->check();
 
-        LOAD_FREQUENCY_SHEDDING_MODEL* uflsmodel = load->get_load_frequency_shedding_model();
+        LOAD_FREQUENCY_RELAY_MODEL* uflsmodel = load->get_load_frequency_relay_model();
         if(uflsmodel!=NULL)
             uflsmodel->check();
     }

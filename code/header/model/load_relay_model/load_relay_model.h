@@ -1,19 +1,24 @@
-#ifndef LOAD_VOLTAGE_SHEDDING_MODEL_H
-#define LOAD_VOLTAGE_SHEDDING_MODEL_H
+#ifndef LOAD_RELAY_MODEL_H
+#define LOAD_RELAY_MODEL_H
 
-#include "header/model/load_shedding_model/load_shedding_model.h"
+#include "header/model/model.h"
+#include "header/basic/steps_enum.h"
 
-class LOAD_VOLTAGE_SHEDDING_MODEL : public LOAD_SHEDDING_MODEL
+class LOAD;
+
+class LOAD_RELAY_MODEL : public MODEL
 {
     public:
-        LOAD_VOLTAGE_SHEDDING_MODEL();
-        virtual ~LOAD_VOLTAGE_SHEDDING_MODEL();
+        LOAD_RELAY_MODEL();
+        virtual ~LOAD_RELAY_MODEL();
 
-        virtual string get_model_type() const;
-    public: // common input
-        double get_bus_voltage_in_pu() const;
+        LOAD* get_load_pointer() const;
 
-    public: // other common
+        void set_subsystem_type(SUBSYSTEM_TYPE subtype);
+        SUBSYSTEM_TYPE get_subsystem_type() const;
+        string get_detailed_model_name() const;
+
+        virtual string get_model_type() const = 0;
         virtual string get_model_name() const = 0;
 
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
@@ -39,6 +44,10 @@ class LOAD_VOLTAGE_SHEDDING_MODEL : public LOAD_SHEDDING_MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+    private:
+        SUBSYSTEM_TYPE subsystem_type;
+
+
 };
 
-#endif // LOAD_SHEDDING_MODEL_H
+#endif // LOAD_RELAY_MODEL_H

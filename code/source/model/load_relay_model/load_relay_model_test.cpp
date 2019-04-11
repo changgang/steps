@@ -1,4 +1,4 @@
-#include "header/model/load_shedding_model/load_shedding_model_test.h"
+#include "header/model/load_relay_model/load_relay_model_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
 #include <cstring>
@@ -8,14 +8,14 @@
 #include <cmath>
 
 using namespace std;
-LOAD_SHEDDING_MODEL_TEST::LOAD_SHEDDING_MODEL_TEST()
+LOAD_RELAY_MODEL_TEST::LOAD_RELAY_MODEL_TEST()
 {
     ;
 }
 
 
 
-void LOAD_SHEDDING_MODEL_TEST::setup()
+void LOAD_RELAY_MODEL_TEST::setup()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     psdb.set_allowed_max_bus_number(100);
@@ -50,7 +50,7 @@ void LOAD_SHEDDING_MODEL_TEST::setup()
     loadptr = psdb.get_load(did);
 }
 
-void LOAD_SHEDDING_MODEL_TEST::tear_down()
+void LOAD_RELAY_MODEL_TEST::tear_down()
 {
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
     psdb.clear_database();
@@ -61,7 +61,7 @@ void LOAD_SHEDDING_MODEL_TEST::tear_down()
     show_test_end_information();
 }
 
-LOAD* LOAD_SHEDDING_MODEL_TEST::get_load()
+LOAD* LOAD_RELAY_MODEL_TEST::get_load()
 {
     return loadptr;
 }

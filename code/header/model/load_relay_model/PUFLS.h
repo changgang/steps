@@ -1,14 +1,14 @@
 #ifndef PUFLS_H
 #define PUFLS_H
 
-#include "header/model/load_shedding_model/load_frequency_shedding_model.h"
+#include "header/model/load_relay_model/load_frequency_relay_model.h"
 #include "header/block/first_order_block.h"
 #include "header/meter/continuous_buffer.h"
 #include "header/basic/timer.h"
 #include "header/basic/constants.h"
 #include "header/basic/steps_enum.h"
 
-class PUFLS : public LOAD_FREQUENCY_SHEDDING_MODEL
+class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
 {
     public:
         PUFLS();
@@ -112,9 +112,9 @@ class PUFLS : public LOAD_FREQUENCY_SHEDDING_MODEL
         double additional_shed_scale;
         bool flag_additional_stage_is_tripped;
 
-        double discrete_stage_shed_scale_in_pu[MAX_LOAD_SHEDDING_STAGE];
-        TIMER discrete_stage_timer[MAX_LOAD_SHEDDING_STAGE];
-        bool flag_discrete_stage_is_tripped[MAX_LOAD_SHEDDING_STAGE];
+        double discrete_stage_shed_scale_in_pu[MAX_LOAD_RELAY_STAGE];
+        TIMER discrete_stage_timer[MAX_LOAD_RELAY_STAGE];
+        bool flag_discrete_stage_is_tripped[MAX_LOAD_RELAY_STAGE];
 
         CONTINUOUS_BUFFER history_minimum_frequency_buffer;
 

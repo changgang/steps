@@ -101,9 +101,9 @@
 #include "header/model/load_model/load_model_test.h"
 #include "header/model/load_model/IEEL_test.h"
 
-#include "header/model/load_shedding_model/UVLS_test.h"
-#include "header/model/load_shedding_model/UFLS_test.h"
-#include "header/model/load_shedding_model/PUFLS_test.h"
+#include "header/model/load_relay_model/UVLS_test.h"
+#include "header/model/load_relay_model/UFLS_test.h"
+#include "header/model/load_relay_model/PUFLS_test.h"
 
 #include "header/model/hvdc_model/vdcol_test.h"
 #include "header/model/hvdc_model/CDC4T_test.h"

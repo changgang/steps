@@ -1,4 +1,4 @@
-#include "header/model/load_shedding_model/UVLS_test.h"
+#include "header/model/load_relay_model/UVLS_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
 #include <cstring>
@@ -8,7 +8,7 @@
 #include <cmath>
 
 using namespace std;
-UVLS_TEST::UVLS_TEST() : LOAD_VOLTAGE_SHEDDING_MODEL_TEST()
+UVLS_TEST::UVLS_TEST() : LOAD_VOLTAGE_RELAY_MODEL_TEST()
 {
     TEST_ADD(UVLS_TEST::test_model_name);
     TEST_ADD(UVLS_TEST::test_set_get_parameters);
@@ -18,7 +18,7 @@ UVLS_TEST::UVLS_TEST() : LOAD_VOLTAGE_SHEDDING_MODEL_TEST()
 
 void UVLS_TEST::setup()
 {
-    LOAD_VOLTAGE_SHEDDING_MODEL_TEST::setup();
+    LOAD_VOLTAGE_RELAY_MODEL_TEST::setup();
 
     LOAD* load = get_load();
 
@@ -51,21 +51,21 @@ void UVLS_TEST::setup()
 
 void UVLS_TEST::tear_down()
 {
-    LOAD_VOLTAGE_SHEDDING_MODEL_TEST::tear_down();
+    LOAD_VOLTAGE_RELAY_MODEL_TEST::tear_down();
 }
 
 void UVLS_TEST::test_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UVLS_TEST");
 
-    TEST_ASSERT(get_load()->get_load_voltage_shedding_model()->get_model_name()=="UVLS");
+    TEST_ASSERT(get_load()->get_load_voltage_relay_model()->get_model_name()=="UVLS");
 }
 
 void UVLS_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UVLS_TEST");
 
-    UVLS* model = (UVLS*) get_load()->get_load_voltage_shedding_model();
+    UVLS* model = (UVLS*) get_load()->get_load_voltage_relay_model();
 
     size_t stage = 0;
 

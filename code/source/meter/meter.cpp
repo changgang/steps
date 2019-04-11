@@ -53,10 +53,10 @@ vector<string> load_meters{ "CURRENT IN KA",
                             "ACTIVE POWER IN PU", "REACTIVE POWER IN PU",
                             "TOTAL SCALE IN PU",
                             "MANUALLY SCALE IN PU",
-                            "SHEDDING SHED SCALE IN PU",
+                            "RELAY SHED SCALE IN PU",
                             "LOAD MODEL INTERNAL VARIABLE",
-                            "FREQUENCY SHEDDING MODEL INTERNAL VARIABLE",
-                            "VOLTAGE SHEDDING MODEL INTERNAL VARIABLE"};
+                            "FREQUENCY RELAY MODEL INTERNAL VARIABLE",
+                            "VOLTAGE RELAY MODEL INTERNAL VARIABLE"};
 
 vector<string> generator_meters{"ROTOR ANGLE IN DEG",
                                 "ROTOR SPEED IN PU",               "ROTOR SPEED IN HZ",
@@ -313,10 +313,10 @@ bool METER::is_internal_variable_name_valid(string name) const
         LOAD* ptr = (LOAD*)get_device_pointer();
         if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
             model = ptr->get_load_model();
-        if(meter_type=="FREQUENCY SHEDDING MODEL INTERNAL VARIABLE")
-            model = ptr->get_load_frequency_shedding_model();
-        if(meter_type=="VOLTAGE SHEDDING MODEL INTERNAL VARIABLE")
-            model = ptr->get_load_voltage_shedding_model();
+        if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
+            model = ptr->get_load_frequency_relay_model();
+        if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
+            model = ptr->get_load_voltage_relay_model();
     }
     if(get_device_type()=="GENERATOR")
     {
@@ -1032,17 +1032,17 @@ double METER::get_meter_value_as_a_load() const
         else
             return model->get_model_internal_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="FREQUENCY SHEDDING MODEL INTERNAL VARIABLE")
+    if(meter_type=="FREQUENCY RELAY MODEL INTERNAL VARIABLE")
     {
-        LOAD_FREQUENCY_SHEDDING_MODEL* model = load->get_load_frequency_shedding_model();
+        LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
         if(model==NULL)
             return 0.0;
         else
             return model->get_model_internal_variable_with_name(internal_variable_name);
     }
-    if(meter_type=="VOLTAGE SHEDDING MODEL INTERNAL VARIABLE")
+    if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
     {
-        LOAD_VOLTAGE_SHEDDING_MODEL* model = load->get_load_voltage_shedding_model();
+        LOAD_VOLTAGE_RELAY_MODEL* model = load->get_load_voltage_relay_model();
         if(model==NULL)
             return 0.0;
         else
@@ -1056,9 +1056,9 @@ double METER::get_meter_value_as_a_load() const
     {
         return load->get_load_manually_scale_factor_in_pu();
     }
-    if(meter_type=="SHEDDING SHED SCALE IN PU")
+    if(meter_type=="RELAY SHED SCALE IN PU")
     {
-        return load->get_load_shedding_shed_scale_factor_in_pu();
+        return load->get_load_relay_shed_scale_factor_in_pu();
     }
     return 0.0;
 }

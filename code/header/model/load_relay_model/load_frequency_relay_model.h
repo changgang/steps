@@ -1,24 +1,20 @@
-#ifndef LOAD_SHEDDING_MODEL_H
-#define LOAD_SHEDDING_MODEL_H
+#ifndef LOAD_FREQUENCY_RELAY_MODEL_H
+#define LOAD_FREQUENCY_RELAY_MODEL_H
 
-#include "header/model/model.h"
-#include "header/basic/steps_enum.h"
+#include "header/model/load_relay_model/load_relay_model.h"
 
-class LOAD;
-
-class LOAD_SHEDDING_MODEL : public MODEL
+class LOAD_FREQUENCY_RELAY_MODEL : public LOAD_RELAY_MODEL
 {
     public:
-        LOAD_SHEDDING_MODEL();
-        virtual ~LOAD_SHEDDING_MODEL();
+        LOAD_FREQUENCY_RELAY_MODEL();
+        virtual ~LOAD_FREQUENCY_RELAY_MODEL();
 
-        LOAD* get_load_pointer() const;
+        virtual string get_model_type() const;
+    public: // common input
+        double get_bus_frequency_in_Hz() const;
+        double get_bus_base_frequency_in_Hz() const;
 
-        void set_subsystem_type(SUBSYSTEM_TYPE subtype);
-        SUBSYSTEM_TYPE get_subsystem_type() const;
-        string get_detailed_model_name() const;
-
-        virtual string get_model_type() const = 0;
+    public: // other common
         virtual string get_model_name() const = 0;
 
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
@@ -44,10 +40,6 @@ class LOAD_SHEDDING_MODEL : public MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
-    private:
-        SUBSYSTEM_TYPE subsystem_type;
-
-
 };
 
-#endif // LOAD_SHEDDING_MODEL_H
+#endif // LOAD_RELAY_MODEL_H

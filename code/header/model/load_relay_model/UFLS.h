@@ -1,12 +1,12 @@
 #ifndef UFLS_H
 #define UFLS_H
 
-#include "header/model/load_shedding_model/load_frequency_shedding_model.h"
+#include "header/model/load_relay_model/load_frequency_relay_model.h"
 #include "header/basic/constants.h"
 #include "header/basic/timer.h"
 #include "header/block/first_order_block.h"
 
-class UFLS : public LOAD_FREQUENCY_SHEDDING_MODEL
+class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
 {
     public:
         UFLS();
@@ -74,12 +74,12 @@ class UFLS : public LOAD_FREQUENCY_SHEDDING_MODEL
 
         FIRST_ORDER_BLOCK frequency_sensor;
 
-        double frequency_threshold_in_Hz[MAX_LOAD_SHEDDING_STAGE];
-        double scale_in_pu[MAX_LOAD_SHEDDING_STAGE];
+        double frequency_threshold_in_Hz[MAX_LOAD_RELAY_STAGE];
+        double scale_in_pu[MAX_LOAD_RELAY_STAGE];
 
-        TIMER stage_timer[MAX_LOAD_SHEDDING_STAGE];
-        TIMER breaker_timer[MAX_LOAD_SHEDDING_STAGE];
-        bool flag_stage_is_tripped[MAX_LOAD_SHEDDING_STAGE];
+        TIMER stage_timer[MAX_LOAD_RELAY_STAGE];
+        TIMER breaker_timer[MAX_LOAD_RELAY_STAGE];
+        bool flag_stage_is_tripped[MAX_LOAD_RELAY_STAGE];
 };
 
 #endif // UFLS_H

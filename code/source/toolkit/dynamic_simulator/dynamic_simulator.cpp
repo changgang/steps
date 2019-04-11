@@ -431,7 +431,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
         append_meter(meter);
         meter = setter.prepare_load_manually_scale_in_pu_meter(load->get_device_id());
         append_meter(meter);
-        meter = setter.prepare_load_shedding_shed_scale_in_pu_meter(load->get_device_id());
+        meter = setter.prepare_load_relay_shed_scale_in_pu_meter(load->get_device_id());
         append_meter(meter);
     }
 
@@ -940,8 +940,8 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
         meter = setter.prepare_load_total_scale_in_pu_meter(did);
     if(meter_type=="MANUALLY SCALE IN PU")
         meter = setter.prepare_load_manually_scale_in_pu_meter(did);
-    if(meter_type=="SHEDDING SHED SCALE IN PU")
-        meter = setter.prepare_load_shedding_shed_scale_in_pu_meter(did);
+    if(meter_type=="RELAY SHED SCALE IN PU")
+        meter = setter.prepare_load_relay_shed_scale_in_pu_meter(did);
 
     if(meter.is_valid())
         append_meter(meter);
@@ -3123,7 +3123,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 
     if(gen_id.get_device_type()!="GENERATOR")
     {
-        osstream<<"The given device is not a GENERATOR (it is a "<<gen_id.get_device_type()<<") for shedding generator."<<endl
+        osstream<<"The given device is not a GENERATOR (it is a "<<gen_id.get_device_type()<<") for relay generator."<<endl
                <<"No generator will be shed at time "<<get_dynamic_simulation_time_in_s()<<" s."<<endl;
         show_information_with_leading_time_stamp(osstream);
         return;
@@ -3135,7 +3135,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
     {
         if(fabs(percent)<FLOAT_EPSILON)
         {
-            osstream<<"Generator shedding percent is 0.0 for "<<generator->get_device_name()<<endl
+            osstream<<"Generator relay percent is 0.0 for "<<generator->get_device_name()<<endl
                    <<"No generator will be shed at time "<<get_dynamic_simulation_time_in_s()<<" s."<<endl;
             show_information_with_leading_time_stamp(osstream);
             return;

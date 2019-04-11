@@ -1,4 +1,4 @@
-#include "header/model/load_shedding_model/UFLS_test.h"
+#include "header/model/load_relay_model/UFLS_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
 #include <cstring>
@@ -8,7 +8,7 @@
 #include <cmath>
 
 using namespace std;
-UFLS_TEST::UFLS_TEST() : LOAD_FREQUENCY_SHEDDING_MODEL_TEST()
+UFLS_TEST::UFLS_TEST() : LOAD_FREQUENCY_RELAY_MODEL_TEST()
 {
     TEST_ADD(UFLS_TEST::test_model_name);
     TEST_ADD(UFLS_TEST::test_set_get_parameters);
@@ -18,7 +18,7 @@ UFLS_TEST::UFLS_TEST() : LOAD_FREQUENCY_SHEDDING_MODEL_TEST()
 
 void UFLS_TEST::setup()
 {
-    LOAD_FREQUENCY_SHEDDING_MODEL_TEST::setup();
+    LOAD_FREQUENCY_RELAY_MODEL_TEST::setup();
 
     LOAD* load = get_load();
 
@@ -51,21 +51,21 @@ void UFLS_TEST::setup()
 
 void UFLS_TEST::tear_down()
 {
-    LOAD_FREQUENCY_SHEDDING_MODEL_TEST::tear_down();
+    LOAD_FREQUENCY_RELAY_MODEL_TEST::tear_down();
 }
 
 void UFLS_TEST::test_model_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UFLS_TEST");
 
-    TEST_ASSERT(get_load()->get_load_frequency_shedding_model()->get_model_name()=="UFLS");
+    TEST_ASSERT(get_load()->get_load_frequency_relay_model()->get_model_name()=="UFLS");
 }
 
 void UFLS_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UFLS_TEST");
 
-    UFLS* model = (UFLS*) get_load()->get_load_frequency_shedding_model();
+    UFLS* model = (UFLS*) get_load()->get_load_frequency_relay_model();
 
     size_t stage = 0;
 

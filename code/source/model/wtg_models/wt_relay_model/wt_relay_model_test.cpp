@@ -91,7 +91,7 @@ void WT_RELAY_MODEL_TEST::test_get_model_type()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        TEST_ASSERT(model->get_model_type()=="WT SHEDDING");
+        TEST_ASSERT(model->get_model_type()=="WT RELAY");
     }
     else
         TEST_ASSERT(false);

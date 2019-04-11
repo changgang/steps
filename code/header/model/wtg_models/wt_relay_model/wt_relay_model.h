@@ -5,7 +5,7 @@
 class WT_RELAY_MODEL : public WTG_MODEL
 {
     /*
-    wind shedding model:
+    wind relay model:
     inputs:
         vwind: wind speed
         speed: rotor speed
