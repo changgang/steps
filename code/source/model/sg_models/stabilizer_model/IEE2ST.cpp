@@ -47,8 +47,8 @@ void IEE2ST::copy_from_const_model(const IEE2ST& model)
     this->set_T8_in_s(model.get_T8_in_s());
     this->set_T9_in_s(model.get_T9_in_s());
     this->set_T10_in_s(model.get_T10_in_s());
-    this->set_Vssmax(model.get_Vssmax());
-    this->set_Vssmin(model.get_Vssmin());
+    this->set_Vsmax(model.get_Vsmax());
+    this->set_Vsmin(model.get_Vsmin());
     this->set_Vcmax(model.get_Vcmax());
     this->set_Vcmin(model.get_Vcmin());
 
@@ -133,13 +133,13 @@ void IEE2ST::set_T10_in_s(double T)
 {
     phase_tuner_3.set_T2_in_s(T);
 }
-void IEE2ST::set_Vssmax(double vmax)
+void IEE2ST::set_Vsmax(double vmax)
 {
-    Vssmax = vmax;
+    Vsmax = vmax;
 }
-void IEE2ST::set_Vssmin(double vmin)
+void IEE2ST::set_Vsmin(double vmin)
 {
-    Vssmin = vmin;
+    Vsmin = vmin;
 }
 
 void IEE2ST::set_Vcmax(double vmax)
@@ -207,13 +207,13 @@ double IEE2ST::get_T10_in_s() const
     return phase_tuner_3.get_T2_in_s();
 }
 
-double IEE2ST::get_Vssmax() const
+double IEE2ST::get_Vsmax() const
 {
-    return Vssmax;
+    return Vsmax;
 }
-double IEE2ST::get_Vssmin() const
+double IEE2ST::get_Vsmin() const
 {
-    return Vssmin;
+    return Vsmin;
 }
 double IEE2ST::get_Vcmax() const
 {
@@ -237,7 +237,7 @@ bool IEE2ST::setup_model_with_steps_string_vector(vector<string>& data)
 
     size_t signal_type[2], bus[2];
     double k1, t1, k2, t2, t3, t4, t5, t6, t7, t8, t9, t10,
-           lsmax, lsmin, vcl, vcu;
+           vsmax, vsmin, vcl, vcu;
 
     size_t i=3;
     signal_type[0] = get_integer_data(data[i],"0"); i++;
@@ -264,8 +264,8 @@ bool IEE2ST::setup_model_with_steps_string_vector(vector<string>& data)
     t8 = get_double_data(data[i],"0.0"); i++;
     t9 = get_double_data(data[i],"0.0"); i++;
     t10 = get_double_data(data[i],"0.0"); i++;
-    lsmax = get_double_data(data[i],"0.0"); i++;
-    lsmin = get_double_data(data[i],"0.0"); i++;
+    vsmax = get_double_data(data[i],"0.0"); i++;
+    vsmin = get_double_data(data[i],"0.0"); i++;
     vcu = get_double_data(data[i],"0.0"); i++;
     vcl = get_double_data(data[i],"0.0"); i++;
 
@@ -281,8 +281,8 @@ bool IEE2ST::setup_model_with_steps_string_vector(vector<string>& data)
     set_T8_in_s(t8);
     set_T9_in_s(t9);
     set_T10_in_s(t10);
-    set_Vssmax(lsmax);
-    set_Vssmin(lsmin);
+    set_Vsmax(vsmax);
+    set_Vsmin(vsmin);
     set_Vcmax(vcu);
     set_Vcmin(vcl);
 
@@ -416,8 +416,8 @@ void IEE2ST::run(DYNAMIC_MODE mode)
 double IEE2ST::get_stabilizing_signal_in_pu() const
 {
     double output = phase_tuner_3.get_output();
-    double vssmax = get_Vssmax();
-    double vssmin = get_Vssmin();
+    double vssmax = get_Vsmax();
+    double vssmin = get_Vsmin();
     if(output>vssmax)
         output=vssmax;
     if(output<vssmin)
@@ -470,6 +470,10 @@ string IEE2ST::get_standard_model_string() const
     double T8 = get_T8_in_s();
     double T9 = get_T9_in_s();
     double T10 = get_T10_in_s();
+    double Vsmax = get_Vsmax();
+    double Vsmin = get_Vsmin();
+    double Vcmax = get_Vcmax();
+    double Vcmin = get_Vcmin();
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
@@ -508,7 +512,12 @@ string IEE2ST::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<T7<<", "
       <<setw(8)<<setprecision(6)<<T8<<", "
       <<setw(8)<<setprecision(6)<<T9<<", "
-      <<setw(8)<<setprecision(6)<<T10<<"  /";
+      <<setw(8)<<setprecision(6)<<T10<<", "
+      <<setw(8)<<setprecision(6)<<Vsmax<<", "
+      <<setw(8)<<setprecision(6)<<Vsmin<<", "
+      <<setw(8)<<setprecision(6)<<Vcmax<<", "
+      <<setw(8)<<setprecision(6)<<Vcmin<<" /";
+
 
     return osstream.str();
 }

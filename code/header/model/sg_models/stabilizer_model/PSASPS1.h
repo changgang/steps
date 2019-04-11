@@ -16,40 +16,29 @@ class PSASPS1 : public STABILIZER_MODEL
 
         virtual string get_model_name() const;
     public:
-        void set_K1(double K);
-        void set_T1_in_s(double T);
-        void set_K2(double K);
-        void set_T2_in_s(double T);
-        void set_T3_in_s(double T);
-        void set_T4_in_s(double T);
-        void set_T5_in_s(double T);
-        void set_T6_in_s(double T);
-        void set_T7_in_s(double T);
-        void set_T8_in_s(double T);
-        void set_T9_in_s(double T);
-        void set_T10_in_s(double T);
-        void set_Vssmax(double vmax);
-        void set_Vssmin(double vmin);
-        void set_Vcmax(double vmax);
-        void set_Vcmin(double vmin);
+        void set_Kq1(double K);
+        void set_Kq2(double K);
+        void set_Kq3(double K);
+        void set_K(size_t K);
+        void set_Tq_in_s(double T);
+        void set_T1e_in_s(double T);
+        void set_T2e_in_s(double T);
+        void set_T3e_in_s(double T);
+        void set_T4e_in_s(double T);
+        void set_Vsmax(double vmax);
+        void set_Vsmin(double vmin);
 
-        double get_K1() const;
-        double get_K2() const;
-        double get_T1_in_s() const;
-        double get_T2_in_s() const;
-        double get_T3_in_s() const;
-        double get_T4_in_s() const;
-        double get_T5_in_s() const;
-        double get_T6_in_s() const;
-        double get_T7_in_s() const;
-        double get_T8_in_s() const;
-        double get_T9_in_s() const;
-        double get_T10_in_s() const;
-        double get_Vssmax() const;
-        double get_Vssmin() const;
-        double get_Vcmax() const;
-        double get_Vcmin() const;
-
+        double get_Kq1() const;
+        double get_Kq2() const;
+        double get_Kq3() const;
+        size_t get_K() const;
+        double get_Tq_in_s() const;
+        double get_T1e_in_s() const;
+        double get_T2e_in_s() const;
+        double get_T3e_in_s() const;
+        double get_T4e_in_s() const;
+        double get_Vsmax() const;
+        double get_Vsmin() const;
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -77,11 +66,13 @@ class PSASPS1 : public STABILIZER_MODEL
         virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
-        FIRST_ORDER_BLOCK sensor_1, sensor_2;
-        DIFFERENTIAL_BLOCK filter; FIRST_ORDER_BLOCK alternative_filter;
+        double Kq1, Kq2, Kq3;
+        size_t K;
+        DIFFERENTIAL_BLOCK dedc_block;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
-        double Vssmax, Vssmin;
-        double Vcmax, Vcmin;
+        double Vsmax, Vsmin;
+
+        double speed_deviation_ref_pu, Pe_ref_pu, Vterminal_ref_pu;
 };
 
 #endif // PSASPS1_H

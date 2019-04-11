@@ -104,6 +104,13 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
 
     if(model_name=="COMP") { add_COMP_model(data); return;}
 
+    if(model_name=="IEE2ST") { add_IEE2ST_model(data); return;}
+    if(model_name=="PSASPS1") { add_PSASPS1_model(data); return;}
+    if(model_name=="PSASPS2") { add_PSASPS2_model(data); return;}
+    if(model_name=="PSASPS3") { add_PSASPS3_model(data); return;}
+    if(model_name=="PSASPS4") { add_PSASPS4_model(data); return;}
+    if(model_name=="PSASPS5") { add_PSASPS5_model(data); return;}
+
     if(model_name=="SEXS") { add_SEXS_model(data); return;}
     if(model_name=="IEEET1") { add_IEEET1_model(data); return;}
     if(model_name=="PSASPE1") { add_PSASPE1_model(data); return;}
@@ -111,14 +118,6 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="CSEET1") { add_CSEET1_model(data); return;}
     if(model_name=="CSEET2") { add_CSEET2_model(data); return;}
     if(model_name=="PSASPE13") { add_PSASPE13_model(data); return;}
-
-
-    if(model_name=="IEE2ST") { add_IEE2ST_model(data); return;}
-    if(model_name=="PSASPS1") { add_PSASPS1_model(data); return;}
-    if(model_name=="PSASPS2") { add_PSASPS2_model(data); return;}
-    if(model_name=="PSASPS3") { add_PSASPS3_model(data); return;}
-    if(model_name=="PSASPS4") { add_PSASPS4_model(data); return;}
-    if(model_name=="PSASPS5") { add_PSASPS5_model(data); return;}
 
     if(model_name=="TGOV1") { add_TGOV1_model(data); return;}
     if(model_name=="IEEEG1") { add_IEEEG1_model(data); return;}
@@ -481,7 +480,7 @@ void STEPS_IMEXPORTER::add_PSASPS1_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "PSASPS1")
         return;
 
-    if(data.size()<3)
+    if(data.size()<14)
         return;
 
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();

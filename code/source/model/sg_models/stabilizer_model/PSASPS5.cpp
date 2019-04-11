@@ -47,8 +47,8 @@ void PSASPS5::copy_from_const_model(const PSASPS5& model)
     this->set_T8_in_s(model.get_T8_in_s());
     this->set_T9_in_s(model.get_T9_in_s());
     this->set_T10_in_s(model.get_T10_in_s());
-    this->set_Vssmax(model.get_Vssmax());
-    this->set_Vssmin(model.get_Vssmin());
+    this->set_Vsmax(model.get_Vsmax());
+    this->set_Vsmin(model.get_Vsmin());
     this->set_Vcmax(model.get_Vcmax());
     this->set_Vcmin(model.get_Vcmin());
 
@@ -133,13 +133,13 @@ void PSASPS5::set_T10_in_s(double T)
 {
     phase_tuner_3.set_T2_in_s(T);
 }
-void PSASPS5::set_Vssmax(double vmax)
+void PSASPS5::set_Vsmax(double vmax)
 {
-    Vssmax = vmax;
+    Vsmax = vmax;
 }
-void PSASPS5::set_Vssmin(double vmin)
+void PSASPS5::set_Vsmin(double vmin)
 {
-    Vssmin = vmin;
+    Vsmin = vmin;
 }
 
 void PSASPS5::set_Vcmax(double vmax)
@@ -207,13 +207,13 @@ double PSASPS5::get_T10_in_s() const
     return phase_tuner_3.get_T2_in_s();
 }
 
-double PSASPS5::get_Vssmax() const
+double PSASPS5::get_Vsmax() const
 {
-    return Vssmax;
+    return Vsmax;
 }
-double PSASPS5::get_Vssmin() const
+double PSASPS5::get_Vsmin() const
 {
-    return Vssmin;
+    return Vsmin;
 }
 double PSASPS5::get_Vcmax() const
 {
@@ -281,8 +281,8 @@ bool PSASPS5::setup_model_with_steps_string_vector(vector<string>& data)
     set_T8_in_s(t8);
     set_T9_in_s(t9);
     set_T10_in_s(t10);
-    set_Vssmax(lsmax);
-    set_Vssmin(lsmin);
+    set_Vsmax(lsmax);
+    set_Vsmin(lsmin);
     set_Vcmax(vcu);
     set_Vcmin(vcl);
 
@@ -416,8 +416,8 @@ void PSASPS5::run(DYNAMIC_MODE mode)
 double PSASPS5::get_stabilizing_signal_in_pu() const
 {
     double output = phase_tuner_3.get_output();
-    double vssmax = get_Vssmax();
-    double vssmin = get_Vssmin();
+    double vssmax = get_Vsmax();
+    double vssmin = get_Vsmin();
     if(output>vssmax)
         output=vssmax;
     if(output<vssmin)

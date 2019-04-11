@@ -28,8 +28,8 @@ class PSASPS5 : public STABILIZER_MODEL
         void set_T8_in_s(double T);
         void set_T9_in_s(double T);
         void set_T10_in_s(double T);
-        void set_Vssmax(double vmax);
-        void set_Vssmin(double vmin);
+        void set_Vsmax(double vmax);
+        void set_Vsmin(double vmin);
         void set_Vcmax(double vmax);
         void set_Vcmin(double vmin);
 
@@ -45,8 +45,8 @@ class PSASPS5 : public STABILIZER_MODEL
         double get_T8_in_s() const;
         double get_T9_in_s() const;
         double get_T10_in_s() const;
-        double get_Vssmax() const;
-        double get_Vssmin() const;
+        double get_Vsmax() const;
+        double get_Vsmin() const;
         double get_Vcmax() const;
         double get_Vcmin() const;
 
@@ -80,7 +80,7 @@ class PSASPS5 : public STABILIZER_MODEL
         FIRST_ORDER_BLOCK sensor_1, sensor_2;
         DIFFERENTIAL_BLOCK filter; FIRST_ORDER_BLOCK alternative_filter;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
-        double Vssmax, Vssmin;
+        double Vsmax, Vsmin;
         double Vcmax, Vcmin;
 };
 
