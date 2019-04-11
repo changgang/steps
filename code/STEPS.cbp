@@ -224,6 +224,11 @@
 		<Unit filename="header/model/sg_models/sg_model_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/IEE2ST.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/IEE2ST_test.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS1.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS2.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS3.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS4.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS5.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_models.h" />
@@ -543,6 +548,11 @@
 		<Unit filename="source/model/sg_models/sg_model_test.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/IEE2ST.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/IEE2ST_test.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS1.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS2.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS3.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS4.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS5.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model_test.cpp" />
 		<Unit filename="source/model/sg_models/sync_generator_model/gencls.cpp" />
