@@ -107,6 +107,11 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_COMP_model(vector<string>& data);
 
         void add_IEE2ST_model(vector<string>& data);
+        void add_PSASPS1_model(vector<string>& data);
+        void add_PSASPS2_model(vector<string>& data);
+        void add_PSASPS3_model(vector<string>& data);
+        void add_PSASPS4_model(vector<string>& data);
+        void add_PSASPS5_model(vector<string>& data);
 
         void add_SEXS_model(vector<string>& data);
         void add_IEEET1_model(vector<string>& data);

@@ -112,6 +112,14 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="CSEET2") { add_CSEET2_model(data); return;}
     if(model_name=="PSASPE13") { add_PSASPE13_model(data); return;}
 
+
+    if(model_name=="IEE2ST") { add_IEE2ST_model(data); return;}
+    if(model_name=="PSASPS1") { add_PSASPS1_model(data); return;}
+    if(model_name=="PSASPS2") { add_PSASPS2_model(data); return;}
+    if(model_name=="PSASPS3") { add_PSASPS3_model(data); return;}
+    if(model_name=="PSASPS4") { add_PSASPS4_model(data); return;}
+    if(model_name=="PSASPS5") { add_PSASPS5_model(data); return;}
+
     if(model_name=="TGOV1") { add_TGOV1_model(data); return;}
     if(model_name=="IEEEG1") { add_IEEEG1_model(data); return;}
     if(model_name=="IEEEG2") { add_IEEEG2_model(data); return;}
@@ -463,6 +471,142 @@ void STEPS_IMEXPORTER::add_IEE2ST_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEE2ST model is built, but will not be set for "<<generator->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_PSASPS1_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "PSASPS1")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
+
+    GENERATOR* generator = psdb.get_generator(did);
+    if(generator != NULL)
+    {
+        PSASPS1 model;
+
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            generator->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid PSASPS1 model is built, but will not be set for "<<generator->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+void STEPS_IMEXPORTER::add_PSASPS2_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "PSASPS2")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
+
+    GENERATOR* generator = psdb.get_generator(did);
+    if(generator != NULL)
+    {
+        PSASPS2 model;
+
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            generator->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid PSASPS2 model is built, but will not be set for "<<generator->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+void STEPS_IMEXPORTER::add_PSASPS3_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "PSASPS3")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
+
+    GENERATOR* generator = psdb.get_generator(did);
+    if(generator != NULL)
+    {
+        PSASPS3 model;
+
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            generator->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid PSASPS3 model is built, but will not be set for "<<generator->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+void STEPS_IMEXPORTER::add_PSASPS4_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "PSASPS4")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
+
+    GENERATOR* generator = psdb.get_generator(did);
+    if(generator != NULL)
+    {
+        PSASPS4 model;
+
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            generator->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid PSASPS4 model is built, but will not be set for "<<generator->get_device_name();
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
+}
+void STEPS_IMEXPORTER::add_PSASPS5_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "PSASPS5")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DEVICE_ID did = get_generator_device_id_from_string_vector(data);
+
+    GENERATOR* generator = psdb.get_generator(did);
+    if(generator != NULL)
+    {
+        PSASPS5 model;
+
+        bool successful = model.setup_model_with_steps_string_vector(data);
+        if(successful)
+            generator->set_model(&model);
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Invalid PSASPS5 model is built, but will not be set for "<<generator->get_device_name();
             show_information_with_leading_time_stamp(osstream);
         }
     }

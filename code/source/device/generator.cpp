@@ -326,6 +326,31 @@ void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
         IEE2ST* smodel = (IEE2ST*) (model);
         new_model = (STABILIZER_MODEL*) new IEE2ST(*smodel);
     }
+    if(model_name=="PSASPS1")
+    {
+        PSASPS1* smodel = (PSASPS1*) (model);
+        new_model = (STABILIZER_MODEL*) new PSASPS1(*smodel);
+    }
+    if(model_name=="PSASPS2")
+    {
+        PSASPS2* smodel = (PSASPS2*) (model);
+        new_model = (STABILIZER_MODEL*) new PSASPS2(*smodel);
+    }
+    if(model_name=="PSASPS3")
+    {
+        PSASPS3* smodel = (PSASPS3*) (model);
+        new_model = (STABILIZER_MODEL*) new PSASPS3(*smodel);
+    }
+    if(model_name=="PSASPS4")
+    {
+        PSASPS4* smodel = (PSASPS4*) (model);
+        new_model = (STABILIZER_MODEL*) new PSASPS4(*smodel);
+    }
+    if(model_name=="PSASPS5")
+    {
+        PSASPS5* smodel = (PSASPS5*) (model);
+        new_model = (STABILIZER_MODEL*) new PSASPS5(*smodel);
+    }
 
     if(new_model!=NULL)
     {
