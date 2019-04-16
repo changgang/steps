@@ -38,7 +38,7 @@
 #endif // get_variable_name(x)
 
 #ifndef MAX_TEMP_CHAR_BUFFER_SIZE
-#define MAX_TEMP_CHAR_BUFFER_SIZE 500
+    #define MAX_TEMP_CHAR_BUFFER_SIZE 500
 #endif // MAX_TEMP_CHAR_BUFFER_SIZE
 
 #ifndef MAX_LOAD_RELAY_STAGE

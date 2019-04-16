@@ -237,13 +237,13 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new POWER_SYSTEM_DATABASE_TEST));
 
-*/
+
         ts.add(unique_ptr<Test::Suite>(new STEPS_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new BPA_IMEXPORTER_TEST));
-/*
+
         //ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_MODEL_IMEXPORTER_TEST));
 
 
@@ -298,8 +298,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new IEEEG1_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEEEG2_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEEEG3_TEST));
-        ts.add(unique_ptr<Test::Suite>(new IEESGO_TEST));*/
-        ts.add(unique_ptr<Test::Suite>(new IEEEG1SB_TEST));/*
+        ts.add(unique_ptr<Test::Suite>(new IEESGO_TEST));
+        ts.add(unique_ptr<Test::Suite>(new IEEEG1SB_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new LCFB1_TEST));
 
@@ -318,9 +318,9 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new WT3T0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3E0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
-        ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
+        ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));*/
 
-        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
 

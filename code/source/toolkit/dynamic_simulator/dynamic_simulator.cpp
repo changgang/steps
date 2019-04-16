@@ -3,6 +3,7 @@
 #include "header/steps_namespace.h"
 #include "header/meter/meter_setter.h"
 #include <cstdio>
+#include <cstring>
 #include <istream>
 #include <iostream>
 #include <ctime>
@@ -31,7 +32,8 @@ void DYNAMICS_SIMULATOR::clear()
 
     close_meter_output_files();
 
-    set_csv_file_export_enable_flag(true);
+    set_bin_file_export_enable_flag(true);
+    set_csv_file_export_enable_flag(false);
     set_json_file_export_enable_flag(false);
 
     set_dynamic_simulation_time_in_s(0.0);
@@ -61,6 +63,11 @@ void DYNAMICS_SIMULATOR::set_json_file_export_enable_flag(bool flag)
     json_file_export_enabled = flag;
 }
 
+void DYNAMICS_SIMULATOR::set_bin_file_export_enable_flag(bool flag)
+{
+    bin_file_export_enabled = flag;
+}
+
 bool DYNAMICS_SIMULATOR::is_csv_file_export_enabled() const
 {
     return csv_file_export_enabled;
@@ -69,6 +76,11 @@ bool DYNAMICS_SIMULATOR::is_csv_file_export_enabled() const
 bool DYNAMICS_SIMULATOR::is_json_file_export_enabled() const
 {
     return json_file_export_enabled;
+}
+
+bool DYNAMICS_SIMULATOR::is_bin_file_export_enabled() const
+{
+    return bin_file_export_enabled;
 }
 
 void DYNAMICS_SIMULATOR::set_max_DAE_iteration(size_t iteration)
@@ -1197,6 +1209,11 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
         osstream<<"JSON meter output file stream was connected to some file. Stream will be closed before reopen for exporting dynamic simulation meter values.";
         show_information_with_leading_time_stamp(osstream);
     }
+    if(bin_output_file.is_open())
+    {
+        osstream<<"BIN meter output file stream was connected to some file. Stream will be closed before reopen for exporting dynamic simulation meter values.";
+        show_information_with_leading_time_stamp(osstream);
+    }
     close_meter_output_files();
 
     if(output_filename=="")
@@ -1238,6 +1255,17 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
             show_information_with_leading_time_stamp(osstream);
         }
     }
+
+    if(is_bin_file_export_enabled())
+    {
+        string bin_filename = output_filename+".bin";
+        bin_output_file.open(bin_filename, ios::binary);
+        if(not bin_output_file.is_open())
+        {
+            osstream<<"BIN meter output file "<<bin_filename<<" cannot be opened for exporting dynamic simulation meter values.";
+            show_information_with_leading_time_stamp(osstream);
+        }
+    }
 }
 
 void DYNAMICS_SIMULATOR::close_meter_output_files()
@@ -1252,7 +1280,6 @@ void DYNAMICS_SIMULATOR::close_meter_output_files()
 
         //osstream<<"CSV meter output file stream is closed.";
         //show_information_with_leading_time_stamp(osstream);
-
     }
     if(is_json_file_export_enabled() and json_output_file.is_open())
     {
@@ -1263,7 +1290,17 @@ void DYNAMICS_SIMULATOR::close_meter_output_files()
 
         //osstream<<"JSON meter output file stream is closed.";
         //show_information_with_leading_time_stamp(osstream);
+    }
 
+    if(is_bin_file_export_enabled() and bin_output_file.is_open())
+    {
+        //osstream<<"BIN meter output file stream will be closed.";
+        //show_information_with_leading_time_stamp(osstream);
+
+        bin_output_file.close();
+
+        //osstream<<"BIN meter output file stream is closed.";
+        //show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -1274,7 +1311,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
         return;
 
     open_meter_output_files();
-    if(not csv_output_file.is_open() and not json_output_file.is_open())
+    if(not csv_output_file.is_open() and not json_output_file.is_open() and not bin_output_file.is_open())
         return;
 
     // save header to csv file
@@ -1308,6 +1345,27 @@ void DYNAMICS_SIMULATOR::save_meter_information()
         json_output_file<<"],"<<endl<<endl;
         json_output_file<<"    \"meter_value\" : ["<<endl;
     }
+
+    // save header to bin file
+    if(is_bin_file_export_enabled() and bin_output_file.is_open())
+    {
+        size_t m = 4+n;
+        bin_output_file.write((char *)(&m), sizeof(m));
+        char meter_name[MAX_TEMP_CHAR_BUFFER_SIZE];
+        sprintf(meter_name, "TIME\n");
+        bin_output_file.write((char *)(&meter_name), strlen(meter_name));
+        sprintf(meter_name, "DAE INTEGRATION\n");
+        bin_output_file.write((char *)(&meter_name), strlen(meter_name));
+        sprintf(meter_name, "NETWORK INTEGRATION\n");
+        bin_output_file.write((char *)(&meter_name), strlen(meter_name));
+        sprintf(meter_name, "MISMATCH IN MVA\n");
+        bin_output_file.write((char *)(&meter_name), strlen(meter_name));
+        for(size_t i=0; i!=n; ++i)
+        {
+            sprintf(meter_name, (meters[i].get_meter_name()+"\n").c_str());
+            bin_output_file.write((char *)(&meter_name), strlen(meter_name));
+        }
+    }
 }
 
 void DYNAMICS_SIMULATOR::save_meter_values()
@@ -1316,7 +1374,7 @@ void DYNAMICS_SIMULATOR::save_meter_values()
     if(n==0)
         return;
 
-    if(not csv_output_file.is_open() and not json_output_file.is_open())
+    if(not csv_output_file.is_open() and not json_output_file.is_open() and not bin_output_file.is_open())
         return;
 
     get_bus_current_mismatch();
@@ -1325,37 +1383,63 @@ void DYNAMICS_SIMULATOR::save_meter_values()
 
     update_all_meters_value();
 
-    ostringstream osstream;
-    //osstream<<setw(8)<<setprecision(4)<<fixed<<get_dynamic_simulation_time_in_s()<<","
-    //  <<setw(3)<<ITER_DAE<<","<<setw(3)<<ITER_NET<<","
-    //  <<setw(6)<<setprecision(3)<<fixed<<smax;
+    if(is_csv_file_export_enabled() or is_json_file_export_enabled())
+    {
+        ostringstream osstream;
+        //osstream<<setw(8)<<setprecision(4)<<fixed<<get_dynamic_simulation_time_in_s()<<","
+        //  <<setw(3)<<ITER_DAE<<","<<setw(3)<<ITER_NET<<","
+        //  <<setw(6)<<setprecision(3)<<fixed<<smax;
 
-	char temp_buffer[50];
-	string temp_str = "";
-	snprintf(temp_buffer, 50, "%8.4f",get_dynamic_simulation_time_in_s());
-	temp_str += temp_buffer;
-	snprintf(temp_buffer, 50, ",%3lu",ITER_DAE);
-	temp_str += temp_buffer;
-	snprintf(temp_buffer, 50, ",%3lu",ITER_NET);
-	temp_str += temp_buffer;
-	snprintf(temp_buffer, 50, ",%6.3f",smax);
-	temp_str += temp_buffer;
-	for (size_t i = 0; i != n; ++i)
-	{
-		snprintf(temp_buffer, 50, ",%16.12f", meter_values[i]);
-		temp_str += temp_buffer;
-	}
-	osstream << temp_str;
+        char temp_buffer[50];
+        string temp_str = "";
+        snprintf(temp_buffer, 50, "%8.4f",get_dynamic_simulation_time_in_s());
+        temp_str += temp_buffer;
+        snprintf(temp_buffer, 50, ",%3lu",ITER_DAE);
+        temp_str += temp_buffer;
+        snprintf(temp_buffer, 50, ",%3lu",ITER_NET);
+        temp_str += temp_buffer;
+        snprintf(temp_buffer, 50, ",%6.3f",smax);
+        temp_str += temp_buffer;
+        for (size_t i = 0; i != n; ++i)
+        {
+            snprintf(temp_buffer, 50, ",%16.12f", meter_values[i]);
+            temp_str += temp_buffer;
+        }
+        osstream << temp_str;
 
-	/*for(size_t i=0; i!=n; ++i)
-        osstream<<","<<setw(16)<<setprecision(12)<<fixed<<meter_values[i];*/
+        /*for(size_t i=0; i!=n; ++i)
+            osstream<<","<<setw(16)<<setprecision(12)<<fixed<<meter_values[i];*/
 
-    if(is_csv_file_export_enabled() and csv_output_file.is_open())
-        csv_output_file<<osstream.str()<<endl;
+        if(is_csv_file_export_enabled() and csv_output_file.is_open())
+            csv_output_file<<osstream.str()<<endl;
 
-    if(is_json_file_export_enabled() and json_output_file.is_open())
-        json_output_file<<","<<endl
-                        <<"                       ["<<osstream.str()<<"]";
+        if(is_json_file_export_enabled() and json_output_file.is_open())
+            json_output_file<<","<<endl
+                            <<"                       ["<<osstream.str()<<"]";
+    }
+    if(is_bin_file_export_enabled() and bin_output_file.is_open())
+    {
+        double fvalue=0.0;
+        size_t ivalue=0;
+
+        fvalue = get_dynamic_simulation_time_in_s();
+        bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+
+        ivalue = ITER_DAE;
+        bin_output_file.write((char *)(&ivalue), sizeof(ivalue));
+
+        ivalue = ITER_NET;
+        bin_output_file.write((char *)(&ivalue), sizeof(ivalue));
+
+        fvalue = smax;
+        bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+
+        for (size_t i = 0; i != n; ++i)
+        {
+            fvalue = meter_values[i];
+            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+        }
+    }
 }
 
 void DYNAMICS_SIMULATOR::start()
@@ -1413,7 +1497,7 @@ void DYNAMICS_SIMULATOR::start()
 
 void DYNAMICS_SIMULATOR::stop()
 {
-    if(get_dynamic_simulation_time_in_s() >0.0 or csv_output_file.is_open())
+    if(get_dynamic_simulation_time_in_s() >0.0)
     {
         ostringstream osstream;
         osstream<<"Dynamics simulation stops.";

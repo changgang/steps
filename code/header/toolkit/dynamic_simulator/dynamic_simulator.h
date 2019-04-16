@@ -21,8 +21,10 @@ class DYNAMICS_SIMULATOR: public BASE
 
         void set_csv_file_export_enable_flag(bool flag);
         void set_json_file_export_enable_flag(bool flag);
+        void set_bin_file_export_enable_flag(bool flag);
         bool is_csv_file_export_enabled() const;
         bool is_json_file_export_enabled() const;
+        bool is_bin_file_export_enabled() const;
 
         //void set_current_simulation_time_in_s(double time);
         //double get_current_simulation_time_in_s() const;
@@ -209,9 +211,9 @@ class DYNAMICS_SIMULATOR: public BASE
         vector< vector<GENERATOR*> > generators_in_islands;
 
         string output_filename;
-        ofstream csv_output_file, json_output_file;
+        ofstream csv_output_file, json_output_file, bin_output_file;
 
-        bool csv_file_export_enabled, json_file_export_enabled;
+        bool csv_file_export_enabled, json_file_export_enabled, bin_file_export_enabled;
 
         bool relay_action_flag;
     private:

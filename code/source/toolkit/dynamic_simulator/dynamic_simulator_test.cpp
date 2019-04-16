@@ -19,6 +19,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
 
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_bin_file_export_enable_flag);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_csv_file_export_enable_flag);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_json_file_export_enable_flag);
 
@@ -101,8 +102,20 @@ void DYNAMICS_SIMULATOR_TEST::test_constructor()
     TEST_ASSERT(simulator.get_max_network_iteration()==1);
     TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.00001)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.0)<FLOAT_EPSILON);
-    TEST_ASSERT(simulator.is_csv_file_export_enabled()==true);
+    TEST_ASSERT(simulator.is_bin_file_export_enabled()==true);
+    TEST_ASSERT(simulator.is_csv_file_export_enabled()==false);
     TEST_ASSERT(simulator.is_json_file_export_enabled()==false);
+}
+
+void DYNAMICS_SIMULATOR_TEST::test_set_get_bin_file_export_enable_flag()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    DYNAMICS_SIMULATOR& simulator = get_default_dynamic_simulator();
+    simulator.set_bin_file_export_enable_flag(true);
+    TEST_ASSERT(simulator.is_bin_file_export_enabled()==true);
+    simulator.set_bin_file_export_enable_flag(false);
+    TEST_ASSERT(simulator.is_bin_file_export_enabled()==false);
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_set_get_csv_file_export_enable_flag()

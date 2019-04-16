@@ -26,6 +26,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
     private:
         void test_constructor();
 
+        void test_set_get_bin_file_export_enable_flag();
         void test_set_get_csv_file_export_enable_flag();
         void test_set_get_json_file_export_enable_flag();
 
