@@ -34585,7 +34585,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1554991505 source:c:\users\lichg\steps\code\main_tests.cpp
+1555058656 source:c:\users\lichg\steps\code\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -34654,6 +34654,11 @@
 	"header/model/sg_models/exciter_model/PSASPE13_test.h"
 	"header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
 	"header/model/sg_models/stabilizer_model/IEE2ST_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS1_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS2_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS3_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS4_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS5_test.h"
 	"header/model/sg_models/turbine_governor_model/TGOV1_test.h"
 	"header/model/sg_models/turbine_governor_model/IEEEG1_test.h"
 	"header/model/sg_models/turbine_governor_model/IEEEG2_test.h"
@@ -39022,31 +39027,96 @@
 	"header/basic/utility.h"
 	<vector>
 
-1554995322 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps2.cpp
+1554998492 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps2.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS2.h"
 	"header/basic/constants.h"
 	<cstdio>
 	"header/basic/utility.h"
 	<vector>
 
-1554995349 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps3.cpp
+1554998492 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps3.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS3.h"
 	"header/basic/constants.h"
 	<cstdio>
 	"header/basic/utility.h"
 	<vector>
 
-1554995349 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps4.cpp
+1554998492 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps4.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS4.h"
 	"header/basic/constants.h"
 	<cstdio>
 	"header/basic/utility.h"
 	<vector>
 
-1554995347 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps5.cpp
+1554998492 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps5.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS5.h"
 	"header/basic/constants.h"
 	<cstdio>
 	"header/basic/utility.h"
 	<vector>
+
+1555058562 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps1_test.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS1_test.h"
+	"header/basic/utility.h"
+
+1555058284 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\psasps1_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS1.h"
+	"header/power_system_database.h"
+
+1555058342 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps2_test.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS2_test.h"
+	"header/basic/utility.h"
+
+1555058292 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\psasps2_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS2.h"
+	"header/power_system_database.h"
+
+1555058351 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps3_test.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS3_test.h"
+	"header/basic/utility.h"
+
+1555058301 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\psasps3_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS3.h"
+	"header/power_system_database.h"
+
+1555058368 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps4_test.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS4_test.h"
+	"header/basic/utility.h"
+
+1555058309 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\psasps4_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS4.h"
+	"header/power_system_database.h"
+
+1555058366 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps5_test.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS5_test.h"
+	"header/basic/utility.h"
+
+1555058318 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\psasps5_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS5.h"
+	"header/power_system_database.h"
 
