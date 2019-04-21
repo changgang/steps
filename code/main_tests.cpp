@@ -288,8 +288,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new PSASPE13_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new IEE2ST_TEST));
-        ts.add(unique_ptr<Test::Suite>(new PSASPS1_TEST));
-        ts.add(unique_ptr<Test::Suite>(new PSASPS2_TEST));
+        ts.add(unique_ptr<Test::Suite>(new PSASPS1_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new PSASPS2_TEST));/*
         ts.add(unique_ptr<Test::Suite>(new PSASPS3_TEST));
         ts.add(unique_ptr<Test::Suite>(new PSASPS4_TEST));
         ts.add(unique_ptr<Test::Suite>(new PSASPS5_TEST));

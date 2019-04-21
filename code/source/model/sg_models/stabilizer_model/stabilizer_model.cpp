@@ -91,6 +91,8 @@ size_t STABILIZER_MODEL::convert_signal_type_string_to_number(string signal_type
         return 5;
     if(signal_type=="ROCOV IN PU/S")
         return 6;
+    if(signal_type=="MECHANICAL POWER IN PU ON MBASE")
+        return 7;
     return INDEX_NOT_EXIST;
 }
 
@@ -110,6 +112,8 @@ string STABILIZER_MODEL::convert_signal_type_number_to_string(size_t signal_type
             return "VOLTAGE IN PU";
         case 6:
             return "ROCOV IN PU/S";
+        case 7:
+            return "MECHANICAL POWER IN PU ON MBASE";
         default:
             return "";
     }
@@ -184,6 +188,17 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
             if(busptr==NULL)
                 break;
             DEVICE_ID did = busptr->get_device_id();
+            signal.set_device_id(did);
+            signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+            break;
+        }
+        case 7:
+        {
+            vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
+            if(gens.size()==0)
+                break;
+            GENERATOR* gen = gens[0];
+            DEVICE_ID did = gen->get_device_id();
             signal.set_device_id(did);
             signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
             break;
