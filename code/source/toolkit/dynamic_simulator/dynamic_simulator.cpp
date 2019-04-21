@@ -3,6 +3,7 @@
 #include "header/steps_namespace.h"
 #include "header/meter/meter_setter.h"
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <istream>
 #include <iostream>
@@ -33,7 +34,7 @@ void DYNAMICS_SIMULATOR::clear()
     close_meter_output_files();
 
     set_bin_file_export_enable_flag(true);
-    set_csv_file_export_enable_flag(false);
+    set_csv_file_export_enable_flag(true);
     set_json_file_export_enable_flag(false);
 
     set_dynamic_simulation_time_in_s(0.0);
@@ -1307,6 +1308,7 @@ void DYNAMICS_SIMULATOR::close_meter_output_files()
 void DYNAMICS_SIMULATOR::save_meter_information()
 {
     size_t n = meters.size();
+    show_information_with_leading_time_stamp("save meter information");
     if(n==0)
         return;
 
@@ -1326,13 +1328,13 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 
         for(size_t i=0; i!=n; ++i)
             csv_output_file<<","<<meters[i].get_meter_name();
-        csv_output_file<<endl;
+        csv_output_file<<"\n";
     }
 
     // save header to json file
     if(is_json_file_export_enabled() and json_output_file.is_open())
     {
-        json_output_file<<"{"<<endl;
+        json_output_file<<"{"<<"\n";
 
         //json_output_file<<"    \"meter_type\" : [\"TIME\", \"ITERATION\", \"MISMATCH IN MVA\"";
         //for(size_t i=0; i!=n; ++i)
@@ -1342,29 +1344,57 @@ void DYNAMICS_SIMULATOR::save_meter_information()
         json_output_file<<"    \"meter_name\" : [\"TIME\", \"DAE INTEGRATION\", \"NETWORK ITERATION\", \"MISMATCH IN MVA\"";
         for(size_t i=0; i!=n; ++i)
             json_output_file<<", \""<<meters[i].get_meter_name()<<"\"";
-        json_output_file<<"],"<<endl<<endl;
-        json_output_file<<"    \"meter_value\" : ["<<endl;
+        json_output_file<<"],"<<"\n\n";
+        json_output_file<<"    \"meter_value\" : ["<<"\n";
     }
 
     // save header to bin file
+
     if(is_bin_file_export_enabled() and bin_output_file.is_open())
     {
+        size_t bin_version=0;
+        bin_output_file.write((char *)(&bin_version), sizeof(bin_version));
+
+        time_t tt = time(NULL);
+        tm* local_time= localtime(&tt);
+
+        size_t year = local_time->tm_year + 1900;
+        size_t month = local_time->tm_mon + 1;
+        size_t day = local_time->tm_mday;
+        size_t hour = local_time->tm_hour;
+        size_t minute = local_time->tm_min;
+        size_t second = local_time->tm_sec;
+
+        bin_output_file.write((char *)(&year), sizeof(year));
+        bin_output_file.write((char *)(&month), sizeof(month));
+        bin_output_file.write((char *)(&day), sizeof(day));
+        bin_output_file.write((char *)(&hour), sizeof(hour));
+        bin_output_file.write((char *)(&minute), sizeof(minute));
+        bin_output_file.write((char *)(&second), sizeof(second));
+
+        size_t float_size=sizeof(float);
+        bin_output_file.write((char *)(&float_size), sizeof(float_size));
+
         size_t m = 4+n;
         bin_output_file.write((char *)(&m), sizeof(m));
-        char meter_name[MAX_TEMP_CHAR_BUFFER_SIZE];
-        sprintf(meter_name, "TIME\n");
-        bin_output_file.write((char *)(&meter_name), strlen(meter_name));
-        sprintf(meter_name, "DAE INTEGRATION\n");
-        bin_output_file.write((char *)(&meter_name), strlen(meter_name));
-        sprintf(meter_name, "NETWORK INTEGRATION\n");
-        bin_output_file.write((char *)(&meter_name), strlen(meter_name));
-        sprintf(meter_name, "MISMATCH IN MVA\n");
-        bin_output_file.write((char *)(&meter_name), strlen(meter_name));
+        string meter_names ="";
+
+        meter_names += "TIME\n";
+        meter_names += "DAE INTEGRATION\n";
+        meter_names += "NETWORK INTEGRATION\n";
+        meter_names += "MISMATCH IN MVA\n";
         for(size_t i=0; i!=n; ++i)
-        {
-            sprintf(meter_name, (meters[i].get_meter_name()+"\n").c_str());
-            bin_output_file.write((char *)(&meter_name), strlen(meter_name));
-        }
+            meter_names += (meters[i].get_meter_name()+"\n");
+
+        size_t n_meter_string_size = strlen(meter_names.c_str());
+        bin_output_file.write((char *)(&n_meter_string_size), sizeof(n_meter_string_size));
+
+        char * pmeter_name = new char[n_meter_string_size+1];
+        sprintf(pmeter_name, meter_names.c_str());
+        pmeter_name[n_meter_string_size]='\0';
+
+        bin_output_file.write((char *)(pmeter_name), strlen(pmeter_name));
+        delete [] pmeter_name;
     }
 }
 
@@ -1419,17 +1449,16 @@ void DYNAMICS_SIMULATOR::save_meter_values()
     }
     if(is_bin_file_export_enabled() and bin_output_file.is_open())
     {
-        double fvalue=0.0;
-        size_t ivalue=0;
+        float fvalue=0.0;
 
         fvalue = get_dynamic_simulation_time_in_s();
         bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
 
-        ivalue = ITER_DAE;
-        bin_output_file.write((char *)(&ivalue), sizeof(ivalue));
+        fvalue = float(ITER_DAE);
+        bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
 
-        ivalue = ITER_NET;
-        bin_output_file.write((char *)(&ivalue), sizeof(ivalue));
+        fvalue = float(ITER_NET);
+        bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
 
         fvalue = smax;
         bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
