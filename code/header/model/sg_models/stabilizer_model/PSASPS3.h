@@ -16,40 +16,44 @@ class PSASPS3 : public STABILIZER_MODEL
 
         virtual string get_model_name() const;
     public:
+        void set_Macc(double M);
+        void set_Iacc(double I);
+        void set_Nacc(double N);
+        void set_dedc_1_flag(bool flag);
+        void set_Tacc_in_s(double T);
+        void set_TD_in_s(double T);
+        void set_Ti1_in_s(double T);
+        void set_Ti2_in_s(double T);
+        void set_Ti3_in_s(double T);
+        void set_Ti4_in_s(double T);
+        void set_K0(double K);
         void set_K1(double K);
-        void set_T1_in_s(double T);
         void set_K2(double K);
-        void set_T2_in_s(double T);
-        void set_T3_in_s(double T);
-        void set_T4_in_s(double T);
-        void set_T5_in_s(double T);
+        void set_K3(double K);
+        void set_K4(double K);
+        void set_KP(double K);
         void set_T6_in_s(double T);
-        void set_T7_in_s(double T);
-        void set_T8_in_s(double T);
-        void set_T9_in_s(double T);
-        void set_T10_in_s(double T);
         void set_Vsmax(double vmax);
         void set_Vsmin(double vmin);
-        void set_Vcmax(double vmax);
-        void set_Vcmin(double vmin);
 
+        double get_Macc() const;
+        double get_Iacc() const;
+        double get_Nacc() const;
+        bool get_dedc_1_flag() const;
+        double get_Tacc_in_s() const;
+        double get_TD_in_s() const;
+        double get_Ti1_in_s() const;
+        double get_Ti2_in_s() const;
+        double get_Ti3_in_s() const;
+        double get_Ti4_in_s() const;
+        double get_K0() const;
         double get_K1() const;
         double get_K2() const;
-        double get_T1_in_s() const;
-        double get_T2_in_s() const;
-        double get_T3_in_s() const;
-        double get_T4_in_s() const;
-        double get_T5_in_s() const;
-        double get_T6_in_s() const;
-        double get_T7_in_s() const;
-        double get_T8_in_s() const;
-        double get_T9_in_s() const;
-        double get_T10_in_s() const;
+        double get_K3() const;
+        double get_K4() const;
+        double get_KP() const;
         double get_Vsmax() const;
         double get_Vsmin() const;
-        double get_Vcmax() const;
-        double get_Vcmin() const;
-
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -77,11 +81,14 @@ class PSASPS3 : public STABILIZER_MODEL
         virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
-        FIRST_ORDER_BLOCK sensor_1, sensor_2;
-        DIFFERENTIAL_BLOCK filter; FIRST_ORDER_BLOCK alternative_filter;
-        LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
+        double Macc, Iacc, Nacc;
+        bool dedc_block_1_flag;
+        DIFFERENTIAL_BLOCK dedc_block_1, dedc_block_2;
+        INTEGRAL_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3, phase_tuner_4;
+        double K0, K1, K2, K3, K4, KP;
         double Vsmax, Vsmin;
-        double Vcmax, Vcmin;
+
+        double speed_deviation_ref_pu, Pe_ref_pu, Pmech_ref_pu;
 };
 
 #endif // PSASPS3_H
