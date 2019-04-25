@@ -3,6 +3,12 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
+
+/***
+It should be noted that, the first De-DC block of Pelec is a FIRST_ORDER_BLOCK in manual of PSASP V7.3, July 2017.
+However, it is modeled as a DIFFERENTIAL_BLOCK in STEPS.
+Further check is necessary.
+***/
 PSASPS4::PSASPS4()
 {
     clear();
