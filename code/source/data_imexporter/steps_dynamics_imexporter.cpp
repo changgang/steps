@@ -1015,8 +1015,8 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
     string identifier;
 
     size_t i=0;
-    subsystem_number = get_integer_data(data[i], "0");  ++i; ++i;
-    identifier = get_string_data(data[i],""); ++i;
+    i = 1; subsystem_number = get_integer_data(data[i], "0");
+    i = 2; identifier = get_string_data(data[i],"");
 
     size_t model_name_size = model_name.size();
     string model_subsystem_type = model_name.substr(model_name_size-2,2);
