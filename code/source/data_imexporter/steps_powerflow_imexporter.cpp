@@ -1782,9 +1782,9 @@ void STEPS_IMEXPORTER::add_hvdc_converter_data(HVDC& hvdc, HVDC_CONVERTER_SIDE c
     }
     if(data.size()>0)
     {
-        double tap = get_double_data(data.front(),"1.0");
+        double turn_ratio = get_double_data(data.front(),"1.0");
         data.erase(data.begin());
-        double v = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(converter)*tap;
+        double v = hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(converter)*turn_ratio;
         hvdc.set_converter_transformer_converter_side_base_voltage_in_kV(converter, v);
     }
     if(data.size()>0)

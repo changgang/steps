@@ -32,6 +32,7 @@ class POWERFLOW_SOLVER_TEST : public Test::Suite
         void test_set_get_flat_start_logic();
         void test_set_get_transformer_tap_adjustment_logic();
         void test_set_get_non_divergent_solution_logic();
+        void test_set_get_export_jacobian_matrix_step_by_step_logic();
 
         void check_Arthur_R_Bergen_3_bus_model_powerflow_result();
         void check_IEEE_9_bus_model_powerflow_result();

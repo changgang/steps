@@ -107,6 +107,8 @@ bool api_get_powerflow_solver_boolean_parameter(char* parameter_name)
         return solver.get_transformer_tap_adjustment_logic();
     if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
         return solver.get_non_divergent_solution_logic();
+    if(PARAMETER_NAME=="EXPORT JACOBIAN LOGIC")
+        return solver.get_export_jacobian_matrix_step_by_step_logic();
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n"
@@ -133,6 +135,11 @@ void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value
     if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
     {
         solver.set_non_divergent_solution_logic(value);
+        return;
+    }
+    if(PARAMETER_NAME=="EXPORT JACOBIAN LOGIC")
+    {
+        solver.set_export_jacobian_matrix_step_by_step_logic(value);
         return;
     }
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];

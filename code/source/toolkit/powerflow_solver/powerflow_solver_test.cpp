@@ -150,6 +150,19 @@ void POWERFLOW_SOLVER_TEST::test_set_get_non_divergent_solution_logic()
     TEST_ASSERT(powerflow_solver.get_non_divergent_solution_logic()==false);
 }
 
+void POWERFLOW_SOLVER_TEST::test_set_get_export_jacobian_matrix_step_by_step_logic()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
+
+    POWERFLOW_SOLVER& powerflow_solver = get_default_powerflow_solver();
+
+    powerflow_solver.set_export_jacobian_matrix_step_by_step_logic(true);
+    TEST_ASSERT(powerflow_solver.get_export_jacobian_matrix_step_by_step_logic()==true);
+
+    powerflow_solver.set_export_jacobian_matrix_step_by_step_logic(false);
+    TEST_ASSERT(powerflow_solver.get_export_jacobian_matrix_step_by_step_logic()==false);
+}
+
 void POWERFLOW_SOLVER_TEST::test_solve_Arthur_R_Bergen_3_bus_model_with_full_Newton_Raphson_solution()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");

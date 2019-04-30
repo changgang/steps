@@ -65,17 +65,42 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
 
     int n = Y.get_matrix_entry_count();
     int row, column;
+    size_t ibus, jbus;
+    ostringstream osstream;
     for(int k=0; k!=n; ++k)
     {
         row = Y.get_row_number_of_entry_index(k);
         column = Y.get_column_number_of_entry_index(k);
+        ibus = nw_db->get_physical_bus_number_of_internal_bus(row);
+        jbus = nw_db->get_physical_bus_number_of_internal_bus(column);
+
         der = get_jacobian_delta_p_over_angle_of_internal_bus(row,column);
+        if(isnan(der))
+        {
+            osstream<<"NAN is detected when building Jacobian matrix, dP/dA is NAN at row: "<<row<<"(bus "<<ibus<<"), col: "<<column<<"(bus "<<jbus<<")";
+            show_information_with_leading_time_stamp(osstream);
+        }
         jacobian_delta_p_over_angle.add_entry(row,column, der);
         der = get_jacobian_delta_p_over_voltage_of_internal_bus(row,column);
+        if(isnan(der))
+        {
+            osstream<<"NAN is detected when building Jacobian matrix, dP/dV is NAN at row: "<<row<<"(bus "<<ibus<<"), col: "<<column<<"(bus "<<jbus<<")";
+            show_information_with_leading_time_stamp(osstream);
+        }
         jacobian_delta_p_over_voltage.add_entry(row,column, der);
         der = get_jacobian_delta_q_over_angle_of_internal_bus(row,column);
+        if(isnan(der))
+        {
+            osstream<<"NAN is detected when building Jacobian matrix, dQ/dA is NAN at row: "<<row<<"(bus "<<ibus<<"), col: "<<column<<"(bus "<<jbus<<")";
+            show_information_with_leading_time_stamp(osstream);
+        }
         jacobian_delta_q_over_angle.add_entry(row,column, der);
         der = get_jacobian_delta_q_over_voltage_of_internal_bus(row,column);
+        if(isnan(der))
+        {
+            osstream<<"NAN is detected when building Jacobian matrix, dQ/dV is NAN at row: "<<row<<"(bus "<<ibus<<"), col: "<<column<<"(bus "<<jbus<<")";
+            show_information_with_leading_time_stamp(osstream);
+        }
         jacobian_delta_q_over_voltage.add_entry(row,column, der);
     }
     jacobian_delta_p_over_angle.compress_and_merge_duplicate_entries();
@@ -83,7 +108,6 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
     jacobian_delta_q_over_angle.compress_and_merge_duplicate_entries();
     jacobian_delta_q_over_voltage.compress_and_merge_duplicate_entries();
 
-    ostringstream osstream;
     osstream<<"Done building separate jacobian matrix.";
     show_information_with_leading_time_stamp(osstream);
     return;

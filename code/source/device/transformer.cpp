@@ -182,6 +182,12 @@ void TRANSFORMER::set_leakage_impedance_between_windings_based_on_winding_nomina
         winding1 = winding2;
         winding2 = temp_winding;
     }
+    if(z==0.0)
+    {
+        osstream<<"Warning. The leakage impedance between "<<get_winding_name(winding1)<<" and "<<get_winding_name(winding2)<<" windings is zero for "<<get_device_name()<<endl
+                <<"Correction is required. Check original data.";
+        show_information_with_leading_time_stamp(osstream);
+    }
 
     if(winding1==PRIMARY_SIDE and winding2==SECONDARY_SIDE)
         zl_primary2secondary_in_pu = z;
@@ -502,9 +508,9 @@ void TRANSFORMER::clear()
     winding_nominal_capacity_in_MVA[SECONDARY_SIDE] = 0.0;
     winding_nominal_capacity_in_MVA[TERTIARY_SIDE] = 0.0;
 
-    set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, 0.0);
-    set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, 0.0);
-    set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE, 0.0);
+    set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE, complex<double>(0.0, 0.001));
+    set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE, complex<double>(0.0, 0.001));
+    set_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE, complex<double>(0.0, 0.001));
 
     set_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu(0.0);
 

@@ -13,6 +13,7 @@ POWERFLOW_SOLVER::POWERFLOW_SOLVER()
     set_flat_start_logic(false);
     set_transformer_tap_adjustment_logic(true);
     set_non_divergent_solution_logic(true);
+    set_export_jacobian_matrix_step_by_step_logic(false);
 
     set_allowed_max_active_power_imbalance_in_MW(0.001);
     set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
@@ -99,6 +100,11 @@ void POWERFLOW_SOLVER::set_non_divergent_solution_logic(bool logic)
     non_divergent_solution_enabled = logic;
 }
 
+void POWERFLOW_SOLVER::set_export_jacobian_matrix_step_by_step_logic(bool flag)
+{
+    export_jacobian_matrix_step_by_step = flag;
+}
+
 double POWERFLOW_SOLVER::get_allowed_max_active_power_imbalance_in_MW() const
 {
     return P_threshold_in_MW;
@@ -127,6 +133,11 @@ double POWERFLOW_SOLVER::get_iteration_accelerator() const
 bool POWERFLOW_SOLVER::get_non_divergent_solution_logic() const
 {
     return non_divergent_solution_enabled;
+}
+
+bool POWERFLOW_SOLVER::get_export_jacobian_matrix_step_by_step_logic() const
+{
+    return export_jacobian_matrix_step_by_step;
 }
 
 void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
@@ -204,6 +215,10 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
         jacobian = jacobian_builder.get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses,
                                                                                                    internal_Q_equation_buses);
 
+        if(get_export_jacobian_matrix_step_by_step_logic()==true)
+        {
+            jacobian.save_matrix_to_file("Jacobian-NR-Iter-"+num2str(get_iteration_count())+".csv");
+        }
         bus_delta_voltage_angle = bus_power_mismatch/jacobian;
 
         update_bus_voltage_and_angle(bus_delta_voltage_angle);
@@ -269,6 +284,12 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
             max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
             //continue;
+        }
+
+        if(get_export_jacobian_matrix_step_by_step_logic()==true)
+        {
+            BP.save_matrix_to_file("Jacobian-BP-PQ-Iter-"+num2str(get_iteration_count())+".csv");
+            BQ.save_matrix_to_file("Jacobian-BQ-PQ-Iter-"+num2str(get_iteration_count())+".csv");
         }
 
         if(max_P_mismatch_in_MW < get_allowed_max_active_power_imbalance_in_MW() and
@@ -463,6 +484,18 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
 void POWERFLOW_SOLVER::optimize_bus_numbers()
 {
     network_matrix.optimize_network_ordering();
+    /*ostringstream osstream;
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    size_t n = psdb.get_in_service_bus_count();
+    size_t ibus=0;
+    osstream<<"Powerflow bus number, physical vs internal"<<endl;
+    for(size_t i=0; i!=n; ++i)
+    {
+        ibus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+        osstream<<ibus<<", "<<i<<endl;
+    }
+    show_information_with_leading_time_stamp(osstream);*/
+
 }
 
 void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
@@ -545,8 +578,26 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
         bus_power[i] = -bus_power[i];
 
     add_source_to_bus_power_mismatch();
+
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+            cout<<"after adding source NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+    }
     add_load_to_bus_power_mismatch();
+
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+            cout<<"after adding load NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+    }
     add_hvdc_to_bus_power_mismatch();
+
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+            cout<<"after adding hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+    }
 
     /*ostringstream osstream;
     osstream<<"Power mismatch of buses.";

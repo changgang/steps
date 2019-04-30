@@ -160,6 +160,8 @@ void HVDC::set_nominal_dc_power_per_pole_in_MW(const double P)
     if(P>0.0)
     {
         demand_power_in_MW = P;
+        if(get_nominal_dc_voltage_per_pole_in_kV()!=0.0)
+            demand_current_in_kA = P/get_nominal_dc_voltage_per_pole_in_kV();
     }
     else
     {
@@ -183,6 +185,10 @@ void HVDC::set_nominal_dc_voltage_per_pole_in_kV(const double V)
     if(V>0.0)
     {
         demand_voltage_in_kV = V;
+        if(get_nominal_dc_current_per_pole_in_kA()!=0.0 and get_nominal_dc_power_per_pole_in_MW()==0.0)
+            demand_power_in_MW = get_nominal_dc_current_per_pole_in_kA()*V;
+        if(get_nominal_dc_current_per_pole_in_kA()==0.0 and get_nominal_dc_power_per_pole_in_MW()!=0.0)
+            demand_current_in_kA = get_nominal_dc_power_per_pole_in_MW()/V;
     }
     else
     {
@@ -204,6 +210,8 @@ void HVDC::set_nominal_dc_current_per_pole_in_kA(const double I)
     if(I>0.0)
     {
         demand_current_in_kA = I;
+        if(get_nominal_dc_voltage_per_pole_in_kV()!=0.0)
+            demand_power_in_MW = I*get_nominal_dc_voltage_per_pole_in_kV();
     }
     else
     {
@@ -1628,13 +1636,13 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
             }
             else
             {
-                // error!!!!!
                 osstream<<"Warning. Both minimum alpha and minimum gamma reached when trying to solve "<<get_device_name()
-                  <<" with CONSTANT POWER and CONSTANT VOTLAGE mode."
-                  <<"HVDC link will be with minimum alpha and gamma. The solution may be incorrect.";
+                  <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
+                  <<"HVDC link will turn into reduced (DELTI) CONSTANT CURRENT mode controlled by inverter.";
                 show_information_with_leading_time_stamp(osstream);
 
-                solve_with_solved_tap_and_firing_angle();
+                //solve_with_solved_tap_and_firing_angle();
+                solve_as_rectifier_regulating_alpha_and_inverter_regulating_current();
             }
         }
     }
@@ -1642,8 +1650,8 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
 
 bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERTER_SIDE converter, double Vdc, double Idc)
 {
-    //ostringstream osstream;
-    //cout<<get_converter_side_name(converter)<<" desired Vdc = "<<Vdc<<"kV, Idc = "<<Idc<<endl;
+    ostringstream osstream;
+    //cout<<"solving "<<get_device_name()<<" with "<<__FUNCTION__<<": "<<get_converter_side_name(converter)<<" desired Vdc = "<<Vdc<<"kV, Idc = "<<Idc<<endl;
     solve_best_converter_transformer_tap_with_min_angle(converter, Vdc, Idc);
     double Tap = get_converter_transformer_tap_in_pu(converter);
 
@@ -1658,7 +1666,7 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
             cosAngle = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, Vdc, Idc, Tap);
         else
             cosAngle = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(INVERTER, Vdc, Idc, Tap);
-
+        //cout<<"desired cosAngle is :"<<cosAngle<<endl;
         if(cosAngle>cos_angle_min)
         {
             minAngleReached = true;
@@ -1750,9 +1758,9 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
     double R = get_line_resistance_in_ohm();
     double VdcR = VdcI + Idc*R;
 
-    //osstream<<"trying to solve "<<get_device_name()<<" with desired DC voltage rec "<<VdcR<<" kV, inv "<<VdcI<<" kV, "
-    //       <<" I "<<Idc<<" kA";
-    //show_information_with_leading_time_stamp(osstream);
+    osstream<<"trying to solve "<<get_device_name()<<" with desired DC voltage rec "<<VdcR<<" kV, inv "<<VdcI<<" kV, "
+           <<" I "<<Idc<<" kA";
+    show_information_with_leading_time_stamp(osstream);
 
     bool minAlphaReached = solve_converter_transformer_tap_and_desired_firing_angle(RECTIFIER, VdcR, Idc);
     bool minGammaReached = solve_converter_transformer_tap_and_desired_firing_angle(INVERTER, VdcI, Idc);
@@ -1801,8 +1809,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
-    //os<<"Solve %s as constant power (R) + constant gamma (I) mode.",
-    //              get_device_name().c_str());
+    //osstream<<"Solve "<<get_device_name()<<" as constant power (R) + constant gamma (I) mode.";
     //show_information_with_leading_time_stamp(osstream);
 
     double Pn = get_nominal_dc_power_per_pole_in_MW();
@@ -1888,7 +1895,6 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
     //os<<"Solve %s as constant current (R) + constant gamma (I) mode.",
     //              get_device_name().c_str());
     //show_information_with_leading_time_stamp(osstream);
-
     set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER));
 
     double Vn = get_nominal_dc_voltage_per_pole_in_kV();
@@ -1930,7 +1936,6 @@ void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
     //os<<"Solve %s as constant alpha (R) + constant current (I) mode.",
     //              get_device_name().c_str());
     //show_information_with_leading_time_stamp(osstream);
-
     set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
 
     double In = get_rectifier_nominal_dc_current_command_in_kA();
@@ -2038,7 +2043,6 @@ double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_an
     double Vdrop = get_converter_voltage_drop_per_bridge_in_kV(converter);
 
     double TurnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
-
     complex<double> Z = get_converter_transformer_impedance_in_ohm(converter);
 
     size_t N = get_converter_number_of_bridge(converter);
