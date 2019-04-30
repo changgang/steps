@@ -130,6 +130,8 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name)
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="ANGLE STABILITY SURVILLIANCE LOGIC")
         return ds.get_rotor_angle_stability_survilliance_flag();
+    if(PARAMETER_NAME=="BIN EXPORT LOGIC")
+        return ds.is_bin_file_export_enabled();
     if(PARAMETER_NAME=="CSV EXPORT LOGIC")
         return ds.is_csv_file_export_enabled();
     if(PARAMETER_NAME=="JSON EXPORT LOGIC")
@@ -149,6 +151,11 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
     if(PARAMETER_NAME=="ANGLE STABILITY SURVILLIANCE LOGIC")
     {
         ds.set_rotor_angle_stability_survilliance_flag(value);
+        return;
+    }
+    if(PARAMETER_NAME=="BIN EXPORT LOGIC")
+    {
+        ds.set_bin_file_export_enable_flag(value);
         return;
     }
     if(PARAMETER_NAME=="CSV EXPORT LOGIC")

@@ -861,6 +861,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
     double Vdcr = Vdci + Rdc*Iset_kA;
 
     double Idc;
+
     if(not is_bypassed())
     {
         if(gamma_min_in_rad>=gamma_max_in_rad) // constant gamma mode
@@ -893,7 +894,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                 {
                     alpha_in_rad = acos(cos_alpha);
                     osstream<<"Rectifier can hold the reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
-                    show_information_with_leading_time_stamp(osstream);
+                    //show_information_with_leading_time_stamp(osstream);
                 }
                 else
                 {
@@ -930,49 +931,64 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                            <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
                            <<"Minimum gamma is reached."<<endl
                            <<"Rectifier will try to regulate current as "<<Iset_kA<<" kA."<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    //show_information_with_leading_time_stamp(osstream);
 
                     gamma_in_rad = gamma_min_in_rad;
                     hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
                     // try to reduce dc voltage
                     // vdcr0*cos_alpha-rcr*Iset_kA=vdci0*cos_gamma_min-rci*Iset_kA + Rdc*Iset_kA
-                    cos_alpha = (vdc0_i*cos_gamma_min-rceq_i*Iset_kA+Rdc*Iset_kA+rceq_r*Iset_kA)/vdc0_r;
-                    if(cos_alpha<cos_alpha_min)
-                    {
-                        alpha_in_rad = acos(cos_alpha);
-                        osstream<<"Rectifier can hold the current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
-                    }
-                    else//
-                    {
-                        alpha_in_rad = alpha_min_in_rad;
-                        osstream<<"However, Rectifier cannot hold current even with minimum alpha.("
-                               <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
-                               <<"Minimum alpha is alos reached."<<endl
-                               <<"Hvdc current command will be reduced from "<<Iset_kA<<" kA to ";
-                        Iset_kA *= (1.0-margin);
-                        osstream<<Iset_kA<<" kA with margin by "<<margin*100.0<<"%"<<endl;
 
+                    double vdc = vdc0_i*cos_gamma_min-rceq_i*Iset_kA;
+                    if(vdc<0.0)
+                    {
+                        osstream<<"However, the inverter DC voltage is negative ("<<vdc<<"kV) if minimum gamma is reached and DC current order is "<<Iset_kA<<" kA."
+                               <<"(line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
+                               <<"Hvdc link will be bypassed.";
+                        show_information_with_leading_time_stamp(osstream);
+                        bypass_hvdc();
+                        solve_hvdc_as_bypassed(Iset_kA_for_bypass);
+                        return;
+                    }
+                    else
+                    {
                         cos_alpha = (vdc0_i*cos_gamma_min-rceq_i*Iset_kA+Rdc*Iset_kA+rceq_r*Iset_kA)/vdc0_r;
                         if(cos_alpha<cos_alpha_min)
                         {
                             alpha_in_rad = acos(cos_alpha);
-                            osstream<<"Rectifier can hold reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
+                            osstream<<"Rectifier can hold the current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
                         }
-                        else
+                        else//
                         {
                             alpha_in_rad = alpha_min_in_rad;
-                            osstream<<"However, rectifier cannot hold the reduced current even with minimum alpha."<<endl
-                                   <<"Rectifier will be operated with minimum alpha = "<<rad2deg(alpha_min_in_rad)<<" deg.("
+                            osstream<<"However, Rectifier cannot hold current even with minimum alpha.("
                                    <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
-                                   <<"Hvdc link will be bypassed.";
-                            show_information_with_leading_time_stamp(osstream);
-                            bypass_hvdc();
-                            solve_hvdc_as_bypassed(Iset_kA_for_bypass);
-                            return;
+                                   <<"Minimum alpha is alos reached."<<endl
+                                   <<"Hvdc current command will be reduced from "<<Iset_kA<<" kA to ";
+                            Iset_kA *= (1.0-margin);
+                            osstream<<Iset_kA<<" kA with margin by "<<margin*100.0<<"%"<<endl;
+
+                            cos_alpha = (vdc0_i*cos_gamma_min-rceq_i*Iset_kA+Rdc*Iset_kA+rceq_r*Iset_kA)/vdc0_r;
+                            if(cos_alpha<cos_alpha_min)
+                            {
+                                alpha_in_rad = acos(cos_alpha);
+                                osstream<<"Rectifier can hold reduced current with alpha = "<<rad2deg(alpha_in_rad)<<" deg.";
+                            }
+                            else
+                            {
+                                alpha_in_rad = alpha_min_in_rad;
+                                osstream<<"However, rectifier cannot hold the reduced current even with minimum alpha."<<endl
+                                       <<"Rectifier will be operated with minimum alpha = "<<rad2deg(alpha_min_in_rad)<<" deg.("
+                                       <<"line "<<__LINE__<<" of file "<<__FILE__<<")."<<endl
+                                       <<"Hvdc link will be bypassed.";
+                                show_information_with_leading_time_stamp(osstream);
+                                bypass_hvdc();
+                                solve_hvdc_as_bypassed(Iset_kA_for_bypass);
+                                return;
+                            }
                         }
+                        hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
+                        //show_information_with_leading_time_stamp(osstream);
                     }
-                    hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(alpha_in_rad));
-                    show_information_with_leading_time_stamp(osstream);
                 }
             }
             else // alpha can not hold dc current
@@ -1007,7 +1023,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
                     return;
                 }
                 hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(gamma_in_rad));
-                show_information_with_leading_time_stamp(osstream);
+                //show_information_with_leading_time_stamp(osstream);
 
             }
         }
@@ -1018,7 +1034,6 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
         Idc = (vdc0_r*cos_alpha-vdc0_i*cos_gamma)/(Rdc+rceq_r-rceq_i);
         Vdcr = vdc0_r*cos_alpha - rceq_r*Idc;
         Vdci = vdc0_i*cos_gamma - rceq_i*Idc;
-
         hvdc->set_converter_dc_voltage_in_kV(RECTIFIER, Vdcr);
         hvdc->set_converter_dc_voltage_in_kV(INVERTER, Vdci);
         hvdc->set_line_dc_current_in_kA(Idc);
@@ -1316,6 +1331,7 @@ double HVDC_MODEL::get_converter_dc_power_in_MW(HVDC_CONVERTER_SIDE converter) c
 
     double V = get_converter_dc_voltage_in_kV(converter);
     double I = get_converter_dc_current_in_kA(converter);
+
     return V*I;
 }
 

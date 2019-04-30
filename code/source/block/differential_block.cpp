@@ -92,6 +92,8 @@ void DIFFERENTIAL_BLOCK::integrate()
     double ds = (k/t*x-s)/t;
     if(fabs(ds)<FLOAT_EPSILON)
         return;
+    //if(fabs(ds)>DSTATE_THRESHOLD)
+    //    cout<<"Derivative of state is changed dramatically in DIFFERENTIAL_BLOCK\n";
 
     set_state(s);
     set_output(y);

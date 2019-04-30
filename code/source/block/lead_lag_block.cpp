@@ -143,6 +143,8 @@ void LEAD_LAG_BLOCK::integrate()
     double ds = (k*x-s)/t2;
     if(fabs(ds)<FLOAT_EPSILON)
         return;
+    //if(fabs(ds)>DSTATE_THRESHOLD)
+    //    cout<<"Derivative of state is changed dramatically in LEAD_LAG_BLOCK\n";
 
     set_state(s);
     set_output(y);

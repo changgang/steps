@@ -1878,15 +1878,18 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 bool DYNAMICS_SIMULATOR::solve_network()
 {
     ostringstream osstream;
-    //POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
 
     //clock_t start = clock(), start0 = clock();
-    /*size_t nbus = psdb.get_in_service_bus_count();
-    for(int i=0; i!=nbus; ++i)
+    //osstream<<"Now go solve network with DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"() at time "<<get_dynamic_simulation_time_in_s()<<"s";
+    //show_information_with_leading_time_stamp(osstream);
+
+    size_t nbus = psdb.get_in_service_bus_count();
+    /*for(int i=0; i!=nbus; ++i)
     {
         size_t bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
         complex<double> V = psdb.get_bus_complex_voltage_in_pu(bus);
-        osstream<<"Initial voltage of bus %u: %f pu, %f deg",bus, steps_fast_complex_abs(V), rad2deg(steps_fast_complex_arg(V)));
+        osstream<<"Initial voltage of bus "<<bus<<": "<<abs(V)<<" pu, "<<rad2deg(arg(V))<<" deg";
         show_information_with_leading_time_stamp(osstream);
     }*/
     bool converged = false;
@@ -1902,7 +1905,6 @@ bool DYNAMICS_SIMULATOR::solve_network()
             --network_iter_count;
             break;
         }
-
         solve_hvdcs_without_integration();
         get_bus_current_mismatch();
         if(not is_converged())
@@ -1938,6 +1940,7 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 
 void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 {
+    NETWORK_MATRIX* net = get_network_matrix();
     get_bus_currnet_into_network();
 
     size_t n = I_mismatch.size();
@@ -1946,10 +1949,119 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         I_mismatch[i] = -I_mismatch[i];
 
     add_generators_to_bus_current_mismatch();
+    for(size_t i = 0; i<n; ++i)
+    {
+        if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
+        {
+            ostringstream osstream;
+            osstream<<"warning. NAN is detected when getting bus current mismatch after adding generators when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+            for(size_t j = 0; j<n; ++j)
+            {
+                if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
+                {
+                    size_t ibus = net->get_physical_bus_number_of_internal_bus(j);
+                    osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
+                }
+            }
+            show_information_with_leading_time_stamp(osstream);
+            break;
+        }
+    }
     add_wt_generators_to_bus_current_mismatch();
+    for(size_t i = 0; i<n; ++i)
+    {
+        if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
+        {
+            ostringstream osstream;
+            osstream<<"warning. NAN is detected when getting bus current mismatch after adding wt generators when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+            for(size_t j = 0; j<n; ++j)
+            {
+                if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
+                {
+                    size_t ibus = net->get_physical_bus_number_of_internal_bus(j);
+                    osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
+                }
+            }
+            show_information_with_leading_time_stamp(osstream);
+            break;
+        }
+    }
     add_loads_to_bus_current_mismatch();
+    for(size_t i = 0; i<n; ++i)
+    {
+        if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
+        {
+            ostringstream osstream;
+            osstream<<"warning. NAN is detected when getting bus current mismatch after adding loads when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+            for(size_t j = 0; j<n; ++j)
+            {
+                if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
+                {
+                    size_t ibus = net->get_physical_bus_number_of_internal_bus(j);
+                    osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
+                }
+            }
+            show_information_with_leading_time_stamp(osstream);
+            break;
+        }
+    }
     add_hvdcs_to_bus_current_mismatch();
+    for(size_t i = 0; i<n; ++i)
+    {
+        if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
+        {
+            ostringstream osstream;
+            osstream<<"warning. NAN is detected when getting bus current mismatch after adding hvdcs when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+            for(size_t j = 0; j<n; ++j)
+            {
+                if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
+                {
+                    size_t ibus = net->get_physical_bus_number_of_internal_bus(j);
+                    osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[j]<<endl;
+                }
+            }
+            show_information_with_leading_time_stamp(osstream);
+            break;
+        }
+    }
     add_equivalent_devices_to_bus_current_mismatch();
+    for(size_t i = 0; i<n; ++i)
+    {
+        if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
+        {
+            ostringstream osstream;
+            osstream<<"warning. NAN is detected when getting bus current mismatch after adding equivalent devices when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+            for(size_t j = 0; j<n; ++j)
+            {
+                if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
+                {
+                    size_t ibus = net->get_physical_bus_number_of_internal_bus(j);
+                    osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
+                }
+            }
+            show_information_with_leading_time_stamp(osstream);
+            break;
+        }
+    }
+    /*
+    //cout<<"bus current mismatch:"<<endl;
+    for(size_t i=0; i<n; ++i)
+    {
+        size_t ibus = net->get_physical_bus_number_of_internal_bus(i);
+        //cout<<ibus<<", "<<I_mismatch[i]<<endl;
+    }
+    double maxmismatch = 0.0;
+    size_t busmax = 0;
+    for(size_t i=0; i<n; ++i)
+    {
+        if(maxmismatch<abs(I_mismatch[i]))
+        {
+            maxmismatch = abs(I_mismatch[i]);
+            busmax = net->get_physical_bus_number_of_internal_bus(i);
+        }
+    }
+    cout<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<endl;*/
+
 }
 
 void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
@@ -2114,7 +2226,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 
         I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
         /*ostringstream osstream;
-        osstream<< "Load %u source current: %f + j%f",physical_bus, I.real(), I.imag());
+        osstream<<load->get_device_name()<<" source current: "<<load->get_dynamics_load_current_in_pu_based_on_system_base_power()<<", voltage = "<<psdb.get_bus_voltage_in_pu(physical_bus);
         show_information_with_leading_time_stamp(osstream);*/
     }
 }
@@ -2141,7 +2253,6 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
         internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
         I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
-        //cout<<"Rec current of "<<hvdcs[i]->get_device_name()<<" in pu is "<<I<<endl;
 
         I_mismatch[internal_bus] -= I;
 
@@ -2150,7 +2261,6 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
         internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
         I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
-        //cout<<"Inv current of "<<hvdcs[i]->get_device_name()<<" in pu is "<<I<<endl;
 
         I_mismatch[internal_bus] -= I;
     }
@@ -2289,6 +2399,13 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
         delta_vang = steps_fast_complex_arg(z);
         vang_new = vang0+delta_vang;
 
+        if(vmag_new<0.0)
+            vmag_new = 0.0;
+
+        if(vmag_new>3.0)
+            vmag_new = 3.0;
+
+
         bus->set_voltage_in_pu(vmag_new);
         bus->set_angle_in_rad(vang_new);
     }
@@ -2340,7 +2457,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT 
     double vbase = busptr->get_base_voltage_in_kV();
     double sbase = psdb.get_system_base_power_in_MVA();
     double zbase = vbase*vbase/sbase;
-    double fault_x = -1.0/fault_b*zbase;
+    double fault_x = -zbase/fault_b;
     if(fault_x<1)
         busptr->set_voltage_in_pu(0.05);
     else

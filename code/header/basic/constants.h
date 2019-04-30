@@ -25,6 +25,10 @@
     #define FLOAT_EPSILON 1e-10
 #endif // FLOAT_EPSILON
 
+#ifndef DSTATE_THRESHOLD
+    #define DSTATE_THRESHOLD 100.0
+#endif
+
 #ifndef INDEX_NOT_EXIST
     #define INDEX_NOT_EXIST 1000000000
 #endif // INDEX_NOT_EXIST

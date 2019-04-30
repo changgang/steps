@@ -325,6 +325,9 @@ void IEEL::run(DYNAMIC_MODE mode)
 
 complex<double> IEEL::get_load_power_in_MVA() const
 {
+    LOAD* load = get_load_pointer();
+    double Vth = load->get_voltage_threshold_of_constant_power_load_in_pu();
+
     double V = get_bus_voltage_in_pu();
     double f = get_bus_frequency_deviation_in_pu();
 
@@ -336,7 +339,38 @@ complex<double> IEEL::get_load_power_in_MVA() const
     double n3 = get_P_n_power_3();
     double kf = get_P_Kf();
 
-    double P = get_initial_load_power_in_MVA().real()*(alpha1*steps_fast_pow(V,n1)+alpha2*steps_fast_pow(V,n2)+alpha3*steps_fast_pow(V,n3))*(1.0+kf*f);
+    double P = 0.0;
+    if(fabs(n1)<FLOAT_EPSILON)
+    {
+        if(V>Vth)
+            P += alpha1;
+        else
+            P += (alpha1/Vth*V);
+    }
+    else
+        P += alpha1*steps_fast_pow(V,n1);
+
+    if(fabs(n2)<FLOAT_EPSILON)
+    {
+        if(V>Vth)
+            P += alpha2;
+        else
+            P += (alpha2/Vth*V);
+    }
+    else
+        P += alpha2*steps_fast_pow(V,n2);
+
+    if(fabs(n3)<FLOAT_EPSILON)
+    {
+        if(V>Vth)
+            P += alpha3;
+        else
+            P += (alpha3/Vth*V);
+    }
+    else
+        P += alpha3*steps_fast_pow(V,n3);
+
+    P = get_initial_load_power_in_MVA().real()*P*(1.0+kf*f);
 
     alpha1 = get_Q_alpha_1();
     alpha2 = get_Q_alpha_2();
@@ -346,7 +380,38 @@ complex<double> IEEL::get_load_power_in_MVA() const
     n3 = get_Q_n_power_3();
     kf = get_Q_Kf();
 
-    double Q = get_initial_load_power_in_MVA().imag()*(alpha1*steps_fast_pow(V,n1)+alpha2* steps_fast_pow(V,n2)+alpha3*steps_fast_pow(V,n3))*(1.0+kf*f);
+    double Q = 0.0;
+    if(fabs(n1)<FLOAT_EPSILON)
+    {
+        if(V>Vth)
+            Q += alpha1;
+        else
+            Q += (alpha1/Vth*V);
+    }
+    else
+        Q += alpha1*steps_fast_pow(V,n1);
+
+    if(fabs(n2)<FLOAT_EPSILON)
+    {
+        if(V>Vth)
+            Q += alpha2;
+        else
+            Q += (alpha2/Vth*V);
+    }
+    else
+        Q += alpha2*steps_fast_pow(V,n2);
+
+    if(fabs(n3)<FLOAT_EPSILON)
+    {
+        if(V>Vth)
+            Q += alpha3;
+        else
+            Q += (alpha3/Vth*V);
+    }
+    else
+        Q += alpha3*steps_fast_pow(V,n3);
+
+    Q = get_initial_load_power_in_MVA().imag()*Q*(1.0+kf*f);
 
     return complex<double>(P,Q);
 }

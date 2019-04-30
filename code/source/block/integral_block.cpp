@@ -104,6 +104,8 @@ void INTEGRAL_BLOCK::integrate()
     double ds = x/t;
     if(fabs(ds)<FLOAT_EPSILON)
         return;
+    //if(fabs(ds)>DSTATE_THRESHOLD)
+    //    cout<<"Derivative of state is changed dramatically in INTEGRAL_BLOCK\n";
 
     double s, z, y;
 
