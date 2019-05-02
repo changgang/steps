@@ -1617,7 +1617,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
         if(not(minAlphaReached) and minGammaReached)
         {
             osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
-              <<" with CONSTANT POWER and CONSTANT VOTLAGE mode."
+              <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
               <<"HVDC link will turn into CONSTANT GAMMA mode for inverter.";
             show_information_with_leading_time_stamp(osstream);
 
@@ -1628,7 +1628,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
             if(minAlphaReached and not(minGammaReached))
             {
                 osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
-                  <<" with CONSTANT POWER and CONSTANT VOTLAGE mode."
+                  <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
                   <<"HVDC link will turn into reduced (DELTI) CONSTANT CURRENT mode controlled by inverter.";
                 show_information_with_leading_time_stamp(osstream);
 

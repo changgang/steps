@@ -66,6 +66,7 @@ class POWERFLOW_SOLVER
 
         void set_bus_power_mismatch_vector_for_solution();
 
+        void try_to_solve_hvdc_steady_state();
         void calculate_raw_bus_power_mismatch();
         void calculate_raw_bus_power_into_network();
         void calculate_raw_bus_current_into_network();
