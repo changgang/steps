@@ -168,7 +168,7 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency()
         WT_GENERATOR* gen = get_test_wt_generator();
         size_t bus = gen->get_generator_bus();
 
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
         BUS* busptrr = psdb.get_bus(bus);
 
         TEST_ASSERT(fabs(model->get_bus_frequency_in_pu()-psdb.get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
@@ -190,7 +190,7 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency_deviation()
         WT_GENERATOR* gen = get_test_wt_generator();
         size_t bus = gen->get_generator_bus();
 
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
         BUS* busptrr = psdb.get_bus(bus);
 
         TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu()-psdb.get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
@@ -262,7 +262,7 @@ void WT_PITCH_MODEL_TEST::test_get_standard_model_string()
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        show_information_with_leading_time_stamp(model->get_standard_model_string());
+        default_toolkit.show_information_with_leading_time_stamp(model->get_standard_model_string());
     }
     else
         TEST_ASSERT(false);
@@ -274,7 +274,7 @@ void WT_PITCH_MODEL_TEST::test_step_response_with_active_power_order_drop()
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         initialize_models();
         run_to_time(1.0);
@@ -283,7 +283,7 @@ void WT_PITCH_MODEL_TEST::test_step_response_with_active_power_order_drop()
 
         run_to_time(6.0);
 
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -295,7 +295,7 @@ void WT_PITCH_MODEL_TEST::test_step_response_with_frequency_drop()
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         initialize_models();
         run_to_time(1.0);
@@ -304,7 +304,7 @@ void WT_PITCH_MODEL_TEST::test_step_response_with_frequency_drop()
 
         run_to_time(6.0);
 
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -321,7 +321,7 @@ void WT_PITCH_MODEL_TEST::apply_active_power_order_drop_of_5_percent()
 void WT_PITCH_MODEL_TEST::apply_frequency_drop_of_5_percent()
 {
     WT_GENERATOR* gen = get_test_wt_generator();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     size_t bus = gen->get_generator_bus();
     BUS* busptr = psdb.get_bus(bus);
@@ -335,8 +335,8 @@ void WT_PITCH_MODEL_TEST::apply_frequency_drop_of_5_percent()
 void WT_PITCH_MODEL_TEST::initialize_models()
 {
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
-    STEPS::TIME = -2.0*delt;
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     WT_AERODYNAMIC_MODEL* aerd = get_test_wt_aerodynamic_model();
@@ -374,13 +374,13 @@ void WT_PITCH_MODEL_TEST::run_to_time(double tend)
     WT_TURBINE_MODEL* turbine = get_test_wt_turbine_model();
     WT_PITCH_MODEL* model = get_test_wt_pitch_model();
 
-    double delt =get_dynamic_simulation_time_step_in_s();
+    double delt =default_toolkit.get_dynamic_simulation_time_step_in_s();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>tend)
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>tend)
         {
-            STEPS::TIME -= delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         double pitch=0.0;
@@ -407,7 +407,7 @@ void WT_PITCH_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
     osstream<<"TIME\tSPEED\tSPEEDREF\tFREQ\tPITCH";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_PITCH_MODEL_TEST::export_meter_values()
@@ -416,11 +416,11 @@ void WT_PITCH_MODEL_TEST::export_meter_values()
 
     WT_PITCH_MODEL* model = get_test_wt_pitch_model();
 
-    osstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
+    osstream<<setw(10)<<setprecision(6)<<fixed<<default_toolkit.get_dynamic_simulation_time_in_s()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_wt_generator_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_wt_generator_reference_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_bus_frequency_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_pitch_angle_in_deg();
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

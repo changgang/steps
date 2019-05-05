@@ -2,6 +2,7 @@
 #include "header/model/equivalent_model/equivalent_models.h"
 #include "header/basic/utility.h"
 #include "header/meter/meter_setter.h"
+#include "header/steps.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -47,6 +48,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_equivalent_model(string file)
 
 void EQUIVALENT_MODEL_IMEXPORTER::load_data_into_ram(string file)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     data_in_ram.clear();
@@ -55,7 +57,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_data_into_ram(string file)
     if(fid==NULL)
     {
         osstream<<"equivalent model file cannot be open"<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -95,7 +97,8 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     if(n==0)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ostringstream osstream;
 
@@ -112,11 +115,12 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     psdb.append_equivalent_device(edevice);
 
     osstream<<"Equivalent device added: "<<edevice.get_device_name();
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & data_line, size_t& delay, double& coefficient)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     METER_SETTER setter;
@@ -126,7 +130,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
     if(data_line.size()==0)
     {
         osstream<<"FATAL error. No data is found in the data line. Cannot generate meter for equivalent model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return meter;
     }
 
@@ -314,7 +318,8 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     if(n==0)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ostringstream osstream;
 
@@ -370,7 +375,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
             osstream<<"Warning. Invalid meter is detected in ARXL model data: "<<endl;
             for(size_t k=0; k<data_line.size(); ++k)
                osstream<<data_line[k]<<", ";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 
@@ -383,9 +388,26 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     EQUIVALENT_MODEL* emodel = pedevice->get_equivalent_model();
 
     osstream<<"ARXL model added to "<<pedevice->get_device_name();
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     osstream<<emodel->get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
 }
+
+
+bool EQUIVALENT_MODEL_IMEXPORTER::is_valid() const
+{
+    return true;
+}
+
+void EQUIVALENT_MODEL_IMEXPORTER::check()
+{
+    ;
+}
+
+void EQUIVALENT_MODEL_IMEXPORTER::clear()
+{
+    ;
+}
+

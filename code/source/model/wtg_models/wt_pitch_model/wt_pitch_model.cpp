@@ -1,6 +1,7 @@
 #include "header/model/wtg_models/wt_turbine_model/wt_turbine_model.h"
 
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 
 WT_PITCH_MODEL::WT_PITCH_MODEL()
@@ -58,7 +59,8 @@ double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
     if(gen==NULL)
         return 1.0;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = gen->get_generator_bus();
     return psdb.get_bus_frequency_in_pu(bus);
@@ -70,7 +72,8 @@ double WT_PITCH_MODEL::get_bus_frequency_deviation_in_pu() const
     if(gen==NULL)
         return 1.0;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = gen->get_generator_bus();
     return psdb.get_bus_frequency_deviation_in_pu(bus);

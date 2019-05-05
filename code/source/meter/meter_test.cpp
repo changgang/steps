@@ -3,6 +3,7 @@
 #include "header/prepare_for_tests/prepare_models_for_test.h"
 #include "header/meter/meter.h"
 #include "header/model/all_supported_models.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -40,7 +41,7 @@ METER_TEST::METER_TEST()
 
 void METER_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     BUS bus;
     bus.set_bus_number(1);
@@ -111,8 +112,8 @@ void METER_TEST::tear_down()
 {
     meter.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -608,7 +609,7 @@ void METER_TEST::test_copy_with_operator_equal()
 
     METER newmeter = meter;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     TEST_ASSERT(newmeter.get_device_id()==did);
     TEST_ASSERT(newmeter.get_device_type()=="BUS");
@@ -668,7 +669,7 @@ void METER_TEST::test_get_bus_meter_value()
 
     meter.set_meter_type("VOLTAGE IN PU");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(1);
     busptr->set_voltage_in_pu(1.05);
     TEST_ASSERT(fabs(meter.get_meter_value()-1.05)<FLOAT_EPSILON);
@@ -714,7 +715,7 @@ void METER_TEST::test_get_equivalent_device_meter_value()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     EQUIVALENT_DEVICE* edevice = psdb.get_equivalent_device(did);
     TEST_ASSERT(edevice!=NULL);
 

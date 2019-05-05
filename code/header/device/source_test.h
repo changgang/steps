@@ -14,6 +14,7 @@
 
 #include "header/device/generator.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 
 using namespace std;
 

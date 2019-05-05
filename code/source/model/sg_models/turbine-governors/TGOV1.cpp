@@ -1,5 +1,6 @@
 #include "header/model/sg_models/turbine_governor_model/TGOV1.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 TGOV1::TGOV1()
 {
     clear();
@@ -23,7 +24,7 @@ void TGOV1::copy_from_const_model(const TGOV1& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_default_power_system_database());
+    //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     this->governor.set_limiter_type(WINDUP_LIMITER);
@@ -167,7 +168,8 @@ bool TGOV1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -229,7 +231,8 @@ void TGOV1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void TGOV1::save()
 {

@@ -6,6 +6,7 @@
 #include <istream>
 #include <iostream>
 #include <cstdio>
+#include "header/steps_namespace.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ ZONE_TEST::ZONE_TEST()
 
 void ZONE_TEST::setup()
 {
-    ;
+    zone.set_toolkit(default_toolkit);
 }
 
 void ZONE_TEST::tear_down()

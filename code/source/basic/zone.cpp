@@ -1,5 +1,6 @@
 #include "header/basic/zone.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 
 #include <istream>
 #include <iostream>
@@ -22,7 +23,11 @@ void ZONE::set_zone_number(size_t number)
         this->zone_number = number;
     else
     {
-        cout<<get_system_time_stamp_string()<<" "<<"0 is not allowed for setting zone number. 0 will be set to indicated invalid zone."<<endl;
+        ostringstream osstream;
+        osstream<<"0 is not allowed for setting zone number. 0 will be set to indicated invalid zone.";
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
         this->zone_number = 0;
     }
 }
@@ -64,9 +69,9 @@ void ZONE::clear()
 void ZONE::report() const
 {
     ostringstream osstream;
-
     osstream<<"Zone "<<get_zone_number()<<" ("<<get_zone_name()<<")";
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit=get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 ZONE& ZONE::operator=(const ZONE& zone)

@@ -5,7 +5,7 @@
 
 class POWER_SYSTEM_DATABASE;
 
-class METER_SETTER
+class METER_SETTER : public BASE
 {
     public:
         METER_SETTER();
@@ -209,5 +209,9 @@ class METER_SETTER
         bool prepare_energy_storage_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_hvdc_meter(METER& meter, const DEVICE_ID& device_id);
         bool prepare_equivalent_device_meter(METER& meter, const DEVICE_ID& device_id);
+
+        virtual bool is_valid() const;
+        virtual void check();
+        virtual void clear();
 };
 #endif // METER_SETTER_H

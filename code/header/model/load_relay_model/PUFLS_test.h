@@ -15,6 +15,7 @@
 #include "header/model/load_relay_model/load_frequency_relay_model_test.h"
 #include "header/model/load_relay_model/PUFLS.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class PUFLS_TEST : public LOAD_FREQUENCY_RELAY_MODEL_TEST
@@ -34,6 +35,7 @@ class PUFLS_TEST : public LOAD_FREQUENCY_RELAY_MODEL_TEST
         void test_composite_load_relay_scheme_with_realtime_frequency_additional_stage();
         void test_composite_load_relay_scheme_with_minimum_frequency_additional_stage();
     private:
+
 };
 
 #endif//PUFLS_TEST_H

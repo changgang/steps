@@ -14,7 +14,7 @@
 
 #include "header/model/load_model/IEEL.h"
 #include "header/power_system_database.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class IEEL_TEST : public LOAD_MODEL_TEST
@@ -29,6 +29,7 @@ class IEEL_TEST : public LOAD_MODEL_TEST
         virtual void test_get_detailed_model_name();
         virtual void test_set_get_parameters();
     private:
+
 };
 
 #endif//IEEL_TEST_H

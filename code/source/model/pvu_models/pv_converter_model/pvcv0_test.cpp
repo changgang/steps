@@ -128,7 +128,7 @@ void PVCV0_TEST::test_initialize_and_get_initialized_inputs()
     osstream<<"PVCV0 model after initialized:"<<endl;
     osstream<<"PLL angle = "<<model->get_pll_angle_in_deg()<<" deg, PLL frequency = "<<model->get_pll_frequency_in_Hz()<<endl;
     osstream<<"Terminal P = "<<model->get_terminal_active_power_in_MW()<<" MW, Q = "<<model->get_terminal_reactive_power_in_MVar()<<" MVar"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
 
 

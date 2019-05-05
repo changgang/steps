@@ -11,6 +11,7 @@
 #include "cpptest.h"
 
 #include "header/basic/sparse_matrix_define.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -57,6 +58,7 @@ class SPARSE_MATRIX_TEST : public Test::Suite
     private:
         void prepare_basic_matrix();
         STEPS_SPARSE_MATRIX matrix;
+
 };
 
 #endif // SPARSE_MATRIX_TEST_H

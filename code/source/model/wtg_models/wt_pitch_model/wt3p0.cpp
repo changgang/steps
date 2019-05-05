@@ -42,7 +42,7 @@ void WT3P0::copy_from_const_model(const WT3P0& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_default_power_system_database());
+    //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     set_Tspeed_in_s(model.get_Tspeed_in_s());
@@ -268,7 +268,8 @@ bool WT3P0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -286,6 +287,7 @@ void WT3P0::initialize()
 
     if(not aerdmodel->is_model_initialized())
         aerdmodel->initialize();
+    STEPS& toolkit = get_toolkit();
 
     double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
 
@@ -298,13 +300,13 @@ void WT3P0::initialize()
     {
         osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Pitch angle is "<<pitch0<<" deg, and Pitchmax is "<<pmax<<" deg.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(pitch0<pmin)
     {
         osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Pitch angle is "<<pitch0<<" deg, and Pitchmin is "<<pmin<<" deg.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     speed_controller.set_output(pitch0);
@@ -329,7 +331,7 @@ void WT3P0::initialize()
             <<"(2) frequency regulator state: "<<frequency_controller.get_state()<<endl
             <<"(3) pitch integrator state: "<<pitch_integrator.get_state()<<endl
             <<"(4) pitch angle is "<<get_pitch_angle_in_deg()<<" deg";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3P0::run(DYNAMIC_MODE mode)
@@ -399,7 +401,8 @@ void WT3P0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void WT3P0::save()
 {
@@ -525,7 +528,8 @@ void WT3P0::set_model_data_with_name(string par_name, double value)
     if(par_name == "PITCH MAX IN DEG")        return set_Pitchmax_in_deg(value);
     if(par_name == "T PITCH IN S")            return set_Tp_in_s(value);
 
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

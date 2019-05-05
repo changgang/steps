@@ -14,6 +14,7 @@
 
 #include "header/model/wtg_models/wt_generator_model/wt3g0.h"
 
+#include "header/STEPS.h"
 
 using namespace std;
 

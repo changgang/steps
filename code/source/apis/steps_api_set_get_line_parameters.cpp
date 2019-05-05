@@ -4,11 +4,12 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name)
+int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
@@ -37,11 +38,12 @@ int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
     }
 }
 
-void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, int value)
+void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, int value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
@@ -65,12 +67,12 @@ void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char*
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-
-double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name)
+double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
@@ -164,11 +166,12 @@ double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char*
     }
 }
 
-void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, double value)
+void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, double value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
@@ -303,13 +306,14 @@ void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* p
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name)
+const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
@@ -317,26 +321,26 @@ const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier,
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
 		{
-			snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (lineptr->get_identifier()).c_str());
-			return STEPS::steps_char_buffer;
+			snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (lineptr->get_identifier()).c_str());
+			return toolkit.steps_char_buffer;
 		}
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
-        return STEPS::steps_char_buffer;
+        return toolkit.steps_char_buffer;
     }
     else
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
-        return STEPS::steps_char_buffer;
+        return toolkit.steps_char_buffer;
     }
 }
 
-
-void api_set_line_string_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, char* value)
+void api_set_line_string_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, char* value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
@@ -351,11 +355,12 @@ void api_set_line_string_data(size_t ibus, size_t jbus, char* identifier, char* 
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-bool api_get_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name)
+bool api_get_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
@@ -378,12 +383,12 @@ bool api_get_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char*
     }
 }
 
-
-void api_set_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, bool value)
+void api_set_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, bool value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)

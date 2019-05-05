@@ -4,7 +4,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-void api_load_powerflow_data_from_file(char* file, char* file_type)
+void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolkit_index)
 {
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
@@ -22,7 +22,7 @@ void api_load_powerflow_data_from_file(char* file, char* file_type)
     }
 }
 
-void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line)
+void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line, size_t toolkit_index)
 {
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
@@ -41,7 +41,7 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
 }
 
 
-void api_load_dynamic_data_from_file(char* file, char* file_type)
+void api_load_dynamic_data_from_file(char* file, char* file_type, size_t toolkit_index)
 {
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
@@ -59,7 +59,7 @@ void api_load_dynamic_data_from_file(char* file, char* file_type)
     }
 }
 
-void api_save_dynamic_data_to_file(char* file, char* file_type)
+void api_save_dynamic_data_to_file(char* file, char* file_type, size_t toolkit_index)
 {
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")

@@ -80,7 +80,7 @@ void GENROU_TEST::test_initialize_and_get_initialized_inputs()
     show_test_information_for_function_of_class(__FUNCTION__,"GENROU_TEST");
 
     GENERATOR* genptr = get_test_generator();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     SYNC_GENERATOR_MODEL* model = (GENROU*) get_test_sync_generator_model();
 

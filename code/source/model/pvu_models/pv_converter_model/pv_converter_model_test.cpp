@@ -1,5 +1,6 @@
 #include "header/model/pvu_models/pv_converter_model/pv_converter_model_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -56,7 +57,7 @@ void PV_CONVERTER_MODEL_TEST::test_get_terminal_complex_voltage_in_pu()
 {
     PV_UNIT* pv_unit = get_test_pv_unit();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     size_t bus = pv_unit->get_unit_bus();
     TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb.get_bus_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
 }
@@ -79,7 +80,7 @@ void PV_CONVERTER_MODEL_TEST::test_get_nominal_frequency_in_Hz()
 {
     PV_UNIT* pv_unit = get_test_pv_unit();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(fabs(model->get_bus_base_frequency_in_Hz()-psdb.get_bus_base_frequency_in_Hz(pv_unit->get_unit_bus()))<FLOAT_EPSILON);
 }
 
@@ -153,7 +154,7 @@ void PV_CONVERTER_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
     osstream<<"TIME\tVTERM\tBUSANGLE\tPLL_FREQ\tPLL_ANGLE\tIPCMD\tIQCMD\tEQCMD\tPELEC\tQELEC";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PV_CONVERTER_MODEL_TEST::export_meter_values(double time)
@@ -182,7 +183,7 @@ void PV_CONVERTER_MODEL_TEST::export_meter_values(double time)
       <<setw(10)<<setprecision(6)<<fixed<<pelec<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<qelec;
 
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PV_CONVERTER_MODEL_TEST::test_active_current_step_response_of_pv_converter_model()
@@ -193,13 +194,13 @@ void PV_CONVERTER_MODEL_TEST::test_active_current_step_response_of_pv_converter_
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double time = -delt*2.0;
 
@@ -239,7 +240,7 @@ void PV_CONVERTER_MODEL_TEST::test_active_current_step_response_of_pv_converter_
             run_a_step();
             export_meter_values(time);
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -253,13 +254,13 @@ void PV_CONVERTER_MODEL_TEST::test_reactive_current_step_response_of_pv_converte
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double time = -delt*2.0;
 
@@ -299,7 +300,7 @@ void PV_CONVERTER_MODEL_TEST::test_reactive_current_step_response_of_pv_converte
             run_a_step();
             export_meter_values(time);
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -307,20 +308,20 @@ void PV_CONVERTER_MODEL_TEST::test_reactive_current_step_response_of_pv_converte
 
 void PV_CONVERTER_MODEL_TEST::test_bus_magnitude_step_response_of_pv_converter_model()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
     ostringstream osstream;
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double time = -delt*2.0;
 
@@ -362,7 +363,7 @@ void PV_CONVERTER_MODEL_TEST::test_bus_magnitude_step_response_of_pv_converter_m
             run_a_step();
             export_meter_values(time);
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -370,20 +371,20 @@ void PV_CONVERTER_MODEL_TEST::test_bus_magnitude_step_response_of_pv_converter_m
 
 void PV_CONVERTER_MODEL_TEST::test_bus_angle_step_response_of_pv_converter_model()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
     ostringstream osstream;
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double time = -delt*2.0;
 
@@ -425,7 +426,7 @@ void PV_CONVERTER_MODEL_TEST::test_bus_angle_step_response_of_pv_converter_model
             run_a_step();
             export_meter_values(time);
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -440,13 +441,13 @@ void PV_CONVERTER_MODEL_TEST::test_variable_step_simulation_with_active_current_
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double time = -delt*2.0;
 
@@ -488,7 +489,7 @@ void PV_CONVERTER_MODEL_TEST::test_variable_step_simulation_with_active_current_
         }
 
         delt *= 2.0;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
         model->run(UPDATE_MODE);
 
         export_meter_values(time);
@@ -508,7 +509,7 @@ void PV_CONVERTER_MODEL_TEST::test_variable_step_simulation_with_active_current_
         }
 
         delt *= 2.0;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
         model->run(UPDATE_MODE);
 
         export_meter_values(time);
@@ -527,7 +528,7 @@ void PV_CONVERTER_MODEL_TEST::test_variable_step_simulation_with_active_current_
             export_meter_values(time);
         }
 
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);

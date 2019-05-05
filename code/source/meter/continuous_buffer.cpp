@@ -86,6 +86,16 @@ void CONTINUOUS_BUFFER::clear()
     }
 }
 
+bool CONTINUOUS_BUFFER::is_valid() const
+{
+    return true;
+}
+
+void CONTINUOUS_BUFFER::check()
+{
+    ;
+}
+
 void CONTINUOUS_BUFFER::set_buffer_size(size_t buffer_size)
 {
     if(buffer_size==0)
@@ -102,7 +112,8 @@ size_t CONTINUOUS_BUFFER::get_buffer_size() const
 
 void CONTINUOUS_BUFFER::initialize_buffer(double initial_time, double value)
 {
-    double delt = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     index_of_buffer_head = 0;
     for(size_t i=0; i!=buffer_size; ++i)
@@ -231,5 +242,6 @@ void CONTINUOUS_BUFFER::show_buffer() const
     {
         osstream<<get_buffer_time_at_delay_index(i)<<","<<get_buffer_value_at_delay_index(i)<<endl;
     }
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }

@@ -13,6 +13,7 @@
 #include "cpptest.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 #include "header/basic/timer.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class TIMER_TEST : public Test::Suite

@@ -1,5 +1,6 @@
 #include "header/model/energy_storage_model/estr0.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -28,7 +29,7 @@ void ESTR0::copy_from_const_model(const ESTR0& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_default_power_system_database());
+    //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     this->set_Tp1_in_s(model.get_Tp1_in_s());
@@ -336,7 +337,8 @@ bool ESTR0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -540,7 +542,8 @@ complex<double> ESTR0::get_terminal_complex_current_in_pu_based_on_sbase() const
     complex<double> I = get_terminal_complex_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
     return I*mbase/sbase;
@@ -556,7 +559,8 @@ complex<double> ESTR0::get_terminal_complex_current_in_kA() const
     ENERGY_STORAGE* estorage = (ENERGY_STORAGE*) get_device_pointer();
     size_t bus = estorage->get_energy_storage_bus();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double vbase = psdb.get_bus_base_voltage_in_kV(bus);
 
     double ibase = mbase/(sqrt(3.0)*vbase);
@@ -595,7 +599,8 @@ void ESTR0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void ESTR0::save()

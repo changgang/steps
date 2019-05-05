@@ -36,7 +36,9 @@ SOURCE_TEST::SOURCE_TEST()
 
 void SOURCE_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    generator.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
@@ -55,8 +57,8 @@ void SOURCE_TEST::tear_down()
 {
     generator.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -65,7 +67,7 @@ void SOURCE_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SOURCE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(generator.get_generator_bus()==0);
     TEST_ASSERT(generator.get_identifier()=="");
     TEST_ASSERT(generator.get_status()==false);
@@ -116,7 +118,7 @@ void SOURCE_TEST::test_set_get_mbase()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SOURCE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     generator.set_mbase_in_MVA(200.0);
     TEST_ASSERT(generator.get_mbase_in_MVA()==200.0);
     generator.set_mbase_in_MVA(0.0);

@@ -1,5 +1,6 @@
 #include "header/model/sg_models/turbine_governor_model/TGOV1_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 using namespace std;
 
 TGOV1_TEST::TGOV1_TEST()
@@ -125,7 +126,7 @@ void TGOV1_TEST::test_step_response()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"TGOV1_TEST");
 
-    redirect_stdout_to_file("test_log/step_response_of_TGOV1_model.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_TGOV1_model.txt");
 
     TGOV1* model = (TGOV1*) get_test_turbine_governor_model();
 
@@ -133,7 +134,7 @@ void TGOV1_TEST::test_step_response()
 
     run_step_response_of_turbine_govnernor_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 
 }
 

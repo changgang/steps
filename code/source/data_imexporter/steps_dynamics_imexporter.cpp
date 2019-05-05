@@ -11,14 +11,15 @@ void STEPS_IMEXPORTER::load_dynamic_data(string file)
 {
     ostringstream osstream;
     osstream<<"Loading dynamic data from STEPS file: "<<file;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     //file = string2upper(file);
     load_dynamic_data_into_ram(file);
     load_all_models();
 
     osstream<<"Done loading dynamic data.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void STEPS_IMEXPORTER::load_dynamic_data_from_steps_vector(vector<vector<string> >& data)
@@ -29,6 +30,7 @@ void STEPS_IMEXPORTER::load_dynamic_data_from_steps_vector(vector<vector<string>
 
 void STEPS_IMEXPORTER::load_dynamic_data_into_ram(string file)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     splitted_sdyr_data_in_ram.clear();
@@ -37,7 +39,7 @@ void STEPS_IMEXPORTER::load_dynamic_data_into_ram(string file)
     if(fid == NULL)
     {
         osstream<<"STEPS dyr file '"<<file<<"' is not accessible. Loading STEPS dyr data is failed.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -152,7 +154,8 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
 
 
     osstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
 }
 
@@ -285,7 +288,8 @@ DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>
     DEVICE_ID did;
     did.set_device_type("HVDC");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(data.size()<2)
         return did;
@@ -347,13 +351,15 @@ void STEPS_IMEXPORTER::add_GENCLS_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENCLS model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -361,7 +367,7 @@ void STEPS_IMEXPORTER::add_GENCLS_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid GENCLS model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -374,13 +380,15 @@ void STEPS_IMEXPORTER::add_GENROU_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENROU model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -388,7 +396,7 @@ void STEPS_IMEXPORTER::add_GENROU_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid GENROU model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -400,14 +408,15 @@ void STEPS_IMEXPORTER::add_GENSAL_model(vector<string>& data)
 
     if(data.size()<3)
         return;
-
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         GENSAL model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -415,7 +424,7 @@ void STEPS_IMEXPORTER::add_GENSAL_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid GENSAL model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -428,13 +437,15 @@ void STEPS_IMEXPORTER::add_COMP_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         COMP model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -442,7 +453,7 @@ void STEPS_IMEXPORTER::add_COMP_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid COMP model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -455,14 +466,15 @@ void STEPS_IMEXPORTER::add_IEE2ST_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEE2ST model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -470,7 +482,7 @@ void STEPS_IMEXPORTER::add_IEE2ST_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEE2ST model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -483,14 +495,15 @@ void STEPS_IMEXPORTER::add_PSASPS1_model(vector<string>& data)
     if(data.size()<14)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPS1 model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -498,7 +511,7 @@ void STEPS_IMEXPORTER::add_PSASPS1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PSASPS1 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -510,14 +523,15 @@ void STEPS_IMEXPORTER::add_PSASPS2_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPS2 model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -525,7 +539,7 @@ void STEPS_IMEXPORTER::add_PSASPS2_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PSASPS2 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -537,14 +551,15 @@ void STEPS_IMEXPORTER::add_PSASPS3_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPS3 model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -552,7 +567,7 @@ void STEPS_IMEXPORTER::add_PSASPS3_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PSASPS3 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -564,14 +579,15 @@ void STEPS_IMEXPORTER::add_PSASPS4_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPS4 model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -579,7 +595,7 @@ void STEPS_IMEXPORTER::add_PSASPS4_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PSASPS4 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -591,14 +607,15 @@ void STEPS_IMEXPORTER::add_PSASPS5_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPS5 model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -606,7 +623,7 @@ void STEPS_IMEXPORTER::add_PSASPS5_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PSASPS5 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -619,13 +636,15 @@ void STEPS_IMEXPORTER::add_SEXS_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         SEXS model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -633,7 +652,7 @@ void STEPS_IMEXPORTER::add_SEXS_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid SEXS model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -646,13 +665,15 @@ void STEPS_IMEXPORTER::add_IEEET1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEET1 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -660,7 +681,7 @@ void STEPS_IMEXPORTER::add_IEEET1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEEET1 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -673,13 +694,15 @@ void STEPS_IMEXPORTER::add_PSASPE1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE1 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -687,7 +710,7 @@ void STEPS_IMEXPORTER::add_PSASPE1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PSASPE1 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -700,13 +723,15 @@ void STEPS_IMEXPORTER::add_PSASPE2_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE2 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -714,7 +739,7 @@ void STEPS_IMEXPORTER::add_PSASPE2_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PSASPE2 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -727,13 +752,15 @@ void STEPS_IMEXPORTER::add_CSEET1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         CSEET1 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -741,7 +768,7 @@ void STEPS_IMEXPORTER::add_CSEET1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid CSEET1 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -754,13 +781,15 @@ void STEPS_IMEXPORTER::add_CSEET2_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         CSEET2 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -768,7 +797,7 @@ void STEPS_IMEXPORTER::add_CSEET2_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid CSEET2 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -781,13 +810,15 @@ void STEPS_IMEXPORTER::add_PSASPE13_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         PSASPE13 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -795,7 +826,7 @@ void STEPS_IMEXPORTER::add_PSASPE13_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid PSASPE13 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -808,13 +839,15 @@ void STEPS_IMEXPORTER::add_TGOV1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         TGOV1 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -822,7 +855,7 @@ void STEPS_IMEXPORTER::add_TGOV1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid TGOV1 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -835,13 +868,15 @@ void STEPS_IMEXPORTER::add_IEEEG1_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG1 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -849,7 +884,7 @@ void STEPS_IMEXPORTER::add_IEEEG1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEEEG1 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -862,13 +897,15 @@ void STEPS_IMEXPORTER::add_IEEEG2_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG2 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -876,7 +913,7 @@ void STEPS_IMEXPORTER::add_IEEEG2_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEEEG2 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -889,13 +926,15 @@ void STEPS_IMEXPORTER::add_IEEEG3_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG3 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -903,7 +942,7 @@ void STEPS_IMEXPORTER::add_IEEEG3_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEEEG3 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -917,13 +956,15 @@ void STEPS_IMEXPORTER::add_IEESGO_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEESGO model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -931,7 +972,7 @@ void STEPS_IMEXPORTER::add_IEESGO_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEESGO model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -944,13 +985,15 @@ void STEPS_IMEXPORTER::add_IEEEG1SB_model(vector<string>& data)
     if(data.size()<3)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         IEEEG1SB model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -958,7 +1001,7 @@ void STEPS_IMEXPORTER::add_IEEEG1SB_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid IEEEG1SB model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -971,13 +1014,15 @@ void STEPS_IMEXPORTER::add_LCFB1_model(vector<string>& data)
     if(data.size()<12)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_generator_device_id_from_string_vector(data);
 
     GENERATOR* generator = psdb.get_generator(did);
     if(generator != NULL)
     {
         LCFB1 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             generator->set_model(&model);
@@ -985,7 +1030,7 @@ void STEPS_IMEXPORTER::add_LCFB1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid LCFB1 model is built, but will not be set for "<<generator->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1006,7 +1051,8 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
        )
         return loads;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(data.size()<3)
         return loads;
@@ -1090,7 +1136,9 @@ void STEPS_IMEXPORTER::add_IEEL_model(vector<string>& data)
     if(data.size()<3)
         return;
 
+    STEPS& toolkit = get_toolkit();
     IEEL model;
+    model.set_toolkit(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
@@ -1111,10 +1159,10 @@ void STEPS_IMEXPORTER::add_UFLS_model(vector<string>& data)
     if(data.size()<3)
         return;
 
+    STEPS& toolkit = get_toolkit();
     UFLS model;
-
+    model.set_toolkit(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
-
     if(successful)
     {
         vector<LOAD*> loads = get_all_loads_of(data);
@@ -1134,7 +1182,9 @@ void STEPS_IMEXPORTER::add_PUFLS_model(vector<string>& data)
     if(data.size()<3)
         return;
 
+    STEPS& toolkit = get_toolkit();
     PUFLS model;
+    model.set_toolkit(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)
     {
@@ -1150,17 +1200,18 @@ void STEPS_IMEXPORTER::add_CDC4T_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "CDC4T")
         return;
 
-
     if(data.size()<24)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
 
     HVDC* hvdc = psdb.get_hvdc(did);
     if(hvdc != NULL)
     {
         CDC4T model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             hvdc->set_model(&model);
@@ -1168,7 +1219,7 @@ void STEPS_IMEXPORTER::add_CDC4T_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid CDC4T model is built, but will not be set for "<<hvdc->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1182,13 +1233,15 @@ void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
     if(data.size()<34)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_hvdc_device_id_from_string_vector(data);
 
     HVDC* hvdc = psdb.get_hvdc(did);
     if(hvdc != NULL)
     {
         CDC6T model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             hvdc->set_model(&model);
@@ -1196,7 +1249,7 @@ void STEPS_IMEXPORTER::add_CDC6T_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid CDC6T model is built, but will not be set for "<<hvdc->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1206,14 +1259,15 @@ void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "WT3G1")
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3G1 model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1221,7 +1275,7 @@ void STEPS_IMEXPORTER::add_WT3G1_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WT3G1 model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1232,14 +1286,15 @@ void STEPS_IMEXPORTER::add_WT3G0_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "WT3G0")
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3G0 model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1247,7 +1302,7 @@ void STEPS_IMEXPORTER::add_WT3G0_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WT3G0 model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1258,14 +1313,15 @@ void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "WT3G2")
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3G2 model;
-
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1273,7 +1329,7 @@ void STEPS_IMEXPORTER::add_WT3G2_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WT3G2 model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1283,13 +1339,15 @@ void STEPS_IMEXPORTER::add_AERD0_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "AERD0")
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         AERD0 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1297,7 +1355,7 @@ void STEPS_IMEXPORTER::add_AERD0_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid AERD0 model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1307,13 +1365,15 @@ void STEPS_IMEXPORTER::add_WT3T0_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "WT3T0")
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3T0 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1321,7 +1381,7 @@ void STEPS_IMEXPORTER::add_WT3T0_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WT3T0 model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1331,13 +1391,15 @@ void STEPS_IMEXPORTER::add_WT3E0_model(vector<string>& data)
     if(get_dynamic_model_name(data) != "WT3E0")
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3E0 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1345,7 +1407,7 @@ void STEPS_IMEXPORTER::add_WT3E0_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WT3E0 model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1354,14 +1416,15 @@ void STEPS_IMEXPORTER::add_WT3P0_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WT3P0")
         return;
-
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WT3P0 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1369,7 +1432,7 @@ void STEPS_IMEXPORTER::add_WT3P0_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WT3P0 model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1378,14 +1441,15 @@ void STEPS_IMEXPORTER::add_FILEWIND_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "FILEWIND")
         return;
-
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         FILEWIND model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1393,7 +1457,7 @@ void STEPS_IMEXPORTER::add_FILEWIND_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid FILEWIND model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -1402,14 +1466,15 @@ void STEPS_IMEXPORTER::add_WTRLY0_model(vector<string>& data)
 {
     if(get_dynamic_model_name(data) != "WTRLY0")
         return;
-
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_wt_generator_device_id_from_string_vector(data);
 
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen != NULL)
     {
         WTRLY0 model;
+        model.set_toolkit(toolkit);
         bool successful = model.setup_model_with_steps_string_vector(data);
         if(successful)
             gen->set_model(&model);
@@ -1417,7 +1482,7 @@ void STEPS_IMEXPORTER::add_WTRLY0_model(vector<string>& data)
         {
             ostringstream osstream;
             osstream<<"Warning. Invalid WTRLY0 model is built, but will not be set for "<<gen->get_device_name();
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }

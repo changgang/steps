@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/block/saturation_block.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -36,5 +37,6 @@ class SATURATION_BLOCK_TEST : public Test::Suite
         void test_get_saturation_exponential_type_input_as_exponential();
     private:
         SATURATION_BLOCK block;
+
 };
 #endif // SATURATION_BLOCK_TEST_H

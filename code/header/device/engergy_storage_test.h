@@ -14,7 +14,7 @@
 
 #include "header/device/energy_storage.h"
 #include "header/power_system_database.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class ENERGY_STORAGE_TEST : public Test::Suite

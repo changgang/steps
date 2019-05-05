@@ -13,6 +13,8 @@
 #include "cpptest.h"
 
 #include "header/basic/inphno.h"
+#include "header/STEPS.h"
+
 using namespace std;
 
 class INPHNO_TEST : public Test::Suite
@@ -31,6 +33,7 @@ class INPHNO_TEST : public Test::Suite
         void test_clear();
     private:
         INPHNO inphno;
+
 };
 
 #endif //INPHNO_TEST_H

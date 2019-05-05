@@ -1,5 +1,6 @@
 #include "header/model/sg_models/stabilizer_model/PSASPS5.h"
 #include "header/basic/constants.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
@@ -23,7 +24,7 @@ void PSASPS5::copy_from_const_model(const PSASPS5& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_default_power_system_database());
+    //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     for(size_t i=0; i!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
@@ -302,7 +303,8 @@ bool PSASPS5::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -426,7 +428,8 @@ double PSASPS5::get_stabilizing_signal_in_pu() const
     double vcmax = get_Vcmax();
     double vcmin = get_Vcmin();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = get_device_id().get_device_terminal()[0];
     double terminal_voltage = psdb.get_bus_voltage_in_pu(bus);
     if(vcmax!=0.0 and terminal_voltage>vcmax)
@@ -445,7 +448,8 @@ void PSASPS5::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PSASPS5::save()

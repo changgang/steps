@@ -14,6 +14,7 @@
 
 #include "header/model/sg_models/stabilizer_model/PSASPS3.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class PSASPS3_TEST : public STABILIZER_MODEL_TEST
@@ -28,6 +29,7 @@ class PSASPS3_TEST : public STABILIZER_MODEL_TEST
         void test_set_get_parameters();
         void test_set_get_input_signals();
     private:
+
 };
 
 #endif//PSASPS3_TEST_H

@@ -62,7 +62,8 @@ bool FILEIRRAD::setup_model_with_steps_string_vector(vector<string>& data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<string_vector2csv(data);
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -77,7 +78,8 @@ bool FILEIRRAD::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -92,7 +94,8 @@ void FILEIRRAD::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 double FILEIRRAD::get_solar_irradiance_in_pu()
@@ -114,7 +117,8 @@ void FILEIRRAD::check()
 
 void FILEIRRAD::report()
 {
-    show_information_with_leading_time_stamp(get_standard_model_string());
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(get_standard_model_string());
 }
 
 void FILEIRRAD::save()
@@ -163,7 +167,8 @@ double FILEIRRAD::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var_name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 

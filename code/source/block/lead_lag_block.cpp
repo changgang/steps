@@ -24,7 +24,8 @@ void LEAD_LAG_BLOCK::set_K(double k)
     {
         ostringstream osstream;
         osstream<<"Error. Zero amplifier K is not allowed for LEAD_LAG_BLOCK.";
-        show_information_with_leading_time_stamp(osstream);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     this->K = k;
@@ -77,7 +78,8 @@ void LEAD_LAG_BLOCK::initialize()
         return;
     }
 
-    double h = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double k = get_K();
 
@@ -120,7 +122,8 @@ void LEAD_LAG_BLOCK::run(DYNAMIC_MODE mode)
 
 void LEAD_LAG_BLOCK::integrate()
 {
-    double h = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double k = get_K();
     double t1 = get_T1_in_s();
@@ -152,7 +155,8 @@ void LEAD_LAG_BLOCK::integrate()
 
 void LEAD_LAG_BLOCK::update()
 {
-    double h = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double k = get_K();
     double t1 = get_T1_in_s();

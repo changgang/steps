@@ -14,6 +14,7 @@
 
 #include "header/device/pv_unit.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class PV_UNIT_TEST : public Test::Suite

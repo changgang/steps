@@ -1,5 +1,6 @@
 #include "header/model/sg_models/turbine_governor_model/IEEEG2_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 using namespace std;
 
 IEEEG2_TEST::IEEEG2_TEST()
@@ -126,7 +127,7 @@ void IEEEG2_TEST::test_step_response()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"IEEEG2_TEST");
 
-    redirect_stdout_to_file("test_log/step_response_of_IEEEG2_model.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_IEEEG2_model.txt");
 
     IEEEG2* model = (IEEEG2*) get_test_turbine_governor_model();
 
@@ -134,7 +135,7 @@ void IEEEG2_TEST::test_step_response()
 
     run_step_response_of_turbine_govnernor_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 
 }
 

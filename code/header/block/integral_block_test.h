@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/block/integral_block.h"
+#include "header/STEPS.h"
 
 using namespace std;
 

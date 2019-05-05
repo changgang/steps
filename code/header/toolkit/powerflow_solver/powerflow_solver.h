@@ -6,11 +6,12 @@
 #include "header/network/network_matrix.h"
 #include "header/basic/sparse_matrix_define.h"
 
-class POWERFLOW_SOLVER
+class POWERFLOW_SOLVER : public BASE
 {
     public:
         POWERFLOW_SOLVER();
         ~POWERFLOW_SOLVER();
+        virtual void clear();
 
         NETWORK_MATRIX& get_network_matrix();
 
@@ -96,7 +97,6 @@ class POWERFLOW_SOLVER
 
         void set_convergence_flag(bool flag);
 
-
         STEPS_SPARSE_MATRIX jacobian, BP, BQ;
 
         vector<double> bus_active_power_mismatch_in_pu, bus_reactive_power_mismatch_in_pu;
@@ -115,7 +115,8 @@ class POWERFLOW_SOLVER
 
         size_t iteration_count, max_iteration;
     private:
-        NETWORK_MATRIX network_matrix;
+        virtual bool is_valid() const;
+        virtual void check();
 };
 
 #endif // POWERFLOW_SOLVER_H

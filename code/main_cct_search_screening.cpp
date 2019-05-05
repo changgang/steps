@@ -1,4 +1,5 @@
 #include "header/power_system_database.h"
+#include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/toolkit/cct_searcher/cct_searcher.h"
@@ -10,11 +11,11 @@ using namespace std;
 
 int main()
 {
-    initialize_simulator(); // this function should be called first
+    initialize_package(); // this function should be called first
 
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database(); // create a new database
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database(); // create a new database
     psdb.set_allowed_max_bus_number(1000); // set the max bus number of the database
 
     PSSE_IMEXPORTER importer; // create an imexporter
@@ -63,11 +64,11 @@ int main()
 
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Now go searching CCT for fault at side %lu of %s.",
                  searcher.get_fault_side_bus(),(did.get_device_name()).c_str());
-        show_information_with_leading_time_stamp(buffer);
+        default_toolkit.show_information_with_leading_time_stamp(buffer);
         double cct = searcher.search_cct();
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Now done searching CCT for fault at side %lu of %s.",
                  searcher.get_fault_side_bus(),(did.get_device_name()).c_str());
-        show_information_with_leading_time_stamp(buffer);
+        default_toolkit.show_information_with_leading_time_stamp(buffer);
         ccts[i] = cct;
 
         searcher.run_case_with_clearing_time(cct);
@@ -76,15 +77,13 @@ int main()
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Searched CCT of all lines:\n");
-    show_information_with_leading_time_stamp(buffer);
+    default_toolkit.show_information_with_leading_time_stamp(buffer);
     for(size_t i=0; i!=n_events; ++i)
     {
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s at fault side %lu: %fs.\n",(fault_lines[i].get_device_name()).c_str(),
                  fault_side_buses[i], ccts[i]);
-        show_information_with_leading_time_stamp(buffer);
+        default_toolkit.show_information_with_leading_time_stamp(buffer);
     }
-
-    terminate_simulator();
 
     return 0;
 }

@@ -29,7 +29,7 @@ CONTINUOUS_BUFFER_TEST::CONTINUOUS_BUFFER_TEST()
 
 void CONTINUOUS_BUFFER_TEST::setup()
 {
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 
 void CONTINUOUS_BUFFER_TEST::tear_down()
@@ -61,7 +61,7 @@ void CONTINUOUS_BUFFER_TEST::test_initialize_buffer()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CONTINUOUS_BUFFER_TEST");
 
-    double delt = get_dynamic_simulation_time_step_in_s();
+    double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double current_time = -2.0*delt;
 
     buffer.set_buffer_size(100);
@@ -161,7 +161,7 @@ void CONTINUOUS_BUFFER_TEST::test_get_index_of_buffer_head()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CONTINUOUS_BUFFER_TEST");
 
-    double delt = get_dynamic_simulation_time_step_in_s();
+    double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double current_time = -2.0*delt;
 
     buffer.set_buffer_size(100);
@@ -214,7 +214,7 @@ void CONTINUOUS_BUFFER_TEST::test_get_buffer_value_at_head()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CONTINUOUS_BUFFER_TEST");
 
-    double delt = get_dynamic_simulation_time_step_in_s();
+    double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double current_time = -2.0*delt;
 
     buffer.set_buffer_size(100);
@@ -285,7 +285,7 @@ void CONTINUOUS_BUFFER_TEST::test_get_buffer_value_at_delay_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CONTINUOUS_BUFFER_TEST");
 
-    double delt = get_dynamic_simulation_time_step_in_s();
+    double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double current_time = -2.0*delt;
 
     buffer.set_buffer_size(100);

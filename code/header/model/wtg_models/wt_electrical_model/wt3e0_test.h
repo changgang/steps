@@ -14,6 +14,7 @@
 
 #include "header/model/wtg_models/wt_electrical_model/wt3e0.h"
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class WT3E0_TEST : public WT_ELECTRICAL_MODEL_TEST

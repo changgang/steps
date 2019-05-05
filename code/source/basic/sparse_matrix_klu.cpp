@@ -339,7 +339,7 @@ int SPARSE_MATRIX_KLU::get_entry_index(int row, int col) const
         {
             ostringstream osstream;
             osstream<<"Error. Sparse matrix not in compressed form when getting entry index.\nINDEX_NOT_EXIST will be returned.";
-            show_information_with_leading_time_stamp(osstream);
+            show_information_with_leading_time_stamp_with_default_toolkit(osstream);
             return INDEX_NOT_EXIST;
         }
 
@@ -460,10 +460,10 @@ void SPARSE_MATRIX_KLU::report_brief() const
     int i=0, j=0, k=0;
 
     buffer="matrix entries:\n";
-    show_information_with_leading_time_stamp(buffer);
+    show_information_with_leading_time_stamp_with_default_toolkit(buffer);
 
 	snprintf(cbuffer, 1000, "row   column     real       imaginary\n");
-    show_information_with_leading_time_stamp(cbuffer);
+    show_information_with_leading_time_stamp_with_default_toolkit(cbuffer);
 
     int n = get_matrix_size();
     for(j=0;j!=n;++j)
@@ -475,7 +475,7 @@ void SPARSE_MATRIX_KLU::report_brief() const
             snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f, % 10.6f\n",i,j,compressed_matrix_real[k],compressed_matrix_imag[k]);
 
             buffer = cbuffer;
-            show_information_with_leading_time_stamp(buffer);
+            show_information_with_leading_time_stamp_with_default_toolkit(buffer);
         }
     }
 }
@@ -497,7 +497,7 @@ void SPARSE_MATRIX_KLU::save_matrix_to_file(string filename) const
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving sparse matrix(CSparse) contents."<<endl
           <<"No sparse matrix(CSparse) will be exported.";
-        show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         return;
     }
 

@@ -25,13 +25,14 @@ string COMPENSATOR_MODEL::get_model_type() const
 
 complex<double> COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
 {
+    STEPS& toolkit = get_toolkit();
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;
     else
     {
         size_t bus = generator->get_generator_bus();
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         return psdb.get_bus_complex_voltage_in_pu(bus);
     }
 }

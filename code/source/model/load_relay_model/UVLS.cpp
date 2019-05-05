@@ -209,14 +209,16 @@ bool UVLS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void UVLS::initialize()
 {
     LOAD* load = get_load_pointer();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double volt = psdb.get_bus_voltage_in_pu(load->get_load_bus());
 
     for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
@@ -240,7 +242,8 @@ void UVLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
 
-    double current_time = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     double volt = get_bus_voltage_in_pu();
 
@@ -263,7 +266,7 @@ void UVLS::run(DYNAMIC_MODE mode)
                 {
                     osstream<<"UVLS stage "<<i<<" timer of "<<get_device_name()<<" is timed out at time "<<current_time<<" s."<<endl
                       <<get_scale_in_pu_of_stage(i)*100.0<<"% loads are tripped.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     trip_stage(i); // trip it
                 }
@@ -276,7 +279,7 @@ void UVLS::run(DYNAMIC_MODE mode)
                 {
                     osstream<<"UVLS stage "<<i<<" timer of "<<get_device_name()<<" is sending tripping signal to breaker at time "<<current_time<<" s since stage delayer timer is timed out."<<endl
                       <<"Current voltage is "<<v<<" pu, and stage voltage threshold is "<<get_voltage_threshold_in_pu_of_stage(i)<<" pu.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     start_stage_breaker_timer(i); // start breaker;
                 }
                 else// delayer not timed out
@@ -288,7 +291,7 @@ void UVLS::run(DYNAMIC_MODE mode)
                         // need to reset
                         osstream<<"UVLS stage "<<i<<" timer of "<<get_device_name()<<" is reset at time "<<current_time<<" s due to recovery of voltage."<<endl
                           <<"Current voltage is "<<v<<" pu, and stage voltage threshold is "<<get_voltage_threshold_in_pu_of_stage(i)<<" pu.";
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                         reset_stage_delayer_timer(i);
                     }
                 }
@@ -300,7 +303,7 @@ void UVLS::run(DYNAMIC_MODE mode)
                 {
                     osstream<<"UVLS stage "<<i<<" timer of "<<get_device_name()<<" is started at time "<<current_time<<" s due to drop of voltage."<<endl
                       <<"Current voltage is "<<v<<" pu, and stage voltage threshold is "<<get_voltage_threshold_in_pu_of_stage(i)<<" pu.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     start_stage_delayer_timer(i);
                 }
             }
@@ -376,6 +379,7 @@ bool UVLS::is_stage_breaker_timer_timed_out(size_t i) const
 
 void UVLS::trip_stage(size_t i)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(i<MAX_LOAD_RELAY_STAGE)
     {
@@ -383,7 +387,7 @@ void UVLS::trip_stage(size_t i)
         {
             flag_stage_is_tripped[i] = true;
             reset_stage_breaker_timer(i);
-            DYNAMICS_SIMULATOR& sim = get_default_dynamic_simulator();
+            DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
             sim.enable_relay_action_flag();
         }
     }

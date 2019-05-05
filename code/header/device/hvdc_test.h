@@ -14,7 +14,7 @@
 
 #include "header/device/hvdc.h"
 #include "header/power_system_database.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class HVDC_TEST : public Test::Suite

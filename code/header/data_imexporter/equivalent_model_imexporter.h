@@ -2,9 +2,9 @@
 #define EQUIVALENT_MODEL_IMEXPORTER_H
 
 #include "header/power_system_database.h"
-
+#include "header/basic/base.h"
 #include <vector>
-class EQUIVALENT_MODEL_IMEXPORTER
+class EQUIVALENT_MODEL_IMEXPORTER : public BASE
 {
     public:
         EQUIVALENT_MODEL_IMEXPORTER();
@@ -17,6 +17,9 @@ class EQUIVALENT_MODEL_IMEXPORTER
         void add_equivalent_device(vector< vector<string> >& model_data);
         void load_ARXL_model(vector< vector<string> >& model_data);
     private:
+        virtual bool is_valid() const;
+        virtual void check();
+        virtual void clear();
         vector< vector< vector<string> > > data_in_ram;
 
 };

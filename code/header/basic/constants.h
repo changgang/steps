@@ -41,6 +41,10 @@
     #define get_variable_name(x) #x
 #endif // get_variable_name(x)
 
+#ifndef MAX_TOOLKIT_SIZE
+    #define MAX_TOOLKIT_SIZE 1000
+#endif // MAX_TOOLKIT_SIZE
+
 #ifndef MAX_TEMP_CHAR_BUFFER_SIZE
     #define MAX_TEMP_CHAR_BUFFER_SIZE 500
 #endif // MAX_TEMP_CHAR_BUFFER_SIZE

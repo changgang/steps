@@ -101,7 +101,7 @@ void WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::add_wind_turbine_power_and_speed_pai
     {
         ostringstream osstream;
         osstream<<"The wind power generation and turbine speed pair ("<<power<<", "<<speed<<") is invalid. No wind power generation and speed lookup table is updated.";
-        show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     }
 }
 

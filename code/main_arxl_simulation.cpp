@@ -1,6 +1,7 @@
 #include <istream>
 #include <iostream>
 #include "header/power_system_database.h"
+#include "header/steps_namespace.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/basic/utility.h"
@@ -14,14 +15,14 @@ void prepare_training_generation_shed_case();
 
 void prepare_training_load_scale_case()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DYNAMICS_SIMULATOR& simulator = get_default_dynamic_simulator();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     psdb.set_allowed_max_bus_number(1000);
     psdb.set_system_base_power_in_MVA(100.0);
 
     simulator.set_allowed_max_power_imbalance_in_MVA(0.0001);
-    set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
 
     PSSE_IMEXPORTER importer;
 
@@ -58,19 +59,19 @@ void prepare_training_load_scale_case()
 
     simulator.clear();
 
-    psdb.clear_database();
+    psdb.clear();
 }
 
 void prepare_training_generation_shed_case()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DYNAMICS_SIMULATOR& simulator = get_default_dynamic_simulator();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     psdb.set_allowed_max_bus_number(1000);
     psdb.set_system_base_power_in_MVA(100.0);
 
     simulator.set_allowed_max_power_imbalance_in_MVA(0.0001);
-    set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
 
     PSSE_IMEXPORTER importer;
 
@@ -107,24 +108,24 @@ void prepare_training_generation_shed_case()
 
     simulator.clear();
 
-    psdb.clear_database();
+    psdb.clear();
 }
 
 
 int main()
 {
-    initialize_simulator(); // this function should be called first
+    initialize_package(); // this function should be called first
 
     //prepare_training_load_scale_case();
     //prepare_training_generation_shed_case();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    DYNAMICS_SIMULATOR& simulator = get_default_dynamic_simulator();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
     psdb.set_allowed_max_bus_number(1000);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
     simulator.set_allowed_max_power_imbalance_in_MVA(0.01);
     simulator.set_max_DAE_iteration(10);
     simulator.set_max_network_iteration(200);
@@ -185,9 +186,7 @@ int main()
 
     simulator.clear();
 
-    psdb.clear_database();
-
-    terminate_simulator();
+    psdb.clear();
 
     return 0;
 }

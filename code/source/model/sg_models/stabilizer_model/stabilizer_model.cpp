@@ -1,6 +1,7 @@
 #include "header/model/sg_models/stabilizer_model/stabilizer_model.h"
 #include <cstdio>
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 STABILIZER_MODEL::STABILIZER_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
@@ -21,25 +22,26 @@ string STABILIZER_MODEL::get_model_type() const
 
 void STABILIZER_MODEL::set_input_signal_at_slot(size_t slot, SIGNAL& signal)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(not signal.is_valid())
     {
         osstream<<"Warning. Invalid signal ("<<signal.get_meter_name()<<") is not allowed when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
     if(slot>=MAX_STABILIZER_INPUT_SIGNAL_SLOT)
     {
         osstream<<"Warning. Signal slot "<<slot<<" is beyond the capacity of slots when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     if(signals[slot].is_valid())
     {
         osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signals[slot].get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
           <<"It will be deleted and new signal ("<<signal.get_meter_name()<<") will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         signals[slot].clear();
     }
     signals[slot] = signal;
@@ -122,7 +124,8 @@ string STABILIZER_MODEL::convert_signal_type_number_to_string(size_t signal_type
 SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_type, size_t bus)
 {
     SIGNAL signal;
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(bus==0)
         return signal;

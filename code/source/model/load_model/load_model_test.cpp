@@ -21,7 +21,7 @@ LOAD_MODEL_TEST::LOAD_MODEL_TEST()
 
 void LOAD_MODEL_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
@@ -56,9 +56,9 @@ void LOAD_MODEL_TEST::setup()
 
 void LOAD_MODEL_TEST::tear_down()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    psdb.clear_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -85,7 +85,7 @@ void LOAD_MODEL_TEST::test_get_bus_voltage()
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(fabs(model->get_bus_voltage_in_pu() - psdb.get_bus_voltage_in_pu(1))<FLOAT_EPSILON);
 }
 
@@ -96,7 +96,7 @@ void LOAD_MODEL_TEST::test_get_bus_frequency_deviation()
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu() - psdb.get_bus_frequency_deviation_in_pu(1))<FLOAT_EPSILON);
 }
 
@@ -139,7 +139,7 @@ void LOAD_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
     osstream<<"TIME\tVOLT_PU\tFREQ_PU\tP_MW\tQ_MVAR"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void LOAD_MODEL_TEST::export_meter_values(double time)
@@ -159,20 +159,20 @@ void LOAD_MODEL_TEST::export_meter_values(double time)
       <<setprecision(6)<<fixed<<freq<<"\t"
       <<setprecision(6)<<fixed<<S.real()<<"\t"
       <<setprecision(6)<<fixed<<S.imag()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
 {
     LOAD* load = get_load();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     LOAD_MODEL* model = load->get_load_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    redirect_stdout_to_file("test_log/test_run_voltage_ramp_response_"+model->get_model_name()+".txt");
+    default_toolkit.redirect_stdout_to_file("test_log/test_run_voltage_ramp_response_"+model->get_model_name()+".txt");
 
-    double delt = get_dynamic_simulation_time_step_in_s();
+    double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double TIME = -2.0*delt;
     double P;
 
@@ -250,20 +250,20 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
         export_meter_values(TIME);
     }
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 
 void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
 {
     LOAD* load = get_load();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     LOAD_MODEL* model = load->get_load_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    redirect_stdout_to_file("test_log/test_run_frequency_ramp_response_"+model->get_model_name()+".txt");
+    default_toolkit.redirect_stdout_to_file("test_log/test_run_frequency_ramp_response_"+model->get_model_name()+".txt");
 
-    double delt = get_dynamic_simulation_time_step_in_s();
+    double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double TIME = -2.0*delt;
     double P;
 
@@ -343,7 +343,7 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
         export_meter_values(TIME);
     }
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 
 

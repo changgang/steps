@@ -119,7 +119,7 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
       <<"GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, SWITCHED SHUNT"<<endl
       <<"LINE, TRANSFORMER, HVDC, VSC HVDC, FACTS, MULTI DC, EQUIVALENT DEVICE, and GENERAL DEVICE."<<endl
       <<"Device type will be set as blank, and \"NONE\" will be returned if get_device_type() is called.";
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     device_type = "";
 }
 
@@ -132,7 +132,7 @@ void DEVICE_ID::set_device_terminal(const TERMINAL& term)
         ostringstream osstream;
         osstream<<"Invalid terminal is provided for setting DEVICE_ID object. nothing is changed."<<endl
           <<"Possible device type is "<<get_device_type()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     }
 }
 

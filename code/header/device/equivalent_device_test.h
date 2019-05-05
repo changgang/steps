@@ -14,7 +14,7 @@
 
 #include "header/device/equivalent_device.h"
 #include "header/power_system_database.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class EQUIVALENT_DEVICE_TEST : public Test::Suite

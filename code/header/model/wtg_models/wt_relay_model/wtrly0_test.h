@@ -12,6 +12,7 @@
 
 #include "header/model/wtg_models/wt_relay_model/wtrly0.h"
 #include "header/model/wtg_models/wt_relay_model/wt_relay_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class WTRLY0_TEST : public WT_RELAY_MODEL_TEST
@@ -26,6 +27,7 @@ class WTRLY0_TEST : public WT_RELAY_MODEL_TEST
         virtual void test_set_get_parameters();
         virtual void test_initialize();
     private:
+
 };
 
 #endif//WTRLY0_TEST_H

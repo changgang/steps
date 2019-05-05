@@ -14,10 +14,11 @@ using namespace std;
 
 POWERFLOW_CASE_GENERATOR::POWERFLOW_CASE_GENERATOR()
 {
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     set_power_system_database_maximum_bus_number(10000);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     set_generator_title("MODE GENERATOR");
 
@@ -34,6 +35,7 @@ POWERFLOW_CASE_GENERATOR::~POWERFLOW_CASE_GENERATOR()
 
 void POWERFLOW_CASE_GENERATOR::set_power_system_database_maximum_bus_number(size_t number)
 {
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(number);
 }
 
@@ -64,6 +66,7 @@ void POWERFLOW_CASE_GENERATOR::set_maximum_case_count_to_generate(size_t n)
 
 size_t POWERFLOW_CASE_GENERATOR::get_power_system_database_maximum_bus_number() const
 {
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     return psdb.get_allowed_max_bus_number();
 }
 
@@ -94,7 +97,8 @@ size_t POWERFLOW_CASE_GENERATOR::get_maximum_case_count_to_generate() const
 
 vector< vector<double> > POWERFLOW_CASE_GENERATOR::generate_load_scale_randoms()
 {
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     PSSE_IMEXPORTER imexporter;
 
@@ -123,7 +127,7 @@ vector< vector<double> > POWERFLOW_CASE_GENERATOR::generate_load_scale_randoms()
         }
         random_cases.push_back(load_scale);
     }
-    psdb.clear_database();
+    psdb.clear();
 
     return random_cases;
 }
@@ -145,7 +149,8 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
 {
     ostringstream osstream;
 
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     PSSE_IMEXPORTER imexporter;
 
@@ -215,7 +220,7 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
     if(not solver.is_converged())
     {
         osstream<<"Powerflow is converged. Need to manually tune it.";
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     vector<string> splitted_string = split_string(pf_file, ".");

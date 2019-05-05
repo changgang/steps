@@ -1,5 +1,6 @@
 #include "header/model/bus_frequency_model/bus_frequency_model.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 #include "header/basic/utility.h"
 #include <istream>
 #include <iostream>
@@ -38,16 +39,15 @@ size_t BUS_FREQUENCY_MODEL::get_bus() const
 void BUS_FREQUENCY_MODEL::initialize()
 {
     ostringstream osstream;
-
+    STEPS& toolkit = get_toolkit();
     if(bus_ptr==NULL)
     {
         osstream<<"Warning. Bus frequency model is not properly set since bus pointer is NULL. This line should never appear.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
-
-    double DELT = get_dynamic_simulation_time_step_in_s();
+    double DELT = toolkit.get_dynamic_simulation_time_step_in_s();
     frequency_block.set_T_in_s(DELT*4.0);
 
     frequency_block.set_input(bus_ptr->get_angle_in_rad());

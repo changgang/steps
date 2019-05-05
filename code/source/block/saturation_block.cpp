@@ -172,7 +172,7 @@ void SATURATION_BLOCK::check()
           <<"S1="<<setprecision(6)<<fixed<<S1<<", "
           <<"V2="<<setprecision(3)<<fixed<<V2<<", "
           <<"S2="<<setprecision(6)<<fixed<<S2;
-        show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     }
 }
 

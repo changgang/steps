@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
 #include "header/data_imexporter/psse_imexporter.h"
+#include "header/steps_namespace.h"
 #include <istream>
 #include <cstdlib>
 #include <cstring>
@@ -250,7 +251,7 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_area);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_zone);
 
-    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_database);
+    TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear);
     //TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_bus);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_all_buses);
     TEST_ADD(POWER_SYSTEM_DATABASE_TEST::test_clear_generator);
@@ -306,13 +307,14 @@ POWER_SYSTEM_DATABASE_TEST::POWER_SYSTEM_DATABASE_TEST()
 
 void POWER_SYSTEM_DATABASE_TEST::setup()
 {
-    ;
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 }
 
 void POWER_SYSTEM_DATABASE_TEST::tear_down()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -320,7 +322,7 @@ void POWER_SYSTEM_DATABASE_TEST::tear_down()
 
 void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
 
     // all devices in the test database are:
@@ -342,6 +344,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         BUS bus;
+        bus.set_toolkit(default_toolkit);
+
         bus.set_bus_number(1);
         bus.set_bus_name("BUS A");
         bus.set_base_voltage_in_kV(110.0);
@@ -373,6 +377,7 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         GENERATOR generator;
+        generator.set_toolkit(default_toolkit);
         generator.set_generator_bus(1);
         generator.set_identifier("#1");
         generator.set_status(true);
@@ -439,6 +444,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         WT_GENERATOR wt_generator;
+        wt_generator.set_toolkit(default_toolkit);
+
         wt_generator.set_source_bus(1);
         wt_generator.set_identifier("#1");
         wt_generator.set_status(true);
@@ -503,9 +510,10 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
         psdb.append_wt_generator(wt_generator);
     }
 
-
     {
         PV_UNIT pv_unit;
+        pv_unit.set_toolkit(default_toolkit);
+
         pv_unit.set_unit_bus(1);
         pv_unit.set_identifier("#1");
         pv_unit.set_status(true);
@@ -572,6 +580,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         ENERGY_STORAGE energy_storage;
+        energy_storage.set_toolkit(default_toolkit);
+
         energy_storage.set_energy_storage_bus(1);
         energy_storage.set_identifier("#1");
         energy_storage.set_status(true);
@@ -638,6 +648,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         LOAD load;
+        load.set_toolkit(default_toolkit);
+
         load.set_load_bus(1);
         load.set_identifier("#1");
         load.set_status(true);
@@ -675,6 +687,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         FIXED_SHUNT shunt;
+        shunt.set_toolkit(default_toolkit);
+
         shunt.set_shunt_bus(1);
         shunt.set_identifier("#1");
         psdb.append_fixed_shunt(shunt);
@@ -699,6 +713,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         LINE line;
+        line.set_toolkit(default_toolkit);
+
         line.set_sending_side_bus(1);
         line.set_receiving_side_bus(2);
         line.set_identifier("#1");
@@ -726,6 +742,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         TRANSFORMER transformer;
+        transformer.set_toolkit(default_toolkit);
+
         transformer.set_winding_bus(PRIMARY_SIDE, 1);
         transformer.set_winding_bus(SECONDARY_SIDE, 2);
         transformer.set_identifier("#1");
@@ -759,6 +777,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         HVDC hvdc;
+        hvdc.set_toolkit(default_toolkit);
+
         hvdc.set_converter_bus(RECTIFIER, 1);
         hvdc.set_converter_bus(INVERTER, 2);
         hvdc.set_identifier("#1");
@@ -792,6 +812,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         EQUIVALENT_DEVICE edevice;
+        edevice.set_toolkit(default_toolkit);
+
         edevice.set_equivalent_device_bus(1);
         edevice.set_identifier("#1");
         edevice.set_status(true);
@@ -823,6 +845,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         AREA area;
+        area.set_toolkit(default_toolkit);
+
         area.set_area_number(1);
         area.set_area_name("AREA A");
         area.set_area_swing_bus(1);
@@ -841,6 +865,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         ZONE zone;
+        zone.set_toolkit(default_toolkit);
+
         zone.set_zone_number(1);
         zone.set_zone_name("ZONE A");
         psdb.append_zone(zone);
@@ -856,6 +882,8 @@ void POWER_SYSTEM_DATABASE_TEST::prepare_database_for_test()
 
     {
         OWNER owner;
+        owner.set_toolkit(default_toolkit);
+
         owner.set_owner_number(1);
         owner.set_owner_name("OWNER A");
         psdb.append_owner(owner);
@@ -874,7 +902,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_zero_impedance_threshold()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_zero_impedance_threshold_in_pu(0.01);
     TEST_ASSERT(fabs(psdb.get_zero_impedance_threshold_in_pu()-0.01)<FLOAT_EPSILON);
@@ -889,7 +917,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_bus_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_bus_capacity(10000);
     TEST_ASSERT(psdb.get_bus_capacity()==10000);
@@ -905,7 +933,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_generator_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_generator_capacity(10000);
     TEST_ASSERT(psdb.get_generator_capacity()==10000);
@@ -921,7 +949,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_wt_generator_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_wt_generator_capacity(10000);
     TEST_ASSERT(psdb.get_wt_generator_capacity()==10000);
@@ -938,7 +966,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_pv_unit_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_pv_unit_capacity(10000);
     TEST_ASSERT(psdb.get_pv_unit_capacity()==10000);
@@ -954,7 +982,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_load_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_load_capacity(10000);
     TEST_ASSERT(psdb.get_load_capacity()==10000);
@@ -970,7 +998,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_fixed_shunt_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_fixed_shunt_capacity(10000);
     TEST_ASSERT(psdb.get_fixed_shunt_capacity()==10000);
@@ -986,13 +1014,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_line_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_line_capacity(10000);
-    TEST_ASSERT(psdb.get_line_capacity()==50000);
+    TEST_ASSERT(psdb.get_line_capacity()==10000);
 
     psdb.set_line_capacity(1000);
-    TEST_ASSERT(psdb.get_line_capacity()==50000);
+    TEST_ASSERT(psdb.get_line_capacity()==10000);
 
     psdb.set_line_capacity(60000);
     TEST_ASSERT(psdb.get_line_capacity()==60000);
@@ -1002,7 +1030,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_transformer_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_transformer_capacity(10000);
     TEST_ASSERT(psdb.get_transformer_capacity()==10000);
@@ -1018,7 +1046,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_hvdc_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_hvdc_capacity(10000);
     TEST_ASSERT(psdb.get_hvdc_capacity()==10000);
@@ -1034,7 +1062,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_equivalent_device_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_equivalent_device_capacity(10000);
     TEST_ASSERT(psdb.get_equivalent_device_capacity()==10000);
@@ -1050,7 +1078,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_energy_storage_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_energy_storage_capacity(10000);
     TEST_ASSERT(psdb.get_energy_storage_capacity()==10000);
@@ -1066,7 +1094,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_area_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_area_capacity(10000);
     TEST_ASSERT(psdb.get_area_capacity()==10000);
@@ -1082,7 +1110,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_zone_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_zone_capacity(10000);
     TEST_ASSERT(psdb.get_zone_capacity()==10000);
@@ -1098,7 +1126,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_owner_capacity()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_owner_capacity(10000);
     TEST_ASSERT(psdb.get_owner_capacity()==10000);
@@ -1115,7 +1143,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_system_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_system_name("System Test");
     TEST_ASSERT(psdb.get_system_name()=="System Test");
@@ -1125,7 +1153,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_allowed_max_bus_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(1000);
     TEST_ASSERT(psdb.get_allowed_max_bus_number()==1000);
@@ -1137,7 +1165,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_bus_in_allowed_range()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
     TEST_ASSERT(psdb.is_bus_in_allowed_range(0)==false);
@@ -1151,7 +1179,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_set_get_system_base_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_system_base_power_in_MVA(100.0);
     TEST_ASSERT(fabs(psdb.get_system_base_power_in_MVA()-100.0)<FLOAT_EPSILON);
@@ -1163,7 +1191,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1230,7 +1258,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1241,6 +1269,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
     psdb.append_bus(bus);
 
     GENERATOR generator;
+    generator.set_toolkit(default_toolkit);
     generator.set_generator_bus(1);
     generator.set_identifier("#1");
     generator.set_status(true);
@@ -1284,7 +1313,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1295,6 +1324,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
     psdb.append_bus(bus);
 
     WT_GENERATOR wt_generator;
+    wt_generator.set_toolkit(default_toolkit);
+
     wt_generator.set_source_bus(1);
     wt_generator.set_identifier("#1");
     wt_generator.set_status(true);
@@ -1339,7 +1370,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1350,6 +1381,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
     psdb.append_bus(bus);
 
     PV_UNIT pv_unit;
+    pv_unit.set_toolkit(default_toolkit);
+
     pv_unit.set_unit_bus(1);
     pv_unit.set_identifier("#1");
     pv_unit.set_status(true);
@@ -1393,7 +1426,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1404,6 +1437,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
     psdb.append_bus(bus);
 
     LOAD load;
+    load.set_toolkit(default_toolkit);
+
     load.set_load_bus(1);
     load.set_identifier("#1");
     load.set_status(true);
@@ -1447,7 +1482,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1461,6 +1496,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_line()
     psdb.append_bus(bus);
 
     LINE line;
+    line.set_toolkit(default_toolkit);
+
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
     line.set_identifier("#1");
@@ -1513,7 +1550,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1531,6 +1568,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_transformer()
     psdb.append_bus(bus);
 
     TRANSFORMER transformer;
+    transformer.set_toolkit(default_toolkit);
+
     transformer.set_winding_bus(PRIMARY_SIDE, 1);
     transformer.set_winding_bus(SECONDARY_SIDE, 2);
     transformer.set_winding_bus(TERTIARY_SIDE, 0);
@@ -1592,7 +1631,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1602,6 +1641,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_fixed_shunt()
     psdb.append_bus(bus);
 
     FIXED_SHUNT shunt;
+    shunt.set_toolkit(default_toolkit);
+
     shunt.set_shunt_bus(1);
     shunt.set_identifier("#1");
     shunt.set_status(true);
@@ -1645,7 +1686,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1659,6 +1700,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_hvdc()
     psdb.append_bus(bus);
 
     HVDC hvdc;
+    hvdc.set_toolkit(default_toolkit);
+
     hvdc.set_name("DC1");
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -1711,7 +1754,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1721,6 +1764,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_equivalent_device()
     psdb.append_bus(bus);
 
     EQUIVALENT_DEVICE edevice;
+    edevice.set_toolkit(default_toolkit);
+
     edevice.set_equivalent_device_bus(1);
     edevice.set_identifier("#1");
     edevice.set_status(true);
@@ -1762,7 +1807,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1772,6 +1817,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_energy_storage()
     psdb.append_bus(bus);
 
     ENERGY_STORAGE estorage;
+    estorage.set_toolkit(default_toolkit);
+
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
     estorage.set_status(true);
@@ -1813,7 +1860,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
@@ -1831,6 +1878,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_area()
     psdb.append_bus(bus);
 
     AREA area;
+    area.set_toolkit(default_toolkit);
+
     area.set_area_number(1);
     area.set_area_name("area 1");
     area.set_area_swing_bus(1);
@@ -1871,11 +1920,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
     ZONE zone;
+    zone.set_toolkit(default_toolkit);
+
     zone.set_zone_number(1);
     zone.set_zone_name("zone 1");
     psdb.append_zone(zone);
@@ -1907,11 +1958,13 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_owner()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_allowed_max_bus_number(100);
 
     OWNER owner;
+    owner.set_toolkit(default_toolkit);
+
     owner.set_owner_number(1);
     owner.set_owner_name("owner 1");
     psdb.append_owner(owner);
@@ -1944,7 +1997,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_bus_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -1958,7 +2011,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_generator_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -1986,7 +2039,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_wt_generator_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2014,7 +2067,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_pv_unit_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2041,7 +2094,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_load_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2069,7 +2122,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_line_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2111,7 +2164,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_transformer_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2166,7 +2219,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_fixed_shunt_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2194,7 +2247,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2236,7 +2289,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_equivalent_device_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2264,7 +2317,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_energy_storage_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2292,7 +2345,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_area_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2306,7 +2359,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_zone_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2319,7 +2372,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_owner_exist()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2332,11 +2385,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_change_bus_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     ostringstream osstream;
     osstream<<"Known bug of change_bus_number(): only terminal bus can be changed. buses for additional control, i.e., generator control bus is not changed.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     prepare_database_for_test();
 
@@ -2536,7 +2589,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2562,7 +2615,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2588,7 +2641,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2613,7 +2666,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2650,7 +2703,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2675,7 +2728,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2737,7 +2790,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2842,7 +2895,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2867,7 +2920,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2930,7 +2983,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2956,7 +3009,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -2983,7 +3036,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3005,7 +3058,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3028,7 +3081,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3050,7 +3103,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3073,7 +3126,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3095,7 +3148,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3117,7 +3170,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_connecting_to_b
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3139,7 +3192,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_connecting_to_b
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3161,7 +3214,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3183,7 +3236,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_connectin
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3205,7 +3258,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_connecting_t
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3228,7 +3281,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3250,7 +3303,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3272,7 +3325,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3295,7 +3348,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3317,7 +3370,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3342,7 +3395,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3364,7 +3417,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3386,7 +3439,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3408,7 +3461,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3430,7 +3483,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3452,7 +3505,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3474,7 +3527,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3497,7 +3550,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3519,7 +3572,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3541,7 +3594,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3564,7 +3617,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3586,7 +3639,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3611,7 +3664,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3633,7 +3686,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3655,7 +3708,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3677,7 +3730,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3699,7 +3752,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3721,7 +3774,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3743,7 +3796,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3765,7 +3818,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3787,7 +3840,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3809,7 +3862,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3832,7 +3885,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3854,7 +3907,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3879,7 +3932,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3901,7 +3954,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3923,7 +3976,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3945,7 +3998,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3967,7 +4020,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -3989,7 +4042,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4011,7 +4064,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4034,7 +4087,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4056,7 +4109,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4078,7 +4131,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4101,7 +4154,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4123,7 +4176,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4148,7 +4201,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4170,7 +4223,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4192,7 +4245,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4214,7 +4267,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4236,7 +4289,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4258,7 +4311,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4280,7 +4333,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4303,7 +4356,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_devices()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4334,7 +4387,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_buses()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4350,7 +4403,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_with_constraints()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4401,7 +4454,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4426,7 +4479,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_generators()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4452,7 +4505,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4479,7 +4532,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_pv_units()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4505,7 +4558,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4567,7 +4620,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_loads()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4593,7 +4646,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_lines()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4625,7 +4678,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_transformers()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4673,7 +4726,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4699,7 +4752,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4731,7 +4784,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4757,7 +4810,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4783,7 +4836,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_areas()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4800,7 +4853,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_zones()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4817,7 +4870,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_owners()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4834,7 +4887,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_buses_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4852,7 +4905,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_number_with_constraints()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4903,7 +4956,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4928,7 +4981,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_generators_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4957,7 +5010,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -4987,7 +5040,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_pv_units_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5016,7 +5069,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5067,7 +5120,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_loads_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5096,7 +5149,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_lines_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5139,7 +5192,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_transformers_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5192,7 +5245,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5221,7 +5274,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5264,7 +5317,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5293,7 +5346,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages_device_id()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5322,7 +5375,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_areas_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5339,7 +5392,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_zones_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5356,7 +5409,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_owners_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5373,7 +5426,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5384,7 +5437,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_in_service_bus_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5398,7 +5451,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_zero_impedance_threshold_in_pu(0.001);
 
@@ -5406,6 +5459,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
 
     {
         BUS bus;
+        bus.set_toolkit(default_toolkit);
+
         bus.set_bus_number(1);
         bus.set_bus_name("BUS A");
         bus.set_base_voltage_in_kV(110.0);
@@ -5456,6 +5511,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_overshadowed_bus_count()
     {
         //1-2-3-5-4-1
         LINE line;
+        line.set_toolkit(default_toolkit);
+
         line.set_sending_side_bus(1);
         line.set_receiving_side_bus(2);
         line.set_identifier("#1");
@@ -5628,7 +5685,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generator_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5639,7 +5696,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5650,7 +5707,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_unit_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5661,7 +5718,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_source_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5672,7 +5729,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_load_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5683,7 +5740,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_line_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5694,7 +5751,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformer_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5705,7 +5762,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5716,7 +5773,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5727,7 +5784,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5738,7 +5795,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5749,7 +5806,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_area_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5760,7 +5817,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_zone_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5771,7 +5828,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_owner_count()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5783,7 +5840,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5797,7 +5854,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generator_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5841,7 +5898,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generator_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5883,7 +5940,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_unit_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5924,7 +5981,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_load_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -5965,7 +6022,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_line_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6009,7 +6066,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformer_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6061,7 +6118,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunt_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6102,7 +6159,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdc_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6146,7 +6203,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_device_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6187,7 +6244,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storage_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6229,7 +6286,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_area_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6243,7 +6300,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_zone_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6257,7 +6314,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_owner_index()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6272,7 +6329,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_bus_name2bus_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6286,7 +6343,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_area_name2area_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6300,7 +6357,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_zone_name2zone_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6314,7 +6371,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_owner_name2owner_number()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6329,7 +6386,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_bus_number2bus_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6344,7 +6401,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_area_number2area_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6358,7 +6415,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_zone_number2zone_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6372,7 +6429,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_owner_number2owner_name()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6386,7 +6443,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6426,7 +6483,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_load_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6457,7 +6514,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_at_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6497,7 +6554,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6537,7 +6594,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6578,7 +6635,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6645,7 +6702,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_source_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6672,7 +6729,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_at_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6706,7 +6763,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6741,7 +6798,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6776,7 +6833,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6816,7 +6873,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_generator_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6843,7 +6900,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_at_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6877,7 +6934,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6911,7 +6968,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6946,7 +7003,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -6986,7 +7043,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_wt_generator_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7013,7 +7070,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_at_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7048,7 +7105,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7083,7 +7140,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7118,7 +7175,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7158,7 +7215,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_pv_unit_power()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7185,7 +7242,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_at_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7220,7 +7277,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_area()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7255,7 +7312,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_zone()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7289,7 +7346,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7427,15 +7484,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_bus()
     TEST_ASSERT(psdb.get_equivalent_devices_connecting_to_bus(3).size()==0);
 }
 
-void POWER_SYSTEM_DATABASE_TEST::test_clear_database()
+void POWER_SYSTEM_DATABASE_TEST::test_clear()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
-    psdb.clear_database();
+    psdb.clear();
 
     TEST_ASSERT(psdb.get_bus_count()==0);
     TEST_ASSERT(psdb.get_generator_count()==0);
@@ -7457,7 +7514,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_buses()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7482,7 +7539,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7537,7 +7594,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_generators_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7567,7 +7624,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_generators()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7580,7 +7637,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generator()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7640,7 +7697,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_wt_generators_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7667,7 +7724,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_wt_generators()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7681,7 +7738,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_pv_unit()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7741,7 +7798,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_pv_units_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7768,7 +7825,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_pv_units()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7781,7 +7838,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_sources_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7810,7 +7867,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_sources()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7822,7 +7879,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_load()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7879,7 +7936,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_loads_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7906,7 +7963,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_loads()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7919,7 +7976,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_line()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -7980,7 +8037,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_lines_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8007,7 +8064,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_lines()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8020,7 +8077,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_transformer()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8096,7 +8153,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_transformers_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8120,7 +8177,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_transformers()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8133,11 +8190,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunt()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     ostringstream osstream;
     osstream<<"ALEEEEEEEEEEERT! clear_fixed_shunt is not functioning if using the vector::erase function.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     prepare_database_for_test();
 
@@ -8193,7 +8250,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunts_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8220,7 +8277,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_fixed_shunts()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8233,7 +8290,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdc()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8294,7 +8351,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_hvdcs_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8321,7 +8378,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_hvdcs()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8334,7 +8391,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_equivalent_device()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8392,7 +8449,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_equivalent_devices_connecting_to_bus
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8419,7 +8476,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_equivalent_devices()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8432,7 +8489,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8490,7 +8547,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_energy_storages_connecting_to_bus()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8517,7 +8574,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_energy_storages()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8530,7 +8587,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_areas()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8543,7 +8600,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_zones()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8556,7 +8613,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_all_owners()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8569,7 +8626,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_complex_voltage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8585,7 +8642,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_base_frequency()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8596,7 +8653,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_base_voltage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8607,7 +8664,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_voltage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8623,7 +8680,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_angle()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8639,7 +8696,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_voltage_to_regulate_of_physical_bus_in
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
 
@@ -8654,7 +8711,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_p_max_at_physical_bus_in_M
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
     // 1                       2                     3
@@ -8671,7 +8728,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_p_min_at_physical_bus_in_M
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
     // 1                       2                     3
@@ -8688,7 +8745,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_q_max_at_physical_bus_in_M
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
     // 1                       2                     3
@@ -8707,7 +8764,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_regulatable_q_min_at_physical_bus_in_M
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
     // 1                       2                     3
@@ -8726,7 +8783,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_regulating_p_generation_at_physi
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
     // 1                 2                  3
@@ -8745,7 +8802,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_regulating_q_generation_at_physi
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
     // 1                 2                  3
@@ -8764,7 +8821,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_p_generation_of_sources_at_physi
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
     // 1                 2                  3
@@ -8783,7 +8840,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_q_generation_of_sources_at_physi
 {
     show_test_information_for_function_of_class(__FUNCTION__,"POWER_SYSTEM_DATABASE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     prepare_database_for_test();
     // 1                 2                  3

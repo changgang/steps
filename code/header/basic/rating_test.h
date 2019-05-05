@@ -11,6 +11,7 @@
 #include "cpptest.h"
 
 #include "header/basic/rating.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -30,9 +31,9 @@ class RATING_TEST : public Test::Suite
         void test_copy_with_operator_equal();
         void test_operator_bracket();
         void test_clear();
-
     private:
         RATING rating;
+
 };
 
 #endif // RATING_TEST_H

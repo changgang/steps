@@ -3,8 +3,9 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-void api_set_dynamic_model(char* model_string, char* file_type)
+void api_set_dynamic_model(char* model_string, char* file_type, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     string data(model_string);
     string FileType(file_type);
     FileType = string2upper(FileType);
@@ -24,7 +25,7 @@ void api_set_dynamic_model(char* model_string, char* file_type)
         {
             ostringstream stream;
             stream<<"File Type '"<<file_type<<"' is not supported for loading dynamic model with "<<__FUNCTION__<<"()";
-            show_information_with_leading_time_stamp(stream);
+            toolkit.show_information_with_leading_time_stamp(stream);
         }
     }
 }

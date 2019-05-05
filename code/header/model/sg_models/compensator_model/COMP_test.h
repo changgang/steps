@@ -15,6 +15,7 @@
 #include "header/model/sg_models/compensator_model/COMP.h"
 #include "header/model/sg_models/compensator_model/compensator_model_test.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class COMP_TEST : public COMPENSATOR_MODEL_TEST

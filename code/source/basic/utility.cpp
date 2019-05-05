@@ -8,23 +8,14 @@
 #include <istream>
 #include <iostream>
 #include <fstream>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
-streambuf * stdout_backup = NULL;
-ofstream output_file;
-
 double four_over_pi = 4.0/PI;
 double four_over_pi2 = 4.0/(PI*PI);
-char current_alphabeta = 'Z';
 
-char get_next_alphabeta()
-{
-    current_alphabeta ++;
-    if(current_alphabeta>'Z')
-        current_alphabeta = 'A';
-    return current_alphabeta;
-}
 
 string num2str(int number)
 {
@@ -338,9 +329,7 @@ string string2csv(string str)
     char* csv = (char*) malloc(sizeof(char)*n2);
     if(csv==NULL)
     {
-        ostringstream sstream;
-        sstream<<"Warning. Failed to allocate memory for "<<__FUNCTION__<<"().";
-        show_information_with_leading_time_stamp(sstream);
+        cout<<"Warning. Failed to allocate memory for "<<__FUNCTION__<<"().\n";
         return "";
     }
     for(size_t i=0; i!=n2; ++i)
@@ -448,23 +437,6 @@ string swap_data_in_csv_string(string& data, size_t i, size_t j)
     }
 }
 
-void redirect_stdout_to_file(string file)
-{
-    stdout_backup = cout.rdbuf();
-    output_file.open(file);
-    cout.rdbuf(output_file.rdbuf());
-}
-
-void recover_stdout()
-{
-    if(stdout_backup != NULL)
-    {
-        output_file.close();
-        cout.rdbuf(stdout_backup);
-        stdout_backup = NULL;
-    }
-}
-
 complex<double> xy2dq_with_angle_in_deg(complex<double> V, double angle)
 {
     angle = deg2rad(angle);
@@ -491,119 +463,6 @@ complex<double> dq2xy_with_angle_in_rad(complex<double> V, double angle)
     return V*rotation;
 }
 
-void initialize_simulator()
-{
-    ostringstream osstream;
-    osstream<<"System started.";
-    show_information_with_leading_time_stamp(osstream);
-}
-
-void reset_simulator()
-{
-    ostringstream osstream;
-    osstream<<"Simulator reset.";
-    show_information_with_leading_time_stamp(osstream);
-
-    STEPS::default_power_system_db.clear_database();
-}
-
-void terminate_simulator()
-{
-    reset_simulator();
-    ostringstream osstream;
-    osstream<<"System is terminated.";
-    show_information_with_leading_time_stamp(osstream);
-}
-
-void show_test_information_for_function_of_class(string func, string cls)
-{
-    ostringstream osstream;
-    //os<<"--------------------------------------------------------------------");
-    osstream<<"--s--t--a--r--t-----------------------------------------------------";
-    show_information_with_leading_time_stamp(osstream);
-    osstream<<"Run testing of "<<cls<<"::"<<func;
-    show_information_with_leading_time_stamp(osstream);
-}
-
-void show_test_end_information()
-{
-    ostringstream osstream;
-    osstream<<"--d--o--n--e-------------------------------------------------------";
-    show_information_with_leading_time_stamp(osstream);
-}
-
-void show_information_with_leading_time_stamp(string info)
-{
-    vector<string> splitted_info = split_string(info,"\n");
-    size_t info_size = splitted_info.size();
-    if(info_size==0)
-        return;
-
-    string sys_time = get_system_time_stamp_string();
-    cout<<sys_time<<" "<<splitted_info[0]<<endl;
-
-    for(size_t i=1; i!=info_size; ++i)
-        cout<<sys_time<<" + "<<splitted_info[i]<<endl;
-}
-
-void show_information_with_leading_time_stamp(ostringstream& stream)
-{
-    show_information_with_leading_time_stamp(stream.str());
-    stream.str("");
-}
-
-void show_set_get_model_data_with_index_error(string device, string model, string func, size_t index)
-{
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    if(func=="set_model_data_with_index")
-    {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Index %lu is out of range when calling %s:%s() for %s.\n0.0 will be returned.",
-                 index, model.c_str(), func.c_str(), device.c_str());
-        show_information_with_leading_time_stamp(buffer);
-        return;
-    }
-    if(func=="get_model_data_with_index")
-    {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Index %lu is out of range when calling %s:%s() for %s.\nNothing will be set.",
-                 index, model.c_str(), func.c_str(), device.c_str());
-        show_information_with_leading_time_stamp(buffer);
-        return;
-    }
-}
-
-void show_set_get_model_data_with_name_error(string device, string model, string func, string par_name)
-{
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    if(func=="set_model_data_with_name")
-    {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s is not supported when calling %s:%s() of %s.\n0.0 will be returned.",
-                 par_name.c_str(), model.c_str(), func.c_str(), device.c_str());
-        show_information_with_leading_time_stamp(buffer);
-        return;
-    }
-    if(func=="get_model_data_with_name")
-    {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s is not supported when calling %s:%s() of %s.\nNothing will be set.",
-                 par_name.c_str(), model.c_str(), func.c_str(), device.c_str());
-        show_information_with_leading_time_stamp(buffer);
-        return;
-    }
-}
-
-string get_system_time_stamp_string()
-{
-    time_t tt = time(NULL);
-    tm* local_time= localtime(&tt);
-    time_t clock_now = clock();
-
-    double elapsed_time_in_s = double(clock_now-STEPS::clock_when_system_started)/double(CLOCKS_PER_SEC);
-
-    char time_stamp[40];
-    snprintf(time_stamp,40, "%d-%02d-%02d %02d:%02d:%02d [% 8.3f]", local_time->tm_year + 1900, local_time->tm_mon + 1,
-            local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec, elapsed_time_in_s);
-    return string(time_stamp);
-}
-
 
 bool is_file_exist(const string file)
 {
@@ -621,42 +480,32 @@ bool is_file_exist(const string file)
     }
 }
 
-POWER_SYSTEM_DATABASE& get_default_power_system_database()
+
+void show_information_with_leading_time_stamp_with_default_toolkit(string info)
 {
-    return STEPS::default_power_system_db;
+    STEPS& toolkit = get_default_toolkit();
+    toolkit.show_information_with_leading_time_stamp(info);
 }
 
-POWERFLOW_SOLVER& get_default_powerflow_solver()
+void show_information_with_leading_time_stamp_with_default_toolkit(ostringstream& stream)
 {
-    return STEPS::default_powerflow_solver;
+    STEPS& toolkit = get_default_toolkit();
+    toolkit.show_information_with_leading_time_stamp(stream);
 }
 
-DYNAMICS_SIMULATOR& get_default_dynamic_simulator()
+void show_test_information_for_function_of_class(string func, string cls)
 {
-    return STEPS::default_dynamic_simulator;
-}
-
-void set_dynamic_simulation_time_step_in_s(double delt)
-{
-    STEPS::DELT = delt;
     ostringstream osstream;
-    osstream<<"System dynamic simulation time step is set as :"<<STEPS::DELT<<" s.";
-    show_information_with_leading_time_stamp(osstream);
+    osstream<<"--s--t--a--r--t-----------------------------------------------------\n"
+            <<"Run testing of "<<cls<<"::"<<func;
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
 
-double get_dynamic_simulation_time_step_in_s()
+void show_test_end_information()
 {
-    return STEPS::DELT;
-}
-
-void set_dynamic_simulation_time_in_s(double time)
-{
-    STEPS::TIME = time;
-}
-
-double get_dynamic_simulation_time_in_s()
-{
-    return STEPS::TIME;
+    ostringstream osstream;
+    osstream<<"--d--o--n--e-------------------------------------------------------";
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
 
 vector<string> psse_dyr_string2steps_string_vector(string& data)
@@ -672,3 +521,79 @@ string psse_dyr_string2steps_string(string& data)
 {
     return swap_data_in_csv_string(data, 1, 2);
 }
+
+
+void initialize_package()
+{
+    default_toolkit.set_toolkit_name("TK DFLT");
+    for(size_t i=0; i<MAX_TOOLKIT_SIZE; ++i)
+        toolkits[i] = NULL;
+}
+
+size_t generate_new_toolkit()
+{
+    while(get_toolkit_count()>=MAX_TOOLKIT_SIZE)
+    {
+        ostringstream osstream;
+        osstream<<"Warning. Toolkit table is full when calling "<<__FUNCTION__<<"().\nTry to generate new toolkit in 5 sec.\n";
+
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+    }
+
+    STEPS tk = STEPS();
+    size_t index=INDEX_NOT_EXIST;
+    while(true)
+    {
+        bool toolkit_index_is_set = false;
+
+        for(size_t i=0; i!=MAX_TOOLKIT_SIZE; ++i)
+        {
+            if(toolkits[i]==nullptr)
+            {
+                toolkits[i] = &tk;
+                toolkit_index_is_set = true;
+                index = i;
+                ostringstream osstream;
+                osstream<<"TK "<<setfill('0')<<setw(4)<<num2str(i);
+                tk.set_toolkit_name(osstream.str());
+                break;
+            }
+        }
+        if(toolkit_index_is_set==true)
+            break;
+    }
+    return index;
+}
+
+void delete_toolkit(size_t toolkit_index)
+{
+    if(toolkit_index<MAX_TOOLKIT_SIZE)
+    {
+        if(toolkits[toolkit_index]!=NULL)
+        {
+            delete toolkits[toolkit_index];
+            toolkits[toolkit_index] = NULL;
+        }
+    }
+}
+
+size_t get_toolkit_count()
+{
+    size_t count = 0;
+    for(size_t i=0; i!=MAX_TOOLKIT_SIZE; ++i)
+    {
+        if(toolkits[i]!=nullptr)
+            ++count;
+    }
+    return count;
+}
+
+STEPS& get_default_toolkit()
+{
+    return default_toolkit;
+}
+
+
+

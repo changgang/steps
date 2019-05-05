@@ -51,7 +51,9 @@ TRANSFORMER_TEST::TRANSFORMER_TEST()
 
 void TRANSFORMER_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    transformer.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(10);
 
@@ -81,8 +83,8 @@ void TRANSFORMER_TEST::tear_down()
 {
     transformer.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -122,9 +124,9 @@ void TRANSFORMER_TEST::test_constructor()
     TEST_ASSERT(transformer.get_winding_nominal_voltage_in_kV(SECONDARY_SIDE)==0.0);
     TEST_ASSERT(transformer.get_winding_nominal_voltage_in_kV(TERTIARY_SIDE)==0.0);
 
-    TEST_ASSERT(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)==0.0);
-    TEST_ASSERT(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE)==0.0);
-    TEST_ASSERT(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE)==0.0);
+    TEST_ASSERT(abs(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, SECONDARY_SIDE)-complex<double>(0.0, 0.001))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE, TERTIARY_SIDE)-complex<double>(0.0, 0.001))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(transformer.get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE)-complex<double>(0.0, 0.001))<FLOAT_EPSILON);
     TEST_ASSERT(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE)==1.0);
     TEST_ASSERT(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE)==1.0);
     TEST_ASSERT(transformer.get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE)==1.0);
@@ -697,11 +699,11 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_2_winding_trans()
     ostringstream osstream;
     osstream<<"Magnetizing admittance is placed at the middle of leakage impedance. Test pass with PSS/E."<<endl
       <<"Minor difference can be observed when testing transformer with non-zero magnetizing admittance.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     prepare_two_winding_transformer_bus_and_identifier();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
     bus->set_base_voltage_in_kV(13.8);
     bus->set_voltage_in_pu(1.05);
@@ -733,54 +735,54 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_2_winding_trans()
     transformer.set_winding_angle_shift_in_deg(SECONDARY_SIDE, angle2);
 
     osstream<<"With all windings in service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     complex<double> Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
     transformer.set_winding_breaker_status(PRIMARY_SIDE, false);
     transformer.set_winding_breaker_status(SECONDARY_SIDE, true);
 
     osstream<<"With winding 1 out of service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
     transformer.set_winding_breaker_status(PRIMARY_SIDE, true);
     transformer.set_winding_breaker_status(SECONDARY_SIDE, false);
 
     osstream<<"With winding 2 out of service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 
@@ -791,11 +793,11 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     ostringstream osstream;
     osstream<<"Magnetizing admittance is placed at the virtual star bus. Test pass with PSS/E."<<endl
       <<"Minor difference can be observed when testing transformer with non-zero magnetizing admittance.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     prepare_three_winding_transformer_bus_and_identifier();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus;
     bus = psdb.get_bus(1);
     bus->set_base_voltage_in_kV(13.8);
@@ -845,22 +847,22 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     transformer.set_winding_angle_shift_in_deg(TERTIARY_SIDE, angle3);
 
     osstream<<"With all windings in service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     complex<double> Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(TERTIARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(TERTIARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(TERTIARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
 
@@ -869,22 +871,22 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     transformer.set_winding_breaker_status(TERTIARY_SIDE, true);
 
     osstream<<"With winding 1 out of service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(TERTIARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(TERTIARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(TERTIARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
 
@@ -894,22 +896,22 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     transformer.set_winding_breaker_status(TERTIARY_SIDE, true);
 
     osstream<<"With winding 2 out of service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(TERTIARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(TERTIARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(TERTIARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
 
@@ -919,22 +921,22 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     transformer.set_winding_breaker_status(TERTIARY_SIDE, false);
 
     osstream<<"With winding 3 out of service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(TERTIARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(TERTIARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(TERTIARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
     transformer.set_winding_breaker_status(PRIMARY_SIDE, false);
@@ -942,22 +944,22 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     transformer.set_winding_breaker_status(TERTIARY_SIDE, true);
 
     osstream<<"With winding 1 and 2 out of service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(TERTIARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(TERTIARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(TERTIARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
 
@@ -966,22 +968,22 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     transformer.set_winding_breaker_status(TERTIARY_SIDE, false);
 
     osstream<<"With winding 1 and 3 out of service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(TERTIARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(TERTIARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(TERTIARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
 
@@ -990,21 +992,21 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     transformer.set_winding_breaker_status(TERTIARY_SIDE, false);
 
     osstream<<"With winding 2 and 3 out of service:";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     Vstar = transformer.get_star_bus_complex_voltage_in_pu();
     osstream<<"Star bus voltage = "<< steps_fast_complex_abs(Vstar)<<" pu, "<<rad2deg(steps_fast_complex_arg(Vstar))<<" deg.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(PRIMARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(PRIMARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(SECONDARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(SECONDARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary current = "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_pu(TERTIARY_SIDE))<<" pu, "<< steps_fast_complex_abs(transformer.get_winding_complex_current_in_kA(TERTIARY_SIDE))<<" kA.";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Primary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(PRIMARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Secondary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(SECONDARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     osstream<<"Tertiary power (into winding) = "<<transformer.get_winding_complex_power_in_MVA(TERTIARY_SIDE)<<" MVA";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

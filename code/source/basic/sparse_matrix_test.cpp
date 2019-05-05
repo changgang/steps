@@ -44,7 +44,6 @@ void SPARSE_MATRIX_TEST::setup()
 void SPARSE_MATRIX_TEST::tear_down()
 {
     matrix.clear();
-
     show_test_end_information();
 }
 
@@ -75,7 +74,7 @@ void SPARSE_MATRIX_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
 
-    TEST_ASSERT(matrix.get_matrix_size()==0);
+    TEST_ASSERT(matrix.get_matrix_size()==1);
 }
 
 void SPARSE_MATRIX_TEST::test_add_entry()
@@ -345,7 +344,7 @@ void SPARSE_MATRIX_TEST::test_slove_Ax_equal_b()
     show_test_information_for_function_of_class(__FUNCTION__,"SPARSE_MATRIX_TEST");
     ostringstream osstream;
     osstream<<"LU_factorization is also tested.";
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
     prepare_basic_matrix();
 

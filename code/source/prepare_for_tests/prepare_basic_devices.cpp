@@ -1,16 +1,20 @@
 #include "header/prepare_for_tests/prepare_models_for_test.h"
 #include "header/model/all_supported_models.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
+
 
 void prepare_basic_buses()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    psdb.clear_database();
+    psdb.clear();
 
     psdb.set_allowed_max_bus_number(10);
 
     BUS bus;
+    bus.set_toolkit(default_toolkit);
+
     bus.set_bus_number(1);
     bus.set_bus_name("bus 1");
     bus.set_base_voltage_in_kV(123.0);
@@ -32,17 +36,30 @@ void prepare_basic_buses()
 
 void prepare_basic_generators()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     GENERATOR generator;
+    generator.set_toolkit(default_toolkit);
+
     GENCLS gen_model;
+    gen_model.set_toolkit(default_toolkit);
+
     IEEET1 ex_model;
+    ex_model.set_toolkit(default_toolkit);
+
     COMP comp_model;
+    comp_model.set_toolkit(default_toolkit);
+
     IEE2ST pss_model;
+    pss_model.set_toolkit(default_toolkit);
+
     IEEEG1 turbine_model;
+    turbine_model.set_toolkit(default_toolkit);
+
     LCFB1 turbine_load_controller_model;
+    turbine_load_controller_model.set_toolkit(default_toolkit);
 
     generator.set_generator_bus(1);
     generator.set_identifier("1#");
@@ -107,17 +124,30 @@ void prepare_basic_generators()
 
 void prepare_basic_wt_generators()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     WT_GENERATOR wt_generator;
+    wt_generator.set_toolkit(default_toolkit);
+
     WT3G0 gen_model;
+    gen_model.set_toolkit(default_toolkit);
+
     AERD0 aerd_model;
+    aerd_model.set_toolkit(default_toolkit);
+
     WT3T0 turbine_model;
+    turbine_model.set_toolkit(default_toolkit);
+
     WT3E0 elec_model;
+    elec_model.set_toolkit(default_toolkit);
+
     WT3P0 pitch_model;
+    pitch_model.set_toolkit(default_toolkit);
+
     FILEWIND wind_model;
+    wind_model.set_toolkit(default_toolkit);
 
     wt_generator.set_generator_bus(1);
     wt_generator.set_identifier("1#");
@@ -183,11 +213,12 @@ void prepare_basic_wt_generators()
 
 void prepare_basic_pv_units()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     PV_UNIT pv_unit;
+    pv_unit.set_toolkit(default_toolkit);
 
     pv_unit.set_unit_bus(1);
     pv_unit.set_identifier("1#");
@@ -218,13 +249,16 @@ void prepare_basic_pv_units()
 
 void prepare_basic_energy_strorages()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     ENERGY_STORAGE estorage;
+    estorage.set_toolkit(default_toolkit);
+
     ESTR0 model;
+    model.set_toolkit(default_toolkit);
 
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
@@ -244,16 +278,23 @@ void prepare_basic_energy_strorages()
 
 void prepare_basic_loads()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     LOAD load;
+    load.set_toolkit(default_toolkit);
+
     IEEL load_model;
+    load_model.set_toolkit(default_toolkit);
     load_model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
+
     UFLS freq_model;
+    freq_model.set_toolkit(default_toolkit);
+
     UVLS volt_model;
+    volt_model.set_toolkit(default_toolkit);
 
     load.set_load_bus(1);
     load.set_identifier("1#");
@@ -290,12 +331,13 @@ void prepare_basic_loads()
 
 void prepare_basic_lines()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     LINE line;
+    line.set_toolkit(default_toolkit);
 
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
@@ -314,12 +356,13 @@ void prepare_basic_lines()
 }
 void prepare_basic_transformers()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     TRANSFORMER transformer;
+    transformer.set_toolkit(default_toolkit);
 
     transformer.set_winding_bus(PRIMARY_SIDE, 1);
     transformer.set_winding_bus(SECONDARY_SIDE, 2);
@@ -342,12 +385,13 @@ void prepare_basic_transformers()
 
 void prepare_basic_fixed_shunts()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     FIXED_SHUNT shunt;
+    shunt.set_toolkit(default_toolkit);
 
     shunt.set_shunt_bus(1);
     shunt.set_identifier("1#");
@@ -369,13 +413,16 @@ void prepare_basic_fixed_shunts()
 
 void prepare_basic_hvdcs()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     HVDC hvdc;
+    hvdc.set_toolkit(default_toolkit);
+
     CDC4T model;
+    model.set_toolkit(default_toolkit);
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -398,12 +445,13 @@ void prepare_basic_hvdcs()
 
 void prepare_basic_equivalent_devices()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     if(psdb.get_bus_count()==0)
         prepare_basic_buses();
 
     EQUIVALENT_DEVICE edevice;
+    edevice.set_toolkit(default_toolkit);
 
     edevice.set_equivalent_device_bus(1);
     edevice.set_identifier("E1");

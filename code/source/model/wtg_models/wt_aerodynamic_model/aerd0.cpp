@@ -255,7 +255,8 @@ bool AERD0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return true;
 }
 
@@ -418,7 +419,8 @@ double AERD0::get_model_data_with_name(string par_name) const
     if(par_name=="C8")
         return get_C8();
 
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -491,7 +493,8 @@ void AERD0::set_model_data_with_name(string par_name, double value)
     if(par_name=="C8")
         return set_C8(value);
 
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

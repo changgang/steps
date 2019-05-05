@@ -14,7 +14,7 @@
 
 #include "header/device/fixed_shunt.h"
 #include "header/power_system_database.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class FIXED_SHUNT_TEST : public Test::Suite

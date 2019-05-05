@@ -1,5 +1,6 @@
 #include "header/model/pvu_models/pv_panel_model/pv_panel_model.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <istream>
 #include <iostream>
 
@@ -52,6 +53,7 @@ void PV_PANEL_MODEL::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

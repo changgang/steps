@@ -15,6 +15,7 @@
 #include "header/model/load_relay_model/load_frequency_relay_model.h"
 #include "header/model/load_relay_model/load_relay_model_test.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class LOAD_FREQUENCY_RELAY_MODEL_TEST : public LOAD_RELAY_MODEL_TEST

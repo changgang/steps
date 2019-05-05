@@ -25,7 +25,7 @@ void PI_BLOCK::set_Kp(double K)
     {
         ostringstream osstream;
         osstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PI_BLOCK.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     pid_block.set_Kp(K);
@@ -42,7 +42,7 @@ void PI_BLOCK::set_Ki(double K)
     {
         ostringstream osstream;
         osstream<<"Error. Zero amplifier Ki of INTEGRAL_BLOCK part is not allowed for PI_BLOCK.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     pid_block.set_Ki(K);
@@ -96,14 +96,16 @@ void PI_BLOCK::initialize()
         if(s>vmax)
         {
             osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(osstream);
+            STEPS& toolkit = get_toolkit();
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         else
         {
             if(s<vmin)
             {
                 osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-                show_information_with_leading_time_stamp(osstream);
+                STEPS& toolkit = get_toolkit();
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
     }

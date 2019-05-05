@@ -187,7 +187,7 @@ void SYNC_GENERATOR_MODEL_TEST::export_meter_title()
     ostringstream osstream;
     osstream<<"TIME\tANGLE\tSPEED\tPMECH\tEFD\tVTERM\tPELEC\tQELEC";
     osstream<<osstream.str()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void SYNC_GENERATOR_MODEL_TEST::export_meter_values(double time)
@@ -214,7 +214,7 @@ void SYNC_GENERATOR_MODEL_TEST::export_meter_values(double time)
       <<setw(10)<<setprecision(6)<<fixed<<qelec;
 
     osstream<<osstream.str()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 }
 
@@ -227,13 +227,13 @@ void SYNC_GENERATOR_MODEL_TEST::test_pmech_step_response_of_sync_generator_model
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double TIME = -delt*2.0;
 
@@ -273,7 +273,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_pmech_step_response_of_sync_generator_model
             run_a_step();
             export_meter_values(TIME);
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -288,13 +288,13 @@ void SYNC_GENERATOR_MODEL_TEST::test_efd_step_response_of_sync_generator_model()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double TIME = -delt*2.0;
 
@@ -334,7 +334,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_efd_step_response_of_sync_generator_model()
             run_a_step();
             export_meter_values(TIME);
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -344,19 +344,19 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     SYNC_GENERATOR_MODEL* model = get_test_sync_generator_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double TIME = -delt*2.0;
 
@@ -398,7 +398,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
             run_a_step();
             export_meter_values(TIME);
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -414,13 +414,13 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
         double TIME = -delt*2.0;
 
@@ -462,7 +462,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
         }
 
         delt *= 2.0;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
         model->run(UPDATE_MODE);
 
         export_meter_values(TIME);
@@ -482,7 +482,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
         }
 
         delt *= 2.0;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
         model->run(UPDATE_MODE);
 
         export_meter_values(TIME);
@@ -501,7 +501,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
             export_meter_values(TIME);
         }
 
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);

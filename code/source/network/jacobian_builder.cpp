@@ -1,6 +1,7 @@
 #include "header/network/jacobian_builder.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include "header/STEPS.h"
 
 #include <istream>
 #include <iostream>
@@ -43,7 +44,8 @@ bool JACOBIAN_BUILDER::is_network_matrix_set() const
         ostringstream osstream;
         osstream<<"Error. Jacobian builder is not connected to any network database."<<endl
           <<"No operation on the jacobian builder will work.";
-        show_information_with_leading_time_stamp(osstream);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return false;
     }
 }
@@ -52,6 +54,8 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
 {
     if(not is_network_matrix_set())
         return;
+
+    STEPS& toolkit = get_toolkit();
 
     jacobian_delta_p_over_angle.clear();
     jacobian_delta_p_over_voltage.clear();
@@ -78,28 +82,28 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
         if(isnan(der))
         {
             osstream<<"NAN is detected when building Jacobian matrix, dP/dA is NAN at row: "<<row<<"(bus "<<ibus<<"), col: "<<column<<"(bus "<<jbus<<")";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         jacobian_delta_p_over_angle.add_entry(row,column, der);
         der = get_jacobian_delta_p_over_voltage_of_internal_bus(row,column);
         if(isnan(der))
         {
             osstream<<"NAN is detected when building Jacobian matrix, dP/dV is NAN at row: "<<row<<"(bus "<<ibus<<"), col: "<<column<<"(bus "<<jbus<<")";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         jacobian_delta_p_over_voltage.add_entry(row,column, der);
         der = get_jacobian_delta_q_over_angle_of_internal_bus(row,column);
         if(isnan(der))
         {
             osstream<<"NAN is detected when building Jacobian matrix, dQ/dA is NAN at row: "<<row<<"(bus "<<ibus<<"), col: "<<column<<"(bus "<<jbus<<")";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         jacobian_delta_q_over_angle.add_entry(row,column, der);
         der = get_jacobian_delta_q_over_voltage_of_internal_bus(row,column);
         if(isnan(der))
         {
             osstream<<"NAN is detected when building Jacobian matrix, dQ/dV is NAN at row: "<<row<<"(bus "<<ibus<<"), col: "<<column<<"(bus "<<jbus<<")";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         jacobian_delta_q_over_voltage.add_entry(row,column, der);
     }
@@ -109,7 +113,7 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
     jacobian_delta_q_over_voltage.compress_and_merge_duplicate_entries();
 
     osstream<<"Done building separate jacobian matrix.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return;
 }
 
@@ -127,7 +131,8 @@ void JACOBIAN_BUILDER::update_seprate_jacobians()
 void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
 {
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
@@ -186,7 +191,8 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
 void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
 {
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
@@ -246,7 +252,8 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
 void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
 {
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
@@ -306,7 +313,8 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
 void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
 {
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
@@ -372,7 +380,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
     NETWORK_MATRIX* nw_db = get_network_matrix();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
     complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
@@ -437,7 +446,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
     NETWORK_MATRIX* nw_db = get_network_matrix();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
     complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
@@ -502,7 +512,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
     NETWORK_MATRIX* nw_db = get_network_matrix();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
     complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
@@ -567,7 +578,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
     NETWORK_MATRIX* nw_db = get_network_matrix();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
     complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
@@ -630,7 +642,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_physical_bus(size_t 
         return 0.0;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
     {
@@ -643,7 +656,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_physical_bus(size_t 
     {
         ostringstream osstream;
         osstream<<"Either physical bus "<<ibus<<" or "<<jbus<<" doesn't exist when getting jacobian of delta P over bus angle.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         return 0.0;
     }
@@ -655,7 +668,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_physical_bus(size_
         return 0.0;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
     {
@@ -668,7 +682,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_physical_bus(size_
     {
         ostringstream osstream;
         osstream<<"Either physical bus "<<ibus<<" or "<<jbus<<" doesn't exist when getting jacobian of delta P over bus voltage.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         return 0.0;
     }
@@ -680,7 +694,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_physical_bus(size_t 
         return 0.0;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
     {
@@ -693,7 +708,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_physical_bus(size_t 
     {
         ostringstream osstream;
         osstream<<"Either physical bus "<<ibus<<" or "<<jbus<<" doesn't exist when getting jacobian of delta Q over bus angle.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         return 0.0;
     }
@@ -705,7 +720,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_
         return 0.0;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
     {
@@ -718,7 +734,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_
     {
         ostringstream osstream;
         osstream<<"Either physical bus "<<ibus<<" or "<<jbus<<" doesn't exist when getting jacobian of delta Q over bus voltage.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         return 0.0;
     }
@@ -728,19 +744,20 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_eq
                                                                 const vector<size_t> internal_P_equation_buses,
                                                                 const vector<size_t> internal_Q_equation_buses)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(not is_network_matrix_set())
     {
         osstream<<"Full decoupled jacobian matrix will not be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     //osstream<<"go forming the full jacobian matrix.";
-    //show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t n_internal_P_equation_buses = internal_P_equation_buses.size(),
            n_internal_Q_equation_buses = internal_Q_equation_buses.size();
@@ -831,7 +848,7 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_eq
     full_jacobian.compress_and_merge_duplicate_entries();
 
     //osstream<<"done forming the full jacobian matrix.\nnow returning the matrix.";
-    //show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
     return full_jacobian;
 
     /*
@@ -903,18 +920,19 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_eq
 
 STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(not is_network_matrix_set())
     {
         osstream<<"Decoupled BP matrix will not be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     osstream<<"Building BP matrix for active power solution.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const STEPS_SPARSE_MATRIX& BP = nw_db->get_decoupled_network_BP_matrix();
 
@@ -968,25 +986,26 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_
     B_jacobian.compress_and_merge_duplicate_entries();
 
     osstream<<"Done building BP matrix for active power solution.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     return B_jacobian;
 }
 
 STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(not is_network_matrix_set())
     {
         osstream<<"Decoupled BQ matrix will not be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     osstream<<"Building BQ matrix for active power solution.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     const STEPS_SPARSE_MATRIX& BQ = nw_db->get_decoupled_network_BQ_matrix();
 
@@ -1041,7 +1060,7 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_
 
 
     osstream<<"Done building BQ matrix for active power solution.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     return B_jacobian;
 }
@@ -1052,6 +1071,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
         return;
 
     NETWORK_MATRIX* nw_db = get_network_matrix();
+    STEPS& toolkit = get_toolkit();
 
     size_t MAX_ENTRIES_TO_SHOW = 50;
 
@@ -1070,7 +1090,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
 
     osstream<<"The first "<<entries_to_show<<" JACOBIAN_BUILDER entries of P over angle are:"<<endl
       <<"row      row_bus  column   col_bus  value";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(size_t k=0; k!=entries_to_show; ++k)
     {
@@ -1088,7 +1108,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
           <<setw(8)<<col<<" "
           <<setw(8)<<col_bus<<" "
           <<setw(10)<<setprecision(6)<<fixed<<rvalue;
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     nentry = jacobian_delta_p_over_voltage.get_matrix_entry_count();
@@ -1100,7 +1120,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
 
     osstream<<"The first "<<entries_to_show<<" JACOBIAN_BUILDER entries of P over voltage are:"<<endl
       <<"row      row_bus  column   col_bus  value";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(size_t k=0; k!=entries_to_show; ++k)
     {
@@ -1118,7 +1138,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
           <<setw(8)<<col<<" "
           <<setw(8)<<col_bus<<" "
           <<setw(10)<<setprecision(6)<<fixed<<rvalue;
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     nentry = jacobian_delta_q_over_angle.get_matrix_entry_count();
@@ -1130,7 +1150,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
 
     osstream<<"The first "<<entries_to_show<<" JACOBIAN_BUILDER entries of Q over angle are:"<<endl
       <<"row      row_bus  column   col_bus  value";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(size_t k=0; k!=entries_to_show; ++k)
     {
@@ -1148,7 +1168,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
           <<setw(8)<<col<<" "
           <<setw(8)<<col_bus<<" "
           <<setw(10)<<setprecision(6)<<fixed<<rvalue;
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     nentry = jacobian_delta_q_over_voltage.get_matrix_entry_count();
@@ -1160,7 +1180,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
 
     osstream<<"The first "<<entries_to_show<<" JACOBIAN_BUILDER entries of Q over voltage are:"<<endl
       <<"row      row_bus  column   col_bus  value";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(size_t k=0; k!=entries_to_show; ++k)
     {
@@ -1178,7 +1198,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
           <<setw(8)<<col<<" "
           <<setw(8)<<col_bus<<" "
           <<setw(10)<<setprecision(6)<<fixed<<rvalue;
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -1186,6 +1206,7 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
 {
     if(not is_network_matrix_set())
         return;
+    STEPS& toolkit = get_toolkit();
 
     ofstream file;
     ostringstream osstream;
@@ -1195,7 +1216,7 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving jacobian matrix."<<endl
           <<"No jacobian matrix will be exported.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -1285,3 +1306,17 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
     file.close();
 }
 
+bool JACOBIAN_BUILDER::is_valid() const
+{
+    return true;
+}
+
+void JACOBIAN_BUILDER::check()
+{
+    ;
+}
+
+void JACOBIAN_BUILDER::clear()
+{
+    ;
+}

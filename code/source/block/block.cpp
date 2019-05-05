@@ -20,6 +20,16 @@ BLOCK::~BLOCK()
     ;
 }
 
+bool BLOCK::is_valid() const
+{
+    return true;
+}
+
+void BLOCK::clear()
+{
+    ;
+}
+
 void BLOCK::set_state(double value)
 {
     state = value;
@@ -131,7 +141,8 @@ void BLOCK::check_limiter() const
         {
             ostringstream osstream;
             osstream<<"Error. Limiter upper bound ("<<upper_limit<<") is less than lower bound ("<<lower_limit<<").";
-            show_information_with_leading_time_stamp(osstream);
+            STEPS& toolkit = get_toolkit();
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }

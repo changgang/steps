@@ -1,6 +1,7 @@
 #include "header/model/wtg_models/wt_aerodynamic_model/wt_aerodynamic_model_test.h"
 #include "header/basic/utility.h"
 #include "header/model/wtg_models/wt_generator_model/wt3g0.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -434,7 +435,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_standard_model_string()
 void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_underspeed_mode()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
-    set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
     ostringstream osstream;
 
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
@@ -456,14 +457,14 @@ void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_
         osstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
                <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
                <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_mppt_mode()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
-    set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
     ostringstream osstream;
 
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
@@ -485,7 +486,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_
         osstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
                <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
                <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -493,7 +494,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_
 void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_mode()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"AERD0_TEST");
-    set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
     ostringstream osstream;
 
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
@@ -515,7 +516,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_
         osstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
                <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
                <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -530,19 +531,19 @@ void WT_AERODYNAMIC_MODEL_TEST::test_list_Cp_and_mechanical_power_data_of_differ
 
         model->initialize();
         string file =  "test_log/test_"+model->get_model_name()+"_"+__FUNCTION__+".txt";
-        redirect_stdout_to_file(file);
+        default_toolkit.redirect_stdout_to_file(file);
 
         osstream<<model->get_standard_model_string();
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double r = model->get_turbine_blade_radius_in_m();
         double vwind = model->get_nominal_wind_speed_in_mps();
         double pitch = 0.0;
         double pmax = model->get_total_wind_power_per_wt_generator_in_MW(vwind);
         osstream<<"Power curve when pitch = 0.0 deg, and wind speed = "<<vwind<<" m/s, blade radius = "<<r<<" m";
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
         osstream<<"Speed(rad/s)\tLambda\tCP\tPmech(MW)";
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         for(double w=0.1; w<4.0*PI; w+=0.1)
         {
@@ -555,9 +556,9 @@ void WT_AERODYNAMIC_MODEL_TEST::test_list_Cp_and_mechanical_power_data_of_differ
                    <<setw(10)<<setprecision(6)<<lambda<<"\t"
                    <<setw(10)<<setprecision(6)<<cp<<"\t"
                    <<setw(10)<<setprecision(6)<<pmech;
-            show_information_with_leading_time_stamp(osstream);
+            default_toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);

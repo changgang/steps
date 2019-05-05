@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/toolkit/powerflow_case_generator/powerflow_case_generator.h"
+#include "header/STEPS.h"
 
 using namespace std;
 

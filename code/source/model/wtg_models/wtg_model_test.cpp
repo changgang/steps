@@ -1,5 +1,6 @@
 #include "header/model/wtg_models/wtg_model_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -14,11 +15,9 @@ WTG_MODEL_TEST::WTG_MODEL_TEST()
     ;
 }
 
-
-
 void WTG_MODEL_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
@@ -47,8 +46,8 @@ void WTG_MODEL_TEST::setup()
 
 void WTG_MODEL_TEST::tear_down()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 }
 
 WT_GENERATOR* WTG_MODEL_TEST::get_test_wt_generator()
@@ -60,7 +59,7 @@ WT_GENERATOR* WTG_MODEL_TEST::get_test_wt_generator()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     return psdb.get_wt_generator(did);
 }
 

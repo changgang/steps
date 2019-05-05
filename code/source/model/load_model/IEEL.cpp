@@ -1,5 +1,6 @@
 #include "header/model/load_model/IEEL.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 IEEL::IEEL()
 {
@@ -21,7 +22,7 @@ void IEEL::copy_from_const_model(const IEEL& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_default_power_system_database());
+    //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     this->set_subsystem_type(model.get_subsystem_type());
@@ -283,7 +284,8 @@ bool IEEL::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -423,7 +425,8 @@ void IEEL::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEEL::save()
 {

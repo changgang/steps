@@ -13,7 +13,7 @@
 #include "cpptest.h"
 
 #include "header/data_imexporter/psse_imexporter.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class PSSE_IMEXPORTER_TEST : public Test::Suite

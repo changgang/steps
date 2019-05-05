@@ -125,7 +125,7 @@ void WT_ELECTRICAL_MODEL_TEST::test_get_terminal_bus_voltage()
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     size_t bus = genptr->get_generator_bus();
 
     TEST_ASSERT(fabs(model->get_terminal_bus_voltage_in_pu()-psdb.get_bus_voltage_in_pu(bus))<FLOAT_EPSILON);
@@ -140,7 +140,7 @@ void WT_ELECTRICAL_MODEL_TEST::test_get_terminal_bus_frequency()
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     size_t bus = genptr->get_generator_bus();
 
     TEST_ASSERT(fabs(model->get_terminal_bus_frequency_deviation_in_pu()-psdb.get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
@@ -249,14 +249,14 @@ void WT_ELECTRICAL_MODEL_TEST::test_step_response_with_voltage_drop()
 
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    redirect_stdout_to_file("test_log/step_response_of_"+model->get_model_name()+"_model.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_"+model->get_model_name()+"_model.txt");
 
     initialize_models();
     run_to_time(1.0);
     apply_voltage_drop_of_10_percent();
     run_to_time(6.0);
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 
 void WT_ELECTRICAL_MODEL_TEST::test_step_response_with_frequency_drop()
@@ -265,14 +265,14 @@ void WT_ELECTRICAL_MODEL_TEST::test_step_response_with_frequency_drop()
 
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    redirect_stdout_to_file("test_log/step_response_of_"+model->get_model_name()+"_model.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_"+model->get_model_name()+"_model.txt");
 
     initialize_models();
     run_to_time(1.0);
     apply_voltage_drop_of_10_percent();
     run_to_time(6.0);
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 
 void WT_ELECTRICAL_MODEL_TEST::initialize_models()
@@ -281,8 +281,8 @@ void WT_ELECTRICAL_MODEL_TEST::initialize_models()
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
-    STEPS::TIME = -2.0*delt;
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
     wtgenmodel->initialize();
     model->initialize();
     export_meter_title();
@@ -296,13 +296,13 @@ void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
 
-    double delt =get_dynamic_simulation_time_step_in_s();
+    double delt =default_toolkit.get_dynamic_simulation_time_step_in_s();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>tend)
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>tend)
         {
-            STEPS::TIME -= delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         double ip=0.0, iq=0.0;
@@ -319,7 +319,7 @@ void WT_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
             iq = model->get_reactive_current_command_in_pu_based_on_mbase();
             iter_count++;
         }
-        //oosstream<<"Integration at time "<<STEPS::TIME<<", takes "<<iter_count<<" iterations.";
+        //oosstream<<"Integration at time "<<default_toolkit.get_dynamic_simulation_time_in_s()<<", takes "<<iter_count<<" iterations.";
         //show_information_with_leading_time_stamp(oosstream);
         model->run(UPDATE_MODE);
         wtgenmodel->run(UPDATE_MODE);
@@ -331,12 +331,12 @@ void WT_ELECTRICAL_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
     osstream<<"TIME\tVOLT\tFREQ\tIPCMD\tIQCMD\tEQCMD\tPELEC\tQELEC";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
 
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
@@ -346,7 +346,7 @@ void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
     double freq = bus->get_frequency_deviation_in_pu();
 
     ostringstream oosstream;
-    oosstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
+    oosstream<<setw(10)<<setprecision(6)<<fixed<<default_toolkit.get_dynamic_simulation_time_in_s()<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<voltage<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<freq<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<model->get_active_current_command_in_pu_based_on_mbase()<<"\t"
@@ -354,19 +354,19 @@ void WT_ELECTRICAL_MODEL_TEST::export_meter_values()
             <<setw(10)<<setprecision(6)<<fixed<<model->get_reactive_voltage_command_in_pu()<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<genmodel->get_terminal_active_power_in_MW()<<"\t"
             <<setw(10)<<setprecision(6)<<fixed<<genmodel->get_terminal_reactive_power_in_MVar();
-    show_information_with_leading_time_stamp(oosstream);
+    default_toolkit.show_information_with_leading_time_stamp(oosstream);
 }
 
 void WT_ELECTRICAL_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
     bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
 }
 
 void WT_ELECTRICAL_MODEL_TEST::apply_frequency_drop_of_5_percent()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
     BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
     model->set_frequency_deviation_in_pu(0.05);
@@ -377,5 +377,5 @@ void WT_ELECTRICAL_MODEL_TEST::test_get_standard_model_string()
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    show_information_with_leading_time_stamp(model->get_standard_model_string());
+    default_toolkit.show_information_with_leading_time_stamp(model->get_standard_model_string());
 }

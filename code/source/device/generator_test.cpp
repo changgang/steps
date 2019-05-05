@@ -40,7 +40,8 @@ GENERATOR_TEST::GENERATOR_TEST()
 
 void GENERATOR_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    generator.set_toolkit(default_toolkit);
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
@@ -59,8 +60,8 @@ void GENERATOR_TEST::tear_down()
 {
     generator.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -69,7 +70,7 @@ void GENERATOR_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENERATOR_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     TEST_ASSERT(generator.get_generator_bus()==0);
     TEST_ASSERT(generator.get_identifier()=="");
@@ -159,7 +160,7 @@ void GENERATOR_TEST::test_set_get_sync_generator_model()
     generator.set_identifier("1#");
     generator.set_status(true);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -191,7 +192,7 @@ void GENERATOR_TEST::test_set_get_compensator_model()
     generator.set_identifier("1#");
     generator.set_status(true);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -219,7 +220,7 @@ void GENERATOR_TEST::test_set_get_exciter_model()
     generator.set_identifier("1#");
     generator.set_status(true);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -257,7 +258,7 @@ void GENERATOR_TEST::test_set_get_stabilizer_model()
     generator.set_identifier("1#");
     generator.set_status(true);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -308,7 +309,7 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
     generator.set_identifier("1#");
     generator.set_status(true);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();

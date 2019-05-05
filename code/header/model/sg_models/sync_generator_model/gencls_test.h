@@ -14,7 +14,7 @@
 
 #include "header/model/sg_models/sync_generator_model/gencls.h"
 
-
+#include "header/STEPS.h"
 using namespace std;
 
 class GENCLS_TEST : public SYNC_GENERATOR_MODEL_TEST

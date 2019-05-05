@@ -1,5 +1,6 @@
 #include "header/model/sg_models/exciter_model/SEXS.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -27,7 +28,7 @@ void SEXS::copy_from_const_model(const SEXS& model)
 {
     clear();
 
-    //this->set_power_system_database(model.get_default_power_system_database());
+    //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
     this->set_TA_in_s(model.get_TA_in_s());
@@ -163,7 +164,8 @@ bool SEXS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -172,7 +174,7 @@ void SEXS::initialize()
     ostringstream osstream;
     if(is_model_initialized())
         return;
-
+    STEPS& toolkit = get_toolkit();
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return;
@@ -191,13 +193,13 @@ void SEXS::initialize()
     {
         osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(Efd<get_Efdmin_in_pu())
     {
         osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     exciter.set_output(Efd);
     exciter.initialize();
@@ -252,7 +254,8 @@ void SEXS::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void SEXS::save()
@@ -309,7 +312,8 @@ double SEXS::get_model_data_with_name(string par_name) const
         if(par_name=="EMAX") return get_Efdmax_in_pu();
         if(par_name=="EMIN") return get_Efdmin_in_pu();
     }
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -325,7 +329,8 @@ void SEXS::set_model_data_with_name(string par_name, double value)
         if(par_name=="EMAX") return set_Efdmax_in_pu(value);
         if(par_name=="EMIN") return set_Efdmin_in_pu(value);
     }
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
 void SEXS::prepare_model_internal_variable_table()

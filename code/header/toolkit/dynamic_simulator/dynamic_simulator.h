@@ -17,7 +17,12 @@ class DYNAMICS_SIMULATOR: public BASE
         ~DYNAMICS_SIMULATOR();
         virtual void clear();
 
-        NETWORK_MATRIX* get_network_matrix();
+        void set_dynamic_simulation_time_step_in_s(double delt);
+        double get_dynamic_simulation_time_step_in_s();
+        void set_dynamic_simulation_time_in_s(double time);
+        double get_dynamic_simulation_time_in_s();
+
+        NETWORK_MATRIX& get_network_matrix();
 
         void set_csv_file_export_enable_flag(bool flag);
         void set_json_file_export_enable_flag(bool flag);
@@ -187,7 +192,9 @@ class DYNAMICS_SIMULATOR: public BASE
         void update_generators_in_islands();
         bool is_system_angular_stable() const;
 
-        //double TIME;
+        double DELT;
+        double TIME;
+
         size_t ITER_DAE, ITER_NET;
         double P_threshold_in_MW, Q_threshold_in_MVar;
         size_t network_iteration_count, DAE_iteration_count;
@@ -200,8 +207,6 @@ class DYNAMICS_SIMULATOR: public BASE
         vector<double> delta_V;
 
         STEPS_SPARSE_MATRIX jacobian;
-
-        NETWORK_MATRIX network_matrix;
 
         vector<METER> meters;
         vector<double> meter_values;

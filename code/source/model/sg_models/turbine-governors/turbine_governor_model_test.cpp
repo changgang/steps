@@ -44,7 +44,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
     osstream<<"TIME\tSPEED\tPMECH\tPRESSURE";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void TURBINE_GOVERNOR_MODEL_TEST::export_meter_values(double time)
@@ -61,7 +61,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::export_meter_values(double time)
       <<setw(10)<<setprecision(6)<<fixed<<speed<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<pmech<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<model->get_model_internal_variable_with_name("STEAM PRESSURE");
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void TURBINE_GOVERNOR_MODEL_TEST::run_step_response_of_turbine_govnernor_model()
@@ -71,10 +71,10 @@ void TURBINE_GOVERNOR_MODEL_TEST::run_step_response_of_turbine_govnernor_model()
     GENERATOR* genptr = get_test_generator();
     TURBINE_GOVERNOR_MODEL* model = genptr->get_turbine_governor_model();
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
 

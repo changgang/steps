@@ -21,7 +21,7 @@ INTEGRAL_BLOCK_TEST::INTEGRAL_BLOCK_TEST()
 
 void INTEGRAL_BLOCK_TEST::setup()
 {
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 
 void INTEGRAL_BLOCK_TEST::tear_down()
@@ -51,7 +51,7 @@ void INTEGRAL_BLOCK_TEST::test_initialize_integrate_update_once()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"INTEGRAL_BLOCK_TEST");
 
-    double h = get_dynamic_simulation_time_step_in_s();
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     block.set_T_in_s(0.5);
     double output = 10.0;
@@ -86,7 +86,7 @@ void INTEGRAL_BLOCK_TEST::test_step_response_without_limiter()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"INTEGRAL_BLOCK_TEST");
 
-    double h = get_dynamic_simulation_time_step_in_s();
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double t = -5.0*h;
 
     block.set_T_in_s(0.5);
@@ -118,7 +118,7 @@ void INTEGRAL_BLOCK_TEST::test_step_response_with_limiter()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"INTEGRAL_BLOCK_TEST");
 
-    double h = get_dynamic_simulation_time_step_in_s();
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double t = -5.0*h;
 
     block.set_T_in_s(0.5);

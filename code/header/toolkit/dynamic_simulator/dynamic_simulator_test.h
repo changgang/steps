@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -32,6 +33,8 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
 
         //void test_set_get_current_simulation_time();
 
+        void test_set_get_DELT();
+        void test_set_get_TIME();
         void test_set_get_max_DAE_iteration();
         void test_set_get_max_network_iteration();
         void test_set_get_max_update_event_iteration();

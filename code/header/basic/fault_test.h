@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/basic/fault.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -32,5 +33,6 @@ class FAULT_TEST : public Test::Suite
         void test_copy_with_opeartor_equal();
     private:
         FAULT fault;
+
 };
 #endif // FAULT_TEST_H

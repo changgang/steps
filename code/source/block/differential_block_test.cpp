@@ -19,7 +19,7 @@ DIFFERENTIAL_BLOCK_TEST::DIFFERENTIAL_BLOCK_TEST()
 
 void DIFFERENTIAL_BLOCK_TEST::setup()
 {
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 
 void DIFFERENTIAL_BLOCK_TEST::tear_down()
@@ -59,8 +59,8 @@ void DIFFERENTIAL_BLOCK_TEST::test_set_get_T()
 void DIFFERENTIAL_BLOCK_TEST::test_step_response_without_limiter()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DIFFERENTIAL_BLOCK_TEST");
-    set_dynamic_simulation_time_step_in_s(0.001);
-    double h = get_dynamic_simulation_time_step_in_s();
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     double K = 2.0;
     double T = 5.0;

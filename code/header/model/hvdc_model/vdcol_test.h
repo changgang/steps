@@ -13,6 +13,8 @@
 #include "cpptest.h"
 #include "header/power_system_database.h"
 #include "header/model/hvdc_model/vdcol.h"
+#include "header/STEPS.h"
+
 using namespace std;
 
 class VDCOL_TEST : public Test::Suite
@@ -30,6 +32,7 @@ class VDCOL_TEST : public Test::Suite
         void test_copy_with_operator_equal();
     private:
         VDCOL limiter;
+
 };
 
 #endif//VDCOL_TEST_H

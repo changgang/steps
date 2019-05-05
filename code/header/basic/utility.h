@@ -7,7 +7,6 @@
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 #include <complex>
 
-char get_next_alphabeta();
 string num2str(int number);
 string num2str(size_t number);
 string num2str(double number);
@@ -48,36 +47,28 @@ vector<string> split_string(string str, const string sep);
 string string_vector2csv(const vector<string>& vec);
 string swap_data_in_csv_string(const string& data, size_t i, size_t j);
 
-void redirect_stdout_to_file(string file);
-void recover_stdout();
-
 complex<double> xy2dq_with_angle_in_deg(complex<double> V, double angle);
 complex<double> xy2dq_with_angle_in_rad(complex<double> V, double angle);
 complex<double> dq2xy_with_angle_in_deg(complex<double> V, double angle);
 complex<double> dq2xy_with_angle_in_rad(complex<double> V, double angle);
 
-void initialize_simulator();
-void reset_simulator();
-void terminate_simulator();
-void show_test_information_for_function_of_class(string func, string cls);
-void show_test_end_information();
-void show_information_with_leading_time_stamp(string info);
-void show_information_with_leading_time_stamp(ostringstream& stream);
-void show_set_get_model_data_with_index_error(string device, string model, string func, size_t index);
-void show_set_get_model_data_with_name_error(string device, string model, string func, string par_name);
-string get_system_time_stamp_string();
-
 bool is_file_exist(const string file);
 
-POWER_SYSTEM_DATABASE& get_default_power_system_database();
-POWERFLOW_SOLVER& get_default_powerflow_solver();
-DYNAMICS_SIMULATOR& get_default_dynamic_simulator();
+void show_information_with_leading_time_stamp_with_default_toolkit(string info);
+void show_information_with_leading_time_stamp_with_default_toolkit(ostringstream& stream);
+string get_system_time_stamp_string_with_default_toolkit();
 
-void set_dynamic_simulation_time_step_in_s(double delt);
-double get_dynamic_simulation_time_step_in_s();
-void set_dynamic_simulation_time_in_s(double time);
-double get_dynamic_simulation_time_in_s();
+void show_test_information_for_function_of_class(string func, string cls);
+void show_test_end_information();
+
 vector<string> psse_dyr_string2steps_string_vector(string& data);
 string psse_dyr_string2steps_string(string& data);
+
+void initialize_package();
+size_t generate_new_toolkit();
+void delete_toolkit(size_t toolkit_index);
+size_t get_toolkit_count();
+STEPS& get_default_toolkit();
+
 
 #endif // UTILITY_H

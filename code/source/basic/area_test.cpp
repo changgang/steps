@@ -1,5 +1,6 @@
 #include "header/basic/area_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 
 #include <istream>
 #include <cstdlib>
@@ -24,7 +25,9 @@ AREA_TEST::AREA_TEST()
 
 void AREA_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    area.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
 
     BUS bus;
@@ -47,8 +50,8 @@ void AREA_TEST::tear_down()
 {
     area.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+
+    default_toolkit.clear();
 
     show_test_end_information();
 }
@@ -66,6 +69,7 @@ void AREA_TEST::test_constructor()
 
 void AREA_TEST::test_set_get_area_number()
 {
+
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
     // area number is size_t,
@@ -82,6 +86,7 @@ void AREA_TEST::test_set_get_area_number()
 }
 void AREA_TEST::test_set_get_area_name()
 {
+
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
     area.set_area_name("area 1");
@@ -90,6 +95,7 @@ void AREA_TEST::test_set_get_area_name()
 
 void AREA_TEST::test_set_get_area_swing_bus()
 {
+
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
     // area swing bus must be valid.
@@ -110,6 +116,7 @@ void AREA_TEST::test_set_get_area_swing_bus()
 
 void AREA_TEST::test_set_get_expected_power_leaving_area_in_MW()
 {
+
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
     TEST_ASSERT(fabs(area.get_expected_power_leaving_area_in_MW()-0.0)<FLOAT_EPSILON);
@@ -120,6 +127,7 @@ void AREA_TEST::test_set_get_expected_power_leaving_area_in_MW()
 }
 void AREA_TEST::test_set_get_area_power_mismatch_tolerance_in_MW()
 {
+
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
     TEST_ASSERT(fabs(area.get_area_power_mismatch_tolerance_in_MW()-10.0)<FLOAT_EPSILON);
@@ -128,6 +136,7 @@ void AREA_TEST::test_set_get_area_power_mismatch_tolerance_in_MW()
 }
 void AREA_TEST::test_is_valid()
 {
+
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
     TEST_ASSERT(area.is_valid()==false);
@@ -142,6 +151,7 @@ void AREA_TEST::test_is_valid()
 
 void AREA_TEST::test_clear()
 {
+
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
     area.set_area_number(1);
@@ -160,6 +170,7 @@ void AREA_TEST::test_clear()
 }
 void AREA_TEST::test_copy_with_operator_equal()
 {
+
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
     area.set_area_number(1);

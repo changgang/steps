@@ -5,7 +5,7 @@
 
 #include <cstdlib>
 
-class CONTINUOUS_BUFFER
+class CONTINUOUS_BUFFER : public BASE
 {
     public:
         CONTINUOUS_BUFFER();
@@ -13,7 +13,7 @@ class CONTINUOUS_BUFFER
         CONTINUOUS_BUFFER& operator=(const CONTINUOUS_BUFFER& buffer);
         ~CONTINUOUS_BUFFER();
 
-        void clear();
+        virtual void clear();
 
         void set_buffer_size(size_t buffer_size);
         size_t get_buffer_size() const;
@@ -41,6 +41,9 @@ class CONTINUOUS_BUFFER
 
         vector<double> time_buffer;
         vector<double> value_buffer;
+
+        virtual bool is_valid() const;
+        virtual void check();
 };
 
 #endif // CONTINUOUS_BUFFER_H

@@ -17,7 +17,7 @@ DEVICE::~DEVICE()
 
 /*double DEVICE::get_dynamic_simulator_time_in_s() const
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(psdb!=NULL)
         return psdb->get_dynamic_simulator_time_in_s();
     else

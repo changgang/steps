@@ -13,7 +13,7 @@
 #include "cpptest.h"
 
 #include "header/data_imexporter/bpa_imexporter.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class BPA_IMEXPORTER_TEST : public Test::Suite

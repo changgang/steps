@@ -16,13 +16,13 @@
 int main()
 {
     clock_t start = clock();
-    DYNAMICS_SIMULATOR& simulator = get_default_dynamic_simulator();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    redirect_stdout_to_file(file);
+    default_toolkit.redirect_stdout_to_file(file);
 
     PSSE_IMEXPORTER importer;
 
@@ -52,7 +52,7 @@ int main()
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
     //simulator.set_max_DAE_iteration(20);
     //simulator.set_max_network_iteration(200);
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     simulator.start();
     simulator.run_to(1.0);
@@ -73,7 +73,7 @@ int main()
     simulator.trip_line(did);
 
     simulator.run_to(5.0);
-    recover_stdout();
+    default_toolkit.recover_stdout();
 
     clock_t stop = clock();
 

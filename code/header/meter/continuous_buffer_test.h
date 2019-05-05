@@ -13,7 +13,7 @@
 #include "cpptest.h"
 
 #include "header/meter/continuous_buffer.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class CONTINUOUS_BUFFER_TEST : public Test::Suite

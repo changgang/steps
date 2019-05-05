@@ -47,7 +47,7 @@ void FILEWIND_TEST::prepare_wind_speed_file(string file)
     if(not fid.is_open())
     {
         osstream<<"File '"<<file<<"' cannot be opened for preparing wind speed file. Check FILEWIND_TEST::"<<__FUNCTION__<<"()";
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     fid<<"TIME,SPEED,DIRECTION"<<endl;
@@ -101,51 +101,51 @@ void FILEWIND_TEST::test_get_wind_speed()
     fid<<"1.0, 1.1, 5.0"<<endl;
     fid<<"5.0, 0.7, 9.0"<<endl;*/
 
-    STEPS::TIME = -0.02;
+    default_toolkit.set_dynamic_simulation_time_in_s(-0.02);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-1.0*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 0.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(0.0);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-1.0*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 0.5;
+    default_toolkit.set_dynamic_simulation_time_in_s(0.5);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-1.05)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-1.05*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 0.7;
+    default_toolkit.set_dynamic_simulation_time_in_s(0.7);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-1.07)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-1.07*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 1.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(1.0);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-1.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-1.1*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 2.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(2.0);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-1.0*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 3.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(3.0);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-0.9)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-0.9*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 4.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(4.0);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-0.8)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-0.8*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 4.9;
+    default_toolkit.set_dynamic_simulation_time_in_s(4.9);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-0.71)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-0.71*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 5.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(5.0);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-0.7)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-0.7*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 6.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(6.0);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-0.7)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-0.7*vn)<FLOAT_EPSILON);
 
-    STEPS::TIME = 100.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(100.0);
     TEST_ASSERT(fabs(model->get_wind_speed_in_pu()-0.7)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_wind_speed_in_mps()-0.7*vn)<FLOAT_EPSILON);
 }
@@ -161,39 +161,39 @@ void FILEWIND_TEST::test_get_wind_direction()
     fid<<"1.0, 1.1, 5.0"<<endl;
     fid<<"5.0, 0.7, 9.0"<<endl;*/
 
-    STEPS::TIME = -0.02;
+    default_toolkit.set_dynamic_simulation_time_in_s(-0.02);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-0.0)<FLOAT_EPSILON);
 
-    STEPS::TIME = 0.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(0.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-0.0)<FLOAT_EPSILON);
 
-    STEPS::TIME = 0.5;
+    default_toolkit.set_dynamic_simulation_time_in_s(0.5);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-2.5)<FLOAT_EPSILON);
 
-    STEPS::TIME = 0.7;
+    default_toolkit.set_dynamic_simulation_time_in_s(0.7);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-3.5)<FLOAT_EPSILON);
 
-    STEPS::TIME = 1.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(1.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-5.0)<FLOAT_EPSILON);
 
-    STEPS::TIME = 2.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(2.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-6.0)<FLOAT_EPSILON);
 
-    STEPS::TIME = 3.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(3.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-7.0)<FLOAT_EPSILON);
 
-    STEPS::TIME = 4.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(4.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-8.0)<FLOAT_EPSILON);
 
-    STEPS::TIME = 4.9;
+    default_toolkit.set_dynamic_simulation_time_in_s(4.9);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-8.9)<FLOAT_EPSILON);
 
-    STEPS::TIME = 5.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(5.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-9.0)<FLOAT_EPSILON);
 
-    STEPS::TIME = 6.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(6.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-9.0)<FLOAT_EPSILON);
 
-    STEPS::TIME = 100.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(100.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-9.0)<FLOAT_EPSILON);
 }

@@ -42,7 +42,8 @@ double EXCITER_MODEL::get_initial_excitation_voltage_in_pu_from_sync_generator_m
 
 double EXCITER_MODEL::get_compensated_voltage_in_pu() const
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;

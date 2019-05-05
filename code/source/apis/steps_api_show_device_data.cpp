@@ -4,9 +4,10 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-void api_show_device_data(const char* device_type)
+void api_show_device_data(const char* device_type, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string DEVICE_TYPE = string2upper(device_type);
 
     if(DEVICE_TYPE == "ALL" or DEVICE_TYPE=="BUS")

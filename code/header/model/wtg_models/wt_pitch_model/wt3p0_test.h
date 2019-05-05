@@ -14,6 +14,7 @@
 
 #include "header/model/wtg_models/wt_pitch_model/wt3p0.h"
 #include "header/model/wtg_models/wt_pitch_model/wt_pitch_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class WT3P0_TEST : public WT_PITCH_MODEL_TEST

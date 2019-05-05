@@ -13,7 +13,7 @@
 #include "header/model/pvu_models/pv_panel_model/pv_panel_model_test.h"
 
 #include "header/model/pvu_models/pv_panel_model/pvp0.h"
-
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -28,6 +28,7 @@ class PVP0_TEST : public PV_PANEL_MODEL_TEST
         virtual void test_get_model_name();
         virtual void test_set_get_parameters();
     private:
+
 };
 
 #endif//PVP0_TEST_H

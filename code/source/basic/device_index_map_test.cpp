@@ -661,7 +661,7 @@ void DEVICE_INDEX_MAP_TEST::test_index_performance_with_many_buses()
 
     ostringstream osstream;
     osstream<<"now performing indexing";
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     for(size_t i=1; i<=MAX_TRANSFORMERS; ++i)
     {
         terminal = prepare_terminal(i,i+1,i+2);

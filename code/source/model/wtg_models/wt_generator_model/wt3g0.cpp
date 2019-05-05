@@ -225,13 +225,14 @@ bool WT3G0::setup_model_with_steps_string_vector(vector<string>& data)
     pllmin = get_double_data(data[i],"0.0");
 
     DEVICE_ID did = get_wt_generator_device_id(ibus, id);
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     WT_GENERATOR* gen = psdb.get_wt_generator(did);
     if(gen==NULL)
     {
         osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
                <<"No such wt generator exists in the power system database.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return is_successful;
     }
 
@@ -271,7 +272,8 @@ bool WT3G0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -360,7 +362,8 @@ void WT3G0::initialize()
             <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
             <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
             <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-    show_information_with_leading_time_stamp(oosstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(oosstream);
 }
 
 void WT3G0::run(DYNAMIC_MODE mode)
@@ -438,7 +441,8 @@ void WT3G0::run(DYNAMIC_MODE mode)
 
 complex<double> WT3G0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 
@@ -493,7 +497,8 @@ complex<double> WT3G0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
 complex<double> WT3G0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
@@ -527,7 +532,8 @@ void WT3G0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3G0::save()
@@ -741,7 +747,8 @@ complex<double> WT3G0::get_internal_voltage_in_pu_in_xy_axis()
     complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Z = get_source_impedance_in_pu_based_on_mbase();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 

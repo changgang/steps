@@ -19,10 +19,11 @@ void prepare_psse_sample_model()
 
 void prepare_psse_sample_model_buses()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
     BUS bus;
+    bus.set_toolkit(default_toolkit);
     bus.set_bus_number(101);
     bus.set_bus_name("NUC-A");
     bus.set_base_voltage_in_kV(21.6);
@@ -123,58 +124,65 @@ void prepare_psse_sample_model_buses()
 }
 void prepare_psse_sample_model_generators()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     GENERATOR gen;
+    gen.set_toolkit(default_toolkit);
     psdb.append_generator(gen);
 }
 
 void prepare_psse_sample_model_loads()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     LOAD load;
+    load.set_toolkit(default_toolkit);
     psdb.append_load(load);
 }
 
 void prepare_psse_sample_model_lines()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     LINE line;
+    line.set_toolkit(default_toolkit);
     psdb.append_line(line);
 }
 
 void prepare_psse_sample_model_transformers()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TRANSFORMER trans;
+    trans.set_toolkit(default_toolkit);
     psdb.append_transformer(trans);
 }
 
 void prepare_psse_sample_model_fixed_shunts()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     FIXED_SHUNT shunt;
+    shunt.set_toolkit(default_toolkit);
     psdb.append_fixed_shunt(shunt);
 }
 
 void prepare_psse_sample_model_switched_shunts()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     ostringstream osstream;
     osstream<<"Switched shunt is not supported.  No Switched shunt will be added to sample model of "<<psdb.get_system_name()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void prepare_psse_sample_model_hvdcs()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     HVDC hvdc;
+    hvdc.set_toolkit(default_toolkit);
     psdb.append_hvdc(hvdc);
 }
 
 void prepare_psse_sample_model_areas()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     AREA area;
+    area.set_toolkit(default_toolkit);
     area.set_area_number(1);
     area.set_area_name("AREA");
     psdb.append_area(area);
@@ -182,8 +190,9 @@ void prepare_psse_sample_model_areas()
 
 void prepare_psse_sample_model_zones()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     ZONE zone;
+    zone.set_toolkit(default_toolkit);
     zone.set_zone_number(1);
     zone.set_zone_name("ZONE");
     psdb.append_zone(zone);
@@ -191,8 +200,9 @@ void prepare_psse_sample_model_zones()
 
 void prepare_psse_sample_model_owners()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     OWNER owner;
+    owner.set_toolkit(default_toolkit);
     psdb.append_owner(owner);
 }
 

@@ -32,7 +32,6 @@ void BUS_INDEX_TEST::setup()
 void BUS_INDEX_TEST::tear_down()
 {
     bus_index.clear();
-
     show_test_end_information();
 }
 

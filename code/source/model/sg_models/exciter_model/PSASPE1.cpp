@@ -1,5 +1,6 @@
 #include "header/model/sg_models/exciter_model/PSASPE1.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -218,7 +219,8 @@ bool PSASPE1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -317,7 +319,8 @@ void PSASPE1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PSASPE1::save()

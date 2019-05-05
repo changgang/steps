@@ -36,6 +36,7 @@ BPA_IMEXPORTER::~BPA_IMEXPORTER()
 
 string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, string format)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     string data = trim_string(original_data);
     if(data.size()==0)
@@ -46,7 +47,7 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
     if(format.size()<2)
     {
         osstream<<"Warning. Invalid BPA format ("<<format<<") is given. No BPA data will be converted.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return "";
     }
 
@@ -72,7 +73,7 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
         return data;
 
     osstream<<"Warning. Unsupported format ("<<format<<") is given to format BPA data.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return original_data;
 }
 
@@ -93,7 +94,8 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
 {
     ostringstream osstream;
     osstream<<"Loading powerflow data from BPA file: "<<file;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
 
@@ -101,7 +103,7 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
     {
         osstream<<"No data in the given BPA file: "<<file<<endl
           <<"Please check if the file exists or not.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         return;
     }
@@ -120,7 +122,7 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
     */
 
     osstream<<"Done loading powerflow data.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
 }
 
@@ -132,6 +134,7 @@ void BPA_IMEXPORTER::load_sequence_data(string sq_source)
 
 void BPA_IMEXPORTER::load_powerflow_data_into_ram(string file)
 {
+    STEPS& toolkit = get_toolkit();
     dat_data_in_ram.clear();
 
     ifstream dat_file(file);
@@ -140,7 +143,7 @@ void BPA_IMEXPORTER::load_powerflow_data_into_ram(string file)
     {
         ostringstream osstream;
         osstream<<"BPA dat file '"<<file<<"' is not accessible. Loading BPA dat data is failed.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -409,12 +412,13 @@ size_t BPA_IMEXPORTER::get_data_version() const
 
 void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string file)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     FILE* fid = fopen(file.c_str(),"rt");
     if(fid==NULL)
     {
         osstream<<"Warning. Bus name and number pair file ("<<file<<") cannot be opened. No bus number will be updated.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     char buffer[1024];
@@ -439,7 +443,8 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
 
 void BPA_IMEXPORTER::load_area_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -457,6 +462,7 @@ void BPA_IMEXPORTER::load_area_data()
             if(area_number == 0)
             {
                 AREA area;
+                area.set_toolkit(toolkit);
                 area.set_area_name(area_name);
 
                 size_t area_count = psdb.get_area_count();
@@ -476,7 +482,8 @@ void BPA_IMEXPORTER::load_area_data()
 
 void BPA_IMEXPORTER::load_zone_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -498,6 +505,7 @@ void BPA_IMEXPORTER::load_zone_data()
             if(zone_number == 0)
             {
                 ZONE zone;
+                zone.set_toolkit(toolkit);
                 zone.set_zone_name(zone_name);
 
                 size_t zone_count = psdb.get_zone_count();
@@ -510,7 +518,8 @@ void BPA_IMEXPORTER::load_zone_data()
 
 void BPA_IMEXPORTER::load_owner_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -534,6 +543,7 @@ void BPA_IMEXPORTER::load_owner_data()
             if(owner_number == 0)
             {
                 OWNER owner;
+                owner.set_toolkit(toolkit);
                 owner.set_owner_name(owner_name);
 
                 size_t owner_count = psdb.get_owner_count();
@@ -546,7 +556,8 @@ void BPA_IMEXPORTER::load_owner_data()
 
 void BPA_IMEXPORTER::load_bus_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -562,6 +573,7 @@ void BPA_IMEXPORTER::load_bus_data()
            card_type=="BS")
         {
             BUS bus;
+            bus.set_toolkit(toolkit);
 
             size_t bus_count = psdb.get_bus_count();
             bus.set_bus_number(bus_count+1);
@@ -633,7 +645,8 @@ void BPA_IMEXPORTER::load_bus_data()
 
 void BPA_IMEXPORTER::set_bus_area()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -674,7 +687,8 @@ void BPA_IMEXPORTER::set_bus_area()
 
 void BPA_IMEXPORTER::set_area_swing_bus()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
     for(size_t i=0; i<n; ++i)
@@ -737,7 +751,8 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
 void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -753,6 +768,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
            card_type=="BS")
         {
             LOAD load;
+            load.set_toolkit(toolkit);
 
             data = grow_string_to_at_least_size(data, 80);
 
@@ -877,6 +893,8 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
                 if(S_p==0.0 and S_i==0.0)
                 {
                     FIXED_SHUNT fshunt;
+                    fshunt.set_toolkit(toolkit);
+
                     fshunt.set_shunt_bus(loads[i]->get_load_bus());
                     fshunt.set_identifier(loads[i]->get_identifier());
                     fshunt.set_status(true);
@@ -908,7 +926,8 @@ void BPA_IMEXPORTER::load_source_data()
 
 void BPA_IMEXPORTER::load_generator_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -941,6 +960,7 @@ void BPA_IMEXPORTER::load_generator_data()
             string v_schedule_str = data.substr(57, 4);
 
             GENERATOR generator;
+            generator.set_toolkit(toolkit);
 
             generator.set_generator_bus(bus_number);
             generator.set_bus_to_regulate(bus_number);
@@ -990,7 +1010,8 @@ void BPA_IMEXPORTER::load_source_common_data()
 }
 void BPA_IMEXPORTER::load_line_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -1044,6 +1065,7 @@ void BPA_IMEXPORTER::load_line_data()
             double length = get_double_data(length_str,"0.0");
 
             LINE line;
+            line.set_toolkit(toolkit);
 
             line.set_sending_side_bus(ibus);
             line.set_receiving_side_bus(jbus);
@@ -1161,6 +1183,7 @@ void BPA_IMEXPORTER::load_line_data()
             rate = sqrt(3.0)*rate*base_voltage;
 
             LINE line;
+            line.set_toolkit(toolkit);
 
             line.set_sending_side_bus(ibus);
             line.set_receiving_side_bus(jbus);
@@ -1272,7 +1295,8 @@ void BPA_IMEXPORTER::load_line_data()
 
 void BPA_IMEXPORTER::load_transformer_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -1347,6 +1371,7 @@ void BPA_IMEXPORTER::load_transformer_data()
             double phase_shift_between_primary_and_secondary = get_double_data(phase_shift_between_primary_and_secondary_str,"0.0");
 
             TRANSFORMER trans;
+            trans.set_toolkit(toolkit);
 
             trans.set_identifier(identifier);
             if(owner != 0)
@@ -1601,7 +1626,8 @@ void BPA_IMEXPORTER::load_transformer_data()
 
 void BPA_IMEXPORTER::load_hvdc_data()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
 
@@ -1691,6 +1717,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 from_converter_grid_bus_name_to_pole_number[bus_names_of_two_converters] = 1;
 
             HVDC hvdc;
+            hvdc.set_toolkit(toolkit);
 
             hvdc.set_converter_bus(RECTIFIER,rectifier_grid_side_bus);
             hvdc.set_converter_bus(INVERTER,inverter_grid_side_bus);
@@ -2073,13 +2100,14 @@ void BPA_IMEXPORTER::load_hvdc_data()
 void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream ofs(file);
     if(!ofs)
     {
         osstream<<"Warning. BPA dat file "<<file<<" cannot be opened for exporting powerflow data.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -2114,6 +2142,7 @@ void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedan
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string format) const
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     format = string2upper(format);
@@ -2121,7 +2150,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
     if(format.size()<2 or format.at(0)!='A')
     {
         osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable string data to bpa data.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return original_data;
     }
 
@@ -2143,7 +2172,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
     if(not is_valid_format)
     {
         osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable string data to bpa data.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return original_data;
     }
 
@@ -2158,7 +2187,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
     else
     {
         osstream<<"Warning. Longer string ("<<data<<") than format ("<<format<<") is detected. Information will be lost since tail will be trimmed.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         data = data.substr(0, n);
         return data;
@@ -2167,6 +2196,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string format) const
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     format = string2upper(format);
@@ -2174,7 +2204,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string
     if(format.size()<4 or format.at(0)!='F' or format.find(".")==string::npos)
     {
         osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable double data to bpa data.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
     bool is_valid_format = false;
@@ -2196,7 +2226,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string
     if(not is_valid_format)
     {
         osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable double data to bpa data.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
@@ -2272,7 +2302,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string
         else
         {
             osstream<<"Warning. Double data ("<<original_data<<") exceeds the limit of BPA format ("<<format<<").";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             if(original_data>0.0)
             {
                 return convert_data_into_bpa_format(maxvalue_without_dot, format);
@@ -2292,6 +2322,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(size_t original_data, string
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string format) const
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
 
     format = string2upper(format);
@@ -2299,7 +2330,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string fo
     if(format.size()<2 or format.at(0)!='I')
     {
         osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or size_t data to bpa data.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
@@ -2321,7 +2352,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string fo
     if(not is_valid_format)
     {
         osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or size_t data to bpa data.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
@@ -2333,7 +2364,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string fo
     if(original_data>maxvalue or original_data<minvalue)
     {
         osstream<<"Warning. Integer of size_t data ("<<original_data<<") (n="<<n<<") exceeds the limit ("<<minvalue<<", "<<maxvalue<<") of BPA format ("<<format<<").";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
@@ -2355,7 +2386,8 @@ string BPA_IMEXPORTER::export_case_data() const
 string BPA_IMEXPORTER::export_bus_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<BUS*> buses = psdb.get_all_buses();
     size_t n = buses.size();
@@ -2546,7 +2578,8 @@ string BPA_IMEXPORTER::export_bus_data() const
 string BPA_IMEXPORTER::export_line_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<LINE*> lines = psdb.get_all_lines();
     size_t n = lines.size();
@@ -2651,7 +2684,8 @@ string BPA_IMEXPORTER::export_line_data() const
 string BPA_IMEXPORTER::export_transformer_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
@@ -2678,7 +2712,8 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
     if(trans->is_three_winding_transformer())
         return export_three_winding_transformer(trans);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t primary_bus = trans->get_winding_bus(PRIMARY_SIDE);
     size_t secondary_bus = trans->get_winding_bus(SECONDARY_SIDE);
@@ -2869,7 +2904,8 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     if(trans->is_two_winding_transformer())
         return export_two_winding_transformer(trans);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string transformer_name=trans->get_transformer_name();
     string neutral_point_name="&" + transformer_name;
@@ -3067,7 +3103,8 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
 string BPA_IMEXPORTER::export_hvdc_data() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();

@@ -53,7 +53,9 @@ LOAD_TEST::LOAD_TEST()
 
 void LOAD_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    load.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
 
     BUS bus;
@@ -71,8 +73,8 @@ void LOAD_TEST::tear_down()
 {
     load.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -296,7 +298,7 @@ void LOAD_TEST::test_get_actual_total_load()
     load.set_nominal_constant_current_load_in_MVA(s_I);
     load.set_nominal_constant_impedance_load_in_MVA(s_Z);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(load.get_load_bus());
     bus->set_voltage_in_pu(0.5);
 
@@ -315,7 +317,7 @@ void LOAD_TEST::test_get_actual_constant_power_load()
 
     LOAD::set_voltage_threshold_of_constant_power_load_in_pu(0.7);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(load.get_load_bus());
     bus->set_voltage_in_pu(0.95);
 
@@ -337,7 +339,7 @@ void LOAD_TEST::test_get_actual_constant_current_load()
     complex<double> s_I(100.0, 50.0);
     load.set_nominal_constant_current_load_in_MVA(s_I);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(load.get_load_bus());
 
     bus->set_voltage_in_pu(0.95);
@@ -355,7 +357,7 @@ void LOAD_TEST::test_get_actual_constant_impedance_load()
     complex<double> s_Z(100.0, 50.0);
     load.set_nominal_constant_impedance_load_in_MVA(s_Z);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(load.get_load_bus());
 
     bus->set_voltage_in_pu(0.95);
@@ -373,7 +375,7 @@ void LOAD_TEST::test_set_get_load_model()
     load.set_identifier("1#");
     load.set_status(true);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.append_load(load);
 
     DEVICE_ID did = load.get_device_id();

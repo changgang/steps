@@ -38,7 +38,9 @@ STEPS_IMEXPORTER_TEST::STEPS_IMEXPORTER_TEST()
 
 void STEPS_IMEXPORTER_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    importer.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
     importer.load_powerflow_data("../../../bench/sample.raw");
@@ -46,8 +48,8 @@ void STEPS_IMEXPORTER_TEST::setup()
 
 void STEPS_IMEXPORTER_TEST::tear_down()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -56,7 +58,7 @@ void STEPS_IMEXPORTER_TEST::test_load_case_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(psdb.get_system_base_power_in_MVA()==100.0);
     TEST_ASSERT(importer.get_data_version()==31);
 }
@@ -65,7 +67,7 @@ void STEPS_IMEXPORTER_TEST::test_load_bus_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<BUS*> buses = psdb.get_all_buses();
     size_t n = buses.size();
 
@@ -121,7 +123,7 @@ void STEPS_IMEXPORTER_TEST::test_load_load_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<LOAD*> loads = psdb.get_all_loads();
     size_t n = loads.size();
 
@@ -175,7 +177,7 @@ void STEPS_IMEXPORTER_TEST::test_load_fixed_shunt_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
     size_t n = shunts.size();
 
@@ -220,7 +222,7 @@ void STEPS_IMEXPORTER_TEST::test_load_generator_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<GENERATOR*> generators = psdb.get_all_generators();
     size_t n = generators.size();
 
@@ -283,7 +285,7 @@ void STEPS_IMEXPORTER_TEST::test_load_wt_generator_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
     size_t n = wt_generators.size();
 
@@ -330,7 +332,7 @@ void STEPS_IMEXPORTER_TEST::test_load_line_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
     size_t n = lines.size();
 
@@ -396,7 +398,7 @@ void STEPS_IMEXPORTER_TEST::test_load_transformer_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<TRANSFORMER*> trans = psdb.get_all_transformers();
     size_t n = trans.size();
 
@@ -436,7 +438,7 @@ void STEPS_IMEXPORTER_TEST::test_load_area_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<AREA*> areas = psdb.get_all_areas();
     size_t n = areas.size();
 
@@ -501,7 +503,7 @@ void STEPS_IMEXPORTER_TEST::test_load_hvdc_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
 
@@ -515,7 +517,7 @@ void STEPS_IMEXPORTER_TEST::test_load_zone_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<ZONE*> zones = psdb.get_all_zones();
     size_t n = zones.size();
 
@@ -576,7 +578,7 @@ void STEPS_IMEXPORTER_TEST::test_load_owner_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<OWNER*> owners = psdb.get_all_owners();
     size_t n = owners.size();
 
@@ -631,9 +633,9 @@ void STEPS_IMEXPORTER_TEST::test_load_dynamic_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"STEPS_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
-    importer.load_powerflow_data("ieee9.raw");
-    importer.load_dynamic_data("ieee9.dyr");
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
+    importer.load_powerflow_data("../../../bench/ieee9.raw");
+    importer.load_dynamic_data("../../../bench/ieee9.dyr");
 }
 

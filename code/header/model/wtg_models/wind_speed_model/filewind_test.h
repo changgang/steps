@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/model/wtg_models/wind_speed_model/wind_speed_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class FILEWIND_TEST : public WIND_SPEED_MODEL_TEST

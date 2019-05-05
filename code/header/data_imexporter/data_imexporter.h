@@ -2,11 +2,12 @@
 #define DATA_IMEXPORTER_H
 
 #include "header/power_system_database.h"
+#include "header/basic/base.h"
 #include <string>
 #include <fstream>
 
 using namespace std;
-class DATA_IMEXPORTER
+class DATA_IMEXPORTER : public BASE
 {
     public:
         DATA_IMEXPORTER();
@@ -25,6 +26,9 @@ class DATA_IMEXPORTER
         virtual void export_dynamic_data(string file) = 0;
         virtual void export_sequence_data(string file) = 0;
     private:
+        virtual bool is_valid() const;
+        virtual void check();
+        virtual void clear();
         double base_frequency_in_Hz;
         bool export_zero_impedance_line;
 };

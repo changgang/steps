@@ -53,7 +53,6 @@ void ESTR0_TEST::setup()
 void ESTR0_TEST::tear_down()
 {
     ENERGY_STORAGE_MODEL_TEST::tear_down();
-
     show_test_end_information();
 }
 

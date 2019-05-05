@@ -119,7 +119,7 @@ void POWERFLOW_CASE_GENERATOR_TEST::test_generate_load_scale_randoms()
     generator->set_power_system_database_maximum_bus_number(100);
     generator->set_uniform_load_scale(0.2);
     generator->set_random_load_scale(0.05);
-    generator->set_base_powerflow_data_filename("ieee9.raw");
+    generator->set_base_powerflow_data_filename("../../../bench/ieee9.raw");
 
     vector< vector<double> > cases = generator->generate_load_scale_randoms();
     for(size_t i=0; i<cases.size(); ++i)
@@ -130,7 +130,7 @@ void POWERFLOW_CASE_GENERATOR_TEST::test_generate_load_scale_randoms()
             osstream<<rands[j]<<", ";
         osstream<<endl;
     }
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void POWERFLOW_CASE_GENERATOR_TEST::test_generate_cases()

@@ -82,6 +82,7 @@ double PV_UNIT::get_rated_power_per_pv_unit_in_MW() const
 void PV_UNIT::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
 
     if(get_status()==false)
         return;
@@ -98,7 +99,7 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
             if(conv==NULL)
             {
                 osstream<<"Error. No PV_CONVERTER_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
             conv->initialize();
@@ -109,7 +110,7 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
             if(panel==NULL)
             {
                 osstream<<"Error. No PV_PANEL_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
             panel->initialize();
@@ -140,6 +141,7 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
 
 void PV_UNIT::report() const
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
@@ -150,7 +152,7 @@ void PV_UNIT::report() const
       <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
       <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar"<<endl
       <<"Zsource = "<<setw(8)<<setprecision(6)<<fixed<<get_source_impedance_in_pu();
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PV_UNIT::save() const
@@ -192,7 +194,8 @@ void PV_UNIT::set_model(const MODEL* model)
 
     ostringstream osstream;
     osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up pv unit-related model.";
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
@@ -201,10 +204,11 @@ void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
     if(model==NULL)
         return;
 
+    STEPS& toolkit = get_toolkit();
     if(model->get_model_type()!="PV UNIT")
     {
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up pv converter model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -225,7 +229,7 @@ void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
 
     if(new_model!=NULL)
     {
-
+        new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         pv_converter_model = new_model;
 
@@ -236,7 +240,7 @@ void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append pv converter model of "<<get_device_name()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -325,6 +329,8 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& gen)
     if(this==(&gen)) return *this;
 
     clear();
+
+    set_toolkit(gen.get_toolkit());
 
     set_unit_bus(gen.get_unit_bus());
     set_identifier(gen.get_identifier());

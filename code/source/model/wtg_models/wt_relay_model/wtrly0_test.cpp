@@ -116,5 +116,5 @@ void WTRLY0_TEST::test_initialize()
     WTRLY0* model = (WTRLY0*) get_test_wt_relay_model();
     model->initialize();
     osstream<<"WTRLY0 model after initialized:"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }

@@ -41,7 +41,8 @@ BPA_IMEXPORTER_TEST::BPA_IMEXPORTER_TEST()
 
 void BPA_IMEXPORTER_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    importer.set_toolkit(default_toolkit);
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100000);
 
     importer.load_powerflow_data("山东电网简化.dat");
@@ -49,8 +50,8 @@ void BPA_IMEXPORTER_TEST::setup()
 
 void BPA_IMEXPORTER_TEST::tear_down()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -65,7 +66,7 @@ void BPA_IMEXPORTER_TEST::test_load_case_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(psdb.get_system_base_power_in_MVA()==100.0);
     TEST_ASSERT(importer.get_data_version()==31);
 }
@@ -77,7 +78,7 @@ void BPA_IMEXPORTER_TEST::test_load_zone_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<ZONE*> zones = psdb.get_all_zones();
 
     osstream<<"Zone count: "<<zones.size()<<endl;
@@ -85,7 +86,7 @@ void BPA_IMEXPORTER_TEST::test_load_zone_data()
     for(size_t i=0; i!=n; ++i)
         osstream<<zones[i]->get_zone_name()<<", "<<zones[i]->get_zone_number()<<endl;
 
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
 void BPA_IMEXPORTER_TEST::test_load_owner_data()
 {
@@ -93,14 +94,14 @@ void BPA_IMEXPORTER_TEST::test_load_owner_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<OWNER*> owners = psdb.get_all_owners();
 
     osstream<<"Owner count: "<<owners.size()<<endl;
     size_t n = owners.size();
     for(size_t i=0; i!=n; ++i)
         osstream<<owners[i]->get_owner_name()<<", "<<owners[i]->get_owner_number()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
 void BPA_IMEXPORTER_TEST::test_load_bus_data()
 {
@@ -108,11 +109,11 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<BUS*> buses = psdb.get_all_buses();
 
     osstream<<"Bus count: "<<buses.size()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     size_t n = buses.size();
     for(size_t i=0; i!=n; ++i)
         buses[i]->report();
@@ -123,14 +124,14 @@ void BPA_IMEXPORTER_TEST::test_load_area_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<AREA*> areas = psdb.get_all_areas();
 
     osstream<<"Area count: "<<areas.size()<<endl;
     size_t n = areas.size();
     for(size_t i=0; i!=n; ++i)
         osstream<<areas[i]->get_area_name()<<", "<<areas[i]->get_area_number()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
 
 /*
@@ -195,11 +196,11 @@ void BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<LOAD*> loads = psdb.get_all_loads();
 
     osstream<<"Load count: "<<loads.size()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     size_t n = loads.size();
     for(size_t i=0; i!=n; ++i)
         loads[i]->report();
@@ -207,7 +208,7 @@ void BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data()
     vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
 
     osstream<<"Fixed shunt count: "<<fshunts.size()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     n = fshunts.size();
     for(size_t i=0; i!=n; ++i)
         fshunts[i]->report();
@@ -224,11 +225,11 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<GENERATOR*> generators = psdb.get_all_generators();
 
     osstream<<"Generator count: "<<generators.size()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
     size_t n = generators.size();
     for(size_t i=0; i!=n; ++i)
@@ -297,7 +298,7 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
     size_t n = wt_generators.size();
 
@@ -346,11 +347,11 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
     osstream<<"Line count: "<<lines.size()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     size_t n = lines.size();
     for(size_t i=0; i!=n; ++i)
         lines[i]->report();
@@ -421,11 +422,11 @@ void BPA_IMEXPORTER_TEST::test_load_transformer_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<TRANSFORMER*> trans = psdb.get_all_transformers();
 
     osstream<<"Transformer count: "<<trans.size()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     size_t n = trans.size();
     for(size_t i=0; i!=n; ++i)
         trans[i]->report();
@@ -437,7 +438,7 @@ void BPA_IMEXPORTER_TEST::test_load_hvdc_data()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
 
@@ -499,10 +500,11 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
     //importer.load_powerflow_data("")
     PSSE_IMEXPORTER psse_importer;
+    psse_importer.set_toolkit(default_toolkit);
     psse_importer.load_powerflow_data("../../../bench/bench_yunnan.raw");
 
     //psse_importer.load_powerflow_data("../../../bench/sample.raw");
@@ -512,8 +514,8 @@ void BPA_IMEXPORTER_TEST::test_export_powerflow_data()
     importer.export_powerflow_data("test_log/export_sd_model_with_BPA_IMEXPORTER.dat");
     psse_importer.export_powerflow_data("test_log/export_sd_model_with_PSSE_IMEXPORTER.raw");
 
-    psdb.clear_database();
-    importer.load_powerflow_data("云南网500kV简化网络.dat");
+    psdb.clear();
+    importer.load_powerflow_data("../../../云南网500kV简化网络.dat");
     importer.export_powerflow_data("test_log/export_yn_model_with_BPA_IMEXPORTER.dat");
     psse_importer.export_powerflow_data("test_log/export_yn_model_with_PSSE_IMEXPORTER.raw");
 

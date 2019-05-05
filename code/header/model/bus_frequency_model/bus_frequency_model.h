@@ -5,7 +5,7 @@
 
 class BUS;
 
-class BUS_FREQUENCY_MODEL
+class BUS_FREQUENCY_MODEL : public BASE
 {
     public:
         BUS_FREQUENCY_MODEL();

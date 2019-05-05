@@ -10,9 +10,10 @@ using namespace std;
 
 void BPA_IMEXPORTER::load_dynamic_data(string file)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<"Loading dynamic data from BPA file: "<<file;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     load_dynamic_data_into_ram(file);
 
@@ -20,7 +21,7 @@ void BPA_IMEXPORTER::load_dynamic_data(string file)
     {
         osstream<<"No data in the given BPA file: "<<file<<endl
           <<"Please check if the file exist or not.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
 
         return;
     }
@@ -28,11 +29,12 @@ void BPA_IMEXPORTER::load_dynamic_data(string file)
 
 
     osstream<<"Done loading dynamic data.";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void BPA_IMEXPORTER::load_dynamic_data_into_ram(string file)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     swi_data_in_ram.clear();
 
@@ -42,7 +44,7 @@ void BPA_IMEXPORTER::load_dynamic_data_into_ram(string file)
     {
         ostringstream osstream;
         osstream<<"BPA swi file '"<<file<<"' is not accessible. Loading BPA swi data is failed.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -60,7 +62,7 @@ void BPA_IMEXPORTER::load_dynamic_data_into_ram(string file)
     {
         osstream<<swi_data_in_ram[i]<<endl;
     }
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 
@@ -432,14 +434,15 @@ void BPA_IMEXPORTER::load_one_model(string data)
 {
     ostringstream osstream;
     osstream<<"Now go parsing dynamic data: "<<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     string model_name = get_dynamic_model_name(data);
     if(model_name=="")
         return;
 
     osstream<<"Warning. Dynamic model '"<<model_name<<"' is not supported. Check line "<<__LINE__<<" in file "<<__FILE__<<".";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
 }
 string BPA_IMEXPORTER::get_dynamic_model_name(string data)
@@ -591,8 +594,8 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
        model_name!="CIM5AL" and model_name!="CIM5AR" and model_name!="CIM5ZN" and
        model_name!="CIM5BL")
         return loads;
-
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<string> swidata = split_string(data,",");
     if(swidata.size()<9)

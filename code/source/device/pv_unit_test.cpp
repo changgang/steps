@@ -27,7 +27,9 @@ PV_UNIT_TEST::PV_UNIT_TEST()
 
 void PV_UNIT_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    pv_unit.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
@@ -47,8 +49,8 @@ void PV_UNIT_TEST::tear_down()
 {
     pv_unit.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -57,7 +59,7 @@ void PV_UNIT_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PV_UNIT_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     TEST_ASSERT(pv_unit.get_unit_bus()==0);
     TEST_ASSERT(pv_unit.get_identifier()=="");

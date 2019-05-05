@@ -12,6 +12,7 @@
 
 #include "header/model/wtg_models/wtg_model_test.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class WT_TURBINE_MODEL_TEST : public WTG_MODEL_TEST
@@ -21,7 +22,6 @@ class WT_TURBINE_MODEL_TEST : public WTG_MODEL_TEST
     protected:
         virtual void setup();
         virtual void tear_down();
-
     protected:
         void test_get_model_type();
         void test_set_get_damping();

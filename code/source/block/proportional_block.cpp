@@ -1,5 +1,6 @@
 #include "header/block/proportional_block.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 
 PROPORTIONAL_BLOCK::PROPORTIONAL_BLOCK()
@@ -18,7 +19,7 @@ void PROPORTIONAL_BLOCK::set_K(double k)
     {
         ostringstream osstream;
         osstream<<"Error. Zero amplifier K is not allowed for PROPORTIONAL_BLOCK.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }*/
 
@@ -64,13 +65,15 @@ void PROPORTIONAL_BLOCK::initialize()
         if(y>vmax)
         {
             osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(osstream);
+            STEPS& toolkit = get_toolkit();
+            toolkit.show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(y<vmin)
         {
             osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds lower limit bound ("<<vmin<<").";
-            show_information_with_leading_time_stamp(osstream);
+            STEPS& toolkit = get_toolkit();
+            toolkit.show_information_with_leading_time_stamp(osstream);
             return;
         }
     }

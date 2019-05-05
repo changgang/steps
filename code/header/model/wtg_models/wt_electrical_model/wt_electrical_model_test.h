@@ -13,6 +13,7 @@
 #include "header/model/wtg_models/wtg_model_test.h"
 
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class WT_ELECTRICAL_MODEL_TEST : public WTG_MODEL_TEST

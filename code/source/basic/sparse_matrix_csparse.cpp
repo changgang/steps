@@ -318,7 +318,7 @@ int SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
         {
             ostringstream osstream;
             osstream<<"Error. Sparse matrix not in compressed form when getting entry index.\nINDEX_NOT_EXIST will be returned.";
-            show_information_with_leading_time_stamp(osstream);
+            show_information_with_leading_time_stamp_with_default_toolkit(osstream);
             return INDEX_NOT_EXIST;
         }
 
@@ -416,7 +416,7 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
     if (!CS_CSC (matrix_real))/* check inputs */
     {
         snprintf(buffer, 256, "No real matrix is set for LU factorization. Return. (line %d in file %s)\n",__LINE__,__FILE__);
-        show_information_with_leading_time_stamp(buffer);
+        show_information_with_leading_time_stamp_with_default_toolkit(buffer);
         return;
     }
     n = matrix_real->n ;
@@ -426,7 +426,7 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
     if(ok!=1)
     {
         snprintf(buffer, 256, "ALERT!  LU factorization for sparse matrix(CSparse) failed! (line %d in file %s)\n",__LINE__,__FILE__);
-        show_information_with_leading_time_stamp(buffer);
+        show_information_with_leading_time_stamp_with_default_toolkit(buffer);
         return;
     }
     // reset working space
@@ -435,7 +435,7 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
     if(LU_workspace == NULL)
     {
         snprintf(buffer, 256, "Global variable LU_workspace was not successfully set. No workspace for LU solution. (line %d in file %s)\n",__LINE__,__FILE__);
-        show_information_with_leading_time_stamp(buffer);
+        show_information_with_leading_time_stamp_with_default_toolkit(buffer);
     }
 
     update_clock_when_LU_factorization_is_performed(); // mark the clock when finish the LU decomposition
@@ -462,7 +462,7 @@ void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
     if(bb==NULL)
     {
         osstream<<"Error. Failed to allocate temporary array for solving Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
-        show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
         return; // failed to allocate array bb
     }
@@ -474,7 +474,7 @@ void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
     if(OK != 1)
     {
         osstream<<"Error. Failed to solve Lx=b.(function "<<__FUNCTION__<<" in file "<<__FILE__;
-        show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         return; // failed to solve equation
     }
     // now solution is OK
@@ -496,7 +496,7 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
     {
         snprintf(cbuffer, 1000, "Error. Failed to allocate temporary array for solving xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
         buffer = cbuffer;
-        show_information_with_leading_time_stamp(buffer);
+        show_information_with_leading_time_stamp_with_default_toolkit(buffer);
         return; // failed to allocate array bb
     }
     for(size_t i=0; i!=n; ++i) LU_workspace[i]=b[i]; // set bb
@@ -507,7 +507,7 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
     {
         snprintf(cbuffer, 1000, "Error. Failed to solve xU=b.(function %s in file %s)\n",__FUNCTION__,__FILE__);
         buffer = cbuffer;
-        show_information_with_leading_time_stamp(buffer);
+        show_information_with_leading_time_stamp_with_default_toolkit(buffer);
         return; // failed to solve equation
     }
     // now solution is OK
@@ -527,10 +527,10 @@ void SPARSE_MATRIX_CSPARSE::report_brief() const
     int i=0, j=0, k=0;
 
     buffer="matrix entries:\n";
-    show_information_with_leading_time_stamp(buffer);
+    show_information_with_leading_time_stamp_with_default_toolkit(buffer);
 
 	snprintf(cbuffer, 1000, "row   column     real       imaginary\n");
-    show_information_with_leading_time_stamp(cbuffer);
+    show_information_with_leading_time_stamp_with_default_toolkit(cbuffer);
 
     int n = get_matrix_size();
     for(j=0;j!=n;++j)
@@ -545,7 +545,7 @@ void SPARSE_MATRIX_CSPARSE::report_brief() const
                 snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f, % 10.6f\n",i,j,matrix_real->x[k],matrix_imag->x[k]);
 
             buffer = cbuffer;
-            show_information_with_leading_time_stamp(buffer);
+            show_information_with_leading_time_stamp_with_default_toolkit(buffer);
         }
     }
 }
@@ -567,7 +567,7 @@ void SPARSE_MATRIX_CSPARSE::save_matrix_to_file(string filename) const
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving sparse matrix(CSparse) contents."<<endl
           <<"No sparse matrix(CSparse) will be exported.";
-        show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         return;
     }
 

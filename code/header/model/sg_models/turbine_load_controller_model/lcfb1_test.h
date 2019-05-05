@@ -11,9 +11,9 @@
 #endif
 
 #include "header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.h"
-
 #include "header/model/sg_models/turbine_load_controller_model/lcfb1.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class LCFB1_TEST : public TURBINE_LOAD_CONTROLLER_MODEL_TEST
@@ -27,6 +27,7 @@ class LCFB1_TEST : public TURBINE_LOAD_CONTROLLER_MODEL_TEST
         void test_get_model_name();
         void test_set_get_parameters();
     private:
+
 };
 
 #endif//LCFB1_TEST_H

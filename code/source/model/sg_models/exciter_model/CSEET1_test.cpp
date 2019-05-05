@@ -155,11 +155,11 @@ void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITH_BRUSH_and_feedb
     model->set_exciter_brush(WITH_BRUSH);
     model->set_feedback_slot(AT_VOLTAGE_ERROR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_1.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_1.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITH_BRUSH_and_feedbacker_AT_REGULATOR()
 {
@@ -171,11 +171,11 @@ void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITH_BRUSH_and_feedb
     model->set_exciter_brush(WITH_BRUSH);
     model->set_feedback_slot(AT_REGULATOR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_2.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_2.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITHOUT_BRUSH_and_feedbacker_AT_VOLTAGE_ERROR()
 {
@@ -187,11 +187,11 @@ void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITHOUT_BRUSH_and_fe
     model->set_exciter_brush(WITHOUT_BRUSH);
     model->set_feedback_slot(AT_VOLTAGE_ERROR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_3.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_3.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITHOUT_BRUSH_and_feedbacker_AT_REGULATOR()
 {
@@ -203,11 +203,11 @@ void CSEET1_TEST::test_step_response_SEPARATE_EXCIATION_and_WITHOUT_BRUSH_and_fe
     model->set_exciter_brush(WITHOUT_BRUSH);
     model->set_feedback_slot(AT_REGULATOR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_4.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_4.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITH_BRUSH_and_feedbacker_AT_VOLTAGE_ERROR()
 {
@@ -219,11 +219,11 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITH_BRUSH_and_feedbacke
     model->set_exciter_brush(WITH_BRUSH);
     model->set_feedback_slot(AT_VOLTAGE_ERROR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_5.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_5.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITH_BRUSH_and_feedbacker_AT_REGULATOR()
 {
@@ -235,11 +235,11 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITH_BRUSH_and_feedbacke
     model->set_exciter_brush(WITH_BRUSH);
     model->set_feedback_slot(AT_REGULATOR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_6.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_6.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITHOUT_BRUSH_and_feedbacker_AT_VOLTAGE_ERROR()
 {
@@ -251,11 +251,11 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITHOUT_BRUSH_and_feedba
     model->set_exciter_brush(WITHOUT_BRUSH);
     model->set_feedback_slot(AT_VOLTAGE_ERROR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_7.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_7.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITHOUT_BRUSH_and_feedbacker_AT_REGULATOR()
 {
@@ -267,9 +267,9 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITHOUT_BRUSH_and_feedba
     model->set_exciter_brush(WITHOUT_BRUSH);
     model->set_feedback_slot(AT_REGULATOR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_8.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET1_model_8.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }

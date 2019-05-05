@@ -41,7 +41,6 @@ class PV_ELECTRICAL_MODEL_TEST : public PVU_MODEL_TEST
         void test_step_response_with_voltage_drop();
         void test_step_response_with_frequency_drop();
 
-
         virtual void test_get_model_name() = 0;
         virtual void test_set_get_parameters() = 0;
         virtual void test_initialize() = 0;

@@ -2,69 +2,105 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func)
+
+size_t api_generate_new_toolkit()
 {
+    size_t index = generate_new_toolkit();
+    return index;
+}
+
+void api_initialize_toolkit(size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    toolkit.clear();
+}
+
+STEPS& get_toolkit_of_index(size_t index)
+{
+    STEPS* toolkit = NULL;
+    if(index!=INDEX_NOT_EXIST and index<MAX_TOOLKIT_SIZE)
+        toolkit = toolkits[index];
+
+    if(toolkit==NULL)
+    {
+        ostringstream osstream;
+        osstream<<"Fatal error. No STEPS toolkit is found with "<<__FUNCTION__<<"().\n"
+                <<"index is "<<index<<" which should be in range of (0, "<<MAX_TOOLKIT_SIZE-1<<").";
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+    }
+    return (*toolkit);
+}
+
+void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Side '%s' is not supported for %s with api %s.\n"
              "Nothing will be chaged.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              side.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func)
+void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for %s with api %s.\n"
              "Nothing will be chaged.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              par_name.c_str(), (did.get_device_name()).c_str(), api_func.c_str());
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void show_parameter_not_supported_with_api(string par_name, string api_func)
+void show_parameter_not_supported_with_api(string par_name, string api_func, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported with api %s.\n"
              "Nothing will be chaged.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              par_name.c_str(), api_func.c_str());
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void show_device_not_exist_with_api(DEVICE_ID did, string api_func)
+void show_device_not_exist_with_api(DEVICE_ID did, string api_func, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Device %s does not exist in database with api %s.\n"
              "Nothing will be chaged.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              (did.get_device_name()).c_str(), api_func.c_str());
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
 
-void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, size_t no, string api_func)
+void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, size_t no, string api_func, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for Area/Zone/Owner %lu with api %s.\n"
              "Nothing will be chaged.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              par_name.c_str(), no, api_func.c_str());
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void show_area_zone_owner_not_exist_with_api(size_t no, string api_func)
+void show_area_zone_owner_not_exist_with_api(size_t no, string api_func, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Area/Zone/Owner %lu does not exist in database with api %s.\n"
              "Nothing will be chaged.\n"
              "If return value is expected, 0/0.0/False/EMPTY STRING will be returned",
              no, api_func.c_str());
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-size_t get_owner_of_device(DEVICE* device, string parameter_name)
+size_t get_owner_of_device(DEVICE* device, string parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="OWNER1")
     {
@@ -89,8 +125,9 @@ size_t get_owner_of_device(DEVICE* device, string parameter_name)
     return 0;
 }
 
-void set_owner_of_device(DEVICE* device, string parameter_name, int value)
+void set_owner_of_device(DEVICE* device, string parameter_name, int value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     if(PARAMETER_NAME=="OWNER1")
@@ -100,7 +137,7 @@ void set_owner_of_device(DEVICE* device, string parameter_name, int value)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 1 already set and will not be set again for %s.",
                      (device->get_device_name()).c_str());
-            show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
         OWNERSHIP os;
@@ -116,7 +153,7 @@ void set_owner_of_device(DEVICE* device, string parameter_name, int value)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 2 already set and will not be set again for %s.",
                      (device->get_device_name()).c_str());
-            show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
         OWNERSHIP os = device->get_ownership();
@@ -132,7 +169,7 @@ void set_owner_of_device(DEVICE* device, string parameter_name, int value)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 3 already set and will not be set again for %s.",
                      (device->get_device_name()).c_str());
-            show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
         OWNERSHIP os = device->get_ownership();
@@ -148,7 +185,7 @@ void set_owner_of_device(DEVICE* device, string parameter_name, int value)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 4 already set and will not be set again for %s.",
                      (device->get_device_name()).c_str());
-            show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
         OWNERSHIP os = device->get_ownership();
@@ -160,8 +197,9 @@ void set_owner_of_device(DEVICE* device, string parameter_name, int value)
     return;
 }
 
-double get_owner_fraction_of_device(DEVICE* device, string parameter_name)
+double get_owner_fraction_of_device(DEVICE* device, string parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="FRAC1")
     {
@@ -186,8 +224,9 @@ double get_owner_fraction_of_device(DEVICE* device, string parameter_name)
     return 0;
 }
 
-void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double value)
+void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     if(PARAMETER_NAME=="FRAC1")
@@ -197,7 +236,7 @@ void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double 
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 1 does not exist and owner fraction will not be set for %s.",
                      (device->get_device_name()).c_str());
-            show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
         OWNERSHIP os = device->get_ownership();
@@ -215,7 +254,7 @@ void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double 
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 2 does not exist and owner fraction will not be set for %s.",
                      (device->get_device_name()).c_str());
-            show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
         OWNERSHIP os = device->get_ownership();
@@ -233,7 +272,7 @@ void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double 
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 3 does not exist and owner fraction will not be set for %s.",
                      (device->get_device_name()).c_str());
-            show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
         OWNERSHIP os = device->get_ownership();
@@ -251,7 +290,7 @@ void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double 
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Owner 4 does not exist and owner fraction will not be set for %s.",
                      (device->get_device_name()).c_str());
-            show_information_with_leading_time_stamp(buffer);
+            toolkit.show_information_with_leading_time_stamp(buffer);
             return;
         }
         OWNERSHIP os = device->get_ownership();
@@ -264,34 +303,25 @@ void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double 
     show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, device->get_device_id(), __FUNCTION__);
 }
 
-
-void api_initialize_package()
+size_t api_get_allowed_maximum_bus_number(size_t toolkit_index)
 {
-    initialize_simulator();
-}
-
-void api_initialize_powerflow_solver()
-{
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    solver.initialize_powerflow_solver();
-}
-
-size_t api_get_allowed_maximum_bus_number()
-{
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_allowed_max_bus_number();
 }
 
-void api_set_allowed_maximum_bus_number(size_t max_bus)
+void api_set_allowed_maximum_bus_number(size_t max_bus, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(max_bus);
 }
 
 
-size_t api_get_device_capacity(const char* device_type)
+size_t api_get_device_capacity(const char* device_type, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string DEVICE_TYPE = string2upper(device_type);
 
     if(DEVICE_TYPE=="BUS")
@@ -322,28 +352,32 @@ size_t api_get_device_capacity(const char* device_type)
 }
 
 
-size_t api_get_area_capacity()
+size_t api_get_area_capacity(size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_area_capacity();
 }
 
-size_t api_get_zone_capacity()
+size_t api_get_zone_capacity(size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_zone_capacity();
 }
 
-size_t api_get_owner_capacity()
+size_t api_get_owner_capacity(size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_owner_capacity();
 }
 
 
-void api_set_device_capacity(const char* device_type, size_t cap)
+void api_set_device_capacity(const char* device_type, size_t cap, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string DEVICE_TYPE = string2upper(device_type);
 
     if(DEVICE_TYPE=="BUS")
@@ -372,39 +406,44 @@ void api_set_device_capacity(const char* device_type, size_t cap)
     show_parameter_not_supported_with_api(DEVICE_TYPE, __FUNCTION__);
 }
 
-void api_set_area_capacity(size_t cap)
+void api_set_area_capacity(size_t cap, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.set_area_capacity(cap);
 }
 
-void api_set_zone_capacity(size_t cap)
+void api_set_zone_capacity(size_t cap, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.set_zone_capacity(cap);
 }
 
-void api_set_owner_capacity(size_t cap)
+void api_set_owner_capacity(size_t cap, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.set_owner_capacity(cap);
 }
 
-void api_clear_package()
+void api_clear_package(size_t toolkit_index)
 {
-    get_default_power_system_database().clear_database();
-    get_default_dynamic_simulator().clear();
-
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    toolkit.get_power_system_database().clear();
+    toolkit.get_dynamic_simulator().clear();
 }
 
-void api_terminate_package()
+void api_terminate_package(size_t toolkit_index)
 {
-    terminate_simulator();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    toolkit.terminate();
 }
 
-double api_get_package_float_data(char* parameter_name)
+double api_get_package_float_data(char* parameter_name, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="SBASE")
@@ -414,9 +453,10 @@ double api_get_package_float_data(char* parameter_name)
     return 0.0;
 }
 
-void api_set_package_float_data(char* parameter_name, double value)
+void api_set_package_float_data(char* parameter_name, double value, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="SBASE")
@@ -426,30 +466,32 @@ void api_set_package_float_data(char* parameter_name, double value)
 }
 
 
-const char* api_get_package_string_data(char* parameter_name)
+const char* api_get_package_string_data(char* parameter_name, size_t toolkit_index)
 {
-    snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="CASE INFORMATION")
     {
-        snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_information()).c_str());
-        return STEPS::steps_char_buffer;
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_information()).c_str());
+        return toolkit.steps_char_buffer;
     }
     if(PARAMETER_NAME=="CASE ADDITIONAL INFORMATION")
     {
-        snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_additional_information()).c_str());
-        return STEPS::steps_char_buffer;
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_additional_information()).c_str());
+        return toolkit.steps_char_buffer;
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
-    return STEPS::steps_char_buffer;
+    return toolkit.steps_char_buffer;
 }
 
-void api_set_package_string_data(char* parameter_name, char* value)
+void api_set_package_string_data(char* parameter_name, char* value, size_t toolkit_index)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="CASE INFORMATION")

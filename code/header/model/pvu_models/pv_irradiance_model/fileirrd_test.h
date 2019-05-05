@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/model/pvu_models/pv_irradiance_model/pv_irradiance_model_test.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ class FILEIRRAD_TEST : public PV_IRRADIANCE_MODEL_TEST
         virtual void test_get_solar_irradiance_direction();
     private:
         void prepare_solar_irradiance_file(string file);
+
 };
 
 #endif//FILEIRRAD_TEST_H

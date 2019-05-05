@@ -19,6 +19,9 @@ JACOBIAN_BUILDER_TEST::JACOBIAN_BUILDER_TEST()
 
 void JACOBIAN_BUILDER_TEST::setup()
 {
+    network_matrix.set_toolkit(default_toolkit);
+    jacobian_builder.set_toolkit(default_toolkit);
+
     jacobian_builder.set_network_matrix(network_matrix);
 
     prepare_Arthur_R_Bergen_3_bus_model();
@@ -26,9 +29,9 @@ void JACOBIAN_BUILDER_TEST::setup()
 
 void JACOBIAN_BUILDER_TEST::tear_down()
 {
-    network_matrix.clear_database();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    network_matrix.clear();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -43,7 +46,7 @@ void JACOBIAN_BUILDER_TEST::test_form_and_show_seprate_jacobians()
 
     ostringstream osstream;
     osstream<<"Jacobian with initial voltage from Arthur R. Arthur_R_Bergen";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     jacobian_builder.show_seprate_jacobians();
 }
 
@@ -56,7 +59,7 @@ void JACOBIAN_BUILDER_TEST::test_update_seprate_jacobians()
 
     jacobian_builder.build_seprate_jacobians();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus;
     bus = psdb.get_bus(2);
     bus->set_angle_in_deg(-2.9395);
@@ -65,7 +68,7 @@ void JACOBIAN_BUILDER_TEST::test_update_seprate_jacobians()
     bus->set_angle_in_deg(-9.51111);
 
     osstream<<"Jacobian with voltage of the first iteration from Arthur R. Arthur_R_Bergen";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     jacobian_builder.update_seprate_jacobians();
     jacobian_builder.show_seprate_jacobians();
 }
@@ -92,11 +95,11 @@ void JACOBIAN_BUILDER_TEST::test_get_full_jacobian_for_coupled_P_and_Q_equations
 
 
     osstream<<"Full Jacobian with initial voltage from Arthur R. Arthur_R_Bergen";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     J.report_brief();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus;
     bus = psdb.get_bus(2);
     bus->set_angle_in_deg(-2.9395);
@@ -109,7 +112,7 @@ void JACOBIAN_BUILDER_TEST::test_get_full_jacobian_for_coupled_P_and_Q_equations
     J = jacobian_builder.get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses, internal_Q_equation_buses);
 
     osstream<<"Full Jacobian with voltage of the first iteration from Arthur R. Arthur_R_Bergen";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     J.report_brief();
 }
@@ -133,7 +136,7 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_P_equations()
 
 
     osstream<<"Decoupled B Jacobian for P equations from Arthur R. Arthur_R_Bergen";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     B.report_brief();
 }
@@ -157,7 +160,7 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_Q_equations()
 
 
     osstream<<"Decoupled B Jacobian for Q equations from Arthur R. Arthur_R_Bergen";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     B.report_brief();
 }

@@ -2,10 +2,11 @@
 #define TIMER_H
 
 #include "header/device/device.h"
+#include "header/basic/base.h"
 #include <string>
 using namespace std;
 
-class TIMER
+class TIMER : public BASE
 {
     public:
         TIMER();
@@ -24,10 +25,11 @@ class TIMER
         double get_timer_interval_in_s() const;
         double get_time_when_started_in_s() const;
 
-        bool is_valid() const;
-        void check();
+        virtual bool is_valid() const;
+        virtual void check();
+        virtual void clear();
+
         void report() const;
-        void clear();
 
         virtual TIMER& operator=(const TIMER& timer);
     private:

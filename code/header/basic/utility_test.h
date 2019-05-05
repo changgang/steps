@@ -14,6 +14,8 @@
 
 #include "header/basic/utility.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
+
 using namespace std;
 
 class UTILITY_TEST : public Test::Suite
@@ -53,12 +55,7 @@ class UTILITY_TEST : public Test::Suite
         void test_split_string();
         void test_string_vector2csv();
 
-        void test_redirect_and_recover_stdout();
-
         void test_is_file_exist();
-        void test_set_get_dynamic_simulation_time_step();
-        void test_set_get_dynamic_simulation_time();
-    private:
 };
 
 #endif//UTILITY_TEST_H

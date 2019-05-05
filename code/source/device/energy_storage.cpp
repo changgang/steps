@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 
 #include "header/model/energy_storage_model/energy_storage_models.h"
+#include "header/STEPS.h"
 
 #include <istream>
 #include <iostream>
@@ -79,7 +80,8 @@ void ENERGY_STORAGE::set_model(const MODEL* model)
     }
     ostringstream osstream;
     osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void ENERGY_STORAGE::set_energy_storage_model(const ENERGY_STORAGE_MODEL* model)
@@ -87,11 +89,12 @@ void ENERGY_STORAGE::set_energy_storage_model(const ENERGY_STORAGE_MODEL* model)
     if(model==NULL)
         return;
 
+    STEPS& toolkit = get_toolkit();
     if(model->get_model_type()!="ENERGY STORAGE")
     {
         ostringstream osstream;
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up energy storage model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -112,7 +115,7 @@ void ENERGY_STORAGE::set_energy_storage_model(const ENERGY_STORAGE_MODEL* model)
 
     if(new_model!=NULL)
     {
-
+        new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         energy_storage_model = new_model;
     }
@@ -120,7 +123,7 @@ void ENERGY_STORAGE::set_energy_storage_model(const ENERGY_STORAGE_MODEL* model)
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append energy storage model of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -175,7 +178,8 @@ void ENERGY_STORAGE::report() const
       <<"Q = "<<setw(8)<<setprecision(4)<<fixed<<get_q_generation_in_MVar()<<" MVar, "
       <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
       <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar";
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void ENERGY_STORAGE::save() const
@@ -188,6 +192,9 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
     if(this==(&estorage)) return *this;
 
     clear();
+
+    set_toolkit(estorage.get_toolkit());
+
     set_energy_storage_bus(estorage.get_energy_storage_bus());
     set_identifier(estorage.get_identifier());
     set_status(estorage.get_status());

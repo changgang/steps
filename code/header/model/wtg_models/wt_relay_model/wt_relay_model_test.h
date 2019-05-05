@@ -21,7 +21,6 @@ class WT_RELAY_MODEL_TEST : public WTG_MODEL_TEST
     protected:
         virtual void setup();
         virtual void tear_down();
-
     protected:
         void test_get_model_type();
         void test_set_get_damping();

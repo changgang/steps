@@ -1,5 +1,6 @@
 #include "header/model/wtg_models/wt_turbine_model/wt3t0_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -83,5 +84,5 @@ void WT3T0_TEST::test_initialize()
     osstream<<"WT3T0 model after initialized:"<<endl;
     osstream<<"Turbine speed = "<<model->get_turbine_speed_in_pu()<<" pu, generator speed = "<<model->get_generator_speed_in_pu()<<" pu"<<endl
            <<"Rotor angle = "<<model->get_rotor_angle_in_deg()<<" deg";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }

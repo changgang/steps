@@ -137,11 +137,11 @@ void CSEET2_TEST::test_step_response_SEPARATE_EXCIATION_and_stabilizer_AT_VOLTAG
     model->set_excitation_source(SEPARATE_EXCITATION);
     model->set_stabilizer_slot(AT_VOLTAGE_ERROR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET2_model_1.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET2_model_1.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET2_TEST::test_step_response_SEPARATE_EXCIATION_and_stabilizer_AT_REGULATOR()
 {
@@ -152,11 +152,11 @@ void CSEET2_TEST::test_step_response_SEPARATE_EXCIATION_and_stabilizer_AT_REGULA
     model->set_excitation_source(SEPARATE_EXCITATION);
     model->set_stabilizer_slot(AT_REGULATOR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET2_model_2.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET2_model_2.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET2_TEST::test_step_response_SELF_EXCIATION_and_stabilizer_AT_VOLTAGE_ERROR()
 {
@@ -167,11 +167,11 @@ void CSEET2_TEST::test_step_response_SELF_EXCIATION_and_stabilizer_AT_VOLTAGE_ER
     model->set_excitation_source(SELF_EXCITATION);
     model->set_stabilizer_slot(AT_VOLTAGE_ERROR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET2_model_3.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET2_model_3.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 void CSEET2_TEST::test_step_response_SELF_EXCIATION_and_stabilizer_AT_REGULATOR()
 {
@@ -182,10 +182,10 @@ void CSEET2_TEST::test_step_response_SELF_EXCIATION_and_stabilizer_AT_REGULATOR(
     model->set_excitation_source(SELF_EXCITATION);
     model->set_stabilizer_slot(AT_REGULATOR);
 
-    redirect_stdout_to_file("test_log/step_response_of_CSEET2_model_4.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_CSEET2_model_4.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 

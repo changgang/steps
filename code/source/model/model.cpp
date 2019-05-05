@@ -1,6 +1,7 @@
 #include "header/model/model.h"
 #include <cstdio>
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 
 #include <iostream>
 using namespace std;
@@ -45,7 +46,8 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
     {
         ostringstream osstream;
         osstream<<"Warning. Device type '"<<device_type<<"' is not supported when setting up dynamic model.";
-        show_information_with_leading_time_stamp(osstream);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 string MODEL::get_allowed_device_type() const
@@ -85,21 +87,23 @@ bool MODEL::is_model_data_exist(size_t var_index) const
 
 void MODEL::set_model_data_with_index(size_t index, double value)
 {
+    STEPS& toolkit = get_toolkit();
     string var_name = get_model_data_name(index);
     if(var_name!="")
         set_model_data_with_name(var_name, value);
     else
-        show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+        toolkit.show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
 }
 
 double MODEL::get_model_data_with_index(size_t index)
 {
     string var_name = get_model_data_name(index);
+    STEPS& toolkit = get_toolkit();
     if(var_name!="")
         return get_model_data_with_name(var_name);
     else
     {
-        show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
+        toolkit.show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
         return 0.0;
     }
 }
@@ -144,11 +148,12 @@ double MODEL::get_model_internal_variable_with_index(size_t index)
 void MODEL::set_device_id(DEVICE_ID did)
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
     if(not did.is_valid())
     {
         osstream<<"Warning. Invalid device id (possible of "<<did.get_device_type()<<") is given to build model. "
           <<"Model device id will not be updated.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -156,17 +161,17 @@ void MODEL::set_device_id(DEVICE_ID did)
     {
         osstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which "<<get_allowed_device_type()<<" is expected."
           <<"Model device id will not be updated.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     /*if(get_device_pointer()!=NULL)
     {
         osstream<<"Warning. Valid device ("<<get_device_name()<<") has already been set for "<<get_model_type()<<" model '"<<get_model_name()<<"'."<<endl
           <<"New device ("<<did.get_device_name()<<") will be updated.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }*/
 
 
@@ -175,7 +180,7 @@ void MODEL::set_device_id(DEVICE_ID did)
     if(device_pointer==NULL)
     {
         osstream<<"Warning. No valid device can be found for dynamic model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -250,7 +255,7 @@ bool MODEL::is_valid() const
     // should never be called
     return false;
 
-    /*POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    /*POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     DEVICE_ID did = get_device_id();
     if(psdb==NULL or (not did.is_valid()))
         return false;

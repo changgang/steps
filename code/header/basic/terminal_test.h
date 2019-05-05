@@ -33,6 +33,7 @@ class TERMINAL_TEST : public Test::Suite
         void test_operator_bracket();
     private:
         TERMINAL terminal;
+
 };
 
 #endif//TERMINAL_TEST_H

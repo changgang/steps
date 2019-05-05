@@ -14,6 +14,7 @@
 
 #include "header/model/sg_models/exciter_model/IEEET1.h"
 #include "header/model/sg_models/exciter_model/exciter_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class IEEET1_TEST : public EXCITER_MODEL_TEST
@@ -28,6 +29,7 @@ class IEEET1_TEST : public EXCITER_MODEL_TEST
         virtual void test_set_get_parameters();
         virtual void test_initialize();
     private:
+
 };
 
 #endif//IEEET1_TEST_H

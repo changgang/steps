@@ -36,7 +36,9 @@ FIXED_SHUNT_TEST::FIXED_SHUNT_TEST()
 
 void FIXED_SHUNT_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    fixed_shunt.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(10);
 
@@ -51,8 +53,8 @@ void FIXED_SHUNT_TEST::tear_down()
 {
     fixed_shunt.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -189,7 +191,7 @@ void FIXED_SHUNT_TEST::test_get_actual_impedance_shunt()
     complex<double> s_Z(10.0, 300.0);
     fixed_shunt.set_nominal_impedance_shunt_in_MVA(s_Z);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(fixed_shunt.get_shunt_bus());
 
     bus->set_voltage_in_pu(0.95);

@@ -80,7 +80,9 @@ HVDC_TEST::HVDC_TEST()
 
 void HVDC_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    hvdc.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
@@ -99,8 +101,8 @@ void HVDC_TEST::tear_down()
 {
     hvdc.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -499,7 +501,7 @@ void HVDC_TEST::test_set_get_converter_transformer_base_voltage()
 
     prepare_hvdc_buses();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     size_t rec_bus = hvdc.get_converter_bus(RECTIFIER);
     hvdc.set_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER, 500.0);
@@ -1152,7 +1154,7 @@ void HVDC_TEST::test_solve_hvdc()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
@@ -1192,19 +1194,19 @@ void HVDC_TEST::test_solve_hvdc()
     hvdc.set_converter_transformer_tap_in_pu(INVERTER, 1.27);
 
     osstream<<"Test 1: solve with 1.0 AC voltage at both sides";
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     hvdc.solve_steady_state();
     hvdc.show_solved_hvdc_steady_state();
 
     osstream<<"Test 2: solve with 0.8 AC voltage at rectifier side";
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     BUS* busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
     busptr->set_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
     hvdc.show_solved_hvdc_steady_state();
 
     osstream<<"Test 3: solve with 0.8 AC voltage at inverter side";
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
     busptr->set_voltage_in_pu(1.0);
     busptr = psdb.get_bus(hvdc.get_converter_bus(INVERTER));
@@ -1213,7 +1215,7 @@ void HVDC_TEST::test_solve_hvdc()
     hvdc.show_solved_hvdc_steady_state();
 
     osstream<<"Test 4: solve with 0.8 AC voltage at both sides";
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
     busptr->set_voltage_in_pu(0.8);
     busptr = psdb.get_bus(hvdc.get_converter_bus(INVERTER));
@@ -1279,7 +1281,7 @@ void HVDC_TEST::test_get_converter_dc_power()
 {
     ostringstream osstream;
     osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
@@ -1287,7 +1289,7 @@ void HVDC_TEST::test_get_converter_ac_active_power()
 {
     ostringstream osstream;
     osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
@@ -1295,7 +1297,7 @@ void HVDC_TEST::test_get_converter_ac_reactive_power()
 {
     ostringstream osstream;
     osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
@@ -1303,7 +1305,7 @@ void HVDC_TEST::test_get_converter_ac_apparent_power()
 {
     ostringstream osstream;
     osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
@@ -1311,7 +1313,7 @@ void HVDC_TEST::test_get_converter_ac_power_factor()
 {
     ostringstream osstream;
     osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 
@@ -1319,7 +1321,7 @@ void HVDC_TEST::test_get_converter_commutating_overlap_angle()
 {
     ostringstream osstream;
     osstream<<"HAVENOT Run testing of HVDC_TEST::"<<__FUNCTION__;
-    show_information_with_leading_time_stamp(osstream);
+    show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
 }
 

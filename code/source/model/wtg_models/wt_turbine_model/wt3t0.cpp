@@ -1,5 +1,6 @@
 #include "header/model/wtg_models/wt_turbine_model/wt3t0.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 
 WT3T0::WT3T0()
 {
@@ -130,7 +131,8 @@ bool WT3T0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -141,7 +143,8 @@ void WT3T0::initialize()
     if(gen==NULL)
         return;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     WT_GENERATOR_MODEL* gen_model = gen->get_wt_generator_model();
     if(gen_model==NULL)
@@ -190,7 +193,7 @@ void WT3T0::initialize()
             <<"(2) Generator speed is "<<get_generator_speed_in_pu()<<" pu"<<endl
             <<"(3) Generator rotor angle is "<<get_rotor_angle_in_deg()<<" deg"<<endl
             <<"(4) Shaft block state is "<<shaft_twist_block.get_state();
-    show_information_with_leading_time_stamp(oosstream);
+    toolkit.show_information_with_leading_time_stamp(oosstream);
 }
 
 void WT3T0::run(DYNAMIC_MODE mode)
@@ -252,12 +255,12 @@ void WT3T0::run(DYNAMIC_MODE mode)
         if(w<wmin or w>wmax*1.1)
         {
             ostringstream osstream;
-            osstream<<get_device_name()<<" is tripped at time "<<get_dynamic_simulation_time_in_s()<<"s due to ";
+            osstream<<get_device_name()<<" is tripped at time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s due to ";
             if(w<wmin)
                 osstream<<"rotor w<wmin: "<<w<<"<"<<wmin<<" pu";
             else
                 osstream<<"rotor w>wmax*1.1: "<<w<<">"<<wmax*1.1<<" pu";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             wtgen->set_status(false);
         }*/
     }
@@ -295,7 +298,8 @@ void WT3T0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3T0::save()
@@ -352,7 +356,8 @@ double WT3T0::get_model_data_with_name(string par_name) const
     }
     else
     {
-        show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
         return 0.0;
     }
 }
@@ -370,7 +375,8 @@ void WT3T0::set_model_data_with_name(string par_name, double value)
     }
     else
     {
-        show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
         return;
     }
 }

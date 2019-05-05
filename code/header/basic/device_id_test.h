@@ -11,6 +11,7 @@
 #include "cpptest.h"
 
 #include "header/basic/device_id.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -66,6 +67,7 @@ class DEVICE_ID_TEST : public Test::Suite
     private:
         DEVICE_ID device_id;
         TERMINAL terminal_1_bus, terminal_2_bus, terminal_3_bus, terminal_4_bus, terminal_100_bus, terminal_101_bus;
+
 };
 
 #endif //DEVICE_ID_TEST_H

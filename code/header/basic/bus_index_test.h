@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/basic/bus_index.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ class BUS_INDEX_TEST : public Test::Suite
         void test_get_index_of_bus_and_operator_bracket();
     private:
         BUS_INDEX bus_index;
+
 };
 
 #endif //BUS_INDEX_TEST_H

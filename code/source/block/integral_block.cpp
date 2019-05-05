@@ -47,7 +47,8 @@ void INTEGRAL_BLOCK::initialize()
     double vmax = get_upper_limit();
     double vmin = get_lower_limit();
 
-    double h = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double s = y;
     double ds = 0.0;
@@ -64,12 +65,12 @@ void INTEGRAL_BLOCK::initialize()
         if(s>vmax)
         {
             osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         if(s<vmin)
         {
             osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
 }
@@ -89,7 +90,8 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 
 void INTEGRAL_BLOCK::integrate()
 {
-    double h = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();
     if(fabs(t)<FLOAT_EPSILON or fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)
@@ -147,7 +149,8 @@ void INTEGRAL_BLOCK::integrate()
 
 void INTEGRAL_BLOCK::update()
 {
-    double h = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();
     if(fabs(t)<FLOAT_EPSILON or fabs(t-INFINITE_THRESHOLD)<FLOAT_EPSILON)

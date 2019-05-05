@@ -24,7 +24,7 @@ void PD_BLOCK::set_Kp(double K)
     {
         ostringstream osstream;
         osstream<<"Error. Zero amplifier Kp of PROPORTIONAL_BLOCK part is not allowed for PD_BLOCK.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     p_block.set_K(K);
@@ -51,7 +51,8 @@ void PD_BLOCK::set_Td_in_s(double T)
     {
         ostringstream osstream;
         osstream<<"Error. Non-positive time constant Td is not allowed for PD_BLOCK.";
-        show_information_with_leading_time_stamp(osstream);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     d_block.set_T_in_s(T);

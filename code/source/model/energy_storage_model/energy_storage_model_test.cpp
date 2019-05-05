@@ -27,7 +27,7 @@ ENERGY_STORAGE_MODEL_TEST::ENERGY_STORAGE_MODEL_TEST()
 
 void ENERGY_STORAGE_MODEL_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
@@ -54,8 +54,8 @@ void ENERGY_STORAGE_MODEL_TEST::setup()
 
 void ENERGY_STORAGE_MODEL_TEST::tear_down()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 }
 
 
@@ -68,7 +68,7 @@ ENERGY_STORAGE* ENERGY_STORAGE_MODEL_TEST::get_test_energy_storage()
     did.set_device_terminal(terminal);
     did.set_device_identifier("#1");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     return psdb.get_energy_storage(did);
 }
 
@@ -181,7 +181,7 @@ void ENERGY_STORAGE_MODEL_TEST::export_meter_title()
     ostringstream osstream;
     osstream<<"TIME\tFREQ\tVOLT\tPELEC\tQELEC\tENERGY";
     osstream<<osstream.str()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void ENERGY_STORAGE_MODEL_TEST::export_meter_values()
@@ -196,7 +196,7 @@ void ENERGY_STORAGE_MODEL_TEST::export_meter_values()
     double qelec = model->get_terminal_reactive_power_in_MVar();
     double soc = model->get_energy_state_in_pu();
 
-    osstream<<setw(6)<<setprecision(3)<<fixed<<STEPS::TIME<<"\t"
+    osstream<<setw(6)<<setprecision(3)<<fixed<<default_toolkit.get_dynamic_simulation_time_in_s()<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<freq<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<volt<<"\t"
       <<setw(10)<<setprecision(6)<<fixed<<pelec<<"\t"
@@ -204,7 +204,7 @@ void ENERGY_STORAGE_MODEL_TEST::export_meter_values()
       <<setw(10)<<setprecision(6)<<fixed<<soc;
 
     osstream<<osstream.str()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 }
 
@@ -212,21 +212,21 @@ void ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response()
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     ENERGY_STORAGE_MODEL* model = get_test_energy_storage_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
-        STEPS::TIME = -delt*2.0;
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
 
         model->initialize();
 
@@ -235,10 +235,11 @@ void ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response()
 
         while(true)
         {
-            STEPS::TIME += delt;
-            if(STEPS::TIME>1.0+FLOAT_EPSILON)
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+
+            if(default_toolkit.get_dynamic_simulation_time_in_s()>1.0+FLOAT_EPSILON)
             {
-                STEPS::TIME -=delt;
+                default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
                 break;
             }
             run_a_step();
@@ -253,18 +254,18 @@ void ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response()
 
         while(true)
         {
-            STEPS::TIME += delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
 
-            if(STEPS::TIME>6.0+FLOAT_EPSILON)
+            if(default_toolkit.get_dynamic_simulation_time_in_s()>6.0+FLOAT_EPSILON)
             {
-                STEPS::TIME -=delt;
+                default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
                 break;
             }
 
             run_a_step();
             export_meter_values();
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -274,21 +275,21 @@ void ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response()
 {
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     ENERGY_STORAGE_MODEL* model = get_test_energy_storage_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-        show_information_with_leading_time_stamp(osstream);
+        default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
-        set_dynamic_simulation_time_step_in_s(delt);
+        default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
-        STEPS::TIME = -delt*2.0;
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
 
         model->initialize();
 
@@ -297,10 +298,10 @@ void ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response()
 
         while(true)
         {
-            STEPS::TIME += delt;
-            if(STEPS::TIME>1.0+FLOAT_EPSILON)
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+            if(default_toolkit.get_dynamic_simulation_time_in_s()>1.0+FLOAT_EPSILON)
             {
-                STEPS::TIME -=delt;
+                default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
                 break;
             }
             run_a_step();
@@ -315,18 +316,18 @@ void ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response()
 
         while(true)
         {
-            STEPS::TIME += delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
 
-            if(STEPS::TIME>6.0+FLOAT_EPSILON)
+            if(default_toolkit.get_dynamic_simulation_time_in_s()>6.0+FLOAT_EPSILON)
             {
-                STEPS::TIME -=delt;
+                default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
                 break;
             }
 
             run_a_step();
             export_meter_values();
         }
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);

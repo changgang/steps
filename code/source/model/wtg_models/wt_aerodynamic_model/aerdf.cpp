@@ -38,13 +38,14 @@ void AERDF::copy_from_const_model(const AERDF& model)
 
 void AERDF::set_Cp_file(string file)
 {
+    STEPS& toolkit = get_toolkit();
     cp_file_name = file;
     load_data_from_Cp_file();
     if(pitch_angles.size()==0)
     {
         ostringstream osstream;
         osstream<<"Error. Fail to load wind turbine Cp data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         cp_file_name = "";
         return;
     }
@@ -57,18 +58,19 @@ string AERDF::get_Cp_file() const
 
 void AERDF::load_data_from_Cp_file()
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream oosstream;
     if(cp_file_name.size()<1)
     {
         oosstream<<"Initialization error. No file is provided for loading wind turbine Cp data. Check model "<<get_model_name()<<" of "<<get_device_name();
-        show_information_with_leading_time_stamp(oosstream);
+        toolkit.show_information_with_leading_time_stamp(oosstream);
         return;
     }
     ifstream fid(cp_file_name);
     if(not fid.is_open())
     {
         oosstream<<"Initialization error. Fail to open wind turbine Cp data file '"<<cp_file_name<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
-        show_information_with_leading_time_stamp(oosstream);
+        toolkit.show_information_with_leading_time_stamp(oosstream);
         return;
     }
     else
@@ -110,6 +112,7 @@ void AERDF::load_pitch_angles()
 
 void AERDF::load_tip_speed_ratios()
 {
+    STEPS& toolkit = get_toolkit();
     tip_speed_ratios.clear();
 
     ifstream fid(cp_file_name);
@@ -133,7 +136,7 @@ void AERDF::load_tip_speed_ratios()
         if(n==0)
         {
             osstream<<"Warning. No more tip speed ratio lines in wind turbine Cp data file '"<<cp_file_name<<"' of "<<get_model_name()<<" of "<<get_device_name()<<".";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
         double tsr = get_double_data(datavec.front(),"0.0");
@@ -144,6 +147,7 @@ void AERDF::load_tip_speed_ratios()
 
 void AERDF::load_Cp_matrix()
 {
+    STEPS& toolkit = get_toolkit();
     Cp_Matrix.clear();
 
     ifstream fid(cp_file_name);
@@ -171,7 +175,7 @@ void AERDF::load_Cp_matrix()
             osstream<<"Warning. Different length of tip speed ratio line is detected in wind turbine Cp data file '"<<cp_file_name<<"' of "<<get_model_name()<<" of "<<get_device_name()<<":"<<endl
                     <<data<<endl
                     <<"No more data will be loaded from Cp data file '"<<cp_file_name<<"'.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
 
@@ -315,7 +319,8 @@ bool AERDF::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return true;
 }
 
@@ -437,7 +442,8 @@ double AERDF::get_model_data_with_name(string par_name) const
     if(par_name=="AIR DENSITY IN KG/M3")
         return get_air_density_in_kgpm3();
 
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -486,7 +492,8 @@ void AERDF::set_model_data_with_name(string par_name, double value)
     if(par_name=="AIR DENSITY IN KG/M3")
         return set_air_density_in_kgpm3(value);
 
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 
@@ -508,7 +515,8 @@ double AERDF::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 

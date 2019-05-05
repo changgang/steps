@@ -2,9 +2,10 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-size_t api_get_powerflow_solver_integer_parameter(char* parameter_name)
+size_t api_get_powerflow_solver_integer_parameter(char* parameter_name, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="MAX ITERATION")
@@ -13,13 +14,14 @@ size_t api_get_powerflow_solver_integer_parameter(char* parameter_name)
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n"
              "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
     return 0;
 }
 
-void api_set_powerflow_solver_integer_parameter(char* parameter_name, int value)
+void api_set_powerflow_solver_integer_parameter(char* parameter_name, int value, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="MAX ITERATION")
@@ -30,14 +32,15 @@ void api_set_powerflow_solver_integer_parameter(char* parameter_name, int value)
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
     return;
 }
 
-double api_get_powerflow_solver_float_parameter(char* parameter_name)
+double api_get_powerflow_solver_float_parameter(char* parameter_name, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="MAX ACTIVE POWER IMBALANCE IN MW")
@@ -54,14 +57,15 @@ double api_get_powerflow_solver_float_parameter(char* parameter_name)
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n"
              "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
     return 0.0;
 }
 
-void api_set_powerflow_solver_float_parameter(char* parameter_name, double value)
+void api_set_powerflow_solver_float_parameter(char* parameter_name, double value, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="MAX ACTIVE POWER IMBALANCE IN MW")
@@ -92,13 +96,14 @@ void api_set_powerflow_solver_float_parameter(char* parameter_name, double value
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
     return;
 }
 
-bool api_get_powerflow_solver_boolean_parameter(char* parameter_name)
+bool api_get_powerflow_solver_boolean_parameter(char* parameter_name, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="FLAT START LOGIC")
@@ -113,13 +118,14 @@ bool api_get_powerflow_solver_boolean_parameter(char* parameter_name)
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n"
              "False will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
     return false;
 }
 
-void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value)
+void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="FLAT START LOGIC")
@@ -145,13 +151,14 @@ void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
     return;
 }
 
-void api_solve_powerflow(char* method)
+void api_solve_powerflow(char* method, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
 
     string string_method = string2upper(method);
 
@@ -176,102 +183,105 @@ void api_solve_powerflow(char* method)
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Method %s is not supported for solving powerflow with api %s.",
              string_method.c_str(), __FUNCTION__);
-    show_information_with_leading_time_stamp(buffer);
+    toolkit.show_information_with_leading_time_stamp(buffer);
     return;
 }
 
-bool api_is_powerflow_converged()
+bool api_is_powerflow_converged(size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     return solver.is_converged();
 }
 
-void api_show_powerflow_result()
+void api_show_powerflow_result(size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     solver.show_powerflow_result();
 }
 
-void api_save_powerflow_result(char* file)
+void api_save_powerflow_result(char* file, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     solver.save_powerflow_result_to_file(file);
 }
 
-void api_save_extended_powerflow_result(char* file)
+void api_save_extended_powerflow_result(char* file, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
-
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     solver.save_extended_powerflow_result_to_file(file);
 }
 
-void api_save_jacobian_matrix(char* file)
+void api_save_jacobian_matrix(char* file, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     solver.save_jacobian_matrix_to_file(file);
 }
 
-
-
-void api_build_network_matrix()
+void api_build_network_matrix(size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
     network_matrix.build_network_matrix();
 }
 
-void api_build_decoupled_network_matrix()
+void api_build_decoupled_network_matrix(size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
     network_matrix.build_decoupled_network_matrix();
 }
 
-void api_build_dc_network_matrix()
+void api_build_dc_network_matrix(size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
     network_matrix.build_dc_network_matrix();
 }
 
-void api_build_dynamic_network_matrix()
+void api_build_dynamic_network_matrix(size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
     network_matrix.build_dynamic_network_matrix();
 }
 
-
-void api_save_network_matrix(char* file)
+void api_save_network_matrix(char* file, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
     network_matrix.save_network_matrix_to_file(file);
 }
 
-
-void api_save_decoupled_network_matrix(char* file)
+void api_save_decoupled_network_matrix(char* file, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
     network_matrix.save_decoupled_network_matrix_to_file(file);
 }
 
-
-void api_save_dc_network_matrix(char* file)
+void api_save_dc_network_matrix(char* file, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
     network_matrix.save_dc_network_matrix_to_file(file);
 }
 
-
-void api_save_dynamic_network_matrix(char* file)
+void api_save_dynamic_network_matrix(char* file, size_t toolkit_index)
 {
-    POWERFLOW_SOLVER& solver = get_default_powerflow_solver();
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
     network_matrix.save_dynamic_network_matrix_to_file(file);
 }

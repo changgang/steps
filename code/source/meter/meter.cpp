@@ -241,7 +241,8 @@ void METER::set_device_id(const DEVICE_ID& did)
     {
         ostringstream osstream;
         osstream<<"Warning. Device id is invalid for setting up meter.";
-        show_information_with_leading_time_stamp(osstream);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     this->device_id =did;
     set_device_pointer();
@@ -250,10 +251,11 @@ void METER::set_device_id(const DEVICE_ID& did)
 void METER::set_meter_type(string meter_type)
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
     if(not device_id.is_valid())
     {
         osstream<<"Warning. Device id is invalid for setting up meter type. Set up proper device id first.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -266,18 +268,19 @@ void METER::set_meter_type(string meter_type)
     else
     {
         osstream<<"Warning, Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_id.get_device_name()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         this->meter_type = "";
     }
 }
 
 void METER::set_internal_variable_name(string name)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     if(not device_id.is_valid())
     {
         osstream<<"Warning. Device id is invalid for setting up meter internal variable name. Set up proper device id first.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -288,14 +291,14 @@ void METER::set_internal_variable_name(string name)
         else
         {
             osstream<<"Warning, Internal variable name '"<<name<<"' is not valid. No internal variable name will be set.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             this->internal_variable_name = "";
         }
     }
     else
     {
         osstream<<"Warning, Meter type '"<<meter_type<<"' is not valid Internal Variable Meter. No internal variable name will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         this->internal_variable_name = "";
     }
 }
@@ -304,6 +307,8 @@ bool METER::is_internal_variable_name_valid(string name) const
 {
     if(get_device_pointer()==NULL)
         return false;
+
+    STEPS& toolkit = get_toolkit();
 
     name = string2upper(name);
     string meter_type = get_meter_type();
@@ -380,7 +385,7 @@ bool METER::is_internal_variable_name_valid(string name) const
     {
         ostringstream osstream;
         osstream<<"Warning. No dynamic model is found when check if internal variable name is valid.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return false;
     }
 }
@@ -423,13 +428,14 @@ bool METER::is_valid_meter_type(string meter_type) const
 bool METER::is_valid_meter_type_of_device(string meter_type, string device_type) const
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
 
     device_type = string2upper(device_type);
     map<string, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
     if(it==SUPPORTED_METERS.end())
     {
         osstream<<"Warning. Device type "<<device_type<<" is not supported for setting up meter.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return false;
     }
     else
@@ -491,7 +497,7 @@ string METER::get_meter_name() const
         if(meter_type.find("INTERNAL VARIABLE")!=string::npos)
             name += " " + get_internal_variable_name();
 
-        //name += " OF "+get_device_id().get_device_name()+" IN PS "+get_default_power_system_database()->get_system_name();
+        //name += " OF "+get_device_id().get_device_name()+" IN PS "+toolkit.get_power_system_database()->get_system_name();
         name += " @ "+get_device_id().get_device_name();
 
         string device_type = get_device_type();
@@ -568,8 +574,8 @@ void METER::set_device_pointer()
         device_pointer = NULL;
         return;
     }
-
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string device_type = device_id.get_device_type();
     DEVICE* deviceptr = NULL;
@@ -611,7 +617,7 @@ void METER::set_device_pointer()
     {
         ostringstream osstream;
         osstream<<"Device cannot be found in database for setting meter. Device is "<<device_id.get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -630,7 +636,8 @@ void METER::initialize_meter_buffer()
     if(get_device_pointer()==NULL)
         set_device_pointer();
 
-    double current_time = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     double value = get_meter_value();
     buffer.initialize_buffer(current_time, value);
@@ -640,8 +647,8 @@ void METER::update_meter_buffer()
 {
     if(get_device_pointer()==NULL)
         set_device_pointer();
-
-    double current_time = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     buffer.append_data(current_time, get_meter_value());
 }
@@ -991,6 +998,7 @@ double METER::get_meter_value_as_a_transformer() const
 
 double METER::get_meter_value_as_a_load() const
 {
+    STEPS& toolkit = get_toolkit();
     LOAD* load = (LOAD*) get_device_pointer();
     if(load==NULL)
         return 0.0;
@@ -1011,7 +1019,7 @@ double METER::get_meter_value_as_a_load() const
 
     if(meter_type=="CURRENT IN KA")
     {
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         double sbase = psdb.get_system_base_power_in_MVA();
         double vbase = psdb.get_bus_base_voltage_in_kV(load->get_load_bus());
         double ibase = sbase/(sqrt(3.0)*vbase);
@@ -1071,7 +1079,8 @@ double METER::get_meter_value_as_a_generator() const
     if(generator->get_status()==false)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = generator->get_mbase_in_MVA();
@@ -1395,7 +1404,8 @@ double METER::get_meter_value_as_a_wt_generator() const
         return 0.0;
 
     size_t bus = generator->get_generator_bus();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = generator->get_mbase_in_MVA();

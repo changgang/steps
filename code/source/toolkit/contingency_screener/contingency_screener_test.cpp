@@ -39,7 +39,7 @@ CONTINGENCY_SCREENER_TEST::CONTINGENCY_SCREENER_TEST()
 
 void CONTINGENCY_SCREENER_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(1000);
     psdb.set_system_base_power_in_MVA(100.0);
 
@@ -49,8 +49,8 @@ void CONTINGENCY_SCREENER_TEST::setup()
 void CONTINGENCY_SCREENER_TEST::tear_down()
 {
     delete searcher;
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -235,7 +235,7 @@ void CONTINGENCY_SCREENER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    redirect_stdout_to_file(file);
+    default_toolkit.redirect_stdout_to_file(file);
 
     //searcher->set_search_title("CCT_SEARCH_IEEE9_CLASSIC_FAULT_AT_LINE_7_5");
     searcher->set_powerflow_data_filename("IEEE9_classical.raw");
@@ -275,7 +275,7 @@ void CONTINGENCY_SCREENER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     double cct = searcher->search_cct();
 
     osstream<<"Searched CCT is: "<<cct<<" s"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }

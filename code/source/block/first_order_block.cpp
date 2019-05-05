@@ -23,7 +23,7 @@ void FIRST_ORDER_BLOCK::set_K(double k)
     {
         ostringstream osstream;
         osstream<<"Error. Zero amplifier K is not allowed for FIRST_ORDER_BLOCK.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }*/
     this->K = k;
@@ -65,7 +65,8 @@ void FIRST_ORDER_BLOCK::initialize()
     {
         ostringstream osstream;
 
-        double h = get_dynamic_simulation_time_step_in_s();
+        STEPS& toolkit = get_toolkit();
+        double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
         LIMITER_TYPE limiter_type = get_limiter_type();
         double vmax = get_upper_limit();
@@ -107,14 +108,14 @@ void FIRST_ORDER_BLOCK::initialize()
             if(s>vmax)
             {
                 osstream<<"Initialization Error. State ("<<s<<") exceeds upper limit bound ("<<vmax<<").";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
             else
             {
                 if(s<vmin)
                 {
                     osstream<<"Initialization Error. State ("<<s<<") exceeds lower limit bound ("<<vmin<<").";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
         }
@@ -135,7 +136,8 @@ void FIRST_ORDER_BLOCK::integrate()
     if(k==0.0)
         return;
 
-    double h = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();
 
@@ -204,7 +206,8 @@ void FIRST_ORDER_BLOCK::update()
     if(k==0.0)
         return;
 
-    double h = get_dynamic_simulation_time_step_in_s();
+    STEPS& toolkit = get_toolkit();
+    double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();
 

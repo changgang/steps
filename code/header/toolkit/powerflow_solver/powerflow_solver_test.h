@@ -14,6 +14,7 @@
 
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class POWERFLOW_SOLVER_TEST : public Test::Suite

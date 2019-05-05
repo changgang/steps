@@ -1,5 +1,6 @@
 #include "header/model/sg_models/exciter_model/CSEET1.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -545,6 +546,7 @@ double CSEET1::get_Efdmax_in_pu() const
 double CSEET1::get_initial_Ve_with_Fex_function() const
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
 
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
@@ -576,7 +578,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
         if(Fex == 0.0)
         {
             osstream<<"Fatal error. Fex = 0.0 is encountered when initializing exciter CSEET1 of "<<get_device_name()<<".";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             Ve = 0.0;
             break;
         }
@@ -584,7 +586,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
         if(iter_count>10)
         {
             osstream<<"Warning. Initial Ve is not solved within 10 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
     }
@@ -770,7 +772,8 @@ bool CSEET1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -968,7 +971,8 @@ void CSEET1::run(DYNAMIC_MODE mode)
     double Vrmax = get_VRmax_in_pu();
     double Vrmin = get_VRmin_in_pu();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = generator->get_generator_bus();
     double Vt = psdb.get_bus_voltage_in_pu(bus);
 
@@ -1028,7 +1032,8 @@ void CSEET1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void CSEET1::save()

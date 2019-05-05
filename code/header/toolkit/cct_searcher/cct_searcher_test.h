@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/toolkit/cct_searcher/cct_searcher.h"
+#include "header/STEPS.h"
 
 using namespace std;
 

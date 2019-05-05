@@ -4,11 +4,12 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name)
+int api_get_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
@@ -78,11 +79,12 @@ int api_get_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char
     }
 }
 
-void api_set_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, int value)
+void api_set_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, int value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
@@ -148,12 +150,12 @@ void api_set_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, cha
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-
-double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name)
+double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
@@ -281,13 +283,12 @@ double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, cha
 
 }
 
-
-
-void api_set_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, double value)
+void api_set_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, double value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
@@ -451,13 +452,14 @@ void api_set_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char*
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name)
+const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
@@ -468,33 +470,33 @@ const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbu
         if(SIDE != "TRANSFORMER")
         {
             show_side_not_supported_for_device_with_api(SIDE, did, __FUNCTION__);
-            return STEPS::steps_char_buffer;
+            return toolkit.steps_char_buffer;
         }
         else
         {
 			if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
 			{
-				snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (transptr->get_identifier()).c_str());
-				return STEPS::steps_char_buffer;
+				snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (transptr->get_identifier()).c_str());
+				return toolkit.steps_char_buffer;
 			}
         }
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, did, __FUNCTION__);
-        return STEPS::steps_char_buffer;
+        return toolkit.steps_char_buffer;
     }
     else
     {
         show_device_not_exist_with_api(did, __FUNCTION__);
-        return STEPS::steps_char_buffer;
+        return toolkit.steps_char_buffer;
     }
 }
 
-
-void api_set_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, char* value)
+void api_set_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, char* value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
@@ -525,11 +527,12 @@ void api_set_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-bool api_get_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name)
+bool api_get_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
@@ -568,12 +571,12 @@ bool api_get_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, cha
     }
 }
 
-
-void api_set_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, bool value)
+void api_set_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, bool value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)

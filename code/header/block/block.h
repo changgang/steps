@@ -2,12 +2,13 @@
 #define BLOCK_H
 
 #include "header/basic/steps_enum.h"
+#include "header/basic/base.h"
 #include <vector>
 
 
 using namespace std;
 
-class BLOCK
+class BLOCK : public BASE
 {
     public:
         BLOCK();
@@ -17,7 +18,9 @@ class BLOCK
         virtual void integrate() = 0;
         virtual void update() = 0;
 
+        virtual bool is_valid() const;
         virtual void check() = 0;
+        virtual void clear();
 
         void set_input(double input);
         void set_output(double output);

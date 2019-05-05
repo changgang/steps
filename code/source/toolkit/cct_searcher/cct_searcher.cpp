@@ -13,11 +13,12 @@ using namespace std;
 
 CCT_SEARCHER::CCT_SEARCHER()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_default_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     set_power_system_database_maximum_bus_number(10000);
     psdb.set_system_base_power_in_MVA(100.0);
 
-    set_dynamic_simulation_time_step_in_s(0.01);
+    toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     set_search_title("CCT_SEARCH");
 
@@ -46,7 +47,8 @@ CCT_SEARCHER::~CCT_SEARCHER()
 
 void CCT_SEARCHER::set_power_system_database_maximum_bus_number(size_t number)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_default_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(number);
 }
 
@@ -140,7 +142,8 @@ void CCT_SEARCHER::set_simulator_iteration_accelerator(double iter_alpha)
 
 size_t CCT_SEARCHER::get_power_system_database_maximum_bus_number() const
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_default_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_allowed_max_bus_number();
 }
 
@@ -227,12 +230,13 @@ double CCT_SEARCHER::get_simulator_iteration_accelerator() const
 
 double CCT_SEARCHER::search_cct()
 {
+    STEPS& toolkit = get_default_toolkit();
     ostringstream osstream;
     if(not is_searcher_is_properly_set())
     {
         osstream<<"CCT searcher is not properly set. No CCT will be searched."<<endl
           <<"0.0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -259,7 +263,7 @@ double CCT_SEARCHER::search_cct()
 
             clearing_time_max += delt;
             osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
             is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
         }
@@ -275,7 +279,7 @@ double CCT_SEARCHER::search_cct()
 
                 clearing_time_max = clearing_time_min+0.5*delt;
                 osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
             }
@@ -291,7 +295,7 @@ double CCT_SEARCHER::search_cct()
 
                     clearing_time_min *=0.5;
                     osstream<<"Now go on checking clearing time "<<clearing_time_min<<" s.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     is_clearing_time_min_stable = perform_simulation_with_clearing_time(clearing_time_min);
                 }
@@ -303,7 +307,7 @@ double CCT_SEARCHER::search_cct()
                       <<", but stable when fault clearing time is "<<clearing_time_max<<endl
                       <<"This is impossible for power system operation."<<endl
                       <<"If you observe this message, CONGRATULATIONS, you find something interesting. Go on working on it.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     break;
                 }
@@ -323,6 +327,7 @@ double CCT_SEARCHER::search_cct()
 
 bool CCT_SEARCHER::is_searcher_is_properly_set() const
 {
+    STEPS& toolkit = get_default_toolkit();
     ostringstream osstream;
 
     bool is_properly_set = true;
@@ -369,15 +374,16 @@ bool CCT_SEARCHER::is_searcher_is_properly_set() const
     }
 
     if(not is_properly_set)
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     return is_properly_set;
 }
 
 
 bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    STEPS& toolkit = get_default_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.clear();
 
     PSSE_IMEXPORTER importer;
 
@@ -421,23 +427,23 @@ bool CCT_SEARCHER::perform_simulation_with_clearing_time(double clearing_time)
     clear_fault(simulator);
 
     double tend = get_simulation_time_span_in_s();
-    double delt = get_dynamic_simulation_time_step_in_s();
+    double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     simulator.run_to(tend-1.0);
 
     bool is_stable = true;
-    double TIME = get_dynamic_simulation_time_in_s();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
     while(TIME<tend)
     {
         simulator.run_to(TIME+delt);
         is_stable = check_if_system_is_stable();
         if(not is_stable)
             break;
-        TIME = get_dynamic_simulation_time_in_s();
+        TIME = toolkit.get_dynamic_simulation_time_in_s();
     }
 
     simulator.clear();
-    psdb.clear_database();
+    psdb.clear();
 
     return is_stable;
 }
@@ -447,10 +453,11 @@ void CCT_SEARCHER::prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator)
 {
     generators_in_islands.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_default_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    NETWORK_MATRIX* network_matrix = simulator.get_network_matrix();
-    vector< vector<size_t> > islands = network_matrix->get_islands_with_physical_bus_number();
+    NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
+    vector< vector<size_t> > islands = network_matrix.get_islands_with_physical_bus_number();
     size_t nislands = islands.size();
     for(size_t i=0; i!=nislands; ++i)
     {
@@ -502,7 +509,8 @@ void CCT_SEARCHER::clear_fault(DYNAMICS_SIMULATOR& simulator)
 bool CCT_SEARCHER::check_if_system_is_stable() const
 {
     ostringstream osstream;
-    double TIME = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_default_toolkit();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
     bool system_is_stable = true;
     size_t n = generators_in_islands.size();
     for(size_t island=0; island!=n; island++)
@@ -549,7 +557,7 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
                 SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
                 osstream<<generator->get_device_name()<<"  "<<genmodel->get_rotor_angle_in_deg()<<endl;
             }
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
     }

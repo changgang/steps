@@ -33,3 +33,18 @@ bool DATA_IMEXPORTER::get_export_zero_impedance_line_logic() const
     return export_zero_impedance_line;
 }
 
+
+bool DATA_IMEXPORTER::is_valid() const
+{
+    return true;
+}
+
+void DATA_IMEXPORTER::check()
+{
+    ;
+}
+
+void DATA_IMEXPORTER::clear()
+{
+    ;
+}

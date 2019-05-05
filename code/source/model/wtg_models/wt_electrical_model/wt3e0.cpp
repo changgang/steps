@@ -1,6 +1,7 @@
 #include "header/model/wtg_models/wt_electrical_model/wt3e0.h"
 #include "header/device/wt_generator.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include <iostream>
@@ -154,7 +155,8 @@ void WT3E0::set_voltage_flag(size_t flag)
     {
         ostringstream osstream;
         osstream<<"Error. "<<flag<<" is not allowed to set up voltage flag for "<<get_model_name()<<" model. 0, 1, or 2 is allowed.";
-        show_information_with_leading_time_stamp(osstream);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -582,7 +584,8 @@ bool WT3E0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -617,6 +620,8 @@ void WT3E0::initialize()
     if(not turbine_model->is_model_initialized())
         turbine_model->initialize();
 
+    STEPS& toolkit = get_toolkit();
+
     double vterm = get_terminal_bus_voltage_in_pu();
     double iterm = get_wt_generator_terminal_current_in_pu();
     double freq = get_terminal_bus_frequency_deviation_in_pu();
@@ -632,7 +637,7 @@ void WT3E0::initialize()
     {
         osstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     double porder = ipcmd*vterm;
     double pmax = get_Pmax_in_pu();
@@ -642,13 +647,13 @@ void WT3E0::initialize()
     {
         osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(porder<pmin)
     {
         osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Porder is "<<porder<<", and Pmin is "<<pmin<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     power_order_integrator.initialize();
 
@@ -706,13 +711,13 @@ void WT3E0::initialize()
         {
             osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
               <<"Eqcmd is "<<eqcmd<<", and Vmax is "<<vmax<<" for voltage flag = "<<vflag;
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         if(eqcmd<vmin)
         {
             osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
               <<"Eqcmd is "<<eqcmd<<", and Vmin is "<<vmin<<" for voltage flag = "<<vflag;
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         V_error_integrator.initialize();
         verror = 0.0;
@@ -726,13 +731,13 @@ void WT3E0::initialize()
     {
         osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"Vcmd is "<<vcmd<<", and Vmax is "<<vmax<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(vcmd<vmin)
     {
         osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"Vcmd is "<<vcmd<<", and Vmin is "<<vmin<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     Q_error_integrator.initialize();
 
@@ -743,13 +748,13 @@ void WT3E0::initialize()
     {
         osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
                 <<"Qcmd is "<<qcmd<<", and Qmax is "<<qmax<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(qcmd<qmin)
     {
         osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
                 <<"Qcmd is "<<qcmd<<", and Qmin is "<<qmin<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     set_reactive_power_reference_in_pu(qcmd);
@@ -797,7 +802,7 @@ void WT3E0::initialize()
             <<"(13) reactive voltage command: "<<get_reactive_voltage_command_in_pu()<<endl
             <<"(14) active current command: "<<get_active_current_command_in_pu_based_on_mbase()<<endl
             <<"(15) reactive current command: "<<get_reactive_current_command_in_pu_based_on_mbase();
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3E0::run(DYNAMIC_MODE mode)
@@ -830,12 +835,12 @@ void WT3E0::run(DYNAMIC_MODE mode)
 
     //double input = speed + speedref_bias - wind_turbine_speed_reference_sensor.get_output();
     double input = speed - wind_turbine_speed_reference_sensor.get_output();
-	//osstream << "at time " << STEPS::TIME << "s, speed error is: " << input << endl;
+	//osstream << "at time " << toolkit.get_dynamic_simulation_time_in_s()<< "s, speed error is: " << input << endl;
 	//show_information_with_leading_time_stamp(osstream);
 
     torque_PI_regulator.set_input(input);
     torque_PI_regulator.run(mode);
-	//osstream << "at time " << STEPS::TIME << "s, speed error PI regulator is: " << torque_PI_regulator.get_output() << endl;
+	//osstream << "at time " << toolkit.get_dynamic_simulation_time_in_s()<< "s, speed error PI regulator is: " << torque_PI_regulator.get_output() << endl;
 	//show_information_with_leading_time_stamp(osstream);
 	//osstream<<"torque_PI_regulator input = "<<input<<", output = "<<torque_PI_regulator.get_output()<<endl;
 
@@ -867,12 +872,12 @@ void WT3E0::run(DYNAMIC_MODE mode)
         double w = turb->get_generator_speed_in_pu();
         if(w<wmin or w>wmax*1.1)
         {
-            osstream<<"Frequency regulation logic of "<<get_device_name()<<" is tripped at time "<<get_dynamic_simulation_time_in_s()<<"s due to ";
+            osstream<<"Frequency regulation logic of "<<get_device_name()<<" is tripped at time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s due to ";
             if(w<wmin)
                 osstream<<"rotor w<wmin: "<<w<<"<"<<wmin<<" pu";
             else
                 osstream<<"rotor w>wmax*1.1: "<<w<<">"<<wmax*1.1<<" pu";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             trip_frequency_regulation();
         }
     }*/
@@ -889,18 +894,18 @@ void WT3E0::run(DYNAMIC_MODE mode)
         input = torque_PI_regulator.get_output()*speed
                 -power_order_integrator.get_output();
     }
-	//osstream << "at time " << STEPS::TIME << "s, active power rate is: " << input << endl;
+	//osstream << "at time " << toolkit.get_dynamic_simulation_time_in_s()<< "s, active power rate is: " << input << endl;
 	//show_information_with_leading_time_stamp(osstream);
     if(input>get_rPmax_in_pu())
         input = get_rPmax_in_pu();
     if(input<get_rPmin_in_pu())
         input = get_rPmin_in_pu();
 
-    //osstream<<"At time "<<STEPS::TIME<<", WT3E0 power_order_integrator input is "<<input;
+    //osstream<<"At time "<<toolkit.get_dynamic_simulation_time_in_s()<<", WT3E0 power_order_integrator input is "<<input;
     //show_information_with_leading_time_stamp(osstream);
     power_order_integrator.set_input(input);
     power_order_integrator.run(mode);
-	//osstream << "at time " << STEPS::TIME << "s, active power order is: " << power_order_integrator.get_output() << endl;
+	//osstream << "at time " << toolkit.get_dynamic_simulation_time_in_s()<< "s, active power order is: " << power_order_integrator.get_output() << endl;
 	//show_information_with_leading_time_stamp(osstream);
 	//osstream<<"power_order_integrator input = "<<input<<", output = "<<power_order_integrator.get_output()<<endl;
 
@@ -912,7 +917,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
     input = vterm+iterm*xcomp;
     voltage_sensor.set_input(input);
     voltage_sensor.run(mode);
-    //osstream<<"At time "<<STEPS::TIME<<" s"<<endl;
+    //osstream<<"At time "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
     //osstream<<"voltage_sensor input = "<<setw(20)<<setprecision(19)<<fixed<<input<<", output = "<<voltage_sensor.get_output()<<endl;
 
     input = get_voltage_reference_in_pu()-voltage_sensor.get_output();
@@ -1081,7 +1086,8 @@ void WT3E0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3E0::save()
@@ -1256,7 +1262,8 @@ double WT3E0::get_model_data_with_name(string par_name) const
     if(par_name == "PMAX IN PU")                       return get_Pmax_in_pu();
     if(par_name == "ACTIVE CURRENT MAX IN PU")         return get_IPmax_in_pu();
 
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -1326,7 +1333,8 @@ void WT3E0::set_model_data_with_name(string par_name, double value)
     if(par_name == "PMAX IN PU")                       return set_Pmax_in_pu(value);
     if(par_name == "ACTIVE CURRENT MAX IN PU")         return set_IPmax_in_pu(value);
 
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

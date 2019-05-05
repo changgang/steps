@@ -14,6 +14,7 @@
 
 #include "header/model/sg_models/stabilizer_model/IEE2ST.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class IEE2ST_TEST : public STABILIZER_MODEL_TEST
@@ -28,6 +29,7 @@ class IEE2ST_TEST : public STABILIZER_MODEL_TEST
         void test_set_get_parameters();
         void test_set_get_input_signals();
     private:
+
 };
 
 #endif//IEE2ST_TEST_H

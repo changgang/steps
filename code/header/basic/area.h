@@ -5,8 +5,6 @@
 #include <string>
 using namespace std;
 
-
-
 class AREA : public BASE
 {
     public:

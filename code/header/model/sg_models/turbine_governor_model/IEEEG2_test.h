@@ -12,6 +12,7 @@
 
 #include "header/model/sg_models/turbine_governor_model/IEEEG2.h"
 #include "header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class IEEEG2_TEST : public TURBINE_GOVERNOR_MODEL_TEST

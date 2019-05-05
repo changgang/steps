@@ -1,5 +1,6 @@
 #include "header/model/sg_models/turbine_governor_model/IEESGO.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 IEESGO::IEESGO()
 {
     clear();
@@ -224,7 +225,8 @@ bool IEESGO::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -232,6 +234,8 @@ bool IEESGO::setup_model_with_bpa_string(string data)
 void IEESGO::initialize()
 {
     ostringstream osstream;
+
+    STEPS& toolkit = get_toolkit();
 
     double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
 
@@ -259,14 +263,14 @@ void IEESGO::initialize()
         osstream<<"Initialization Error. Initial mechanical power exceeds upper limit when initializing "
                <<get_model_type()<<" model "<<get_model_name()<<" of "<<get_device_name()<<endl
                <<"Initial mechanical power is "<<pmech0<<" p.u., upper limit is "<<pmax;
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(pmech0<pmin)
     {
         osstream<<"Initialization Error. Initial mechanical power exceeds lower limit when initializing "
                <<get_model_type()<<" model "<<get_model_name()<<" of "<<get_device_name()<<endl
                <<"Initial mechanical power is "<<pmech0<<" p.u., lower limit is "<<pmin;
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     set_flag_model_initialized_as_true();
@@ -338,7 +342,8 @@ void IEESGO::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEESGO::save()
 {

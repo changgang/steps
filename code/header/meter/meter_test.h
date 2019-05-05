@@ -14,7 +14,7 @@
 
 #include "header/meter/meter.h"
 #include "header/power_system_database.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class METER_TEST : public Test::Suite

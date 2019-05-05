@@ -92,23 +92,23 @@ void EXCITER_MODEL_TEST::test_step_response()
     EXCITER_MODEL* model = get_test_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    redirect_stdout_to_file("test_log/step_response_of_"+model->get_model_name()+"_model.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_"+model->get_model_name()+"_model.txt");
 
     run_step_response_of_exciter_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }
 
 void EXCITER_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
     osstream<<"TIME\tVOLT\tEFD";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void EXCITER_MODEL_TEST::export_meter_values(double time)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
 
     EXCITER_MODEL* model = get_test_exciter_model();
@@ -119,12 +119,12 @@ void EXCITER_MODEL_TEST::export_meter_values(double time)
     osstream<<setw(6)<<setprecision(3)<<time<<"\t"
       <<setw(10)<<setprecision(6)<<voltage<<"\t"
       <<setw(10)<<setprecision(6)<<efd;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void EXCITER_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
 
     bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
@@ -143,10 +143,10 @@ void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
     EXCITER_MODEL* model = get_test_exciter_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     double TIME = -delt*2.0;
     double efd;
@@ -210,5 +210,5 @@ void EXCITER_MODEL_TEST::test_get_standard_model_string()
     EXCITER_MODEL* model = get_test_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    show_information_with_leading_time_stamp(model->get_standard_model_string());
+    default_toolkit.show_information_with_leading_time_stamp(model->get_standard_model_string());
 }

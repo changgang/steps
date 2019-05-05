@@ -217,12 +217,13 @@ void CONTINGENCY_SCREENER::append_generator_to_monitor(const DEVICE_ID& did)
 
 double CONTINGENCY_SCREENER::search_cct()
 {
+    STEPS& toolkit = get_default_toolkit();
     ostringstream osstream;
     if(not is_searcher_is_properly_set())
     {
         osstream<<"CCT searcher is not properly set. No CCT will be searched."<<endl
           <<"0.0 will be returned.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 
@@ -249,7 +250,7 @@ double CONTINGENCY_SCREENER::search_cct()
 
             clearing_time_max += delt;
             osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
             is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
         }
@@ -265,7 +266,7 @@ double CONTINGENCY_SCREENER::search_cct()
 
                 clearing_time_max = clearing_time_min+0.5*delt;
                 osstream<<"Now go on checking clearing time "<<clearing_time_max<<" s.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 is_clearing_time_max_stable = perform_simulation_with_clearing_time(clearing_time_max);
             }
@@ -281,7 +282,7 @@ double CONTINGENCY_SCREENER::search_cct()
 
                     clearing_time_min *=0.5;
                     osstream<<"Now go on checking clearing time "<<clearing_time_min<<" s.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     is_clearing_time_min_stable = perform_simulation_with_clearing_time(clearing_time_min);
                 }
@@ -293,7 +294,7 @@ double CONTINGENCY_SCREENER::search_cct()
                       <<", but stable when fault clearing time is "<<clearing_time_max<<endl
                       <<"This is impossible for power system operation."<<endl
                       <<"If you observe this message, CONGRATULATIONS, you find something interesting. Go on working on it.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     break;
                 }
@@ -314,6 +315,7 @@ double CONTINGENCY_SCREENER::search_cct()
 bool CONTINGENCY_SCREENER::is_searcher_is_properly_set() const
 {
     ostringstream osstream;
+    STEPS& toolkit = get_default_toolkit();
 
     bool is_properly_set = true;
     osstream<<"CCT searcher is not properly set due to:"<<endl;
@@ -363,14 +365,15 @@ bool CONTINGENCY_SCREENER::is_searcher_is_properly_set() const
         osstream<<"Less than 2 generators are monitored."<<endl;
     }
     if(not is_properly_set)
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     return is_properly_set;
 }
 
 bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing_time)
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    STEPS& toolkit = get_default_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    psdb.clear();
 
     PSSE_IMEXPORTER importer;
 
@@ -405,16 +408,16 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
     clear_fault(simulator);
 
     double tend = get_simulation_time_span_in_s();
-    //double delt = get_dynamic_simulation_time_step_in_s();
+    //double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     simulator.run_to(tend-1.0);
 
     bool is_stable = true;
-    double TIME = get_dynamic_simulation_time_in_s();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
     while(TIME<tend)
     {
         simulator.run_a_step();
-        TIME = get_dynamic_simulation_time_in_s();
+        TIME = toolkit.get_dynamic_simulation_time_in_s();
         is_stable = check_if_system_is_stable(simulator);
         if(not is_stable)
             break;

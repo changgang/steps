@@ -194,16 +194,17 @@ static unique_ptr<Test::Output> cmdline(int argc, char* argv[])
 
 
 // Main test program
-//
 int main(int argc, char* argv[])
 {
-    initialize_simulator(); // this function should be called first
+    initialize_package(); // this function should be called first
 
+    cout<<__FILE__<<" @ "<<__LINE__<<"\n";
 	try
 	{
         Test::Suite ts;
-/*
+
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
+
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
         ts.add(unique_ptr<Test::Suite>(new AREA_TEST));
         ts.add(unique_ptr<Test::Suite>(new ZONE_TEST));
@@ -237,7 +238,6 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new POWER_SYSTEM_DATABASE_TEST));
 
-
         ts.add(unique_ptr<Test::Suite>(new STEPS_IMEXPORTER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new PSSE_IMEXPORTER_TEST));
@@ -250,10 +250,10 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new NETWORK_MATRIX_TEST));
 
 
-        ts.add(unique_ptr<Test::Suite>(new JACOBIAN_BUILDER_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new JACOBIAN_BUILDER_TEST));
 
 
-        //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_SOLVER_TEST));
+        ts.add(unique_ptr<Test::Suite>(new POWERFLOW_SOLVER_TEST));
 /*
         ts.add(unique_ptr<Test::Suite>(new PROPORTIONAL_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new INTEGRAL_BLOCK_TEST));
@@ -288,10 +288,10 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new PSASPE13_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new IEE2ST_TEST));
-        ts.add(unique_ptr<Test::Suite>(new PSASPS1_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new PSASPS1_TEST));
         ts.add(unique_ptr<Test::Suite>(new PSASPS2_TEST));
         ts.add(unique_ptr<Test::Suite>(new PSASPS3_TEST));
-        ts.add(unique_ptr<Test::Suite>(new PSASPS4_TEST));/*
+        ts.add(unique_ptr<Test::Suite>(new PSASPS4_TEST));
         ts.add(unique_ptr<Test::Suite>(new PSASPS5_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new TGOV1_TEST));
@@ -311,16 +311,16 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new VDCOL_TEST));
         ts.add(unique_ptr<Test::Suite>(new CDC4T_TEST));
         ts.add(unique_ptr<Test::Suite>(new CDC6T_TEST));
-*/
-        /*ts.add(unique_ptr<Test::Suite>(new WT3G1_TEST));
+
+        ts.add(unique_ptr<Test::Suite>(new WT3G1_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3G0_TEST));
         ts.add(unique_ptr<Test::Suite>(new AERD0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3T0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3E0_TEST));
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
-        ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
+        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));*/
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
 
@@ -328,17 +328,16 @@ int main(int argc, char* argv[])
         unique_ptr<Test::Output> output(cmdline(argc, argv));
         ts.run(*output, true);
 
-        redirect_stdout_to_file("STEPS_test_report.html");
+        default_toolkit.redirect_stdout_to_file("STEPS_test_report.html");
         Test::HtmlOutput* const html = dynamic_cast<Test::HtmlOutput*>(output.get());
         if (html)
         	html->generate(cout, true, "STEPS");
-        recover_stdout();
+        default_toolkit.recover_stdout();
 	}
 	catch (...)
 	{
         cout << "unexpected exception encountered\n";
         return EXIT_FAILURE;
 	}
-	terminate_simulator();
 	return EXIT_SUCCESS;
 }

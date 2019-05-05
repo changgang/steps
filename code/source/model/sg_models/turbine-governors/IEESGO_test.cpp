@@ -1,5 +1,6 @@
 #include "header/model/sg_models/turbine_governor_model/IEESGO_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 using namespace std;
 
 IEESGO_TEST::IEESGO_TEST()
@@ -132,7 +133,7 @@ void IEESGO_TEST::test_step_response()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"IEESGO_TEST");
 
-    redirect_stdout_to_file("test_log/step_response_of_IEESGO_model.txt");
+    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_IEESGO_model.txt");
 
     IEESGO* model = (IEESGO*) get_test_turbine_governor_model();
 
@@ -140,7 +141,7 @@ void IEESGO_TEST::test_step_response()
 
     run_step_response_of_turbine_govnernor_model();
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 
 }
 

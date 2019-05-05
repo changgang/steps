@@ -1,5 +1,6 @@
 #include "header/model/sg_models/sync_generator_model/gencls_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -72,7 +73,7 @@ void GENCLS_TEST::test_initialize_and_get_initialized_inputs()
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
     GENERATOR* genptr = get_test_generator();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     complex<double> V=psdb.get_bus_complex_voltage_in_pu(1);
 

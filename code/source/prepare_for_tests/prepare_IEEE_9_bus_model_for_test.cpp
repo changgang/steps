@@ -5,6 +5,7 @@
 #include "header/model/load_model/IEEL.h"
 
 #include "header/data_imexporter/psse_imexporter.h"
+#include "header/steps_namespace.h"
 
 #include <istream>
 #include <iostream>
@@ -24,11 +25,13 @@ void prepare_IEEE_9_bus_model()
 
 void prepare_IEEE_9_bus_model_buses()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(10);
     psdb.set_system_base_power_in_MVA(100.0);
 
     BUS bus;
+    bus.set_toolkit(default_toolkit);
+
     bus.set_bus_number(1);
     bus.set_bus_name("BUS_1");
     bus.set_base_voltage_in_kV(16.5);
@@ -140,8 +143,10 @@ void prepare_IEEE_9_bus_model_buses()
 }
 void prepare_IEEE_9_bus_model_generators()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     GENERATOR generator;
+    generator.set_toolkit(default_toolkit);
+
     complex<double> gen_z(0.0);
 
     generator.set_generator_bus(1);
@@ -199,8 +204,10 @@ void prepare_IEEE_9_bus_model_generators()
 }
 void prepare_IEEE_9_bus_model_loads()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     LOAD load;
+    load.set_toolkit(default_toolkit);
+
     complex<double> s(0.0,0.0);
 
     load.set_load_bus(5);
@@ -238,8 +245,10 @@ void prepare_IEEE_9_bus_model_loads()
 }
 void prepare_IEEE_9_bus_model_lines()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     LINE line;
+    line.set_toolkit(default_toolkit);
+
     complex<double> z(0.0), y(0.0);
 
     line.set_sending_side_bus(4);
@@ -326,8 +335,10 @@ void prepare_IEEE_9_bus_model_lines()
 
 void prepare_IEEE_9_bus_model_transformers()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TRANSFORMER trans;
+    trans.set_toolkit(default_toolkit);
+
     complex<double> z(0.0), y(0.0);
 
     trans.set_winding_bus(PRIMARY_SIDE, 1);
@@ -385,8 +396,9 @@ void prepare_IEEE_9_bus_model_transformers()
 
 void prepare_IEEE_9_bus_model_areas()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     AREA area;
+    area.set_toolkit(default_toolkit);
 
     area.set_area_number(1);
     area.set_area_swing_bus(0);
@@ -404,8 +416,9 @@ void prepare_IEEE_9_bus_model_areas()
 
 void prepare_IEEE_9_bus_model_zones()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     ZONE zone;
+    zone.set_toolkit(default_toolkit);
 
     zone.set_zone_number(1);
 
@@ -414,8 +427,9 @@ void prepare_IEEE_9_bus_model_zones()
 
 void prepare_IEEE_9_bus_model_owners()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     OWNER owner;
+    owner.set_toolkit(default_toolkit);
 
     owner.set_owner_number(1);
 
@@ -424,7 +438,7 @@ void prepare_IEEE_9_bus_model_owners()
 
 void prepare_IEEE_9_bus_model_dynamic_model()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
     TERMINAL terminal;
@@ -435,6 +449,8 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     GENERATOR* generator;
 
     GENCLS gen1_model;
+    gen1_model.set_toolkit(default_toolkit);
+
     gen1_model.set_H_in_s(9.5515);
 
     generator = psdb.get_generator(did);
@@ -445,6 +461,8 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     did.set_device_terminal(terminal);
 
     GENCLS gen2_model;
+    gen2_model.set_toolkit(default_toolkit);
+
     gen2_model.set_H_in_s(3.3333);
 
     generator = psdb.get_generator(did);
@@ -455,6 +473,8 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     did.set_device_terminal(terminal);
 
     GENCLS gen3_model;
+    gen3_model.set_toolkit(default_toolkit);
+
     gen3_model.set_H_in_s(2.3516);
 
     generator = psdb.get_generator(did);
@@ -464,6 +484,8 @@ void prepare_IEEE_9_bus_model_dynamic_model()
 
 
     IEEL load_model;
+    load_model.set_toolkit(default_toolkit);
+
     load_model.set_P_alpha_1(1.0);
     load_model.set_P_alpha_2(0.0);
     load_model.set_P_alpha_3(0.0);
@@ -492,7 +514,7 @@ void prepare_IEEE_9_bus_model_dynamic_model()
 
 void prepare_IEEE_9_bus_model_classical_dynamic_model()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
     TERMINAL terminal;
@@ -503,6 +525,8 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     GENERATOR* generator;
 
     GENCLS gen1_model;
+    gen1_model.set_toolkit(default_toolkit);
+
     gen1_model.set_H_in_s(9.5515);
 
     generator = psdb.get_generator(did);
@@ -517,6 +541,8 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     did.set_device_terminal(terminal);
 
     GENCLS gen2_model;
+    gen2_model.set_toolkit(default_toolkit);
+
     gen2_model.set_H_in_s(3.3333);
 
     generator = psdb.get_generator(did);
@@ -531,6 +557,8 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     did.set_device_terminal(terminal);
 
     GENCLS gen3_model;
+    gen3_model.set_toolkit(default_toolkit);
+
     gen3_model.set_H_in_s(2.3516);
 
     generator = psdb.get_generator(did);
@@ -542,6 +570,8 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     did.set_device_type("LOAD");
 
     IEEL load_model;
+    load_model.set_toolkit(default_toolkit);
+
     load_model.set_P_alpha_1(1.0);
     load_model.set_P_alpha_2(0.0);
     load_model.set_P_alpha_3(0.0);
@@ -571,6 +601,7 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
 void prepare_IEEE_9_bus_model_complete_dynamic_model()
 {
     PSSE_IMEXPORTER importer;
+    importer.set_toolkit(default_toolkit);
     importer.load_dynamic_data("ieee9.dyr");
 }
 

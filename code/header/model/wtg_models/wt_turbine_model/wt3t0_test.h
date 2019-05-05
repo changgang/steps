@@ -12,6 +12,7 @@
 
 #include "header/model/wtg_models/wt_turbine_model/wt3t0.h"
 #include "header/model/wtg_models/wt_turbine_model/wt_turbine_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class WT3T0_TEST : public WT_TURBINE_MODEL_TEST

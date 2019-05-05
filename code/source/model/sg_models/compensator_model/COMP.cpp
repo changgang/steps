@@ -1,5 +1,6 @@
 #include "header/model/sg_models/compensator_model/COMP.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <istream>
 #include <iostream>
 
@@ -23,7 +24,7 @@ void COMP::clear()
 void COMP::copy_from_const_model(const COMP& model)
 {
     clear();
-    //this->set_power_system_database(model.get_default_power_system_database());
+    //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
     this->set_Xe(model.get_Xe());
 }
@@ -91,7 +92,8 @@ bool COMP::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -126,7 +128,8 @@ void COMP::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void COMP::save()
 {
@@ -160,7 +163,8 @@ double COMP::get_model_data_with_name(string par_name) const
     {
         if(par_name=="XE") return get_Xe();
     }
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -170,7 +174,8 @@ void COMP::set_model_data_with_name(string par_name, double value)
     {
         if(par_name=="XE") return set_Xe(value);
     }
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }
 

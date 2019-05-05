@@ -1,5 +1,6 @@
 #include "header/model/sg_models/exciter_model/PSASPE2.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -290,7 +291,8 @@ bool PSASPE2::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -338,7 +340,8 @@ void PSASPE2::initialize()
     double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
     this->Efd0 = Efd;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = generator->get_generator_bus();
     this->Vt0 = psdb.get_bus_voltage_in_pu(bus);
 
@@ -396,7 +399,8 @@ double PSASPE2::get_excitation_voltage_in_pu() const
     if(gen_model==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = generator->get_generator_bus();
     complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
     complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
@@ -431,7 +435,8 @@ void PSASPE2::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PSASPE2::save()

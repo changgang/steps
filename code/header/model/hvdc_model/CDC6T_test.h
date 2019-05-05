@@ -14,6 +14,7 @@
 
 #include "header/model/hvdc_model/CDC6T.h"
 #include "header/model/hvdc_model/hvdc_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class CDC6T_TEST : public HVDC_MODEL_TEST
@@ -28,6 +29,7 @@ class CDC6T_TEST : public HVDC_MODEL_TEST
         virtual void test_get_model_name();
         virtual void test_set_get_parameters();
     private:
+
 };
 
 #endif//CDC6T_TEST_H

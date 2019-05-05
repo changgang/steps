@@ -12,6 +12,7 @@
 
 #include "header/model/sg_models/exciter_model/CSEET1.h"
 #include "header/model/sg_models/exciter_model/exciter_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class CSEET1_TEST : public EXCITER_MODEL_TEST

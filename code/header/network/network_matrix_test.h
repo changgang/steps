@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/network/network_matrix.h"
+#include "header/STEPS.h"
 
 using namespace std;
 

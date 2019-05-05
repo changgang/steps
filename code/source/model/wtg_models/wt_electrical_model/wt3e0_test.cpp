@@ -1,5 +1,6 @@
 #include "header/model/wtg_models/wt_electrical_model/wt3e0_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -186,7 +187,7 @@ void WT3E0_TEST::test_set_get_parameters()
 void WT3E0_TEST::test_initialize()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"WT3E0_TEST");
-    set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
     ostringstream osstream;
 
     WT_GENERATOR_MODEL* wtgenmodel = get_test_wt_generator_model();
@@ -202,6 +203,6 @@ void WT3E0_TEST::test_initialize()
     osstream<<"Turbine blade radius = "<<model->get_turbine_blade_radius_in_m()<<" m, generator/turbine turn ratio = "<<model->get_generator_to_turbine_gear_ratio()<<endl
            <<"Pitch angle = "<<model->get_initial_pitch_angle_in_deg()<<" deg, turbine speed = "<<model->get_initial_turbine_speed_in_rad_per_s()<<" rad/s ("
            <<model->get_initial_turbine_speed_in_pu()<<" pu)";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
     */
 }

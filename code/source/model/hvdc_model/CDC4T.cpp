@@ -1,6 +1,7 @@
 #include "header/model/hvdc_model/CDC4T.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -216,7 +217,8 @@ bool CDC4T::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -295,9 +297,10 @@ void CDC4T::check_blocking_logic()
     if(is_manual_blocked())
         return;
 
-    double TIME = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
     double vac_r = psdb.get_bus_voltage_in_pu(bus_r);
 
@@ -311,7 +314,7 @@ void CDC4T::check_blocking_logic()
         {
             osstream<<hvdc->get_device_name()<<" will be blocked at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
             osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC blocking voltage threshold is "<<vblock<<" pu.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
             block_hvdc();
         }
@@ -322,7 +325,7 @@ void CDC4T::check_blocking_logic()
         {
             osstream<<hvdc->get_device_name()<<" block timer is timed out, and will unblock at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
             osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC unblocking voltage threshold is "<<vunblock<<" pu.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
             unblock_hvdc();
         }
@@ -341,7 +344,8 @@ void CDC4T::check_bypassing_logic()
     if(is_manual_bypassed())
         return;
 
-    double TIME = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     if(not is_bypassed())
     {
@@ -361,7 +365,7 @@ void CDC4T::check_bypassing_logic()
                 ostringstream osstream;
                 osstream<<hvdc->get_device_name()<<" will be bypassed at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
                 osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC bypassing voltage threshold is "<<vbypass<<" kV.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 bypass_hvdc();
             }
@@ -369,7 +373,7 @@ void CDC4T::check_bypassing_logic()
     }
     else
     {
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         size_t bus_i = hvdc->get_converter_bus(INVERTER);
         double vac_i = psdb.get_bus_voltage_in_pu(bus_i);
 
@@ -379,7 +383,7 @@ void CDC4T::check_bypassing_logic()
             ostringstream osstream;
             osstream<<hvdc->get_device_name()<<" bypass timer is timed out, and will unbypass at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
             osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vunbypass<<" pu.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
             unbypass_hvdc();
         }
@@ -395,7 +399,8 @@ void CDC4T::check_mode_switching_logic()
     if(is_blocked() or is_bypassed())
         return;
 
-    double TIME = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     double t_unblock = get_unblocking_time();
     double t_unbypass = get_unbypassing_time();
@@ -413,7 +418,7 @@ void CDC4T::check_mode_switching_logic()
                 ostringstream osstream;
                 osstream<<hvdc->get_device_name()<<" will switch mode from holding DC power to holding DC current at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
                 osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC mode switch voltage threshold is "<<vmode<<" kV.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 switch_hvdc_mode();
             }
@@ -426,7 +431,7 @@ void CDC4T::check_mode_switching_logic()
             ostringstream osstream;
             osstream<<hvdc->get_device_name()<<" mode switch timer is timed out, and will switch back to DC power control mode at time "<<TIME<<" s due to recovery of inverter DC voltage."<<endl;
             osstream<<"Inverter DC voltage is "<<vdc_i<<" pu, andDC mode switch voltage threshold is "<<vmode<<" pu.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
             switch_hvdc_mode_back();
         }
@@ -443,7 +448,8 @@ void CDC4T::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void CDC4T::save()

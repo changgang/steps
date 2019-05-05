@@ -15,7 +15,7 @@ class NETWORK_MATRIX : public BASE
     public:
         NETWORK_MATRIX();
         ~NETWORK_MATRIX();
-        void clear_database();
+        virtual void clear();
 
         void build_network_matrix();
         void build_decoupled_network_matrix();
@@ -97,6 +97,5 @@ class NETWORK_MATRIX : public BASE
     private:
         virtual bool is_valid() const;
         virtual void check();
-        virtual void clear();
 };
 #endif // NETWORK_MATRIX_H

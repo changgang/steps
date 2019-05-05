@@ -13,7 +13,7 @@
 #include "cpptest.h"
 
 #include "header/block/pi_block.h"
-
+#include "header/STEPS.h"
 using namespace std;
 
 class PI_BLOCK_TEST : public Test::Suite

@@ -132,9 +132,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_an
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode();
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -146,9 +146,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_an
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_mppt_mode();
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -160,9 +160,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_an
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode();
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -174,9 +174,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generato
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode();
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -188,9 +188,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generato
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_mppt_mode();
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -203,9 +203,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generato
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_overspeed_mode();
-        recover_stdout();
+        default_toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -216,7 +216,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 {
     ostringstream osstream;
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR* genptr = get_test_wt_generator();
     if(genptr==NULL)
@@ -233,10 +233,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-    STEPS::TIME = -delt*2.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -246,10 +246,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -272,11 +272,11 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
     while(true)
     {
-        STEPS::TIME += delt;
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -298,7 +298,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 {
     ostringstream osstream;
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR* genptr = get_test_wt_generator();
     if(genptr==NULL)
@@ -315,10 +315,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-    STEPS::TIME = -delt*2.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -328,10 +328,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -354,11 +354,11 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
     while(true)
     {
-        STEPS::TIME += delt;
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -381,7 +381,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 {
     ostringstream osstream;
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR* genptr = get_test_wt_generator();
     if(genptr==NULL)
@@ -398,10 +398,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-    STEPS::TIME = -delt*2.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -411,10 +411,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -437,11 +437,11 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
     while(true)
     {
-        STEPS::TIME += delt;
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -477,7 +477,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     ostringstream osstream;
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
@@ -488,9 +488,9 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    STEPS::TIME = -delt*2.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -500,10 +500,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -529,11 +529,11 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
     while(true)
     {
-        STEPS::TIME += delt;
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -558,7 +558,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     ostringstream osstream;
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
@@ -569,9 +569,9 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    STEPS::TIME = -delt*2.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -581,10 +581,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -610,11 +610,11 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
     while(true)
     {
-        STEPS::TIME += delt;
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -640,7 +640,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     ostringstream osstream;
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
@@ -651,9 +651,9 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    STEPS::TIME = -delt*2.0;
+    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -663,10 +663,10 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -692,11 +692,11 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
     while(true)
     {
-        STEPS::TIME += delt;
+        default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(default_toolkit.get_dynamic_simulation_time_in_s()>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -728,7 +728,7 @@ void WT_TURBINE_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
     osstream<<"TIME\tPELEC\tPMECH\tTSPEED\tGSPEED\tANGLE";
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_TURBINE_MODEL_TEST::export_meter_values()
@@ -737,12 +737,12 @@ void WT_TURBINE_MODEL_TEST::export_meter_values()
 
     WT_TURBINE_MODEL* model = get_test_wt_turbine_model();
 
-    osstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
+    osstream<<setw(10)<<setprecision(6)<<fixed<<default_toolkit.get_dynamic_simulation_time_in_s()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_wt_generator_active_power_generation_in_MW()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_mechanical_power_in_pu_from_wt_aerodynamic_model()*model->get_mbase_in_MVA()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_turbine_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_generator_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_rotor_angle_in_deg();
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

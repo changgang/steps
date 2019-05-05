@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/basic/zone.h"
+#include "header/STEPS.h"
 
 using namespace std;
 

@@ -13,6 +13,7 @@
 #include "header/model/sg_models/sg_model_test.h"
 
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class EXCITER_MODEL_TEST : public SG_MODEL_TEST

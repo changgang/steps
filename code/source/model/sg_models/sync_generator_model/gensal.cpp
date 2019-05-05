@@ -1,6 +1,10 @@
 #include "header/model/sg_models/sync_generator_model/gensal.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
+#include <iostream>
+using namespace std;
+
 GENSAL::GENSAL()
 {
     clear();
@@ -55,6 +59,7 @@ string GENSAL::get_model_name() const
 
 void GENSAL::update_source_impedance()
 {
+    STEPS& toolkit = get_toolkit();
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
     {
@@ -65,7 +70,7 @@ void GENSAL::update_source_impedance()
             ostringstream osstream;
             osstream<<"Warning. The subtransient reactance ("<<get_Xpp()<<") is not equal to generator source reactance ("<<Zsource.imag()<<") for '"<<get_model_name()<<"' of "<<get_device_name()<<"."<<endl
               <<"Source reactance will be updated with subtransient reactance.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             Zsource = complex<double>(Zsource.real(), Z.imag());
             generator->set_source_impedance_in_pu(Zsource);
         }
@@ -131,7 +136,8 @@ bool GENSAL::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -344,7 +350,8 @@ complex<double> GENSAL::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Exy = get_internal_voltage_in_pu_in_xy_axis();
     complex<double> Z(get_Rs(), get_Xpp());
     double mbase = get_mbase_in_MVA();
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
     return Exy/Z*mbase/sbase;
@@ -377,7 +384,8 @@ complex<double> GENSAL::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
     return Ixy*mbase/sbase;
@@ -393,7 +401,8 @@ double GENSAL::get_terminal_current_in_pu_based_on_sbase()
     double I = get_terminal_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
     return I*mbase/sbase;
@@ -409,7 +418,8 @@ void GENSAL::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void GENSAL::save()
@@ -478,7 +488,8 @@ double GENSAL::get_model_data_with_name(string par_name) const
         if(par_name == "S1")    return get_saturation_at_1();
         if(par_name == "S1.2")  return get_saturation_at_1p2();
     }
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
 
@@ -501,7 +512,8 @@ void GENSAL::set_model_data_with_name(string par_name, double value)
         if(par_name == "S1")    return set_saturation_at_1(value);
         if(par_name == "S1.2")  return set_saturation_at_1p2(value);
     }
-    show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 
 

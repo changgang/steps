@@ -1,5 +1,6 @@
 #include "header/device/generator.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 
 #include "header/model/sg_models/sync_generator_model/sync_generator_models.h"
 #include "header/model/sg_models/compensator_model/compensator_models.h"
@@ -130,7 +131,8 @@ void GENERATOR::set_model(const MODEL* model)
     }
     ostringstream osstream;
     osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up generator-related model.";
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void GENERATOR::set_sync_generator_model(const SYNC_GENERATOR_MODEL* model)
@@ -138,11 +140,12 @@ void GENERATOR::set_sync_generator_model(const SYNC_GENERATOR_MODEL* model)
     if(model==NULL)
         return;
 
+    STEPS& toolkit = get_toolkit();
     if(model->get_model_type()!="SYNC GENERATOR")
     {
         ostringstream osstream;
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up sync generator model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -173,7 +176,7 @@ void GENERATOR::set_sync_generator_model(const SYNC_GENERATOR_MODEL* model)
 
     if(new_model!=NULL)
     {
-
+        new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         sync_generator_model = new_model;
     }
@@ -181,7 +184,8 @@ void GENERATOR::set_sync_generator_model(const SYNC_GENERATOR_MODEL* model)
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append sync generator model of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -190,11 +194,13 @@ void GENERATOR::set_compensator_model(const COMPENSATOR_MODEL* model)
     if(model==NULL)
         return;
 
+    STEPS& toolkit = get_toolkit();
+
     if(model->get_model_type()!="COMPENSATOR")
     {
         ostringstream osstream;
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up compensator model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -215,7 +221,7 @@ void GENERATOR::set_compensator_model(const COMPENSATOR_MODEL* model)
 
     if(new_model!=NULL)
     {
-
+        new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         compensator_model = new_model;
     }
@@ -223,7 +229,7 @@ void GENERATOR::set_compensator_model(const COMPENSATOR_MODEL* model)
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append compensator model of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -232,11 +238,13 @@ void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
     if(model==NULL)
         return;
 
+    STEPS& toolkit = get_toolkit();
+
     if(model->get_model_type()!="EXCITER")
     {
         ostringstream osstream;
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up exciter model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -287,7 +295,7 @@ void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
 
     if(new_model!=NULL)
     {
-
+        new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         exciter_model = new_model;
     }
@@ -295,20 +303,21 @@ void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append exciter model of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
 {
-    ostringstream osstream;
     if(model==NULL)
         return;
+    STEPS& toolkit = get_toolkit();
 
+    ostringstream osstream;
     if(model->get_model_type()!="STABILIZER")
     {
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up stabilizer model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -354,7 +363,7 @@ void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
 
     if(new_model!=NULL)
     {
-
+        new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         stabilizer_model = new_model;
     }
@@ -362,7 +371,7 @@ void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append stabilizer model of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -370,12 +379,13 @@ void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
 {
     if(model==NULL)
         return;
+    STEPS& toolkit = get_toolkit();
 
     if(model->get_model_type()!="TURBINE GOVERNOR")
     {
         ostringstream osstream;
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up turbine governor model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -421,7 +431,7 @@ void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
 
     if(new_model!=NULL)
     {
-
+        new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         turbine_governor_model = new_model;
     }
@@ -429,7 +439,7 @@ void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append turbine governor model of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -437,12 +447,13 @@ void GENERATOR::set_turbine_load_controller_model(const TURBINE_LOAD_CONTROLLER_
 {
     if(model==NULL)
         return;
+    STEPS& toolkit = get_toolkit();
 
     if(model->get_model_type()!="TURBINE LOAD CONTROLLER")
     {
         ostringstream osstream;
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up turbine load controller model.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -463,6 +474,7 @@ void GENERATOR::set_turbine_load_controller_model(const TURBINE_LOAD_CONTROLLER_
 
     if(new_model!=NULL)
     {
+        new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         turbine_load_controller_model = new_model;
     }
@@ -470,7 +482,7 @@ void GENERATOR::set_turbine_load_controller_model(const TURBINE_LOAD_CONTROLLER_
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append turbine load controller model of "<<get_device_name();
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -637,7 +649,8 @@ void GENERATOR::report() const
       <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
       <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar"<<endl
       <<"Zsource = "<<setw(8)<<setprecision(6)<<fixed<<get_generator_impedance_in_pu();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void GENERATOR::save() const
@@ -650,6 +663,9 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
     if(this==(&gen)) return *this;
 
     clear();
+
+    set_toolkit(gen.get_toolkit());
+
     set_generator_bus(gen.get_generator_bus());
     set_identifier(gen.get_identifier());
     set_status(gen.get_status());
@@ -686,7 +702,8 @@ complex<double> GENERATOR::get_source_dynamic_current_in_pu_based_on_system_base
     if(get_status()==false or generator_model==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> I = generator_model->get_terminal_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();

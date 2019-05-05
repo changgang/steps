@@ -1,5 +1,6 @@
 #include "header/model/hvdc_model/vdcol.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -46,6 +47,7 @@ double VDCOL::get_vdcol_current_of_last_point_in_kA() const
 void VDCOL::append_vdcol_point_in_kV_kA(double V_in_kV, double I_in_kA)
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
     size_t n = get_vdcol_point_count();
     if(n == 0)
     {
@@ -61,7 +63,7 @@ void VDCOL::append_vdcol_point_in_kV_kA(double V_in_kV, double I_in_kA)
             if(V_in_kV==get_vdcol_voltage_of_point_in_kV(i))
             {
                 osstream<<"Warning. Cannot set duplicate VDCOL points with the same voltage ("<<V_in_kV<<" kV).";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
                 return;
             }
         }
@@ -132,6 +134,7 @@ double VDCOL::get_vdcol_current_of_point_in_kA(size_t index) const
 double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_in_kV(double Vdci_in_kV) const
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
 
     size_t n = get_vdcol_point_count();
     if(n==0)
@@ -159,7 +162,7 @@ double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_i
     osstream<<"This warning information should never be displayed. Otherwise, the following VDCOL in invalid:"<<endl;
     for(size_t i=0; i!=n; ++i)
         osstream<<"Point "<<i<<": "<<get_vdcol_voltage_of_point_in_kV(i)<<" kV, "<<get_vdcol_current_of_point_in_kA(i)<<" kA"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     return 0.0;
 }
@@ -167,6 +170,16 @@ double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_i
 void VDCOL::clear()
 {
     vdcol_parameters.clear();
+}
+
+bool VDCOL::is_valid() const
+{
+    return true;
+}
+
+void VDCOL::check()
+{
+    ;
 }
 
 VDCOL& VDCOL::operator=(const VDCOL& limiter)

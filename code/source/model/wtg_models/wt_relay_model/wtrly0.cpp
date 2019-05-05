@@ -1,5 +1,6 @@
 #include "header/model/wtg_models/wt_relay_model/wtrly0.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <iostream>
 using namespace std;
 
@@ -62,12 +63,13 @@ string WTRLY0::get_model_name() const
 
 void WTRLY0::set_wind_spped_relay_pair_in_pu_s(size_t index, double vwind, double tdelay)
 {
+    STEPS& toolkit = get_toolkit();
     if(index>=MAX_RELAY_COUNT)
     {
         ostringstream osstream;
         osstream<<"Warning. Index exceeds "<<MAX_RELAY_COUNT<<" when setting up "<<get_model_name()<<" of "<<get_device_name()<<endl
                 <<"No wind speed relay pair will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     vwind_th[index] = vwind;
     vwind_relay_timer[index].set_timer_interval_in_s(tdelay);
@@ -75,12 +77,13 @@ void WTRLY0::set_wind_spped_relay_pair_in_pu_s(size_t index, double vwind, doubl
 
 void WTRLY0::set_rotor_speed_relay_pair_in_pu_s(size_t index, double speed, double tdelay)
 {
+    STEPS& toolkit = get_toolkit();
     if(index>=MAX_RELAY_COUNT)
     {
         ostringstream osstream;
         osstream<<"Warning. Index exceeds "<<MAX_RELAY_COUNT<<" when setting up "<<get_model_name()<<" of "<<get_device_name()<<endl
                 <<"No rotor speed relay pair will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     speed_th[index] = speed;
     speed_relay_timer[index].set_timer_interval_in_s(tdelay);
@@ -88,12 +91,13 @@ void WTRLY0::set_rotor_speed_relay_pair_in_pu_s(size_t index, double speed, doub
 
 void WTRLY0::set_bus_frequency_relay_pair_in_pu_s(size_t index, double freq, double tdelay)
 {
+    STEPS& toolkit = get_toolkit();
     if(index>=MAX_RELAY_COUNT)
     {
         ostringstream osstream;
         osstream<<"Warning. Index exceeds "<<MAX_RELAY_COUNT<<" when setting up "<<get_model_name()<<" of "<<get_device_name()<<endl
                 <<"No bus frequency relay pair will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     freq_th[index] = freq;
     freq_relay_timer[index].set_timer_interval_in_s(tdelay);
@@ -101,12 +105,13 @@ void WTRLY0::set_bus_frequency_relay_pair_in_pu_s(size_t index, double freq, dou
 
 void WTRLY0::set_bus_voltage_relay_pair_in_pu_s(size_t index, double volt, double tdelay)
 {
+    STEPS& toolkit = get_toolkit();
     if(index>=MAX_RELAY_COUNT)
     {
         ostringstream osstream;
         osstream<<"Warning. Index exceeds "<<MAX_RELAY_COUNT<<" when setting up "<<get_model_name()<<" of "<<get_device_name()<<endl
                 <<"No bus voltage relay pair will be set.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     volt_th[index] = volt;
     volt_relay_timer[index].set_timer_interval_in_s(tdelay);
@@ -248,7 +253,8 @@ bool WTRLY0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -308,7 +314,8 @@ void WTRLY0::check_wind_speed_relay()
 
     DEVICE_ID did = get_device_id();
 
-    DYNAMICS_SIMULATOR& sim = get_default_dynamic_simulator();
+    STEPS& toolkit = get_toolkit();
+    DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
     double vwind = get_wind_speed_in_pu();
 
@@ -321,18 +328,18 @@ void WTRLY0::check_wind_speed_relay()
                 if(vwind_th[i]>1.0 and vwind>vwind_th[i])
                 {
                     vwind_relay_timer[i].start();
-                    osstream<<"Wind speed relay timer of "<<get_device_name()<<" is started at "<<get_dynamic_simulation_time_in_s()
+                    osstream<<"Wind speed relay timer of "<<get_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
                             <<"s due to wind speed exceeding over wind speed threshold: "<<vwind<<" > "<<vwind_th[i]<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 else
                 {
                     if(vwind_th[i]<1.0 and vwind<vwind_th[i])
                     {
                         vwind_relay_timer[i].start();
-                        osstream<<"Wind speed relay timer of "<<get_device_name()<<" is started at "<<get_dynamic_simulation_time_in_s()
+                        osstream<<"Wind speed relay timer of "<<get_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to wind speed exceeding under wind speed threshold: "<<vwind<<" < "<<vwind_th[i]<<endl;
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
             }
@@ -342,8 +349,8 @@ void WTRLY0::check_wind_speed_relay()
                 if(vwind_relay_timer[i].is_timed_out())
                 {
 
-                    osstream<<"Wind speed relay timer of "<<get_device_name()<<" is timed out at "<<get_dynamic_simulation_time_in_s()<<" s"<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    osstream<<"Wind speed relay timer of "<<get_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     sim.trip_wt_generator(did, INFINITE_THRESHOLD);
                     sim.enable_relay_action_flag();
                 }
@@ -352,18 +359,18 @@ void WTRLY0::check_wind_speed_relay()
                     if(vwind_th[i]>1.0 and vwind<vwind_th[i])
                     {
                         vwind_relay_timer[i].reset();
-                        osstream<<"Wind speed relay timer of "<<get_device_name()<<" is reset at "<<get_dynamic_simulation_time_in_s()
+                        osstream<<"Wind speed relay timer of "<<get_device_name()<<" is reset at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to wind speed less than over wind speed threshold: "<<vwind<<" < "<<vwind_th[i]<<endl;
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                     else
                     {
                         if(vwind_th[i]<1.0 and vwind>vwind_th[i])
                         {
                             vwind_relay_timer[i].reset();
-                            osstream<<"Wind speed relay timer of "<<get_device_name()<<" is reset at "<<get_dynamic_simulation_time_in_s()
+                            osstream<<"Wind speed relay timer of "<<get_device_name()<<" is reset at "<<toolkit.get_dynamic_simulation_time_in_s()
                                     <<"s due to wind speed greater than under wind speed threshold: "<<vwind<<" > "<<vwind_th[i]<<endl;
-                            show_information_with_leading_time_stamp(osstream);
+                            toolkit.show_information_with_leading_time_stamp(osstream);
                         }
                     }
                 }
@@ -383,7 +390,8 @@ void WTRLY0::check_rotor_speed_relay()
 
     DEVICE_ID did = get_device_id();
 
-    DYNAMICS_SIMULATOR& sim = get_default_dynamic_simulator();
+    STEPS& toolkit = get_toolkit();
+    DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
     double speed = get_wt_generator_rotor_speed_in_pu();
 
@@ -396,18 +404,18 @@ void WTRLY0::check_rotor_speed_relay()
                 if(speed_th[i]>1.0 and speed>speed_th[i])
                 {
                     speed_relay_timer[i].start();
-                    osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is started at "<<get_dynamic_simulation_time_in_s()
+                    osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
                             <<"s due to rotor speed exceeding over rotor speed threshold: "<<speed<<" > "<<speed_th[i]<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 else
                 {
                     if(speed_th[i]<1.0 and speed<speed_th[i])
                     {
                         speed_relay_timer[i].start();
-                        osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is started at "<<get_dynamic_simulation_time_in_s()
+                        osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to rotor speed exceeding under rotor speed threshold: "<<speed<<" < "<<speed_th[i]<<endl;
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
             }
@@ -417,8 +425,8 @@ void WTRLY0::check_rotor_speed_relay()
                 if(speed_relay_timer[i].is_timed_out())
                 {
 
-                    osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is timed out at "<<get_dynamic_simulation_time_in_s()<<" s"<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     sim.trip_wt_generator(did, INFINITE_THRESHOLD);
                     sim.enable_relay_action_flag();
                 }
@@ -427,18 +435,18 @@ void WTRLY0::check_rotor_speed_relay()
                     if(speed_th[i]>1.0 and speed<speed_th[i])
                     {
                         speed_relay_timer[i].reset();
-                        osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is reset at "<<get_dynamic_simulation_time_in_s()
+                        osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is reset at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to rotor speed less than over rotor speed threshold: "<<speed<<" < "<<speed_th[i]<<endl;
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                     else
                     {
                         if(speed_th[i]<1.0 and speed>speed_th[i])
                         {
                             speed_relay_timer[i].reset();
-                            osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is reset at "<<get_dynamic_simulation_time_in_s()
+                            osstream<<"Rotor speed relay timer of "<<get_device_name()<<" is reset at "<<toolkit.get_dynamic_simulation_time_in_s()
                                     <<"s due to rotor speed greater than under rotor speed threshold: "<<speed<<" > "<<speed_th[i]<<endl;
-                            show_information_with_leading_time_stamp(osstream);
+                            toolkit.show_information_with_leading_time_stamp(osstream);
                         }
                     }
                 }
@@ -458,7 +466,8 @@ void WTRLY0::check_bus_frequency_relay()
 
     DEVICE_ID did = get_device_id();
 
-    DYNAMICS_SIMULATOR& sim = get_default_dynamic_simulator();
+    STEPS& toolkit = get_toolkit();
+    DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
     double freq = get_bus_frequency_in_pu();
 
@@ -471,18 +480,18 @@ void WTRLY0::check_bus_frequency_relay()
                 if(freq_th[i]>1.0 and freq>freq_th[i])
                 {
                     freq_relay_timer[i].start();
-                    osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is started at "<<get_dynamic_simulation_time_in_s()
+                    osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
                             <<"s due to bus frequency exceeding over bus frequency threshold: "<<freq<<" > "<<freq_th[i]<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 else
                 {
                     if(freq_th[i]<1.0 and freq<freq_th[i])
                     {
                         freq_relay_timer[i].start();
-                        osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is started at "<<get_dynamic_simulation_time_in_s()
+                        osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to bus frequency exceeding under bus frequency threshold: "<<freq<<" < "<<freq_th[i]<<endl;
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
             }
@@ -492,8 +501,8 @@ void WTRLY0::check_bus_frequency_relay()
                 if(freq_relay_timer[i].is_timed_out())
                 {
 
-                    osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is timed out at "<<get_dynamic_simulation_time_in_s()<<" s"<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     sim.trip_wt_generator(did, INFINITE_THRESHOLD);
                     sim.enable_relay_action_flag();
                 }
@@ -502,18 +511,18 @@ void WTRLY0::check_bus_frequency_relay()
                     if(freq_th[i]>1.0 and freq<freq_th[i])
                     {
                         freq_relay_timer[i].reset();
-                        osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is reset at "<<get_dynamic_simulation_time_in_s()
+                        osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is reset at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to bus frequency less than over bus frequency threshold: "<<freq<<" < "<<freq_th[i]<<endl;
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                     else
                     {
                         if(freq_th[i]<1.0 and freq>freq_th[i])
                         {
                             freq_relay_timer[i].reset();
-                            osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is reset at "<<get_dynamic_simulation_time_in_s()
+                            osstream<<"Bus frequency relay timer of "<<get_device_name()<<" is reset at "<<toolkit.get_dynamic_simulation_time_in_s()
                                     <<"s due to bus frequency greater than under bus frequency threshold: "<<freq<<" > "<<freq_th[i]<<endl;
-                            show_information_with_leading_time_stamp(osstream);
+                            toolkit.show_information_with_leading_time_stamp(osstream);
                         }
                     }
                 }
@@ -533,7 +542,8 @@ void WTRLY0::check_bus_voltage_relay()
 
     DEVICE_ID did = get_device_id();
 
-    DYNAMICS_SIMULATOR& sim = get_default_dynamic_simulator();
+    STEPS& toolkit = get_toolkit();
+    DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
     double volt = get_bus_voltage_in_pu();
     if(volt>2.0)
@@ -548,18 +558,18 @@ void WTRLY0::check_bus_voltage_relay()
                 if(volt_th[i]>1.0 and volt>volt_th[i])
                 {
                     volt_relay_timer[i].start();
-                    osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is started at "<<get_dynamic_simulation_time_in_s()
+                    osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
                             <<"s due to bus voltage exceeding over bus voltage threshold: "<<volt<<" > "<<volt_th[i]<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 else
                 {
                     if(volt_th[i]<1.0 and volt<volt_th[i])
                     {
                         volt_relay_timer[i].start();
-                        osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is started at "<<get_dynamic_simulation_time_in_s()
+                        osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is started at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to bus voltage exceeding under bus voltage threshold: "<<volt<<" < "<<volt_th[i]<<endl;
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                 }
             }
@@ -569,8 +579,8 @@ void WTRLY0::check_bus_voltage_relay()
                 if(volt_relay_timer[i].is_timed_out())
                 {
 
-                    osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is timed out at "<<get_dynamic_simulation_time_in_s()<<" s"<<endl;
-                    show_information_with_leading_time_stamp(osstream);
+                    osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is timed out at "<<toolkit.get_dynamic_simulation_time_in_s()<<" s"<<endl;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
                     sim.trip_wt_generator(did, INFINITE_THRESHOLD);
                     sim.enable_relay_action_flag();
                 }
@@ -579,18 +589,18 @@ void WTRLY0::check_bus_voltage_relay()
                     if(volt_th[i]>1.0 and volt<volt_th[i])
                     {
                         volt_relay_timer[i].reset();
-                        osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is reset at "<<get_dynamic_simulation_time_in_s()
+                        osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is reset at "<<toolkit.get_dynamic_simulation_time_in_s()
                                 <<"s due to bus voltage less than over bus voltage threshold: "<<volt<<" < "<<volt_th[i]<<endl;
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
                     }
                     else
                     {
                         if(volt_th[i]<1.0 and volt>volt_th[i])
                         {
                             volt_relay_timer[i].reset();
-                            osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is reset at "<<get_dynamic_simulation_time_in_s()
+                            osstream<<"Bus voltage relay timer of "<<get_device_name()<<" is reset at "<<toolkit.get_dynamic_simulation_time_in_s()
                                     <<"s due to bus voltage greater than under bus voltage threshold: "<<volt<<" > "<<volt_th[i]<<endl;
-                            show_information_with_leading_time_stamp(osstream);
+                            toolkit.show_information_with_leading_time_stamp(osstream);
                         }
                     }
                 }
@@ -608,7 +618,8 @@ void WTRLY0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WTRLY0::save()
@@ -719,6 +730,7 @@ void WTRLY0::prepare_model_data_table()
 
 double WTRLY0::get_model_data_with_name(string par_name) const
 {
+    STEPS& toolkit = get_toolkit();
     par_name = string2upper(par_name);
     if(is_model_data_exist(par_name))
     {
@@ -727,13 +739,14 @@ double WTRLY0::get_model_data_with_name(string par_name) const
     }
     else
     {
-        show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+        toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
         return 0.0;
     }
 }
 
 void WTRLY0::set_model_data_with_name(string par_name, double value)
 {
+    STEPS& toolkit = get_toolkit();
     par_name = string2upper(par_name);
     if(is_model_data_exist(par_name))
     {
@@ -741,11 +754,10 @@ void WTRLY0::set_model_data_with_name(string par_name, double value)
     }
     else
     {
-        show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
+        toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
         return;
     }
 }
-
 
 void WTRLY0::prepare_model_internal_variable_table()
 {

@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -279,7 +280,7 @@ class POWER_SYSTEM_DATABASE_TEST : public Test::Suite
         void test_scale_pv_unit_power_in_area();
         void test_scale_pv_unit_power_in_zone();
 
-        void test_clear_database();
+        void test_clear();
         void test_clear_bus();
         void test_clear_all_buses();
         void test_clear_generator();

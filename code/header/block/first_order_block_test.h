@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/block/first_order_block.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class FIRST_ORDER_BLOCK_TEST : public Test::Suite

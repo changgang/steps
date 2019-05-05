@@ -1,6 +1,7 @@
 #include "header/model/load_model/load_model.h"
 #include "header/power_system_database.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 
 LOAD_MODEL::LOAD_MODEL()
@@ -25,7 +26,8 @@ string LOAD_MODEL::get_model_type() const
 
 double LOAD_MODEL::get_bus_voltage_in_pu() const
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
@@ -34,7 +36,8 @@ double LOAD_MODEL::get_bus_voltage_in_pu() const
 }
 double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();

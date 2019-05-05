@@ -1,5 +1,6 @@
 #include "header/model/sg_models/exciter_model/IEEET1.h"
 #include "header/basic/utility.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -249,13 +250,15 @@ bool IEEET1::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input data is provided: "<<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEEET1::initialize()
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit();
     if(is_model_initialized())
         return;
 
@@ -291,13 +294,13 @@ void IEEET1::initialize()
     {
         osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
           <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     if(input<get_VRmin_in_pu())
     {
         osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
           <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
     regulator.set_output(input);
@@ -359,7 +362,8 @@ void IEEET1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void IEEET1::save()

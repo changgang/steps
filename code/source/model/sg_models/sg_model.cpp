@@ -1,6 +1,7 @@
 #include "header/model/sg_models/sg_model.h"
 #include "header/basic/utility.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 SG_MODEL::SG_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
@@ -31,7 +32,8 @@ double SG_MODEL::get_bus_base_frequency_in_Hz() const
     if(gen==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return psdb.get_bus_base_frequency_in_Hz(gen->get_generator_bus());
 }
@@ -42,7 +44,8 @@ complex<double> SG_MODEL::get_terminal_complex_voltage_in_pu() const
     if(gen==NULL)
         return 0.0;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = gen->get_generator_bus();
     complex<double> Vxy = psdb.get_bus_complex_voltage_in_pu(bus);

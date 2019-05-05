@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    initialize_simulator(); // this function should be called first
+    initialize_package(); // this function should be called first
 
     PSSE_IMEXPORTER importer;
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
@@ -27,6 +27,5 @@ int main()
     solver.save_jacobian_matrix_to_file("IEEE39_jacobian_matrix.csv");
     solver.save_bus_powerflow_result_to_file("IEEE39_bus_powerflow_result.csv");
 
-    terminate_simulator();
     return 0;
 }

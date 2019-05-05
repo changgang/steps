@@ -104,10 +104,6 @@ void WT_RELAY_MODEL_TEST::test_set_get_damping()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        model->set_damping_in_pu(0.0);
-        TEST_ASSERT(fabs(model->get_damping_in_pu()-0.0)<FLOAT_EPSILON);
-        model->set_damping_in_pu(1.0);
-        TEST_ASSERT(fabs(model->get_damping_in_pu()-1.0)<FLOAT_EPSILON);
     }
     else
         TEST_ASSERT(false);
@@ -115,7 +111,7 @@ void WT_RELAY_MODEL_TEST::test_set_get_damping()
 
 void WT_RELAY_MODEL_TEST::test_get_standard_model_string()
 {
-    WT_RELAY_MODEL* model = get_test_wt_turbine_model();
+    WT_RELAY_MODEL* model = get_test_wt_relay_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
@@ -128,13 +124,13 @@ void WT_RELAY_MODEL_TEST::test_get_standard_model_string()
 
 void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode()
 {
-    WT_RELAY_MODEL* model = get_test_wt_turbine_model();
+    WT_RELAY_MODEL* model = get_test_wt_relay_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode();
-        recover_stdout();
+        toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -142,13 +138,13 @@ void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angl
 
 void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_mppt_mode()
 {
-    WT_RELAY_MODEL* model = get_test_wt_turbine_model();
+    WT_RELAY_MODEL* model = get_test_wt_relay_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_mppt_mode();
-        recover_stdout();
+        toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -156,13 +152,13 @@ void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angl
 
 void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode()
 {
-    WT_RELAY_MODEL* model = get_test_wt_turbine_model();
+    WT_RELAY_MODEL* model = get_test_wt_relay_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode();
-        recover_stdout();
+        toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -170,13 +166,13 @@ void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angl
 
 void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode()
 {
-    WT_RELAY_MODEL* model = get_test_wt_turbine_model();
+    WT_RELAY_MODEL* model = get_test_wt_relay_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode();
-        recover_stdout();
+        toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -184,13 +180,13 @@ void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_
 
 void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_mppt_mode()
 {
-    WT_RELAY_MODEL* model = get_test_wt_turbine_model();
+    WT_RELAY_MODEL* model = get_test_wt_relay_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_mppt_mode();
-        recover_stdout();
+        toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -203,9 +199,9 @@ void WT_RELAY_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generator_
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_overspeed_mode();
-        recover_stdout();
+        toolkit.recover_stdout();
     }
     else
         TEST_ASSERT(false);
@@ -216,7 +212,7 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
 {
     ostringstream osstream;
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR* genptr = get_test_wt_generator();
     if(genptr==NULL)
@@ -233,10 +229,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
     WT_RELAY_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-    STEPS::TIME = -delt*2.0;
+    toolkit.TIME -= (2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -246,10 +242,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        toolkit.TIME += delt;
+        if(toolkit.TIME>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -272,11 +268,11 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
 
     while(true)
     {
-        STEPS::TIME += delt;
+        toolkit.TIME += delt;
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(toolkit.TIME>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -298,7 +294,7 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
 {
     ostringstream osstream;
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR* genptr = get_test_wt_generator();
     if(genptr==NULL)
@@ -315,10 +311,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
     WT_RELAY_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-    STEPS::TIME = -delt*2.0;
+    toolkit.TIME -= (2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -328,10 +324,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        toolkit.TIME += delt;
+        if(toolkit.TIME>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -354,11 +350,11 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
 
     while(true)
     {
-        STEPS::TIME += delt;
+        toolkit.TIME += delt;
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(toolkit.TIME>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -381,7 +377,7 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
 {
     ostringstream osstream;
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR* genptr = get_test_wt_generator();
     if(genptr==NULL)
@@ -398,10 +394,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
     WT_RELAY_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-    STEPS::TIME = -delt*2.0;
+    toolkit.TIME -= (2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -411,10 +407,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        toolkit.TIME += delt;
+        if(toolkit.TIME>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -437,11 +433,11 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_angle
 
     while(true)
     {
-        STEPS::TIME += delt;
+        toolkit.TIME += delt;
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(toolkit.TIME>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -477,7 +473,7 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     ostringstream osstream;
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
@@ -488,9 +484,9 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     WT_RELAY_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
-    STEPS::TIME = -delt*2.0;
+    toolkit.TIME -= (2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -500,10 +496,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        toolkit.TIME += delt;
+        if(toolkit.TIME>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -529,11 +525,11 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
 
     while(true)
     {
-        STEPS::TIME += delt;
+        toolkit.TIME += delt;
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(toolkit.TIME>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -558,7 +554,7 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     ostringstream osstream;
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
@@ -569,9 +565,9 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     WT_RELAY_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
-    STEPS::TIME = -delt*2.0;
+    toolkit.TIME -= (2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -581,10 +577,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        toolkit.TIME += delt;
+        if(toolkit.TIME>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -610,11 +606,11 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
 
     while(true)
     {
-        STEPS::TIME += delt;
+        toolkit.TIME += delt;
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(toolkit.TIME>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -640,7 +636,7 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     ostringstream osstream;
 
     double delt = 0.001;
-    set_dynamic_simulation_time_step_in_s(delt);
+    toolkit.set_dynamic_simulation_time_step_in_s(delt);
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     genmodel->initialize();
@@ -651,9 +647,9 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     WT_RELAY_MODEL*model = get_test_wt_turbine_model();
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
-    STEPS::TIME = -delt*2.0;
+    toolkit.TIME -= (2.0*delt);
     double generator_speed;
 
     model->initialize();
@@ -663,10 +659,10 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
     export_meter_values();
     while(true)
     {
-        STEPS::TIME += delt;
-        if(STEPS::TIME>1.0+FLOAT_EPSILON)
+        toolkit.TIME += delt;
+        if(toolkit.TIME>1.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -692,11 +688,11 @@ void WT_RELAY_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator_p
 
     while(true)
     {
-        STEPS::TIME += delt;
+        toolkit.TIME += delt;
 
-        if(STEPS::TIME>6.0+FLOAT_EPSILON)
+        if(toolkit.TIME>6.0+FLOAT_EPSILON)
         {
-            STEPS::TIME -=delt;
+            toolkit.TIME -=delt;
             break;
         }
         generator_speed =  model->get_generator_speed_in_pu();
@@ -728,7 +724,7 @@ void WT_RELAY_MODEL_TEST::export_meter_title()
 {
     ostringstream osstream;
     osstream<<"TIME\tPELEC\tPMECH\tTSPEED\tGSPEED\tANGLE";
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT_RELAY_MODEL_TEST::export_meter_values()
@@ -737,12 +733,12 @@ void WT_RELAY_MODEL_TEST::export_meter_values()
 
     WT_RELAY_MODEL* model = get_test_wt_turbine_model();
 
-    osstream<<setw(10)<<setprecision(6)<<fixed<<STEPS::TIME<<"\t"
+    osstream<<setw(10)<<setprecision(6)<<fixed<<toolkit.get_dynamic_simulation_time_in_s()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_wt_generator_active_power_generation_in_MW()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_mechanical_power_in_pu_from_wt_aerodynamic_model()*model->get_mbase_in_MVA()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_turbine_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_generator_speed_in_pu()<<"\t"
            <<setw(10)<<setprecision(6)<<fixed<<model->get_rotor_angle_in_deg();
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

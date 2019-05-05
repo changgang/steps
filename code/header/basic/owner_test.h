@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/basic/owner.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -32,6 +33,7 @@ class OWNER_TEST : public Test::Suite
         void test_copy_with_operator_equal();
     private:
         OWNER owner;
+
 };
 
 #endif

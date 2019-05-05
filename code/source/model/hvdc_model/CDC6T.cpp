@@ -1,6 +1,7 @@
 #include "header/model/hvdc_model/CDC6T.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>
@@ -362,7 +363,8 @@ bool CDC6T::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -450,12 +452,12 @@ void CDC6T::check_blocking_logic()
 
     if(is_manual_blocked())
         return;
-
-    double TIME = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
     size_t bus_i = hvdc->get_converter_bus(INVERTER);
     double vac_r = psdb.get_bus_voltage_in_pu(bus_r);
@@ -475,7 +477,7 @@ void CDC6T::check_blocking_logic()
         {
             osstream<<hvdc->get_device_name()<<" will be blocked at time "<<TIME<<" s due to instantaneous drop of rectifier AC voltage."<<endl;
             osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC blocking voltage threshold is "<<vacr_iblock<<" pu.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
             block_flag = true;
         }
@@ -488,7 +490,7 @@ void CDC6T::check_blocking_logic()
 
                 osstream<<hvdc->get_device_name()<<" rectifier AC blocking timer is started at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
         else
@@ -499,7 +501,7 @@ void CDC6T::check_blocking_logic()
 
                 osstream<<hvdc->get_device_name()<<" rectifier AC blocking timer is reset at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
 
@@ -509,7 +511,7 @@ void CDC6T::check_blocking_logic()
             {
                 osstream<<hvdc->get_device_name()<<" rectifier AC blocking timer is timed out and will be blocked at time "<<TIME<<" s due to remaining drop of rectifier AC voltage for "<<tr_dblock<<" s."<<endl;
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and AC delayed blocking voltage threshold is "<<vacr_dblock<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 block_flag = true;
             }
@@ -521,7 +523,7 @@ void CDC6T::check_blocking_logic()
             {
                 osstream<<hvdc->get_device_name()<<" inverter AC blocking timer is started and block signal is sent to rectifier at time "<<TIME<<" s due to drop of inverter AC voltage"<<endl;
                 osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC instantaneous blocking voltage threshold is "<<vaci_iblock<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 inv_ac_blocking_signal_transmitting_timer.start();
             }
@@ -532,7 +534,7 @@ void CDC6T::check_blocking_logic()
             {
                 osstream<<hvdc->get_device_name()<<" inverter AC blocking timer is timed out and will be blocked at time "<<TIME<<" s due to drop of inverter AC voltage after "<<t_comm<<" s."<<endl;
                 osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC instantaneous blocking voltage threshold is "<<vaci_iblock<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 block_flag = true;
             }
@@ -568,7 +570,7 @@ void CDC6T::check_blocking_logic()
             {
                 osstream<<hvdc->get_device_name()<<" rectifier AC unblocking timer is started at time "<<TIME<<" s due to recovery of rectifier AC voltage."<<endl;
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed unblocking voltage threshold is "<<vacr_dunblock<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 rec_ac_unblocking_timer.start();
             }
@@ -579,7 +581,7 @@ void CDC6T::check_blocking_logic()
             {
                 osstream<<hvdc->get_device_name()<<" rectifier AC unblocking timer is reset at time "<<TIME<<" s due to drop of rectifier AC voltage."<<endl;
                 osstream<<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC delayed unblocking voltage threshold is "<<vacr_dunblock<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 rec_ac_unblocking_timer.reset();
             }
@@ -593,7 +595,7 @@ void CDC6T::check_blocking_logic()
                 {
                     osstream<<hvdc->get_device_name()<<" inverter AC unblocking timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
                     osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC delayed unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     inv_ac_unblocking_timer.start();
                 }
@@ -604,7 +606,7 @@ void CDC6T::check_blocking_logic()
                 {
                     osstream<<hvdc->get_device_name()<<" inverter AC unblocking timer is reset at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
                     osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC delayed unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     inv_ac_unblocking_timer.reset();
                 }
@@ -614,7 +616,7 @@ void CDC6T::check_blocking_logic()
                     {
                         osstream<<hvdc->get_device_name()<<" inverter AC unblocking timer is timed out and unblocking signal is sent to rectifier side at time "<<TIME<<" s since inverter unblocking timer is timed out."<<endl;
                         osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC delayed unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
 
                         inv_ac_unblocking_timer.reset();
                         inv_ac_unblocking_signal_transmitting_timer.start();
@@ -630,7 +632,7 @@ void CDC6T::check_blocking_logic()
                 osstream<<hvdc->get_device_name()<<" block timer, rectifier AC unblocking timer, and inverter AC unblocking signal transmitting timer are timed out, and will be unblocked at time "<<TIME<<" s due to recovery of rectifier and inverter AC voltage for at least "<<tr_dunblock<<" s"<<endl
                   <<"Rectifier AC voltage is "<<vac_r<<" pu, and rectifier AC unblocking voltage threshold is "<<vacr_dunblock<<" pu."<<endl
                   <<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC unblocking voltage threshold is "<<vaci_dunblock<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 unblock_hvdc();
                 rec_ac_unblocking_timer.reset();
@@ -652,9 +654,10 @@ void CDC6T::check_bypassing_logic()
     if(is_manual_bypassed())
         return;
 
-    double TIME = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
 
     if(not is_bypassed())
@@ -673,7 +676,7 @@ void CDC6T::check_bypassing_logic()
             {
                 osstream<<hvdc->get_device_name()<<" will be bypassed at time "<<TIME<<" s due to instantaneous drop of inverter DC voltage."<<endl;
                 osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and inverter DC bypassing voltage threshold is "<<vdc_ibypass<<" kV.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 bypass_logic = true;
             }
@@ -687,7 +690,7 @@ void CDC6T::check_bypassing_logic()
                 {
                     osstream<<hvdc->get_device_name()<<" inverter AC bypassing timer is started at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
                     osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     inv_ac_bypassing_timer.start();
                 }
@@ -698,7 +701,7 @@ void CDC6T::check_bypassing_logic()
                 {
                     osstream<<hvdc->get_device_name()<<" inverter AC bypassing timer is reset at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
                     osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
-                    show_information_with_leading_time_stamp(osstream);
+                    toolkit.show_information_with_leading_time_stamp(osstream);
 
                     inv_ac_bypassing_timer.reset();
                 }
@@ -708,7 +711,7 @@ void CDC6T::check_bypassing_logic()
                     {
                         osstream<<hvdc->get_device_name()<<" inverter AC bypassing timer is timed out and will be bypassed at time "<<TIME<<" s due to timed out timer of inverter AC voltage drop."<<endl;
                         osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC bypassing voltage threshold is "<<vaci_dbypass<<" pu.";
-                        show_information_with_leading_time_stamp(osstream);
+                        toolkit.show_information_with_leading_time_stamp(osstream);
 
                         bypass_logic = true;
                     }
@@ -723,7 +726,7 @@ void CDC6T::check_bypassing_logic()
     }
     else
     {
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         size_t bus_i = hvdc->get_converter_bus(INVERTER);
         double vac_i = psdb.get_bus_voltage_in_pu(bus_i);
 
@@ -735,7 +738,7 @@ void CDC6T::check_bypassing_logic()
             {
                 osstream<<hvdc->get_device_name()<<" inverter AC unbypassing timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
                 osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 inv_ac_unbypassing_timer.start();
             }
@@ -746,7 +749,7 @@ void CDC6T::check_bypassing_logic()
             {
                 osstream<<hvdc->get_device_name()<<" inverter AC unbypassing timer is reset at time "<<TIME<<" s due to drop of inverter AC voltage."<<endl;
                 osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 inv_ac_unbypassing_timer.reset();
             }
@@ -758,7 +761,7 @@ void CDC6T::check_bypassing_logic()
             {
                 osstream<<hvdc->get_device_name()<<" bypass timer and inverter AC unbypassing timer are timed out, and will be unbypassed at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
                 osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and inverter AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 unbypass_hvdc();
                 inv_ac_unbypassing_timer.reset();
@@ -776,7 +779,8 @@ void CDC6T::check_mode_switching_logic()
     if(is_blocked() or is_bypassed())
         return;
 
-    double TIME = get_dynamic_simulation_time_in_s();
+    STEPS& toolkit = get_toolkit();
+    double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     double t_unblock = get_unblocking_time();
     double t_unbypass = get_unbypassing_time();
@@ -794,7 +798,7 @@ void CDC6T::check_mode_switching_logic()
                 ostringstream osstream;
                 osstream<<hvdc->get_device_name()<<" will switch mode from holding DC power to holding DC current at time "<<TIME<<" s due to drop of inverter DC voltage."<<endl;
                 osstream<<"Inverter DC voltage is "<<vdc_i<<" kV, and DC mode switch voltage threshold is "<<vmode<<" kV.";
-                show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);
 
                 switch_hvdc_mode();
             }
@@ -807,7 +811,7 @@ void CDC6T::check_mode_switching_logic()
             ostringstream osstream;
             osstream<<hvdc->get_device_name()<<" mode switch timer is timed out, and will switch back to DC power control mode at time "<<TIME<<" s due to recovery of inverter DC voltage."<<endl;
             osstream<<"Inverter DC voltage is "<<vdc_i<<" pu, andDC mode switch voltage threshold is "<<vmode<<" pu.";
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
 
             switch_hvdc_mode_back();
         }
@@ -823,7 +827,8 @@ void CDC6T::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void CDC6T::save()
@@ -914,7 +919,8 @@ double CDC6T::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    show_information_with_leading_time_stamp(osstream);
+    STEPS& toolkit = get_toolkit();
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }
 

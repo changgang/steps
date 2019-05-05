@@ -21,7 +21,7 @@ FIRST_ORDER_BLOCK_TEST::FIRST_ORDER_BLOCK_TEST()
 
 void FIRST_ORDER_BLOCK_TEST::setup()
 {
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 
 void FIRST_ORDER_BLOCK_TEST::tear_down()
@@ -62,8 +62,8 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_without_limiter()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FIRST_ORDER_BLOCK_TEST");
 
-    set_dynamic_simulation_time_step_in_s(0.001);
-    double h = get_dynamic_simulation_time_step_in_s();
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     double K = 2.0;
     double T = 5.0;
@@ -99,8 +99,8 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_with_limiter()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FIRST_ORDER_BLOCK_TEST");
 
-    set_dynamic_simulation_time_step_in_s(0.001);
-    double h = get_dynamic_simulation_time_step_in_s();
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     double K = 2.0;
     double T = 5.0;
@@ -145,8 +145,8 @@ void FIRST_ORDER_BLOCK_TEST::test_step_response_without_limiter_when_T_is_zero()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FIRST_ORDER_BLOCK_TEST");
 
-    set_dynamic_simulation_time_step_in_s(0.001);
-    double h = get_dynamic_simulation_time_step_in_s();
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     double K = 2.0;
     double T = 0.0;

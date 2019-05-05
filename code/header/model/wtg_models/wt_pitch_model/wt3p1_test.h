@@ -14,6 +14,7 @@
 
 #include "header/model/sg_models/turbine_governor_model/TGOV1.h"
 #include "header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class TGOV1_TEST : public TURBINE_GOVERNOR_MODEL_TEST
@@ -34,6 +35,7 @@ class TGOV1_TEST : public TURBINE_GOVERNOR_MODEL_TEST
         virtual void test_step_response();
         virtual void test_get_standard_model_string();
     private:
+
 };
 
 #endif//TGOV1_TEST_H

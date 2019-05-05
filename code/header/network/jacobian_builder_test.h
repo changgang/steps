@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/network/jacobian_builder.h"
+#include "header/STEPS.h"
 
 using namespace std;
 

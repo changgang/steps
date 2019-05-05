@@ -187,6 +187,7 @@ string PVCV0::get_model_name() const
 
 bool PVCV0::setup_model_with_steps_string_vector(vector<string>& data)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     bool is_successful = false;
     if(data.size()<18)
@@ -223,13 +224,13 @@ bool PVCV0::setup_model_with_steps_string_vector(vector<string>& data)
     pllmin = get_double_data(data[i],"0.0");
 
     DEVICE_ID did = get_pv_unit_device_id(ibus, id);
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     PV_UNIT* gen = psdb.get_pv_unit(did);
     if(gen==NULL)
     {
         osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
                <<"No such wt pv_unit exists in the power system database.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return is_successful;
     }
 
@@ -266,10 +267,11 @@ bool PVCV0::setup_model_with_psse_string(string data)
 
 bool PVCV0::setup_model_with_bpa_string(string data)
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
@@ -446,7 +448,8 @@ void PVCV0::run(DYNAMIC_MODE mode)
 
 complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 
@@ -501,7 +504,8 @@ complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 
 complex<double> PVCV0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
@@ -510,7 +514,8 @@ complex<double> PVCV0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
 
 complex<double> PVCV0::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 
@@ -543,9 +548,10 @@ void PVCV0::check()
 
 void PVCV0::report()
 {
+    STEPS& toolkit = get_toolkit();
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    show_information_with_leading_time_stamp(osstream);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PVCV0::save()
@@ -646,7 +652,7 @@ complex<double> PVCV0::get_terminal_complex_power_in_pu_based_on_mbase()
 {
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-    //cout<<"at time "<<STEPS::TIME<<" terminal Ixy  based on mbase = "<<Ixy<<", Vxy = "<<Vxy<<", S = "<<Vxy*conj(Ixy)*get_mbase_in_MVA()<<endl;
+    //cout<<"at time "<<toolkit.get_dynamic_simulation_time_in_s()<<" terminal Ixy  based on mbase = "<<Ixy<<", Vxy = "<<Vxy<<", S = "<<Vxy*conj(Ixy)*get_mbase_in_MVA()<<endl;
 
     complex<double> S = Vxy*conj(Ixy);
     return S;
@@ -759,10 +765,11 @@ double PVCV0::get_pll_frequency_in_Hz()
 
 complex<double> PVCV0::get_internal_voltage_in_pu_in_xy_axis()
 {
+    STEPS& toolkit = get_toolkit();
     complex<double> Ixy = get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
     complex<double> Z = get_source_impedance_in_pu_based_on_mbase();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
     double mbase = get_mbase_in_MVA();
 

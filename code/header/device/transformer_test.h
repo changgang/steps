@@ -14,6 +14,7 @@
 
 #include "header/device/transformer.h"
 #include "header/power_system_database.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class TRANSFORMER_TEST : public Test::Suite

@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/block/differential_block.h"
+#include "header/STEPS.h"
 using namespace std;
 
 class DIFFERENTIAL_BLOCK_TEST : public Test::Suite

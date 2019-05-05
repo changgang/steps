@@ -20,7 +20,7 @@ PD_BLOCK_TEST::PD_BLOCK_TEST()
 
 void PD_BLOCK_TEST::setup()
 {
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 
 void PD_BLOCK_TEST::tear_down()
@@ -72,8 +72,8 @@ void PD_BLOCK_TEST::test_step_response_without_limiter()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PD_BLOCK_TEST");
 
-    set_dynamic_simulation_time_step_in_s(0.001);
-    double h = get_dynamic_simulation_time_step_in_s();
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    double h = default_toolkit.get_dynamic_simulation_time_step_in_s();
 
     double Kp = 10.0;
     double Kd = 2.0;

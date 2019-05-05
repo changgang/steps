@@ -40,7 +40,9 @@ EQUIVALENT_DEVICE_TEST::EQUIVALENT_DEVICE_TEST()
 
 void EQUIVALENT_DEVICE_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    edevice.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(10);
 
@@ -55,8 +57,8 @@ void EQUIVALENT_DEVICE_TEST::tear_down()
 {
     edevice.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }

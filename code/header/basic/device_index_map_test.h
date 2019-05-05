@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/basic/device_index_map.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -47,6 +48,7 @@ class DEVICE_INDEX_MAP_TEST : public Test::Suite
         TERMINAL prepare_terminal(size_t ibus,size_t jbus, size_t kbus);
     private:
         DEVICE_INDEX_MAP device_index_map;
+
 };
 
 #endif //DEVICE_INDEX_MAP_TEST_H

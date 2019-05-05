@@ -51,7 +51,9 @@ LINE_TEST::LINE_TEST()
 
 void LINE_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    line.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
@@ -75,8 +77,8 @@ void LINE_TEST::tear_down()
 {
     line.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -280,7 +282,7 @@ void LINE_TEST::test_is_zero_impedance_line()
     line.set_receiving_side_bus(2);
     line.set_identifier("1#");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     complex<double> z(0.0, 0.001), y(0.0, 0.002);
     line.set_line_positive_sequence_z_in_pu(z);

@@ -1,5 +1,6 @@
 #include "header/model/model_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ MODEL_TEST::MODEL_TEST()
 
 void MODEL_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
@@ -48,8 +49,8 @@ void MODEL_TEST::tear_down()
 {
     model.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }

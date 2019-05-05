@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/toolkit/contingency_screener/contingency_screener.h"
+#include "header/STEPS.h"
 
 using namespace std;
 

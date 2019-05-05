@@ -4,15 +4,16 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_name)
+int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -44,20 +45,21 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
                  "0 will be returned.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
-        show_information_with_leading_time_stamp(buffer);
+        toolkit.show_information_with_leading_time_stamp(buffer);
         return 0;
     }
 }
 
-void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_name, int value)
+void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_name, int value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -87,20 +89,20 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
                  "Nothing will be changed.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
-        show_information_with_leading_time_stamp(buffer);
+        toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
 
-
-double api_get_source_float_data(size_t bus, char* identifier, char* parameter_name)
+double api_get_source_float_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -158,20 +160,21 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
                  "0.0 will be returned.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
-        show_information_with_leading_time_stamp(buffer);
+        toolkit.show_information_with_leading_time_stamp(buffer);
         return 0.0;
     }
 }
 
-void api_set_source_float_data(size_t bus, char* identifier, char* parameter_name, double value)
+void api_set_source_float_data(size_t bus, char* identifier, char* parameter_name, double value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -233,21 +236,22 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
                  "Nothing will be changed.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
-        show_information_with_leading_time_stamp(buffer);
+        toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
 
-const char* api_get_source_string_data(size_t bus, char* identifier, char* parameter_name)
+const char* api_get_source_string_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(STEPS::steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -263,7 +267,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
         string PARAMETER_NAME = string2upper(parameter_name);
 
         show_parameter_not_supported_for_device_with_api(PARAMETER_NAME, sourceptr->get_device_id(), __FUNCTION__);
-        return STEPS::steps_char_buffer;
+        return toolkit.steps_char_buffer;
     }
     else
     {
@@ -272,21 +276,21 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
                  "EMPTY STRING will be returned.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
-        show_information_with_leading_time_stamp(buffer);
-        return STEPS::steps_char_buffer;
+        toolkit.show_information_with_leading_time_stamp(buffer);
+        return toolkit.steps_char_buffer;
     }
 }
 
-
-void api_set_source_string_data(size_t bus, char* identifier, char* parameter_name, char* value)
+void api_set_source_string_data(size_t bus, char* identifier, char* parameter_name, char* value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -311,19 +315,20 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
                  "Nothing will be changed.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
-        show_information_with_leading_time_stamp(buffer);
+        toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
 
-bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_name)
+bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -351,21 +356,21 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
                  "False will be returned.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
-        show_information_with_leading_time_stamp(buffer);
+        toolkit.show_information_with_leading_time_stamp(buffer);
         return false;
     }
 }
 
-
-void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value)
+void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
     pv_unit_did = get_pv_unit_device_id(bus, identifier);
     energy_storage_did = get_energy_storage_device_id(bus, identifier);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -393,6 +398,6 @@ void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_n
                  "Nothing will be changed.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
-        show_information_with_leading_time_stamp(buffer);
+        toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }

@@ -13,6 +13,7 @@
 #include "cpptest.h"
 
 #include "header/model/model_var_table.h"
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ class MODEL_VAR_TABLE_TEST : public Test::Suite
 {
     public:
         MODEL_VAR_TABLE_TEST();
+
     protected:
         virtual void setup();
         virtual void tear_down();

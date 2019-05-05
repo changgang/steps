@@ -43,7 +43,7 @@ void CCT_SEARCHER_TEST::setup()
 {
     searcher = new CCT_SEARCHER();
 
-    set_dynamic_simulation_time_step_in_s(0.01);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 
 void CCT_SEARCHER_TEST::tear_down()
@@ -255,7 +255,7 @@ void CCT_SEARCHER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    redirect_stdout_to_file(file);
+    default_toolkit.redirect_stdout_to_file(file);
 
     //searcher->set_search_title("CCT_SEARCH_IEEE9_CLASSIC_FAULT_AT_LINE_7_5");
     searcher->set_search_title("");
@@ -279,7 +279,7 @@ void CCT_SEARCHER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     double cct = searcher->search_cct();
 
     osstream<<"Searched CCT is: "<<cct<<" s"<<endl;
-    show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    recover_stdout();
+    default_toolkit.recover_stdout();
 }

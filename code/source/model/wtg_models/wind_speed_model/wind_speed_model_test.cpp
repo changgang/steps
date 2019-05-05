@@ -73,7 +73,7 @@ void WIND_SPEED_MODEL_TEST::test_get_standard_model_string()
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        show_information_with_leading_time_stamp(model->get_standard_model_string());
+        default_toolkit.show_information_with_leading_time_stamp(model->get_standard_model_string());
     }
     else
         TEST_ASSERT(false);

@@ -23,10 +23,13 @@ TIMER_TEST::TIMER_TEST()
 
 void TIMER_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    timer.set_toolkit(default_toolkit);
 
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(1000);
+
     BUS bus;
+
     bus.set_bus_number(1);
     bus.set_bus_name("bus");
     bus.set_base_voltage_in_kV(100.0);
@@ -42,8 +45,8 @@ void TIMER_TEST::tear_down()
 {
     timer.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -76,13 +79,13 @@ void TIMER_TEST::test_start_reset_timer()
 
     TEST_ASSERT(timer.is_started()==false);
 
-    set_dynamic_simulation_time_in_s(1.0);
+    default_toolkit.set_dynamic_simulation_time_in_s(1.0);
 
     timer.start();
     TEST_ASSERT(timer.is_started()==true);
     TEST_ASSERT(fabs(timer.get_time_when_started_in_s()-1.0)<FLOAT_EPSILON);
 
-    set_dynamic_simulation_time_in_s(4.0);
+    default_toolkit.set_dynamic_simulation_time_in_s(4.0);
     timer.reset();
     TEST_ASSERT(timer.is_started()==false);
     TEST_ASSERT(fabs(timer.get_time_when_started_in_s()-INFINITE_THRESHOLD)<FLOAT_EPSILON);
@@ -94,21 +97,21 @@ void TIMER_TEST::test_is_timed_out()
 
     timer.set_timer_interval_in_s(2.0);
 
-    set_dynamic_simulation_time_in_s(1.0);
+    default_toolkit.set_dynamic_simulation_time_in_s(1.0);
     timer.start();
 
     TEST_ASSERT(timer.is_timed_out()==false);
 
-    set_dynamic_simulation_time_in_s(1.5);
+    default_toolkit.set_dynamic_simulation_time_in_s(1.5);
     TEST_ASSERT(timer.is_timed_out()==false);
 
-    set_dynamic_simulation_time_in_s(2.5);
+    default_toolkit.set_dynamic_simulation_time_in_s(2.5);
     TEST_ASSERT(timer.is_timed_out()==false);
 
-    set_dynamic_simulation_time_in_s(3.0);
+    default_toolkit.set_dynamic_simulation_time_in_s(3.0);
     TEST_ASSERT(timer.is_timed_out()==true);
 
-    set_dynamic_simulation_time_in_s(3.5);
+    default_toolkit.set_dynamic_simulation_time_in_s(3.5);
     TEST_ASSERT(timer.is_timed_out()==true);
 }
 

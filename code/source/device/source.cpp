@@ -1,6 +1,7 @@
 #include "header/device/source.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include "header/STEPS.h"
 
 #include <istream>
 #include <iostream>
@@ -20,21 +21,22 @@ void SOURCE::set_source_bus(size_t bus)
 {
     ostringstream osstream;
 
+    STEPS& toolkit = get_toolkit();
     if(bus==0)
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up source bus."<<endl
           <<"0 will be set to indicate invalid source.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         source_bus = 0;
         return;
     }
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(not psdb.is_bus_exist(bus))
     {
         osstream<<"Bus "<<bus<<" does not exist for setting up power source."<<endl
           <<"0 will be set to indicate invalid power source.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         source_bus = 0;
         return;
     }
@@ -53,14 +55,15 @@ void SOURCE::set_status(bool status)
 
 void SOURCE::set_mbase_in_MVA(double mbase)
 {
-    ostringstream osstream;
     if(mbase>=0.0)
         this->mbase_MVA = mbase;
     else
     {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
         osstream<<"Negative MBASE ("<<mbase<<" MVA) is not allowed for setting up power source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<"."<<endl
           <<"Source MBASE will not be changed.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     return;
     /*
@@ -68,7 +71,7 @@ void SOURCE::set_mbase_in_MVA(double mbase)
         this->mbase_MVA = mbase;
     else
     {
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         double mvabase = psdb.get_system_base_power_in_MVA();
         if(mbase == 0.0)
             this->mbase_MVA = mvabase;
@@ -78,7 +81,7 @@ void SOURCE::set_mbase_in_MVA(double mbase)
             osstream<<"Negative MBASE (%f MVA) is not allowed for setting up power source '%s' at bus %u.\n"
                          "System base MVA (%f MVA) will be set automatically.",mbase,get_identifier().c_str(),
                          get_source_bus(),mvabase);
-            show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);
             this->mbase_MVA = mvabase;
         }
     }*/
@@ -116,12 +119,13 @@ void SOURCE::set_q_min_in_MVar(double q_min)
 
 void SOURCE::set_voltage_to_regulate_in_pu(double v_pu)
 {
-    ostringstream osstream;
     if(v_pu<=0.0)
     {
+        STEPS& toolkit = get_toolkit();
+        ostringstream osstream;
         osstream<<"Non-positive voltage ("<<v_pu<<") is not supported for voltage to regulate when setting up power source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<"."<<endl
           <<"1.0 p.u. will set automatically.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         v_pu = 1.0;
     }
     voltage_to_regulate_pu = v_pu;
@@ -136,7 +140,8 @@ void SOURCE::set_bus_to_regulate(size_t bus)
         ostringstream osstream;
         osstream<<"Warning. Currently generators are not supposed to regulate voltage at bus different from its terminal bus.\n"
                 <<"Terminal bus "<<get_source_bus()<<" will be set to regulate. New bus "<<bus<<" is discarded.";
-        show_information_with_leading_time_stamp(osstream);
+        STEPS& toolkit = get_toolkit();
+        toolkit.show_information_with_leading_time_stamp(osstream);
         bus_to_regulate = get_source_bus();
     }
 }
@@ -166,7 +171,8 @@ double SOURCE::get_mbase_in_MVA() const
 {
     if(mbase_MVA==0.0)
     {
-        POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+        STEPS& toolkit = get_toolkit();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         return psdb.get_system_base_power_in_MVA();
     }
     else
@@ -229,7 +235,8 @@ complex<double> SOURCE::get_source_impedance_in_pu() const
 double SOURCE::get_base_voltage_in_kV() const
 {
     ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     BUS* bus = psdb.get_bus(get_source_bus());
     if(bus!=NULL)
@@ -238,7 +245,7 @@ double SOURCE::get_base_voltage_in_kV() const
     {
         osstream<<"No bus "<<get_source_bus()<<" is found in power system database '"<<psdb.get_system_name()<<"'."<<endl
           <<"Base voltage of source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<" will be returned as 0.0.";
-        show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
     }
 }
@@ -260,8 +267,10 @@ void SOURCE::clear()
     set_identifier("");
     set_status(false);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    set_mbase_in_MVA(psdb.get_system_base_power_in_MVA());
+    /*STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    set_mbase_in_MVA(psdb.get_system_base_power_in_MVA());*/
+    set_mbase_in_MVA(0.0);
 
     set_p_generation_in_MW(0.0);
     set_q_generation_in_MVar(0.0);
@@ -282,7 +291,8 @@ bool SOURCE::is_connected_to_bus(size_t bus) const
 
 bool SOURCE::is_in_area(size_t area) const
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_source_bus());
     if(busptr!=NULL)
     {
@@ -294,7 +304,8 @@ bool SOURCE::is_in_area(size_t area) const
 
 bool SOURCE::is_in_zone(size_t zone) const
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    STEPS& toolkit = get_toolkit();
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_source_bus());
     if(busptr!=NULL)
     {

@@ -32,7 +32,9 @@ ENERGY_STORAGE_TEST::ENERGY_STORAGE_TEST()
 
 void ENERGY_STORAGE_TEST::setup()
 {
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    energy_storage.set_toolkit(default_toolkit);
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.set_system_base_power_in_MVA(100.0);
     psdb.set_allowed_max_bus_number(100);
 
@@ -51,8 +53,8 @@ void ENERGY_STORAGE_TEST::tear_down()
 {
     energy_storage.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
-    psdb.clear_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
 
     show_test_end_information();
 }
@@ -61,7 +63,7 @@ void ENERGY_STORAGE_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"ENERGY_STORAGE_TEST");
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     TEST_ASSERT(energy_storage.get_energy_storage_bus()==0);
     TEST_ASSERT(energy_storage.get_identifier()=="");
@@ -150,7 +152,7 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_model()
     energy_storage.set_identifier("1#");
     energy_storage.set_status(true);
 
-    POWER_SYSTEM_DATABASE& psdb = get_default_power_system_database();
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     psdb.append_energy_storage(energy_storage);
 
     DEVICE_ID did = energy_storage.get_device_id();

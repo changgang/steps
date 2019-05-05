@@ -13,7 +13,7 @@
 #include "header/model/energy_storage_model/energy_storage_model_test.h"
 
 #include "header/model/energy_storage_model/estr0.h"
-
+#include "header/STEPS.h"
 
 using namespace std;
 
@@ -29,6 +29,8 @@ class ESTR0_TEST : public ENERGY_STORAGE_MODEL_TEST
         virtual void test_set_get_parameters();
 
         void test_initialize_and_get_initialized_inputs();
+    private:
+
 };
 
 #endif//ESTR0_TEST_H
