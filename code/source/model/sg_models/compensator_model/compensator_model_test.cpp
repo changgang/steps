@@ -80,6 +80,7 @@ void COMPENSATOR_MODEL_TEST::initialize_models()
     ostringstream oosstream;
     double delt = 0.001;
     default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
+    default_toolkit.set_dynamic_simulation_time_in_s(-2.0*delt);
 
     GENERATOR* genptr = get_test_generator();
     COMPENSATOR_MODEL* model = get_test_compensator_model();
@@ -90,7 +91,6 @@ void COMPENSATOR_MODEL_TEST::initialize_models()
     SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
     genmodel->initialize();
 
-    default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
 
     model->initialize();
 
@@ -153,6 +153,7 @@ void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_voltage()
 
     GENERATOR* genptr = get_test_generator();
     COMP model;
+    model.set_toolkit(default_toolkit);
     model.set_device_id(genptr->get_device_id());
     TEST_ASSERT(model.get_generator_terminal_voltage_in_pu()==1.0);
 }
@@ -166,6 +167,7 @@ void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_current()
     (genptr->get_sync_generator_model())->initialize();
 
     COMP model;
+    model.set_toolkit(default_toolkit);
     model.set_device_id(genptr->get_device_id());
 
     TEST_ASSERT(abs(model.get_generator_terminal_current_in_pu()-complex<double>(1.0,-0.3)*0.5)<FLOAT_EPSILON);

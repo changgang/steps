@@ -27,7 +27,6 @@ void CSEET1_TEST::setup()
     CSEET1 model;
 
     GENERATOR* genptr = get_test_generator();
-    model.set_device_id(genptr->get_device_id());
 
     model.set_excitation_source(SELF_EXCITATION);
     model.set_exciter_brush(WITHOUT_BRUSH);

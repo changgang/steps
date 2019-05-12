@@ -308,6 +308,17 @@ bool IEE2ST::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void IEE2ST::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    sensor_1.set_toolkit(toolkit);
+    sensor_2.set_toolkit(toolkit);
+    filter.set_toolkit(toolkit);
+    alternative_filter.set_toolkit(toolkit);
+    phase_tuner_1.set_toolkit(toolkit);
+    phase_tuner_2.set_toolkit(toolkit);
+    phase_tuner_3.set_toolkit(toolkit);
+}
 
 void IEE2ST::initialize()
 {
@@ -330,6 +341,8 @@ void IEE2ST::initialize()
     }
     if(not exciter->is_model_initialized())
         exciter->initialize();
+
+    set_block_toolkit();
 
     phase_tuner_3.set_output(0.0);
     phase_tuner_3.initialize();

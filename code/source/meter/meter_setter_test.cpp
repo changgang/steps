@@ -1,5 +1,6 @@
 #include "header/meter/meter_setter_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
 #include <cstdlib>
 #include <cstring>
@@ -28,7 +29,7 @@ METER_SETTER_TEST::METER_SETTER_TEST()
 
 void METER_SETTER_TEST::setup()
 {
-    ;
+    setter.set_toolkit(default_toolkit);
 }
 
 void METER_SETTER_TEST::tear_down()
@@ -49,6 +50,8 @@ void METER_SETTER_TEST::test_prepare_bus_related_meters()
     prepare_basic_buses();
 
     METER meter;
+    meter.set_toolkit(default_toolkit);
+
     DEVICE_ID did;
     TERMINAL terminal;
 

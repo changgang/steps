@@ -15,19 +15,14 @@ SEXS_TEST::SEXS_TEST() : EXCITER_MODEL_TEST()
 void SEXS_TEST::setup()
 {
     EXCITER_MODEL_TEST::setup();
-
     SEXS model;
-
     GENERATOR* genptr = get_test_generator();
-    model.set_device_id(genptr->get_device_id());
-
     model.set_TA_in_s(1.0);
     model.set_TB_in_s(4.0);
     model.set_K(50.0);
     model.set_TE_in_s(0.02);
     model.set_Efdmax_in_pu(6.0);
     model.set_Efdmin_in_pu(-4.0);
-
     genptr->set_model(&model);
 }
 

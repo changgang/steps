@@ -29,6 +29,7 @@ CONTINUOUS_BUFFER_TEST::CONTINUOUS_BUFFER_TEST()
 
 void CONTINUOUS_BUFFER_TEST::setup()
 {
+    buffer.set_toolkit(default_toolkit);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 
@@ -359,7 +360,7 @@ void CONTINUOUS_BUFFER_TEST::test_get_delay_index_of_time()
     buffer.append_data(0.02, 3.0);
     buffer.append_data(0.03, 3.0);
     buffer.append_data(0.06, 5.0);
-    TEST_ASSERT(buffer.get_delay_index_of_time(0.0)==4)
+    TEST_ASSERT(buffer.get_delay_index_of_time(0.0)==4);
     TEST_ASSERT(buffer.get_delay_index_of_time(0.01)==3);
     TEST_ASSERT(buffer.get_delay_index_of_time(0.02)==2);
     TEST_ASSERT(buffer.get_delay_index_of_time(0.03)==1);

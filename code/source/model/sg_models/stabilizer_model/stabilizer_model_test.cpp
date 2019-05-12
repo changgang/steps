@@ -44,6 +44,8 @@ void STABILIZER_MODEL_TEST::test_set_get_input_signal()
     GENERATOR* generator = get_test_generator();
 
     SIGNAL signal;
+    signal.set_toolkit(default_toolkit);
+
     signal.set_device_id(generator->get_device_id());
     signal.set_meter_type("ROTOR SPEED DEVIATION IN PU");
 

@@ -28,15 +28,17 @@ class PV_PANEL_MODEL : public PVU_MODEL
         void copy_from_const_model(const PV_PANEL_MODEL& model);
     public:
         virtual string get_model_type() const;
-
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
     public:
         virtual string get_model_name() const = 0;
 
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
+
+        virtual void set_block_toolkit() = 0;
+
+        virtual void initialize() = 0;
+        virtual void run(DYNAMIC_MODE mode) = 0;
 
         virtual double get_Cp(double lambda, double pitch_deg) const = 0;
         virtual double get_derivative_of_Cp_over_lambda(double lambda, double pitch_deg) const = 0;

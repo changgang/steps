@@ -202,7 +202,7 @@ METER::METER()
 void METER::copy_from_const_meter(const METER& meter)
 {
     clear();
-
+    set_toolkit(meter.get_toolkit());
     set_buffer_size(meter.get_buffer_size());
     set_device_id(meter.get_device_id());
     set_meter_type(meter.get_meter_type());

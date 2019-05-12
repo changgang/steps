@@ -273,6 +273,15 @@ bool IEEEG3::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void IEEEG3::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    governor.set_toolkit(toolkit);
+    servo_motor.set_toolkit(toolkit);
+    feedbacker.set_toolkit(toolkit);
+    water_hammer.set_toolkit(toolkit);
+}
+
 void IEEEG3::initialize()
 {
     ostringstream osstream;
@@ -288,6 +297,8 @@ void IEEEG3::initialize()
         return;
     if(not gen_model->is_model_initialized())
         gen_model->initialize();
+
+    set_block_toolkit();
 
     STEPS& toolkit = get_toolkit();
 

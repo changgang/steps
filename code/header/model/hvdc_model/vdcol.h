@@ -7,7 +7,7 @@
 #include "header/basic/base.h"
 using namespace std;
 
-class VDCOL : public BASE
+class VDCOL
 {
     public:
         VDCOL();
@@ -24,15 +24,15 @@ class VDCOL : public BASE
 
         VDCOL& operator=(const VDCOL& limiter);
 
-        virtual void clear();
+        void clear();
     private:
         void copy_from_const_vdcol(const VDCOL& limiter);
 
         double get_vdcol_voltage_of_last_point_in_kV() const;
         double get_vdcol_current_of_last_point_in_kA() const;
 
-        virtual bool is_valid() const;
-        virtual void check();
+        bool is_valid() const;
+        void check();
 
         vector< vector<double> > vdcol_parameters;
 };

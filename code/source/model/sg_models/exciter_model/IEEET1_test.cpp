@@ -19,7 +19,6 @@ void IEEET1_TEST::setup()
     IEEET1 model;
 
     GENERATOR* genptr = get_test_generator();
-    model.set_device_id(genptr->get_device_id());
 
     model.set_TR_in_s(0.06);
     model.set_KA(40.0);

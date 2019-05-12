@@ -273,6 +273,15 @@ bool WT3P0::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void WT3P0::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    speed_reference_sensor.set_toolkit(toolkit);
+    speed_controller.set_toolkit(toolkit);
+    frequency_sensor.set_toolkit(toolkit);
+    frequency_controller.set_toolkit(toolkit);
+    pitch_integrator.set_toolkit(toolkit);
+}
 
 void WT3P0::initialize()
 {
@@ -287,6 +296,9 @@ void WT3P0::initialize()
 
     if(not aerdmodel->is_model_initialized())
         aerdmodel->initialize();
+
+    set_block_toolkit();
+
     STEPS& toolkit = get_toolkit();
 
     double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();

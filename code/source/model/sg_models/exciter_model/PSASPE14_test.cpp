@@ -19,8 +19,6 @@ void PSASPE14_TEST::setup()
     PSASPE14 model;
 
     GENERATOR* genptr = get_test_generator();
-    model.set_device_id(genptr->get_device_id());
-
 
     genptr->set_model(&model);
 }

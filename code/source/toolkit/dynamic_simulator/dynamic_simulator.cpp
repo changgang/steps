@@ -232,6 +232,7 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
+    setter.set_toolkit(toolkit);
 
     size_t n = psdb.get_bus_count();
     vector<BUS*> buses = psdb.get_all_buses();
@@ -269,6 +270,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
+    setter.set_toolkit(toolkit);
 
     size_t n;
 
@@ -325,7 +327,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     size_t n;
 
@@ -453,7 +455,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     size_t n;
 
@@ -483,7 +485,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meters()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     size_t n;
 
@@ -510,7 +512,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     size_t n;
 
@@ -583,7 +585,7 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     size_t n;
 
@@ -628,9 +630,11 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
 
     if(meter_type=="VOLTAGE IN PU")
@@ -672,9 +676,11 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
 
     if(meter_type=="ROTOR ANGLE IN DEG")
@@ -730,9 +736,11 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
 
     if(meter_type=="TERMINAL CURRENT IN KA")
@@ -812,9 +820,11 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
 
     if(meter_type=="TERMINAL CURRENT IN KA")
@@ -894,9 +904,13 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
 
     if(meter_type=="TERMINAL CURRENT IN KA")
@@ -976,9 +990,11 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
 
     if(meter_type=="ACTIVE POWER IN MW")
@@ -1022,9 +1038,11 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
     side = string2upper(side);
 
@@ -1073,9 +1091,11 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
     side = string2upper(side);
 
@@ -1153,9 +1173,11 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
     }
 
     METER_SETTER setter;
-
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
+
     meter_type = string2upper(meter_type);
 
     if(meter_type=="ACTIVE POWER GENERATION IN MW")
@@ -1189,6 +1211,8 @@ size_t DYNAMICS_SIMULATOR::get_meter_count() const
 METER DYNAMICS_SIMULATOR::get_meter(size_t i)
 {
     METER voidmeter;
+    voidmeter.set_toolkit(get_toolkit());
+
 
     if(meters.size()==0)
         return voidmeter;

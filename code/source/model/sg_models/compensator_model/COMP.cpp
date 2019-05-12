@@ -98,10 +98,17 @@ bool COMP::setup_model_with_bpa_string(string data)
 }
 
 
+void COMP::set_block_toolkit()
+{
+    ;
+}
+
 void COMP::initialize()
 {
     if(is_model_initialized())
         return;
+
+    set_block_toolkit();
 
     set_flag_model_initialized_as_false();
 }

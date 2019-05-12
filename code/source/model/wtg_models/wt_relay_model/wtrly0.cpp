@@ -258,6 +258,17 @@ bool WTRLY0::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void WTRLY0::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
+    {
+        vwind_relay_timer[i].set_toolkit(toolkit);
+        speed_relay_timer[i].set_toolkit(toolkit);
+        freq_relay_timer[i].set_toolkit(toolkit);
+        volt_relay_timer[i].set_toolkit(toolkit);
+    }
+}
 
 void WTRLY0::initialize()
 {
@@ -276,6 +287,8 @@ void WTRLY0::initialize()
         return;
     if(not aero_model->is_model_initialized())
         aero_model->initialize();
+
+    set_block_toolkit();
 
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {

@@ -138,10 +138,6 @@
 
 using namespace std;
 
-
-
-
-
 enum OutputType
 {
 	Compiler,
@@ -198,7 +194,6 @@ int main(int argc, char* argv[])
 {
     initialize_package(); // this function should be called first
 
-    cout<<__FILE__<<" @ "<<__LINE__<<"\n";
 	try
 	{
         Test::Suite ts;
@@ -253,8 +248,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new JACOBIAN_BUILDER_TEST));
 
 
-        ts.add(unique_ptr<Test::Suite>(new POWERFLOW_SOLVER_TEST));
-/*
+        //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_SOLVER_TEST));
+
         ts.add(unique_ptr<Test::Suite>(new PROPORTIONAL_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new INTEGRAL_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new DIFFERENTIAL_BLOCK_TEST));
@@ -320,7 +315,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
         ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
 

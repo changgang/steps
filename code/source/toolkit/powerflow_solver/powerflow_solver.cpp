@@ -156,20 +156,21 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
     if(psdb.get_bus_count()==0)
         return;
 
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-
-
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Start solve powerflow with Full Newton Raphson solution.");
     toolkit.show_information_with_leading_time_stamp(buffer);
 
     initialize_powerflow_solver();
 
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
     double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
     vector<double> bus_power_mismatch, bus_delta_voltage_angle;
-    JACOBIAN_BUILDER jacobian_builder;
-    jacobian_builder.set_network_matrix(network_matrix);
+/*    JACOBIAN_BUILDER jacobian_builder;
+    jacobian_builder.set_toolkit(toolkit);
 
+    jacobian_builder.set_network_matrix(network_matrix);
+*/
     network_matrix.build_network_matrix();
     //network_matrix.report_network_matrix();
 
@@ -247,7 +248,6 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(psdb.get_bus_count()==0)
         return;
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Start solve powerflow with Fast Decoupled solution.");
@@ -255,11 +255,15 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
     initialize_powerflow_solver();
 
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
     double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
     vector<double> P_power_mismatch, Q_power_mismatch, bus_delta_voltage, bus_delta_angle;
-    JACOBIAN_BUILDER jacobian_builder;
-    jacobian_builder.set_network_matrix(network_matrix);
+/*    JACOBIAN_BUILDER jacobian_builder;
+    jacobian_builder.set_toolkit(toolkit);
 
+    jacobian_builder.set_network_matrix(network_matrix);
+*/
     network_matrix.build_network_matrix();
 
     network_matrix.build_decoupled_network_matrix();
@@ -379,6 +383,12 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Initializing powerflow solver.");
     toolkit.show_information_with_leading_time_stamp(buffer);
+
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+    network_matrix.set_toolkit(toolkit);
+
+    jacobian_builder.set_toolkit(toolkit);
+    jacobian_builder.set_network_matrix(network_matrix);
 
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -2222,11 +2232,13 @@ void POWERFLOW_SOLVER::save_network_matrix_to_file(string filename) const
 
 void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(string filename)
 {
+    STEPS& toolkit = get_toolkit();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    JACOBIAN_BUILDER jacobian_builder;
+/*    JACOBIAN_BUILDER jacobian_builder;
+    jacobian_builder.set_toolkit(toolkit);
     jacobian_builder.set_network_matrix(network_matrix);
-
+*/
     jacobian_builder.build_seprate_jacobians();
 
     jacobian_builder.save_jacobian_matrix_to_file(filename);

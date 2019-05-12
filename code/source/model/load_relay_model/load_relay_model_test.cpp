@@ -32,6 +32,7 @@ void LOAD_RELAY_MODEL_TEST::setup()
     psdb.append_bus(bus);
 
     LOAD load;
+    load.set_toolkit(default_toolkit);
     load.set_load_bus(1);
     load.set_identifier("#1");
     load.set_status(true);

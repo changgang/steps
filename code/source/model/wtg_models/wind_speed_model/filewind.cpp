@@ -103,9 +103,15 @@ bool FILEWIND::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void FILEWIND::set_block_toolkit()
+{
+    ;
+}
 
 void FILEWIND::initialize()
 {
+    set_block_toolkit();
+
     load_wind_speed_from_file();
 
     current_time = -INFINITE_THRESHOLD;

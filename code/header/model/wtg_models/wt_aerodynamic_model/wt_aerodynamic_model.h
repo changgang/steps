@@ -69,6 +69,8 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_total_wind_power_per_wt_generator_in_MW(double vwind) const;
 
 
+        virtual void set_block_toolkit();
+
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
         double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind);

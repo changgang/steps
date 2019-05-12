@@ -43,6 +43,7 @@ void HVDC_MODEL_TEST::setup()
     psdb.append_bus(bus);
 
     HVDC hvdc;
+    hvdc.set_toolkit(default_toolkit);
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("DC");
@@ -184,7 +185,7 @@ void HVDC_MODEL_TEST::test_initialize()
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_initialize_"+model->get_model_name());
+    default_toolkit.redirect_stdout_to_file("test_log/test_initialize_"+model->get_model_name()+".txt");
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -209,7 +210,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_rectifier_voltage_ramp_response_"+model->get_model_name());
+    default_toolkit.redirect_stdout_to_file("test_log/test_rectifier_voltage_ramp_response_"+model->get_model_name()+".txt");
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -376,7 +377,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_inverter_voltage_ramp_response_"+model->get_model_name());
+    default_toolkit.redirect_stdout_to_file("test_log/test_inverter_voltage_ramp_response_"+model->get_model_name()+".txt");
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -541,7 +542,7 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_manual_block_and_unblock_"+model->get_model_name());
+    default_toolkit.redirect_stdout_to_file("test_log/test_manual_block_and_unblock_"+model->get_model_name()+".txt");
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -656,7 +657,7 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
     HVDC_MODEL* model = get_test_hvdc_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_manual_bypass_and_unbypass_"+model->get_model_name());
+    default_toolkit.redirect_stdout_to_file("test_log/test_manual_bypass_and_unbypass_"+model->get_model_name()+".txt");
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -767,7 +768,7 @@ void HVDC_MODEL_TEST::test_get_standard_model_string()
 
     HVDC_MODEL* model = get_test_hvdc_model();
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_get_standard_model_string_"+model->get_model_name());
+    default_toolkit.redirect_stdout_to_file("test_log/test_get_standard_model_string_"+model->get_model_name()+".txt");
 
     osstream<<"Model:"<<model->get_standard_model_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);

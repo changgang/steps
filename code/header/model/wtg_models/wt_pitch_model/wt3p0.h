@@ -46,6 +46,8 @@ class WT3P0 : public WT_PITCH_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void set_block_toolkit();
+
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
         virtual double get_pitch_angle_in_deg() const;

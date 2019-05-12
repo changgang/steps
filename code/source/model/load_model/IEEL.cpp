@@ -289,9 +289,15 @@ bool IEEL::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void IEEL::set_block_toolkit()
+{
+    ;
+}
 
 void IEEL::initialize()
 {
+    set_block_toolkit();
+
     LOAD* load = get_load_pointer();
     complex<double> S = load->get_actual_total_load_in_MVA();
     double V = get_bus_voltage_in_pu();

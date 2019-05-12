@@ -106,6 +106,8 @@ bool GENCLS::setup_model_with_bpa_string(string data)
 
 void GENCLS::initialize()
 {
+    set_block_toolkit();
+
     update_source_impedance();
 
     // rotor angle and speed

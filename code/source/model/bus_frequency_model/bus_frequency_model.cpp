@@ -39,15 +39,18 @@ size_t BUS_FREQUENCY_MODEL::get_bus() const
 void BUS_FREQUENCY_MODEL::initialize()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+
     if(bus_ptr==NULL)
     {
         osstream<<"Warning. Bus frequency model is not properly set since bus pointer is NULL. This line should never appear.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         return;
     }
+    STEPS& toolkit = bus_ptr->get_toolkit();
+    set_toolkit(toolkit);
 
     double DELT = toolkit.get_dynamic_simulation_time_step_in_s();
+    frequency_block.set_toolkit(toolkit);
     frequency_block.set_T_in_s(DELT*4.0);
 
     frequency_block.set_input(bus_ptr->get_angle_in_rad());

@@ -135,7 +135,7 @@ void WT3G2_TEST::test_set_get_pll_angle()
     show_test_information_for_function_of_class(__FUNCTION__,"WT3G2_TEST");
 
     WT3G2* model = (WT3G2*) get_test_wt_generator_model();
-
+    model->initialize();
     model->set_pll_angle_in_deg(10.0);
     TEST_ASSERT(fabs(model->get_pll_angle_in_deg()-10.0)<FLOAT_EPSILON);
 }

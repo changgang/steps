@@ -21,6 +21,8 @@ class LOAD_FREQUENCY_RELAY_MODEL : public LOAD_RELAY_MODEL
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
 
+        virtual void set_block_toolkit() = 0;
+
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual double get_total_shed_scale_factor_in_pu() const = 0;

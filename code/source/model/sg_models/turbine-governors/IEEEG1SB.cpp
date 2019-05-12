@@ -455,6 +455,21 @@ bool IEEEG1SB::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void IEEEG1SB::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    droop.set_toolkit(toolkit);
+    servo_motor.set_toolkit(toolkit);
+    delayer1.set_toolkit(toolkit);
+    delayer2.set_toolkit(toolkit);
+    delayer3.set_toolkit(toolkit);
+    delayer4.set_toolkit(toolkit);
+    boiler_PI.set_toolkit(toolkit);
+    fuel_producer.set_toolkit(toolkit);
+    fuel_delayer1.set_toolkit(toolkit);
+    fuel_delayer2.set_toolkit(toolkit);
+    drum.set_toolkit(toolkit);
+}
 
 void IEEEG1SB::initialize()
 {
@@ -472,6 +487,8 @@ void IEEEG1SB::initialize()
         return;
     if(not gen_model->is_model_initialized())
         gen_model->initialize();
+
+    set_block_toolkit();
 
     double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
 

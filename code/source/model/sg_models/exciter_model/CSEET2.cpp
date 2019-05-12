@@ -536,6 +536,18 @@ bool CSEET2::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void CSEET2::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    sensor.set_toolkit(toolkit);
+    serial_tuner1_lead_lag.set_toolkit(toolkit);
+    serial_tuner1_pi.set_toolkit(toolkit);
+    serial_tuner2.set_toolkit(toolkit);
+    parallel_integral.set_toolkit(toolkit);
+    parallel_differential.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
+    feedbacker.set_toolkit(toolkit);
+}
 
 void CSEET2::initialize()
 {
@@ -552,6 +564,8 @@ void CSEET2::initialize()
 
     if(not gen_model->is_model_initialized())
         gen_model->initialize();
+
+    set_block_toolkit();
 
     if(get_tuner_type()==SERIAL_TUNER)
     {

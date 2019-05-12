@@ -20,11 +20,8 @@ void COMP_TEST::setup()
     COMPENSATOR_MODEL_TEST::setup();
 
     COMP model;
-
     GENERATOR* generator  = get_test_generator();
-
     model.set_Xe(0.1);
-
     generator->set_model(&model);
 }
 

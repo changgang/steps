@@ -21,6 +21,7 @@ INTEGRAL_BLOCK_TEST::INTEGRAL_BLOCK_TEST()
 
 void INTEGRAL_BLOCK_TEST::setup()
 {
+    block.set_toolkit(default_toolkit);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 }
 

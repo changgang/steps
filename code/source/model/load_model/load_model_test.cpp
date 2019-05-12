@@ -22,6 +22,7 @@ LOAD_MODEL_TEST::LOAD_MODEL_TEST()
 void LOAD_MODEL_TEST::setup()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    psdb.clear();
     psdb.set_allowed_max_bus_number(100);
     psdb.set_system_base_power_in_MVA(100.0);
 
@@ -35,6 +36,7 @@ void LOAD_MODEL_TEST::setup()
     psdb.append_bus(bus);
 
     LOAD load;
+    load.set_toolkit(default_toolkit);
     load.set_load_bus(1);
     load.set_identifier("#1");
     load.set_status(true);

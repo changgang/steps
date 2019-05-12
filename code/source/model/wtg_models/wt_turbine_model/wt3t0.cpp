@@ -136,6 +136,14 @@ bool WT3T0::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void WT3T0::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    shaft_twist_block.set_toolkit(toolkit);
+    turbine_inertia_block.set_toolkit(toolkit);
+    generator_inertia_block.set_toolkit(toolkit);
+    generator_rotor_angle_block.set_toolkit(toolkit);
+}
 
 void WT3T0::initialize()
 {
@@ -157,6 +165,8 @@ void WT3T0::initialize()
         return;
     if(not aero_model->is_model_initialized())
         aero_model->initialize();
+
+    set_block_toolkit();
 
     size_t bus = gen->get_generator_bus();
 

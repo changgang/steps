@@ -4,6 +4,7 @@
 #include "header/device/bus.h"
 #include "header/device/source.h"
 #include "header/network/network_matrix.h"
+#include "header/network/jacobian_builder.h"
 #include "header/basic/sparse_matrix_define.h"
 
 class POWERFLOW_SOLVER : public BASE
@@ -96,6 +97,8 @@ class POWERFLOW_SOLVER : public BASE
         void extract_bus_power_mismatch_for_solution();
 
         void set_convergence_flag(bool flag);
+
+        JACOBIAN_BUILDER jacobian_builder;
 
         STEPS_SPARSE_MATRIX jacobian, BP, BQ;
 

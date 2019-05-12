@@ -224,6 +224,14 @@ bool PSASPE1::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void PSASPE1::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    sensor.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
+    feedbacker.set_toolkit(toolkit);
+    exciter.set_toolkit(toolkit);
+}
 
 void PSASPE1::initialize()
 {
@@ -240,6 +248,8 @@ void PSASPE1::initialize()
 
     if(not gen_model->is_model_initialized())
         gen_model->initialize();
+
+    set_block_toolkit();
 
     double Ecomp = get_compensated_voltage_in_pu();
 

@@ -342,10 +342,23 @@ bool ESTR0::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void ESTR0::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+
+    active_lead_lag_1.set_toolkit(toolkit);
+    active_lead_lag_2.set_toolkit(toolkit);
+    active_pid_block.set_toolkit(toolkit);
+    active_power_filter.set_toolkit(toolkit);
+    energy_state_block.set_toolkit(toolkit);
+    reactive_lead_lag_1.set_toolkit(toolkit);
+    reactive_lead_lag_2.set_toolkit(toolkit);
+    reactive_integral_block.set_toolkit(toolkit);
+}
+
 void ESTR0::initialize()
 {
-    energy_state_block.set_upper_limit(1.0);
-    energy_state_block.set_lower_limit(0.0);
+    set_block_toolkit();
 
     double V = get_terminal_bus_voltage_in_pu();
     double iacmax = get_Iacmax_in_pu();

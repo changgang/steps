@@ -86,6 +86,8 @@ class CSEET2: public EXCITER_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void set_block_toolkit();
+
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
         virtual double get_excitation_voltage_in_pu() const;

@@ -410,6 +410,24 @@ bool PSASPS4::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void PSASPS4::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    speed_sensor.set_toolkit(toolkit);
+    pelec_sensor.set_toolkit(toolkit);
+    speed_dedc_block_1.set_toolkit(toolkit);
+    speed_dedc_block_2.set_toolkit(toolkit);
+    pelec_dedc_block_1.set_toolkit(toolkit);
+    pelec_dedc_block_2.set_toolkit(toolkit);
+    notch_filter_phase_tuner.set_toolkit(toolkit);
+    notch_filter_first_order_block_1.set_toolkit(toolkit);
+    notch_filter_first_order_block_2.set_toolkit(toolkit);
+    notch_filter_first_order_block_3.set_toolkit(toolkit);
+    notch_filter_first_order_block_4.set_toolkit(toolkit);
+    phase_tuner_1.set_toolkit(toolkit);
+    phase_tuner_2.set_toolkit(toolkit);
+    phase_tuner_3.set_toolkit(toolkit);
+}
 
 void PSASPS4::initialize()
 {
@@ -432,6 +450,8 @@ void PSASPS4::initialize()
     }
     if(not exciter->is_model_initialized())
         exciter->initialize();
+
+    set_block_toolkit();
 
     size_t bus = generator->get_generator_bus();
 

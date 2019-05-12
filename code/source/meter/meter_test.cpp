@@ -41,6 +41,8 @@ METER_TEST::METER_TEST()
 
 void METER_TEST::setup()
 {
+    meter.set_toolkit(default_toolkit);
+
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     BUS bus;
@@ -56,12 +58,14 @@ void METER_TEST::setup()
     psdb.append_bus(bus);
 
     LINE line;
+    line.set_toolkit(default_toolkit);
     line.set_sending_side_bus(1);
     line.set_receiving_side_bus(2);
     line.set_identifier("#1");
     psdb.append_line(line);
 
     TRANSFORMER transformer;
+    transformer.set_toolkit(default_toolkit);
     transformer.set_winding_bus(PRIMARY_SIDE, 1);
     transformer.set_winding_bus(SECONDARY_SIDE, 2);
     transformer.set_identifier("#1");
@@ -71,6 +75,7 @@ void METER_TEST::setup()
     psdb.append_transformer(transformer);
 
     GENERATOR generator;
+    generator.set_toolkit(default_toolkit);
     generator.set_generator_bus(1);
     generator.set_identifier("#1");
     psdb.append_generator(generator);
@@ -79,22 +84,26 @@ void METER_TEST::setup()
     psdb.append_dynamic_model(get_generator_device_id(1,"#1"),&model);
 
     LOAD load;
+    load.set_toolkit(default_toolkit);
     load.set_load_bus(1);
     load.set_identifier("#1");
     psdb.append_load(load);
 
     WT_GENERATOR wt_generator;
+    wt_generator.set_toolkit(default_toolkit);
     wt_generator.set_source_bus(1);
     wt_generator.set_identifier("#1");
     psdb.append_wt_generator(wt_generator);
 
     HVDC hvdc;
+    hvdc.set_toolkit(default_toolkit);
     hvdc.set_converter_bus(RECTIFIER, 1);
     hvdc.set_converter_bus(INVERTER, 2);
     hvdc.set_identifier("#1");
     psdb.append_hvdc(hvdc);
 
     EQUIVALENT_DEVICE edevice;
+    edevice.set_toolkit(default_toolkit);
     edevice.set_equivalent_device_bus(1);
     edevice.set_identifier("#1");
     edevice.set_status(true);
@@ -102,6 +111,7 @@ void METER_TEST::setup()
 
 
     ENERGY_STORAGE estorage;
+    estorage.set_toolkit(default_toolkit);
     estorage.set_energy_storage_bus(1);
     estorage.set_identifier("#1");
     estorage.set_status(true);

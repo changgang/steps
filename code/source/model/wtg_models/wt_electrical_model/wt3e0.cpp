@@ -589,6 +589,26 @@ bool WT3E0::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void WT3E0::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    voltage_sensor.set_toolkit(toolkit);
+    voltage_regulator_first_order_block.set_toolkit(toolkit);
+    voltage_regulator_integrator.set_toolkit(toolkit);
+    voltage_regulator_filter.set_toolkit(toolkit);
+    active_power_sensor.set_toolkit(toolkit);
+    Q_error_integrator.set_toolkit(toolkit);
+    V_error_integrator.set_toolkit(toolkit);
+
+    wind_turbine_speed_reference_sensor.set_toolkit(toolkit);
+    torque_PI_regulator.set_toolkit(toolkit);
+    virtual_inertia_emulator.set_toolkit(toolkit);
+    frequency_droop_controller.set_toolkit(toolkit);
+
+    frequency_integral_controller.set_toolkit(toolkit);
+    power_order_integrator.set_toolkit(toolkit);
+}
+
 void WT3E0::initialize()
 {
     ostringstream osstream;
@@ -619,6 +639,8 @@ void WT3E0::initialize()
 
     if(not turbine_model->is_model_initialized())
         turbine_model->initialize();
+
+    set_block_toolkit();
 
     STEPS& toolkit = get_toolkit();
 

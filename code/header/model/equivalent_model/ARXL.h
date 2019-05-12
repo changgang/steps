@@ -41,6 +41,8 @@ class ARXL : public EQUIVALENT_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void set_block_toolkit();
+
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
         virtual void update_meters_buffer();

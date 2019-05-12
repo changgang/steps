@@ -169,12 +169,19 @@ bool SEXS::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void SEXS::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    phase_tuner.set_toolkit(toolkit);
+    exciter.set_toolkit(toolkit);
+}
+
 void SEXS::initialize()
 {
     ostringstream osstream;
     if(is_model_initialized())
         return;
-    STEPS& toolkit = get_toolkit();
+
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return;
@@ -184,6 +191,10 @@ void SEXS::initialize()
         return;
     if(not gen_model->is_model_initialized())
         gen_model->initialize();
+
+    set_block_toolkit();
+
+    STEPS& toolkit = get_toolkit();
 
     double Ecomp = get_compensated_voltage_in_pu();
 

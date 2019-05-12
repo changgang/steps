@@ -275,6 +275,16 @@ bool WT3G2::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void WT3G2::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    active_current_commander.set_toolkit(toolkit);
+    LVPL_voltage_sensor.set_toolkit(toolkit);
+    reactive_voltage_commander.set_toolkit(toolkit);
+    PLL_frequency_integrator.set_toolkit(toolkit);
+    PLL_angle_integrator.set_toolkit(toolkit);
+}
+
 void WT3G2::initialize()
 {
     ostringstream oosstream;
@@ -284,6 +294,8 @@ void WT3G2::initialize()
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
     if(wt_generator==NULL)
         return;
+
+    set_block_toolkit();
 
     size_t n_lumped = get_number_of_lumped_wt_generators();
     double fbase = get_bus_base_frequency_in_Hz();

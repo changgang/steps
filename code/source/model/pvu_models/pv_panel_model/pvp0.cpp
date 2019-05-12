@@ -65,6 +65,28 @@ bool PVP0::setup_model_with_bpa_string(string data)
     toolkit.show_information_with_leading_time_stamp(osstream);
     return true;
 }
+void PVP0::set_block_toolkit()
+{
+    ;
+}
+
+void PVP0::initialize()
+{
+    ostringstream oosstream;
+    if(is_model_initialized())
+        return;
+
+    PV_UNIT* pv_unit = get_pv_unit_pointer();
+    if(pv_unit==NULL)
+        return;
+
+    set_block_toolkit();
+}
+
+void PVP0::run(DYNAMIC_MODE mode)
+{
+    ;
+}
 
 
 void PVP0::check()

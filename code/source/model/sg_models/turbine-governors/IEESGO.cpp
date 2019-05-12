@@ -230,9 +230,20 @@ bool IEESGO::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void IEESGO::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    governor_tuner.set_toolkit(toolkit);
+    governor.set_toolkit(toolkit);
+    high_pressure_turbine.set_toolkit(toolkit);
+    medium_pressure_turbine.set_toolkit(toolkit);
+    low_pressure_turbine.set_toolkit(toolkit);
+}
 
 void IEESGO::initialize()
 {
+    set_block_toolkit();
+
     ostringstream osstream;
 
     STEPS& toolkit = get_toolkit();

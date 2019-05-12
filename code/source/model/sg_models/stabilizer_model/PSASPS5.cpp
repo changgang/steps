@@ -308,6 +308,10 @@ bool PSASPS5::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void PSASPS5::set_block_toolkit()
+{
+    ;
+}
 
 void PSASPS5::initialize()
 {
@@ -330,6 +334,8 @@ void PSASPS5::initialize()
     }
     if(not exciter->is_model_initialized())
         exciter->initialize();
+
+    set_block_toolkit();
 
     phase_tuner_3.set_output(0.0);
     phase_tuner_3.initialize();

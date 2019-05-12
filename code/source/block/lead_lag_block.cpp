@@ -62,6 +62,7 @@ void LEAD_LAG_BLOCK::initialize()
 
     if(t1==0.0)
     {
+        first_order_block.set_toolkit(get_toolkit());
         first_order_block.set_limiter_type(this->get_limiter_type());
         first_order_block.set_upper_limit(this->get_upper_limit());
         first_order_block.set_lower_limit(this->get_lower_limit());

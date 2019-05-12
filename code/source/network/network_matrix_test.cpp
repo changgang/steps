@@ -151,11 +151,8 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
     show_test_information_for_function_of_class(__FUNCTION__,"NETWORK_MATRIX_TEST");
 
     network_matrix.build_network_matrix();
-    cout<<__FILE__<<" @ "<<__LINE__<<"\n";
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    cout<<__FILE__<<" @ "<<__LINE__<<"\n";
     network_matrix.check_newtork_connectivity();
-    cout<<__FILE__<<" @ "<<__LINE__<<"\n";
 
     ostringstream osstream;
     osstream<<"Islands when tripping line 4-5 and 4-6";

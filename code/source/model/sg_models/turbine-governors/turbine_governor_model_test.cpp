@@ -148,6 +148,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::test_get_rotor_speed()
     SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
 
     TGOV1 model;
+    model.set_toolkit(default_toolkit);
     model.set_device_id(genptr->get_device_id());
 
     TEST_ASSERT(fabs(model.get_rotor_speed_deviation_in_pu_from_sync_generator_model()-genmodel->get_rotor_speed_deviation_in_pu())<FLOAT_EPSILON);

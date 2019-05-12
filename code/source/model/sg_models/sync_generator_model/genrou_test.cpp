@@ -24,7 +24,6 @@ void GENROU_TEST::setup()
     SYNC_GENERATOR_MODEL_TEST::setup();
 
     GENROU model;
-
     model.set_Rs(0.01);
     model.set_Xd(1.7);
     model.set_Xq(1.6);

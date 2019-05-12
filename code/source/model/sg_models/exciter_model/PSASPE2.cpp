@@ -296,6 +296,15 @@ bool PSASPE2::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void PSASPE2::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    sensor.set_toolkit(toolkit);
+    tuner1_lead_lag.set_toolkit(toolkit);
+    tuner1_pi.set_toolkit(toolkit);
+    tuner2.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
+}
 
 void PSASPE2::initialize()
 {
@@ -312,6 +321,10 @@ void PSASPE2::initialize()
 
     if(not gen_model->is_model_initialized())
         gen_model->initialize();
+
+    set_block_toolkit();
+
+    STEPS& toolkit = get_toolkit();
 
     double Ecomp = get_compensated_voltage_in_pu();
 
@@ -340,7 +353,6 @@ void PSASPE2::initialize()
     double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
     this->Efd0 = Efd;
 
-    STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = generator->get_generator_bus();
     this->Vt0 = psdb.get_bus_voltage_in_pu(bus);

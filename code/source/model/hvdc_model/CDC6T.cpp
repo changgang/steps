@@ -368,6 +368,23 @@ bool CDC6T::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void CDC6T::set_block_toolkit()
+{
+    set_common_timer_toolkit();
+
+    STEPS& toolkit = get_toolkit();
+    inverter_dc_voltage_sensor.set_toolkit(toolkit);
+    dc_current_sensor.set_toolkit(toolkit);
+    rectifier_dc_voltage_sensor.set_toolkit(toolkit);
+
+    rec_ac_blocking_timer.set_toolkit(toolkit);
+    inv_ac_blocking_signal_transmitting_timer.set_toolkit(toolkit);
+    rec_ac_unblocking_timer.set_toolkit(toolkit);
+    inv_ac_unblocking_timer.set_toolkit(toolkit);
+    inv_ac_unblocking_signal_transmitting_timer.set_toolkit(toolkit);
+    inv_ac_bypassing_timer.set_toolkit(toolkit);
+    inv_ac_unbypassing_timer.set_toolkit(toolkit);
+}
 void CDC6T::initialize()
 {
     if(is_model_initialized())
@@ -376,6 +393,8 @@ void CDC6T::initialize()
     HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
+
+    set_block_toolkit();
 
     rec_ac_blocking_timer.set_attached_device(hvdc);
     inv_ac_bypassing_timer.set_attached_device(hvdc);

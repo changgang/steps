@@ -31,6 +31,7 @@ void WTG_MODEL_TEST::setup()
     psdb.append_bus(bus);
 
     WT_GENERATOR wt_generator;
+    wt_generator.set_toolkit(default_toolkit);
     wt_generator.set_generator_bus(1);
     wt_generator.set_identifier("#1");
     wt_generator.set_status(true);

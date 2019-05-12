@@ -108,6 +108,9 @@ void GENCLS_TEST::test_set_get_rotor_angle()
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
     GENCLS* model = (GENCLS*) get_test_sync_generator_model();
+    model->set_Tj_in_s(6.0);
+    model->set_D(1.0);
+    model->initialize();
 
     model->set_rotor_angle_in_deg(10.0);
     TEST_ASSERT(fabs(model->get_rotor_angle_in_deg()-10.0)<FLOAT_EPSILON);
@@ -118,6 +121,10 @@ void GENCLS_TEST::test_set_get_rotor_speed()
     show_test_information_for_function_of_class(__FUNCTION__,"GENCLS_TEST");
 
     GENCLS* model = (GENCLS*) get_test_sync_generator_model();
+    model->set_Tj_in_s(6.0);
+    model->set_D(1.0);
+
+    model->initialize();
 
     model->set_rotor_speed_deviation_in_pu(0.1);
     TEST_ASSERT(fabs(model->get_rotor_speed_deviation_in_pu()-0.1)<FLOAT_EPSILON);

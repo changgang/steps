@@ -153,6 +153,10 @@ void PID_BLOCK::initialize()
 {
     ostringstream osstream;
 
+    p_block.set_toolkit(get_toolkit());
+    i_block.set_toolkit(get_toolkit());
+    d_block.set_toolkit(get_toolkit());
+
     p_block.set_output(0.0);
     i_block.set_output(get_output());
     d_block.set_input(0.0);

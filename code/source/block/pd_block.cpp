@@ -85,6 +85,9 @@ double PD_BLOCK::get_differentiator_store() const
 
 void PD_BLOCK::initialize()
 {
+    p_block.set_toolkit(get_toolkit());
+    d_block.set_toolkit(get_toolkit());
+
     double y = get_output();
     p_block.set_output(y);
     d_block.set_input(0.0);

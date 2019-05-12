@@ -472,10 +472,10 @@ void HVDC_MODEL::manual_block_hvdc()
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     if(not is_blocked())
+    {
         block_hvdc();
-
+    }
     manual_blocked = true;
-
 }
 
 void HVDC_MODEL::manual_unblock_hvdc()
@@ -510,7 +510,6 @@ bool HVDC_MODEL::is_blocked() const
     HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return false;
-
     return not hvdc->get_status();
 }
 
@@ -1534,4 +1533,12 @@ double HVDC_MODEL::get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter)
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return psdb.get_bus_voltage_in_pu(hvdc->get_converter_bus(converter));
+}
+
+void HVDC_MODEL::set_common_timer_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    block_timer.set_toolkit(toolkit);
+    bypass_timer.set_toolkit(toolkit);
+    mode_switch_timer.set_toolkit(toolkit);
 }

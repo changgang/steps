@@ -37,6 +37,8 @@ class IEEEG2 : public TURBINE_GOVERNOR_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void set_block_toolkit();
+
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
         virtual double get_mechanical_power_in_pu_based_on_mbase() const;

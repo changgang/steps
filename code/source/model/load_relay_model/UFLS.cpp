@@ -214,9 +214,25 @@ bool UFLS::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void UFLS::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    frequency_sensor.set_toolkit(toolkit);
+    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    {
+        stage_timer[i].set_toolkit(toolkit);
+        breaker_timer[i].set_toolkit(toolkit);
+    }
+}
+
 void UFLS::initialize()
 {
     LOAD* load = get_load_pointer();
+    if(load==NULL)
+        return;
+
+    set_block_toolkit();
+
     double fbase = get_bus_base_frequency_in_Hz();
 
     for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)

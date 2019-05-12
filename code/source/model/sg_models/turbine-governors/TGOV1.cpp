@@ -173,9 +173,18 @@ bool TGOV1::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void TGOV1::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    governor.set_toolkit(toolkit);
+    turbine.set_toolkit(toolkit);
+    damping.set_toolkit(toolkit);
+}
 
 void TGOV1::initialize()
 {
+    set_block_toolkit();
+
     double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
     turbine.set_output(pmech0);
     turbine.initialize();

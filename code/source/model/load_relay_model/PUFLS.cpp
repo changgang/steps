@@ -293,11 +293,26 @@ bool PUFLS::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void PUFLS::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+
+    frequency_sensor.set_toolkit(toolkit);
+    additional_stage_timer.set_toolkit(toolkit);
+    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+        discrete_stage_timer[i].set_toolkit(toolkit);
+    history_minimum_frequency_buffer.set_toolkit(toolkit);
+}
+
 void PUFLS::initialize()
 {
     LOAD* load = get_load_pointer();
     if(load==NULL)
         return;
+
+    set_block_toolkit();
+
+    STEPS& toolkit = get_toolkit();
 
     double fbase = get_bus_base_frequency_in_Hz();
 
@@ -306,7 +321,6 @@ void PUFLS::initialize()
         discrete_stage_timer[stage].set_attached_device(load);
 
     double t_delay = get_time_delay_in_s();
-    STEPS& toolkit = get_toolkit();
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     frequency_sensor.set_output(fbase);

@@ -79,6 +79,7 @@ void PI_BLOCK::initialize()
 {
     ostringstream osstream;
 
+    pid_block.set_toolkit(get_toolkit());
     pid_block.set_output(get_output());
 
     pid_block.initialize();

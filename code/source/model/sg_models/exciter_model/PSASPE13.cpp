@@ -267,6 +267,15 @@ bool PSASPE13::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void PSASPE13::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    sensor.set_toolkit(toolkit);
+    tuner.set_toolkit(toolkit);
+    regulator.set_toolkit(toolkit);
+    feedbacker.set_toolkit(toolkit);
+}
+
 void PSASPE13::initialize()
 {
     if(is_model_initialized())
@@ -282,6 +291,8 @@ void PSASPE13::initialize()
 
     if(not gen_model->is_model_initialized())
         gen_model->initialize();
+
+    set_block_toolkit();
 
     double Ecomp = get_compensated_voltage_in_pu();
     double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();

@@ -280,6 +280,7 @@ INTEGRAL_BLOCK* SYNC_GENERATOR_MODEL::get_q_axis_subtransient_block()
     return &subtransient_block_q_axis;
 }
 
+
 bool SYNC_GENERATOR_MODEL::is_saturation_considered() const
 {
     return saturation_block.is_saturation_considered();
@@ -390,4 +391,16 @@ double SYNC_GENERATOR_MODEL::get_excitation_voltage_in_pu() const
     }
     else
         return 0.0;
+}
+
+
+void SYNC_GENERATOR_MODEL::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    transient_block_d_axis.set_toolkit(toolkit);
+    subtransient_block_d_axis.set_toolkit(toolkit);
+    transient_block_q_axis.set_toolkit(toolkit);
+    subtransient_block_q_axis.set_toolkit(toolkit);
+    rotor_angle_block.set_toolkit(toolkit);
+    rotor_speed_block.set_toolkit(toolkit);
 }

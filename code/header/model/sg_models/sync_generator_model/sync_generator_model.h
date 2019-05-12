@@ -95,6 +95,8 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
 
+        virtual void set_block_toolkit();
+
         virtual void initialize() = 0;
         virtual void initialize_rotor_angle() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;

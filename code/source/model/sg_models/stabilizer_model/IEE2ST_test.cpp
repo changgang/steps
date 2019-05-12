@@ -12,11 +12,10 @@ IEE2ST_TEST::IEE2ST_TEST() : STABILIZER_MODEL_TEST()
 void IEE2ST_TEST::setup()
 {
     STABILIZER_MODEL_TEST::setup();
-
     GENERATOR* genptr = get_test_generator();
     IEE2ST model;
     genptr->set_model(&model);
-}
+ }
 
 void IEE2ST_TEST::tear_down()
 {

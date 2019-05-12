@@ -358,6 +358,16 @@ bool IEEEG1::setup_model_with_bpa_string(string data)
     return false;
 }
 
+void IEEEG1::set_block_toolkit()
+{
+    STEPS& toolkit = get_toolkit();
+    droop.set_toolkit(toolkit);
+    servo_motor.set_toolkit(toolkit);
+    delayer1.set_toolkit(toolkit);
+    delayer2.set_toolkit(toolkit);
+    delayer3.set_toolkit(toolkit);
+    delayer4.set_toolkit(toolkit);
+}
 
 void IEEEG1::initialize()
 {
@@ -375,6 +385,8 @@ void IEEEG1::initialize()
 
     if(not gen_model->is_model_initialized())
         gen_model->initialize();
+
+    set_block_toolkit();
 
     STEPS& toolkit = get_toolkit();
 
