@@ -6,7 +6,7 @@
 
 size_t api_get_device_count(const char* device_type, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string DEVICE_TYPE = string2upper(device_type);
 
@@ -39,49 +39,49 @@ size_t api_get_device_count(const char* device_type, size_t toolkit_index)
 
 size_t api_get_area_count(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_area_count();
 }
 
 size_t api_get_zone_count(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_zone_count();
 }
 
 size_t api_get_owner_count(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_owner_count();
 }
 
 size_t api_get_in_service_bus_count(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_in_service_bus_count();
 }
 
 void api_update_overshadowed_buses(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     psdb.update_overshadowed_bus_count();
 }
 
 void api_set_all_buses_un_overshadowed(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     psdb.set_all_buses_un_overshadowed();
 }
 
 size_t api_get_overshadowed_bus_count(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     psdb.update_overshadowed_bus_count();
     return psdb.get_overshadowed_bus_count();

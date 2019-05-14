@@ -6,7 +6,7 @@
 
 void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(not psdb.is_bus_exist(bus_number))
@@ -21,7 +21,7 @@ void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV, s
 
 void api_add_generator(size_t bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_generator_device_id(bus_number, identifier);
@@ -37,7 +37,7 @@ void api_add_generator(size_t bus_number, char* identifier, size_t toolkit_index
 
 void api_add_wt_generator(size_t bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_wt_generator_device_id(bus_number, identifier);
@@ -54,7 +54,7 @@ void api_add_wt_generator(size_t bus_number, char* identifier, size_t toolkit_in
 
 void api_add_pv_unit(size_t bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_pv_unit_device_id(bus_number, identifier);
@@ -70,7 +70,7 @@ void api_add_pv_unit(size_t bus_number, char* identifier, size_t toolkit_index)
 
 void api_add_load(size_t bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_load_device_id(bus_number, identifier);
@@ -86,7 +86,7 @@ void api_add_load(size_t bus_number, char* identifier, size_t toolkit_index)
 
 void api_add_fixed_shunt(size_t bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_fixed_shunt_device_id(bus_number, identifier);
@@ -102,7 +102,7 @@ void api_add_fixed_shunt(size_t bus_number, char* identifier, size_t toolkit_ind
 
 void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_line_device_id(sending_side_bus_number, receiving_side_bus_number, identifier);
@@ -119,7 +119,7 @@ void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_numb
 
 void api_add_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_hvdc_device_id(rectifier_bus_number, inverter_bus_number, identifier);
@@ -136,7 +136,7 @@ void api_add_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char*
 
 void api_add_transformer(size_t primary_side_bus_number, size_t secondary_side_bus_number, size_t tertiary_side_bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_transformer_device_id(primary_side_bus_number, secondary_side_bus_number, tertiary_side_bus_number, identifier);
@@ -154,7 +154,7 @@ void api_add_transformer(size_t primary_side_bus_number, size_t secondary_side_b
 
 void api_add_equivalent_device(size_t bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_equivalent_device_id(bus_number, identifier);
@@ -170,7 +170,7 @@ void api_add_equivalent_device(size_t bus_number, char* identifier, size_t toolk
 
 void api_add_energy_storage(size_t bus_number, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_energy_storage_device_id(bus_number, identifier);
@@ -186,7 +186,7 @@ void api_add_energy_storage(size_t bus_number, char* identifier, size_t toolkit_
 
 void api_add_area(size_t area_number, char* area_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(not psdb.is_area_exist(area_number))
@@ -200,7 +200,7 @@ void api_add_area(size_t area_number, char* area_name, size_t toolkit_index)
 
 void api_add_zone(size_t zone_number, char* zone_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(not psdb.is_zone_exist(zone_number))
@@ -214,7 +214,7 @@ void api_add_zone(size_t zone_number, char* zone_name, size_t toolkit_index)
 
 void api_add_owner(size_t owner_number, char* owner_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(not psdb.is_owner_exist(owner_number))

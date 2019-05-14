@@ -6,7 +6,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1557025583 c:\users\lichg\steps\code\header\apis\steps_api.h
+1557797835 c:\users\lichg\steps\code\header\apis\steps_api.h
 	"header/STEPS.h"
 	"header/power_system_database.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -461,16 +461,17 @@
 	<ctime>
 	<string>
 
-1557039114 c:\users\lichg\steps\code\header\basic\utility.h
+1557796278 c:\users\lichg\steps\code\header\basic\utility.h
 	"header/power_system_database.h"
 	"header/network/network_matrix.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	<complex>
 
-1556986964 c:\users\lichg\steps\code\header\steps_namespace.h
+1557796425 c:\users\lichg\steps\code\header\steps_namespace.h
 	"header/STEPS.h"
 	"header/basic/constants.h"
+	<mutex>
 
 1553928358 c:\users\lichg\steps\code\header\data_imexporter\psse_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
@@ -837,7 +838,7 @@
 	<istream>
 	<iostream>
 
-1557037926 source:c:\users\lichg\steps\code\source\basic\fault_test.cpp
+1557808391 source:c:\users\lichg\steps\code\source\basic\fault_test.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -1304,7 +1305,7 @@
 	"header/basic/timer.h"
 	"header/STEPS.h"
 
-1557039261 source:c:\users\lichg\steps\code\source\basic\utility.cpp
+1557808123 source:c:\users\lichg\steps\code\source\basic\utility.cpp
 	"header/basic/utility.h"
 	"header/basic/constants.h"
 	"header/steps_namespace.h"
@@ -1316,8 +1317,9 @@
 	<fstream>
 	<chrono>
 	<thread>
+	<mutex>
 
-1557061747 source:c:\users\lichg\steps\code\source\basic\utility_test.cpp
+1557809742 source:c:\users\lichg\steps\code\source\basic\utility_test.cpp
 	"header/basic/utility_test.h"
 	"header/steps_namespace.h"
 	"header/prepare_for_tests/prepare_models_for_test.h"
@@ -1328,7 +1330,7 @@
 	<cstdio>
 	<cmath>
 
-1557050427 c:\users\lichg\steps\code\header\basic\utility_test.h
+1557809552 c:\users\lichg\steps\code\header\basic\utility_test.h
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -4746,7 +4748,7 @@
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1556987323 source:c:\users\lichg\steps\code\source\steps_namespace.cpp
+1557796423 source:c:\users\lichg\steps\code\source\steps_namespace.cpp
 	"header/steps_namespace.h"
 
 1557052353 source:c:\users\lichg\steps\code\source\toolkit\cct_searcher\cct_searcher_test.cpp
@@ -4848,7 +4850,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1557544647 source:c:\users\lichg\steps\code\source\steps.cpp
+1557797562 source:c:\users\lichg\steps\code\source\steps.cpp
 	"header/steps.h"
 	"header/basic/utility.h"
 	<iostream>
@@ -4907,7 +4909,7 @@
 	"header/toolkit/contingency_screener/contingency_screener.h"
 	"header/STEPS.h"
 
-1557548272 source:c:\users\lichg\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator_test.cpp
+1557752823 source:c:\users\lichg\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator_test.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator_test.h"
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
@@ -4963,7 +4965,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1557052653 source:c:\users\lichg\steps\code\main_arxl_simulation.cpp
+1557795957 source:c:\users\lichg\steps\code\main_arxl_simulation.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -4975,7 +4977,7 @@
 	"header/prepare_for_tests/prepare_models_for_test.h"
 	"header/data_imexporter/equivalent_model_imexporter.h"
 
-1557052868 source:c:\users\lichg\steps\code\main_powerflow.cpp
+1557795946 source:c:\users\lichg\steps\code\main_powerflow.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -4983,7 +4985,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1557052742 source:c:\users\lichg\steps\code\main_cct_search_screening.cpp
+1557795954 source:c:\users\lichg\steps\code\main_cct_search_screening.cpp
 	"header/power_system_database.h"
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
@@ -4992,7 +4994,7 @@
 	<istream>
 	<iostream>
 
-1557052759 source:c:\users\lichg\steps\code\main_dynamics_simulation.cpp
+1557795950 source:c:\users\lichg\steps\code\main_dynamics_simulation.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -5019,7 +5021,7 @@
 	<cmath>
 	<ctime>
 
-1557052884 source:c:\users\lichg\steps\code\main_ufls_simulation.cpp
+1557795935 source:c:\users\lichg\steps\code\main_ufls_simulation.cpp
 	<istream>
 	<iostream>
 	"header/power_system_database.h"
@@ -5030,7 +5032,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/model/all_supported_models.h"
 
-1557548307 source:c:\users\lichg\steps\code\main_tests.cpp
+1557809199 source:c:\users\lichg\steps\code\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -5047,6 +5049,7 @@
 	"header/basic/sparse_matrix_test.h"
 	"header/basic/fault_test.h"
 	"header/basic/timer_test.h"
+	"header/basic/constants_test.h"
 	"header/basic/bus_index_test.h"
 	"header/basic/device_index_map_test.h"
 	"header/basic/inphno_test.h"
@@ -5129,4 +5132,19 @@
 	"header/toolkit/cct_searcher/cct_searcher_test.h"
 	"header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h"
 	"header/steps_namespace.h"
+
+1557808297 c:\users\lichg\steps\code\header\basic\constants_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+
+1557809494 source:c:\users\lichg\steps\code\source\basic\constants_test.cpp
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/basic/constants_test.h"
+	"header/basic/utility.h"
 

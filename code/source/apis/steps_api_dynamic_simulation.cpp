@@ -5,7 +5,7 @@
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -23,7 +23,7 @@ size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name, size_t 
 
 void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -46,7 +46,7 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
 
 double api_get_dynamic_simulator_float_parameter(char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -67,7 +67,7 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name, size_t to
 
 void api_set_dynamic_simulator_float_parameter(char* parameter_name, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -94,7 +94,7 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
 
 const char* api_get_dynamic_simulator_string_parameter(char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
 	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
@@ -114,7 +114,7 @@ const char* api_get_dynamic_simulator_string_parameter(char* parameter_name, siz
 
 void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -131,7 +131,7 @@ void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* valu
 
 bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -152,7 +152,7 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, size_t to
 }
 void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -184,14 +184,14 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
 
 void api_set_dynamic_simulator_output_file(char* file, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string parameter_name = "OUTPUT FILENAME";
     api_set_dynamic_simulator_string_parameter((char*)parameter_name.c_str(), file);
 }
 
 const char* api_get_dynamic_simulator_output_file(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
 	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", ds.get_output_file().c_str());
@@ -200,102 +200,102 @@ const char* api_get_dynamic_simulator_output_file(size_t toolkit_index)
 
 void api_set_dynamic_simulation_time_step(double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     toolkit.set_dynamic_simulation_time_step_in_s(value);
 }
 
 double api_get_dynamic_simulation_time_step(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     return toolkit.get_dynamic_simulation_time_step_in_s();
 }
 
 double api_get_dynamic_simulation_time(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     return toolkit.get_dynamic_simulation_time_in_s();
 }
 
 void api_prepare_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_meters();
 }
 
 void api_prepare_bus_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_bus_related_meters();
 }
 
 void api_prepare_generator_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_generator_related_meters();
 }
 
 void api_prepare_wt_generator_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_wt_generator_related_meters();
 }
 
 void api_prepare_pv_unit_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_pv_unit_related_meters();
 }
 
 void api_prepare_energy_storage_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_energy_storage_related_meters();
 }
 
 void api_prepare_load_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_load_related_meters();
 }
 
 void api_prepare_line_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_line_related_meters();
 }
 
 void api_prepare_hvdc_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_hvdc_related_meters();
 }
 
 void api_prepare_equivalent_device_related_meters(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_equivalent_device_related_meters();
 }
 
 void api_prepare_bus_related_meter(size_t bus, char* meter_type, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_bus_related_meter(bus, meter_type);
 }
 
 void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_generator_device_id(bus, id);
     ds.prepare_generator_related_meter(did, meter_type, var_name);
@@ -303,7 +303,7 @@ void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type,
 
 void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_wt_generator_device_id(bus, id);
     ds.prepare_wt_generator_related_meter(did, meter_type, var_name);
@@ -311,7 +311,7 @@ void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_ty
 
 void api_prepare_pv_unit_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_pv_unit_device_id(bus, id);
     ds.prepare_pv_unit_related_meter(did, meter_type, var_name);
@@ -319,7 +319,7 @@ void api_prepare_pv_unit_related_meter(size_t bus, char* id, char* meter_type, c
 
 void api_prepare_energy_storage_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_energy_storage_device_id(bus, id);
     ds.prepare_energy_storage_related_meter(did, meter_type, var_name);
@@ -327,7 +327,7 @@ void api_prepare_energy_storage_related_meter(size_t bus, char* id, char* meter_
 
 void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_load_device_id(bus, id);
     ds.prepare_load_related_meter(did, meter_type, var_name);
@@ -335,7 +335,7 @@ void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type, char
 
 void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_line_device_id(ibus, jbus, id);
     ds.prepare_line_related_meter(did, meter_type, side, var_name);
@@ -343,7 +343,7 @@ void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* me
 
 void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, id);
     ds.prepare_hvdc_related_meter(did, meter_type, side, var_name);
@@ -351,7 +351,7 @@ void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* me
 
 void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_equivalent_device_id(bus, id);
     ds.prepare_equivalent_device_related_meter(did, meter_type, var_name);
@@ -359,35 +359,35 @@ void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* met
 
 void api_start_dynamic_simulation(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.start();
 }
 
 void api_stop_dynamic_simulation(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.stop();
 }
 
 void api_run_simulation_to_time(double t_end, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.run_to(t_end);
 }
 
 void api_run_a_step(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.run_a_step();
 }
 
 void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double fault_B, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     string string_fault_type = string2upper(fault_type);
     if(string_fault_type=="THREE PHASE FAULT")
@@ -403,7 +403,7 @@ void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double faul
 
 void api_clear_bus_fault(size_t bus, char* fault_type, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     string string_fault_type = string2upper(fault_type);
     if(string_fault_type=="THREE PHASE FAULT")
@@ -419,14 +419,14 @@ void api_clear_bus_fault(size_t bus, char* fault_type, size_t toolkit_index)
 
 void api_trip_bus(size_t bus, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.trip_bus(bus);
 }
 
 void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -455,7 +455,7 @@ void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_
 
 void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_type, double fault_location, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -484,7 +484,7 @@ void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* faul
 
 void api_trip_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -504,7 +504,7 @@ void api_trip_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_in
 
 void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -524,7 +524,7 @@ void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t to
 
 void api_close_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -544,7 +544,7 @@ void api_close_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_i
 
 void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -564,7 +564,7 @@ void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t t
 
 void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -584,7 +584,7 @@ void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifie
 
 void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -604,7 +604,7 @@ void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* i
 
 void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -624,7 +624,7 @@ void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifi
 
 void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -644,7 +644,7 @@ void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* 
 
 void api_trip_generator(size_t bus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -664,7 +664,7 @@ void api_trip_generator(size_t bus, char* identifier, size_t toolkit_index)
 
 void api_shed_generator(size_t bus, char* identifier, double percent, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -684,7 +684,7 @@ void api_shed_generator(size_t bus, char* identifier, double percent, size_t too
 
 void api_trip_load(size_t bus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -704,7 +704,7 @@ void api_trip_load(size_t bus, char* identifier, size_t toolkit_index)
 
 void api_close_load(size_t bus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -724,7 +724,7 @@ void api_close_load(size_t bus, char* identifier, size_t toolkit_index)
 
 void api_scale_load(size_t bus, char* identifier, double percent, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -744,7 +744,7 @@ void api_scale_load(size_t bus, char* identifier, double percent, size_t toolkit
 
 void api_scale_all_loads(double percent, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     ds.scale_all_load(percent);
@@ -752,7 +752,7 @@ void api_scale_all_loads(double percent, size_t toolkit_index)
 
 void api_trip_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -772,7 +772,7 @@ void api_trip_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
 
 void api_close_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -792,7 +792,7 @@ void api_close_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
 
 void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -812,7 +812,7 @@ void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier, size_t
 
 void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -832,7 +832,7 @@ void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier, size
 
 void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -851,7 +851,7 @@ void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier, size_t 
 
 void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -870,7 +870,7 @@ void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier, size_
 
 double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_generator_device_id(bus, identifier);
@@ -895,7 +895,7 @@ double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier, s
 
 double api_get_generator_power_reference_in_MW(size_t bus, char* identifier, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     DEVICE_ID did = get_generator_device_id(bus, identifier);
@@ -920,7 +920,7 @@ double api_get_generator_power_reference_in_MW(size_t bus, char* identifier, siz
 
 void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -940,7 +940,7 @@ void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, dou
 
 void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -960,7 +960,7 @@ void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, doubl
 
 double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     ostringstream osstream;
 
     toolkit.set_dynamic_simulation_time_step_in_s(0.01);

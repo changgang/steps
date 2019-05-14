@@ -106,7 +106,7 @@ void DYNAMICS_SIMULATOR_TEST::test_constructor()
     TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.00001)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(simulator.is_bin_file_export_enabled()==true);
-    TEST_ASSERT(simulator.is_csv_file_export_enabled()==false);
+    TEST_ASSERT(simulator.is_csv_file_export_enabled()==true);
     TEST_ASSERT(simulator.is_json_file_export_enabled()==false);
 }
 

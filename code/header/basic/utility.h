@@ -69,6 +69,7 @@ size_t generate_new_toolkit();
 void delete_toolkit(size_t toolkit_index);
 size_t get_toolkit_count();
 STEPS& get_default_toolkit();
+STEPS& get_toolkit(size_t toolkit_index);
 
 
 #endif // UTILITY_H

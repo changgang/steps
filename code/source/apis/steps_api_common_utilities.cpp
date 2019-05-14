@@ -11,29 +11,13 @@ size_t api_generate_new_toolkit()
 
 void api_initialize_toolkit(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     toolkit.clear();
-}
-
-STEPS& get_toolkit_of_index(size_t index)
-{
-    STEPS* toolkit = NULL;
-    if(index!=INDEX_NOT_EXIST and index<MAX_TOOLKIT_SIZE)
-        toolkit = toolkits[index];
-
-    if(toolkit==NULL)
-    {
-        ostringstream osstream;
-        osstream<<"Fatal error. No STEPS toolkit is found with "<<__FUNCTION__<<"().\n"
-                <<"index is "<<index<<" which should be in range of (0, "<<MAX_TOOLKIT_SIZE-1<<").";
-        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    }
-    return (*toolkit);
 }
 
 void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Side '%s' is not supported for %s with api %s.\n"
              "Nothing will be chaged.\n"
@@ -44,7 +28,7 @@ void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, str
 
 void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for %s with api %s.\n"
              "Nothing will be chaged.\n"
@@ -55,7 +39,7 @@ void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID
 
 void show_parameter_not_supported_with_api(string par_name, string api_func, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported with api %s.\n"
              "Nothing will be chaged.\n"
@@ -66,7 +50,7 @@ void show_parameter_not_supported_with_api(string par_name, string api_func, siz
 
 void show_device_not_exist_with_api(DEVICE_ID did, string api_func, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Device %s does not exist in database with api %s.\n"
              "Nothing will be chaged.\n"
@@ -78,7 +62,7 @@ void show_device_not_exist_with_api(DEVICE_ID did, string api_func, size_t toolk
 
 void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, size_t no, string api_func, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for Area/Zone/Owner %lu with api %s.\n"
              "Nothing will be chaged.\n"
@@ -89,7 +73,7 @@ void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, 
 
 void show_area_zone_owner_not_exist_with_api(size_t no, string api_func, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Area/Zone/Owner %lu does not exist in database with api %s.\n"
              "Nothing will be chaged.\n"
@@ -100,7 +84,7 @@ void show_area_zone_owner_not_exist_with_api(size_t no, string api_func, size_t 
 
 size_t get_owner_of_device(DEVICE* device, string parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="OWNER1")
     {
@@ -127,7 +111,7 @@ size_t get_owner_of_device(DEVICE* device, string parameter_name, size_t toolkit
 
 void set_owner_of_device(DEVICE* device, string parameter_name, int value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     if(PARAMETER_NAME=="OWNER1")
@@ -199,7 +183,7 @@ void set_owner_of_device(DEVICE* device, string parameter_name, int value, size_
 
 double get_owner_fraction_of_device(DEVICE* device, string parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="FRAC1")
     {
@@ -226,7 +210,7 @@ double get_owner_fraction_of_device(DEVICE* device, string parameter_name, size_
 
 void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     if(PARAMETER_NAME=="FRAC1")
@@ -305,14 +289,14 @@ void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double 
 
 size_t api_get_allowed_maximum_bus_number(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_allowed_max_bus_number();
 }
 
 void api_set_allowed_maximum_bus_number(size_t max_bus, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     psdb.set_allowed_max_bus_number(max_bus);
 }
@@ -320,7 +304,7 @@ void api_set_allowed_maximum_bus_number(size_t max_bus, size_t toolkit_index)
 
 size_t api_get_device_capacity(const char* device_type, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string DEVICE_TYPE = string2upper(device_type);
 
@@ -354,21 +338,21 @@ size_t api_get_device_capacity(const char* device_type, size_t toolkit_index)
 
 size_t api_get_area_capacity(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_area_capacity();
 }
 
 size_t api_get_zone_capacity(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_zone_capacity();
 }
 
 size_t api_get_owner_capacity(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_owner_capacity();
 }
@@ -376,7 +360,7 @@ size_t api_get_owner_capacity(size_t toolkit_index)
 
 void api_set_device_capacity(const char* device_type, size_t cap, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string DEVICE_TYPE = string2upper(device_type);
 
@@ -408,41 +392,41 @@ void api_set_device_capacity(const char* device_type, size_t cap, size_t toolkit
 
 void api_set_area_capacity(size_t cap, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.set_area_capacity(cap);
 }
 
 void api_set_zone_capacity(size_t cap, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.set_zone_capacity(cap);
 }
 
 void api_set_owner_capacity(size_t cap, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.set_owner_capacity(cap);
 }
 
 void api_clear_package(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     toolkit.get_power_system_database().clear();
     toolkit.get_dynamic_simulator().clear();
 }
 
 void api_terminate_package(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     toolkit.terminate();
 }
 
 double api_get_package_float_data(char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -455,7 +439,7 @@ double api_get_package_float_data(char* parameter_name, size_t toolkit_index)
 
 void api_set_package_float_data(char* parameter_name, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
@@ -468,7 +452,7 @@ void api_set_package_float_data(char* parameter_name, double value, size_t toolk
 
 const char* api_get_package_string_data(char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -490,7 +474,7 @@ const char* api_get_package_string_data(char* parameter_name, size_t toolkit_ind
 
 void api_set_package_string_data(char* parameter_name, char* value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);

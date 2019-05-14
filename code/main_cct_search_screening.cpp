@@ -11,8 +11,6 @@ using namespace std;
 
 int main()
 {
-    initialize_package(); // this function should be called first
-
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database(); // create a new database

@@ -9,14 +9,14 @@ using namespace std;
 
 size_t api_bus_name2bus_number(const char* bus_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.bus_name2bus_number(bus_name);
 }
 
 const char* api_bus_number2bus_name(size_t bus_number, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string name = psdb.bus_number2bus_name(bus_number);
 
@@ -26,7 +26,7 @@ const char* api_bus_number2bus_name(size_t bus_number, size_t toolkit_index)
 
 void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     toolkit.api_search_buffer.buses = psdb.get_buses_with_constraints(vbase_kV_min, vbase_kV_max, v_pu_min, v_pu_max, area, zone, owner);
@@ -35,7 +35,7 @@ void api_initialize_bus_search(double vbase_kV_min, double vbase_kV_max, double 
 
 void api_initialize_all_bus_search(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     toolkit.api_search_buffer.buses = psdb.get_all_buses();
@@ -44,7 +44,7 @@ void api_initialize_all_bus_search(size_t toolkit_index)
 
 size_t api_get_current_bus_number(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     size_t index = toolkit.api_search_buffer.bus_pointer;
     size_t n = toolkit.api_search_buffer.buses.size();
     if(index<n)
@@ -55,7 +55,7 @@ size_t api_get_current_bus_number(size_t toolkit_index)
 
 void api_goto_next_bus(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     size_t index = toolkit.api_search_buffer.bus_pointer;
     size_t n = toolkit.api_search_buffer.buses.size();
     if(index<n)
@@ -64,7 +64,7 @@ void api_goto_next_bus(size_t toolkit_index)
 
 void api_initialize_device_search(const char* device_type, size_t bus, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string DEVICE_TYPE = string2upper(device_type);
@@ -161,7 +161,7 @@ void api_initialize_device_search(const char* device_type, size_t bus, size_t to
 
 size_t api_get_current_device_bus_number(const char* device_type, const char* side, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string DEVICE_TYPE = string2upper(device_type);
     string SIDE = string2upper(side);
     if(DEVICE_TYPE=="GENERATOR")
@@ -290,7 +290,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
 
  const char* api_get_current_device_identifier(const char* device_type, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
 	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
     string DEVICE_TYPE = string2upper(device_type);
     if(DEVICE_TYPE=="GENERATOR")
@@ -429,7 +429,7 @@ size_t api_get_current_device_bus_number(const char* device_type, const char* si
 
 void api_goto_next_device(const char* device_type, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string DEVICE_TYPE = string2upper(device_type);
     if(DEVICE_TYPE=="GENERATOR")
     {
@@ -526,7 +526,7 @@ void api_goto_next_device(const char* device_type, size_t toolkit_index)
 
 void api_initialize_area_search(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     toolkit.api_search_buffer.areas = psdb.get_all_areas();
@@ -535,7 +535,7 @@ void api_initialize_area_search(size_t toolkit_index)
 
 size_t api_get_current_area_number(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     size_t index = toolkit.api_search_buffer.area_pointer;
     size_t n = toolkit.api_search_buffer.areas.size();
     if(index<n)
@@ -546,7 +546,7 @@ size_t api_get_current_area_number(size_t toolkit_index)
 
 void api_goto_next_area(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     size_t index = toolkit.api_search_buffer.area_pointer;
     size_t n = toolkit.api_search_buffer.areas.size();
     if(index<n)
@@ -555,7 +555,7 @@ void api_goto_next_area(size_t toolkit_index)
 
 void api_initialize_zone_search(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     toolkit.api_search_buffer.zones = psdb.get_all_zones();
@@ -564,7 +564,7 @@ void api_initialize_zone_search(size_t toolkit_index)
 
 size_t api_get_current_zone_number(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     size_t index = toolkit.api_search_buffer.zone_pointer;
     size_t n = toolkit.api_search_buffer.zones.size();
     if(index<n)
@@ -575,7 +575,7 @@ size_t api_get_current_zone_number(size_t toolkit_index)
 
 void api_goto_next_zone(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     size_t index = toolkit.api_search_buffer.zone_pointer;
     size_t n = toolkit.api_search_buffer.zones.size();
     if(index<n)
@@ -584,7 +584,7 @@ void api_goto_next_zone(size_t toolkit_index)
 
 void api_initialize_owner_search(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     toolkit.api_search_buffer.owners = psdb.get_all_owners();
@@ -593,7 +593,7 @@ void api_initialize_owner_search(size_t toolkit_index)
 
 size_t api_get_current_owner_number(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     size_t index = toolkit.api_search_buffer.owner_pointer;
     size_t n = toolkit.api_search_buffer.owners.size();
     if(index<n)
@@ -604,7 +604,7 @@ size_t api_get_current_owner_number(size_t toolkit_index)
 
 void api_goto_next_owner(size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     size_t index = toolkit.api_search_buffer.owner_pointer;
     size_t n = toolkit.api_search_buffer.owners.size();
     if(index<n)

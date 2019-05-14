@@ -8,8 +8,6 @@ using namespace std;
 
 int main()
 {
-    initialize_package(); // this function should be called first
-
     PSSE_IMEXPORTER importer;
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
 

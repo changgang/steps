@@ -21,12 +21,16 @@ class NETWORK_MATRIX : public BASE
         void build_decoupled_network_matrix();
         void build_dc_network_matrix();
         void build_dynamic_network_matrix();
+        void build_sequential_network_matrix();
 
         STEPS_SPARSE_MATRIX& get_network_matrix();
         STEPS_SPARSE_MATRIX& get_decoupled_network_BP_matrix();
         STEPS_SPARSE_MATRIX& get_decoupled_network_BQ_matrix();
         STEPS_SPARSE_MATRIX& get_dc_network_matrix();
         STEPS_SPARSE_MATRIX& get_dynamic_network_matrix();
+        STEPS_SPARSE_MATRIX& get_sequential_network_Y1_matrix();
+        STEPS_SPARSE_MATRIX& get_sequential_network_Y2_matrix();
+        STEPS_SPARSE_MATRIX& get_sequential_network_Y0_matrix();
 
         void optimize_network_ordering();
         void check_newtork_connectivity();
@@ -85,6 +89,13 @@ class NETWORK_MATRIX : public BASE
         void add_wt_generators_to_dynamic_network();
         void add_wt_generator_to_dynamic_network(WT_GENERATOR& gen);
 
+        void add_lines_to_sequential_network();
+        void add_faulted_line_to_sequential_network(const LINE& line);
+        void add_generators_to_sequential_network();
+        void add_generator_to_sequential_network(const GENERATOR& gen);
+        void add_wt_generators_to_sequential_network();
+        void add_wt_generator_to_sequential_network(WT_GENERATOR& gen);
+
         bool is_condition_ok() const;
         void initialize_physical_internal_bus_pair();
         void reorder_physical_internal_bus_pair();
@@ -92,7 +103,8 @@ class NETWORK_MATRIX : public BASE
         void report_network_matrix_common() const;
         void save_network_matrix_common(ofstream& file) const;
     private:
-        STEPS_SPARSE_MATRIX network_Y_matrix, network_BP_matrix, network_BQ_matrix, network_DC_B_matrix;
+        STEPS_SPARSE_MATRIX network_Y_matrix, network_BP_matrix, network_BQ_matrix, network_DC_B_matrix,
+                            network_Y1_matrix, network_Y2_matrix, network_Y3_matrix;
         INPHNO inphno;
     private:
         virtual bool is_valid() const;

@@ -46,6 +46,7 @@
 		<Unit filename="header/basic/bus_index_test.h" />
 		<Unit filename="header/basic/complex.h" />
 		<Unit filename="header/basic/constants.h" />
+		<Unit filename="header/basic/constants_test.h" />
 		<Unit filename="header/basic/device_id.h" />
 		<Unit filename="header/basic/device_id_test.h" />
 		<Unit filename="header/basic/device_index_map.h" />
@@ -390,6 +391,7 @@
 		<Unit filename="source/basic/base.cpp" />
 		<Unit filename="source/basic/bus_index.cpp" />
 		<Unit filename="source/basic/bus_index_test.cpp" />
+		<Unit filename="source/basic/constants_test.cpp" />
 		<Unit filename="source/basic/device_id.cpp" />
 		<Unit filename="source/basic/device_id_test.cpp" />
 		<Unit filename="source/basic/device_index_map.cpp" />

@@ -10,6 +10,7 @@
 #include <fstream>
 #include <chrono>
 #include <thread>
+#include <mutex>
 
 using namespace std;
 
@@ -525,6 +526,7 @@ string psse_dyr_string2steps_string(string& data)
 
 void initialize_package()
 {
+    return;
     default_toolkit.set_toolkit_name("TK DFLT");
     for(size_t i=0; i<MAX_TOOLKIT_SIZE; ++i)
         toolkits[i] = NULL;
@@ -532,6 +534,7 @@ void initialize_package()
 
 size_t generate_new_toolkit()
 {
+    mtx.lock();
     while(get_toolkit_count()>=MAX_TOOLKIT_SIZE)
     {
         ostringstream osstream;
@@ -542,33 +545,33 @@ size_t generate_new_toolkit()
         std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     }
 
-    STEPS tk = STEPS();
     size_t index=INDEX_NOT_EXIST;
     while(true)
     {
         bool toolkit_index_is_set = false;
-
         for(size_t i=0; i!=MAX_TOOLKIT_SIZE; ++i)
         {
-            if(toolkits[i]==nullptr)
+            if(toolkits[i]==NULL)
             {
-                toolkits[i] = &tk;
+                toolkits[i] = new STEPS;
                 toolkit_index_is_set = true;
                 index = i;
-                ostringstream osstream;
-                osstream<<"TK "<<setfill('0')<<setw(4)<<num2str(i);
-                tk.set_toolkit_name(osstream.str());
+                ostringstream stream, osstream;
+                stream<<"TK "<<setfill('0')<<setw(4)<<num2str(i);
+                toolkits[i]->set_toolkit_name(stream.str());
                 break;
             }
         }
         if(toolkit_index_is_set==true)
             break;
     }
+    mtx.unlock();
     return index;
 }
 
 void delete_toolkit(size_t toolkit_index)
 {
+    mtx.lock();
     if(toolkit_index<MAX_TOOLKIT_SIZE)
     {
         if(toolkits[toolkit_index]!=NULL)
@@ -577,6 +580,7 @@ void delete_toolkit(size_t toolkit_index)
             toolkits[toolkit_index] = NULL;
         }
     }
+    mtx.unlock();
 }
 
 size_t get_toolkit_count()
@@ -584,7 +588,7 @@ size_t get_toolkit_count()
     size_t count = 0;
     for(size_t i=0; i!=MAX_TOOLKIT_SIZE; ++i)
     {
-        if(toolkits[i]!=nullptr)
+        if(toolkits[i]!=NULL)
             ++count;
     }
     return count;
@@ -595,5 +599,20 @@ STEPS& get_default_toolkit()
     return default_toolkit;
 }
 
+STEPS& get_toolkit(size_t toolkit_index)
+{
+    if(toolkit_index==INDEX_NOT_EXIST)
+        return default_toolkit;
+    if(toolkit_index<MAX_TOOLKIT_SIZE and toolkits[toolkit_index]!=NULL)
+        return *toolkits[toolkit_index];
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Fatal Error. The toolkit_index is either invalid or toolkit is NULL when calling "<<__FUNCTION__<<"(). toolkit_index is: "<<toolkit_index<<"\n"
+                <<"Default toolkit will be returned. However, no further simulation is guaranteed.";
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        return default_toolkit;
+    }
+}
 
 

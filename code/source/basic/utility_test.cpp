@@ -37,6 +37,9 @@ UTILITY_TEST::UTILITY_TEST()
     TEST_ADD(UTILITY_TEST::test_string_vector2csv);
 
     TEST_ADD(UTILITY_TEST::test_is_file_exist);
+    TEST_ADD(UTILITY_TEST::test_generate_and_delete_toolkit);
+    TEST_ADD(UTILITY_TEST::test_get_toolkit);
+
 
     //TEST_ADD(UTILITY_TEST::test_redirect_and_recover_stdout);
 
@@ -301,6 +304,59 @@ void UTILITY_TEST::test_is_file_exist()
     TEST_ASSERT(is_file_exist("../../../bench/sample.raw")==true);
     TEST_ASSERT(is_file_exist("sample2.raw")==false);
 }
+void UTILITY_TEST::test_generate_and_delete_toolkit()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
+
+    for(size_t k=0; k!=10; ++k)
+    {
+        TEST_ASSERT(toolkits[k]==NULL);
+    }
+
+    size_t i=INFINITE_THRESHOLD;
+    i = generate_new_toolkit();
+    TEST_ASSERT(i==0);
+    TEST_ASSERT(toolkits[i]!=NULL);
+    TEST_ASSERT(toolkits[i]->get_toolkit_name()=="TK 0000");
+    delete_toolkit(i);
+    TEST_ASSERT(toolkits[i]==NULL);
+
+    for(size_t k=0; k!=10; ++k)
+    {
+        i = generate_new_toolkit();
+        TEST_ASSERT(i==k);
+        TEST_ASSERT(toolkits[i]!=NULL);
+        TEST_ASSERT(get_toolkit_count()==i+1);
+        toolkits[i]->show_information_with_leading_time_stamp("You should find this message in log.");
+    }
+    for(size_t k=0; k!=10; ++k)
+    {
+        delete_toolkit(k);
+        TEST_ASSERT(toolkits[k]==NULL);
+    }
+}
+void UTILITY_TEST::test_get_toolkit()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
+
+    for(size_t k=0; k!=10; ++k)
+    {
+        generate_new_toolkit();
+    }
+    TEST_ASSERT(&get_toolkit(INDEX_NOT_EXIST)==&default_toolkit);
+    for(size_t k=0; k!=10; ++k)
+    {
+        TEST_ASSERT(&(get_toolkit(k))==toolkits[k]);
+    }
+    for(size_t k=10; k!=20; ++k)
+    {
+        TEST_ASSERT(&(get_toolkit(k))==&(default_toolkit));
+    }
+    for(size_t k=0; k!=10; ++k)
+    {
+        delete_toolkit(k);
+    }
+}
 /*void UTILITY_TEST::test_redirect_and_recover_stdout()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
@@ -312,27 +368,4 @@ void UTILITY_TEST::test_is_file_exist()
     default_toolkit.recover_stdout();
     show_information_with_leading_time_stamp_with_default_toolkit("This line should be outputted to stdout.");
 }
-
-void UTILITY_TEST::test_set_get_dynamic_simulation_time_step()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
-
-    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
-    TEST_ASSERT(fabs(default_toolkit.get_dynamic_simulation_time_step_in_s()-0.01)<FLOAT_EPSILON);
-
-    default_toolkit.set_dynamic_simulation_time_step_in_s(0.02);
-    TEST_ASSERT(fabs(default_toolkit.get_dynamic_simulation_time_step_in_s()-0.02)<FLOAT_EPSILON);
-}
-
-void UTILITY_TEST::test_set_get_dynamic_simulation_time()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
-
-    default_toolkit.set_dynamic_simulation_time_in_s(0.01);
-    TEST_ASSERT(fabs(default_toolkit.get_dynamic_simulation_time_in_s()-0.01)<FLOAT_EPSILON);
-
-    default_toolkit.set_dynamic_simulation_time_in_s(0.02);
-    TEST_ASSERT(fabs(default_toolkit.get_dynamic_simulation_time_in_s()-0.02)<FLOAT_EPSILON);
-}
-
 */

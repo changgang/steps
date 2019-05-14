@@ -6,7 +6,7 @@
 
 int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
@@ -52,7 +52,7 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
 
 void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_name, int value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
@@ -95,7 +95,7 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
 
 double api_get_source_float_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
@@ -167,7 +167,7 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
 
 void api_set_source_float_data(size_t bus, char* identifier, char* parameter_name, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
@@ -242,7 +242,7 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
 
 const char* api_get_source_string_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
@@ -283,7 +283,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
 
 void api_set_source_string_data(size_t bus, char* identifier, char* parameter_name, char* value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
@@ -321,7 +321,7 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
 
 bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);
@@ -363,7 +363,7 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
 
 void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
     generator_did = get_generator_device_id(bus, identifier);
     wt_generator_did = get_wt_generator_device_id(bus, identifier);

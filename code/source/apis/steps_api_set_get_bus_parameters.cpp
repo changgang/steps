@@ -6,7 +6,7 @@
 
 int api_get_bus_integer_data(size_t bus, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -62,7 +62,7 @@ int api_get_bus_integer_data(size_t bus, char* parameter_name, size_t toolkit_in
 
 void api_set_bus_integer_data(size_t bus, char* parameter_name, int value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -121,7 +121,7 @@ void api_set_bus_integer_data(size_t bus, char* parameter_name, int value, size_
 
 double api_get_bus_float_data(size_t bus, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -169,7 +169,7 @@ double api_get_bus_float_data(size_t bus, char* parameter_name, size_t toolkit_i
 
 void api_set_bus_float_data(size_t bus, char* parameter_name, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -213,7 +213,7 @@ void api_set_bus_float_data(size_t bus, char* parameter_name, double value, size
 
 const char* api_get_bus_string_data(size_t bus, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -242,7 +242,7 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name, size_t too
 
 void api_set_bus_string_data(size_t bus, char* parameter_name, char* value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -262,7 +262,7 @@ void api_set_bus_string_data(size_t bus, char* parameter_name, char* value, size
 
 bool api_get_bus_boolean_data(size_t bus, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -284,7 +284,7 @@ bool api_get_bus_boolean_data(size_t bus, char* parameter_name, size_t toolkit_i
 
 void api_set_bus_boolean_data(size_t bus, char* parameter_name, bool value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %lu, %s, %s.",
              __FUNCTION__, bus, parameter_name, (value==true?"True":"False"));

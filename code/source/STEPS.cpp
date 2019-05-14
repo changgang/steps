@@ -6,8 +6,7 @@ using namespace std;
 STEPS::STEPS()
 {
     clock_when_system_started=clock();
-    set_toolkit_name("TK INIT");
-    show_information_with_leading_time_stamp("STEPS simulation toolkit is created.");
+    toolkit_name = "TK DFLT";
 
     power_system_db.set_toolkit(*this);
     power_system_db.set_database_capacity();
@@ -34,7 +33,13 @@ STEPS::~STEPS()
 
 void STEPS::set_toolkit_name(string name)
 {
-    toolkit_name = name;
+    if(toolkit_name!=name)
+    {
+        ostringstream osstream;
+        osstream<<"STEPS toolkit "<<toolkit_name<<" is renamed as: "<<name;
+        show_information_with_leading_time_stamp(osstream);
+        toolkit_name = name;
+    }
 }
 
 string STEPS::get_toolkit_name() const

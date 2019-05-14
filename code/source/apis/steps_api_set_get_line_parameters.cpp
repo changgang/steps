@@ -6,7 +6,7 @@
 
 int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -40,7 +40,7 @@ int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
 
 void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, int value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -69,7 +69,7 @@ void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char*
 
 double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -168,7 +168,7 @@ double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char*
 
 void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -308,7 +308,7 @@ void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* p
 
 const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -337,7 +337,7 @@ const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier,
 
 void api_set_line_string_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, char* value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -357,7 +357,7 @@ void api_set_line_string_data(size_t ibus, size_t jbus, char* identifier, char* 
 
 bool api_get_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -385,7 +385,7 @@ bool api_get_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char*
 
 void api_set_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, bool value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

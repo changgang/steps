@@ -4,7 +4,7 @@
 
 const char* api_get_wt_generator_related_model_name(size_t bus, char* identifier, char* model_type, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
 	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -64,7 +64,7 @@ const char* api_get_wt_generator_related_model_name(size_t bus, char* identifier
 
 double api_get_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     WT_GENERATOR* generator = psdb.get_wt_generator(did);
@@ -131,7 +131,7 @@ double api_get_wt_generator_related_model_float_parameter(size_t bus, char* iden
 
 void api_set_wt_generator_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_wt_generator_device_id(bus, identifier);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     WT_GENERATOR* generator = psdb.get_wt_generator(did);

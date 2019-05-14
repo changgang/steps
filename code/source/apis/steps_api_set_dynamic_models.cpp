@@ -5,7 +5,7 @@
 
 void api_set_dynamic_model(char* model_string, char* file_type, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string data(model_string);
     string FileType(file_type);
     FileType = string2upper(FileType);

@@ -20,6 +20,7 @@
 #include "header/basic/sparse_matrix_test.h"
 #include "header/basic/fault_test.h"
 #include "header/basic/timer_test.h"
+#include "header/basic/constants_test.h"
 
 #include "header/basic/bus_index_test.h"
 #include "header/basic/device_index_map_test.h"
@@ -192,8 +193,6 @@ static unique_ptr<Test::Output> cmdline(int argc, char* argv[])
 // Main test program
 int main(int argc, char* argv[])
 {
-    initialize_package(); // this function should be called first
-
 	try
 	{
         Test::Suite ts;
@@ -213,6 +212,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new DEVICE_INDEX_MAP_TEST));
         ts.add(unique_ptr<Test::Suite>(new INPHNO_TEST));
         ts.add(unique_ptr<Test::Suite>(new TIMER_TEST));
+        ts.add(unique_ptr<Test::Suite>(new CONSTANTS_TEST));
 
         //
         ts.add(unique_ptr<Test::Suite>(new BUS_TEST));
@@ -241,7 +241,7 @@ int main(int argc, char* argv[])
 
         //ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_MODEL_IMEXPORTER_TEST));
 
-
+/*
         ts.add(unique_ptr<Test::Suite>(new NETWORK_MATRIX_TEST));
 
 
@@ -318,7 +318,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
-
+*/
         // Run the tests
         unique_ptr<Test::Output> output(cmdline(argc, argv));
         ts.run(*output, true);

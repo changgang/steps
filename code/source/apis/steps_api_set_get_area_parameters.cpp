@@ -6,7 +6,7 @@
 
 int api_get_area_integer_data(size_t area, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     AREA* areaptr = psdb.get_area(area);
@@ -31,7 +31,7 @@ int api_get_area_integer_data(size_t area, char* parameter_name, size_t toolkit_
 
 void api_set_area_integer_data(size_t area, char* parameter_name, int value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     AREA* areaptr = psdb.get_area(area);
@@ -52,7 +52,7 @@ void api_set_area_integer_data(size_t area, char* parameter_name, int value, siz
 
 double api_get_area_float_data(size_t area, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     AREA* areaptr = psdb.get_area(area);
@@ -77,7 +77,7 @@ double api_get_area_float_data(size_t area, char* parameter_name, size_t toolkit
 
 void api_set_area_float_data(size_t area, char* parameter_name, double value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     AREA* areaptr = psdb.get_area(area);
@@ -98,7 +98,7 @@ void api_set_area_float_data(size_t area, char* parameter_name, double value, si
 
 const char* api_get_area_string_data(size_t area, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
 	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
@@ -125,7 +125,7 @@ const char* api_get_area_string_data(size_t area, char* parameter_name, size_t t
 
 void api_set_area_string_data(size_t area, char* parameter_name, char* value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string BLANK = "";
@@ -144,7 +144,7 @@ void api_set_area_string_data(size_t area, char* parameter_name, char* value, si
 
 bool api_get_area_boolean_data(size_t area, char* parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     AREA* areaptr = psdb.get_area(area);
@@ -164,7 +164,7 @@ bool api_get_area_boolean_data(size_t area, char* parameter_name, size_t toolkit
 
 void api_set_area_boolean_data(size_t area, char* parameter_name, bool value, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit_of_index(toolkit_index);
+    STEPS& toolkit = get_toolkit(toolkit_index);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %lu, %s, %s.",
              __FUNCTION__, area, parameter_name, (value==true?"True":"False"));

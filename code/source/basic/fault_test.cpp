@@ -32,11 +32,13 @@ void FAULT_TEST::tear_down()
 
 void FAULT_TEST::test_constructor()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"FAULT_TEST");
     TEST_ASSERT(fault.is_faulted()==false);
 }
 
 void FAULT_TEST::test_set_get_fault_type()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"FAULT_TEST");
     fault.set_fault_type(SINGLE_PHASE_GROUNDED_FAULT);
     TEST_ASSERT(fault.get_fault_type()==SINGLE_PHASE_GROUNDED_FAULT);
     TEST_ASSERT(fault.get_fault_type_string()=="SINGLE PHASE GROUNDED FAULT");
@@ -52,6 +54,7 @@ void FAULT_TEST::test_set_get_fault_type()
 }
 void FAULT_TEST::test_set_get_fault_shunt()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"FAULT_TEST");
     complex<double> y = 0.0;
 
     y = complex<double>(0.2, -2e8);
@@ -65,6 +68,7 @@ void FAULT_TEST::test_set_get_fault_shunt()
 
 void FAULT_TEST::test_is_faulted()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"FAULT_TEST");
     fault.set_fault_type(THREE_PHASES_FAULT);
     TEST_ASSERT(fault.is_faulted()==false);
 
@@ -83,6 +87,7 @@ void FAULT_TEST::test_is_faulted()
 
 void FAULT_TEST::test_clear()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"FAULT_TEST");
     fault.set_fault_type(SINGLE_PHASE_GROUNDED_FAULT);
 
     complex<double> y = 0.0;
@@ -101,6 +106,7 @@ void FAULT_TEST::test_clear()
 
 void FAULT_TEST::test_copy_with_opeartor_equal()
 {
+    show_test_information_for_function_of_class(__FUNCTION__,"FAULT_TEST");
     fault.set_fault_type(THREE_PHASES_FAULT);
     complex<double> y = 0.0;
     y = complex<double>(0.2, -2e10);

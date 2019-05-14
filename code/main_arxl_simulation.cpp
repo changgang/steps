@@ -114,8 +114,6 @@ void prepare_training_generation_shed_case()
 
 int main()
 {
-    initialize_package(); // this function should be called first
-
     //prepare_training_load_scale_case();
     //prepare_training_generation_shed_case();
 

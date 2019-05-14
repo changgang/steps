@@ -11,8 +11,6 @@ using namespace std;
 
 int main()
 {
-    initialize_package(); // this function should be called first
-
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
     PSSE_IMEXPORTER importer;

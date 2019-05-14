@@ -56,6 +56,9 @@ class UTILITY_TEST : public Test::Suite
         void test_string_vector2csv();
 
         void test_is_file_exist();
+
+        void test_generate_and_delete_toolkit();
+        void test_get_toolkit();
 };
 
 #endif//UTILITY_TEST_H
