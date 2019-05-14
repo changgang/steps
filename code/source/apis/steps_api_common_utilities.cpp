@@ -9,10 +9,85 @@ size_t api_generate_new_toolkit()
     return index;
 }
 
+void api_delete_toolkit(size_t toolkit_index)
+{
+    delete_toolkit(toolkit_index);
+}
+
+
 void api_initialize_toolkit(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     toolkit.clear();
+}
+
+void api_clear_toolkit(size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    toolkit.get_power_system_database().clear();
+    toolkit.get_dynamic_simulator().clear();
+}
+double api_get_toolkit_float_data(char* parameter_name, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="SBASE")
+        return psdb.get_system_base_power_in_MVA();
+
+    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
+    return 0.0;
+}
+
+void api_set_toolkit_float_data(char* parameter_name, double value, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="SBASE")
+        return psdb.set_system_base_power_in_MVA(value);
+
+    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
+}
+
+
+const char* api_get_toolkit_string_data(char* parameter_name, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="CASE INFORMATION")
+    {
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_information()).c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(PARAMETER_NAME=="CASE ADDITIONAL INFORMATION")
+    {
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_additional_information()).c_str());
+        return toolkit.steps_char_buffer;
+    }
+
+    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
+    return toolkit.steps_char_buffer;
+}
+
+void api_set_toolkit_string_data(char* parameter_name, char* value, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="CASE INFORMATION")
+        return psdb.set_case_information(value);
+    if(PARAMETER_NAME=="CASE ADDITIONAL INFORMATION")
+        return psdb.set_case_additional_information(value);
+
+    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
+    return;
 }
 
 void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func, size_t toolkit_index)
@@ -411,79 +486,4 @@ void api_set_owner_capacity(size_t cap, size_t toolkit_index)
     return psdb.set_owner_capacity(cap);
 }
 
-void api_clear_package(size_t toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    toolkit.get_power_system_database().clear();
-    toolkit.get_dynamic_simulator().clear();
-}
-
-void api_terminate_package(size_t toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    toolkit.terminate();
-}
-
-double api_get_package_float_data(char* parameter_name, size_t toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="SBASE")
-        return psdb.get_system_base_power_in_MVA();
-
-    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
-    return 0.0;
-}
-
-void api_set_package_float_data(char* parameter_name, double value, size_t toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="SBASE")
-        return psdb.set_system_base_power_in_MVA(value);
-
-    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
-}
-
-
-const char* api_get_package_string_data(char* parameter_name, size_t toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="CASE INFORMATION")
-    {
-        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_information()).c_str());
-        return toolkit.steps_char_buffer;
-    }
-    if(PARAMETER_NAME=="CASE ADDITIONAL INFORMATION")
-    {
-        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_additional_information()).c_str());
-        return toolkit.steps_char_buffer;
-    }
-
-    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
-    return toolkit.steps_char_buffer;
-}
-
-void api_set_package_string_data(char* parameter_name, char* value, size_t toolkit_index)
-{
-    STEPS& toolkit = get_toolkit(toolkit_index);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="CASE INFORMATION")
-        return psdb.set_case_information(value);
-    if(PARAMETER_NAME=="CASE ADDITIONAL INFORMATION")
-        return psdb.set_case_additional_information(value);
-
-    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
-    return;
-}
 

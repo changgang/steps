@@ -2,6 +2,9 @@
 #include "header/basic/utility.h"
 #include "header/toolkit/cct_searcher/cct_searcher.h"
 #include "header/steps_namespace.h"
+#include <iostream>
+
+using namespace std;
 
 size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name, size_t toolkit_index)
 {
@@ -184,9 +187,8 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
 
 void api_set_dynamic_simulator_output_file(char* file, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit(toolkit_index);
     string parameter_name = "OUTPUT FILENAME";
-    api_set_dynamic_simulator_string_parameter((char*)parameter_name.c_str(), file);
+    api_set_dynamic_simulator_string_parameter((char*)parameter_name.c_str(), file, toolkit_index);
 }
 
 const char* api_get_dynamic_simulator_output_file(size_t toolkit_index)

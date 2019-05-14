@@ -1373,11 +1373,12 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 {
     STEPS& toolkit = get_toolkit();
     size_t n = meters.size();
-    toolkit.show_information_with_leading_time_stamp("save meter information");
+    //toolkit.show_information_with_leading_time_stamp("save meter information");
     if(n==0)
         return;
 
     open_meter_output_files();
+
     if(not csv_output_file.is_open() and not json_output_file.is_open() and not bin_output_file.is_open())
         return;
 

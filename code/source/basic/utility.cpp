@@ -535,7 +535,7 @@ void initialize_package()
 size_t generate_new_toolkit()
 {
     mtx.lock();
-    while(get_toolkit_count()>=MAX_TOOLKIT_SIZE)
+    /*while(get_toolkit_count()>=MAX_TOOLKIT_SIZE)
     {
         ostringstream osstream;
         osstream<<"Warning. Toolkit table is full when calling "<<__FUNCTION__<<"().\nTry to generate new toolkit in 5 sec.\n";
@@ -543,7 +543,7 @@ size_t generate_new_toolkit()
         show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-    }
+    }*/
 
     size_t index=INDEX_NOT_EXIST;
     while(true)
@@ -553,12 +553,14 @@ size_t generate_new_toolkit()
         {
             if(toolkits[i]==NULL)
             {
+                ostringstream osstream;
+                osstream<<"NULL toolkit is found at "<<i<<endl;
+                show_information_with_leading_time_stamp_with_default_toolkit(osstream);
                 toolkits[i] = new STEPS;
                 toolkit_index_is_set = true;
                 index = i;
-                ostringstream stream, osstream;
-                stream<<"TK "<<setfill('0')<<setw(4)<<num2str(i);
-                toolkits[i]->set_toolkit_name(stream.str());
+                osstream<<"TK "<<setfill('0')<<setw(4)<<num2str(i);
+                toolkits[i]->set_toolkit_name(osstream.str());
                 break;
             }
         }

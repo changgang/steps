@@ -17,8 +17,15 @@ extern "C" {
 #endif
 
 EXPORT_STEPS_DLL size_t api_generate_new_toolkit();
+EXPORT_STEPS_DLL void api_delete_toolkit(size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_initialize_toolkit(size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_clear_toolkit(size_t toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL double api_get_toolkit_float_data(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_toolkit_float_data(char* parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL const char* api_get_toolkit_string_data(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_toolkit_string_data(char* parameter_name, char* value, size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
@@ -45,13 +52,6 @@ EXPORT_STEPS_DLL void api_set_device_capacity(const char* device_type, size_t ca
 EXPORT_STEPS_DLL void api_set_area_capacity(size_t cap, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_zone_capacity(size_t cap, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_owner_capacity(size_t cap, size_t toolkit_index=INDEX_NOT_EXIST);
-
-EXPORT_STEPS_DLL void api_clear_package(size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_terminate_package(size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL double api_get_package_float_data(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_set_package_float_data(char* parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL const char* api_get_package_string_data(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_set_package_string_data(char* parameter_name, char* value, size_t toolkit_index=INDEX_NOT_EXIST);
 
 
 EXPORT_STEPS_DLL void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);

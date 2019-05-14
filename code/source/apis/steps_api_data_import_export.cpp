@@ -6,10 +6,12 @@
 
 void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
         PSSE_IMEXPORTER importer;
+        importer.set_toolkit(toolkit);
         importer.load_powerflow_data(file);
     }
     else
@@ -17,6 +19,7 @@ void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolk
         if(string_file_type=="BPA")
         {
             BPA_IMEXPORTER importer;
+            importer.set_toolkit(toolkit);
             importer.load_powerflow_data(file);
         }
     }
@@ -24,10 +27,12 @@ void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolk
 
 void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
         PSSE_IMEXPORTER exporter;
+        exporter.set_toolkit(toolkit);
         exporter.export_powerflow_data(file, export_zero_impedance_line);
     }
     else
@@ -35,6 +40,7 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
         if(string_file_type=="BPA")
         {
             BPA_IMEXPORTER exporter;
+            exporter.set_toolkit(toolkit);
             exporter.export_powerflow_data(file, export_zero_impedance_line);
         }
     }
@@ -43,10 +49,12 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
 
 void api_load_dynamic_data_from_file(char* file, char* file_type, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
         PSSE_IMEXPORTER importer;
+        importer.set_toolkit(toolkit);
         importer.load_dynamic_data(file);
     }
     else
@@ -54,6 +62,7 @@ void api_load_dynamic_data_from_file(char* file, char* file_type, size_t toolkit
         if(string_file_type=="BPA")
         {
             BPA_IMEXPORTER importer;
+            importer.set_toolkit(toolkit);
             importer.load_dynamic_data(file);
         }
     }
@@ -61,10 +70,12 @@ void api_load_dynamic_data_from_file(char* file, char* file_type, size_t toolkit
 
 void api_save_dynamic_data_to_file(char* file, char* file_type, size_t toolkit_index)
 {
+    STEPS& toolkit = get_toolkit(toolkit_index);
     string string_file_type = string2upper(file_type);
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
         PSSE_IMEXPORTER exporter;
+        exporter.set_toolkit(toolkit);
         exporter.export_dynamic_data(file);
     }
     else
@@ -72,6 +83,7 @@ void api_save_dynamic_data_to_file(char* file, char* file_type, size_t toolkit_i
         if(string_file_type=="BPA")
         {
             BPA_IMEXPORTER exporter;
+            exporter.set_toolkit(toolkit);
             exporter.export_dynamic_data(file);
         }
     }
