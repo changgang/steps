@@ -206,7 +206,7 @@ char STEPS::get_next_alphabeta()
 void STEPS::redirect_stdout_to_file(string file)
 {
     stdout_backup = cout.rdbuf();
-    output_file.open(file, ios::app);
+    output_file.open(file);
     cout.rdbuf(output_file.rdbuf());
 }
 

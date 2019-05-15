@@ -1604,20 +1604,18 @@ void DYNAMICS_SIMULATOR::start()
 void DYNAMICS_SIMULATOR::stop()
 {
     STEPS& toolkit = get_toolkit();
-    if(toolkit.get_dynamic_simulation_time_in_s() >0.0)
-    {
-        ostringstream osstream;
-        osstream<<"Dynamics simulation stops.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+    //if(toolkit.get_dynamic_simulation_time_in_s() >0.0)
+    ostringstream osstream;
+    osstream<<"Dynamics simulation stops at simulation time: "<<toolkit.get_dynamic_simulation_time_in_s()<<"s.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
-        if(json_output_file.is_open())
-            json_output_file<<endl
-                            <<"                    ]"<<endl
-                            <<"}";
-        close_meter_output_files();
+    if(json_output_file.is_open())
+        json_output_file<<endl
+                        <<"                    ]"<<endl
+                        <<"}";
+    close_meter_output_files();
 
-        toolkit.set_dynamic_simulation_time_in_s(-2.0*toolkit.get_dynamic_simulation_time_step_in_s());
-    }
+    toolkit.set_dynamic_simulation_time_in_s(-2.0*toolkit.get_dynamic_simulation_time_step_in_s());
 }
 
 
