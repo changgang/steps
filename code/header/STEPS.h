@@ -15,7 +15,7 @@ using namespace std;
 class STEPS
 {
     public:
-        STEPS();
+        STEPS(string name="TK DFLT", string log_file="");
         virtual ~STEPS();
         void set_toolkit_name(string name);
         string get_toolkit_name() const;

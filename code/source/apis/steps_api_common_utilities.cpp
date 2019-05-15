@@ -3,9 +3,12 @@
 #include "header/steps_namespace.h"
 
 
-size_t api_generate_new_toolkit()
+size_t api_generate_new_toolkit(char* log_fie)
 {
-    size_t index = generate_new_toolkit();
+    string log_file_name = "";
+    if(log_fie!=NULL)
+        log_file_name = log_fie;
+    size_t index = generate_new_toolkit(log_file_name);
     return index;
 }
 

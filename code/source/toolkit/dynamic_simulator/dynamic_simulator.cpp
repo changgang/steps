@@ -14,6 +14,7 @@ using namespace std;
 
 DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR()
 {
+    DELT = 0.01;
     clear();
 }
 
@@ -1281,6 +1282,8 @@ void DYNAMICS_SIMULATOR::open_meter_output_files()
     }
     close_meter_output_files();
 
+    //osstream<<"output file name is : "<<output_filename<<endl;
+    //toolkit.show_information_with_leading_time_stamp(osstream);
     if(output_filename=="")
     {
         return;
@@ -1371,9 +1374,13 @@ void DYNAMICS_SIMULATOR::close_meter_output_files()
 
 void DYNAMICS_SIMULATOR::save_meter_information()
 {
+    ostringstream osstream;
+
     STEPS& toolkit = get_toolkit();
+
     size_t n = meters.size();
-    //toolkit.show_information_with_leading_time_stamp("save meter information");
+    //osstream<<"save meter information: "<<n<<" meters were set. output file name is: "<<output_filename;
+    //toolkit.show_information_with_leading_time_stamp(osstream);
     if(n==0)
         return;
 

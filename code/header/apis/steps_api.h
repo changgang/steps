@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-EXPORT_STEPS_DLL size_t api_generate_new_toolkit();
+EXPORT_STEPS_DLL size_t api_generate_new_toolkit(char* log_fie=NULL);
 EXPORT_STEPS_DLL void api_delete_toolkit(size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_initialize_toolkit(size_t toolkit_index=INDEX_NOT_EXIST);

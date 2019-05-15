@@ -532,7 +532,7 @@ void initialize_package()
         toolkits[i] = NULL;
 }
 
-size_t generate_new_toolkit()
+size_t generate_new_toolkit(string log_file)
 {
     mtx.lock();
     /*while(get_toolkit_count()>=MAX_TOOLKIT_SIZE)
@@ -553,14 +553,13 @@ size_t generate_new_toolkit()
         {
             if(toolkits[i]==NULL)
             {
-                ostringstream osstream;
-                osstream<<"NULL toolkit is found at "<<i<<endl;
-                show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-                toolkits[i] = new STEPS;
-                toolkit_index_is_set = true;
                 index = i;
-                osstream<<"TK "<<setfill('0')<<setw(4)<<num2str(i);
-                toolkits[i]->set_toolkit_name(osstream.str());
+                ostringstream osstream;
+                //osstream<<"NULL toolkit is found at "<<i<<endl;
+                //show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+                osstream<<"TK "<<setfill('0')<<setw(4)<<num2str(index);
+                toolkits[index] = new STEPS(osstream.str(), log_file);
+                toolkit_index_is_set = true;
                 break;
             }
         }
@@ -606,7 +605,7 @@ STEPS& get_toolkit(size_t toolkit_index)
     if(toolkit_index==INDEX_NOT_EXIST)
         return default_toolkit;
     if(toolkit_index<MAX_TOOLKIT_SIZE and toolkits[toolkit_index]!=NULL)
-        return *toolkits[toolkit_index];
+        return *(toolkits[toolkit_index]);
     else
     {
         ostringstream osstream;

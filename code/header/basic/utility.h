@@ -65,7 +65,7 @@ vector<string> psse_dyr_string2steps_string_vector(string& data);
 string psse_dyr_string2steps_string(string& data);
 
 void initialize_package();
-size_t generate_new_toolkit();
+size_t generate_new_toolkit(string log_file="");
 void delete_toolkit(size_t toolkit_index);
 size_t get_toolkit_count();
 STEPS& get_default_toolkit();

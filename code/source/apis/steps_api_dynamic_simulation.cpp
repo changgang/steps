@@ -123,7 +123,11 @@ void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* valu
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="OUTPUT FILENAME")
     {
+        ostringstream osstream;
+        //osstream<<"Output file is to be set as : "<<value<<endl;
         ds.set_output_file(value);
+        //osstream<<"Output file is set as : "<<ds.get_output_file()<<endl;
+        //toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];

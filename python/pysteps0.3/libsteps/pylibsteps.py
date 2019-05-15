@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.4.1"
-libsteps_date = "2019/02/19"
+libsteps_version = "0.5.0"
+libsteps_date = "2019/05/15"
 
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -25,27 +25,9 @@ def get_base_library():
             library = None
 
     return library
-
-def get_parallel_library():
-    base_library = get_base_library()
-    filename, extension = os.path.splitext(base_library)
-    parallel_library = filename+'-p'+extension
-    if not os.path.exists(parallel_library):
-        command = "copy"
-        if platform.system()=="Linux" or platform.system()=="Unix":
-            command = "cp"
-        command = command + " "+base_library+" "+parallel_library
-        os.system(command)
-    if not os.path.exists(parallel_library):
-        print("Library for parallel STEPS does not exist and cannot be created. Consult your administrator.")
-        return None
-    return parallel_library
     
-def load_library(parallel_flag=False):
-    if parallel_flag is True:
-        library = get_parallel_library()
-    else:
-        library = get_base_library()
+def load_library():
+    library = get_base_library()
     if library is not None:
         libsteps = cdll.LoadLibrary(library)
     else:

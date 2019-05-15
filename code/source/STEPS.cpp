@@ -1,12 +1,19 @@
 #include "header/steps.h"
 #include "header/basic/utility.h"
 #include <iostream>
+#include <chrono>
+#include <thread>
 using namespace std;
 
-STEPS::STEPS()
+STEPS::STEPS(string name, string log_file)
 {
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     clock_when_system_started=clock();
-    toolkit_name = "TK DFLT";
+
+    if(log_file!="")
+        redirect_stdout_to_file(log_file);
+
+    toolkit_name = name;
 
     power_system_db.set_toolkit(*this);
     power_system_db.set_database_capacity();
@@ -14,11 +21,10 @@ STEPS::STEPS()
     powerflow_solver.set_toolkit(*this);
 
     dynamic_simulator.set_toolkit(*this);
-    dynamic_simulator.set_dynamic_simulation_time_step_in_s(0.01);
 
     network_matrix.set_toolkit(*this);
 
-    show_information_with_leading_time_stamp("STEPS simulation toolkit is created.");
+    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" is created @ "+num2str(int(this)));
 
     stdout_backup = NULL;
 
@@ -27,8 +33,9 @@ STEPS::STEPS()
 
 STEPS::~STEPS()
 {
-    show_information_with_leading_time_stamp("STEPS simulation toolkit is deleted.");
+    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" @ "+num2str(int(this))+" is deleted.");
     clear();
+    recover_stdout();
 }
 
 void STEPS::set_toolkit_name(string name)
@@ -199,7 +206,7 @@ char STEPS::get_next_alphabeta()
 void STEPS::redirect_stdout_to_file(string file)
 {
     stdout_backup = cout.rdbuf();
-    output_file.open(file);
+    output_file.open(file, ios::app);
     cout.rdbuf(output_file.rdbuf());
 }
 
