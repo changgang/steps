@@ -33,6 +33,9 @@ def load_library():
     else:
         return None
 
+    libsteps.api_set_default_toolkit_log_file.restype = None
+    libsteps.api_set_default_toolkit_log_file.argtype = (c_char_p, )
+    
     libsteps.api_generate_new_toolkit.restype = c_uint
     libsteps.api_generate_new_toolkit.argtypes = None
     

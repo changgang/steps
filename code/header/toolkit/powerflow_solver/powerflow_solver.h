@@ -41,12 +41,12 @@ class POWERFLOW_SOLVER : public BASE
         void solve_with_modified_Gaussian_Seidel_solution();
 
         bool get_convergence_flag() const;
-        bool is_converged() const;
+        bool is_converged();
 
         double get_maximum_active_power_mismatch_in_MW() const;
         double get_maximum_reactive_power_mismatch_in_MVar() const;
 
-        void show_powerflow_result() const;
+        void show_powerflow_result();
         void save_powerflow_result_to_file(string filename) const;
         void save_extended_powerflow_result_to_file(string filename) const;
         void save_network_matrix_to_file(string filename) const;

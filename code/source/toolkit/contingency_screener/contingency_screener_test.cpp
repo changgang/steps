@@ -235,7 +235,7 @@ void CONTINGENCY_SCREENER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     //searcher->set_search_title("CCT_SEARCH_IEEE9_CLASSIC_FAULT_AT_LINE_7_5");
     searcher->set_powerflow_data_filename("IEEE9_classical.raw");
@@ -277,5 +277,5 @@ void CONTINGENCY_SCREENER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
     osstream<<"Searched CCT is: "<<cct<<" s"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }

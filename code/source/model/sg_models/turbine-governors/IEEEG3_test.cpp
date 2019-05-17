@@ -145,7 +145,7 @@ void IEEEG3_TEST::test_step_response()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"IEEEG3_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_IEEEG3_model.txt");
+    default_toolkit.open_log_file("test_log/step_response_of_IEEEG3_model.txt");
 
     IEEEG3* model = (IEEEG3*) get_test_turbine_governor_model();
 
@@ -153,7 +153,7 @@ void IEEEG3_TEST::test_step_response()
 
     run_step_response_of_turbine_govnernor_model();
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 
 }
 

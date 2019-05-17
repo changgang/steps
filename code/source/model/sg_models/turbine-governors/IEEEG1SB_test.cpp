@@ -160,7 +160,7 @@ void IEEEG1SB_TEST::test_step_response()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"IEEEG1SB_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_IEEEG1SB_model.txt");
+    default_toolkit.open_log_file("test_log/step_response_of_IEEEG1SB_model.txt");
 
     IEEEG1SB* model = (IEEEG1SB*) get_test_turbine_governor_model();
 
@@ -168,7 +168,7 @@ void IEEEG1SB_TEST::test_step_response()
 
     run_step_response_of_turbine_govnernor_model();
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 
 }
 

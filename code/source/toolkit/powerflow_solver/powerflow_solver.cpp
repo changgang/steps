@@ -597,8 +597,24 @@ bool POWERFLOW_SOLVER::get_convergence_flag() const
     return converged;
 }
 
-bool POWERFLOW_SOLVER::is_converged() const
+bool POWERFLOW_SOLVER::is_converged()
 {
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+    osstream<<"Check maximum active and reactive power mismatch.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    calculate_raw_bus_power_mismatch();
+
+    double max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
+    double max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
+
+    if(max_P_mismatch_in_MW<get_allowed_max_active_power_imbalance_in_MW() and
+       max_Q_mismatch_in_MW<get_allowed_max_reactive_power_imbalance_in_MVar())
+        return true;
+    else
+        return false;
+
     return get_convergence_flag();
 }
 
@@ -1705,7 +1721,7 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void POWERFLOW_SOLVER::show_powerflow_result() const
+void POWERFLOW_SOLVER::show_powerflow_result()
 {
     STEPS& toolkit = get_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

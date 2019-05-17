@@ -10,10 +10,12 @@ global STEPS_LIB
 class STEPS():
     def __init__(self, is_default=False, log_file=""):
         global STEPS_LIB
+
         if 'STEPS_LIB' not in globals():
             STEPS_LIB = pylibsteps.load_library()
 
         if is_default==True:
+            #STEPS_LIB.api_set_default_toolkit_log_file(log_file)
             self.toolkit_index = 1000000000
         else:
             log_file = self.__get_c_char_p_of_string(log_file)
@@ -23,7 +25,6 @@ class STEPS():
         global STEPS_LIB
         if 'STEPS_LIB' in globals():
             STEPS_LIB.api_delete_toolkit(self.toolkit_index)
-        #print("STEPS simulator is deleted")
 
     def __extract_single_bus_device_id(self, did):
         bus = did[0]

@@ -442,7 +442,7 @@ void DYNAMICS_SIMULATOR_TEST::test_start()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
@@ -475,7 +475,7 @@ void DYNAMICS_SIMULATOR_TEST::test_start()
         osstream<<genmodel->get_device_name()<<" initialized : "<<genmodel->get_rotor_angle_in_deg()<<" deg"<<endl;
     }
     default_toolkit.show_information_with_leading_time_stamp(osstream);
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
@@ -576,7 +576,7 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_GENCLS_IEEL()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -590,7 +590,7 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_GENCLS_IEEL()
 
     run_single_machine_model_for_model_test();
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_GENROU()
@@ -602,7 +602,7 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_GENROU()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -616,7 +616,7 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_GENROU()
 
     run_single_machine_model_for_model_test();
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEET1()
@@ -628,7 +628,7 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEET1()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -642,7 +642,7 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEET1()
 
     run_single_machine_model_for_model_test();
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEEG1()
@@ -654,7 +654,7 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEEG1()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -668,7 +668,7 @@ void DYNAMICS_SIMULATOR_TEST::test_single_machine_model_IEEEG1()
 
     run_single_machine_model_for_model_test();
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -681,7 +681,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -716,7 +716,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus()
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -729,7 +729,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -777,7 +777,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -791,7 +791,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -841,7 +841,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -855,7 +855,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -898,7 +898,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU()
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -911,7 +911,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -954,7 +954,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL()
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -969,7 +969,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1012,7 +1012,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1()
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -1026,7 +1026,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1069,7 +1069,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1()
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -1083,7 +1083,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1126,7 +1126,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1()
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -1139,7 +1139,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1182,7 +1182,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB1()
@@ -1194,7 +1194,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1245,7 +1245,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB
 
     simulator.run_to(50);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -1258,7 +1258,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_with
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1305,7 +1305,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_with
 
     simulator.run_to(20);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS()
@@ -1317,7 +1317,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1364,7 +1364,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS
 
     simulator.run_to(20);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -1377,7 +1377,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFL
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1424,7 +1424,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFL
 
     simulator.run_to(20);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -1437,7 +1437,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1465,7 +1465,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
     simulator.run_to(1.0);
 
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENROU_CDC4T()
@@ -1478,7 +1478,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
@@ -1533,7 +1533,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
 
     simulator.run_to(5.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 
@@ -1547,7 +1547,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
 
     PSSE_IMEXPORTER importer;
@@ -1646,7 +1646,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
 
     simulator.run_to(10.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
@@ -1659,7 +1659,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
 
     PSSE_IMEXPORTER importer;
@@ -1766,5 +1766,5 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
 
     simulator.run_to(100.0);
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }

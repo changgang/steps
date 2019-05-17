@@ -227,7 +227,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_pmech_step_response_of_sync_generator_model
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -273,7 +273,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_pmech_step_response_of_sync_generator_model
             run_a_step();
             export_meter_values(TIME);
         }
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -288,7 +288,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_efd_step_response_of_sync_generator_model()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -334,7 +334,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_efd_step_response_of_sync_generator_model()
             run_a_step();
             export_meter_values(TIME);
         }
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -350,7 +350,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -398,7 +398,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
             run_a_step();
             export_meter_values(TIME);
         }
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -414,7 +414,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -501,7 +501,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
             export_meter_values(TIME);
         }
 
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);

@@ -357,15 +357,15 @@ void UTILITY_TEST::test_get_toolkit()
         delete_toolkit(k);
     }
 }
-/*void UTILITY_TEST::test_redirect_and_recover_stdout()
+/*void UTILITY_TEST::test_redirect_and_close_log_file()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_redirect_stdout.dat");
+    default_toolkit.open_log_file("test_log/test_redirect_stdout.dat");
     show_information_with_leading_time_stamp_with_default_toolkit("This is a test line for redirecting stdout to this file.");
     show_information_with_leading_time_stamp_with_default_toolkit("This is the second test line for redirecting stdout to this file.");
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
     show_information_with_leading_time_stamp_with_default_toolkit("This line should be outputted to stdout.");
 }
 */

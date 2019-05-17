@@ -22,7 +22,7 @@ int main()
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
-    default_toolkit.redirect_stdout_to_file(file);
+    default_toolkit.open_log_file(file);
 
     PSSE_IMEXPORTER importer;
 
@@ -73,7 +73,7 @@ int main()
     simulator.trip_line(did);
 
     simulator.run_to(5.0);
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 
     clock_t stop = clock();
 

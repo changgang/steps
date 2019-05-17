@@ -1548,17 +1548,25 @@ void DYNAMICS_SIMULATOR::save_meter_values()
 void DYNAMICS_SIMULATOR::start()
 {
     STEPS& toolkit = get_toolkit();
+    POWERFLOW_SOLVER& pf_solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Dynamics initialization starts.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    ostringstream osstream;
+    osstream<<"Dynamics initialization starts.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     meter_values.resize(meters.size(), 0.0);
 
     toolkit.set_dynamic_simulation_time_in_s(-2.0*toolkit.get_dynamic_simulation_time_step_in_s());
 
     network_matrix.optimize_network_ordering();
+
+    if(not pf_solver.is_converged())
+    {
+        osstream<<"Warning. Powerflow is not converged. Please go check powerflow solution.\n"
+                <<"Any further simulation cannot be trusted.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 
     run_all_models(INITIALIZE_MODE);
 
@@ -1587,15 +1595,15 @@ void DYNAMICS_SIMULATOR::start()
             break;
     }
     ITER_DAE = iter_count;
-    if(iter_count>1)
+    if(ITER_NET>1)
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Warning. Network solution converged in %lu iterations for dynamics simulation initialization.",
-                 iter_count);
-        toolkit.show_information_with_leading_time_stamp(buffer);
+        osstream<<"Warning. Network solution converged in "<<ITER_NET<<" iterations for dynamics simulation initialization.\n"
+                <<"Any solution with more than 1 iteration is indicating bad initial powerflow result or exceeding dynamic upper or lower limits.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Dynamics initialization finished.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
+    osstream<<"Dynamics initialization finished.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
 
     save_meter_information();
     save_meter_values();
@@ -1615,7 +1623,7 @@ void DYNAMICS_SIMULATOR::stop()
                         <<"}";
     close_meter_output_files();
 
-    toolkit.set_dynamic_simulation_time_in_s(-2.0*toolkit.get_dynamic_simulation_time_step_in_s());
+    //toolkit.set_dynamic_simulation_time_in_s(-2.0*toolkit.get_dynamic_simulation_time_step_in_s());
 }
 
 

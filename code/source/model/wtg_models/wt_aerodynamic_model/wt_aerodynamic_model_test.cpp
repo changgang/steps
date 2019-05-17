@@ -531,7 +531,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_list_Cp_and_mechanical_power_data_of_differ
 
         model->initialize();
         string file =  "test_log/test_"+model->get_model_name()+"_"+__FUNCTION__+".txt";
-        default_toolkit.redirect_stdout_to_file(file);
+        default_toolkit.open_log_file(file);
 
         osstream<<model->get_standard_model_string();
         default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -558,7 +558,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_list_Cp_and_mechanical_power_data_of_differ
                    <<setw(10)<<setprecision(6)<<pmech;
             default_toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);

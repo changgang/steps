@@ -8,10 +8,10 @@ using namespace std;
 STEPS::STEPS(string name, string log_file)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-    clock_when_system_started=clock();
-
     if(log_file!="")
-        redirect_stdout_to_file(log_file);
+        open_log_file(log_file);
+
+    clock_when_system_started=clock();
 
     toolkit_name = name;
 
@@ -26,7 +26,6 @@ STEPS::STEPS(string name, string log_file)
 
     show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" is created @ "+num2str(int(this)));
 
-    stdout_backup = NULL;
 
     clear();
 }
@@ -34,8 +33,8 @@ STEPS::STEPS(string name, string log_file)
 STEPS::~STEPS()
 {
     show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" @ "+num2str(int(this))+" is deleted.");
-    clear();
-    recover_stdout();
+    //clear();
+    close_log_file();
 }
 
 void STEPS::set_toolkit_name(string name)
@@ -62,8 +61,21 @@ void STEPS::clear()
 
     powerflow_solver.clear();
     dynamic_simulator.clear();
+}
 
-    recover_stdout();
+void STEPS::open_log_file(string file)
+{
+    if(log_file.is_open())
+        close_log_file();
+
+    if(file!="")
+        log_file.open(file);
+}
+
+void STEPS::close_log_file()
+{
+    if(log_file.is_open())
+        log_file.close();
 }
 
 void STEPS::reset()
@@ -137,10 +149,20 @@ void STEPS::show_information_with_leading_time_stamp(string info)
         return;
 
     string sys_time = get_system_time_stamp_string();
-    cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<"\n";
+    if(log_file.is_open())
+    {
+        log_file<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<"\n";
 
-    for(size_t i=1; i!=info_size; ++i)
-        cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<"\n";
+        for(size_t i=1; i!=info_size; ++i)
+            log_file<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<"\n";
+    }
+    else
+    {
+        cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<"\n";
+
+        for(size_t i=1; i!=info_size; ++i)
+            cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<"\n";
+    }
 }
 
 string STEPS::get_system_time_stamp_string()
@@ -201,21 +223,4 @@ char STEPS::get_next_alphabeta()
     if(current_alphabeta>'Z')
         current_alphabeta = 'A';
     return current_alphabeta;
-}
-
-void STEPS::redirect_stdout_to_file(string file)
-{
-    stdout_backup = cout.rdbuf();
-    output_file.open(file);
-    cout.rdbuf(output_file.rdbuf());
-}
-
-void STEPS::recover_stdout()
-{
-    if(stdout_backup != NULL)
-    {
-        output_file.close();
-        cout.rdbuf(stdout_backup);
-        stdout_backup = NULL;
-    }
 }

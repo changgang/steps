@@ -21,8 +21,8 @@ class STEPS
         string get_toolkit_name() const;
 
         char get_next_alphabeta();
-        void redirect_stdout_to_file(string file);
-        void recover_stdout();
+        void open_log_file(string file);
+        void close_log_file();
 
         void show_information_with_leading_time_stamp(string info);
         void show_information_with_leading_time_stamp(ostringstream& stream);
@@ -60,8 +60,7 @@ class STEPS
 
         time_t clock_when_system_started;
 
-        streambuf * stdout_backup;
-        ofstream output_file;
+        ofstream log_file;
         char current_alphabeta;
 };
 #endif // STEPS_H

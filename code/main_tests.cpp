@@ -323,11 +323,11 @@ int main(int argc, char* argv[])
         unique_ptr<Test::Output> output(cmdline(argc, argv));
         ts.run(*output, true);
 
-        default_toolkit.redirect_stdout_to_file("STEPS_test_report.html");
+        default_toolkit.open_log_file("STEPS_test_report.html");
         Test::HtmlOutput* const html = dynamic_cast<Test::HtmlOutput*>(output.get());
         if (html)
         	html->generate(cout, true, "STEPS");
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
 	}
 	catch (...)
 	{

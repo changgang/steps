@@ -218,7 +218,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -265,7 +265,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response()
             run_a_step();
             export_meter_values();
         }
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -281,7 +281,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response()
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
         osstream<<"Model:"<<model->get_standard_model_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -327,7 +327,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response()
             run_a_step();
             export_meter_values();
         }
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);

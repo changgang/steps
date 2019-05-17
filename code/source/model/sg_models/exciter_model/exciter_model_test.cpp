@@ -92,11 +92,11 @@ void EXCITER_MODEL_TEST::test_step_response()
     EXCITER_MODEL* model = get_test_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/step_response_of_"+model->get_model_name()+"_model.txt");
+    default_toolkit.open_log_file("test_log/step_response_of_"+model->get_model_name()+"_model.txt");
 
     run_step_response_of_exciter_model();
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void EXCITER_MODEL_TEST::export_meter_title()

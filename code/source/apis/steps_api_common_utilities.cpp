@@ -2,6 +2,13 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+void api_set_default_toolkit_log_file(char* log_fie)
+{
+    string log_file_name = "";
+    if(log_fie!=NULL)
+        log_file_name = log_fie;
+    default_toolkit.open_log_file(log_file_name);
+}
 
 size_t api_generate_new_toolkit(char* log_fie)
 {

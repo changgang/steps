@@ -94,7 +94,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
     LOAD* load = get_load();
     LOAD_VOLTAGE_RELAY_MODEL* model = load->get_load_voltage_relay_model();
 
-    default_toolkit.redirect_stdout_to_file(outputfile);
+    default_toolkit.open_log_file(outputfile);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
@@ -217,5 +217,5 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
         export_meter_values();
     }
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }

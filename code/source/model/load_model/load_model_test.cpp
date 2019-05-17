@@ -172,7 +172,7 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
     LOAD_MODEL* model = load->get_load_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_run_voltage_ramp_response_"+model->get_model_name()+".txt");
+    default_toolkit.open_log_file("test_log/test_run_voltage_ramp_response_"+model->get_model_name()+".txt");
 
     double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double TIME = -2.0*delt;
@@ -252,7 +252,7 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
         export_meter_values(TIME);
     }
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
@@ -263,7 +263,7 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
     LOAD_MODEL* model = load->get_load_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.redirect_stdout_to_file("test_log/test_run_frequency_ramp_response_"+model->get_model_name()+".txt");
+    default_toolkit.open_log_file("test_log/test_run_frequency_ramp_response_"+model->get_model_name()+".txt");
 
     double delt = default_toolkit.get_dynamic_simulation_time_step_in_s();
     double TIME = -2.0*delt;
@@ -345,7 +345,7 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
         export_meter_values(TIME);
     }
 
-    default_toolkit.recover_stdout();
+    default_toolkit.close_log_file();
 }
 
 

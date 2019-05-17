@@ -132,9 +132,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_an
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode();
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -146,9 +146,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_an
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_mppt_mode();
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -160,9 +160,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_an
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode();
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -174,9 +174,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generato
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_underspeed_mode();
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -188,9 +188,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generato
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_mppt_mode();
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
@@ -203,9 +203,9 @@ void WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_generato
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        default_toolkit.redirect_stdout_to_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
+        default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
         run_step_response_of_wt_turbine_model_with_generator_power_order_drop_in_overspeed_mode();
-        default_toolkit.recover_stdout();
+        default_toolkit.close_log_file();
     }
     else
         TEST_ASSERT(false);
