@@ -1336,6 +1336,75 @@ class STEPS():
         model_type = self.__get_c_char_p_of_string(model_type)
         par_name = self.__get_c_char_p_of_string(par_name)
         return STEPS_LIB.api_set_pv_unit_related_model_float_parameter(ibus, ickt, model_type, par_name, value, self.toolkit_index)
+         
+    def get_load_related_model_name(self, load, model_type):
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(load)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        return str(STEPS_LIB.api_get_load_related_model_name(ibus, ickt, model_type, self.toolkit_index))
+
+    def get_load_related_model_data(self, load, model_type, par_name):
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(load)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_get_load_related_model_float_parameter(ibus, ickt, model_type, par_name, self.toolkit_index)
+        
+    def set_load_related_model_data(self, load, model_type, par_name, value):
+        global STEPS_LIB
+        ibus, ickt = self.__extract_single_bus_device_id(load)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_set_load_related_model_float_parameter(ibus, ickt, model_type, par_name, value, self.toolkit_index)
+        
+    def get_line_related_model_name(self, line, model_type):
+        global STEPS_LIB
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        return str(STEPS_LIB.api_get_line_related_model_name(ibus, jbus, ickt, model_type, self.toolkit_index))
+
+    def get_line_related_model_data(self, line, model_type, par_name):
+        global STEPS_LIB
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_get_line_related_model_float_parameter(ibus, jbus, ickt, model_type, par_name, self.toolkit_index)
+        
+    def set_line_related_model_data(self, line, model_type, par_name, value):
+        global STEPS_LIB
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(line)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_set_line_related_model_float_parameter(ibus, jbus, ickt, model_type, par_name, value, self.toolkit_index)
+        
+    def get_hvdc_related_model_name(self, hvdc, model_type):
+        global STEPS_LIB
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        return str(STEPS_LIB.api_get_hvdc_related_model_name(ibus, jbus, ickt, model_type, self.toolkit_index))
+
+    def get_hvdc_related_model_data(self, hvdc, model_type, par_name):
+        global STEPS_LIB
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_get_hvdc_related_model_float_parameter(ibus, jbus, ickt, model_type, par_name, self.toolkit_index)
+        
+    def set_hvdc_related_model_data(self, hvdc, model_type, par_name, value):
+        global STEPS_LIB
+        ibus, jbus, ickt = self.__extract_double_bus_device_id(hvdc)
+        ickt = self.__get_c_char_p_of_string(ickt)
+        model_type = self.__get_c_char_p_of_string(model_type)
+        par_name = self.__get_c_char_p_of_string(par_name)
+        return STEPS_LIB.api_set_hvdc_related_model_float_parameter(ibus, jbus, ickt, model_type, par_name, value, self.toolkit_index)
         
     def get_powerflow_solver_parameter(self, par_type, par_name):
         global STEPS_LIB

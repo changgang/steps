@@ -6,7 +6,7 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 
-1558068304 c:\users\lichg\steps\code\header\apis\steps_api.h
+1558455711 c:\users\lichg\steps\code\header\apis\steps_api.h
 	"header/STEPS.h"
 	"header/power_system_database.h"
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
@@ -497,7 +497,7 @@
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 
-1558068435 source:c:\users\lichg\steps\code\source\apis\steps_api_common_utilities.cpp
+1558272139 source:c:\users\lichg\steps\code\source\apis\steps_api_common_utilities.cpp
 	"header/apis/steps_api.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -5150,4 +5150,25 @@
 	<iostream>
 	"header/basic/constants_test.h"
 	"header/basic/utility.h"
+
+1558455096 source:c:\users\lichg\steps\code\source\apis\steps_api_set_get_hvdc_related_model_parameters.cpp
+	"header/apis/steps_api.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/data_imexporter/psse_imexporter.h"
+	"header/data_imexporter/bpa_imexporter.h"
+
+1558454967 source:c:\users\lichg\steps\code\source\apis\steps_api_set_get_line_related_model_parameters.cpp
+	"header/apis/steps_api.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/data_imexporter/psse_imexporter.h"
+	"header/data_imexporter/bpa_imexporter.h"
+
+1558418745 source:c:\users\lichg\steps\code\source\apis\steps_api_set_get_load_related_model_parameters.cpp
+	"header/apis/steps_api.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/data_imexporter/psse_imexporter.h"
+	"header/data_imexporter/bpa_imexporter.h"
 

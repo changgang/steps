@@ -70,6 +70,11 @@ const char* api_get_toolkit_string_data(char* parameter_name, size_t toolkit_ind
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="TOOLKIT NAME")
+    {
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (toolkit.get_toolkit_name()).c_str());
+        return toolkit.steps_char_buffer;
+    }
     if(PARAMETER_NAME=="CASE INFORMATION")
     {
         snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (psdb.get_case_information()).c_str());
@@ -91,6 +96,8 @@ void api_set_toolkit_string_data(char* parameter_name, char* value, size_t toolk
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="TOOLKIT NAME")
+        return toolkit.set_toolkit_name(value);
     if(PARAMETER_NAME=="CASE INFORMATION")
         return psdb.set_case_information(value);
     if(PARAMETER_NAME=="CASE ADDITIONAL INFORMATION")

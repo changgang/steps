@@ -261,6 +261,10 @@ EXPORT_STEPS_DLL const char* api_get_load_related_model_name(size_t bus, char* i
 EXPORT_STEPS_DLL double api_get_load_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_load_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL const char* api_get_line_related_model_name(size_t ibus, size_t jbus, char* identifier, char* model_type, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_line_related_model_float_parameter(size_t ibus, size_t jbus, char* identifier, char* model_type, char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_line_related_model_float_parameter(size_t ibus, size_t jbus, char* identifier, char* model_type, char* parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);
+
 EXPORT_STEPS_DLL const char* api_get_hvdc_related_model_name(size_t ibus, size_t jbus, char* identifier, char* model_type, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_hvdc_related_model_float_parameter(size_t ibus, size_t jbus, char* identifier, char* model_type, char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_hvdc_related_model_float_parameter(size_t ibus, size_t jbus, char* identifier, char* model_type, char* parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);
@@ -268,6 +272,15 @@ EXPORT_STEPS_DLL void api_set_hvdc_related_model_float_parameter(size_t ibus, si
 EXPORT_STEPS_DLL const char* api_get_energy_storage_related_model_name(size_t bus, char* identifier, char* model_type, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_energy_storage_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_energy_storage_related_model_float_parameter(size_t bus, char* identifier, char* model_type, char* parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);
+
+
+EXPORT_STEPS_DLL double api_get_generator_related_model_float_variable(size_t bus, char* identifier, char* model_type, char* variable_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_wt_generator_related_model_float_variable(size_t bus, char* identifier, char* model_type, char* variable_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_pv_unit_related_model_float_variable(size_t bus, char* identifier, char* model_type, char* variable_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_load_related_model_float_variable(size_t bus, char* identifier, char* model_type, char* variable_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_line_related_model_float_variable(size_t ibus, size_t jbus, char* identifier, char* model_type, char* variable_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_hvdc_related_model_float_variable(size_t ibus, size_t jbus, char* identifier, char* model_type, char* variable_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_energy_storage_related_model_float_variable(size_t bus, char* identifier, char* model_type, char* variable_name, size_t toolkit_index=INDEX_NOT_EXIST);
 
 
 EXPORT_STEPS_DLL size_t api_get_powerflow_solver_integer_parameter(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
