@@ -59,6 +59,12 @@ def load_library():
     
     libsteps.api_set_toolkit_string_data.restype = None
     libsteps.api_set_toolkit_string_data.argtypes = (c_char_p, c_char_p, c_uint)
+    
+    libsteps.api_get_toolkit_bool_data.restype = c_bool
+    libsteps.api_get_toolkit_bool_data.argtypes = (c_char_p, c_uint)
+    
+    libsteps.api_set_toolkit_bool_data.restype = None
+    libsteps.api_set_toolkit_bool_data.argtypes = (c_char_p, c_bool, c_uint)
 
     libsteps.api_load_powerflow_data_from_file.restype = None
     libsteps.api_load_powerflow_data_from_file.argtypes = (c_char_p, c_char_p, c_uint)

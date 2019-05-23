@@ -8,8 +8,11 @@ using namespace std;
 STEPS::STEPS(string name, string log_file)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
     if(log_file!="")
         open_log_file(log_file);
+
+    detailed_log_enabled = false;
 
     clock_when_system_started=clock();
 
@@ -76,6 +79,27 @@ void STEPS::close_log_file()
 {
     if(log_file.is_open())
         log_file.close();
+}
+
+void STEPS::enable_detailed_log()
+{
+    ostringstream osstream;
+    osstream<<"Detailed log is enabled";
+    show_information_with_leading_time_stamp(osstream);
+    detailed_log_enabled = true;
+}
+
+void STEPS::disable_detailed_log()
+{
+    ostringstream osstream;
+    osstream<<"Detailed log is disabled";
+    show_information_with_leading_time_stamp(osstream);
+    detailed_log_enabled = false;
+}
+
+bool STEPS::is_detailed_log_enabled()
+{
+    return detailed_log_enabled;
 }
 
 void STEPS::reset()

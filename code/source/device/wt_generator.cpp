@@ -564,8 +564,8 @@ void WT_GENERATOR::set_wt_relay_model(const WT_RELAY_MODEL* model)
         new_model->set_toolkit(toolkit);
         new_model->set_device_id(get_device_id());
         wt_relay_model = new_model;
-        osstream<<"wt relay model is set";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        //osstream<<"wt relay model is set";
+        //toolkit.show_information_with_leading_time_stamp(osstream);
     }
     else
     {

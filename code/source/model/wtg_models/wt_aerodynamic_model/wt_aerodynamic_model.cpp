@@ -625,6 +625,9 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         return;
     }
 
+    size_t iter_max = 100;
+    size_t iter = 0;
+
     while(true)
     {
         pitch_high = pitch_low+pitch_step;
@@ -640,10 +643,18 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
             pitch_low = pitch_high;
             w_mppt_low = w_mppt_high;
         }
+        ++iter;
+        if(iter>iter_max)
+        {
+            if(toolkit.is_detailed_log_enabled())
+            {
+                osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            break;
+        }
     }
-
-    size_t iter_max = 100;
-    size_t iter = 0;
+    iter = 0;
     while(true)
     {
         double pitch = 0.5*(pitch_low+pitch_high);
@@ -665,7 +676,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         else
             pitch_low = pitch;
 
-        iter ++;
+        ++iter;
         if(iter>iter_max)
         {
             osstream<<"Warning. Failed to initialize pitch angle and turbine speed within "<<iter_max<<" iterations when turbine speed mode is WT_MPPT_MODE."<<endl
@@ -750,6 +761,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
     set_initial_pitch_angle_in_deg(pitch_low);
     double pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
 
+    size_t iter_count = 0, iter_max = 100;
     while(true)
     {
         pitch_high = pitch_low + pitch_step;
@@ -761,6 +773,16 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
             pitch_low = pitch_high;
         else
             break;
+        ++iter_count;
+        if(iter_count>iter_max)
+        {
+            if(toolkit.is_detailed_log_enabled())
+            {
+                osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            break;
+        }
     }
 
     set_initial_pitch_angle_in_deg(pitch_low);
@@ -771,8 +793,8 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
     osstream<<"Desired pmech = "<<pmech<<" MW (per wind turbine)"<<endl
             <<"Initial pitch angle: low pitch = "<<pitch_low<<" deg, pmech = "<<pwind_low<<" MW"<<endl
             <<"                     high pitch = "<<pitch_high<<" deg, pmech = "<<pwind_high<<" MW"<<endl;
-    size_t iter_count = 0, iter_max = 100;
 
+    iter_count = 0;
     while(true)
     {
         double pitch_new = 0.5*(pitch_low+pitch_high);
@@ -925,12 +947,16 @@ void WT_AERODYNAMIC_MODEL::set_current_pitch_angle_in_deg(double pitch)
 
 void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_angle()
 {
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
     double pitch = get_current_pitch_angle_in_deg();
 
     double lambda_low = 3.0;
     double lambda_high = 3.0;
     double lambda_step =  1.0;
 
+    size_t iter_count = 0, iter_max = 100;
     while(true)
     {
         double der = get_derivative_of_Cp_over_lambda(lambda_low, pitch);
@@ -943,7 +969,18 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
             else
                 lambda_low -= lambda_step;
         }
+        ++iter_count;
+        if(iter_count>iter_max)
+        {
+            if(toolkit.is_detailed_log_enabled())
+            {
+                osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            break;
+        }
     }
+    iter_count=0;
     while(true)
     {
         double der = get_derivative_of_Cp_over_lambda(lambda_high, pitch);
@@ -956,10 +993,20 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
             else
                 lambda_high += lambda_step;
         }
+        ++iter_count;
+        if(iter_count>iter_max)
+        {
+            if(toolkit.is_detailed_log_enabled())
+            {
+                osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            break;
+        }
     }
 
     double lambda_new = 0.0;
-    size_t iter_count = 0, iter_max = 100;
+    iter_count=0;
     while(true)
     {
         lambda_new = 0.5*(lambda_low+lambda_high);
@@ -993,6 +1040,9 @@ void WT_AERODYNAMIC_MODEL::set_current_pelec_including_loss_per_turbine_in_MW(do
 
 void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit()
 {
+    STEPS& toolkit = get_toolkit();
+    ostringstream osstream;
+
     double pitch = get_current_pitch_angle_in_deg();
 
     double w_mppt = get_mppt_speed_in_rad_per_s(pitch);
@@ -1034,9 +1084,12 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
     double w_low, w_high;
     double w_step = 0.5;
     double p_low, p_high;
+
+    size_t iter_count =0, iter_max = 100;
     if(get_turbine_speed_mode()==WT_UNDERSPEED_MODE)
     {
         w_high = w_mppt;
+        iter_count = 0;
         while(true)
         {
             w_low = w_high - w_step;
@@ -1050,11 +1103,23 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
                 break;
             else
                 w_high = w_low;
+
+            ++iter_count;
+            if(iter_count>iter_max)
+            {
+                if(toolkit.is_detailed_log_enabled())
+                {
+                    osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                break;
+            }
         }
     }
     else
     {
         w_low = w_mppt;
+        iter_count = 0;
         while(true)
         {
             w_high = w_low + w_step;
@@ -1068,6 +1133,16 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
                 break;
             else
                 w_low = w_high;
+            ++iter_count;
+            if(iter_count>iter_max)
+            {
+                if(toolkit.is_detailed_log_enabled())
+                {
+                    osstream<<"Warning. Failed to exit loop within "<<iter_max<<" iterations @ line "<<__LINE__<<" of "<<__FILE__;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                break;
+            }
         }
     }
 
@@ -1076,7 +1151,7 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
 
 
     double w = 0.0;
-    size_t iter_count = 0, iter_max = 100;
+    iter_count = 0;
     while(true)
     {
         double w_new = 0.5*(w_low+w_high);

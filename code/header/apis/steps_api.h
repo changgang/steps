@@ -28,6 +28,8 @@ EXPORT_STEPS_DLL double api_get_toolkit_float_data(char* parameter_name, size_t 
 EXPORT_STEPS_DLL void api_set_toolkit_float_data(char* parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL const char* api_get_toolkit_string_data(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_toolkit_string_data(char* parameter_name, char* value, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL bool api_get_toolkit_bool_data(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_toolkit_bool_data(char* parameter_name, bool value, size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);

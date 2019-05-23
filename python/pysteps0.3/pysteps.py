@@ -112,6 +112,24 @@ class STEPS():
         global STEPS_LIB
         return self.set_toolkit_string_data("CASE ADDITIONAL INFORMATION", value)    
 
+    def get_toolkit_bool_data(self, dataname):
+        global STEPS_LIB
+        dataname = self.__get_c_char_p_of_string(dataname)
+        return STEPS_LIB.api_get_toolkit_bool_data(dataname, self.toolkit_index)        
+
+    def set_toolkit_bool_data(self, dataname, value):
+        global STEPS_LIB
+        dataname = self.__get_c_char_p_of_string(dataname)
+        return STEPS_LIB.api_set_toolkit_bool_data(dataname, value, self.toolkit_index)
+    
+    def get_toolkit_detailed_log_logic(self):
+        global STEPS_LIB
+        return self.get_toolkit_bool_data("DETAILED LOG LOGIC")
+    
+    def set_toolkit_detailed_log_logic(self, logic):
+        global STEPS_LIB
+        return self.set_toolkit_bool_data("DETAILED LOG LOGIC", logic)
+    
 
     def get_allowed_maximum_bus_number(self):
         global STEPS_LIB

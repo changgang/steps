@@ -107,6 +107,40 @@ void api_set_toolkit_string_data(char* parameter_name, char* value, size_t toolk
     return;
 }
 
+bool api_get_toolkit_bool_data(char* parameter_name, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="DETAILED LOG LOGIC")
+    {
+        return toolkit.is_detailed_log_enabled();
+    }
+
+    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
+    return toolkit.steps_char_buffer;
+}
+
+void api_set_toolkit_bool_data(char* parameter_name, bool value, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    string PARAMETER_NAME = string2upper(parameter_name);
+    if(PARAMETER_NAME=="DETAILED LOG LOGIC")
+    {
+        if(value==true)
+            return toolkit.enable_detailed_log();
+        else
+            return toolkit.disable_detailed_log();
+    }
+
+    show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
+    return;
+}
+
 void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

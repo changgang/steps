@@ -23,6 +23,9 @@ class STEPS
         char get_next_alphabeta();
         void open_log_file(string file);
         void close_log_file();
+        void enable_detailed_log();
+        void disable_detailed_log();
+        bool is_detailed_log_enabled();
 
         void show_information_with_leading_time_stamp(string info);
         void show_information_with_leading_time_stamp(ostringstream& stream);
@@ -61,6 +64,7 @@ class STEPS
         time_t clock_when_system_started;
 
         ofstream log_file;
+        bool detailed_log_enabled;
         char current_alphabeta;
 };
 #endif // STEPS_H

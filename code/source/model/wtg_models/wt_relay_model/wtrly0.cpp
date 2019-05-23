@@ -63,13 +63,13 @@ string WTRLY0::get_model_name() const
 
 void WTRLY0::set_wind_spped_relay_pair_in_pu_s(size_t index, double vwind, double tdelay)
 {
-    STEPS& toolkit = get_toolkit();
     if(index>=MAX_RELAY_COUNT)
     {
-        ostringstream osstream;
+        /*ostringstream osstream;
         osstream<<"Warning. Index exceeds "<<MAX_RELAY_COUNT<<" when setting up "<<get_model_name()<<" of "<<get_device_name()<<endl
                 <<"No wind speed relay pair will be set.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);*/
+        return;
     }
     vwind_th[index] = vwind;
     vwind_relay_timer[index].set_timer_interval_in_s(tdelay);
@@ -77,13 +77,13 @@ void WTRLY0::set_wind_spped_relay_pair_in_pu_s(size_t index, double vwind, doubl
 
 void WTRLY0::set_rotor_speed_relay_pair_in_pu_s(size_t index, double speed, double tdelay)
 {
-    STEPS& toolkit = get_toolkit();
     if(index>=MAX_RELAY_COUNT)
     {
-        ostringstream osstream;
+        /*ostringstream osstream;
         osstream<<"Warning. Index exceeds "<<MAX_RELAY_COUNT<<" when setting up "<<get_model_name()<<" of "<<get_device_name()<<endl
                 <<"No rotor speed relay pair will be set.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);*/
+        return;
     }
     speed_th[index] = speed;
     speed_relay_timer[index].set_timer_interval_in_s(tdelay);
@@ -91,13 +91,13 @@ void WTRLY0::set_rotor_speed_relay_pair_in_pu_s(size_t index, double speed, doub
 
 void WTRLY0::set_bus_frequency_relay_pair_in_pu_s(size_t index, double freq, double tdelay)
 {
-    STEPS& toolkit = get_toolkit();
     if(index>=MAX_RELAY_COUNT)
     {
-        ostringstream osstream;
+        /*ostringstream osstream;
         osstream<<"Warning. Index exceeds "<<MAX_RELAY_COUNT<<" when setting up "<<get_model_name()<<" of "<<get_device_name()<<endl
                 <<"No bus frequency relay pair will be set.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);*/
+        return;
     }
     freq_th[index] = freq;
     freq_relay_timer[index].set_timer_interval_in_s(tdelay);
@@ -105,13 +105,13 @@ void WTRLY0::set_bus_frequency_relay_pair_in_pu_s(size_t index, double freq, dou
 
 void WTRLY0::set_bus_voltage_relay_pair_in_pu_s(size_t index, double volt, double tdelay)
 {
-    STEPS& toolkit = get_toolkit();
     if(index>=MAX_RELAY_COUNT)
     {
-        ostringstream osstream;
+        /*ostringstream osstream;
         osstream<<"Warning. Index exceeds "<<MAX_RELAY_COUNT<<" when setting up "<<get_model_name()<<" of "<<get_device_name()<<endl
                 <<"No bus voltage relay pair will be set.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);*/
+        return;
     }
     volt_th[index] = volt;
     volt_relay_timer[index].set_timer_interval_in_s(tdelay);
@@ -207,7 +207,7 @@ bool WTRLY0::setup_model_with_steps_string_vector(vector<string>& data)
         v = get_double_data(data[i], "0.0"); ++i;
         t = get_double_data(data[i], "0.0"); ++i;
         set_wind_spped_relay_pair_in_pu_s(k, v, t);
-        cout<<"wind speed relay pair: "<<k<<", "<<v<<", "<<t<<endl;
+        //cout<<"wind speed relay pair: "<<k<<", "<<v<<", "<<t<<endl;
     }
 
     n = get_integer_data(data[i], "0"); ++i;
@@ -216,7 +216,7 @@ bool WTRLY0::setup_model_with_steps_string_vector(vector<string>& data)
         s = get_double_data(data[i], "0.0"); ++i;
         t = get_double_data(data[i], "0.0"); ++i;
         set_rotor_speed_relay_pair_in_pu_s(k, s, t);
-        cout<<"rotor speed relay pair: "<<k<<", "<<s<<", "<<t<<endl;
+        //cout<<"rotor speed relay pair: "<<k<<", "<<s<<", "<<t<<endl;
     }
 
     n = get_integer_data(data[i], "0"); ++i;
@@ -225,7 +225,7 @@ bool WTRLY0::setup_model_with_steps_string_vector(vector<string>& data)
         f = get_double_data(data[i], "0.0"); ++i;
         t = get_double_data(data[i], "0.0"); ++i;
         set_bus_frequency_relay_pair_in_pu_s(k, f, t);
-        cout<<"bus frequency relay pair: "<<k<<", "<<f<<", "<<t<<endl;
+        //cout<<"bus frequency relay pair: "<<k<<", "<<f<<", "<<t<<endl;
     }
 
     n = get_integer_data(data[i], "0"); ++i;
@@ -234,7 +234,7 @@ bool WTRLY0::setup_model_with_steps_string_vector(vector<string>& data)
         v = get_double_data(data[i], "0.0"); ++i;
         t = get_double_data(data[i], "0.0"); ++i;
         set_bus_voltage_relay_pair_in_pu_s(k, v, t);
-        cout<<"bus voltage relay pair: "<<k<<", "<<v<<", "<<t<<endl;
+        //cout<<"bus voltage relay pair: "<<k<<", "<<v<<", "<<t<<endl;
     }
 
     is_successful = true;

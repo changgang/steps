@@ -1561,12 +1561,12 @@ void DYNAMICS_SIMULATOR::start()
 
     network_matrix.optimize_network_ordering();
 
-    if(not pf_solver.is_converged())
+    /*if(not pf_solver.is_converged())
     {
         osstream<<"Warning. Powerflow is not converged. Please go check powerflow solution.\n"
                 <<"Any further simulation cannot be trusted.";
         toolkit.show_information_with_leading_time_stamp(osstream);
-    }
+    }*/
 
     run_all_models(INITIALIZE_MODE);
 
@@ -1687,6 +1687,11 @@ void DYNAMICS_SIMULATOR::run_a_step()
     STEPS& toolkit = get_toolkit();
 
     toolkit.set_dynamic_simulation_time_in_s(toolkit.get_dynamic_simulation_time_in_s()+ toolkit.get_dynamic_simulation_time_step_in_s());
+    if(toolkit.is_detailed_log_enabled())
+    {
+        osstream<<"Run dynamic simulation at time "<<toolkit.get_dynamic_simulation_time_in_s();
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
     update_equivalent_devices_buffer();
     update_equivalent_devices_output();
 
@@ -1694,35 +1699,45 @@ void DYNAMICS_SIMULATOR::run_a_step()
     //bool DAE_converged = false;
     ITER_DAE = 0;
     ITER_NET = 0;
-    size_t DAE_iter_max = get_max_DAE_iteration();
-    //size_t network_iter_max = get_max_network_iteration();
     double max_angle_difference_old = get_system_max_angle_difference_in_deg();
     while(true)
     {
         ++ITER_DAE;
-        if(ITER_DAE>DAE_iter_max)
+        if(toolkit.is_detailed_log_enabled())
         {
-            if(DAE_iter_max!=2)
+            osstream<<"Solve DAE with iteration "<<ITER_DAE<<" at time "<<toolkit.get_dynamic_simulation_time_in_s();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+
+        if(ITER_DAE>max_DAE_iteration)
+        {
+            if(max_DAE_iteration!=2)
             {
                 char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
                 snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve DAE in %lu iterations when integrating at time %f s.",
-                         DAE_iter_max, toolkit.get_dynamic_simulation_time_in_s());
+                         max_DAE_iteration, toolkit.get_dynamic_simulation_time_in_s());
                 toolkit.show_information_with_leading_time_stamp(buffer);
             }
             --ITER_DAE;
             break;
         }
         integrate();
-        solve_network();
+        bool network_converged = solve_network();
         ITER_NET += network_iteration_count;
-        /*network_converged = solve_network();
-        if(not network_converged)
-        {
-            osstream<<"Failed to solve network in "<<network_iter_max<<" iterations when integrating at time "<<TIME<<" s.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }*/
+
         double max_angle_difference_new = get_system_max_angle_difference_in_deg();
-        //cout<<"max angle difference new: "<<max_angle_difference_new<<", old: "<<max_angle_difference_old<<", diff="<<max_angle_difference_new-max_angle_difference_old<<endl;
+        if(toolkit.is_detailed_log_enabled())
+        {
+            osstream<<"maximum angle difference with iteration "<<ITER_DAE<<" at time "<<toolkit.get_dynamic_simulation_time_in_s()<<" is "<<max_angle_difference_new;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+
+        if(toolkit.is_detailed_log_enabled() and (not network_converged))
+        {
+            osstream<<"Failed to solve network in "<<max_network_iteration<<" iterations during DAE iteration "<<ITER_DAE<<" when integrating at time "<<TIME<<" s."
+                    <<"New max angle difference is "<<max_angle_difference_new<<" deg while old is "<<max_angle_difference_old<<" deg (difference is "<<max_angle_difference_new-max_angle_difference_old<<" deg)";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
         if(fabs(max_angle_difference_new-max_angle_difference_old)<1e-8) // DAE solution converged
             break;
         else
@@ -1976,7 +1991,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     //clock_t start = clock(), start0 = clock();
     //osstream<<"Now go solve network with DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"() at time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s";
-    //show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
 
     size_t nbus = psdb.get_in_service_bus_count();
     /*for(int i=0; i!=nbus; ++i)
@@ -2820,6 +2835,11 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
         double angle_difference = angle_max - angle_min;
         double scaled_angle_difference = rad2deg(round_angle_in_rad_to_PI(deg2rad(angle_difference)));
 
+        if(toolkit.is_detailed_log_enabled())
+        {
+            osstream<<"angle difference is island is "<<scaled_angle_difference<<" deg at time "<<toolkit.get_dynamic_simulation_time_in_s();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
         if(angle_difference>get_rotor_angle_stability_threshold_in_deg())
         {
             system_is_stable = false;
