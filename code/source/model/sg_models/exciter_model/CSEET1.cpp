@@ -546,7 +546,7 @@ double CSEET1::get_Efdmax_in_pu() const
 double CSEET1::get_initial_Ve_with_Fex_function() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
@@ -772,14 +772,14 @@ bool CSEET1::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void CSEET1::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     sensor.set_toolkit(toolkit);
     serial_tuner1_lead_lag.set_toolkit(toolkit);
     serial_tuner1_pi.set_toolkit(toolkit);
@@ -988,7 +988,7 @@ void CSEET1::run(DYNAMIC_MODE mode)
     double Vrmax = get_VRmax_in_pu();
     double Vrmin = get_VRmin_in_pu();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = generator->get_generator_bus();
     double Vt = psdb.get_bus_voltage_in_pu(bus);
@@ -1049,7 +1049,7 @@ void CSEET1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

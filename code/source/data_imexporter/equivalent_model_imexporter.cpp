@@ -48,7 +48,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_equivalent_model(string file)
 
 void EQUIVALENT_MODEL_IMEXPORTER::load_data_into_ram(string file)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     data_in_ram.clear();
@@ -97,7 +97,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     if(n==0)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ostringstream osstream;
@@ -120,7 +120,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
 
 METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & data_line, size_t& delay, double& coefficient)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     METER_SETTER setter;
@@ -318,7 +318,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     if(n==0)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ostringstream osstream;

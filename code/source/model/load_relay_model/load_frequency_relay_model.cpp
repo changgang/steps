@@ -25,7 +25,7 @@ double LOAD_FREQUENCY_RELAY_MODEL::get_bus_frequency_in_Hz() const
     if(load==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = load->get_load_bus();
@@ -39,7 +39,7 @@ double LOAD_FREQUENCY_RELAY_MODEL::get_bus_base_frequency_in_Hz() const
     if(load==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = load->get_load_bus();

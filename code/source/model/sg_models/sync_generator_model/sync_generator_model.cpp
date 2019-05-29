@@ -183,7 +183,7 @@ double SYNC_GENERATOR_MODEL::get_Xpp() const
 {
     if(Xdpp!=Xqpp)
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         ostringstream osstream;
         osstream<<"Warning. Subtransient Xd\"("<<Xdpp<<") is not equal to Xq\"("<<Xqpp<<"). Xd\" will be returned.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -396,7 +396,7 @@ double SYNC_GENERATOR_MODEL::get_excitation_voltage_in_pu() const
 
 void SYNC_GENERATOR_MODEL::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     transient_block_d_axis.set_toolkit(toolkit);
     subtransient_block_d_axis.set_toolkit(toolkit);
     transient_block_q_axis.set_toolkit(toolkit);

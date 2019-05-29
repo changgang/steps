@@ -25,7 +25,7 @@ string COMPENSATOR_MODEL::get_model_type() const
 
 complex<double> COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
         return 0.0;

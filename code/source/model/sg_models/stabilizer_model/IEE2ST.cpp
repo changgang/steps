@@ -303,14 +303,14 @@ bool IEE2ST::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEE2ST::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     sensor_1.set_toolkit(toolkit);
     sensor_2.set_toolkit(toolkit);
     filter.set_toolkit(toolkit);
@@ -441,7 +441,7 @@ double IEE2ST::get_stabilizing_signal_in_pu() const
     double vcmax = get_Vcmax();
     double vcmin = get_Vcmin();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = get_device_id().get_device_terminal()[0];
     double terminal_voltage = psdb.get_bus_voltage_in_pu(bus);
@@ -461,7 +461,7 @@ void IEE2ST::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

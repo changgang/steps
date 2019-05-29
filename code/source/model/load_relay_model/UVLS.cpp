@@ -209,14 +209,14 @@ bool UVLS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void UVLS::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     voltage_sensor.set_toolkit(toolkit);
     for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
     {
@@ -233,7 +233,7 @@ void UVLS::initialize()
 
     set_block_toolkit();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double volt = psdb.get_bus_voltage_in_pu(load->get_load_bus());
@@ -259,7 +259,7 @@ void UVLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     double volt = get_bus_voltage_in_pu();
@@ -396,7 +396,7 @@ bool UVLS::is_stage_breaker_timer_timed_out(size_t i) const
 
 void UVLS::trip_stage(size_t i)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(i<MAX_LOAD_RELAY_STAGE)
     {

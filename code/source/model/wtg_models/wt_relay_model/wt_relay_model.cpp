@@ -65,7 +65,7 @@ double WT_RELAY_MODEL::get_bus_frequency_in_pu() const
     if(bus==0)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_frequency_in_pu(bus);
 }
@@ -79,7 +79,7 @@ double WT_RELAY_MODEL::get_bus_voltage_in_pu() const
     if(bus==0)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_voltage_in_pu(bus);
 }

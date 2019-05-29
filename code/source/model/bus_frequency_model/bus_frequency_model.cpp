@@ -46,7 +46,7 @@ void BUS_FREQUENCY_MODEL::initialize()
         show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         return;
     }
-    STEPS& toolkit = bus_ptr->get_toolkit();
+    STEPS& toolkit = bus_ptr->get_toolkit(__PRETTY_FUNCTION__);
     set_toolkit(toolkit);
 
     double DELT = toolkit.get_dynamic_simulation_time_step_in_s();

@@ -98,7 +98,7 @@ bool FILEWIND::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -134,7 +134,7 @@ void FILEWIND::initialize()
 
 void FILEWIND::load_wind_speed_from_file()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream oosstream;
     string file = get_wind_speed_serial_file();
     if(file.size()<1)
@@ -193,7 +193,7 @@ void FILEWIND::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not necessary to call. Input mode is provided: "<<mode;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -202,7 +202,7 @@ double FILEWIND::get_wind_speed_in_pu()
     if(time.size()==0)
         return 1.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double simulation_time = toolkit.get_dynamic_simulation_time_in_s();
 
     if(fabs(simulation_time-current_time)<FLOAT_EPSILON)
@@ -218,7 +218,7 @@ double FILEWIND::get_wind_direction_in_deg()
     if(time.size()==0)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double simulation_time = toolkit.get_dynamic_simulation_time_in_s();
 
     if(fabs(simulation_time-current_time)<FLOAT_EPSILON)
@@ -258,7 +258,7 @@ size_t FILEWIND::get_previous_position() const
 }
 void FILEWIND::search_wind_data_at_simulation_time()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double simulation_time = toolkit.get_dynamic_simulation_time_in_s();
 
     current_time = simulation_time;
@@ -331,7 +331,7 @@ void FILEWIND::check()
 
 void FILEWIND::report()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(get_standard_model_string());
 }
 

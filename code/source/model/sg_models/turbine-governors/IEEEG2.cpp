@@ -174,14 +174,14 @@ bool IEEEG2::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEEEG2::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     droop.set_toolkit(toolkit);
     tuner.set_toolkit(toolkit);
     water_hammer.set_toolkit(toolkit);
@@ -207,7 +207,7 @@ void IEEEG2::initialize()
 
     set_block_toolkit();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
 
@@ -301,7 +301,7 @@ void IEEEG2::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEEEG2::save()

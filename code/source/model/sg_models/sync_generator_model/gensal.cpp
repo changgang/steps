@@ -59,7 +59,7 @@ string GENSAL::get_model_name() const
 
 void GENSAL::update_source_impedance()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
     {
@@ -136,7 +136,7 @@ bool GENSAL::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -352,7 +352,7 @@ complex<double> GENSAL::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Exy = get_internal_voltage_in_pu_in_xy_axis();
     complex<double> Z(get_Rs(), get_Xpp());
     double mbase = get_mbase_in_MVA();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -386,7 +386,7 @@ complex<double> GENSAL::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -403,7 +403,7 @@ double GENSAL::get_terminal_current_in_pu_based_on_sbase()
     double I = get_terminal_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -420,7 +420,7 @@ void GENSAL::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -490,7 +490,7 @@ double GENSAL::get_model_data_with_name(string par_name) const
         if(par_name == "S1")    return get_saturation_at_1();
         if(par_name == "S1.2")  return get_saturation_at_1p2();
     }
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -514,7 +514,7 @@ void GENSAL::set_model_data_with_name(string par_name, double value)
         if(par_name == "S1")    return set_saturation_at_1(value);
         if(par_name == "S1.2")  return set_saturation_at_1p2(value);
     }
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 

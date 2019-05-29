@@ -36,7 +36,7 @@ complex<double> ENERGY_STORAGE_MODEL::get_terminal_bus_complex_voltage_in_pu() c
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
     if(estorage==NULL)
         return 0.0;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
@@ -48,7 +48,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_voltage_in_pu() const
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
     if(estorage==NULL)
         return 0.0;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
@@ -60,7 +60,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_angle_in_rad() const
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
     if(estorage==NULL)
         return 0.0;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
@@ -74,7 +74,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
     if(estorage==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();

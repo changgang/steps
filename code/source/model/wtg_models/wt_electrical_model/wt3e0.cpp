@@ -155,7 +155,7 @@ void WT3E0::set_voltage_flag(size_t flag)
     {
         ostringstream osstream;
         osstream<<"Error. "<<flag<<" is not allowed to set up voltage flag for "<<get_model_name()<<" model. 0, 1, or 2 is allowed.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -584,14 +584,14 @@ bool WT3E0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void WT3E0::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     voltage_sensor.set_toolkit(toolkit);
     voltage_regulator_first_order_block.set_toolkit(toolkit);
     voltage_regulator_integrator.set_toolkit(toolkit);
@@ -642,7 +642,7 @@ void WT3E0::initialize()
 
     set_block_toolkit();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     double vterm = get_terminal_bus_voltage_in_pu();
     double iterm = get_wt_generator_terminal_current_in_pu();
@@ -1108,7 +1108,7 @@ void WT3E0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -1284,7 +1284,7 @@ double WT3E0::get_model_data_with_name(string par_name) const
     if(par_name == "PMAX IN PU")                       return get_Pmax_in_pu();
     if(par_name == "ACTIVE CURRENT MAX IN PU")         return get_IPmax_in_pu();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -1355,7 +1355,7 @@ void WT3E0::set_model_data_with_name(string par_name, double value)
     if(par_name == "PMAX IN PU")                       return set_Pmax_in_pu(value);
     if(par_name == "ACTIVE CURRENT MAX IN PU")         return set_IPmax_in_pu(value);
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }

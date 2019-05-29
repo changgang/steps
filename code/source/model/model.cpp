@@ -46,7 +46,7 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
     {
         ostringstream osstream;
         osstream<<"Warning. Device type '"<<device_type<<"' is not supported when setting up dynamic model.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -87,7 +87,7 @@ bool MODEL::is_model_data_exist(size_t var_index) const
 
 void MODEL::set_model_data_with_index(size_t index, double value)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     string var_name = get_model_data_name(index);
     if(var_name!="")
         set_model_data_with_name(var_name, value);
@@ -98,7 +98,7 @@ void MODEL::set_model_data_with_index(size_t index, double value)
 double MODEL::get_model_data_with_index(size_t index)
 {
     string var_name = get_model_data_name(index);
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(var_name!="")
         return get_model_data_with_name(var_name);
     else
@@ -148,7 +148,7 @@ double MODEL::get_model_internal_variable_with_index(size_t index)
 void MODEL::set_device_id(DEVICE_ID did)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(not did.is_valid())
     {
         osstream<<"Warning. Invalid device id (possible of "<<did.get_device_type()<<") is given to build model. "

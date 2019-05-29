@@ -49,7 +49,7 @@ void TRANSFORMER::set_non_metered_end_bus(size_t bus)
         return;
     }
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(bus==get_winding_bus(PRIMARY_SIDE) or bus==get_winding_bus(SECONDARY_SIDE) or bus==get_winding_bus(TERTIARY_SIDE))
         non_metered_end_bus = bus;
@@ -88,7 +88,7 @@ void TRANSFORMER::set_winding_bus(TRANSFORMER_WINDING_SIDE winding, size_t bus)
         return;
     }
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(bus==0 and winding!=TERTIARY_SIDE)
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<get_winding_name(winding)<<" winding bus of transformer."<<endl
@@ -125,7 +125,7 @@ void TRANSFORMER::set_winding_connection_type(TRANSFORMER_WINDING_SIDE winding, 
 void TRANSFORMER::set_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE winding, double v)
 {
     size_t bus = get_winding_bus(winding);
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(v==0.0)
@@ -145,7 +145,7 @@ void TRANSFORMER::set_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE win
 void TRANSFORMER::set_winding_nominal_capacity_in_MVA(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2, double s)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(winding1==winding2)
     {
         osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to set winding nominal capacity.";
@@ -176,7 +176,7 @@ void TRANSFORMER::set_leakage_impedance_between_windings_based_on_winding_nomina
     ostringstream osstream;
     if(winding1==winding2)
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to set winding leakage impedance.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
@@ -190,7 +190,7 @@ void TRANSFORMER::set_leakage_impedance_between_windings_based_on_winding_nomina
     }
     if(z==0.0)
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         osstream<<"Warning. The leakage impedance between "<<get_winding_name(winding1)<<" and "<<get_winding_name(winding2)<<" windings is zero for "<<get_device_name()<<endl
                 <<"Correction is required. Check original data.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -262,7 +262,7 @@ void TRANSFORMER::set_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding, s
         winding_controlled_bus[winding] = winding_bus;
     else
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         if(psdb.is_bus_exist(bus))
             winding_controlled_bus[winding] = bus;
@@ -354,7 +354,7 @@ double TRANSFORMER::get_winding_nominal_capacity_in_MVA(TRANSFORMER_WINDING_SIDE
     ostringstream osstream;
     if(winding1==winding2)
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding nominal capacity. Zero will be returned.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
@@ -377,7 +377,7 @@ complex<double> TRANSFORMER::get_leakage_impedance_between_windings_based_on_win
     ostringstream osstream;
     if(winding1==winding2)
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding nominal leakage impedance. Zero will be returned.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 0.0;
@@ -599,7 +599,7 @@ bool TRANSFORMER::is_connected_to_bus(size_t bus) const
 
 bool TRANSFORMER::is_in_area(size_t area) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(is_two_winding_transformer())
     {
@@ -640,7 +640,7 @@ bool TRANSFORMER::is_in_area(size_t area) const
 
 bool TRANSFORMER::is_in_zone(size_t zone) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(is_two_winding_transformer())
@@ -682,7 +682,7 @@ bool TRANSFORMER::is_in_zone(size_t zone) const
 
 void TRANSFORMER::report() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(is_two_winding_transformer())
         osstream<<"Two winding transformer '"<<get_identifier()<<"' connecting to bus "
@@ -717,7 +717,7 @@ void TRANSFORMER::set_model(const MODEL* model)
 {
     ostringstream osstream;
     osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -727,7 +727,7 @@ TRANSFORMER& TRANSFORMER::operator=(const TRANSFORMER& transformer)
 
     clear();
 
-    set_toolkit(transformer.get_toolkit());
+    set_toolkit(transformer.get_toolkit(__PRETTY_FUNCTION__));
 
     if(transformer.get_winding_bus(PRIMARY_SIDE)!=0)
         set_winding_bus(PRIMARY_SIDE, transformer.get_winding_bus(PRIMARY_SIDE));
@@ -905,7 +905,7 @@ complex<double> TRANSFORMER::get_two_winding_trans_star_bus_complex_voltage_in_p
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
@@ -961,7 +961,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_star_bus_complex_voltage_in
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
@@ -1118,7 +1118,7 @@ complex<double> TRANSFORMER::get_two_winding_trans_primary_winding_complex_curre
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> Z = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
@@ -1148,7 +1148,7 @@ complex<double> TRANSFORMER::get_two_winding_trans_secondary_winding_complex_cur
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> Z = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
@@ -1178,7 +1178,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_primary_winding_complex_cur
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
@@ -1210,7 +1210,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_secondary_winding_complex_c
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
@@ -1242,7 +1242,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_tertiary_winding_complex_cu
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> Zps_original = get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
@@ -1288,7 +1288,7 @@ complex<double> TRANSFORMER::get_primary_winding_complex_current_in_kA() const
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double Vbase = psdb.get_bus_base_voltage_in_kV(get_winding_bus(PRIMARY_SIDE));
@@ -1303,7 +1303,7 @@ complex<double> TRANSFORMER::get_secondary_winding_complex_current_in_kA() const
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double Vbase = psdb.get_bus_base_voltage_in_kV(get_winding_bus(SECONDARY_SIDE));
@@ -1318,7 +1318,7 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_current_in_kA() const
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double Vbase = psdb.get_bus_base_voltage_in_kV(get_winding_bus(TERTIARY_SIDE));
@@ -1347,7 +1347,7 @@ complex<double> TRANSFORMER::get_primary_winding_complex_power_in_pu() const
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> V, I;
@@ -1362,7 +1362,7 @@ complex<double> TRANSFORMER::get_secondary_winding_complex_power_in_pu() const
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> V, I;
@@ -1377,7 +1377,7 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_power_in_pu() const
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> V, I;
@@ -1403,7 +1403,7 @@ complex<double> TRANSFORMER::get_winding_complex_power_in_MVA(TRANSFORMER_WINDIN
 complex<double> TRANSFORMER::get_primary_winding_complex_power_in_MVA() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return get_primary_winding_complex_power_in_pu()*psdb.get_system_base_power_in_MVA();
@@ -1412,7 +1412,7 @@ complex<double> TRANSFORMER::get_primary_winding_complex_power_in_MVA() const
 complex<double> TRANSFORMER::get_secondary_winding_complex_power_in_MVA() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return get_secondary_winding_complex_power_in_pu()*psdb.get_system_base_power_in_MVA();
@@ -1421,7 +1421,7 @@ complex<double> TRANSFORMER::get_secondary_winding_complex_power_in_MVA() const
 complex<double> TRANSFORMER::get_tertiary_winding_complex_power_in_MVA() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return get_tertiary_winding_complex_power_in_pu()*psdb.get_system_base_power_in_MVA();
@@ -1430,7 +1430,7 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_power_in_MVA() const
 complex<double> TRANSFORMER::get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(TRANSFORMER_WINDING_SIDE winding1, TRANSFORMER_WINDING_SIDE winding2) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(winding1==winding2)
     {
         osstream<<"Warning. The same windings ("<<get_winding_name(winding1)<<") are not allowed to get winding leakage impedance based on system base. Zero will be returned.";
@@ -1474,7 +1474,7 @@ double TRANSFORMER::get_winding_off_nominal_turn_ratio_in_pu(TRANSFORMER_WINDING
 double TRANSFORMER::get_primary_winding_off_nominal_turn_ratio_in_pu() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double Tr = get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE);
@@ -1487,7 +1487,7 @@ double TRANSFORMER::get_primary_winding_off_nominal_turn_ratio_in_pu() const
 double TRANSFORMER::get_secondary_winding_off_nominal_turn_ratio_in_pu() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double Tr = get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE);
@@ -1503,7 +1503,7 @@ double TRANSFORMER::get_tertiary_winding_off_nominal_turn_ratio_in_pu() const
         return 0.0;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double Tr = get_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE);
@@ -1518,7 +1518,7 @@ complex<double> TRANSFORMER::get_magnetizing_admittance_based_on_winding_normina
     complex<double> Y = get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu();
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double Vnom = get_winding_nominal_voltage_in_kV(PRIMARY_SIDE);

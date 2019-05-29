@@ -450,14 +450,14 @@ bool IEEEG1SB::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEEEG1SB::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     droop.set_toolkit(toolkit);
     servo_motor.set_toolkit(toolkit);
     delayer1.set_toolkit(toolkit);
@@ -476,7 +476,7 @@ void IEEEG1SB::initialize()
     ostringstream osstream;
     if(is_model_initialized())
         return;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     GENERATOR* generator = get_generator_pointer();
     if(generator==NULL)
@@ -634,7 +634,7 @@ void IEEEG1SB::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void IEEEG1SB::save()

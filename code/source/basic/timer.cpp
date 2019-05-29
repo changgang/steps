@@ -53,7 +53,7 @@ void TIMER::start()
     if(device==NULL)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     time_when_timer_is_started_in_s = toolkit.get_dynamic_simulation_time_in_s();
 }
 
@@ -76,7 +76,7 @@ bool TIMER::is_timed_out() const
         return false;
     else
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
         if(TIME>(time_when_timer_is_started_in_s+time_interval_in_s-FLOAT_EPSILON))

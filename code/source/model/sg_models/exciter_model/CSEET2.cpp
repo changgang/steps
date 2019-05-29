@@ -531,14 +531,14 @@ bool CSEET2::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void CSEET2::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     sensor.set_toolkit(toolkit);
     serial_tuner1_lead_lag.set_toolkit(toolkit);
     serial_tuner1_pi.set_toolkit(toolkit);
@@ -719,7 +719,7 @@ double CSEET2::get_excitation_voltage_in_pu() const
     double Vrmax = get_VRmax_in_pu();
     double Vrmin = get_VRmin_in_pu();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = generator->get_generator_bus();
     double Vt = psdb.get_bus_voltage_in_pu(bus);
@@ -750,7 +750,7 @@ void CSEET2::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

@@ -268,14 +268,14 @@ bool WT3P0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void WT3P0::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     speed_reference_sensor.set_toolkit(toolkit);
     speed_controller.set_toolkit(toolkit);
     frequency_sensor.set_toolkit(toolkit);
@@ -299,7 +299,7 @@ void WT3P0::initialize()
 
     set_block_toolkit();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
 
@@ -413,7 +413,7 @@ void WT3P0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 void WT3P0::save()
@@ -540,7 +540,7 @@ void WT3P0::set_model_data_with_name(string par_name, double value)
     if(par_name == "PITCH MAX IN DEG")        return set_Pitchmax_in_deg(value);
     if(par_name == "T PITCH IN S")            return set_Tp_in_s(value);
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return;
 }

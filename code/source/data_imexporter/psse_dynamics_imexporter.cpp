@@ -12,7 +12,7 @@ void PSSE_IMEXPORTER::load_dynamic_data(string file)
 {
     ostringstream osstream;
     osstream<<"Loading dynamic data from PSS/E file: "<<file;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     //file = string2upper(file);
@@ -25,7 +25,7 @@ void PSSE_IMEXPORTER::load_dynamic_data(string file)
 
 void PSSE_IMEXPORTER::load_dynamic_data_into_ram(string file)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     dyr_data_in_ram.clear();
@@ -94,7 +94,7 @@ void PSSE_IMEXPORTER::load_one_model(string data)
     //for(size_t i=0; i<record.size();++i)
     //    cout<<record[i]<<endl;
     STEPS_IMEXPORTER importer;
-    importer.set_toolkit(get_toolkit());
+    importer.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
     importer.load_one_model(record);
     //cout<<"done. Now go to next one"<<endl;
 }

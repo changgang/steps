@@ -26,7 +26,7 @@ string LOAD_MODEL::get_model_type() const
 
 double LOAD_MODEL::get_bus_voltage_in_pu() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LOAD* load = get_load_pointer();
@@ -36,7 +36,7 @@ double LOAD_MODEL::get_bus_voltage_in_pu() const
 }
 double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     LOAD* load = get_load_pointer();

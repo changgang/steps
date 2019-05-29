@@ -47,7 +47,7 @@ void INTEGRAL_BLOCK::initialize()
     double vmax = get_upper_limit();
     double vmin = get_lower_limit();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double s = y;
@@ -90,7 +90,7 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 
 void INTEGRAL_BLOCK::integrate()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();
@@ -149,7 +149,7 @@ void INTEGRAL_BLOCK::integrate()
 
 void INTEGRAL_BLOCK::update()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();

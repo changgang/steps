@@ -337,14 +337,14 @@ bool ESTR0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void ESTR0::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     active_lead_lag_1.set_toolkit(toolkit);
     active_lead_lag_2.set_toolkit(toolkit);
@@ -555,7 +555,7 @@ complex<double> ESTR0::get_terminal_complex_current_in_pu_based_on_sbase() const
     complex<double> I = get_terminal_complex_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -572,7 +572,7 @@ complex<double> ESTR0::get_terminal_complex_current_in_kA() const
     ENERGY_STORAGE* estorage = (ENERGY_STORAGE*) get_device_pointer();
     size_t bus = estorage->get_energy_storage_bus();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double vbase = psdb.get_bus_base_voltage_in_kV(bus);
 
@@ -612,7 +612,7 @@ void ESTR0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

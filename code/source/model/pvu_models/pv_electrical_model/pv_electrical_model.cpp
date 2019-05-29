@@ -43,7 +43,7 @@ complex<double> PV_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() co
     if(pv_unit==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = pv_unit->get_unit_bus();
@@ -68,7 +68,7 @@ double PV_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
     if(pv_unit==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = pv_unit->get_unit_bus();
@@ -117,7 +117,7 @@ void PV_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
     if(source==NULL)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = get_bus_to_regulate();

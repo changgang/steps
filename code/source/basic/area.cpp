@@ -20,7 +20,7 @@ AREA::~AREA()
 
 void AREA::set_area_number(size_t number)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(number!=0)
         this->area_number = number;
@@ -40,7 +40,7 @@ void AREA::set_area_name(string name)
 
 void AREA::set_area_swing_bus(size_t bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(bus==0)
     {
         set_area_swing_bus_with_zero_input();
@@ -65,7 +65,7 @@ void AREA::set_area_swing_bus(size_t bus)
 
 void AREA::set_area_swing_bus_with_zero_input()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     bool found_slack_bus_in_this_area = false;
@@ -93,7 +93,7 @@ void AREA::set_area_swing_bus_with_zero_input()
 
 void AREA::set_area_swing_bus_with_existing_bus(size_t bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -134,7 +134,7 @@ void AREA::set_area_power_mismatch_tolerance_in_MW(double P)
         this->area_power_mismatch_tolerance_in_MW = P;
     else
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         ostringstream osstream;
         osstream<<"Warning. Non-positive area power mismatch tolerance ("<<P<<" MW) is not allowed for setting up area "<<get_area_number()<<"."<<endl
           <<"10.0MW will be set automatically.";
@@ -193,7 +193,7 @@ void AREA::clear()
 
 void AREA::report() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     size_t bus = get_area_swing_bus();

@@ -250,14 +250,14 @@ bool IEEET1::setup_model_with_bpa_string(string data)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input data is provided: "<<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void IEEET1::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     sensor.set_toolkit(toolkit);
     regulator.set_toolkit(toolkit);
     feedbacker.set_toolkit(toolkit);
@@ -283,7 +283,7 @@ void IEEET1::initialize()
 
     set_block_toolkit();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double Ecomp = get_compensated_voltage_in_pu();
 
     sensor.set_output(Ecomp);
@@ -373,7 +373,7 @@ void IEEET1::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

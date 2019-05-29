@@ -65,14 +65,14 @@ void PROPORTIONAL_BLOCK::initialize()
         if(y>vmax)
         {
             osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds upper limit bound ("<<vmax<<").";
-            STEPS& toolkit = get_toolkit();
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             toolkit.show_information_with_leading_time_stamp(osstream);
             return;
         }
         if(y<vmin)
         {
             osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds lower limit bound ("<<vmin<<").";
-            STEPS& toolkit = get_toolkit();
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             toolkit.show_information_with_leading_time_stamp(osstream);
             return;
         }

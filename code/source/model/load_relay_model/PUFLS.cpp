@@ -288,14 +288,14 @@ bool PUFLS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void PUFLS::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     frequency_sensor.set_toolkit(toolkit);
     additional_stage_timer.set_toolkit(toolkit);
@@ -312,7 +312,7 @@ void PUFLS::initialize()
 
     set_block_toolkit();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     double fbase = get_bus_base_frequency_in_Hz();
 
@@ -347,7 +347,7 @@ void PUFLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
@@ -403,7 +403,7 @@ void PUFLS::append_new_minimum_frequency()
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
@@ -435,7 +435,7 @@ void PUFLS::update_continuous_shed_command()
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     double f_th = get_continuous_frequency_threshold_in_Hz();
@@ -621,7 +621,7 @@ void PUFLS::trip_additional_stage()
     if(is_additional_stage_tripped())
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
@@ -638,7 +638,7 @@ void PUFLS::try_to_start_additional_stage_timer()
     if(is_additional_stage_timer_started())
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
@@ -699,7 +699,7 @@ void PUFLS::try_to_reset_additional_stage_timer()
     if(not is_additional_stage_timer_started())
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;

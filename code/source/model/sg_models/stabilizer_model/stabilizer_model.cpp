@@ -22,7 +22,7 @@ string STABILIZER_MODEL::get_model_type() const
 
 void STABILIZER_MODEL::set_input_signal_at_slot(size_t slot, SIGNAL& signal)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(not signal.is_valid())
     {
@@ -124,7 +124,7 @@ string STABILIZER_MODEL::convert_signal_type_number_to_string(size_t signal_type
 SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_type, size_t bus)
 {
     SIGNAL signal;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(bus==0)

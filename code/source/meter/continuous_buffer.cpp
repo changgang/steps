@@ -112,7 +112,7 @@ size_t CONTINUOUS_BUFFER::get_buffer_size() const
 
 void CONTINUOUS_BUFFER::initialize_buffer(double initial_time, double value)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     index_of_buffer_head = 0;
@@ -242,6 +242,6 @@ void CONTINUOUS_BUFFER::show_buffer() const
     {
         osstream<<get_buffer_time_at_delay_index(i)<<","<<get_buffer_value_at_delay_index(i)<<endl;
     }
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }

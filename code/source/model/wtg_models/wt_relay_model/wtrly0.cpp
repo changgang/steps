@@ -253,14 +253,14 @@ bool WTRLY0::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void WTRLY0::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {
         vwind_relay_timer[i].set_toolkit(toolkit);
@@ -327,7 +327,7 @@ void WTRLY0::check_wind_speed_relay()
 
     DEVICE_ID did = get_device_id();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
     double vwind = get_wind_speed_in_pu();
@@ -403,7 +403,7 @@ void WTRLY0::check_rotor_speed_relay()
 
     DEVICE_ID did = get_device_id();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
     double speed = get_wt_generator_rotor_speed_in_pu();
@@ -479,7 +479,7 @@ void WTRLY0::check_bus_frequency_relay()
 
     DEVICE_ID did = get_device_id();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
     double freq = get_bus_frequency_in_pu();
@@ -555,7 +555,7 @@ void WTRLY0::check_bus_voltage_relay()
 
     DEVICE_ID did = get_device_id();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
     double volt = get_bus_voltage_in_pu();
@@ -631,7 +631,7 @@ void WTRLY0::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -743,7 +743,7 @@ void WTRLY0::prepare_model_data_table()
 
 double WTRLY0::get_model_data_with_name(string par_name) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     par_name = string2upper(par_name);
     if(is_model_data_exist(par_name))
     {
@@ -759,7 +759,7 @@ double WTRLY0::get_model_data_with_name(string par_name) const
 
 void WTRLY0::set_model_data_with_name(string par_name, double value)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     par_name = string2upper(par_name);
     if(is_model_data_exist(par_name))
     {

@@ -42,7 +42,7 @@ void POWERFLOW_SOLVER::clear()
 
 NETWORK_MATRIX& POWERFLOW_SOLVER::get_network_matrix()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     return toolkit.get_network_matrix();
 }
 
@@ -62,7 +62,7 @@ void POWERFLOW_SOLVER::set_allowed_max_active_power_imbalance_in_MW(double P)
         P_threshold_in_MW = P;
     else
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Non-positive (%fMW) is not allowed for setting convergence threshold of"
                  "active power imbalance for powerflow solution.\n0.01MW will be set automatically.", P);
@@ -77,7 +77,7 @@ void POWERFLOW_SOLVER::set_allowed_max_reactive_power_imbalance_in_MVar(double Q
         Q_threshold_in_MVar = Q;
     else
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Non-positive (%fMVar) is not allowed for setting convergence threshold of"
                  "reactive power imbalance for powerflow solution.\n0.01MVar will be set automatically.", Q);
@@ -151,7 +151,7 @@ bool POWERFLOW_SOLVER::get_export_jacobian_matrix_step_by_step_logic() const
 
 void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(psdb.get_bus_count()==0)
         return;
@@ -244,7 +244,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 
 void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(psdb.get_bus_count()==0)
         return;
@@ -379,7 +379,7 @@ void POWERFLOW_SOLVER::solve_with_modified_Gaussian_Seidel_solution()
 
 void POWERFLOW_SOLVER::initialize_powerflow_solver()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Initializing powerflow solver.");
     toolkit.show_information_with_leading_time_stamp(buffer);
@@ -407,7 +407,7 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
 
 void POWERFLOW_SOLVER::initialize_bus_type()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     bool flat_flag = get_flat_start_logic();
 
@@ -437,7 +437,7 @@ void POWERFLOW_SOLVER::initialize_bus_type()
 
 void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<SOURCE*> sources = psdb.get_all_sources();
     size_t nsource = sources.size();
@@ -471,7 +471,7 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 
 void POWERFLOW_SOLVER::initialize_bus_voltage()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<BUS*> buses;
@@ -514,7 +514,7 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
 
 void POWERFLOW_SOLVER::optimize_bus_numbers()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     network_matrix.optimize_network_ordering();
     /*ostringstream osstream;
@@ -533,7 +533,7 @@ void POWERFLOW_SOLVER::optimize_bus_numbers()
 
 void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -599,7 +599,7 @@ bool POWERFLOW_SOLVER::get_convergence_flag() const
 
 bool POWERFLOW_SOLVER::is_converged()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     osstream<<"Check maximum active and reactive power mismatch.";
     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -620,7 +620,7 @@ bool POWERFLOW_SOLVER::is_converged()
 
 void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t nhvdc = hvdcs.size();
@@ -636,7 +636,7 @@ void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -696,7 +696,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     calculate_raw_bus_current_into_network();
@@ -734,7 +734,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
 
 void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -784,7 +784,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
 }
 void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -830,7 +830,7 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 
 void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -863,7 +863,7 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 
 void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -909,7 +909,7 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 
 double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
 
@@ -941,7 +941,7 @@ double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
 
 double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
 
@@ -972,7 +972,7 @@ double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
 
 bool POWERFLOW_SOLVER::check_bus_type_constraints()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t physical_bus;
@@ -1022,7 +1022,7 @@ bool POWERFLOW_SOLVER::check_bus_type_constraints()
 
 void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(size_t physical_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -1067,7 +1067,7 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(size_t physica
 
 bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -1142,7 +1142,7 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
 
 bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t physical_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -1356,7 +1356,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
 
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(size_t physical_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
 
@@ -1366,7 +1366,7 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_min(size_t physical_
 }
 void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
 
@@ -1452,7 +1452,7 @@ vector<double> POWERFLOW_SOLVER::get_bus_Q_power_mismatch_vector_for_decoupled_s
 
 void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -1565,7 +1565,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
 
 void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -1644,7 +1644,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
 
 void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -1723,7 +1723,7 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
 
 void POWERFLOW_SOLVER::show_powerflow_result()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ostringstream osstream;
@@ -1776,7 +1776,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
 }
 void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ostringstream osstream;
@@ -2001,7 +2001,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
 
 void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ostringstream osstream;
@@ -2241,14 +2241,14 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
 
 void POWERFLOW_SOLVER::save_network_matrix_to_file(string filename) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
     network_matrix.save_network_matrix_to_file(filename);
 }
 
 void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(string filename)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
 /*    JACOBIAN_BUILDER jacobian_builder;
@@ -2262,9 +2262,9 @@ void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(string filename)
 
 void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(string filename) const
 {
-    STEPS& toolkit = get_toolkit();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream file(filename);
     if(not file.is_open())

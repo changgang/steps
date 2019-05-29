@@ -82,7 +82,7 @@ double PV_UNIT::get_rated_power_per_pv_unit_in_MW() const
 void PV_UNIT::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(get_status()==false)
         return;
@@ -141,7 +141,7 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
 
 void PV_UNIT::report() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
@@ -194,7 +194,7 @@ void PV_UNIT::set_model(const MODEL* model)
 
     ostringstream osstream;
     osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up pv unit-related model.";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -204,7 +204,7 @@ void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
     if(model==NULL)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(model->get_model_type()!="PV UNIT")
     {
         osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up pv converter model.";
@@ -330,7 +330,7 @@ PV_UNIT& PV_UNIT::operator=(const PV_UNIT& gen)
 
     clear();
 
-    set_toolkit(gen.get_toolkit());
+    set_toolkit(gen.get_toolkit(__PRETTY_FUNCTION__));
 
     set_unit_bus(gen.get_unit_bus());
     set_identifier(gen.get_identifier());

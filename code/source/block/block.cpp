@@ -141,7 +141,7 @@ void BLOCK::check_limiter() const
         {
             ostringstream osstream;
             osstream<<"Error. Limiter upper bound ("<<upper_limit<<") is less than lower bound ("<<lower_limit<<").";
-            STEPS& toolkit = get_toolkit();
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

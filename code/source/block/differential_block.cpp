@@ -33,7 +33,7 @@ void DIFFERENTIAL_BLOCK::set_T_in_s(double t)
     {
         ostringstream osstream;
         osstream<<"Error. Zero time constant T is not allowed for DIFFERENTIAL_BLOCK.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -47,7 +47,7 @@ double DIFFERENTIAL_BLOCK::get_T_in_s() const
 
 void DIFFERENTIAL_BLOCK::initialize()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double k = get_K();
@@ -78,7 +78,7 @@ void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
 
 void DIFFERENTIAL_BLOCK::integrate()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double k = get_K();
@@ -104,7 +104,7 @@ void DIFFERENTIAL_BLOCK::integrate()
 
 void DIFFERENTIAL_BLOCK::update()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double k = get_K();
@@ -130,7 +130,7 @@ void DIFFERENTIAL_BLOCK::check()
     {
         ostringstream osstream;
         osstream<<"Warning. Limiter is not allowed for DIFFERENTIAL_BLOCK, and will be disabled.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);;
     }
 }

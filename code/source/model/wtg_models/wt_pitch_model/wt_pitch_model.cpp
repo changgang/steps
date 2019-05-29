@@ -59,7 +59,7 @@ double WT_PITCH_MODEL::get_bus_frequency_in_pu() const
     if(gen==NULL)
         return 1.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = gen->get_generator_bus();
@@ -72,7 +72,7 @@ double WT_PITCH_MODEL::get_bus_frequency_deviation_in_pu() const
     if(gen==NULL)
         return 1.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = gen->get_generator_bus();

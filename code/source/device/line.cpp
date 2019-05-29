@@ -19,7 +19,7 @@ LINE::~LINE()
 void LINE::set_sending_side_bus(size_t bus)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(bus==0)
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up sending side bus of line."<<endl
@@ -45,7 +45,7 @@ void LINE::set_sending_side_bus(size_t bus)
 void LINE::set_receiving_side_bus(size_t bus)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(bus==0)
     {
@@ -222,7 +222,7 @@ double LINE::get_length() const
 
 bool LINE::is_zero_impedance_line() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double z_th = psdb.get_zero_impedance_threshold_in_pu();
     double y = abs(get_line_positive_sequence_y_in_pu());
@@ -239,7 +239,7 @@ void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
     if(not is_connected_to_bus(to_bus))
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(location<0.0 or location>1.0)
     {
         osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<get_device_name()<<"."<<endl
@@ -286,7 +286,7 @@ void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
 
 double LINE::get_fault_location_of_fault(size_t index) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(index>=get_fault_count())
     {
@@ -339,7 +339,7 @@ void LINE::clear_fault_at_location(size_t to_bus, double location)
     if(location<0.0 or location>1.0)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(to_bus == get_receiving_side_bus())
         location = 1.0-location;
@@ -392,7 +392,7 @@ bool LINE::is_valid() const
 void LINE::check()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(psdb.get_bus_base_voltage_in_kV(get_sending_side_bus()) !=
@@ -436,7 +436,7 @@ bool LINE::is_connected_to_bus(size_t bus) const
 
 bool LINE::is_in_area(size_t area) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr_send = psdb.get_bus(get_sending_side_bus());
     BUS* busptr_rec = psdb.get_bus(get_receiving_side_bus());
@@ -455,7 +455,7 @@ bool LINE::is_in_area(size_t area) const
 
 bool LINE::is_in_zone(size_t zone) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr_send = psdb.get_bus(get_sending_side_bus());
     BUS* busptr_rec = psdb.get_bus(get_receiving_side_bus());
@@ -474,7 +474,7 @@ bool LINE::is_in_zone(size_t zone) const
 
 void LINE::report() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<((get_sending_side_breaker_status()==true and get_receiving_side_breaker_status()==true)?"in service":"out of service")<<", "
       <<"line R+jX = "<<setw(8)<<setprecision(4)<<fixed<<get_line_positive_sequence_z_in_pu()<<" pu, "
@@ -492,7 +492,7 @@ void LINE::save() const
 void LINE::set_model(const MODEL* model)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -503,7 +503,7 @@ LINE& LINE::operator=(const LINE& line)
 
     clear();
 
-    set_toolkit(line.get_toolkit());
+    set_toolkit(line.get_toolkit(__PRETTY_FUNCTION__));
 
     set_sending_side_bus(line.get_sending_side_bus());
     set_receiving_side_bus(line.get_receiving_side_bus());
@@ -559,7 +559,7 @@ DEVICE_ID LINE::get_device_id() const
 
 double LINE::get_line_base_voltage_in_kV() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return psdb.get_bus_base_voltage_in_kV(get_sending_side_bus());
@@ -568,28 +568,28 @@ double LINE::get_line_base_voltage_in_kV() const
 
 complex<double> LINE::get_line_complex_voltage_at_sending_side_in_pu() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_complex_voltage_in_pu(get_sending_side_bus());
 }
 
 complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_pu() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_complex_voltage_in_pu(get_receiving_side_bus());
 }
 
 complex<double> LINE::get_line_complex_voltage_at_sending_side_in_kV() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_complex_voltage_in_kV(get_sending_side_bus());
 }
 
 complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_kV() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.get_bus_complex_voltage_in_kV(get_receiving_side_bus());
 }
@@ -644,7 +644,7 @@ complex<double> LINE::get_line_complex_current_at_receiving_side_in_pu() const
 
 complex<double> LINE::get_line_complex_current_at_sending_side_in_kA() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double mvabase = psdb.get_system_base_power_in_MVA();
@@ -656,7 +656,7 @@ complex<double> LINE::get_line_complex_current_at_sending_side_in_kA() const
 
 complex<double> LINE::get_line_complex_current_at_receiving_side_in_kA() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double mvabase = psdb.get_system_base_power_in_MVA();
@@ -678,7 +678,7 @@ complex<double> LINE::get_line_complex_power_at_receiving_side_in_pu() const
 
 complex<double> LINE::get_line_complex_power_at_sending_side_in_MVA() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double mvabase = psdb.get_system_base_power_in_MVA();
@@ -688,7 +688,7 @@ complex<double> LINE::get_line_complex_power_at_sending_side_in_MVA() const
 
 complex<double> LINE::get_line_complex_power_at_receiving_side_in_MVA() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double mvabase = psdb.get_system_base_power_in_MVA();
@@ -714,7 +714,7 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_p
 
 complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double mvabase = psdb.get_system_base_power_in_MVA();
@@ -731,7 +731,7 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm
 
 complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_ohm() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double mvabase = 100.0;

@@ -305,7 +305,7 @@ void WT_AERODYNAMIC_MODEL::initialize()
 {
     ostringstream osstream;
     osstream<<"Now go initialize "<<get_model_name()<<" model of "<<get_device_name()<<endl;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
@@ -377,7 +377,7 @@ void WT_AERODYNAMIC_MODEL::initialize_wind_turbine_blade_radius_and_gear_ratio()
 
 void WT_AERODYNAMIC_MODEL::initialize_turbine_blade_radius_with_nominal_parameters()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(get_rated_power_per_wt_generator_in_MW()<=0.0)
     {
@@ -459,7 +459,7 @@ void WT_AERODYNAMIC_MODEL::initialize_generator_to_turbine_gear_ratio()
     set_generator_to_turbine_gear_ratio(turnratio);
 
     osstream<<"Turbine gear ratio is initialized as: "<<turnratio;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return;
 }
@@ -480,7 +480,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed()
     ostringstream osstream;
 
     osstream<<"Now go initialize WT generator pitch angle and turbine speed."<<endl;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     double pmax = get_maximum_available_mechanical_power_per_wt_generator_in_MW(get_wind_speed_in_mps());
@@ -520,7 +520,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_undersp
         if(get_turbine_speed_mode()==WT_OVERSPEED_MODE)
             osstream<<"OVERSPEED mode";
     }
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     set_initial_pitch_angle_in_deg(0.0);
@@ -570,7 +570,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
     ostringstream osstream;
 
     osstream<<"Now go initialize pitch angle and turbine speed of "<<get_device_name()<<" with turbine speed mode: MPPT mode";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
@@ -716,7 +716,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
 void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen==NULL)
@@ -947,7 +947,7 @@ void WT_AERODYNAMIC_MODEL::set_current_pitch_angle_in_deg(double pitch)
 
 void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_angle()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     double pitch = get_current_pitch_angle_in_deg();
@@ -1040,7 +1040,7 @@ void WT_AERODYNAMIC_MODEL::set_current_pelec_including_loss_per_turbine_in_MW(do
 
 void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     double pitch = get_current_pitch_angle_in_deg();

@@ -80,7 +80,7 @@ void ENERGY_STORAGE::set_model(const MODEL* model)
     }
     ostringstream osstream;
     osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -89,7 +89,7 @@ void ENERGY_STORAGE::set_energy_storage_model(const ENERGY_STORAGE_MODEL* model)
     if(model==NULL)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(model->get_model_type()!="ENERGY STORAGE")
     {
         ostringstream osstream;
@@ -178,7 +178,7 @@ void ENERGY_STORAGE::report() const
       <<"Q = "<<setw(8)<<setprecision(4)<<fixed<<get_q_generation_in_MVar()<<" MVar, "
       <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
       <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -193,7 +193,7 @@ ENERGY_STORAGE& ENERGY_STORAGE::operator=(const ENERGY_STORAGE& estorage)
 
     clear();
 
-    set_toolkit(estorage.get_toolkit());
+    set_toolkit(estorage.get_toolkit(__PRETTY_FUNCTION__));
 
     set_energy_storage_bus(estorage.get_energy_storage_bus());
     set_identifier(estorage.get_identifier());

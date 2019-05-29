@@ -24,13 +24,13 @@ void FIXED_SHUNT::set_shunt_bus(size_t shunt_bus)
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up fixed shunt bus."<<endl
           <<"0 will be set to indicate invalid fixed shunt.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
         this->bus = 0;
         return;
     }
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(psdb.is_bus_exist(shunt_bus))
         this->bus = shunt_bus;
@@ -85,7 +85,7 @@ complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
 
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     double mvabase = psdb.get_system_base_power_in_MVA();
@@ -129,7 +129,7 @@ bool FIXED_SHUNT::is_connected_to_bus(size_t target_bus) const
 
 bool FIXED_SHUNT::is_in_area(size_t area) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_shunt_bus());
     if(busptr!=NULL)
@@ -142,7 +142,7 @@ bool FIXED_SHUNT::is_in_area(size_t area) const
 
 bool FIXED_SHUNT::is_in_zone(size_t zone) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(get_shunt_bus());
     if(busptr!=NULL)
@@ -158,7 +158,7 @@ void FIXED_SHUNT::report() const
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
       <<"P+jQ[Z] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_impedance_shunt_in_MVA()<<" MVA.";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -171,7 +171,7 @@ void FIXED_SHUNT::set_model(const MODEL* model)
 {
     ostringstream osstream;
     osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -181,7 +181,7 @@ FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)
 
     clear();
 
-    set_toolkit(fixed_shunt.get_toolkit());
+    set_toolkit(fixed_shunt.get_toolkit(__PRETTY_FUNCTION__));
 
     set_shunt_bus(fixed_shunt.get_shunt_bus());
     set_identifier(fixed_shunt.get_identifier());
@@ -219,7 +219,7 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 
     complex<double> S0 = get_nominal_impedance_shunt_in_MVA();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     BUS* busptr = psdb.get_bus(get_shunt_bus());

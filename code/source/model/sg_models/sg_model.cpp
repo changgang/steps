@@ -32,7 +32,7 @@ double SG_MODEL::get_bus_base_frequency_in_Hz() const
     if(gen==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     return psdb.get_bus_base_frequency_in_Hz(gen->get_generator_bus());
@@ -44,7 +44,7 @@ complex<double> SG_MODEL::get_terminal_complex_voltage_in_pu() const
     if(gen==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = gen->get_generator_bus();

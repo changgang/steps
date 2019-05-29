@@ -37,7 +37,7 @@ LOAD::~LOAD()
 void LOAD::set_load_bus(size_t load_bus)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(load_bus==0)
     {
@@ -212,7 +212,7 @@ void LOAD::report() const
       <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_power_load_in_MVA()<<" MVA, "
       <<"P+jQ[I part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_current_load_in_MVA()<<" MVA, "
       <<"P+jQ[Z part] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_constant_impedance_load_in_MVA()<<" MVA.";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -228,7 +228,7 @@ LOAD& LOAD::operator=(const LOAD& load)
 
     clear();
 
-    set_toolkit(load.get_toolkit());
+    set_toolkit(load.get_toolkit(__PRETTY_FUNCTION__));
     set_load_bus(load.get_load_bus());
     set_identifier(load.get_identifier());
     set_status(load.get_status());
@@ -280,7 +280,7 @@ complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
         return 0.0;
 
     complex<double> S0 = get_nominal_constant_power_load_in_MVA();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     BUS* busptr = psdb.get_bus(get_load_bus());
@@ -311,7 +311,7 @@ complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
         return 0.0;
 
     complex<double> S0 = get_nominal_constant_current_load_in_MVA();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     BUS* busptr = psdb.get_bus(get_load_bus());
@@ -337,7 +337,7 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
         return 0.0;
 
     complex<double> S0 = get_nominal_constant_impedance_load_in_MVA();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     BUS* busptr = psdb.get_bus(get_load_bus());
@@ -394,7 +394,7 @@ void LOAD::set_load_model(const LOAD_MODEL* model)
 {
     if(model->get_model_type()!="LOAD CHARACTERISTICS")
         return;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     LOAD_MODEL* oldmodel = get_load_model();
     if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
@@ -430,7 +430,7 @@ void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* mode
     if(model == NULL)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(model->get_model_type()!="LOAD FREQUENCY RELAY")
         return;
 
@@ -475,7 +475,7 @@ void LOAD::set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model)
 {
     if(model == NULL)
         return;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(model->get_model_type()!="LOAD VOLTAGE RELAY")
         return;
 
@@ -595,7 +595,7 @@ complex<double> LOAD::get_dynamic_load_in_MVA()
 
 complex<double> LOAD::get_dynamic_load_in_pu()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double sbase = toolkit.get_power_system_database().get_system_base_power_in_MVA();
 
     return get_dynamic_load_in_MVA()/sbase;
@@ -640,7 +640,7 @@ complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power
 {
     if(get_status())//==true
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         complex<double> S = get_dynamic_load_in_MVA()/psdb.get_system_base_power_in_MVA();
 

@@ -52,7 +52,7 @@ void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
     DELT = delt;
     ostringstream osstream;
     osstream<<"System dynamic simulation time step is set as :"<<DELT<<" s.";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -73,7 +73,7 @@ double DYNAMICS_SIMULATOR::get_dynamic_simulation_time_in_s()
 
 NETWORK_MATRIX& DYNAMICS_SIMULATOR::get_network_matrix()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     return toolkit.get_network_matrix();
 }
 
@@ -198,7 +198,7 @@ double DYNAMICS_SIMULATOR::get_rotor_angle_stability_threshold_in_deg() const
 
 void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(meter.is_valid())
     {
         meters.push_back(meter);
@@ -229,7 +229,7 @@ void DYNAMICS_SIMULATOR::prepare_meters()
 
 void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
@@ -267,7 +267,7 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
@@ -324,7 +324,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
@@ -452,7 +452,7 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_load_related_meters()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
@@ -482,7 +482,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_line_related_meters()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
@@ -509,7 +509,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
@@ -582,7 +582,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     METER_SETTER setter;
@@ -620,7 +620,7 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
 void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(not psdb.is_bus_exist(bus))
@@ -659,7 +659,7 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type
 void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(did.get_device_type()!="GENERATOR")
@@ -719,7 +719,7 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
 void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(did.get_device_type()!="WT GENERATOR")
@@ -803,7 +803,7 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
 void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(did.get_device_type()!="PV UNIT")
@@ -887,7 +887,7 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
 void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(did.get_device_type()!="PV UNIT")
@@ -973,7 +973,7 @@ void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meter(const DEVICE_ID& d
 void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(did.get_device_type()!="LOAD")
@@ -1021,7 +1021,7 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
 void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(did.get_device_type()!="LINE")
@@ -1074,7 +1074,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
 void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(did.get_device_type()!="HVDC")
@@ -1156,7 +1156,7 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meter(const DEVICE_ID& did, string
 void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     if(did.get_device_type()!="EQUIVALENT DEVICE")
@@ -1212,7 +1212,7 @@ size_t DYNAMICS_SIMULATOR::get_meter_count() const
 METER DYNAMICS_SIMULATOR::get_meter(size_t i)
 {
     METER voidmeter;
-    voidmeter.set_toolkit(get_toolkit());
+    voidmeter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
 
 
     if(meters.size()==0)
@@ -1263,7 +1263,7 @@ string DYNAMICS_SIMULATOR::get_output_file() const
 
 void DYNAMICS_SIMULATOR::open_meter_output_files()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(csv_output_file.is_open())
     {
@@ -1376,7 +1376,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     size_t n = meters.size();
     //osstream<<"save meter information: "<<n<<" meters were set. output file name is: "<<output_filename;
@@ -1473,7 +1473,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 
 void DYNAMICS_SIMULATOR::save_meter_values()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t n = meters.size();
     if(n==0)
         return;
@@ -1547,7 +1547,7 @@ void DYNAMICS_SIMULATOR::save_meter_values()
 
 void DYNAMICS_SIMULATOR::start()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWERFLOW_SOLVER& pf_solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -1555,18 +1555,19 @@ void DYNAMICS_SIMULATOR::start()
     osstream<<"Dynamics initialization starts.";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
+    if(not pf_solver.is_converged())
+    {
+        osstream<<"Warning. Powerflow is not converged. Please go check powerflow solution.\n"
+                <<"Any further simulation cannot be trusted.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+
     meter_values.resize(meters.size(), 0.0);
 
     toolkit.set_dynamic_simulation_time_in_s(-2.0*toolkit.get_dynamic_simulation_time_step_in_s());
 
     network_matrix.optimize_network_ordering();
 
-    /*if(not pf_solver.is_converged())
-    {
-        osstream<<"Warning. Powerflow is not converged. Please go check powerflow solution.\n"
-                <<"Any further simulation cannot be trusted.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }*/
 
     run_all_models(INITIALIZE_MODE);
 
@@ -1611,7 +1612,7 @@ void DYNAMICS_SIMULATOR::start()
 
 void DYNAMICS_SIMULATOR::stop()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //if(toolkit.get_dynamic_simulation_time_in_s() >0.0)
     ostringstream osstream;
     osstream<<"Dynamics simulation stops at simulation time: "<<toolkit.get_dynamic_simulation_time_in_s()<<"s.";
@@ -1629,7 +1630,7 @@ void DYNAMICS_SIMULATOR::stop()
 
 double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<GENERATOR*> gens = psdb.get_all_generators();
     size_t n = gens.size();
@@ -1658,7 +1659,7 @@ double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 
 void DYNAMICS_SIMULATOR::run_to(double time)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     update_with_event();
     while(toolkit.get_dynamic_simulation_time_in_s()<=time-FLOAT_EPSILON)
     {
@@ -1684,7 +1685,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 void DYNAMICS_SIMULATOR::run_a_step()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     toolkit.set_dynamic_simulation_time_in_s(toolkit.get_dynamic_simulation_time_in_s()+ toolkit.get_dynamic_simulation_time_step_in_s());
     if(toolkit.is_detailed_log_enabled())
@@ -1751,7 +1752,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
 void DYNAMICS_SIMULATOR::update_with_event()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     bool network_converged = false;
     size_t update_event_iter_max = get_max_update_event_iteration();
@@ -1796,7 +1797,7 @@ void DYNAMICS_SIMULATOR::integrate()
 void DYNAMICS_SIMULATOR::update()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //clock_t start = clock();
     update_equivalent_devices_buffer();
     run_all_models(UPDATE_MODE);
@@ -1832,7 +1833,7 @@ void DYNAMICS_SIMULATOR::update_relay_models()
 
 void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t n = psdb.get_generator_count();
@@ -1920,7 +1921,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
 void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<BUS*> buses = psdb.get_all_in_service_buses();
     size_t n = buses.size();
@@ -1953,7 +1954,7 @@ bool DYNAMICS_SIMULATOR::get_relay_actiion_flag() const
 
 void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     size_t n = edevices.size();
@@ -1967,7 +1968,7 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 
 void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     size_t n = edevices.size();
@@ -1986,7 +1987,7 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 bool DYNAMICS_SIMULATOR::solve_network()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //clock_t start = clock(), start0 = clock();
@@ -2036,7 +2037,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
 void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
@@ -2050,7 +2051,7 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 
 void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& net = get_network_matrix();
     get_bus_currnet_into_network();
 
@@ -2177,7 +2178,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_matrix();
@@ -2227,7 +2228,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 
 void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2274,7 +2275,7 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2324,7 +2325,7 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2351,7 +2352,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 }
 void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2389,7 +2390,7 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2439,7 +2440,7 @@ bool DYNAMICS_SIMULATOR::is_converged()
 
 void DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2498,7 +2499,7 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 
 void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2576,14 +2577,14 @@ void DYNAMICS_SIMULATOR::build_jacobian()
 
 void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step(double newDELT)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.set_dynamic_simulation_time_step_in_s(newDELT);
 }
 
 
 void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT fault)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(bus);
     double fault_b = fault.get_fault_shunt_in_pu().imag();
@@ -2615,7 +2616,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT 
 
 void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, FAULT fault)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(bus);
     double fault_b = fault.get_fault_shunt_in_pu().imag();
@@ -2655,7 +2656,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& 
     if(location <0.0 or location >1.0)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(location>0.5)
     {
@@ -2707,7 +2708,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_
     if(location <0.0 or location >1.0)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     if(location>0.5)
     {
@@ -2759,7 +2760,7 @@ void DYNAMICS_SIMULATOR::update_generators_in_islands()
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2797,7 +2798,7 @@ void DYNAMICS_SIMULATOR::update_generators_in_islands()
 bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
     bool system_is_stable = true;
     size_t nislands = generators_in_islands.size();
@@ -2866,7 +2867,7 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
 void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, complex<double> fault_shunt)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2905,7 +2906,7 @@ void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, complex<double> fault_shunt)
 
 void DYNAMICS_SIMULATOR::clear_bus_fault(size_t bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2928,7 +2929,7 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(size_t bus)
 
 void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2960,7 +2961,7 @@ void DYNAMICS_SIMULATOR::trip_buses(const vector<size_t> buses)
 
 void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, complex<double> fault_shunt)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3032,7 +3033,7 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bu
 
 void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3088,7 +3089,7 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, size_t side_
 
 void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     if(line_id.get_device_type()!="LINE")
@@ -3125,7 +3126,7 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
 
 void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, size_t side_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3180,7 +3181,7 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, size_t side
 
 void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     if(line_id.get_device_type()!="LINE")
@@ -3217,7 +3218,7 @@ void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
 
 void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, size_t side_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3270,7 +3271,7 @@ void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, size_t sid
 
 void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     if(trans_id.get_device_type()!="TRANSFORMER")
@@ -3311,7 +3312,7 @@ void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
 
 void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3382,7 +3383,7 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, siz
 
 void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     if(trans_id.get_device_type()!="TRANSFORMER")
@@ -3423,7 +3424,7 @@ void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
 
 void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3490,7 +3491,7 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, si
 
 void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3528,7 +3529,7 @@ void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
 
 void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3575,7 +3576,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 
 void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3632,7 +3633,7 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
 
 void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3670,7 +3671,7 @@ void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 
 void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3708,7 +3709,7 @@ void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
 
 void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     if(load_id.get_device_type()!="LOAD")
@@ -3755,7 +3756,7 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
 
 void DYNAMICS_SIMULATOR::scale_all_load(double percent)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(fabs(percent)<FLOAT_EPSILON)
     {
@@ -3787,7 +3788,7 @@ void DYNAMICS_SIMULATOR::scale_all_load(double percent)
 
 void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3825,7 +3826,7 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
 
 void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
@@ -3864,7 +3865,7 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 
 void DYNAMICS_SIMULATOR::manual_bypass_hvdc(const DEVICE_ID& hvdc_id)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3886,7 +3887,7 @@ void DYNAMICS_SIMULATOR::manual_unbypass_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     HVDC* hvdc = psdb.get_hvdc(hvdc_id);
     if(hvdc!=NULL)
@@ -3906,7 +3907,7 @@ void DYNAMICS_SIMULATOR::manual_block_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     HVDC* hvdc = psdb.get_hvdc(hvdc_id);
     if(hvdc!=NULL)
@@ -3926,7 +3927,7 @@ void DYNAMICS_SIMULATOR::manual_unblock_hvdc(const DEVICE_ID& hvdc_id)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     HVDC* hvdc = psdb.get_hvdc(hvdc_id);
     if(hvdc!=NULL)
@@ -3945,7 +3946,7 @@ void DYNAMICS_SIMULATOR::manual_unblock_hvdc(const DEVICE_ID& hvdc_id)
 
 void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator != NULL)
@@ -3958,7 +3959,7 @@ void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_I
 
 void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator != NULL)
@@ -3971,7 +3972,7 @@ void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(const DEVICE_ID&
 
 void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     size_t n = edevices.size();

@@ -99,7 +99,7 @@ bool GENCLS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -208,7 +208,7 @@ complex<double> GENCLS::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Exy = get_internal_voltage_in_pu_in_xy_axis();
     complex<double> Z(get_Rs(), get_Xdp());
     double mbase = get_mbase_in_MVA();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -239,7 +239,7 @@ complex<double> GENCLS::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -256,7 +256,7 @@ double GENCLS::get_terminal_current_in_pu_based_on_sbase()
     double I = get_terminal_current_in_pu_based_on_mbase();
     double mbase = get_mbase_in_MVA();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
 
@@ -273,7 +273,7 @@ void GENCLS::report()
 {
     ostringstream osstream;
     osstream<< get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -313,7 +313,7 @@ double GENCLS::get_model_data_with_name(string par_name) const
         if(par_name=="H")  return get_H_in_s();
         if(par_name=="D")  return get_D();
     }
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
     return 0.0;
 }
@@ -326,7 +326,7 @@ void GENCLS::set_model_data_with_name(string par_name, double value)
         if(par_name == "H") return set_H_in_s(value);
         if(par_name == "D") return set_D(value);
     }
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
 }
 

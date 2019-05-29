@@ -114,7 +114,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     }
     else
     {
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         ostringstream osstream;
         osstream<<"No valid steps_config.json found. Use default power system database capacity.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -328,7 +328,7 @@ void POWER_SYSTEM_DATABASE::set_system_base_power_in_MVA(const double s)
         ostringstream osstream;
         osstream<<"Warning. Non positive power ("<<s<<" MVA) is not allowed for setting system base power."<<endl
           <<"Nothing will be changed.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -360,7 +360,7 @@ string POWER_SYSTEM_DATABASE::get_case_additional_information() const
 
 void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     bus.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -408,7 +408,7 @@ void POWER_SYSTEM_DATABASE::append_bus(BUS& bus)
 
 void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     generator.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -464,7 +464,7 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 
 void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     wt_generator.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -521,7 +521,7 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 
 void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     pv_unit.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -578,7 +578,7 @@ void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
 
 void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     estorage.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -634,7 +634,7 @@ void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
 
 void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     load.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -690,7 +690,7 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 
 void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     line.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -755,7 +755,7 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
 
 void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     transformer.set_toolkit(toolkit);
     ostringstream osstream;
 
@@ -828,7 +828,7 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
 
 void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     shunt.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -884,7 +884,7 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 
 void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     hvdc.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -949,7 +949,7 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
 
 void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     edevice.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -1005,7 +1005,7 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 
 void POWER_SYSTEM_DATABASE::append_area(AREA& area)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     area.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -1043,7 +1043,7 @@ void POWER_SYSTEM_DATABASE::append_area(AREA& area)
 
 void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     zone.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -1077,7 +1077,7 @@ void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
 
 void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     owner.set_toolkit(toolkit);
 
     ostringstream osstream;
@@ -1336,7 +1336,7 @@ bool POWER_SYSTEM_DATABASE::is_owner_exist(const size_t no) const
 
 void POWER_SYSTEM_DATABASE::change_bus_number(size_t original_bus_number, size_t new_bus_number)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(not is_bus_exist(original_bus_number))
     {
@@ -4879,7 +4879,7 @@ void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
 
     Bus[index].set_bus_type(OUT_OF_SERVICE);
     osstream<<"Bus "<<bus<<" is tripped.";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     update_in_service_bus_count();

@@ -25,7 +25,7 @@ void ZONE::set_zone_number(size_t number)
     {
         ostringstream osstream;
         osstream<<"0 is not allowed for setting zone number. 0 will be set to indicated invalid zone.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         this->zone_number = 0;
@@ -70,7 +70,7 @@ void ZONE::report() const
 {
     ostringstream osstream;
     osstream<<"Zone "<<get_zone_number()<<" ("<<get_zone_name()<<")";
-    STEPS& toolkit=get_toolkit();
+    STEPS& toolkit=get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 

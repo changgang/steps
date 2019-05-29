@@ -363,7 +363,7 @@ bool CDC6T::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
@@ -372,7 +372,7 @@ void CDC6T::set_block_toolkit()
 {
     set_common_timer_toolkit();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     inverter_dc_voltage_sensor.set_toolkit(toolkit);
     dc_current_sensor.set_toolkit(toolkit);
     rectifier_dc_voltage_sensor.set_toolkit(toolkit);
@@ -471,7 +471,7 @@ void CDC6T::check_blocking_logic()
 
     if(is_manual_blocked())
         return;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     ostringstream osstream;
@@ -673,7 +673,7 @@ void CDC6T::check_bypassing_logic()
     if(is_manual_bypassed())
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -798,7 +798,7 @@ void CDC6T::check_mode_switching_logic()
     if(is_blocked() or is_bypassed())
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     double t_unblock = get_unblocking_time();
@@ -846,7 +846,7 @@ void CDC6T::report()
 {
     ostringstream osstream;
     osstream<<get_standard_model_string();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -938,7 +938,7 @@ double CDC6T::get_model_internal_variable_with_name(string var_name)
 {
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() has not been implemented. Input var name is provided: "<<var_name;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return 0.0;
 }

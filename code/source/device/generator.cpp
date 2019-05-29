@@ -131,7 +131,7 @@ void GENERATOR::set_model(const MODEL* model)
     }
     ostringstream osstream;
     osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up generator-related model.";
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -140,7 +140,7 @@ void GENERATOR::set_sync_generator_model(const SYNC_GENERATOR_MODEL* model)
     if(model==NULL)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(model->get_model_type()!="SYNC GENERATOR")
     {
         ostringstream osstream;
@@ -184,7 +184,7 @@ void GENERATOR::set_sync_generator_model(const SYNC_GENERATOR_MODEL* model)
     {
         ostringstream osstream;
         osstream<<"Warning. Model '"<<model_name<<"' is not supported when append sync generator model of "<<get_device_name();
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -194,7 +194,7 @@ void GENERATOR::set_compensator_model(const COMPENSATOR_MODEL* model)
     if(model==NULL)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(model->get_model_type()!="COMPENSATOR")
     {
@@ -238,7 +238,7 @@ void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
     if(model==NULL)
         return;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(model->get_model_type()!="EXCITER")
     {
@@ -311,7 +311,7 @@ void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
 {
     if(model==NULL)
         return;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     ostringstream osstream;
     if(model->get_model_type()!="STABILIZER")
@@ -379,7 +379,7 @@ void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
 {
     if(model==NULL)
         return;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(model->get_model_type()!="TURBINE GOVERNOR")
     {
@@ -447,7 +447,7 @@ void GENERATOR::set_turbine_load_controller_model(const TURBINE_LOAD_CONTROLLER_
 {
     if(model==NULL)
         return;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     if(model->get_model_type()!="TURBINE LOAD CONTROLLER")
     {
@@ -649,7 +649,7 @@ void GENERATOR::report() const
       <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
       <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar"<<endl
       <<"Zsource = "<<setw(8)<<setprecision(6)<<fixed<<get_generator_impedance_in_pu();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -664,7 +664,7 @@ GENERATOR& GENERATOR::operator=(const GENERATOR& gen)
 
     clear();
 
-    set_toolkit(gen.get_toolkit());
+    set_toolkit(gen.get_toolkit(__PRETTY_FUNCTION__));
 
     set_generator_bus(gen.get_generator_bus());
     set_identifier(gen.get_identifier());
@@ -702,7 +702,7 @@ complex<double> GENERATOR::get_source_dynamic_current_in_pu_based_on_system_base
     if(get_status()==false or generator_model==NULL)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     complex<double> I = generator_model->get_terminal_current_in_pu_based_on_mbase();

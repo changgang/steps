@@ -202,7 +202,7 @@ METER::METER()
 void METER::copy_from_const_meter(const METER& meter)
 {
     clear();
-    set_toolkit(meter.get_toolkit());
+    set_toolkit(meter.get_toolkit(__PRETTY_FUNCTION__));
     set_buffer_size(meter.get_buffer_size());
     set_device_id(meter.get_device_id());
     set_meter_type(meter.get_meter_type());
@@ -241,7 +241,7 @@ void METER::set_device_id(const DEVICE_ID& did)
     {
         ostringstream osstream;
         osstream<<"Warning. Device id is invalid for setting up meter.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     this->device_id =did;
@@ -251,7 +251,7 @@ void METER::set_device_id(const DEVICE_ID& did)
 void METER::set_meter_type(string meter_type)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(not device_id.is_valid())
     {
         osstream<<"Warning. Device id is invalid for setting up meter type. Set up proper device id first.";
@@ -275,7 +275,7 @@ void METER::set_meter_type(string meter_type)
 
 void METER::set_internal_variable_name(string name)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     if(not device_id.is_valid())
     {
@@ -308,7 +308,7 @@ bool METER::is_internal_variable_name_valid(string name) const
     if(get_device_pointer()==NULL)
         return false;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     name = string2upper(name);
     string meter_type = get_meter_type();
@@ -428,7 +428,7 @@ bool METER::is_valid_meter_type(string meter_type) const
 bool METER::is_valid_meter_type_of_device(string meter_type, string device_type) const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     device_type = string2upper(device_type);
     map<string, vector<string> >::const_iterator it = SUPPORTED_METERS.find(device_type);
@@ -574,7 +574,7 @@ void METER::set_device_pointer()
         device_pointer = NULL;
         return;
     }
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string device_type = device_id.get_device_type();
@@ -636,7 +636,7 @@ void METER::initialize_meter_buffer()
     if(get_device_pointer()==NULL)
         set_device_pointer();
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     double value = get_meter_value();
@@ -647,7 +647,7 @@ void METER::update_meter_buffer()
 {
     if(get_device_pointer()==NULL)
         set_device_pointer();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     buffer.append_data(current_time, get_meter_value());
@@ -998,7 +998,7 @@ double METER::get_meter_value_as_a_transformer() const
 
 double METER::get_meter_value_as_a_load() const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     LOAD* load = (LOAD*) get_device_pointer();
     if(load==NULL)
         return 0.0;
@@ -1079,7 +1079,7 @@ double METER::get_meter_value_as_a_generator() const
     if(generator->get_status()==false)
         return 0.0;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
     double sbase = psdb.get_system_base_power_in_MVA();
@@ -1404,7 +1404,7 @@ double METER::get_meter_value_as_a_wt_generator() const
         return 0.0;
 
     size_t bus = generator->get_generator_bus();
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
     double sbase = psdb.get_system_base_power_in_MVA();

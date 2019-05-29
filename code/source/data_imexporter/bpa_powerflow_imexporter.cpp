@@ -36,7 +36,7 @@ BPA_IMEXPORTER::~BPA_IMEXPORTER()
 
 string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, string format)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     string data = trim_string(original_data);
     if(data.size()==0)
@@ -94,7 +94,7 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
 {
     ostringstream osstream;
     osstream<<"Loading powerflow data from BPA file: "<<file;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
@@ -134,7 +134,7 @@ void BPA_IMEXPORTER::load_sequence_data(string sq_source)
 
 void BPA_IMEXPORTER::load_powerflow_data_into_ram(string file)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     dat_data_in_ram.clear();
 
     ifstream dat_file(file);
@@ -412,7 +412,7 @@ size_t BPA_IMEXPORTER::get_data_version() const
 
 void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string file)
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     FILE* fid = fopen(file.c_str(),"rt");
     if(fid==NULL)
@@ -443,7 +443,7 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
 
 void BPA_IMEXPORTER::load_area_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -482,7 +482,7 @@ void BPA_IMEXPORTER::load_area_data()
 
 void BPA_IMEXPORTER::load_zone_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -518,7 +518,7 @@ void BPA_IMEXPORTER::load_zone_data()
 
 void BPA_IMEXPORTER::load_owner_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -556,7 +556,7 @@ void BPA_IMEXPORTER::load_owner_data()
 
 void BPA_IMEXPORTER::load_bus_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -645,7 +645,7 @@ void BPA_IMEXPORTER::load_bus_data()
 
 void BPA_IMEXPORTER::set_bus_area()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -687,7 +687,7 @@ void BPA_IMEXPORTER::set_bus_area()
 
 void BPA_IMEXPORTER::set_area_swing_bus()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -751,7 +751,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
 void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -926,7 +926,7 @@ void BPA_IMEXPORTER::load_source_data()
 
 void BPA_IMEXPORTER::load_generator_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -1010,7 +1010,7 @@ void BPA_IMEXPORTER::load_source_common_data()
 }
 void BPA_IMEXPORTER::load_line_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -1295,7 +1295,7 @@ void BPA_IMEXPORTER::load_line_data()
 
 void BPA_IMEXPORTER::load_transformer_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -1626,7 +1626,7 @@ void BPA_IMEXPORTER::load_transformer_data()
 
 void BPA_IMEXPORTER::load_hvdc_data()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = dat_data_in_ram.size();
     string data, card_type;
@@ -2100,7 +2100,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
 void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream ofs(file);
@@ -2142,7 +2142,7 @@ void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedan
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string format) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     format = string2upper(format);
@@ -2196,7 +2196,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string format) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     format = string2upper(format);
@@ -2322,7 +2322,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(size_t original_data, string
 
 string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string format) const
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
     format = string2upper(format);
@@ -2386,7 +2386,7 @@ string BPA_IMEXPORTER::export_case_data() const
 string BPA_IMEXPORTER::export_bus_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<BUS*> buses = psdb.get_all_buses();
@@ -2578,7 +2578,7 @@ string BPA_IMEXPORTER::export_bus_data() const
 string BPA_IMEXPORTER::export_line_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<LINE*> lines = psdb.get_all_lines();
@@ -2684,7 +2684,7 @@ string BPA_IMEXPORTER::export_line_data() const
 string BPA_IMEXPORTER::export_transformer_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
@@ -2712,7 +2712,7 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
     if(trans->is_three_winding_transformer())
         return export_three_winding_transformer(trans);
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t primary_bus = trans->get_winding_bus(PRIMARY_SIDE);
@@ -2904,7 +2904,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     if(trans->is_two_winding_transformer())
         return export_two_winding_transformer(trans);
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string transformer_name=trans->get_transformer_name();
@@ -3103,7 +3103,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
 string BPA_IMEXPORTER::export_hvdc_data() const
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();

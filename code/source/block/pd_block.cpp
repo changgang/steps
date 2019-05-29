@@ -51,7 +51,7 @@ void PD_BLOCK::set_Td_in_s(double T)
     {
         ostringstream osstream;
         osstream<<"Error. Non-positive time constant Td is not allowed for PD_BLOCK.";
-        STEPS& toolkit = get_toolkit();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -85,8 +85,8 @@ double PD_BLOCK::get_differentiator_store() const
 
 void PD_BLOCK::initialize()
 {
-    p_block.set_toolkit(get_toolkit());
-    d_block.set_toolkit(get_toolkit());
+    p_block.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+    d_block.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
 
     double y = get_output();
     p_block.set_output(y);

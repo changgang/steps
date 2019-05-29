@@ -209,14 +209,14 @@ bool UFLS::setup_model_with_bpa_string(string data)
     ostringstream osstream;
     osstream<<get_model_name()<<"::"<<__FUNCTION__<<"() is not fully supported to set up model with following data:"<<endl
             <<data;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
     return false;
 }
 
 void UFLS::set_block_toolkit()
 {
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     frequency_sensor.set_toolkit(toolkit);
     for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
     {
@@ -256,7 +256,7 @@ void UFLS::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
     double freq = get_bus_frequency_in_Hz();
@@ -394,7 +394,7 @@ bool UFLS::is_stage_breaker_timer_timed_out(size_t i) const
 void UFLS::trip_stage(size_t i)
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(i<MAX_LOAD_RELAY_STAGE)
     {
         if(not is_stage_tripped(i))
