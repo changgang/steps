@@ -188,80 +188,80 @@ size_t DEVICE_ID::get_maximum_allowed_terminal_count() const
 string DEVICE_ID::get_device_name() const
 {
     string device_name = "INVALID DEVICE (possible of type "+get_device_type()+")";
-    if(not is_valid())
-        return device_name;
-
-    string name = get_device_type();
-    string ident = get_device_identifier();
-    TERMINAL term = get_device_terminal();
-    vector<size_t> buses = term.get_buses();
-    size_t bus_count = term.get_bus_count();
-    if(name=="BUS")
+    if(is_valid())
     {
-        device_name = name+" "+num2str(buses[0]);
-        return device_name;
-    }
-
-    if(name=="LINE" or name=="HVDC" or name=="VSC HVDC")
-    {
-        if(ident=="")
-            device_name = name + " ";
-        else
-            device_name = name + " "+ident+" ";
-        device_name += "LINKING BUS "+num2str(buses[0])+" AND "+num2str(buses[1]);
-        return device_name;
-    }
-
-    if(name=="TRANSFORMER")
-    {
-        if(ident=="")
-            device_name = name + " ";
-        else
-            device_name = name + " "+ident+" ";
-        if(bus_count==2)
-            device_name += "LINKING BUS "+num2str(buses[0])+" AND "+num2str(buses[1]);
-        else
-            device_name += "LINKING BUS "+num2str(buses[0])+" "+num2str(buses[1])+" AND "+num2str(buses[2]);
-        return device_name;
-    }
-
-    if(name=="GENERATOR" or name=="WT GENERATOR" or name=="PV UNIT" or name=="ENERGY STORAGE" or
-       name=="LOAD" or name=="FIXED SHUNT" or name=="SWITCHED SHUNT" or name=="EQUIVALENT DEVICE")
-    {
-        if(ident=="")
-            device_name = name + " ";
-        else
-            device_name = name + " "+ident+" ";
-        device_name += "AT BUS "+num2str(buses[0]);
-        return device_name;
-    }
-
-    if(name=="GENERAL DEVICE")
-    {
-        if(ident=="")
-            device_name = name + " ";
-        else
-            device_name = name + " "+ident+" ";
-        switch(bus_count)
+        string name = get_device_type();
+        string ident = get_device_identifier();
+        TERMINAL term = get_device_terminal();
+        vector<size_t> buses = term.get_buses();
+        size_t bus_count = term.get_bus_count();
+        if(name=="BUS")
         {
-            case 0:
-                device_name += " AT SUPER CONTROL CENTER";
-                break;
-            case 1:
-                device_name += " AT BUS "+num2str(buses[0]);
-                break;
-            default:
-                device_name += " LINKING BUSES ("+num2str(buses[0]);
-                for(size_t i=1; i<bus_count; ++i)
-                    device_name += ", "+num2str(buses[i]);
-                device_name += ")";
-                break;
+            device_name = name+" "+num2str(buses[0]);
+            return device_name;
+        }
+
+        if(name=="LINE" or name=="HVDC" or name=="VSC HVDC")
+        {
+            if(ident=="")
+                device_name = name + " ";
+            else
+                device_name = name + " "+ident+" ";
+            device_name += "LINKING BUS "+num2str(buses[0])+" AND "+num2str(buses[1]);
+            return device_name;
+        }
+
+        if(name=="TRANSFORMER")
+        {
+            if(ident=="")
+                device_name = name + " ";
+            else
+                device_name = name + " "+ident+" ";
+            if(bus_count==2)
+                device_name += "LINKING BUS "+num2str(buses[0])+" AND "+num2str(buses[1]);
+            else
+                device_name += "LINKING BUS "+num2str(buses[0])+" "+num2str(buses[1])+" AND "+num2str(buses[2]);
+            return device_name;
+        }
+
+        if(name=="GENERATOR" or name=="WT GENERATOR" or name=="PV UNIT" or name=="ENERGY STORAGE" or
+           name=="LOAD" or name=="FIXED SHUNT" or name=="SWITCHED SHUNT" or name=="EQUIVALENT DEVICE")
+        {
+            if(ident=="")
+                device_name = name + " ";
+            else
+                device_name = name + " "+ident+" ";
+            device_name += "AT BUS "+num2str(buses[0]);
+            return device_name;
+        }
+
+        if(name=="GENERAL DEVICE")
+        {
+            if(ident=="")
+                device_name = name + " ";
+            else
+                device_name = name + " "+ident+" ";
+            switch(bus_count)
+            {
+                case 0:
+                    device_name += " AT SUPER CONTROL CENTER";
+                    break;
+                case 1:
+                    device_name += " AT BUS "+num2str(buses[0]);
+                    break;
+                default:
+                    device_name += " LINKING BUSES ("+num2str(buses[0]);
+                    for(size_t i=1; i<bus_count; ++i)
+                        device_name += ", "+num2str(buses[i]);
+                    device_name += ")";
+                    break;
+            }
+            return device_name;
         }
         return device_name;
     }
-
-
-    return device_name;
+    else
+        return device_name;
 }
 
 bool DEVICE_ID::is_valid() const
@@ -294,58 +294,60 @@ DEVICE_ID& DEVICE_ID::operator= (const DEVICE_ID& device_id)
 
 bool DEVICE_ID::operator< (const DEVICE_ID& device_id) const
 {
-    if(this->get_device_type() != device_id.get_device_type()) // of different types, no comparison
-        return false;
-
-    TERMINAL this_terminal = this->get_device_terminal();
-    TERMINAL to_compare_terminal = device_id.get_device_terminal();
-    string this_identifier = this->get_device_identifier();
-    string to_compare_identifier = device_id.get_device_identifier();
-
-    size_t this_size = this_terminal.get_bus_count();
-    size_t to_compare_size = to_compare_terminal.get_bus_count();
-
-    size_t max_size = max(this_size, to_compare_size);
-
-    bool isless = false;
-    bool isgreater = false;
-
-    for(size_t i=0; i!=max_size; ++i)
+    if(this->get_device_type() == device_id.get_device_type())
     {
-        if(this_terminal[i]<to_compare_terminal[i])
+        TERMINAL this_terminal = this->get_device_terminal();
+        TERMINAL to_compare_terminal = device_id.get_device_terminal();
+        string this_identifier = this->get_device_identifier();
+        string to_compare_identifier = device_id.get_device_identifier();
+
+        size_t this_size = this_terminal.get_bus_count();
+        size_t to_compare_size = to_compare_terminal.get_bus_count();
+
+        size_t max_size = max(this_size, to_compare_size);
+
+        bool isless = false;
+        bool isgreater = false;
+
+        for(size_t i=0; i!=max_size; ++i)
         {
-            isless = true;
-            break;
-        }
-        else
-        {
-            if(this_terminal[i]>to_compare_terminal[i])
+            if(this_terminal[i]<to_compare_terminal[i])
             {
-                isgreater = true;
+                isless = true;
                 break;
             }
             else
-                continue;
-        }
-    }
-
-    if((not isless) and (not isgreater))
-    {
-        if(this_identifier<to_compare_identifier)
-        {
-            isless = true;
-        }
-        else
-        {
-            if(this_identifier>to_compare_identifier)
             {
-                isgreater = true;
+                if(this_terminal[i]>to_compare_terminal[i])
+                {
+                    isgreater = true;
+                    break;
+                }
+                else
+                    continue;
             }
         }
-    }
 
-    if(isless) return true;
-    else       return false;
+        if((not isless) and (not isgreater))
+        {
+            if(this_identifier<to_compare_identifier)
+            {
+                isless = true;
+            }
+            else
+            {
+                if(this_identifier>to_compare_identifier)
+                {
+                    isgreater = true;
+                }
+            }
+        }
+
+        if(isless) return true;
+        else       return false;
+    }
+    else// of different types, no comparison
+        return false;
 }
 
 bool DEVICE_ID::operator==(const DEVICE_ID& device_id) const

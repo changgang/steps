@@ -172,40 +172,43 @@ double PSASPE1::get_TF_in_s() const
 bool PSASPE1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<12)
+    if(data.size()>=12)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double kr, tr, ka, ta, te, kf, tf, efdmax, efdmin;
+
+            size_t i=3;
+            kr = get_double_data(data[i],"1.0"); i++;
+            tr = get_double_data(data[i],"0.0"); i++;
+            ka = get_double_data(data[i],"0.0"); i++;
+            ta = get_double_data(data[i],"0.0"); i++;
+            te = get_double_data(data[i],"0.0"); i++;
+            kf = get_double_data(data[i],"0.0"); i++;
+            tf = get_double_data(data[i],"0.0"); i++;
+            efdmax = get_double_data(data[i],"0.0"); i++;
+            efdmin = get_double_data(data[i],"0.0"); i++;
+
+            set_KR(kr);
+            set_TR_in_s(tr);
+            set_KA(ka);
+            set_TA_in_s(ta);
+            set_TE_in_s(te);
+            set_KF(kf);
+            set_TF_in_s(tf);
+            set_Efdmax_in_pu(efdmax);
+            set_Efdmax_in_pu(efdmin);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-
-    double kr, tr, ka, ta, te, kf, tf, efdmax, efdmin;
-
-    size_t i=3;
-    kr = get_double_data(data[i],"1.0"); i++;
-    tr = get_double_data(data[i],"0.0"); i++;
-    ka = get_double_data(data[i],"0.0"); i++;
-    ta = get_double_data(data[i],"0.0"); i++;
-    te = get_double_data(data[i],"0.0"); i++;
-    kf = get_double_data(data[i],"0.0"); i++;
-    tf = get_double_data(data[i],"0.0"); i++;
-    efdmax = get_double_data(data[i],"0.0"); i++;
-    efdmin = get_double_data(data[i],"0.0"); i++;
-
-    set_KR(kr);
-    set_TR_in_s(tr);
-    set_KA(ka);
-    set_TA_in_s(ta);
-    set_TE_in_s(te);
-    set_KF(kf);
-    set_TF_in_s(tf);
-    set_Efdmax_in_pu(efdmax);
-    set_Efdmax_in_pu(efdmin);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool PSASPE1::setup_model_with_psse_string(string data)
@@ -235,79 +238,79 @@ void PSASPE1::set_block_toolkit()
 
 void PSASPE1::initialize()
 {
-    if(is_model_initialized())
-        return;
+    if(not is_model_initialized())
+    {
+        GENERATOR* generator = get_generator_pointer();
+        if(generator!=NULL)
+        {
+            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+            if(gen_model!=NULL)
+            {
+                if(not gen_model->is_model_initialized())
+                    gen_model->initialize();
 
-    GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
+                set_block_toolkit();
 
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return;
+                double Ecomp = get_compensated_voltage_in_pu();
 
-    if(not gen_model->is_model_initialized())
-        gen_model->initialize();
+                set_voltage_reference_in_pu(Ecomp);
 
-    set_block_toolkit();
+                sensor.set_output(0.0);
+                sensor.initialize();
 
-    double Ecomp = get_compensated_voltage_in_pu();
+                double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+                Efd0 = Efd;
 
-    set_voltage_reference_in_pu(Ecomp);
+                exciter.set_output(Efd);
+                exciter.initialize();
 
-    sensor.set_output(0.0);
-    sensor.initialize();
+                feedbacker.set_input(Efd);
+                feedbacker.initialize();
 
-    double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-    Efd0 = Efd;
+                regulator.set_output(0.0);
+                regulator.initialize();
 
-    exciter.set_output(Efd);
-    exciter.initialize();
-
-    feedbacker.set_input(Efd);
-    feedbacker.initialize();
-
-    regulator.set_output(0.0);
-    regulator.initialize();
-
-    set_flag_model_initialized_as_true();
+                set_flag_model_initialized_as_true();
+            }
+        }
+    }
 }
 
 void PSASPE1::run(DYNAMIC_MODE mode)
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
+    if(generator!=NULL)
+    {
+        double Ecomp = get_compensated_voltage_in_pu();
+        double Vref = get_voltage_reference_in_pu();
+        double Vs = get_stabilizing_signal_in_pu();
 
-    double Ecomp = get_compensated_voltage_in_pu();
-    double Vref = get_voltage_reference_in_pu();
-    double Vs = get_stabilizing_signal_in_pu();
+        double input = Vref-Ecomp;
+        sensor.set_input(input);
+        sensor.run(mode);
 
-    double input = Vref-Ecomp;
-    sensor.set_input(input);
-    sensor.run(mode);
+        input = sensor.get_output()+Vs-feedbacker.get_output();
+        regulator.set_input(input);
+        regulator.run(mode);
 
-    input = sensor.get_output()+Vs-feedbacker.get_output();
-    regulator.set_input(input);
-    regulator.run(mode);
+        input = Efd0+regulator.get_output();
+        double VAmax = get_VAmax_in_pu();
+        double VAmin = get_VAmin_in_pu();
+        if(input>VAmax) input = VAmax;
+        if(input<VAmin) input = VAmin;
 
-    input = Efd0+regulator.get_output();
-    double VAmax = get_VAmax_in_pu();
-    double VAmin = get_VAmin_in_pu();
-    if(input>VAmax) input = VAmax;
-    if(input<VAmin) input = VAmin;
+        exciter.set_input(input);
+        exciter.run(mode);
 
-    exciter.set_input(input);
-    exciter.run(mode);
+        double Efd = get_excitation_voltage_in_pu();
 
-    double Efd = get_excitation_voltage_in_pu();
+        feedbacker.set_input(Efd);
+        feedbacker.run(mode);
+        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
-    feedbacker.set_input(Efd);
-    feedbacker.run(mode);
-    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
-
-    if(mode == UPDATE_MODE)
-        set_flag_model_updated_as_true();
+        if(mode == UPDATE_MODE)
+            set_flag_model_updated_as_true();
+    }
 }
 
 double PSASPE1::get_excitation_voltage_in_pu() const

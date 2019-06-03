@@ -67,14 +67,14 @@ void AERDF::load_data_from_Cp_file()
         return;
     }
     ifstream fid(cp_file_name);
-    if(not fid.is_open())
+    if(fid.is_open())
+        fid.close();
+    else
     {
         oosstream<<"Initialization error. Fail to open wind turbine Cp data file '"<<cp_file_name<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
         toolkit.show_information_with_leading_time_stamp(oosstream);
         return;
     }
-    else
-        fid.close();
 
     load_pitch_angles();
     load_tip_speed_ratios();
@@ -252,60 +252,64 @@ string AERDF::get_model_name() const
 bool AERDF::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<11)
-        return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    int speed_mode_flag=0;
-    size_t n;
-    double vwind0, gear_eta, rou0_air, min_speed, max_speed;
-    double rou_air;
-    string file;
-
-    size_t i=3;
-    speed_mode_flag = get_integer_data(data[i],"0"); i++;
-    n = size_t(get_integer_data(data[i],"1")); i++;
-    vwind0 = get_double_data(data[i],"0.0"); i++;
-    gear_eta = get_double_data(data[i],"0.0"); i++;
-    rou0_air = get_double_data(data[i],"0.0"); i++;
-    min_speed = get_double_data(data[i],"0.6"); i++;
-    max_speed = get_double_data(data[i],"1.2"); i++;
-    rou_air = get_double_data(data[i],"0.0"); i++;
-    file = get_string_data(data[i],"");
-
-    switch(speed_mode_flag)
+    if(data.size()>=11)
     {
-        case -1:
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
         {
-            set_turbine_speed_mode(WT_UNDERSPEED_MODE);
-            break;
+            int speed_mode_flag=0;
+            size_t n;
+            double vwind0, gear_eta, rou0_air, min_speed, max_speed;
+            double rou_air;
+            string file;
+
+            size_t i=3;
+            speed_mode_flag = get_integer_data(data[i],"0"); i++;
+            n = size_t(get_integer_data(data[i],"1")); i++;
+            vwind0 = get_double_data(data[i],"0.0"); i++;
+            gear_eta = get_double_data(data[i],"0.0"); i++;
+            rou0_air = get_double_data(data[i],"0.0"); i++;
+            min_speed = get_double_data(data[i],"0.6"); i++;
+            max_speed = get_double_data(data[i],"1.2"); i++;
+            rou_air = get_double_data(data[i],"0.0"); i++;
+            file = get_string_data(data[i],"");
+
+            switch(speed_mode_flag)
+            {
+                case -1:
+                {
+                    set_turbine_speed_mode(WT_UNDERSPEED_MODE);
+                    break;
+                }
+                case 1:
+                {
+                    set_turbine_speed_mode(WT_OVERSPEED_MODE);
+                    break;
+                }
+                default:
+                {
+                    set_turbine_speed_mode(WT_MPPT_MODE);
+                    break;
+                }
+            }
+            set_number_of_pole_pairs(n);
+            set_nominal_wind_speed_in_mps(vwind0);
+            set_gear_efficiency(gear_eta);
+            set_nominal_air_density_in_kgpm3(rou0_air);
+            set_min_steady_state_turbine_speed_in_pu(min_speed);
+            set_max_steady_state_turbine_speed_in_pu(max_speed);
+            set_air_density_in_kgpm3(rou_air);
+            set_Cp_file(file);
+
+            is_successful = true;
+
+            return is_successful;
         }
-        case 1:
-        {
-            set_turbine_speed_mode(WT_OVERSPEED_MODE);
-            break;
-        }
-        default:
-        {
-            set_turbine_speed_mode(WT_MPPT_MODE);
-            break;
-        }
+        else
+            return is_successful;
     }
-    set_number_of_pole_pairs(n);
-    set_nominal_wind_speed_in_mps(vwind0);
-    set_gear_efficiency(gear_eta);
-    set_nominal_air_density_in_kgpm3(rou0_air);
-    set_min_steady_state_turbine_speed_in_pu(min_speed);
-    set_max_steady_state_turbine_speed_in_pu(max_speed);
-    set_air_density_in_kgpm3(rou_air);
-    set_Cp_file(file);
-
-    is_successful = true;
-
-    return is_successful;
+    else
+        return is_successful;
 }
 
 bool AERDF::setup_model_with_psse_string(string data)

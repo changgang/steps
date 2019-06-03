@@ -176,42 +176,46 @@ double IEESGO::get_Pmin_in_pu() const
 bool IEESGO::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<14)
+    if(data.size()>=14)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double t1, t2, t3, t4, t5, t6, k1, k2, k3, pmax, pmin;
+            size_t i=3;
+            t1 = get_double_data(data[i],"0.0"); i++;
+            t2 = get_double_data(data[i],"0.0"); i++;
+            t3 = get_double_data(data[i],"0.0"); i++;
+            t4 = get_double_data(data[i],"0.0"); i++;
+            t5 = get_double_data(data[i],"0.0"); i++;
+            t6 = get_double_data(data[i],"0.0"); i++;
+            k1 = get_double_data(data[i],"0.0"); i++;
+            k2 = get_double_data(data[i],"0.0"); i++;
+            k3 = get_double_data(data[i],"0.0"); i++;
+            pmax = get_double_data(data[i],"0.0"); i++;
+            pmin = get_double_data(data[i],"0.0"); i++;
+
+            set_K1(k1);
+            set_K2(k2);
+            set_K3(k3);
+            set_T1_in_s(t1);
+            set_T2_in_s(t2);
+            set_T3_in_s(t3);
+            set_T4_in_s(t4);
+            set_T5_in_s(t5);
+            set_T6_in_s(t6);
+            set_Pmax_in_pu(pmax);
+            set_Pmin_in_pu(pmin);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    double t1, t2, t3, t4, t5, t6, k1, k2, k3, pmax, pmin;
-    size_t i=3;
-    t1 = get_double_data(data[i],"0.0"); i++;
-    t2 = get_double_data(data[i],"0.0"); i++;
-    t3 = get_double_data(data[i],"0.0"); i++;
-    t4 = get_double_data(data[i],"0.0"); i++;
-    t5 = get_double_data(data[i],"0.0"); i++;
-    t6 = get_double_data(data[i],"0.0"); i++;
-    k1 = get_double_data(data[i],"0.0"); i++;
-    k2 = get_double_data(data[i],"0.0"); i++;
-    k3 = get_double_data(data[i],"0.0"); i++;
-    pmax = get_double_data(data[i],"0.0"); i++;
-    pmin = get_double_data(data[i],"0.0"); i++;
-
-    set_K1(k1);
-    set_K2(k2);
-    set_K3(k3);
-    set_T1_in_s(t1);
-    set_T2_in_s(t2);
-    set_T3_in_s(t3);
-    set_T4_in_s(t4);
-    set_T5_in_s(t5);
-    set_T6_in_s(t6);
-    set_Pmax_in_pu(pmax);
-    set_Pmin_in_pu(pmin);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool IEESGO::setup_model_with_psse_string(string data)

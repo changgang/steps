@@ -47,13 +47,13 @@ METER METER_SETTER::prepare_bus_voltage_in_pu_meter(size_t bus)
 
     bool successful = prepare_bus_meter(meter, bus);
 
-    if(not successful)
-        return meter;
-    else
+    if(successful)
     {
         meter.set_meter_type("VOLTAGE IN PU");
         return meter;
     }
+    else
+        return meter;
 }
 METER METER_SETTER::prepare_bus_voltage_in_kV_meter(size_t bus)
 {
@@ -62,13 +62,13 @@ METER METER_SETTER::prepare_bus_voltage_in_kV_meter(size_t bus)
 
     bool successful = prepare_bus_meter(meter, bus);
 
-    if(not successful)
-        return meter;
-    else
+    if(successful)
     {
         meter.set_meter_type("VOLTAGE IN KV");
         return meter;
     }
+    else
+        return meter;
 }
 
 METER METER_SETTER::prepare_bus_angle_in_deg_meter(size_t bus)
@@ -78,13 +78,13 @@ METER METER_SETTER::prepare_bus_angle_in_deg_meter(size_t bus)
 
     bool successful = prepare_bus_meter(meter, bus);
 
-    if(not successful)
-        return meter;
-    else
+    if(successful)
     {
        meter.set_meter_type("ANGLE IN DEG");
         return meter;
     }
+    else
+        return meter;
 }
 
 METER METER_SETTER::prepare_bus_angle_in_rad_meter(size_t bus)
@@ -94,13 +94,13 @@ METER METER_SETTER::prepare_bus_angle_in_rad_meter(size_t bus)
 
     bool successful = prepare_bus_meter(meter, bus);
 
-    if(not successful)
-        return meter;
-    else
+    if(successful)
     {
        meter.set_meter_type("ANGLE IN RAD");
         return meter;
     }
+    else
+        return meter;
 }
 
 METER METER_SETTER::prepare_bus_frequency_in_pu_meter(size_t bus)

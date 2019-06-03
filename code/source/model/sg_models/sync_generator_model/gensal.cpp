@@ -81,48 +81,52 @@ void GENSAL::update_source_impedance()
 bool GENSAL::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<15)
+    if(data.size()>=15)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double xd, xq, xdp, xpp, xl, td0p, td0pp, tq0pp;
+            double H, D;
+            double s1, s1p2;
+
+            size_t i=3;
+            td0p = get_double_data(data[i],"0.0"); i++;
+            td0pp = get_double_data(data[i],"0.0"); i++;
+            tq0pp = get_double_data(data[i],"0.0"); i++;
+            H = get_double_data(data[i],"0.0"); i++;
+            D = get_double_data(data[i],"0.0"); i++;
+            xd = get_double_data(data[i],"0.0"); i++;
+            xq = get_double_data(data[i],"0.0"); i++;
+            xdp = get_double_data(data[i],"0.0"); i++;
+            xpp = get_double_data(data[i],"0.0"); i++;
+            xl = get_double_data(data[i],"0.0"); i++;
+            s1 = get_double_data(data[i],"0.0"); i++;
+            s1p2 = get_double_data(data[i],"0.0");
+
+            set_Xd(xd);
+            set_Xq(xq);
+            set_Xdp(xdp);
+            set_Xdpp(xpp);
+            set_Xqpp(xpp);
+            set_Xl(xl);
+            set_Td0p_in_s(td0p);
+            set_Td0pp_in_s(td0pp);
+            set_Tq0pp_in_s(tq0pp);
+            set_H_in_s(H);
+            set_D(D);
+            set_saturation_at_1(s1);
+            set_saturation_at_1p2(s1p2);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    double xd, xq, xdp, xpp, xl, td0p, td0pp, tq0pp;
-    double H, D;
-    double s1, s1p2;
-
-    size_t i=3;
-    td0p = get_double_data(data[i],"0.0"); i++;
-    td0pp = get_double_data(data[i],"0.0"); i++;
-    tq0pp = get_double_data(data[i],"0.0"); i++;
-    H = get_double_data(data[i],"0.0"); i++;
-    D = get_double_data(data[i],"0.0"); i++;
-    xd = get_double_data(data[i],"0.0"); i++;
-    xq = get_double_data(data[i],"0.0"); i++;
-    xdp = get_double_data(data[i],"0.0"); i++;
-    xpp = get_double_data(data[i],"0.0"); i++;
-    xl = get_double_data(data[i],"0.0"); i++;
-    s1 = get_double_data(data[i],"0.0"); i++;
-    s1p2 = get_double_data(data[i],"0.0");
-
-    set_Xd(xd);
-    set_Xq(xq);
-    set_Xdp(xdp);
-    set_Xdpp(xpp);
-    set_Xqpp(xpp);
-    set_Xl(xl);
-    set_Td0p_in_s(td0p);
-    set_Td0pp_in_s(td0pp);
-    set_Tq0pp_in_s(tq0pp);
-    set_H_in_s(H);
-    set_D(D);
-    set_saturation_at_1(s1);
-    set_saturation_at_1p2(s1p2);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool GENSAL::setup_model_with_psse_string(string data)
@@ -257,10 +261,10 @@ void GENSAL::initialize_rotor_angle()
 
     double rotor_angle_EQ = steps_fast_complex_arg(EQ/Vxy) + steps_fast_complex_arg(Vxy);
     double rotor_angle = 0.0;
-    if(C == 0.0)
-        rotor_angle = PI*0.5;
-    else
+    if(C != 0.0)
         rotor_angle = atan(D/C);
+    else
+        rotor_angle = PI*0.5;
 
     while(true)
     {

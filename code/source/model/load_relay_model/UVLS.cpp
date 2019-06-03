@@ -81,23 +81,20 @@ void UVLS::set_voltage_sensor_time_in_s(double t)
 
 void UVLS::set_voltage_threshold_in_pu_of_stage(size_t i, double f)
 {
-    if(i>=MAX_LOAD_RELAY_STAGE)
-        return;
-    voltage_threshold_in_pu[i] = f;
+    if(i<MAX_LOAD_RELAY_STAGE)
+        voltage_threshold_in_pu[i] = f;
 }
 
 void UVLS::set_time_delay_in_s_of_stage(size_t i, double t)
 {
-    if(i>=MAX_LOAD_RELAY_STAGE)
-        return;
-    stage_timer[i].set_timer_interval_in_s(t);
+    if(i<MAX_LOAD_RELAY_STAGE)
+        stage_timer[i].set_timer_interval_in_s(t);
 }
 
 void UVLS::set_scale_in_pu_of_stage(size_t i, double s)
 {
-    if(i>=MAX_LOAD_RELAY_STAGE)
-        return;
-    scale_in_pu[i] = s;
+    if(i<MAX_LOAD_RELAY_STAGE)
+        scale_in_pu[i] = s;
 }
 
 void UVLS::set_breaker_time_in_s(double t)
@@ -143,59 +140,63 @@ double UVLS::get_breaker_time_in_s() const
 bool UVLS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<20)
-        return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!="UVLSAL" and model_name!="UVLSAR" and model_name!="UVLSZN" and model_name!="UVLSBL")
-        return is_successful;
-
-    double t_sensor, tbreak, vth, tdelay, scale;
-
-    size_t i=3;
-
-    t_sensor = get_double_data(data[i],"0.0"); ++i;
-    set_voltage_sensor_time_in_s(t_sensor);
-
-    tbreak = get_double_data(data[i],"0.0"); ++i;
-    set_breaker_time_in_s(tbreak);
-
-    size_t stage = 0;
-
-    size_t n = data.size()-2;
-    for(i=5; i<n; i=i+3)
+    if(data.size()>=20)
     {
-        vth = get_double_data(data[i],"0.0");
-        tdelay = get_double_data(data[i+1],"0.0");
-        scale = get_double_data(data[i+2],"0.0");
-
-        set_voltage_threshold_in_pu_of_stage(stage, vth);
-        set_time_delay_in_s_of_stage(stage, tdelay);
-        set_scale_in_pu_of_stage(stage, scale);
-
-        ++stage;
-    }
-
-    if(model_name=="UVLSAL")
-        set_subsystem_type(ALL_SYSTEM_TYPE);
-    else
-    {
-        if(model_name=="UVLSAR")
-            set_subsystem_type(AREA_SUBSYSTEM_TYPE);
-        else
+        string model_name = get_string_data(data[0],"");
+        if(model_name=="UVLSAL" or model_name!="UVLSBL" or model_name!="UVLSAR" or model_name!="UVLSZN")
         {
-            if(model_name=="UVLSZN")
-                set_subsystem_type(ZONE_SUBSYSTEM_TYPE);
+            double t_sensor, tbreak, vth, tdelay, scale;
+
+            size_t i=3;
+
+            t_sensor = get_double_data(data[i],"0.0"); ++i;
+            set_voltage_sensor_time_in_s(t_sensor);
+
+            tbreak = get_double_data(data[i],"0.0"); ++i;
+            set_breaker_time_in_s(tbreak);
+
+            size_t stage = 0;
+
+            size_t n = data.size()-2;
+            for(i=5; i<n; i=i+3)
+            {
+                vth = get_double_data(data[i],"0.0");
+                tdelay = get_double_data(data[i+1],"0.0");
+                scale = get_double_data(data[i+2],"0.0");
+
+                set_voltage_threshold_in_pu_of_stage(stage, vth);
+                set_time_delay_in_s_of_stage(stage, tdelay);
+                set_scale_in_pu_of_stage(stage, scale);
+
+                ++stage;
+            }
+
+            if(model_name=="UVLSAL")
+                set_subsystem_type(ALL_SYSTEM_TYPE);
             else
             {
-                //UVLSBL
-                set_subsystem_type(BUS_SUBSYSTEM_TYPE);
+                if(model_name=="UVLSBL")
+                    set_subsystem_type(BUS_SUBSYSTEM_TYPE);
+                else
+                {
+                    if(model_name=="UVLSAR")
+                        set_subsystem_type(AREA_SUBSYSTEM_TYPE);
+                    else
+                    {//UVLSZN
+                        set_subsystem_type(ZONE_SUBSYSTEM_TYPE);
+                    }
+                }
             }
-        }
-    }
-    is_successful = true;
+            is_successful = true;
 
-    return is_successful;
+            return is_successful;
+
+        }
+        else
+            return is_successful;
+    }
+    else
+        return is_successful;
 }
 
 bool UVLS::setup_model_with_psse_string(string data)
@@ -228,30 +229,30 @@ void UVLS::set_block_toolkit()
 void UVLS::initialize()
 {
     LOAD* load = get_load_pointer();
-    if(load==NULL)
-        return;
-
-    set_block_toolkit();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double volt = psdb.get_bus_voltage_in_pu(load->get_load_bus());
-
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    if(load!=NULL)
     {
-        stage_timer[i].set_attached_device(load);
-        breaker_timer[i].set_attached_device(load);
-    }
+        set_block_toolkit();
 
-    voltage_sensor.set_output(volt);
-    voltage_sensor.initialize();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
-    {
-        stage_timer[i].reset();
-        breaker_timer[i].reset();
-        flag_stage_is_tripped[i]=false;
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        double volt = psdb.get_bus_voltage_in_pu(load->get_load_bus());
+
+        for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+        {
+            stage_timer[i].set_attached_device(load);
+            breaker_timer[i].set_attached_device(load);
+        }
+
+        voltage_sensor.set_output(volt);
+        voltage_sensor.initialize();
+
+        for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+        {
+            stage_timer[i].reset();
+            breaker_timer[i].reset();
+            flag_stage_is_tripped[i]=false;
+        }
     }
 }
 
@@ -333,11 +334,7 @@ double UVLS::get_total_shed_scale_factor_in_pu() const
 {
     double total_scale = 0.0;
     for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
-    {
-        if(is_stage_tripped(i))
-            total_scale += get_scale_in_pu_of_stage(i);
-
-    }
+        total_scale += (is_stage_tripped(i)*get_scale_in_pu_of_stage(i));
     return total_scale;
 }
 
@@ -412,10 +409,11 @@ void UVLS::trip_stage(size_t i)
 
 bool UVLS::is_stage_tripped(size_t i) const
 {
-    if(i>=MAX_LOAD_RELAY_STAGE)
+    if(i<MAX_LOAD_RELAY_STAGE)
+        return flag_stage_is_tripped[i];
+    else
         return false;
 
-    return flag_stage_is_tripped[i];
 }
 
 void UVLS::check()

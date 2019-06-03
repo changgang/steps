@@ -67,63 +67,62 @@ DEVICE_ID ENERGY_STORAGE::get_device_id() const
 
 void ENERGY_STORAGE::set_model(const MODEL* model)
 {
-    if(model==NULL)
-        return;
-
-    if(model->get_allowed_device_type()!="ENERGY STORAGE")
-        return;
-
-    if(model->get_model_type()=="ENERGY STORAGE")
+    if(model!=NULL and model->get_allowed_device_type()=="ENERGY STORAGE")
     {
-        set_energy_storage_model((ENERGY_STORAGE_MODEL*) model);
-        return;
+        if(model->get_model_type()=="ENERGY STORAGE")
+        {
+            set_energy_storage_model((ENERGY_STORAGE_MODEL*) model);
+            return;
+        }
+        ostringstream osstream;
+        osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
-    ostringstream osstream;
-    osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void ENERGY_STORAGE::set_energy_storage_model(const ENERGY_STORAGE_MODEL* model)
 {
-    if(model==NULL)
-        return;
+    if(model!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        if(model->get_model_type()=="ENERGY STORAGE")
+        {
+            ENERGY_STORAGE_MODEL* oldmodel = get_energy_storage_model();
+            if(oldmodel!=NULL)
+            {
+                delete oldmodel;
+                energy_storage_model = NULL;
+            }
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(model->get_model_type()!="ENERGY STORAGE")
-    {
-        ostringstream osstream;
-        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up energy storage model.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+            ENERGY_STORAGE_MODEL *new_model = NULL;
+            string model_name = model->get_model_name();
+            if(model_name=="ESTR0")
+            {
+                ESTR0* smodel = (ESTR0*) (model);
+                new_model = (ENERGY_STORAGE_MODEL*) new ESTR0(*smodel);
+            }
 
-    ENERGY_STORAGE_MODEL* oldmodel = get_energy_storage_model();
-    if(oldmodel!=NULL)
-    {
-        delete oldmodel;
-        energy_storage_model = NULL;
-    }
-
-    ENERGY_STORAGE_MODEL *new_model = NULL;
-    string model_name = model->get_model_name();
-    if(model_name=="ESTR0")
-    {
-        ESTR0* smodel = (ESTR0*) (model);
-        new_model = (ENERGY_STORAGE_MODEL*) new ESTR0(*smodel);
-    }
-
-    if(new_model!=NULL)
-    {
-        new_model->set_toolkit(toolkit);
-        new_model->set_device_id(get_device_id());
-        energy_storage_model = new_model;
-    }
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append energy storage model of "<<get_device_name();
-        toolkit.show_information_with_leading_time_stamp(osstream);
+            if(new_model!=NULL)
+            {
+                new_model->set_toolkit(toolkit);
+                new_model->set_device_id(get_device_id());
+                energy_storage_model = new_model;
+            }
+            else
+            {
+                ostringstream osstream;
+                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append energy storage model of "<<get_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up energy storage model.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
     }
 }
 
@@ -143,26 +142,26 @@ ENERGY_STORAGE_MODEL* ENERGY_STORAGE::get_energy_storage_model() const
 
 void ENERGY_STORAGE::run(DYNAMIC_MODE mode)
 {
-    if(get_status()==false)
-        return;
-
-    switch(mode)
+    if(get_status()==true)
     {
-        case INITIALIZE_MODE:
+        switch(mode)
         {
-            ENERGY_STORAGE_MODEL* estorage = get_energy_storage_model();
-            if(estorage==NULL)
-                return;
-            estorage->initialize();
-
-            break;
-        }
-        default:
-        {
-            ENERGY_STORAGE_MODEL* estorage = get_energy_storage_model();
-            if(estorage!=NULL)
-                estorage->run(mode);
-            break;
+            case INITIALIZE_MODE:
+            {
+                ENERGY_STORAGE_MODEL* estorage = get_energy_storage_model();
+                if(estorage!=NULL)
+                    estorage->initialize();
+                else
+                    return;
+                break;
+            }
+            default:
+            {
+                ENERGY_STORAGE_MODEL* estorage = get_energy_storage_model();
+                if(estorage!=NULL)
+                    estorage->run(mode);
+                break;
+            }
         }
     }
 }
@@ -171,13 +170,13 @@ void ENERGY_STORAGE::report() const
 {
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
-      <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
-      <<"P = "<<setw(8)<<setprecision(4)<<fixed<<get_p_generation_in_MW()<<" MW, "
-      <<"Pmax = "<<setw(8)<<setprecision(4)<<fixed<<get_p_max_in_MW()<<" MW, "
-      <<"Pmin = "<<setw(8)<<setprecision(4)<<fixed<<get_p_min_in_MW()<<" MW"<<endl
-      <<"Q = "<<setw(8)<<setprecision(4)<<fixed<<get_q_generation_in_MVar()<<" MVar, "
-      <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
-      <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar";
+            <<"MBASE = "<<setw(6)<<setprecision(2)<<fixed<<get_mbase_in_MVA()<<" MVA"<<endl
+            <<"P = "<<setw(8)<<setprecision(4)<<fixed<<get_p_generation_in_MW()<<" MW, "
+            <<"Pmax = "<<setw(8)<<setprecision(4)<<fixed<<get_p_max_in_MW()<<" MW, "
+            <<"Pmin = "<<setw(8)<<setprecision(4)<<fixed<<get_p_min_in_MW()<<" MW"<<endl
+            <<"Q = "<<setw(8)<<setprecision(4)<<fixed<<get_q_generation_in_MVar()<<" MVar, "
+            <<"Qmax = "<<setw(8)<<setprecision(4)<<fixed<<get_q_max_in_MVar()<<" MVar, "
+            <<"Qmin = "<<setw(8)<<setprecision(4)<<fixed<<get_q_min_in_MVar()<<" MVar";
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }

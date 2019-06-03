@@ -230,54 +230,57 @@ double PSASPE2::get_Ke() const
 bool PSASPE2::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<19)
+    if(data.size()>=19)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double kr, tr, k2, t1, t2, t3, t4, ka, ta, efdmax, efdmin, vta, vtb, kpt, kit, ke;
+
+            size_t i=3;
+            kr = get_double_data(data[i],"1.0"); i++;
+            tr = get_double_data(data[i],"0.0"); i++;
+            k2 = get_double_data(data[i],"0.0"); i++;
+            t1 = get_double_data(data[i],"0.0"); i++;
+            t2 = get_double_data(data[i],"0.0"); i++;
+            t3 = get_double_data(data[i],"0.0"); i++;
+            t4 = get_double_data(data[i],"0.0"); i++;
+            ka = get_double_data(data[i],"0.0"); i++;
+            ta = get_double_data(data[i],"0.0"); i++;
+            efdmax = get_double_data(data[i],"0.0"); i++;
+            efdmin = get_double_data(data[i],"0.0"); i++;
+            vta = get_double_data(data[i],"0.0"); i++;
+            vtb = get_double_data(data[i],"0.0"); i++;
+            kpt = get_double_data(data[i],"0.0"); i++;
+            kit = get_double_data(data[i],"0.0"); i++;
+            ke = get_double_data(data[i],"0.0"); i++;
+
+            set_KR(kr);
+            set_TR_in_s(tr);
+            set_K2(k2);
+            set_T1_in_s(t1);
+            set_T2_in_s(t2);
+            set_T3_in_s(t3);
+            set_T4_in_s(t4);
+            set_KA(ka);
+            set_TA_in_s(ta);
+            set_Efdmax_in_pu(efdmax);
+            set_Efdmax_in_pu(efdmin);
+            set_Vta_in_pu(vta);
+            set_Vtb_in_pu(vtb);
+            set_Kpt(kpt);
+            set_Kit(kit);
+            set_Ke(ke);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-
-    double kr, tr, k2, t1, t2, t3, t4, ka, ta, efdmax, efdmin, vta, vtb, kpt, kit, ke;
-
-    size_t i=3;
-    kr = get_double_data(data[i],"1.0"); i++;
-    tr = get_double_data(data[i],"0.0"); i++;
-    k2 = get_double_data(data[i],"0.0"); i++;
-    t1 = get_double_data(data[i],"0.0"); i++;
-    t2 = get_double_data(data[i],"0.0"); i++;
-    t3 = get_double_data(data[i],"0.0"); i++;
-    t4 = get_double_data(data[i],"0.0"); i++;
-    ka = get_double_data(data[i],"0.0"); i++;
-    ta = get_double_data(data[i],"0.0"); i++;
-    efdmax = get_double_data(data[i],"0.0"); i++;
-    efdmin = get_double_data(data[i],"0.0"); i++;
-    vta = get_double_data(data[i],"0.0"); i++;
-    vtb = get_double_data(data[i],"0.0"); i++;
-    kpt = get_double_data(data[i],"0.0"); i++;
-    kit = get_double_data(data[i],"0.0"); i++;
-    ke = get_double_data(data[i],"0.0"); i++;
-
-    set_KR(kr);
-    set_TR_in_s(tr);
-    set_K2(k2);
-    set_T1_in_s(t1);
-    set_T2_in_s(t2);
-    set_T3_in_s(t3);
-    set_T4_in_s(t4);
-    set_KA(ka);
-    set_TA_in_s(ta);
-    set_Efdmax_in_pu(efdmax);
-    set_Efdmax_in_pu(efdmin);
-    set_Vta_in_pu(vta);
-    set_Vtb_in_pu(vtb);
-    set_Kpt(kpt);
-    set_Kit(kit);
-    set_Ke(ke);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool PSASPE2::setup_model_with_psse_string(string data)
@@ -308,135 +311,139 @@ void PSASPE2::set_block_toolkit()
 
 void PSASPE2::initialize()
 {
-    if(is_model_initialized())
-        return;
-
-    GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
-
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return;
-
-    if(not gen_model->is_model_initialized())
-        gen_model->initialize();
-
-    set_block_toolkit();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    double Ecomp = get_compensated_voltage_in_pu();
-
-    set_voltage_reference_in_pu(Ecomp);
-
-    sensor.set_output(0.0);
-    sensor.initialize();
-
-    if(get_K2()==true)
+    if(not is_model_initialized())
     {
-        tuner1_lead_lag.set_output(0.0);
-        tuner1_lead_lag.initialize();
+        GENERATOR* generator = get_generator_pointer();
+        if(generator!=NULL)
+        {
+            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+            if(gen_model!=NULL)
+            {
+                if(not gen_model->is_model_initialized())
+                    gen_model->initialize();
+
+                set_block_toolkit();
+
+                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+                double Ecomp = get_compensated_voltage_in_pu();
+
+                set_voltage_reference_in_pu(Ecomp);
+
+                sensor.set_output(0.0);
+                sensor.initialize();
+
+                if(get_K2()==true)
+                {
+                    tuner1_lead_lag.set_output(0.0);
+                    tuner1_lead_lag.initialize();
+                }
+                else
+                {
+                    tuner1_pi.set_output(0.0);
+                    tuner1_pi.initialize();
+                }
+
+                tuner2.set_output(0.0);
+                tuner2.initialize();
+
+                regulator.set_output(0.0);
+                regulator.initialize();
+
+                double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+                this->Efd0 = Efd;
+
+                POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+                size_t bus = generator->get_generator_bus();
+                this->Vt0 = psdb.get_bus_voltage_in_pu(bus);
+
+                set_flag_model_initialized_as_true();
+            }
+        }
     }
-    else
-    {
-        tuner1_pi.set_output(0.0);
-        tuner1_pi.initialize();
-    }
-
-    tuner2.set_output(0.0);
-    tuner2.initialize();
-
-    regulator.set_output(0.0);
-    regulator.initialize();
-
-    double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-    this->Efd0 = Efd;
-
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t bus = generator->get_generator_bus();
-    this->Vt0 = psdb.get_bus_voltage_in_pu(bus);
-
-    set_flag_model_initialized_as_true();
 }
 
 void PSASPE2::run(DYNAMIC_MODE mode)
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
-
-    double Ecomp = get_compensated_voltage_in_pu();
-    double Vref = get_voltage_reference_in_pu();
-    double Vs = get_stabilizing_signal_in_pu();
-
-    double input = Vref-Ecomp+Vs;
-    sensor.set_input(input);
-    sensor.run(mode);
-
-    input = sensor.get_output();
-    if(get_K2()==true)
+    if(generator!=NULL)
     {
-        tuner1_lead_lag.set_input(input);
-        tuner1_lead_lag.run(mode);
-        input = tuner1_lead_lag.get_output();
+        double Ecomp = get_compensated_voltage_in_pu();
+        double Vref = get_voltage_reference_in_pu();
+        double Vs = get_stabilizing_signal_in_pu();
+
+        double input = Vref-Ecomp+Vs;
+        sensor.set_input(input);
+        sensor.run(mode);
+
+        input = sensor.get_output();
+        if(get_K2()==true)
+        {
+            tuner1_lead_lag.set_input(input);
+            tuner1_lead_lag.run(mode);
+            input = tuner1_lead_lag.get_output();
+        }
+        else
+        {
+            tuner1_pi.set_input(input);
+            tuner1_pi.run(mode);
+            input = tuner1_pi.get_output();
+        }
+
+        tuner2.set_input(input);
+        tuner2.run(mode);
+
+        input = tuner2.get_output();
+        regulator.set_input(input);
+        regulator.run(mode);
+
+        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
+
+        if(mode == UPDATE_MODE)
+            set_flag_model_updated_as_true();
     }
-    else
-    {
-        tuner1_pi.set_input(input);
-        tuner1_pi.run(mode);
-        input = tuner1_pi.get_output();
-    }
-
-    tuner2.set_input(input);
-    tuner2.run(mode);
-
-    input = tuner2.get_output();
-    regulator.set_input(input);
-    regulator.run(mode);
-
-    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
-
-    if(mode == UPDATE_MODE)
-        set_flag_model_updated_as_true();
 }
 
 double PSASPE2::get_excitation_voltage_in_pu() const
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
+    if(generator!=NULL)
+    {
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
+        {
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+            size_t bus = generator->get_generator_bus();
+            complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
+            complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+            double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+
+            double Efdmax = get_Efdmax_in_pu();
+            double Efdmin = get_Efdmin_in_pu();
+
+            double Vta = get_Vta_in_pu(), Vtb = get_Vtb_in_pu();
+            double Kv1 = 1.0/(Vt0*Vta), Kv2 = 1.0/(Vt0/Vtb);
+
+            double Kpt = get_Kpt(), Kit = get_Kit(), Ke = get_Ke();
+            complex<double> imag_1(0.0, 1.0);
+
+            double scale = abs(Kpt*Vt + imag_1*Kit*It);
+            Efdmax = Kv1*scale*Efdmax - Ke*Ifd;
+            Efdmin = Kv2*scale*Efdmin - Ke*Ifd;
+
+            double Efd = Efd0 + regulator.get_output();
+
+            if(Efd>Efdmax) Efd = Efdmax;
+            if(Efd<Efdmin) Efd = Efdmin;
+
+            return Efd;
+        }
+        else
+            return 0.0;
+    }
+    else
         return 0.0;
-
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t bus = generator->get_generator_bus();
-    complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
-    complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-    double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-
-    double Efdmax = get_Efdmax_in_pu();
-    double Efdmin = get_Efdmin_in_pu();
-
-    double Vta = get_Vta_in_pu(), Vtb = get_Vtb_in_pu();
-    double Kv1 = 1.0/(Vt0*Vta), Kv2 = 1.0/(Vt0/Vtb);
-
-    double Kpt = get_Kpt(), Kit = get_Kit(), Ke = get_Ke();
-    complex<double> imag_1(0.0, 1.0);
-
-    double scale = abs(Kpt*Vt + imag_1*Kit*It);
-    Efdmax = Kv1*scale*Efdmax - Ke*Ifd;
-    Efdmin = Kv2*scale*Efdmin - Ke*Ifd;
-
-    double Efd = Efd0 + regulator.get_output();
-
-    if(Efd>Efdmax) Efd = Efdmax;
-    if(Efd<Efdmin) Efd = Efdmin;
-
-    return Efd;
 }
 void PSASPE2::check()
 {

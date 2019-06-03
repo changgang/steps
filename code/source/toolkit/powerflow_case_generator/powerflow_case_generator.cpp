@@ -160,15 +160,12 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
     // increase load
     vector<LOAD*> loads = psdb.get_all_loads();
     size_t nload = loads.size();
-    LOAD* load;
-    double scale;
     for(size_t i=0; i!=nload; ++i)
     {
-        load = loads[i];
-        if(load->get_status()==true)
+        if(loads[i]->get_status()==true)
         {
-            scale = load_randoms[i];
-            psdb.scale_load_power(load->get_device_id(), scale);
+            double scale = load_randoms[i];
+            psdb.scale_load_power(loads[i]->get_device_id(), scale);
         }
     }
 
@@ -177,7 +174,6 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
 
     double uniform_load_scale = get_uniform_load_scale();
     Ploss *= (1.0+uniform_load_scale);
-
 
     vector<GENERATOR*> generators = psdb.get_all_generators();
     size_t nsource = generators.size();
@@ -188,11 +184,8 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
 
     bool load_level_exceeds_max_generation = false;
 
-    while(true)
+    while(fabs(uniform_gen_scale)>1e-4)
     {
-        if(fabs(uniform_gen_scale)<1e-4)
-            break;
-
         for(size_t i=0; i!=nsource; ++i)
         {
             generator = generators[i];
@@ -236,8 +229,7 @@ void POWERFLOW_CASE_GENERATOR::generate_case_with_load_random(vector<double> loa
     string randoms_info = psdb.get_case_additional_information()+"  PS:LOAD RANDOMS ARE: ";
     for(size_t i=0; i!=nload; ++i)
     {
-        load = loads[i];
-        scale = load_randoms[i];
+        double scale = load_randoms[i];
         randoms_info += num2str(scale)+"  ";
     }
 

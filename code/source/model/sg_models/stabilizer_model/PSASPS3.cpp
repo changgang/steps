@@ -261,58 +261,62 @@ double PSASPS3::get_Vsmin() const
 bool PSASPS3::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<21)
-        is_successful = false;
+    if(data.size()>=21)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            int dedc1_flag;
+            double macc, iacc, nacc, tacc, td, ti1, ti2, ti3, ti4, k0, k1, k2, k3, k4, kp, vsmax, vsmin;
 
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
+            size_t i=3;
+            macc = get_double_data(data[i],"0.0"); i++;
+            iacc = get_double_data(data[i],"0.0"); i++;
+            nacc = get_double_data(data[i],"0.0"); i++;
+            dedc1_flag= get_integer_data(data[i],"0"); i++;
+            tacc= get_double_data(data[i],"0.0"); i++;
+            td= get_double_data(data[i],"0.0"); i++;
+            ti1 = get_double_data(data[i],"0.0"); i++;
+            ti2 = get_double_data(data[i],"0.0"); i++;
+            ti3 = get_double_data(data[i],"0.0"); i++;
+            ti4 = get_double_data(data[i],"0.0"); i++;
+            k0 = get_double_data(data[i],"0.0"); i++;
+            k1 = get_double_data(data[i],"0.0"); i++;
+            k2 = get_double_data(data[i],"0.0"); i++;
+            k3 = get_double_data(data[i],"0.0"); i++;
+            k4 = get_double_data(data[i],"0.0"); i++;
+            kp = get_double_data(data[i],"0.0"); i++;
+            vsmax = get_double_data(data[i],"0.0"); i++;
+            vsmin = get_double_data(data[i],"0.0"); i++;
+
+            set_Macc(macc);
+            set_Iacc(iacc);
+            set_Nacc(nacc);
+            set_dedc_1_flag(dedc1_flag);
+            set_Tacc_in_s(tacc);
+            set_TD_in_s(td);
+            set_Ti1_in_s(ti1);
+            set_Ti2_in_s(ti2);
+            set_Ti3_in_s(ti3);
+            set_Ti4_in_s(ti4);
+            set_K0(k0);
+            set_K1(k1);
+            set_K2(k2);
+            set_K3(k3);
+            set_K4(k4);
+            set_KP(kp);
+            set_Vsmax(vsmax);
+            set_Vsmin(vsmin);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    int dedc1_flag;
-    double macc, iacc, nacc, tacc, td, ti1, ti2, ti3, ti4, k0, k1, k2, k3, k4, kp, vsmax, vsmin;
-
-    size_t i=3;
-    macc = get_double_data(data[i],"0.0"); i++;
-    iacc = get_double_data(data[i],"0.0"); i++;
-    nacc = get_double_data(data[i],"0.0"); i++;
-    dedc1_flag= get_integer_data(data[i],"0"); i++;
-    tacc= get_double_data(data[i],"0.0"); i++;
-    td= get_double_data(data[i],"0.0"); i++;
-    ti1 = get_double_data(data[i],"0.0"); i++;
-    ti2 = get_double_data(data[i],"0.0"); i++;
-    ti3 = get_double_data(data[i],"0.0"); i++;
-    ti4 = get_double_data(data[i],"0.0"); i++;
-    k0 = get_double_data(data[i],"0.0"); i++;
-    k1 = get_double_data(data[i],"0.0"); i++;
-    k2 = get_double_data(data[i],"0.0"); i++;
-    k3 = get_double_data(data[i],"0.0"); i++;
-    k4 = get_double_data(data[i],"0.0"); i++;
-    kp = get_double_data(data[i],"0.0"); i++;
-    vsmax = get_double_data(data[i],"0.0"); i++;
-    vsmin = get_double_data(data[i],"0.0"); i++;
-
-    set_Macc(macc);
-    set_Iacc(iacc);
-    set_Nacc(nacc);
-    set_dedc_1_flag(dedc1_flag);
-    set_Tacc_in_s(tacc);
-    set_TD_in_s(td);
-    set_Ti1_in_s(ti1);
-    set_Ti2_in_s(ti2);
-    set_Ti3_in_s(ti3);
-    set_Ti4_in_s(ti4);
-    set_K0(k0);
-    set_K1(k1);
-    set_K2(k2);
-    set_K3(k3);
-    set_K4(k4);
-    set_KP(kp);
-    set_Vsmax(vsmax);
-    set_Vsmin(vsmin);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool PSASPS3::setup_model_with_psse_string(string data)
@@ -347,105 +351,102 @@ void PSASPS3::initialize()
     ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
+    if(generator!=NULL)
     {
-        deactivate_model();
-        set_flag_model_initialized_as_true();
-        return;
+        EXCITER_MODEL* exciter = generator->get_exciter_model();
+        if(exciter!=NULL)
+        {
+            if(not exciter->is_model_initialized())
+                exciter->initialize();
+
+            set_block_toolkit();
+
+            size_t bus = generator->get_generator_bus();
+
+            SIGNAL signal = prepare_signal_with_signal_type_and_bus(1, bus);
+            if(signal.is_valid())
+                set_input_signal_at_slot(0, signal);
+
+            signal = prepare_signal_with_signal_type_and_bus(3, bus);
+            if(signal.is_valid())
+                set_input_signal_at_slot(1, signal);
+
+            signal = prepare_signal_with_signal_type_and_bus(7, bus);
+            if(signal.is_valid())
+                set_input_signal_at_slot(2, signal);
+
+            phase_tuner_4.set_output(0.0);
+            phase_tuner_4.initialize();
+
+            phase_tuner_3.set_output(0.0);
+            phase_tuner_3.initialize();
+
+            phase_tuner_2.set_output(0.0);
+            phase_tuner_2.initialize();
+
+            phase_tuner_1.set_output(0.0);
+            phase_tuner_1.initialize();
+
+            dedc_block_2.set_output(0.0);
+            dedc_block_2.initialize();
+
+            dedc_block_1.set_output(0.0);
+            dedc_block_1.initialize();
+
+            speed_deviation_ref_pu = get_signal_value_of_slot(0);
+            Pe_ref_pu = get_signal_value_of_slot(1);
+            Pmech_ref_pu = get_signal_value_of_slot(2);
+        }
+        else
+            deactivate_model();
     }
-
-    EXCITER_MODEL* exciter = generator->get_exciter_model();
-    if(exciter==NULL)
-    {
+    else
         deactivate_model();
-        set_flag_model_initialized_as_true();
-        return;
-    }
-    if(not exciter->is_model_initialized())
-        exciter->initialize();
-
-    set_block_toolkit();
-
-    size_t bus = generator->get_generator_bus();
-
-    SIGNAL signal = prepare_signal_with_signal_type_and_bus(1, bus);
-    if(signal.is_valid())
-        set_input_signal_at_slot(0, signal);
-
-    signal = prepare_signal_with_signal_type_and_bus(3, bus);
-    if(signal.is_valid())
-        set_input_signal_at_slot(1, signal);
-
-    signal = prepare_signal_with_signal_type_and_bus(7, bus);
-    if(signal.is_valid())
-        set_input_signal_at_slot(2, signal);
-
-    phase_tuner_4.set_output(0.0);
-    phase_tuner_4.initialize();
-
-    phase_tuner_3.set_output(0.0);
-    phase_tuner_3.initialize();
-
-    phase_tuner_2.set_output(0.0);
-    phase_tuner_2.initialize();
-
-    phase_tuner_1.set_output(0.0);
-    phase_tuner_1.initialize();
-
-    dedc_block_2.set_output(0.0);
-    dedc_block_2.initialize();
-
-    dedc_block_1.set_output(0.0);
-    dedc_block_1.initialize();
-
-    speed_deviation_ref_pu = get_signal_value_of_slot(0);
-    Pe_ref_pu = get_signal_value_of_slot(1);
-    Pmech_ref_pu = get_signal_value_of_slot(2);
 
     set_flag_model_initialized_as_true();
 }
 
 void PSASPS3::run(DYNAMIC_MODE mode)
 {
-    if(not is_model_active())
-        return;
-
-    double speed_deviation_pu = get_signal_value_of_slot(0);
-    double Pe_pu = get_signal_value_of_slot(1);
-    double Pmech_pu = get_signal_value_of_slot(2);
-
-    double input = Macc*(speed_deviation_pu-speed_deviation_ref_pu)+Iacc*(Pmech_pu-Pmech_ref_pu)-Nacc*(Pe_pu-Pe_ref_pu);
-
-    if(get_dedc_1_flag())
+    if(is_model_active())
     {
-        dedc_block_1.set_input(input);
-        dedc_block_1.run(mode);
-        input = dedc_block_1.get_output();
+        double speed_deviation_pu = get_signal_value_of_slot(0);
+        double Pe_pu = get_signal_value_of_slot(1);
+        double Pmech_pu = get_signal_value_of_slot(2);
+
+        double input = Macc*(speed_deviation_pu-speed_deviation_ref_pu)+Iacc*(Pmech_pu-Pmech_ref_pu)-Nacc*(Pe_pu-Pe_ref_pu);
+
+        if(get_dedc_1_flag())
+        {
+            dedc_block_1.set_input(input);
+            dedc_block_1.run(mode);
+            input = dedc_block_1.get_output();
+        }
+
+        dedc_block_2.set_input(input);
+        dedc_block_2.run(mode);
+        input = dedc_block_2.get_output();
+
+        input -= (phase_tuner_1.get_output()+phase_tuner_2.get_output()+phase_tuner_3.get_output()+phase_tuner_4.get_output());
+
+        phase_tuner_1.set_input(input);
+        phase_tuner_1.run(mode);
+        input = phase_tuner_1.get_output();
+
+        phase_tuner_2.set_input(input);
+        phase_tuner_2.run(mode);
+        input = phase_tuner_2.get_output();
+
+        phase_tuner_3.set_input(input);
+        phase_tuner_3.run(mode);
+        input = phase_tuner_3.get_output();
+
+        phase_tuner_4.set_input(input);
+        phase_tuner_4.run(mode);
+
+        if(mode==UPDATE_MODE)
+            set_flag_model_updated_as_true();
     }
-
-    dedc_block_2.set_input(input);
-    dedc_block_2.run(mode);
-    input = dedc_block_2.get_output();
-
-    input -= (phase_tuner_1.get_output()+phase_tuner_2.get_output()+phase_tuner_3.get_output()+phase_tuner_4.get_output());
-
-    phase_tuner_1.set_input(input);
-    phase_tuner_1.run(mode);
-    input = phase_tuner_1.get_output();
-
-    phase_tuner_2.set_input(input);
-    phase_tuner_2.run(mode);
-    input = phase_tuner_2.get_output();
-
-    phase_tuner_3.set_input(input);
-    phase_tuner_3.run(mode);
-    input = phase_tuner_3.get_output();
-
-    phase_tuner_4.set_input(input);
-    phase_tuner_4.run(mode);
-
-    if(mode==UPDATE_MODE)
-        set_flag_model_updated_as_true();
 }
 
 double PSASPS3::get_stabilizing_signal_in_pu() const

@@ -62,23 +62,27 @@ double COMP::get_Xe() const
 bool COMP::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<4)
+    if(data.size()>=4)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double xe;
+
+            size_t i=3;
+            xe = get_double_data(data[i],"0.0");
+
+            set_Xe(xe);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    double xe;
-
-    size_t i=3;
-    xe = get_double_data(data[i],"0.0");
-
-    set_Xe(xe);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool COMP::setup_model_with_psse_string(string data)
@@ -105,12 +109,12 @@ void COMP::set_block_toolkit()
 
 void COMP::initialize()
 {
-    if(is_model_initialized())
-        return;
+    if(not is_model_initialized())
+    {
+        set_block_toolkit();
 
-    set_block_toolkit();
-
-    set_flag_model_initialized_as_false();
+        set_flag_model_initialized_as_false();
+    }
 }
 
 void COMP::run(DYNAMIC_MODE mode)
@@ -118,6 +122,7 @@ void COMP::run(DYNAMIC_MODE mode)
     if(mode==UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
+
 double COMP::get_compensated_voltage_in_pu() const
 {
     complex<double> Vt = get_generator_terminal_voltage_in_pu();
@@ -127,6 +132,7 @@ double COMP::get_compensated_voltage_in_pu() const
     complex<double> Vct = Vt-j*xe*It;
     return steps_fast_complex_abs(Vct);
 }
+
 void COMP::check()
 {
     ;

@@ -205,76 +205,80 @@ bool PUFLS::setup_model_with_steps_string_vector(vector<string>& data)
     bool is_successful = false;
     size_t n = data.size();
 
-    if(n<12)
-        return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!="PUFLSAL" and model_name!="PUFLSAR" and model_name!="PUFLSZN" and model_name!="PUFLSBL")
-        return is_successful;
-
-    double t_freq, fth_continuous, tdelay, K_scale, max_scale;
-    size_t signal_flag;
-    double fth_additional, additional_scale, additional_time_delay;
-
-    size_t i=3;
-    signal_flag = get_integer_data(data[i], "0"); i++;
-    t_freq = get_double_data(data[i],"0.0"); i++;
-    fth_continuous = get_double_data(data[i],"0.0"); i++;
-    K_scale = get_double_data(data[i],"0.0"); i++;
-    tdelay = get_double_data(data[i],"0.0"); i++;
-    max_scale = get_double_data(data[i],"0.0"); i++;
-
-    set_frequency_sensor_time_in_s(t_freq);
-    set_continuous_frequency_threshold_in_Hz(fth_continuous);
-    set_time_delay_in_s(tdelay);
-    set_scale_K_in_pu_per_Hz(K_scale);
-    set_maximum_continuous_shed_scale_in_pu(max_scale);
-
-    fth_additional = get_double_data(data[i],"0.0"); i++;
-    additional_time_delay = get_double_data(data[i],"0.0"); i++;
-    additional_scale = get_double_data(data[i],"0.0"); i++;
-
-    if(signal_flag==0)
-        set_additional_stage_trigger_signal(REALTIME_FREQUENCY);
-    else
-        set_additional_stage_trigger_signal(MINIMUM_FREQUENCY);
-    set_additional_stage_frequency_threshold_in_Hz(fth_additional);
-    set_additional_stage_time_delay_in_s(additional_time_delay);
-    set_additional_stage_shed_scale_in_pu(additional_scale);
-
     if(n>=12)
     {
-        tdelay = get_double_data(data[i],"0.0"); i++;
-        set_discrete_stage_time_delay_in_s(tdelay);
-
-        for(size_t stage=0; i!=n and stage!=MAX_LOAD_RELAY_STAGE; ++i, ++stage)
+        string model_name = get_string_data(data[0],"");
+        if(model_name=="PUFLSAL" or model_name=="PUFLSBL" or model_name=="PUFLSAR" or model_name=="PUFLSZN")
         {
-            double scale = get_double_data(data[i],"0.0");
-            set_discrete_stage_shed_scale_in_pu(stage, scale);
-        }
-    }
+            double t_freq, fth_continuous, tdelay, K_scale, max_scale;
+            size_t signal_flag;
+            double fth_additional, additional_scale, additional_time_delay;
+
+            size_t i=3;
+            signal_flag = get_integer_data(data[i], "0"); i++;
+            t_freq = get_double_data(data[i],"0.0"); i++;
+            fth_continuous = get_double_data(data[i],"0.0"); i++;
+            K_scale = get_double_data(data[i],"0.0"); i++;
+            tdelay = get_double_data(data[i],"0.0"); i++;
+            max_scale = get_double_data(data[i],"0.0"); i++;
+
+            set_frequency_sensor_time_in_s(t_freq);
+            set_continuous_frequency_threshold_in_Hz(fth_continuous);
+            set_time_delay_in_s(tdelay);
+            set_scale_K_in_pu_per_Hz(K_scale);
+            set_maximum_continuous_shed_scale_in_pu(max_scale);
+
+            fth_additional = get_double_data(data[i],"0.0"); i++;
+            additional_time_delay = get_double_data(data[i],"0.0"); i++;
+            additional_scale = get_double_data(data[i],"0.0"); i++;
+
+            if(signal_flag==0)
+                set_additional_stage_trigger_signal(REALTIME_FREQUENCY);
+            else
+                set_additional_stage_trigger_signal(MINIMUM_FREQUENCY);
+            set_additional_stage_frequency_threshold_in_Hz(fth_additional);
+            set_additional_stage_time_delay_in_s(additional_time_delay);
+            set_additional_stage_shed_scale_in_pu(additional_scale);
+
+            if(n>=12)
+            {
+                tdelay = get_double_data(data[i],"0.0"); i++;
+                set_discrete_stage_time_delay_in_s(tdelay);
+
+                for(size_t stage=0; i!=n and stage!=MAX_LOAD_RELAY_STAGE; ++i, ++stage)
+                {
+                    double scale = get_double_data(data[i],"0.0");
+                    set_discrete_stage_shed_scale_in_pu(stage, scale);
+                }
+            }
 
 
-    if(model_name=="PUFLSAL")
-        set_subsystem_type(ALL_SYSTEM_TYPE);
-    else
-    {
-        if(model_name=="PUFLSAR")
-            set_subsystem_type(AREA_SUBSYSTEM_TYPE);
-        else
-        {
-            if(model_name=="PUFLSZN")
-                set_subsystem_type(ZONE_SUBSYSTEM_TYPE);
+            if(model_name=="PUFLSAL")
+                set_subsystem_type(ALL_SYSTEM_TYPE);
             else
             {
-                //PUFLSBL
-                set_subsystem_type(BUS_SUBSYSTEM_TYPE);
+                if(model_name=="PUFLSAR")
+                    set_subsystem_type(AREA_SUBSYSTEM_TYPE);
+                else
+                {
+                    if(model_name=="PUFLSZN")
+                        set_subsystem_type(ZONE_SUBSYSTEM_TYPE);
+                    else
+                    {
+                        //PUFLSBL
+                        set_subsystem_type(BUS_SUBSYSTEM_TYPE);
+                    }
+                }
             }
-        }
-    }
-    is_successful = true;
+            is_successful = true;
 
-    return is_successful;
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
+        return is_successful;
 }
 
 bool PUFLS::setup_model_with_psse_string(string data)
@@ -307,40 +311,40 @@ void PUFLS::set_block_toolkit()
 void PUFLS::initialize()
 {
     LOAD* load = get_load_pointer();
-    if(load==NULL)
-        return;
-
-    set_block_toolkit();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    double fbase = get_bus_base_frequency_in_Hz();
-
-    additional_stage_timer.set_attached_device(load);
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
-        discrete_stage_timer[stage].set_attached_device(load);
-
-    double t_delay = get_time_delay_in_s();
-    double delt = toolkit.get_dynamic_simulation_time_step_in_s();
-
-    frequency_sensor.set_output(fbase);
-    frequency_sensor.initialize();
-
-    double current_time = toolkit.get_dynamic_simulation_time_in_s();
-
-    history_minimum_frequency_buffer.set_buffer_size(2*(size_t)(t_delay/delt)+2);
-    history_minimum_frequency_buffer.initialize_buffer(current_time, fbase);
-
-    additional_stage_timer.reset();
-    flag_additional_stage_is_tripped = false;
-
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    if(load!=NULL)
     {
-        discrete_stage_timer[stage].reset();
-        flag_discrete_stage_is_tripped[stage] = false;
-    }
+        set_block_toolkit();
 
-    current_continuous_shed_command_in_pu = 0.0;
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+        double fbase = get_bus_base_frequency_in_Hz();
+
+        additional_stage_timer.set_attached_device(load);
+        for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+            discrete_stage_timer[stage].set_attached_device(load);
+
+        double t_delay = get_time_delay_in_s();
+        double delt = toolkit.get_dynamic_simulation_time_step_in_s();
+
+        frequency_sensor.set_output(fbase);
+        frequency_sensor.initialize();
+
+        double current_time = toolkit.get_dynamic_simulation_time_in_s();
+
+        history_minimum_frequency_buffer.set_buffer_size(2*(size_t)(t_delay/delt)+2);
+        history_minimum_frequency_buffer.initialize_buffer(current_time, fbase);
+
+        additional_stage_timer.reset();
+        flag_additional_stage_is_tripped = false;
+
+        for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+        {
+            discrete_stage_timer[stage].reset();
+            flag_discrete_stage_is_tripped[stage] = false;
+        }
+
+        current_continuous_shed_command_in_pu = 0.0;
+    }
 }
 
 void PUFLS::run(DYNAMIC_MODE mode)
@@ -475,10 +479,7 @@ double PUFLS::get_total_discrete_shed_scale_in_pu() const
 {
     double scale = 0.0;
     for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
-    {
-        if(is_discrete_stage_tipped(stage))
-            scale += discrete_stage_shed_scale_in_pu[stage];
-    }
+        scale += (is_discrete_stage_tipped(stage)*discrete_stage_shed_scale_in_pu[stage]);
     return scale;
 }
 
@@ -618,128 +619,125 @@ bool PUFLS::is_additional_stage_timer_started() const
 
 void PUFLS::trip_additional_stage()
 {
-    if(is_additional_stage_tripped())
-        return;
+    if(not is_additional_stage_tripped())
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double current_time = toolkit.get_dynamic_simulation_time_in_s();
-
-    ostringstream osstream;
-    osstream<<"PUFLS additional stage of "<<get_device_name()<<" is timed out at time "
-      <<setprecision(3)<<fixed<<current_time<<" s. "<<endl
-      <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()*100.0<<"% loads is tripped.";
-    toolkit.show_information_with_leading_time_stamp(osstream);
-    flag_additional_stage_is_tripped = true;
-    additional_stage_timer.reset();
+        ostringstream osstream;
+        osstream<<"PUFLS additional stage of "<<get_device_name()<<" is timed out at time "
+          <<setprecision(3)<<fixed<<current_time<<" s. "<<endl
+          <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()*100.0<<"% loads is tripped.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        flag_additional_stage_is_tripped = true;
+        additional_stage_timer.reset();
+    }
 }
 
 void PUFLS::try_to_start_additional_stage_timer()
 {
-    if(is_additional_stage_timer_started())
-        return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double current_time = toolkit.get_dynamic_simulation_time_in_s();
-
-    ostringstream osstream;
-    double current_freq = frequency_sensor.get_output();
-    double f_th = get_additional_stage_frequency_threshold_in_Hz();
-    switch(get_additional_stage_trigger_signal())
+    if(not is_additional_stage_timer_started())
     {
-        case REALTIME_FREQUENCY:
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double current_time = toolkit.get_dynamic_simulation_time_in_s();
+
+        ostringstream osstream;
+        double current_freq = frequency_sensor.get_output();
+        double f_th = get_additional_stage_frequency_threshold_in_Hz();
+        switch(get_additional_stage_trigger_signal())
         {
-            if(current_freq<f_th)
+            case REALTIME_FREQUENCY:
             {
-                osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "<<current_time
-                  <<" s due to drop of frequency."<<endl
-                  <<"Current frequency is "<<current_freq<<" Hz, and stage frequency threshold is "<<f_th<<" Hz.",
-                toolkit.show_information_with_leading_time_stamp(osstream);
-                start_additional_stage_timer();
-            }
-            break;
-        }
-        default: // MINIMUM_FREQUENCY
-        {
-            if(current_freq<f_th)
-            {
-                if(is_frequency_recovering_beyond_current_minimum_frequency()) // frequency is recovering
+                if(current_freq<f_th)
                 {
-                    osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
-                      <<current_time<<" s due to recovery of frequency."<<endl
-                      <<"Current frequency is "<<current_freq<<" Hz.";
+                    osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "<<current_time
+                      <<" s due to drop of frequency."<<endl
+                      <<"Current frequency is "<<current_freq<<" Hz, and stage frequency threshold is "<<f_th<<" Hz.",
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     start_additional_stage_timer();
                 }
-                else
+                break;
+            }
+            default: // MINIMUM_FREQUENCY
+            {
+                if(current_freq<f_th)
                 {
-                    if(is_minimum_frequency_not_changing())
+                    if(is_frequency_recovering_beyond_current_minimum_frequency()) // frequency is recovering
                     {
                         osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
-                          <<current_time<<" s since minimum frequency is not changing."<<endl
+                          <<current_time<<" s due to recovery of frequency."<<endl
                           <<"Current frequency is "<<current_freq<<" Hz.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         start_additional_stage_timer();
                     }
+                    else
+                    {
+                        if(is_minimum_frequency_not_changing())
+                        {
+                            osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is started at time "
+                              <<current_time<<" s since minimum frequency is not changing."<<endl
+                              <<"Current frequency is "<<current_freq<<" Hz.";
+                            toolkit.show_information_with_leading_time_stamp(osstream);
+                            start_additional_stage_timer();
+                        }
+                    }
                 }
+                break;
             }
-            break;
         }
     }
 }
 void PUFLS::start_additional_stage_timer()
 {
-    if(is_additional_stage_timer_started())
-        return;
-
-    additional_stage_timer.start();
+    if(not is_additional_stage_timer_started())
+        additional_stage_timer.start();
 }
 
 void PUFLS::try_to_reset_additional_stage_timer()
 {
-    if(not is_additional_stage_timer_started())
-        return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double current_time = toolkit.get_dynamic_simulation_time_in_s();
-
-    ostringstream osstream;
-    double current_freq = frequency_sensor.get_output();
-    double f_th = get_additional_stage_frequency_threshold_in_Hz();
-    switch(get_additional_stage_trigger_signal())
+    if(is_additional_stage_timer_started())
     {
-        case REALTIME_FREQUENCY:
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double current_time = toolkit.get_dynamic_simulation_time_in_s();
+
+        ostringstream osstream;
+        double current_freq = frequency_sensor.get_output();
+        double f_th = get_additional_stage_frequency_threshold_in_Hz();
+        switch(get_additional_stage_trigger_signal())
         {
-            if(current_freq>f_th)
+            case REALTIME_FREQUENCY:
             {
-                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS additional stage timer of %s is reset at time %.3fs due to recovery of frequency.\n"
-                        "Current frequency is %.4fHz, and stage frequency threshold is %.4fHz.",get_device_name().c_str(),current_time,
-                        current_freq,f_th);
-                toolkit.show_information_with_leading_time_stamp(buffer);
-                reset_additional_stage_timer();
+                if(current_freq>f_th)
+                {
+                    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+                    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS additional stage timer of %s is reset at time %.3fs due to recovery of frequency.\n"
+                            "Current frequency is %.4fHz, and stage frequency threshold is %.4fHz.",get_device_name().c_str(),current_time,
+                            current_freq,f_th);
+                    toolkit.show_information_with_leading_time_stamp(buffer);
+                    reset_additional_stage_timer();
+                }
+                break;
             }
-            break;
-        }
-        default: // MINIMUM_FREQUENCY
-        {
-            if(is_minimum_frequency_declining())
+            default: // MINIMUM_FREQUENCY
             {
-                osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is reset at time "<<current_time
-                  <<" s due to declining of minimum frequency."<<endl
-                  <<"Current frequency is "<<current_freq<<" Hz.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-                reset_additional_stage_timer();
+                if(is_minimum_frequency_declining())
+                {
+                    osstream<<"PUFLS additional stage timer of "<<get_device_name()<<" is reset at time "<<current_time
+                      <<" s due to declining of minimum frequency."<<endl
+                      <<"Current frequency is "<<current_freq<<" Hz.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    reset_additional_stage_timer();
+                }
+                break;
             }
-            break;
         }
     }
 }
 
 void PUFLS::reset_additional_stage_timer()
 {
-    if(not is_additional_stage_timer_started())
-        return;
-    additional_stage_timer.reset();
+    if(is_additional_stage_timer_started())
+        additional_stage_timer.reset();
 }
 
 bool PUFLS::is_frequency_recovering_beyond_current_minimum_frequency() const
@@ -778,8 +776,7 @@ double PUFLS::get_total_shed_scale_factor_in_pu() const
         total_shed_scale += get_total_discrete_shed_scale_in_pu();
     }
 
-    if(flag_additional_stage_is_tripped)
-        total_shed_scale += get_additional_stage_shed_scale_in_pu();
+    total_shed_scale += (flag_additional_stage_is_tripped*get_additional_stage_shed_scale_in_pu());
     //cout<<"total shed scale = "<<total_shed_scale<<endl;
 
     return total_shed_scale;

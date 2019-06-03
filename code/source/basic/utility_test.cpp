@@ -228,7 +228,7 @@ void UTILITY_TEST::test_radps2hz()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double w = 1.0;
-    double f = w/(2.0*PI);
+    double f = w/PI2;
     TEST_ASSERT(fabs(radps2hz(w)-f)<FLOAT_EPSILON);
 }
 
@@ -237,7 +237,7 @@ void UTILITY_TEST::test_hz2radps()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double f = 1.0;
-    double w = f*(2.0*PI);
+    double w = f*PI2;
     TEST_ASSERT(fabs(hz2radps(f)-w)<FLOAT_EPSILON);
 }
 

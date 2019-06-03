@@ -363,14 +363,14 @@ void EQUIVALENT_DEVICE::report() const
 {
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<endl
-      <<"equivalent voltage source: "<<(get_equivalent_voltage_source_status()==true?"in service":"out of service")<<", "
-      <<"V = "<<setw(8)<<setprecision(6)<<fixed<< steps_fast_complex_abs(get_equivalent_voltage_source_voltage_in_pu())<<" pu, "
-      <<"Angle = "<<setw(8)<<setprecision(6)<<fixed<<rad2deg(steps_fast_complex_arg(get_equivalent_voltage_source_voltage_in_pu()))<<" deg, "
-      <<"Z = "<<setw(8)<<setprecision(6)<<fixed<<get_equivalent_voltage_source_impedance_in_pu()<<" pu"<<endl
-      <<"equivalent load: "<<(get_equivalent_load_status()==true?"in service":"out of service")<<", "
-      <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_power_load_in_MVA()<<"MVA, "
-      <<"P+jQ[I part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_current_load_in_MVA()<<"MVA, "
-      <<"P+jQ[Z part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_impedance_load_in_MVA()<<"MVA.";
+            <<"equivalent voltage source: "<<(get_equivalent_voltage_source_status()==true?"in service":"out of service")<<", "
+            <<"V = "<<setw(8)<<setprecision(6)<<fixed<< steps_fast_complex_abs(get_equivalent_voltage_source_voltage_in_pu())<<" pu, "
+            <<"Angle = "<<setw(8)<<setprecision(6)<<fixed<<rad2deg(steps_fast_complex_arg(get_equivalent_voltage_source_voltage_in_pu()))<<" deg, "
+            <<"Z = "<<setw(8)<<setprecision(6)<<fixed<<get_equivalent_voltage_source_impedance_in_pu()<<" pu"<<endl
+            <<"equivalent load: "<<(get_equivalent_load_status()==true?"in service":"out of service")<<", "
+            <<"P+jQ[P part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_power_load_in_MVA()<<"MVA, "
+            <<"P+jQ[I part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_current_load_in_MVA()<<"MVA, "
+            <<"P+jQ[Z part] = "<<setw(6)<<setprecision(2)<<fixed<<get_equivalent_nominal_constant_impedance_load_in_MVA()<<"MVA.";
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -423,48 +423,49 @@ DEVICE_ID EQUIVALENT_DEVICE::get_device_id() const
 
 void EQUIVALENT_DEVICE::set_model(const MODEL* model)
 {
-    if(model->get_allowed_device_type()!="EQUIVALENT DEVICE")
-        return;
-
-    if(model->get_model_type()=="EQUIVALENT MODEL")
+    if(model != NULL and model->get_allowed_device_type()=="EQUIVALENT DEVICE")
     {
-        set_equivalent_model((EQUIVALENT_MODEL*) model);
-        return;
+        if(model->get_model_type()=="EQUIVALENT MODEL")
+        {
+            set_equivalent_model((EQUIVALENT_MODEL*) model);
+            return;
+        }
     }
 }
 
 void EQUIVALENT_DEVICE::set_equivalent_model(const EQUIVALENT_MODEL* model)
 {
-    if(model->get_model_type()!="EQUIVALENT MODEL")
-        return;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    if(model!=NULL and model->get_model_type()=="EQUIVALENT MODEL")
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
-    EQUIVALENT_MODEL* oldmodel = get_equivalent_model();
-    if(oldmodel!=NULL)
-    {
-        delete oldmodel;
-        equivalent_model = NULL;
-    }
+        EQUIVALENT_MODEL* oldmodel = get_equivalent_model();
+        if(oldmodel!=NULL)
+        {
+            delete oldmodel;
+            equivalent_model = NULL;
+        }
 
-    EQUIVALENT_MODEL *new_model = NULL;
-    string model_name = model->get_model_name();
-    if(model_name=="ARXL")
-    {
-        ARXL* smodel = (ARXL*) (model);
-        new_model = (EQUIVALENT_MODEL*) new ARXL(*smodel);
-    }
+        EQUIVALENT_MODEL *new_model = NULL;
+        string model_name = model->get_model_name();
+        if(model_name=="ARXL")
+        {
+            ARXL* smodel = (ARXL*) (model);
+            new_model = (EQUIVALENT_MODEL*) new ARXL(*smodel);
+        }
 
-    if(new_model!=NULL)
-    {
-        new_model->set_toolkit(toolkit);
-        new_model->set_device_id(get_device_id());
-        equivalent_model = new_model;
-    }
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append equivalent model of "<<get_device_name();
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        if(new_model!=NULL)
+        {
+            new_model->set_toolkit(toolkit);
+            new_model->set_device_id(get_device_id());
+            equivalent_model = new_model;
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Model '"<<model_name<<"' is not supported when append equivalent model of "<<get_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
@@ -481,9 +482,10 @@ void EQUIVALENT_DEVICE::run(DYNAMIC_MODE mode)
         case INITIALIZE_MODE:
         {
             EQUIVALENT_MODEL* model = get_equivalent_model();
-            if(model==NULL)
+            if(model!=NULL)
+                model->initialize();
+            else
                 return;
-            model->initialize();
 
             break;
         }

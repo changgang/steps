@@ -17,7 +17,6 @@ using namespace std;
 double four_over_pi = 4.0/PI;
 double four_over_pi2 = 4.0/(PI*PI);
 
-
 string num2str(int number)
 {
     char str[1000];
@@ -51,14 +50,18 @@ double str2double(string str)
 
 int get_integer_data(string strval, string strdefault)
 {
-    if(strval.size()==0) strval=strdefault;
-    return str2int(strval);
+    if(strval.size()!=0)
+        return str2int(strval);
+    else
+        return str2int(strdefault);
 }
 
 double get_double_data(string strval, string strdefault)
 {
-    if(strval.size()==0) strval=strdefault;
-    return str2double(strval);
+    if(strval.size()!=0)
+        return str2double(strval);
+    else
+        return str2double(strdefault);
 }
 
 string get_string_data(string strval, string strdefault)
@@ -127,26 +130,40 @@ string string2upper(string str)
 
 double rad2deg(double angle)
 {
-    return angle*180.0/PI;
+    return angle*(180.0/PI);
 }
 
 double deg2rad(double angle)
 {
-    return angle*PI/180.0;
+    return angle*(PI/180.0);
 }
 
 double radps2hz(double w)
 {
-    return w/(2.0*PI);
+    return w/PI2;
+    //return w/(2.0*PI);
 }
 
 double hz2radps(double f)
 {
-    return 2.0*PI*f;
+    return PI2*f;
+    //return 2.0*PI*f;
 }
 
 double round_angle_in_rad_to_PI(double angle)
 {
+    while(fabs(angle)>PI)
+    {
+        if(angle>PI)
+            angle -= PI2;
+        else
+        {
+            if(angle<-PI)
+                angle += PI2;
+        }
+    }
+    return angle;
+/*
     if(angle>PI)
     {
         angle -= (PI+PI);
@@ -160,8 +177,9 @@ double round_angle_in_rad_to_PI(double angle)
         return angle;
     else
         return round_angle_in_rad_to_PI(angle);
-
+*/
 }
+
 double steps_fast_complex_abs(complex<double> z)
 {
 	double x = z.real();
@@ -174,48 +192,55 @@ double steps_fast_complex_arg(complex<double> z)
 	double x = z.real();
 	double y = z.imag();
 
-	if (x == 0.0 and y == 0.0)
-		return 0.0;
-
-	if (x == 0.0)
+	if(x != 0.0 and y != 0.0)
 	{
-		if (y > 0)
-			return PI * 0.5;
-		else
-		{
-			if (y < 0.0)
-				return -PI * 0.5;
-			else
-				return 0.0;
-		}
+	    double angle = atan(y / x);
+        if (x < 0.0)
+        {
+            if (y > 0.0)
+                angle += PI;
+            else
+                angle -= PI;
+        }
+        return angle;
 	}
-
-	if (y == 0.0)
-	{
-		if (x > 0.0)
-			return 0.0;
-		else
-		{
-			if (x < 0.0)
-				return PI;
-			else
-				return 0.0;
-		}
-	}
-
-	double angle = atan(y / x);
-	if (x < 0.0)
-	{
-		if (y > 0.0)
-			angle += PI;
-		else
-			angle -= PI;
-	}
-	return angle;
+	else
+    {
+        if (x == 0.0 and y != 0.0)
+        {
+            if (y > 0)
+                return PI * 0.5;
+            else
+            {
+                if (y < 0.0)
+                    return -PI * 0.5;
+                else
+                    return 0.0;
+            }
+        }
+        else
+        {
+            if (y == 0.0 and x != 0.0)
+            {
+                if (x > 0.0)
+                    return 0.0;
+                else
+                {
+                    if (x < 0.0)
+                        return PI;
+                    else
+                        return 0.0;
+                }
+            }
+            else//x == 0.0 and y == 0.0
+                return 0.0;
+        }
+    }
 }
 
 double steps_fast_pow(double base, double exp)
 {
+	return pow(base, exp);
 	if (fabs(exp - 0.0) < FLOAT_EPSILON)
 		return 1.0;
 	if (fabs(exp - 1.0) < FLOAT_EPSILON)
@@ -224,26 +249,23 @@ double steps_fast_pow(double base, double exp)
 		return base*base;
 	if (fabs(exp - 3.0) < FLOAT_EPSILON)
 		return base*base*base;
-	return pow(base, exp);
 }
 
 double steps_fast_sine(double angle_in_rad)
 {
     double x = angle_in_rad;
     // round to [-PI, PI]
-    while(true)
+    while(x<-PI or x>PI)
     {
         if(x<-PI) x+=PI2;
         else
         {
             if(x>PI) x-=PI2;
         }
-        if(x>=-PI and x<=PI)
-            break;
     }
     //compute sine
     double sin = 0.0;
-    if (x< 0)
+    if (x < 0)
     {
         sin= four_over_pi* x + four_over_pi2 * x* x;
         if (sin< 0) sin= 0.225*(sin*(-sin)- sin)+ sin;
@@ -284,11 +306,11 @@ double steps_fast_arctangent(double angle_in_rad)
 
 string trim_string(string str)
 {
-    if(str.empty())
-        return str;
-
-    str.erase(0,str.find_first_not_of(" \t\n\r"));
-    str.erase(str.find_last_not_of(" \t\n\r")+1);
+    if(not str.empty())
+    {
+        str.erase(0,str.find_first_not_of(" \t\n\r"));
+        str.erase(str.find_last_not_of(" \t\n\r")+1);
+    }
     return str;
 }
 
@@ -328,59 +350,62 @@ string string2csv(string str)
     size_t n2 = n<<1;
 
     char* csv = (char*) malloc(sizeof(char)*n2);
-    if(csv==NULL)
+    if(csv!=NULL)
     {
-        cout<<"Warning. Failed to allocate memory for "<<__FUNCTION__<<"().\n";
-        return "";
-    }
-    for(size_t i=0; i!=n2; ++i)
-        csv[i]='\0';
+        for(size_t i=0; i!=n2; ++i)
+            csv[i]='\0';
 
-    size_t ncsv = 0;
-    for(size_t i=0; i!=n; ++i)
-    {
-        char source = str[i];
-        if(source=='"')
+        size_t ncsv = 0;
+        for(size_t i=0; i!=n; ++i)
         {
-            csv[ncsv] = source;
-            ++ncsv;
-            for(++i; i!=n; ++i)
+            char source = str[i];
+            if(source=='"')
             {
-                source=str[i];
-                if(source=='"')
+                csv[ncsv] = source;
+                ++ncsv;
+                for(++i; i!=n; ++i)
                 {
-                    csv[ncsv] = source;
+                    source=str[i];
+                    if(source=='"')
+                    {
+                        csv[ncsv] = source;
+                        ++ncsv;
+                        break;
+                    }
+                    else
+                    {
+                        csv[ncsv] = source;
+                        ++ncsv;
+                    }
+                }
+                continue;
+            }
+            else
+            {
+                if(source==',' or source==' ')
+                {
+                    csv[ncsv]=',';
                     ++ncsv;
-                    break;
+                    continue;
                 }
                 else
                 {
                     csv[ncsv] = source;
                     ++ncsv;
+                    continue;
                 }
             }
-            continue;
         }
-        else
-        {
-            if(source==',' or source==' ')
-            {
-                csv[ncsv]=',';
-                ++ncsv;
-                continue;
-            }
-            else
-            {
-                csv[ncsv] = source;
-                ++ncsv;
-                continue;
-            }
-        }
-    }
 
-    string newstr(csv);
-    free(csv);
-    return newstr;
+        string newstr(csv);
+        free(csv);
+        return newstr;
+    }
+    else
+    {
+        cout<<"Warning. Failed to allocate memory for "<<__FUNCTION__<<"().\n";
+        return "";
+    }
 }
 
 vector<string> split_string(string str, const string sep)
@@ -388,10 +413,8 @@ vector<string> split_string(string str, const string sep)
     vector<string> splitted_str;
     str = trim_string(str);
     size_t newline_index = 0;
-    while(true)
+    while(not str.empty())
     {
-        if(str.empty())
-            break;
         newline_index = str.find_first_of(sep);
         if(newline_index != string::npos)
         {
@@ -427,15 +450,15 @@ string swap_data_in_csv_string(string& data, size_t i, size_t j)
 {
     vector<string> record = split_string(data,",");
     size_t n = record.size();
-    if(i>n or j>n)
-        return data;
-    else
+    if(i<=n and j<=n)
     {
         string temp = record[i];
         record[i]=record[j];
         record[j]=temp;
         return string_vector2csv(record);
     }
+    else
+        return data;
 }
 
 complex<double> xy2dq_with_angle_in_deg(complex<double> V, double angle)
@@ -470,14 +493,14 @@ bool is_file_exist(const string file)
     // check if the file exist
     // date: Sep. 1, 2016
     FILE* fid = fopen(file.c_str(),"r");
-    if(fid==NULL)
-    {
-        return false;
-    }
-    else
+    if(fid!=NULL)
     {
         fclose(fid);
         return true;
+    }
+    else
+    {
+        return false;
     }
 }
 

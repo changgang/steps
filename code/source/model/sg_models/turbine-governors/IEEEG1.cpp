@@ -284,62 +284,65 @@ double IEEEG1::get_K8() const
 bool IEEEG1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<25)
+    if(data.size()>=25)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double k, t1, t2, t3, uo, uc, pmax, pmin, t4, k1, k2, t5, k3, k4, t6, k5, k6, t7, k7, k8;
+
+            size_t i=5;
+            k = get_double_data(data[i],"0.0"); i++;
+            t1 = get_double_data(data[i],"0.0"); i++;
+            t2 = get_double_data(data[i],"0.0"); i++;
+            t3 = get_double_data(data[i],"0.0"); i++;
+            uo = get_double_data(data[i],"0.0"); i++;
+            uc = get_double_data(data[i],"0.0"); i++;
+            pmax = get_double_data(data[i],"0.0"); i++;
+            pmin = get_double_data(data[i],"0.0"); i++;
+            t4 = get_double_data(data[i],"0.0"); i++;
+            k1 = get_double_data(data[i],"0.0"); i++;
+            k2 = get_double_data(data[i],"0.0"); i++;
+            t5 = get_double_data(data[i],"0.0"); i++;
+            k3 = get_double_data(data[i],"0.0"); i++;
+            k4 = get_double_data(data[i],"0.0"); i++;
+            t6 = get_double_data(data[i],"0.0"); i++;
+            k5 = get_double_data(data[i],"0.0"); i++;
+            k6 = get_double_data(data[i],"0.0"); i++;
+            t7 = get_double_data(data[i],"0.0"); i++;
+            k7 = get_double_data(data[i],"0.0"); i++;
+            k8 = get_double_data(data[i],"0.0");
+
+            set_K(k);
+            set_T1_in_s(t1);
+            set_T2_in_s(t2);
+            set_T3_in_s(t3);
+            set_Uo_in_pu(uo);
+            set_Uc_in_pu(uc);
+            set_Pmax_in_pu(pmax);
+            set_Pmin_in_pu(pmin);
+            set_T4_in_s(t4);
+            set_K1(k1);
+            set_K2(k2);
+            set_T5_in_s(t5);
+            set_K3(k3);
+            set_K4(k4);
+            set_T6_in_s(t6);
+            set_K5(k5);
+            set_K6(k6);
+            set_T7_in_s(t7);
+            set_K7(k7);
+            set_K8(k8);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-
-    double k, t1, t2, t3, uo, uc, pmax, pmin, t4, k1, k2, t5, k3, k4, t6, k5, k6, t7, k7, k8;
-
-    size_t i=5;
-    k = get_double_data(data[i],"0.0"); i++;
-    t1 = get_double_data(data[i],"0.0"); i++;
-    t2 = get_double_data(data[i],"0.0"); i++;
-    t3 = get_double_data(data[i],"0.0"); i++;
-    uo = get_double_data(data[i],"0.0"); i++;
-    uc = get_double_data(data[i],"0.0"); i++;
-    pmax = get_double_data(data[i],"0.0"); i++;
-    pmin = get_double_data(data[i],"0.0"); i++;
-    t4 = get_double_data(data[i],"0.0"); i++;
-    k1 = get_double_data(data[i],"0.0"); i++;
-    k2 = get_double_data(data[i],"0.0"); i++;
-    t5 = get_double_data(data[i],"0.0"); i++;
-    k3 = get_double_data(data[i],"0.0"); i++;
-    k4 = get_double_data(data[i],"0.0"); i++;
-    t6 = get_double_data(data[i],"0.0"); i++;
-    k5 = get_double_data(data[i],"0.0"); i++;
-    k6 = get_double_data(data[i],"0.0"); i++;
-    t7 = get_double_data(data[i],"0.0"); i++;
-    k7 = get_double_data(data[i],"0.0"); i++;
-    k8 = get_double_data(data[i],"0.0");
-
-    set_K(k);
-    set_T1_in_s(t1);
-    set_T2_in_s(t2);
-    set_T3_in_s(t3);
-    set_Uo_in_pu(uo);
-    set_Uc_in_pu(uc);
-    set_Pmax_in_pu(pmax);
-    set_Pmin_in_pu(pmin);
-    set_T4_in_s(t4);
-    set_K1(k1);
-    set_K2(k2);
-    set_T5_in_s(t5);
-    set_K3(k3);
-    set_K4(k4);
-    set_T6_in_s(t6);
-    set_K5(k5);
-    set_K6(k6);
-    set_T7_in_s(t7);
-    set_K7(k7);
-    set_K8(k8);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool IEEEG1::setup_model_with_psse_string(string data)
@@ -372,61 +375,61 @@ void IEEEG1::set_block_toolkit()
 void IEEEG1::initialize()
 {
     ostringstream osstream;
-    if(is_model_initialized())
-        return;
-
-    GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
-
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return;
-
-    if(not gen_model->is_model_initialized())
-        gen_model->initialize();
-
-    set_block_toolkit();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
-
-    droop.set_output(0.0);
-    droop.initialize();
-
-    double sumK=get_K1()+get_K3()+get_K5()+get_K7();
-
-    double valve = pmech0/sumK;
-
-    if(valve>get_Pmax_in_pu())
+    if(not is_model_initialized())
     {
-        osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        GENERATOR* generator = get_generator_pointer();
+        if(generator!=NULL)
+        {
+            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+            if(gen_model!=NULL)
+            {
+                if(not gen_model->is_model_initialized())
+                    gen_model->initialize();
+
+                set_block_toolkit();
+
+                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+                double pmech0 = get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model();
+
+                droop.set_output(0.0);
+                droop.initialize();
+
+                double sumK=get_K1()+get_K3()+get_K5()+get_K7();
+
+                double valve = pmech0/sumK;
+
+                if(valve>get_Pmax_in_pu())
+                {
+                    osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Valve is "<<valve<<", and Pmax is "<<get_Pmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(valve<get_Pmin_in_pu())
+                {
+                    osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+
+                servo_motor.set_output(valve);
+                delayer1.set_output(valve);
+                delayer2.set_output(valve);
+                delayer3.set_output(valve);
+                delayer4.set_output(valve);
+
+                servo_motor.initialize();
+                delayer1.initialize();
+                delayer2.initialize();
+                delayer3.initialize();
+                delayer4.initialize();
+
+                set_initial_mechanical_power_reference_in_pu_based_on_mbase(valve);
+
+                set_flag_model_initialized_as_true();
+            }
+        }
     }
-    if(valve<get_Pmin_in_pu())
-    {
-        osstream<<"Initialization error. Valve of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-          <<"Valve is "<<valve<<", and Pmin is "<<get_Pmin_in_pu()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-
-    servo_motor.set_output(valve);
-    delayer1.set_output(valve);
-    delayer2.set_output(valve);
-    delayer3.set_output(valve);
-    delayer4.set_output(valve);
-
-    servo_motor.initialize();
-    delayer1.initialize();
-    delayer2.initialize();
-    delayer3.initialize();
-    delayer4.initialize();
-
-    set_initial_mechanical_power_reference_in_pu_based_on_mbase(valve);
-
-    set_flag_model_initialized_as_true();
 }
 
 void IEEEG1::run(DYNAMIC_MODE mode)

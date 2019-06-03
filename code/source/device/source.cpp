@@ -169,14 +169,14 @@ bool SOURCE::get_status() const
 
 double SOURCE::get_mbase_in_MVA() const
 {
-    if(mbase_MVA==0.0)
+    if(mbase_MVA!=0.0)
+        return mbase_MVA;
+    else
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         return psdb.get_system_base_power_in_MVA();
     }
-    else
-        return mbase_MVA;
 }
 
 double SOURCE::get_p_generation_in_MW() const
@@ -286,7 +286,7 @@ void SOURCE::clear()
 bool SOURCE::is_connected_to_bus(size_t bus) const
 {
     if(get_source_bus()==bus) return true;
-    else return false;
+    else                      return false;
 }
 
 bool SOURCE::is_in_area(size_t area) const

@@ -69,7 +69,6 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
         Document document;
         document.Parse(str.c_str());
 
-
         if(document.HasMember("bus") and document["bus"].IsInt())
             bus_capacity = size_t(document["bus"].GetInt());
 
@@ -116,7 +115,7 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         ostringstream osstream;
-        osstream<<"No valid steps_config.json found. Use default power system database capacity.";
+        osstream<<"No configuration file <steps_config.json> is found. Use default power system database capacity.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
@@ -413,9 +412,6 @@ void POWER_SYSTEM_DATABASE::append_generator(GENERATOR& generator)
 
     ostringstream osstream;
 
-    //if(generator.toolkit.get_power_system_database()==NULL)
-    //    generator.set_power_system_database(this);
-
     if(not generator.is_valid())
     {
         osstream<<"Warning. Failed to append invalid generator to power system database '"<<get_system_name()<<"'.";
@@ -469,16 +465,12 @@ void POWER_SYSTEM_DATABASE::append_wt_generator(WT_GENERATOR& wt_generator)
 
     ostringstream osstream;
 
-    //if(wt_generator.toolkit.get_power_system_database()==NULL)
-    //    wt_generator.set_power_system_database(this);
-
     if(not wt_generator.is_valid())
     {
         osstream<<"Warning. Failed to append invalid wt generator to power system database '"<<get_system_name()<<"'.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-
 
     size_t wt_generator_bus = wt_generator.get_source_bus();
 
@@ -526,16 +518,12 @@ void POWER_SYSTEM_DATABASE::append_pv_unit(PV_UNIT& pv_unit)
 
     ostringstream osstream;
 
-    //if(pv_unit.toolkit.get_power_system_database()==NULL)
-    //    pv_unit.set_power_system_database(this);
-
     if(not pv_unit.is_valid())
     {
         osstream<<"Warning. Failed to append invalid pv unit to power system database '"<<get_system_name()<<"'.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-
 
     size_t pv_unit_bus = pv_unit.get_unit_bus();
 
@@ -582,9 +570,6 @@ void POWER_SYSTEM_DATABASE::append_energy_storage(ENERGY_STORAGE& estorage)
     estorage.set_toolkit(toolkit);
 
     ostringstream osstream;
-
-    //if(estorage.toolkit.get_power_system_database()==NULL)
-    //    estorage.set_power_system_database(this);
 
     if(not estorage.is_valid())
     {
@@ -639,9 +624,6 @@ void POWER_SYSTEM_DATABASE::append_load(LOAD& load)
 
     ostringstream osstream;
 
-    //if(load.toolkit.get_power_system_database()==NULL)
-    //    load.set_power_system_database(this);
-
     if(not load.is_valid())
     {
         osstream<<"Warning. Failed to append invalid load to power system database '"<<get_system_name()<<"'.";
@@ -694,9 +676,6 @@ void POWER_SYSTEM_DATABASE::append_line(LINE& line)
     line.set_toolkit(toolkit);
 
     ostringstream osstream;
-
-    //if(line.toolkit.get_power_system_database()==NULL)
-    //    line.set_power_system_database(this);
 
     if(not line.is_valid())
     {
@@ -758,9 +737,6 @@ void POWER_SYSTEM_DATABASE::append_transformer(TRANSFORMER& transformer)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     transformer.set_toolkit(toolkit);
     ostringstream osstream;
-
-    //if(transformer.toolkit.get_power_system_database()==NULL)
-    //    transformer.set_power_system_database(this);
 
     if(not transformer.is_valid())
     {
@@ -833,9 +809,6 @@ void POWER_SYSTEM_DATABASE::append_fixed_shunt(FIXED_SHUNT& shunt)
 
     ostringstream osstream;
 
-    //if(shunt.toolkit.get_power_system_database()==NULL)
-    //    shunt.set_power_system_database(this);
-
     if(not shunt.is_valid())
     {
         osstream<<"Warning. Failed to append invalid fixed shunt to power system database '"<<get_system_name()<<"'.";
@@ -888,9 +861,6 @@ void POWER_SYSTEM_DATABASE::append_hvdc(HVDC& hvdc)
     hvdc.set_toolkit(toolkit);
 
     ostringstream osstream;
-
-    //if(hvdc.toolkit.get_power_system_database()==NULL)
-    //    hvdc.set_power_system_database(this);
 
     if(not hvdc.is_valid())
     {
@@ -954,9 +924,6 @@ void POWER_SYSTEM_DATABASE::append_equivalent_device(EQUIVALENT_DEVICE& edevice)
 
     ostringstream osstream;
 
-    //if(edevice.toolkit.get_power_system_database()==NULL)
-    //    edevice.set_power_system_database(this);
-
     if(not edevice.is_valid())
     {
         osstream<<"Warning. Failed to append invalid equivalent device to power system database '"<<get_system_name()<<"'.";
@@ -1008,37 +975,27 @@ void POWER_SYSTEM_DATABASE::append_area(AREA& area)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     area.set_toolkit(toolkit);
 
-    ostringstream osstream;
-
-    //if(area.toolkit.get_power_system_database()==NULL)
-    //    area.set_power_system_database(this);
-
-    if(not area.is_valid())
+    if(area.is_valid() and
+       (not this->is_area_exist(area.get_area_number())) and
+       Area.capacity()>Area.size())
     {
-        osstream<<"Warning. Failed to append invalid area to power system database '"<<get_system_name()<<"'.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
+        size_t area_count = get_area_count();
+        Area.push_back(area);
+        area_index[area.get_area_number()]= area_count;
     }
-
-    if(this->is_area_exist(area.get_area_number()))
+    else
     {
-        osstream<<"Warning. Area "<<area.get_area_number()<<" already exists in power system database '"<<get_system_name()<<"': Area."<<endl
-          <<"Duplicate copy is not allowed.";
+        ostringstream osstream;
+        if(not area.is_valid())
+            osstream<<"Warning. Failed to append invalid area to power system database '"<<get_system_name()<<"'.";
+        if(this->is_area_exist(area.get_area_number()))
+            osstream<<"Warning. Area "<<area.get_area_number()<<" already exists in power system database '"<<get_system_name()<<"': Area."<<endl
+              <<"Duplicate copy is not allowed.";
+        if(Area.capacity()==Area.size())
+            osstream<<"Warning. Capacity limit ("<<Area.capacity()<<") reached when appending area to power system database '"<<get_system_name()<<"'."<<endl
+              <<"Increase capacity by modified steps_config.json.";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
     }
-
-    if(Area.capacity()==Area.size())
-    {
-        osstream<<"Warning. Capacity limit ("<<Area.capacity()<<") reached when appending area to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Increase capacity by modified steps_config.json.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    size_t area_count = get_area_count();
-    Area.push_back(area);
-    area_index[area.get_area_number()]= area_count;
 }
 
 void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
@@ -1046,33 +1003,27 @@ void POWER_SYSTEM_DATABASE::append_zone(ZONE& zone)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     zone.set_toolkit(toolkit);
 
-    ostringstream osstream;
-    if(not zone.is_valid())
+    if(zone.is_valid() and
+       (not this->is_zone_exist(zone.get_zone_number())) and
+       Zone.capacity()>Zone.size())
     {
-        osstream<<"Warning. Failed to append invalid zone to power system database '"<<get_system_name()<<"'.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
+        size_t zone_count = get_zone_count();
+        Zone.push_back(zone);
+        zone_index[zone.get_zone_number()]= zone_count;
     }
-
-    if(this->is_zone_exist(zone.get_zone_number()))
+    else
     {
-        osstream<<"Warning. Zone "<<zone.get_zone_number()<<" already exists in power system database '"<<get_system_name()<<"': Zone."<<endl
-          <<"Duplicate copy is not allowed.";
+        ostringstream osstream;
+        if(not zone.is_valid())
+            osstream<<"Warning. Failed to append invalid zone to power system database '"<<get_system_name()<<"'.";
+        if(this->is_zone_exist(zone.get_zone_number()))
+            osstream<<"Warning. Zone "<<zone.get_zone_number()<<" already exists in power system database '"<<get_system_name()<<"': Zone."<<endl
+              <<"Duplicate copy is not allowed.";
+        if(Zone.capacity()==Zone.size())
+            osstream<<"Warning. Capacity limit ("<<Zone.capacity()<<") reached when appending zone to power system database '"<<get_system_name()<<"'."<<endl
+              <<"Increase capacity by modified steps_config.json.";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
     }
-
-    if(Zone.capacity()==Zone.size())
-    {
-        osstream<<"Warning. Capacity limit ("<<Zone.capacity()<<") reached when appending zone to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Increase capacity by modified steps_config.json.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    size_t zone_count = get_zone_count();
-    Zone.push_back(zone);
-    zone_index[zone.get_zone_number()]= zone_count;
 }
 
 void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
@@ -1080,165 +1031,159 @@ void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     owner.set_toolkit(toolkit);
 
-    ostringstream osstream;
-
-    if(not owner.is_valid())
+    if(owner.is_valid() and
+       (not this->is_owner_exist(owner.get_owner_number())) and
+       Owner.capacity()>Owner.size())
     {
-        osstream<<"Warning. Failed to append invalid owner to power system database '"<<get_system_name()<<"'.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
+        size_t owner_count = get_owner_count();
+        Owner.push_back(owner);
+        owner_index[owner.get_owner_number()]= owner_count;
     }
-
-    if(this->is_owner_exist(owner.get_owner_number()))
+    else
     {
-        osstream<<"Warning. Owner "<<owner.get_owner_number()<<" already exists in power system database '"<<get_system_name()<<"': Owner."<<endl
-          <<"Duplicate copy is not allowed.";
+        ostringstream osstream;
+        if(not owner.is_valid())
+            osstream<<"Warning. Failed to append invalid owner to power system database '"<<get_system_name()<<"'.";
+        if(this->is_owner_exist(owner.get_owner_number()))
+            osstream<<"Warning. Owner "<<owner.get_owner_number()<<" already exists in power system database '"<<get_system_name()<<"': Owner."<<endl
+              <<"Duplicate copy is not allowed.";
+        if(Owner.capacity()==Owner.size())
+            osstream<<"Warning. Capacity limit ("<<Owner.capacity()<<") reached when appending owner to power system database '"<<get_system_name()<<"'."<<endl
+              <<"Increase capacity by modified steps_config.json.";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
     }
-
-    if(Owner.capacity()==Owner.size())
-    {
-        osstream<<"Warning. Capacity limit ("<<Owner.capacity()<<") reached when appending owner to power system database '"<<get_system_name()<<"'."<<endl
-          <<"Increase capacity by modified steps_config.json.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    size_t owner_count = get_owner_count();
-    Owner.push_back(owner);
-    owner_index[owner.get_owner_number()]= owner_count;
 }
 
 void POWER_SYSTEM_DATABASE::append_dynamic_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() != model->get_allowed_device_type())
-        return;
-    if(did.get_device_type()=="LOAD")
+    if(did.get_device_type() == model->get_allowed_device_type())
     {
-        append_load_related_model(did, model);
-        return;
+        if(did.get_device_type()=="LOAD")
+        {
+            append_load_related_model(did, model);
+            return;
+        }
+        if(did.get_device_type()=="GENERATOR")
+        {
+            append_generator_related_model(did, model);
+            return;
+        }
+        if(did.get_device_type()=="WT GENERATOR")
+        {
+            append_wt_generator_related_model(did, model);
+            return;
+        }
+        if(did.get_device_type()=="PV UNIT")
+        {
+            append_pv_unit_related_model(did, model);
+            return;
+        }
+        if(did.get_device_type()=="ENERGY STORAGE")
+        {
+            append_energy_storage_related_model(did, model);
+            return;
+        }
+        if(did.get_device_type()=="HVDC")
+        {
+            append_hvdc_related_model(did, model);
+            return;
+        }
     }
-    if(did.get_device_type()=="GENERATOR")
-    {
-        append_generator_related_model(did, model);
-        return;
-    }
-    if(did.get_device_type()=="WT GENERATOR")
-    {
-        append_wt_generator_related_model(did, model);
-        return;
-    }
-    if(did.get_device_type()=="PV UNIT")
-    {
-        append_pv_unit_related_model(did, model);
-        return;
-    }
-    if(did.get_device_type()=="ENERGY STORAGE")
-    {
-        append_energy_storage_related_model(did, model);
-        return;
-    }
-    if(did.get_device_type()=="HVDC")
-    {
-        append_hvdc_related_model(did, model);
-        return;
-    }
-    return;
 }
 
 
 void POWER_SYSTEM_DATABASE::append_load_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() != model->get_allowed_device_type())
-        return;
-    if(did.get_device_type()=="LOAD")
+    if(did.get_device_type() == model->get_allowed_device_type())
     {
-        LOAD* ptr = get_load(did);
-        if(ptr!=NULL)
-            ptr->set_model(model);
-        return;
+        if(did.get_device_type()=="LOAD")
+        {
+            LOAD* ptr = get_load(did);
+            if(ptr!=NULL)
+                ptr->set_model(model);
+        }
     }
 }
 
 void POWER_SYSTEM_DATABASE::append_generator_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() != model->get_allowed_device_type())
-        return;
-    if(did.get_device_type()=="GENERATOR")
+    if(did.get_device_type() == model->get_allowed_device_type())
     {
-        GENERATOR* ptr = get_generator(did);
-        if(ptr!=NULL)
-            ptr->set_model(model);
-        return;
+        if(did.get_device_type()=="GENERATOR")
+        {
+            GENERATOR* ptr = get_generator(did);
+            if(ptr!=NULL)
+                ptr->set_model(model);
+        }
     }
 }
 
 void POWER_SYSTEM_DATABASE::append_wt_generator_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() != model->get_allowed_device_type())
-        return;
-    if(did.get_device_type()=="WT GENERATOR")
+    if(did.get_device_type() == model->get_allowed_device_type())
     {
-        WT_GENERATOR* ptr = get_wt_generator(did);
-        if(ptr!=NULL)
-            ptr->set_model(model);
-        return;
+        if(did.get_device_type()=="WT GENERATOR")
+        {
+            WT_GENERATOR* ptr = get_wt_generator(did);
+            if(ptr!=NULL)
+                ptr->set_model(model);
+        }
     }
 }
 
 void POWER_SYSTEM_DATABASE::append_pv_unit_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() != model->get_allowed_device_type())
-        return;
-    if(did.get_device_type()=="PV UNIT")
+    if(did.get_device_type() == model->get_allowed_device_type())
     {
-        PV_UNIT* ptr = get_pv_unit(did);
-        if(ptr!=NULL)
-            ptr->set_model(model);
-        return;
+        if(did.get_device_type()=="PV UNIT")
+        {
+            PV_UNIT* ptr = get_pv_unit(did);
+            if(ptr!=NULL)
+                ptr->set_model(model);
+        }
     }
 }
 
 void POWER_SYSTEM_DATABASE::append_energy_storage_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() != model->get_allowed_device_type())
-        return;
-    if(did.get_device_type()=="ENERGY STORAGE")
+    if(did.get_device_type() == model->get_allowed_device_type())
     {
-        ENERGY_STORAGE* ptr = get_energy_storage(did);
-        if(ptr!=NULL)
-            ptr->set_model(model);
-        return;
+        if(did.get_device_type()=="ENERGY STORAGE")
+        {
+            ENERGY_STORAGE* ptr = get_energy_storage(did);
+            if(ptr!=NULL)
+                ptr->set_model(model);
+        }
     }
 }
 void POWER_SYSTEM_DATABASE::append_hvdc_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() != model->get_allowed_device_type())
-        return;
-    if(did.get_device_type()=="HVDC")
+    if(did.get_device_type() == model->get_allowed_device_type())
     {
-        HVDC* ptr = get_hvdc(did);
-        if(ptr!=NULL)
-            ptr->set_model(model);
-        return;
+        if(did.get_device_type()=="HVDC")
+        {
+            HVDC* ptr = get_hvdc(did);
+            if(ptr!=NULL)
+                ptr->set_model(model);
+        }
     }
 }
 
 void POWER_SYSTEM_DATABASE::update_all_bus_base_frequency(double fbase_Hz)
 {
     size_t n = Bus.size();
-    for(size_t i=0; i<n; ++i)
+    for(size_t i=0; i!=n; ++i)
         Bus[i].set_base_frequency_in_Hz(fbase_Hz);
 }
 
 bool POWER_SYSTEM_DATABASE::is_bus_exist(size_t bus) const
 {
-    if(bus == 0) return false;
-
-    size_t index = this->get_bus_index(bus);
-    if(index != INDEX_NOT_EXIST)
-        return true;
+    if(bus != 0)
+    {
+        size_t index = this->get_bus_index(bus);
+        if(index!=INDEX_NOT_EXIST) return true;
+        else                       return false;
+    }
     else
         return false;
 }
@@ -1246,308 +1191,306 @@ bool POWER_SYSTEM_DATABASE::is_bus_exist(size_t bus) const
 bool POWER_SYSTEM_DATABASE::is_generator_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_generator_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_wt_generator_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_wt_generator_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_pv_unit_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_pv_unit_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_load_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_load_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_line_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_line_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_transformer_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_transformer_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_fixed_shunt_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_fixed_shunt_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_hvdc_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_hvdc_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_equivalent_device_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_equivalent_device_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_energy_storage_exist(const DEVICE_ID& device_id) const
 {
     size_t index = get_energy_storage_index(device_id);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_area_exist(const size_t no) const
 {
     size_t index = get_area_index(no);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_zone_exist(const size_t no) const
 {
     size_t index = get_zone_index(no);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 bool POWER_SYSTEM_DATABASE::is_owner_exist(const size_t no) const
 {
     size_t index = get_owner_index(no);
-    if(index==INDEX_NOT_EXIST) return false;
-    else return true;
+    if(index!=INDEX_NOT_EXIST) return true;
+    else                       return false;
 }
 
 void POWER_SYSTEM_DATABASE::change_bus_number(size_t original_bus_number, size_t new_bus_number)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
-    if(not is_bus_exist(original_bus_number))
+
+    if(is_bus_exist(original_bus_number) and
+       (not is_bus_exist(new_bus_number)) and
+       is_bus_in_allowed_range(new_bus_number))
     {
-        osstream<<"Warning. The original bus number to change ("<<original_bus_number<<") does not exist in the power system database. No bus number will be changed.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-    if(is_bus_exist(new_bus_number))
-    {
-        osstream<<"Warning. The new bus number to change ("<<new_bus_number<<") already exists in the power system database. No bus number will be changed.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-    if(not is_bus_in_allowed_range(new_bus_number))
-    {
-        osstream<<"Warning. The new bus number to change ("<<new_bus_number<<") exceeds the allowed maximum bus number range [1, "<<get_allowed_max_bus_number()<<"] in the power system database. No bus number will be changed.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+        BUS* bus = get_bus(original_bus_number);
 
+        bus->set_bus_number(new_bus_number);
 
-    BUS* bus = get_bus(original_bus_number);
+        bus_index.set_bus_with_index(new_bus_number, get_bus_index(original_bus_number));
+        bus_index.set_bus_with_index(original_bus_number, INDEX_NOT_EXIST);
 
-    bus->set_bus_number(new_bus_number);
-
-    bus_index.set_bus_with_index(new_bus_number, get_bus_index(original_bus_number));
-    bus_index.set_bus_with_index(original_bus_number, INDEX_NOT_EXIST);
-
-    vector<GENERATOR*> gens = get_generators_connecting_to_bus(original_bus_number);
-    size_t ngens = gens.size();
-    for(size_t i=0; i!=ngens; ++i)
-    {
-        GENERATOR* gen = gens[i];
-        DEVICE_ID old_did = gen->get_device_id();
-        size_t index = get_generator_index(old_did);
-        generator_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        gen->set_generator_bus(new_bus_number);
-        DEVICE_ID new_did = gen->get_device_id();
-        generator_index.set_device_index(new_did, index);
-    }
-
-    vector<WT_GENERATOR*> wt_generators = get_wt_generators_connecting_to_bus(original_bus_number);
-    size_t nwt_generator = wt_generators.size();
-    for(size_t i=0; i!=nwt_generator; ++i)
-    {
-        WT_GENERATOR* wt_generator = wt_generators[i];
-        DEVICE_ID old_did = wt_generator->get_device_id();
-        size_t index = get_wt_generator_index(old_did);
-        wt_generator_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        wt_generator->set_source_bus(new_bus_number);
-        DEVICE_ID new_did = wt_generator->get_device_id();
-        wt_generator_index.set_device_index(new_did, index);
-    }
-
-    vector<PV_UNIT*> pv_units = get_pv_units_connecting_to_bus(original_bus_number);
-    size_t npv_unit = pv_units.size();
-    for(size_t i=0; i!=npv_unit; ++i)
-    {
-        PV_UNIT* pv_unit = pv_units[i];
-        DEVICE_ID old_did = pv_unit->get_device_id();
-        size_t index = get_pv_unit_index(old_did);
-        pv_unit_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        pv_unit->set_unit_bus(new_bus_number);
-        DEVICE_ID new_did = pv_unit->get_device_id();
-        pv_unit_index.set_device_index(new_did, index);
-    }
-
-    vector<ENERGY_STORAGE*> estorages = get_energy_storages_connecting_to_bus(original_bus_number);
-    size_t nestorage = estorages.size();
-    for(size_t i=0; i!=nestorage; ++i)
-    {
-        ENERGY_STORAGE* estorage = estorages[i];
-        DEVICE_ID old_did = estorage->get_device_id();
-        size_t index = get_energy_storage_index(old_did);
-        energy_storage_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        estorage->set_energy_storage_bus(new_bus_number);
-        DEVICE_ID new_did = estorage->get_device_id();
-        energy_storage_index.set_device_index(new_did, index);
-    }
-
-    vector<LOAD*> loads = get_loads_connecting_to_bus(original_bus_number);
-    size_t nload = loads.size();
-    for(size_t i=0; i!=nload; ++i)
-    {
-        LOAD* load = loads[i];
-        DEVICE_ID old_did = load->get_device_id();
-        size_t index = get_load_index(old_did);
-        load_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        load->set_load_bus(new_bus_number);
-        DEVICE_ID new_did = load->get_device_id();
-        load_index.set_device_index(new_did, index);
-    }
-
-    vector<FIXED_SHUNT*> fshunts = get_fixed_shunts_connecting_to_bus(original_bus_number);
-    size_t nfshunt = fshunts.size();
-    for(size_t i=0; i!=nfshunt; ++i)
-    {
-        FIXED_SHUNT* fshunt = fshunts[i];
-        DEVICE_ID old_did = fshunt->get_device_id();
-        size_t index = get_fixed_shunt_index(old_did);
-        fixed_shunt_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        fshunt->set_shunt_bus(new_bus_number);
-        DEVICE_ID new_did = fshunt->get_device_id();
-        fixed_shunt_index.set_device_index(new_did, index);
-    }
-
-    vector<LINE*> lines = get_lines_connecting_to_bus(original_bus_number);
-    size_t nline = lines.size();
-    for(size_t i=0; i!=nline; ++i)
-    {
-        LINE* line = lines[i];
-        DEVICE_ID old_did = line->get_device_id();
-        size_t index = get_line_index(old_did);
-        line_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        if(line->get_sending_side_bus()==original_bus_number)
-            line->set_sending_side_bus(new_bus_number);
-        else
-            line->set_receiving_side_bus(new_bus_number);
-
-        DEVICE_ID new_did = line->get_device_id();
-        line_index.set_device_index(new_did, index);
-
-    }
-
-    vector<HVDC*> hvdcs = get_hvdcs_connecting_to_bus(original_bus_number);
-    size_t nhvdc = hvdcs.size();
-    for(size_t i=0; i!=nhvdc; ++i)
-    {
-        HVDC* hvdc = hvdcs[i];
-        DEVICE_ID old_did = hvdc->get_device_id();
-        size_t index = get_hvdc_index(old_did);
-        hvdc_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        if(hvdc->get_converter_bus(RECTIFIER)==original_bus_number)
-            hvdc->set_converter_bus(RECTIFIER, new_bus_number);
-        else
-            hvdc->set_converter_bus(INVERTER, new_bus_number);
-
-        DEVICE_ID new_did = hvdc->get_device_id();
-        hvdc_index.set_device_index(new_did, index);
-    }
-
-    vector<TRANSFORMER*> transformers = get_transformers_connecting_to_bus(original_bus_number);
-    size_t ntrans = transformers.size();
-    for(size_t i=0; i!=ntrans; ++i)
-    {
-        TRANSFORMER* trans = transformers[i];
-        DEVICE_ID old_did = trans->get_device_id();
-        size_t index = get_transformer_index(old_did);
-        transformer_index.set_device_index(old_did, INDEX_NOT_EXIST);
-
-        if(trans->get_winding_bus(PRIMARY_SIDE)==original_bus_number)
-            trans->set_winding_bus(PRIMARY_SIDE, new_bus_number);
-        else
+        vector<GENERATOR*> gens = get_generators_connecting_to_bus(original_bus_number);
+        size_t ngens = gens.size();
+        for(size_t i=0; i!=ngens; ++i)
         {
-            if(trans->get_winding_bus(SECONDARY_SIDE)==original_bus_number)
-                trans->set_winding_bus(SECONDARY_SIDE, new_bus_number);
-            else
-                trans->set_winding_bus(TERTIARY_SIDE, new_bus_number);
+            GENERATOR* gen = gens[i];
+            DEVICE_ID old_did = gen->get_device_id();
+            size_t index = get_generator_index(old_did);
+            generator_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            gen->set_generator_bus(new_bus_number);
+            DEVICE_ID new_did = gen->get_device_id();
+            generator_index.set_device_index(new_did, index);
         }
 
-        DEVICE_ID new_did = trans->get_device_id();
-        transformer_index.set_device_index(new_did, index);
+        vector<WT_GENERATOR*> wt_generators = get_wt_generators_connecting_to_bus(original_bus_number);
+        size_t nwt_generator = wt_generators.size();
+        for(size_t i=0; i!=nwt_generator; ++i)
+        {
+            WT_GENERATOR* wt_generator = wt_generators[i];
+            DEVICE_ID old_did = wt_generator->get_device_id();
+            size_t index = get_wt_generator_index(old_did);
+            wt_generator_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            wt_generator->set_source_bus(new_bus_number);
+            DEVICE_ID new_did = wt_generator->get_device_id();
+            wt_generator_index.set_device_index(new_did, index);
+        }
+
+        vector<PV_UNIT*> pv_units = get_pv_units_connecting_to_bus(original_bus_number);
+        size_t npv_unit = pv_units.size();
+        for(size_t i=0; i!=npv_unit; ++i)
+        {
+            PV_UNIT* pv_unit = pv_units[i];
+            DEVICE_ID old_did = pv_unit->get_device_id();
+            size_t index = get_pv_unit_index(old_did);
+            pv_unit_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            pv_unit->set_unit_bus(new_bus_number);
+            DEVICE_ID new_did = pv_unit->get_device_id();
+            pv_unit_index.set_device_index(new_did, index);
+        }
+
+        vector<ENERGY_STORAGE*> estorages = get_energy_storages_connecting_to_bus(original_bus_number);
+        size_t nestorage = estorages.size();
+        for(size_t i=0; i!=nestorage; ++i)
+        {
+            ENERGY_STORAGE* estorage = estorages[i];
+            DEVICE_ID old_did = estorage->get_device_id();
+            size_t index = get_energy_storage_index(old_did);
+            energy_storage_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            estorage->set_energy_storage_bus(new_bus_number);
+            DEVICE_ID new_did = estorage->get_device_id();
+            energy_storage_index.set_device_index(new_did, index);
+        }
+
+        vector<LOAD*> loads = get_loads_connecting_to_bus(original_bus_number);
+        size_t nload = loads.size();
+        for(size_t i=0; i!=nload; ++i)
+        {
+            LOAD* load = loads[i];
+            DEVICE_ID old_did = load->get_device_id();
+            size_t index = get_load_index(old_did);
+            load_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            load->set_load_bus(new_bus_number);
+            DEVICE_ID new_did = load->get_device_id();
+            load_index.set_device_index(new_did, index);
+        }
+
+        vector<FIXED_SHUNT*> fshunts = get_fixed_shunts_connecting_to_bus(original_bus_number);
+        size_t nfshunt = fshunts.size();
+        for(size_t i=0; i!=nfshunt; ++i)
+        {
+            FIXED_SHUNT* fshunt = fshunts[i];
+            DEVICE_ID old_did = fshunt->get_device_id();
+            size_t index = get_fixed_shunt_index(old_did);
+            fixed_shunt_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            fshunt->set_shunt_bus(new_bus_number);
+            DEVICE_ID new_did = fshunt->get_device_id();
+            fixed_shunt_index.set_device_index(new_did, index);
+        }
+
+        vector<LINE*> lines = get_lines_connecting_to_bus(original_bus_number);
+        size_t nline = lines.size();
+        for(size_t i=0; i!=nline; ++i)
+        {
+            LINE* line = lines[i];
+            DEVICE_ID old_did = line->get_device_id();
+            size_t index = get_line_index(old_did);
+            line_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            if(line->get_sending_side_bus()==original_bus_number)
+                line->set_sending_side_bus(new_bus_number);
+            else
+                line->set_receiving_side_bus(new_bus_number);
+
+            DEVICE_ID new_did = line->get_device_id();
+            line_index.set_device_index(new_did, index);
+
+        }
+
+        vector<HVDC*> hvdcs = get_hvdcs_connecting_to_bus(original_bus_number);
+        size_t nhvdc = hvdcs.size();
+        for(size_t i=0; i!=nhvdc; ++i)
+        {
+            HVDC* hvdc = hvdcs[i];
+            DEVICE_ID old_did = hvdc->get_device_id();
+            size_t index = get_hvdc_index(old_did);
+            hvdc_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            if(hvdc->get_converter_bus(RECTIFIER)==original_bus_number)
+                hvdc->set_converter_bus(RECTIFIER, new_bus_number);
+            else
+                hvdc->set_converter_bus(INVERTER, new_bus_number);
+
+            DEVICE_ID new_did = hvdc->get_device_id();
+            hvdc_index.set_device_index(new_did, index);
+        }
+
+        vector<TRANSFORMER*> transformers = get_transformers_connecting_to_bus(original_bus_number);
+        size_t ntrans = transformers.size();
+        for(size_t i=0; i!=ntrans; ++i)
+        {
+            TRANSFORMER* trans = transformers[i];
+            DEVICE_ID old_did = trans->get_device_id();
+            size_t index = get_transformer_index(old_did);
+            transformer_index.set_device_index(old_did, INDEX_NOT_EXIST);
+
+            if(trans->get_winding_bus(PRIMARY_SIDE)==original_bus_number)
+                trans->set_winding_bus(PRIMARY_SIDE, new_bus_number);
+            else
+            {
+                if(trans->get_winding_bus(SECONDARY_SIDE)==original_bus_number)
+                    trans->set_winding_bus(SECONDARY_SIDE, new_bus_number);
+                else
+                    trans->set_winding_bus(TERTIARY_SIDE, new_bus_number);
+            }
+
+            DEVICE_ID new_did = trans->get_device_id();
+            transformer_index.set_device_index(new_did, index);
+        }
+    }
+    else
+    {
+        if(not is_bus_exist(original_bus_number))
+            osstream<<"Warning. The original bus number to change ("<<original_bus_number<<") does not exist in the power system database. No bus number will be changed.";
+        if(is_bus_exist(new_bus_number))
+            osstream<<"Warning. The new bus number to change ("<<new_bus_number<<") already exists in the power system database. No bus number will be changed.";
+        if(not is_bus_in_allowed_range(new_bus_number))
+            osstream<<"Warning. The new bus number to change ("<<new_bus_number<<") exceeds the allowed maximum bus number range [1, "<<get_allowed_max_bus_number()<<"] in the power system database. No bus number will be changed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
 DEVICE* POWER_SYSTEM_DATABASE::get_device(const DEVICE_ID& device_id)
 {
     // this function is not tested
-    if(not device_id.is_valid())
+    if(device_id.is_valid())
+    {
+        string dtype = device_id.get_device_type();
+        if(dtype=="BUS")
+            return (DEVICE*) get_bus(device_id);
+
+        if(dtype=="GENERATOR")
+            return (DEVICE*) get_generator(device_id);
+
+        if(dtype=="WT GENERATOR")
+            return (DEVICE*) get_wt_generator(device_id);
+
+        if(dtype=="PV UNIT")
+            return (DEVICE*) get_pv_unit(device_id);
+
+        if(dtype=="LOAD")
+            return (DEVICE*) get_load(device_id);
+
+        if(dtype=="FIXED SHUNT")
+            return (DEVICE*) get_fixed_shunt(device_id);
+
+        if(dtype=="LINE")
+            return (DEVICE*) get_line(device_id);
+
+        if(dtype=="HVDC")
+            return (DEVICE*) get_hvdc(device_id);
+
+        if(dtype=="TRANSFORMER")
+            return (DEVICE*) get_transformer(device_id);
+
+        if(dtype=="EQUIVALENT DEVICE")
+            return (DEVICE*) get_equivalent_device(device_id);
+
         return NULL;
-
-    string dtype = device_id.get_device_type();
-    if(dtype=="BUS")
-        return (DEVICE*) get_bus(device_id);
-
-    if(dtype=="GENERATOR")
-        return (DEVICE*) get_generator(device_id);
-
-    if(dtype=="WT GENERATOR")
-        return (DEVICE*) get_wt_generator(device_id);
-
-    if(dtype=="PV UNIT")
-        return (DEVICE*) get_pv_unit(device_id);
-
-    if(dtype=="LOAD")
-        return (DEVICE*) get_load(device_id);
-
-    if(dtype=="FIXED SHUNT")
-        return (DEVICE*) get_fixed_shunt(device_id);
-
-    if(dtype=="LINE")
-        return (DEVICE*) get_line(device_id);
-
-    if(dtype=="HVDC")
-        return (DEVICE*) get_hvdc(device_id);
-
-    if(dtype=="TRANSFORMER")
-        return (DEVICE*) get_transformer(device_id);
-
-    if(dtype=="EQUIVALENT DEVICE")
-        return (DEVICE*) get_equivalent_device(device_id);
-
-    return NULL;
+    }
+    else
+        return NULL;
 }
 
 BUS* POWER_SYSTEM_DATABASE::get_bus(size_t bus)
@@ -1769,7 +1712,9 @@ vector<GENERATOR*> POWER_SYSTEM_DATABASE::get_generators_connecting_to_bus(const
     size_t n = get_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Generator[i].is_connected_to_bus(bus))
+        if(not Generator[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(Generator[i]));
     }
     return device;
@@ -1783,7 +1728,9 @@ vector<WT_GENERATOR*> POWER_SYSTEM_DATABASE::get_wt_generators_connecting_to_bus
     size_t n = get_wt_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(WT_Generator[i].is_connected_to_bus(bus))
+        if(not WT_Generator[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(WT_Generator[i]));
     }
     return device;
@@ -1798,7 +1745,9 @@ vector<PV_UNIT*> POWER_SYSTEM_DATABASE::get_pv_units_connecting_to_bus(const siz
     size_t n = get_pv_unit_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(PV_Unit[i].is_connected_to_bus(bus))
+        if(not PV_Unit[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(PV_Unit[i]));
     }
     return device;
@@ -1844,7 +1793,9 @@ vector<LOAD*> POWER_SYSTEM_DATABASE::get_loads_connecting_to_bus(const size_t bu
     size_t n = get_load_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Load[i].is_connected_to_bus(bus))
+        if(not Load[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(Load[i]));
     }
     return device;
@@ -1858,7 +1809,9 @@ vector<LINE*> POWER_SYSTEM_DATABASE::get_lines_connecting_to_bus(const size_t bu
     size_t n = get_line_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Line[i].is_connected_to_bus(bus))
+        if(not Line[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(Line[i]));
     }
     return device;
@@ -1872,7 +1825,9 @@ vector<TRANSFORMER*> POWER_SYSTEM_DATABASE::get_transformers_connecting_to_bus(c
     size_t n = get_transformer_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Transformer[i].is_connected_to_bus(bus))
+        if(not Transformer[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(Transformer[i]));
     }
     return device;
@@ -1886,7 +1841,9 @@ vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_connecting_to_bus(c
     size_t n = get_fixed_shunt_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Fixed_shunt[i].is_connected_to_bus(bus))
+        if(not Fixed_shunt[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(Fixed_shunt[i]));
     }
     return device;
@@ -1900,7 +1857,9 @@ vector<HVDC*> POWER_SYSTEM_DATABASE::get_hvdcs_connecting_to_bus(const size_t bu
     size_t n = get_hvdc_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Hvdc[i].is_connected_to_bus(bus))
+        if(not Hvdc[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(Hvdc[i]));
     }
     return device;
@@ -1914,7 +1873,9 @@ vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_connect
     size_t n = get_equivalent_device_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Equivalent_device[i].is_connected_to_bus(bus))
+        if(not Equivalent_device[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(Equivalent_device[i]));
     }
     return device;
@@ -1928,7 +1889,9 @@ vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_connecting_to
     size_t n = get_energy_storage_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Energy_storage[i].is_connected_to_bus(bus))
+        if(not Energy_storage[i].is_connected_to_bus(bus))
+            continue;
+        else
             device.push_back(&(Energy_storage[i]));
     }
     return device;
@@ -2136,7 +2099,9 @@ vector<BUS*> POWER_SYSTEM_DATABASE::get_buses_in_area(const size_t area)
     size_t n = get_bus_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Bus[i].is_in_area(area))
+        if(not Bus[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Bus[i]));
     }
     return device;
@@ -2150,7 +2115,9 @@ vector<GENERATOR*> POWER_SYSTEM_DATABASE::get_generators_in_area(const size_t ar
     size_t n = get_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Generator[i].is_in_area(area))
+        if(not Generator[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Generator[i]));
     }
     return device;
@@ -2164,7 +2131,9 @@ vector<WT_GENERATOR*> POWER_SYSTEM_DATABASE::get_wt_generators_in_area(const siz
     size_t n = get_wt_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(WT_Generator[i].is_in_area(area))
+        if(not WT_Generator[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(WT_Generator[i]));
     }
     return device;
@@ -2179,7 +2148,9 @@ vector<PV_UNIT*> POWER_SYSTEM_DATABASE::get_pv_units_in_area(const size_t area)
     size_t n = get_pv_unit_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(PV_Unit[i].is_in_area(area))
+        if(not PV_Unit[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(PV_Unit[i]));
     }
     return device;
@@ -2225,7 +2196,9 @@ vector<LOAD*> POWER_SYSTEM_DATABASE::get_loads_in_area(const size_t area)
     size_t n = get_load_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Load[i].is_in_area(area))
+        if(not Load[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Load[i]));
     }
     return device;
@@ -2239,7 +2212,9 @@ vector<LINE*> POWER_SYSTEM_DATABASE::get_lines_in_area(const size_t area)
     size_t n = get_line_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Line[i].is_in_area(area))
+        if(not Line[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Line[i]));
     }
     return device;
@@ -2253,7 +2228,9 @@ vector<TRANSFORMER*> POWER_SYSTEM_DATABASE::get_transformers_in_area(const size_
     size_t n = get_transformer_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Transformer[i].is_in_area(area))
+        if(not Transformer[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Transformer[i]));
     }
     return device;
@@ -2267,7 +2244,9 @@ vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_in_area(const size_
     size_t n = get_fixed_shunt_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Fixed_shunt[i].is_in_area(area))
+        if(not Fixed_shunt[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Fixed_shunt[i]));
     }
     return device;
@@ -2281,7 +2260,9 @@ vector<HVDC*> POWER_SYSTEM_DATABASE::get_hvdcs_in_area(const size_t area)
     size_t n = get_hvdc_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Hvdc[i].is_in_area(area))
+        if(not Hvdc[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Hvdc[i]));
     }
     return device;
@@ -2295,7 +2276,9 @@ vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_area
     size_t n = get_equivalent_device_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Equivalent_device[i].is_in_area(area))
+        if(not Equivalent_device[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Equivalent_device[i]));
     }
     return device;
@@ -2309,7 +2292,9 @@ vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_in_area(const
     size_t n = get_energy_storage_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Energy_storage[i].is_in_area(area))
+        if(not Energy_storage[i].is_in_area(area))
+            continue;
+        else
             device.push_back(&(Energy_storage[i]));
     }
     return device;
@@ -2529,7 +2514,9 @@ vector<BUS*> POWER_SYSTEM_DATABASE::get_buses_in_zone(const size_t zone)
     size_t n = get_bus_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Bus[i].is_in_zone(zone))
+        if(not Bus[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Bus[i]));
     }
     return device;
@@ -2543,7 +2530,9 @@ vector<GENERATOR*> POWER_SYSTEM_DATABASE::get_generators_in_zone(const size_t zo
     size_t n = get_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Generator[i].is_in_zone(zone))
+        if(not Generator[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Generator[i]));
     }
     return device;
@@ -2557,7 +2546,9 @@ vector<WT_GENERATOR*> POWER_SYSTEM_DATABASE::get_wt_generators_in_zone(const siz
     size_t n = get_wt_generator_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(WT_Generator[i].is_in_zone(zone))
+        if(not WT_Generator[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(WT_Generator[i]));
     }
     return device;
@@ -2571,7 +2562,9 @@ vector<PV_UNIT*> POWER_SYSTEM_DATABASE::get_pv_units_in_zone(const size_t zone)
     size_t n = get_pv_unit_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(PV_Unit[i].is_in_zone(zone))
+        if(not PV_Unit[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(PV_Unit[i]));
     }
     return device;
@@ -2617,7 +2610,9 @@ vector<LOAD*> POWER_SYSTEM_DATABASE::get_loads_in_zone(const size_t zone)
     size_t n = get_load_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Load[i].is_in_zone(zone))
+        if(not Load[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Load[i]));
     }
     return device;
@@ -2631,7 +2626,9 @@ vector<LINE*> POWER_SYSTEM_DATABASE::get_lines_in_zone(const size_t zone)
     size_t n = get_line_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Line[i].is_in_zone(zone))
+        if(not Line[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Line[i]));
     }
     return device;
@@ -2645,7 +2642,9 @@ vector<TRANSFORMER*> POWER_SYSTEM_DATABASE::get_transformers_in_zone(const size_
     size_t n = get_transformer_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Transformer[i].is_in_zone(zone))
+        if(not Transformer[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Transformer[i]));
     }
     return device;
@@ -2659,7 +2658,9 @@ vector<FIXED_SHUNT*> POWER_SYSTEM_DATABASE::get_fixed_shunts_in_zone(const size_
     size_t n = get_fixed_shunt_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Fixed_shunt[i].is_in_zone(zone))
+        if(not Fixed_shunt[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Fixed_shunt[i]));
     }
     return device;
@@ -2673,7 +2674,9 @@ vector<HVDC*> POWER_SYSTEM_DATABASE::get_hvdcs_in_zone(const size_t zone)
     size_t n = get_hvdc_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Hvdc[i].is_in_zone(zone))
+        if(not Hvdc[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Hvdc[i]));
     }
     return device;
@@ -2687,7 +2690,9 @@ vector<EQUIVALENT_DEVICE*> POWER_SYSTEM_DATABASE::get_equivalent_devices_in_zone
     size_t n = get_equivalent_device_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Equivalent_device[i].is_in_zone(zone))
+        if(not Equivalent_device[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Equivalent_device[i]));
     }
     return device;
@@ -2701,7 +2706,9 @@ vector<ENERGY_STORAGE*> POWER_SYSTEM_DATABASE::get_energy_storages_in_zone(const
     size_t n = get_energy_storage_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Energy_storage[i].is_in_zone(zone))
+        if(not Energy_storage[i].is_in_zone(zone))
+            continue;
+        else
             device.push_back(&(Energy_storage[i]));
     }
     return device;
@@ -2938,11 +2945,9 @@ vector<BUS*> POWER_SYSTEM_DATABASE::get_buses_with_constraints(double vbase_kV_m
         this_zone = Bus[i].get_zone_number();
         this_owner = Bus[i].get_owner_number();
 
-        if(area!=0 and this_area!=area)
-            continue;
-        if(zone!=0 and this_zone!=zone)
-            continue;
-        if(owner!=0 and this_owner!=owner)
+        if((area!=0 and this_area!=area) or
+           (zone!=0 and this_zone!=zone) or
+           (owner!=0 and this_owner!=owner))
             continue;
         if(vbase>=vbase_kV_min and vbase<=vbase_kV_max and v>=v_pu_min and v<=v_pu_max)
             device.push_back(&(Bus[i]));
@@ -3156,11 +3161,9 @@ vector<size_t> POWER_SYSTEM_DATABASE::get_buses_number_with_constraints(double v
         this_zone = Bus[i].get_zone_number();
         this_owner = Bus[i].get_owner_number();
 
-        if(area!=0 and this_area!=area)
-            continue;
-        if(zone!=0 and this_zone!=zone)
-            continue;
-        if(owner!=0 and this_owner!=owner)
+        if((area!=0 and this_area!=area) or
+           (zone!=0 and this_zone!=zone) or
+           (owner!=0 and this_owner!=owner))
             continue;
         if(vbase>=vbase_kV_min and vbase<=vbase_kV_max and v>=v_pu_min and v<=v_pu_max)
             buses_number.push_back(Bus[i].get_bus_number());
@@ -3177,6 +3180,8 @@ vector<size_t> POWER_SYSTEM_DATABASE::get_all_in_service_buses_number()
     {
         if(Bus[i].get_bus_type()!=OUT_OF_SERVICE)
             buses_number.push_back(Bus[i].get_bus_number());
+        else
+            continue;
     }
     return buses_number;
 }
@@ -3351,7 +3356,9 @@ void POWER_SYSTEM_DATABASE::update_in_service_bus_count()
     size_t n_out_of_service = 0;
     for(size_t i=0; i!=n; ++i)
     {
-        if(Bus[i].get_bus_type()==OUT_OF_SERVICE)
+        if(Bus[i].get_bus_type()!=OUT_OF_SERVICE)
+            continue;
+        else
 			++n_out_of_service;
     }
 
@@ -3381,13 +3388,13 @@ void POWER_SYSTEM_DATABASE::update_overshadowed_bus_count()
         bool new_bus_is_overshadowed = false;
         for(size_t i=0; i!=n; ++i)
         {
-            if(Line[i].is_zero_impedance_line())
+            if(not Line[i].is_zero_impedance_line())
+                continue;
+            else
             {
                 bool istatus = Line[i].get_sending_side_breaker_status();
                 bool jstatus = Line[i].get_receiving_side_breaker_status();
-                if(istatus==false or jstatus==false)
-                    continue;
-                else
+                if(istatus!=false and jstatus!=false)
                 {
                     size_t ibus = Line[i].get_sending_side_bus();
                     size_t jbus = Line[i].get_receiving_side_bus();
@@ -3418,6 +3425,8 @@ void POWER_SYSTEM_DATABASE::update_overshadowed_bus_count()
                             new_bus_is_overshadowed = true;
                     }
                 }
+                else
+                    continue;
             }
         }
         if(new_bus_is_overshadowed==false)
@@ -3427,7 +3436,9 @@ void POWER_SYSTEM_DATABASE::update_overshadowed_bus_count()
     n = Bus.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Bus[i].is_bus_overshadowed())
+        if(not Bus[i].is_bus_overshadowed())
+            continue;
+        else
             ++overshadowed_bus_count;
     }
 }
@@ -3575,24 +3586,24 @@ size_t POWER_SYSTEM_DATABASE::get_area_index(const size_t no) const
 {
     map<size_t, size_t>::const_iterator iter = area_index.begin();
     iter = area_index.find(no);
-    if(iter==area_index.end()) return INDEX_NOT_EXIST;
-    else                       return iter->second;
+    if(iter!=area_index.end()) return iter->second;
+    else                       return INDEX_NOT_EXIST;
 }
 
 size_t POWER_SYSTEM_DATABASE::get_zone_index(const size_t no) const
 {
     map<size_t, size_t>::const_iterator iter = zone_index.begin();
     iter = zone_index.find(no);
-    if(iter==zone_index.end()) return INDEX_NOT_EXIST;
-    else                       return iter->second;
+    if(iter!=zone_index.end()) return iter->second;
+    else                       return INDEX_NOT_EXIST;
 }
 
 size_t POWER_SYSTEM_DATABASE::get_owner_index(const size_t no) const
 {
     map<size_t, size_t>::const_iterator iter = owner_index.begin();
     iter = owner_index.find(no);
-    if(iter==owner_index.end()) return INDEX_NOT_EXIST;
-    else                        return iter->second;
+    if(iter!=owner_index.end()) return iter->second;
+    else                        return INDEX_NOT_EXIST;
 }
 
 size_t POWER_SYSTEM_DATABASE::bus_name2bus_number(const string&name) const
@@ -3601,7 +3612,9 @@ size_t POWER_SYSTEM_DATABASE::bus_name2bus_number(const string&name) const
     size_t n = get_bus_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Bus[i].get_bus_name()==trimmed_name)
+        if(Bus[i].get_bus_name()!=trimmed_name)
+            continue;
+        else
             return Bus[i].get_bus_number();
     }
     return 0;
@@ -3613,7 +3626,9 @@ size_t POWER_SYSTEM_DATABASE::area_name2area_number(const string& name) const
     size_t n = get_area_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Area[i].get_area_name()==trimmed_name)
+        if(Area[i].get_area_name()!=trimmed_name)
+            continue;
+        else
             return Area[i].get_area_number();
     }
     return 0;
@@ -3625,7 +3640,9 @@ size_t POWER_SYSTEM_DATABASE::zone_name2zone_number(const string& name) const
     size_t n = get_zone_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Zone[i].get_zone_name()==trimmed_name)
+        if(Zone[i].get_zone_name()!=trimmed_name)
+            continue;
+        else
             return Zone[i].get_zone_number();
     }
     return 0;
@@ -3637,7 +3654,9 @@ size_t POWER_SYSTEM_DATABASE::owner_name2owner_number(const string& name) const
     size_t n = get_owner_count();
     for(size_t i=0; i!=n; ++i)
     {
-        if(Owner[i].get_owner_name()==trimmed_name)
+        if(Owner[i].get_owner_name()!=trimmed_name)
+            continue;
+        else
             return Owner[i].get_owner_number();
     }
     return 0;
@@ -3645,42 +3664,44 @@ size_t POWER_SYSTEM_DATABASE::owner_name2owner_number(const string& name) const
 
 string POWER_SYSTEM_DATABASE::bus_number2bus_name(size_t number)
 {
-    if(not is_bus_in_allowed_range(number))
-        return "";
-
-    BUS* bus = get_bus(number);
-    if(bus==NULL)
-        return "";
+    if(is_bus_in_allowed_range(number))
+    {
+        BUS* bus = get_bus(number);
+        if(bus!=NULL)
+            return bus->get_bus_name();
+        else
+            return "";
+    }
     else
-        return bus->get_bus_name();
+        return "";
 }
 
 
 string POWER_SYSTEM_DATABASE::area_number2area_name(size_t number)
 {
     AREA* area = get_area(number);
-    if(area==NULL)
-        return "";
-    else
+    if(area!=NULL)
         return area->get_area_name();
+    else
+        return "";
 }
 
 string POWER_SYSTEM_DATABASE::zone_number2zone_name(size_t number)
 {
     ZONE* zone = get_zone(number);
-    if(zone==NULL)
-        return "";
-    else
+    if(zone!=NULL)
         return zone->get_zone_name();
+    else
+        return "";
 }
 
 string POWER_SYSTEM_DATABASE::owner_number2owner_name(size_t number)
 {
     OWNER* owner = get_owner(number);
-    if(owner==NULL)
-        return "";
-    else
+    if(owner!=NULL)
         return owner->get_owner_name();
+    else
+        return "";
 }
 
 void POWER_SYSTEM_DATABASE::check()
@@ -4230,33 +4251,34 @@ void POWER_SYSTEM_DATABASE::scale_energy_storages_power_in_zone(size_t zone_numb
 
 void POWER_SYSTEM_DATABASE::clear_bus(size_t bus)
 {
-    if(not is_bus_exist(bus)) return;
-
-    clear_sources_connecting_to_bus(bus);
-    clear_loads_connecting_to_bus(bus);
-    clear_lines_connecting_to_bus(bus);
-    clear_transformers_connecting_to_bus(bus);
-    clear_fixed_shunts_connecting_to_bus(bus);
-    clear_hvdcs_connecting_to_bus(bus);
-    clear_equivalent_devices_connecting_to_bus(bus);
-
-    size_t current_index = get_bus_index(bus);
-
-    vector<BUS>::iterator iter = Bus.begin();
-    std::advance(iter, current_index);
-    Bus.erase(iter);
-    bus_index.set_bus_with_index(bus, INDEX_NOT_EXIST);
-
-    size_t max_bus_number = bus_index.get_max_bus_number();
-
-    size_t max_bus_number_plus_1 = max_bus_number+1;
-    for(size_t i=1; i!=max_bus_number_plus_1; ++i)
+    if(is_bus_exist(bus))
     {
-        size_t index = bus_index.get_index_of_bus(i);
-        if(index!= INDEX_NOT_EXIST and index>current_index)
-            bus_index.set_bus_with_index(i, index-1);
+        clear_sources_connecting_to_bus(bus);
+        clear_loads_connecting_to_bus(bus);
+        clear_lines_connecting_to_bus(bus);
+        clear_transformers_connecting_to_bus(bus);
+        clear_fixed_shunts_connecting_to_bus(bus);
+        clear_hvdcs_connecting_to_bus(bus);
+        clear_equivalent_devices_connecting_to_bus(bus);
+
+        size_t current_index = get_bus_index(bus);
+
+        vector<BUS>::iterator iter = Bus.begin();
+        std::advance(iter, current_index);
+        Bus.erase(iter);
+        bus_index.set_bus_with_index(bus, INDEX_NOT_EXIST);
+
+        size_t max_bus_number = bus_index.get_max_bus_number();
+
+        size_t max_bus_number_plus_1 = max_bus_number+1;
+        for(size_t i=1; i!=max_bus_number_plus_1; ++i)
+        {
+            size_t index = bus_index.get_index_of_bus(i);
+            if(index!= INDEX_NOT_EXIST and index>current_index)
+                bus_index.set_bus_with_index(i, index-1);
+        }
+        update_in_service_bus_count();
     }
-    update_in_service_bus_count();
 }
 
 void POWER_SYSTEM_DATABASE::clear_all_buses()
@@ -4280,17 +4302,18 @@ void POWER_SYSTEM_DATABASE::clear_all_buses()
 
 void POWER_SYSTEM_DATABASE::clear_generator(const DEVICE_ID& device_id)
 {
-    if(not is_generator_exist(device_id)) return;
+    if(is_generator_exist(device_id))
+    {
+        size_t current_index = get_generator_index(device_id);
 
-    size_t current_index = get_generator_index(device_id);
+        vector<GENERATOR>::iterator iter_generator = Generator.begin();
 
-    vector<GENERATOR>::iterator iter_generator = Generator.begin();
+        std::advance(iter_generator, current_index);
+        Generator.erase(iter_generator);
+        generator_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    std::advance(iter_generator, current_index);
-    Generator.erase(iter_generator);
-    generator_index.set_device_index(device_id, INDEX_NOT_EXIST);
-
-    generator_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        generator_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::clear_generators_connecting_to_bus(const size_t bus)
@@ -4301,14 +4324,16 @@ void POWER_SYSTEM_DATABASE::clear_generators_connecting_to_bus(const size_t bus)
     while(true)
     {
         vector<GENERATOR*> generator = get_generators_connecting_to_bus(bus);
-        if(generator.size()==0)
+        if(generator.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(bus);
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(generator[0]->get_identifier());
+            clear_generator(device_id);
+        }
+        else
             break;
-
-        terminal.clear();
-        terminal.append_bus(bus);
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(generator[0]->get_identifier());
-        clear_generator(device_id);
     }
 }
 
@@ -4321,17 +4346,18 @@ void POWER_SYSTEM_DATABASE::clear_all_generators()
 
 void POWER_SYSTEM_DATABASE::clear_wt_generator(const DEVICE_ID& device_id)
 {
-    if(not is_wt_generator_exist(device_id)) return;
+    if(is_wt_generator_exist(device_id))
+    {
+        size_t current_index = get_wt_generator_index(device_id);
 
-    size_t current_index = get_wt_generator_index(device_id);
+        vector<WT_GENERATOR>::iterator iter_wt_generator = WT_Generator.begin();
 
-    vector<WT_GENERATOR>::iterator iter_wt_generator = WT_Generator.begin();
+        std::advance(iter_wt_generator, current_index);
+        WT_Generator.erase(iter_wt_generator);
+        wt_generator_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    std::advance(iter_wt_generator, current_index);
-    WT_Generator.erase(iter_wt_generator);
-    wt_generator_index.set_device_index(device_id, INDEX_NOT_EXIST);
-
-    wt_generator_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        wt_generator_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::clear_wt_generators_connecting_to_bus(const size_t bus)
@@ -4342,13 +4368,16 @@ void POWER_SYSTEM_DATABASE::clear_wt_generators_connecting_to_bus(const size_t b
     while(true)
     {
         vector<WT_GENERATOR*> wt_generator = get_wt_generators_connecting_to_bus(bus);
-        if(wt_generator.size()==0)
+        if(wt_generator.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(bus);
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(wt_generator[0]->get_identifier());
+            clear_wt_generator(device_id);
+        }
+        else
             break;
-        terminal.clear();
-        terminal.append_bus(bus);
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(wt_generator[0]->get_identifier());
-        clear_wt_generator(device_id);
     }
 }
 
@@ -4360,17 +4389,18 @@ void POWER_SYSTEM_DATABASE::clear_all_wt_generators()
 
 void POWER_SYSTEM_DATABASE::clear_pv_unit(const DEVICE_ID& device_id)
 {
-    if(not is_pv_unit_exist(device_id)) return;
+    if(is_pv_unit_exist(device_id))
+    {
+        size_t current_index = get_pv_unit_index(device_id);
 
-    size_t current_index = get_pv_unit_index(device_id);
+        vector<PV_UNIT>::iterator iter_pv_unit = PV_Unit.begin();
 
-    vector<PV_UNIT>::iterator iter_pv_unit = PV_Unit.begin();
+        std::advance(iter_pv_unit, current_index);
+        PV_Unit.erase(iter_pv_unit);
+        pv_unit_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    std::advance(iter_pv_unit, current_index);
-    PV_Unit.erase(iter_pv_unit);
-    pv_unit_index.set_device_index(device_id, INDEX_NOT_EXIST);
-
-    pv_unit_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        pv_unit_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 
@@ -4382,13 +4412,16 @@ void POWER_SYSTEM_DATABASE::clear_pv_units_connecting_to_bus(const size_t bus)
     while(true)
     {
         vector<PV_UNIT*> pv_unit = get_pv_units_connecting_to_bus(bus);
-        if(pv_unit.size()==0)
+        if(pv_unit.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(bus);
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(pv_unit[0]->get_identifier());
+            clear_pv_unit(device_id);
+        }
+        else
             break;
-        terminal.clear();
-        terminal.append_bus(bus);
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(pv_unit[0]->get_identifier());
-        clear_pv_unit(device_id);
     }
 }
 
@@ -4416,18 +4449,19 @@ void POWER_SYSTEM_DATABASE::clear_all_sources()
 
 void POWER_SYSTEM_DATABASE::clear_load(const DEVICE_ID& device_id)
 {
-    if(not is_load_exist(device_id)) return;
+    if(is_load_exist(device_id))
+    {
+        size_t current_index = get_load_index(device_id);
 
-    size_t current_index = get_load_index(device_id);
-
-    vector<LOAD>::iterator iter_load = Load.begin();
+        vector<LOAD>::iterator iter_load = Load.begin();
 
 
-    std::advance(iter_load, current_index);
-    Load.erase(iter_load);
-    load_index.set_device_index(device_id, INDEX_NOT_EXIST);
+        std::advance(iter_load, current_index);
+        Load.erase(iter_load);
+        load_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    load_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        load_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::clear_loads_connecting_to_bus(const size_t bus)
@@ -4438,14 +4472,17 @@ void POWER_SYSTEM_DATABASE::clear_loads_connecting_to_bus(const size_t bus)
     while(true)
     {
         vector<LOAD*> load = get_loads_connecting_to_bus(bus);
-        if(load.size()==0)
+        if(load.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(bus);
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(load[0]->get_identifier());
+            clear_load(device_id);
+        }
+        else
             break;
 
-        terminal.clear();
-        terminal.append_bus(bus);
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(load[0]->get_identifier());
-        clear_load(device_id);
     }
 }
 
@@ -4458,18 +4495,19 @@ void POWER_SYSTEM_DATABASE::clear_all_loads()
 
 void POWER_SYSTEM_DATABASE::clear_line(const DEVICE_ID& device_id)
 {
-    if(not is_line_exist(device_id)) return;
+    if(is_line_exist(device_id))
+    {
+        size_t current_index = get_line_index(device_id);
 
-    size_t current_index = get_line_index(device_id);
-
-    vector<LINE>::iterator iter_line = Line.begin();
+        vector<LINE>::iterator iter_line = Line.begin();
 
 
-    std::advance(iter_line, current_index);
-    Line.erase(iter_line);
-    line_index.set_device_index(device_id, INDEX_NOT_EXIST);
+        std::advance(iter_line, current_index);
+        Line.erase(iter_line);
+        line_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    line_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        line_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::clear_lines_connecting_to_bus(const size_t bus)
@@ -4480,15 +4518,18 @@ void POWER_SYSTEM_DATABASE::clear_lines_connecting_to_bus(const size_t bus)
     while(true)
     {
         vector<LINE*> line = get_lines_connecting_to_bus(bus);
-        if(line.size()==0)
+        if(line.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(line[0]->get_sending_side_bus());
+            terminal.append_bus(line[0]->get_receiving_side_bus());
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(line[0]->get_identifier());
+            clear_line(device_id);
+        }
+        else
             break;
 
-        terminal.clear();
-        terminal.append_bus(line[0]->get_sending_side_bus());
-        terminal.append_bus(line[0]->get_receiving_side_bus());
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(line[0]->get_identifier());
-        clear_line(device_id);
     }
 }
 
@@ -4500,17 +4541,18 @@ void POWER_SYSTEM_DATABASE::clear_all_lines()
 
 void POWER_SYSTEM_DATABASE::clear_transformer(const DEVICE_ID& device_id)
 {
-    if(not is_transformer_exist(device_id)) return;
+    if(is_transformer_exist(device_id))
+    {
+        size_t current_index = get_transformer_index(device_id);
 
-    size_t current_index = get_transformer_index(device_id);
+        vector<TRANSFORMER>::iterator iter_transformer = Transformer.begin();
 
-    vector<TRANSFORMER>::iterator iter_transformer = Transformer.begin();
+        std::advance(iter_transformer, current_index);
+        Transformer.erase(iter_transformer);
+        transformer_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    std::advance(iter_transformer, current_index);
-    Transformer.erase(iter_transformer);
-    transformer_index.set_device_index(device_id, INDEX_NOT_EXIST);
-
-    transformer_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        transformer_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::clear_transformers_connecting_to_bus(const size_t bus)
@@ -4522,16 +4564,18 @@ void POWER_SYSTEM_DATABASE::clear_transformers_connecting_to_bus(const size_t bu
     {
         vector<TRANSFORMER*> transformer = get_transformers_connecting_to_bus(bus);
 
-        if(transformer.size()==0)
+        if(transformer.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(transformer[0]->get_winding_bus(PRIMARY_SIDE));
+            terminal.append_bus(transformer[0]->get_winding_bus(SECONDARY_SIDE));
+            terminal.append_bus(transformer[0]->get_winding_bus(TERTIARY_SIDE));
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(transformer[0]->get_identifier());
+            clear_transformer(device_id);
+        }
+        else
             break;
-
-        terminal.clear();
-        terminal.append_bus(transformer[0]->get_winding_bus(PRIMARY_SIDE));
-        terminal.append_bus(transformer[0]->get_winding_bus(SECONDARY_SIDE));
-        terminal.append_bus(transformer[0]->get_winding_bus(TERTIARY_SIDE));
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(transformer[0]->get_identifier());
-        clear_transformer(device_id);
     }
 }
 
@@ -4544,22 +4588,35 @@ void POWER_SYSTEM_DATABASE::clear_all_transformers()
 
 void POWER_SYSTEM_DATABASE::clear_fixed_shunt(const DEVICE_ID& device_id)
 {
-    if(not is_fixed_shunt_exist(device_id))
-        return;
+    if(is_fixed_shunt_exist(device_id))
+    {
+        size_t current_index = get_fixed_shunt_index(device_id);
 
-    size_t current_index = get_fixed_shunt_index(device_id);
+        vector<FIXED_SHUNT>::iterator iter_fs = Fixed_shunt.begin();
 
-    vector<FIXED_SHUNT> fs;
-    size_t nfshunt = get_fixed_shunt_count();
-    for(size_t i=0; i!=nfshunt; ++i)
-        if(i!=current_index) fs.push_back(Fixed_shunt[i]);
 
-    Fixed_shunt.clear();
-    Fixed_shunt = fs;
+        std::advance(iter_fs, current_index);
+        Fixed_shunt.erase(iter_fs);
+        fixed_shunt_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    fixed_shunt_index.set_device_index(device_id, INDEX_NOT_EXIST);
+        fixed_shunt_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
 
-    fixed_shunt_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        /*
+        size_t current_index = get_fixed_shunt_index(device_id);
+
+        vector<FIXED_SHUNT> fs;
+        size_t nfshunt = get_fixed_shunt_count();
+        for(size_t i=0; i!=nfshunt; ++i)
+            if(i!=current_index) fs.push_back(Fixed_shunt[i]);
+
+        Fixed_shunt.clear();
+        Fixed_shunt = fs;
+
+        fixed_shunt_index.set_device_index(device_id, INDEX_NOT_EXIST);
+
+        fixed_shunt_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        */
+    }
 }
 
 
@@ -4573,12 +4630,14 @@ void POWER_SYSTEM_DATABASE::clear_fixed_shunts_connecting_to_bus(const size_t bu
     while(true)
     {
         vector<FIXED_SHUNT*> fixed_shunt = get_fixed_shunts_connecting_to_bus(bus);
-        if(fixed_shunt.size()==0)
+        if(fixed_shunt.size()!=0)
+        {
+            device_id.set_device_identifier(fixed_shunt[0]->get_identifier());
+            clear_fixed_shunt(device_id);
+            fixed_shunt.clear();
+        }
+        else
             break;
-
-        device_id.set_device_identifier(fixed_shunt[0]->get_identifier());
-        clear_fixed_shunt(device_id);
-        fixed_shunt.clear();
     }
 }
 
@@ -4590,18 +4649,19 @@ void POWER_SYSTEM_DATABASE::clear_all_fixed_shunts()
 
 void POWER_SYSTEM_DATABASE::clear_hvdc(const DEVICE_ID& device_id)
 {
-    if(not is_hvdc_exist(device_id)) return;
+    if(is_hvdc_exist(device_id))
+    {
+        size_t current_index = get_hvdc_index(device_id);
 
-    size_t current_index = get_hvdc_index(device_id);
-
-    vector<HVDC>::iterator iter_hvdc = Hvdc.begin();
+        vector<HVDC>::iterator iter_hvdc = Hvdc.begin();
 
 
-    std::advance(iter_hvdc, current_index);
-    Hvdc.erase(iter_hvdc);
-    hvdc_index.set_device_index(device_id, INDEX_NOT_EXIST);
+        std::advance(iter_hvdc, current_index);
+        Hvdc.erase(iter_hvdc);
+        hvdc_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    hvdc_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        hvdc_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::clear_hvdcs_connecting_to_bus(const size_t bus)
@@ -4612,15 +4672,17 @@ void POWER_SYSTEM_DATABASE::clear_hvdcs_connecting_to_bus(const size_t bus)
     while(true)
     {
         vector<HVDC*> hvdc = get_hvdcs_connecting_to_bus(bus);
-        if(hvdc.size()==0)
+        if(hvdc.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(hvdc[0]->get_converter_bus(RECTIFIER));
+            terminal.append_bus(hvdc[0]->get_converter_bus(INVERTER));
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(hvdc[0]->get_identifier());
+            clear_hvdc(device_id);
+        }
+        else
             break;
-
-        terminal.clear();
-        terminal.append_bus(hvdc[0]->get_converter_bus(RECTIFIER));
-        terminal.append_bus(hvdc[0]->get_converter_bus(INVERTER));
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(hvdc[0]->get_identifier());
-        clear_hvdc(device_id);
     }
 }
 
@@ -4632,18 +4694,19 @@ void POWER_SYSTEM_DATABASE::clear_all_hvdcs()
 
 void POWER_SYSTEM_DATABASE::clear_equivalent_device(const DEVICE_ID& device_id)
 {
-    if(not is_equivalent_device_exist(device_id)) return;
+    if(is_equivalent_device_exist(device_id))
+    {
+        size_t current_index = get_equivalent_device_index(device_id);
 
-    size_t current_index = get_equivalent_device_index(device_id);
-
-    vector<EQUIVALENT_DEVICE>::iterator iter_edevice = Equivalent_device.begin();
+        vector<EQUIVALENT_DEVICE>::iterator iter_edevice = Equivalent_device.begin();
 
 
-    std::advance(iter_edevice, current_index);
-    Equivalent_device.erase(iter_edevice);
-    equivalent_device_index.set_device_index(device_id, INDEX_NOT_EXIST);
+        std::advance(iter_edevice, current_index);
+        Equivalent_device.erase(iter_edevice);
+        equivalent_device_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    equivalent_device_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        equivalent_device_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::clear_equivalent_devices_connecting_to_bus(const size_t bus)
@@ -4654,14 +4717,16 @@ void POWER_SYSTEM_DATABASE::clear_equivalent_devices_connecting_to_bus(const siz
     while(true)
     {
         vector<EQUIVALENT_DEVICE*> edevice = get_equivalent_devices_connecting_to_bus(bus);
-        if(edevice.size()==0)
+        if(edevice.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(edevice[0]->get_equivalent_device_bus());
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(edevice[0]->get_identifier());
+            clear_equivalent_device(device_id);
+        }
+        else
             break;
-
-        terminal.clear();
-        terminal.append_bus(edevice[0]->get_equivalent_device_bus());
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(edevice[0]->get_identifier());
-        clear_equivalent_device(device_id);
     }
 }
 
@@ -4674,18 +4739,19 @@ void POWER_SYSTEM_DATABASE::clear_all_equivalent_devices()
 
 void POWER_SYSTEM_DATABASE::clear_energy_storage(const DEVICE_ID& device_id)
 {
-    if(not is_energy_storage_exist(device_id)) return;
+    if(is_energy_storage_exist(device_id))
+    {
+        size_t current_index = get_energy_storage_index(device_id);
 
-    size_t current_index = get_energy_storage_index(device_id);
-
-    vector<ENERGY_STORAGE>::iterator iter_edevice = Energy_storage.begin();
+        vector<ENERGY_STORAGE>::iterator iter_edevice = Energy_storage.begin();
 
 
-    std::advance(iter_edevice, current_index);
-    Energy_storage.erase(iter_edevice);
-    energy_storage_index.set_device_index(device_id, INDEX_NOT_EXIST);
+        std::advance(iter_edevice, current_index);
+        Energy_storage.erase(iter_edevice);
+        energy_storage_index.set_device_index(device_id, INDEX_NOT_EXIST);
 
-    energy_storage_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+        energy_storage_index.decrease_index_by_1_for_device_with_index_greater_than(current_index);
+    }
 }
 
 void POWER_SYSTEM_DATABASE::clear_energy_storages_connecting_to_bus(const size_t bus)
@@ -4696,14 +4762,16 @@ void POWER_SYSTEM_DATABASE::clear_energy_storages_connecting_to_bus(const size_t
     while(true)
     {
         vector<ENERGY_STORAGE*> estorage = get_energy_storages_connecting_to_bus(bus);
-        if(estorage.size()==0)
+        if(estorage.size()!=0)
+        {
+            terminal.clear();
+            terminal.append_bus(estorage[0]->get_energy_storage_bus());
+            device_id.set_device_terminal(terminal);
+            device_id.set_device_identifier(estorage[0]->get_identifier());
+            clear_energy_storage(device_id);
+        }
+        else
             break;
-
-        terminal.clear();
-        terminal.append_bus(estorage[0]->get_energy_storage_bus());
-        device_id.set_device_terminal(terminal);
-        device_id.set_device_identifier(estorage[0]->get_identifier());
-        clear_energy_storage(device_id);
     }
 }
 
@@ -4749,140 +4817,143 @@ void POWER_SYSTEM_DATABASE::clear_all_owners()
 
 void POWER_SYSTEM_DATABASE::trip_bus(size_t bus)
 {
-    if(not is_bus_exist(bus)) return;
-
-    size_t index = get_bus_index(bus);
-    if(Bus[index].get_bus_type()==OUT_OF_SERVICE)
-        return;
-
-    ostringstream osstream;
-
-    osstream<<"The following devices are tripped before bus "<<bus<<" is tripped."<<endl;
-
-    size_t n = 0;
-
-    vector<GENERATOR*> gens = get_generators_connecting_to_bus(bus);
-    n=gens.size();
-    for(size_t i=0; i!=n; ++i)
+    if(is_bus_exist(bus))
     {
-        if(gens[i]->get_status()==true)
+        size_t index = get_bus_index(bus);
+        if(Bus[index].get_bus_type()!=OUT_OF_SERVICE)
         {
-            gens[i]->set_status(false);
-            osstream<<gens[i]->get_device_name()<<endl;
+            ostringstream osstream;
+
+            osstream<<"The following devices are tripped before bus "<<bus<<" is tripped."<<endl;
+
+            size_t n = 0;
+
+            vector<GENERATOR*> gens = get_generators_connecting_to_bus(bus);
+            n=gens.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(gens[i]->get_status()==true)
+                {
+                    gens[i]->set_status(false);
+                    osstream<<gens[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<WT_GENERATOR*> wts = get_wt_generators_connecting_to_bus(bus);
+            n=wts.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(wts[i]->get_status()==true)
+                {
+                    wts[i]->set_status(false);
+                    osstream<<wts[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<PV_UNIT*> pvs = get_pv_units_connecting_to_bus(bus);
+            n=pvs.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(pvs[i]->get_status()==true)
+                {
+                    pvs[i]->set_status(false);
+                    osstream<<pvs[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<ENERGY_STORAGE*> ess = get_energy_storages_connecting_to_bus(bus);
+            n=ess.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(ess[i]->get_status()==true)
+                {
+                    ess[i]->set_status(false);
+                    osstream<<ess[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<LOAD*> loads = get_loads_connecting_to_bus(bus);
+            n=loads.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(loads[i]->get_status()==true)
+                {
+                    loads[i]->set_status(false);
+                    osstream<<loads[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<FIXED_SHUNT*> fshunts = get_fixed_shunts_connecting_to_bus(bus);
+            n=fshunts.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(fshunts[i]->get_status()==true)
+                {
+                    fshunts[i]->set_status(false);
+                    osstream<<fshunts[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<LINE*> lines = get_lines_connecting_to_bus(bus);
+            n=lines.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(lines[i]->get_sending_side_breaker_status()==true or lines[i]->get_receiving_side_breaker_status()==true)
+                {
+                    lines[i]->set_sending_side_breaker_status(false);
+                    lines[i]->set_receiving_side_breaker_status(false);
+                    osstream<<lines[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<TRANSFORMER*> transes = get_transformers_connecting_to_bus(bus);
+            n=transes.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(transes[i]->get_winding_breaker_status(PRIMARY_SIDE)==true or transes[i]->get_winding_breaker_status(SECONDARY_SIDE)==true or
+                   (transes[i]->is_three_winding_transformer() and transes[i]->get_winding_breaker_status(TERTIARY_SIDE)==true) )
+                {
+                    transes[i]->set_winding_breaker_status(PRIMARY_SIDE, false);
+                    transes[i]->set_winding_breaker_status(SECONDARY_SIDE, false);
+                    if(transes[i]->is_two_winding_transformer())
+                        continue;
+                    else
+                        transes[i]->set_winding_breaker_status(TERTIARY_SIDE, false);
+
+                    osstream<<transes[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<HVDC*> hvdcs = get_hvdcs_connecting_to_bus(bus);
+            n=hvdcs.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(hvdcs[i]->get_status()==true)
+                {
+                    hvdcs[i]->set_status(false);
+                    osstream<<hvdcs[i]->get_device_name()<<endl;
+                }
+            }
+
+            vector<EQUIVALENT_DEVICE*> edevices = get_equivalent_devices_connecting_to_bus(bus);
+            n=edevices.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(edevices[i]->get_status()==true)
+                {
+                    edevices[i]->set_status(false);
+                    osstream<<edevices[i]->get_device_name()<<endl;
+                }
+            }
+
+            Bus[index].set_bus_type(OUT_OF_SERVICE);
+            osstream<<"Bus "<<bus<<" is tripped.";
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            toolkit.show_information_with_leading_time_stamp(osstream);
+
+            update_in_service_bus_count();
         }
     }
-
-    vector<WT_GENERATOR*> wts = get_wt_generators_connecting_to_bus(bus);
-    n=wts.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(wts[i]->get_status()==true)
-        {
-            wts[i]->set_status(false);
-            osstream<<wts[i]->get_device_name()<<endl;
-        }
-    }
-
-    vector<PV_UNIT*> pvs = get_pv_units_connecting_to_bus(bus);
-    n=pvs.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(pvs[i]->get_status()==true)
-        {
-            pvs[i]->set_status(false);
-            osstream<<pvs[i]->get_device_name()<<endl;
-        }
-    }
-
-    vector<ENERGY_STORAGE*> ess = get_energy_storages_connecting_to_bus(bus);
-    n=ess.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(ess[i]->get_status()==true)
-        {
-            ess[i]->set_status(false);
-            osstream<<ess[i]->get_device_name()<<endl;
-        }
-    }
-
-    vector<LOAD*> loads = get_loads_connecting_to_bus(bus);
-    n=loads.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(loads[i]->get_status()==true)
-        {
-            loads[i]->set_status(false);
-            osstream<<loads[i]->get_device_name()<<endl;
-        }
-    }
-
-    vector<FIXED_SHUNT*> fshunts = get_fixed_shunts_connecting_to_bus(bus);
-    n=fshunts.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(fshunts[i]->get_status()==true)
-        {
-            fshunts[i]->set_status(false);
-            osstream<<fshunts[i]->get_device_name()<<endl;
-        }
-    }
-
-    vector<LINE*> lines = get_lines_connecting_to_bus(bus);
-    n=lines.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(lines[i]->get_sending_side_breaker_status()==true or lines[i]->get_receiving_side_breaker_status()==true)
-        {
-            lines[i]->set_sending_side_breaker_status(false);
-            lines[i]->set_receiving_side_breaker_status(false);
-            osstream<<lines[i]->get_device_name()<<endl;
-        }
-    }
-
-    vector<TRANSFORMER*> transes = get_transformers_connecting_to_bus(bus);
-    n=transes.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(transes[i]->get_winding_breaker_status(PRIMARY_SIDE)==true or transes[i]->get_winding_breaker_status(SECONDARY_SIDE)==true or
-           (transes[i]->is_three_winding_transformer() and transes[i]->get_winding_breaker_status(TERTIARY_SIDE)==true) )
-        {
-            transes[i]->set_winding_breaker_status(PRIMARY_SIDE, false);
-            transes[i]->set_winding_breaker_status(SECONDARY_SIDE, false);
-            if(transes[i]->is_three_winding_transformer())
-                transes[i]->set_winding_breaker_status(TERTIARY_SIDE, false);
-
-            osstream<<transes[i]->get_device_name()<<endl;
-        }
-    }
-
-    vector<HVDC*> hvdcs = get_hvdcs_connecting_to_bus(bus);
-    n=hvdcs.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(hvdcs[i]->get_status()==true)
-        {
-            hvdcs[i]->set_status(false);
-            osstream<<hvdcs[i]->get_device_name()<<endl;
-        }
-    }
-
-    vector<EQUIVALENT_DEVICE*> edevices = get_equivalent_devices_connecting_to_bus(bus);
-    n=edevices.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(edevices[i]->get_status()==true)
-        {
-            edevices[i]->set_status(false);
-            osstream<<edevices[i]->get_device_name()<<endl;
-        }
-    }
-
-    Bus[index].set_bus_type(OUT_OF_SERVICE);
-    osstream<<"Bus "<<bus<<" is tripped.";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
-
-    update_in_service_bus_count();
 }
 
 void POWER_SYSTEM_DATABASE::check_device_status_for_out_of_service_buses()
@@ -4893,7 +4964,9 @@ void POWER_SYSTEM_DATABASE::check_device_status_for_out_of_service_buses()
     for(size_t i=0; i!=nbus; ++i)
     {
         bus = buses[i];
-        if(bus->get_bus_type()==OUT_OF_SERVICE)
+        if(bus->get_bus_type()!=OUT_OF_SERVICE)
+            continue;
+        else
         {
             size_t bus_number = bus->get_bus_number();
             check_source_status_for_out_of_service_bus(bus_number);
@@ -5167,165 +5240,177 @@ double POWER_SYSTEM_DATABASE::get_voltage_to_regulate_of_physical_bus_in_pu(size
 
 double POWER_SYSTEM_DATABASE::get_regulatable_p_max_at_physical_bus_in_MW(size_t bus)
 {
-    if(not is_bus_exist(bus))
-        return 0.0;
-
-    BUS* busptr = get_bus(bus);
-    BUS_TYPE btype = busptr->get_bus_type();
-    if(btype!=SLACK_TYPE)
-        return 0.0;
-    else
+    if(is_bus_exist(bus))
     {
-        double total_p_max_in_MW = 0.0;
-
-        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-        size_t n = sources.size();
-        for(size_t i=0; i!=n; ++i)
+        BUS* busptr = get_bus(bus);
+        BUS_TYPE btype = busptr->get_bus_type();
+        if(btype==SLACK_TYPE)
         {
-            if(sources[i]->get_status() == false)
-                continue;
-            total_p_max_in_MW += sources[i]->get_p_max_in_MW();
+            double total_p_max_in_MW = 0.0;
+
+            vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+
+            size_t n = sources.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(sources[i]->get_status() == false)
+                    continue;
+                total_p_max_in_MW += sources[i]->get_p_max_in_MW();
+            }
+            return total_p_max_in_MW;
         }
-        return total_p_max_in_MW;
+        else
+            return 0.0;
     }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_regulatable_p_min_at_physical_bus_in_MW(size_t bus)
 {
-    if(not is_bus_exist(bus))
-        return 0.0;
-
-    BUS* busptr = get_bus(bus);
-    BUS_TYPE btype = busptr->get_bus_type();
-    if(btype!=SLACK_TYPE)
-        return 0.0;
-    else
+    if(is_bus_exist(bus))
     {
-        double total_p_min_in_MW = 0.0;
-
-        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-        size_t n = sources.size();
-        for(size_t i=0; i!=n; ++i)
+        BUS* busptr = get_bus(bus);
+        BUS_TYPE btype = busptr->get_bus_type();
+        if(btype==SLACK_TYPE)
         {
-            if(sources[i]->get_status() == false)
-                continue;
-            total_p_min_in_MW += sources[i]->get_p_min_in_MW();
+            double total_p_min_in_MW = 0.0;
+
+            vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+
+            size_t n = sources.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(sources[i]->get_status() == false)
+                    continue;
+                total_p_min_in_MW += sources[i]->get_p_min_in_MW();
+            }
+            return total_p_min_in_MW;
         }
-        return total_p_min_in_MW;
+        else
+            return 0.0;
     }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_regulatable_q_max_at_physical_bus_in_MVar(size_t bus)
 {
-    if(not is_bus_exist(bus))
-        return 0.0;
-
-    BUS* busptr = get_bus(bus);
-    BUS_TYPE btype = busptr->get_bus_type();
-    if(btype!=SLACK_TYPE and btype!=PV_TYPE
-       and btype!=PV_TO_PQ_TYPE_1 and btype!=PV_TO_PQ_TYPE_2
-       and btype!=PV_TO_PQ_TYPE_3 and btype!=PV_TO_PQ_TYPE_4)
-        return 0.0;
-    else
+    if(is_bus_exist(bus))
     {
-        double total_q_max_in_MVar = 0.0;
-
-        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-        size_t n = sources.size();
-        for(size_t i=0; i!=n; ++i)
+        BUS* busptr = get_bus(bus);
+        BUS_TYPE btype = busptr->get_bus_type();
+        if(btype==PV_TYPE or
+           btype==PV_TO_PQ_TYPE_1 or btype==PV_TO_PQ_TYPE_2 or
+           btype==PV_TO_PQ_TYPE_3 or btype==PV_TO_PQ_TYPE_4 or
+           btype==SLACK_TYPE)
         {
-            if(sources[i]->get_status() == false)
-                continue;
-            total_q_max_in_MVar += sources[i]->get_q_max_in_MVar();
+            double total_q_max_in_MVar = 0.0;
+
+            vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+
+            size_t n = sources.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(sources[i]->get_status() == false)
+                    continue;
+                total_q_max_in_MVar += sources[i]->get_q_max_in_MVar();
+            }
+            return total_q_max_in_MVar;
         }
-        return total_q_max_in_MVar;
+        else
+            return 0.0;
     }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_regulatable_q_min_at_physical_bus_in_MVar(size_t bus)
 {
-    if(not is_bus_exist(bus))
-        return 0.0;
-
-    BUS* busptr = get_bus(bus);
-    BUS_TYPE btype = busptr->get_bus_type();
-    if(btype!=SLACK_TYPE and btype!=PV_TYPE
-       and btype!=PV_TO_PQ_TYPE_1 and btype!=PV_TO_PQ_TYPE_2
-       and btype!=PV_TO_PQ_TYPE_3 and btype!=PV_TO_PQ_TYPE_4)
-        return 0.0;
-    else
+    if(is_bus_exist(bus))
     {
-        double total_q_min_in_MVar = 0.0;
-
-        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-        size_t n = sources.size();
-        for(size_t i=0; i!=n; ++i)
+        BUS* busptr = get_bus(bus);
+        BUS_TYPE btype = busptr->get_bus_type();
+        if(btype==PV_TYPE or
+           btype==PV_TO_PQ_TYPE_1 or btype==PV_TO_PQ_TYPE_2 or
+           btype==PV_TO_PQ_TYPE_3 or btype==PV_TO_PQ_TYPE_4 or
+           btype==SLACK_TYPE )
         {
-            if(sources[i]->get_status() == false)
-                continue;
-            total_q_min_in_MVar += sources[i]->get_q_min_in_MVar();
+            double total_q_min_in_MVar = 0.0;
+
+            vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+
+            size_t n = sources.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(sources[i]->get_status() == true)
+                    total_q_min_in_MVar += sources[i]->get_q_min_in_MVar();
+            }
+            return total_q_min_in_MVar;
         }
-        return total_q_min_in_MVar;
+        else
+            return 0.0;
     }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_total_regulating_p_generation_at_physical_bus_in_MW(size_t bus)
 {
-    if(not is_bus_exist(bus))
-        return 0.0;
-
-    BUS* busptr = get_bus(bus);
-    BUS_TYPE btype = busptr->get_bus_type();
-    if(btype!=SLACK_TYPE)
-        return 0.0;
-    else
+    if(is_bus_exist(bus))
     {
-        double total_p_in_MW = 0.0;
-
-        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-        size_t n = sources.size();
-        for(size_t i=0; i!=n; ++i)
+        BUS* busptr = get_bus(bus);
+        BUS_TYPE btype = busptr->get_bus_type();
+        if(btype==SLACK_TYPE)
         {
-            if(sources[i]->get_status() == false)
-                continue;
-            total_p_in_MW += sources[i]->get_p_generation_in_MW();
+            double total_p_in_MW = 0.0;
+
+            vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+
+            size_t n = sources.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(sources[i]->get_status() == true)
+                    total_p_in_MW += sources[i]->get_p_generation_in_MW();
+            }
+            return total_p_in_MW;
         }
-        return total_p_in_MW;
+        else
+            return 0.0;
     }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_total_regulating_q_generation_at_physical_bus_in_MVar(size_t bus)
 {
 
-    if(not is_bus_exist(bus))
-        return 0.0;
-
-    BUS* busptr = get_bus(bus);
-    BUS_TYPE btype = busptr->get_bus_type();
-    if(btype!=SLACK_TYPE and btype!=PV_TYPE
-       and btype!=PV_TO_PQ_TYPE_1 and btype!=PV_TO_PQ_TYPE_2
-       and btype!=PV_TO_PQ_TYPE_3 and btype!=PV_TO_PQ_TYPE_4)
-        return 0.0;
-    else
+    if(is_bus_exist(bus))
     {
-        double total_q_in_MVar = 0.0;
-
-        vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
-
-        size_t n = sources.size();
-        for(size_t i=0; i!=n; ++i)
+        BUS* busptr = get_bus(bus);
+        BUS_TYPE btype = busptr->get_bus_type();
+        if(btype==PV_TYPE or
+           btype==PV_TO_PQ_TYPE_1 or btype==PV_TO_PQ_TYPE_2 or
+           btype==PV_TO_PQ_TYPE_3 or btype==PV_TO_PQ_TYPE_4 or
+           btype==SLACK_TYPE)
         {
-            if(sources[i]->get_status() == false)
-                continue;
-            total_q_in_MVar += sources[i]->get_q_generation_in_MVar();
+            double total_q_in_MVar = 0.0;
+
+            vector<SOURCE*> sources = get_sources_connecting_to_bus(bus);
+
+            size_t n = sources.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                if(sources[i]->get_status() == true)
+                    total_q_in_MVar += sources[i]->get_q_generation_in_MVar();
+            }
+            return total_q_in_MVar;
         }
-        return total_q_in_MVar;
+        else
+            return 0.0;
     }
+    else
+        return 0.0;
 }
 
 double POWER_SYSTEM_DATABASE::get_total_p_generation_at_physical_bus_in_MW(size_t bus)
@@ -5337,10 +5422,8 @@ double POWER_SYSTEM_DATABASE::get_total_p_generation_at_physical_bus_in_MW(size_
     size_t n = sources.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(sources[i]->get_status() == false)
-            continue;
-
-        total_p_in_MW += sources[i]->get_p_generation_in_MW();
+        if(sources[i]->get_status() == true)
+            total_p_in_MW += sources[i]->get_p_generation_in_MW();
     }
     return total_p_in_MW;
 }
@@ -5354,10 +5437,8 @@ double POWER_SYSTEM_DATABASE::get_total_q_generation_at_physical_bus_in_MVar(siz
     size_t n = sources.size();
     for(size_t i=0; i!=n; ++i)
     {
-        if(sources[i]->get_status() == false)
-            continue;
-
-        total_q_in_MVar += sources[i]->get_q_generation_in_MVar();
+        if(sources[i]->get_status() == true)
+            total_q_in_MVar += sources[i]->get_q_generation_in_MVar();
     }
     return total_q_in_MVar;
 }

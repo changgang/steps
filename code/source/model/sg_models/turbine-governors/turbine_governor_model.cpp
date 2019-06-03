@@ -24,30 +24,31 @@ string TURBINE_GOVERNOR_MODEL::get_model_type() const
 double TURBINE_GOVERNOR_MODEL::get_rotor_speed_deviation_in_pu_from_sync_generator_model() const
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return 0.0;
-
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return 0.0;
+    if(generator!=NULL)
+    {
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
+            return gen_model->get_rotor_speed_deviation_in_pu();
+        else
+            return 0.0;
+    }
     else
-        return gen_model->get_rotor_speed_deviation_in_pu();
-
-
+        return 0.0;
 }
+
 double TURBINE_GOVERNOR_MODEL::get_initial_mechanical_power_in_pu_based_on_mbase_from_sync_generator_model() const
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return 0.0;
-    else
+    if(generator!=NULL)
     {
         SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-        if(gen_model==NULL)
-            return 0.0;
-        else
+        if(gen_model!=NULL)
             return gen_model->get_initial_mechanical_power_in_pu_based_on_mbase();
+        else
+            return 0.0;
     }
+    else
+        return 0.0;
 }
 
 void TURBINE_GOVERNOR_MODEL::set_initial_mechanical_power_reference_in_pu_based_on_mbase(double P)

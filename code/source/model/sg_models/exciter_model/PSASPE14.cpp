@@ -261,33 +261,36 @@ double PSASPE14::get_Kc() const
 bool PSASPE14::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<17)
+    if(data.size()>=17)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            size_t i=3;
+            double tr = get_double_data(data[i],"0.0"); i++;
+            double vimax = get_double_data(data[i],"0.0"); i++;
+            double vimin = get_double_data(data[i],"0.0"); i++;
+            double tc = get_double_data(data[i],"0.0"); i++;
+            double tb = get_double_data(data[i],"0.0"); i++;
+            double ka = get_double_data(data[i],"0.0"); i++;
+            double ta = get_double_data(data[i],"0.0"); i++;
+            double vrmax = get_double_data(data[i],"0.0"); i++;
+            double vrmin = get_double_data(data[i],"0.0"); i++;
+            double kf = get_double_data(data[i],"0.0"); i++;
+            double tf = get_double_data(data[i],"0.0"); i++;
+            double efdmax = get_double_data(data[i],"0.0"); i++;
+            double efdmin = get_double_data(data[i],"0.0"); i++;
+            double kc = get_double_data(data[i],"0.0"); i++;
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    size_t i=3;
-    double tr = get_double_data(data[i],"0.0"); i++;
-    double vimax = get_double_data(data[i],"0.0"); i++;
-    double vimin = get_double_data(data[i],"0.0"); i++;
-    double tc = get_double_data(data[i],"0.0"); i++;
-    double tb = get_double_data(data[i],"0.0"); i++;
-    double ka = get_double_data(data[i],"0.0"); i++;
-    double ta = get_double_data(data[i],"0.0"); i++;
-    double vrmax = get_double_data(data[i],"0.0"); i++;
-    double vrmin = get_double_data(data[i],"0.0"); i++;
-    double kf = get_double_data(data[i],"0.0"); i++;
-    double tf = get_double_data(data[i],"0.0"); i++;
-    double efdmax = get_double_data(data[i],"0.0"); i++;
-    double efdmin = get_double_data(data[i],"0.0"); i++;
-    double kc = get_double_data(data[i],"0.0"); i++;
-
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool PSASPE14::setup_model_with_psse_string(string data)
@@ -319,67 +322,71 @@ void PSASPE14::set_block_toolkit()
 
 void PSASPE14::initialize()
 {
-    if(is_model_initialized())
-        return;
+    if(not is_model_initialized())
+    {
+        GENERATOR* generator = get_generator_pointer();
+        if(generator!=NULL)
+        {
+            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+            if(gen_model!=NULL)
+            {
+                if(not gen_model->is_model_initialized())
+                    gen_model->initialize();
 
-    GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
+                set_block_toolkit();
 
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return;
+                double Ecomp = get_compensated_voltage_in_pu();
+                double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
 
-    if(not gen_model->is_model_initialized())
-        gen_model->initialize();
+                regulator.set_output(Efd);
+                regulator.initialize();
+                double output = regulator.get_input();
 
-    set_block_toolkit();
-
-    double Ecomp = get_compensated_voltage_in_pu();
-    double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-
-    regulator.set_output(Efd);
-    regulator.initialize();
-    double output = regulator.get_input();
-
-    set_flag_model_initialized_as_true();
+                set_flag_model_initialized_as_true();
+            }
+        }
+    }
 }
 
 void PSASPE14::run(DYNAMIC_MODE mode)
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
+    if(generator!=NULL)
+    {
+        double Ecomp = get_compensated_voltage_in_pu();
+        double Vref = get_voltage_reference_in_pu();
+        double Vs = get_stabilizing_signal_in_pu();
 
-    double Ecomp = get_compensated_voltage_in_pu();
-    double Vref = get_voltage_reference_in_pu();
-    double Vs = get_stabilizing_signal_in_pu();
+        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
-    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
-
-    if(mode == UPDATE_MODE)
-        set_flag_model_updated_as_true();
+        if(mode == UPDATE_MODE)
+            set_flag_model_updated_as_true();
+    }
 }
 
 double PSASPE14::get_excitation_voltage_in_pu() const
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
+    if(generator!=NULL)
+    {
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
+        {
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+            size_t bus = generator->get_generator_bus();
+            double Vt = psdb.get_bus_voltage_in_pu(bus);
+            double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+
+            return 0.0;
+        }
+        else
+            return 0.0;
+    }
+    else
         return 0.0;
-
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t bus = generator->get_generator_bus();
-    double Vt = psdb.get_bus_voltage_in_pu(bus);
-    double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-
-
-    return 0.0;
 }
+
 void PSASPE14::check()
 {
     ;

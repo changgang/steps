@@ -21,15 +21,21 @@ string WT_ELECTRICAL_MODEL::get_model_type() const
 complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_generation_in_MVA() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return 0.0;
-    WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
-    if(genmodel==NULL)
-        return 0.0;
-    if(not genmodel->is_model_initialized())
-        genmodel->initialize();
+    if(gen!=NULL)
+    {
+        WT_GENERATOR_MODEL* genmodel = gen->get_wt_generator_model();
+        if(genmodel!=NULL)
+        {
+            if(not genmodel->is_model_initialized())
+                genmodel->initialize();
 
-    return genmodel->get_terminal_complex_power_in_MVA();
+            return genmodel->get_terminal_complex_power_in_MVA();
+        }
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
 }
 
 complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_generation_in_pu_based_on_mbase() const
@@ -40,14 +46,16 @@ complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_generation_in_pu_
 complex<double> WT_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
+    if(gen!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = gen->get_generator_bus();
+        return psdb.get_bus_complex_voltage_in_pu(bus);
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus = gen->get_generator_bus();
-    return psdb.get_bus_complex_voltage_in_pu(bus);
 }
 
 double WT_ELECTRICAL_MODEL::get_terminal_bus_voltage_in_pu() const
@@ -65,25 +73,29 @@ double WT_ELECTRICAL_MODEL::get_terminal_bus_frequency_in_pu() const
 double WT_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
+    if(gen!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = gen->get_generator_bus();
+        return psdb.get_bus_frequency_deviation_in_pu(bus);
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus = gen->get_generator_bus();
-    return psdb.get_bus_frequency_deviation_in_pu(bus);
 }
 
 complex<double> WT_ELECTRICAL_MODEL::get_wt_generator_terminal_complex_current_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
-        return 0.0;
-
-    WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
-    if(model!=NULL and model->is_model_initialized())
-        return model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    if(gen!=NULL)
+    {
+        WT_GENERATOR_MODEL* model = gen->get_wt_generator_model();
+        if(model!=NULL and model->is_model_initialized())
+            return model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+        else
+            return 0.0;
+    }
     else
         return 0.0;
 }
@@ -114,17 +126,19 @@ void WT_ELECTRICAL_MODEL::set_voltage_reference_in_pu(double vref)
 void WT_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
 {
     WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source==NULL)
-        return;
+    if(source!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        size_t bus = get_bus_to_regulate();
+        if(bus!=0)
+            ;
+        else
+            bus = source->get_source_bus();
 
-    size_t bus = get_bus_to_regulate();
-    if(bus==0)
-        bus = source->get_source_bus();
-
-    return set_voltage_reference_in_pu(psdb.get_bus_voltage_in_pu(bus));
+        return set_voltage_reference_in_pu(psdb.get_bus_voltage_in_pu(bus));
+    }
 }
 
 double WT_ELECTRICAL_MODEL::get_voltage_reference_in_pu() const
@@ -185,44 +199,48 @@ PE_VAR_CONTROL_MODE WT_ELECTRICAL_MODEL::get_var_control_mode() const
 double WT_ELECTRICAL_MODEL::get_wt_generator_speed_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen == NULL)
-        return 0.0;
-
-    WT_TURBINE_MODEL* turbinemodel = gen->get_wt_turbine_model();
-    if(turbinemodel != NULL and turbinemodel->is_model_initialized())
-        return turbinemodel->get_turbine_speed_in_pu();
+    if(gen != NULL)
+    {
+        WT_TURBINE_MODEL* turbinemodel = gen->get_wt_turbine_model();
+        if(turbinemodel != NULL and turbinemodel->is_model_initialized())
+            return turbinemodel->get_turbine_speed_in_pu();
+        else
+            return 1.0;
+    }
     else
-        return 1.0;
+        return 0.0;
 }
 
 double WT_ELECTRICAL_MODEL::get_wt_generator_speed_referance_in_pu() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen == NULL)  return 0.0;
-
-
-	WT_PITCH_MODEL* pitch_model = gen->get_wt_pitch_model();
-	if (pitch_model != NULL)
-	{
-		if (not pitch_model->is_model_initialized())
-			pitch_model->initialize();
-		if (pitch_model->get_hold_wtg_speed_flag() == true)
-			return pitch_model->get_const_wtg_speed_reference_in_pu();
-		else
-			return pitch_model->get_wt_generator_reference_speed_in_pu();
-	}
-	else
-	{
-		WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
-		if (aero_model != NULL)
-		{
-			if (not aero_model->is_model_initialized())
-				aero_model->initialize();
-			return aero_model->get_turbine_reference_speed_in_pu();
-		}
-		else
-			return 0.0;
-	}
+    if(gen != NULL)
+    {
+        WT_PITCH_MODEL* pitch_model = gen->get_wt_pitch_model();
+        if (pitch_model != NULL)
+        {
+            if (not pitch_model->is_model_initialized())
+                pitch_model->initialize();
+            if (pitch_model->get_hold_wtg_speed_flag() == true)
+                return pitch_model->get_const_wtg_speed_reference_in_pu();
+            else
+                return pitch_model->get_wt_generator_reference_speed_in_pu();
+        }
+        else
+        {
+            WT_AERODYNAMIC_MODEL* aero_model = gen->get_wt_aerodynamic_model();
+            if (aero_model != NULL)
+            {
+                if (not aero_model->is_model_initialized())
+                    aero_model->initialize();
+                return aero_model->get_turbine_reference_speed_in_pu();
+            }
+            else
+                return 0.0;
+        }
+    }
+    else
+        return 0.0;
 }
 
 void WT_ELECTRICAL_MODEL::set_wind_turbine_power_speed_lookup_table(WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table)

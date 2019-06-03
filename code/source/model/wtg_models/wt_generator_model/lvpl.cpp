@@ -78,30 +78,32 @@ double LVPL::get_LVPL_order(double v) const
         v2 = v;
     }
 
-    if(v1==0.0 and v2==0.0)
-        return INFINITE_THRESHOLD;
-
-    if(fabs(v1-v2)<FLOAT_EPSILON)
+    if(v1!=0.0 or v2!=0.0)
     {
-        if(v<v1)
-            return 0.0;
-        else
-            return INFINITE_THRESHOLD;
-    }
-    else
-    {
-        if(v<=v1)
-            return 0.0;
-        else
+        if(fabs(v1-v2)>FLOAT_EPSILON)
         {
-            if(v>=v2)
-                return INFINITE_THRESHOLD;
-            else
+            if(v>v1 and v<v2)
             {
                 double slope = g/(v2-v1);
                 double order = v1+(v-v1)*slope;
                 return order;
             }
+            else
+            {
+                if(v<=v1)
+                    return 0.0;
+                else
+                    return INFINITE_THRESHOLD;
+            }
+        }
+        else
+        {
+            if(v<v1)
+                return 0.0;
+            else
+                return INFINITE_THRESHOLD;
         }
     }
+    else
+        return INFINITE_THRESHOLD;
 }

@@ -27,29 +27,32 @@ complex<double> COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return 0.0;
-    else
+    if(generator!=NULL)
     {
         size_t bus = generator->get_generator_bus();
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         return psdb.get_bus_complex_voltage_in_pu(bus);
     }
+    else
+        return 0.0;
 }
 
 complex<double> COMPENSATOR_MODEL::get_generator_terminal_current_in_pu() const
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return 0.0;
-    else
+    if(generator!=NULL)
     {
         SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-        if(gen_model==NULL)
+        if(gen_model!=NULL)
+        {
+            if(not gen_model->is_model_initialized())
+                gen_model->initialize();
+            complex<double> I = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+            return I;
+        }
+        else
             return 0.0;
-        if(not gen_model->is_model_initialized())
-            gen_model->initialize();
-        complex<double> I = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
-        return I;
     }
+    else
+        return 0.0;
 }

@@ -112,73 +112,77 @@ bool WT3G1::setup_model_with_steps_string_vector(vector<string>& data)
     ostringstream osstream;
 
     bool is_successful = false;
-    if(data.size()<8)
-        return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    size_t ibus;
-    string id;
-    size_t n_lumped_turbine;
-    double xeq, kpll, kipll, pllmax, prate;
-
-    ibus = size_t(get_integer_data(data[1],"0"));
-    id = get_string_data(data[2],"");
-
-    size_t i=3;
-    xeq = get_double_data(data[i],"0.0"); i++;
-    kpll = get_double_data(data[i],"0.0"); i++;
-    kipll = get_double_data(data[i],"0.0"); i++;
-    pllmax = get_double_data(data[i],"0.0"); i++;
-    prate = get_double_data(data[i],"0.0");
-
-    DEVICE_ID did = get_wt_generator_device_id(ibus, id);
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    WT_GENERATOR* gen = psdb.get_wt_generator(did);
-    if(gen==NULL)
+    if(data.size()>=8)
     {
-        osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
-               <<"No such wt generator exists in the power system database.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            size_t ibus;
+            string id;
+            size_t n_lumped_turbine;
+            double xeq, kpll, kipll, pllmax, prate;
+
+            ibus = size_t(get_integer_data(data[1],"0"));
+            id = get_string_data(data[2],"");
+
+            size_t i=3;
+            xeq = get_double_data(data[i],"0.0"); i++;
+            kpll = get_double_data(data[i],"0.0"); i++;
+            kipll = get_double_data(data[i],"0.0"); i++;
+            pllmax = get_double_data(data[i],"0.0"); i++;
+            prate = get_double_data(data[i],"0.0");
+
+            DEVICE_ID did = get_wt_generator_device_id(ibus, id);
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+            WT_GENERATOR* gen = psdb.get_wt_generator(did);
+            if(gen==NULL)
+            {
+                osstream<<"Error when loading data to build "<<get_model_name()<<" model for "<<did.get_device_name()<<endl
+                       <<"No such wt generator exists in the power system database.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                return is_successful;
+            }
+
+            double mbase = gen->get_mbase_in_MVA();
+            n_lumped_turbine = round(mbase/prate);
+            if(fabs(mbase-n_lumped_turbine*prate)>1e-2)
+            {
+                osstream<<"Warning. The MBASE of "<<did.get_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
+                       <<"MBASE = "<<mbase<<" MVA and Prate = "<<prate<<" MW."<<endl
+                       <<"Machine MBASE will be updated as "<<n_lumped_turbine*prate<<" MVA.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                gen->set_mbase_in_MVA(n_lumped_turbine*prate);
+            }
+
+            gen->set_number_of_lumped_wt_generators(n_lumped_turbine);
+            gen->set_rated_power_per_wt_generator_in_MW(prate);
+
+            set_Xeq_in_pu(xeq);
+            set_KPLL(kpll);
+            set_KIPLL(kipll);
+            set_PLLmax(pllmax);
+
+            complex<double> Z = gen->get_source_impedance_in_pu();
+            if(fabs(Z.imag()-xeq)>FLOAT_EPSILON)
+            {
+                osstream<<"Warning. The Xeq of "<<get_model_name()<<" model is different from imaginary part of ZSOURCE of "<<did.get_device_name()<<endl
+                       <<"Xeq = "<<xeq<<" and XSource = "<<Z.imag()<<endl
+                       <<"XSource will be updated as "<<xeq;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                Z = complex<double>(Z.real(), xeq);
+                gen->set_source_impedance_in_pu(Z);
+            }
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-    }
-
-    double mbase = gen->get_mbase_in_MVA();
-    n_lumped_turbine = round(mbase/prate);
-    if(fabs(mbase-n_lumped_turbine*prate)>1e-2)
-    {
-        osstream<<"Warning. The MBASE of "<<did.get_device_name()<<" is far way from n times of the Prate of "<<get_model_name()<<" model."<<endl
-               <<"MBASE = "<<mbase<<" MVA and Prate = "<<prate<<" MW."<<endl
-               <<"Machine MBASE will be updated as "<<n_lumped_turbine*prate<<" MVA.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        gen->set_mbase_in_MVA(n_lumped_turbine*prate);
-    }
-
-    gen->set_number_of_lumped_wt_generators(n_lumped_turbine);
-    gen->set_rated_power_per_wt_generator_in_MW(prate);
-
-    set_Xeq_in_pu(xeq);
-    set_KPLL(kpll);
-    set_KIPLL(kipll);
-    set_PLLmax(pllmax);
-
-    complex<double> Z = gen->get_source_impedance_in_pu();
-    if(fabs(Z.imag()-xeq)>FLOAT_EPSILON)
-    {
-        osstream<<"Warning. The Xeq of "<<get_model_name()<<" model is different from imaginary part of ZSOURCE of "<<did.get_device_name()<<endl
-               <<"Xeq = "<<xeq<<" and XSource = "<<Z.imag()<<endl
-               <<"XSource will be updated as "<<xeq;
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        Z = complex<double>(Z.real(), xeq);
-        gen->set_source_impedance_in_pu(Z);
-    }
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool WT3G1::setup_model_with_psse_string(string data)
@@ -209,146 +213,151 @@ void WT3G1::set_block_toolkit()
 void WT3G1::initialize()
 {
     ostringstream oosstream;
-    if(is_model_initialized())
-        return;
-
-    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator==NULL)
-        return;
-
-    set_block_toolkit();
-
-    size_t n_lumped = get_number_of_lumped_wt_generators();
-    double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = 2.0*PI*fbase;
-
-    double kipll = get_KIPLL();
-    if(kipll!=0.0)
+    if(not is_model_initialized())
     {
-        PLL_frequency_integrator.set_T_in_s(1.0/kipll);
-        double pllmax = get_PLLmax();
-        PLL_frequency_integrator.set_upper_limit(pllmax);
-        PLL_frequency_integrator.set_lower_limit(-pllmax);
+        WT_GENERATOR* wt_generator = get_wt_generator_pointer();
+        if(wt_generator!=NULL)
+        {
+            set_block_toolkit();
+
+            size_t n_lumped = get_number_of_lumped_wt_generators();
+            double fbase = get_bus_base_frequency_in_Hz();
+            double wbase = 2.0*PI*fbase;
+
+            double kipll = get_KIPLL();
+            if(kipll!=0.0)
+            {
+                PLL_frequency_integrator.set_T_in_s(1.0/kipll);
+                double pllmax = get_PLLmax();
+                PLL_frequency_integrator.set_upper_limit(pllmax);
+                PLL_frequency_integrator.set_lower_limit(-pllmax);
+            }
+
+            PLL_angle_integrator.set_T_in_s(1.0/wbase);
+
+            double mbase = get_mbase_in_MVA();
+            mbase /= n_lumped;
+
+            double xeq = get_Xeq_in_pu();
+            complex<double>Zsource(0.0, xeq);
+
+            double P = wt_generator->get_p_generation_in_MW()/n_lumped;
+            double Q = wt_generator->get_q_generation_in_MVar()/n_lumped;
+            complex<double> S(P/mbase,Q/mbase);
+
+
+            complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+            double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+            // ignore voltage angle
+            complex<double> Ixy = conj(S/Vxy);
+            complex<double> Isource = Ixy + Vxy/Zsource;
+
+            double Ix = Isource.real();
+            double Iy = Isource.imag();
+
+            double IP = Ix*cos(angle_in_rad) + Iy*sin(angle_in_rad);
+            double IQ =-Ix*sin(angle_in_rad) + Iy*cos(angle_in_rad);
+
+            double EQ = IQ*(-xeq);
+
+            active_current_commander.set_output(IP);
+            active_current_commander.initialize();
+
+            reactive_voltage_commander.set_output(EQ);
+            reactive_voltage_commander.initialize();
+
+            if(kipll!=0.0)
+            {
+                PLL_frequency_integrator.set_output(0.0);
+                PLL_frequency_integrator.initialize();
+            }
+
+            PLL_angle_integrator.set_output(angle_in_rad);
+            PLL_angle_integrator.initialize();
+
+            set_initial_active_current_command_in_pu_based_on_mbase(IP);
+            set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
+            set_initial_reactive_voltage_command_in_pu(EQ);
+
+            set_flag_model_initialized_as_true();
+
+            oosstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                    <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
+                    <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
+                    <<"(3) States of blocks"<<endl
+                    <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
+                    <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
+                    <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
+                    <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
+                    <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
+                    <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
+                    <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            toolkit.show_information_with_leading_time_stamp(oosstream);
+        }
     }
-
-    PLL_angle_integrator.set_T_in_s(1.0/wbase);
-
-    double mbase = get_mbase_in_MVA();
-    mbase /= n_lumped;
-
-    double xeq = get_Xeq_in_pu();
-    complex<double>Zsource(0.0, xeq);
-
-    double P = wt_generator->get_p_generation_in_MW()/n_lumped;
-    double Q = wt_generator->get_q_generation_in_MVar()/n_lumped;
-    complex<double> S(P/mbase,Q/mbase);
-
-
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
-    // ignore voltage angle
-    complex<double> Ixy = conj(S/Vxy);
-    complex<double> Isource = Ixy + Vxy/Zsource;
-
-    double Ix = Isource.real();
-    double Iy = Isource.imag();
-
-    double IP = Ix*cos(angle_in_rad) + Iy*sin(angle_in_rad);
-    double IQ =-Ix*sin(angle_in_rad) + Iy*cos(angle_in_rad);
-
-    double EQ = IQ*(-xeq);
-
-    active_current_commander.set_output(IP);
-    active_current_commander.initialize();
-
-    reactive_voltage_commander.set_output(EQ);
-    reactive_voltage_commander.initialize();
-
-    if(kipll!=0.0)
-    {
-        PLL_frequency_integrator.set_output(0.0);
-        PLL_frequency_integrator.initialize();
-    }
-
-    PLL_angle_integrator.set_output(angle_in_rad);
-    PLL_angle_integrator.initialize();
-
-    set_initial_active_current_command_in_pu_based_on_mbase(IP);
-    set_initial_reactive_current_command_in_pu_based_on_mbase(IQ);
-    set_initial_reactive_voltage_command_in_pu(EQ);
-
-    set_flag_model_initialized_as_true();
-
-    oosstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-            <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
-            <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
-            <<"(3) States of blocks"<<endl
-            <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
-            <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-            <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
-            <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
-            <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
-            <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
-            <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(oosstream);
 }
 
 void WT3G1::run(DYNAMIC_MODE mode)
 {
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator==NULL)
-        return;
-
-    double fbase = get_bus_base_frequency_in_Hz();
-    double wbase = 2.0*PI*fbase;
-
-    complex<double> Vxy = get_terminal_complex_voltage_in_pu();
-    double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
-    double angle_in_deg = rad2deg(angle_in_rad);
-
-    double IP = get_active_current_command_in_pu_based_on_mbase();
-
-    active_current_commander.set_input(IP);
-    active_current_commander.run(mode);
-
-    double EQ = get_reactive_voltage_command_in_pu();
-
-    reactive_voltage_commander.set_input(EQ);
-    reactive_voltage_commander.run(mode);
-
-    double kpll = get_KPLL();
-    double kipll = get_KIPLL();
-    if(kpll==0.0 and kipll==0.0)
+    if(wt_generator!=NULL)
     {
-        set_pll_angle_in_deg(angle_in_deg);
+        double fbase = get_bus_base_frequency_in_Hz();
+        double wbase = 2.0*PI*fbase;
+
+        complex<double> Vxy = get_terminal_complex_voltage_in_pu();
+        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
+        double angle_in_deg = rad2deg(angle_in_rad);
+
+        double IP = get_active_current_command_in_pu_based_on_mbase();
+
+        active_current_commander.set_input(IP);
+        active_current_commander.run(mode);
+
+        double EQ = get_reactive_voltage_command_in_pu();
+
+        reactive_voltage_commander.set_input(EQ);
+        reactive_voltage_commander.run(mode);
+
+        double kpll = get_KPLL();
+        double kipll = get_KIPLL();
+        if(kpll!=0.0 or kipll!=0.0)
+        {
+            double Vr = Vxy.real();
+            double Vi = Vxy.imag();
+
+            double angle = get_pll_angle_in_rad();
+            double Vy = -Vr*sin(angle)+Vi*cos(angle);
+
+            double input = Vy*kpll/wbase;
+            PLL_frequency_integrator.set_input(input);
+            PLL_frequency_integrator.run(mode);
+
+            double output = PLL_frequency_integrator.get_output();
+            input += output;
+
+            double pllmax = get_PLLmax();
+            if(input>=-pllmax and input<=pllmax)
+                ;
+            else
+            {
+                if(input>pllmax)
+                    input = pllmax;
+                else
+                    input = -pllmax;
+            }
+
+            PLL_angle_integrator.set_input(input);
+            PLL_angle_integrator.run(mode);
+        }
+        else
+        {
+            set_pll_angle_in_deg(angle_in_deg);
+        }
+        if(mode==UPDATE_MODE)
+            set_flag_model_updated_as_true();
     }
-    else
-    {
-        double Vr = Vxy.real();
-        double Vi = Vxy.imag();
-
-        double angle = get_pll_angle_in_rad();
-        double Vy = -Vr*sin(angle)+Vi*cos(angle);
-
-        double input = Vy*kpll/wbase;
-        PLL_frequency_integrator.set_input(input);
-        PLL_frequency_integrator.run(mode);
-
-        double output = PLL_frequency_integrator.get_output();
-        input += output;
-
-        double pllmax = get_PLLmax();
-        if(input>pllmax)
-            input = pllmax;
-        if(input<-pllmax)
-            input = -pllmax;
-
-        PLL_angle_integrator.set_input(input);
-        PLL_angle_integrator.run(mode);
-    }
-    if(mode==UPDATE_MODE)
-        set_flag_model_updated_as_true();
 }
 
 complex<double> WT3G1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
@@ -557,14 +566,14 @@ double WT3G1::get_pll_angle_in_rad()
 {
     double kpll = get_KPLL();
     double kipll = get_KIPLL();
-    if(kpll==0.0 and kipll==0.0)
+    if(kpll!=0.0 or kipll!=0.0)
+        return PLL_angle_integrator.get_output();
+    else
     {
         complex<double> Vxy = get_terminal_complex_voltage_in_pu();
         double angle = atan2(Vxy.imag(), Vxy.real());
         return angle;
     }
-    else
-        return PLL_angle_integrator.get_output();
 }
 
 double WT3G1::get_pll_angle_in_deg()
@@ -581,9 +590,7 @@ double WT3G1::get_pll_frequency_deviation_in_pu()
 
     double kpll = get_KPLL();
     double kipll = get_KIPLL();
-    if(kpll==0.0 and kipll==0.0)
-        return 0.0;
-    else
+    if(kpll!=0.0 or kipll!=0.0)
     {
         double Vr = Vxy.real();
         double Vi = Vxy.imag();
@@ -597,6 +604,8 @@ double WT3G1::get_pll_frequency_deviation_in_pu()
 
         return input+output;
     }
+    else
+        return 0.0;
 }
 
 double WT3G1::get_pll_frequency_deviation_in_Hz()

@@ -186,41 +186,45 @@ double LCFB1::get_Pelec0() const
 bool LCFB1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<12)
-        is_successful = false;
+    if(data.size()>=12)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            size_t frequency_flag, power_flag;
+            double fb, tpelec, db, emax, kp, ki, irmax;
 
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
+            size_t i=3;
+            frequency_flag = get_integer_data(data[i],"0"); i++;
+            power_flag = get_integer_data(data[i],"0"); i++;
+
+            fb = get_double_data(data[i],"0.0"); i++;
+            tpelec = get_double_data(data[i],"0.0"); i++;
+            db = get_double_data(data[i],"0.0"); i++;
+            emax = get_double_data(data[i],"0.0"); i++;
+            kp = get_double_data(data[i],"0.0"); i++;
+            ki = get_double_data(data[i],"0.0"); i++;
+            irmax = get_double_data(data[i],"0.0");
+
+            set_frequency_regulation_flag((frequency_flag==0?false:true));
+            set_power_regulation_flag((power_flag==0?false:true));
+            set_Fb(fb);
+            set_Tpelec_in_s(tpelec);
+            set_db(db);
+            set_Emax(emax);
+            set_Kp(kp);
+            set_Ki(ki);
+            set_Irmax(irmax);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    size_t frequency_flag, power_flag;
-    double fb, tpelec, db, emax, kp, ki, irmax;
-
-    size_t i=3;
-    frequency_flag = get_integer_data(data[i],"0"); i++;
-    power_flag = get_integer_data(data[i],"0"); i++;
-
-    fb = get_double_data(data[i],"0.0"); i++;
-    tpelec = get_double_data(data[i],"0.0"); i++;
-    db = get_double_data(data[i],"0.0"); i++;
-    emax = get_double_data(data[i],"0.0"); i++;
-    kp = get_double_data(data[i],"0.0"); i++;
-    ki = get_double_data(data[i],"0.0"); i++;
-    irmax = get_double_data(data[i],"0.0");
-
-    set_frequency_regulation_flag((frequency_flag==0?false:true));
-    set_power_regulation_flag((power_flag==0?false:true));
-    set_Fb(fb);
-    set_Tpelec_in_s(tpelec);
-    set_db(db);
-    set_Emax(emax);
-    set_Kp(kp);
-    set_Ki(ki);
-    set_Irmax(irmax);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool LCFB1::setup_model_with_psse_string(string data)
@@ -251,28 +255,29 @@ void LCFB1::initialize()
     ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
+    if(generator!=NULL)
+    {
+        set_block_toolkit();
+
+        double pref = get_initial_mechanical_power_reference_in_pu_based_on_mbase_from_turbine_governor_model();
+        set_Pref0(pref);
+
+        error_integrator.set_output(0.0);
+        error_integrator.initialize();
+
+        double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();
+        Pelec_sensor.set_output(pelec);
+        Pelec_sensor.initialize();
+
+        set_Pelec0(pelec);
+
+        set_flag_model_initialized_as_true();
+    }
+    else
     {
         deactivate_model();
         set_flag_model_initialized_as_true();
-        return;
     }
-
-    set_block_toolkit();
-
-    double pref = get_initial_mechanical_power_reference_in_pu_based_on_mbase_from_turbine_governor_model();
-    set_Pref0(pref);
-
-    error_integrator.set_output(0.0);
-    error_integrator.initialize();
-
-    double pelec = get_terminal_active_power_in_pu_based_on_mbase_from_generator_model();
-    Pelec_sensor.set_output(pelec);
-    Pelec_sensor.initialize();
-
-    set_Pelec0(pelec);
-
-    set_flag_model_initialized_as_true();
 }
 
 void LCFB1::run(DYNAMIC_MODE mode)

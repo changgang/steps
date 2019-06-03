@@ -71,20 +71,24 @@ string FILEWIND::get_wind_speed_serial_file() const
 bool FILEWIND::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<4)
+    if(data.size()>=4)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            string file;
+            file = get_string_data(data[3],"0.0");
+
+            set_wind_speed_serial_file(file);
+
+            is_successful = true;
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    string file;
-    file = get_string_data(data[3],"0.0");
-
-    set_wind_speed_serial_file(file);
-
-    is_successful = true;
-    return is_successful;
 }
 
 bool FILEWIND::setup_model_with_psse_string(string data)
@@ -144,49 +148,50 @@ void FILEWIND::load_wind_speed_from_file()
         return;
     }
     ifstream fid(file);
-    if(not fid.is_open())
+    if(fid.is_open())
+    {
+        time.clear();
+        wind_speed.clear();
+        wind_direction.clear();
+
+        string data;
+        vector<string> datavec;
+        getline(fid, data); // skip the head line
+        while(true)
+        {
+            getline(fid, data);
+            if(data.size()<3)
+                break;
+            data = trim_string(data);
+            data = string2csv(data);
+            datavec = split_string(data,",");
+            if(datavec.size()<2)
+                break;
+
+            double t = get_double_data(datavec.front(),"0.0");
+            datavec.erase(datavec.begin());
+
+            double v = get_double_data(datavec.front(),"0.0");
+            datavec.erase(datavec.begin());
+
+            double direction = 0.0;
+            if(datavec.size()>0)
+            {
+                direction = get_double_data(datavec.front(),"0.0");
+                datavec.erase(datavec.begin());
+            }
+
+            time.push_back(t);
+            wind_speed.push_back(v);
+            wind_direction.push_back(direction);
+        }
+        fid.close();
+    }
+    else
     {
         oosstream<<"Initialization error. Fail to load wind speed data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
         toolkit.show_information_with_leading_time_stamp(oosstream);
-        return;
     }
-
-    time.clear();
-    wind_speed.clear();
-    wind_direction.clear();
-
-    string data;
-    vector<string> datavec;
-    getline(fid, data); // skip the head line
-    while(true)
-    {
-        getline(fid, data);
-        if(data.size()<3)
-            break;
-        data = trim_string(data);
-        data = string2csv(data);
-        datavec = split_string(data,",");
-        if(datavec.size()<2)
-            break;
-
-        double t = get_double_data(datavec.front(),"0.0");
-        datavec.erase(datavec.begin());
-
-        double v = get_double_data(datavec.front(),"0.0");
-        datavec.erase(datavec.begin());
-
-        double direction = 0.0;
-        if(datavec.size()>0)
-        {
-            direction = get_double_data(datavec.front(),"0.0");
-            datavec.erase(datavec.begin());
-        }
-
-        time.push_back(t);
-        wind_speed.push_back(v);
-        wind_direction.push_back(direction);
-    }
-    fid.close();
 }
 
 void FILEWIND::run(DYNAMIC_MODE mode)
@@ -233,15 +238,19 @@ double FILEWIND::get_wind_direction_in_deg()
 double FILEWIND::get_wind_speed_in_pu()
 {
     WT_GENERATOR* generator = get_wt_generator_pointer();
-    if(generator==NULL)
+    if(generator!=NULL)
+    {
+        WT_AERODYNAMIC_MODEL* aero_model = generator->get_wt_aerodynamic_model();
+        if(aero_model!=NULL)
+        {
+            double vwind = get_wind_speed_in_mps();
+            return vwind/aero_model->get_nominal_wind_speed_in_mps();
+        }
+        else
+            return 0.0;
+    }
+    else
         return 0.0;
-
-    WT_AERODYNAMIC_MODEL* aero_model = generator->get_wt_aerodynamic_model();
-    if(aero_model==NULL)
-        return 0.0;
-
-    double vwind = get_wind_speed_in_mps();
-    return vwind/aero_model->get_nominal_wind_speed_in_mps();
 }
 */
 void FILEWIND::set_previous_position(size_t pos)

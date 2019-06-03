@@ -188,44 +188,48 @@ double PSASPS1::get_Vsmin() const
 bool PSASPS1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<14)
-        is_successful = false;
+    if(data.size()>=14)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            size_t k;
+            double kq1, kq2, kq3, tq, t1e, t2e, t3e, t4e, vsmax, vsmin;
 
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
+            size_t i=3;
+            kq1 = get_double_data(data[i],"0.0"); i++;
+            kq2 = get_double_data(data[i],"0.0"); i++;
+            kq3 = get_double_data(data[i],"0.0"); i++;
+            k = get_integer_data(data[i],"0"); i++;
+            tq = get_double_data(data[i],"0.0"); i++;
+            t1e = get_double_data(data[i],"0.0"); i++;
+            t2e = get_double_data(data[i],"0.0"); i++;
+            t3e = get_double_data(data[i],"0.0"); i++;
+            t4e = get_double_data(data[i],"0.0"); i++;
+            vsmax = get_double_data(data[i],"0.0"); i++;
+            vsmin = get_double_data(data[i],"0.0"); i++;
+
+            set_Kq1(kq1);
+            set_Kq2(kq2);
+            set_Kq3(kq3);
+            set_K(k);
+            set_Tq_in_s(tq);
+            set_T1e_in_s(t1e);
+            set_T2e_in_s(t2e);
+            set_T3e_in_s(t3e);
+            set_T4e_in_s(t4e);
+            set_Vsmax(vsmax);
+            set_Vsmin(vsmin);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    size_t k;
-    double kq1, kq2, kq3, tq, t1e, t2e, t3e, t4e, vsmax, vsmin;
-
-    size_t i=3;
-    kq1 = get_double_data(data[i],"0.0"); i++;
-    kq2 = get_double_data(data[i],"0.0"); i++;
-    kq3 = get_double_data(data[i],"0.0"); i++;
-    k = get_integer_data(data[i],"0"); i++;
-    tq = get_double_data(data[i],"0.0"); i++;
-    t1e = get_double_data(data[i],"0.0"); i++;
-    t2e = get_double_data(data[i],"0.0"); i++;
-    t3e = get_double_data(data[i],"0.0"); i++;
-    t4e = get_double_data(data[i],"0.0"); i++;
-    vsmax = get_double_data(data[i],"0.0"); i++;
-    vsmin = get_double_data(data[i],"0.0"); i++;
-
-    set_Kq1(kq1);
-    set_Kq2(kq2);
-    set_Kq3(kq3);
-    set_K(k);
-    set_Tq_in_s(tq);
-    set_T1e_in_s(t1e);
-    set_T2e_in_s(t2e);
-    set_T3e_in_s(t3e);
-    set_T4e_in_s(t4e);
-    set_Vsmax(vsmax);
-    set_Vsmin(vsmin);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool PSASPS1::setup_model_with_psse_string(string data)
@@ -258,91 +262,87 @@ void PSASPS1::initialize()
     ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
+    if(generator!=NULL)
     {
-        deactivate_model();
-        set_flag_model_initialized_as_true();
-        return;
+        EXCITER_MODEL* exciter = generator->get_exciter_model();
+        if(exciter!=NULL)
+        {
+            if(not exciter->is_model_initialized())
+                exciter->initialize();
+
+            set_block_toolkit();
+
+            size_t bus = generator->get_generator_bus();
+
+            SIGNAL signal = prepare_signal_with_signal_type_and_bus(1, bus);
+            if(signal.is_valid())
+                set_input_signal_at_slot(0, signal);
+
+            signal = prepare_signal_with_signal_type_and_bus(3, bus);
+            if(signal.is_valid())
+                set_input_signal_at_slot(1, signal);
+
+            signal = prepare_signal_with_signal_type_and_bus(5, bus);
+            if(signal.is_valid())
+                set_input_signal_at_slot(2, signal);
+
+            phase_tuner_3.set_output(0.0);
+            phase_tuner_3.initialize();
+
+            phase_tuner_2.set_output(0.0);
+            phase_tuner_2.initialize();
+
+            phase_tuner_1.set_output(0.0);
+            phase_tuner_1.initialize();
+
+            dedc_block.set_output(0.0);
+            dedc_block.initialize();
+
+            speed_deviation_ref_pu = get_signal_value_of_slot(0);
+            Pe_ref_pu = get_signal_value_of_slot(1);
+            Vterminal_ref_pu = get_signal_value_of_slot(2);
+        }
+        else
+            deactivate_model();
     }
-
-    EXCITER_MODEL* exciter = generator->get_exciter_model();
-    if(exciter==NULL)
-    {
+    else
         deactivate_model();
-        set_flag_model_initialized_as_true();
-        return;
-    }
-    if(not exciter->is_model_initialized())
-        exciter->initialize();
-
-
-    set_block_toolkit();
-
-    size_t bus = generator->get_generator_bus();
-
-    SIGNAL signal = prepare_signal_with_signal_type_and_bus(1, bus);
-    if(signal.is_valid())
-        set_input_signal_at_slot(0, signal);
-
-    signal = prepare_signal_with_signal_type_and_bus(3, bus);
-    if(signal.is_valid())
-        set_input_signal_at_slot(1, signal);
-
-    signal = prepare_signal_with_signal_type_and_bus(5, bus);
-    if(signal.is_valid())
-        set_input_signal_at_slot(2, signal);
-
-    phase_tuner_3.set_output(0.0);
-    phase_tuner_3.initialize();
-
-    phase_tuner_2.set_output(0.0);
-    phase_tuner_2.initialize();
-
-    phase_tuner_1.set_output(0.0);
-    phase_tuner_1.initialize();
-
-    dedc_block.set_output(0.0);
-    dedc_block.initialize();
-
-    speed_deviation_ref_pu = get_signal_value_of_slot(0);
-    Pe_ref_pu = get_signal_value_of_slot(1);
-    Vterminal_ref_pu = get_signal_value_of_slot(2);
 
     set_flag_model_initialized_as_true();
 }
 
 void PSASPS1::run(DYNAMIC_MODE mode)
 {
-    if(not is_model_active())
-        return;
-
-    double speed_deviation_pu = get_signal_value_of_slot(0);
-    double Pe_pu = get_signal_value_of_slot(1);
-    double Vterminal_pu = get_signal_value_of_slot(2);
-
-    double input = Kq1*(speed_deviation_pu-speed_deviation_ref_pu)+Kq2*(Pe_pu-Pe_ref_pu)+Kq3*(Vterminal_pu-Vterminal_ref_pu);
-    if(K==0)
+    if(is_model_active())
     {
-        dedc_block.set_input(input);
-        dedc_block.run(mode);
-        input = dedc_block.get_output();
+        double speed_deviation_pu = get_signal_value_of_slot(0);
+        double Pe_pu = get_signal_value_of_slot(1);
+        double Vterminal_pu = get_signal_value_of_slot(2);
+
+        double input = Kq1*(speed_deviation_pu-speed_deviation_ref_pu)+Kq2*(Pe_pu-Pe_ref_pu)+Kq3*(Vterminal_pu-Vterminal_ref_pu);
+        if(K==0)
+        {
+            dedc_block.set_input(input);
+            dedc_block.run(mode);
+            input = dedc_block.get_output();
+        }
+        else
+        {
+            phase_tuner_1.set_input(input);
+            phase_tuner_1.run(mode);
+            input = phase_tuner_1.get_output();
+        }
+
+        phase_tuner_2.set_input(input);
+        phase_tuner_2.run(mode);
+        input = phase_tuner_2.get_output();
+
+        phase_tuner_3.set_input(input);
+        phase_tuner_3.run(mode);
+
+        if(mode==UPDATE_MODE)
+            set_flag_model_updated_as_true();
     }
-    else
-    {
-        phase_tuner_1.set_input(input);
-        phase_tuner_1.run(mode);
-        input = phase_tuner_1.get_output();
-    }
-
-    phase_tuner_2.set_input(input);
-    phase_tuner_2.run(mode);
-    input = phase_tuner_2.get_output();
-
-    phase_tuner_3.set_input(input);
-    phase_tuner_3.run(mode);
-
-    if(mode==UPDATE_MODE)
-        set_flag_model_updated_as_true();
 }
 
 double PSASPS1::get_stabilizing_signal_in_pu() const

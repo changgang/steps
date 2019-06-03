@@ -61,25 +61,29 @@ double PV_CONVERTER_MODEL::get_initial_reactive_current_command_in_pu_based_on_m
 double PV_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit==NULL)
-        return 0.0;
-
-    PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
-    if(model!=NULL and model->is_model_initialized())
-        return model->get_active_current_command_in_pu_based_on_mbase();
+    if(pv_unit!=NULL)
+    {
+        PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
+        if(model!=NULL and model->is_model_initialized())
+            return model->get_active_current_command_in_pu_based_on_mbase();
+        else
+            return get_initial_active_current_command_in_pu_based_on_mbase();
+    }
     else
-        return get_initial_active_current_command_in_pu_based_on_mbase();
+        return 0.0;
 }
 
 double PV_CONVERTER_MODEL::get_reactive_current_command_in_pu_based_on_mbase() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit==NULL)
-        return 0.0;
-
-    PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
-    if(model!=NULL and model->is_model_initialized())
-        return model->get_reactive_current_command_in_pu_based_on_mbase();
+    if(pv_unit!=NULL)
+    {
+        PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
+        if(model!=NULL and model->is_model_initialized())
+            return model->get_reactive_current_command_in_pu_based_on_mbase();
+        else
+            return get_initial_reactive_current_command_in_pu_based_on_mbase();
+    }
     else
-        return get_initial_reactive_current_command_in_pu_based_on_mbase();
+        return 0.0;
 }

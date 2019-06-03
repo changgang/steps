@@ -29,25 +29,29 @@ double SG_MODEL::get_mbase_in_MVA() const
 double SG_MODEL::get_bus_base_frequency_in_Hz() const
 {
     GENERATOR* gen = get_generator_pointer();
-    if(gen==NULL)
+    if(gen!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        return psdb.get_bus_base_frequency_in_Hz(gen->get_generator_bus());
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    return psdb.get_bus_base_frequency_in_Hz(gen->get_generator_bus());
 }
 
 complex<double> SG_MODEL::get_terminal_complex_voltage_in_pu() const
 {
     GENERATOR* gen = get_generator_pointer();
-    if(gen==NULL)
+    if(gen!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = gen->get_generator_bus();
+        complex<double> Vxy = psdb.get_bus_complex_voltage_in_pu(bus);
+        return Vxy;
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus = gen->get_generator_bus();
-    complex<double> Vxy = psdb.get_bus_complex_voltage_in_pu(bus);
-    return Vxy;
 }

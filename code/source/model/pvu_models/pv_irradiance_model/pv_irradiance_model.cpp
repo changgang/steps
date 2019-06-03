@@ -20,13 +20,16 @@ string PV_IRRADIANCE_MODEL::get_model_type() const
 double PV_IRRADIANCE_MODEL::get_nominal_irradiance_in_Wpm2() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit==NULL)
+    if(pv_unit!=NULL)
+    {
+        PV_IRRADIANCE_MODEL* pvirrd = pv_unit->get_pv_irradiance_model();
+        if(pvirrd!=NULL)
+            return pvirrd->get_nominal_irradiance_in_Wpm2();
+        else
+            return 0.0;
+    }
+    else
         return 0.0;
-    PV_IRRADIANCE_MODEL* pvirrd = pv_unit->get_pv_irradiance_model();
-    if(pvirrd==NULL)
-        return 0.0;
-
-    return pvirrd->get_nominal_irradiance_in_Wpm2();
 }
 
 double PV_IRRADIANCE_MODEL::get_solar_irradiance_in_Wpm2()

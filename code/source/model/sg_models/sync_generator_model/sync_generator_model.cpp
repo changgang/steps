@@ -181,14 +181,16 @@ double SYNC_GENERATOR_MODEL::get_Xqpp() const
 
 double SYNC_GENERATOR_MODEL::get_Xpp() const
 {
-    if(Xdpp!=Xqpp)
+    if(Xdpp==Xqpp)
+        return Xdpp;
+    else
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         ostringstream osstream;
         osstream<<"Warning. Subtransient Xd\"("<<Xdpp<<") is not equal to Xq\"("<<Xqpp<<"). Xd\" will be returned.";
         toolkit.show_information_with_leading_time_stamp(osstream);
+        return Xdpp;
     }
-    return Xdpp;
 }
 
 double SYNC_GENERATOR_MODEL::get_Xl() const
@@ -288,10 +290,11 @@ bool SYNC_GENERATOR_MODEL::is_saturation_considered() const
 
 double SYNC_GENERATOR_MODEL::get_saturation_with_flux(double flux) const
 {
-    if(not is_saturation_considered())
+    if(is_saturation_considered())
+        return saturation_block.get_saturation(flux);
+    else
         return 0.0;
 
-    return saturation_block.get_saturation(flux);
     /*
     switch(get_saturation_type())
     {

@@ -20,20 +20,20 @@ RATING::~RATING()
 
 void RATING::set_rating_A_MVA(double rate)
 {
-    if(rate<0) return;
-    rating_A_MVA = rate;
+    if(rate>=0)
+        rating_A_MVA = rate;
 }
 
 void RATING::set_rating_B_MVA(double rate)
 {
-    if(rate<0) return;
-    rating_B_MVA = rate;
+    if(rate>=0)
+        rating_B_MVA = rate;
 }
 
 void RATING::set_rating_C_MVA(double rate)
 {
-    if(rate<0) return;
-    rating_C_MVA = rate;
+    if(rate>=0)
+        rating_C_MVA = rate;
 }
 
 double RATING::get_rating_A_MVA() const

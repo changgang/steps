@@ -198,8 +198,8 @@ void BUS::set_voltage_to_regulate_in_pu(double voltage)
         {
             ostringstream osstream;
             osstream<<"Warning. New voltage to regulate ("<<voltage<<" pu) is not allowed to set for bus "<<get_bus_number()
-              <<" with existing voltage to regulate: "<<get_voltage_to_regulate_in_pu()<<" pu."<<endl
-              <<"Voltage to regulate will not be changed.";
+                    <<" with existing voltage to regulate: "<<get_voltage_to_regulate_in_pu()<<" pu."<<endl
+                    <<"Voltage to regulate will not be changed.";
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             toolkit.show_information_with_leading_time_stamp(osstream);
         }

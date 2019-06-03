@@ -19,16 +19,16 @@ OWNERSHIP::OWNERSHIP(const OWNERSHIP& ownership)
 
 void OWNERSHIP::append_owner_and_its_fraction(size_t owner, double fraction)
 {
-	if(owner == 0) return;
-    if(fraction<0.0) return;
-
-    if(! has_owner(owner))
-        ownership_pair.insert(map<size_t,double>::value_type(owner, fraction));
-    else
+	if(owner != 0 and fraction>=0.0)
     {
-        map<size_t, double>::iterator iter;
-        iter = ownership_pair.find(owner);
-        iter->second += fraction;
+        if(not has_owner(owner))
+            ownership_pair.insert(map<size_t,double>::value_type(owner, fraction));
+        else
+        {
+            map<size_t, double>::iterator iter;
+            iter = ownership_pair.find(owner);
+            iter->second += fraction;
+        }
     }
 }
 
@@ -49,10 +49,11 @@ void OWNERSHIP::normalize()
     for(iter=ownership_pair.begin(); iter!=ownership_pair.end(); ++iter)
         sum_fraction += iter->second;
 
-    if(sum_fraction==0.0) return;
-
-    for(iter=ownership_pair.begin(); iter!=ownership_pair.end(); ++iter)
-        iter->second /= sum_fraction;
+    if(sum_fraction!=0.0)
+    {
+        for(iter=ownership_pair.begin(); iter!=ownership_pair.end(); ++iter)
+            iter->second /= sum_fraction;
+    }
 }
 
 bool OWNERSHIP::empty() const

@@ -22,13 +22,16 @@ string WIND_SPEED_MODEL::get_model_type() const
 double WIND_SPEED_MODEL::get_nominal_wind_speed_in_mps() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    if(gen==NULL)
+    if(gen!=NULL)
+    {
+        WT_AERODYNAMIC_MODEL* aerd = gen->get_wt_aerodynamic_model();
+        if(aerd!=NULL)
+            return aerd->get_nominal_wind_speed_in_mps();
+        else
+            return 0.0;
+    }
+    else
         return 0.0;
-    WT_AERODYNAMIC_MODEL* aerd = gen->get_wt_aerodynamic_model();
-    if(aerd==NULL)
-        return 0.0;
-
-    return aerd->get_nominal_wind_speed_in_mps();
 }
 
 double WIND_SPEED_MODEL::get_wind_speed_in_mps()

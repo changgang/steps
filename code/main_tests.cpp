@@ -241,14 +241,14 @@ int main(int argc, char* argv[])
 
         //ts.add(unique_ptr<Test::Suite>(new EQUIVALENT_MODEL_IMEXPORTER_TEST));
 
-/*
+
         ts.add(unique_ptr<Test::Suite>(new NETWORK_MATRIX_TEST));
 
 
         ts.add(unique_ptr<Test::Suite>(new JACOBIAN_BUILDER_TEST));
 
 
-        //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_SOLVER_TEST));
+        ts.add(unique_ptr<Test::Suite>(new POWERFLOW_SOLVER_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new PROPORTIONAL_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new INTEGRAL_BLOCK_TEST));
@@ -318,12 +318,12 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
-*/
+
         // Run the tests
         unique_ptr<Test::Output> output(cmdline(argc, argv));
         ts.run(*output, true);
 
-        default_toolkit.open_log_file("STEPS_test_report.html");
+        default_toolkit.open_log_file("STEPS_test_report2.html");
         Test::HtmlOutput* const html = dynamic_cast<Test::HtmlOutput*>(output.get());
         if (html)
         	html->generate(cout, true, "STEPS");

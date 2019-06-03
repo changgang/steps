@@ -84,56 +84,58 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
-    if(get_status()==false)
-        return;
-
-    PV_CONVERTER_MODEL* conv = get_pv_converter_model();
-    PV_ELECTRICAL_MODEL* elec = get_pv_electrical_model();
-    PV_PANEL_MODEL* panel = get_pv_panel_model();
-    PV_IRRADIANCE_MODEL* irrd = get_pv_irradiance_model();
-
-    switch(mode)
+    if(get_status()==true)
     {
-        case INITIALIZE_MODE:
+        PV_CONVERTER_MODEL* conv = get_pv_converter_model();
+        PV_ELECTRICAL_MODEL* elec = get_pv_electrical_model();
+        PV_PANEL_MODEL* panel = get_pv_panel_model();
+        PV_IRRADIANCE_MODEL* irrd = get_pv_irradiance_model();
+
+        switch(mode)
         {
-            if(conv==NULL)
+            case INITIALIZE_MODE:
             {
-                osstream<<"Error. No PV_CONVERTER_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-                return;
+                if(conv!=NULL)
+                    conv->initialize();
+                else
+                {
+                    osstream<<"Error. No PV_CONVERTER_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    return;
+                }
+
+                if(irrd!=NULL)
+                    irrd->initialize();
+
+                if(panel!=NULL)
+                    panel->initialize();
+                else
+                {
+                    osstream<<"Error. No PV_PANEL_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    return;
+                }
+
+                if(elec!=NULL)
+                    elec->initialize();
+
+                break;
             }
-            conv->initialize();
-
-            if(irrd!=NULL)
-                irrd->initialize();
-
-            if(panel==NULL)
+            default:
             {
-                osstream<<"Error. No PV_PANEL_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-                return;
+                //if(irrd!=NULL)
+                //    irrd->run(mode);
+
+                if(elec!=NULL)
+                    elec->run(mode);
+
+                if(panel!=NULL)
+                    panel->run(mode);
+
+                if(conv!=NULL)
+                    conv->run(mode);
+                break;
             }
-            panel->initialize();
-
-            if(elec!=NULL)
-                elec->initialize();
-
-            break;
-        }
-        default:
-        {
-            //if(irrd!=NULL)
-            //    irrd->run(mode);
-
-            if(elec!=NULL)
-                elec->run(mode);
-
-            if(panel!=NULL)
-                panel->run(mode);
-
-            if(conv!=NULL)
-                conv->run(mode);
-            break;
         }
     }
 }
@@ -162,110 +164,108 @@ void PV_UNIT::save() const
 
 void PV_UNIT::set_model(const MODEL* model)
 {
-    if(model == NULL)
-        return;
-
-    if(model->get_allowed_device_type()!="PV UNIT")
-        return;
-
-    if(model->get_model_type()=="PV CONVERTER")
+    if(model != NULL)
     {
-        set_pv_converter_model((PV_CONVERTER_MODEL*) model);
-        return;
-    }
+        if(model->get_allowed_device_type()=="PV UNIT")
+        {
+            if(model->get_model_type()=="PV CONVERTER")
+            {
+                set_pv_converter_model((PV_CONVERTER_MODEL*) model);
+                return;
+            }
 
-    if(model->get_model_type()=="PV PANEL")
-    {
-        set_pv_panel_model((PV_PANEL_MODEL*) model);
-        return;
-    }
+            if(model->get_model_type()=="PV PANEL")
+            {
+                set_pv_panel_model((PV_PANEL_MODEL*) model);
+                return;
+            }
 
-    if(model->get_model_type()=="PV ELECTRICAL")
-    {
-        set_pv_electrical_model((PV_ELECTRICAL_MODEL*) model);
-        return;
-    }
+            if(model->get_model_type()=="PV ELECTRICAL")
+            {
+                set_pv_electrical_model((PV_ELECTRICAL_MODEL*) model);
+                return;
+            }
 
-    if(model->get_model_type()=="PV IRRADIANCE")
-    {
-        set_pv_irradiance_model((PV_IRRADIANCE_MODEL*) model);
-        return;
-    }
+            if(model->get_model_type()=="PV IRRADIANCE")
+            {
+                set_pv_irradiance_model((PV_IRRADIANCE_MODEL*) model);
+                return;
+            }
 
-    ostringstream osstream;
-    osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up pv unit-related model.";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+            ostringstream osstream;
+            osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up pv unit-related model.";
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
 }
 
 void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
 {
     ostringstream osstream;
-    if(model==NULL)
-        return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(model->get_model_type()!="PV UNIT")
+    if(model!=NULL)
     {
-        osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up pv converter model.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        if(model->get_model_type()=="PV UNIT")
+        {
+            PV_CONVERTER_MODEL* oldmodel = get_pv_converter_model();
+            if(oldmodel!=NULL)
+            {
+                delete oldmodel;
+                pv_converter_model = NULL;
+            }
 
-    PV_CONVERTER_MODEL* oldmodel = get_pv_converter_model();
-    if(oldmodel!=NULL)
-    {
-        delete oldmodel;
-        pv_converter_model = NULL;
-    }
+            PV_CONVERTER_MODEL *new_model = NULL;
+            string model_name = model->get_model_name();
+            if(model_name=="XXX")
+            {
+                //WT3G0* smodel = (WT3G0*) (model);
+                //new_model = (PV_UNIT_MODEL*) new WT3G0(*smodel);
+            }
 
-    PV_CONVERTER_MODEL *new_model = NULL;
-    string model_name = model->get_model_name();
-    if(model_name=="XXX")
-    {
-        //WT3G0* smodel = (WT3G0*) (model);
-        //new_model = (PV_UNIT_MODEL*) new WT3G0(*smodel);
-    }
+            if(new_model!=NULL)
+            {
+                new_model->set_toolkit(toolkit);
+                new_model->set_device_id(get_device_id());
+                pv_converter_model = new_model;
 
-    if(new_model!=NULL)
-    {
-        new_model->set_toolkit(toolkit);
-        new_model->set_device_id(get_device_id());
-        pv_converter_model = new_model;
-
-        set_number_of_lumped_pv_units(new_model->get_number_of_lumped_pv_units());
-        set_rated_power_per_pv_unit_in_MW(new_model->get_rated_power_per_pv_unit_in_MW());
-    }
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append pv converter model of "<<get_device_name()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+                set_number_of_lumped_pv_units(new_model->get_number_of_lumped_pv_units());
+                set_rated_power_per_pv_unit_in_MW(new_model->get_rated_power_per_pv_unit_in_MW());
+            }
+            else
+            {
+                ostringstream osstream;
+                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append pv converter model of "<<get_device_name()<<".";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up pv converter model.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
 void PV_UNIT::set_pv_panel_model(const PV_PANEL_MODEL* model)
 {
     ostringstream osstream;
-    if(model==NULL)
+    if(model!=NULL)
         return;
-
 }
 
 void PV_UNIT::set_pv_electrical_model(const PV_ELECTRICAL_MODEL* model)
 {
     ostringstream osstream;
-    if(model==NULL)
+    if(model!=NULL)
         return;
-
 }
 
 void PV_UNIT::set_pv_irradiance_model(const PV_IRRADIANCE_MODEL* model)
 {
     ostringstream osstream;
-    if(model==NULL)
+    if(model!=NULL)
         return;
-
 }
 
 PV_CONVERTER_MODEL* PV_UNIT::get_pv_converter_model()

@@ -75,6 +75,7 @@ void TGOV1::set_T3_in_s(double T)
 {
     turbine.set_T2_in_s(T);
 }
+
 void TGOV1::set_Valvemax_in_pu(double V)
 {
     governor.set_upper_limit(V);
@@ -84,6 +85,7 @@ void TGOV1::set_Valvemin_in_pu(double V)
 {
     governor.set_lower_limit(V);
 }
+
 void TGOV1::set_D(double D)
 {
     damping.set_K(D);
@@ -117,44 +119,48 @@ double TGOV1::get_Valvemin_in_pu() const
 {
     return governor.get_lower_limit();
 }
+
 double TGOV1::get_D() const
 {
     return damping.get_K();
 }
 
-
 bool TGOV1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<9)
+    if(data.size()>=9)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double r, t1, vmax, vmin, t2, t3, d;
+
+            size_t i=3;
+            r = get_double_data(data[i],"0.0"); i++;
+            t1 = get_double_data(data[i],"0.0"); i++;
+            vmax = get_double_data(data[i],"0.0"); i++;
+            vmin = get_double_data(data[i],"0.0"); i++;
+            t2 = get_double_data(data[i],"0.0"); i++;
+            t3 = get_double_data(data[i],"0.0"); i++;
+            d = get_double_data(data[i],"0.0"); i++;
+
+            set_R(r);
+            set_T1_in_s(t1);
+            set_Valvemax_in_pu(vmax);
+            set_Valvemin_in_pu(vmin);
+            set_T2_in_s(t2);
+            set_T3_in_s(t3);
+            set_D(d);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    double r, t1, vmax, vmin, t2, t3, d;
-
-    size_t i=3;
-    r = get_double_data(data[i],"0.0"); i++;
-    t1 = get_double_data(data[i],"0.0"); i++;
-    vmax = get_double_data(data[i],"0.0"); i++;
-    vmin = get_double_data(data[i],"0.0"); i++;
-    t2 = get_double_data(data[i],"0.0"); i++;
-    t3 = get_double_data(data[i],"0.0"); i++;
-    d = get_double_data(data[i],"0.0"); i++;
-
-    set_R(r);
-    set_T1_in_s(t1);
-    set_Valvemax_in_pu(vmax);
-    set_Valvemin_in_pu(vmin);
-    set_T2_in_s(t2);
-    set_T3_in_s(t3);
-    set_D(d);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool TGOV1::setup_model_with_psse_string(string data)

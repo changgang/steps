@@ -98,10 +98,10 @@ void POWERFLOW_SOLVER::set_transformer_tap_adjustment_logic(bool logic)
 
 void POWERFLOW_SOLVER::set_iteration_accelerator(double iter_alpha)
 {
-    if(iter_alpha<=0.0)
-        this->alpha = 1.0;
-    else
+    if(iter_alpha>0.0)
         this->alpha = iter_alpha;
+    else
+        this->alpha = 1.0;
 }
 
 void POWERFLOW_SOLVER::set_non_divergent_solution_logic(bool logic)
@@ -153,222 +153,222 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    if(psdb.get_bus_count()==0)
-        return;
-
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Start solve powerflow with Full Newton Raphson solution.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
-
-    initialize_powerflow_solver();
-
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-
-    double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
-    vector<double> bus_power_mismatch, bus_delta_voltage_angle;
-/*    JACOBIAN_BUILDER jacobian_builder;
-    jacobian_builder.set_toolkit(toolkit);
-
-    jacobian_builder.set_network_matrix(network_matrix);
-*/
-    network_matrix.build_network_matrix();
-    //network_matrix.report_network_matrix();
-
-    update_P_and_Q_equation_internal_buses();
-    jacobian_builder.build_seprate_jacobians();
-    //jacobian_builder.show_seprate_jacobians();
-
-    while(true)
+    if(psdb.get_bus_count()!=0)
     {
         char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %lu:",iteration_count);
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Start solve powerflow with Full Newton Raphson solution.");
         toolkit.show_information_with_leading_time_stamp(buffer);
 
-        try_to_solve_hvdc_steady_state();
+        initialize_powerflow_solver();
 
-        calculate_raw_bus_power_mismatch();
+        NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-        max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
-        max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
+        double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
+        vector<double> bus_power_mismatch, bus_delta_voltage_angle;
+    /*    JACOBIAN_BUILDER jacobian_builder;
+        jacobian_builder.set_toolkit(toolkit);
 
+        jacobian_builder.set_network_matrix(network_matrix);
+    */
+        network_matrix.build_network_matrix();
+        //network_matrix.report_network_matrix();
 
-        bool bus_type_changed = check_bus_type_constraints();
+        update_P_and_Q_equation_internal_buses();
+        jacobian_builder.build_seprate_jacobians();
+        //jacobian_builder.show_seprate_jacobians();
 
-        if(bus_type_changed)
+        while(true)
         {
-            update_P_and_Q_equation_internal_buses();
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %lu:",iteration_count);
+            toolkit.show_information_with_leading_time_stamp(buffer);
+
+            try_to_solve_hvdc_steady_state();
 
             calculate_raw_bus_power_mismatch();
 
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
             max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
+
+
+            bool bus_type_changed = check_bus_type_constraints();
+
+            if(bus_type_changed)
+            {
+                update_P_and_Q_equation_internal_buses();
+
+                calculate_raw_bus_power_mismatch();
+
+                max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
+                max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
+            }
+            if(max_P_mismatch_in_MW < get_allowed_max_active_power_imbalance_in_MW() and
+               max_Q_mismatch_in_MW < get_allowed_max_reactive_power_imbalance_in_MVar())
+            {
+                set_convergence_flag(true);
+
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow converged within %lu iterations.",iteration_count);
+                toolkit.show_information_with_leading_time_stamp(buffer);
+                break;
+            }
+            else
+                set_convergence_flag(false);
+
+            if(get_iteration_count()>=get_max_iteration())
+            {
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %lu iterations.",get_max_iteration());
+                toolkit.show_information_with_leading_time_stamp(buffer);
+                break;
+            }
+
+            bus_power_mismatch = get_bus_power_mismatch_vector_for_coupled_solution();
+
+            jacobian_builder.update_seprate_jacobians();
+
+            jacobian = jacobian_builder.get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses,
+                                                                                                       internal_Q_equation_buses);
+
+            if(get_export_jacobian_matrix_step_by_step_logic()==true)
+            {
+                jacobian.save_matrix_to_file("Jacobian-NR-Iter-"+num2str(get_iteration_count())+".csv");
+            }
+            bus_delta_voltage_angle = bus_power_mismatch/jacobian;
+
+            update_bus_voltage_and_angle(bus_delta_voltage_angle);
+
+            ++iteration_count;
         }
-        if(max_P_mismatch_in_MW < get_allowed_max_active_power_imbalance_in_MW() and
-           max_Q_mismatch_in_MW < get_allowed_max_reactive_power_imbalance_in_MVar())
-        {
-            set_convergence_flag(true);
-
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow converged within %lu iterations.",iteration_count);
-            toolkit.show_information_with_leading_time_stamp(buffer);
-            break;
-        }
-        else
-            set_convergence_flag(false);
-
-        if(get_iteration_count()>=get_max_iteration())
-        {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %lu iterations.",get_max_iteration());
-            toolkit.show_information_with_leading_time_stamp(buffer);
-            break;
-        }
-
-        bus_power_mismatch = get_bus_power_mismatch_vector_for_coupled_solution();
-
-        jacobian_builder.update_seprate_jacobians();
-
-        jacobian = jacobian_builder.get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(internal_P_equation_buses,
-                                                                                                   internal_Q_equation_buses);
-
-        if(get_export_jacobian_matrix_step_by_step_logic()==true)
-        {
-            jacobian.save_matrix_to_file("Jacobian-NR-Iter-"+num2str(get_iteration_count())+".csv");
-        }
-        bus_delta_voltage_angle = bus_power_mismatch/jacobian;
-
-        update_bus_voltage_and_angle(bus_delta_voltage_angle);
-
-		++iteration_count;
+        show_powerflow_result();
     }
-    show_powerflow_result();
 }
 
 void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    if(psdb.get_bus_count()==0)
-        return;
-
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Start solve powerflow with Fast Decoupled solution.");
-    toolkit.show_information_with_leading_time_stamp(buffer);
-
-    initialize_powerflow_solver();
-
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-
-    double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
-    vector<double> P_power_mismatch, Q_power_mismatch, bus_delta_voltage, bus_delta_angle;
-/*    JACOBIAN_BUILDER jacobian_builder;
-    jacobian_builder.set_toolkit(toolkit);
-
-    jacobian_builder.set_network_matrix(network_matrix);
-*/
-    network_matrix.build_network_matrix();
-
-    network_matrix.build_decoupled_network_matrix();
-    //const SPARSE_MATRIX& Y = network_matrix.get_network_matrix();
-    //cout<<"Y matrix identity is: "<<get_sparse_matrix_identity(Y)<<endl;
-
-    update_P_and_Q_equation_internal_buses();
-    BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
-    BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
-    //BP.LU_factorization(1, 1e-6);
-    //BQ.LU_factorization(1, 1e-6);
-    //BP.report_brief();
-    //BQ.report_brief();
-
-    size_t physical_bus;
-
-    while(true)
+    if(psdb.get_bus_count()!=0)
     {
-
         char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %lu:",iteration_count);
+        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Start solve powerflow with Fast Decoupled solution.");
         toolkit.show_information_with_leading_time_stamp(buffer);
 
-        try_to_solve_hvdc_steady_state();
+        initialize_powerflow_solver();
 
-        calculate_raw_bus_power_mismatch();
-        max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
-        max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
+        NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-        bool bus_type_changed = check_bus_type_constraints();
-        if(bus_type_changed)
+        double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
+        vector<double> P_power_mismatch, Q_power_mismatch, bus_delta_voltage, bus_delta_angle;
+    /*    JACOBIAN_BUILDER jacobian_builder;
+        jacobian_builder.set_toolkit(toolkit);
+
+        jacobian_builder.set_network_matrix(network_matrix);
+    */
+        network_matrix.build_network_matrix();
+
+        network_matrix.build_decoupled_network_matrix();
+        //const SPARSE_MATRIX& Y = network_matrix.get_network_matrix();
+        //cout<<"Y matrix identity is: "<<get_sparse_matrix_identity(Y)<<endl;
+
+        update_P_and_Q_equation_internal_buses();
+        BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
+        BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
+        //BP.LU_factorization(1, 1e-6);
+        //BQ.LU_factorization(1, 1e-6);
+        //BP.report_brief();
+        //BQ.report_brief();
+
+        size_t physical_bus;
+
+        while(true)
         {
-            update_P_and_Q_equation_internal_buses();
-            //BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
-            BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
-            BQ.LU_factorization(1, 1e-6);
+
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Iteration %lu:",iteration_count);
+            toolkit.show_information_with_leading_time_stamp(buffer);
+
+            try_to_solve_hvdc_steady_state();
 
             calculate_raw_bus_power_mismatch();
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
             max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
-            //continue;
+
+            bool bus_type_changed = check_bus_type_constraints();
+            if(bus_type_changed)
+            {
+                update_P_and_Q_equation_internal_buses();
+                //BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
+                BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
+                BQ.LU_factorization(1, 1e-6);
+
+                calculate_raw_bus_power_mismatch();
+                max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
+                max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
+                //continue;
+            }
+
+            if(get_export_jacobian_matrix_step_by_step_logic()==true)
+            {
+                BP.save_matrix_to_file("Jacobian-BP-PQ-Iter-"+num2str(get_iteration_count())+".csv");
+                BQ.save_matrix_to_file("Jacobian-BQ-PQ-Iter-"+num2str(get_iteration_count())+".csv");
+            }
+
+            if(max_P_mismatch_in_MW < get_allowed_max_active_power_imbalance_in_MW() and
+               max_Q_mismatch_in_MW < get_allowed_max_reactive_power_imbalance_in_MVar())
+            {
+                set_convergence_flag(true);
+
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow converged within %lu iterations.",iteration_count);
+                toolkit.show_information_with_leading_time_stamp(buffer);
+                break;
+            }
+            else
+                set_convergence_flag(false);
+
+            if(get_iteration_count()>=get_max_iteration())
+            {
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %lu iterations.",get_max_iteration());
+                toolkit.show_information_with_leading_time_stamp(buffer);
+                break;
+            }
+
+            P_power_mismatch = get_bus_P_power_mismatch_vector_for_decoupled_solution();
+            size_t n = internal_P_equation_buses.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
+                P_power_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
+            }
+            bus_delta_angle = P_power_mismatch/BP;
+            //BP.report_brief();
+            //for(size_t i=0; i<P_power_mismatch.size(); i++)
+            //    cout<<i<<","<<P_power_mismatch[i]<<endl;
+            //for(size_t i=0; i<internal_P_equation_buses.size(); ++i)
+            //{
+            //    cout<<bus_delta_angle[i]<<endl;
+            //    //bus_delta_angle[i] /= abs(psdb.get_bus_complex_voltage_in_pu(network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
+            //}
+            update_bus_angle(bus_delta_angle);
+
+            calculate_raw_bus_power_mismatch();
+
+            max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
+            max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
+
+            Q_power_mismatch = get_bus_Q_power_mismatch_vector_for_decoupled_solution();
+            n = internal_Q_equation_buses.size();
+            for(size_t i=0; i!=n; ++i)
+            {
+                physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
+                Q_power_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
+            }
+            bus_delta_voltage = Q_power_mismatch/BQ;
+
+            update_bus_voltage(bus_delta_voltage);
+
+            iteration_count ++;
         }
-
-        if(get_export_jacobian_matrix_step_by_step_logic()==true)
-        {
-            BP.save_matrix_to_file("Jacobian-BP-PQ-Iter-"+num2str(get_iteration_count())+".csv");
-            BQ.save_matrix_to_file("Jacobian-BQ-PQ-Iter-"+num2str(get_iteration_count())+".csv");
-        }
-
-        if(max_P_mismatch_in_MW < get_allowed_max_active_power_imbalance_in_MW() and
-           max_Q_mismatch_in_MW < get_allowed_max_reactive_power_imbalance_in_MVar())
-        {
-            set_convergence_flag(true);
-
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow converged within %lu iterations.",iteration_count);
-            toolkit.show_information_with_leading_time_stamp(buffer);
-            break;
-        }
-        else
-            set_convergence_flag(false);
-
-        if(get_iteration_count()>=get_max_iteration())
-        {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow failed to converge within %lu iterations.",get_max_iteration());
-            toolkit.show_information_with_leading_time_stamp(buffer);
-            break;
-        }
-
-        P_power_mismatch = get_bus_P_power_mismatch_vector_for_decoupled_solution();
-        size_t n = internal_P_equation_buses.size();
-        for(size_t i=0; i!=n; ++i)
-        {
-            physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
-            P_power_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
-        }
-        bus_delta_angle = P_power_mismatch/BP;
-        //BP.report_brief();
-        //for(size_t i=0; i<P_power_mismatch.size(); i++)
-        //    cout<<i<<","<<P_power_mismatch[i]<<endl;
-        //for(size_t i=0; i<internal_P_equation_buses.size(); ++i)
-        //{
-        //    cout<<bus_delta_angle[i]<<endl;
-        //    //bus_delta_angle[i] /= abs(psdb.get_bus_complex_voltage_in_pu(network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
-        //}
-        update_bus_angle(bus_delta_angle);
-
-        calculate_raw_bus_power_mismatch();
-
-        max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
-        max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
-
-        Q_power_mismatch = get_bus_Q_power_mismatch_vector_for_decoupled_solution();
-        n = internal_Q_equation_buses.size();
-        for(size_t i=0; i!=n; ++i)
-        {
-            physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
-            Q_power_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
-        }
-        bus_delta_voltage = Q_power_mismatch/BQ;
-
-        update_bus_voltage(bus_delta_voltage);
-
-        iteration_count ++;
+        show_powerflow_result();
     }
-    show_powerflow_result();
 }
 
 void POWERFLOW_SOLVER::solve_with_modified_Gaussian_Seidel_solution()
@@ -409,27 +409,37 @@ void POWERFLOW_SOLVER::initialize_bus_type()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    bool flat_flag = get_flat_start_logic();
 
     vector<BUS*> buses = psdb.get_all_buses();
-
     size_t nbus = buses.size();
-    for(size_t i=0; i!=nbus; ++i)
+
+    if(get_flat_start_logic()==true)
     {
-        BUS_TYPE btype = buses[i]->get_bus_type();
-        if(flat_flag==true)
+        for(size_t i=0; i!=nbus; ++i)
+        {
+            BUS_TYPE btype = buses[i]->get_bus_type();
             if(btype == PV_TO_PQ_TYPE_1 or btype == PV_TO_PQ_TYPE_2 or
                btype == PV_TO_PQ_TYPE_3 or btype == PV_TO_PQ_TYPE_4)
                 buses[i]->set_bus_type(PV_TYPE);
+        }
+    }
+
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        BUS_TYPE btype = buses[i]->get_bus_type();
         if(btype==PV_TYPE)
         {
             vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(buses[i]->get_bus_number());
             size_t nsource = sources.size();
             size_t n_inservice = 0;
             for(size_t j=0; j!=nsource; ++j)
+            {
                 if(sources[j]->get_status()==true)
-                    n_inservice++;
-            if(n_inservice==0)
+                  ++n_inservice;
+            }
+            if(n_inservice!=0)
+                ;
+            else
                 buses[i]->set_bus_type(PQ_TYPE);
         }
     }
@@ -443,17 +453,17 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
     size_t nsource = sources.size();
     for(size_t i=0; i!=nsource; ++i)
     {
-        if(sources[i]->get_status()==false)
-            continue;
-
-        double qmax = sources[i]->get_q_max_in_MVar();
-        double qmin = sources[i]->get_q_min_in_MVar();
-        if(qmax!=qmin)
+        if(sources[i]->get_status()==true)
         {
-            size_t bus = sources[i]->get_bus_to_regulate();
-            double vreg = sources[i]->get_voltage_to_regulate_in_pu();
-            BUS* busptr = psdb.get_bus(bus);
-            busptr->set_voltage_to_regulate_in_pu(vreg);
+            double qmax = sources[i]->get_q_max_in_MVar();
+            double qmin = sources[i]->get_q_min_in_MVar();
+            if(qmax!=qmin)
+            {
+                size_t bus = sources[i]->get_bus_to_regulate();
+                double vreg = sources[i]->get_voltage_to_regulate_in_pu();
+                BUS* busptr = psdb.get_bus(bus);
+                busptr->set_voltage_to_regulate_in_pu(vreg);
+            }
         }
     }
     vector<BUS*> buses = psdb.get_all_buses();
@@ -461,7 +471,9 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
     for(size_t i=0; i!=nbus; ++i)
     {
         BUS_TYPE btype = buses[i]->get_bus_type();
-        if(btype!=PQ_TYPE and  btype!=OUT_OF_SERVICE)
+        if(btype==PQ_TYPE or btype==OUT_OF_SERVICE)
+            continue;
+        else // PV, SLACK
         {
             if(fabs(buses[i]->get_voltage_to_regulate_in_pu())<FLOAT_EPSILON)
                 buses[i]->set_voltage_to_regulate_in_pu(1.0);
@@ -481,17 +493,18 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
 
     if(get_flat_start_logic()==true)
     {
-        BUS_TYPE btype;
         for(size_t i=0; i!=nbus; ++i)
         {
-            btype = buses[i]->get_bus_type();
-            if(btype == OUT_OF_SERVICE)
-                continue;
-
-            if(btype==PQ_TYPE)
-                buses[i]->set_voltage_in_pu(1.0);
-            else
-                buses[i]->set_voltage_in_pu(buses[i]->get_voltage_to_regulate_in_pu());
+            switch(buses[i]->get_bus_type())
+            {
+                case PQ_TYPE:
+                    buses[i]->set_voltage_in_pu(1.0);
+                    break;
+                case OUT_OF_SERVICE:
+                    continue;
+                default:
+                    buses[i]->set_voltage_in_pu(buses[i]->get_voltage_to_regulate_in_pu());
+            }
 
             buses[i]->set_angle_in_rad(0.0);
         }
@@ -502,8 +515,7 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
     toolkit.show_information_with_leading_time_stamp(buffer);
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      voltage(pu) angle(deg)");
     toolkit.show_information_with_leading_time_stamp(buffer);
-    if(nbus>200)
-        nbus = 200;
+    nbus = nbus>200 ? 200 : nbus;
     for(size_t i=0; i!=nbus; ++i)
     {
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f",
@@ -626,7 +638,7 @@ void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
     size_t nhvdc = hvdcs.size();
     for(size_t i=0; i!=nhvdc; ++i)
     {
-        if(hvdcs[i]->get_status() == true)
+        if(hvdcs[i]->get_status()==true)
         {
             hvdcs[i]->solve_steady_state();
             //hvdcs[i]->show_solved_hvdc_steady_state();
@@ -790,41 +802,34 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 
     double Sbase = psdb.get_system_base_power_in_MVA();
 
-    size_t physical_bus, internal_bus;
-
-    bool status;
-
-    BUS_TYPE btype;
-
-    complex<double> Sgen;
-
     vector<SOURCE*> sources = psdb.get_all_sources();
-
-    BUS* busptr;
 
     size_t nsource = sources.size();
 
     for(size_t i=0; i!=nsource; ++i)
     {
-        status = sources[i]->get_status();
-        if(status == false)
-            continue;
+        if(sources[i]->get_status() == true)
+        {
+            size_t physical_bus = sources[i]->get_source_bus();
 
-        physical_bus = sources[i]->get_source_bus();
+            BUS* busptr = psdb.get_bus(physical_bus);
 
-        busptr = psdb.get_bus(physical_bus);
-
-        btype = busptr->get_bus_type();
-        if(btype == OUT_OF_SERVICE or btype == SLACK_TYPE)
-            continue;
-
-        if(btype == PV_TYPE)
-            Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), 0.0);
-        else// PQ, PV2PQ
-            Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), sources[i]->get_q_generation_in_MVar());
-
-        internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
-        bus_power[internal_bus] += (Sgen/Sbase);
+            complex<double> Sgen;
+            switch(busptr->get_bus_type())
+            {
+                case PV_TYPE:
+                    Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), 0.0);
+                    break;
+                case OUT_OF_SERVICE:
+                case SLACK_TYPE:
+                    continue;
+                default:// PQ, PV2PQ
+                    Sgen = complex<double>(sources[i]->get_p_generation_in_MW(), sources[i]->get_q_generation_in_MVar());
+                    break;
+            }
+            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            bus_power[internal_bus] += (Sgen/Sbase);
+        }
     }
 }
 
@@ -838,8 +843,6 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 
     size_t physical_bus, internal_bus;
 
-    bool status;
-
     vector<LOAD*> loads = psdb.get_all_loads();
 
     size_t nload = loads.size();
@@ -848,16 +851,15 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 
     for(size_t i=0; i!=nload; ++i)
     {
-        status = loads[i]->get_status();
-        if(status == false)
-            continue;
+        if(loads[i]->get_status() == true)
+        {
+            physical_bus = loads[i]->get_load_bus();
+            internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-        physical_bus = loads[i]->get_load_bus();
-        internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            Sload = loads[i]->get_actual_total_load_in_MVA()/Sbase;
 
-        Sload = loads[i]->get_actual_total_load_in_MVA()/Sbase;
-
-        bus_power[internal_bus] -= Sload;
+            bus_power[internal_bus] -= Sload;
+        }
     }
 }
 
@@ -872,8 +874,6 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
     size_t physical_bus_rec, internal_bus_rec,
            physical_bus_inv, internal_bus_inv;
 
-    bool status;
-
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
 
     size_t nhvdc = hvdcs.size();
@@ -882,28 +882,27 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 
     for(size_t i=0; i!=nhvdc; ++i)
     {
-        status = hvdcs[i]->get_status();
-        if(status == false)
-            continue;
+        if(hvdcs[i]->get_status() == true)
+        {
+            physical_bus_rec = hvdcs[i]->get_converter_bus(RECTIFIER);
+            internal_bus_rec = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus_rec);
 
-        physical_bus_rec = hvdcs[i]->get_converter_bus(RECTIFIER);
-        internal_bus_rec = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus_rec);
+            physical_bus_inv = hvdcs[i]->get_converter_bus(INVERTER);
+            internal_bus_inv = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus_inv);
 
-        physical_bus_inv = hvdcs[i]->get_converter_bus(INVERTER);
-        internal_bus_inv = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus_inv);
+            //hvdcs[i]->solve_steady_state();
+            //hvdcs[i]->show_solved_hvdc_steady_state();
 
-        //hvdcs[i]->solve_steady_state();
-        //hvdcs[i]->show_solved_hvdc_steady_state();
+            S_rec = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER), hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER));
+            S_inv = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER), -hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER));
 
-        S_rec = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER), hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER));
-        S_inv = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER), -hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER));
+            //ostringstream osstream;
+            //osstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
+            //show_information_with_leading_time_stamp(osstream);
 
-        //ostringstream osstream;
-        //osstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
-        //show_information_with_leading_time_stamp(osstream);
-
-        bus_power[internal_bus_rec] -= S_rec/Sbase;
-        bus_power[internal_bus_inv] += S_inv/Sbase;
+            bus_power[internal_bus_rec] -= S_rec/Sbase;
+            bus_power[internal_bus_inv] += S_inv/Sbase;
+        }
     }
 }
 
@@ -921,7 +920,9 @@ double POWERFLOW_SOLVER::get_maximum_active_power_mismatch_in_MW() const
     for(size_t i=0; i!=nP; ++i)
     {
         internal_bus = internal_P_equation_buses[i];
-        if(fabs(bus_power[internal_bus].real()) > max_P_error_in_pu)
+        if(fabs(bus_power[internal_bus].real()) < max_P_error_in_pu)
+            continue;
+        else
         {
             physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
             max_P_error_in_pu = fabs(bus_power[internal_bus].real());
@@ -953,7 +954,9 @@ double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
     for(size_t i=0; i!=nQ; ++i)
     {
         internal_bus = internal_Q_equation_buses[i];
-        if(fabs(bus_power[internal_bus].imag()) > max_Q_error_in_pu)
+        if(fabs(bus_power[internal_bus].imag()) < max_Q_error_in_pu)
+            continue;
+        else
         {
             physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
             max_Q_error_in_pu = fabs(bus_power[internal_bus].imag());
@@ -1028,40 +1031,40 @@ void POWERFLOW_SOLVER::check_SLACK_bus_constraint_of_physical_bus(size_t physica
 
     BUS* bus = psdb.get_bus(physical_bus);
 
-    if(bus->get_bus_type()!=SLACK_TYPE)
-        return;
-
-    size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
-
-    double sbase = psdb.get_system_base_power_in_MVA();
-    double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*sbase;
-    double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*sbase;
-
-    double total_p_max_in_MW = psdb.get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
-    double total_p_min_in_MW = psdb.get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
-    double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-    double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
-
-    double P_loading_percentage = (bus_P_mismatch_in_MW-total_p_min_in_MW);
-        P_loading_percentage /= (total_p_max_in_MW - total_p_min_in_MW);
-    double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
-        Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
-
-    vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
-    size_t n;
-    n = sources.size();
-    for(size_t i=0; i!=n; ++i)
+    if(bus->get_bus_type()==SLACK_TYPE)
     {
-        if(sources[i]->get_status() == false)
-            continue;
+        size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-        double P_loading_in_MW = sources[i]->get_p_max_in_MW() - sources[i]->get_p_min_in_MW();
-        P_loading_in_MW = P_loading_in_MW*P_loading_percentage + sources[i]->get_p_min_in_MW();
-        sources[i]->set_p_generation_in_MW(P_loading_in_MW);
+        double sbase = psdb.get_system_base_power_in_MVA();
+        double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*sbase;
+        double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*sbase;
 
-        double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
-        Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
-        sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
+        double total_p_max_in_MW = psdb.get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
+        double total_p_min_in_MW = psdb.get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
+        double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
+        double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+
+        double P_loading_percentage = (bus_P_mismatch_in_MW-total_p_min_in_MW);
+            P_loading_percentage /= (total_p_max_in_MW - total_p_min_in_MW);
+        double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
+            Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
+
+        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        size_t n;
+        n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == true)
+            {
+                double P_loading_in_MW = sources[i]->get_p_max_in_MW() - sources[i]->get_p_min_in_MW();
+                P_loading_in_MW = P_loading_in_MW*P_loading_percentage + sources[i]->get_p_min_in_MW();
+                sources[i]->set_p_generation_in_MW(P_loading_in_MW);
+
+                double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
+                Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
+                sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
+            }
+        }
     }
 }
 
@@ -1073,71 +1076,74 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
 
     BUS* bus = psdb.get_bus(physical_bus);
 
-    if(bus->get_bus_type()!=PV_TYPE)
+    if(bus->get_bus_type()==PV_TYPE)
+    {
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+
+        bool bus_type_changed = false;
+        size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+        double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
+
+        double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
+        double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+
+        if(total_q_max_in_MVar==total_q_min_in_MVar)
+        {
+            bus->set_bus_type(PV_TO_PQ_TYPE_3);
+            bus_type_changed = true;
+            set_all_sources_at_physical_bus_to_q_max(physical_bus);
+
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
+            toolkit.show_information_with_leading_time_stamp(buffer);
+
+            return bus_type_changed;
+        }
+
+        size_t n;
+
+        if(bus_Q_mismatch_in_MVar > total_q_max_in_MVar)
+        {
+            bus->set_bus_type(PV_TO_PQ_TYPE_3);
+            bus_type_changed = true;
+
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
+            toolkit.show_information_with_leading_time_stamp(buffer);
+
+            set_all_sources_at_physical_bus_to_q_max(physical_bus);
+            return bus_type_changed;
+        }
+
+        if(bus_Q_mismatch_in_MVar < total_q_min_in_MVar)
+        {
+            bus->set_bus_type(PV_TO_PQ_TYPE_3);
+            bus_type_changed = true;
+
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.", physical_bus);
+            toolkit.show_information_with_leading_time_stamp(buffer);
+
+            set_all_sources_at_physical_bus_to_q_min(physical_bus);
+            return bus_type_changed;
+        }
+
+        double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
+        Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
+
+        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == true)
+            {
+                double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
+                Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
+                sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
+            }
+        }
+        return bus_type_changed;
+    }
+    else
         return false;
-
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-
-    bool bus_type_changed = false;
-    size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
-
-    double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
-
-    double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
-    double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
-
-    if(total_q_max_in_MVar==total_q_min_in_MVar)
-    {
-        bus->set_bus_type(PV_TO_PQ_TYPE_3);
-        bus_type_changed = true;
-        set_all_sources_at_physical_bus_to_q_max(physical_bus);
-
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-
-        return bus_type_changed;
-    }
-
-    size_t n;
-
-    if(bus_Q_mismatch_in_MVar > total_q_max_in_MVar)
-    {
-        bus->set_bus_type(PV_TO_PQ_TYPE_3);
-        bus_type_changed = true;
-
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-
-        set_all_sources_at_physical_bus_to_q_max(physical_bus);
-        return bus_type_changed;
-    }
-
-    if(bus_Q_mismatch_in_MVar < total_q_min_in_MVar)
-    {
-        bus->set_bus_type(PV_TO_PQ_TYPE_3);
-        bus_type_changed = true;
-
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.", physical_bus);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-
-        set_all_sources_at_physical_bus_to_q_min(physical_bus);
-        return bus_type_changed;
-    }
-
-    double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
-    Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
-
-    vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
-    n = sources.size();
-    for(size_t i=0; i!=n; ++i)
-    {
-        if(sources[i]->get_status() == false)
-            continue;
-        double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
-        Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
-        sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
-    }
-    return bus_type_changed;
 }
 
 bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t physical_bus)
@@ -1161,7 +1167,9 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
     double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
     double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
 
-    if(total_q_max_in_MVar == total_q_min_in_MVar)
+    if(fabs(total_q_max_in_MVar-total_q_min_in_MVar)>FLOAT_EPSILON)
+        ;
+    else
     {
         if(bus->get_bus_type()!=PV_TO_PQ_TYPE_3)
         {
@@ -1196,11 +1204,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
 
     if(bus_voltage>voltage_to_regulated)
     {
-        if(total_q_generation_in_MVar==total_q_min_in_MVar)
-        {
-            ;
-        }
-        else
+        if(total_q_generation_in_MVar>total_q_min_in_MVar)
         {
             switch(bus->get_bus_type())
             {
@@ -1233,11 +1237,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
     }
     else // bus_voltage<voltage_to_regulated
     {
-        if(total_q_generation_in_MVar==total_q_max_in_MVar)
-        {
-            ;
-        }
-        else
+        if(total_q_generation_in_MVar<total_q_max_in_MVar)
         {
             switch(bus->get_bus_type())
             {
@@ -1525,10 +1525,8 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
             calculate_raw_bus_power_mismatch();
             double Perror = get_maximum_active_power_mismatch_in_MW();
             double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
-            if((Perror<Perror0 or Perror<get_allowed_max_active_power_imbalance_in_MW())
-                and (Qerror<Qerror0 or Qerror<get_allowed_max_reactive_power_imbalance_in_MVar()))
-                break;
-            else
+            if((Perror>Perror0 and Perror>get_allowed_max_active_power_imbalance_in_MW())
+                or (Qerror>Qerror0 and Qerror>get_allowed_max_reactive_power_imbalance_in_MVar()))
             {
                 alpha *= 0.5;
                 for(size_t i=0; i!=nP; ++i)
@@ -1559,6 +1557,8 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
                     bus->set_voltage_in_pu(current_voltage - alpha*delta_voltage);
                 }
             }
+            else
+                break;
         }
     }
 }
@@ -1612,9 +1612,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
         {
             calculate_raw_bus_power_mismatch();
             double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
-            if(Qerror<Qerror0 or Qerror<get_allowed_max_reactive_power_imbalance_in_MVar())
-                break;
-            else
+            if(Qerror>Qerror0 and Qerror>get_allowed_max_reactive_power_imbalance_in_MVar())
             {
                 alpha *= 0.5;
                 max_delta_v *= 0.5;
@@ -1632,6 +1630,8 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
                     bus->set_voltage_in_pu(current_voltage - alpha*delta_voltage);
                 }
             }
+            else
+                break;
         }
     }
 
@@ -1692,9 +1692,7 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
         {
             calculate_raw_bus_power_mismatch();
             double Perror = get_maximum_active_power_mismatch_in_MW();
-            if(Perror<Perror0 or Perror<get_allowed_max_active_power_imbalance_in_MW())
-                break;
-            else
+            if(Perror>Perror0 and Perror>get_allowed_max_active_power_imbalance_in_MW())
             {
                 alpha *= 0.5;
                 max_delta_angle *=0.5;
@@ -1712,6 +1710,8 @@ void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
                     bus->set_angle_in_rad(current_angle - alpha*delta_angle);
                 }
             }
+            else
+                break;
         }
     }
 
@@ -1782,221 +1782,223 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
     ostringstream osstream;
 
     ofstream file(filename);
-    if(not file.is_open())
+    if(file.is_open())
+    {
+        time_t tt = time(NULL);
+        tm* local_time= localtime(&tt);
+
+        char time_stamp[40];
+        char buffer[1000];
+        snprintf(time_stamp,40, "%d-%02d-%02d %02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
+                local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+
+        file<<"% Powerflow result exported at "<<time_stamp<<endl;
+        snprintf(buffer, 1000, "%s", (psdb.get_case_information()).c_str());
+        file<<"% "<<buffer<<endl;
+        snprintf(buffer, 1000, "%s", (psdb.get_case_additional_information()).c_str());
+        file<<"% "<<buffer<<endl;
+        vector<BUS*> buses = psdb.get_all_buses();
+        size_t nbus = buses.size();
+        if(nbus>0)
+        {
+            file<<"% Bus"<<endl;
+            file<<"BUS,NAME,VBASE/KV,VOLTAGE/PU,ANGLE/DEG,VOLTAGE/KV,ANGLE/RAD"<<endl;
+            for(size_t i=0; i!=nbus; ++i)
+            {
+                /*file<<buses[i]->get_bus_number()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_base_voltage_in_kV()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_kV()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_angle_in_rad()<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f",
+                         buses[i]->get_bus_number(),(buses[i]->get_bus_name()).c_str(),
+                         buses[i]->get_base_voltage_in_kV(),
+                         buses[i]->get_voltage_in_pu(), buses[i]->get_angle_in_deg(),
+                         buses[i]->get_voltage_in_kV(), buses[i]->get_angle_in_rad());
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<GENERATOR*> generators = psdb.get_all_generators();
+        size_t ngen = generators.size();
+        if(ngen>0)
+        {
+            file<<"% Generator"<<endl;
+            file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(size_t i=0; i!=ngen; ++i)
+            {
+                size_t bus = generators[i]->get_generator_bus();
+                /*file<<bus<<",\""<<generators[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<generators[i]->get_p_generation_in_MW()<<","
+                    <<setprecision(6)<<fixed<<generators[i]->get_q_generation_in_MVar()<<","
+                    <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
+                         generators[i]->get_generator_bus(),(generators[i]->get_identifier()).c_str(),
+                         generators[i]->get_p_generation_in_MW(), generators[i]->get_q_generation_in_MVar(),
+                         psdb.get_bus_voltage_in_pu(bus));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+        size_t nsource = wt_generators.size();
+        if(nsource>0)
+        {
+            file<<"% WT generator"<<endl;
+            file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(size_t i=0; i!=nsource; ++i)
+            {
+                size_t bus = wt_generators[i]->get_source_bus();
+                /*file<<bus<<",\""<<wt_generators[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<wt_generators[i]->get_p_generation_in_MW()<<","
+                    <<setprecision(6)<<fixed<<wt_generators[i]->get_q_generation_in_MVar()<<","
+                    <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
+                         wt_generators[i]->get_generator_bus(),(wt_generators[i]->get_identifier()).c_str(),
+                         wt_generators[i]->get_p_generation_in_MW(), wt_generators[i]->get_q_generation_in_MVar(),
+                         psdb.get_bus_voltage_in_pu(bus));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<LOAD*> loads = psdb.get_all_loads();
+        size_t nload = loads.size();
+        if(nload>0)
+        {
+            file<<"% Load"<<endl;
+            file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(size_t i=0; i!=nload; ++i)
+            {
+                size_t bus = loads[i]->get_load_bus();
+                complex<double> s = loads[i]->get_actual_total_load_in_MVA();
+                /*file<<bus<<",\""<<loads[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<s.real()<<","
+                    <<setprecision(6)<<fixed<<s.imag()<<","
+                    <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
+                         loads[i]->get_load_bus(),(loads[i]->get_identifier()).c_str(),
+                         s.real(), s.imag(), psdb.get_bus_voltage_in_pu(bus));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<LINE*> lines = psdb.get_all_lines();
+        size_t nline = lines.size();
+        if(nline>0)
+        {
+            file<<"% Line"<<endl;
+            file<<"IBUS,JBUS,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,II/KA,IJ/KA"<<endl;
+            for(size_t i=0; i!=nline; ++i)
+            {
+                complex<double> si = lines[i]->get_line_complex_power_at_sending_side_in_MVA();
+                complex<double> sj = lines[i]->get_line_complex_power_at_receiving_side_in_MVA();
+                /*file<<lines[i]->get_sending_side_bus()<<","<<lines[i]->get_receiving_side_bus()<<",\""<<lines[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<si.real()<<","
+                    <<setprecision(6)<<fixed<<si.imag()<<","
+                    <<setprecision(6)<<fixed<<sj.real()<<","
+                    <<setprecision(6)<<fixed<<sj.imag()<<","
+                    <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
+                    <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;*/
+
+                snprintf(buffer, 1000, "%lu,%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                         lines[i]->get_sending_side_bus(),lines[i]->get_receiving_side_bus(),(lines[i]->get_identifier()).c_str(),
+                         si.real(), si.imag(),sj.real(), sj.imag(),
+                         steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA()),
+                         steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA()));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
+        size_t ntrans = transformers.size();
+        if(ntrans>0)
+        {
+            file<<"% Transformer"<<endl;
+            file<<"IBUS,JBUS,KBUS,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,PK/MW,QK/MVAR,KI/PU,KJ/PU,KK/PU"<<endl;
+            for(size_t i=0; i!=ntrans; ++i)
+            {
+                complex<double> sp = transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE);
+                complex<double> ss = transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE);
+                complex<double> st = transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE);
+
+                /*file<<transformers[i]->get_winding_bus(PRIMARY_SIDE)<<","
+                    <<transformers[i]->get_winding_bus(SECONDARY_SIDE)<<","
+                    <<transformers[i]->get_winding_bus(TERTIARY_SIDE)<<",\""<<transformers[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<sp.real()<<","
+                    <<setprecision(6)<<fixed<<sp.imag()<<","
+                    <<setprecision(6)<<fixed<<ss.real()<<","
+                    <<setprecision(6)<<fixed<<ss.imag()<<","
+                    <<setprecision(6)<<fixed<<st.real()<<","
+                    <<setprecision(6)<<fixed<<st.imag()<<","
+                    <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE)<<","
+                    <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE)<<","
+                    <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE)<<endl;*/
+
+
+                snprintf(buffer, 1000, "%lu,%lu,%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                         transformers[i]->get_winding_bus(PRIMARY_SIDE),transformers[i]->get_winding_bus(SECONDARY_SIDE),
+                         transformers[i]->get_winding_bus(TERTIARY_SIDE), (transformers[i]->get_identifier()).c_str(),
+                         sp.real(), sp.imag(), ss.real(), ss.imag(), st.real(), st.imag(),
+                         transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE),
+                         transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE),
+                         transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+        size_t nhvdc = hvdcs.size();
+        if(nhvdc>0)
+        {
+            file<<"% Hvdc"<<endl;
+            file<<"IBUS,JBUS,ID,PR/MW,QR/MVAR,PI/MW,QI/MVAR,ALPHA/DEG,GAMMA/DEG,VDCR/KV,VDCI/KV,IDC/KA,VACR/PU,VACI/PU,KR/PU,KI/PU"<<endl;
+            for(size_t i=0; i!=nhvdc; ++i)
+            {
+                size_t busr = hvdcs[i]->get_converter_bus(RECTIFIER);
+                size_t busi = hvdcs[i]->get_converter_bus(INVERTER);
+                /*file<<busr<<","<<busi<<",\""<<hvdcs[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busr)<<","
+                    <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busi)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER)<<endl;*/
+                snprintf(buffer, 1000, "%lu,%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                         hvdcs[i]->get_converter_bus(RECTIFIER),hvdcs[i]->get_converter_bus(INVERTER),(hvdcs[i]->get_identifier()).c_str(),
+                         hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER),
+                         hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER),
+                         hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER),
+                         hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER),
+                         hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER),
+                         hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER),
+                         hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER),
+                         hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER),
+                         hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER),
+                         psdb.get_bus_voltage_in_pu(busr),
+                         psdb.get_bus_voltage_in_pu(busi),
+                         hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER),
+                         hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER));
+                file<<buffer<<endl;
+            }
+        }
+
+        file.close();
+    }
+    else
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving powerflow result to file."<<endl
           <<"No powerflow result will be exported.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-
-    time_t tt = time(NULL);
-    tm* local_time= localtime(&tt);
-
-    char time_stamp[40];
-    char buffer[1000];
-    snprintf(time_stamp,40, "%d-%02d-%02d %02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
-            local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
-
-    file<<"% Powerflow result exported at "<<time_stamp<<endl;
-    snprintf(buffer, 1000, "%s", (psdb.get_case_information()).c_str());
-    file<<"% "<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (psdb.get_case_additional_information()).c_str());
-    file<<"% "<<buffer<<endl;
-    vector<BUS*> buses = psdb.get_all_buses();
-    size_t nbus = buses.size();
-    if(nbus>0)
-    {
-        file<<"% Bus"<<endl;
-        file<<"BUS,NAME,VBASE/KV,VOLTAGE/PU,ANGLE/DEG,VOLTAGE/KV,ANGLE/RAD"<<endl;
-        for(size_t i=0; i!=nbus; ++i)
-        {
-            /*file<<buses[i]->get_bus_number()<<","
-                <<setprecision(6)<<fixed<<buses[i]->get_base_voltage_in_kV()<<","
-                <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
-                <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<","
-                <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_kV()<<","
-                <<setprecision(6)<<fixed<<buses[i]->get_angle_in_rad()<<endl;*/
-            snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f",
-                     buses[i]->get_bus_number(),(buses[i]->get_bus_name()).c_str(),
-                     buses[i]->get_base_voltage_in_kV(),
-                     buses[i]->get_voltage_in_pu(), buses[i]->get_angle_in_deg(),
-                     buses[i]->get_voltage_in_kV(), buses[i]->get_angle_in_rad());
-            file<<buffer<<endl;
-        }
-    }
-
-    vector<GENERATOR*> generators = psdb.get_all_generators();
-    size_t ngen = generators.size();
-    if(ngen>0)
-    {
-        file<<"% Generator"<<endl;
-        file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
-        for(size_t i=0; i!=ngen; ++i)
-        {
-            size_t bus = generators[i]->get_generator_bus();
-            /*file<<bus<<",\""<<generators[i]->get_identifier()<<"\","
-                <<setprecision(6)<<fixed<<generators[i]->get_p_generation_in_MW()<<","
-                <<setprecision(6)<<fixed<<generators[i]->get_q_generation_in_MVar()<<","
-                <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
-            snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
-                     generators[i]->get_generator_bus(),(generators[i]->get_identifier()).c_str(),
-                     generators[i]->get_p_generation_in_MW(), generators[i]->get_q_generation_in_MVar(),
-                     psdb.get_bus_voltage_in_pu(bus));
-            file<<buffer<<endl;
-        }
-    }
-
-    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-    size_t nsource = wt_generators.size();
-    if(nsource>0)
-    {
-        file<<"% WT generator"<<endl;
-        file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
-        for(size_t i=0; i!=nsource; ++i)
-        {
-            size_t bus = wt_generators[i]->get_source_bus();
-            /*file<<bus<<",\""<<wt_generators[i]->get_identifier()<<"\","
-                <<setprecision(6)<<fixed<<wt_generators[i]->get_p_generation_in_MW()<<","
-                <<setprecision(6)<<fixed<<wt_generators[i]->get_q_generation_in_MVar()<<","
-                <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
-            snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
-                     wt_generators[i]->get_generator_bus(),(wt_generators[i]->get_identifier()).c_str(),
-                     wt_generators[i]->get_p_generation_in_MW(), wt_generators[i]->get_q_generation_in_MVar(),
-                     psdb.get_bus_voltage_in_pu(bus));
-            file<<buffer<<endl;
-        }
-    }
-
-    vector<LOAD*> loads = psdb.get_all_loads();
-    size_t nload = loads.size();
-    if(nload>0)
-    {
-        file<<"% Load"<<endl;
-        file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
-        for(size_t i=0; i!=nload; ++i)
-        {
-            size_t bus = loads[i]->get_load_bus();
-            complex<double> s = loads[i]->get_actual_total_load_in_MVA();
-            /*file<<bus<<",\""<<loads[i]->get_identifier()<<"\","
-                <<setprecision(6)<<fixed<<s.real()<<","
-                <<setprecision(6)<<fixed<<s.imag()<<","
-                <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
-            snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
-                     loads[i]->get_load_bus(),(loads[i]->get_identifier()).c_str(),
-                     s.real(), s.imag(), psdb.get_bus_voltage_in_pu(bus));
-            file<<buffer<<endl;
-        }
-    }
-
-    vector<LINE*> lines = psdb.get_all_lines();
-    size_t nline = lines.size();
-    if(nline>0)
-    {
-        file<<"% Line"<<endl;
-        file<<"IBUS,JBUS,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,II/KA,IJ/KA"<<endl;
-        for(size_t i=0; i!=nline; ++i)
-        {
-            complex<double> si = lines[i]->get_line_complex_power_at_sending_side_in_MVA();
-            complex<double> sj = lines[i]->get_line_complex_power_at_receiving_side_in_MVA();
-            /*file<<lines[i]->get_sending_side_bus()<<","<<lines[i]->get_receiving_side_bus()<<",\""<<lines[i]->get_identifier()<<"\","
-                <<setprecision(6)<<fixed<<si.real()<<","
-                <<setprecision(6)<<fixed<<si.imag()<<","
-                <<setprecision(6)<<fixed<<sj.real()<<","
-                <<setprecision(6)<<fixed<<sj.imag()<<","
-                <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
-                <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;*/
-
-            snprintf(buffer, 1000, "%lu,%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                     lines[i]->get_sending_side_bus(),lines[i]->get_receiving_side_bus(),(lines[i]->get_identifier()).c_str(),
-                     si.real(), si.imag(),sj.real(), sj.imag(),
-                     steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA()),
-                     steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA()));
-            file<<buffer<<endl;
-        }
-    }
-
-    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
-    size_t ntrans = transformers.size();
-    if(ntrans>0)
-    {
-        file<<"% Transformer"<<endl;
-        file<<"IBUS,JBUS,KBUS,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,PK/MW,QK/MVAR,KI/PU,KJ/PU,KK/PU"<<endl;
-        for(size_t i=0; i!=ntrans; ++i)
-        {
-            complex<double> sp = transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE);
-            complex<double> ss = transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE);
-            complex<double> st = transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE);
-
-            /*file<<transformers[i]->get_winding_bus(PRIMARY_SIDE)<<","
-                <<transformers[i]->get_winding_bus(SECONDARY_SIDE)<<","
-                <<transformers[i]->get_winding_bus(TERTIARY_SIDE)<<",\""<<transformers[i]->get_identifier()<<"\","
-                <<setprecision(6)<<fixed<<sp.real()<<","
-                <<setprecision(6)<<fixed<<sp.imag()<<","
-                <<setprecision(6)<<fixed<<ss.real()<<","
-                <<setprecision(6)<<fixed<<ss.imag()<<","
-                <<setprecision(6)<<fixed<<st.real()<<","
-                <<setprecision(6)<<fixed<<st.imag()<<","
-                <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE)<<","
-                <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE)<<","
-                <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE)<<endl;*/
-
-
-            snprintf(buffer, 1000, "%lu,%lu,%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                     transformers[i]->get_winding_bus(PRIMARY_SIDE),transformers[i]->get_winding_bus(SECONDARY_SIDE),
-                     transformers[i]->get_winding_bus(TERTIARY_SIDE), (transformers[i]->get_identifier()).c_str(),
-                     sp.real(), sp.imag(), ss.real(), ss.imag(), st.real(), st.imag(),
-                     transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE),
-                     transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE),
-                     transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE));
-            file<<buffer<<endl;
-        }
-    }
-
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t nhvdc = hvdcs.size();
-    if(nhvdc>0)
-    {
-        file<<"% Hvdc"<<endl;
-        file<<"IBUS,JBUS,ID,PR/MW,QR/MVAR,PI/MW,QI/MVAR,ALPHA/DEG,GAMMA/DEG,VDCR/KV,VDCI/KV,IDC/KA,VACR/PU,VACI/PU,KR/PU,KI/PU"<<endl;
-        for(size_t i=0; i!=nhvdc; ++i)
-        {
-            size_t busr = hvdcs[i]->get_converter_bus(RECTIFIER);
-            size_t busi = hvdcs[i]->get_converter_bus(INVERTER);
-            /*file<<busr<<","<<busi<<",\""<<hvdcs[i]->get_identifier()<<"\","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER)<<","
-                <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busr)<<","
-                <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busi)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER)<<","
-                <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER)<<endl;*/
-            snprintf(buffer, 1000, "%lu,%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                     hvdcs[i]->get_converter_bus(RECTIFIER),hvdcs[i]->get_converter_bus(INVERTER),(hvdcs[i]->get_identifier()).c_str(),
-                     hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER),
-                     hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER),
-                     hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER),
-                     hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER),
-                     hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER),
-                     hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER),
-                     hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER),
-                     hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER),
-                     hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER),
-                     psdb.get_bus_voltage_in_pu(busr),
-                     psdb.get_bus_voltage_in_pu(busi),
-                     hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER),
-                     hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER));
-            file<<buffer<<endl;
-        }
-    }
-
-    file.close();
 }
 
 void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) const
@@ -2007,236 +2009,238 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
     ostringstream osstream;
 
     ofstream file(filename);
-    if(not file.is_open())
+    if(file.is_open())
+    {
+        time_t tt = time(NULL);
+        tm* local_time= localtime(&tt);
+
+        char time_stamp[40];
+        char buffer[1000];
+        snprintf(time_stamp,40, "%d-%02d-%02d %02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
+                local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+
+        file<<"% Powerflow result exported at "<<time_stamp<<endl;
+        snprintf(buffer, 1000, "%s", (psdb.get_case_information()).c_str());
+        file<<"% "<<buffer<<endl;
+        snprintf(buffer, 1000, "%s", (psdb.get_case_additional_information()).c_str());
+        file<<"% "<<buffer<<endl;
+        vector<BUS*> buses = psdb.get_all_buses();
+        size_t nbus = buses.size();
+        if(nbus>0)
+        {
+            file<<"% Bus"<<endl;
+            file<<"BUS,NAME,VBASE/KV,VOLTAGE/PU,ANGLE/DEG,VOLTAGE/KV,ANGLE/RAD"<<endl;
+            for(size_t i=0; i!=nbus; ++i)
+            {
+                /*file<<buses[i]->get_bus_number()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_base_voltage_in_kV()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_kV()<<","
+                    <<setprecision(6)<<fixed<<buses[i]->get_angle_in_rad()<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f",
+                         buses[i]->get_bus_number(),(buses[i]->get_bus_name()).c_str(),
+                         buses[i]->get_base_voltage_in_kV(),
+                         buses[i]->get_voltage_in_pu(), buses[i]->get_angle_in_deg(),
+                         buses[i]->get_voltage_in_kV(), buses[i]->get_angle_in_rad());
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<GENERATOR*> generators = psdb.get_all_generators();
+        size_t ngen = generators.size();
+        if(ngen>0)
+        {
+            file<<"% Generator"<<endl;
+            file<<"BUS,NAME,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(size_t i=0; i!=ngen; ++i)
+            {
+                size_t bus = generators[i]->get_generator_bus();
+                /*file<<bus<<",\""<<generators[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<generators[i]->get_p_generation_in_MW()<<","
+                    <<setprecision(6)<<fixed<<generators[i]->get_q_generation_in_MVar()<<","
+                    <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
+                         bus, psdb.bus_number2bus_name(bus).c_str(),
+                         (generators[i]->get_identifier()).c_str(),
+                         generators[i]->get_p_generation_in_MW(), generators[i]->get_q_generation_in_MVar(),
+                         psdb.get_bus_voltage_in_pu(bus));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+        size_t nsource = wt_generators.size();
+        if(nsource>0)
+        {
+            file<<"% WT generator"<<endl;
+            file<<"BUS,NAME,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(size_t i=0; i!=nsource; ++i)
+            {
+                size_t bus = wt_generators[i]->get_source_bus();
+                /*file<<bus<<",\""<<wt_generators[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<wt_generators[i]->get_p_generation_in_MW()<<","
+                    <<setprecision(6)<<fixed<<wt_generators[i]->get_q_generation_in_MVar()<<","
+                    <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
+                         bus, psdb.bus_number2bus_name(bus).c_str(),
+                         (wt_generators[i]->get_identifier()).c_str(),
+                         wt_generators[i]->get_p_generation_in_MW(), wt_generators[i]->get_q_generation_in_MVar(),
+                         psdb.get_bus_voltage_in_pu(bus));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<LOAD*> loads = psdb.get_all_loads();
+        size_t nload = loads.size();
+        if(nload>0)
+        {
+            file<<"% Load"<<endl;
+            file<<"BUS,NAME,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(size_t i=0; i!=nload; ++i)
+            {
+                size_t bus = loads[i]->get_load_bus();
+                complex<double> s = loads[i]->get_actual_total_load_in_MVA();
+                /*file<<bus<<",\""<<loads[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<s.real()<<","
+                    <<setprecision(6)<<fixed<<s.imag()<<","
+                    <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
+                         bus, psdb.bus_number2bus_name(bus).c_str(),
+                         (loads[i]->get_identifier()).c_str(),
+                         s.real(), s.imag(), psdb.get_bus_voltage_in_pu(bus));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<LINE*> lines = psdb.get_all_lines();
+        size_t nline = lines.size();
+        if(nline>0)
+        {
+            file<<"% Line"<<endl;
+            file<<"IBUS,INAME,JBUS,JNAMEID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,II/KA,IJ/KA"<<endl;
+            for(size_t i=0; i!=nline; ++i)
+            {
+                size_t ibus = lines[i]->get_sending_side_bus();
+                size_t jbus = lines[i]->get_receiving_side_bus();
+                complex<double> si = lines[i]->get_line_complex_power_at_sending_side_in_MVA();
+                complex<double> sj = lines[i]->get_line_complex_power_at_receiving_side_in_MVA();
+                /*file<<lines[i]->get_sending_side_bus()<<","<<lines[i]->get_receiving_side_bus()<<",\""<<lines[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<si.real()<<","
+                    <<setprecision(6)<<fixed<<si.imag()<<","
+                    <<setprecision(6)<<fixed<<sj.real()<<","
+                    <<setprecision(6)<<fixed<<sj.imag()<<","
+                    <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
+                    <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;*/
+
+                snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                         ibus, psdb.bus_number2bus_name(ibus).c_str(),
+                         jbus, psdb.bus_number2bus_name(jbus).c_str(),
+                         (lines[i]->get_identifier()).c_str(),
+                         si.real(), si.imag(),sj.real(), sj.imag(),
+                         steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA()),
+                         steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA()));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
+        size_t ntrans = transformers.size();
+        if(ntrans>0)
+        {
+            file<<"% Transformer"<<endl;
+            file<<"IBUS,INAME,JBUS,JNAME,KBUS,KNAME,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,PK/MW,QK/MVAR,KI/PU,KJ/PU,KK/PU"<<endl;
+            for(size_t i=0; i!=ntrans; ++i)
+            {
+                size_t ibus = transformers[i]->get_winding_bus(PRIMARY_SIDE);
+                size_t jbus = transformers[i]->get_winding_bus(SECONDARY_SIDE);
+                size_t kbus = transformers[i]->get_winding_bus(TERTIARY_SIDE);
+
+                complex<double> sp = transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE);
+                complex<double> ss = transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE);
+                complex<double> st = transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE);
+
+                /*file<<transformers[i]->get_winding_bus(PRIMARY_SIDE)<<","
+                    <<transformers[i]->get_winding_bus(SECONDARY_SIDE)<<","
+                    <<transformers[i]->get_winding_bus(TERTIARY_SIDE)<<",\""<<transformers[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<sp.real()<<","
+                    <<setprecision(6)<<fixed<<sp.imag()<<","
+                    <<setprecision(6)<<fixed<<ss.real()<<","
+                    <<setprecision(6)<<fixed<<ss.imag()<<","
+                    <<setprecision(6)<<fixed<<st.real()<<","
+                    <<setprecision(6)<<fixed<<st.imag()<<","
+                    <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE)<<","
+                    <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE)<<","
+                    <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE)<<endl;*/
+
+
+                snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                         ibus, psdb.bus_number2bus_name(ibus).c_str(),
+                         jbus, psdb.bus_number2bus_name(jbus).c_str(),
+                         kbus, psdb.bus_number2bus_name(kbus).c_str(),
+                         (transformers[i]->get_identifier()).c_str(),
+                         sp.real(), sp.imag(), ss.real(), ss.imag(), st.real(), st.imag(),
+                         transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE),
+                         transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE),
+                         transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE));
+                file<<buffer<<endl;
+            }
+        }
+
+        vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+        size_t nhvdc = hvdcs.size();
+        if(nhvdc>0)
+        {
+            file<<"% Hvdc"<<endl;
+            file<<"IBUS,INAME,JBUS,JNAME,ID,PR/MW,QR/MVAR,PI/MW,QI/MVAR,ALPHA/DEG,GAMMA/DEG,VDCR/KV,VDCI/KV,IDC/KA,VACR/PU,VACI/PU,KR/PU,KI/PU"<<endl;
+            for(size_t i=0; i!=nhvdc; ++i)
+            {
+                size_t busr = hvdcs[i]->get_converter_bus(RECTIFIER);
+                size_t busi = hvdcs[i]->get_converter_bus(INVERTER);
+                /*file<<busr<<","<<busi<<",\""<<hvdcs[i]->get_identifier()<<"\","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busr)<<","
+                    <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busi)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER)<<","
+                    <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER)<<endl;*/
+                snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
+                         busr, psdb.bus_number2bus_name(busr).c_str(),
+                         busi, psdb.bus_number2bus_name(busi).c_str(),
+                         (hvdcs[i]->get_identifier()).c_str(),
+                         hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER),
+                         hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER),
+                         hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER),
+                         hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER),
+                         hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER),
+                         hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER),
+                         hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER),
+                         hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER),
+                         hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER),
+                         psdb.get_bus_voltage_in_pu(busr),
+                         psdb.get_bus_voltage_in_pu(busi),
+                         hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER),
+                         hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER));
+                file<<buffer<<endl;
+            }
+        }
+
+        file.close();
+    }
+    else
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving extended powerflow result to file."<<endl
           <<"No powerflow result will be exported.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-
-    time_t tt = time(NULL);
-    tm* local_time= localtime(&tt);
-
-    char time_stamp[40];
-    char buffer[1000];
-    snprintf(time_stamp,40, "%d-%02d-%02d %02d:%02d:%02d", local_time->tm_year + 1900, local_time->tm_mon + 1,
-            local_time->tm_mday, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
-
-    file<<"% Powerflow result exported at "<<time_stamp<<endl;
-    snprintf(buffer, 1000, "%s", (psdb.get_case_information()).c_str());
-    file<<"% "<<buffer<<endl;
-    snprintf(buffer, 1000, "%s", (psdb.get_case_additional_information()).c_str());
-    file<<"% "<<buffer<<endl;
-    vector<BUS*> buses = psdb.get_all_buses();
-    size_t nbus = buses.size();
-    if(nbus>0)
-    {
-        file<<"% Bus"<<endl;
-        file<<"BUS,NAME,VBASE/KV,VOLTAGE/PU,ANGLE/DEG,VOLTAGE/KV,ANGLE/RAD"<<endl;
-    }
-    for(size_t i=0; i!=nbus; ++i)
-    {
-        /*file<<buses[i]->get_bus_number()<<","
-            <<setprecision(6)<<fixed<<buses[i]->get_base_voltage_in_kV()<<","
-            <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
-            <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<","
-            <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_kV()<<","
-            <<setprecision(6)<<fixed<<buses[i]->get_angle_in_rad()<<endl;*/
-        snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f",
-                 buses[i]->get_bus_number(),(buses[i]->get_bus_name()).c_str(),
-                 buses[i]->get_base_voltage_in_kV(),
-                 buses[i]->get_voltage_in_pu(), buses[i]->get_angle_in_deg(),
-                 buses[i]->get_voltage_in_kV(), buses[i]->get_angle_in_rad());
-        file<<buffer<<endl;
-    }
-
-    vector<GENERATOR*> generators = psdb.get_all_generators();
-    size_t ngen = generators.size();
-    if(ngen>0)
-    {
-        file<<"% Generator"<<endl;
-        file<<"BUS,NAME,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
-    }
-    for(size_t i=0; i!=ngen; ++i)
-    {
-        size_t bus = generators[i]->get_generator_bus();
-        /*file<<bus<<",\""<<generators[i]->get_identifier()<<"\","
-            <<setprecision(6)<<fixed<<generators[i]->get_p_generation_in_MW()<<","
-            <<setprecision(6)<<fixed<<generators[i]->get_q_generation_in_MVar()<<","
-            <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
-        snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
-                 bus, psdb.bus_number2bus_name(bus).c_str(),
-                 (generators[i]->get_identifier()).c_str(),
-                 generators[i]->get_p_generation_in_MW(), generators[i]->get_q_generation_in_MVar(),
-                 psdb.get_bus_voltage_in_pu(bus));
-        file<<buffer<<endl;
-    }
-
-    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-    size_t nsource = wt_generators.size();
-    if(nsource>0)
-    {
-        file<<"% WT generator"<<endl;
-        file<<"BUS,NAME,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
-    }
-    for(size_t i=0; i!=nsource; ++i)
-    {
-        size_t bus = wt_generators[i]->get_source_bus();
-        /*file<<bus<<",\""<<wt_generators[i]->get_identifier()<<"\","
-            <<setprecision(6)<<fixed<<wt_generators[i]->get_p_generation_in_MW()<<","
-            <<setprecision(6)<<fixed<<wt_generators[i]->get_q_generation_in_MVar()<<","
-            <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
-        snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
-                 bus, psdb.bus_number2bus_name(bus).c_str(),
-                 (wt_generators[i]->get_identifier()).c_str(),
-                 wt_generators[i]->get_p_generation_in_MW(), wt_generators[i]->get_q_generation_in_MVar(),
-                 psdb.get_bus_voltage_in_pu(bus));
-        file<<buffer<<endl;
-    }
-
-    vector<LOAD*> loads = psdb.get_all_loads();
-    size_t nload = loads.size();
-    if(nload>0)
-    {
-        file<<"% Load"<<endl;
-        file<<"BUS,NAME,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
-    }
-    for(size_t i=0; i!=nload; ++i)
-    {
-        size_t bus = loads[i]->get_load_bus();
-        complex<double> s = loads[i]->get_actual_total_load_in_MVA();
-        /*file<<bus<<",\""<<loads[i]->get_identifier()<<"\","
-            <<setprecision(6)<<fixed<<s.real()<<","
-            <<setprecision(6)<<fixed<<s.imag()<<","
-            <<setprecision(6)<<db->get_bus_voltage_in_pu(bus)<<endl;*/
-        snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
-                 bus, psdb.bus_number2bus_name(bus).c_str(),
-                 (loads[i]->get_identifier()).c_str(),
-                 s.real(), s.imag(), psdb.get_bus_voltage_in_pu(bus));
-        file<<buffer<<endl;
-    }
-
-    vector<LINE*> lines = psdb.get_all_lines();
-    size_t nline = lines.size();
-    if(nline>0)
-    {
-        file<<"% Line"<<endl;
-        file<<"IBUS,INAME,JBUS,JNAMEID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,II/KA,IJ/KA"<<endl;
-    }
-    for(size_t i=0; i!=nline; ++i)
-    {
-        size_t ibus = lines[i]->get_sending_side_bus();
-        size_t jbus = lines[i]->get_receiving_side_bus();
-        complex<double> si = lines[i]->get_line_complex_power_at_sending_side_in_MVA();
-        complex<double> sj = lines[i]->get_line_complex_power_at_receiving_side_in_MVA();
-        /*file<<lines[i]->get_sending_side_bus()<<","<<lines[i]->get_receiving_side_bus()<<",\""<<lines[i]->get_identifier()<<"\","
-            <<setprecision(6)<<fixed<<si.real()<<","
-            <<setprecision(6)<<fixed<<si.imag()<<","
-            <<setprecision(6)<<fixed<<sj.real()<<","
-            <<setprecision(6)<<fixed<<sj.imag()<<","
-            <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA())<<","
-            <<setprecision(6)<<fixed<<steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA())<<endl;*/
-
-        snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                 ibus, psdb.bus_number2bus_name(ibus).c_str(),
-                 jbus, psdb.bus_number2bus_name(jbus).c_str(),
-                 (lines[i]->get_identifier()).c_str(),
-                 si.real(), si.imag(),sj.real(), sj.imag(),
-                 steps_fast_complex_abs(lines[i]->get_line_complex_current_at_sending_side_in_kA()),
-                 steps_fast_complex_abs(lines[i]->get_line_complex_current_at_receiving_side_in_kA()));
-        file<<buffer<<endl;
-    }
-
-    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
-    size_t ntrans = transformers.size();
-    if(ntrans>0)
-    {
-        file<<"% Transformer"<<endl;
-        file<<"IBUS,INAME,JBUS,JNAME,KBUS,KNAME,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,PK/MW,QK/MVAR,KI/PU,KJ/PU,KK/PU"<<endl;
-    }
-    for(size_t i=0; i!=ntrans; ++i)
-    {
-        size_t ibus = transformers[i]->get_winding_bus(PRIMARY_SIDE);
-        size_t jbus = transformers[i]->get_winding_bus(SECONDARY_SIDE);
-        size_t kbus = transformers[i]->get_winding_bus(TERTIARY_SIDE);
-
-        complex<double> sp = transformers[i]->get_winding_complex_power_in_MVA(PRIMARY_SIDE);
-        complex<double> ss = transformers[i]->get_winding_complex_power_in_MVA(SECONDARY_SIDE);
-        complex<double> st = transformers[i]->get_winding_complex_power_in_MVA(TERTIARY_SIDE);
-
-        /*file<<transformers[i]->get_winding_bus(PRIMARY_SIDE)<<","
-            <<transformers[i]->get_winding_bus(SECONDARY_SIDE)<<","
-            <<transformers[i]->get_winding_bus(TERTIARY_SIDE)<<",\""<<transformers[i]->get_identifier()<<"\","
-            <<setprecision(6)<<fixed<<sp.real()<<","
-            <<setprecision(6)<<fixed<<sp.imag()<<","
-            <<setprecision(6)<<fixed<<ss.real()<<","
-            <<setprecision(6)<<fixed<<ss.imag()<<","
-            <<setprecision(6)<<fixed<<st.real()<<","
-            <<setprecision(6)<<fixed<<st.imag()<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE)<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE)<<","
-            <<setprecision(6)<<fixed<<transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE)<<endl;*/
-
-
-        snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                 ibus, psdb.bus_number2bus_name(ibus).c_str(),
-                 jbus, psdb.bus_number2bus_name(jbus).c_str(),
-                 kbus, psdb.bus_number2bus_name(kbus).c_str(),
-                 (transformers[i]->get_identifier()).c_str(),
-                 sp.real(), sp.imag(), ss.real(), ss.imag(), st.real(), st.imag(),
-                 transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(PRIMARY_SIDE),
-                 transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(SECONDARY_SIDE),
-                 transformers[i]->get_winding_off_nominal_turn_ratio_in_pu(TERTIARY_SIDE));
-        file<<buffer<<endl;
-    }
-
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t nhvdc = hvdcs.size();
-    if(nhvdc>0)
-    {
-        file<<"% Hvdc"<<endl;
-        file<<"IBUS,INAME,JBUS,JNAME,ID,PR/MW,QR/MVAR,PI/MW,QI/MVAR,ALPHA/DEG,GAMMA/DEG,VDCR/KV,VDCI/KV,IDC/KA,VACR/PU,VACI/PU,KR/PU,KI/PU"<<endl;
-    }
-    for(size_t i=0; i!=nhvdc; ++i)
-    {
-        size_t busr = hvdcs[i]->get_converter_bus(RECTIFIER);
-        size_t busi = hvdcs[i]->get_converter_bus(INVERTER);
-        /*file<<busr<<","<<busi<<",\""<<hvdcs[i]->get_identifier()<<"\","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER)<<","
-            <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busr)<<","
-            <<setprecision(6)<<fixed<<db->get_bus_voltage_in_pu(busi)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER)<<","
-            <<setprecision(6)<<fixed<<hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER)<<endl;*/
-        snprintf(buffer, 1000, "%lu,\"%s\",%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f",
-                 busr, psdb.bus_number2bus_name(busr).c_str(),
-                 busi, psdb.bus_number2bus_name(busi).c_str(),
-                 (hvdcs[i]->get_identifier()).c_str(),
-                 hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER),
-                 hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER),
-                 hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER),
-                 hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER),
-                 hvdcs[i]->get_converter_alpha_or_gamma_in_deg(RECTIFIER),
-                 hvdcs[i]->get_converter_alpha_or_gamma_in_deg(INVERTER),
-                 hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER),
-                 hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER),
-                 hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER),
-                 psdb.get_bus_voltage_in_pu(busr),
-                 psdb.get_bus_voltage_in_pu(busi),
-                 hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER),
-                 hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER));
-        file<<buffer<<endl;
-    }
-
-    file.close();
 }
 
 void POWERFLOW_SOLVER::save_network_matrix_to_file(string filename) const
@@ -2267,25 +2271,27 @@ void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(string filename) const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream file(filename);
-    if(not file.is_open())
+    if(file.is_open())
+    {
+        file<<"BUS,VOLTAGE,ANGLE"<<endl;
+
+        vector<BUS*> buses = psdb.get_all_buses();
+        size_t nbus = buses.size();
+        for(size_t i=0; i!=nbus; ++i)
+        {
+            file<<buses[i]->get_bus_number()<<","
+                <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
+                <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<endl;
+        }
+        file.close();
+    }
+    else
     {
         osstream<<"File '"<<filename<<"' cannot be opened for saving bus powerflow result to file."<<endl
           <<"No bus powerflow result will be exported.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-
-    file<<"BUS,VOLTAGE,ANGLE"<<endl;
-
-    vector<BUS*> buses = psdb.get_all_buses();
-    size_t nbus = buses.size();
-    for(size_t i=0; i!=nbus; ++i)
-    {
-        file<<buses[i]->get_bus_number()<<","
-            <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
-            <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<endl;
-    }
-    file.close();
 }
 
 size_t POWERFLOW_SOLVER::get_iteration_count() const

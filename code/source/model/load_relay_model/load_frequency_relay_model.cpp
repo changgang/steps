@@ -22,27 +22,31 @@ string LOAD_FREQUENCY_RELAY_MODEL::get_model_type() const
 double LOAD_FREQUENCY_RELAY_MODEL::get_bus_frequency_in_Hz() const
 {
     LOAD* load = get_load_pointer();
-    if(load==NULL)
+    if(load!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = load->get_load_bus();
+
+        return psdb.get_bus_frequency_in_Hz(bus);
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus = load->get_load_bus();
-
-    return psdb.get_bus_frequency_in_Hz(bus);
 }
 
 double LOAD_FREQUENCY_RELAY_MODEL::get_bus_base_frequency_in_Hz() const
 {
     LOAD* load = get_load_pointer();
-    if(load==NULL)
+    if(load!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = load->get_load_bus();
+
+        return psdb.get_bus_base_frequency_in_Hz(bus);
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus = load->get_load_bus();
-
-    return psdb.get_bus_base_frequency_in_Hz(bus);
 }

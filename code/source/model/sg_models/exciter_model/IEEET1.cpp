@@ -196,48 +196,52 @@ double IEEET1::get_SE2_in_pu() const
 bool IEEET1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<17)
+    if(data.size()>=17)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double tr, ka, ta, vrmax, vrmin, ke, te, kf, tf, e1, se1, e2, se2;
+
+            size_t i=3;
+            tr = get_double_data(data[i],"0.0"); i++;
+            ka = get_double_data(data[i],"0.0"); i++;
+            ta = get_double_data(data[i],"0.0"); i++;
+            vrmax = get_double_data(data[i],"0.0"); i++;
+            vrmin = get_double_data(data[i],"0.0"); i++;
+            ke = get_double_data(data[i],"0.0"); i++;
+            te = get_double_data(data[i],"0.0"); i++;
+            kf = get_double_data(data[i],"0.0"); i++;
+            tf = get_double_data(data[i],"0.0"); i++;
+            /*double temp = get_double_data(data[i],"0.0");*/ i++;
+            e1 = get_double_data(data[i],"0.0"); i++;
+            se1 = get_double_data(data[i],"0.0"); i++;
+            e2 = get_double_data(data[i],"0.0"); i++;
+            se2 = get_double_data(data[i],"0.0");
+
+            set_TR_in_s(tr);
+            set_KA(ka);
+            set_TA_in_s(ta);
+            set_VRmax_in_pu(vrmax);
+            set_VRmin_in_pu(vrmin);
+            set_KE(ke);
+            set_TE_in_s(te);
+            set_KF(kf);
+            set_TF_in_s(tf);
+            set_E1_in_pu(e1);
+            set_SE1_in_pu(se1);
+            set_E2_in_pu(e2);
+            set_SE2_in_pu(se2);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    double tr, ka, ta, vrmax, vrmin, ke, te, kf, tf, e1, se1, e2, se2;
-
-    size_t i=3;
-    tr = get_double_data(data[i],"0.0"); i++;
-    ka = get_double_data(data[i],"0.0"); i++;
-    ta = get_double_data(data[i],"0.0"); i++;
-    vrmax = get_double_data(data[i],"0.0"); i++;
-    vrmin = get_double_data(data[i],"0.0"); i++;
-    ke = get_double_data(data[i],"0.0"); i++;
-    te = get_double_data(data[i],"0.0"); i++;
-    kf = get_double_data(data[i],"0.0"); i++;
-    tf = get_double_data(data[i],"0.0"); i++;
-    /*double temp = get_double_data(data[i],"0.0");*/ i++;
-    e1 = get_double_data(data[i],"0.0"); i++;
-    se1 = get_double_data(data[i],"0.0"); i++;
-    e2 = get_double_data(data[i],"0.0"); i++;
-    se2 = get_double_data(data[i],"0.0");
-
-    set_TR_in_s(tr);
-    set_KA(ka);
-    set_TA_in_s(ta);
-    set_VRmax_in_pu(vrmax);
-    set_VRmin_in_pu(vrmin);
-    set_KE(ke);
-    set_TE_in_s(te);
-    set_KF(kf);
-    set_TF_in_s(tf);
-    set_E1_in_pu(e1);
-    set_SE1_in_pu(se1);
-    set_E2_in_pu(e2);
-    set_SE2_in_pu(se2);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool IEEET1::setup_model_with_psse_string(string data)
@@ -267,97 +271,97 @@ void IEEET1::set_block_toolkit()
 void IEEET1::initialize()
 {
     ostringstream osstream;
-    if(is_model_initialized())
-        return;
-
-    GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
-
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return;
-
-    if(not gen_model->is_model_initialized())
-        gen_model->initialize();
-
-    set_block_toolkit();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double Ecomp = get_compensated_voltage_in_pu();
-
-    sensor.set_output(Ecomp);
-    sensor.initialize();
-
-    double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-
-    exciter.set_output(Efd);
-    exciter.initialize();
-
-    feedbacker.set_input(Efd);
-    feedbacker.initialize();
-
-    double KE = get_KE();
-    double SE = saturation_block.get_saturation(Efd);
-    double input = (KE+SE)*Efd;
-
-    if(input>get_VRmax_in_pu())
+    if(not is_model_initialized())
     {
-        osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        GENERATOR* generator = get_generator_pointer();
+        if(generator!=NULL)
+        {
+            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+            if(gen_model!=NULL)
+            {
+                if(not gen_model->is_model_initialized())
+                    gen_model->initialize();
+
+                set_block_toolkit();
+
+                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                double Ecomp = get_compensated_voltage_in_pu();
+
+                sensor.set_output(Ecomp);
+                sensor.initialize();
+
+                double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+
+                exciter.set_output(Efd);
+                exciter.initialize();
+
+                feedbacker.set_input(Efd);
+                feedbacker.initialize();
+
+                double KE = get_KE();
+                double SE = saturation_block.get_saturation(Efd);
+                double input = (KE+SE)*Efd;
+
+                if(input>get_VRmax_in_pu())
+                {
+                    osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"VR is "<<input<<", and VRmax is "<<get_VRmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(input<get_VRmin_in_pu())
+                {
+                    osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+
+                regulator.set_output(input);
+                regulator.initialize();
+
+                input = regulator.get_input();
+
+                double Vref = input+Ecomp;
+                set_voltage_reference_in_pu(Vref);
+
+                set_flag_model_initialized_as_true();
+            }
+        }
     }
-    if(input<get_VRmin_in_pu())
-    {
-        osstream<<"Initialization error. VR of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-          <<"VR is "<<input<<", and VRmin is "<<get_VRmin_in_pu()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-
-    regulator.set_output(input);
-    regulator.initialize();
-
-    input = regulator.get_input();
-
-    double Vref = input+Ecomp;
-    set_voltage_reference_in_pu(Vref);
-
-    set_flag_model_initialized_as_true();
 }
 
 void IEEET1::run(DYNAMIC_MODE mode)
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
+    if(generator!=NULL)
+    {
+        double Ecomp = get_compensated_voltage_in_pu();
+        double Vref = get_voltage_reference_in_pu();
+        double Vs = get_stabilizing_signal_in_pu();
 
-    double Ecomp = get_compensated_voltage_in_pu();
-    double Vref = get_voltage_reference_in_pu();
-    double Vs = get_stabilizing_signal_in_pu();
+        sensor.set_input(Ecomp);
+        sensor.run(mode);
 
-    sensor.set_input(Ecomp);
-    sensor.run(mode);
+        double Efd = exciter.get_output();
+        feedbacker.set_input(Efd);
+        feedbacker.run(mode);
 
-    double Efd = exciter.get_output();
-    feedbacker.set_input(Efd);
-    feedbacker.run(mode);
+        double input = Vref-sensor.get_output()+Vs-feedbacker.get_output();
 
-    double input = Vref-sensor.get_output()+Vs-feedbacker.get_output();
+        regulator.set_input(input);
+        regulator.run(mode);
 
-    regulator.set_input(input);
-    regulator.run(mode);
+        double KE = get_KE();
+        double SE = saturation_block.get_saturation(Efd);
+        input = regulator.get_output()-(KE+SE)*Efd;
 
-    double KE = get_KE();
-    double SE = saturation_block.get_saturation(Efd);
-    input = regulator.get_output()-(KE+SE)*Efd;
+        exciter.set_input(input);
+        exciter.run(mode);
 
-    exciter.set_input(input);
-    exciter.run(mode);
+        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
-    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
-
-    if(mode == UPDATE_MODE)
-        set_flag_model_updated_as_true();
+        if(mode == UPDATE_MODE)
+            set_flag_model_updated_as_true();
+    }
 }
 
 double IEEET1::get_excitation_voltage_in_pu() const

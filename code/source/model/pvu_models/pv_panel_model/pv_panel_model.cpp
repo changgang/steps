@@ -45,8 +45,10 @@ void PV_PANEL_MODEL::initialize()
     ostringstream osstream;
 
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit==NULL)
-        return;
+    if(pv_unit!=NULL)
+    {
+        ;
+    }
 }
 
 void PV_PANEL_MODEL::run(DYNAMIC_MODE mode)

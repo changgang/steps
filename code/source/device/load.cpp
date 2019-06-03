@@ -39,7 +39,21 @@ void LOAD::set_load_bus(size_t load_bus)
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
-    if(load_bus==0)
+    if(load_bus!=0)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        if(not psdb.is_bus_exist(load_bus))
+        {
+            osstream<<"Bus "<<load_bus<<" does not exist for setting up load."<<endl
+              <<"0 will be set to indicate invalid load.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            this->bus = 0;
+            return;
+        }
+        this->bus = load_bus;
+    }
+    else
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up load bus."<<endl
           <<"0 will be set to indicate invalid load.";
@@ -47,18 +61,6 @@ void LOAD::set_load_bus(size_t load_bus)
         this->bus = load_bus;
         return;
     }
-
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    if(not psdb.is_bus_exist(load_bus))
-    {
-        osstream<<"Bus "<<load_bus<<" does not exist for setting up load."<<endl
-          <<"0 will be set to indicate invalid load.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        this->bus = 0;
-        return;
-    }
-    this->bus = load_bus;
 }
 
 void LOAD::set_identifier(string load_id)
@@ -274,92 +276,101 @@ complex<double> LOAD::get_actual_total_load_in_MVA() const
 
 complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
 {
-    ostringstream osstream;
-
-    if(get_status() == false)
-        return 0.0;
-
-    complex<double> S0 = get_nominal_constant_power_load_in_MVA();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    BUS* busptr = psdb.get_bus(get_load_bus());
-    if(busptr==NULL)
+    if(get_status() == true)
     {
-        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
-          <<get_device_name()<<" actual constant power load will be returned as it nominal power.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return S0;
+        complex<double> S0 = get_nominal_constant_power_load_in_MVA();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        BUS* busptr = psdb.get_bus(get_load_bus());
+        if(busptr!=NULL)
+        {
+            double v = busptr->get_voltage_in_pu();
+
+            complex<double> s;
+            if(v>=get_voltage_threshold_of_constant_power_load_in_pu())
+                s = S0;
+            else
+                s = S0/get_voltage_threshold_of_constant_power_load_in_pu()*v;
+
+            return s;
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
+              <<get_device_name()<<" actual constant power load will be returned as it nominal power.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return S0;
+        }
     }
-
-    double v = busptr->get_voltage_in_pu();
-
-    complex<double> s;
-    if(v>=get_voltage_threshold_of_constant_power_load_in_pu())
-        s = S0;
     else
-        s = S0/get_voltage_threshold_of_constant_power_load_in_pu()*v;
-
-    return s;
+        return 0.0;
 }
 
 complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
 {
-    ostringstream osstream;
-
-    if(get_status() == false)
-        return 0.0;
-
-    complex<double> S0 = get_nominal_constant_current_load_in_MVA();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    BUS* busptr = psdb.get_bus(get_load_bus());
-    if(busptr==NULL)
+    if(get_status() == true)
     {
-        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
-          <<get_device_name()<<" actual constant current load will be returned as it nominal power.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return S0;
+        complex<double> S0 = get_nominal_constant_current_load_in_MVA();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        BUS* busptr = psdb.get_bus(get_load_bus());
+        if(busptr!=NULL)
+        {
+            double v = busptr->get_voltage_in_pu();
+
+            complex<double> s = S0*v;
+            return s;
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
+              <<get_device_name()<<" actual constant current load will be returned as it nominal power.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return S0;
+        }
     }
-
-    double v = busptr->get_voltage_in_pu();
-
-    complex<double> s = S0*v;
-    return s;
+    else
+        return 0.0;
 }
 
 complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
 {
-    ostringstream osstream;
-
-    if(get_status() == false)
-        return 0.0;
-
-    complex<double> S0 = get_nominal_constant_impedance_load_in_MVA();
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    BUS* busptr = psdb.get_bus(get_load_bus());
-    if(busptr==NULL)
+    if(get_status() == true)
     {
-        osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
-          <<get_device_name()<<" actual constant impedance load will be returned as it nominal power.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return S0;
+        complex<double> S0 = get_nominal_constant_impedance_load_in_MVA();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        BUS* busptr = psdb.get_bus(get_load_bus());
+        if(busptr!=NULL)
+        {
+            double v = busptr->get_voltage_in_pu();
+
+            complex<double> s = S0*v*v;
+            return s;
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
+              <<get_device_name()<<" actual constant impedance load will be returned as it nominal power.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return S0;
+        }
     }
-
-    double v = busptr->get_voltage_in_pu();
-
-    complex<double> s = S0*v*v;
-    return s;
+    else
+        return 0.0;
 }
 
 
 void LOAD::set_voltage_threshold_of_constant_power_load_in_pu(double v)
 {
-    if(v<=0.0) return;
-    voltage_threshold_of_constant_power_load_in_pu = v;
+    if(v>0.0)
+        voltage_threshold_of_constant_power_load_in_pu = v;
 }
 
 double LOAD::get_voltage_threshold_of_constant_power_load_in_pu()
@@ -370,141 +381,137 @@ double LOAD::get_voltage_threshold_of_constant_power_load_in_pu()
 
 void LOAD::set_model(const MODEL* model)
 {
-    if(model->get_allowed_device_type()!="LOAD")
-        return;
-
-    if(model->get_model_type()=="LOAD CHARACTERISTICS")
+    if(model->get_allowed_device_type()=="LOAD")
     {
-        set_load_model((LOAD_MODEL*) model);
-        return;
-    }
-    if(model->get_model_type()=="LOAD VOLTAGE RELAY")
-    {
-        set_load_voltage_relay_model((LOAD_VOLTAGE_RELAY_MODEL*) model);
-        return;
-    }
-    if(model->get_model_type()=="LOAD FREQUENCY RELAY")
-    {
-        set_load_frequency_relay_model((LOAD_FREQUENCY_RELAY_MODEL*) model);
-        return;
+        if(model->get_model_type()=="LOAD CHARACTERISTICS")
+        {
+            set_load_model((LOAD_MODEL*) model);
+            return;
+        }
+        if(model->get_model_type()=="LOAD VOLTAGE RELAY")
+        {
+            set_load_voltage_relay_model((LOAD_VOLTAGE_RELAY_MODEL*) model);
+            return;
+        }
+        if(model->get_model_type()=="LOAD FREQUENCY RELAY")
+        {
+            set_load_frequency_relay_model((LOAD_FREQUENCY_RELAY_MODEL*) model);
+            return;
+        }
     }
 }
 
 void LOAD::set_load_model(const LOAD_MODEL* model)
 {
-    if(model->get_model_type()!="LOAD CHARACTERISTICS")
-        return;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    if(model!=NULL and model->get_model_type()=="LOAD CHARACTERISTICS")
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
-    LOAD_MODEL* oldmodel = get_load_model();
-    if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
-    {
-        delete oldmodel;
-        load_model = NULL;
-    }
+        LOAD_MODEL* oldmodel = get_load_model();
+        if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
+        {
+            delete oldmodel;
+            load_model = NULL;
+        }
 
-    LOAD_MODEL *new_model = NULL;
-    string model_name = model->get_model_name();
-    if(model_name=="IEEL")
-    {
-        IEEL* smodel = (IEEL*) (model);
-        new_model = (LOAD_MODEL*) new IEEL(*smodel);
-    }
+        LOAD_MODEL *new_model = NULL;
+        string model_name = model->get_model_name();
+        if(model_name=="IEEL")
+        {
+            IEEL* smodel = (IEEL*) (model);
+            new_model = (LOAD_MODEL*) new IEEL(*smodel);
+        }
 
-    if(new_model!=NULL)
-    {
-        new_model->set_toolkit(toolkit);
-        new_model->set_device_id(get_device_id());
-        load_model = new_model;
-    }
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load model of "<<get_device_name()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        if(new_model!=NULL)
+        {
+            new_model->set_toolkit(toolkit);
+            new_model->set_device_id(get_device_id());
+            load_model = new_model;
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load model of "<<get_device_name()<<".";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
 void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* model)
 {
-    if(model == NULL)
-        return;
+    if(model != NULL and model->get_model_type()=="LOAD FREQUENCY RELAY")
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        LOAD_FREQUENCY_RELAY_MODEL* oldmodel = get_load_frequency_relay_model();
+        if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
+        {
+            delete oldmodel;
+            load_frequency_relay_model = NULL;
+        }
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(model->get_model_type()!="LOAD FREQUENCY RELAY")
-        return;
+        LOAD_FREQUENCY_RELAY_MODEL *new_model = NULL;
+        string model_name = model->get_model_name();
+        if(model_name=="UFLS")
+        {
+            UFLS* smodel = (UFLS*) (model);
+            new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new UFLS(*smodel);
+        }
+        if(model_name=="PUFLS")
+        {
+            PUFLS* smodel = (PUFLS*) (model);
+            new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new PUFLS(*smodel);
+        }
 
-    LOAD_FREQUENCY_RELAY_MODEL* oldmodel = get_load_frequency_relay_model();
-    if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
-    {
-        delete oldmodel;
-        load_frequency_relay_model = NULL;
-    }
-
-    LOAD_FREQUENCY_RELAY_MODEL *new_model = NULL;
-    string model_name = model->get_model_name();
-    if(model_name=="UFLS")
-    {
-        UFLS* smodel = (UFLS*) (model);
-        new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new UFLS(*smodel);
-    }
-    if(model_name=="PUFLS")
-    {
-        PUFLS* smodel = (PUFLS*) (model);
-        new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new PUFLS(*smodel);
-    }
-
-    if(new_model!=NULL)
-    {
-        new_model->set_toolkit(toolkit);
-        new_model->set_device_id(get_device_id());
-        load_frequency_relay_model = new_model;
-        ostringstream osstream;
-        osstream<<new_model->get_model_name()<<" is added.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load frequency relay model of "<<get_device_name()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        if(new_model!=NULL)
+        {
+            new_model->set_toolkit(toolkit);
+            new_model->set_device_id(get_device_id());
+            load_frequency_relay_model = new_model;
+            ostringstream osstream;
+            osstream<<new_model->get_model_name()<<" is added.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load frequency relay model of "<<get_device_name()<<".";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
 void LOAD::set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model)
 {
-    if(model == NULL)
-        return;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(model->get_model_type()!="LOAD VOLTAGE RELAY")
-        return;
+    if(model != NULL and model->get_model_type()=="LOAD VOLTAGE RELAY")
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        LOAD_VOLTAGE_RELAY_MODEL* oldmodel = get_load_voltage_relay_model();
+        if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
+        {
+            delete oldmodel;
+            load_voltage_relay_model = NULL;
+        }
 
-    LOAD_VOLTAGE_RELAY_MODEL* oldmodel = get_load_voltage_relay_model();
-    if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
-    {
-        delete oldmodel;
-        load_voltage_relay_model = NULL;
-    }
+        LOAD_VOLTAGE_RELAY_MODEL *new_model = NULL;
+        string model_name = model->get_model_name();
+        if(model_name=="UVLS")
+        {
+            UVLS* smodel = (UVLS*) (model);
+            new_model = (LOAD_VOLTAGE_RELAY_MODEL*) new UVLS(*smodel);
+        }
 
-    LOAD_VOLTAGE_RELAY_MODEL *new_model = NULL;
-    string model_name = model->get_model_name();
-    if(model_name=="UVLS")
-    {
-        UVLS* smodel = (UVLS*) (model);
-        new_model = (LOAD_VOLTAGE_RELAY_MODEL*) new UVLS(*smodel);
-    }
-
-    if(new_model!=NULL)
-    {
-        new_model->set_toolkit(toolkit);
-        new_model->set_device_id(get_device_id());
-        load_voltage_relay_model = new_model;
-    }
-    else
-    {
-        ostringstream osstream;
-        osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load voltage relay model of "<<get_device_name()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        if(new_model!=NULL)
+        {
+            new_model->set_toolkit(toolkit);
+            new_model->set_device_id(get_device_id());
+            load_voltage_relay_model = new_model;
+        }
+        else
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load voltage relay model of "<<get_device_name()<<".";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 }
 
@@ -526,60 +533,60 @@ LOAD_VOLTAGE_RELAY_MODEL* LOAD::get_load_voltage_relay_model() const
 
 void LOAD::run(DYNAMIC_MODE mode)
 {
-    if(get_status()==false)
-        return;
-
-    switch(mode)
+    if(get_status()==true)
     {
-        case INITIALIZE_MODE:
+        switch(mode)
         {
-            LOAD_MODEL* load = get_load_model();
-            if(load==NULL)
-                return;
-            load->initialize();
+            case INITIALIZE_MODE:
+            {
+                LOAD_MODEL* load = get_load_model();
+                if(load != NULL)
+                {
+                    load->initialize();
 
-            LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
-            if(uvls!=NULL)
-                uvls->initialize();
+                    LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
+                    if(uvls!=NULL)
+                        uvls->initialize();
 
-            LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
-            if(ufls!=NULL)
-                ufls->initialize();
+                    LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
+                    if(ufls!=NULL)
+                        ufls->initialize();
+                }
+                break;
+            }
+            case INTEGRATE_MODE:
+            case UPDATE_MODE:
+            {
+                LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
+                if(uvls!=NULL)
+                    uvls->run(mode);
 
-            break;
-        }
-        case INTEGRATE_MODE:
-        case UPDATE_MODE:
-        {
-            LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
-            if(uvls!=NULL)
-                uvls->run(mode);
+                LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
+                if(ufls!=NULL)
+                    ufls->run(mode);
 
-            LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
-            if(ufls!=NULL)
-                ufls->run(mode);
+                LOAD_MODEL* load = get_load_model();
+                if(load!=NULL)
+                    load->run(mode);
+                break;
+            }
+            case RELAY_MODE:
+            {
+                LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
+                if(uvls!=NULL)
+                    uvls->run(mode);
 
-            LOAD_MODEL* load = get_load_model();
-            if(load!=NULL)
-                load->run(mode);
-            break;
-        }
-        case RELAY_MODE:
-        {
-            LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
-            if(uvls!=NULL)
-                uvls->run(mode);
-
-            LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
-            if(ufls!=NULL)
-                ufls->run(mode);
+                LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
+                if(ufls!=NULL)
+                    ufls->run(mode);
+            }
         }
     }
 }
 
 complex<double> LOAD::get_dynamic_load_in_MVA()
 {
-    if(get_status())//==true
+    if(get_status()==true)
     {
         double scale = 1.0+get_load_total_scale_factor_in_pu();
 
@@ -616,7 +623,7 @@ double LOAD::get_load_manually_scale_factor_in_pu() const
 
 double LOAD::get_load_relay_shed_scale_factor_in_pu() const
 {
-    if(get_status())//==true
+    if(get_status()==true)
     {
         LOAD_FREQUENCY_RELAY_MODEL* frelay = get_load_frequency_relay_model();
         LOAD_VOLTAGE_RELAY_MODEL* vrelay = get_load_voltage_relay_model();
@@ -638,7 +645,7 @@ double LOAD::get_load_relay_shed_scale_factor_in_pu() const
 
 complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power()
 {
-    if(get_status())//==true
+    if(get_status()==true)
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

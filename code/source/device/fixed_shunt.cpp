@@ -20,26 +20,28 @@ void FIXED_SHUNT::set_shunt_bus(size_t shunt_bus)
 {
     ostringstream osstream;
 
-    if(shunt_bus==0)
+    if(shunt_bus!=0)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        if(psdb.is_bus_exist(shunt_bus))
+            this->bus = shunt_bus;
+        else
+        {
+            osstream<<"Bus "<<shunt_bus<<" does not exist in the power system database '"<<psdb.get_system_name()<<"' for setting up fixed shunt."<<endl
+                    <<"0 will be set to indicate invalid fixed shunt.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            this->bus = 0;
+        }
+    }
+    else
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up fixed shunt bus."<<endl
-          <<"0 will be set to indicate invalid fixed shunt.";
+                <<"0 will be set to indicate invalid fixed shunt.";
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
         this->bus = 0;
         return;
-    }
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    if(psdb.is_bus_exist(shunt_bus))
-        this->bus = shunt_bus;
-    else
-    {
-        osstream<<"Bus "<<shunt_bus<<" does not exist in the power system database '"<<psdb.get_system_name()<<"' for setting up fixed shunt."<<endl
-          <<"0 will be set to indicate invalid fixed shunt.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        this->bus = 0;
     }
 }
 
@@ -124,7 +126,7 @@ void FIXED_SHUNT::clear()
 bool FIXED_SHUNT::is_connected_to_bus(size_t target_bus) const
 {
     if(target_bus==get_shunt_bus()) return true;
-    else return false;
+    else                            return false;
 }
 
 bool FIXED_SHUNT::is_in_area(size_t area) const
@@ -157,7 +159,7 @@ void FIXED_SHUNT::report() const
 {
     ostringstream osstream;
     osstream<<get_device_name()<<": "<<(get_status()==true?"in service":"out of service")<<", "
-      <<"P+jQ[Z] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_impedance_shunt_in_MVA()<<" MVA.";
+            <<"P+jQ[Z] = "<<setw(6)<<setprecision(2)<<fixed<<get_nominal_impedance_shunt_in_MVA()<<" MVA.";
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -214,24 +216,29 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 {
     ostringstream osstream;
 
-    if(get_status() == false)
-        return 0.0;
-
-    complex<double> S0 = get_nominal_impedance_shunt_in_MVA();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    BUS* busptr = psdb.get_bus(get_shunt_bus());
-
-    if(busptr==NULL)
+    if(get_status() == true)
     {
-        osstream<<"Bus "<<get_shunt_bus()<<" is not found when getting the actual impedance shunt of "<<get_device_name()<<". Nominal impedance shunt in MVA will be returned.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return S0;
+        complex<double> S0 = get_nominal_impedance_shunt_in_MVA();
+
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        BUS* busptr = psdb.get_bus(get_shunt_bus());
+
+        if(busptr!=NULL)
+        {
+            double v = busptr->get_voltage_in_pu();
+            return S0*v*v;
+        }
+        else
+        {
+            osstream<<"Bus "<<get_shunt_bus()<<" is not found when getting the actual impedance shunt of "<<get_device_name()<<". Nominal impedance shunt in MVA will be returned.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return S0;
+        }
     }
-    double v = busptr->get_voltage_in_pu();
-    return S0*v*v;
+    else
+        return 0.0;
 }
 
 

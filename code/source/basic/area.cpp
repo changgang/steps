@@ -41,25 +41,26 @@ void AREA::set_area_name(string name)
 void AREA::set_area_swing_bus(size_t bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(bus==0)
+    if(bus!=0)
     {
-        set_area_swing_bus_with_zero_input();
-        return;
+        ostringstream osstream;
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        if(psdb.is_bus_exist(bus))
+            set_area_swing_bus_with_existing_bus(bus);
+        else
+        {
+            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Error. Bus %lu does not exist in power system database %s when setting area swing bus number of area %lu.\n"
+                     "Bus 0 will be set to indicate invalid area.", bus, (psdb.get_system_name()).c_str(), get_area_number());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+
+            area_swing_bus = 0;
+        }
     }
-
-    ostringstream osstream;
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    if(psdb.is_bus_exist(bus))
-        set_area_swing_bus_with_existing_bus(bus);
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Error. Bus %lu does not exist in power system database %s when setting area swing bus number of area %lu.\n"
-                 "Bus 0 will be set to indicate invalid area.", bus, (psdb.get_system_name()).c_str(), get_area_number());
-        toolkit.show_information_with_leading_time_stamp(buffer);
-
-        area_swing_bus = 0;
+        set_area_swing_bus_with_zero_input();
     }
 }
 
@@ -200,10 +201,10 @@ void AREA::report() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string busname = "";
     BUS* busptr = psdb.get_bus(bus);
-    if(busptr==NULL)
-        busname = "NO SUCH BUS";
-    else
+    if(busptr!=NULL)
         busname = busptr->get_bus_name();
+    else
+        busname = "NO SUCH BUS";
 
     osstream<<"Area "<<get_area_number()<<" ("<<get_area_name()<<"): Expected leaving power = "
       <<setprecision(2)<<fixed<<get_expected_power_leaving_area_in_MW()<<" MW, tolerance = "

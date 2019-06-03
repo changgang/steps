@@ -393,9 +393,7 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
 
     set_meters(simulator);
 
-    string filename = "";
-    if(filename != "")
-        filename += "_cleared_after_"+num2str(clearing_time)+"s";
+    string filename = "cs_cleared_after_"+num2str(clearing_time)+"s";
     simulator.set_output_file(filename);
 
     simulator.start();
@@ -419,7 +417,9 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
         simulator.run_a_step();
         TIME = toolkit.get_dynamic_simulation_time_in_s();
         is_stable = check_if_system_is_stable(simulator);
-        if(not is_stable)
+        if(is_stable)
+            continue;
+        else
             break;
     }
 
@@ -499,10 +499,12 @@ bool CONTINGENCY_SCREENER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulat
         }
     }
     double angle_difference = angle_max - angle_min;
-    while(angle_difference>180.0)
+    while(angle_difference>360.0)
+        angle_difference -= 360.0;
+    /*while(angle_difference>180.0)
         angle_difference -= 360.0;
     while(angle_difference<-180.0)
-        angle_difference += 360.0;
+        angle_difference += 360.0;*/
     if(fabs(angle_difference)>get_angle_difference_threshold_in_deg())
         return false;
     else

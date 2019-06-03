@@ -21,15 +21,21 @@ string PV_ELECTRICAL_MODEL::get_model_type() const
 complex<double> PV_ELECTRICAL_MODEL::get_pv_unit_terminal_generation_in_MVA() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit==NULL)
-        return 0.0;
-    PV_CONVERTER_MODEL* pv_unitmodel = pv_unit->get_pv_converter_model();
-    if(pv_unitmodel==NULL)
-        return 0.0;
-    if(not pv_unitmodel->is_model_initialized())
-        pv_unitmodel->initialize();
+    if(pv_unit!=NULL)
+    {
+        PV_CONVERTER_MODEL* pv_unitmodel = pv_unit->get_pv_converter_model();
+        if(pv_unitmodel!=NULL)
+        {
+            if(not pv_unitmodel->is_model_initialized())
+                pv_unitmodel->initialize();
 
-    return pv_unitmodel->get_terminal_complex_power_in_MVA();
+            return pv_unitmodel->get_terminal_complex_power_in_MVA();
+        }
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
 }
 
 complex<double> PV_ELECTRICAL_MODEL::get_pv_unit_terminal_generation_in_pu_based_on_mbase() const
@@ -40,14 +46,16 @@ complex<double> PV_ELECTRICAL_MODEL::get_pv_unit_terminal_generation_in_pu_based
 complex<double> PV_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit==NULL)
+    if(pv_unit!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = pv_unit->get_unit_bus();
+        return psdb.get_bus_complex_voltage_in_pu(bus);
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus = pv_unit->get_unit_bus();
-    return psdb.get_bus_complex_voltage_in_pu(bus);
 }
 
 double PV_ELECTRICAL_MODEL::get_terminal_bus_voltage_in_pu() const
@@ -65,25 +73,29 @@ double PV_ELECTRICAL_MODEL::get_terminal_bus_frequency_in_pu() const
 double PV_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit==NULL)
+    if(pv_unit!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = pv_unit->get_unit_bus();
+        return psdb.get_bus_frequency_deviation_in_pu(bus);
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus = pv_unit->get_unit_bus();
-    return psdb.get_bus_frequency_deviation_in_pu(bus);
 }
 
 complex<double> PV_ELECTRICAL_MODEL::get_pv_unit_terminal_complex_current_in_pu() const
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
-    if(pv_unit==NULL)
-        return 0.0;
-
-    PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
-    if(model!=NULL and model->is_model_initialized())
-        return model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+    if(pv_unit!=NULL)
+    {
+        PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
+        if(model!=NULL and model->is_model_initialized())
+            return model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+        else
+            return 0.0;
+    }
     else
         return 0.0;
 }
@@ -114,17 +126,17 @@ void PV_ELECTRICAL_MODEL::set_voltage_reference_in_pu(double vref)
 void PV_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
 {
     PV_UNIT* source = get_pv_unit_pointer();
-    if(source==NULL)
-        return;
+    if(source!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        size_t bus = get_bus_to_regulate();
+        if(bus==0)
+            bus = source->get_source_bus();
 
-    size_t bus = get_bus_to_regulate();
-    if(bus==0)
-        bus = source->get_source_bus();
-
-    return set_voltage_reference_in_pu(psdb.get_bus_voltage_in_pu(bus));
+        return set_voltage_reference_in_pu(psdb.get_bus_voltage_in_pu(bus));
+    }
 }
 
 double PV_ELECTRICAL_MODEL::get_voltage_reference_in_pu() const

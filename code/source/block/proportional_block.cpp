@@ -34,76 +34,77 @@ double PROPORTIONAL_BLOCK::get_K() const
 void PROPORTIONAL_BLOCK::initialize()
 {
     double k = get_K();
-    if(fabs(k)<FLOAT_EPSILON)
+    if(fabs(k)>FLOAT_EPSILON)
     {
-        set_input(0.0);
-        return;
-    }
+        double y = get_output();
+        double x;
+        if(k==0.0)
+        {
+            y = 0.0;
+            set_output(y);
+            x = 0.0;
+        }
+        else
+            x = y/k;
 
-    double y = get_output();
-    double x;
-    if(k==0.0)
-    {
-        y = 0.0;
-        set_output(y);
-        x = 0.0;
+        set_input(x);
+
+        if(get_limiter_type()!=NO_LIMITER)
+        {
+            double vmax = get_upper_limit();
+            double vmin = get_lower_limit();
+            if(y>=vmin and y<=vmax)
+                return;
+
+            ostringstream osstream;
+
+            if(y>vmax)
+            {
+                osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds upper limit bound ("<<vmax<<").";
+                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                return;
+            }
+            if(y<vmin)
+            {
+                osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds lower limit bound ("<<vmin<<").";
+                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                return;
+            }
+        }
     }
     else
-        x = y/k;
-
-    set_input(x);
-
-    if(get_limiter_type()!=NO_LIMITER)
     {
-        double vmax = get_upper_limit();
-        double vmin = get_lower_limit();
-        if(y>=vmin and y<=vmax)
-            return;
-
-        ostringstream osstream;
-
-        if(y>vmax)
-        {
-            osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds upper limit bound ("<<vmax<<").";
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            return;
-        }
-        if(y<vmin)
-        {
-            osstream<<"Initialization Error. Proportional output ("<<y<<") exceeds lower limit bound ("<<vmin<<").";
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            return;
-        }
+        set_input(0.0);
     }
 }
 
 void PROPORTIONAL_BLOCK::run(DYNAMIC_MODE mode)
 {
     double k = get_K();
-    if(fabs(k)<FLOAT_EPSILON)
-        return;
-
-    LIMITER_TYPE limiter = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double x = get_input();
-
-    double y = k*x;
-
-    if(limiter!=NO_LIMITER)
+    if(fabs(k)>FLOAT_EPSILON)
     {
-        if(y>vmax)
-            y = vmax;
-        else
+        LIMITER_TYPE limiter = get_limiter_type();
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
+
+        double x = get_input();
+
+        double y = k*x;
+
+        if(limiter!=NO_LIMITER)
         {
-            if(y<vmin)
-                y = vmin;
+            if(y>vmax)
+                y = vmax;
+            else
+            {
+                if(y<vmin)
+                    y = vmin;
+            }
         }
+        set_output(y);
     }
-    set_output(y);
 }
 
 void PROPORTIONAL_BLOCK::integrate()

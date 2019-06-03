@@ -20,53 +20,53 @@ void LINE::set_sending_side_bus(size_t bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(bus==0)
+    if(bus!=0)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        if(psdb.is_bus_exist(bus))
+            sending_side_bus = bus;
+        else
+        {
+            osstream<<"Warning. Bus "<<bus<<" does not exist for setting up sending side bus of line."<<endl
+              <<"0 will be set to indicate invalid transmission line.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            sending_side_bus = 0;
+        }
+    }
+    else
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up sending side bus of line."<<endl
           <<"0 will be set to indicate invalid transmission line.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         sending_side_bus = 0;
-        return;
     }
-
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    if(not psdb.is_bus_exist(bus))
-    {
-        osstream<<"Warning. Bus "<<bus<<" does not exist for setting up sending side bus of line."<<endl
-          <<"0 will be set to indicate invalid transmission line.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        sending_side_bus = 0;
-        return;
-    }
-    sending_side_bus = bus;
 }
 
 void LINE::set_receiving_side_bus(size_t bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    if(bus==0)
+    if(bus!=0)
+    {
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        if(psdb.is_bus_exist(bus))
+            receiving_side_bus = bus;
+        else
+        {
+            osstream<<"Warning. Bus "<<bus<<" does not exist for setting up receiving side bus of line."<<endl
+                    <<"0 will be set to indicate invalid transmission line.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            receiving_side_bus = 0;
+            return;
+        }
+    }
+    else
     {
         osstream<<"Warning. Zero bus number (0) is not allowed for setting up receiving side bus of line."<<endl
-          <<"0 will be set to indicate invalid transmission line.";
+                <<"0 will be set to indicate invalid transmission line.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         receiving_side_bus = 0;
-        return;
     }
-
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    if(not psdb.is_bus_exist(bus))
-    {
-        osstream<<"Warning. Bus "<<bus<<" does not exist for setting up receiving side bus of line."<<endl
-          <<"0 will be set to indicate invalid transmission line.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        receiving_side_bus = 0;
-        return;
-    }
-    receiving_side_bus = bus;
 }
 
 void LINE::set_identifier(string line_id)
@@ -132,7 +132,7 @@ void LINE::set_rating(RATING line_rating)
 void LINE::set_meter_end_bus(size_t meter_bus)
 {
     if(meter_bus == get_receiving_side_bus()) meter_end_bus = get_receiving_side_bus();
-    else                                 meter_end_bus = get_sending_side_bus();
+    else                                      meter_end_bus = get_sending_side_bus();
 }
 
 void LINE::set_length(double line_length)
@@ -226,7 +226,7 @@ bool LINE::is_zero_impedance_line() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double z_th = psdb.get_zero_impedance_threshold_in_pu();
     double y = abs(get_line_positive_sequence_y_in_pu());
-    double z= abs(get_line_positive_sequence_z_in_pu());
+    double z = abs(get_line_positive_sequence_z_in_pu());
     if(y<FLOAT_EPSILON and (z<=z_th or (z-z_th)<FLOAT_EPSILON))
         return true;
     else
@@ -235,93 +235,95 @@ bool LINE::is_zero_impedance_line() const
 
 void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
 {
-    ostringstream osstream;
-    if(not is_connected_to_bus(to_bus))
-        return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(location<0.0 or location>1.0)
+    if(is_connected_to_bus(to_bus))
     {
-        osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<get_device_name()<<"."<<endl
-               <<"No fault will be set.";
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        ostringstream osstream;
+        if(location<0.0 or location>1.0)
+        {
+            osstream<<"Warning. Fault location ("<<location<<") is out of allowed range [0.0, 1.0] for "<<get_device_name()<<"."<<endl
+                    <<"No fault will be set.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+
+        if(not fault.is_faulted())
+        {
+            osstream<<"Warning. Given fault is not faulted for "<<get_device_name()<<"."<<endl
+                   <<"No fault will be set.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+
+        string fault_type = fault.get_fault_type_string();
+
+        complex<double> y = fault.get_fault_shunt_in_pu();
+        osstream<<fault_type<<" fault is set for "<<get_device_name()<<"."<<endl
+               <<"Fault shunt is "<<y<<" pu at location "<<location<<" to bus "<<to_bus;
+
+        if(to_bus == get_receiving_side_bus())
+            location = 1.0-location;
+
+        map<double,FAULT>::iterator iter;
+        for(iter=faults.begin(); iter!=faults.end(); ++iter)
+        {
+            if(fabs(iter->first-location)<FLOAT_EPSILON)
+                break;
+        }
+        if(iter!=faults.end())
+        {
+            osstream<<"Fault at location "<<location<<" (to sending side bus) already exist for "<<get_device_name()<<"."<<endl
+                  <<"Setting fault at this location will remove the previous one";
+            iter->second = fault;
+        }
+        else
+        {
+            faults.insert(pair<double,FAULT>(location, fault));
+        }
         toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
     }
-
-    if(not fault.is_faulted())
-    {
-        osstream<<"Warning. Given fault is not faulted for "<<get_device_name()<<"."<<endl
-               <<"No fault will be set.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return;
-    }
-
-    string fault_type = fault.get_fault_type_string();
-
-    complex<double> y = fault.get_fault_shunt_in_pu();
-    osstream<<fault_type<<" fault is set for "<<get_device_name()<<"."<<endl
-           <<"Fault shunt is "<<y<<" pu at location "<<location<<" to bus "<<to_bus;
-
-    if(to_bus == get_receiving_side_bus())
-        location = 1.0-location;
-
-    map<double,FAULT>::iterator iter;
-    for(iter=faults.begin(); iter!=faults.end(); ++iter)
-    {
-        if(fabs(iter->first-location)<FLOAT_EPSILON)
-            break;
-    }
-    if(iter!=faults.end())
-    {
-        osstream<<"Fault at location "<<location<<" (to sending side bus) already exist for "<<get_device_name()<<"."<<endl
-              <<"Setting fault at this location will remove the previous one";
-        iter->second = fault;
-    }
-    else
-    {
-        faults.insert(pair<double,FAULT>(location, fault));
-    }
-    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 double LINE::get_fault_location_of_fault(size_t index) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    ostringstream osstream;
-    if(index>=get_fault_count())
+    if(index<get_fault_count())
     {
+        map<double,FAULT>::const_iterator iter=faults.begin();
+
+        for(size_t i=0; i!=index; ++i)
+            ++iter;
+
+        return iter->first;
+    }
+    else
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        ostringstream osstream;
         osstream<<"Invalid index ("<<index<<") was given to get fault location. [0, "<<faults.size()<<") is allowed.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return 9999.9;
     }
-    map<double,FAULT>::const_iterator iter=faults.begin();
-
-    for(size_t i=0; i!=index; ++i)
-		++iter;
-
-    return iter->first;
 }
 
 FAULT LINE::get_fault_at_location(size_t to_bus, double location) const
 {
     FAULT nofault;
-    if(not is_connected_to_bus(to_bus))
-        return nofault;
-
-    if(location<0.0 or location>1.0)
-        return nofault;
-
-    if(to_bus == get_receiving_side_bus())
-        location = 1.0-location;
-
-    map<double,FAULT>::const_iterator iter;
-    for(iter=faults.begin(); iter!=faults.end(); ++iter)
+    if(is_connected_to_bus(to_bus) and (location>=0.0 and location<=1.0))
     {
-        if(fabs(iter->first-location)<FLOAT_EPSILON)
-            break;
+        if(to_bus == get_receiving_side_bus())
+            location = 1.0-location;
+
+        map<double,FAULT>::const_iterator iter;
+        for(iter=faults.begin(); iter!=faults.end(); ++iter)
+        {
+            if(fabs(iter->first-location)<FLOAT_EPSILON)
+                break;
+        }
+        if(iter!=faults.end())
+            return iter->second;
+        else
+            return nofault;
     }
-    if(iter!=faults.end())
-        return iter->second;
     else
         return nofault;
 }
@@ -333,38 +335,35 @@ void LINE::clear_all_faults()
 
 void LINE::clear_fault_at_location(size_t to_bus, double location)
 {
-    if(not is_connected_to_bus(to_bus))
-        return;
-
-    if(location<0.0 or location>1.0)
-        return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    if(to_bus == get_receiving_side_bus())
-        location = 1.0-location;
-
-    map<double,FAULT>::iterator iter;
-    for(iter=faults.begin(); iter!=faults.end(); ++iter)
+    if(is_connected_to_bus(to_bus) and (location>=0.0 and location<=1.0))
     {
-        if(fabs(iter->first-location)<FLOAT_EPSILON)
-            break;
-    }
-    if(iter!=faults.end())
-    {
-        ostringstream osstream;
-        FAULT fault = iter->second;
-        string fault_type_str = fault.get_fault_type_string();
-        complex<double> y = fault.get_fault_shunt_in_pu();
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
-        if(to_bus==get_sending_side_bus())
-            osstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
-              <<"Fault shunt "<<y<<" pu at location "<<location<<" to bus "<<get_sending_side_bus()<<".";
-        else
-            osstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
-              <<"Fault shunt "<<y<<" pu at location "<<1.0-location<<" to bus "<<get_receiving_side_bus()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        faults.erase(iter);
+        if(to_bus == get_receiving_side_bus())
+            location = 1.0-location;
+
+        map<double,FAULT>::iterator iter;
+        for(iter=faults.begin(); iter!=faults.end(); ++iter)
+        {
+            if(fabs(iter->first-location)<FLOAT_EPSILON)
+                break;
+        }
+        if(iter!=faults.end())
+        {
+            ostringstream osstream;
+            FAULT fault = iter->second;
+            string fault_type_str = fault.get_fault_type_string();
+            complex<double> y = fault.get_fault_shunt_in_pu();
+
+            if(to_bus==get_sending_side_bus())
+                osstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
+                  <<"Fault shunt "<<y<<" pu at location "<<location<<" to bus "<<get_sending_side_bus()<<".";
+            else
+                osstream<<fault_type_str<<" is cleared for "<<get_device_name()<<endl
+                  <<"Fault shunt "<<y<<" pu at location "<<1.0-location<<" to bus "<<get_receiving_side_bus()<<".";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            faults.erase(iter);
+        }
     }
 }
 
@@ -430,8 +429,8 @@ void LINE::clear()
 
 bool LINE::is_connected_to_bus(size_t bus) const
 {
-    if(get_sending_side_bus()==bus || get_receiving_side_bus()==bus) return true;
-    else return false;
+    if(get_sending_side_bus()==bus or get_receiving_side_bus()==bus) return true;
+    else                                                             return false;
 }
 
 bool LINE::is_in_area(size_t area) const
@@ -596,50 +595,54 @@ complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_kV() const
 
 complex<double> LINE::get_line_complex_current_at_sending_side_in_pu() const
 {
-    if(get_sending_side_breaker_status()==false)
-        return 0.0;
-
-    complex<double> Z = get_line_positive_sequence_z_in_pu();
-    complex<double> Y = get_line_positive_sequence_y_in_pu();
-    complex<double> Ys = 0.5*Y + get_shunt_positive_sequence_y_at_sending_side_in_pu();
-    complex<double> Yr = 0.5*Y + get_shunt_positive_sequence_y_at_receiving_side_in_pu();
-
-    complex<double> Vs = get_line_complex_voltage_at_sending_side_in_pu();
-
-    if(get_receiving_side_breaker_status()==false)
+    if(get_sending_side_breaker_status()==true)
     {
-        complex<double> Yeq = Ys+1.0/(Z+1.0/Yr);
-        return Vs*Yeq;
+        complex<double> Z = get_line_positive_sequence_z_in_pu();
+        complex<double> Y = get_line_positive_sequence_y_in_pu();
+        complex<double> Ys = 0.5*Y + get_shunt_positive_sequence_y_at_sending_side_in_pu();
+        complex<double> Yr = 0.5*Y + get_shunt_positive_sequence_y_at_receiving_side_in_pu();
+
+        complex<double> Vs = get_line_complex_voltage_at_sending_side_in_pu();
+
+        if(get_receiving_side_breaker_status()==true)
+        {
+            complex<double> Vr = get_line_complex_voltage_at_receiving_side_in_pu();
+            return (Vs-Vr)/Z+Vs*Ys;
+        }
+        else
+        {
+            complex<double> Yeq = Ys+1.0/(Z+1.0/Yr);
+            return Vs*Yeq;
+        }
     }
     else
-    {
-        complex<double> Vr = get_line_complex_voltage_at_receiving_side_in_pu();
-        return (Vs-Vr)/Z+Vs*Ys;
-    }
+        return 0.0;
 }
 
 complex<double> LINE::get_line_complex_current_at_receiving_side_in_pu() const
 {
-    if(get_receiving_side_breaker_status()==false)
-        return 0.0;
-
-    complex<double> Z = get_line_positive_sequence_z_in_pu();
-    complex<double> Y = get_line_positive_sequence_y_in_pu();
-    complex<double> Ys = 0.5*Y + get_shunt_positive_sequence_y_at_sending_side_in_pu();
-    complex<double> Yr = 0.5*Y + get_shunt_positive_sequence_y_at_receiving_side_in_pu();
-
-
-    complex<double> Vr = get_line_complex_voltage_at_receiving_side_in_pu();
-    if(get_sending_side_breaker_status()==false)
+    if(get_receiving_side_breaker_status()==true)
     {
-        complex<double> Yeq = Yr+1.0/(Z+1.0/Ys);
-        return Vr*Yeq;
+        complex<double> Z = get_line_positive_sequence_z_in_pu();
+        complex<double> Y = get_line_positive_sequence_y_in_pu();
+        complex<double> Ys = 0.5*Y + get_shunt_positive_sequence_y_at_sending_side_in_pu();
+        complex<double> Yr = 0.5*Y + get_shunt_positive_sequence_y_at_receiving_side_in_pu();
+
+
+        complex<double> Vr = get_line_complex_voltage_at_receiving_side_in_pu();
+        if(get_sending_side_breaker_status()==true)
+        {
+            complex<double> Vs = get_line_complex_voltage_at_sending_side_in_pu();
+            return (Vr-Vs)/Z+Vr*Yr;
+        }
+        else
+        {
+            complex<double> Yeq = Yr+1.0/(Z+1.0/Ys);
+            return Vr*Yeq;
+        }
     }
     else
-    {
-        complex<double> Vs = get_line_complex_voltage_at_sending_side_in_pu();
-        return (Vr-Vs)/Z+Vr*Yr;
-    }
+        return 0.0;
 }
 
 complex<double> LINE::get_line_complex_current_at_sending_side_in_kA() const
@@ -698,18 +701,18 @@ complex<double> LINE::get_line_complex_power_at_receiving_side_in_MVA() const
 
 complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_pu() const
 {
-    if(get_sending_side_breaker_status()==false)
-        return INFINITE_THRESHOLD;
-    else
+    if(get_sending_side_breaker_status()==true)
         return get_line_complex_voltage_at_sending_side_in_pu()/get_line_complex_current_at_sending_side_in_pu();
+    else
+        return INFINITE_THRESHOLD;
 }
 
 complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_pu() const
 {
-    if(get_receiving_side_breaker_status()==false)
-        return INFINITE_THRESHOLD;
-    else
+    if(get_receiving_side_breaker_status()==true)
         return get_line_complex_voltage_at_receiving_side_in_pu()/get_line_complex_current_at_receiving_side_in_pu();
+    else
+        return INFINITE_THRESHOLD;
 }
 
 complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm() const
@@ -719,14 +722,14 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm
 
     double mvabase = psdb.get_system_base_power_in_MVA();
 
-    if(get_sending_side_breaker_status()==false)
-        return INDEX_NOT_EXIST;
-    else
+    if(get_sending_side_breaker_status()==true)
     {
         double Vbase_kV = get_line_base_voltage_in_kV();
         double Zbase_ohm = Vbase_kV*Vbase_kV/mvabase;
         return get_line_complex_apparent_impedance_at_sending_side_in_pu()*Zbase_ohm;
     }
+    else
+        return INDEX_NOT_EXIST;
 }
 
 complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_ohm() const
@@ -738,14 +741,14 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_o
 
     mvabase = psdb.get_system_base_power_in_MVA();
 
-    if(get_receiving_side_breaker_status()==false)
-        return INFINITE_THRESHOLD;
-    else
+    if(get_receiving_side_breaker_status()==true)
     {
         double Vbase_kV = get_line_base_voltage_in_kV();
         double Zbase_ohm = Vbase_kV*Vbase_kV/mvabase;
         return get_line_complex_apparent_impedance_at_receiving_side_in_pu()*Zbase_ohm;
     }
+    else
+        return INFINITE_THRESHOLD;
 }
 
 

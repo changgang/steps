@@ -22,8 +22,7 @@ TERMINAL::~TERMINAL()
 
 void TERMINAL::append_bus(size_t bus)
 {
-    if(bus==0) return;
-    if(not has_bus(bus))
+    if(bus!=0 and (not has_bus(bus)))
         append_and_sort_buses(bus);
 }
 

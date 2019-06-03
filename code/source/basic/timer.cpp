@@ -50,11 +50,11 @@ void TIMER::set_timer_interval_in_s(double t)
 void TIMER::start()
 {
     DEVICE* device = get_attached_device();
-    if(device==NULL)
-        return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    time_when_timer_is_started_in_s = toolkit.get_dynamic_simulation_time_in_s();
+    if(device!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        time_when_timer_is_started_in_s = toolkit.get_dynamic_simulation_time_in_s();
+    }
 }
 
 void TIMER::reset()
@@ -72,9 +72,7 @@ bool TIMER::is_started() const
 
 bool TIMER::is_timed_out() const
 {
-    if(time_when_timer_is_started_in_s==INFINITE_THRESHOLD)
-        return false;
-    else
+    if(time_when_timer_is_started_in_s!=INFINITE_THRESHOLD)
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
@@ -84,6 +82,8 @@ bool TIMER::is_timed_out() const
         else
             return false;
     }
+    else
+        return false;
 }
 
 double TIMER::get_timer_interval_in_s() const
@@ -98,10 +98,10 @@ double TIMER::get_time_when_started_in_s() const
 
 bool TIMER::is_valid() const
 {
-    if(get_timer_interval_in_s()==INFINITE_THRESHOLD)
-        return false;
-    else
+    if(get_timer_interval_in_s()!=INFINITE_THRESHOLD)
         return true;
+    else
+        return false;
 }
 
 void TIMER::check()

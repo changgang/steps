@@ -205,56 +205,60 @@ double WT3P0::get_Tp_in_s() const
 bool WT3P0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<18)
-        return is_successful;
+    if(data.size()>=18)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            int hold_speed_flag = 0;
+            double tp, kps, kis, tf, fup, flow, kpf, kif, kdf, tdf, rpmax, pmax, pmin, tspeed;
 
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
+            size_t i=3;
+            hold_speed_flag = get_integer_data(data[i],"0"); i++;
+            tspeed = get_double_data(data[i],"0.0"); i++;
+            kps = get_double_data(data[i],"0.0"); i++;
+            kis = get_double_data(data[i],"0.0"); i++;
+            tf = get_double_data(data[i],"0.0"); i++;
+            flow = get_double_data(data[i],"1.0"); i++;
+            fup = get_double_data(data[i],"1.0"); i++;
+            kpf = get_double_data(data[i],"0.0"); i++;
+            kif = get_double_data(data[i],"0.0"); i++;
+            kdf = get_double_data(data[i],"0.0"); i++;
+            tdf = get_double_data(data[i],"0.0"); i++;
+            rpmax = get_double_data(data[i],"0.0"); i++;
+            pmin = get_double_data(data[i],"0.0"); i++;
+            pmax = get_double_data(data[i],"0.0"); i++;
+            tp = get_double_data(data[i],"0.0");
 
-    int hold_speed_flag = 0;
-    double tp, kps, kis, tf, fup, flow, kpf, kif, kdf, tdf, rpmax, pmax, pmin, tspeed;
+            if(hold_speed_flag==0)
+                set_hold_wtg_speed_flag(false);
+            else
+                set_hold_wtg_speed_flag(true);
 
-    size_t i=3;
-    hold_speed_flag = get_integer_data(data[i],"0"); i++;
-    tspeed = get_double_data(data[i],"0.0"); i++;
-    kps = get_double_data(data[i],"0.0"); i++;
-    kis = get_double_data(data[i],"0.0"); i++;
-    tf = get_double_data(data[i],"0.0"); i++;
-    flow = get_double_data(data[i],"1.0"); i++;
-    fup = get_double_data(data[i],"1.0"); i++;
-    kpf = get_double_data(data[i],"0.0"); i++;
-    kif = get_double_data(data[i],"0.0"); i++;
-    kdf = get_double_data(data[i],"0.0"); i++;
-    tdf = get_double_data(data[i],"0.0"); i++;
-    rpmax = get_double_data(data[i],"0.0"); i++;
-    pmin = get_double_data(data[i],"0.0"); i++;
-    pmax = get_double_data(data[i],"0.0"); i++;
-    tp = get_double_data(data[i],"0.0");
+            set_Tspeed_in_s(tspeed);
+            set_Kp_speed_controller(kps);
+            set_Ki_speed_controller(kis);
+            set_Tfrequency_in_s(tf);
+            set_frequency_upper_deadband_in_pu(fup);
+            set_frequency_lower_deadband_in_pu(flow);
+            set_Kp_frequency_controller(kpf);
+            set_Ki_frequency_controller(kif);
+            set_Kd_frequency_controller(kdf);
+            set_Td_frequency_controller_in_s(tdf);
+            set_ratePitchmax_in_deg_per_s(rpmax);
+            set_Pitchmin_in_deg(pmin);
+            set_Pitchmax_in_deg(pmax);
+            set_Tp_in_s(tp);
 
-    if(hold_speed_flag==0)
-        set_hold_wtg_speed_flag(false);
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
     else
-        set_hold_wtg_speed_flag(true);
-
-    set_Tspeed_in_s(tspeed);
-    set_Kp_speed_controller(kps);
-    set_Ki_speed_controller(kis);
-    set_Tfrequency_in_s(tf);
-    set_frequency_upper_deadband_in_pu(fup);
-    set_frequency_lower_deadband_in_pu(flow);
-    set_Kp_frequency_controller(kpf);
-    set_Ki_frequency_controller(kif);
-    set_Kd_frequency_controller(kdf);
-    set_Td_frequency_controller_in_s(tdf);
-    set_ratePitchmax_in_deg_per_s(rpmax);
-    set_Pitchmin_in_deg(pmin);
-    set_Pitchmax_in_deg(pmax);
-    set_Tp_in_s(tp);
-
-    is_successful = true;
-
-    return is_successful;
+        return is_successful;
 }
 
 bool WT3P0::setup_model_with_psse_string(string data)
@@ -287,63 +291,63 @@ void WT3P0::initialize()
 {
     ostringstream osstream;
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator==NULL)
-        return;
-
-    WT_AERODYNAMIC_MODEL* aerdmodel = wt_generator->get_wt_aerodynamic_model();
-    if(aerdmodel==NULL)
-        return;
-
-    if(not aerdmodel->is_model_initialized())
-        aerdmodel->initialize();
-
-    set_block_toolkit();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
-
-    pitch_integrator.set_output(pitch0);
-    pitch_integrator.initialize();
-
-    double pmax = get_Pitchmax_in_deg();
-    double pmin = get_Pitchmin_in_deg();
-    if(pitch0>pmax)
+    if(wt_generator!=NULL)
     {
-        osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"Pitch angle is "<<pitch0<<" deg, and Pitchmax is "<<pmax<<" deg.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        WT_AERODYNAMIC_MODEL* aerdmodel = wt_generator->get_wt_aerodynamic_model();
+        if(aerdmodel!=NULL)
+        {
+            if(not aerdmodel->is_model_initialized())
+                aerdmodel->initialize();
+
+            set_block_toolkit();
+
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+            double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
+
+            pitch_integrator.set_output(pitch0);
+            pitch_integrator.initialize();
+
+            double pmax = get_Pitchmax_in_deg();
+            double pmin = get_Pitchmin_in_deg();
+            if(pitch0>pmax)
+            {
+                osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                  <<"Pitch angle is "<<pitch0<<" deg, and Pitchmax is "<<pmax<<" deg.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+            if(pitch0<pmin)
+            {
+                osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                  <<"Pitch angle is "<<pitch0<<" deg, and Pitchmin is "<<pmin<<" deg.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
+            speed_controller.set_output(pitch0);
+            speed_controller.initialize();
+
+            double speed_ref = get_wt_generator_reference_speed_in_pu();
+            speed_reference_sensor.set_output(speed_ref);
+            speed_reference_sensor.initialize();
+            if(get_hold_wtg_speed_flag()==true)
+                set_const_wtg_speed_reference_in_pu(speed_ref);
+
+            frequency_sensor.set_output(0.0);
+            frequency_sensor.initialize();
+
+            frequency_controller.set_output(0.0);
+            frequency_controller.initialize();
+
+            set_flag_model_initialized_as_true();
+
+            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                    <<"(1) speed regulator state: "<<speed_controller.get_state()<<endl
+                    <<"(2) frequency regulator state: "<<frequency_controller.get_state()<<endl
+                    <<"(3) pitch integrator state: "<<pitch_integrator.get_state()<<endl
+                    <<"(4) pitch angle is "<<get_pitch_angle_in_deg()<<" deg";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
-    if(pitch0<pmin)
-    {
-        osstream<<"Initialization error. Pitch of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-          <<"Pitch angle is "<<pitch0<<" deg, and Pitchmin is "<<pmin<<" deg.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-
-    speed_controller.set_output(pitch0);
-    speed_controller.initialize();
-
-    double speed_ref = get_wt_generator_reference_speed_in_pu();
-    speed_reference_sensor.set_output(speed_ref);
-    speed_reference_sensor.initialize();
-    if(get_hold_wtg_speed_flag()==true)
-        set_const_wtg_speed_reference_in_pu(speed_ref);
-
-    frequency_sensor.set_output(0.0);
-    frequency_sensor.initialize();
-
-    frequency_controller.set_output(0.0);
-    frequency_controller.initialize();
-
-    set_flag_model_initialized_as_true();
-
-    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-            <<"(1) speed regulator state: "<<speed_controller.get_state()<<endl
-            <<"(2) frequency regulator state: "<<frequency_controller.get_state()<<endl
-            <<"(3) pitch integrator state: "<<pitch_integrator.get_state()<<endl
-            <<"(4) pitch angle is "<<get_pitch_angle_in_deg()<<" deg";
-    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void WT3P0::run(DYNAMIC_MODE mode)
@@ -370,14 +374,14 @@ void WT3P0::run(DYNAMIC_MODE mode)
 
     double fup = get_frequency_upper_deadband_in_pu();
     double flow = get_frequency_lower_deadband_in_pu();
-    if(freq>fup)
-        freq -= fup;
+    if(freq>=flow and freq<=fup)
+        freq = 0.0;
     else
     {
-        if(freq<flow)
-            freq -= flow;
+        if(freq>fup)
+            freq -= fup;
         else
-            freq = 0.0;
+            freq -= flow;
     }
 
     frequency_controller.set_input(freq);
@@ -387,10 +391,15 @@ void WT3P0::run(DYNAMIC_MODE mode)
     rate -= pitch_integrator.get_output();
 
     double ratemax = get_ratePitchmax_in_deg_per_s();
-    if(rate>ratemax)
-        rate = ratemax;
-    if(rate<-ratemax)
-        rate = -ratemax;
+    if(rate<=ratemax and rate>-ratemax)
+        ;
+    else
+    {
+        if(rate>ratemax)
+            rate = ratemax;
+        else
+            rate = -ratemax;
+    }
 
     pitch_integrator.set_input(rate);
     pitch_integrator.run(mode);

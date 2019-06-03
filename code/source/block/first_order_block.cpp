@@ -48,20 +48,7 @@ void FIRST_ORDER_BLOCK::initialize()
 {
     double k = get_K();
     double t = get_T_in_s();
-    if(t==0.0)
-    {
-        set_state(0.0);
-        set_store(0.0);
-        set_dstate(0.0);
-        if(k!=0.0)
-            set_input(get_output()/get_K());
-        else
-        {
-            set_output(0.0);
-            set_input(0.0);
-        }
-    }
-    else
+    if(t!=0.0)
     {
         ostringstream osstream;
 
@@ -73,7 +60,9 @@ void FIRST_ORDER_BLOCK::initialize()
         double vmin = get_lower_limit();
 
         double y = get_output();
-        if(k==0.0)
+        if(k!=0.0)
+            ;
+        else
         {
             y=0.0;
             set_output(0.0);
@@ -93,10 +82,10 @@ void FIRST_ORDER_BLOCK::initialize()
             z = 0.0;
         }
         ds = 0.0;
-        if(k==0)
-            x = 0.0;
-        else
+        if(k!=0)
             x = y/k;
+        else
+            x = 0.0;
 
         set_state(s);
         set_store(z);
@@ -120,6 +109,19 @@ void FIRST_ORDER_BLOCK::initialize()
             }
         }
     }
+    else
+    {
+        set_state(0.0);
+        set_store(0.0);
+        set_dstate(0.0);
+        if(k!=0.0)
+            set_input(get_output()/get_K());
+        else
+        {
+            set_output(0.0);
+            set_input(0.0);
+        }
+    }
 }
 
 void FIRST_ORDER_BLOCK::run(DYNAMIC_MODE mode)
@@ -133,136 +135,136 @@ void FIRST_ORDER_BLOCK::run(DYNAMIC_MODE mode)
 void FIRST_ORDER_BLOCK::integrate()
 {
     double k = get_K();
-    if(k==0.0)
-        return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
-    double t = get_T_in_s();
-
-    LIMITER_TYPE limiter_type = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double x = get_input();
-
-    double s, z, y;
-
-    if(t!=0.0)
+    if(k!=0.0)
     {
-        z = get_store();
-        //s = (z+k*x)/(1.0+2.0*t/h);
-        s = h*(z+k*x)/(h+2.0*t);
-        y = s;
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
-        double ds = (k*x-s)/t;
-        if(fabs(ds)<FLOAT_EPSILON)
-            return;
-        //if(fabs(ds)>DSTATE_THRESHOLD)
-        //    cout<<"Derivative of state is changed dramatically in FIRST_ORDER_BLOCK\n";
+        double t = get_T_in_s();
 
-        if(limiter_type != NO_LIMITER)
+        LIMITER_TYPE limiter_type = get_limiter_type();
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
+
+        double x = get_input();
+
+        double s, z, y;
+
+        if(t!=0.0)
         {
-            if(limiter_type == WINDUP_LIMITER)
+            z = get_store();
+            //s = (z+k*x)/(1.0+2.0*t/h);
+            s = h*(z+k*x)/(h+2.0*t);
+            y = s;
+
+            double ds = (k*x-s)/t;
+            if(fabs(ds)<FLOAT_EPSILON)
+                return;
+            //if(fabs(ds)>DSTATE_THRESHOLD)
+            //    cout<<"Derivative of state is changed dramatically in FIRST_ORDER_BLOCK\n";
+
+            if(limiter_type != NO_LIMITER)
             {
-                if(y>vmax)
-                    y = vmax;
-                else
+                if(limiter_type == WINDUP_LIMITER)
                 {
-                    if(y<vmin)
-                        y = vmin;
-                }
-            }
-            else
-            {
-                if(s>vmax)
-                {
-                    s = vmax;
-                    y = vmax;
-                }
-                else
-                {
-                    if(s<vmin)
+                    if(y>vmax)
+                        y = vmax;
+                    else
                     {
-                        s = vmin;
-                        y = vmin;
+                        if(y<vmin)
+                            y = vmin;
+                    }
+                }
+                else
+                {
+                    if(s>vmax)
+                    {
+                        s = vmax;
+                        y = vmax;
+                    }
+                    else
+                    {
+                        if(s<vmin)
+                        {
+                            s = vmin;
+                            y = vmin;
+                        }
                     }
                 }
             }
+            set_state(s);
         }
-        set_state(s);
+        else
+        {
+            y = k*x;
+        }
+        set_output(y);
     }
-    else
-    {
-        y = k*x;
-    }
-    set_output(y);
 }
 
 void FIRST_ORDER_BLOCK::update()
 {
     double k = get_K();
-    if(k==0.0)
-        return;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
-    double t = get_T_in_s();
-
-    LIMITER_TYPE limiter_type = get_limiter_type();
-    double vmax = get_upper_limit();
-    double vmin = get_lower_limit();
-
-    double x = get_input();
-
-    double s, ds, z, y;
-
-    if(t!=0.0)
+    if(k!=0.0)
     {
-        ds = x/t;
-        s = get_state();
-        y = s;
-        if(limiter_type != NO_LIMITER)
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double h = toolkit.get_dynamic_simulation_time_step_in_s();
+
+        double t = get_T_in_s();
+
+        LIMITER_TYPE limiter_type = get_limiter_type();
+        double vmax = get_upper_limit();
+        double vmin = get_lower_limit();
+
+        double x = get_input();
+
+        double s, ds, z, y;
+
+        if(t!=0.0)
         {
-            if(limiter_type == WINDUP_LIMITER)
+            ds = x/t;
+            s = get_state();
+            y = s;
+            if(limiter_type != NO_LIMITER)
             {
-                if(y>vmax)
-                    y = vmax;
-                else
+                if(limiter_type == WINDUP_LIMITER)
                 {
-                    if(y<vmin)
-                        y = vmin;
-                }
-            }
-            else
-            {
-                if(s>=vmax and ds>0.0)
-                {
-                    ds = 0.0;
-                    y = vmax;
+                    if(y>vmax)
+                        y = vmax;
+                    else
+                    {
+                        if(y<vmin)
+                            y = vmin;
+                    }
                 }
                 else
                 {
-                    if(s<=vmin and ds<0.0)
+                    if(s>=vmax and ds>0.0)
                     {
                         ds = 0.0;
-                        y = vmin;
+                        y = vmax;
+                    }
+                    else
+                    {
+                        if(s<=vmin and ds<0.0)
+                        {
+                            ds = 0.0;
+                            y = vmin;
+                        }
                     }
                 }
             }
+            //z = k*x-(1.0-2.0*t/h)*s;
+            z = k*x-(h-2.0*t)*s/h;
+            set_dstate(ds);
+            set_store(z);
         }
-        //z = k*x-(1.0-2.0*t/h)*s;
-        z = k*x-(h-2.0*t)*s/h;
-        set_dstate(ds);
-        set_store(z);
+        else
+        {
+            y = k*x;
+        }
+        set_output(y);
     }
-    else
-    {
-        y = k*x;
-    }
-    set_output(y);
 }
 
 void FIRST_ORDER_BLOCK::check()

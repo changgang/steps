@@ -67,25 +67,29 @@ void GENCLS::update_source_impedance()
 bool GENCLS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<5)
+    if(data.size()>=5)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double H, D;
+
+            size_t i=3;
+            H = get_double_data(data[i],"0.0"); i++;
+            D = get_double_data(data[i],"0.0");
+
+            set_H_in_s(H);
+            set_D(D);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    double H, D;
-
-    size_t i=3;
-    H = get_double_data(data[i],"0.0"); i++;
-    D = get_double_data(data[i],"0.0");
-
-    set_H_in_s(H);
-    set_D(D);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool GENCLS::setup_model_with_psse_string(string data)

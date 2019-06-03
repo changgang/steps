@@ -8192,9 +8192,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_clear_fixed_shunt()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    ostringstream osstream;
+    /*ostringstream osstream;
     osstream<<"ALEEEEEEEEEEERT! clear_fixed_shunt is not functioning if using the vector::erase function.";
-    default_toolkit.show_information_with_leading_time_stamp(osstream);
+    default_toolkit.show_information_with_leading_time_stamp(osstream);*/
 
     prepare_database_for_test();
 

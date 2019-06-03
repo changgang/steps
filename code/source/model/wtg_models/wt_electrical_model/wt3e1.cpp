@@ -72,49 +72,53 @@ string WT3E1::get_model_name() const
 double WT3E1::get_active_power_current_command_in_pu()
 {
     WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source==NULL)
+    if(source!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = source->get_source_bus();
+        double vterm = psdb.get_bus_voltage_in_pu(bus);
+
+        double IPcmd = power_order_integrator.get_output()/vterm;
+
+        double IPmax = get_IPmax_in_pu();
+        if(IPcmd>IPmax)
+            IPcmd = IPmax;
+        return IPcmd;
+    }
+    else
         return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus = source->get_source_bus();
-    double vterm = psdb.get_bus_voltage_in_pu(bus);
-
-    double IPcmd = power_order_integrator.get_output()/vterm;
-
-    double IPmax = get_IPmax_in_pu();
-    if(IPcmd>IPmax)
-        IPcmd = IPmax;
-    return IPcmd;
 }
 
 double WT3E1::get_reactive_power_current_command_in_pu()
 {
     WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source==NULL)
-        return 0.0;
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    double EQcmd = 0.0;
-    if(get_voltage_flag()==0)
+    if(source!=NULL)
     {
-        size_t bus = source->get_source_bus();
-        double vterm = psdb.get_bus_voltage_in_pu(bus);
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        EQcmd = Q_error_integrator.get_output()-vterm;
+        double EQcmd = 0.0;
+        if(get_voltage_flag()==0)
+        {
+            size_t bus = source->get_source_bus();
+            double vterm = psdb.get_bus_voltage_in_pu(bus);
+
+            EQcmd = Q_error_integrator.get_output()-vterm;
+        }
+        else
+        {
+            EQcmd = V_error_integrator.get_output();
+        }
+
+        double Xsource = source->get_source_impedance_in_pu().imag();
+
+        double IQcmd = -EQcmd/Xsource;
+        return IQcmd;
     }
     else
-    {
-        EQcmd = V_error_integrator.get_output();
-    }
-
-    double Xsource = source->get_source_impedance_in_pu().imag();
-
-    double IQcmd = -EQcmd/Xsource;
-    return IQcmd;
+        return 0.0;
 }
 
 void WT3E1::set_transformer_from_bus(size_t bus)
@@ -421,130 +425,134 @@ double WT3E1::get_IPmax_in_pu() const
 bool WT3E1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<40)
-        return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    size_t bus, var_control_flag, voltage_flag, trans_from_bus, trans_to_bus;
-    string trans_id;
-
-    double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
-           ipmax, trv, rpmax, rpmin, tspeed, kqi, vmax, vmin,
-           kqv, eqmax, eqmin, tv, tp, fn,
-           wmin, wp20, wp40, wp60, pmin_at_wmin, wp100;
-
-    size_t i=3;
-    bus = get_integer_data(data[i],"0"); i++;
-    var_control_flag = get_integer_data(data[i],"0"); i++;
-    voltage_flag = get_integer_data(data[i],"0"); i++;
-    trans_from_bus = get_integer_data(data[i],"0"); i++;
-    trans_to_bus = get_integer_data(data[i],"0"); i++;
-    trans_id = get_string_data(data[i],""); i++;
-    tfv = get_double_data(data[i],"0.0"); i++;
-    kpv = get_double_data(data[i],"0.0"); i++;
-    kiv = get_double_data(data[i],"0.0"); i++;
-    xc = get_double_data(data[i],"0.0"); i++;
-    tfp = get_double_data(data[i],"0.0"); i++;
-    kpp = get_double_data(data[i],"0.0"); i++;
-    kip = get_double_data(data[i],"0.0"); i++;
-    pmax = get_double_data(data[i],"0.0"); i++;
-    pmin = get_double_data(data[i],"0.0"); i++;
-    qmax = get_double_data(data[i],"0.0"); i++;
-    qmin = get_double_data(data[i],"0.0"); i++;
-    ipmax = get_double_data(data[i],"0.0"); i++;
-    trv = get_double_data(data[i],"0.0"); i++;
-    rpmax = get_double_data(data[i],"0.0"); i++;
-    rpmin = get_double_data(data[i],"0.0"); i++;
-    tspeed = get_double_data(data[i],"0.0"); i++;
-    kqi = get_double_data(data[i],"0.0"); i++;
-    vmax = get_double_data(data[i],"0.0"); i++;
-    vmin = get_double_data(data[i],"0.0"); i++;
-    kqv = get_double_data(data[i],"0.0"); i++;
-    eqmin = get_double_data(data[i],"0.0"); i++;
-    eqmax = get_double_data(data[i],"0.0"); i++;
-    tv = get_double_data(data[i],"0.0"); i++;
-    tp = get_double_data(data[i],"0.0"); i++;
-    fn = get_double_data(data[i],"0.0"); i++;
-    wmin = get_double_data(data[i],"0.0"); i++;
-    wp20 = get_double_data(data[i],"0.0"); i++;
-    wp40 = get_double_data(data[i],"0.0"); i++;
-    wp60 = get_double_data(data[i],"0.0"); i++;
-    pmin_at_wmin = get_double_data(data[i],"0.0"); i++;
-    wp100 = get_double_data(data[i],"0.0");
-
-    set_bus_to_regulate(bus);
-    PE_VAR_CONTROL_MODE mode;
-    switch(var_control_flag)
+    if(data.size()>=40)
     {
-        case 0:
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
         {
-            mode = CONSTANT_VAR_MODE;
-            break;
+            size_t bus, var_control_flag, voltage_flag, trans_from_bus, trans_to_bus;
+            string trans_id;
+
+            double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
+                   ipmax, trv, rpmax, rpmin, tspeed, kqi, vmax, vmin,
+                   kqv, eqmax, eqmin, tv, tp, fn,
+                   wmin, wp20, wp40, wp60, pmin_at_wmin, wp100;
+
+            size_t i=3;
+            bus = get_integer_data(data[i],"0"); i++;
+            var_control_flag = get_integer_data(data[i],"0"); i++;
+            voltage_flag = get_integer_data(data[i],"0"); i++;
+            trans_from_bus = get_integer_data(data[i],"0"); i++;
+            trans_to_bus = get_integer_data(data[i],"0"); i++;
+            trans_id = get_string_data(data[i],""); i++;
+            tfv = get_double_data(data[i],"0.0"); i++;
+            kpv = get_double_data(data[i],"0.0"); i++;
+            kiv = get_double_data(data[i],"0.0"); i++;
+            xc = get_double_data(data[i],"0.0"); i++;
+            tfp = get_double_data(data[i],"0.0"); i++;
+            kpp = get_double_data(data[i],"0.0"); i++;
+            kip = get_double_data(data[i],"0.0"); i++;
+            pmax = get_double_data(data[i],"0.0"); i++;
+            pmin = get_double_data(data[i],"0.0"); i++;
+            qmax = get_double_data(data[i],"0.0"); i++;
+            qmin = get_double_data(data[i],"0.0"); i++;
+            ipmax = get_double_data(data[i],"0.0"); i++;
+            trv = get_double_data(data[i],"0.0"); i++;
+            rpmax = get_double_data(data[i],"0.0"); i++;
+            rpmin = get_double_data(data[i],"0.0"); i++;
+            tspeed = get_double_data(data[i],"0.0"); i++;
+            kqi = get_double_data(data[i],"0.0"); i++;
+            vmax = get_double_data(data[i],"0.0"); i++;
+            vmin = get_double_data(data[i],"0.0"); i++;
+            kqv = get_double_data(data[i],"0.0"); i++;
+            eqmin = get_double_data(data[i],"0.0"); i++;
+            eqmax = get_double_data(data[i],"0.0"); i++;
+            tv = get_double_data(data[i],"0.0"); i++;
+            tp = get_double_data(data[i],"0.0"); i++;
+            fn = get_double_data(data[i],"0.0"); i++;
+            wmin = get_double_data(data[i],"0.0"); i++;
+            wp20 = get_double_data(data[i],"0.0"); i++;
+            wp40 = get_double_data(data[i],"0.0"); i++;
+            wp60 = get_double_data(data[i],"0.0"); i++;
+            pmin_at_wmin = get_double_data(data[i],"0.0"); i++;
+            wp100 = get_double_data(data[i],"0.0");
+
+            set_bus_to_regulate(bus);
+            PE_VAR_CONTROL_MODE mode;
+            switch(var_control_flag)
+            {
+                case 0:
+                {
+                    mode = CONSTANT_VAR_MODE;
+                    break;
+                }
+                case 1:
+                {
+                    mode = CONSTANT_POWER_FACTOR_MODE;
+                    break;
+                }
+                case 2:
+                {
+                    mode = CONSTANT_VOLTAGE_MODE;
+                    break;
+                }
+                default:
+                {
+                    mode = CONSTANT_VAR_MODE;
+                    break;
+                }
+            }
+            set_var_control_mode(mode);
+            set_transformer_from_bus(trans_from_bus);
+            set_transformer_to_bus(trans_to_bus);
+            set_transformer_id(trans_id);
+            set_Xcomp_in_pu(xc);
+            set_TRV_in_s(trv);
+            set_Fn(fn);
+            set_KIV(kiv);
+            set_Qmax_in_pu(qmax);
+            set_Qmin_in_pu(qmin);
+            set_KPV(kpv);
+            set_TV_in_s(tv);
+            set_TFV_in_s(tfv);
+            set_TP_in_s(tp);
+            set_KQI(kqi);
+            set_Vmax_in_pu(vmax);
+            set_Vmin_in_pu(vmin);
+
+            if(voltage_flag>2)
+                voltage_flag = 2;
+            set_voltage_flag(voltage_flag);
+            set_KQV(kqv);
+            set_EQmax_in_pu(eqmax);
+            set_EQmin_in_pu(eqmin);
+            set_Tspeed_in_s(tspeed);
+            set_KPP(kpp);
+            set_KIP(kip);
+            set_rPmax_in_pu(rpmax);
+            set_rPmin_in_pu(rpmin);
+            set_TFP_in_s(tfp);
+            set_Pmax_in_pu(pmax);
+            set_Pmin_in_pu(pmin);
+            set_IPmax_in_pu(ipmax);
+
+            WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table;
+            table.add_wind_turbine_power_and_speed_pair_in_pu(wmin, pmin_at_wmin);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(wp20, 0.2);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(wp40, 0.4);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(wp60, 0.6);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(wp100, 1.0);
+            set_wind_turbine_power_speed_lookup_table(table);
+
+            is_successful = true;
+
+            return is_successful;
         }
-        case 1:
-        {
-            mode = CONSTANT_POWER_FACTOR_MODE;
-            break;
-        }
-        case 2:
-        {
-            mode = CONSTANT_VOLTAGE_MODE;
-            break;
-        }
-        default:
-        {
-            mode = CONSTANT_VAR_MODE;
-            break;
-        }
+        else
+            return is_successful;
     }
-    set_var_control_mode(mode);
-    set_transformer_from_bus(trans_from_bus);
-    set_transformer_to_bus(trans_to_bus);
-    set_transformer_id(trans_id);
-    set_Xcomp_in_pu(xc);
-    set_TRV_in_s(trv);
-    set_Fn(fn);
-    set_KIV(kiv);
-    set_Qmax_in_pu(qmax);
-    set_Qmin_in_pu(qmin);
-    set_KPV(kpv);
-    set_TV_in_s(tv);
-    set_TFV_in_s(tfv);
-    set_TP_in_s(tp);
-    set_KQI(kqi);
-    set_Vmax_in_pu(vmax);
-    set_Vmin_in_pu(vmin);
-
-    if(voltage_flag>2)
-        voltage_flag = 2;
-    set_voltage_flag(voltage_flag);
-    set_KQV(kqv);
-    set_EQmax_in_pu(eqmax);
-    set_EQmin_in_pu(eqmin);
-    set_Tspeed_in_s(tspeed);
-    set_KPP(kpp);
-    set_KIP(kip);
-    set_rPmax_in_pu(rpmax);
-    set_rPmin_in_pu(rpmin);
-    set_TFP_in_s(tfp);
-    set_Pmax_in_pu(pmax);
-    set_Pmin_in_pu(pmin);
-    set_IPmax_in_pu(ipmax);
-
-    WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table;
-    table.add_wind_turbine_power_and_speed_pair_in_pu(wmin, pmin_at_wmin);
-    table.add_wind_turbine_power_and_speed_pair_in_pu(wp20, 0.2);
-    table.add_wind_turbine_power_and_speed_pair_in_pu(wp40, 0.4);
-    table.add_wind_turbine_power_and_speed_pair_in_pu(wp60, 0.6);
-    table.add_wind_turbine_power_and_speed_pair_in_pu(wp100, 1.0);
-    set_wind_turbine_power_speed_lookup_table(table);
-
-    is_successful = true;
-
-    return is_successful;
+    else
+        return is_successful;
 }
 
 bool WT3E1::setup_model_with_psse_string(string data)
@@ -581,288 +589,284 @@ void WT3E1::set_block_toolkit()
 void WT3E1::initialize()
 {
     ostringstream osstream;
-    if(is_model_initialized())
-        return;
-
-    WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator==NULL)
-        return;
-
-    WT_GENERATOR_MODEL* gen_model = wt_generator->get_wt_generator_model();
-    if(gen_model==NULL)
-        return;
-
-    if(not gen_model->is_model_initialized())
-        gen_model->initialize();
-
-    set_block_toolkit();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    double vterm = get_terminal_bus_voltage_in_pu();
-    double iterm = gen_model->get_terminal_current_in_pu_based_on_mbase();
-    //double freq = get_terminal_bus_frequency_deviation_in_pu();
-    //double mbase = wt_generator->get_mbase_in_MVA();
-    complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
-    double pelec = selec.real();
-    double qelec = selec.imag();
-    double speed = get_wind_turbine_reference_speed_with_power_in_pu(pelec);
-
-    double ipcmd = gen_model->get_active_current_command_in_pu_based_on_mbase();
-    double ipmax = get_IPmax_in_pu();
-    if(ipcmd>ipmax)
+    if(not is_model_initialized())
     {
-        osstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    double porder = ipcmd*vterm;
-    double pmax = get_Pmax_in_pu();
-    double pmin = get_Pmin_in_pu();
-    power_order_integrator.set_output(porder);
-    if(porder>pmax)
-    {
-        osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    if(porder<pmin)
-    {
-        osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-          <<"Porder is "<<porder<<", and Pmin is "<<pmin<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    power_order_integrator.initialize();
-
-    double torque =  porder/(1.0+speed);
-    torque_PI_regulator.set_output(torque);
-    torque_PI_regulator.initialize();
-
-    wind_turbine_speed_reference_sensor.set_output(speed);
-    wind_turbine_speed_reference_sensor.initialize();
-
-
-    double iqcmd = gen_model->get_reactive_current_command_in_pu_based_on_mbase();
-    double xsource = wt_generator->get_source_impedance_in_pu().imag();
-    double eqcmd = iqcmd*(-xsource);
-
-    double verror = 0.0;
-    size_t vflag = get_voltage_flag();
-    if(vflag == 0)
-    {
-        V_error_integrator.set_output(0.0);
-        V_error_integrator.initialize();
-
-        verror = eqcmd;
-    }
-    else
-    {
-        if(vflag == 1)
+        WT_GENERATOR* wt_generator = get_wt_generator_pointer();
+        if(wt_generator!=NULL)
         {
-            V_error_integrator.set_upper_limit(vterm+get_EQmax_in_pu());
-            V_error_integrator.set_lower_limit(vterm+get_EQmin_in_pu());
+            WT_GENERATOR_MODEL* gen_model = wt_generator->get_wt_generator_model();
+            if(gen_model!=NULL)
+            {
+                if(not gen_model->is_model_initialized())
+                    gen_model->initialize();
+
+                set_block_toolkit();
+
+                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+                double vterm = get_terminal_bus_voltage_in_pu();
+                double iterm = gen_model->get_terminal_current_in_pu_based_on_mbase();
+                //double freq = get_terminal_bus_frequency_deviation_in_pu();
+                //double mbase = wt_generator->get_mbase_in_MVA();
+                complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
+                double pelec = selec.real();
+                double qelec = selec.imag();
+                double speed = get_wind_turbine_reference_speed_with_power_in_pu(pelec);
+
+                double ipcmd = gen_model->get_active_current_command_in_pu_based_on_mbase();
+                double ipmax = get_IPmax_in_pu();
+                if(ipcmd>ipmax)
+                {
+                    osstream<<"Initialization error. IPcmd (Active current command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"IPcmd is "<<ipcmd<<", and IPmax is "<<ipmax<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                double porder = ipcmd*vterm;
+                double pmax = get_Pmax_in_pu();
+                double pmin = get_Pmin_in_pu();
+                power_order_integrator.set_output(porder);
+                if(porder>pmax)
+                {
+                    osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Porder is "<<porder<<", and Pmax is "<<pmax<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(porder<pmin)
+                {
+                    osstream<<"Initialization error. Porder (Active power order) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Porder is "<<porder<<", and Pmin is "<<pmin<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                power_order_integrator.initialize();
+
+                double torque =  porder/(1.0+speed);
+                torque_PI_regulator.set_output(torque);
+                torque_PI_regulator.initialize();
+
+                wind_turbine_speed_reference_sensor.set_output(speed);
+                wind_turbine_speed_reference_sensor.initialize();
+
+
+                double iqcmd = gen_model->get_reactive_current_command_in_pu_based_on_mbase();
+                double xsource = wt_generator->get_source_impedance_in_pu().imag();
+                double eqcmd = iqcmd*(-xsource);
+
+                double verror = 0.0;
+                size_t vflag = get_voltage_flag();
+                if(vflag == 0)
+                {
+                    V_error_integrator.set_output(0.0);
+                    V_error_integrator.initialize();
+
+                    verror = eqcmd;
+                }
+                else
+                {
+                    if(vflag == 1)
+                    {
+                        V_error_integrator.set_upper_limit(vterm+get_EQmax_in_pu());
+                        V_error_integrator.set_lower_limit(vterm+get_EQmin_in_pu());
+                    }
+                    else
+                    {
+                        V_error_integrator.set_upper_limit(get_EQmax_in_pu());
+                        V_error_integrator.set_lower_limit(get_EQmin_in_pu());
+                    }
+                    double vmax = V_error_integrator.get_upper_limit();
+                    double vmin = V_error_integrator.get_lower_limit();
+
+                    V_error_integrator.set_output(eqcmd);
+                    if(eqcmd>vmax)
+                    {
+                        osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                          <<"Eqcmd is "<<eqcmd<<", and Vmax is "<<vmax<<".";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
+                    if(eqcmd<vmin)
+                    {
+                        osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                          <<"Eqcmd is "<<eqcmd<<", and Vmin is "<<vmin<<".";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
+                    V_error_integrator.initialize();
+                    verror = 0.0;
+                }
+
+                double vcmd = verror+vterm;
+                double vmax = get_Vmax_in_pu();
+                double vmin = get_Vmin_in_pu();
+                Q_error_integrator.set_output(vcmd);
+                if(vcmd>vmax)
+                {
+                    osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Vcmd is "<<vcmd<<", and Vmax is "<<vmax<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(vcmd<vmin)
+                {
+                    osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Vcmd is "<<vcmd<<", and Vmin is "<<vmin<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                Q_error_integrator.initialize();
+
+                double qcmd = qelec;
+                double qmax = get_Qmax_in_pu();
+                double qmin = get_Qmin_in_pu();
+                if(qcmd>qmax)
+                {
+                    osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Qcmd is "<<qcmd<<", and Qmax is "<<qmax<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(qcmd<qmin)
+                {
+                    osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Qcmd is "<<qcmd<<", and Qmin is "<<qmin<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+
+                set_reactive_power_reference_in_pu(qcmd);
+
+                active_power_sensor.set_output(pelec);
+                active_power_sensor.initialize();
+
+                double smag = steps_fast_complex_abs(selec);
+                double pf = fabs(pelec)/smag;
+                pf = (qelec/pelec>0? pf:-pf);
+                set_power_factor_reference_in_pu(pf);
+
+                voltage_regulator_filter.set_output(qcmd);
+                voltage_regulator_filter.initialize();
+
+                voltage_regulator_integrator.set_output(qcmd);
+                voltage_regulator_integrator.initialize();
+
+                voltage_regulator_first_order_block.set_output(0.0);
+                voltage_regulator_first_order_block.initialize();
+
+                double xcomp = get_Xcomp_in_pu();
+                double vref = vterm+iterm*xcomp;
+
+                voltage_sensor.set_output(vref);
+                voltage_sensor.initialize();
+
+                set_voltage_reference_in_pu(vref);
+
+                set_flag_model_initialized_as_true();
+            }
         }
-        else
-        {
-            V_error_integrator.set_upper_limit(get_EQmax_in_pu());
-            V_error_integrator.set_lower_limit(get_EQmin_in_pu());
-        }
-        double vmax = V_error_integrator.get_upper_limit();
-        double vmin = V_error_integrator.get_lower_limit();
-
-        V_error_integrator.set_output(eqcmd);
-        if(eqcmd>vmax)
-        {
-            osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-              <<"Eqcmd is "<<eqcmd<<", and Vmax is "<<vmax<<".";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-        if(eqcmd<vmin)
-        {
-            osstream<<"Initialization error. Eqcmd (reactive voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-              <<"Eqcmd is "<<eqcmd<<", and Vmin is "<<vmin<<".";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-        V_error_integrator.initialize();
-        verror = 0.0;
     }
-
-    double vcmd = verror+vterm;
-    double vmax = get_Vmax_in_pu();
-    double vmin = get_Vmin_in_pu();
-    Q_error_integrator.set_output(vcmd);
-    if(vcmd>vmax)
-    {
-        osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"Vcmd is "<<vcmd<<", and Vmax is "<<vmax<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    if(vcmd<vmin)
-    {
-        osstream<<"Initialization error. Vcmd (voltage command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-          <<"Vcmd is "<<vcmd<<", and Vmin is "<<vmin<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    Q_error_integrator.initialize();
-
-    double qcmd = qelec;
-    double qmax = get_Qmax_in_pu();
-    double qmin = get_Qmin_in_pu();
-    if(qcmd>qmax)
-    {
-        osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"Qcmd is "<<qcmd<<", and Qmax is "<<qmax<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    if(qcmd<qmin)
-    {
-        osstream<<"Initialization error. Qcmd (reactive power command) of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-          <<"Qcmd is "<<qcmd<<", and Qmin is "<<qmin<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-
-    set_reactive_power_reference_in_pu(qcmd);
-
-    active_power_sensor.set_output(pelec);
-    active_power_sensor.initialize();
-
-	double smag = steps_fast_complex_abs(selec);
-    double pf = fabs(pelec)/smag;
-    pf = (qelec/pelec>0? pf:-pf);
-    set_power_factor_reference_in_pu(pf);
-
-    voltage_regulator_filter.set_output(qcmd);
-    voltage_regulator_filter.initialize();
-
-    voltage_regulator_integrator.set_output(qcmd);
-    voltage_regulator_integrator.initialize();
-
-    voltage_regulator_first_order_block.set_output(0.0);
-    voltage_regulator_first_order_block.initialize();
-
-    double xcomp = get_Xcomp_in_pu();
-    double vref = vterm+iterm*xcomp;
-
-    voltage_sensor.set_output(vref);
-    voltage_sensor.initialize();
-
-    set_voltage_reference_in_pu(vref);
-
-    set_flag_model_initialized_as_true();
 }
 
 void WT3E1::run(DYNAMIC_MODE mode)
 {
     ostringstream osstream;
-    if(is_model_initialized())
-        return;
-
     WT_GENERATOR* wt_generator = get_wt_generator_pointer();
-    if(wt_generator==NULL)
-        return;
-
-    WT_GENERATOR_MODEL* source_model = wt_generator->get_wt_generator_model();
-    if(source_model==NULL)
-        return;
-
-
-    double vterm = get_terminal_bus_voltage_in_pu();
-    double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
-    //double freq = get_terminal_bus_frequency_deviation_in_pu();
-    //double mbase = wt_generator->get_mbase_in_MVA();
-    complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
-    double pelec = selec.real();
-    double qelec = selec.imag();
-
-    double speed_ref = get_wind_turbine_reference_speed_with_power_in_pu(pelec);
-    double speed = speed_ref;
-
-
-    wind_turbine_speed_reference_sensor.set_input(speed_ref);
-    wind_turbine_speed_reference_sensor.run(mode);
-
-    double input = speed - wind_turbine_speed_reference_sensor.get_output();
-
-    torque_PI_regulator.set_input(input);
-    torque_PI_regulator.run(mode);
-
-    input = torque_PI_regulator.get_output()*(1.0+speed)-power_order_integrator.get_output();
-    if(input>get_rPmax_in_pu())
-        input = get_rPmax_in_pu();
-    if(input<get_rPmin_in_pu())
-        input = get_rPmin_in_pu();
-
-    power_order_integrator.set_input(input);
-    power_order_integrator.run(mode);
-
-
-    active_power_sensor.set_input(pelec);
-    active_power_sensor.run(mode);
-
-    double xcomp = get_Xcomp_in_pu();
-    input = vterm+iterm*xcomp;
-    voltage_sensor.set_input(input);
-    voltage_sensor.run(mode);
-
-    input = get_voltage_reference_in_pu()-voltage_sensor.get_output();
-    input /= get_Fn();
-
-    voltage_regulator_integrator.set_input(input);
-    voltage_regulator_integrator.run(mode);
-
-    voltage_regulator_first_order_block.set_input(input);
-    voltage_regulator_first_order_block.run(mode);
-
-    input = voltage_regulator_integrator.get_output() + voltage_regulator_first_order_block.get_output();
-    voltage_regulator_filter.set_input(input);
-    voltage_regulator_filter.run(mode);
-
-    PE_VAR_CONTROL_MODE var_mode = get_var_control_mode();
-    double qcmd = 0.0;
-    if(var_mode==CONSTANT_VAR_MODE)
-        qcmd = get_reactive_power_reference_in_pu();
-    else
+    if(wt_generator!=NULL)
     {
-        if(var_mode==CONSTANT_POWER_FACTOR_MODE)
+        WT_GENERATOR_MODEL* source_model = wt_generator->get_wt_generator_model();
+        if(source_model!=NULL)
         {
-            double pf = get_power_factor_reference_in_pu();
-            qcmd = sqrt(1.0-pf*pf)/pf*active_power_sensor.get_output();
-        }
-        else
-            qcmd = voltage_regulator_filter.get_output();
-    }
-    if(qcmd>get_Qmax_in_pu())
-        qcmd = get_Qmax_in_pu();
-    if(qcmd<get_Qmin_in_pu())
-        qcmd = get_Qmin_in_pu();
+            double vterm = get_terminal_bus_voltage_in_pu();
+            double iterm = source_model->get_terminal_current_in_pu_based_on_mbase();
+            //double freq = get_terminal_bus_frequency_deviation_in_pu();
+            //double mbase = wt_generator->get_mbase_in_MVA();
+            complex<double> selec = get_wt_generator_terminal_generation_in_pu_based_on_mbase();
+            double pelec = selec.real();
+            double qelec = selec.imag();
 
-    input = qcmd - qelec;
-    Q_error_integrator.set_input(input);
-    Q_error_integrator.run(mode);
+            double speed_ref = get_wind_turbine_reference_speed_with_power_in_pu(pelec);
+            double speed = speed_ref;
 
-    size_t vflag = get_voltage_flag();
-    if(vflag == 1 or vflag == 2)
-    {
-        if(vflag == 1)
-        {
-            V_error_integrator.set_upper_limit(vterm+get_EQmax_in_pu());
-            V_error_integrator.set_lower_limit(vterm+get_EQmin_in_pu());
-        }
-        else
-        {
-            if(vflag == 2)
+
+            wind_turbine_speed_reference_sensor.set_input(speed_ref);
+            wind_turbine_speed_reference_sensor.run(mode);
+
+            double input = speed - wind_turbine_speed_reference_sensor.get_output();
+
+            torque_PI_regulator.set_input(input);
+            torque_PI_regulator.run(mode);
+
+            input = torque_PI_regulator.get_output()*(1.0+speed)-power_order_integrator.get_output();
+            if(input>get_rPmax_in_pu())
+                input = get_rPmax_in_pu();
+            if(input<get_rPmin_in_pu())
+                input = get_rPmin_in_pu();
+
+            power_order_integrator.set_input(input);
+            power_order_integrator.run(mode);
+
+
+            active_power_sensor.set_input(pelec);
+            active_power_sensor.run(mode);
+
+            double xcomp = get_Xcomp_in_pu();
+            input = vterm+iterm*xcomp;
+            voltage_sensor.set_input(input);
+            voltage_sensor.run(mode);
+
+            input = get_voltage_reference_in_pu()-voltage_sensor.get_output();
+            input /= get_Fn();
+
+            voltage_regulator_integrator.set_input(input);
+            voltage_regulator_integrator.run(mode);
+
+            voltage_regulator_first_order_block.set_input(input);
+            voltage_regulator_first_order_block.run(mode);
+
+            input = voltage_regulator_integrator.get_output() + voltage_regulator_first_order_block.get_output();
+            voltage_regulator_filter.set_input(input);
+            voltage_regulator_filter.run(mode);
+
+            PE_VAR_CONTROL_MODE var_mode = get_var_control_mode();
+            double qcmd = 0.0;
+            if(var_mode==CONSTANT_VAR_MODE)
+                qcmd = get_reactive_power_reference_in_pu();
+            else
             {
-                V_error_integrator.set_upper_limit(get_EQmax_in_pu());
-                V_error_integrator.set_lower_limit(get_EQmin_in_pu());
+                if(var_mode==CONSTANT_POWER_FACTOR_MODE)
+                {
+                    double pf = get_power_factor_reference_in_pu();
+                    qcmd = sqrt(1.0-pf*pf)/pf*active_power_sensor.get_output();
+                }
+                else
+                    qcmd = voltage_regulator_filter.get_output();
             }
-        }
-        input = Q_error_integrator.get_output()-vterm;
-        V_error_integrator.set_input(input);
-        V_error_integrator.run(mode);
-    }
+            if(qcmd>get_Qmax_in_pu())
+                qcmd = get_Qmax_in_pu();
+            if(qcmd<get_Qmin_in_pu())
+                qcmd = get_Qmin_in_pu();
 
-    if(mode == UPDATE_MODE)
-        set_flag_model_updated_as_true();
+            input = qcmd - qelec;
+            Q_error_integrator.set_input(input);
+            Q_error_integrator.run(mode);
+
+            size_t vflag = get_voltage_flag();
+            if(vflag == 1 or vflag == 2)
+            {
+                if(vflag == 1)
+                {
+                    V_error_integrator.set_upper_limit(vterm+get_EQmax_in_pu());
+                    V_error_integrator.set_lower_limit(vterm+get_EQmin_in_pu());
+                }
+                else
+                {
+                    if(vflag == 2)
+                    {
+                        V_error_integrator.set_upper_limit(get_EQmax_in_pu());
+                        V_error_integrator.set_lower_limit(get_EQmin_in_pu());
+                    }
+                }
+                input = Q_error_integrator.get_output()-vterm;
+                V_error_integrator.set_input(input);
+                V_error_integrator.run(mode);
+            }
+
+            if(mode == UPDATE_MODE)
+                set_flag_model_updated_as_true();
+        }
+    }
 }
 void WT3E1::check()
 {

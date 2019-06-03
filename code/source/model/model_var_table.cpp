@@ -19,20 +19,22 @@ void MODEL_VAR_TABLE::clear()
 
 void MODEL_VAR_TABLE::add_variable_name_index_pair(string var_name, size_t var_index)
 {
-    if(var_name=="")  return;
-    var_name = string2upper(var_name);
-    map<string, size_t>::const_iterator iter_name = var_name2index_map.begin();
-    map<size_t, string>::const_iterator iter_index = var_index2name_map.begin();
-    iter_name = var_name2index_map.find(var_name);
-    iter_index = var_index2name_map.find(var_index);
-    if(iter_name!=var_name2index_map.end() or iter_index!=var_index2name_map.end())
-    {// var_name or var_index already exists
-        return;
-    }
-    else
+    if(var_name!="")
     {
-        var_name2index_map.insert(pair<string, size_t>(var_name, var_index));
-        var_index2name_map.insert(pair<size_t, string>(var_index, var_name));
+        var_name = string2upper(var_name);
+        map<string, size_t>::const_iterator iter_name = var_name2index_map.begin();
+        map<size_t, string>::const_iterator iter_index = var_index2name_map.begin();
+        iter_name = var_name2index_map.find(var_name);
+        iter_index = var_index2name_map.find(var_index);
+        if(iter_name==var_name2index_map.end() and iter_index==var_index2name_map.end())
+        {// var_name and var_index not exist
+            var_name2index_map.insert(pair<string, size_t>(var_name, var_index));
+            var_index2name_map.insert(pair<size_t, string>(var_index, var_name));
+        }
+        else
+        {// var_name or var_index already exists
+            return;
+        }
     }
 }
 

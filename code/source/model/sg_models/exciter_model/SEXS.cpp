@@ -122,35 +122,38 @@ double SEXS::get_Efdmin_in_pu() const
 bool SEXS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<8)
+    if(data.size()>=8)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double ta_over_tb, ta, tb, k, te, emax, emin;
+
+            size_t i=3;
+            ta_over_tb = get_double_data(data[i],"0.0"); i++;
+            tb = get_double_data(data[i],"0.0"); i++;
+            k = get_double_data(data[i],"0.0"); i++;
+            te = get_double_data(data[i],"0.0"); i++;
+            emin = get_double_data(data[i],"0.0"); i++;
+            emax = get_double_data(data[i],"0.0"); i++;
+            ta = ta_over_tb*tb;
+
+            set_TA_in_s(ta);
+            set_TB_in_s(tb);
+            set_K(k);
+            set_TE_in_s(te);
+            set_Efdmin_in_pu(emin);
+            set_Efdmax_in_pu(emax);
+
+            is_successful = true;
+
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-
-    double ta_over_tb, ta, tb, k, te, emax, emin;
-
-    size_t i=3;
-    ta_over_tb = get_double_data(data[i],"0.0"); i++;
-    tb = get_double_data(data[i],"0.0"); i++;
-    k = get_double_data(data[i],"0.0"); i++;
-    te = get_double_data(data[i],"0.0"); i++;
-    emin = get_double_data(data[i],"0.0"); i++;
-    emax = get_double_data(data[i],"0.0"); i++;
-    ta = ta_over_tb*tb;
-
-    set_TA_in_s(ta);
-    set_TB_in_s(tb);
-    set_K(k);
-    set_TE_in_s(te);
-    set_Efdmin_in_pu(emin);
-    set_Efdmax_in_pu(emax);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool SEXS::setup_model_with_psse_string(string data)
@@ -179,77 +182,78 @@ void SEXS::set_block_toolkit()
 void SEXS::initialize()
 {
     ostringstream osstream;
-    if(is_model_initialized())
-        return;
-
-    GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
-
-    SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-    if(gen_model==NULL)
-        return;
-    if(not gen_model->is_model_initialized())
-        gen_model->initialize();
-
-    set_block_toolkit();
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-    double Ecomp = get_compensated_voltage_in_pu();
-
-    double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
-
-    if(Efd>get_Efdmax_in_pu())
+    if(not is_model_initialized())
     {
-        osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-          <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        GENERATOR* generator = get_generator_pointer();
+        if(generator!=NULL)
+        {
+            SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+            if(gen_model!=NULL)
+            {
+                if(not gen_model->is_model_initialized())
+                    gen_model->initialize();
+
+                set_block_toolkit();
+
+                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+                double Ecomp = get_compensated_voltage_in_pu();
+
+                double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+
+                if(Efd>get_Efdmax_in_pu())
+                {
+                    osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(Efd<get_Efdmin_in_pu())
+                {
+                    osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                exciter.set_output(Efd);
+                exciter.initialize();
+
+                double input = exciter.get_input();
+                phase_tuner.set_output(input);
+                phase_tuner.initialize();
+
+                input = phase_tuner.get_input();
+
+                double Vref = input+Ecomp;
+                set_voltage_reference_in_pu(Vref);
+
+                set_flag_model_initialized_as_true();
+            }
+        }
     }
-    if(Efd<get_Efdmin_in_pu())
-    {
-        osstream<<"Initialization error. Efd of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-          <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-    exciter.set_output(Efd);
-    exciter.initialize();
-
-    double input = exciter.get_input();
-    phase_tuner.set_output(input);
-    phase_tuner.initialize();
-
-    input = phase_tuner.get_input();
-
-    double Vref = input+Ecomp;
-    set_voltage_reference_in_pu(Vref);
-
-    set_flag_model_initialized_as_true();
 }
 
 void SEXS::run(DYNAMIC_MODE mode)
 {
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
-        return;
+    if(generator!=NULL)
+    {
+        double Ecomp = get_compensated_voltage_in_pu();
+        double Vref = get_voltage_reference_in_pu();
+        double Vs = get_stabilizing_signal_in_pu();
 
-    double Ecomp = get_compensated_voltage_in_pu();
-    double Vref = get_voltage_reference_in_pu();
-    double Vs = get_stabilizing_signal_in_pu();
+        double input = Vref-Ecomp+Vs;
 
-    double input = Vref-Ecomp+Vs;
+        phase_tuner.set_input(input);
+        phase_tuner.run(mode);
 
-    phase_tuner.set_input(input);
-    phase_tuner.run(mode);
+        input = phase_tuner.get_output();
+        exciter.set_input(input);
+        exciter.run(mode);
 
-    input = phase_tuner.get_output();
-    exciter.set_input(input);
-    exciter.run(mode);
+        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
 
-    //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
-
-    if(mode == UPDATE_MODE)
-        set_flag_model_updated_as_true();
+        if(mode == UPDATE_MODE)
+            set_flag_model_updated_as_true();
+    }
 }
 
 double SEXS::get_excitation_voltage_in_pu() const

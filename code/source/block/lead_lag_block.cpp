@@ -59,8 +59,28 @@ double LEAD_LAG_BLOCK::get_T2_in_s() const
 void LEAD_LAG_BLOCK::initialize()
 {
     double t1 = get_T1_in_s();
+    if(t1!=0.0)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
-    if(t1==0.0)
+        double k = get_K();
+
+        double y = get_output();
+
+        double s, ds, z, x;
+
+        s = y;
+        x = y/k;
+        z = (1.0-h/(2.0*t1))*s+h/(2.0*t1)*y;
+        ds = 0.0;
+
+        set_state(s);
+        set_store(z);
+        set_dstate(ds);
+        set_input(x);
+    }
+    else
     {
         first_order_block.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
         first_order_block.set_limiter_type(this->get_limiter_type());
@@ -76,33 +96,20 @@ void LEAD_LAG_BLOCK::initialize()
         this->set_dstate(first_order_block.get_dstate());
         this->set_store(first_order_block.get_store());
         this->set_input(first_order_block.get_input());
-        return;
     }
-
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
-    double k = get_K();
-
-    double y = get_output();
-
-    double s, ds, z, x;
-
-    s = y;
-    x = y/k;
-    z = (1.0-h/(2.0*t1))*s+h/(2.0*t1)*y;
-    ds = 0.0;
-
-    set_state(s);
-    set_store(z);
-    set_dstate(ds);
-    set_input(x);
 }
 
 void LEAD_LAG_BLOCK::run(DYNAMIC_MODE mode)
 {
     double t1 = get_T1_in_s();
-    if(t1==0.0)
+    if(t1!=0.0)
+    {
+        if(mode==INTEGRATE_MODE)
+            integrate();
+        if(mode==UPDATE_MODE)
+            update();
+    }
+    else
     {
         first_order_block.set_input(this->get_input());
         first_order_block.run(mode);
@@ -111,13 +118,6 @@ void LEAD_LAG_BLOCK::run(DYNAMIC_MODE mode)
         this->set_dstate(first_order_block.get_dstate());
         this->set_store(first_order_block.get_store());
         this->set_output(first_order_block.get_output());
-    }
-    else
-    {
-        if(mode==INTEGRATE_MODE)
-            integrate();
-        if(mode==UPDATE_MODE)
-            update();
     }
 }
 
@@ -145,13 +145,14 @@ void LEAD_LAG_BLOCK::integrate()
     y = t1/t2*(k*x+(t2/t1-1.0)*s);
 
     double ds = (k*x-s)/t2;
-    if(fabs(ds)<FLOAT_EPSILON)
-        return;
+    if(fabs(ds)>FLOAT_EPSILON)
+    {
+        set_state(s);
+        set_output(y);
+    }
     //if(fabs(ds)>DSTATE_THRESHOLD)
     //    cout<<"Derivative of state is changed dramatically in LEAD_LAG_BLOCK\n";
 
-    set_state(s);
-    set_output(y);
 }
 
 void LEAD_LAG_BLOCK::update()

@@ -174,74 +174,78 @@ string AERD0::get_model_name() const
 bool AERD0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<19)
-        return is_successful;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    int speed_mode_flag=0;
-    size_t n;
-    double vwind0, gear_eta, rou0_air, min_speed, max_speed;
-    double rou_air;
-    double c1, c2, c3, c4, c5, c6, c7, c8;
-
-    size_t i=3;
-    speed_mode_flag = get_integer_data(data[i],"0"); i++;
-    n = size_t(get_integer_data(data[i],"1")); i++;
-    vwind0 = get_double_data(data[i],"0.0"); i++;
-    gear_eta = get_double_data(data[i],"0.0"); i++;
-    rou0_air = get_double_data(data[i],"0.0"); i++;
-    min_speed = get_double_data(data[i],"0.6"); i++;
-    max_speed = get_double_data(data[i],"1.2"); i++;
-    rou_air = get_double_data(data[i],"0.0"); i++;
-    c1 = get_double_data(data[i],"0.0"); i++;
-    c2 = get_double_data(data[i],"0.0"); i++;
-    c3 = get_double_data(data[i],"0.0"); i++;
-    c4 = get_double_data(data[i],"0.0"); i++;
-    c5 = get_double_data(data[i],"0.0"); i++;
-    c6 = get_double_data(data[i],"0.0");i++;
-    c7 = get_double_data(data[i],"0.0");i++;
-    c8 = get_double_data(data[i],"0.0");
-
-    switch(speed_mode_flag)
+    if(data.size()>=19)
     {
-        case -1:
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
         {
-            set_turbine_speed_mode(WT_UNDERSPEED_MODE);
-            break;
+            int speed_mode_flag=0;
+            size_t n;
+            double vwind0, gear_eta, rou0_air, min_speed, max_speed;
+            double rou_air;
+            double c1, c2, c3, c4, c5, c6, c7, c8;
+
+            size_t i=3;
+            speed_mode_flag = get_integer_data(data[i],"0"); i++;
+            n = size_t(get_integer_data(data[i],"1")); i++;
+            vwind0 = get_double_data(data[i],"0.0"); i++;
+            gear_eta = get_double_data(data[i],"0.0"); i++;
+            rou0_air = get_double_data(data[i],"0.0"); i++;
+            min_speed = get_double_data(data[i],"0.6"); i++;
+            max_speed = get_double_data(data[i],"1.2"); i++;
+            rou_air = get_double_data(data[i],"0.0"); i++;
+            c1 = get_double_data(data[i],"0.0"); i++;
+            c2 = get_double_data(data[i],"0.0"); i++;
+            c3 = get_double_data(data[i],"0.0"); i++;
+            c4 = get_double_data(data[i],"0.0"); i++;
+            c5 = get_double_data(data[i],"0.0"); i++;
+            c6 = get_double_data(data[i],"0.0");i++;
+            c7 = get_double_data(data[i],"0.0");i++;
+            c8 = get_double_data(data[i],"0.0");
+
+            switch(speed_mode_flag)
+            {
+                case -1:
+                {
+                    set_turbine_speed_mode(WT_UNDERSPEED_MODE);
+                    break;
+                }
+                case 1:
+                {
+                    set_turbine_speed_mode(WT_OVERSPEED_MODE);
+                    break;
+                }
+                default:
+                {
+                    set_turbine_speed_mode(WT_MPPT_MODE);
+                    break;
+                }
+            }
+            set_number_of_pole_pairs(n);
+            set_nominal_wind_speed_in_mps(vwind0);
+            set_gear_efficiency(gear_eta);
+            set_nominal_air_density_in_kgpm3(rou0_air);
+            set_min_steady_state_turbine_speed_in_pu(min_speed);
+            set_max_steady_state_turbine_speed_in_pu(max_speed);
+            set_air_density_in_kgpm3(rou_air);
+            set_C1(c1);
+            set_C2(c2);
+            set_C3(c3);
+            set_C4(c4);
+            set_C5(c5);
+            set_C6(c6);
+            set_C7(c7);
+            set_C8(c8);
+
+            is_successful = true;
+
+            return is_successful;
         }
-        case 1:
-        {
-            set_turbine_speed_mode(WT_OVERSPEED_MODE);
-            break;
-        }
-        default:
-        {
-            set_turbine_speed_mode(WT_MPPT_MODE);
-            break;
-        }
+        else
+            return is_successful;
     }
-    set_number_of_pole_pairs(n);
-    set_nominal_wind_speed_in_mps(vwind0);
-    set_gear_efficiency(gear_eta);
-    set_nominal_air_density_in_kgpm3(rou0_air);
-    set_min_steady_state_turbine_speed_in_pu(min_speed);
-    set_max_steady_state_turbine_speed_in_pu(max_speed);
-    set_air_density_in_kgpm3(rou_air);
-    set_C1(c1);
-    set_C2(c2);
-    set_C3(c3);
-    set_C4(c4);
-    set_C5(c5);
-    set_C6(c6);
-    set_C7(c7);
-    set_C8(c8);
-
-    is_successful = true;
-
-    return is_successful;
+    else
+        return is_successful;
 }
 
 bool AERD0::setup_model_with_psse_string(string data)

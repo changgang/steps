@@ -229,67 +229,70 @@ double PSASPS5::get_Vcmin() const
 bool PSASPS5::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<23)
-        is_successful = false;
-
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
-        return is_successful;
-
-    size_t signal_type[2], bus[2];
-    double k1, t1, k2, t2, t3, t4, t5, t6, t7, t8, t9, t10,
-           lsmax, lsmin, vcl, vcu;
-
-    size_t i=3;
-    signal_type[0] = get_integer_data(data[i],"0"); i++;
-    bus[0] = get_integer_data(data[i],"0"); i++;
-    signal_type[1] = get_integer_data(data[i],"0"); i++;
-    bus[1] = get_integer_data(data[i],"0"); i++;
-
-    for(size_t i=0; i<2; ++i)
+    if(data.size()>=23)
     {
-        SIGNAL signal = prepare_signal_with_signal_type_and_bus(signal_type[i], bus[i]);
-        if(signal.is_valid())
-            set_input_signal_at_slot(i, signal);
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            size_t signal_type[2], bus[2];
+            double k1, t1, k2, t2, t3, t4, t5, t6, t7, t8, t9, t10,
+                   lsmax, lsmin, vcl, vcu;
+
+            size_t i=3;
+            signal_type[0] = get_integer_data(data[i],"0"); i++;
+            bus[0] = get_integer_data(data[i],"0"); i++;
+            signal_type[1] = get_integer_data(data[i],"0"); i++;
+            bus[1] = get_integer_data(data[i],"0"); i++;
+
+            for(size_t i=0; i<2; ++i)
+            {
+                SIGNAL signal = prepare_signal_with_signal_type_and_bus(signal_type[i], bus[i]);
+                if(signal.is_valid())
+                    set_input_signal_at_slot(i, signal);
+            }
+
+            k1 = get_double_data(data[i],"0.0"); i++;
+            k2 = get_double_data(data[i],"0.0"); i++;
+            t1 = get_double_data(data[i],"0.0"); i++;
+            t2 = get_double_data(data[i],"0.0"); i++;
+            t3 = get_double_data(data[i],"0.0"); i++;
+            t4 = get_double_data(data[i],"0.0"); i++;
+            t5 = get_double_data(data[i],"0.0"); i++;
+            t6 = get_double_data(data[i],"0.0"); i++;
+            t7 = get_double_data(data[i],"0.0"); i++;
+            t8 = get_double_data(data[i],"0.0"); i++;
+            t9 = get_double_data(data[i],"0.0"); i++;
+            t10 = get_double_data(data[i],"0.0"); i++;
+            lsmax = get_double_data(data[i],"0.0"); i++;
+            lsmin = get_double_data(data[i],"0.0"); i++;
+            vcu = get_double_data(data[i],"0.0"); i++;
+            vcl = get_double_data(data[i],"0.0"); i++;
+
+            set_K1(k1);
+            set_K2(k2);
+            set_T1_in_s(t1);
+            set_T2_in_s(t2);
+            set_T3_in_s(t3);
+            set_T4_in_s(t4);
+            set_T5_in_s(t5);
+            set_T6_in_s(t6);
+            set_T7_in_s(t7);
+            set_T8_in_s(t8);
+            set_T9_in_s(t9);
+            set_T10_in_s(t10);
+            set_Vsmax(lsmax);
+            set_Vsmin(lsmin);
+            set_Vcmax(vcu);
+            set_Vcmin(vcl);
+
+            is_successful = true;
+            return is_successful;
+        }
+        else
+            return is_successful;
     }
-
-    k1 = get_double_data(data[i],"0.0"); i++;
-    k2 = get_double_data(data[i],"0.0"); i++;
-    t1 = get_double_data(data[i],"0.0"); i++;
-    t2 = get_double_data(data[i],"0.0"); i++;
-    t3 = get_double_data(data[i],"0.0"); i++;
-    t4 = get_double_data(data[i],"0.0"); i++;
-    t5 = get_double_data(data[i],"0.0"); i++;
-    t6 = get_double_data(data[i],"0.0"); i++;
-    t7 = get_double_data(data[i],"0.0"); i++;
-    t8 = get_double_data(data[i],"0.0"); i++;
-    t9 = get_double_data(data[i],"0.0"); i++;
-    t10 = get_double_data(data[i],"0.0"); i++;
-    lsmax = get_double_data(data[i],"0.0"); i++;
-    lsmin = get_double_data(data[i],"0.0"); i++;
-    vcu = get_double_data(data[i],"0.0"); i++;
-    vcl = get_double_data(data[i],"0.0"); i++;
-
-    set_K1(k1);
-    set_K2(k2);
-    set_T1_in_s(t1);
-    set_T2_in_s(t2);
-    set_T3_in_s(t3);
-    set_T4_in_s(t4);
-    set_T5_in_s(t5);
-    set_T6_in_s(t6);
-    set_T7_in_s(t7);
-    set_T8_in_s(t8);
-    set_T9_in_s(t9);
-    set_T10_in_s(t10);
-    set_Vsmax(lsmax);
-    set_Vsmin(lsmin);
-    set_Vcmax(vcu);
-    set_Vcmin(vcl);
-
-    is_successful = true;
-
-    return is_successful;
+    else
+        return is_successful;
 }
 
 bool PSASPS5::setup_model_with_psse_string(string data)
@@ -318,107 +321,105 @@ void PSASPS5::initialize()
     ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
-    if(generator==NULL)
+    if(generator!=NULL)
     {
-        deactivate_model();
-        set_flag_model_initialized_as_true();
-        return;
-    }
+        EXCITER_MODEL* exciter = generator->get_exciter_model();
+        if(exciter!=NULL)
+        {
+            if(not exciter->is_model_initialized())
+                exciter->initialize();
 
-    EXCITER_MODEL* exciter = generator->get_exciter_model();
-    if(exciter==NULL)
-    {
-        deactivate_model();
-        set_flag_model_initialized_as_true();
-        return;
-    }
-    if(not exciter->is_model_initialized())
-        exciter->initialize();
+            set_block_toolkit();
 
-    set_block_toolkit();
+            phase_tuner_3.set_output(0.0);
+            phase_tuner_3.initialize();
 
-    phase_tuner_3.set_output(0.0);
-    phase_tuner_3.initialize();
+            phase_tuner_2.set_output(0.0);
+            phase_tuner_2.initialize();
 
-    phase_tuner_2.set_output(0.0);
-    phase_tuner_2.initialize();
+            phase_tuner_1.set_output(0.0);
+            phase_tuner_1.initialize();
 
-    phase_tuner_1.set_output(0.0);
-    phase_tuner_1.initialize();
+            double value_slot_1 = get_signal_value_of_slot(0);
+            double value_slot_2 = get_signal_value_of_slot(1);
+            double value_sensor_1 = value_slot_1*get_K1();
+            double value_sensor_2 = value_slot_2*get_K2();
 
-    double value_slot_1 = get_signal_value_of_slot(0);
-    double value_slot_2 = get_signal_value_of_slot(1);
-    double value_sensor_1 = value_slot_1*get_K1();
-    double value_sensor_2 = value_slot_2*get_K2();
+            sensor_1.set_output(value_sensor_1);
+            sensor_1.initialize();
 
-    sensor_1.set_output(value_sensor_1);
-    sensor_1.initialize();
+            sensor_2.set_output(value_sensor_2);
+            sensor_2.initialize();
 
-    sensor_2.set_output(value_sensor_2);
-    sensor_2.initialize();
+            double value_sum = value_sensor_1 + value_sensor_2;
 
-    double value_sum = value_sensor_1 + value_sensor_2;
-
-    double T3 = get_T3_in_s();
-    if(T3>0.0)
-    {
-        filter.set_input(value_sum);
-        filter.initialize();
+            double T3 = get_T3_in_s();
+            if(T3>0.0)
+            {
+                filter.set_input(value_sum);
+                filter.initialize();
+            }
+            else
+            {
+                osstream<<"Initialization failed. T3<=0.0 in model "<<get_model_name()<<" of "
+                  <<get_generator_pointer()->get_device_name()<<" requires input signals with 0 steady state value."<<endl
+                  <<"However, "<<value_sum<<" is given. Check input signals in slots.";
+                alternative_filter.set_output(0.0);
+                alternative_filter.initialize();
+            }
+        }
+        else
+            deactivate_model();
     }
     else
-    {
-        osstream<<"Initialization failed. T3<=0.0 in model "<<get_model_name()<<" of "
-          <<get_generator_pointer()->get_device_name()<<" requires input signals with 0 steady state value."<<endl
-          <<"However, "<<value_sum<<" is given. Check input signals in slots.";
-        alternative_filter.set_output(0.0);
-        alternative_filter.initialize();
-    }
+        deactivate_model();
+
     set_flag_model_initialized_as_true();
 }
 
 void PSASPS5::run(DYNAMIC_MODE mode)
 {
-    if(not is_model_active())
-        return;
-
-    double value_slot_1 = get_signal_value_of_slot(0);
-    sensor_1.set_input(value_slot_1);
-    sensor_1.run(mode);
-    double output1 = sensor_1.get_output();
-
-    double value_slot_2 = get_signal_value_of_slot(1);
-    sensor_2.set_input(value_slot_2);
-    sensor_2.run(mode);
-    double output2 = sensor_2.get_output();
-
-    double input = output1+output2;
-    double T3 = get_T3_in_s();
-    if(T3>0.0)
+    if(is_model_active())
     {
-        filter.set_input(input);
-        filter.run(mode);
-        input = filter.get_output();
+        double value_slot_1 = get_signal_value_of_slot(0);
+        sensor_1.set_input(value_slot_1);
+        sensor_1.run(mode);
+        double output1 = sensor_1.get_output();
+
+        double value_slot_2 = get_signal_value_of_slot(1);
+        sensor_2.set_input(value_slot_2);
+        sensor_2.run(mode);
+        double output2 = sensor_2.get_output();
+
+        double input = output1+output2;
+        double T3 = get_T3_in_s();
+        if(T3>0.0)
+        {
+            filter.set_input(input);
+            filter.run(mode);
+            input = filter.get_output();
+        }
+        else
+        {
+            alternative_filter.set_input(input);
+            alternative_filter.run(mode);
+            input = alternative_filter.get_output();
+        }
+
+        phase_tuner_1.set_input(input);
+        phase_tuner_1.run(mode);
+
+        input = phase_tuner_1.get_output();
+        phase_tuner_2.set_input(input);
+        phase_tuner_2.run(mode);
+
+        input = phase_tuner_2.get_output();
+        phase_tuner_3.set_input(input);
+        phase_tuner_3.run(mode);
+
+        if(mode==UPDATE_MODE)
+            set_flag_model_updated_as_true();
     }
-    else
-    {
-        alternative_filter.set_input(input);
-        alternative_filter.run(mode);
-        input = alternative_filter.get_output();
-    }
-
-    phase_tuner_1.set_input(input);
-    phase_tuner_1.run(mode);
-
-    input = phase_tuner_1.get_output();
-    phase_tuner_2.set_input(input);
-    phase_tuner_2.run(mode);
-
-    input = phase_tuner_2.get_output();
-    phase_tuner_3.set_input(input);
-    phase_tuner_3.run(mode);
-
-    if(mode==UPDATE_MODE)
-        set_flag_model_updated_as_true();
 }
 
 double PSASPS5::get_stabilizing_signal_in_pu() const
