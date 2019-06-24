@@ -107,14 +107,14 @@ bool FILEWIND::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void FILEWIND::set_block_toolkit()
+void FILEWIND::setup_block_toolkit_and_parameters()
 {
     ;
 }
 
 void FILEWIND::initialize()
 {
-    set_block_toolkit();
+    setup_block_toolkit_and_parameters();
 
     load_wind_speed_from_file();
 

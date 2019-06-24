@@ -368,7 +368,7 @@ bool CDC6T::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void CDC6T::set_block_toolkit()
+void CDC6T::setup_block_toolkit_and_parameters()
 {
     set_common_timer_toolkit();
 
@@ -394,7 +394,7 @@ void CDC6T::initialize()
     if(hvdc==NULL)
         return;
 
-    set_block_toolkit();
+    setup_block_toolkit_and_parameters();
 
     rec_ac_blocking_timer.set_attached_device(hvdc);
     inv_ac_bypassing_timer.set_attached_device(hvdc);

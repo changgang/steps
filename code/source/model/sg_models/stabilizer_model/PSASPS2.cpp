@@ -268,7 +268,7 @@ bool PSASPS2::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void PSASPS2::set_block_toolkit()
+void PSASPS2::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     dedc_block_1.set_toolkit(toolkit);
@@ -291,7 +291,7 @@ void PSASPS2::initialize()
             if(not exciter->is_model_initialized())
                 exciter->initialize();
 
-            set_block_toolkit();
+            setup_block_toolkit_and_parameters();
 
             size_t bus = generator->get_generator_bus();
 

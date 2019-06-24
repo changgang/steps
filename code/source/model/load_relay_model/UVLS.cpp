@@ -215,7 +215,7 @@ bool UVLS::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void UVLS::set_block_toolkit()
+void UVLS::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     voltage_sensor.set_toolkit(toolkit);
@@ -231,7 +231,7 @@ void UVLS::initialize()
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {
-        set_block_toolkit();
+        setup_block_toolkit_and_parameters();
 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 

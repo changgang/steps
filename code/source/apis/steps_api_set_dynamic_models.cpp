@@ -2,6 +2,7 @@
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
+#include "header/STEPS.h"
 
 void api_set_dynamic_model(char* model_string, char* file_type, size_t toolkit_index)
 {
@@ -12,6 +13,7 @@ void api_set_dynamic_model(char* model_string, char* file_type, size_t toolkit_i
     if(FileType=="PSSE" or FileType=="PSS/E")
 	{
 	    PSSE_IMEXPORTER importer;
+	    importer.set_toolkit(toolkit);
         importer.load_one_model(data);
 	}
 	else
@@ -19,6 +21,7 @@ void api_set_dynamic_model(char* model_string, char* file_type, size_t toolkit_i
         if(FileType=="BPA")
         {
             BPA_IMEXPORTER importer;
+            importer.set_toolkit(toolkit);
             importer.load_one_model(data);
         }
         else

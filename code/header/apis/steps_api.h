@@ -2,15 +2,13 @@
 #define STEPS_API_H
 
 #ifdef _MSC_VER
-#define EXPORT_STEPS_DLL __declspec(dllexport, size_t toolkit_index=INDEX_NOT_EXIST)
+#define EXPORT_STEPS_DLL __declspec(dllexport)
 #else
 #define EXPORT_STEPS_DLL
 #endif
 
-#include "header/STEPS.h"
-#include "header/power_system_database.h"
-#include "header/toolkit/powerflow_solver/powerflow_solver.h"
-#include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
+#include <cstdlib>
+#include "header/basic/constants.h"
 
 #ifdef  __cplusplus
 extern "C" {
@@ -30,20 +28,6 @@ EXPORT_STEPS_DLL const char* api_get_toolkit_string_data(char* parameter_name, s
 EXPORT_STEPS_DLL void api_set_toolkit_string_data(char* parameter_name, char* value, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL bool api_get_toolkit_bool_data(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_toolkit_bool_data(char* parameter_name, bool value, size_t toolkit_index=INDEX_NOT_EXIST);
-
-EXPORT_STEPS_DLL void show_side_not_supported_for_device_with_api(string side, DEVICE_ID did, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void show_parameter_not_supported_for_device_with_api(string par_name, DEVICE_ID did, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void show_parameter_not_supported_with_api(string par_name, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void show_device_not_exist_with_api(DEVICE_ID did, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
-
-EXPORT_STEPS_DLL void show_parameter_not_supported_for_area_zone_owner_with_api(string par_name, size_t no, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void show_area_zone_owner_not_exist_with_api(size_t no, string api_func, size_t toolkit_index=INDEX_NOT_EXIST);
-
-EXPORT_STEPS_DLL size_t get_owner_of_device(DEVICE* device, string parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void set_owner_of_device(DEVICE* device, string parameter_name, int value, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL double get_owner_fraction_of_device(DEVICE* device, string parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void set_owner_fraction_of_device(DEVICE* device, string parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);
-
 
 EXPORT_STEPS_DLL size_t api_get_allowed_maximum_bus_number(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_allowed_maximum_bus_number(size_t max_bus, size_t toolkit_index=INDEX_NOT_EXIST);

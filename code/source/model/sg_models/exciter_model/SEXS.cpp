@@ -172,7 +172,7 @@ bool SEXS::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void SEXS::set_block_toolkit()
+void SEXS::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     phase_tuner.set_toolkit(toolkit);
@@ -193,7 +193,7 @@ void SEXS::initialize()
                 if(not gen_model->is_model_initialized())
                     gen_model->initialize();
 
-                set_block_toolkit();
+                setup_block_toolkit_and_parameters();
 
                 STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 

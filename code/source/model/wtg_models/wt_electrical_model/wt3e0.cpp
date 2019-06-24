@@ -593,7 +593,7 @@ bool WT3E0::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void WT3E0::set_block_toolkit()
+void WT3E0::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     voltage_sensor.set_toolkit(toolkit);
@@ -639,7 +639,7 @@ void WT3E0::initialize()
                         if(not turbine_model->is_model_initialized())
                             turbine_model->initialize();
 
-                        set_block_toolkit();
+                        setup_block_toolkit_and_parameters();
 
                         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 

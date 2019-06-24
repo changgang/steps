@@ -84,14 +84,14 @@ bool FILEIRRAD::setup_model_with_bpa_string(string data)
 }
 
 
-void FILEIRRAD::set_block_toolkit()
+void FILEIRRAD::setup_block_toolkit_and_parameters()
 {
     ;
 }
 
 void FILEIRRAD::initialize()
 {
-    set_block_toolkit();
+    setup_block_toolkit_and_parameters();
 }
 
 

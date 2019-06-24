@@ -110,7 +110,7 @@ bool GENCLS::setup_model_with_bpa_string(string data)
 
 void GENCLS::initialize()
 {
-    set_block_toolkit();
+    setup_block_toolkit_and_parameters();
 
     update_source_impedance();
 

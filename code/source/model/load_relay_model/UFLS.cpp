@@ -215,7 +215,7 @@ bool UFLS::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void UFLS::set_block_toolkit()
+void UFLS::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     frequency_sensor.set_toolkit(toolkit);
@@ -231,7 +231,7 @@ void UFLS::initialize()
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {
-        set_block_toolkit();
+        setup_block_toolkit_and_parameters();
 
         double fbase = get_bus_base_frequency_in_Hz();
 

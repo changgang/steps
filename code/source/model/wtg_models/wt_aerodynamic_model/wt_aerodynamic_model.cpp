@@ -305,7 +305,7 @@ double WT_AERODYNAMIC_MODEL::get_total_wind_power_per_wt_generator_in_MW(double 
 }
 
 
-void WT_AERODYNAMIC_MODEL::set_block_toolkit()
+void WT_AERODYNAMIC_MODEL::setup_block_toolkit_and_parameters()
 {
     ;
 }
@@ -326,7 +326,7 @@ void WT_AERODYNAMIC_MODEL::initialize()
             if(not genmodel->is_model_initialized())
                 genmodel->initialize();
 
-            set_block_toolkit();
+            setup_block_toolkit_and_parameters();
 
             set_cpmax_at_zero_pitch();
 

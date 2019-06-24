@@ -101,7 +101,94 @@ void PSSE_IMEXPORTER::load_one_model(string data)
 
 void PSSE_IMEXPORTER::export_dynamic_data(string file)
 {
-    ofstream fid(file);
-    fid.close();
-    return;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    ofstream ofs(file);
+    if(!ofs)
+    {
+        osstream<<"Warning. PSS/E dyr file "<<file<<" cannot be opened for exporting dynamic data.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    MODEL* model=NULL;
+    size_t n=0;
+    vector<GENERATOR*> gens = psdb.get_all_generators();
+    GENERATOR* gen = NULL;
+    n = gens.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        gen = gens[i];
+        model = gen->get_sync_generator_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = gen->get_exciter_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = gen->get_stabilizer_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = gen->get_turbine_governor_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+    }
+    vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
+    WT_GENERATOR* wt_gen = NULL;
+    n = wt_gens.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        wt_gen = wt_gens[i];
+        model = wt_gen->get_wt_generator_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = wt_gen->get_wt_aerodynamic_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = wt_gen->get_wt_turbine_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = wt_gen->get_wt_electrical_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = wt_gen->get_wt_pitch_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = wt_gen->get_wind_speed_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = wt_gen->get_wt_relay_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+    }
+    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    HVDC* hvdc = NULL;
+    n = hvdcs.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        hvdc = hvdcs[i];
+        model = hvdc->get_hvdc_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = hvdc->get_auxiliary_signal_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+    }
+    vector<LOAD*> loads = psdb.get_all_loads();
+    LOAD* load = NULL;
+    n = loads.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        load = loads[i];
+        model = load->get_load_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = load->get_load_frequency_relay_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+        model = load->get_load_voltage_relay_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_model_string()<<"\n";
+    }
+    ofs.close();
 }

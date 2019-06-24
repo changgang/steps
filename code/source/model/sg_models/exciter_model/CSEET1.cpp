@@ -784,7 +784,7 @@ bool CSEET1::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void CSEET1::set_block_toolkit()
+void CSEET1::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     sensor.set_toolkit(toolkit);
@@ -812,7 +812,7 @@ void CSEET1::initialize()
                 if(not gen_model->is_model_initialized())
                     gen_model->initialize();
 
-                set_block_toolkit();
+                setup_block_toolkit_and_parameters();
 
                 if(get_tuner_type()==SERIAL_TUNER)
                 {

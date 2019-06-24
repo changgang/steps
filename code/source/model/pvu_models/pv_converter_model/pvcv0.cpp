@@ -279,7 +279,7 @@ bool PVCV0::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void PVCV0::set_block_toolkit()
+void PVCV0::setup_block_toolkit_and_parameters()
 {
     ;
 }
@@ -292,7 +292,7 @@ void PVCV0::initialize()
         PV_UNIT* pv_unit = get_pv_unit_pointer();
         if(pv_unit!=NULL)
         {
-            set_block_toolkit();
+            setup_block_toolkit_and_parameters();
 
             size_t n_lumped = get_number_of_lumped_pv_units();
             double fbase = get_bus_base_frequency_in_Hz();

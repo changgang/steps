@@ -342,7 +342,7 @@ bool ESTR0::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void ESTR0::set_block_toolkit()
+void ESTR0::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
@@ -358,7 +358,7 @@ void ESTR0::set_block_toolkit()
 
 void ESTR0::initialize()
 {
-    set_block_toolkit();
+    setup_block_toolkit_and_parameters();
 
     double V = get_terminal_bus_voltage_in_pu();
     double iacmax = get_Iacmax_in_pu();

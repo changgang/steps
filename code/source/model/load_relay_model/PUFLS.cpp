@@ -297,7 +297,7 @@ bool PUFLS::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void PUFLS::set_block_toolkit()
+void PUFLS::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
@@ -313,7 +313,7 @@ void PUFLS::initialize()
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {
-        set_block_toolkit();
+        setup_block_toolkit_and_parameters();
 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 

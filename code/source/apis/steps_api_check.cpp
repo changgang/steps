@@ -1,6 +1,7 @@
 #include "header/apis/steps_api.h"
 #include "header/basic/utility.h"
-
+#include "header/STEPS.h"
+#include "header/power_system_database.h"
 void api_check_database(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

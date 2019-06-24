@@ -65,7 +65,7 @@ bool PVP0::setup_model_with_bpa_string(string data)
     toolkit.show_information_with_leading_time_stamp(osstream);
     return true;
 }
-void PVP0::set_block_toolkit()
+void PVP0::setup_block_toolkit_and_parameters()
 {
     ;
 }
@@ -78,7 +78,7 @@ void PVP0::initialize()
         PV_UNIT* pv_unit = get_pv_unit_pointer();
         if(pv_unit!=NULL)
         {
-            set_block_toolkit();
+            setup_block_toolkit_and_parameters();
         }
     }
 }

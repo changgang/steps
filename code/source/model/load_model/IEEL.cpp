@@ -293,14 +293,14 @@ bool IEEL::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void IEEL::set_block_toolkit()
+void IEEL::setup_block_toolkit_and_parameters()
 {
     ;
 }
 
 void IEEL::initialize()
 {
-    set_block_toolkit();
+    setup_block_toolkit_and_parameters();
 
     LOAD* load = get_load_pointer();
     complex<double> S = load->get_actual_total_load_in_MVA();

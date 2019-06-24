@@ -148,7 +148,7 @@ bool GENSAL::setup_model_with_bpa_string(string data)
 
 void GENSAL::initialize()
 {
-    set_block_toolkit();
+    setup_block_toolkit_and_parameters();
 
     update_source_impedance();
     initialize_rotor_angle();

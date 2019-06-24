@@ -243,7 +243,7 @@ bool LCFB1::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void LCFB1::set_block_toolkit()
+void LCFB1::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     Pelec_sensor.set_toolkit(toolkit);
@@ -257,7 +257,7 @@ void LCFB1::initialize()
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
     {
-        set_block_toolkit();
+        setup_block_toolkit_and_parameters();
 
         double pref = get_initial_mechanical_power_reference_in_pu_based_on_mbase_from_turbine_governor_model();
         set_Pref0(pref);

@@ -274,7 +274,7 @@ bool WTRLY0::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void WTRLY0::set_block_toolkit()
+void WTRLY0::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
@@ -303,7 +303,7 @@ void WTRLY0::initialize()
                 if(not aero_model->is_model_initialized())
                     aero_model->initialize();
 
-                set_block_toolkit();
+                setup_block_toolkit_and_parameters();
 
                 for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
                 {

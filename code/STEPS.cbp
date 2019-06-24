@@ -8,11 +8,10 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="../build/bin/Release/STEPS" prefix_auto="1" extension_auto="1" />
+				<Option output="../build/bin/Release/libSTEPS" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
 				<Option object_output="../build/obj/Release/" />
-				<Option type="1" />
+				<Option type="3" />
 				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
 				<Option parameters="--compiler " />
 				<Compiler>
 					<Add option="-O3" />
@@ -38,6 +37,7 @@
 		</Build>
 		<Unit filename="header/STEPS.h" />
 		<Unit filename="header/apis/steps_api.h" />
+		<Unit filename="header/apis/steps_api_common.h" />
 		<Unit filename="header/apis/steps_api_search_buffer.h" />
 		<Unit filename="header/basic/area.h" />
 		<Unit filename="header/basic/area_test.h" />
@@ -252,6 +252,8 @@
 		<Unit filename="header/model/sg_models/sync_generator_model/sync_generator_model.h" />
 		<Unit filename="header/model/sg_models/sync_generator_model/sync_generator_model_test.h" />
 		<Unit filename="header/model/sg_models/sync_generator_model/sync_generator_models.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/GAST2A.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/GAST2A_test.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1SB.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/IEEEG1SB_test.h" />
@@ -264,6 +266,8 @@
 		<Unit filename="header/model/sg_models/turbine_governor_model/IEESGO_test.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/TGOV1.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/TGOV1_test.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/URCSCT.h" />
+		<Unit filename="header/model/sg_models/turbine_governor_model/URCSCT_test.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/turbine_governor_model.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h" />
 		<Unit filename="header/model/sg_models/turbine_governor_model/turbine_governor_models.h" />
@@ -362,7 +366,7 @@
 		<Unit filename="source/STEPS.cpp" />
 		<Unit filename="source/apis/steps_api_add_devices.cpp" />
 		<Unit filename="source/apis/steps_api_check.cpp" />
-		<Unit filename="source/apis/steps_api_common_utilities.cpp" />
+		<Unit filename="source/apis/steps_api_common.cpp" />
 		<Unit filename="source/apis/steps_api_data_import_export.cpp" />
 		<Unit filename="source/apis/steps_api_dynamic_simulation.cpp" />
 		<Unit filename="source/apis/steps_api_get_device_count.cpp" />
@@ -389,6 +393,7 @@
 		<Unit filename="source/apis/steps_api_set_get_wt_generator_related_model_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_set_get_zone_parameters.cpp" />
 		<Unit filename="source/apis/steps_api_show_device_data.cpp" />
+		<Unit filename="source/apis/steps_api_utilities.cpp" />
 		<Unit filename="source/basic/area.cpp" />
 		<Unit filename="source/basic/area_test.cpp" />
 		<Unit filename="source/basic/base.cpp" />
@@ -585,20 +590,30 @@
 		<Unit filename="source/model/sg_models/sync_generator_model/gensal_test.cpp" />
 		<Unit filename="source/model/sg_models/sync_generator_model/sync_generator_model.cpp" />
 		<Unit filename="source/model/sg_models/sync_generator_model/sync_generator_model_test.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1SB.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1SB_test.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEEEG1_test.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEEEG2.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEEEG2_test.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEEEG3.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEEEG3_test.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEESGO.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/IEESGO_test.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/TGOV1.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/TGOV1_test.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/turbine_governor_model.cpp" />
-		<Unit filename="source/model/sg_models/turbine-governors/turbine_governor_model_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/GAST2A.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/GAST2A_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/sg_models/turbine_governors/IEEEG1.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEEEG1SB.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEEEG1SB_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEEEG1_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEEEG2.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEEEG2_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEEEG3.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEEEG3_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEESGO.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/IEESGO_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/TGOV1.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/TGOV1_test.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/URCSCT.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/URCSCT_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="source/model/sg_models/turbine_governors/turbine_governor_model.cpp" />
+		<Unit filename="source/model/sg_models/turbine_governors/turbine_governor_model_test.cpp" />
 		<Unit filename="source/model/sg_models/turbine_load_controller_model/lcfb1.cpp" />
 		<Unit filename="source/model/sg_models/turbine_load_controller_model/lcfb1_test.cpp" />
 		<Unit filename="source/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.cpp" />

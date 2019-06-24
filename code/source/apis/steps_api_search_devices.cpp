@@ -1,5 +1,6 @@
 #include <istream>
 #include "header/apis/steps_api.h"
+#include "header/apis/steps_api_common.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include "header/data_imexporter/psse_imexporter.h"

@@ -277,7 +277,7 @@ bool WT3P0::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void WT3P0::set_block_toolkit()
+void WT3P0::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     speed_reference_sensor.set_toolkit(toolkit);
@@ -299,7 +299,7 @@ void WT3P0::initialize()
             if(not aerdmodel->is_model_initialized())
                 aerdmodel->initialize();
 
-            set_block_toolkit();
+            setup_block_toolkit_and_parameters();
 
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 

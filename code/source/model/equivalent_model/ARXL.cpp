@@ -257,14 +257,14 @@ bool ARXL::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void ARXL::set_block_toolkit()
+void ARXL::setup_block_toolkit_and_parameters()
 {
     ;
 }
 
 void ARXL::initialize()
 {
-    set_block_toolkit();
+    setup_block_toolkit_and_parameters();
 
     size_t n = p_meters.size();
     for(size_t i=0; i!=n; ++i)

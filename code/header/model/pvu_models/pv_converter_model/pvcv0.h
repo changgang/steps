@@ -45,7 +45,7 @@ class PVCV0 : public PV_CONVERTER_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
-        virtual void set_block_toolkit();
+        virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);

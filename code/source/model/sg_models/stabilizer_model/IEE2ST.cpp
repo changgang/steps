@@ -312,7 +312,7 @@ bool IEE2ST::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void IEE2ST::set_block_toolkit()
+void IEE2ST::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     sensor_1.set_toolkit(toolkit);
@@ -337,7 +337,7 @@ void IEE2ST::initialize()
             if(not exciter->is_model_initialized())
                 exciter->initialize();
 
-            set_block_toolkit();
+            setup_block_toolkit_and_parameters();
 
             phase_tuner_3.set_output(0.0);
             phase_tuner_3.initialize();

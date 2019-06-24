@@ -397,7 +397,7 @@ double SYNC_GENERATOR_MODEL::get_excitation_voltage_in_pu() const
 }
 
 
-void SYNC_GENERATOR_MODEL::set_block_toolkit()
+void SYNC_GENERATOR_MODEL::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     transient_block_d_axis.set_toolkit(toolkit);

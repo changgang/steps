@@ -201,7 +201,7 @@ bool WT3G1::setup_model_with_bpa_string(string data)
     return false;
 }
 
-void WT3G1::set_block_toolkit()
+void WT3G1::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     active_current_commander.set_toolkit(toolkit);
@@ -218,7 +218,7 @@ void WT3G1::initialize()
         WT_GENERATOR* wt_generator = get_wt_generator_pointer();
         if(wt_generator!=NULL)
         {
-            set_block_toolkit();
+            setup_block_toolkit_and_parameters();
 
             size_t n_lumped = get_number_of_lumped_wt_generators();
             double fbase = get_bus_base_frequency_in_Hz();
