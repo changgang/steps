@@ -39,6 +39,7 @@ void PSASPS2::copy_from_const_model(const PSASPS2& model)
     this->set_Kw(model.get_Kw());
     this->set_Kp(model.get_Kp());
     this->set_Kt(model.get_Kt());
+    this->set_Tr_in_s(model.get_Tr_in_s());
     this->set_Tw1_in_s(model.get_Tw1_in_s());
     this->set_Tw2_in_s(model.get_Tw2_in_s());
     this->set_T1_in_s(model.get_T1_in_s());
@@ -84,6 +85,13 @@ void PSASPS2::set_Kp(double K)
 void PSASPS2::set_Kt(double K)
 {
     Kt = K;
+}
+
+void PSASPS2::set_Tr_in_s(double T)
+{
+    sensor_w.set_T_in_s(T);
+    sensor_p.set_T_in_s(T);
+    sensor_t.set_T_in_s(T);
 }
 
 void PSASPS2::set_Tw1_in_s(double T)
@@ -152,6 +160,11 @@ double PSASPS2::get_Kt() const
     return Kt;
 }
 
+double PSASPS2::get_Tr_in_s() const
+{
+    return sensor_w.get_T_in_s();
+}
+
 double PSASPS2::get_Tw1_in_s() const
 {
     return dedc_block_1.get_T_in_s();
@@ -205,17 +218,18 @@ double PSASPS2::get_Vsmin() const
 bool PSASPS2::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=16)
+    if(data.size()>=17)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            double kw, kp, kt, tw1, tw2, t1, t2, t3, t4, t5, t6, vsmax, vsmin;
+            double kw, kp, kt, tr, tw1, tw2, t1, t2, t3, t4, t5, t6, vsmax, vsmin;
 
             size_t i=3;
             kw = get_double_data(data[i],"0.0"); i++;
             kp = get_double_data(data[i],"0.0"); i++;
             kt = get_double_data(data[i],"0.0"); i++;
+            tr= get_double_data(data[i],"0.0"); i++;
             tw1= get_double_data(data[i],"0.0"); i++;
             tw2= get_double_data(data[i],"0.0"); i++;
             t1 = get_double_data(data[i],"0.0"); i++;
@@ -230,6 +244,7 @@ bool PSASPS2::setup_model_with_steps_string_vector(vector<string>& data)
             set_Kw(kw);
             set_Kp(kp);
             set_Kt(kt);
+            set_Tr_in_s(tr);
             set_Tw1_in_s(tw1);
             set_Tw2_in_s(tw2);
             set_T1_in_s(t1);
@@ -271,6 +286,9 @@ bool PSASPS2::setup_model_with_bpa_string(string data)
 void PSASPS2::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    sensor_w.set_toolkit(toolkit);
+    sensor_p.set_toolkit(toolkit);
+    sensor_t.set_toolkit(toolkit);
     dedc_block_1.set_toolkit(toolkit);
     dedc_block_2.set_toolkit(toolkit);
     phase_tuner_1.set_toolkit(toolkit);
@@ -325,6 +343,15 @@ void PSASPS2::initialize()
             speed_deviation_ref_pu = get_signal_value_of_slot(0);
             Pe_ref_pu = get_signal_value_of_slot(1);
             Pmech_ref_pu = get_signal_value_of_slot(2);
+
+            sensor_w.set_output(speed_deviation_ref_pu);
+            sensor_w.initialize();
+
+            sensor_p.set_output(Pe_ref_pu);
+            sensor_p.initialize();
+
+            sensor_t.set_output(Pmech_ref_pu);
+            sensor_t.initialize();
         }
         else
             deactivate_model();
@@ -343,7 +370,16 @@ void PSASPS2::run(DYNAMIC_MODE mode)
         double Pe_pu = get_signal_value_of_slot(1);
         double Pmech_pu = get_signal_value_of_slot(2);
 
-        double input = Kw*(speed_deviation_pu-speed_deviation_ref_pu)-Kp*(Pe_pu-Pe_ref_pu)-Kt*(Pmech_ref_pu-Pmech_pu);
+        sensor_w.set_input(speed_deviation_pu);
+        sensor_w.run(mode);
+
+        sensor_p.set_input(Pe_pu);
+        sensor_p.run(mode);
+
+        sensor_t.set_input(Pmech_pu);
+        sensor_t.run(mode);
+
+        double input = Kw*(sensor_w.get_output()-speed_deviation_ref_pu)-Kp*(sensor_p.get_output()-Pe_ref_pu)-Kt*(Pmech_ref_pu-sensor_t.get_output());
 
         dedc_block_1.set_input(input);
         dedc_block_1.run(mode);
@@ -406,6 +442,7 @@ string PSASPS2::get_standard_model_string() const
     double Kw = get_Kw();
     double Kp = get_Kp();
     double Kt = get_Kt();
+    double Tr = get_Tr_in_s();
     double Tw1 = get_Tw1_in_s();
     double Tw2 = get_Tw2_in_s();
     double T1 = get_T1_in_s();
@@ -427,6 +464,7 @@ string PSASPS2::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<Kw<<", "
       <<setw(8)<<setprecision(6)<<Kp<<", "
       <<setw(8)<<setprecision(6)<<Kt<<", "
+      <<setw(8)<<setprecision(6)<<Tr<<", "
       <<setw(8)<<setprecision(6)<<Tw1<<", "
       <<setw(8)<<setprecision(6)<<Tw2<<", "
       <<setw(8)<<setprecision(6)<<T1<<", "
@@ -448,6 +486,7 @@ void PSASPS2::prepare_model_data_table()
     add_model_data_name_and_index_pair("KW", i); i++;
     add_model_data_name_and_index_pair("KP", i); i++;
     add_model_data_name_and_index_pair("KT", i); i++;
+    add_model_data_name_and_index_pair("TR", i); i++;
     add_model_data_name_and_index_pair("TW1", i); i++;
     add_model_data_name_and_index_pair("TW2", i); i++;
     add_model_data_name_and_index_pair("T1", i); i++;
@@ -469,6 +508,8 @@ double PSASPS2::get_model_data_with_name(string par_name) const
         return get_Kp();
     if(par_name=="KT")
         return get_Kt();
+    if(par_name=="TR")
+        return get_Tr_in_s();
     if(par_name=="TW1")
         return get_Tw1_in_s();
     if(par_name=="TW2")
@@ -502,6 +543,8 @@ void PSASPS2::set_model_data_with_name(string par_name, double value)
         return set_Kp(value);
     if(par_name=="KT")
         return set_Kt(value);
+    if(par_name=="TR")
+        return set_Tr_in_s(value);
     if(par_name=="TW1")
         return set_Tw1_in_s(value);
     if(par_name=="TW2")
@@ -533,6 +576,9 @@ void PSASPS2::prepare_model_internal_variable_table()
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 3", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SPEED SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@PELEC SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@PMECH SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@DEDC BLOCK 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@DEDC BLOCK 2", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;
@@ -551,6 +597,15 @@ double PSASPS2::get_model_internal_variable_with_name(string var_name)
 
     if(var_name == "SIGNAL@SLOT 3")
         return get_signal_value_of_slot(2);
+
+    if(var_name == "STATE@SPEED SENSOR")
+        return sensor_w.get_state();
+
+    if(var_name == "STATE@PELEC SENSOR")
+        return sensor_p.get_state();
+
+    if(var_name == "STATE@PMECH SENSOR")
+        return sensor_t.get_state();
 
     if(var_name == "STATE@DEDC BLOCK 1")
         return dedc_block_1.get_state();

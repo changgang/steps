@@ -163,6 +163,10 @@ class STEPS():
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_save_dynamic_data_from_file(file, ftype, self.toolkit_index)
 
+    def check_network_connectivity(self, remove_void_islands=False):
+        global STEPS_LIB
+        STEPS_LIB.api_check_network_connectivity(remove_void_islands, self.toolkit_index)
+        
     def get_bus_capacity(self):
         global STEPS_LIB
         device = self.__get_c_char_p_of_string("BUS")

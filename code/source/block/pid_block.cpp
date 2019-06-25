@@ -76,7 +76,10 @@ void PID_BLOCK::set_Td_in_s(double T)
         ostringstream osstream;
         osstream<<"Error. Non-positive time constant Td is not allowed for PID_BLOCK.";
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        if(&toolkit!=NULL)
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        else
+            show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         return;
     }
     d_block.set_T_in_s(T);

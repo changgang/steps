@@ -365,10 +365,10 @@ string PSASPE1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<KA<<", "
       <<setw(8)<<setprecision(6)<<TA<<", "
       <<setw(8)<<setprecision(6)<<TE<<", "
-      <<setw(8)<<setprecision(6)<<Efdmax<<", "
-      <<setw(8)<<setprecision(6)<<Efdmin<<", "
       <<setw(8)<<setprecision(6)<<KF<<", "
-      <<setw(8)<<setprecision(6)<<TF<<"  /";
+      <<setw(8)<<setprecision(6)<<TF<<", "
+      <<setw(8)<<setprecision(6)<<Efdmax<<", "
+      <<setw(8)<<setprecision(6)<<Efdmin<<" /";
     return osstream.str();
 }
 

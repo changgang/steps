@@ -259,10 +259,14 @@ bool WT3G2::setup_model_with_steps_string_vector(vector<string>& data)
             }
         }
         else
+        {
             return is_successful;
+        }
     }
     else
+    {
         return is_successful;
+    }
 }
 
 bool WT3G2::setup_model_with_psse_string(string data)

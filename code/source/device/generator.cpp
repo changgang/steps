@@ -210,6 +210,11 @@ void GENERATOR::set_compensator_model(const COMPENSATOR_MODEL* model)
                 COMP* smodel = (COMP*) (model);
                 new_model = (COMPENSATOR_MODEL*) new COMP(*smodel);
             }
+            if(model_name=="IEEEVC")
+            {
+                IEEEVC* smodel = (IEEEVC*) (model);
+                new_model = (COMPENSATOR_MODEL*) new IEEEVC(*smodel);
+            }
 
             if(new_model!=NULL)
             {
@@ -270,11 +275,6 @@ void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
                 PSASPE2* smodel = (PSASPE2*) (model);
                 new_model = (EXCITER_MODEL*) new PSASPE2(*smodel);
             }
-            if(model_name=="PSASPE13")
-            {
-                PSASPE13* smodel = (PSASPE13*) (model);
-                new_model = (EXCITER_MODEL*) new PSASPE13(*smodel);
-            }
             if(model_name=="CSEET1")
             {
                 CSEET1* smodel = (CSEET1*) (model);
@@ -284,6 +284,16 @@ void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
             {
                 CSEET2* smodel = (CSEET2*) (model);
                 new_model = (EXCITER_MODEL*) new CSEET2(*smodel);
+            }
+            if(model_name=="PSASPE13")
+            {
+                PSASPE13* smodel = (PSASPE13*) (model);
+                new_model = (EXCITER_MODEL*) new PSASPE13(*smodel);
+            }
+            if(model_name=="PSASPE14")
+            {
+                PSASPE14* smodel = (PSASPE14*) (model);
+                new_model = (EXCITER_MODEL*) new PSASPE14(*smodel);
             }
 
             if(new_model!=NULL)
@@ -421,6 +431,16 @@ void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
             {
                 IEEEG1SB* smodel = (IEEEG1SB*) (model);
                 new_model = (TURBINE_GOVERNOR_MODEL*) new IEEEG1SB(*smodel);
+            }
+            if(model_name=="GAST2A")
+            {
+                GAST2A* smodel = (GAST2A*) (model);
+                new_model = (TURBINE_GOVERNOR_MODEL*) new GAST2A(*smodel);
+            }
+            if(model_name=="URCSCT")
+            {
+                URCSCT* smodel = (URCSCT*) (model);
+                new_model = (TURBINE_GOVERNOR_MODEL*) new URCSCT(*smodel);
             }
 
             if(new_model!=NULL)

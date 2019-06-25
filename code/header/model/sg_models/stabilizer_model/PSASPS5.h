@@ -16,40 +16,33 @@ class PSASPS5 : public STABILIZER_MODEL
 
         virtual string get_model_name() const;
     public:
-        void set_K1(double K);
         void set_T1_in_s(double T);
-        void set_K2(double K);
         void set_T2_in_s(double T);
         void set_T3_in_s(double T);
         void set_T4_in_s(double T);
         void set_T5_in_s(double T);
+        void set_K1(double K);
         void set_T6_in_s(double T);
-        void set_T7_in_s(double T);
-        void set_T8_in_s(double T);
-        void set_T9_in_s(double T);
-        void set_T10_in_s(double T);
+        void set_K2(double K);
+        void set_a(double a);
+        void set_p(double p);
+        void set_K(double K);
         void set_Vsmax(double vmax);
         void set_Vsmin(double vmin);
-        void set_Vcmax(double vmax);
-        void set_Vcmin(double vmin);
 
-        double get_K1() const;
-        double get_K2() const;
         double get_T1_in_s() const;
         double get_T2_in_s() const;
         double get_T3_in_s() const;
         double get_T4_in_s() const;
         double get_T5_in_s() const;
+        double get_K1() const;
         double get_T6_in_s() const;
-        double get_T7_in_s() const;
-        double get_T8_in_s() const;
-        double get_T9_in_s() const;
-        double get_T10_in_s() const;
+        double get_K2() const;
+        double get_a() const;
+        double get_p() const;
+        double get_K() const;
         double get_Vsmax() const;
         double get_Vsmin() const;
-        double get_Vcmax() const;
-        double get_Vcmin() const;
-
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -80,10 +73,12 @@ class PSASPS5 : public STABILIZER_MODEL
         virtual void prepare_model_internal_variable_table();
 
         FIRST_ORDER_BLOCK sensor_1, sensor_2;
-        DIFFERENTIAL_BLOCK filter; FIRST_ORDER_BLOCK alternative_filter;
-        LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
+        DIFFERENTIAL_BLOCK dedc_block_1, dedc_block_2, dedc_block_3;
+        FIRST_ORDER_BLOCK speed_amplifier;
+        double K2;
+        double a, p;
+        double K;
         double Vsmax, Vsmin;
-        double Vcmax, Vcmin;
 };
 
 #endif // PSASPS5_H

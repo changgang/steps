@@ -34,7 +34,10 @@ void DIFFERENTIAL_BLOCK::set_T_in_s(double t)
         ostringstream osstream;
         osstream<<"Error. Zero time constant T is not allowed for DIFFERENTIAL_BLOCK.";
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        if(&toolkit!=NULL)
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        else
+            show_information_with_leading_time_stamp_with_default_toolkit(osstream);
         return;
     }
     this->T = t;

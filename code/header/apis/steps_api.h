@@ -47,6 +47,8 @@ EXPORT_STEPS_DLL void api_save_powerflow_data_to_file(char* file, char* file_typ
 EXPORT_STEPS_DLL void api_load_dynamic_data_from_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dynamic_data_to_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_check_network_connectivity(bool remove_void_island=false, size_t toolkit_index=INDEX_NOT_EXIST);
+
 
 EXPORT_STEPS_DLL void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_generator(size_t bus_number, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);

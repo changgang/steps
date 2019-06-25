@@ -47,6 +47,9 @@ void PSASPS2_TEST::test_set_get_parameters()
     model->set_Kt(2.5);
     TEST_ASSERT(fabs(model->get_Kt()-2.5)<FLOAT_EPSILON);
 
+    model->set_Tr_in_s(0.01);
+    TEST_ASSERT(fabs(model->get_Tr_in_s()-0.01)<FLOAT_EPSILON);
+
     model->set_Tw1_in_s(0.1);
     TEST_ASSERT(fabs(model->get_Tw1_in_s()-0.1)<FLOAT_EPSILON);
 

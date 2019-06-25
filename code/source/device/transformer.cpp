@@ -185,13 +185,13 @@ void TRANSFORMER::set_leakage_impedance_between_windings_based_on_winding_nomina
             winding1 = winding2;
             winding2 = temp_winding;
         }
-        if(z==0.0)
+        /*if(z==0.0)
         {
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             osstream<<"Warning. The leakage impedance between "<<get_winding_name(winding1)<<" and "<<get_winding_name(winding2)<<" windings is zero for "<<get_device_name()<<endl
                     <<"Correction is required. Check original data.";
             toolkit.show_information_with_leading_time_stamp(osstream);
-        }
+        }*/
 
         if(winding1==PRIMARY_SIDE and winding2==SECONDARY_SIDE)
             zl_primary2secondary_in_pu = z;

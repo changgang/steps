@@ -27,6 +27,7 @@ class EXCITER_MODEL_TEST : public SG_MODEL_TEST
         void test_get_model_type();
         void test_set_get_voltage_reference();
         void test_get_compensated_voltage();
+        void test_get_field_current();
         void test_step_response();
         void test_get_standard_model_string();
 

@@ -105,6 +105,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_GENSAL_model(vector<string>& data);
 
         void add_COMP_model(vector<string>& data);
+        void add_IEEEVC_model(vector<string>& data);
 
         void add_IEE2ST_model(vector<string>& data);
         void add_PSASPS1_model(vector<string>& data);
@@ -120,6 +121,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_CSEET1_model(vector<string>& data);
         void add_CSEET2_model(vector<string>& data);
         void add_PSASPE13_model(vector<string>& data);
+        void add_PSASPE14_model(vector<string>& data);
 
         void add_TGOV1_model(vector<string>& data);
         void add_IEEEG1_model(vector<string>& data);
@@ -127,6 +129,8 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_IEEEG3_model(vector<string>& data);
         void add_IEESGO_model(vector<string>& data);
         void add_IEEEG1SB_model(vector<string>& data);
+        void add_GAST2A_model(vector<string>& data);
+        void add_URCSCT_model(vector<string>& data);
 
         void add_LCFB1_model(vector<string>& data);
 

@@ -75,6 +75,9 @@ def load_library():
     libsteps.api_save_powerflow_data_to_file.argtypes = (c_char_p, c_char_p, c_bool, c_uint)
     libsteps.api_save_dynamic_data_to_file.restype = None
     libsteps.api_save_dynamic_data_to_file.argtypes = (c_char_p, c_char_p, c_uint)
+    
+    libsteps.api_check_network_connectivity.restype = None
+    libsteps.api_check_network_connectivity.argtypes = (c_bool, c_uint)
 
     libsteps.api_get_allowed_maximum_bus_number.restype = c_uint
     libsteps.api_get_allowed_maximum_bus_number.argtypes = (c_uint, )

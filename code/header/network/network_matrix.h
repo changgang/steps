@@ -33,7 +33,7 @@ class NETWORK_MATRIX : public BASE
         STEPS_SPARSE_MATRIX& get_sequential_network_Y0_matrix();
 
         void optimize_network_ordering();
-        void check_newtork_connectivity();
+        void check_network_connectivity(bool remove_void_island=false);
         vector< vector<size_t> > get_islands_with_internal_bus_number();
         vector< vector<size_t> > get_islands_with_physical_bus_number();
 

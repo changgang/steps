@@ -330,68 +330,71 @@ double PSASPS4::get_Vsmin() const
 bool PSASPS4::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<26)
-        is_successful = false;
+    if(data.size()>=26)
+    {
+        string model_name = get_string_data(data[0],"");
+        if(model_name==get_model_name())
+        {
+            double kw, trw, t5, t6, t7, kr, trp, tw, tw1, tw2, ks, t9, t10, t12, kp, t1, t2, t13, t14, t3, t4,
+                   vsmax, vsmin;
 
-    string model_name = get_string_data(data[0],"");
-    if(model_name!=get_model_name())
+            size_t i=3;
+            kw = get_double_data(data[i],"0.0"); i++;
+            trw = get_double_data(data[i],"0.0"); i++;
+            t5 = get_double_data(data[i],"0.0"); i++;
+            t6 = get_double_data(data[i],"0.0"); i++;
+            t7 = get_double_data(data[i],"0.0"); i++;
+            kr= get_double_data(data[i],"0.0"); i++;
+            trp = get_double_data(data[i],"0.0"); i++;
+            tw = get_double_data(data[i],"0.0"); i++;
+            tw1 = get_double_data(data[i],"0.0"); i++;
+            tw2 = get_double_data(data[i],"0.0"); i++;
+            ks = get_double_data(data[i],"0.0"); i++;
+            t9 = get_double_data(data[i],"0.0"); i++;
+            t10 = get_double_data(data[i],"0.0"); i++;
+            t12 = get_double_data(data[i],"0.0"); i++;
+            kp = get_double_data(data[i],"0.0"); i++;
+            t1 = get_double_data(data[i],"0.0"); i++;
+            t2 = get_double_data(data[i],"0.0"); i++;
+            t13 = get_double_data(data[i],"0.0"); i++;
+            t14 = get_double_data(data[i],"0.0"); i++;
+            t3 = get_double_data(data[i],"0.0"); i++;
+            t4 = get_double_data(data[i],"0.0"); i++;
+            vsmax = get_double_data(data[i],"0.0"); i++;
+            vsmin = get_double_data(data[i],"0.0"); i++;
+
+            set_Kw(kw);
+            set_Trw_in_s(trw);
+            set_T5_in_s(t5);
+            set_T6_in_s(t6);
+            set_T7_in_s(t7);
+            set_Kr(kr);
+            set_Trp_in_s(trp);
+            set_Tw_in_s(tw);
+            set_Tw1_in_s(tw1);
+            set_Tw2_in_s(tw2);
+            set_Ks(ks);
+            set_T9_in_s(t9);
+            set_T10_in_s(t10);
+            set_T12_in_s(t12);
+            set_Kp(kp);
+            set_T1_in_s(t1);
+            set_T2_in_s(t2);
+            set_T13_in_s(t13);
+            set_T14_in_s(t14);
+            set_T3_in_s(t3);
+            set_T4_in_s(t4);
+            set_Vsmax(vsmax);
+            set_Vsmin(vsmin);
+
+            is_successful = true;
+            return is_successful;
+        }
+        else
+            return is_successful;
+    }
+    else
         return is_successful;
-
-    double kw, trw, t5, t6, t7, kr, trp, tw, tw1, tw2, ks, t9, t10, t12, kp, t1, t2, t13, t14, t3, t4,
-           vsmax, vsmin;
-
-    size_t i=3;
-    kw = get_double_data(data[i],"0.0"); i++;
-    trw = get_double_data(data[i],"0.0"); i++;
-    t5 = get_double_data(data[i],"0.0"); i++;
-    t6 = get_double_data(data[i],"0.0"); i++;
-    t7 = get_double_data(data[i],"0.0"); i++;
-    kr= get_double_data(data[i],"0.0"); i++;
-    trp = get_double_data(data[i],"0.0"); i++;
-    tw = get_double_data(data[i],"0.0"); i++;
-    tw1 = get_double_data(data[i],"0.0"); i++;
-    tw2 = get_double_data(data[i],"0.0"); i++;
-    ks = get_double_data(data[i],"0.0"); i++;
-    t9 = get_double_data(data[i],"0.0"); i++;
-    t10 = get_double_data(data[i],"0.0"); i++;
-    t12 = get_double_data(data[i],"0.0"); i++;
-    kp = get_double_data(data[i],"0.0"); i++;
-    t1 = get_double_data(data[i],"0.0"); i++;
-    t2 = get_double_data(data[i],"0.0"); i++;
-    t13 = get_double_data(data[i],"0.0"); i++;
-    t14 = get_double_data(data[i],"0.0"); i++;
-    t3 = get_double_data(data[i],"0.0"); i++;
-    t4 = get_double_data(data[i],"0.0"); i++;
-    vsmax = get_double_data(data[i],"0.0"); i++;
-    vsmin = get_double_data(data[i],"0.0"); i++;
-
-    set_Kw(kw);
-    set_Trw_in_s(trw);
-    set_T5_in_s(t5);
-    set_T6_in_s(t6);
-    set_T7_in_s(t7);
-    set_Kr(kr);
-    set_Trp_in_s(trp);
-    set_Tw_in_s(tw);
-    set_Tw1_in_s(tw1);
-    set_Tw2_in_s(tw2);
-    set_Ks(ks);
-    set_T9_in_s(t9);
-    set_T10_in_s(t10);
-    set_T12_in_s(t12);
-    set_Kp(kp);
-    set_T1_in_s(t1);
-    set_T2_in_s(t2);
-    set_T13_in_s(t13);
-    set_T14_in_s(t14);
-    set_T3_in_s(t3);
-    set_T4_in_s(t4);
-    set_Vsmax(vsmax);
-    set_Vsmin(vsmin);
-
-    is_successful = true;
-
-    return is_successful;
 }
 
 bool PSASPS4::setup_model_with_psse_string(string data)

@@ -152,7 +152,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
 
     network_matrix.build_network_matrix();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    network_matrix.check_newtork_connectivity();
+    network_matrix.check_network_connectivity();
 
     ostringstream osstream;
     osstream<<"Islands when tripping line 4-5 and 4-6";
@@ -182,7 +182,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
-    network_matrix.check_newtork_connectivity();
+    network_matrix.check_network_connectivity();
 
     osstream<<"Islands when tripping line 4-5, 4-6, and 8-9";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -197,7 +197,7 @@ void NETWORK_MATRIX_TEST::test_check_network_connectivity()
     line->set_sending_side_breaker_status(false);
     line->set_receiving_side_breaker_status(false);
 
-    network_matrix.check_newtork_connectivity();
+    network_matrix.check_network_connectivity();
 }
 
 void NETWORK_MATRIX_TEST::test_get_islands()
@@ -365,5 +365,5 @@ void NETWORK_MATRIX_TEST::test_build_network_with_bus_out_of_service()
     network_matrix.build_network_matrix();
     network_matrix.save_network_matrix_to_file("test_log/network_matrix_with_bus_out_of_service_optimized_exported.csv");
 
-    network_matrix.check_newtork_connectivity();
+    network_matrix.check_network_connectivity();
 }

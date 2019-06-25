@@ -23,6 +23,7 @@ class EXCITER_MODEL : public SG_MODEL
         // get input for dynamics
         double get_compensated_voltage_in_pu() const;
         double get_stabilizing_signal_in_pu() const;
+        double get_field_current_in_pu() const;
         // reference
         void set_voltage_reference_in_pu(double vref);
         double get_voltage_reference_in_pu() const;

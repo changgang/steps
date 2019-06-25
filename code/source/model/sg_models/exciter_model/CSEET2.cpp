@@ -412,7 +412,7 @@ double CSEET2::get_KC() const
 bool CSEET2::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=21)
+    if(data.size()>=24)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())

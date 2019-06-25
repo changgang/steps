@@ -2302,7 +2302,7 @@ void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
 
 }
 
-void NETWORK_MATRIX::check_newtork_connectivity()
+void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -2330,12 +2330,12 @@ void NETWORK_MATRIX::check_newtork_connectivity()
             bus = psdb.get_bus(physical_bus);
             if(bus->get_bus_type()!=SLACK_TYPE)
             {
-                osstream<<physical_bus;
+                osstream<<physical_bus<<" ["<<psdb.bus_number2bus_name(physical_bus)<<"  "<<psdb.get_bus_base_voltage_in_kV(physical_bus)<<"kV]";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
             else
             {
-                osstream<<physical_bus<<" (Slack bus)";
+                osstream<<physical_bus<<" ["<<psdb.bus_number2bus_name(physical_bus)<<"  "<<psdb.get_bus_base_voltage_in_kV(physical_bus)<<"kV] (Slack bus)";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 there_is_slack_bus_in_island = true;
             }
@@ -2344,6 +2344,17 @@ void NETWORK_MATRIX::check_newtork_connectivity()
         {
             osstream<<"No slack bus is found in island "<<i<<".";
             toolkit.show_information_with_leading_time_stamp(osstream);
+            if(remove_void_island==true)
+            {
+                for(size_t j=0; j!=nbus; ++j)
+                {
+                    physical_bus = islands[i][j];
+                    bus = psdb.get_bus(physical_bus);
+                    bus->set_bus_type(OUT_OF_SERVICE);
+                }
+                osstream<<"All buses in island "<<i<<" are set as OUT OF SERVICE.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
         }
     }
 }

@@ -80,6 +80,22 @@ double EXCITER_MODEL::get_stabilizing_signal_in_pu() const
         return 0.0;
 }
 
+
+double EXCITER_MODEL::get_field_current_in_pu() const
+{
+    GENERATOR* generator = get_generator_pointer();
+    if(generator!=NULL)
+    {
+        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
+        if(gen_model!=NULL)
+            return gen_model->get_field_current_in_pu_based_on_mbase();
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
 void EXCITER_MODEL::set_voltage_reference_in_pu(double vref)
 {
     voltage_reference_in_pu = vref;

@@ -19,16 +19,12 @@ void PSASPE14::clear()
 {
     prepare_model_data_table();
     prepare_model_internal_variable_table();
-
-    sensor.set_K(1.0);
-    voltage_pi.set_limiter_type(NON_WINDUP_LIMITER);
-    current_pi.set_limiter_type(NON_WINDUP_LIMITER);
 }
+
 void PSASPE14::copy_from_const_model(const PSASPE14& model)
 {
     clear();
 
-    set_Xc_in_s(model.get_Xc_in_s());
     set_Tr_in_s(model.get_Tr_in_s());
     set_Ka(model.get_Ka());
     set_Ta_in_s(model.get_Ta_in_s());
@@ -36,17 +32,16 @@ void PSASPE14::copy_from_const_model(const PSASPE14& model)
     set_Ki(model.get_Ki());
     set_Vrmax_in_pu(model.get_Vrmax_in_pu());
     set_Vrmin_in_pu(model.get_Vrmin_in_pu());
+    set_Kifd(model.get_Kifd());
+    set_Tifd_in_s(model.get_Tifd_in_s());
     set_IKp(model.get_IKp());
     set_IKi(model.get_IKi());
     set_Vfmax_in_pu(model.get_Vfmax_in_pu());
     set_Vfmin_in_pu(model.get_Vfmin_in_pu());
     set_Kt(model.get_Kt());
     set_Tt_in_s(model.get_Tt_in_s());
-    set_Kifd(model.get_Kifd());
-    set_Tifd_in_s(model.get_Tifd_in_s());
     set_Efdmax_in_pu(model.get_Efdmax_in_pu());
     set_Efdmin_in_pu(model.get_Efdmin_in_pu());
-    set_Kc(model.get_Kc());
 }
 
 PSASPE14::PSASPE14(const PSASPE14& model) : EXCITER_MODEL()
@@ -68,11 +63,6 @@ string PSASPE14::get_model_name() const
     return "PSASPE14";
 }
 
-void PSASPE14::set_Xc_in_s(double X)
-{
-    Xc = X;
-}
-
 void PSASPE14::set_Tr_in_s(double T)
 {
     sensor.set_T_in_s(T);
@@ -90,22 +80,32 @@ void PSASPE14::set_Ta_in_s(double T)
 
 void PSASPE14::set_Kp(double K)
 {
-    voltage_pi.set_Kp(K);
+    regulator_pi.set_Kp(K);
 }
 
 void PSASPE14::set_Ki(double K)
 {
-    voltage_pi.set_Ki(K);
+    regulator_pi.set_Ki(K);
 }
 
 void PSASPE14::set_Vrmax_in_pu(double vmax)
 {
-    voltage_pi.set_upper_limit(vmax);
+    regulator_pi.set_upper_limit(vmax);
 }
 
 void PSASPE14::set_Vrmin_in_pu(double vmin)
 {
-    voltage_pi.set_lower_limit(vmin);
+    regulator_pi.set_lower_limit(vmin);
+}
+
+void PSASPE14::set_Kifd(double K)
+{
+    ifd_feedback.set_K(K);
+}
+
+void PSASPE14::set_Tifd_in_s(double T)
+{
+    ifd_feedback.set_T_in_s(T);
 }
 
 void PSASPE14::set_IKp(double K)
@@ -138,16 +138,6 @@ void PSASPE14::set_Tt_in_s(double T)
     rectifier.set_T_in_s(T);
 }
 
-void PSASPE14::set_Kifd(double K)
-{
-    ifd_feedback.set_K(K);
-}
-
-void PSASPE14::set_Tifd_in_s(double T)
-{
-    ifd_feedback.set_T_in_s(T);
-}
-
 void PSASPE14::set_Efdmax_in_pu(double emax)
 {
     Efdmax = emax;
@@ -156,16 +146,6 @@ void PSASPE14::set_Efdmax_in_pu(double emax)
 void PSASPE14::set_Efdmin_in_pu(double emin)
 {
     Efdmin = emin;
-}
-
-void PSASPE14::set_Kc(double K)
-{
-    Kc = K;
-}
-
-double PSASPE14::get_Xc_in_s() const
-{
-    return Xc;
 }
 
 double PSASPE14::get_Tr_in_s() const
@@ -185,22 +165,32 @@ double PSASPE14::get_Ta_in_s() const
 
 double PSASPE14::get_Kp() const
 {
-    return voltage_pi.get_Kp();
+    return regulator_pi.get_Kp();
 }
 
 double PSASPE14::get_Ki() const
 {
-    return voltage_pi.get_Ki();
+    return regulator_pi.get_Ki();
 }
 
 double PSASPE14::get_Vrmax_in_pu() const
 {
-    return voltage_pi.get_upper_limit();
+    return regulator_pi.get_upper_limit();
 }
 
 double PSASPE14::get_Vrmin_in_pu() const
 {
-    return voltage_pi.get_lower_limit();
+    return regulator_pi.get_lower_limit();
+}
+
+double PSASPE14::get_Kifd() const
+{
+    return ifd_feedback.get_K();
+}
+
+double PSASPE14::get_Tifd_in_s() const
+{
+    return ifd_feedback.get_T_in_s();
 }
 
 double PSASPE14::get_IKp() const
@@ -233,16 +223,6 @@ double PSASPE14::get_Tt_in_s() const
     return rectifier.get_T_in_s();
 }
 
-double PSASPE14::get_Kifd() const
-{
-    return ifd_feedback.get_K();
-}
-
-double PSASPE14::get_Tifd_in_s() const
-{
-    return ifd_feedback.get_T_in_s();
-}
-
 double PSASPE14::get_Efdmax_in_pu() const
 {
     return Efdmax;
@@ -253,34 +233,32 @@ double PSASPE14::get_Efdmin_in_pu() const
     return Efdmin;
 }
 
-double PSASPE14::get_Kc() const
-{
-    return Kc;
-}
-
 bool PSASPE14::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=17)
+    if(data.size()>=20)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
             size_t i=3;
-            double tr = get_double_data(data[i],"0.0"); i++;
-            double vimax = get_double_data(data[i],"0.0"); i++;
-            double vimin = get_double_data(data[i],"0.0"); i++;
-            double tc = get_double_data(data[i],"0.0"); i++;
-            double tb = get_double_data(data[i],"0.0"); i++;
-            double ka = get_double_data(data[i],"0.0"); i++;
-            double ta = get_double_data(data[i],"0.0"); i++;
-            double vrmax = get_double_data(data[i],"0.0"); i++;
-            double vrmin = get_double_data(data[i],"0.0"); i++;
-            double kf = get_double_data(data[i],"0.0"); i++;
-            double tf = get_double_data(data[i],"0.0"); i++;
-            double efdmax = get_double_data(data[i],"0.0"); i++;
-            double efdmin = get_double_data(data[i],"0.0"); i++;
-            double kc = get_double_data(data[i],"0.0"); i++;
+            set_Tr_in_s(get_double_data(data[i],"0.0")); ++i;
+            set_Ka(get_double_data(data[i],"0.0")); ++i;
+            set_Ta_in_s(get_double_data(data[i],"0.0")); ++i;
+            set_Kp(get_double_data(data[i],"0.0")); ++i;
+            set_Ki(get_double_data(data[i],"0.0")); ++i;
+            set_Vrmax_in_pu(get_double_data(data[i],"0.0")); ++i;
+            set_Vrmin_in_pu(get_double_data(data[i],"0.0")); ++i;
+            set_Kifd(get_double_data(data[i],"0.0")); ++i;
+            set_Tifd_in_s(get_double_data(data[i],"0.0")); ++i;
+            set_IKp(get_double_data(data[i],"0.0")); ++i;
+            set_IKi(get_double_data(data[i],"0.0")); ++i;
+            set_Vfmax_in_pu(get_double_data(data[i],"0.0")); ++i;
+            set_Vfmin_in_pu(get_double_data(data[i],"0.0")); ++i;
+            set_Kt(get_double_data(data[i],"0.0")); ++i;
+            set_Tt_in_s(get_double_data(data[i],"0.0")); ++i;
+            set_Efdmax_in_pu(get_double_data(data[i],"0.0")); ++i;
+            set_Efdmin_in_pu(get_double_data(data[i],"0.0")); ++i;
 
             is_successful = true;
 
@@ -312,12 +290,13 @@ bool PSASPE14::setup_model_with_bpa_string(string data)
 void PSASPE14::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
     sensor.set_toolkit(toolkit);
     regulator.set_toolkit(toolkit);
-    rectifier.set_toolkit(toolkit);
+    regulator_pi.set_toolkit(toolkit); regulator_pi.set_limiter_type(NON_WINDUP_LIMITER);
     ifd_feedback.set_toolkit(toolkit);
-    voltage_pi.set_toolkit(toolkit);
-    current_pi.set_toolkit(toolkit);
+    current_pi.set_toolkit(toolkit); current_pi.set_limiter_type(NON_WINDUP_LIMITER);
+    rectifier.set_toolkit(toolkit);
 }
 
 void PSASPE14::initialize()
@@ -337,10 +316,27 @@ void PSASPE14::initialize()
 
                 double Ecomp = get_compensated_voltage_in_pu();
                 double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+                double Ifd = get_field_current_in_pu();
 
-                regulator.set_output(Efd);
+                rectifier.set_output(Efd);
+                rectifier.initialize();
+
+                current_pi.set_output(Efd/get_Kt());
+                current_pi.initialize();
+
+                ifd_feedback.set_output(Ifd);
+                ifd_feedback.initialize();
+
+                regulator_pi.set_output(Ifd);
+                regulator_pi.initialize();
+
+                regulator.set_output(0.0);
                 regulator.initialize();
-                double output = regulator.get_input();
+
+                sensor.set_output(Ecomp);
+                sensor.initialize();
+
+                set_voltage_reference_in_pu(Ecomp);
 
                 set_flag_model_initialized_as_true();
             }
@@ -356,8 +352,29 @@ void PSASPE14::run(DYNAMIC_MODE mode)
         double Ecomp = get_compensated_voltage_in_pu();
         double Vref = get_voltage_reference_in_pu();
         double Vs = get_stabilizing_signal_in_pu();
+        double Ifd = get_field_current_in_pu();
 
-        //cout<<"Ecomp="<<Ecomp<<", Vref="<<Vref<<", Vs="<<Vs<<", Efd="<<exciter.get_output()<<endl;
+
+        sensor.set_input(Ecomp);
+        sensor.run(mode);
+
+        double Verror = sensor.get_output()-Vref;
+        double input = Vs - Verror;
+
+        regulator.set_input(input);
+        regulator.run(mode);
+
+        regulator_pi.set_input(regulator.get_output());
+        regulator_pi.run(mode);
+
+        ifd_feedback.set_input(Ifd);
+        ifd_feedback.run(mode);
+
+        current_pi.set_input(regulator_pi.get_output()-ifd_feedback.get_output());
+        current_pi.run(mode);
+
+        rectifier.set_input(current_pi.get_output());
+        rectifier.run(mode);
 
         if(mode == UPDATE_MODE)
             set_flag_model_updated_as_true();
@@ -366,25 +383,15 @@ void PSASPE14::run(DYNAMIC_MODE mode)
 
 double PSASPE14::get_excitation_voltage_in_pu() const
 {
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
-        if(gen_model!=NULL)
-        {
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            size_t bus = generator->get_generator_bus();
-            double Vt = psdb.get_bus_voltage_in_pu(bus);
-            double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-
-            return 0.0;
-        }
-        else
-            return 0.0;
-    }
+    double efd = rectifier.get_output();
+    if(efd>get_Efdmax_in_pu())
+        efd = get_Efdmax_in_pu();
     else
-        return 0.0;
+    {
+        if(efd<get_Efdmin_in_pu())
+            efd = get_Efdmin_in_pu();
+    }
+    return efd;
 }
 
 void PSASPE14::check()
@@ -412,6 +419,26 @@ string PSASPE14::get_standard_model_string() const
     size_t bus = gen->get_generator_bus();
     string identifier= gen->get_identifier();
 
+    osstream<<setw(8)<<bus<<", "
+      <<"'"<<get_model_name()<<"', "
+      <<"'"<<identifier<<"', "
+      <<setw(8)<<setprecision(6)<<get_Tr_in_s()<<", "
+      <<setw(8)<<setprecision(6)<<get_Ka()<<", "
+      <<setw(8)<<setprecision(6)<<get_Ta_in_s()<<", "
+      <<setw(8)<<setprecision(6)<<get_Kp()<<", "
+      <<setw(8)<<setprecision(6)<<get_Ki()<<", "
+      <<setw(8)<<setprecision(6)<<get_Vrmax_in_pu()<<", "
+      <<setw(8)<<setprecision(6)<<get_Vrmin_in_pu()<<", "
+      <<setw(8)<<setprecision(6)<<get_Kifd()<<", "
+      <<setw(8)<<setprecision(6)<<get_Tifd_in_s()<<", "
+      <<setw(8)<<setprecision(6)<<get_IKp()<<", "
+      <<setw(8)<<setprecision(6)<<get_IKi()<<", "
+      <<setw(8)<<setprecision(6)<<get_Vfmax_in_pu()<<", "
+      <<setw(8)<<setprecision(6)<<get_Vfmin_in_pu()<<", "
+      <<setw(8)<<setprecision(6)<<get_Kt()<<", "
+      <<setw(8)<<setprecision(6)<<get_Tt_in_s()<<", "
+      <<setw(8)<<setprecision(6)<<get_Efdmax_in_pu()<<", "
+      <<setw(8)<<setprecision(6)<<get_Efdmin_in_pu()<<"  /";
 
     return osstream.str();
 }
@@ -420,14 +447,62 @@ void PSASPE14::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("TR", i); i++;
+    add_model_data_name_and_index_pair("KA", i); i++;
+    add_model_data_name_and_index_pair("TA", i); i++;
+    add_model_data_name_and_index_pair("KP", i); i++;
+    add_model_data_name_and_index_pair("KI", i); i++;
+    add_model_data_name_and_index_pair("VRMAX", i); i++;
+    add_model_data_name_and_index_pair("VRMIN", i); i++;
+    add_model_data_name_and_index_pair("KIFD", i); i++;
+    add_model_data_name_and_index_pair("TIFD", i); i++;
+    add_model_data_name_and_index_pair("IKP", i); i++;
+    add_model_data_name_and_index_pair("IKI", i); i++;
+    add_model_data_name_and_index_pair("VFMAX", i); i++;
+    add_model_data_name_and_index_pair("VFMIN", i); i++;
+    add_model_data_name_and_index_pair("KT", i); i++;
+    add_model_data_name_and_index_pair("TT", i); i++;
+    add_model_data_name_and_index_pair("EFDMAX", i); i++;
+    add_model_data_name_and_index_pair("EFDMIN", i); i++;
 }
 
 double PSASPE14::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    if(par_name=="TR")
+        return get_Tr_in_s();
+    if(par_name=="KA")
+        return get_Ka();
+    if(par_name=="TA")
+        return get_Ta_in_s();
+    if(par_name=="KP")
+        return get_Kp();
+    if(par_name=="KI")
+        return get_Ki();
+    if(par_name=="VRMAX")
+        return get_Vrmax_in_pu();
+    if(par_name=="VRMIN")
+        return get_Vrmin_in_pu();
+    if(par_name=="KIFD")
+        return get_Kifd();
+    if(par_name=="TIFD")
+        return get_Tifd_in_s();
+    if(par_name=="IKP")
+        return get_IKp();
+    if(par_name=="IKI")
+        return get_IKi();
+    if(par_name=="VFMAX")
+        return get_Vfmax_in_pu();
+    if(par_name=="VFMIN")
+        return get_Vfmin_in_pu();
+    if(par_name=="KT")
+        return get_Kt();
+    if(par_name=="TT")
+        return get_Tt_in_s();
+    if(par_name=="EFDMAX")
+        return get_Efdmax_in_pu();
+    if(par_name=="EFDMIN")
+        return get_Efdmin_in_pu();
 
     return 0.0;
 }
@@ -435,7 +510,7 @@ double PSASPE14::get_model_data_with_name(string par_name) const
 void PSASPE14::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
+    if(par_name=="KA")
         return;
 
     return;
@@ -447,9 +522,11 @@ void PSASPE14::prepare_model_internal_variable_table()
     clear_model_internal_variable_table();
     size_t i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@TUNER", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@REGULATOR PI", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@IFD FEEDBACKER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@CURRENT PI", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@RECTIFIER", i); i++;
 }
 
 double PSASPE14::get_model_internal_variable_with_name(string var_name)
@@ -458,14 +535,20 @@ double PSASPE14::get_model_internal_variable_with_name(string var_name)
     if(var_name == "STATE@SENSOR")
         return sensor.get_state();
 
-    if(var_name == "STATE@TUNER")
-        return 0.0;
-
     if(var_name == "STATE@REGULATOR")
         return regulator.get_state();
 
-    if(var_name == "STATE@FEEDBACKER")
-        return 0.0;
+    if(var_name == "STATE@REGULATOR PI")
+        return regulator_pi.get_state();
+
+    if(var_name == "STATE@IFD FEEDBACKER")
+        return ifd_feedback.get_state();
+
+    if(var_name == "STATE@CURRENT PI")
+        return current_pi.get_state();
+
+    if(var_name == "STATE@RECTIFIER")
+        return rectifier.get_state();
 
     return 0.0;
 }

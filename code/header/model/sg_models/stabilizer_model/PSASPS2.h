@@ -19,6 +19,7 @@ class PSASPS2 : public STABILIZER_MODEL
         void set_Kw(double K);
         void set_Kp(double K);
         void set_Kt(double K);
+        void set_Tr_in_s(double T);
         void set_Tw1_in_s(double T);
         void set_Tw2_in_s(double T);
         void set_T1_in_s(double T);
@@ -33,6 +34,7 @@ class PSASPS2 : public STABILIZER_MODEL
         double get_Kw() const;
         double get_Kp() const;
         double get_Kt() const;
+        double get_Tr_in_s() const;
         double get_Tw1_in_s() const;
         double get_Tw2_in_s() const;
         double get_T1_in_s() const;
@@ -73,6 +75,7 @@ class PSASPS2 : public STABILIZER_MODEL
         virtual void prepare_model_internal_variable_table();
 
         double Kw, Kp, Kt;
+        FIRST_ORDER_BLOCK sensor_w, sensor_p, sensor_t;
         DIFFERENTIAL_BLOCK dedc_block_1, dedc_block_2;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
         double Vsmax, Vsmin;

@@ -204,6 +204,8 @@
 		<Unit filename="header/model/pvu_models/pvu_model_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/COMP.h" />
 		<Unit filename="header/model/sg_models/compensator_model/COMP_test.h" />
+		<Unit filename="header/model/sg_models/compensator_model/IEEEVC.h" />
+		<Unit filename="header/model/sg_models/compensator_model/IEEEVC_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/compensator_model.h" />
 		<Unit filename="header/model/sg_models/compensator_model/compensator_model_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/compensator_models.h" />
@@ -371,6 +373,7 @@
 		<Unit filename="source/apis/steps_api_dynamic_simulation.cpp" />
 		<Unit filename="source/apis/steps_api_get_device_count.cpp" />
 		<Unit filename="source/apis/steps_api_is_device_exist.cpp" />
+		<Unit filename="source/apis/steps_api_network.cpp" />
 		<Unit filename="source/apis/steps_api_powerflow.cpp" />
 		<Unit filename="source/apis/steps_api_remove_devices.cpp" />
 		<Unit filename="source/apis/steps_api_search_buffer.cpp" />
@@ -546,6 +549,8 @@
 		<Unit filename="source/model/pvu_models/pvu_model_test.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/COMP.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/COMP_test.cpp" />
+		<Unit filename="source/model/sg_models/compensator_model/IEEEVC.cpp" />
+		<Unit filename="source/model/sg_models/compensator_model/IEEEVC_test.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/compensator_model.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/compensator_model_test.cpp" />
 		<Unit filename="source/model/sg_models/exciter_model/CSEET1.cpp" />
@@ -579,7 +584,10 @@
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS4.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS4_test.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS5.cpp" />
-		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS5_test.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS5_test.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model_test.cpp" />
 		<Unit filename="source/model/sg_models/sync_generator_model/gencls.cpp" />

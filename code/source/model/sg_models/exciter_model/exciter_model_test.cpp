@@ -13,6 +13,7 @@ EXCITER_MODEL_TEST::EXCITER_MODEL_TEST()
     TEST_ADD(EXCITER_MODEL_TEST::test_get_model_type);
     TEST_ADD(EXCITER_MODEL_TEST::test_set_get_voltage_reference);
     TEST_ADD(EXCITER_MODEL_TEST::test_get_compensated_voltage);
+    TEST_ADD(EXCITER_MODEL_TEST::test_get_field_current);
     TEST_ADD(EXCITER_MODEL_TEST::test_step_response);
     TEST_ADD(EXCITER_MODEL_TEST::test_get_standard_model_string);
 }
@@ -85,6 +86,18 @@ void EXCITER_MODEL_TEST::test_get_compensated_voltage()
     comp_model->initialize();
 
     TEST_ASSERT(fabs(model->get_compensated_voltage_in_pu()-comp_model->get_compensated_voltage_in_pu())<FLOAT_EPSILON);
+}
+
+void EXCITER_MODEL_TEST::test_get_field_current()
+{
+    EXCITER_MODEL* model = get_test_exciter_model();
+    show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
+
+    SYNC_GENERATOR_MODEL* gen_model = get_test_sync_generator_model();
+
+    gen_model->initialize();
+
+    TEST_ASSERT(fabs(model->get_field_current_in_pu()-gen_model->get_field_current_in_pu_based_on_mbase())<FLOAT_EPSILON);
 }
 
 void EXCITER_MODEL_TEST::test_step_response()
