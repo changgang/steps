@@ -728,7 +728,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Shandong_2000_bus_model_with_HVDC_with_fa
     PSSE_IMEXPORTER importer;
     importer.set_toolkit(default_toolkit);
 
-    importer.load_powerflow_data("sd2010.raw");
+    importer.load_powerflow_data("../../../bench/sd2010.raw");
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.0001);

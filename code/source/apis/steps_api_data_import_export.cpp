@@ -25,7 +25,7 @@ void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolk
     }
 }
 
-void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line, size_t toolkit_index)
+void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line, bool export_out_of_service_bus, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     string string_file_type = string2upper(file_type);

@@ -72,7 +72,7 @@ def load_library():
     libsteps.api_load_dynamic_data_from_file.argtypes = (c_char_p, c_char_p, c_uint)
 
     libsteps.api_save_powerflow_data_to_file.restype = None
-    libsteps.api_save_powerflow_data_to_file.argtypes = (c_char_p, c_char_p, c_bool, c_uint)
+    libsteps.api_save_powerflow_data_to_file.argtypes = (c_char_p, c_char_p, c_bool, c_bool, c_uint)
     libsteps.api_save_dynamic_data_to_file.restype = None
     libsteps.api_save_dynamic_data_to_file.argtypes = (c_char_p, c_char_p, c_uint)
     

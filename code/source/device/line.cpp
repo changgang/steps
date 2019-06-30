@@ -394,10 +394,53 @@ void LINE::check()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    if(psdb.get_bus_base_voltage_in_kV(get_sending_side_bus()) !=
-       psdb.get_bus_base_voltage_in_kV(get_receiving_side_bus()))
+    string error_leading_string = "Error detected when checking "+get_device_name()+"["+
+                                  psdb.bus_number2bus_name(get_sending_side_bus())+"-"+
+                                  psdb.bus_number2bus_name(get_receiving_side_bus())+"]: ";
+
+    size_t ibus = get_sending_side_bus();
+    size_t jbus = get_receiving_side_bus();
+    double ivbase = psdb.get_bus_base_voltage_in_kV(ibus);
+    double jvbase = psdb.get_bus_base_voltage_in_kV(jbus);
+    if( ivbase!= jvbase)
     {
-        osstream<<"Error. base voltage at sending and receiving sides are different.";
+        osstream<<error_leading_string<<"Base voltage at sending and receiving sides are different.\n"
+                <<"Vbase["<<ibus<<"] = "<<ivbase<<"kV. "
+                <<"Vbase["<<jbus<<"] = "<<jvbase<<"kV. ";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    complex<double> z = get_line_positive_sequence_z_in_pu();
+    double r = z.real(), x = z.imag();
+    if(r<0)
+    {
+        osstream<<error_leading_string<<"Positive sequence R<0.\n"
+                <<"R = "<<r<<"pu. ";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    if(fabs(r)>10.0)
+    {
+        osstream<<error_leading_string<<"Positive sequence R is too great.\n"
+                <<"R = "<<r<<"pu. ";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    if(fabs(x)>10.0)
+    {
+        osstream<<error_leading_string<<"Positive sequence X is too great.\n"
+                <<"X = "<<x<<"pu. ";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    complex<double> y = get_line_positive_sequence_y_in_pu();
+    double g = y.real(), b = y.imag();
+    if(fabs(g)>50.0)
+    {
+        osstream<<error_leading_string<<"Positive sequence G is too great.\n"
+                <<"G = "<<g<<"pu. ";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    if(fabs(b)>50.0)
+    {
+        osstream<<error_leading_string<<"Positive sequence B is too great.\n"
+                <<"B = "<<b<<"pu. ";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }

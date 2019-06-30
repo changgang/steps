@@ -19,6 +19,9 @@ void PSASPE14::clear()
 {
     prepare_model_data_table();
     prepare_model_internal_variable_table();
+
+    regulator_pi.set_limiter_type(NON_WINDUP_LIMITER);
+    current_pi.set_limiter_type(NON_WINDUP_LIMITER);
 }
 
 void PSASPE14::copy_from_const_model(const PSASPE14& model)
@@ -293,9 +296,9 @@ void PSASPE14::setup_block_toolkit_and_parameters()
 
     sensor.set_toolkit(toolkit);
     regulator.set_toolkit(toolkit);
-    regulator_pi.set_toolkit(toolkit); regulator_pi.set_limiter_type(NON_WINDUP_LIMITER);
+    regulator_pi.set_toolkit(toolkit);
     ifd_feedback.set_toolkit(toolkit);
-    current_pi.set_toolkit(toolkit); current_pi.set_limiter_type(NON_WINDUP_LIMITER);
+    current_pi.set_toolkit(toolkit);
     rectifier.set_toolkit(toolkit);
 }
 

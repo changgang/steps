@@ -84,9 +84,9 @@ class POWERFLOW_SOLVER : public BASE
         vector<double> get_bus_P_power_mismatch_vector_for_decoupled_solution();
         vector<double> get_bus_Q_power_mismatch_vector_for_decoupled_solution();
 
-        void update_bus_voltage_and_angle(const vector<double>& update);
-        void update_bus_voltage(const vector<double>& update);
-        void update_bus_angle(const vector<double>& update);
+        void update_bus_voltage_and_angle(vector<double>& update);
+        void update_bus_voltage(vector<double>& update);
+        void update_bus_angle(vector<double>& update);
 
         void add_source_to_bus_power_mismatch();
         void add_load_to_bus_power_mismatch();

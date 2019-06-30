@@ -780,7 +780,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_
         return 0.0;
 }
 
-STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(
+STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(
                                                                 const vector<size_t> internal_P_equation_buses,
                                                                 const vector<size_t> internal_Q_equation_buses)
 {
@@ -831,7 +831,7 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_eq
     }
 
 
-    static STEPS_SPARSE_MATRIX full_jacobian;
+    STEPS_SPARSE_MATRIX full_jacobian;
 
     full_jacobian.clear();
 
@@ -840,7 +840,7 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_eq
     size_t ibus, jbus;
 
     size_t i,j;
-
+    /* the following codes are replace on June 28, 2019 for higher performance
     int nentry = Y.get_matrix_entry_count();
 
     for(int k=0; k!=nentry; ++k)
@@ -881,6 +881,56 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_eq
                 cvalue = jacobian_delta_q_over_voltage.get_entry_value(ibus,jbus);
                 rvalue = cvalue.real();
                 full_jacobian.add_entry(i+n_internal_P_equation_buses,j+n_internal_P_equation_buses,rvalue);
+            }
+        }
+    }*/
+
+    int ncol = Y.get_matrix_size();
+    for(int col=0; col!=ncol; ++col)
+    {
+        int jbus = col;
+
+        int k_start = Y.get_starting_index_of_column(col);
+        int k_end = Y.get_starting_index_of_column(col+1);
+        for(int k=k_start; k!=k_end; ++k)
+        {
+            int row = Y.get_row_number_of_entry_index(k);
+            int ibus = row;
+            if(is_a_P_equation_bus[ibus])
+            {
+                i = index_of_a_P_equation_bus[ibus];
+                if(is_a_P_equation_bus[jbus])
+                {
+                    j = index_of_a_P_equation_bus[jbus];
+                    cvalue = jacobian_delta_p_over_angle.get_entry_value(ibus,jbus);
+                    rvalue = cvalue.real();
+                    full_jacobian.add_entry(i,j,rvalue);
+                }
+                if(is_a_Q_equation_bus[jbus])
+                {
+                    j = index_of_a_Q_equation_bus[jbus];
+                    cvalue = jacobian_delta_p_over_voltage.get_entry_value(ibus,jbus);
+                    rvalue = cvalue.real();
+                    full_jacobian.add_entry(i,j+n_internal_P_equation_buses,rvalue);
+                }
+            }
+            if(is_a_Q_equation_bus[ibus])
+            {
+                i = index_of_a_Q_equation_bus[ibus];
+                if(is_a_P_equation_bus[jbus])
+                {
+                    j = index_of_a_P_equation_bus[jbus];
+                    cvalue = jacobian_delta_q_over_angle.get_entry_value(ibus,jbus);
+                    rvalue = cvalue.real();
+                    full_jacobian.add_entry(i+n_internal_P_equation_buses,j,rvalue);
+                }
+                if(is_a_Q_equation_bus[jbus])
+                {
+                    j = index_of_a_Q_equation_bus[jbus];
+                    cvalue = jacobian_delta_q_over_voltage.get_entry_value(ibus,jbus);
+                    rvalue = cvalue.real();
+                    full_jacobian.add_entry(i+n_internal_P_equation_buses,j+n_internal_P_equation_buses,rvalue);
+                }
             }
         }
     }
@@ -958,7 +1008,7 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_eq
     */
 }
 
-STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses)
+STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -1007,6 +1057,7 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_
 
     size_t i,j;
 
+    /* the following codes are replace on June 28, 2019 for higher performance
     int nentry = BP.get_matrix_entry_count();
 
     for(int k=0; k!=nentry; ++k)
@@ -1022,6 +1073,33 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_
             B_jacobian.add_entry(i,j,rvalue);
         }
     }
+    */
+
+    int ncol = BP.get_matrix_size();
+    int k_start=0, k_end = 0;
+    for(int col=0; col!=ncol; ++col)
+    {
+        int jbus = col;
+        if(is_a_P_equation_bus[jbus])
+        {
+            int j = index_of_a_P_equation_bus[jbus];
+
+            k_start = BP.get_starting_index_of_column(col);
+            k_end = BP.get_starting_index_of_column(col+1);
+            for(int k = k_start; k!=k_end; ++k)
+            {
+                int row = BP.get_row_number_of_entry_index(k);
+                int ibus = row;
+                if(is_a_P_equation_bus[ibus])
+                {
+                    int i = index_of_a_P_equation_bus[ibus];
+                    cvalue = BP.get_entry_value(k);
+                    rvalue = cvalue.imag();
+                    B_jacobian.add_entry(i,j,rvalue);
+                }
+            }
+        }
+    }
 
     B_jacobian.compress_and_merge_duplicate_entries();
 
@@ -1031,7 +1109,7 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_
     return B_jacobian;
 }
 
-STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses)
+STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -1080,6 +1158,7 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_
 
     size_t i,j;
 
+    /* the following codes are replace on June 28, 2019 for higher performance
     int nentry = BQ.get_matrix_entry_count();
 
     for(int k=0; k!=nentry; ++k)
@@ -1093,6 +1172,33 @@ STEPS_SPARSE_MATRIX& JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_
             cvalue = BQ.get_entry_value(ibus,jbus);
             rvalue = cvalue.imag();
             B_jacobian.add_entry(i,j,rvalue);
+        }
+    }
+    */
+
+    int ncol = BQ.get_matrix_size();
+    int k_start=0, k_end = 0;
+    for(int col=0; col!=ncol; ++col)
+    {
+        int jbus = col;
+        if(is_a_Q_equation_bus[jbus])
+        {
+            int j = index_of_a_Q_equation_bus[jbus];
+
+            k_start = BQ.get_starting_index_of_column(col);
+            k_end = BQ.get_starting_index_of_column(col+1);
+            for(int k = k_start; k!=k_end; ++k)
+            {
+                int row = BQ.get_row_number_of_entry_index(k);
+                int ibus = row;
+                if(is_a_Q_equation_bus[ibus])
+                {
+                    int i = index_of_a_Q_equation_bus[ibus];
+                    cvalue = BQ.get_entry_value(k);
+                    rvalue = cvalue.imag();
+                    B_jacobian.add_entry(i,j,rvalue);
+                }
+            }
         }
     }
 

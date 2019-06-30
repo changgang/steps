@@ -866,7 +866,9 @@ void NETWORK_MATRIX::add_lines_to_decoupled_network()
     size_t n = lines.size();
 
     for(size_t i = 0; i!=n; ++i)
+    {
         add_line_to_decoupled_network(*(lines[i]));
+    }
 }
 
 void NETWORK_MATRIX::add_line_to_decoupled_network(const LINE& line)
@@ -961,7 +963,9 @@ void NETWORK_MATRIX::add_transformers_to_decoupled_network()
     size_t n = transformers.size();
 
     for(size_t i = 0; i!=n; ++i)
+    {
         add_transformer_to_decoupled_network(*(transformers[i]));
+    }
 }
 
 void NETWORK_MATRIX::add_transformer_to_decoupled_network(const TRANSFORMER& trans)
@@ -1162,6 +1166,16 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
             I /= conj(ks);
             yst = I;
 
+            if(isnan(ypp.real()) or isnan(ypp.imag()) or
+               isnan(yps.real()) or isnan(yps.imag()) or
+               isnan(ypt.real()) or isnan(ypt.imag()) or
+               isnan(ysp.real()) or isnan(ysp.imag()) or
+               isnan(yss.real()) or isnan(yss.imag()) or
+               isnan(yst.real()) or isnan(yst.imag()) or
+               isnan(ytp.real()) or isnan(ytp.imag()) or
+               isnan(yts.real()) or isnan(yts.imag()) or
+               isnan(ytt.real()) or isnan(ytt.imag()) )
+                cout<<"NAN is detected when adding "<<trans.get_device_name()<<" to BQ"<<endl;
             network_BQ_matrix.add_entry(p,p,ypp);
             network_BQ_matrix.add_entry(p,s,yps);
             network_BQ_matrix.add_entry(p,t,ypt);
@@ -1641,6 +1655,11 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const T
             I /= conj(kp);
             yps = I;
 
+            if(isnan(ypp.real()) or isnan(ypp.imag()) or
+               isnan(yps.real()) or isnan(yps.imag()) or
+               isnan(ysp.real()) or isnan(ysp.imag()) or
+               isnan(yss.real()) or isnan(yss.imag()) )
+                cout<<"NAN is detected when adding "<<trans.get_device_name()<<" to BQ"<<endl;
             network_BQ_matrix.add_entry(p,p,ypp);
             network_BQ_matrix.add_entry(p,s,yps);
             network_BQ_matrix.add_entry(s,p,ysp);

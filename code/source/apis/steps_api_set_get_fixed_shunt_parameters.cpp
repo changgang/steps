@@ -111,19 +111,45 @@ void api_set_fixed_shunt_float_data(size_t bus, char* identifier, char* paramete
         if(PARAMETER_NAME=="R_PU" or PARAMETER_NAME=="NOMINAL RESISTANCE SHUNT IN PU")
         {
             complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
-            if(value==0.0)
-                return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(INFINITE_THRESHOLD, S.imag()));
+            if(S==0.0)
+            {
+                if(value==0.0)
+                    return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(0.0, 0.0));
+                else
+                    return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(1.0/value*sbase, 0.0));
+            }
             else
-                return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(1.0/value*sbase, S.imag()));
+            {
+                complex<double> Y, Z;
+                Y = S/sbase;
+                Z = 1.0/Y;
+                Z = complex<double>(value, Z.imag());
+                Y = 1.0/Z;
+                S = Y*sbase;
+                return shuntptr->set_nominal_impedance_shunt_in_MVA(S);
+            }
         }
 
         if(PARAMETER_NAME=="X_PU" or PARAMETER_NAME=="NOMINAL REACTANCE SHUNT IN PU")
         {
             complex<double> S = shuntptr->get_nominal_impedance_shunt_in_MVA();
-            if(value==0.0)
-                return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(S.real(), INFINITE_THRESHOLD));
+            if(S==0.0)
+            {
+                if(value==0.0)
+                    return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(0.0, 0.0));
+                else
+                    return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(0.0, 1.0/value*sbase));
+            }
             else
-                return shuntptr->set_nominal_impedance_shunt_in_MVA(complex<double>(S.real(), 1.0/value*sbase));
+            {
+                complex<double> Y, Z;
+                Y = S/sbase;
+                Z = 1.0/Y;
+                Z = complex<double>(Z.real(),value);
+                Y = 1.0/Z;
+                S = Y*sbase;
+                return shuntptr->set_nominal_impedance_shunt_in_MVA(S);
+            }
         }
 
         if(PARAMETER_NAME=="G_PU" or PARAMETER_NAME=="NOMINAL CONDUCTANCE SHUNT IN PU")

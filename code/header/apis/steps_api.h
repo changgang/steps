@@ -43,12 +43,9 @@ EXPORT_STEPS_DLL void api_set_owner_capacity(size_t cap, size_t toolkit_index=IN
 
 
 EXPORT_STEPS_DLL void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line=true, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line=true, bool export_out_of_service_bus=true, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_load_dynamic_data_from_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dynamic_data_to_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);
-
-EXPORT_STEPS_DLL void api_check_network_connectivity(bool remove_void_island=false, size_t toolkit_index=INDEX_NOT_EXIST);
-
 
 EXPORT_STEPS_DLL void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_add_generator(size_t bus_number, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
@@ -377,6 +374,8 @@ EXPORT_STEPS_DLL void api_set_generator_power_reference_in_MW(size_t bus, char* 
 
 EXPORT_STEPS_DLL void api_check_database(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_check_dynamic_data(size_t toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL void api_check_network_connectivity(bool remove_void_island=false, size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line, size_t toolkit_index=INDEX_NOT_EXIST);
 

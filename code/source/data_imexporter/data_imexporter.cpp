@@ -5,6 +5,7 @@ DATA_IMEXPORTER::DATA_IMEXPORTER()
 {
     set_base_frequency_in_Hz(50.0);
     set_export_zero_impedance_line_logic(true);
+    set_export_zero_impedance_line_logic(true);
 }
 
 DATA_IMEXPORTER::~DATA_IMEXPORTER()
@@ -31,6 +32,16 @@ void DATA_IMEXPORTER::set_export_zero_impedance_line_logic(bool logic)
 bool DATA_IMEXPORTER::get_export_zero_impedance_line_logic() const
 {
     return export_zero_impedance_line;
+}
+
+void DATA_IMEXPORTER::set_export_out_of_service_bus_logic(bool logic)
+{
+    export_out_of_service_bus = logic;
+}
+
+bool DATA_IMEXPORTER::get_export_out_of_service_bus_logic() const
+{
+    return export_out_of_service_bus;
 }
 
 

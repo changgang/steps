@@ -3722,7 +3722,6 @@ void POWER_SYSTEM_DATABASE::check_all_devices()
     check_all_transformers();
     check_all_hvdcs();
     check_all_equivalent_devices();
-    check_all_energy_storages();
 }
 
 void POWER_SYSTEM_DATABASE::check_all_buses()
@@ -5124,6 +5123,15 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_complex_voltage_in_kV(size_t bus)
         return busptr->get_complex_voltage_in_kV();
     else
         return 0.0;
+}
+
+BUS_TYPE POWER_SYSTEM_DATABASE::get_bus_type(size_t bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_bus_type();
+    else
+        return OUT_OF_SERVICE;
 }
 
 double POWER_SYSTEM_DATABASE::get_bus_base_frequency_in_Hz(size_t bus)

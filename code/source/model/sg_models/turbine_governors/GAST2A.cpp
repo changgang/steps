@@ -18,6 +18,15 @@ void GAST2A::clear()
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
+    gas_governor_droop.set_limiter_type(NON_WINDUP_LIMITER);
+    gas_governor_iso.set_limiter_type(NON_WINDUP_LIMITER);
+    gas_valve_positioner.set_limiter_type(NO_LIMITER);
+    gas_fuel_system.set_limiter_type(NO_LIMITER);
+    gas_radiation_shield.set_limiter_type(NO_LIMITER);
+    gas_thermocouple.set_limiter_type(NO_LIMITER);
+    gas_temperature_control.set_limiter_type(NON_WINDUP_LIMITER);
+    gas_turbine_dynamic.set_limiter_type(NO_LIMITER);
+
     set_gas_W(0.0);
     set_gas_X_in_s(0.0);
     set_gas_Y_in_s(0.1);
@@ -497,7 +506,6 @@ void GAST2A::setup_block_toolkit_and_parameters()
     gas_governor_droop.set_K(get_gas_W());
     gas_governor_droop.set_T1_in_s(get_gas_X_in_s());
     gas_governor_droop.set_T2_in_s(get_gas_Y_in_s());
-    gas_governor_droop.set_limiter_type(NON_WINDUP_LIMITER);
     gas_governor_droop.set_upper_limit(get_gas_max_in_pu());
     gas_governor_droop.set_lower_limit(get_gas_min_in_pu());
 
@@ -505,7 +513,6 @@ void GAST2A::setup_block_toolkit_and_parameters()
     gas_governor_iso.set_toolkit(toolkit);
     gas_governor_iso.set_Kp(get_gas_W()*get_gas_X_in_s()/get_gas_Y_in_s());
     gas_governor_iso.set_Ki(get_gas_W()/get_gas_Y_in_s());
-    gas_governor_iso.set_limiter_type(NON_WINDUP_LIMITER);
     gas_governor_iso.set_upper_limit(get_gas_max_in_pu());
     gas_governor_iso.set_lower_limit(get_gas_min_in_pu());
 
@@ -513,12 +520,10 @@ void GAST2A::setup_block_toolkit_and_parameters()
     gas_fuel_control.set_buffer_size(round(get_gas_T_in_s()/delt));
 
     gas_valve_positioner.set_toolkit(toolkit);
-    gas_valve_positioner.set_limiter_type(NO_LIMITER);
     gas_valve_positioner.set_K(get_gas_a()/get_gas_c());
     gas_valve_positioner.set_K(get_gas_b_in_s()/get_gas_c());
 
     gas_fuel_system.set_toolkit(toolkit);
-    gas_fuel_system.set_limiter_type(NO_LIMITER);
     gas_fuel_system.set_K(1.0);
     gas_fuel_system.set_T_in_s(get_gas_Tf_in_s());
 
@@ -529,23 +534,19 @@ void GAST2A::setup_block_toolkit_and_parameters()
     gas_turbine_exhaust.set_buffer_size(round(get_gas_ETD_in_s()/delt));
 
     gas_radiation_shield.set_toolkit(toolkit);
-    gas_radiation_shield.set_limiter_type(NO_LIMITER);
     gas_radiation_shield.set_K(get_gas_K5());
     gas_radiation_shield.set_T_in_s(get_gas_T3_in_s());
 
     gas_thermocouple.set_toolkit(toolkit);
-    gas_thermocouple.set_limiter_type(NO_LIMITER);
     gas_thermocouple.set_T_in_s(get_gas_T4_in_s());
 
     gas_temperature_control.set_toolkit(toolkit);
-    gas_temperature_control.set_limiter_type(NON_WINDUP_LIMITER);
     gas_temperature_control.set_upper_limit(get_gas_max_in_pu());
     gas_temperature_control.set_lower_limit(-INFINITE_THRESHOLD);
     gas_temperature_control.set_Kp(get_gas_T5_in_s()/get_gas_Tt_in_s());
     gas_temperature_control.set_Ki(1.0/get_gas_Tt_in_s());
 
     gas_turbine_dynamic.set_toolkit(toolkit);
-    gas_turbine_dynamic.set_limiter_type(NO_LIMITER);
     gas_turbine_dynamic.set_T_in_s(get_gas_TCD_in_s());
 }
 

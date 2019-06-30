@@ -71,7 +71,7 @@ SPARSE_MATRIX_KLU& SPARSE_MATRIX_KLU::operator=(const SPARSE_MATRIX_KLU& matrix)
 void SPARSE_MATRIX_KLU::copy_from_const_matrix(const SPARSE_MATRIX_KLU& matrix)
 {
     clear();
-
+    /* the following codes are replace on June 28, 2019 for higher performance
     int nz = matrix.get_matrix_entry_count();
 
     complex<double> value;
@@ -83,9 +83,35 @@ void SPARSE_MATRIX_KLU::copy_from_const_matrix(const SPARSE_MATRIX_KLU& matrix)
         value = matrix.get_entry_value(k);
 
         add_entry(row, col, value);
+    }*/
+
+    if(matrix.matrix_in_triplet_form())
+    {
+        ostringstream osstream;
+        osstream<<"Matrix is in triplet form. Cannot copy matrix with "<<__FUNCTION__<<"() in "<<__FILE__;
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        return;
     }
-    if(matrix.matrix_in_compressed_column_form())
-        compress_and_merge_duplicate_entries();
+
+    int ncol = matrix.get_matrix_size();
+
+    complex<double> value;
+    for(int col=0; col!=ncol; ++col)
+    {
+        int k_start = matrix.get_starting_index_of_column(col);
+        int k_end = matrix.get_starting_index_of_column(col+1);
+        for(int k=k_start; k!=k_end; ++k)
+        {
+            int row = matrix.get_row_number_of_entry_index(k);
+            value = matrix.get_entry_value(k);
+
+            add_entry(row, col, value);
+        }
+    }
+
+
+    //if(matrix.matrix_in_compressed_column_form())
+    //    compress_and_merge_duplicate_entries();
 
     update_clock_when_matrix_is_changed();
 }

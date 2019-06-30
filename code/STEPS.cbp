@@ -373,7 +373,6 @@
 		<Unit filename="source/apis/steps_api_dynamic_simulation.cpp" />
 		<Unit filename="source/apis/steps_api_get_device_count.cpp" />
 		<Unit filename="source/apis/steps_api_is_device_exist.cpp" />
-		<Unit filename="source/apis/steps_api_network.cpp" />
 		<Unit filename="source/apis/steps_api_powerflow.cpp" />
 		<Unit filename="source/apis/steps_api_remove_devices.cpp" />
 		<Unit filename="source/apis/steps_api_search_buffer.cpp" />

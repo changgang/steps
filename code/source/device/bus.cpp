@@ -80,6 +80,8 @@ void BUS::set_owner_number(size_t number)
 
 void BUS::set_voltage_in_pu(double voltage)
 {
+    voltage_in_pu = voltage;
+    return;
     if(voltage>=0.0)
         voltage_in_pu = voltage;
     else
@@ -88,7 +90,7 @@ void BUS::set_voltage_in_pu(double voltage)
         ostringstream osstream;
         osstream<<"Warning. Non-positive voltage ("<<voltage<<" pu) is not allowed for setting up voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
-               <<"0 will be set automatically. [current dynamic simulation time is: "<<toolkit.get_dynamic_simulation_time_in_s()<<"s]";
+               <<"0.0 will be set automatically. [current dynamic simulation time is: "<<toolkit.get_dynamic_simulation_time_in_s()<<"s]";
         toolkit.show_information_with_leading_time_stamp(osstream);
         voltage_in_pu = 0.0;
         if(isnan(voltage))

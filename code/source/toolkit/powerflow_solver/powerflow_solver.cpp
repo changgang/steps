@@ -246,6 +246,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    ostringstream osstream;
+
     if(psdb.get_bus_count()!=0)
     {
         char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -648,6 +650,8 @@ void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 {
+    ostringstream osstream;
+
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -655,6 +659,16 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     calculate_raw_bus_power_into_network();
 
     size_t nbus = psdb.get_in_service_bus_count();
+
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+        {
+            osstream<<"after  calculate_raw_bus_power_into_network NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+
     for(size_t i=0; i!=nbus; ++i)
         bus_power[i] = -bus_power[i];
 
@@ -663,21 +677,30 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
     for(size_t i=0; i!=nbus; ++i)
     {
         if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
-            cout<<"after adding source NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+        {
+            osstream<<"after adding source NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
     add_load_to_bus_power_mismatch();
 
     for(size_t i=0; i!=nbus; ++i)
     {
         if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
-            cout<<"after adding load NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+        {
+            osstream<<"after adding load NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
     add_hvdc_to_bus_power_mismatch();
 
     for(size_t i=0; i!=nbus; ++i)
     {
         if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
-            cout<<"after adding hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+        {
+            osstream<<"after adding hvdc NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
 
     /*ostringstream osstream;
@@ -708,6 +731,8 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 
 void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
 {
+    ostringstream osstream;
+
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -716,6 +741,14 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
     size_t nbus = psdb.get_in_service_bus_count();
 
     bus_power = bus_current;
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        if(isnan(bus_power[i].real()) or isnan(bus_power[i].imag()))
+        {
+            osstream<<"after  calculate_raw_bus_current_into_network NAN is detected at bus "<<network_matrix.get_physical_bus_number_of_internal_bus(i)<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
 
     complex<double> voltage;
     size_t physical_bus_number;
@@ -1094,8 +1127,11 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
             bus_type_changed = true;
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
 
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            if(toolkit.is_detailed_log_enabled())
+            {
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
+                toolkit.show_information_with_leading_time_stamp(buffer);
+            }
 
             return bus_type_changed;
         }
@@ -1107,8 +1143,11 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             bus_type_changed = true;
 
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            if(toolkit.is_detailed_log_enabled())
+            {
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q max reached.", physical_bus);
+                toolkit.show_information_with_leading_time_stamp(buffer);
+            }
 
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
             return bus_type_changed;
@@ -1119,8 +1158,11 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             bus_type_changed = true;
 
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.", physical_bus);
-            toolkit.show_information_with_leading_time_stamp(buffer);
+            if(toolkit.is_detailed_log_enabled())
+            {
+                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Bus %lu changed from PV_TYPE to PV_TO_PQ_TYPE_3 with sources q min reached.", physical_bus);
+                toolkit.show_information_with_leading_time_stamp(buffer);
+            }
 
             set_all_sources_at_physical_bus_to_q_min(physical_bus);
             return bus_type_changed;
@@ -1175,9 +1217,11 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
         {
             bus->set_bus_type(PV_TO_PQ_TYPE_3);
             bus_type_changed = true;
-
-            osstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            if(toolkit.is_detailed_log_enabled())
+            {
+                osstream<<"Bus "<<physical_bus<<" changed from PV_TYPE to PV_TO_PQ_TYPE_3.";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
 
             set_all_sources_at_physical_bus_to_q_max(physical_bus);
         }
@@ -1227,8 +1271,11 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_voltage_in_pu(voltage_to_regulated);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 default:
                     break;
@@ -1260,8 +1307,11 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_voltage_in_pu(voltage_to_regulated);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 default:
                     break;
@@ -1286,25 +1336,37 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
             {
                 case PV_TO_PQ_TYPE_4:
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 case PV_TO_PQ_TYPE_3:
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 case PV_TO_PQ_TYPE_2:
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_voltage_in_pu(voltage_to_regulated);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 default:
                     break;
@@ -1326,25 +1388,37 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
             {
                 case PV_TO_PQ_TYPE_4:
                     bus->set_bus_type(PV_TO_PQ_TYPE_3);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_4 to PV_TO_PQ_TYPE_3.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 case PV_TO_PQ_TYPE_3:
                     bus->set_bus_type(PV_TO_PQ_TYPE_2);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_3 to PV_TO_PQ_TYPE_2.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 case PV_TO_PQ_TYPE_2:
                     bus->set_bus_type(PV_TO_PQ_TYPE_1);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_2 to PV_TO_PQ_TYPE_1.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
                     bus->set_voltage_in_pu(voltage_to_regulated);
-                    osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    if(toolkit.is_detailed_log_enabled())
+                    {
+                        osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
                     break;
                 default:
                     break;
@@ -1450,11 +1524,30 @@ vector<double> POWERFLOW_SOLVER::get_bus_Q_power_mismatch_vector_for_decoupled_s
     return Q_mismatch;
 }
 
-void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update)
+void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    size_t nP = internal_P_equation_buses.size();
+    size_t nQ = internal_Q_equation_buses.size();
+
+    double max_dv=0.0;
+    size_t nv = update.size();
+    for(size_t i=0; i!=nP; ++i)
+    {
+        if(max_dv<abs(update[i]))
+            max_dv = abs(update[i]);
+    }
+    if(max_dv>0.2)
+    {
+        double scale = 0.2/max_dv;
+        for(size_t i=0; i!=nv; ++i)
+        {
+            update[i] *= scale;
+        }
+    }
 
 /*    ostringstream osstream;
     osstream<<"Bus voltage and angle correction(equation index)");
@@ -1473,9 +1566,6 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
 
     double Perror0 = get_maximum_active_power_mismatch_in_MW();
     double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
-
-    size_t nP = internal_P_equation_buses.size();
-    size_t nQ = internal_Q_equation_buses.size();
 
     vector<size_t> s_mismatch;
     s_mismatch.reserve(nP+nQ);
@@ -1563,11 +1653,27 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(const vector<double>& update
     }
 }
 
-void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
+void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    double max_dv=0.0;
+    size_t nv = update.size();
+    for(size_t i=0; i!=nv; ++i)
+    {
+        if(max_dv<abs(update[i]))
+            max_dv = abs(update[i]);
+    }
+    if(max_dv>0.2)
+    {
+        double scale = 0.2/max_dv;
+        for(size_t i=0; i!=nv; ++i)
+        {
+            update[i] *= scale;
+        }
+    }
 
     double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
 
@@ -1642,11 +1748,27 @@ void POWERFLOW_SOLVER::update_bus_voltage(const vector<double>& update)
 }
 
 
-void POWERFLOW_SOLVER::update_bus_angle(const vector<double>& update)
+void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    double max_dv=0.0;
+    size_t nv = update.size();
+    for(size_t i=0; i!=nv; ++i)
+    {
+        if(max_dv<abs(update[i]))
+            max_dv = abs(update[i]);
+    }
+    if(max_dv>0.2)
+    {
+        double scale = 0.2/max_dv;
+        for(size_t i=0; i!=nv; ++i)
+        {
+            update[i] *= scale;
+        }
+    }
 
     ostringstream osstream;
 

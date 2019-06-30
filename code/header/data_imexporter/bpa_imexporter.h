@@ -19,7 +19,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
 
         void load_one_model(string data);
 
-        virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true);
+        virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true, bool export_out_of_service_bus=true);
         virtual void export_dynamic_data(string file);
         virtual void export_sequence_data(string file);
 

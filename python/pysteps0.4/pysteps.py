@@ -145,11 +145,11 @@ class STEPS():
         ftype = self.__get_c_char_p_of_string(ftype)
         STEPS_LIB.api_load_powerflow_data_from_file(file, ftype, self.toolkit_index)
 
-    def save_powerflow_data(self, file, ftype, export_zero_line=True):
+    def save_powerflow_data(self, file, ftype, export_zero_line=True, export_out_of_service_bus=True):
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
         ftype = self.__get_c_char_p_of_string(ftype)
-        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, self.toolkit_index)
+        STEPS_LIB.api_save_powerflow_data_to_file(file, ftype, export_zero_line, export_out_of_service_bus, self.toolkit_index)
         
     def load_dynamic_data(self, file, ftype):
         global STEPS_LIB

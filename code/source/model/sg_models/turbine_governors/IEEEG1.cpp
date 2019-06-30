@@ -18,6 +18,8 @@ void IEEEG1::clear()
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
+    servo_motor.set_limiter_type(NON_WINDUP_LIMITER);
+
     servo_motor.set_T_in_s(1.0);
     set_T5_in_s(0.0);
     set_T6_in_s(0.0);
@@ -343,7 +345,6 @@ void IEEEG1::setup_block_toolkit_and_parameters()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     droop.set_toolkit(toolkit);
     servo_motor.set_toolkit(toolkit);
-    servo_motor.set_limiter_type(NON_WINDUP_LIMITER);
     delayer1.set_toolkit(toolkit);
     delayer2.set_toolkit(toolkit);
     delayer3.set_toolkit(toolkit);

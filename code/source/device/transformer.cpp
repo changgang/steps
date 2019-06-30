@@ -185,13 +185,15 @@ void TRANSFORMER::set_leakage_impedance_between_windings_based_on_winding_nomina
             winding1 = winding2;
             winding2 = temp_winding;
         }
-        /*if(z==0.0)
+        if(z==0.0)
         {
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             osstream<<"Warning. The leakage impedance between "<<get_winding_name(winding1)<<" and "<<get_winding_name(winding2)<<" windings is zero for "<<get_device_name()<<endl
-                    <<"Correction is required. Check original data.";
+                    <<"Correction is required. Check original data.\n"
+                    <<"Impedance will be set as 0.001.";
             toolkit.show_information_with_leading_time_stamp(osstream);
-        }*/
+            z = complex<double>(0.0, 0.001);
+        }
 
         if(winding1==PRIMARY_SIDE and winding2==SECONDARY_SIDE)
             zl_primary2secondary_in_pu = z;
@@ -500,7 +502,109 @@ bool TRANSFORMER::is_valid() const
 
 void TRANSFORMER::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    string error_leading_string = "Error detected when checking "+get_device_name()+": ";
+
+    size_t ibus = get_winding_bus(PRIMARY_SIDE);
+    size_t jbus = get_winding_bus(SECONDARY_SIDE);
+    size_t kbus = get_winding_bus(TERTIARY_SIDE);
+    complex<double> zij = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE,SECONDARY_SIDE);
+    double r = zij.real(), x = zij.imag();
+    if(fabs(r)>10.0)
+    {
+        osstream<<error_leading_string<<"Positive sequence R between primary and secondary side is too great.\n"
+                <<"Rij = "<<r<<"pu. ";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    if(fabs(x)>10.0)
+    {
+        osstream<<error_leading_string<<"Positive sequence X between primary and secondary side is too great.\n"
+                <<"Xij = "<<x<<"pu. ";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    if(fabs(x)<0.0001)
+    {
+        osstream<<error_leading_string<<"Positive sequence X between primary and secondary side is too little.\n"
+                <<"Xij = "<<x<<"pu. ";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+    if(is_three_winding_transformer())
+    {
+        complex<double> zjk = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
+        complex<double> zki = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE);
+        r = zjk.real(); x = zjk.imag();
+        if(fabs(r)>10.0)
+        {
+            osstream<<error_leading_string<<"Positive sequence R between secondary and tertiary side is too great.\n"
+                    <<"Rjk = "<<r<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(fabs(x)>10.0)
+        {
+            osstream<<error_leading_string<<"Positive sequence X between secondary and tertiary side is too great.\n"
+                    <<"Xjk = "<<x<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(fabs(x)>0.0001)
+        {
+            osstream<<error_leading_string<<"Positive sequence X between secondary and tertiary side is too little.\n"
+                    <<"Xjk = "<<x<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        r = zki.real(); x = zki.imag();
+        if(fabs(r)>10.0)
+        {
+            osstream<<error_leading_string<<"Positive sequence R between tertiary and primary side is too great.\n"
+                    <<"Rki = "<<r<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(fabs(x)>10.0)
+        {
+            osstream<<error_leading_string<<"Positive sequence X between tertiary and primary side is too great.\n"
+                    <<"Xki = "<<x<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(fabs(x)<0.0001)
+        {
+            osstream<<error_leading_string<<"Positive sequence X between tertiary and primary side is too little.\n"
+                    <<"Xki = "<<x<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(zij==zjk)
+        {
+            osstream<<error_leading_string<<"Positive sequence leakage impedance between primary and secondary side is equal to that between secondary and tertiary side.\n"
+                    <<"Zij = "<<zij<<"pu, "<<"Zjk = "<<zjk<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(zjk==zki)
+        {
+            osstream<<error_leading_string<<"Positive sequence leakage impedance between secondary and tertiary side is equal to that between tertiary and primary side.\n"
+                    <<"Zjk = "<<zjk<<"pu, "<<"Zki = "<<zki<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(zki==zij)
+        {
+            osstream<<error_leading_string<<"Positive sequence leakage impedance between tertiary and primary side is equal to that between primary and secondary side.\n"
+                    <<"Zki = "<<zki<<"pu, "<<"Zij = "<<zij<<"pu. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        double sij = get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE);
+        double sjk = get_winding_nominal_capacity_in_MVA(SECONDARY_SIDE, TERTIARY_SIDE);
+        double ski = get_winding_nominal_capacity_in_MVA(TERTIARY_SIDE,PRIMARY_SIDE);
+        double sbase = psdb.get_system_base_power_in_MVA();
+        zij = zij/sij*sbase;
+        zjk = zjk/sjk*sbase;
+        zki = zki/ski*sbase;
+        if(zij+zki-zjk==0.0 or zij+zjk-zki==0.0 or zki+zjk-zij==0.0)
+        {
+            osstream<<error_leading_string<<"Positive sequence leakage impedance of one winding is zero.\n"
+                    <<"Zij = "<<zij<<"pu, "<<"Zjk = "<<zjk<<"pu, "<<"Zki = "<<zki<<"pu. All based on system base power ("<<sbase<<"MVA).";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
 }
 
 void TRANSFORMER::clear()

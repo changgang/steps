@@ -1936,11 +1936,13 @@ void STEPS_IMEXPORTER::load_switched_shunt_data()
 }
 
 
-void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
+void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line, bool export_out_of_service_bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    set_export_out_of_service_bus_logic(export_out_of_service_bus);
 
     ofstream ofs(file);
     if(!ofs)
@@ -2038,6 +2040,8 @@ string STEPS_IMEXPORTER::export_bus_data() const
         BUS* bus = buses[i];
         if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus->get_bus_number())!=0)
             continue;
+        if(get_export_out_of_service_bus_logic()==false)
+            continue;
 
         BUS_TYPE bus_type = bus->get_bus_type();
         int type = 4;
@@ -2102,15 +2106,28 @@ string STEPS_IMEXPORTER::export_load_data() const
             bus = psdb.get_equivalent_bus_of_bus(bus);
             ickt = ickt + toolkit.get_next_alphabeta();
         }
+        if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(bus)==OUT_OF_SERVICE)
+            continue;
 
-        snprintf(buffer, 1000, "%lu, \"%s\", %d, %4lu, %4lu, %12.6f, %12.6f, %12.6f, %12.6f, %12.6f, %12.6f, %4lu, 1, %2d",
-                bus, ickt.c_str(), (load->get_status()==true)?1:0,
-                load->get_area_number(), load->get_zone_number(),
-                load->get_nominal_constant_power_load_in_MVA().real(), load->get_nominal_constant_power_load_in_MVA().imag(),
-                load->get_nominal_constant_current_load_in_MVA().real(), load->get_nominal_constant_current_load_in_MVA().imag(),
-                load->get_nominal_constant_impedance_load_in_MVA().real(), load->get_nominal_constant_impedance_load_in_MVA().imag(),
-                load->get_owner_number(), (load->get_flag_interruptable()==true)?1:0);
-        osstream<<buffer<<endl;
+        osstream<<right
+                <<setw(8)<<bus<<", "
+                <<"\""
+                <<left
+                <<setw(2)<<ickt
+                <<"\""<<", "
+                <<right
+                <<load->get_status()<<", "
+                <<setw(8)<<load->get_area_number()<<", "
+                <<setw(8)<<load->get_zone_number()<<", "
+                <<setw(8)<<setprecision(6)<<load->get_nominal_constant_power_load_in_MVA().real()<<", "
+                <<setw(8)<<setprecision(6)<<load->get_nominal_constant_power_load_in_MVA().imag()<<", "
+                <<setw(8)<<setprecision(6)<<load->get_nominal_constant_current_load_in_MVA().real()<<", "
+                <<setw(8)<<setprecision(6)<<load->get_nominal_constant_current_load_in_MVA().imag()<<", "
+                <<setw(8)<<setprecision(6)<<load->get_nominal_constant_impedance_load_in_MVA().real()<<", "
+                <<setw(8)<<setprecision(6)<<load->get_nominal_constant_impedance_load_in_MVA().imag()<<", "
+                <<setw(8)<<load->get_owner_number()<<", "
+                <<setw(8)<<load->get_flag_interruptable()
+                <<endl;
     }
     return osstream.str();
 }
@@ -2134,6 +2151,8 @@ string STEPS_IMEXPORTER::export_fixed_shunt_data() const
             bus = psdb.get_equivalent_bus_of_bus(bus);
             ickt = ickt + toolkit.get_next_alphabeta();
         }
+        if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(bus)==OUT_OF_SERVICE)
+            continue;
 
         osstream<<right
                 <<setw(8)<<bus<<", "
@@ -2171,6 +2190,8 @@ string STEPS_IMEXPORTER::export_generator_data() const
     for(size_t i=0; i!=n; ++i)
     {
         GENERATOR* generator = generators[i];
+        if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(generator->get_source_bus())==OUT_OF_SERVICE)
+            continue;
 
         osstream<<export_source_common_data(generator);
         osstream<<"0, 0.0, 0"<<endl;
@@ -2189,6 +2210,8 @@ string STEPS_IMEXPORTER::export_wt_generator_data() const
     for(size_t i=0; i!=n; ++i)
     {
         WT_GENERATOR* wt_generator = wt_generators[i];
+        if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(wt_generator->get_source_bus())==OUT_OF_SERVICE)
+            continue;
 
         osstream<<export_source_common_data(wt_generator);
         osstream<<export_source_var_control_data(wt_generator);
@@ -2209,6 +2232,8 @@ string STEPS_IMEXPORTER::export_pv_unit_data() const
     for(size_t i=0; i!=n; ++i)
     {
         PV_UNIT* pv_unit = pv_units[i];
+        if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(pv_unit->get_source_bus())==OUT_OF_SERVICE)
+            continue;
 
         osstream<<export_source_common_data(pv_unit);
         osstream<<export_source_var_control_data(pv_unit);
@@ -2230,6 +2255,8 @@ string STEPS_IMEXPORTER::export_energy_storage_data() const
     for(size_t i=0; i!=n; ++i)
     {
         ENERGY_STORAGE* estorage = estorages[i];
+        if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(estorage->get_source_bus())==OUT_OF_SERVICE)
+            continue;
 
         osstream<<export_source_common_data(estorage);
         osstream<<export_source_var_control_data(estorage);
@@ -2336,6 +2363,9 @@ string STEPS_IMEXPORTER::export_line_data() const
                 jbus = psdb.get_equivalent_bus_of_bus(jbus);
             ickt = ickt + toolkit.get_next_alphabeta();
         }
+        if(get_export_out_of_service_bus_logic()==false and (psdb.get_bus_type(ibus)==OUT_OF_SERVICE or psdb.get_bus_type(jbus)==OUT_OF_SERVICE))
+            continue;
+
         if(ibus==jbus)
             continue;
 
@@ -2396,6 +2426,16 @@ string STEPS_IMEXPORTER::export_transformer_data() const
             if(psdb.get_equivalent_bus_of_bus(kbus)!=0)
                 kbus = psdb.get_equivalent_bus_of_bus(kbus);
             ickt = ickt + toolkit.get_next_alphabeta();
+        }
+        if(trans->is_two_winding_transformer())
+        {
+            if(get_export_out_of_service_bus_logic()==false and (psdb.get_bus_type(ibus)==OUT_OF_SERVICE or psdb.get_bus_type(jbus)==OUT_OF_SERVICE))
+                continue;
+        }
+        else
+        {
+            if(get_export_out_of_service_bus_logic()==false and (psdb.get_bus_type(ibus)==OUT_OF_SERVICE or psdb.get_bus_type(jbus)==OUT_OF_SERVICE or psdb.get_bus_type(kbus)==OUT_OF_SERVICE))
+                continue;
         }
 
         size_t nonmeterend = 2;
@@ -2701,6 +2741,8 @@ string STEPS_IMEXPORTER::export_hvdc_data() const
                 ibus = psdb.get_equivalent_bus_of_bus(ibus);
             ickt = ickt + toolkit.get_next_alphabeta();
         }
+        if(get_export_out_of_service_bus_logic()==false and (psdb.get_bus_type(rbus)==OUT_OF_SERVICE or psdb.get_bus_type(ibus)==OUT_OF_SERVICE))
+            continue;
 
         osstream<<"\""<<left
                <<setw(16)<<hvdc->get_name()<<"\""<<", ";
