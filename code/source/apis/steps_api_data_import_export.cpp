@@ -33,7 +33,8 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
     {
         PSSE_IMEXPORTER exporter;
         exporter.set_toolkit(toolkit);
-        exporter.export_powerflow_data(file, export_zero_impedance_line);
+        exporter.set_export_out_of_service_bus_logic(export_out_of_service_bus);
+        exporter.export_powerflow_data(file);
     }
     else
     {
@@ -41,7 +42,8 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
         {
             BPA_IMEXPORTER exporter;
             exporter.set_toolkit(toolkit);
-            exporter.export_powerflow_data(file, export_zero_impedance_line);
+            exporter.set_export_out_of_service_bus_logic(export_out_of_service_bus);
+            exporter.export_powerflow_data(file);
         }
     }
 }

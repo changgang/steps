@@ -266,13 +266,11 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_switched_shunt_data2steps_vecto
     return convert_i_th_type_data2steps_vector(18);
 }
 
-void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line, bool export_out_of_service_bus)
+void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    set_export_out_of_service_bus_logic(export_out_of_service_bus);
 
     ofstream ofs(file);
     if(!ofs)
@@ -368,10 +366,11 @@ string PSSE_IMEXPORTER::export_bus_data() const
         BUS* bus = buses[i];
         if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus->get_bus_number())!=0)
             continue;
-        if(get_export_out_of_service_bus_logic()==false)
-            continue;
 
         BUS_TYPE bus_type = bus->get_bus_type();
+        if(get_export_out_of_service_bus_logic()==false and bus_type==OUT_OF_SERVICE)
+            continue;
+
         int type = 4;
         if(bus_type == PQ_TYPE) type = 1;
         if(bus_type == PV_TYPE) type = 2;

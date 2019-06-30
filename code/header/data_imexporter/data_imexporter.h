@@ -24,7 +24,7 @@ class DATA_IMEXPORTER : public BASE
         virtual void load_dynamic_data(string dy_source) = 0;
         virtual void load_sequence_data(string sq_source) = 0;
 
-        virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true, bool export_out_of_service_bus=true) = 0;
+        virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true) = 0;
         virtual void export_dynamic_data(string file) = 0;
         virtual void export_sequence_data(string file) = 0;
     private:

@@ -1936,13 +1936,11 @@ void STEPS_IMEXPORTER::load_switched_shunt_data()
 }
 
 
-void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line, bool export_out_of_service_bus)
+void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    set_export_out_of_service_bus_logic(export_out_of_service_bus);
 
     ofstream ofs(file);
     if(!ofs)
