@@ -548,7 +548,7 @@ void TRANSFORMER::check()
                     <<"Xjk = "<<x<<"pu. ";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
-        if(fabs(x)>0.0001)
+        if(fabs(x)<0.0001)
         {
             osstream<<error_leading_string<<"Positive sequence X between secondary and tertiary side is too little.\n"
                     <<"Xjk = "<<x<<"pu. ";
@@ -598,9 +598,9 @@ void TRANSFORMER::check()
         zij = zij/sij*sbase;
         zjk = zjk/sjk*sbase;
         zki = zki/ski*sbase;
-        if(zij+zki-zjk==0.0 or zij+zjk-zki==0.0 or zki+zjk-zij==0.0)
+        if(abs(zij+zki-zjk)<FLOAT_EPSILON or abs(zij+zjk-zki)<FLOAT_EPSILON or abs(zki+zjk-zij)<FLOAT_EPSILON)
         {
-            osstream<<error_leading_string<<"Positive sequence leakage impedance of one winding is zero.\n"
+            osstream<<error_leading_string<<"Positive sequence leakage impedance of one winding is or nearly zero.\n"
                     <<"Zij = "<<zij<<"pu, "<<"Zjk = "<<zjk<<"pu, "<<"Zki = "<<zki<<"pu. All based on system base power ("<<sbase<<"MVA).";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
