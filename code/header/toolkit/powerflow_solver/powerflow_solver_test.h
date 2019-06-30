@@ -30,6 +30,8 @@ class POWERFLOW_SOLVER_TEST : public Test::Suite
         void test_set_get_max_iteration();
         void test_set_get_allowed_max_active_power_imbalance_in_MW();
         void test_set_get_allowed_max_reactive_power_imbalance_in_MVar();
+        void test_set_get_maximum_voltage_change_in_pu();
+        void test_set_get_maximum_angle_change();
         void test_set_get_flat_start_logic();
         void test_set_get_transformer_tap_adjustment_logic();
         void test_set_get_non_divergent_solution_logic();

@@ -53,6 +53,12 @@ double api_get_powerflow_solver_float_parameter(char* parameter_name, size_t too
         return solver.get_allowed_max_reactive_power_imbalance_in_MVar()/psdb.get_system_base_power_in_MVA();
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         return solver.get_iteration_accelerator();
+    if(PARAMETER_NAME=="MAX VOLTAGE CHANGE IN PU")
+        return solver.get_maximum_voltage_change_in_pu();
+    if(PARAMETER_NAME=="MAX ANGLE CHANGE IN DEG")
+        return solver.get_maximum_angle_change_in_deg();
+    if(PARAMETER_NAME=="MAX ANGLE CHANGE IN RAD")
+        return solver.get_maximum_angle_change_in_rad();
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n"
@@ -93,6 +99,18 @@ void api_set_powerflow_solver_float_parameter(char* parameter_name, double value
         solver.set_iteration_accelerator(value);
         return;
     }
+
+    if(PARAMETER_NAME=="MAX VOLTAGE CHANGE IN PU")
+    {
+        solver.set_maximum_voltage_change_in_pu(value);
+        return;
+    }
+    if(PARAMETER_NAME=="MAX ANGLE CHANGE IN DEG")
+    {
+        solver.set_maximum_angle_change_in_deg(value);
+        return;
+    }
+
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for powerflow solver with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);

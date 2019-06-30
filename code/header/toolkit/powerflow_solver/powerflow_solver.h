@@ -21,6 +21,8 @@ class POWERFLOW_SOLVER : public BASE
         void set_max_iteration(size_t iteration);
         void set_allowed_max_active_power_imbalance_in_MW(double P);
         void set_allowed_max_reactive_power_imbalance_in_MVar(double Q);
+        void set_maximum_voltage_change_in_pu(double v);
+        void set_maximum_angle_change_in_deg(double a);
         void set_flat_start_logic(bool logic);
         void set_transformer_tap_adjustment_logic(bool logic);
         void set_iteration_accelerator(double alpha);
@@ -30,6 +32,9 @@ class POWERFLOW_SOLVER : public BASE
         size_t get_max_iteration() const;
         double get_allowed_max_active_power_imbalance_in_MW() const;
         double get_allowed_max_reactive_power_imbalance_in_MVar() const;
+        double get_maximum_voltage_change_in_pu() const;
+        double get_maximum_angle_change_in_deg() const;
+        double get_maximum_angle_change_in_rad() const;
         bool get_flat_start_logic() const;
         bool get_transformer_tap_adjustment_logic() const;
         double get_iteration_accelerator() const;
@@ -109,6 +114,7 @@ class POWERFLOW_SOLVER : public BASE
         double P_threshold_in_MW, Q_threshold_in_MVar;
         bool flat_start_enabled, transformer_tap_adjustment_enabled;
         double alpha;
+        double maximum_voltage_change_in_pu, maximum_angle_change_in_deg;
         bool non_divergent_solution_enabled;
         bool export_jacobian_matrix_step_by_step;
 

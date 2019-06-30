@@ -15,6 +15,8 @@ POWERFLOW_SOLVER_TEST::POWERFLOW_SOLVER_TEST()
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_max_iteration);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_allowed_max_active_power_imbalance_in_MW);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_allowed_max_reactive_power_imbalance_in_MVar);
+    TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_maximum_voltage_change_in_pu);
+    TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_maximum_angle_change);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_flat_start_logic);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_transformer_tap_adjustment_logic);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_non_divergent_solution_logic);
@@ -109,6 +111,34 @@ void POWERFLOW_SOLVER_TEST::test_set_get_allowed_max_reactive_power_imbalance_in
 
     powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.0);
     TEST_ASSERT(fabs(powerflow_solver.get_allowed_max_reactive_power_imbalance_in_MVar()-0.01)<FLOAT_EPSILON);
+}
+
+void POWERFLOW_SOLVER_TEST::test_set_get_maximum_voltage_change_in_pu()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
+
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
+
+    powerflow_solver.set_maximum_voltage_change_in_pu(0.1);
+    TEST_ASSERT(fabs(powerflow_solver.get_maximum_voltage_change_in_pu()-0.1)<FLOAT_EPSILON);
+
+    powerflow_solver.set_maximum_voltage_change_in_pu(0.2);
+    TEST_ASSERT(fabs(powerflow_solver.get_maximum_voltage_change_in_pu()-0.2)<FLOAT_EPSILON);
+}
+
+void POWERFLOW_SOLVER_TEST::test_set_get_maximum_angle_change()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
+
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
+
+    powerflow_solver.set_maximum_angle_change_in_deg(20.0);
+    TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_deg()-20.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_rad()-(20.0/180.*PI))<FLOAT_EPSILON);
+
+    powerflow_solver.set_maximum_angle_change_in_deg(30.0);
+    TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_deg()-30.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(powerflow_solver.get_maximum_angle_change_in_rad()-(30.0/180.*PI))<FLOAT_EPSILON);
 }
 
 void POWERFLOW_SOLVER_TEST::test_set_get_flat_start_logic()

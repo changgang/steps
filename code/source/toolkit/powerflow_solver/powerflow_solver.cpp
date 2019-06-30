@@ -26,6 +26,8 @@ void POWERFLOW_SOLVER::clear()
     set_export_jacobian_matrix_step_by_step_logic(false);
     set_allowed_max_active_power_imbalance_in_MW(0.001);
     set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
+    set_maximum_voltage_change_in_pu(0.2);
+    set_maximum_angle_change_in_deg(20.0);
 
     set_convergence_flag(false);
 
@@ -86,6 +88,17 @@ void POWERFLOW_SOLVER::set_allowed_max_reactive_power_imbalance_in_MVar(double Q
     }
 }
 
+
+void POWERFLOW_SOLVER::set_maximum_voltage_change_in_pu(double v)
+{
+    maximum_voltage_change_in_pu = v;
+}
+
+void POWERFLOW_SOLVER::set_maximum_angle_change_in_deg(double a)
+{
+    maximum_angle_change_in_deg = a;
+}
+
 void POWERFLOW_SOLVER::set_flat_start_logic(bool logic)
 {
     flat_start_enabled = logic;
@@ -122,6 +135,21 @@ double POWERFLOW_SOLVER::get_allowed_max_active_power_imbalance_in_MW() const
 double POWERFLOW_SOLVER::get_allowed_max_reactive_power_imbalance_in_MVar() const
 {
     return Q_threshold_in_MVar;
+}
+
+double POWERFLOW_SOLVER::get_maximum_voltage_change_in_pu() const
+{
+    return maximum_voltage_change_in_pu;
+}
+
+double POWERFLOW_SOLVER::get_maximum_angle_change_in_deg() const
+{
+    return maximum_angle_change_in_deg;
+}
+
+double POWERFLOW_SOLVER::get_maximum_angle_change_in_rad() const
+{
+    return get_maximum_angle_change_in_deg()/180.0*PI;
 }
 
 bool POWERFLOW_SOLVER::get_flat_start_logic() const
@@ -1540,9 +1568,10 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
         if(max_dv<abs(update[i]))
             max_dv = abs(update[i]);
     }
-    if(max_dv>0.2)
+    double limit = get_maximum_voltage_change_in_pu();
+    if(max_dv>limit)
     {
-        double scale = 0.2/max_dv;
+        double scale = limit/max_dv;
         for(size_t i=0; i!=nv; ++i)
         {
             update[i] *= scale;
@@ -1666,9 +1695,10 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
         if(max_dv<abs(update[i]))
             max_dv = abs(update[i]);
     }
-    if(max_dv>0.2)
+    double limit = get_maximum_voltage_change_in_pu();
+    if(max_dv>limit)
     {
-        double scale = 0.2/max_dv;
+        double scale = limit/max_dv;
         for(size_t i=0; i!=nv; ++i)
         {
             update[i] *= scale;
@@ -1761,9 +1791,10 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
         if(max_dv<abs(update[i]))
             max_dv = abs(update[i]);
     }
-    if(max_dv>0.2)
+    double limit = get_maximum_angle_change_in_rad();
+    if(max_dv>limit)
     {
-        double scale = 0.2/max_dv;
+        double scale = limit/max_dv;
         for(size_t i=0; i!=nv; ++i)
         {
             update[i] *= scale;
