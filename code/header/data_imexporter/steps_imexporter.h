@@ -140,6 +140,8 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
 
         void add_IEEL_model(vector<string>& data);
 
+        void add_UVLS_model(vector<string>& data);
+
         void add_UFLS_model(vector<string>& data);
         void add_PUFLS_model(vector<string>& data);
 

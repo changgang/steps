@@ -138,6 +138,9 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="IEELAL" or model_name=="IEELAR" or model_name=="IEELZN" or
        model_name=="IEELOW" or model_name=="IEELBL") { add_IEEL_model(data); return;}
 
+    if(model_name=="UVLSAL" or model_name=="UVLSAR" or model_name=="UVLSZN" or
+       model_name=="UVLSOW" or model_name=="UVLSBL") { add_UVLS_model(data); return;}
+
     if(model_name=="UFLSAL" or model_name=="UFLSAR" or model_name=="UFLSZN" or
        model_name=="UFLSOW" or model_name=="UFLSBL") { add_UFLS_model(data); return;}
     if(model_name=="PUFLSAL" or model_name=="PUFLSAR" or model_name=="PUFLSZN" or
@@ -1165,6 +1168,8 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
        model_name!="IEELBL" and
        model_name!="CIM5AL" and model_name!="CIM5AR" and model_name!="CIM5ZN" and
        model_name!="CIM5BL" and
+       model_name!="UVLSAL" and model_name!="UVLSAR" and model_name!="UVLSZN" and
+       model_name!="UVLSBL" and
        model_name!="UFLSAL" and model_name!="UFLSAR" and model_name!="UFLSZN" and
        model_name!="UFLSBL" and
        model_name!="PUFLSAL" and model_name!="PUFLSAR" and model_name!="PUFLSZN" and
@@ -1259,6 +1264,28 @@ void STEPS_IMEXPORTER::add_IEEL_model(vector<string>& data)
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     IEEL model;
+    model.set_toolkit(toolkit);
+    bool successful = model.setup_model_with_steps_string_vector(data);
+    if(successful)
+    {
+        vector<LOAD*> loads = get_all_loads_of(data);
+        size_t n = loads.size();
+        for(size_t i=0; i!=n; ++i)
+            loads[i]->set_model(&model);
+    }
+}
+
+void STEPS_IMEXPORTER::add_UVLS_model(vector<string>& data)
+{
+    string model_name = get_dynamic_model_name(data);
+    if(model_name!="UVLSAL" and model_name!="UVLSAR" and model_name!="UVLSZN" and
+       model_name!="UVLSBL")
+        return;
+
+    if(data.size()<3)
+        return;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    UVLS model;
     model.set_toolkit(toolkit);
     bool successful = model.setup_model_with_steps_string_vector(data);
     if(successful)

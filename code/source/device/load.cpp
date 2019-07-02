@@ -467,9 +467,6 @@ void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* mode
             new_model->set_toolkit(toolkit);
             new_model->set_device_id(get_device_id());
             load_frequency_relay_model = new_model;
-            ostringstream osstream;
-            osstream<<new_model->get_model_name()<<" is added.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         else
         {

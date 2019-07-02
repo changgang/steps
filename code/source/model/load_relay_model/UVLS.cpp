@@ -188,7 +188,6 @@ bool UVLS::setup_model_with_steps_string_vector(vector<string>& data)
                 }
             }
             is_successful = true;
-
             return is_successful;
 
         }

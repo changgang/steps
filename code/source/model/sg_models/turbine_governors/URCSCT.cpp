@@ -559,7 +559,7 @@ double URCSCT::get_gas_K4() const
 
 double URCSCT::get_gas_T3_in_s() const
 {
-    return gas_fuel_system.get_T_in_s();
+    return gas_radiation_shield.get_T_in_s();
 }
 
 double URCSCT::get_gas_T4_in_s() const
@@ -875,7 +875,7 @@ void URCSCT::setup_block_toolkit_and_parameters()
 
     gas_valve_positioner.set_toolkit(toolkit);
     gas_valve_positioner.set_K(get_gas_a()/get_gas_c());
-    gas_valve_positioner.set_K(get_gas_b_in_s()/get_gas_c());
+    gas_valve_positioner.set_T_in_s(get_gas_b_in_s()/get_gas_c());
 
     gas_fuel_system.set_toolkit(toolkit);
     gas_fuel_system.set_K(1.0);

@@ -257,10 +257,30 @@ bool SOURCE::is_valid() const
     else
         return false;
 }
+
 void SOURCE::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    string error_leading_string = "Error detected when checking "+get_device_name()+": ";
+
+    size_t bus = get_source_bus();
+    double qmax = get_q_max_in_MVar();
+    double qmin = get_q_min_in_MVar();
+    if(fabs(qmax-qmin)<FLOAT_EPSILON)
+    {
+        BUS_TYPE btype = psdb.get_bus_type(bus);
+        if(btype==SLACK_TYPE)
+        {
+            osstream<<error_leading_string<<"Qmax and Qmin are identical for SLACK source. NaN may be detected when distributing reactive power to generators.\n"
+                    <<"Qmax = "<<qmax<<"MVar. Qmin = "<<qmin<<"MVar. ";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
 }
+
 void SOURCE::clear()
 {
     source_bus = 0;

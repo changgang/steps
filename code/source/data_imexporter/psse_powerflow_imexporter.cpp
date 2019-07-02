@@ -121,7 +121,7 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
         sbuffer = trim_string(sbuffer);
         if(sbuffer.size()!=0)
         {
-            if(sbuffer != "0")
+            if(sbuffer != "0" and sbuffer!="\'0\'" and sbuffer!="\"0\"")
             {
                 data_of_one_type.push_back(sbuffer);
             }
@@ -211,8 +211,33 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_fixed_shunt_data2steps_vector()
 
 vector<vector<string> > PSSE_IMEXPORTER::convert_source_data2steps_vector() const
 {
-    return convert_i_th_type_data2steps_vector(5);
+    vector<vector<string> > source_lines = convert_i_th_type_data2steps_vector(5);
+    vector<string> source_line;
+    size_t n = source_lines.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        source_line =  source_lines[i];
+        size_t nz = source_line.size();
+        if(nz>=29)
+            continue;
+        else
+        {
+            if(nz>=28)
+            {
+                int source_type = get_integer_data(source_line[26],"0");
+                if(source_type==0)
+                    source_line.push_back("0"); // synchronous
+                else
+                {
+                    source_line.push_back("1"); // wt generator
+                }
+                source_lines[i] = source_line;
+            }
+        }
+    }
+     return source_lines;
 }
+
 vector<vector<string> > PSSE_IMEXPORTER::convert_line_data2steps_vector() const
 {
     return convert_i_th_type_data2steps_vector(6);

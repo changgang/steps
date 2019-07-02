@@ -1921,9 +1921,19 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         nsource = 200;*/
     for(size_t i=0; i!=nsource; ++i)
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%2s'  %10.6f  %10.6f  %s(%s)",
-                 sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
-                 sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
+        BUS_TYPE btype = psdb.get_bus_type(sources[i]->get_source_bus());
+        if(btype!=SLACK_TYPE)
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%2s'  %10.6f  %10.6f  %s(%s)",
+                     sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
+                     sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
+        }
+        else
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%2s'  %10.6f  %10.6f  %s(%s) [slack bus]",
+                     sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
+                     sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
+        }
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }

@@ -1868,11 +1868,11 @@ void STEPS_IMEXPORTER::load_multi_section_line_data()
 
 void STEPS_IMEXPORTER::load_zone_data()
 {
+    if(splitted_sraw_data_in_ram.size()<14)
+        return;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    if(splitted_sraw_data_in_ram.size()<14)
-        return;
     vector<vector<string> > DATA = splitted_sraw_data_in_ram[13];
 
     vector<string> data;
