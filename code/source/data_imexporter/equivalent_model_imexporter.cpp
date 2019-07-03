@@ -2,7 +2,7 @@
 #include "header/model/equivalent_model/equivalent_models.h"
 #include "header/basic/utility.h"
 #include "header/meter/meter_setter.h"
-#include "header/steps.h"
+#include "header/STEPS.h"
 #include <cstdio>
 #include <istream>
 #include <iostream>

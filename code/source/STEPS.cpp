@@ -1,4 +1,4 @@
-#include "header/steps.h"
+#include "header/STEPS.h"
 #include "header/basic/utility.h"
 #include <iostream>
 #include <chrono>
@@ -27,7 +27,7 @@ STEPS::STEPS(string name, string log_file)
 
     network_matrix.set_toolkit(*this);
 
-    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" is created @ "+num2str(int(this)));
+    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" is created @ "+num2str(size_t(this)));
 
 
     clear();
@@ -35,7 +35,7 @@ STEPS::STEPS(string name, string log_file)
 
 STEPS::~STEPS()
 {
-    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" @ "+num2str(int(this))+" is deleted.");
+    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" @ "+num2str(size_t(this))+" is deleted.");
     //clear();
     close_log_file();
 }

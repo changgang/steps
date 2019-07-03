@@ -654,7 +654,7 @@ class STEPS():
             if bus==0:
                 break
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             generators.append((int(bus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(generators)
@@ -671,7 +671,7 @@ class STEPS():
             if bus==0:
                 break
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             wt_generators.append((int(bus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(wt_generators)
@@ -688,7 +688,7 @@ class STEPS():
             if bus==0:
                 break
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             pv_units.append((int(bus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(pv_units)
@@ -705,7 +705,7 @@ class STEPS():
             if bus==0:
                 break
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             loads.append((int(bus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(loads)
@@ -722,7 +722,7 @@ class STEPS():
             if bus==0:
                 break
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             fixed_shunts.append((int(bus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(fixed_shunts)
@@ -739,7 +739,7 @@ class STEPS():
             if bus==0:
                 break
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             equivalent_devices.append((int(bus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(equivalent_devices)
@@ -756,7 +756,7 @@ class STEPS():
             if bus==0:
                 break
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             energy_storages.append((int(bus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(energy_storages)
@@ -775,7 +775,7 @@ class STEPS():
                 break
             jbus = STEPS_LIB.api_get_current_device_bus_number(device, recv_side, self.toolkit_index)
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             lines.append((int(ibus), int(jbus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(lines)
@@ -796,7 +796,7 @@ class STEPS():
             jbus = STEPS_LIB.api_get_current_device_bus_number(device, sec_side, self.toolkit_index)
             kbus = STEPS_LIB.api_get_current_device_bus_number(device, ter_side, self.toolkit_index)
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             transformers.append((int(ibus), int(jbus), int(kbus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(transformers)
@@ -815,7 +815,7 @@ class STEPS():
                 break
             jbus = STEPS_LIB.api_get_current_device_bus_number(device, inv_side, self.toolkit_index)
             id = STEPS_LIB.api_get_current_device_identifier(device, self.toolkit_index)
-            id = id.decode('utf-8')
+            id = str(id)
             hvdcs.append((int(ibus), int(jbus), id))
             STEPS_LIB.api_goto_next_device(device, self.toolkit_index)
         return tuple(hvdcs)
