@@ -1868,21 +1868,21 @@ class STEPS():
 
     def trip_load(self, load):
         global STEPS_LIB
-        ibus, ickt = self.__extract_single_bus_device_id(generator)
+        ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
         STEPS_LIB.api_trip_load(ibus, ickt, self.toolkit_index)
         return
 
     def close_load(self, load):
         global STEPS_LIB
-        ibus, ickt = self.__extract_single_bus_device_id(generator)
+        ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
         STEPS_LIB.api_close_load(ibus, ickt, self.toolkit_index)
         return
 
     def scale_load(self, load, percent):
         global STEPS_LIB
-        ibus, ickt = self.__extract_single_bus_device_id(generator)
+        ibus, ickt = self.__extract_single_bus_device_id(load)
         ickt = self.__get_c_char_p_of_string(ickt)
         STEPS_LIB.api_scale_load(ibus, ickt, percent, self.toolkit_index)
         return
