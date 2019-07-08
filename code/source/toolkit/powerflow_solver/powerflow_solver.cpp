@@ -26,8 +26,8 @@ void POWERFLOW_SOLVER::clear()
     set_export_jacobian_matrix_step_by_step_logic(false);
     set_allowed_max_active_power_imbalance_in_MW(0.001);
     set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
-    set_maximum_voltage_change_in_pu(0.2);
-    set_maximum_angle_change_in_deg(20.0);
+    set_maximum_voltage_change_in_pu(999.0);
+    set_maximum_angle_change_in_deg(999.0);
 
     set_convergence_flag(false);
 
@@ -1554,6 +1554,8 @@ vector<double> POWERFLOW_SOLVER::get_bus_Q_power_mismatch_vector_for_decoupled_s
 
 void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 {
+    ostringstream osstream;
+
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -1568,6 +1570,9 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
         if(max_dv<abs(update[i]))
             max_dv = abs(update[i]);
     }
+    osstream<<"Maximum voltage change is: "<<max_dv;
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
     double limit = get_maximum_voltage_change_in_pu();
     if(max_dv>limit)
     {
@@ -1688,6 +1693,10 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
+    double limit = get_maximum_voltage_change_in_pu();
+    if(fabs(limit)<FLOAT_EPSILON)
+        return;
+
     double max_dv=0.0;
     size_t nv = update.size();
     for(size_t i=0; i!=nv; ++i)
@@ -1695,7 +1704,6 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
         if(max_dv<abs(update[i]))
             max_dv = abs(update[i]);
     }
-    double limit = get_maximum_voltage_change_in_pu();
     if(max_dv>limit)
     {
         double scale = limit/max_dv;
@@ -1784,6 +1792,10 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
+    double limit = get_maximum_angle_change_in_rad();
+    if(fabs(limit)<FLOAT_EPSILON)
+        return;
+
     double max_dv=0.0;
     size_t nv = update.size();
     for(size_t i=0; i!=nv; ++i)
@@ -1791,7 +1803,6 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
         if(max_dv<abs(update[i]))
             max_dv = abs(update[i]);
     }
-    double limit = get_maximum_angle_change_in_rad();
     if(max_dv>limit)
     {
         double scale = limit/max_dv;
@@ -1878,6 +1889,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
     ostringstream osstream;
 
@@ -1898,14 +1910,28 @@ void POWERFLOW_SOLVER::show_powerflow_result()
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      voltage(pu) angle(deg)");
     toolkit.show_information_with_leading_time_stamp(buffer);
 
+    NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
+
     vector<BUS*> buses = psdb.get_all_buses();
     size_t nbus = buses.size();
     /*if(nbus>200)
         nbus = 200;*/
     for(size_t i=0; i!=nbus; ++i)
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f %s",
-                 buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<500.0)
+        {
+            continue;
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f %s",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
+        }
+        else
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+        }
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 
