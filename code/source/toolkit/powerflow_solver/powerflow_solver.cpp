@@ -1609,7 +1609,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 
     double delta_voltage, delta_angle, current_voltage, current_angle;
 
-    alpha = get_iteration_accelerator();
+    double alpha = get_iteration_accelerator();
 
     BUS* bus;
 
@@ -1722,7 +1722,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 
     double delta_voltage, current_voltage;
 
-    alpha = get_iteration_accelerator();
+    double alpha = get_iteration_accelerator();
 
     double max_delta_v = 0.0;
     size_t max_delta_v_bus = 0;
@@ -1822,7 +1822,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
 
     double delta_angle, current_angle;
 
-    alpha = get_iteration_accelerator();
+    double alpha = get_iteration_accelerator();
 
     double max_delta_angle = 0.0;
     size_t max_delta_angle_bus = 0;
@@ -1921,18 +1921,60 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         size_t bus = buses[i]->get_bus_number();
         size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
         complex<double> smismatch = bus_power[inbus]*sbase;
-        if(fabs(smismatch)<500.0)
+        if(fabs(smismatch)>=1000.0)
         {
-            continue;
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f %s",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
-        }
-        else
-        {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+            toolkit.show_information_with_leading_time_stamp(buffer);
         }
-        toolkit.show_information_with_leading_time_stamp(buffer);
+    }
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<1000.0 and fabs(smismatch)>=500.0)
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+        }
+    }
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<500.0 and fabs(smismatch)>=10.0)
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+        }
+    }
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<10.0 and fabs(smismatch)>=get_allowed_max_active_power_imbalance_in_MW())
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+        }
+    }
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<get_allowed_max_active_power_imbalance_in_MW())
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+        }
     }
 
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Solved machine power:");

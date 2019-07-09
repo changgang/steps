@@ -688,6 +688,8 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
                 meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
             if(meter_type=="MECHANICAL POWER IN MW")
                 meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
+            if(meter_type=="MECHANICAL POWER REFERENCE IN MW")
+                meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(did);
             if(meter_type=="TERMINAL ACTIVE POWER IN MW")
                 meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
             if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
