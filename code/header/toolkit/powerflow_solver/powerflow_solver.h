@@ -27,6 +27,7 @@ class POWERFLOW_SOLVER : public BASE
         void set_transformer_tap_adjustment_logic(bool logic);
         void set_iteration_accelerator(double alpha);
         void set_non_divergent_solution_logic(bool logic);
+        void set_var_limit_check_logic(bool logic);
         void set_export_jacobian_matrix_step_by_step_logic(bool flag);
 
         size_t get_max_iteration() const;
@@ -39,6 +40,7 @@ class POWERFLOW_SOLVER : public BASE
         bool get_transformer_tap_adjustment_logic() const;
         double get_iteration_accelerator() const;
         bool get_non_divergent_solution_logic() const;
+        bool get_var_limit_check_logic() const;
         bool get_export_jacobian_matrix_step_by_step_logic() const;
 
         void solve_with_full_Newton_Raphson_solution();
@@ -116,6 +118,7 @@ class POWERFLOW_SOLVER : public BASE
         double alpha;
         double maximum_voltage_change_in_pu, maximum_angle_change_in_deg;
         bool non_divergent_solution_enabled;
+        bool var_limit_check_enabled;
         bool export_jacobian_matrix_step_by_step;
 
         bool converged;

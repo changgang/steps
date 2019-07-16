@@ -130,6 +130,8 @@ bool api_get_powerflow_solver_boolean_parameter(char* parameter_name, size_t too
         return solver.get_transformer_tap_adjustment_logic();
     if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
         return solver.get_non_divergent_solution_logic();
+    if(PARAMETER_NAME=="VAR LIMIT CHECK LOGIC")
+        return solver.get_var_limit_check_logic();
     if(PARAMETER_NAME=="EXPORT JACOBIAN LOGIC")
         return solver.get_export_jacobian_matrix_step_by_step_logic();
 
@@ -159,6 +161,11 @@ void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value
     if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
     {
         solver.set_non_divergent_solution_logic(value);
+        return;
+    }
+    if(PARAMETER_NAME=="VAR LIMIT CHECK LOGIC")
+    {
+        solver.set_var_limit_check_logic(value);
         return;
     }
     if(PARAMETER_NAME=="EXPORT JACOBIAN LOGIC")

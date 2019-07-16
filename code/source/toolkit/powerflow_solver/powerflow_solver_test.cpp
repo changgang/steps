@@ -20,6 +20,7 @@ POWERFLOW_SOLVER_TEST::POWERFLOW_SOLVER_TEST()
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_flat_start_logic);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_transformer_tap_adjustment_logic);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_non_divergent_solution_logic);
+    TEST_ADD(POWERFLOW_SOLVER_TEST::test_set_get_var_limit_check_logic);
 
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Arthur_R_Bergen_3_bus_model_with_full_Newton_Raphson_solution);
     TEST_ADD(POWERFLOW_SOLVER_TEST::test_solve_Arthur_R_Bergen_3_bus_model_with_fast_decoupled_solution);
@@ -178,6 +179,19 @@ void POWERFLOW_SOLVER_TEST::test_set_get_non_divergent_solution_logic()
 
     powerflow_solver.set_non_divergent_solution_logic(false);
     TEST_ASSERT(powerflow_solver.get_non_divergent_solution_logic()==false);
+}
+
+void POWERFLOW_SOLVER_TEST::test_set_get_var_limit_check_logic()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"POWERFLOW_SOLVER_TEST");
+
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
+
+    powerflow_solver.set_var_limit_check_logic(true);
+    TEST_ASSERT(powerflow_solver.get_var_limit_check_logic()==true);
+
+    powerflow_solver.set_var_limit_check_logic(false);
+    TEST_ASSERT(powerflow_solver.get_var_limit_check_logic()==false);
 }
 
 void POWERFLOW_SOLVER_TEST::test_set_get_export_jacobian_matrix_step_by_step_logic()

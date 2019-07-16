@@ -403,7 +403,6 @@ string PSSE_IMEXPORTER::export_bus_data() const
            bus_type == PV_TO_PQ_TYPE_3 or bus_type == PV_TO_PQ_TYPE_4) type = -2;
         if(bus_type == SLACK_TYPE) type = 3;
         if(bus_type == OUT_OF_SERVICE) type = 4;
-        //if(type == 4) continue;
 
         snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
                  bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,

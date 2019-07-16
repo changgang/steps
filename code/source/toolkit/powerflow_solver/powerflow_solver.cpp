@@ -23,6 +23,7 @@ void POWERFLOW_SOLVER::clear()
     set_flat_start_logic(false);
     set_transformer_tap_adjustment_logic(true);
     set_non_divergent_solution_logic(true);
+    set_var_limit_check_logic(true);
     set_export_jacobian_matrix_step_by_step_logic(false);
     set_allowed_max_active_power_imbalance_in_MW(0.001);
     set_allowed_max_reactive_power_imbalance_in_MVar(0.001);
@@ -122,6 +123,11 @@ void POWERFLOW_SOLVER::set_non_divergent_solution_logic(bool logic)
     non_divergent_solution_enabled = logic;
 }
 
+void POWERFLOW_SOLVER::set_var_limit_check_logic(bool logic)
+{
+    var_limit_check_enabled = logic;
+}
+
 void POWERFLOW_SOLVER::set_export_jacobian_matrix_step_by_step_logic(bool flag)
 {
     export_jacobian_matrix_step_by_step = flag;
@@ -172,6 +178,11 @@ bool POWERFLOW_SOLVER::get_non_divergent_solution_logic() const
     return non_divergent_solution_enabled;
 }
 
+bool POWERFLOW_SOLVER::get_var_limit_check_logic() const
+{
+    return var_limit_check_enabled;
+}
+
 bool POWERFLOW_SOLVER::get_export_jacobian_matrix_step_by_step_logic() const
 {
     return export_jacobian_matrix_step_by_step;
@@ -212,19 +223,21 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             toolkit.show_information_with_leading_time_stamp(buffer);
 
             try_to_solve_hvdc_steady_state();
-
             calculate_raw_bus_power_mismatch();
 
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
             max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
 
 
-            bool bus_type_changed = check_bus_type_constraints();
+            bool bus_type_changed = false;
+            if(get_var_limit_check_logic()==true)
+                bus_type_changed = check_bus_type_constraints();
 
             if(bus_type_changed)
             {
                 update_P_and_Q_equation_internal_buses();
 
+                try_to_solve_hvdc_steady_state();
                 calculate_raw_bus_power_mismatch();
 
                 max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -317,12 +330,17 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             toolkit.show_information_with_leading_time_stamp(buffer);
 
             try_to_solve_hvdc_steady_state();
-
             calculate_raw_bus_power_mismatch();
+
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
             max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
 
-            bool bus_type_changed = check_bus_type_constraints();
+            bool bus_type_changed = false;
+            if(get_var_limit_check_logic()==true)
+            {
+                bus_type_changed = check_bus_type_constraints();
+            }
+
             if(bus_type_changed)
             {
                 update_P_and_Q_equation_internal_buses();
@@ -330,7 +348,9 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
                 BQ.LU_factorization(1, 1e-6);
 
+                try_to_solve_hvdc_steady_state();
                 calculate_raw_bus_power_mismatch();
+
                 max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
                 max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
                 //continue;
@@ -379,6 +399,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             //}
             update_bus_angle(bus_delta_angle);
 
+            try_to_solve_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
 
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -646,6 +667,7 @@ bool POWERFLOW_SOLVER::is_converged()
     osstream<<"Check maximum active and reactive power mismatch.";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
+    try_to_solve_hvdc_steady_state();
     calculate_raw_bus_power_mismatch();
 
     double max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
@@ -959,7 +981,7 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 
             //ostringstream osstream;
             //osstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
-            //show_information_with_leading_time_stamp(osstream);
+            //toolkit.show_information_with_leading_time_stamp(osstream);
 
             bus_power[internal_bus_rec] -= S_rec/Sbase;
             bus_power[internal_bus_inv] += S_inv/Sbase;
@@ -1062,7 +1084,7 @@ bool POWERFLOW_SOLVER::check_bus_type_constraints()
         if(btype==SLACK_TYPE)
         {
             check_SLACK_bus_constraint_of_physical_bus(physical_bus);
-            system_bus_type_changed = false;
+            //system_bus_type_changed = false;
         }
         else
         {
@@ -1563,21 +1585,36 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     size_t nP = internal_P_equation_buses.size();
     size_t nQ = internal_Q_equation_buses.size();
 
-    double max_dv=0.0;
+    double max_dangle=0.0, max_dv = 0.0;
     size_t nv = update.size();
     for(size_t i=0; i!=nP; ++i)
+    {
+        if(max_dangle<abs(update[i]))
+            max_dangle = abs(update[i]);
+    }
+    for(size_t i=nP; i!=nv; ++i)
     {
         if(max_dv<abs(update[i]))
             max_dv = abs(update[i]);
     }
-    osstream<<"Maximum voltage change is: "<<max_dv;
+    osstream<<"Maximum angle   change is: "<<max_dangle<<" rad ("<<rad2deg(max_dangle)<<" deg).\n"
+            <<"Maximum voltage change is: "<<max_dv<<" pu.";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    double limit = get_maximum_voltage_change_in_pu();
+    double limit = get_maximum_angle_change_in_rad();
+    if(max_dangle>limit)
+    {
+        double scale = limit/max_dangle;
+        for(size_t i=0; i!=nP; ++i)
+        {
+            update[i] *= scale;
+        }
+    }
+    limit = get_maximum_voltage_change_in_pu();
     if(max_dv>limit)
     {
         double scale = limit/max_dv;
-        for(size_t i=0; i!=nv; ++i)
+        for(size_t i=nP; i!=nv; ++i)
         {
             update[i] *= scale;
         }
@@ -1610,6 +1647,8 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     double delta_voltage, delta_angle, current_voltage, current_angle;
 
     double alpha = get_iteration_accelerator();
+    double alpha_P = alpha;
+    double alpha_Q = alpha;
 
     BUS* bus;
 
@@ -1624,7 +1663,7 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 
         delta_angle = update[i];
 
-        bus->set_angle_in_rad(current_angle + alpha*delta_angle);
+        bus->set_angle_in_rad(current_angle + alpha_P*delta_angle);
     }
 
     for(size_t i=0; i!=nQ; ++i)
@@ -1638,57 +1677,65 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 
         delta_voltage = update[nP+i];
 
-        bus->set_voltage_in_pu(current_voltage + alpha*delta_voltage);
+        bus->set_voltage_in_pu(current_voltage + alpha_Q*delta_voltage);
     }
 
     if(get_non_divergent_solution_logic()==true)
     {
-        try_to_solve_hvdc_steady_state();
         for(size_t i=0; i<10; ++i)
         {
+            try_to_solve_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
             double Perror = get_maximum_active_power_mismatch_in_MW();
             double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
-            if((Perror>Perror0 and Perror>get_allowed_max_active_power_imbalance_in_MW())
-                or (Qerror>Qerror0 and Qerror>get_allowed_max_reactive_power_imbalance_in_MVar()))
+            bool P_is_worse=Perror>Perror0 and Perror>get_allowed_max_active_power_imbalance_in_MW();
+            bool Q_is_worse=Qerror>Qerror0 and Qerror>get_allowed_max_reactive_power_imbalance_in_MVar();
+            if(not (P_is_worse or Q_is_worse))
+                break;
+            else
             {
-                alpha *= 0.5;
-                for(size_t i=0; i!=nP; ++i)
+                if(P_is_worse)
                 {
-                    internal_bus = internal_P_equation_buses[i];
-                    physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
+                    alpha_P *= 0.5;
+                    for(size_t i=0; i!=nP; ++i)
+                    {
+                        internal_bus = internal_P_equation_buses[i];
+                        physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
 
-                    bus = psdb.get_bus(physical_bus);
+                        bus = psdb.get_bus(physical_bus);
 
-                    current_angle = bus->get_angle_in_rad();
+                        current_angle = bus->get_angle_in_rad();
 
-                    delta_angle = update[i];
+                        delta_angle = update[i];
 
-                    bus->set_angle_in_rad(current_angle - alpha*delta_angle);
+                        bus->set_angle_in_rad(current_angle - alpha_P*delta_angle);
+                    }
                 }
-
-                for(size_t i=0; i!=nQ; ++i)
+                if(Q_is_worse)
                 {
-                    internal_bus = internal_Q_equation_buses[i];
-                    physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
+                    alpha_Q *= 0.5;
+                    for(size_t i=0; i!=nQ; ++i)
+                    {
+                        internal_bus = internal_Q_equation_buses[i];
+                        physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
 
-                    bus = psdb.get_bus(physical_bus);
+                        bus = psdb.get_bus(physical_bus);
 
-                    current_voltage = bus->get_voltage_in_pu();
+                        current_voltage = bus->get_voltage_in_pu();
 
-                    delta_voltage = update[nP+i];
+                        delta_voltage = update[nP+i];
 
-                    bus->set_voltage_in_pu(current_voltage - alpha*delta_voltage);
+                        bus->set_voltage_in_pu(current_voltage - alpha_Q*delta_voltage);
+                    }
                 }
             }
-            else
-                break;
         }
     }
 }
 
 void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 {
+    ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -1751,9 +1798,9 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 
     if(get_non_divergent_solution_logic()==true)
     {
-        try_to_solve_hvdc_steady_state();
         for(size_t i=0; i<10; ++i)
         {
+            try_to_solve_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
             double Qerror = get_maximum_reactive_power_mismatch_in_MVar();
             if(Qerror>Qerror0 and Qerror>get_allowed_max_reactive_power_imbalance_in_MVar())
@@ -1769,7 +1816,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 
                     current_voltage = bus->get_voltage_in_pu();
 
-                    delta_voltage = update[nP+i];
+                    delta_voltage = update[i];
 
                     bus->set_voltage_in_pu(current_voltage - alpha*delta_voltage);
                 }
@@ -1788,6 +1835,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 
 void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
 {
+    ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -1811,8 +1859,6 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
             update[i] *= scale;
         }
     }
-
-    ostringstream osstream;
 
     double Perror0 = get_maximum_active_power_mismatch_in_MW();
 
@@ -1854,6 +1900,7 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
     {
         for(size_t i=0; i<10; ++i)
         {
+            try_to_solve_hvdc_steady_state();
             calculate_raw_bus_power_mismatch();
             double Perror = get_maximum_active_power_mismatch_in_MW();
             if(Perror>Perror0 and Perror>get_allowed_max_active_power_imbalance_in_MW())
@@ -1894,7 +1941,6 @@ void POWERFLOW_SOLVER::show_powerflow_result()
     ostringstream osstream;
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-
 
     if(is_converged())
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Powerflow converged within %lu iterations. Results are listed as follows.",
@@ -1945,7 +1991,55 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         size_t bus = buses[i]->get_bus_number();
         size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
         complex<double> smismatch = bus_power[inbus]*sbase;
-        if(fabs(smismatch)<500.0 and fabs(smismatch)>=10.0)
+        if(fabs(smismatch)<500.0 and fabs(smismatch)>=400.0)
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+        }
+    }
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<400.0 and fabs(smismatch)>=300.0)
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+        }
+    }
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<300.0 and fabs(smismatch)>=200.0)
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+        }
+    }
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<200.0 and fabs(smismatch)>=100.0)
+        {
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+            toolkit.show_information_with_leading_time_stamp(buffer);
+        }
+    }
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        size_t bus = buses[i]->get_bus_number();
+        size_t inbus = network_matrix.get_internal_bus_number_of_physical_bus(bus);
+        complex<double> smismatch = bus_power[inbus]*sbase;
+        if(fabs(smismatch)<100.0 and fabs(smismatch)>=10.0)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());

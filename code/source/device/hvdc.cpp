@@ -1768,8 +1768,9 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
     if(Tap < minTap) Tap = minTap; // apply limit
     if(Tap > maxTap) Tap = maxTap;
 
-    //os<<"Best converter transformer tap with min angle: %f for %s", Tap, get_converter_side_name(converter).c_str());
-    //show_information_with_leading_time_stamp(osstream);
+    //osstream<<"Best converter transformer tap with min angle: "<<Tap<<" for "<<get_converter_side_name(converter).c_str()<<endl
+    //        <<"Vbus = "<<psdb.get_bus_voltage_in_pu(get_converter_bus(converter));
+    //toolkit.show_information_with_leading_time_stamp(osstream);
 
     set_converter_transformer_tap_in_pu(converter, Tap);
 }
@@ -1787,10 +1788,10 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
     double R = get_line_resistance_in_ohm();
     double VdcR = VdcI + Idc*R;
 
-    osstream<<"trying to solve "<<get_device_name()<<" with desired DC voltage rec "<<VdcR<<" kV, inv "<<VdcI<<" kV, "
-           <<" I "<<Idc<<" kA";
+    //osstream<<"trying to solve "<<get_device_name()<<" with desired DC voltage rec "<<VdcR<<" kV, inv "<<VdcI<<" kV, "
+    //       <<" I "<<Idc<<" kA";
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
 
     bool minAlphaReached = solve_converter_transformer_tap_and_desired_firing_angle(RECTIFIER, VdcR, Idc);
     bool minGammaReached = solve_converter_transformer_tap_and_desired_firing_angle(INVERTER, VdcI, Idc);
@@ -1841,7 +1842,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //osstream<<"Solve "<<get_device_name()<<" as constant power (R) + constant gamma (I) mode.";
-    //show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
 
     double Pn = get_nominal_dc_power_per_pole_in_MW();
     HVDC_CONVERTER_SIDE Pside = get_side_to_hold_dc_power();
@@ -1903,6 +1904,8 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         Idc = In; // desired
         VdcR = Pn/Idc; // desired
         VdcI = VdcR - Idc*R;
+        //osstream<<"HVDC desired voltage: "<<VdcR<<", "<<VdcI;
+        //toolkit.show_information_with_leading_time_stamp(osstream);
         //solve TapR with desired Idc, and VdcR
         solve_best_converter_transformer_tap_with_min_angle(INVERTER, VdcI, Idc);
         TapI = get_converter_transformer_tap_in_pu(INVERTER);
