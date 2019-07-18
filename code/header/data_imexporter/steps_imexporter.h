@@ -154,6 +154,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_AERD0_model(vector<string>& data);
         void add_WT3T0_model(vector<string>& data);
         void add_WT3E0_model(vector<string>& data);
+        void add_WT3E1_model(vector<string>& data);
         void add_WT3P0_model(vector<string>& data);
         void add_FILEWIND_model(vector<string>& data);
         void add_WTRLY0_model(vector<string>& data);

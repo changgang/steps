@@ -2,6 +2,9 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
+#include <iostream>
+
+using namespace std;
 STABILIZER_MODEL::STABILIZER_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
@@ -125,98 +128,100 @@ string STABILIZER_MODEL::convert_signal_type_number_to_string(size_t signal_type
 
 SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_type, size_t bus)
 {
-    SIGNAL signal;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    SIGNAL signal;
+    signal.set_toolkit(toolkit);
 
     if(bus!=0)
     {
         switch(signal_type)
+        {
+            case 1:
             {
-                case 1:
+                vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
+                if(gens.size()!=0)
                 {
-                    vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
-                    if(gens.size()!=0)
-                    {
-                        GENERATOR* gen = gens[0];
-                        DEVICE_ID did = gen->get_device_id();
-                        signal.set_device_id(did);
-                        signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
-                    }
-                    break;
+                    GENERATOR* gen = gens[0];
+                    DEVICE_ID did = gen->get_device_id();
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
                 }
-                case 2:
-                {
-                    BUS* busptr = psdb.get_bus(bus);
-                    if(busptr!=NULL)
-                    {
-                        DEVICE_ID did = busptr->get_device_id();
-                        signal.set_device_id(did);
-                        signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
-                    }
-                    break;
-                }
-                case 3:
-                {
-                    vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
-                    if(gens.size()!=0)
-                    {
-                        GENERATOR* gen = gens[0];
-                        DEVICE_ID did = gen->get_device_id();
-                        signal.set_device_id(did);
-                        signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
-                    }
-                    break;
-                }
-                case 4:
-                {
-                    vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
-                    if(gens.size()!=0)
-                    {
-                        GENERATOR* gen = gens[0];
-                        DEVICE_ID did = gen->get_device_id();
-                        signal.set_device_id(did);
-                        signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
-                    }
-                    break;
-                }
-                case 5:
-                {
-                    BUS* busptr = psdb.get_bus(bus);
-                    if(busptr!=NULL)
-                    {
-                        DEVICE_ID did = busptr->get_device_id();
-                        signal.set_device_id(did);
-                        signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
-                    }
-                    break;
-                }
-                case 6:
-                {
-                    BUS* busptr = psdb.get_bus(bus);
-                    if(busptr!=NULL)
-                    {
-                        DEVICE_ID did = busptr->get_device_id();
-                        signal.set_device_id(did);
-                        signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
-                    }
-                    break;
-                }
-                case 7:
-                {
-                    vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
-                    if(gens.size()!=0)
-                    {
-                        GENERATOR* gen = gens[0];
-                        DEVICE_ID did = gen->get_device_id();
-                        signal.set_device_id(did);
-                        signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
-                    }
-                    break;
-                }
-                default:
-                    break;
+                break;
             }
+            case 2:
+            {
+                BUS* busptr = psdb.get_bus(bus);
+                if(busptr!=NULL)
+                {
+                    DEVICE_ID did = busptr->get_device_id();
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+                }
+                break;
+            }
+            case 3:
+            {
+                vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
+                if(gens.size()!=0)
+                {
+                    GENERATOR* gen = gens[0];
+                    DEVICE_ID did = gen->get_device_id();
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+                }
+                break;
+            }
+            case 4:
+            {
+                vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
+                if(gens.size()!=0)
+                {
+                    GENERATOR* gen = gens[0];
+                    DEVICE_ID did = gen->get_device_id();
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+                }
+                break;
+            }
+            case 5:
+            {
+                BUS* busptr = psdb.get_bus(bus);
+                if(busptr!=NULL)
+                {
+                    DEVICE_ID did = busptr->get_device_id();
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+                }
+                break;
+            }
+            case 6:
+            {
+                BUS* busptr = psdb.get_bus(bus);
+                if(busptr!=NULL)
+                {
+                    DEVICE_ID did = busptr->get_device_id();
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+                }
+                break;
+            }
+            case 7:
+            {
+                vector<GENERATOR*> gens = psdb.get_generators_connecting_to_bus(bus);
+                if(gens.size()!=0)
+                {
+                    GENERATOR* gen = gens[0];
+                    DEVICE_ID did = gen->get_device_id();
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+                }
+                break;
+            }
+            default:
+                break;
+        }
     }
     return signal;
 }

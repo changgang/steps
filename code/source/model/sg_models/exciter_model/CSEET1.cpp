@@ -1145,14 +1145,14 @@ string CSEET1::get_standard_model_string() const
         tuner_T3 = get_serial_tuner_T3_in_s();
         tuner_T4 = get_serial_tuner_T4_in_s();
 
-        osstream<<setw(4)<<tuner_selector<<", "
-          <<setw(8)<<setprecision(6)<<tuner_K<<", "
-          <<setw(8)<<setprecision(6)<<tuner_T1<<", "
-          <<setw(8)<<setprecision(6)<<tuner_T2<<", "
-          <<setw(8)<<setprecision(6)<<tuner_VA1max<<", "
-          <<setw(8)<<setprecision(6)<<tuner_VA1min<<", "
-          <<setw(8)<<setprecision(6)<<tuner_T3<<", "
-          <<setw(8)<<setprecision(6)<<tuner_T4<<", ";
+        osstream<<setw(8)<<setprecision(6)<<tuner_K<<", "
+                <<setw(8)<<tuner_selector<<", "
+                <<setw(8)<<setprecision(6)<<tuner_T1<<", "
+                <<setw(8)<<setprecision(6)<<tuner_T2<<", "
+                <<setw(8)<<setprecision(6)<<tuner_VA1max<<", "
+                <<setw(8)<<setprecision(6)<<tuner_VA1min<<", "
+                <<setw(8)<<setprecision(6)<<tuner_T3<<", "
+                <<setw(8)<<setprecision(6)<<tuner_T4<<", ";
     }
     else
     {
@@ -1166,13 +1166,13 @@ string CSEET1::get_standard_model_string() const
         tuner_VDmin = get_parallel_tuner_VDmin_in_pu();
 
         osstream<<setw(8)<<setprecision(6)<<tuner_KP<<", "
-          <<setw(8)<<setprecision(6)<<tuner_KI<<", "
-          <<setw(8)<<setprecision(6)<<tuner_VImax<<", "
-          <<setw(8)<<setprecision(6)<<tuner_VImin<<", "
-          <<setw(8)<<setprecision(6)<<tuner_KD<<", "
-          <<setw(8)<<setprecision(6)<<tuner_TD<<", "
-          <<setw(8)<<setprecision(6)<<tuner_VDmax<<", "
-          <<setw(8)<<setprecision(6)<<tuner_VDmin<<", ";
+                <<setw(8)<<setprecision(6)<<tuner_KI<<", "
+                <<setw(8)<<setprecision(6)<<tuner_VImax<<", "
+                <<setw(8)<<setprecision(6)<<tuner_VImin<<", "
+                <<setw(8)<<setprecision(6)<<tuner_KD<<", "
+                <<setw(8)<<setprecision(6)<<tuner_TD<<", "
+                <<setw(8)<<setprecision(6)<<tuner_VDmax<<", "
+                <<setw(8)<<setprecision(6)<<tuner_VDmin<<", ";
     }
 
     double KA = get_KA();
@@ -1200,9 +1200,9 @@ string CSEET1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<TA<<", "
       <<setw(8)<<setprecision(6)<<VAmax<<", "
       <<setw(8)<<setprecision(6)<<VAmin<<", "
+      <<setw(8)<<setprecision(6)<<KH<<", "
       <<setw(8)<<setprecision(6)<<KF<<", "
       <<setw(8)<<setprecision(6)<<TF<<", "
-      <<setw(8)<<setprecision(6)<<KH<<", "
       <<setw(8)<<setprecision(6)<<KB<<", "
       <<setw(8)<<setprecision(6)<<T5<<", "
       <<setw(8)<<setprecision(6)<<VRmax<<", "

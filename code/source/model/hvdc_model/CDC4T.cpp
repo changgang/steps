@@ -477,7 +477,7 @@ string CDC4T::get_standard_model_string() const
     //size_t ibus = hvdc->get_converter_bus(INVERTER);
     string dcname = hvdc->get_name();
 
-    osstream<<"\""<<dcname<<"\", \"CDC4T\", ";
+    osstream<<"  \""<<dcname<<"\", \"CDC4T\", ";
     osstream<<setprecision(4)<<this->get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER)<<", "
       <<setprecision(4)<<this->get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER)<<", "
       <<setprecision(4)<<this->get_inverter_dc_voltage_sensor_T_in_s()<<", "

@@ -415,6 +415,8 @@ string PSASPE13::get_standard_model_string() const
     double TR = get_TR_in_s();
     double VImax = get_VImax_in_pu();
     double VImin = get_VImin_in_pu();
+    double TC = get_TC_in_s();
+    double TB = get_TB_in_s();
     double KA = get_KA();
     double TA = get_TA_in_s();
     double VRmax = get_VRmax_in_pu();
@@ -431,6 +433,8 @@ string PSASPE13::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<TR<<", "
       <<setw(8)<<setprecision(6)<<VImax<<", "
       <<setw(8)<<setprecision(6)<<VImin<<", "
+      <<setw(8)<<setprecision(6)<<TC<<", "
+      <<setw(8)<<setprecision(6)<<TB<<", "
       <<setw(8)<<setprecision(6)<<KA<<", "
       <<setw(8)<<setprecision(6)<<TA<<", "
       <<setw(8)<<setprecision(6)<<VRmax<<", "

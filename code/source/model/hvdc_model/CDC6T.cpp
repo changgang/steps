@@ -866,7 +866,7 @@ string CDC6T::get_standard_model_string() const
 
     VDCOL vdcol_limiter = get_VDCOL();
 
-    osstream<<"\""<<dcname<<"\", \"CDC6T\", ";
+    osstream<<"  \""<<dcname<<"\", \"CDC6T\", ";
     osstream<<setw(8)<<setprecision(4)<<get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER)<<", "
            <<setw(8)<<setprecision(4)<<get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER)<<", "
            <<setw(8)<<setprecision(4)<<get_inverter_dc_voltage_sensor_T_in_s()<<", "

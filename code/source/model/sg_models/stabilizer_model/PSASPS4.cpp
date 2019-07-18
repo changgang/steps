@@ -4,6 +4,9 @@
 #include <cstdio>
 #include "header/basic/utility.h"
 #include <vector>
+#include <iostream>
+
+using namespace std;
 
 /***
 It should be noted that, the first De-DC block of Pelec is a FIRST_ORDER_BLOCK in manual of PSASP V7.3, July 2017.
@@ -446,7 +449,6 @@ void PSASPS4::initialize()
                 exciter->initialize();
 
             setup_block_toolkit_and_parameters();
-
             size_t bus = generator->get_generator_bus();
 
             SIGNAL signal = prepare_signal_with_signal_type_and_bus(1, bus);

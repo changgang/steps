@@ -449,8 +449,44 @@ string IEEL::get_standard_model_string() const
     size_t bus = load->get_load_bus();
     string identifier = load->get_identifier();
 
+    /*
+    size_t index = bus;
+    switch(get_subsystem_type())
+    {
+        case AREA_SUBSYSTEM_TYPE:
+        {
+            index = load->get_area_number();
+            identifier = "*";
+            break;
+        }
+        case ZONE_SUBSYSTEM_TYPE:
+        {
+            index = load->get_zone_number();
+            identifier = "*";
+            break;
+        }
+        case OWNER_SUBSYSTEM_TYPE:
+        {
+            OWNERSHIP os = load->get_ownership();
+            vector<size_t> owners = os.get_all_owners();
+            if(owners.size()==0)
+                index = 0;
+            else
+                index = owners[0];
+            identifier = "*";
+            break;
+        }
+        case ALL_SYSTEM_TYPE:
+        {
+            index = 0;
+            identifier = "*";
+            break;
+        }
+        default:
+            break;
+    }*/
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_detailed_model_name()<<"', "
+      <<"'IEELBL', "
       <<"'"<<identifier<<"', "
       <<setw(8)<<setprecision(6)<<get_P_alpha_1()<<", "
       <<setw(8)<<setprecision(6)<<get_P_alpha_2()<<", "

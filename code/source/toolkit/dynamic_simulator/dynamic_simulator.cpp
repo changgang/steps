@@ -1599,7 +1599,6 @@ void DYNAMICS_SIMULATOR::start()
 
     network_matrix.optimize_network_ordering();
 
-
     run_all_models(INITIALIZE_MODE);
 
     network_matrix.build_dynamic_network_matrix();

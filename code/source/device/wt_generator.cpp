@@ -431,6 +431,11 @@ void WT_GENERATOR::set_wt_electrical_model(const WT_ELECTRICAL_MODEL* model)
                 WT3E0* smodel = (WT3E0*) (model);
                 new_model = (WT_ELECTRICAL_MODEL*) new WT3E0(*smodel);
             }
+            if(model_name=="WT3E1")
+            {
+                WT3E1* smodel = (WT3E1*) (model);
+                new_model = (WT_ELECTRICAL_MODEL*) new WT3E1(*smodel);
+            }
 
             if(new_model!=NULL)
             {

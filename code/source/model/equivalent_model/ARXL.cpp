@@ -90,7 +90,10 @@ void ARXL::set_output_line(DEVICE_ID did, size_t meter_side)
     clear();
 
     METER_SETTER setter;
+    setter.set_toolkit(toolkit);
+
     METER meter;
+    meter.set_toolkit(toolkit);
 
     meter = setter.prepare_line_active_power_in_MW_meter(did, meter_side);
     add_P_input_item(meter, 0, 0.0);
@@ -494,6 +497,7 @@ void ARXL::switch_output_to_equivalent_device()
 
     // change 0-meters into equivalent device meters
     METER_SETTER setter;
+    setter.set_toolkit(toolkit);
 
     DEVICE_ID  edevice_did = edevice->get_device_id();
 

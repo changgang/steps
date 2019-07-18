@@ -213,6 +213,8 @@ bool PSASPS1::setup_model_with_steps_string_vector(vector<string>& data)
             set_Kq2(kq2);
             set_Kq3(kq3);
             set_K(k);
+            if(tq==0.0)
+                tq = 0.01;
             set_Tq_in_s(tq);
             set_T1e_in_s(t1e);
             set_T2e_in_s(t2e);

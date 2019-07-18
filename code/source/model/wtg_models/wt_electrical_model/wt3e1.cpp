@@ -69,58 +69,6 @@ string WT3E1::get_model_name() const
     return "WT3E1";
 }
 
-double WT3E1::get_active_power_current_command_in_pu()
-{
-    WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        size_t bus = source->get_source_bus();
-        double vterm = psdb.get_bus_voltage_in_pu(bus);
-
-        double IPcmd = power_order_integrator.get_output()/vterm;
-
-        double IPmax = get_IPmax_in_pu();
-        if(IPcmd>IPmax)
-            IPcmd = IPmax;
-        return IPcmd;
-    }
-    else
-        return 0.0;
-}
-
-double WT3E1::get_reactive_power_current_command_in_pu()
-{
-    WT_GENERATOR* source = get_wt_generator_pointer();
-    if(source!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        double EQcmd = 0.0;
-        if(get_voltage_flag()==0)
-        {
-            size_t bus = source->get_source_bus();
-            double vterm = psdb.get_bus_voltage_in_pu(bus);
-
-            EQcmd = Q_error_integrator.get_output()-vterm;
-        }
-        else
-        {
-            EQcmd = V_error_integrator.get_output();
-        }
-
-        double Xsource = source->get_source_impedance_in_pu().imag();
-
-        double IQcmd = -EQcmd/Xsource;
-        return IQcmd;
-    }
-    else
-        return 0.0;
-}
-
 void WT3E1::set_transformer_from_bus(size_t bus)
 {
     transformer_from_bus = bus;
@@ -537,11 +485,14 @@ bool WT3E1::setup_model_with_steps_string_vector(vector<string>& data)
             set_IPmax_in_pu(ipmax);
 
             WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table;
-            table.add_wind_turbine_power_and_speed_pair_in_pu(wmin, pmin_at_wmin);
-            table.add_wind_turbine_power_and_speed_pair_in_pu(wp20, 0.2);
-            table.add_wind_turbine_power_and_speed_pair_in_pu(wp40, 0.4);
-            table.add_wind_turbine_power_and_speed_pair_in_pu(wp60, 0.6);
-            table.add_wind_turbine_power_and_speed_pair_in_pu(wp100, 1.0);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(pmin_at_wmin, wmin);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(0.2, wp20);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(0.4, wp40);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(0.6, wp60);
+            table.add_wind_turbine_power_and_speed_pair_in_pu(1.0, wp100);
+            vector<double> p = table.get_wind_turbine_power_table();
+            vector<double> s = table.get_wind_turbine_speed_table();
+
             set_wind_turbine_power_speed_lookup_table(table);
 
             is_successful = true;
@@ -868,6 +819,99 @@ void WT3E1::run(DYNAMIC_MODE mode)
         }
     }
 }
+
+double WT3E1::get_active_current_command_in_pu_based_on_mbase() const
+{
+    WT_GENERATOR* source = get_wt_generator_pointer();
+    if(source!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        size_t bus = source->get_source_bus();
+        double vterm = psdb.get_bus_voltage_in_pu(bus);
+
+        double porder = get_active_power_command_in_pu_based_on_mbase();
+        double IPcmd = porder/vterm;
+
+        double IPmax = get_IPmax_in_pu();
+        if(IPcmd>IPmax)
+            IPcmd = IPmax;
+        return IPcmd;
+    }
+    else
+        return 0.0;
+
+}
+
+double WT3E1::get_active_power_command_in_pu_based_on_mbase() const
+{
+    return power_order_integrator.get_output();
+}
+
+double WT3E1::get_reactive_current_command_in_pu_based_on_mbase() const
+{
+    WT_GENERATOR* source = get_wt_generator_pointer();
+    if(source!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        double EQcmd = 0.0;
+        if(get_voltage_flag()==0)
+        {
+            EQcmd = get_reactive_power_command_in_pu_based_on_mbase();
+        }
+        else
+        {
+            EQcmd = get_reactive_voltage_command_in_pu();
+        }
+
+        double Xsource = source->get_source_impedance_in_pu().imag();
+
+        double IQcmd = -EQcmd/Xsource;
+        return IQcmd;
+    }
+    else
+        return 0.0;
+}
+
+double WT3E1::get_reactive_power_command_in_pu_based_on_mbase() const
+{
+    WT_GENERATOR* source = get_wt_generator_pointer();
+    if(source!=NULL)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+        if(get_voltage_flag()==0)
+        {
+            size_t bus = source->get_source_bus();
+            double vterm = psdb.get_bus_voltage_in_pu(bus);
+
+            double EQcmd = Q_error_integrator.get_output()-vterm;
+            return EQcmd;
+        }
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
+double WT3E1::get_reactive_voltage_command_in_pu() const
+{
+    if(get_voltage_flag()==0)
+    {
+        return 0.0;
+    }
+    else
+    {
+        double EQcmd = V_error_integrator.get_output();
+        return EQcmd;
+    }
+}
+
 void WT3E1::check()
 {
     ;
@@ -967,7 +1011,7 @@ string WT3E1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<kpp<<", "
       <<setw(8)<<setprecision(6)<<kip<<", "
       <<setw(8)<<setprecision(6)<<pmax<<", "
-      <<setw(8)<<setprecision(6)<<pmin<<", 0, "
+      <<setw(8)<<setprecision(6)<<pmin<<", "
       <<setw(8)<<setprecision(6)<<qmax<<", "
       <<setw(8)<<setprecision(6)<<qmin<<", "
       <<setw(8)<<setprecision(6)<<ipmax<<", "

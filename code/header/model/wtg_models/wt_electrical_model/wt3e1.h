@@ -15,8 +15,6 @@ class WT3E1: public WT_ELECTRICAL_MODEL
         virtual WT3E1& operator=(const WT3E1& model);
     public: // specific exciter
         virtual string get_model_name() const;
-        virtual double get_active_power_current_command_in_pu();
-        virtual double get_reactive_power_current_command_in_pu();
 
         void set_transformer_from_bus(size_t bus);
         void set_transformer_to_bus(size_t bus);
@@ -86,6 +84,11 @@ class WT3E1: public WT_ELECTRICAL_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
+        virtual double get_active_current_command_in_pu_based_on_mbase() const;
+        virtual double get_active_power_command_in_pu_based_on_mbase() const;
+        virtual double get_reactive_current_command_in_pu_based_on_mbase() const;
+        virtual double get_reactive_power_command_in_pu_based_on_mbase() const;
+        virtual double get_reactive_voltage_command_in_pu() const;
         virtual void check();
         virtual void clear();
         virtual void report();

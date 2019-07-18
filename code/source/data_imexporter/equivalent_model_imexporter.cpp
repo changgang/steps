@@ -124,8 +124,10 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
     ostringstream osstream;
 
     METER_SETTER setter;
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
 
     if(data_line.size()==0)
     {
@@ -354,8 +356,10 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     model.set_output_line(did, side_bus);
 
     METER_SETTER setter;
+    setter.set_toolkit(toolkit);
 
     METER meter;
+    meter.set_toolkit(toolkit);
     size_t delay = 0;
     double coefficient = 0.0;
     for(size_t i=1; i!=n; ++i)

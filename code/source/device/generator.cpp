@@ -607,23 +607,18 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                     gen->initialize();
                 else
                     return;
-
                 COMPENSATOR_MODEL* comp = get_compensator_model();
                 if(comp!=NULL)
                     comp->initialize();
-
                 STABILIZER_MODEL* pss = get_stabilizer_model();
                 if(pss!=NULL)
                     pss->initialize();
-
                 EXCITER_MODEL* exciter = get_exciter_model();
                 if(exciter!=NULL)
                     exciter->initialize();
-
                 TURBINE_GOVERNOR_MODEL* tg = get_turbine_governor_model();
                 if(tg!=NULL)
                     tg->initialize();
-
                 TURBINE_LOAD_CONTROLLER_MODEL* tlc = get_turbine_load_controller_model();
                 if(tlc!=NULL)
                     tlc->initialize();

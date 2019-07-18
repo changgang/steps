@@ -293,6 +293,8 @@ bool PSASPS3::setup_model_with_steps_string_vector(vector<string>& data)
             set_Iacc(iacc);
             set_Nacc(nacc);
             set_dedc_1_flag(dedc1_flag);
+            if(tacc == 0.0)
+                tacc = td;
             set_Tacc_in_s(tacc);
             set_TD_in_s(td);
             set_Ti1_in_s(ti1);

@@ -828,8 +828,8 @@ string CSEET2::get_standard_model_string() const
         double T3 = get_serial_tuner_T3_in_s();
         double T4 = get_serial_tuner_T4_in_s();
 
-        osstream<<setw(4)<<selector<<", "
-          <<setw(8)<<setprecision(6)<<K<<", "
+        osstream<<setw(8)<<setprecision(6)<<K<<", "
+          <<setw(8)<<selector<<", "
           <<setw(8)<<setprecision(6)<<T1<<", "
           <<setw(8)<<setprecision(6)<<T2<<", "
           <<setw(8)<<setprecision(6)<<VA1max<<", "
