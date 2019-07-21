@@ -196,6 +196,7 @@ bool WT3G2::setup_model_with_steps_string_vector(vector<string>& data)
             id = get_string_data(data[2],"");
 
             size_t i=3;
+            n_lumped_turbine = get_integer_data(data[i],"0"); i++;
             t_EQcmd = get_double_data(data[i],"0.0"); i++;
             t_IPcmd = get_double_data(data[i],"0.0"); i++;
             kpll = get_double_data(data[i],"0.0"); i++;
@@ -574,6 +575,7 @@ string WT3G2::get_standard_model_string() const
     osstream<<setw(8)<<bus<<", "
       <<"'"<<get_model_name()<<"', "
       <<"'"<<identifier<<"', "
+      <<setw(8)<<get_number_of_lumped_wt_generators()<<", "
       <<setw(8)<<setprecision(6)<<get_converter_reactiver_voltage_command_T_in_s()<<", "
       <<setw(8)<<setprecision(6)<<get_converter_activer_current_command_T_in_s()<<", "
       <<setw(8)<<setprecision(6)<<get_KPLL()<<", "

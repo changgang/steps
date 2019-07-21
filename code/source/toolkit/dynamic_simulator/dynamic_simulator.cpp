@@ -2095,6 +2095,7 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 
 void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 {
+    ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& net = get_network_matrix();
     get_bus_currnet_into_network();
@@ -2111,7 +2112,6 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
-                ostringstream osstream;
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding generators when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(size_t j = 0; j<n; ++j)
                 {
@@ -2133,7 +2133,6 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
-                ostringstream osstream;
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding wt generators when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(size_t j = 0; j<n; ++j)
                 {
@@ -2155,7 +2154,6 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
-                ostringstream osstream;
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding loads when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(size_t j = 0; j<n; ++j)
                 {
@@ -2177,7 +2175,6 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
-                ostringstream osstream;
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding hvdcs when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(size_t j = 0; j<n; ++j)
                 {
@@ -2199,7 +2196,6 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
-                ostringstream osstream;
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding equivalent devices when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
                 for(size_t j = 0; j<n; ++j)
                 {
@@ -2215,11 +2211,13 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     /*
-    //cout<<"bus current mismatch:"<<endl;
+    osstream<<"bus current mismatch:"<<endl;
+    toolkit.show_information_with_leading_time_stamp(osstream);
     for(size_t i=0; i<n; ++i)
     {
-        size_t ibus = net->get_physical_bus_number_of_internal_bus(i);
-        //cout<<ibus<<", "<<I_mismatch[i]<<endl;
+        size_t ibus = net.get_physical_bus_number_of_internal_bus(i);
+        osstream<<ibus<<", "<<I_mismatch[i]<<endl;
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
     double maxmismatch = 0.0;
     size_t busmax = 0;
@@ -2228,11 +2226,12 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         if(maxmismatch<abs(I_mismatch[i]))
         {
             maxmismatch = abs(I_mismatch[i]);
-            busmax = net->get_physical_bus_number_of_internal_bus(i);
+            busmax = net.get_physical_bus_number_of_internal_bus(i);
         }
     }
-    cout<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<endl;*/
-
+    osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<endl;
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    */
 }
 
 void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()

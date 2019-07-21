@@ -1174,6 +1174,8 @@ AUXILIARY_SIGNAL_MODEL* HVDC::get_auxiliary_signal_model() const
 
 void HVDC::run(DYNAMIC_MODE mode)
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    ostringstream osstream;
     if(get_status()==true)
     {
         switch(mode)
@@ -1183,6 +1185,11 @@ void HVDC::run(DYNAMIC_MODE mode)
                 HVDC_MODEL* hvdc_model = get_hvdc_model();
                 if(hvdc_model!=NULL)
                     hvdc_model->initialize();
+                else
+                {
+                    osstream<<"HVDC model is missing for "<<get_device_name();
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
                 break;
             }
             default:
