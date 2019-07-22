@@ -818,7 +818,7 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     //osstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
-    //show_information_with_leading_time_stamp(osstream);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -863,6 +863,8 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 
     double vac_r = psdb.get_bus_voltage_in_kV(bus_r);
     double vac_i = psdb.get_bus_voltage_in_kV(bus_i);
+    //osstream<<"rectifier and inverter side AC voltages are: "<<psdb.get_bus_voltage_in_pu(bus_r)<<", "<<psdb.get_bus_voltage_in_pu(bus_i);
+    //toolkit.show_information_with_leading_time_stamp(osstream);
 
     double eac_r = vac_r/tap_r*ebase_converter_r/ebase_grid_r;
     double eac_i = vac_i/tap_i*ebase_converter_i/ebase_grid_i;
@@ -1415,7 +1417,10 @@ complex<double> HVDC_MODEL::get_converter_ac_complex_power_in_MVA(HVDC_CONVERTER
     double Idc = get_converter_dc_current_in_kA(converter);
     double P = get_converter_dc_power_in_MW(converter);
     double Ploss = N*(2.0*Idc*Idc*Rc); // N for bridges, 2 for two phases
-    P += Ploss;
+    if(converter==RECTIFIER)
+        P += Ploss;
+    else
+        P -= Ploss;
     double phi = deg2rad(get_converter_ac_power_factor_angle_in_deg(converter));
     if(phi==0.0)
         return P;

@@ -16,7 +16,7 @@ DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR()
 {
     DELT = 0.01;
     clear();
-    check_NAN = false;
+    check_NAN = true;
 }
 
 DYNAMICS_SIMULATOR::~DYNAMICS_SIMULATOR()
@@ -2104,6 +2104,26 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     //#pragma omp parallel for
     for(size_t i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
+    if(check_NAN)
+    {
+        for(size_t i = 0; i<n; ++i)
+        {
+            if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
+            {
+                osstream<<"warning. NAN is detected when getting bus current mismatch after get_bus_currnet_into_network() when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                for(size_t j = 0; j<n; ++j)
+                {
+                    if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
+                    {
+                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
+                    }
+                }
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                break;
+            }
+        }
+    }
 
     add_generators_to_bus_current_mismatch();
     if(check_NAN)
@@ -2231,6 +2251,20 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     }
     osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
+
+    for(size_t i=0; i<n; ++i)
+    {
+        if(abs(I_mismatch[i])>0.0001)
+        {
+            osstream<<"mismatch @ bus "<<net.get_physical_bus_number_of_internal_bus(i)<<", "<<I_mismatch[i]<<">0.0001"<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
+        {
+            osstream<<"NAN is detected in I_mismatch @ bus "<<net.get_physical_bus_number_of_internal_bus(i)<<", "<<I_mismatch[i]<<endl;
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
     */
 }
 
@@ -2402,6 +2436,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 }
 void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 {
+    ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -2427,6 +2462,14 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
             I_mismatch[internal_bus] -= I;
 
+            if(toolkit.is_detailed_log_enabled())
+            {
+                I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                osstream<<"Current at rectifier side of "<<hvdc->get_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                        <<"Complex power = "<<sqrt(3.0)*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+
             physical_bus = hvdcs[i]->get_converter_bus(INVERTER);
 
             internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
@@ -2434,6 +2477,14 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
             I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
 
             I_mismatch[internal_bus] -= I;
+
+            if(toolkit.is_detailed_log_enabled())
+            {
+                I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                osstream<<"Current at inverter side of "<<hvdc->get_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
+                        <<"Complex power = "<<sqrt(3.0)*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
         }
     }
 }

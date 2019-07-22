@@ -1182,6 +1182,12 @@ void HVDC::run(DYNAMIC_MODE mode)
         {
             case INITIALIZE_MODE:
             {
+                if(toolkit.is_detailed_log_enabled())
+                {
+                    osstream<<"HVDC data before dynamic initialization";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                    show_solved_hvdc_steady_state();
+                }
                 HVDC_MODEL* hvdc_model = get_hvdc_model();
                 if(hvdc_model!=NULL)
                     hvdc_model->initialize();
@@ -1385,10 +1391,20 @@ void HVDC::show_solved_hvdc_steady_state() const
     osstream<<"Rectifier AC current = "<<get_converter_ac_current_in_kA(converter)<<" kA.";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
+    double P = get_converter_ac_active_power_in_MW(converter);
+    double Q = get_converter_ac_reactive_power_in_MVar(converter);
+    complex<double> S(P,Q);
+    complex<double> V = psdb.get_bus_complex_voltage_in_pu(get_converter_bus(converter));
+    S /=  psdb.get_system_base_power_in_MVA();
+    complex<double> I = conj(S/V);
+    I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(get_converter_bus(converter))));
+
     osstream<<"Pdc = "<<get_converter_dc_power_in_MW(converter)<<" MW, "
             <<"Pac = "<<get_converter_ac_active_power_in_MW(converter)<<" MW, "
             <<"Qac = "<<get_converter_ac_reactive_power_in_MVar(converter)<<" MVar, "
-            <<"Eta = "<<get_converter_ac_power_factor(converter);
+            <<"Eta = "<<get_converter_ac_power_factor(converter)<<", "
+            <<"Iac = "<<get_converter_ac_current_in_kA(converter)<<"kA, or "
+            <<I<<"KA and "<<abs(I)<<"kA";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     converter = INVERTER;
@@ -1438,10 +1454,20 @@ void HVDC::show_solved_hvdc_steady_state() const
     osstream<<"Inverter AC current = "<<get_converter_ac_current_in_kA(converter)<<" kA.";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
+    P = get_converter_ac_active_power_in_MW(converter);
+    Q = get_converter_ac_reactive_power_in_MVar(converter);
+    S = complex<double>(P,Q);
+    V = psdb.get_bus_complex_voltage_in_pu(get_converter_bus(converter));
+    S /=  psdb.get_system_base_power_in_MVA();
+    I = conj(S/V);
+    I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(get_converter_bus(converter))));
+
     osstream<<"Pdc = "<<get_converter_dc_power_in_MW(converter)<<" MW, "
             <<"Pac = "<<get_converter_ac_active_power_in_MW(converter)<<" MW, "
             <<"Qac = "<<get_converter_ac_reactive_power_in_MVar(converter)<<" MVar, "
-            <<"Eta = "<<get_converter_ac_power_factor(converter);
+            <<"Eta = "<<get_converter_ac_power_factor(converter)<<", "
+            <<"Iac = "<<get_converter_ac_current_in_kA(converter)<<"kA, or "
+            <<I<<"KA and "<<abs(I)<<"kA";
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -1548,10 +1574,12 @@ double HVDC::get_converter_ac_active_power_in_MW(HVDC_CONVERTER_SIDE converter) 
     return S*pf;*/
 
     double Iac = get_converter_ac_current_in_kA(converter);
+    double Idc = get_converter_dc_current_in_kA(converter);
 
     size_t N = get_converter_number_of_bridge(converter);
     double R = get_converter_transformer_impedance_in_ohm(converter).real();
-    double loss = sqrt(3.0)*Iac*Iac*R/N;
+    //double loss = sqrt(3.0)*Iac*Iac*R/N;
+    double loss = 2.0*Idc*Idc*R*N;
 
     switch(converter)
     {

@@ -417,7 +417,26 @@ double GENSAL::get_terminal_current_in_pu_based_on_sbase()
 
 void GENSAL::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double xdp = get_Xdp();
+    double xqp = get_Xqp();
+    double xpp = get_Xpp();
+    double xl = get_Xl();
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    bool error_found = false;
+    if(xdp==xpp)
+    {
+        osstream<<"Xd'=X\" was detected: Xd'="<<xdp<<", X\"="<<xpp<<"\n";
+        error_found = true;
+    }
+    if(xdp==xl)
+    {
+        osstream<<"Xd'=Xl was detected: Xd'="<<xdp<<", Xl="<<xl<<"\n";
+        error_found = true;
+    }
+    if(error_found)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void GENSAL::report()
