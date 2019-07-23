@@ -17,6 +17,7 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-Wall" />
+					<Add option="-m64" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 					<Add directory="thirdparty/cpptest" />
@@ -24,6 +25,9 @@
 					<Add directory="thirdparty/SuiteSparse/SuiteSparse_config" />
 					<Add directory="thirdparty/SuiteSparse/AMD/Include" />
 				</Compiler>
+				<Linker>
+					<Add option="-m64" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>

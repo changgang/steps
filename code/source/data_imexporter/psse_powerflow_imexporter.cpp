@@ -354,7 +354,10 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
     ofs.close();
 
     if(export_zero_impedance_line==false)
+    {
+        export_shadowed_bus_pair("equiv_bus_pair.txt");
         psdb.set_all_buses_un_overshadowed();//recover
+    }
 }
 
 string PSSE_IMEXPORTER::export_case_data() const
@@ -403,6 +406,31 @@ string PSSE_IMEXPORTER::export_bus_data() const
            bus_type == PV_TO_PQ_TYPE_3 or bus_type == PV_TO_PQ_TYPE_4) type = -2;
         if(bus_type == SLACK_TYPE) type = 3;
         if(bus_type == OUT_OF_SERVICE) type = 4;
+
+        if(get_export_zero_impedance_line_logic()==false)
+        {
+            size_t bus_number = bus->get_bus_number();
+            for(size_t j=0; j!=n; ++j)
+            {
+                BUS* tbus = buses[j];
+                if(tbus->get_equivalent_bus_number()==bus_number)
+                {
+                    BUS_TYPE btype = tbus->get_bus_type();
+                    if(btype == SLACK_TYPE)
+                    {
+                        type = 3;
+                        break;
+                    }
+                    else
+                    {
+                        if((btype == PV_TYPE  or
+                            btype == PV_TO_PQ_TYPE_1 or btype == PV_TO_PQ_TYPE_2 or
+                            btype == PV_TO_PQ_TYPE_3 or btype == PV_TO_PQ_TYPE_4) and type==1)
+                            type = 2;
+                    }
+                }
+            }
+        }
 
         snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
                  bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,

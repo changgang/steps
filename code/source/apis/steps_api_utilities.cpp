@@ -46,6 +46,8 @@ double api_get_toolkit_float_data(char* parameter_name, size_t toolkit_index)
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="SBASE")
         return psdb.get_system_base_power_in_MVA();
+    if(PARAMETER_NAME=="ZERO IMPEDANCE THRESHOLD IN PU")
+        return psdb.get_zero_impedance_threshold_in_pu();
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
     return 0.0;
@@ -59,6 +61,8 @@ void api_set_toolkit_float_data(char* parameter_name, double value, size_t toolk
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="SBASE")
         return psdb.set_system_base_power_in_MVA(value);
+    if(PARAMETER_NAME=="ZERO IMPEDANCE THRESHOLD IN PU")
+        return psdb.set_zero_impedance_threshold_in_pu(value);
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
 }

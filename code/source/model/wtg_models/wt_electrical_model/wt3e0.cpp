@@ -1381,6 +1381,9 @@ void WT3E0::prepare_model_internal_variable_table()
     add_model_inernal_variable_name_and_index_pair("STATE@VIRTUAL INERTIA CONTROL", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@PRIMARY FREQUENCY CONTROL", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SECONDARY FREQUENCY CONTROL", i); i++;
+    add_model_inernal_variable_name_and_index_pair("VIRTUAL INERTIA CONTROL COMMAND", i); i++;
+    add_model_inernal_variable_name_and_index_pair("PRIMARY FREQUENCY CONTROL COMMAND", i); i++;
+    add_model_inernal_variable_name_and_index_pair("SECONDARY FREQUENCY CONTROL COMMAND", i); i++;
 }
 
 double WT3E0::get_model_internal_variable_with_name(string var_name)
@@ -1392,6 +1395,9 @@ double WT3E0::get_model_internal_variable_with_name(string var_name)
 	if(var_name == "STATE@VIRTUAL INERTIA CONTROL") return virtual_inertia_emulator.get_state();
 	if(var_name == "STATE@PRIMARY FREQUENCY CONTROL") return frequency_droop_controller.get_state();
 	if(var_name == "STATE@SECONDARY FREQUENCY CONTROL") return frequency_integral_controller.get_state();
+	if(var_name == "VIRTUAL INERTIA CONTROL COMMAND") return virtual_inertia_emulator.get_output();
+	if(var_name == "PRIMARY FREQUENCY CONTROL COMMAND") return frequency_droop_controller.get_output();
+	if(var_name == "SECONDARY FREQUENCY CONTROL COMMAND") return frequency_integral_controller.get_output();
     return 0.0;
 }
 

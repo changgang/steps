@@ -20,6 +20,8 @@ class DATA_IMEXPORTER : public BASE
         bool get_export_zero_impedance_line_logic() const;
         bool get_export_out_of_service_bus_logic() const;
 
+        void export_shadowed_bus_pair(string file) const;
+
         virtual void load_powerflow_data(string pf_source) = 0;
         virtual void load_dynamic_data(string dy_source) = 0;
         virtual void load_sequence_data(string sq_source) = 0;
