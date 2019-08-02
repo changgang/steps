@@ -1054,6 +1054,239 @@ void POWER_SYSTEM_DATABASE::append_owner(OWNER& owner)
     }
 }
 
+
+void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    ostringstream osstream;
+    string old_device_type=did_old.get_device_type();
+    string new_device_type=did_new.get_device_type();
+    if(old_device_type!=new_device_type)
+    {
+        osstream<<"Device ID types are inconsistent with each other when calling "<<__FUNCTION__<<":\n"
+                <<"Old device type is: "<<old_device_type<<". New device type is: "<<new_device_type<<".\n"
+                <<"No device id will be updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string device_type = old_device_type;
+    if(device_type!="GENERATOR" and device_type!="WT GENERATOR" and device_type!="PV UNIT" and device_type!="ENERGY STORAGE" and
+       device_type!="LOAD" and device_type!="FIXED SHUNT" and device_type!="LINE" and device_type!="TRANSFORMER" and device_type!="HVDC")
+    {
+        osstream<<"Device ID type is not in the following allowed types when calling "<<__FUNCTION__<<":\n"
+                <<"[GENERATOR, WT GENERATOR, PV UNIT, ENERGY STORAGE, LOAD, FIXED SHUNT, LINE, TRANSFORMER, HVDC].\n"
+                <<"The input device type is: "<<device_type<<".\n"
+                <<"No device id will be updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    TERMINAL new_terminal = did_new.get_device_terminal();
+    size_t ibus = new_terminal[0];
+    size_t jbus = new_terminal[1];
+    size_t kbus = new_terminal[2];
+    string new_id = did_new.get_device_identifier();
+
+    if(device_type=="GENERATOR")
+    {
+        if(not is_generator_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_generator_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        GENERATOR* gen = get_generator(did_old);
+        generator_index.swap_device_index(did_old, did_new);
+        gen->set_generator_bus(ibus);
+        gen->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type=="WT GENERATOR")
+    {
+        if(not is_wt_generator_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_wt_generator_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        WT_GENERATOR* gen = get_wt_generator(did_old);
+        wt_generator_index.swap_device_index(did_old, did_new);
+        gen->set_generator_bus(ibus);
+        gen->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type=="PV UNIT")
+    {
+        if(not is_pv_unit_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_pv_unit_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        PV_UNIT* pv = get_pv_unit(did_old);
+        pv_unit_index.swap_device_index(did_old, did_new);
+        pv->set_unit_bus(ibus);
+        pv->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type=="ENERGY STORAGE")
+    {
+        if(not is_energy_storage_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_energy_storage_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        ENERGY_STORAGE* es = get_energy_storage(did_old);
+        energy_storage_index.swap_device_index(did_old, did_new);
+        es->set_energy_storage_bus(ibus);
+        es->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type=="LOAD")
+    {
+        if(not is_load_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_load_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        LOAD* load = get_load(did_old);
+        load_index.swap_device_index(did_old, did_new);
+        load->set_load_bus(ibus);
+        load->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type=="FIXED SHUNT")
+    {
+        if(not is_fixed_shunt_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_fixed_shunt_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        FIXED_SHUNT* fixed_shunt = get_fixed_shunt(did_old);
+        fixed_shunt_index.swap_device_index(did_old, did_new);
+        fixed_shunt->set_shunt_bus(ibus);
+        fixed_shunt->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type=="LINE")
+    {
+        if(not is_line_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_line_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        LINE* line = get_line(did_old);
+        line_index.swap_device_index(did_old, did_new);
+        line->set_sending_side_bus(ibus);
+        line->set_receiving_side_bus(jbus);
+        line->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type=="TRANSFORMER")
+    {
+        if(not is_transformer_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_transformer_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        TERMINAL old_terminal = did_old.get_device_terminal();
+        if(old_terminal.get_bus_count()!=new_terminal.get_bus_count())
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" bus count is inconsistent with the old device "<<did_old.get_device_name()<<". No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        TRANSFORMER* trans = get_transformer(did_old);
+        transformer_index.swap_device_index(did_old, did_new);
+        trans->set_winding_bus(PRIMARY_SIDE, ibus);
+        trans->set_winding_bus(SECONDARY_SIDE, jbus);
+        trans->set_winding_bus(TERTIARY_SIDE, kbus);
+        trans->set_identifier(new_id);
+        return;
+    }
+
+    if(device_type=="HVDC")
+    {
+        if(not is_hvdc_exist(did_old))
+        {
+            osstream<<"Warning. The old device "<<did_old.get_device_name()<<" does not exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        if(is_hvdc_exist(did_new))
+        {
+            osstream<<"Warning. The new device "<<did_new.get_device_name()<<" already exist in database. No device id will be updated.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+            return;
+        }
+        HVDC* hvdc = get_hvdc(did_old);
+        hvdc_index.swap_device_index(did_old, did_new);
+        hvdc->set_converter_bus(RECTIFIER, ibus);
+        hvdc->set_converter_bus(INVERTER, jbus);
+        hvdc->set_identifier(new_id);
+        return;
+    }
+}
 void POWER_SYSTEM_DATABASE::append_dynamic_model(const DEVICE_ID& did, const MODEL* model)
 {
     if(did.get_device_type() == model->get_allowed_device_type())
@@ -3844,6 +4077,8 @@ void POWER_SYSTEM_DATABASE::check_dynamic_data()
 
 void POWER_SYSTEM_DATABASE::check_generator_related_dynamic_data()
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     vector<GENERATOR*> generators = get_all_generators();
     size_t n = generators.size();
     GENERATOR* generator;
@@ -3854,6 +4089,11 @@ void POWER_SYSTEM_DATABASE::check_generator_related_dynamic_data()
         SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
         if(genmodel!=NULL)
             genmodel->check();
+        else
+        {
+            osstream<<"Error. Generator model is missing for "<<generator->get_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
 
         EXCITER_MODEL* avrmodel = generator->get_exciter_model();
         if(avrmodel!=NULL)
@@ -3915,6 +4155,8 @@ void POWER_SYSTEM_DATABASE::check_pv_unit_related_dynamic_data()
 
 void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    ostringstream osstream;
     vector<LOAD*> loads = get_all_loads();
     size_t n = loads.size();
     LOAD* load;
@@ -3925,6 +4167,11 @@ void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
         LOAD_MODEL* loadmodel = load->get_load_model();
         if(loadmodel!=NULL)
             loadmodel->check();
+        else
+        {
+            osstream<<"Warning. Load model is not found for "<<load->get_device_name();
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
 
         LOAD_VOLTAGE_RELAY_MODEL* uvlsmodel = load->get_load_voltage_relay_model();
         if(uvlsmodel!=NULL)

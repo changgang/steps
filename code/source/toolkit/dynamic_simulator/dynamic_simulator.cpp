@@ -1622,7 +1622,7 @@ void DYNAMICS_SIMULATOR::start()
 		++iter_count;
         converged = solve_network();
         ITER_NET += network_iteration_count;
-        if(converged or iter_count>2)
+        if(converged or iter_count>200)
             break;
     }
     ITER_DAE = iter_count;
@@ -2230,14 +2230,14 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             }
         }
     }
-    /*
+
     osstream<<"bus current mismatch:"<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
     for(size_t i=0; i<n; ++i)
     {
         size_t ibus = net.get_physical_bus_number_of_internal_bus(i);
-        osstream<<ibus<<", "<<I_mismatch[i]<<endl;
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        //osstream<<ibus<<", "<<I_mismatch[i]<<endl;
+        //toolkit.show_information_with_leading_time_stamp(osstream);
     }
     double maxmismatch = 0.0;
     size_t busmax = 0;
@@ -2265,11 +2265,11 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
-    */
 }
 
 void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 {
+    ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -2295,6 +2295,15 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
         {
             int row = Y.get_row_number_of_entry_index(k);
             I_mismatch[row] += Y.get_entry_value(k)*voltage;
+            complex<double> current = Y.get_entry_value(k)*voltage;
+            if(isnan(current.real()) or isnan(current.imag()))
+            {
+                osstream<<"NAN is detected in "<<__FUNCTION__<<"() with Y["
+                        <<row<<"("<<network_matrix.get_physical_bus_number_of_internal_bus(row)<<", "
+                        <<column<<"("<<column_physical_bus<<"] = "<<Y.get_entry_value(k)<<", voltage["
+                        <<column<<"("<<column_physical_bus<<"] = "<<voltage;
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
         }
         k_start = k_end;
     }

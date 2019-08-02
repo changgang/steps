@@ -15,6 +15,7 @@ class DEVICE_INDEX_MAP
         ~DEVICE_INDEX_MAP();
 
         void set_device_index(const DEVICE_ID& device_id, size_t index);
+        void swap_device_index(const DEVICE_ID& device1, const DEVICE_ID& device2);
 
         void decrease_index_by_1_for_device_with_index_greater_than(size_t index);
 

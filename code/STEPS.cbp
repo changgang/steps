@@ -17,7 +17,6 @@
 					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-std=c++1z" />
-					<Add option="-m64" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
@@ -31,7 +30,6 @@
 				<Linker>
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
-					<Add option="-m64" />
 					<Add library="../build/bin/Release/libCSparse.a" />
 					<Add library="../build/bin/Release/libCpptest.a" />
 				</Linker>
