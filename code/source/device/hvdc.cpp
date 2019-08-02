@@ -937,6 +937,9 @@ void HVDC::clear()
 
     hvdc_model = NULL;
     auxiliary_signal_model = NULL;
+
+    converter_firing_angle_fixed[RECTIFIER] = false;
+    converter_firing_angle_fixed[INVERTER] = false;
 }
 
 bool HVDC::is_connected_to_bus(size_t bus) const
@@ -1294,13 +1297,13 @@ DEVICE_ID HVDC::get_device_id() const
 void HVDC::solve_steady_state()
 {
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     HVDC_OPERATION_MODE r_mode = get_converter_operation_mode(RECTIFIER), i_mode = get_converter_operation_mode(INVERTER);
 
     if(r_mode != RECTIFIER_CONSTANT_POWER and r_mode != RECTIFIER_CONSTANT_CURRENT)
     {
         osstream<<"Warning. Rectifier of "<<get_device_name()<<" is not in either RECTIFIER_CONSTANT_POWER or"
                 " RECTIFIER_CONSTANT_CURRENT mode."<<endl<<"HVDC will not be solved.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -1309,10 +1312,12 @@ void HVDC::solve_steady_state()
     {
         osstream<<"Warning. Inverter of "<<get_device_name()<<" is not in either INVERTER_CONSTANT_VOLTAGE or"
                 " INVERTER_CONSTANT_GAMMA mode."<<endl<<"HVDC will not be solved.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
+
+    temp_converter_firing_angle_fixed[RECTIFIER] = false;
+    temp_converter_firing_angle_fixed[INVERTER] = false;
 
     if(r_mode == RECTIFIER_CONSTANT_POWER)
     {
@@ -1327,6 +1332,31 @@ void HVDC::solve_steady_state()
             solve_as_rectifier_regulating_current_and_inverter_regulating_voltage();
         else
             solve_as_rectifier_regulating_current_and_inverter_regulating_gamma();
+    }
+    if(temp_converter_firing_angle_fixed[RECTIFIER] != converter_firing_angle_fixed[RECTIFIER] or
+       temp_converter_firing_angle_fixed[INVERTER] != converter_firing_angle_fixed[INVERTER])
+    {
+        osstream<<"Firing angle mode is changed for "<<get_device_name()<<":\n";
+        if(temp_converter_firing_angle_fixed[RECTIFIER] != converter_firing_angle_fixed[RECTIFIER])
+        {
+            osstream<<"Rectifier alpha is changed from "<<(converter_firing_angle_fixed[RECTIFIER]==true?"Fixed":"Regulating")<<" to "
+                    <<(temp_converter_firing_angle_fixed[RECTIFIER]==true?"Fixed":"Regulating")<<".\n"
+                    <<"Rectifier will "<<(temp_converter_firing_angle_fixed[RECTIFIER]==true?"no longer":"return to")<<" regulate "
+                    <<(r_mode==RECTIFIER_CONSTANT_POWER?"power":"current")<<".\n"
+                    <<"Rectifier firing angle is in "<<(temp_converter_firing_angle_fixed[RECTIFIER]==true?"fixed":"regulating")<<" mode.";
+        }
+        if(temp_converter_firing_angle_fixed[INVERTER] != converter_firing_angle_fixed[INVERTER])
+        {
+            osstream<<"Inverter gamma is changed from "<<(converter_firing_angle_fixed[INVERTER]==true?"Fixed":"Regulating")<<" to "
+                    <<(temp_converter_firing_angle_fixed[INVERTER]==true?"Fixed":"Regulating")<<".\n";
+            if(temp_converter_firing_angle_fixed[INVERTER]==true)
+                osstream<<"Inverter will no longer regulate "<<(converter_firing_angle_fixed[RECTIFIER]==true?"current":"voltage")<<".\n";
+            else
+                osstream<<"Inverter will return to regulate "<<(temp_converter_firing_angle_fixed[RECTIFIER]==true?"current":"voltage")<<".\n";
+
+            osstream<<"Inverter firing angle is in "<<(temp_converter_firing_angle_fixed[INVERTER]==true?"fixed":"regulating")<<" mode.";
+        }
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -1634,7 +1664,11 @@ double HVDC::get_converter_ac_power_factor(HVDC_CONVERTER_SIDE converter) const
 
 void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
 {
+    temp_converter_firing_angle_fixed[RECTIFIER] = false;
+    temp_converter_firing_angle_fixed[INVERTER] = false;
+
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //osstream<<"Solve "<<get_device_name()<<" as constant power (R) + constant voltage (I) mode.";
     //show_information_with_leading_time_stamp(osstream);
 
@@ -1655,17 +1689,17 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
 
     if(minAlphaReached)
     {
-        osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
-          <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        temp_converter_firing_angle_fixed[RECTIFIER] = true;
+        /*osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
+                <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.";
+        toolkit.show_information_with_leading_time_stamp(osstream);*/
     }
     if(minGammaReached)
     {
-        osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
-          <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        temp_converter_firing_angle_fixed[INVERTER] = true;
+        /*osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
+                <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.";
+        toolkit.show_information_with_leading_time_stamp(osstream);*/
     }
 
     if(not(minAlphaReached) and not(minGammaReached))
@@ -1677,11 +1711,11 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
     {
         if(not(minAlphaReached) and minGammaReached)
         {
-            osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
-              <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
-              <<"HVDC link will turn into CONSTANT GAMMA mode for inverter.";
+            /*osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
+                    <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
+                    <<"HVDC link will turn into CONSTANT GAMMA mode for inverter.";
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            toolkit.show_information_with_leading_time_stamp(osstream);*/
 
             solve_as_rectifier_regulating_power_and_inverter_regulating_gamma();
         }
@@ -1689,19 +1723,19 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
         {
             if(minAlphaReached and not(minGammaReached))
             {
-                osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
-                  <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
-                  <<"HVDC link will turn into reduced (DELTI) CONSTANT CURRENT mode controlled by inverter.";
+                /*osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
+                        <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
+                        <<"HVDC link will turn into reduced (DELTI) CONSTANT CURRENT mode controlled by inverter.";
                 STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                toolkit.show_information_with_leading_time_stamp(osstream);*/
 
                 solve_as_rectifier_regulating_alpha_and_inverter_regulating_current();
             }
             else
             {
                 osstream<<"Warning. Both minimum alpha and minimum gamma reached when trying to solve "<<get_device_name()
-                  <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
-                  <<"HVDC link will turn into reduced (DELTI) CONSTANT CURRENT mode controlled by inverter.";
+                        <<" with CONSTANT POWER and CONSTANT VOTLAGE mode.\n"
+                        <<"HVDC link will turn into reduced (DELTI) CONSTANT CURRENT mode controlled by inverter.";
                 STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -1812,7 +1846,11 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
 
 void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage()
 {
+    temp_converter_firing_angle_fixed[RECTIFIER] = false;
+    temp_converter_firing_angle_fixed[INVERTER] = false;
+
     ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //os<<"Solve %s as constant current (R) + constant voltage (I) mode.",
     //              get_device_name().c_str());
     //show_information_with_leading_time_stamp(osstream);
@@ -1825,7 +1863,6 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
 
     //osstream<<"trying to solve "<<get_device_name()<<" with desired DC voltage rec "<<VdcR<<" kV, inv "<<VdcI<<" kV, "
     //       <<" I "<<Idc<<" kA";
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //toolkit.show_information_with_leading_time_stamp(osstream);
 
     bool minAlphaReached = solve_converter_transformer_tap_and_desired_firing_angle(RECTIFIER, VdcR, Idc);
@@ -1840,9 +1877,10 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
     {
         if(not(minAlphaReached) and minGammaReached)
         {
-            osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
-              <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            temp_converter_firing_angle_fixed[INVERTER] = true;
+            /*osstream<<"Minimum gamma reached when trying to solve "<<get_device_name()
+                    <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode.";
+            toolkit.show_information_with_leading_time_stamp(osstream);*/
 
             solve_as_rectifier_regulating_current_and_inverter_regulating_gamma();
         }
@@ -1850,19 +1888,23 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
         {
             if(minAlphaReached and not(minGammaReached))
             {
-                osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
-                  <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                temp_converter_firing_angle_fixed[RECTIFIER] = true;
+                /*osstream<<"Minimum alpha reached when trying to solve "<<get_device_name()
+                        <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode.";
+                toolkit.show_information_with_leading_time_stamp(osstream);*/
 
                 solve_as_rectifier_regulating_alpha_and_inverter_regulating_current();
             }
             else
             {
                 // error!!!!!
-                osstream<<"Warning. Both minimum alpha and minimum gamma reached when trying to solve "<<get_device_name()
-                  <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode."
-                  <<"HVDC link will be with minimum alpha and gamma. The solution may be incorrect.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                temp_converter_firing_angle_fixed[INVERTER] = true;
+                temp_converter_firing_angle_fixed[RECTIFIER] = true;
+
+                /*osstream<<"Warning. Both minimum alpha and minimum gamma reached when trying to solve "<<get_device_name()
+                        <<" with CONSTANT CURRENT and CONSTANT VOTLAGE mode."
+                        <<"HVDC link will be with minimum alpha and gamma. The solution may be incorrect.";
+                toolkit.show_information_with_leading_time_stamp(osstream);*/
 
                 solve_with_solved_tap_and_firing_angle();
             }
@@ -1872,6 +1914,9 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
 
 void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 {
+    temp_converter_firing_angle_fixed[RECTIFIER] = false;
+    temp_converter_firing_angle_fixed[INVERTER] = true;
+
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1930,7 +1975,10 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         // with Tap, solve alpha
         cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
         if(cosAlpha>=cos(alpha_min))
+        {
             set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
+            temp_converter_firing_angle_fixed[RECTIFIER] = true;
+        }
         else//solved
             set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(acos(cosAlpha)));
     }
@@ -1950,7 +1998,10 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
         // solve cosAlpha
         cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
         if(cosAlpha>=cos(alpha_min))
+        {
             set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
+            temp_converter_firing_angle_fixed[RECTIFIER] = true;
+        }
         else
             set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(cosAlpha));
     }
@@ -1959,6 +2010,8 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 
 void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
 {
+    temp_converter_firing_angle_fixed[RECTIFIER] = false;
+    temp_converter_firing_angle_fixed[INVERTER] = true;
     //ostringstream osstream;
     //os<<"Solve %s as constant current (R) + constant gamma (I) mode.",
     //              get_device_name().c_str());
@@ -1990,7 +2043,10 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
     // with Tap, solve alpha
     cosAlpha = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(RECTIFIER, VdcR, Idc, TapR);
     if(cosAlpha>=cos(alpha_min))
+    {
         set_converter_alpha_or_gamma_in_deg(RECTIFIER, get_converter_min_alpha_or_gamma_in_deg(RECTIFIER));
+        temp_converter_firing_angle_fixed[RECTIFIER] = true;
+    }
     else//solved
         set_converter_alpha_or_gamma_in_deg(RECTIFIER, rad2deg(acos(cosAlpha)));
 
@@ -1999,6 +2055,8 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_gamma()
 
 void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
 {
+    temp_converter_firing_angle_fixed[RECTIFIER] = true;
+    temp_converter_firing_angle_fixed[INVERTER] = false;
     //ostringstream osstream;
     //os<<"Solve %s as constant alpha (R) + constant current (I) mode.",
     //              get_device_name().c_str());
@@ -2029,7 +2087,10 @@ void HVDC::solve_as_rectifier_regulating_alpha_and_inverter_regulating_current()
     double cosGamma = solve_desired_converter_cosAngle_with_desired_dc_voltage_current_and_transformer_tap(INVERTER, VdcI, Idc, TapI);
 
     if(cosGamma>=cos(gamma_min))
+    {
         set_converter_alpha_or_gamma_in_deg(INVERTER, get_converter_min_alpha_or_gamma_in_deg(INVERTER));
+        temp_converter_firing_angle_fixed[INVERTER] = true;
+    }
     else//solved
         set_converter_alpha_or_gamma_in_deg(INVERTER, rad2deg(acos(cosGamma)));
 

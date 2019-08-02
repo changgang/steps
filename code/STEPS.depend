@@ -311,7 +311,7 @@
 	<string>
 	<complex>
 
-1553928358 c:\users\lichg\steps\code\header\device\hvdc.h
+1564757229 c:\users\lichg\steps\code\header\device\hvdc.h
 	"header/device/device.h"
 	"header/basic/device_id.h"
 	"header/basic/steps_enum.h"
@@ -2385,7 +2385,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1563676767 source:c:\users\lichg\steps\code\source\device\hvdc.cpp
+1564757603 source:c:\users\lichg\steps\code\source\device\hvdc.cpp
 	"header/device/hvdc.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"

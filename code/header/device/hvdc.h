@@ -205,5 +205,8 @@ class HVDC : public DEVICE
     private:
         HVDC_MODEL* hvdc_model;
         AUXILIARY_SIGNAL_MODEL* auxiliary_signal_model;
+
+        bool converter_firing_angle_fixed[2];
+        bool temp_converter_firing_angle_fixed[2];
 };
 #endif // HVDC_H
