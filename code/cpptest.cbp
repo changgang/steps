@@ -19,14 +19,10 @@
 					<Add option="-Wall" />
 					<Add option="-std=c++1z" />
 					<Add option="-fPIC" />
-					<Add option="-m64" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 				</Compiler>
-				<Linker>
-					<Add option="-m64" />
-				</Linker>
 			</Target>
 		</Build>
 		<Compiler>

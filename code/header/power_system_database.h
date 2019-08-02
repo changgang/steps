@@ -102,6 +102,8 @@ class POWER_SYSTEM_DATABASE : public BASE
         void append_zone(ZONE& zone);
         void append_owner(OWNER& owner);
 
+        void update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new);
+
         void append_dynamic_model(const DEVICE_ID& did, const MODEL* model);
 
         void update_all_bus_base_frequency(double fbase_Hz);

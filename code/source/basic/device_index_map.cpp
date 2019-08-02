@@ -20,6 +20,38 @@ void DEVICE_INDEX_MAP::set_device_index(const DEVICE_ID& device_id, size_t index
 {
     set_device_index_map(device_id, index);
 }
+void DEVICE_INDEX_MAP::swap_device_index(const DEVICE_ID& device1, const DEVICE_ID& device2)
+{
+    size_t index1 = get_index_of_device(device1);
+    size_t index2 = get_index_of_device(device2);
+    if(index1==INDEX_NOT_EXIST and index2==INDEX_NOT_EXIST)
+        return;
+    else
+    {
+        if(index1!=INDEX_NOT_EXIST and index2!=INDEX_NOT_EXIST)
+        {
+            set_device_index(device1, INDEX_NOT_EXIST);
+            set_device_index(device1, index2);
+
+            set_device_index(device2, INDEX_NOT_EXIST);
+            set_device_index(device2, index1);
+        }
+        else
+        {
+            if(index1!=INDEX_NOT_EXIST and index2==INDEX_NOT_EXIST)
+            {
+                set_device_index(device1, index2);
+                set_device_index(device2, index1);
+            }
+            else
+            {
+                set_device_index(device2, index1);
+                set_device_index(device1, index2);
+            }
+        }
+    }
+
+}
 
 void DEVICE_INDEX_MAP::set_device_index_map(const DEVICE_ID& device_id, size_t index)
 {
