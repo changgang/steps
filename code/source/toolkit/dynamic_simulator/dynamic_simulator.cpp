@@ -2097,6 +2097,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& net = get_network_matrix();
     get_bus_currnet_into_network();
 
@@ -2230,7 +2231,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             }
         }
     }
-
+    /*
     osstream<<"bus current mismatch:"<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
     for(size_t i=0; i<n; ++i)
@@ -2239,17 +2240,21 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         //osstream<<ibus<<", "<<I_mismatch[i]<<endl;
         //toolkit.show_information_with_leading_time_stamp(osstream);
     }
+    */
+    /*
     double maxmismatch = 0.0;
+    complex<double> cmaxmismatch = 0.0;
     size_t busmax = 0;
     for(size_t i=0; i<n; ++i)
     {
         if(maxmismatch<abs(I_mismatch[i]))
         {
             maxmismatch = abs(I_mismatch[i]);
+            cmaxmismatch = I_mismatch[i];
             busmax = net.get_physical_bus_number_of_internal_bus(i);
         }
     }
-    osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<endl;
+    osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<" or complex "<<cmaxmismatch<<", complex power = "<<psdb.get_bus_complex_voltage_in_pu(busmax)*conj(cmaxmismatch)*psdb.get_system_base_power_in_MVA()<<setprecision(10)<<", v="<<psdb.get_bus_voltage_in_pu(busmax)<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(size_t i=0; i<n; ++i)
@@ -2265,6 +2270,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
+    */
 }
 
 void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
@@ -2627,7 +2633,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 
         delta_v = complex<double>(delta_V[i], delta_V[i+n]);
 
-        V = V0-delta_v;
+        V = V0-delta_v*alpha;
 
 		vmag_new = steps_fast_complex_abs(V);
 
