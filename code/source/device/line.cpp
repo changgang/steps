@@ -394,55 +394,72 @@ void LINE::check()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    string error_leading_string = "Error detected when checking "+get_device_name()+"["+
-                                  psdb.bus_number2bus_name(get_sending_side_bus())+"-"+
-                                  psdb.bus_number2bus_name(get_receiving_side_bus())+"]: ";
-
     size_t ibus = get_sending_side_bus();
     size_t jbus = get_receiving_side_bus();
     double ivbase = psdb.get_bus_base_voltage_in_kV(ibus);
     double jvbase = psdb.get_bus_base_voltage_in_kV(jbus);
+
+    osstream<<"Warning detected when checking "<<ivbase<<"kV "<<get_device_name()<<"["
+            <<psdb.bus_number2bus_name(get_sending_side_bus())<<"-"
+            <<psdb.bus_number2bus_name(get_receiving_side_bus())<<"]:\n";
+
+    size_t error_count = 0;
+
     if( ivbase!= jvbase)
     {
-        osstream<<error_leading_string<<"Base voltage at sending and receiving sides are different.\n"
+        error_count++;
+        osstream<<"("<<error_count<<") Base voltage at sending and receiving sides are different: "
                 <<"Vbase["<<ibus<<"] = "<<ivbase<<"kV. "
-                <<"Vbase["<<jbus<<"] = "<<jvbase<<"kV. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+                <<"Vbase["<<jbus<<"] = "<<jvbase<<"kV.\n";
     }
     complex<double> z = get_line_positive_sequence_z_in_pu();
     double r = z.real(), x = z.imag();
     if(r<0)
     {
-        osstream<<error_leading_string<<"Positive sequence R<0.\n"
-                <<"R = "<<r<<"pu. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence R<0: "
+                <<"R = "<<r<<"pu.\n";
     }
-    if(fabs(r)>10.0)
+    /*if(fabs(r)>10.0)
     {
-        osstream<<error_leading_string<<"Positive sequence R is too great.\n"
-                <<"R = "<<r<<"pu. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence R is too great: "
+                <<"R = "<<r<<"pu.\n";
     }
     if(fabs(x)>10.0)
     {
-        osstream<<error_leading_string<<"Positive sequence X is too great.\n"
-                <<"X = "<<x<<"pu. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence X is too great: "
+                <<"X = "<<x<<"pu.\n";
+    }*/
+    if(fabs(x)<0.0)
+    {
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence X<0: "
+                <<"X = "<<x<<"pu.\n";
+    }
+    if(x!=0.0 and fabs(r/x)>2.0)
+    {
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence |R/X|>2.0: "
+                <<"R = "<<r<<"pu, X = "<<x<<"pu, R/X = "<<r/x<<".\n";
     }
     complex<double> y = get_line_positive_sequence_y_in_pu();
     double g = y.real(), b = y.imag();
     if(fabs(g)>50.0)
     {
-        osstream<<error_leading_string<<"Positive sequence G is too great.\n"
-                <<"G = "<<g<<"pu. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence G is too great: "
+                <<"G = "<<g<<"pu.\n";
     }
     if(fabs(b)>50.0)
     {
-        osstream<<error_leading_string<<"Positive sequence B is too great.\n"
-                <<"B = "<<b<<"pu. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence B is too great: "
+                <<"B = "<<b<<"pu.\n";
     }
+    if(error_count>0)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void LINE::clear()

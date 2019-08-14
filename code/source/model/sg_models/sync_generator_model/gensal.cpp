@@ -148,6 +148,8 @@ bool GENSAL::setup_model_with_bpa_string(string data)
 
 void GENSAL::initialize()
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     setup_block_toolkit_and_parameters();
 
     update_source_impedance();

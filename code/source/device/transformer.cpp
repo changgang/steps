@@ -506,90 +506,101 @@ void TRANSFORMER::check()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    string error_leading_string = "Error detected when checking "+get_device_name()+": ";
-
     size_t ibus = get_winding_bus(PRIMARY_SIDE);
     size_t jbus = get_winding_bus(SECONDARY_SIDE);
     size_t kbus = get_winding_bus(TERTIARY_SIDE);
+
+    if(is_two_winding_transformer())
+        osstream<<"Warning detected when checking "<<get_device_name()+"["
+                <<psdb.bus_number2bus_name(ibus)<<"-"
+                <<psdb.bus_number2bus_name(jbus)<<"]: \n";
+    else
+        osstream<<"Warning detected when checking "<<get_device_name()+"["
+                <<psdb.bus_number2bus_name(ibus)<<"-"
+                <<psdb.bus_number2bus_name(jbus)<<"-"
+                <<psdb.bus_number2bus_name(kbus)<<"]: \n";
+
+    size_t error_count = 0;
+
     complex<double> zij = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE,SECONDARY_SIDE);
     double r = zij.real(), x = zij.imag();
-    if(fabs(r)>10.0)
+    /*if(fabs(r)>10.0)
     {
-        osstream<<error_leading_string<<"Positive sequence R between primary and secondary side is too great.\n"
-                <<"Rij = "<<r<<"pu. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence R between primary and secondary side is too great: "
+                <<"Rij = "<<r<<"pu\n";
+    }*/
     if(fabs(x)>10.0)
     {
-        osstream<<error_leading_string<<"Positive sequence X between primary and secondary side is too great.\n"
-                <<"Xij = "<<x<<"pu. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence X between primary and secondary side is too great: "
+                <<"Xij = "<<x<<"pu.\n";
     }
     if(fabs(x)<0.0001)
     {
-        osstream<<error_leading_string<<"Positive sequence X between primary and secondary side is too little.\n"
-                <<"Xij = "<<x<<"pu. ";
-        toolkit.show_information_with_leading_time_stamp(osstream);
+        error_count++;
+        osstream<<"("<<error_count<<") Positive sequence X between primary and secondary side is too little: "
+                <<"Xij = "<<x<<"pu.\n";
     }
     if(is_three_winding_transformer())
     {
         complex<double> zjk = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
         complex<double> zki = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE);
         r = zjk.real(); x = zjk.imag();
-        if(fabs(r)>10.0)
+        /*if(fabs(r)>10.0)
         {
-            osstream<<error_leading_string<<"Positive sequence R between secondary and tertiary side is too great.\n"
-                    <<"Rjk = "<<r<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence R between secondary and tertiary side is too great: "
+                    <<"Rjk = "<<r<<"pu.\n";
+        }*/
         if(fabs(x)>10.0)
         {
-            osstream<<error_leading_string<<"Positive sequence X between secondary and tertiary side is too great.\n"
-                    <<"Xjk = "<<x<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence X between secondary and tertiary side is too great: "
+                    <<"Xjk = "<<x<<"pu.\n";
         }
         if(fabs(x)<0.0001)
         {
-            osstream<<error_leading_string<<"Positive sequence X between secondary and tertiary side is too little.\n"
-                    <<"Xjk = "<<x<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence X between secondary and tertiary side is too little: "
+                    <<"Xjk = "<<x<<"pu.\n";
         }
         r = zki.real(); x = zki.imag();
-        if(fabs(r)>10.0)
+        /*if(fabs(r)>10.0)
         {
-            osstream<<error_leading_string<<"Positive sequence R between tertiary and primary side is too great.\n"
-                    <<"Rki = "<<r<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence R between tertiary and primary side is too great: "
+                    <<"Rki = "<<r<<"pu.\n";
+        }*/
         if(fabs(x)>10.0)
         {
-            osstream<<error_leading_string<<"Positive sequence X between tertiary and primary side is too great.\n"
-                    <<"Xki = "<<x<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence X between tertiary and primary side is too great: "
+                    <<"Xki = "<<x<<"pu.\n";
         }
         if(fabs(x)<0.0001)
         {
-            osstream<<error_leading_string<<"Positive sequence X between tertiary and primary side is too little.\n"
-                    <<"Xki = "<<x<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence X between tertiary and primary side is too little: "
+                    <<"Xki = "<<x<<"pu.\n";
         }
         if(zij==zjk)
         {
-            osstream<<error_leading_string<<"Positive sequence leakage impedance between primary and secondary side is equal to that between secondary and tertiary side.\n"
-                    <<"Zij = "<<zij<<"pu, "<<"Zjk = "<<zjk<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence leakage impedance between primary and secondary side is equal to that between secondary and tertiary side: "
+                    <<"Zij = "<<zij<<"pu, "<<"Zjk = "<<zjk<<"pu.\n";
         }
         if(zjk==zki)
         {
-            osstream<<error_leading_string<<"Positive sequence leakage impedance between secondary and tertiary side is equal to that between tertiary and primary side.\n"
-                    <<"Zjk = "<<zjk<<"pu, "<<"Zki = "<<zki<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence leakage impedance between secondary and tertiary side is equal to that between tertiary and primary side: "
+                    <<"Zjk = "<<zjk<<"pu, "<<"Zki = "<<zki<<"pu.\n";
         }
         if(zki==zij)
         {
-            osstream<<error_leading_string<<"Positive sequence leakage impedance between tertiary and primary side is equal to that between primary and secondary side.\n"
-                    <<"Zki = "<<zki<<"pu, "<<"Zij = "<<zij<<"pu. ";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence leakage impedance between tertiary and primary side is equal to that between primary and secondary side: "
+                    <<"Zki = "<<zki<<"pu, "<<"Zij = "<<zij<<"pu.\n";
         }
         double sij = get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE);
         double sjk = get_winding_nominal_capacity_in_MVA(SECONDARY_SIDE, TERTIARY_SIDE);
@@ -598,13 +609,15 @@ void TRANSFORMER::check()
         zij = zij/sij*sbase;
         zjk = zjk/sjk*sbase;
         zki = zki/ski*sbase;
-        if(abs(zij+zki-zjk)<FLOAT_EPSILON or abs(zij+zjk-zki)<FLOAT_EPSILON or abs(zki+zjk-zij)<FLOAT_EPSILON)
+        if(abs(zij+zki-zjk)<1e-6 or abs(zij+zjk-zki)<1e-6 or abs(zki+zjk-zij)<1e-6)
         {
-            osstream<<error_leading_string<<"Positive sequence leakage impedance of one winding is or nearly zero.\n"
-                    <<"Zij = "<<zij<<"pu, "<<"Zjk = "<<zjk<<"pu, "<<"Zki = "<<zki<<"pu. All based on system base power ("<<sbase<<"MVA).";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            error_count++;
+            osstream<<"("<<error_count<<") Positive sequence leakage impedance of at least one winding is or nearly zero: "
+                    <<"Zij = "<<zij<<"pu, "<<"Zjk = "<<zjk<<"pu, "<<"Zki = "<<zki<<"pu. All based on system base power ("<<sbase<<"MVA).\n";
         }
     }
+    if(error_count>0)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void TRANSFORMER::clear()

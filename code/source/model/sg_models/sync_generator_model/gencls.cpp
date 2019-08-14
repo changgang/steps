@@ -110,6 +110,7 @@ bool GENCLS::setup_model_with_bpa_string(string data)
 
 void GENCLS::initialize()
 {
+    ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     setup_block_toolkit_and_parameters();
 
@@ -150,7 +151,6 @@ void GENCLS::initialize()
     Exy = get_internal_voltage_in_pu_in_xy_axis();
     if(isnan(Exy.real()) or isnan(Exy.imag()))
     {
-        ostringstream osstream;
         osstream<<"NAN is detected when initializing GENCLS model of "<<get_generator_pointer()->get_device_name()<<endl
                 <<"efd0="<<efd0<<", Vxy="<<Vxy<<", Ixy="<<Ixy<<", Zs="<<Zsource<<", angle = "<<get_rotor_angle_in_deg();
         toolkit.show_information_with_leading_time_stamp(osstream);

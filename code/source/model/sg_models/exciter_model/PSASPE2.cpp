@@ -265,7 +265,7 @@ bool PSASPE2::setup_model_with_steps_string_vector(vector<string>& data)
             set_KA(ka);
             set_TA_in_s(ta);
             set_Efdmax_in_pu(efdmax);
-            set_Efdmax_in_pu(efdmin);
+            set_Efdmin_in_pu(efdmin);
             set_Vta_in_pu(vta);
             set_Vtb_in_pu(vtb);
             set_Kpt(kpt);
@@ -311,11 +311,13 @@ void PSASPE2::setup_block_toolkit_and_parameters()
 
 void PSASPE2::initialize()
 {
+    ostringstream osstream;
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
+            STEPS& toolkit = generator->get_toolkit(__PRETTY_FUNCTION__);
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -356,6 +358,36 @@ void PSASPE2::initialize()
                 POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
                 size_t bus = generator->get_generator_bus();
                 this->Vt0 = psdb.get_bus_voltage_in_pu(bus);
+
+                complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
+                complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+                double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+
+                double Efdmax = get_Efdmax_in_pu();
+                double Efdmin = get_Efdmin_in_pu();
+
+                double Vta = get_Vta_in_pu(), Vtb = get_Vtb_in_pu();
+                double Kv1 = 1.0/(Vt0*Vta), Kv2 = 1.0/(Vt0/Vtb);
+
+                double Kpt = get_Kpt(), Kit = get_Kit(), Ke = get_Ke();
+                complex<double> imag_1(0.0, 1.0);
+
+                double scale = abs(Kpt*Vt + imag_1*Kit*It);
+                Efdmax = Kv1*scale*Efdmax - Ke*Ifd;
+                Efdmin = Kv2*scale*Efdmin - Ke*Ifd;
+
+                if(Efd>Efdmax)
+                {
+                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Efd is "<<Efd<<", and Efdmax(~) is "<<Efdmax<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(Efd<Efdmin)
+                {
+                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Efd is "<<Efd<<", and Efdmin(~) is "<<Efdmin<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
 
                 set_flag_model_initialized_as_true();
             }

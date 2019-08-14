@@ -1017,7 +1017,8 @@ string WT3E1::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<ipmax<<", "
       <<setw(8)<<setprecision(6)<<trv<<", "
       <<setw(8)<<setprecision(6)<<rpmax<<", "
-      <<setw(8)<<setprecision(6)<<rpmin<<", "
+      <<setw(8)<<setprecision(6)<<rpmin<<", ";
+    osstream<<"\n        "
       <<setw(8)<<setprecision(6)<<tspeed<<", "
       <<setw(8)<<setprecision(6)<<kqi<<", "
       <<setw(8)<<setprecision(6)<<vmax<<", "

@@ -555,11 +555,13 @@ void CSEET2::setup_block_toolkit_and_parameters()
 
 void CSEET2::initialize()
 {
+    ostringstream osstream;
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
+            STEPS& toolkit = generator->get_toolkit(__PRETTY_FUNCTION__);
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -586,6 +588,30 @@ void CSEET2::initialize()
                 double Kc = get_KC();
 
                 double Vr = Efd + Kc*Ifd;
+                if(Vr>get_VRmax_in_pu())
+                {
+                    osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Vr is "<<Vr<<", and Vrmax is "<<get_VRmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(Vr<get_VRmin_in_pu())
+                {
+                    osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Vr is "<<Vr<<", and Vrmin is "<<get_VRmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(Vr>get_VAmax_in_pu())
+                {
+                    osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Vr is "<<Vr<<", and VAmax is "<<get_VAmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(Vr<get_VAmin_in_pu())
+                {
+                    osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Vr is "<<Vr<<", and VAmin is "<<get_VAmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
 
                 regulator.set_output(Vr);
                 regulator.initialize();
@@ -857,6 +883,7 @@ string CSEET2::get_standard_model_string() const
           <<setw(8)<<setprecision(6)<<Vdmax<<", "
           <<setw(8)<<setprecision(6)<<Vdmin<<", ";
     }
+    osstream<<"\n        ";
 
     double KA = get_KA();
     double TA = get_TA_in_s();

@@ -585,11 +585,11 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
             break;
         }
 
-        if(iter_count<=10)
+        if(iter_count<=20)
             ;
         else
         {
-            osstream<<"Warning. Initial Ve is not solved within 10 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".";
+            osstream<<"Warning. Initial Ve is not solved within 20 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".";
             toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
@@ -801,11 +801,14 @@ void CSEET1::setup_block_toolkit_and_parameters()
 
 void CSEET1::initialize()
 {
+    ostringstream osstream;
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
+            STEPS& toolkit = generator->get_toolkit(__PRETTY_FUNCTION__);
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -832,19 +835,66 @@ void CSEET1::initialize()
                 }
 
                 double Efd = get_initial_excitation_voltage_in_pu_from_sync_generator_model();
+                if(Efd>get_Efdmax_in_pu())
+                {
+                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+
                 double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
+                double Vt = psdb.get_bus_voltage_in_pu(generator->get_generator_bus());
 
                 double Ve = get_initial_Ve_with_Fex_function();
+                if(Ve>get_Vemax_in_pu())
+                {
+                    osstream<<"Initialization error. Output of exciter of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Ve is "<<Ve<<", and Vemax is "<<get_Vemax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
                 exciter.set_output(Ve);
                 exciter.initialize();
 
                 double SE = saturation_block.get_saturation(Ve);
+
                 double KE = get_KE();
                 double KD = get_KD();
 
                 double Vfe = (SE+KE)*Ve+Ifd*KD;
-                regulator2.set_output(Vfe);
+                double Vr = Vfe;
+                regulator2.set_output(Vr);
                 regulator2.initialize();
+
+                if(get_excitation_source()==SEPARATE_EXCITATION)
+                {
+                    if(Vr>get_VRmax_in_pu())
+                    {
+                        osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                          <<"Vr is "<<Vr<<", and VRmax is "<<get_VRmax_in_pu()<<".";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
+                    if(Vr<get_VRmin_in_pu())
+                    {
+                        osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                          <<"Vr is "<<Vr<<", and VRmin is "<<get_VRmin_in_pu()<<".";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
+                }
+                else
+                {
+                    if(Vr>get_VRmax_in_pu()*Vt)
+                    {
+                        osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                          <<"Vr is "<<Vr<<", and VRmax*Vt is "<<get_VRmax_in_pu()*Vt<<".";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
+                    if(Vr<get_VRmin_in_pu()*Vt)
+                    {
+                        osstream<<"Initialization error. Output of regulator 2 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                          <<"Vr is "<<Vr<<", and VRmin*Vt is "<<get_VRmin_in_pu()*Vt<<".";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                    }
+                }
 
                 double V_input_to_feedbacker = 0.0;
 
@@ -858,7 +908,18 @@ void CSEET1::initialize()
 
                 double KH = get_KH();
                 double V_regulator1 = regulator2.get_input()+KH*V_input_to_feedbacker;
-
+                if(V_regulator1>get_VAmax_in_pu())
+                {
+                    osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                      <<"Va is "<<V_regulator1<<", and VAmax is "<<get_VAmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(V_regulator1<get_VAmin_in_pu())
+                {
+                    osstream<<"Initialization error. Output of regulator 1 of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                      <<"Va is "<<V_regulator1<<", and VAmin is "<<get_VAmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
                 regulator1.set_output(V_regulator1);
                 regulator1.initialize();
 
@@ -1174,6 +1235,7 @@ string CSEET1::get_standard_model_string() const
                 <<setw(8)<<setprecision(6)<<tuner_VDmax<<", "
                 <<setw(8)<<setprecision(6)<<tuner_VDmin<<", ";
     }
+    osstream<<"\n        ";
 
     double KA = get_KA();
     double TA = get_TA_in_s();
