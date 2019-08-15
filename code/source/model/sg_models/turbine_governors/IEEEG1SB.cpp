@@ -638,7 +638,7 @@ void IEEEG1SB::check()
 void IEEEG1SB::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -646,7 +646,7 @@ void IEEEG1SB::save()
 {
     ;
 }
-string IEEEG1SB::get_standard_model_string() const
+string IEEEG1SB::get_standard_psse_string() const
 {
     ostringstream osstream;
 
@@ -681,38 +681,45 @@ string IEEEG1SB::get_standard_model_string() const
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', 0, '', "
-      <<setw(8)<<setprecision(6)<<K<<", "
-      <<setw(8)<<setprecision(6)<<T1<<", "
-      <<setw(8)<<setprecision(6)<<T2<<", "
-      <<setw(8)<<setprecision(6)<<T3<<", "
-      <<setw(8)<<setprecision(6)<<Uo<<", "
-      <<setw(8)<<setprecision(6)<<Uc<<", "
-      <<setw(8)<<setprecision(6)<<Pmax<<", "
-      <<setw(8)<<setprecision(6)<<Pmin<<", "
-      <<setw(8)<<setprecision(6)<<T4<<", "
-      <<setw(8)<<setprecision(6)<<K1<<", "
-      <<setw(8)<<setprecision(6)<<K2<<", "
-      <<setw(8)<<setprecision(6)<<T5<<", "
-      <<setw(8)<<setprecision(6)<<K3<<", "
-      <<setw(8)<<setprecision(6)<<K4<<", "
-      <<setw(8)<<setprecision(6)<<T6<<", "
-      <<setw(8)<<setprecision(6)<<K5<<", "
-      <<setw(8)<<setprecision(6)<<K6<<", "
-      <<setw(8)<<setprecision(6)<<T7<<", "
-      <<setw(8)<<setprecision(6)<<K7<<", "
-      <<setw(8)<<setprecision(6)<<K8<<", "
-      <<setw(8)<<setprecision(6)<<KP<<", "
-      <<setw(8)<<setprecision(6)<<KI<<", "
-      <<setw(8)<<setprecision(6)<<Tfuel<<", "
-      <<setw(8)<<setprecision(6)<<TFD1<<", "
-      <<setw(8)<<setprecision(6)<<TFD2<<", "
-      <<setw(8)<<setprecision(6)<<Cb<<", "
-      <<setw(8)<<setprecision(6)<<Kb<<" /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(10)<<0<<", "
+            <<setw(6)<<"''"<<", "
+            <<setw(8)<<setprecision(6)<<K<<", "
+            <<setw(8)<<setprecision(6)<<T1<<", "
+            <<setw(8)<<setprecision(6)<<T2<<", "
+            <<setw(8)<<setprecision(6)<<T3<<", "
+            <<setw(8)<<setprecision(6)<<Uo<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<Uc<<", "
+            <<setw(8)<<setprecision(6)<<Pmax<<", "
+            <<setw(8)<<setprecision(6)<<Pmin<<", "
+            <<setw(8)<<setprecision(6)<<T4<<", "
+            <<setw(8)<<setprecision(6)<<K1<<", "
+            <<setw(8)<<setprecision(6)<<K2<<", "
+            <<setw(8)<<setprecision(6)<<T5<<", "
+            <<setw(8)<<setprecision(6)<<K3<<", "
+            <<setw(8)<<setprecision(6)<<K4<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<T6<<", "
+            <<setw(8)<<setprecision(6)<<K5<<", "
+            <<setw(8)<<setprecision(6)<<K6<<", "
+            <<setw(8)<<setprecision(6)<<T7<<", "
+            <<setw(8)<<setprecision(6)<<K7<<", "
+            <<setw(8)<<setprecision(6)<<K8<<", "
+            <<setw(8)<<setprecision(6)<<KP<<", "
+            <<setw(8)<<setprecision(6)<<KI<<", "
+            <<setw(8)<<setprecision(6)<<Tfuel<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<TFD1<<", "
+            <<setw(8)<<setprecision(6)<<TFD2<<", "
+            <<setw(8)<<setprecision(6)<<Cb<<", "
+            <<setw(8)<<setprecision(6)<<Kb<<" /";
     return osstream.str();
 }
 

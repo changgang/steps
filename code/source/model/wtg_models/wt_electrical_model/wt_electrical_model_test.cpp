@@ -25,7 +25,7 @@ WT_ELECTRICAL_MODEL_TEST::WT_ELECTRICAL_MODEL_TEST()
     TEST_ADD(WT_ELECTRICAL_MODEL_TEST::test_get_wt_generator_speed);
     TEST_ADD(WT_ELECTRICAL_MODEL_TEST::test_get_wt_generator_speed_reference);
 
-    TEST_ADD(WT_ELECTRICAL_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(WT_ELECTRICAL_MODEL_TEST::test_get_standard_psse_string);
     TEST_ADD(WT_ELECTRICAL_MODEL_TEST::test_step_response_with_voltage_drop);
     TEST_ADD(WT_ELECTRICAL_MODEL_TEST::test_step_response_with_frequency_drop);
 }
@@ -372,10 +372,10 @@ void WT_ELECTRICAL_MODEL_TEST::apply_frequency_drop_of_5_percent()
     model->set_frequency_deviation_in_pu(0.05);
 }
 
-void WT_ELECTRICAL_MODEL_TEST::test_get_standard_model_string()
+void WT_ELECTRICAL_MODEL_TEST::test_get_standard_psse_string()
 {
     WT_ELECTRICAL_MODEL* model = get_test_wt_electrical_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.show_information_with_leading_time_stamp(model->get_standard_model_string());
+    default_toolkit.show_information_with_leading_time_stamp(model->get_standard_psse_string());
 }

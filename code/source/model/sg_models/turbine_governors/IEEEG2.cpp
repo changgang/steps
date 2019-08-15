@@ -304,7 +304,7 @@ void IEEEG2::check()
 void IEEEG2::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -312,7 +312,7 @@ void IEEEG2::save()
 {
     ;
 }
-string IEEEG2::get_standard_model_string() const
+string IEEEG2::get_standard_psse_string() const
 {
     ostringstream osstream;
 
@@ -326,18 +326,20 @@ string IEEEG2::get_standard_model_string() const
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<K<<", "
-      <<setw(8)<<setprecision(6)<<T1<<", "
-      <<setw(8)<<setprecision(6)<<T2<<", "
-      <<setw(8)<<setprecision(6)<<T3<<", "
-      <<setw(8)<<setprecision(6)<<Pmax<<", "
-      <<setw(8)<<setprecision(6)<<Pmin<<", "
-      <<setw(8)<<setprecision(6)<<T4<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<K<<", "
+            <<setw(8)<<setprecision(6)<<T1<<", "
+            <<setw(8)<<setprecision(6)<<T2<<", "
+            <<setw(8)<<setprecision(6)<<T3<<", "
+            <<setw(8)<<setprecision(6)<<Pmax<<", "
+            <<setw(8)<<setprecision(6)<<Pmin<<", "
+            <<setw(8)<<setprecision(6)<<T4<<" /";
 
     return osstream.str();
 }

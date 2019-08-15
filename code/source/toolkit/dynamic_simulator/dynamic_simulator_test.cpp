@@ -503,7 +503,7 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    //cout<<psdb.get_generator(did)->get_sync_generator_model()->get_standard_model_string()<<endl;
+    //cout<<psdb.get_generator(did)->get_sync_generator_model()->get_standard_psse_string()<<endl;
 
     METER_SETTER setter;
     setter.set_toolkit(default_toolkit);
@@ -1559,17 +1559,17 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     DEVICE_ID gendid = get_wt_generator_device_id(3, "1");
     WT_GENERATOR* gen = psdb.get_wt_generator(gendid);
     if(gen->get_wt_generator_model()!=NULL)
-        cout<<gen->get_wt_generator_model()->get_standard_model_string()<<endl;
+        cout<<gen->get_wt_generator_model()->get_standard_psse_string()<<endl;
     if(gen->get_wt_aerodynamic_model()!=NULL)
-        cout<<gen->get_wt_aerodynamic_model()->get_standard_model_string()<<endl;
+        cout<<gen->get_wt_aerodynamic_model()->get_standard_psse_string()<<endl;
     if(gen->get_wt_turbine_model()!=NULL)
-        cout<<gen->get_wt_turbine_model()->get_standard_model_string()<<endl;
+        cout<<gen->get_wt_turbine_model()->get_standard_psse_string()<<endl;
     if(gen->get_wt_electrical_model()!=NULL)
-        cout<<gen->get_wt_electrical_model()->get_standard_model_string()<<endl;
+        cout<<gen->get_wt_electrical_model()->get_standard_psse_string()<<endl;
     if(gen->get_wt_pitch_model()!=NULL)
-        cout<<gen->get_wt_pitch_model()->get_standard_model_string()<<endl;
+        cout<<gen->get_wt_pitch_model()->get_standard_psse_string()<<endl;
     if(gen->get_wind_speed_model()!=NULL)
-        cout<<gen->get_wind_speed_model()->get_standard_model_string()<<endl;
+        cout<<gen->get_wind_speed_model()->get_standard_psse_string()<<endl;
 
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
@@ -1673,17 +1673,17 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     {
         WT_GENERATOR* gen = gens[i];
         if(gen->get_wt_generator_model()!=NULL)
-            cout<<gen->get_wt_generator_model()->get_standard_model_string()<<endl;
+            cout<<gen->get_wt_generator_model()->get_standard_psse_string()<<endl;
         if(gen->get_wt_aerodynamic_model()!=NULL)
-            cout<<gen->get_wt_aerodynamic_model()->get_standard_model_string()<<endl;
+            cout<<gen->get_wt_aerodynamic_model()->get_standard_psse_string()<<endl;
         if(gen->get_wt_turbine_model()!=NULL)
-            cout<<gen->get_wt_turbine_model()->get_standard_model_string()<<endl;
+            cout<<gen->get_wt_turbine_model()->get_standard_psse_string()<<endl;
         if(gen->get_wt_electrical_model()!=NULL)
-            cout<<gen->get_wt_electrical_model()->get_standard_model_string()<<endl;
+            cout<<gen->get_wt_electrical_model()->get_standard_psse_string()<<endl;
         if(gen->get_wt_pitch_model()!=NULL)
-            cout<<gen->get_wt_pitch_model()->get_standard_model_string()<<endl;
+            cout<<gen->get_wt_pitch_model()->get_standard_psse_string()<<endl;
         if(gen->get_wind_speed_model()!=NULL)
-            cout<<gen->get_wind_speed_model()->get_standard_model_string()<<endl;
+            cout<<gen->get_wind_speed_model()->get_standard_psse_string()<<endl;
     }
 
     //prepare_IEEE_9_bus_model();

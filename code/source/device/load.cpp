@@ -413,6 +413,8 @@ void LOAD::set_load_model(const LOAD_MODEL* model)
             delete oldmodel;
             load_model = NULL;
         }
+        if(load_model!=NULL)
+            return;
 
         LOAD_MODEL *new_model = NULL;
         string model_name = model->get_model_name();
@@ -448,6 +450,8 @@ void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* mode
             delete oldmodel;
             load_frequency_relay_model = NULL;
         }
+        if(load_frequency_relay_model!=NULL)
+            return;
 
         LOAD_FREQUENCY_RELAY_MODEL *new_model = NULL;
         string model_name = model->get_model_name();
@@ -488,6 +492,8 @@ void LOAD::set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model)
             delete oldmodel;
             load_voltage_relay_model = NULL;
         }
+        if(load_voltage_relay_model!=NULL)
+            return;
 
         LOAD_VOLTAGE_RELAY_MODEL *new_model = NULL;
         string model_name = model->get_model_name();

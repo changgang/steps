@@ -17,7 +17,7 @@ WIND_SPEED_MODEL_TEST::WIND_SPEED_MODEL_TEST()
 {
     TEST_ADD(WIND_SPEED_MODEL_TEST::test_get_model_type);
     TEST_ADD(WIND_SPEED_MODEL_TEST::test_get_nominal_wind_speed);
-    TEST_ADD(WIND_SPEED_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(WIND_SPEED_MODEL_TEST::test_get_standard_psse_string);
 }
 
 void WIND_SPEED_MODEL_TEST::setup()
@@ -67,13 +67,13 @@ void WIND_SPEED_MODEL_TEST::test_get_nominal_wind_speed()
         TEST_ASSERT(false);
 }
 
-void WIND_SPEED_MODEL_TEST::test_get_standard_model_string()
+void WIND_SPEED_MODEL_TEST::test_get_standard_psse_string()
 {
     WIND_SPEED_MODEL* model = get_test_wind_speed_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        default_toolkit.show_information_with_leading_time_stamp(model->get_standard_model_string());
+        default_toolkit.show_information_with_leading_time_stamp(model->get_standard_psse_string());
     }
     else
         TEST_ASSERT(false);

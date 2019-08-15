@@ -458,7 +458,7 @@ void CDC4T::check()
 void CDC4T::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -468,7 +468,7 @@ void CDC4T::save()
     ;
 }
 
-string CDC4T::get_standard_model_string() const
+string CDC4T::get_standard_psse_string() const
 {
     ostringstream osstream;
 

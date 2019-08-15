@@ -22,7 +22,7 @@ SYNC_GENERATOR_MODEL_TEST::SYNC_GENERATOR_MODEL_TEST()
     TEST_ADD(SYNC_GENERATOR_MODEL_TEST::test_efd_step_response_of_sync_generator_model);
     TEST_ADD(SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model);
     TEST_ADD(SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_response);
-    TEST_ADD(SYNC_GENERATOR_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(SYNC_GENERATOR_MODEL_TEST::test_get_standard_psse_string);
 }
 
 
@@ -229,7 +229,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_pmech_step_response_of_sync_generator_model
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -290,7 +290,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_efd_step_response_of_sync_generator_model()
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -352,7 +352,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -416,7 +416,7 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -507,14 +507,14 @@ void SYNC_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_pmech_step_re
         TEST_ASSERT(false);
 }
 
-void SYNC_GENERATOR_MODEL_TEST::test_get_standard_model_string()
+void SYNC_GENERATOR_MODEL_TEST::test_get_standard_psse_string()
 {
     SYNC_GENERATOR_MODEL* model = get_test_sync_generator_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        //model->get_standard_model_string();
+        //model->get_standard_psse_string();
     }
     else
         TEST_ASSERT(false);

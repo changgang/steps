@@ -51,7 +51,7 @@ class WT_AERODYNAMIC_MODEL_TEST : public WTG_MODEL_TEST
         void test_get_turbine_frequency();
         void test_get_turbine_speed();
 
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
 
         void test_initialize_and_get_initialized_inputs_with_underspeed_mode();

@@ -430,7 +430,7 @@ void UVLS::save()
     ;
 }
 
-string UVLS::get_standard_model_string() const
+string UVLS::get_standard_psse_string() const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
@@ -455,7 +455,7 @@ string UVLS::get_standard_model_string() const
           <<setprecision(3)<<fixed<<tdelay<<", "
           <<setprecision(3)<<fixed<<scale;
     }
-    osstream<<"  /";
+    osstream<<" /";
     return osstream.str();
 }
 

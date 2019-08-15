@@ -1620,6 +1620,8 @@ void DYNAMICS_SIMULATOR::start()
     while(true)
     {
 		++iter_count;
+		//osstream<<"Network iteration "<<iter_count;
+		//toolkit.show_information_with_leading_time_stamp(osstream);
         converged = solve_network();
         ITER_NET += network_iteration_count;
         if(converged or iter_count>200)
@@ -2051,6 +2053,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
     while(true)
     {
         ++network_iter_count;
+        //osstream<<"Sub network iteration "<<network_iter_count;
+        //toolkit.show_information_with_leading_time_stamp(osstream);
         if(network_iter_count<=network_iter_max)
         {
             solve_hvdcs_without_integration();
@@ -2540,11 +2544,16 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 bool DYNAMICS_SIMULATOR::is_converged()
 {
     //clock_t start = clock();
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
     get_bus_power_mismatch_in_MVA();
 
     double smax = get_max_power_mismatch_in_MVA();
 
     double s_allowed = get_allowed_max_power_imbalance_in_MVA();
+    //osstream<<"maximum power mismatch at time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s is "<<smax<<"MVA ги"<<s_allowed<<")";
+    //toolkit.show_information_with_leading_time_stamp(osstream);
     //cout<<"maximum power mismatch at time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s is "<<smax<<"MVA ги"<<s_allowed<<")"<<endl;
 
     //cout<<"    time for getting maximum power mismatch: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;

@@ -25,7 +25,7 @@ class WT_TURBINE_MODEL_TEST : public WTG_MODEL_TEST
     protected:
         void test_get_model_type();
         void test_set_get_damping();
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
         void test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode();
         void test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_mppt_mode();
         void test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode();

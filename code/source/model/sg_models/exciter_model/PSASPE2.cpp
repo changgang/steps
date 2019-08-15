@@ -317,7 +317,6 @@ void PSASPE2::initialize()
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
-            STEPS& toolkit = generator->get_toolkit(__PRETTY_FUNCTION__);
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -485,7 +484,7 @@ void PSASPE2::check()
 void PSASPE2::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -495,12 +494,15 @@ void PSASPE2::save()
     ;
 }
 
-string PSASPE2::get_standard_model_string() const
+string PSASPE2::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
+
     double KR = get_KR();
     double TR = get_TR_in_s();
     bool K2 = get_K2();
@@ -519,24 +521,25 @@ string PSASPE2::get_standard_model_string() const
     double Ke = get_Ke();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<KR<<", "
-      <<setw(8)<<setprecision(6)<<TR<<", "
-      <<setw(8)<<setprecision(6)<<K2<<", "
-      <<setw(8)<<setprecision(6)<<T1<<", "
-      <<setw(8)<<setprecision(6)<<T2<<", "
-      <<setw(8)<<setprecision(6)<<T3<<", "
-      <<setw(8)<<setprecision(6)<<T4<<", "
-      <<setw(8)<<setprecision(6)<<KA<<", "
-      <<setw(8)<<setprecision(6)<<TA<<", "
-      <<setw(8)<<setprecision(6)<<Efdmax<<", "
-      <<setw(8)<<setprecision(6)<<Efdmin<<", "
-      <<setw(8)<<setprecision(6)<<Vta<<", "
-      <<setw(8)<<setprecision(6)<<Vtb<<", "
-      <<setw(8)<<setprecision(6)<<Kpt<<", "
-      <<setw(8)<<setprecision(6)<<Kit<<", "
-      <<setw(8)<<setprecision(6)<<Ke<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<KR<<", "
+            <<setw(8)<<setprecision(6)<<TR<<", "
+            <<setw(8)<<setprecision(6)<<K2<<", "
+            <<setw(8)<<setprecision(6)<<T1<<", "
+            <<setw(8)<<setprecision(6)<<T2<<", "
+            <<setw(8)<<setprecision(6)<<T3<<", "
+            <<setw(8)<<setprecision(6)<<T4<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<KA<<", "
+            <<setw(8)<<setprecision(6)<<TA<<", "
+            <<setw(8)<<setprecision(6)<<Efdmax<<", "
+            <<setw(8)<<setprecision(6)<<Efdmin<<", "
+            <<setw(8)<<setprecision(6)<<Vta<<", "
+            <<setw(8)<<setprecision(6)<<Vtb<<", "
+            <<setw(8)<<setprecision(6)<<Kpt<<", "
+            <<setw(8)<<setprecision(6)<<Kit<<", "
+            <<setw(8)<<setprecision(6)<<Ke<<" /";
     return osstream.str();
 }
 

@@ -33,7 +33,7 @@ class WT_PITCH_MODEL_TEST : public WTG_MODEL_TEST
         void test_set_get_frequency_upper_deadband();
         void test_set_get_frequency_lower_deadband();
 
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
         void test_step_response_with_active_power_order_drop();
         void test_step_response_with_frequency_drop();

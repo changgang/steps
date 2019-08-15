@@ -39,7 +39,7 @@ WT_AERODYNAMIC_MODEL_TEST::WT_AERODYNAMIC_MODEL_TEST()
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_get_turbine_frequency);
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_get_turbine_speed);
 
-    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_get_standard_psse_string);
 
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_underspeed_mode);
     TEST_ADD(WT_AERODYNAMIC_MODEL_TEST::test_initialize_and_get_initialized_inputs_with_overspeed_mode);
@@ -418,14 +418,14 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_turbine_speed()
 }
 
 
-void WT_AERODYNAMIC_MODEL_TEST::test_get_standard_model_string()
+void WT_AERODYNAMIC_MODEL_TEST::test_get_standard_psse_string()
 {
     WT_AERODYNAMIC_MODEL* model = get_test_wt_aerodynamic_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        model->get_standard_model_string();
+        model->get_standard_psse_string();
     }
     else
         TEST_ASSERT(false);
@@ -533,7 +533,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_list_Cp_and_mechanical_power_data_of_differ
         string file =  "test_log/test_"+model->get_model_name()+"_"+__FUNCTION__+".txt";
         default_toolkit.open_log_file(file);
 
-        osstream<<model->get_standard_model_string();
+        osstream<<model->get_standard_psse_string();
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double r = model->get_turbine_blade_radius_in_m();

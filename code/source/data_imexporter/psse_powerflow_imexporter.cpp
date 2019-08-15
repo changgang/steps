@@ -432,8 +432,8 @@ string PSSE_IMEXPORTER::export_bus_data() const
             }
         }
 
-        snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
-                 bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,
+        snprintf(buffer, 1000, "%8lu, %20s, %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
+                 bus->get_bus_number(), ("\""+bus->get_bus_name()+"\"").c_str(), bus->get_base_voltage_in_kV(), type,
                  bus->get_area_number(), bus->get_zone_number(), bus->get_owner_number(),
                  bus->get_voltage_in_pu(), bus->get_angle_in_deg(),
                  bus->get_normal_voltage_upper_limit_in_pu(), bus->get_normal_voltage_lower_limit_in_pu(),
@@ -489,11 +489,7 @@ string PSSE_IMEXPORTER::export_load_data() const
 
         osstream<<right
                 <<setw(8)<<bus<<", "
-                <<"\""
-                <<left
-                <<setw(2)<<ickt
-                <<"\""<<", "
-                <<right
+                <<setw(6)<<("\""+ickt+"\"")<<", "
                 <<load->get_status()<<", "
                 <<setw(8)<<load->get_area_number()<<", "
                 <<setw(8)<<load->get_zone_number()<<", "
@@ -534,11 +530,7 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data() const
 
         osstream<<right
                 <<setw(8)<<bus<<", "
-                <<"\""
-                <<left
-                <<setw(2)<<ickt
-                <<"\""<<", "
-                <<right
+                <<setw(6)<<("\""+ickt+"\"")<<", "
                 <<shunt->get_status()<<", "
                 <<setw(12)<<setprecision(6)<<fixed<<shunt->get_nominal_impedance_shunt_in_MVA().real()<<", "
                 <<setw(12)<<setprecision(6)<<fixed<<-shunt->get_nominal_impedance_shunt_in_MVA().imag()<<endl;
@@ -663,9 +655,7 @@ string PSSE_IMEXPORTER::export_source_common_data(SOURCE* source) const
 
     osstream<<right
            <<setw(8)<<bus<<", "
-           <<"\""<<left
-           <<setw(2)<<ickt<<"\""<<", "
-           <<right
+           <<setw(6)<<("\""+ickt+"\"")<<", "
            <<setw(12)<<setprecision(6)<<fixed<<source->get_p_generation_in_MW()<<", "
            <<setw(12)<<setprecision(6)<<fixed<<source->get_q_generation_in_MVar()<<", "
            <<setw(12)<<setprecision(6)<<fixed<<source->get_q_max_in_MVar()<<", "
@@ -754,9 +744,7 @@ string PSSE_IMEXPORTER::export_line_data() const
         osstream<<right
                 <<setw(8)<<ibus<<", "
                 <<setw(8)<<jbus<<", "
-                <<"\""<<left
-                <<setw(2)<<ickt<<"\""<<", "
-                <<right
+                <<setw(6)<<("\""+ickt+"\"")<<", "
                 <<setw(12)<<setprecision(6)<<fixed<<line->get_line_positive_sequence_z_in_pu().real()<<","
                 <<setw(12)<<setprecision(6)<<fixed<<line->get_line_positive_sequence_z_in_pu().imag()<<", "
                 <<setw(12)<<setprecision(6)<<fixed<<line->get_line_positive_sequence_y_in_pu().imag()<<", "
@@ -867,9 +855,7 @@ string PSSE_IMEXPORTER::export_transformer_data() const
               <<setw(8)<<ibus<<", "
               <<setw(8)<<jbus<<", "
               <<setw(8)<<kbus<<", "
-              <<"\""<<left
-              <<setw(2)<<ickt<<"\", "
-              <<right
+              <<setw(6)<<("\""+ickt+"\"")<<", "
               <<TAP_OFF_NOMINAL_TURN_RATIO_BASED_ON_WINDING_NOMNAL_VOLTAGE<<", "
               <<IMPEDANCE_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE<<", "
               <<ADMITTANCE_IN_PU_ON_SYSTEM_BASE_POWER_AND_PRIMARY_WINDING_BUS_BASE_VOLTAGE<<", "
@@ -1122,9 +1108,7 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
         if(get_export_out_of_service_bus_logic()==false and (psdb.get_bus_type(rbus)==OUT_OF_SERVICE or psdb.get_bus_type(ibus)==OUT_OF_SERVICE))
             continue;
 
-        osstream<<"\""<<left
-               <<setw(16)<<hvdc->get_name()<<"\""<<", ";
-        osstream<<right;
+        osstream<<setw(20)<<("\""+hvdc->get_name()+"\"")<<", ";
 
         bool status = hvdc->get_status();
         HVDC_OPERATION_MODE mode = hvdc->get_converter_operation_mode(RECTIFIER);

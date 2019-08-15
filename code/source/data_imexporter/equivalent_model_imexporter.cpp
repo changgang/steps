@@ -394,7 +394,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     osstream<<"ARXL model added to "<<pedevice->get_device_name();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    osstream<<emodel->get_standard_model_string();
+    osstream<<emodel->get_standard_psse_string();
     toolkit.show_information_with_leading_time_stamp(osstream);
 
 }

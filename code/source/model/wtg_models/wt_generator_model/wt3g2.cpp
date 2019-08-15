@@ -553,7 +553,7 @@ void WT3G2::check()
 void WT3G2::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -563,32 +563,35 @@ void WT3G2::save()
     ;
 }
 
-string WT3G2::get_standard_model_string() const
+string WT3G2::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     LVPL lvpl = get_LVPL();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<get_number_of_lumped_wt_generators()<<", "
-      <<setw(8)<<setprecision(6)<<get_converter_reactiver_voltage_command_T_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_converter_activer_current_command_T_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_KPLL()<<", "
-      <<setw(8)<<setprecision(6)<<get_KIPLL()<<", "
-      <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
-      <<setw(8)<<setprecision(6)<<get_rated_power_per_wt_generator_in_MW()<<", "
-      <<setw(8)<<setprecision(6)<<lvpl.get_low_voltage_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<lvpl.get_high_voltage_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<lvpl.get_gain_at_hig_voltage()<<", "
-      <<setw(8)<<setprecision(6)<<get_HVRC_voltage_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_HVRC_current_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_LVPL_max_rate_of_active_current_change()<<", "
-      <<setw(8)<<setprecision(6)<<get_LVPL_voltage_sensor_T_in_s()<<" /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<get_number_of_lumped_wt_generators()<<", "
+            <<setw(8)<<setprecision(6)<<get_converter_reactiver_voltage_command_T_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_converter_activer_current_command_T_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_KPLL()<<", "
+            <<setw(8)<<setprecision(6)<<get_KIPLL()<<", "
+            <<setw(8)<<setprecision(6)<<get_PLLmax()<<", "
+            <<setw(8)<<setprecision(6)<<get_rated_power_per_wt_generator_in_MW()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<lvpl.get_low_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<lvpl.get_high_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<lvpl.get_gain_at_hig_voltage()<<", "
+            <<setw(8)<<setprecision(6)<<get_HVRC_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_HVRC_current_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_LVPL_max_rate_of_active_current_change()<<", "
+            <<setw(8)<<setprecision(6)<<get_LVPL_voltage_sensor_T_in_s()<<" /";
 
     return osstream.str();
 }

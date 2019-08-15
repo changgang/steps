@@ -31,7 +31,7 @@ class IEEEVC_TEST : public COMPENSATOR_MODEL_TEST
         virtual void test_set_get_parameters();
         virtual void test_initialize();
         virtual void test_step_response();
-        virtual void test_get_standard_model_string();
+        virtual void test_get_standard_psse_string();
     private:
 };
 

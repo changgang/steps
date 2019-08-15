@@ -427,33 +427,86 @@ void UFLS::save()
     ;
 }
 
-string UFLS::get_standard_model_string() const
+string UFLS::get_standard_psse_string() const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
-    string identifier = load->get_identifier();
-    osstream<<bus<<", "
-      <<"'"<<get_detailed_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setprecision(4)<<fixed<<get_frequency_sensor_time_in_s()<<", "
-      <<setprecision(4)<<fixed<<get_breaker_time_in_s();
+    string identifier = "'"+load->get_identifier()+"'";
 
+    string model_name = "'"+get_model_name()+"'";
+
+    osstream<<setw(8)<<bus<<", "
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(4)<<fixed<<get_frequency_sensor_time_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<fixed<<get_breaker_time_in_s()<<", ";
+
+    size_t n_content = 5;
     double fth, tdelay, scale;
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    size_t i=0;
+    for(i=0; i!=(MAX_LOAD_RELAY_STAGE-1); ++i)
     {
         fth = get_frequency_threshold_in_Hz_of_stage(i);
         tdelay = get_time_delay_in_s_of_stage(i);
         scale = get_scale_in_pu_of_stage(i);
         if(fabs(fth)<FLOAT_EPSILON)
             break;
-        osstream<<", ";
-        osstream<<setprecision(3)<<fixed<<fth<<", "
-          <<setprecision(3)<<fixed<<tdelay<<", "
-          <<setprecision(3)<<fixed<<scale;
+        osstream<<setw(8)<<setprecision(4)<<fixed<<fth<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+        osstream<<setw(8)<<setprecision(4)<<fixed<<tdelay<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+        osstream<<setw(8)<<setprecision(4)<<fixed<<scale<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
     }
-    osstream<<"  /";
-    return osstream.str();
+    i = MAX_LOAD_RELAY_STAGE - 1;
+    fth = get_frequency_threshold_in_Hz_of_stage(i);
+    tdelay = get_time_delay_in_s_of_stage(i);
+    scale = get_scale_in_pu_of_stage(i);
+    if(fabs(fth)>=FLOAT_EPSILON)
+    {
+        osstream<<setw(8)<<setprecision(4)<<fixed<<fth<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+        osstream<<setw(8)<<setprecision(4)<<fixed<<tdelay<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+        osstream<<setw(8)<<setprecision(4)<<fixed<<scale<<", ";
+    }
+    string model_string = osstream.str();
+    osstream.str("");
+
+    model_string = trim_string(model_string, ", ")+" /";
+
+    return model_string;
 }
 
 void UFLS::prepare_model_data_table()

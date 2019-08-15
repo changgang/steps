@@ -741,7 +741,7 @@ void GAST2A::check()
 void GAST2A::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -749,48 +749,53 @@ void GAST2A::save()
 {
     ;
 }
-string GAST2A::get_standard_model_string() const
+string GAST2A::get_standard_psse_string() const
 {
     ostringstream osstream;
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', 0, '', "
-      <<setw(8)<<setprecision(6)<<get_gas_W()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_X_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_Y_in_s()<<", "
-      <<setw(8)<<setprecision(0)<<get_gas_Z()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_ETD_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_TCD_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_Prate_in_MW()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_T_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_max_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_min_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_ECR_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_K3()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_a()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_b_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_c()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_Tf_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_Kf()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_K5()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_K4()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_T3_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_T4_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_Tt_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_T5_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_af1()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_bf1()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_af2()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_bf2()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_cf2()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_TR_in_deg()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_K6()<<", "
-      <<setw(8)<<setprecision(6)<<get_gas_TC_in_deg()<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_W()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_X_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_Y_in_s()<<", "
+            <<setw(8)<<setprecision(0)<<get_gas_Z()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_ETD_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_TCD_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_Prate_in_MW()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<get_gas_T_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_max_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_min_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_ECR_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_K3()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_a()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_b_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_c()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_Tf_in_s()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<get_gas_Kf()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_K5()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_K4()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_T3_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_T4_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_Tt_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_T5_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_af1()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_bf1()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<get_gas_af2()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_bf2()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_cf2()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_TR_in_deg()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_K6()<<", "
+            <<setw(8)<<setprecision(6)<<get_gas_TC_in_deg()<<" /";
     return osstream.str();
 }
 

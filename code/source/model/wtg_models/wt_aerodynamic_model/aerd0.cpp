@@ -286,12 +286,15 @@ void AERD0::save()
     ;
 }
 
-string AERD0::get_standard_model_string() const
+string AERD0::get_standard_psse_string() const
 {
     ostringstream osstream;
     WT_GENERATOR* gen = get_wt_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
+
 
     int speed_mode_flag = 0;
     switch(get_turbine_speed_mode())
@@ -315,24 +318,25 @@ string AERD0::get_standard_model_string() const
     size_t n = get_number_of_pole_pairs();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<speed_mode_flag<<", "
-      <<setw(8)<<n<<", "
-      <<setw(8)<<setprecision(4)<<get_nominal_wind_speed_in_mps()<<", "
-      <<setw(8)<<setprecision(4)<<get_gear_efficiency()<<", "
-      <<setw(8)<<setprecision(4)<<get_nominal_air_density_in_kgpm3()<<", "
-      <<setw(8)<<setprecision(4)<<get_min_steady_state_turbine_speed_in_pu()<<", "
-      <<setw(8)<<setprecision(4)<<get_max_steady_state_turbine_speed_in_pu()<<", "
-      <<setw(8)<<setprecision(4)<<get_air_density_in_kgpm3()<<", "
-      <<setw(8)<<setprecision(4)<<get_C1()<<", "
-      <<setw(8)<<setprecision(4)<<get_C2()<<", "
-      <<setw(8)<<setprecision(4)<<get_C3()<<", "
-      <<setw(8)<<setprecision(4)<<get_C4()<<", "
-      <<setw(8)<<setprecision(4)<<get_C5()<<", "
-      <<setw(8)<<setprecision(4)<<get_C6()<<", "
-      <<setw(8)<<setprecision(4)<<get_C7()<<", "
-      <<setw(8)<<setprecision(4)<<get_C8()<<" /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<speed_mode_flag<<", "
+            <<setw(8)<<n<<", "
+            <<setw(8)<<setprecision(4)<<get_nominal_wind_speed_in_mps()<<", "
+            <<setw(8)<<setprecision(4)<<get_gear_efficiency()<<", "
+            <<setw(8)<<setprecision(4)<<get_nominal_air_density_in_kgpm3()<<", "
+            <<setw(8)<<setprecision(4)<<get_min_steady_state_turbine_speed_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_max_steady_state_turbine_speed_in_pu()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<get_air_density_in_kgpm3()<<", "
+            <<setw(8)<<setprecision(4)<<get_C1()<<", "
+            <<setw(8)<<setprecision(4)<<get_C2()<<", "
+            <<setw(8)<<setprecision(4)<<get_C3()<<", "
+            <<setw(8)<<setprecision(4)<<get_C4()<<", "
+            <<setw(8)<<setprecision(4)<<get_C5()<<", "
+            <<setw(8)<<setprecision(4)<<get_C6()<<", "
+            <<setw(8)<<setprecision(4)<<get_C7()<<", "
+            <<setw(8)<<setprecision(4)<<get_C8()<<" /";
 
     return osstream.str();
 }

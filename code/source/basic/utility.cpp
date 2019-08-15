@@ -304,12 +304,20 @@ double steps_fast_arctangent(double angle_in_rad)
     return 0.0;
 }
 
-string trim_string(string str)
+string trim_string(string str, string garbage)
 {
     if(not str.empty())
     {
-        str.erase(0,str.find_first_not_of(" \t\n\r"));
-        str.erase(str.find_last_not_of(" \t\n\r")+1);
+        if(garbage=="")
+        {
+            str.erase(0,str.find_first_not_of(" \t\n\r"));
+            str.erase(str.find_last_not_of(" \t\n\r")+1);
+        }
+        else
+        {
+            str.erase(0,str.find_first_not_of(garbage));
+            str.erase(str.find_last_not_of(garbage)+1);
+        }
     }
     return str;
 }

@@ -314,7 +314,7 @@ void WT3T0::check()
 void WT3T0::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -323,7 +323,7 @@ void WT3T0::save()
 {
     ;
 }
-string WT3T0::get_standard_model_string() const
+string WT3T0::get_standard_psse_string() const
 {
     ostringstream osstream;
 
@@ -335,16 +335,18 @@ string WT3T0::get_standard_model_string() const
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<ht<<", "
-      <<setw(8)<<setprecision(6)<<hg<<", "
-      <<setw(8)<<setprecision(6)<<kshaft<<", "
-      <<setw(8)<<setprecision(6)<<dshaft<<", "
-      <<setw(8)<<setprecision(6)<<damp<<" /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<ht<<", "
+            <<setw(8)<<setprecision(6)<<hg<<", "
+            <<setw(8)<<setprecision(6)<<kshaft<<", "
+            <<setw(8)<<setprecision(6)<<dshaft<<", "
+            <<setw(8)<<setprecision(6)<<damp<<" /";
     return osstream.str();
 }
 

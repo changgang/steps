@@ -31,7 +31,7 @@ class HVDC_MODEL_TEST : public Test::Suite
         void test_inverter_voltage_ramp_response();
         void test_manual_block_and_unblock();
         void test_manual_bypass_and_unbypass();
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
         void test_get_auxiliary_signal();
 

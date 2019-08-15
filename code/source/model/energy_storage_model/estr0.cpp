@@ -611,7 +611,7 @@ void ESTR0::check()
 void ESTR0::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -621,7 +621,7 @@ void ESTR0::save()
     ;
 }
 
-string ESTR0::get_standard_model_string() const
+string ESTR0::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
@@ -651,7 +651,7 @@ string ESTR0::get_standard_model_string() const
       <<setw(8)<<setprecision(6)<<get_Tq3_in_s()<<", "
       <<setw(8)<<setprecision(6)<<get_Tq4_in_s()<<", "
       <<setw(8)<<setprecision(6)<<get_Kq()<<", "
-      <<setw(8)<<setprecision(6)<<get_Dq()<<"  /";
+      <<setw(8)<<setprecision(6)<<get_Dq()<<" /";
 
     return osstream.str();
 }
@@ -722,7 +722,7 @@ double ESTR0::get_model_internal_variable_with_name(string var_name)
 
 string ESTR0::get_dynamic_data_in_psse_format() const
 {
-    return get_standard_model_string();
+    return get_standard_psse_string();
 }
 
 string ESTR0::get_dynamic_data_in_bpa_format() const

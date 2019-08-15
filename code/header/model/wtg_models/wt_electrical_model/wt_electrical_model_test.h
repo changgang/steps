@@ -40,7 +40,7 @@ class WT_ELECTRICAL_MODEL_TEST : public WTG_MODEL_TEST
         void test_get_wt_generator_speed();
         void test_get_wt_generator_speed_reference();
 
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
         void test_step_response_with_voltage_drop();
         void test_step_response_with_frequency_drop();

@@ -935,7 +935,7 @@ void WT3E1::clear()
 void WT3E1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -945,12 +945,14 @@ void WT3E1::save()
     ;
 }
 
-string WT3E1::get_standard_model_string() const
+string WT3E1::get_standard_psse_string() const
 {
     ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
     size_t bus = source->get_source_bus();
-    string identifier= source->get_identifier();
+    string identifier = "'"+source->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     size_t bus_reg = get_bus_to_regulate();
     PE_VAR_CONTROL_MODE mode = get_var_control_mode();
@@ -958,7 +960,7 @@ string WT3E1::get_standard_model_string() const
     size_t voltage_flag = get_voltage_flag();
     size_t trans_from_bus = get_transformer_from_bus();
     size_t trans_to_bus = get_transformer_to_bus();
-    string trans_id = get_transformer_id();
+    string trans_id = "'"+get_transformer_id()+"'";
     double tfv = get_TFV_in_s();
     double kpv = get_KPV();
     double kiv = get_KIV();
@@ -995,46 +997,49 @@ string WT3E1::get_standard_model_string() const
     double wp100 = table.get_reference_speed_with_power_in_pu(1.0);
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<bus_reg<<", "
-      <<setw(8)<<var_mode<<", "
-      <<setw(8)<<voltage_flag<<", "
-      <<setw(8)<<trans_from_bus<<", "
-      <<setw(8)<<trans_to_bus<<", "
-      <<"'"<<trans_id<<"', "
-      <<setw(8)<<setprecision(6)<<tfv<<", "
-      <<setw(8)<<setprecision(6)<<kpv<<", "
-      <<setw(8)<<setprecision(6)<<kiv<<", "
-      <<setw(8)<<setprecision(6)<<xc<<", "
-      <<setw(8)<<setprecision(6)<<tfp<<", "
-      <<setw(8)<<setprecision(6)<<kpp<<", "
-      <<setw(8)<<setprecision(6)<<kip<<", "
-      <<setw(8)<<setprecision(6)<<pmax<<", "
-      <<setw(8)<<setprecision(6)<<pmin<<", "
-      <<setw(8)<<setprecision(6)<<qmax<<", "
-      <<setw(8)<<setprecision(6)<<qmin<<", "
-      <<setw(8)<<setprecision(6)<<ipmax<<", "
-      <<setw(8)<<setprecision(6)<<trv<<", "
-      <<setw(8)<<setprecision(6)<<rpmax<<", "
-      <<setw(8)<<setprecision(6)<<rpmin<<", ";
-    osstream<<"\n        "
-      <<setw(8)<<setprecision(6)<<tspeed<<", "
-      <<setw(8)<<setprecision(6)<<kqi<<", "
-      <<setw(8)<<setprecision(6)<<vmax<<", "
-      <<setw(8)<<setprecision(6)<<vmin<<", "
-      <<setw(8)<<setprecision(6)<<kqv<<", "
-      <<setw(8)<<setprecision(6)<<eqmin<<", "
-      <<setw(8)<<setprecision(6)<<eqmax<<", "
-      <<setw(8)<<setprecision(6)<<tv<<", "
-      <<setw(8)<<setprecision(6)<<tp<<", "
-      <<setw(8)<<setprecision(6)<<fn<<", "
-      <<setw(8)<<setprecision(6)<<wmin<<", "
-      <<setw(8)<<setprecision(6)<<wp20<<", "
-      <<setw(8)<<setprecision(6)<<wp40<<", "
-      <<setw(8)<<setprecision(6)<<wp60<<", "
-      <<setw(8)<<setprecision(6)<<pmin_at_wmin<<", "
-      <<setw(8)<<setprecision(6)<<wp100<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<bus_reg<<", "
+            <<setw(8)<<var_mode<<", "
+            <<setw(8)<<voltage_flag<<", "
+            <<setw(8)<<trans_from_bus<<", "
+            <<setw(8)<<trans_to_bus<<", "
+            <<setw(8)<<trans_id<<", "
+            <<setw(8)<<setprecision(6)<<tfv<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kpv<<", "
+            <<setw(8)<<setprecision(6)<<kiv<<", "
+            <<setw(8)<<setprecision(6)<<xc<<", "
+            <<setw(8)<<setprecision(6)<<tfp<<", "
+            <<setw(8)<<setprecision(6)<<kpp<<", "
+            <<setw(8)<<setprecision(6)<<kip<<", "
+            <<setw(8)<<setprecision(6)<<pmax<<", "
+            <<setw(8)<<setprecision(6)<<pmin<<", "
+            <<setw(8)<<setprecision(6)<<qmax<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<qmin<<", "
+            <<setw(8)<<setprecision(6)<<ipmax<<", "
+            <<setw(8)<<setprecision(6)<<trv<<", "
+            <<setw(8)<<setprecision(6)<<rpmax<<", "
+            <<setw(8)<<setprecision(6)<<rpmin<<", "
+            <<setw(8)<<setprecision(6)<<tspeed<<", "
+            <<setw(8)<<setprecision(6)<<kqi<<", "
+            <<setw(8)<<setprecision(6)<<vmax<<", "
+            <<setw(8)<<setprecision(6)<<vmin<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kqv<<", "
+            <<setw(8)<<setprecision(6)<<eqmin<<", "
+            <<setw(8)<<setprecision(6)<<eqmax<<", "
+            <<setw(8)<<setprecision(6)<<tv<<", "
+            <<setw(8)<<setprecision(6)<<tp<<", "
+            <<setw(8)<<setprecision(6)<<fn<<", "
+            <<setw(8)<<setprecision(6)<<wmin<<", "
+            <<setw(8)<<setprecision(6)<<wp20<<", "
+            <<setw(8)<<setprecision(6)<<wp40<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<wp60<<", "
+            <<setw(8)<<setprecision(6)<<pmin_at_wmin<<", "
+            <<setw(8)<<setprecision(6)<<wp100<<" /";
 
     return osstream.str();
 }

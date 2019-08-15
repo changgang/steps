@@ -23,7 +23,7 @@ WT_PITCH_MODEL_TEST::WT_PITCH_MODEL_TEST()
     TEST_ADD(WT_PITCH_MODEL_TEST::test_get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_set_get_frequency_upper_deadband);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_set_get_frequency_lower_deadband);
-    TEST_ADD(WT_PITCH_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(WT_PITCH_MODEL_TEST::test_get_standard_psse_string);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_step_response_with_active_power_order_drop);
     TEST_ADD(WT_PITCH_MODEL_TEST::test_step_response_with_frequency_drop);
 }
@@ -256,13 +256,13 @@ void WT_PITCH_MODEL_TEST::test_set_get_frequency_lower_deadband()
         TEST_ASSERT(false);
 }
 
-void WT_PITCH_MODEL_TEST::test_get_standard_model_string()
+void WT_PITCH_MODEL_TEST::test_get_standard_psse_string()
 {
     WT_PITCH_MODEL* model = get_test_wt_pitch_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        default_toolkit.show_information_with_leading_time_stamp(model->get_standard_model_string());
+        default_toolkit.show_information_with_leading_time_stamp(model->get_standard_psse_string());
     }
     else
         TEST_ASSERT(false);

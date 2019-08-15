@@ -561,7 +561,7 @@ void CSEET2::initialize()
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
-            STEPS& toolkit = generator->get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -603,13 +603,13 @@ void CSEET2::initialize()
                 if(Vr>get_VAmax_in_pu())
                 {
                     osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Vr is "<<Vr<<", and VAmax is "<<get_VAmax_in_pu()<<".";
+                      <<"Va is "<<Vr<<", and VAmax is "<<get_VAmax_in_pu()<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 if(Vr<get_VAmin_in_pu())
                 {
                     osstream<<"Initialization error. Regulating excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Vr is "<<Vr<<", and VAmin is "<<get_VAmin_in_pu()<<".";
+                      <<"Va is "<<Vr<<", and VAmin is "<<get_VAmin_in_pu()<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
 
@@ -783,7 +783,7 @@ void CSEET2::check()
 void CSEET2::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -793,12 +793,14 @@ void CSEET2::save()
     ;
 }
 
-string CSEET2::get_standard_model_string() const
+string CSEET2::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     size_t source_index = 0;
     switch(get_excitation_source())
@@ -834,12 +836,13 @@ string CSEET2::get_standard_model_string() const
     double TR = get_TR_in_s();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(4)<<source_index<<", "
-      <<setw(4)<<stabilizer_index<<", "
-      <<setw(4)<<tuner_type<<", "
-      <<setw(8)<<setprecision(6)<<TR<<", ";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<source_index<<", "
+            <<setw(8)<<stabilizer_index<<", "
+            <<setw(8)<<tuner_type<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<TR<<", ";
 
     if(get_tuner_type()==SERIAL_TUNER)
     {
@@ -855,13 +858,14 @@ string CSEET2::get_standard_model_string() const
         double T4 = get_serial_tuner_T4_in_s();
 
         osstream<<setw(8)<<setprecision(6)<<K<<", "
-          <<setw(8)<<selector<<", "
-          <<setw(8)<<setprecision(6)<<T1<<", "
-          <<setw(8)<<setprecision(6)<<T2<<", "
-          <<setw(8)<<setprecision(6)<<VA1max<<", "
-          <<setw(8)<<setprecision(6)<<VA1min<<", "
-          <<setw(8)<<setprecision(6)<<T3<<", "
-          <<setw(8)<<setprecision(6)<<T4<<", ";
+                <<setw(8)<<selector<<", "
+                <<setw(8)<<setprecision(6)<<T1<<", "
+                <<setw(8)<<setprecision(6)<<T2<<", "
+                <<setw(8)<<setprecision(6)<<VA1max<<", "
+                <<setw(8)<<setprecision(6)<<VA1min<<", "
+                <<setw(8)<<setprecision(6)<<T3<<", "
+                <<setw(8)<<setprecision(6)<<T4<<", \n"
+                <<setw(10)<<"";
     }
     else
     {
@@ -875,16 +879,15 @@ string CSEET2::get_standard_model_string() const
         double Vdmin = get_parallel_tuner_VDmin_in_pu();
 
         osstream<<setw(8)<<setprecision(6)<<KP<<", "
-          <<setw(8)<<setprecision(6)<<KI<<", "
-          <<setw(8)<<setprecision(6)<<Vimax<<", "
-          <<setw(8)<<setprecision(6)<<Vimin<<", "
-          <<setw(8)<<setprecision(6)<<KD<<", "
-          <<setw(8)<<setprecision(6)<<TD<<", "
-          <<setw(8)<<setprecision(6)<<Vdmax<<", "
-          <<setw(8)<<setprecision(6)<<Vdmin<<", ";
+                <<setw(8)<<setprecision(6)<<KI<<", "
+                <<setw(8)<<setprecision(6)<<Vimax<<", "
+                <<setw(8)<<setprecision(6)<<Vimin<<", "
+                <<setw(8)<<setprecision(6)<<KD<<", "
+                <<setw(8)<<setprecision(6)<<TD<<", "
+                <<setw(8)<<setprecision(6)<<Vdmax<<", "
+                <<setw(8)<<setprecision(6)<<Vdmin<<", \n"
+                <<setw(10)<<"";
     }
-    osstream<<"\n        ";
-
     double KA = get_KA();
     double TA = get_TA_in_s();
     double VAmax = get_VAmax_in_pu();
@@ -896,14 +899,14 @@ string CSEET2::get_standard_model_string() const
     double KC = get_KC();
 
     osstream<<setw(8)<<setprecision(6)<<KA<<", "
-      <<setw(8)<<setprecision(6)<<TA<<", "
-      <<setw(8)<<setprecision(6)<<VAmax<<", "
-      <<setw(8)<<setprecision(6)<<VAmin<<", "
-      <<setw(8)<<setprecision(6)<<KF<<", "
-      <<setw(8)<<setprecision(6)<<TF<<", "
-      <<setw(8)<<setprecision(6)<<VRmax<<", "
-      <<setw(8)<<setprecision(6)<<VRmin<<", "
-      <<setw(8)<<setprecision(6)<<KC<<"  /";
+            <<setw(8)<<setprecision(6)<<TA<<", "
+            <<setw(8)<<setprecision(6)<<VAmax<<", "
+            <<setw(8)<<setprecision(6)<<VAmin<<", "
+            <<setw(8)<<setprecision(6)<<KF<<", "
+            <<setw(8)<<setprecision(6)<<TF<<", "
+            <<setw(8)<<setprecision(6)<<VRmax<<", "
+            <<setw(8)<<setprecision(6)<<VRmin<<", "
+            <<setw(8)<<setprecision(6)<<KC<<" /";
 
     return osstream.str();
 }

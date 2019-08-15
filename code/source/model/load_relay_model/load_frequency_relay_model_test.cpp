@@ -106,7 +106,7 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
 
     ostringstream osstream;
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;

@@ -244,7 +244,7 @@ void PSASPE1::initialize()
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
-            STEPS& toolkit = generator->get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -266,26 +266,26 @@ void PSASPE1::initialize()
                 if(Efd>get_Efdmax_in_pu())
                 {
                     osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
+                            <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 if(Efd<get_Efdmin_in_pu())
                 {
                     osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
+                            <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
 
                 if(Efd>get_VAmax_in_pu())
                 {
                     osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
-                      <<"Efd is "<<Efd<<", and VAmax is "<<get_VAmax_in_pu()<<".";
+                            <<"Efd is "<<Efd<<", and VAmax is "<<get_VAmax_in_pu()<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
                 if(Efd<get_VAmin_in_pu())
                 {
                     osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
-                      <<"Efd is "<<Efd<<", and VAmin is "<<get_VAmin_in_pu()<<".";
+                            <<"Efd is "<<Efd<<", and VAmin is "<<get_VAmin_in_pu()<<".";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
 
@@ -359,7 +359,7 @@ void PSASPE1::check()
 void PSASPE1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -369,12 +369,15 @@ void PSASPE1::save()
     ;
 }
 
-string PSASPE1::get_standard_model_string() const
+string PSASPE1::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
+
     double KR = get_KR();
     double TR = get_TR_in_s();
     double KA = get_KA();
@@ -386,17 +389,18 @@ string PSASPE1::get_standard_model_string() const
     double TF = get_TF_in_s();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<KR<<", "
-      <<setw(8)<<setprecision(6)<<TR<<", "
-      <<setw(8)<<setprecision(6)<<KA<<", "
-      <<setw(8)<<setprecision(6)<<TA<<", "
-      <<setw(8)<<setprecision(6)<<TE<<", "
-      <<setw(8)<<setprecision(6)<<KF<<", "
-      <<setw(8)<<setprecision(6)<<TF<<", "
-      <<setw(8)<<setprecision(6)<<Efdmax<<", "
-      <<setw(8)<<setprecision(6)<<Efdmin<<" /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<KR<<", "
+            <<setw(8)<<setprecision(6)<<TR<<", "
+            <<setw(8)<<setprecision(6)<<KA<<", "
+            <<setw(8)<<setprecision(6)<<TA<<", "
+            <<setw(8)<<setprecision(6)<<TE<<", "
+            <<setw(8)<<setprecision(6)<<KF<<", "
+            <<setw(8)<<setprecision(6)<<TF<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<Efdmax<<", "
+            <<setw(8)<<setprecision(6)<<Efdmin<<" /";
     return osstream.str();
 }
 

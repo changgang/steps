@@ -39,7 +39,7 @@ double steps_fast_arccosine(double angle_in_rad);
 double steps_fast_tangent(double angle_in_rad);
 double steps_fast_arctangent(double angle_in_rad);
 
-string trim_string(string str);
+string trim_string(string str, string garbage="");
 string replace_string_contents(string str, string source, string destination);
 string shrink_sucessive_blanks(string str);
 string string2csv(string str);

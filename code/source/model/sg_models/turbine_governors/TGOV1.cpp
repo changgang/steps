@@ -245,7 +245,7 @@ void TGOV1::check()
 void TGOV1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -253,7 +253,7 @@ void TGOV1::save()
 {
     ;
 }
-string TGOV1::get_standard_model_string() const
+string TGOV1::get_standard_psse_string() const
 {
     ostringstream osstream;
 
@@ -267,18 +267,20 @@ string TGOV1::get_standard_model_string() const
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<R<<", "
-      <<setw(8)<<setprecision(6)<<T1<<", "
-      <<setw(8)<<setprecision(6)<<Vmax<<", "
-      <<setw(8)<<setprecision(6)<<Vmin<<", "
-      <<setw(8)<<setprecision(6)<<T2<<", "
-      <<setw(8)<<setprecision(6)<<T3<<", "
-      <<setw(8)<<setprecision(6)<<D<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<R<<", "
+            <<setw(8)<<setprecision(6)<<T1<<", "
+            <<setw(8)<<setprecision(6)<<Vmax<<", "
+            <<setw(8)<<setprecision(6)<<Vmin<<", "
+            <<setw(8)<<setprecision(6)<<T2<<", "
+            <<setw(8)<<setprecision(6)<<T3<<", "
+            <<setw(8)<<setprecision(6)<<D<<" /";
     return osstream.str();
 }
 

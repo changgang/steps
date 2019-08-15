@@ -34,7 +34,7 @@ class ENERGY_STORAGE_MODEL_TEST : public Test::Suite
         void test_set_get_initial_Vref();
         void test_frequency_step_response();
         void test_voltage_step_response();
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
         void export_meter_title();
         void export_meter_values();

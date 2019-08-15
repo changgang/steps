@@ -36,7 +36,7 @@ class EQUIVALENT_MODEL : public MODEL
         virtual void check() = 0;
         virtual void report() = 0;
         virtual void save() = 0;
-        virtual string get_standard_model_string() const = 0;
+        virtual string get_standard_psse_string() const = 0;
         virtual void switch_output_to_equivalent_device() = 0;
 
         virtual void prepare_model_data_table() = 0;

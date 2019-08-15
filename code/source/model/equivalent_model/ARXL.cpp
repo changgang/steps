@@ -526,7 +526,7 @@ void ARXL::check()
 void ARXL::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -534,7 +534,7 @@ void ARXL::save()
 {
     ;
 }
-string ARXL::get_standard_model_string() const
+string ARXL::get_standard_psse_string() const
 {
     string data;
 

@@ -647,7 +647,7 @@ void WTRLY0::check()
 void WTRLY0::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -656,18 +656,22 @@ void WTRLY0::save()
 {
     ;
 }
-string WTRLY0::get_standard_model_string() const
+string WTRLY0::get_standard_psse_string() const
 {
     ostringstream osstream;
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', ";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", \n"
+            <<setw(10)<<"";
+    size_t n_content = 0;
     size_t n=0;
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {
@@ -677,6 +681,7 @@ string WTRLY0::get_standard_model_string() const
             ++n;
     }
     osstream<<setw(8)<<n<<", ";
+    n_content = 1;
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {
         if(fabs(vwind_th[i])<FLOAT_EPSILON and fabs(vwind_th[i]-1.0)<FLOAT_EPSILON)
@@ -687,6 +692,8 @@ string WTRLY0::get_standard_model_string() const
             osstream<<setw(8)<<setprecision(6)<<vwind_relay_timer[i].get_timer_interval_in_s()<<", ";
         }
     }
+    osstream<<"\n";
+    osstream<<setw(10)<<"";
 
     n = 0;
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
@@ -707,6 +714,8 @@ string WTRLY0::get_standard_model_string() const
             osstream<<setw(8)<<setprecision(6)<<speed_relay_timer[i].get_timer_interval_in_s()<<", ";
         }
     }
+    osstream<<"\n";
+    osstream<<setw(10)<<"";
 
     n = 0;
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
@@ -727,6 +736,8 @@ string WTRLY0::get_standard_model_string() const
             osstream<<setw(8)<<setprecision(6)<<freq_relay_timer[i].get_timer_interval_in_s()<<", ";
         }
     }
+    osstream<<"\n";
+    osstream<<setw(10)<<"";
 
     n = 0;
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)

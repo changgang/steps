@@ -561,7 +561,7 @@ void PVCV0::report()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -570,7 +570,7 @@ void PVCV0::save()
     ;
 }
 
-string PVCV0::get_standard_model_string() const
+string PVCV0::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();

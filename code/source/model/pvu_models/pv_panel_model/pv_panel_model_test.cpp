@@ -13,7 +13,7 @@ PV_PANEL_MODEL_TEST::PV_PANEL_MODEL_TEST()
 {
     TEST_ADD(PV_PANEL_MODEL_TEST::test_get_model_type);
 
-    TEST_ADD(PV_PANEL_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(PV_PANEL_MODEL_TEST::test_get_standard_psse_string);
 }
 
 void PV_PANEL_MODEL_TEST::setup()
@@ -46,14 +46,14 @@ void PV_PANEL_MODEL_TEST::test_get_model_type()
         TEST_ASSERT(false);
 }
 
-void PV_PANEL_MODEL_TEST::test_get_standard_model_string()
+void PV_PANEL_MODEL_TEST::test_get_standard_psse_string()
 {
     PV_PANEL_MODEL* model = get_test_pv_panel_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        model->get_standard_model_string();
+        model->get_standard_psse_string();
     }
     else
         TEST_ASSERT(false);

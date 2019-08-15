@@ -110,7 +110,7 @@ void PVP0::save()
     ;
 }
 
-string PVP0::get_standard_model_string() const
+string PVP0::get_standard_psse_string() const
 {
     return "";
 }

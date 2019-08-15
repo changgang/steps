@@ -85,7 +85,7 @@ void COMPENSATOR_MODEL_TEST::initialize_models()
     GENERATOR* genptr = get_test_generator();
     COMPENSATOR_MODEL* model = get_test_compensator_model();
 
-    oosstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    oosstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(oosstream);
 
     SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();

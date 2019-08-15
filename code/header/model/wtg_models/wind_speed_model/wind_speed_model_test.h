@@ -26,7 +26,7 @@ class WIND_SPEED_MODEL_TEST : public WTG_MODEL_TEST
         void test_get_model_type();
         void test_get_nominal_wind_speed();
 
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
         virtual void test_get_model_name() = 0;
         virtual void test_set_get_parameters() = 0;

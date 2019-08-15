@@ -67,7 +67,7 @@ class MODEL : public BASE
         virtual void clear() = 0;
         virtual void report() = 0;
         virtual void save() = 0;
-        virtual string get_standard_model_string() const = 0;
+        virtual string get_standard_psse_string() const = 0;
 
         virtual void prepare_model_data_table() = 0;
         virtual double get_model_data_with_name(string par_name) const = 0;

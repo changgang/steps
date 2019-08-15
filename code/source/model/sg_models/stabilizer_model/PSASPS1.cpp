@@ -366,18 +366,18 @@ void PSASPS1::check()
 void PSASPS1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PSASPS1::save()
 {
-    string model = get_standard_model_string();
+    string model = get_standard_psse_string();
     return;
 }
 
-string PSASPS1::get_standard_model_string() const
+string PSASPS1::get_standard_psse_string() const
 {
     ostringstream osstream;
 
@@ -395,22 +395,25 @@ string PSASPS1::get_standard_model_string() const
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<Kq1<<", "
-      <<setw(8)<<setprecision(6)<<Kq2<<", "
-      <<setw(8)<<setprecision(6)<<Kq3<<", "
-      <<setw(4)<<K<<", "
-      <<setw(8)<<setprecision(6)<<Tq<<", "
-      <<setw(8)<<setprecision(6)<<T1e<<", "
-      <<setw(8)<<setprecision(6)<<T2e<<", "
-      <<setw(8)<<setprecision(6)<<T3e<<", "
-      <<setw(8)<<setprecision(6)<<T4e<<", "
-      <<setw(8)<<setprecision(6)<<Vsmax<<", "
-      <<setw(8)<<setprecision(6)<<Vsmin<<" /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<Kq1<<", "
+            <<setw(8)<<setprecision(6)<<Kq2<<", "
+            <<setw(8)<<setprecision(6)<<Kq3<<", "
+            <<setw(8)<<K<<", "
+            <<setw(8)<<setprecision(6)<<Tq<<", "
+            <<setw(8)<<setprecision(6)<<T1e<<", "
+            <<setw(8)<<setprecision(6)<<T2e<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<T3e<<", "
+            <<setw(8)<<setprecision(6)<<T4e<<", "
+            <<setw(8)<<setprecision(6)<<Vsmax<<", "
+            <<setw(8)<<setprecision(6)<<Vsmin<<" /";
 
     return osstream.str();
 }

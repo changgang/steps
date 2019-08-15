@@ -140,7 +140,7 @@ void COMP::check()
 void COMP::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -148,17 +148,19 @@ void COMP::save()
 {
     ;
 }
-string COMP::get_standard_model_string() const
+string COMP::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
+
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(8)<<get_Xe()
-      <<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(8)<<get_Xe()<<" /";
     return osstream.str();
 }
 

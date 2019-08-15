@@ -371,18 +371,18 @@ void LCFB1::check()
 void LCFB1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void LCFB1::save()
 {
-    string model = get_standard_model_string();
+    string model = get_standard_psse_string();
     return;
 }
 
-string LCFB1::get_standard_model_string() const
+string LCFB1::get_standard_psse_string() const
 {
     ostringstream osstream;
 
@@ -398,20 +398,23 @@ string LCFB1::get_standard_model_string() const
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(4)<<(fflag==false?0:1)<<", "
-      <<setw(8)<<(pflag==false?0:1)<<", "
-      <<setw(8)<<setprecision(6)<<fb<<", "
-      <<setw(8)<<setprecision(6)<<tpelec<<", "
-      <<setw(8)<<setprecision(6)<<db<<", "
-      <<setw(8)<<setprecision(6)<<emax<<", "
-      <<setw(8)<<setprecision(6)<<kp<<", "
-      <<setw(8)<<setprecision(6)<<ki<<", "
-      <<setw(8)<<setprecision(6)<<irmax<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<(fflag==false?0:1)<<", "
+            <<setw(8)<<(pflag==false?0:1)<<", "
+            <<setw(8)<<setprecision(6)<<fb<<", "
+            <<setw(8)<<setprecision(6)<<tpelec<<", "
+            <<setw(8)<<setprecision(6)<<db<<", "
+            <<setw(8)<<setprecision(6)<<emax<<", "
+            <<setw(8)<<setprecision(6)<<kp<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<ki<<", "
+            <<setw(8)<<setprecision(6)<<irmax<<" /";
 
     return osstream.str();
 }

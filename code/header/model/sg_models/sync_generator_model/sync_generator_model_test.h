@@ -34,7 +34,7 @@ class SYNC_GENERATOR_MODEL_TEST : public SG_MODEL_TEST
         void test_efd_step_response_of_sync_generator_model();
         void test_bus_step_response_of_sync_generator_model();
         void test_variable_step_simulation_with_pmech_step_response();
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
         void run_a_step();
 

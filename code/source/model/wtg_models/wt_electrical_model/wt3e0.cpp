@@ -1118,7 +1118,7 @@ void WT3E0::clear()
 void WT3E0::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -1128,12 +1128,14 @@ void WT3E0::save()
     ;
 }
 
-string WT3E0::get_standard_model_string() const
+string WT3E0::get_standard_psse_string() const
 {
     ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
     size_t bus = source->get_source_bus();
-    string identifier= source->get_identifier();
+    string identifier = "'"+source->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     size_t bus_reg = get_bus_to_regulate();
     PE_VAR_CONTROL_MODE mode = get_var_control_mode();
@@ -1173,43 +1175,47 @@ string WT3E0::get_standard_model_string() const
     double ipmax = get_IPmax_in_pu();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<bus_reg<<", "
-      <<setw(8)<<var_mode<<", "
-      <<setw(8)<<voltage_flag<<", "
-      <<setw(8)<<setprecision(6)<<xc<<", "
-      <<setw(8)<<setprecision(6)<<trv<<", "
-      <<setw(8)<<setprecision(6)<<fn<<", "
-      <<setw(8)<<setprecision(6)<<kpv<<", "
-      <<setw(8)<<setprecision(6)<<tv<<", "
-      <<setw(8)<<setprecision(6)<<kiv<<", "
-      <<setw(8)<<setprecision(6)<<qmin<<", "
-      <<setw(8)<<setprecision(6)<<qmax<<", "
-      <<setw(8)<<setprecision(6)<<tfv<<", "
-      <<setw(8)<<setprecision(6)<<tp<<", "
-      <<setw(8)<<setprecision(6)<<kqi<<", "
-      <<setw(8)<<setprecision(6)<<vmin<<", "
-      <<setw(8)<<setprecision(6)<<vmax<<", "
-      <<setw(8)<<setprecision(6)<<kqv<<", "
-      <<setw(8)<<setprecision(6)<<eqmin<<", "
-      <<setw(8)<<setprecision(6)<<eqmax<<", "
-      <<setw(8)<<setprecision(6)<<tspeed<<", "
-      <<setw(8)<<setprecision(6)<<kpp<<", "
-      <<setw(8)<<setprecision(6)<<kip<<", "
-      <<setw(8)<<setprecision(6)<<kvi<<", "
-      <<setw(8)<<setprecision(6)<<tvi<<", "
-      <<setw(8)<<setprecision(6)<<kdroop<<", "
-      <<setw(8)<<setprecision(6)<<tdroop<<", "
-      <<setw(8)<<setprecision(6)<<flower<<", "
-      <<setw(8)<<setprecision(6)<<fupper<<", "
-      <<setw(8)<<setprecision(6)<<kint<<", "
-      <<setw(8)<<setprecision(6)<<rpmin<<", "
-      <<setw(8)<<setprecision(6)<<rpmax<<", "
-      <<setw(8)<<setprecision(6)<<tfp<<", "
-      <<setw(8)<<setprecision(6)<<pmin<<", "
-      <<setw(8)<<setprecision(6)<<pmax<<", "
-      <<setw(8)<<setprecision(6)<<ipmax<<" / ";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<bus_reg<<", "
+            <<setw(8)<<var_mode<<", "
+            <<setw(8)<<voltage_flag<<", "
+            <<setw(8)<<setprecision(6)<<xc<<", "
+            <<setw(8)<<setprecision(6)<<trv<<", "
+            <<setw(8)<<setprecision(6)<<fn<<", "
+            <<setw(8)<<setprecision(6)<<kpv<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<tv<<", "
+            <<setw(8)<<setprecision(6)<<kiv<<", "
+            <<setw(8)<<setprecision(6)<<qmin<<", "
+            <<setw(8)<<setprecision(6)<<qmax<<", "
+            <<setw(8)<<setprecision(6)<<tfv<<", "
+            <<setw(8)<<setprecision(6)<<tp<<", "
+            <<setw(8)<<setprecision(6)<<kqi<<", "
+            <<setw(8)<<setprecision(6)<<vmin<<", "
+            <<setw(8)<<setprecision(6)<<vmax<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kqv<<", "
+            <<setw(8)<<setprecision(6)<<eqmin<<", "
+            <<setw(8)<<setprecision(6)<<eqmax<<", "
+            <<setw(8)<<setprecision(6)<<tspeed<<", "
+            <<setw(8)<<setprecision(6)<<kpp<<", "
+            <<setw(8)<<setprecision(6)<<kip<<", "
+            <<setw(8)<<setprecision(6)<<kvi<<", "
+            <<setw(8)<<setprecision(6)<<tvi<<", "
+            <<setw(8)<<setprecision(6)<<kdroop<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<tdroop<<", "
+            <<setw(8)<<setprecision(6)<<flower<<", "
+            <<setw(8)<<setprecision(6)<<fupper<<", "
+            <<setw(8)<<setprecision(6)<<kint<<", "
+            <<setw(8)<<setprecision(6)<<rpmin<<", "
+            <<setw(8)<<setprecision(6)<<rpmax<<", "
+            <<setw(8)<<setprecision(6)<<tfp<<", "
+            <<setw(8)<<setprecision(6)<<pmin<<", "
+            <<setw(8)<<setprecision(6)<<pmax<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<ipmax<<" / ";
 
     return osstream.str();
 }
@@ -1403,7 +1409,7 @@ double WT3E0::get_model_internal_variable_with_name(string var_name)
 
 string WT3E0::get_dynamic_data_in_psse_format() const
 {
-    return get_standard_model_string();
+    return get_standard_psse_string();
 }
 
 string WT3E0::get_dynamic_data_in_bpa_format() const

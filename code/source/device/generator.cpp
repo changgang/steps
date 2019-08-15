@@ -596,6 +596,7 @@ TURBINE_LOAD_CONTROLLER_MODEL* GENERATOR::get_turbine_load_controller_model() co
 
 void GENERATOR::run(DYNAMIC_MODE mode)
 {
+    ostringstream osstream;
     if(get_status()==true)
     {
         switch(mode)
@@ -607,6 +608,8 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                     gen->initialize();
                 else
                     return;
+                STEPS& toolkit = gen->get_toolkit(__PRETTY_FUNCTION__);
+                POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
                 COMPENSATOR_MODEL* comp = get_compensator_model();
                 if(comp!=NULL)
                     comp->initialize();
@@ -615,7 +618,17 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                     pss->initialize();
                 EXCITER_MODEL* exciter = get_exciter_model();
                 if(exciter!=NULL)
-                    exciter->initialize();
+                {
+                    if(exciter->get_model_name()=="PSASPE2" and gen->get_model_name()=="GENCLS")
+                    {
+                        osstream<<"Warning. Exciter model PSASPE2 is incompatible with generator model GENCLS for "<<get_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
+                                <<"Exciter model PSASPE2 will be removed.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        clear_exciter_model();
+                    }
+                    else
+                        exciter->initialize();
+                }
                 TURBINE_GOVERNOR_MODEL* tg = get_turbine_governor_model();
                 if(tg!=NULL)
                     tg->initialize();

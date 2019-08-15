@@ -341,7 +341,7 @@ void FILEWIND::check()
 void FILEWIND::report()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(get_standard_model_string());
+    toolkit.show_information_with_leading_time_stamp(get_standard_psse_string());
 }
 
 void FILEWIND::save()
@@ -349,19 +349,21 @@ void FILEWIND::save()
     ;
 }
 
-string FILEWIND::get_standard_model_string() const
+string FILEWIND::get_standard_psse_string() const
 {
     ostringstream osstream;
     WT_GENERATOR* gen = get_wt_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
+
     string file = get_wind_speed_serial_file();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<"'"<<file<<"'"
-      <<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<"'"<<file<<"' /";
     return osstream.str();
 }
 
@@ -407,15 +409,15 @@ double FILEWIND::get_model_internal_variable_with_name(string var_name)
 
 string FILEWIND::get_dynamic_data_in_psse_format() const
 {
-    return get_standard_model_string();
+    return get_standard_psse_string();
 }
 
 string FILEWIND::get_dynamic_data_in_bpa_format() const
 {
-    return get_standard_model_string();
+    return get_standard_psse_string();
 }
 
 string FILEWIND::get_dynamic_data_in_steps_format() const
 {
-    return get_standard_model_string();
+    return get_standard_psse_string();
 }

@@ -12,7 +12,7 @@ HVDC_MODEL_TEST::HVDC_MODEL_TEST()
     TEST_ADD(HVDC_MODEL_TEST::test_inverter_voltage_ramp_response);
     TEST_ADD(HVDC_MODEL_TEST::test_manual_block_and_unblock);
     TEST_ADD(HVDC_MODEL_TEST::test_manual_bypass_and_unbypass);
-    TEST_ADD(HVDC_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(HVDC_MODEL_TEST::test_get_standard_psse_string);
 }
 
 
@@ -187,7 +187,7 @@ void HVDC_MODEL_TEST::test_initialize()
 
     default_toolkit.open_log_file("test_log/test_initialize_"+model->get_model_name()+".txt");
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
@@ -212,7 +212,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
 
     default_toolkit.open_log_file("test_log/test_rectifier_voltage_ramp_response_"+model->get_model_name()+".txt");
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
@@ -379,7 +379,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
 
     default_toolkit.open_log_file("test_log/test_inverter_voltage_ramp_response_"+model->get_model_name()+".txt");
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
@@ -544,7 +544,7 @@ void HVDC_MODEL_TEST::test_manual_block_and_unblock()
 
     default_toolkit.open_log_file("test_log/test_manual_block_and_unblock_"+model->get_model_name()+".txt");
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
@@ -659,7 +659,7 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
 
     default_toolkit.open_log_file("test_log/test_manual_bypass_and_unbypass_"+model->get_model_name()+".txt");
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
@@ -762,15 +762,15 @@ void HVDC_MODEL_TEST::test_manual_bypass_and_unbypass()
     default_toolkit.close_log_file();
 }
 
-void HVDC_MODEL_TEST::test_get_standard_model_string()
+void HVDC_MODEL_TEST::test_get_standard_psse_string()
 {
     ostringstream osstream;
 
     HVDC_MODEL* model = get_test_hvdc_model();
 
-    default_toolkit.open_log_file("test_log/test_get_standard_model_string_"+model->get_model_name()+".txt");
+    default_toolkit.open_log_file("test_log/test_get_standard_psse_string_"+model->get_model_name()+".txt");
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     default_toolkit.close_log_file();

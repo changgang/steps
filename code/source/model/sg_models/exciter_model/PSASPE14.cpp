@@ -304,11 +304,13 @@ void PSASPE14::setup_block_toolkit_and_parameters()
 
 void PSASPE14::initialize()
 {
+    ostringstream osstream;
     if(not is_model_initialized())
     {
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -321,16 +323,55 @@ void PSASPE14::initialize()
                 double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
                 double Ifd = get_field_current_in_pu();
 
+                if(Efd>get_Efdmax_in_pu())
+                {
+                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                            <<"Efd is "<<Efd<<", and Efdmax is "<<get_Efdmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(Efd<get_Efdmin_in_pu())
+                {
+                    osstream<<"Initialization error. Excitation voltage of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                            <<"Efd is "<<Efd<<", and Efdmin is "<<get_Efdmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
                 rectifier.set_output(Efd);
                 rectifier.initialize();
 
-                current_pi.set_output(Efd/get_Kt());
+                double VF = Efd/get_Kt();
+                if(VF>get_Vfmax_in_pu())
+                {
+                    osstream<<"Initialization error. VF of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                            <<"VF is "<<VF<<", and VFmax is "<<get_Vfmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(VF<get_Vfmin_in_pu())
+                {
+                    osstream<<"Initialization error. VF of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                            <<"VF is "<<VF<<", and VFmin is "<<get_Vfmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                current_pi.set_output(VF);
                 current_pi.initialize();
 
-                ifd_feedback.set_output(Ifd);
+                double Vr = Ifd*get_Kifd();
+
+                ifd_feedback.set_output(Vr);
                 ifd_feedback.initialize();
 
-                regulator_pi.set_output(Ifd);
+                if(Vr>get_Vrmax_in_pu())
+                {
+                    osstream<<"Initialization error. Vr of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds upper limit."
+                            <<"Vr is "<<Vr<<", and VRmax is "<<get_Vrmax_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                if(VF<get_Vrmin_in_pu())
+                {
+                    osstream<<"Initialization error. Vr of '"<<get_model_name()<<"' model of "<<get_device_name()<<" exceeds lower limit."
+                            <<"Vr is "<<Vr<<", and VRmin is "<<get_Vrmin_in_pu()<<".";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+                regulator_pi.set_output(Vr);
                 regulator_pi.initialize();
 
                 regulator.set_output(0.0);
@@ -405,7 +446,7 @@ void PSASPE14::check()
 void PSASPE14::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -415,33 +456,37 @@ void PSASPE14::save()
     ;
 }
 
-string PSASPE14::get_standard_model_string() const
+string PSASPE14::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<get_Tr_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Ka()<<", "
-      <<setw(8)<<setprecision(6)<<get_Ta_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kp()<<", "
-      <<setw(8)<<setprecision(6)<<get_Ki()<<", "
-      <<setw(8)<<setprecision(6)<<get_Vrmax_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_Vrmin_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kifd()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tifd_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_IKp()<<", "
-      <<setw(8)<<setprecision(6)<<get_IKi()<<", "
-      <<setw(8)<<setprecision(6)<<get_Vfmax_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_Vfmin_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_Kt()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tt_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Efdmax_in_pu()<<", "
-      <<setw(8)<<setprecision(6)<<get_Efdmin_in_pu()<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<get_Tr_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_Ka()<<", "
+            <<setw(8)<<setprecision(6)<<get_Ta_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_Kp()<<", "
+            <<setw(8)<<setprecision(6)<<get_Ki()<<", "
+            <<setw(8)<<setprecision(6)<<get_Vrmax_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_Vrmin_in_pu()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<get_Kifd()<<", "
+            <<setw(8)<<setprecision(6)<<get_Tifd_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_IKp()<<", "
+            <<setw(8)<<setprecision(6)<<get_IKi()<<", "
+            <<setw(8)<<setprecision(6)<<get_Vfmax_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_Vfmin_in_pu()<<", "
+            <<setw(8)<<setprecision(6)<<get_Kt()<<", "
+            <<setw(8)<<setprecision(6)<<get_Tt_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_Efdmax_in_pu()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<get_Efdmin_in_pu()<<" /";
 
     return osstream.str();
 }

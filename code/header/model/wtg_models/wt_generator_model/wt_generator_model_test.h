@@ -36,7 +36,7 @@ class WT_GENERATOR_MODEL_TEST : public WTG_MODEL_TEST
         void test_get_model_type();
         void test_set_get_initial_active_current_command();
         void test_set_get_initial_reactive_current_command();
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
         void test_current_source_flag();
 
         void test_active_current_step_response_of_wt_generator_model();

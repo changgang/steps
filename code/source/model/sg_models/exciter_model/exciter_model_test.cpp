@@ -15,7 +15,7 @@ EXCITER_MODEL_TEST::EXCITER_MODEL_TEST()
     TEST_ADD(EXCITER_MODEL_TEST::test_get_compensated_voltage);
     TEST_ADD(EXCITER_MODEL_TEST::test_get_field_current);
     TEST_ADD(EXCITER_MODEL_TEST::test_step_response);
-    TEST_ADD(EXCITER_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(EXCITER_MODEL_TEST::test_get_standard_psse_string);
 }
 
 
@@ -155,7 +155,7 @@ void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
 
     EXCITER_MODEL* model = get_test_exciter_model();
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;
@@ -218,10 +218,10 @@ void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
     }
 }
 
-void EXCITER_MODEL_TEST::test_get_standard_model_string()
+void EXCITER_MODEL_TEST::test_get_standard_psse_string()
 {
     EXCITER_MODEL* model = get_test_exciter_model();
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-    default_toolkit.show_information_with_leading_time_stamp(model->get_standard_model_string());
+    default_toolkit.show_information_with_leading_time_stamp(model->get_standard_psse_string());
 }

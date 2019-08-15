@@ -10,7 +10,7 @@ IEEEVC_TEST::IEEEVC_TEST()
     TEST_ADD(IEEEVC_TEST::test_set_get_parameters);
     TEST_ADD(IEEEVC_TEST::test_initialize);
     TEST_ADD(IEEEVC_TEST::test_step_response);
-    TEST_ADD(IEEEVC_TEST::test_get_standard_model_string);
+    TEST_ADD(IEEEVC_TEST::test_get_standard_psse_string);
 }
 
 
@@ -97,7 +97,7 @@ void IEEEVC_TEST::test_step_response()
 
     default_toolkit.close_log_file();
 }
-void IEEEVC_TEST::test_get_standard_model_string()
+void IEEEVC_TEST::test_get_standard_psse_string()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"IEEEVC_TEST");
 

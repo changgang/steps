@@ -34,7 +34,7 @@ class AUXILIARY_SIGNAL_MODEL_TEST : public Test::Suite
         virtual void test_initialize() = 0;
         virtual void test_set_get_voltage_reference() = 0;
         virtual void test_step_response() = 0;
-        virtual void test_get_standard_model_string() = 0;
+        virtual void test_get_standard_psse_string() = 0;
     private:
         HVDC* hvdcptr;
 };

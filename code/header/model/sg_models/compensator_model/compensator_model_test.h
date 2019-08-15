@@ -35,7 +35,7 @@ class COMPENSATOR_MODEL_TEST : public SG_MODEL_TEST
         void test_get_generator_terminal_current();
         virtual void test_initialize() = 0;
         virtual void test_step_response() = 0;
-        virtual void test_get_standard_model_string() = 0;
+        virtual void test_get_standard_psse_string() = 0;
     private:
         void initialize_models();
         void update_models();

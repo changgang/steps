@@ -1953,7 +1953,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Solved bus voltage and angle:");
     toolkit.show_information_with_leading_time_stamp(buffer);
 
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      voltage(pu) angle(deg)");
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      voltage(pu)     angle(deg)");
     toolkit.show_information_with_leading_time_stamp(buffer);
 
     NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
@@ -1969,7 +1969,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)>=1000.0)
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -1981,7 +1981,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)<1000.0 and fabs(smismatch)>=500.0)
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -1993,7 +1993,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)<500.0 and fabs(smismatch)>=400.0)
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -2005,7 +2005,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)<400.0 and fabs(smismatch)>=300.0)
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -2017,7 +2017,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)<300.0 and fabs(smismatch)>=200.0)
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -2029,7 +2029,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)<200.0 and fabs(smismatch)>=100.0)
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -2041,7 +2041,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)<100.0 and fabs(smismatch)>=10.0)
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -2053,7 +2053,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)<10.0 and fabs(smismatch)>=get_allowed_max_active_power_imbalance_in_MW())
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s (error: %8.3f MW + %8.3f MVar)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -2065,7 +2065,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         complex<double> smismatch = bus_power[inbus]*sbase;
         if(fabs(smismatch)<get_allowed_max_active_power_imbalance_in_MW())
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %10.6f %10.6f %s",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s",
                     buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
@@ -2074,7 +2074,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Solved machine power:");
     toolkit.show_information_with_leading_time_stamp(buffer);
 
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "bus      id   P(MW)      Q(MVar)");
+    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "  bus      id       P(MW)        Q(MVar)");
     toolkit.show_information_with_leading_time_stamp(buffer);
 
     vector<SOURCE*> sources = psdb.get_all_sources();
@@ -2086,13 +2086,13 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         BUS_TYPE btype = psdb.get_bus_type(sources[i]->get_source_bus());
         if(btype!=SLACK_TYPE)
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%2s'  %10.6f  %10.6f  %s(%s)",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%4s'  %12.6f  %12.6f  %-30s[%s]",
                      sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
                      sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
         }
         else
         {
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%2s'  %10.6f  %10.6f  %s(%s) [slack bus]",
+            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu '%4s'  %12.6f  %12.6f  %-30s[%s] [slack bus]",
                      sources[i]->get_source_bus(),(sources[i]->get_identifier()).c_str(),
                      sources[i]->get_p_generation_in_MW(),sources[i]->get_q_generation_in_MVar(), (sources[i]->get_device_name()).c_str(), psdb.bus_number2bus_name(sources[i]->get_source_bus()).c_str());
         }

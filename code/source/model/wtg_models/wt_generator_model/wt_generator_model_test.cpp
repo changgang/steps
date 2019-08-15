@@ -26,7 +26,7 @@ WT_GENERATOR_MODEL_TEST::WT_GENERATOR_MODEL_TEST()
 
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_set_get_initial_active_current_command);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_set_get_initial_reactive_current_command);
-    TEST_ADD(WT_GENERATOR_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(WT_GENERATOR_MODEL_TEST::test_get_standard_psse_string);
 
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_active_current_step_response_of_wt_generator_model);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_reactive_voltage_step_response_of_wt_generator_model);
@@ -200,7 +200,7 @@ void WT_GENERATOR_MODEL_TEST::test_active_current_step_response_of_wt_generator_
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -260,7 +260,7 @@ void WT_GENERATOR_MODEL_TEST::test_reactive_voltage_step_response_of_wt_generato
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -320,7 +320,7 @@ void WT_GENERATOR_MODEL_TEST::test_reactive_current_step_response_of_wt_generato
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -381,7 +381,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_m
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -444,7 +444,7 @@ void WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -507,7 +507,7 @@ void WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -598,14 +598,14 @@ void WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_
         TEST_ASSERT(false);
 }
 
-void WT_GENERATOR_MODEL_TEST::test_get_standard_model_string()
+void WT_GENERATOR_MODEL_TEST::test_get_standard_psse_string()
 {
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        //model->get_standard_model_string();
+        //model->get_standard_psse_string();
     }
     else
         TEST_ASSERT(false);

@@ -376,7 +376,7 @@ void IEEET1::check()
 void IEEET1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -386,12 +386,15 @@ void IEEET1::save()
     ;
 }
 
-string IEEET1::get_standard_model_string() const
+string IEEET1::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
+
     double TR = get_TR_in_s();
     double KA = get_KA();
     double TA = get_TA_in_s();
@@ -406,22 +409,26 @@ string IEEET1::get_standard_model_string() const
     double E2 = get_E2_in_pu();
     double S2 = get_SE2_in_pu();
 
+
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<TR<<", "
-      <<setw(8)<<setprecision(6)<<KA<<", "
-      <<setw(8)<<setprecision(6)<<TA<<", "
-      <<setw(8)<<setprecision(6)<<VRmax<<", "
-      <<setw(8)<<setprecision(6)<<VRmin<<", "
-      <<setw(8)<<setprecision(6)<<KE<<", "
-      <<setw(8)<<setprecision(6)<<TE<<", "
-      <<setw(8)<<setprecision(6)<<KF<<", "
-      <<setw(8)<<setprecision(6)<<TF<<", 0, "
-      <<setw(8)<<setprecision(6)<<E1<<", "
-      <<setw(8)<<setprecision(6)<<S1<<", "
-      <<setw(8)<<setprecision(6)<<E2<<", "
-      <<setw(8)<<setprecision(6)<<S2<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<TR<<", "
+            <<setw(8)<<setprecision(6)<<KA<<", "
+            <<setw(8)<<setprecision(6)<<TA<<", "
+            <<setw(8)<<setprecision(6)<<VRmax<<", "
+            <<setw(8)<<setprecision(6)<<VRmin<<", "
+            <<setw(8)<<setprecision(6)<<KE<<", "
+            <<setw(8)<<setprecision(6)<<TE<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<KF<<", "
+            <<setw(8)<<setprecision(6)<<TF<<", "
+            <<setw(8)<<setprecision(0)<<0<<", "
+            <<setw(8)<<setprecision(6)<<E1<<", "
+            <<setw(8)<<setprecision(6)<<S1<<", "
+            <<setw(8)<<setprecision(6)<<E2<<", "
+            <<setw(8)<<setprecision(6)<<S2<<" /";
+
     return osstream.str();
 }
 

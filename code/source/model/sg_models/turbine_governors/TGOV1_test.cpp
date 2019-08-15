@@ -138,7 +138,7 @@ void TGOV1_TEST::test_step_response()
 
 }
 
-void TGOV1_TEST::test_get_standard_model_string()
+void TGOV1_TEST::test_get_standard_psse_string()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"TGOV1_TEST");
 }

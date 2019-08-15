@@ -268,7 +268,7 @@ void SEXS::check()
 void SEXS::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -278,12 +278,15 @@ void SEXS::save()
     ;
 }
 
-string SEXS::get_standard_model_string() const
+string SEXS::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
+
     double TA = get_TA_in_s();
     double TB = get_TB_in_s();
     double K = get_K();
@@ -292,14 +295,14 @@ string SEXS::get_standard_model_string() const
     double Efdmin = get_Efdmin_in_pu();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<TA/TB<<", "
-      <<setw(8)<<setprecision(6)<<TB<<", "
-      <<setw(8)<<setprecision(6)<<K<<", "
-      <<setw(8)<<setprecision(6)<<TE<<", "
-      <<setw(8)<<setprecision(6)<<Efdmax<<", "
-      <<setw(8)<<setprecision(6)<<Efdmin<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<TA/TB<<", "
+            <<setw(8)<<setprecision(6)<<TB<<", "
+            <<setw(8)<<setprecision(6)<<K<<", "
+            <<setw(8)<<setprecision(6)<<TE<<", "
+            <<setw(8)<<setprecision(6)<<Efdmax<<", "
+            <<setw(8)<<setprecision(6)<<Efdmin<<" /";
     return osstream.str();
 }
 

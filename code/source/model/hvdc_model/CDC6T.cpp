@@ -845,7 +845,7 @@ void CDC6T::check()
 void CDC6T::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -855,51 +855,54 @@ void CDC6T::save()
     ;
 }
 
-string CDC6T::get_standard_model_string() const
+string CDC6T::get_standard_psse_string() const
 {
     ostringstream osstream;
 
     HVDC* hvdc = get_hvdc_pointer();
     //size_t rbus = hvdc->get_converter_bus(RECTIFIER);
     //size_t ibus = hvdc->get_converter_bus(INVERTER);
-    string dcname = hvdc->get_name();
+    string dcname = "'"+hvdc->get_name()+"'";
+    string model_name = "'"+get_model_name()+"'";
 
     VDCOL vdcol_limiter = get_VDCOL();
-
-    osstream<<"  \""<<dcname<<"\", \"CDC6T\", ";
-    osstream<<setw(8)<<setprecision(4)<<get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER)<<", "
-           <<setw(8)<<setprecision(4)<<get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER)<<", "
-           <<setw(8)<<setprecision(4)<<get_inverter_dc_voltage_sensor_T_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_dc_current_sensor_T_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_rectifier_ac_instantaneous_blocking_voltage_in_pu()<<", "
-           <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_unblocking_voltage_in_pu()<<", "
-           <<setw(8)<<setprecision(4)<<get_mininum_blocking_time_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_inverter_dc_instantenous_bypassing_voltage_in_kV()<<", "
-           <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_unbypassing_voltage_in_pu()<<", "
-           <<setw(8)<<setprecision(4)<<get_mininum_bypassing_time_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing()<<", "
-           <<setw(8)<<setprecision(4)<<get_minimum_dc_current_in_kA_following_unblocking()*1000.0<<", "
-           <<setw(8)<<setprecision(4)<<get_dc_voltage_command_recovery_rate_in_pu_per_second()<<", "
-           <<setw(8)<<setprecision(4)<<get_dc_current_command_recovery_rate_in_pu_per_second()<<", "
-           <<setw(8)<<setprecision(4)<<get_minimum_dc_current_command_in_kA()*1000.0<<", ";
-    osstream<<"\n        ";
-    osstream<<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(0)<<", "
-           <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(0)*1000.0<<", "
-           <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(1)<<", "
-           <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(1)*1000.0<<", "
-           <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(2)<<", "
-           <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(2)*1000.0<<", "
-           <<setw(8)<<setprecision(4)<<get_minimum_time_in_switched_mode_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_blocking_voltage_in_pu()<<", "
-           <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_blocking_time_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_unblocking_time_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_inverter_ac_instantenous_blocking_voltage_in_pu()<<", "
-           <<setw(8)<<setprecision(4)<<get_communication_delay_between_converters_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_bypassing_voltage_in_pu()<<", "
-           <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_bypassing_time_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_unblocking_time_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_unbypassing_time_in_s()<<", "
-           <<setw(8)<<setprecision(4)<<get_rectifier_dc_voltage_sensor_T_in_s()<<"  /";
+    osstream<<setw(16)<<dcname<<", "
+            <<setw(10)<<model_name<<", "
+            <<setw(8)<<setprecision(4)<<get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER)<<", "
+            <<setw(8)<<setprecision(4)<<get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER)<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_dc_voltage_sensor_T_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_dc_current_sensor_T_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_rectifier_ac_instantaneous_blocking_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_unblocking_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_mininum_blocking_time_in_s()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<get_inverter_dc_instantenous_bypassing_voltage_in_kV()<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_unbypassing_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_mininum_bypassing_time_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing()<<", "
+            <<setw(8)<<setprecision(4)<<get_minimum_dc_current_in_kA_following_unblocking()*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<get_dc_voltage_command_recovery_rate_in_pu_per_second()<<", "
+            <<setw(8)<<setprecision(4)<<get_dc_current_command_recovery_rate_in_pu_per_second()<<", "
+            <<setw(8)<<setprecision(4)<<get_minimum_dc_current_command_in_kA()*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(0)<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(0)*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(1)<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(1)*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(2)<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(2)*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<get_minimum_time_in_switched_mode_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_blocking_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_blocking_time_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_unblocking_time_in_s()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<get_inverter_ac_instantenous_blocking_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_communication_delay_between_converters_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_bypassing_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_bypassing_time_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_unblocking_time_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_unbypassing_time_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_rectifier_dc_voltage_sensor_T_in_s()<<" /";
 
     return osstream.str();
 }

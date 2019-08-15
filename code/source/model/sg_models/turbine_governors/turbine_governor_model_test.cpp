@@ -70,7 +70,7 @@ void TURBINE_GOVERNOR_MODEL_TEST::run_step_response_of_turbine_govnernor_model()
 
     GENERATOR* genptr = get_test_generator();
     TURBINE_GOVERNOR_MODEL* model = genptr->get_turbine_governor_model();
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     double delt = 0.001;

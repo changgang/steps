@@ -56,7 +56,7 @@ class IEESGO : public TURBINE_GOVERNOR_MODEL
         virtual void clear();
         virtual void report();
         virtual void save();
-        virtual string get_standard_model_string() const;
+        virtual string get_standard_psse_string() const;
 
         virtual double get_model_data_with_name(string par_name) const;
         virtual void set_model_data_with_name(string par_name, double value);

@@ -33,7 +33,7 @@ class TGOV1_TEST : public TURBINE_GOVERNOR_MODEL_TEST
         virtual void test_set_get_mechanical_power_upper_limit();
         virtual void test_set_get_mechanical_power_lower_limit();
         virtual void test_step_response();
-        virtual void test_get_standard_model_string();
+        virtual void test_get_standard_psse_string();
     private:
 
 };

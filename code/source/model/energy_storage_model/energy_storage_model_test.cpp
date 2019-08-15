@@ -20,7 +20,7 @@ ENERGY_STORAGE_MODEL_TEST::ENERGY_STORAGE_MODEL_TEST()
     TEST_ADD(ENERGY_STORAGE_MODEL_TEST::test_set_get_initial_Vref);
     TEST_ADD(ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response);
     TEST_ADD(ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response);
-    TEST_ADD(ENERGY_STORAGE_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(ENERGY_STORAGE_MODEL_TEST::test_get_standard_psse_string);
 }
 
 
@@ -220,7 +220,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_frequency_step_response()
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -283,7 +283,7 @@ void ENERGY_STORAGE_MODEL_TEST::test_voltage_step_response()
 
         default_toolkit.open_log_file("test_log/"+model->get_model_name()+"_"+__FUNCTION__+".txt");
 
-        osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+        osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
         default_toolkit.show_information_with_leading_time_stamp(osstream);
 
         double delt = 0.001;
@@ -350,14 +350,14 @@ void ENERGY_STORAGE_MODEL_TEST::run_a_step()
 }
 
 
-void ENERGY_STORAGE_MODEL_TEST::test_get_standard_model_string()
+void ENERGY_STORAGE_MODEL_TEST::test_get_standard_psse_string()
 {
     ENERGY_STORAGE_MODEL* model = get_test_energy_storage_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        cout<<model->get_standard_model_string()<<endl;
+        cout<<model->get_standard_psse_string()<<endl;
     }
     else
         TEST_ASSERT(false);

@@ -14,7 +14,7 @@ PV_IRRADIANCE_MODEL_TEST::PV_IRRADIANCE_MODEL_TEST()
 {
     TEST_ADD(PV_IRRADIANCE_MODEL_TEST::test_get_model_type);
     TEST_ADD(PV_IRRADIANCE_MODEL_TEST::test_get_nominal_solar_irradiance);
-    TEST_ADD(PV_IRRADIANCE_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(PV_IRRADIANCE_MODEL_TEST::test_get_standard_psse_string);
 }
 
 void PV_IRRADIANCE_MODEL_TEST::setup()
@@ -56,7 +56,7 @@ void PV_IRRADIANCE_MODEL_TEST::test_get_nominal_solar_irradiance()
         TEST_ASSERT(false);
 }
 
-void PV_IRRADIANCE_MODEL_TEST::test_get_standard_model_string()
+void PV_IRRADIANCE_MODEL_TEST::test_get_standard_psse_string()
 {
     PV_IRRADIANCE_MODEL* model = get_test_pv_irradiance_model();
     if(model!=NULL)

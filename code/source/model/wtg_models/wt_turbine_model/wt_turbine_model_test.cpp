@@ -16,7 +16,7 @@ WT_TURBINE_MODEL_TEST::WT_TURBINE_MODEL_TEST()
 {
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_get_model_type);
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_set_get_damping);
-    TEST_ADD(WT_TURBINE_MODEL_TEST::test_get_standard_model_string);
+    TEST_ADD(WT_TURBINE_MODEL_TEST::test_get_standard_psse_string);
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_underspeed_mode);
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_mppt_mode);
     TEST_ADD(WT_TURBINE_MODEL_TEST::test_step_response_of_wt_turbine_model_with_pitch_angle_increase_in_overspeed_mode);
@@ -113,14 +113,14 @@ void WT_TURBINE_MODEL_TEST::test_set_get_damping()
         TEST_ASSERT(false);
 }
 
-void WT_TURBINE_MODEL_TEST::test_get_standard_model_string()
+void WT_TURBINE_MODEL_TEST::test_get_standard_psse_string()
 {
     WT_TURBINE_MODEL* model = get_test_wt_turbine_model();
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
-        model->get_standard_model_string();
+        model->get_standard_psse_string();
     }
     else
         TEST_ASSERT(false);
@@ -232,7 +232,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
@@ -314,7 +314,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
@@ -397,7 +397,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_pitch_ang
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
 
@@ -487,7 +487,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
@@ -568,7 +568,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
@@ -650,7 +650,7 @@ void WT_TURBINE_MODEL_TEST::run_step_response_of_wt_turbine_model_with_generator
 
     WT_TURBINE_MODEL*model = get_test_wt_turbine_model();
 
-    osstream<<"Model:"<<model->get_standard_model_string()<<endl;
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);

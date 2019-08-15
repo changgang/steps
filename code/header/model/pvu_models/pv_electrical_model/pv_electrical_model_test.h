@@ -36,7 +36,7 @@ class PV_ELECTRICAL_MODEL_TEST : public PVU_MODEL_TEST
         void test_set_get_power_factor_reference();
         void test_set_get_var_control_mode();
 
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
         void test_step_response_with_voltage_drop();
         void test_step_response_with_frequency_drop();

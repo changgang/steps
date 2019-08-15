@@ -421,7 +421,7 @@ void WT3P0::check()
 void WT3P0::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -429,7 +429,7 @@ void WT3P0::save()
 {
     ;
 }
-string WT3P0::get_standard_model_string() const
+string WT3P0::get_standard_psse_string() const
 {
     ostringstream osstream;
 
@@ -455,26 +455,29 @@ string WT3P0::get_standard_model_string() const
 
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<hold_speed_flag<<", "
-      <<setw(8)<<setprecision(6)<<tspeed<<", "
-      <<setw(8)<<setprecision(6)<<kps<<", "
-      <<setw(8)<<setprecision(6)<<kis<<", "
-      <<setw(8)<<setprecision(6)<<tf<<", "
-      <<setw(8)<<setprecision(6)<<flow<<", "
-      <<setw(8)<<setprecision(6)<<fup<<", "
-      <<setw(8)<<setprecision(6)<<kpf<<", "
-      <<setw(8)<<setprecision(6)<<kif<<", "
-      <<setw(8)<<setprecision(6)<<kdf<<", "
-      <<setw(8)<<setprecision(6)<<tdf<<", "
-      <<setw(8)<<setprecision(6)<<rpmax<<", "
-      <<setw(8)<<setprecision(6)<<pmin<<", "
-      <<setw(8)<<setprecision(6)<<pmax<<", "
-      <<setw(8)<<setprecision(6)<<tp<<" /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<hold_speed_flag<<", "
+            <<setw(8)<<setprecision(6)<<tspeed<<", "
+            <<setw(8)<<setprecision(6)<<kps<<", "
+            <<setw(8)<<setprecision(6)<<kis<<", "
+            <<setw(8)<<setprecision(6)<<tf<<", "
+            <<setw(8)<<setprecision(6)<<flow<<", "
+            <<setw(8)<<setprecision(6)<<fup<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<kpf<<", "
+            <<setw(8)<<setprecision(6)<<kif<<", "
+            <<setw(8)<<setprecision(6)<<kdf<<", "
+            <<setw(8)<<setprecision(6)<<tdf<<", "
+            <<setw(8)<<setprecision(6)<<rpmax<<", "
+            <<setw(8)<<setprecision(6)<<pmin<<", "
+            <<setw(8)<<setprecision(6)<<pmax<<", "
+            <<setw(8)<<setprecision(6)<<tp<<" /";
     return osstream.str();
 }
 

@@ -55,7 +55,7 @@ void EQUIVALENT_MODEL_IMEXPORTER_TEST::test_load_ieee9_arxl_data()
     for(size_t i=0; i!=n; ++i)
     {
         EQUIVALENT_MODEL* model = edevices[i]->get_equivalent_model();
-        osstream<<model->get_standard_model_string()<<endl;
+        osstream<<model->get_standard_psse_string()<<endl;
     }
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
@@ -77,7 +77,7 @@ void EQUIVALENT_MODEL_IMEXPORTER_TEST::test_load_ieee39_arxl_data()
     for(size_t i=0; i!=n; ++i)
     {
         EQUIVALENT_MODEL* model = edevices[i]->get_equivalent_model();
-        osstream<<model->get_standard_model_string()<<endl;
+        osstream<<model->get_standard_psse_string()<<endl;
     }
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }

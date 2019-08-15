@@ -123,7 +123,7 @@ void FILEIRRAD::check()
 void FILEIRRAD::report()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    toolkit.show_information_with_leading_time_stamp(get_standard_model_string());
+    toolkit.show_information_with_leading_time_stamp(get_standard_psse_string());
 }
 
 void FILEIRRAD::save()
@@ -131,7 +131,7 @@ void FILEIRRAD::save()
     ;
 }
 
-string FILEIRRAD::get_standard_model_string() const
+string FILEIRRAD::get_standard_psse_string() const
 {
     return "";
 }
@@ -179,15 +179,15 @@ double FILEIRRAD::get_model_internal_variable_with_name(string var_name)
 
 string FILEIRRAD::get_dynamic_data_in_psse_format() const
 {
-    return get_standard_model_string();
+    return get_standard_psse_string();
 }
 
 string FILEIRRAD::get_dynamic_data_in_bpa_format() const
 {
-    return get_standard_model_string();
+    return get_standard_psse_string();
 }
 
 string FILEIRRAD::get_dynamic_data_in_steps_format() const
 {
-    return get_standard_model_string();
+    return get_standard_psse_string();
 }

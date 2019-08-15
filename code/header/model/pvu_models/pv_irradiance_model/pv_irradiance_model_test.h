@@ -25,7 +25,7 @@ class PV_IRRADIANCE_MODEL_TEST : public PVU_MODEL_TEST
         void test_get_model_type();
         void test_get_nominal_solar_irradiance();
 
-        void test_get_standard_model_string();
+        void test_get_standard_psse_string();
 
         virtual void test_get_model_name() = 0;
         virtual void test_set_get_parameters() = 0;

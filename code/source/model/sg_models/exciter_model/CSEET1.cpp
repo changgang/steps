@@ -561,6 +561,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
 
     double Fex = 1.0, newFex = 0.0;
     double Ve = 0.0;
+    double oldFex=0.0;
 
     size_t iter_count = 0;
     while(true)
@@ -569,6 +570,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
 
         Ve = Efd/Fex;
         newFex = get_Fex(Ve, Ifd);
+        oldFex = Fex;
 
         if(fabs(Fex-newFex)>FLOAT_EPSILON)
             Fex = newFex;
@@ -585,11 +587,12 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
             break;
         }
 
-        if(iter_count<=20)
+        if(iter_count<=100)
             ;
         else
         {
-            osstream<<"Warning. Initial Ve is not solved within 20 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".";
+            osstream<<"Warning. Initial Ve is not solved within 100 iterations when initializing exciter CSEET1 of "<<get_device_name()<<".\n"
+                    <<"Old Fex = "<<oldFex<<", New Fex = "<<Fex;
             toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
@@ -807,7 +810,7 @@ void CSEET1::initialize()
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
-            STEPS& toolkit = generator->get_toolkit(__PRETTY_FUNCTION__);
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
@@ -1121,7 +1124,7 @@ void CSEET1::check()
 void CSEET1::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -1131,12 +1134,14 @@ void CSEET1::save()
     ;
 }
 
-string CSEET1::get_standard_model_string() const
+string CSEET1::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
     size_t bus = gen->get_generator_bus();
-    string identifier= gen->get_identifier();
+    string identifier = "'"+gen->get_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     size_t source_index = 0;
     switch(get_excitation_source())
@@ -1182,13 +1187,14 @@ string CSEET1::get_standard_model_string() const
     double TR = get_TR_in_s();
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(4)<<source_index<<", "
-      <<setw(4)<<brush_index<<", "
-      <<setw(4)<<feedback_index<<", "
-      <<setw(4)<<tuner_type<<", "
-      <<setw(8)<<setprecision(6)<<TR<<", ";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<source_index<<", "
+            <<setw(8)<<brush_index<<", "
+            <<setw(8)<<feedback_index<<", "
+            <<setw(8)<<tuner_type<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<TR<<", ";
 
     bool tuner_KV; size_t tuner_selector; double tuner_K, tuner_T1, tuner_T2, tuner_VA1max, tuner_VA1min, tuner_T3, tuner_T4;
     double tuner_KP, tuner_KI, tuner_VImax, tuner_VImin, tuner_KD, tuner_TD, tuner_VDmax, tuner_VDmin;
@@ -1213,7 +1219,8 @@ string CSEET1::get_standard_model_string() const
                 <<setw(8)<<setprecision(6)<<tuner_VA1max<<", "
                 <<setw(8)<<setprecision(6)<<tuner_VA1min<<", "
                 <<setw(8)<<setprecision(6)<<tuner_T3<<", "
-                <<setw(8)<<setprecision(6)<<tuner_T4<<", ";
+                <<setw(8)<<setprecision(6)<<tuner_T4<<", \n"
+                <<setw(10)<<"";
     }
     else
     {
@@ -1233,9 +1240,9 @@ string CSEET1::get_standard_model_string() const
                 <<setw(8)<<setprecision(6)<<tuner_KD<<", "
                 <<setw(8)<<setprecision(6)<<tuner_TD<<", "
                 <<setw(8)<<setprecision(6)<<tuner_VDmax<<", "
-                <<setw(8)<<setprecision(6)<<tuner_VDmin<<", ";
+                <<setw(8)<<setprecision(6)<<tuner_VDmin<<", \n"
+                <<setw(10)<<"";
     }
-    osstream<<"\n        ";
 
     double KA = get_KA();
     double TA = get_TA_in_s();
@@ -1259,24 +1266,26 @@ string CSEET1::get_standard_model_string() const
 
 
     osstream<<setw(8)<<setprecision(6)<<KA<<", "
-      <<setw(8)<<setprecision(6)<<TA<<", "
-      <<setw(8)<<setprecision(6)<<VAmax<<", "
-      <<setw(8)<<setprecision(6)<<VAmin<<", "
-      <<setw(8)<<setprecision(6)<<KH<<", "
-      <<setw(8)<<setprecision(6)<<KF<<", "
-      <<setw(8)<<setprecision(6)<<TF<<", "
-      <<setw(8)<<setprecision(6)<<KB<<", "
-      <<setw(8)<<setprecision(6)<<T5<<", "
-      <<setw(8)<<setprecision(6)<<VRmax<<", "
-      <<setw(8)<<setprecision(6)<<VRmin<<", "
-      <<setw(8)<<setprecision(6)<<TE<<", "
-      <<setw(8)<<setprecision(6)<<Vemax<<", "
-      <<setw(8)<<setprecision(6)<<KE<<", "
-      <<setw(8)<<setprecision(6)<<SE75<<", "
-      <<setw(8)<<setprecision(6)<<SE100<<", "
-      <<setw(8)<<setprecision(6)<<KC<<", "
-      <<setw(8)<<setprecision(6)<<KD<<", "
-      <<setw(8)<<setprecision(6)<<Efdmax<<"  /";
+            <<setw(8)<<setprecision(6)<<TA<<", "
+            <<setw(8)<<setprecision(6)<<VAmax<<", "
+            <<setw(8)<<setprecision(6)<<VAmin<<", "
+            <<setw(8)<<setprecision(6)<<KH<<", "
+            <<setw(8)<<setprecision(6)<<KF<<", "
+            <<setw(8)<<setprecision(6)<<TF<<", "
+            <<setw(8)<<setprecision(6)<<KB<<", "
+            <<setw(8)<<setprecision(6)<<T5<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<VRmax<<", "
+            <<setw(8)<<setprecision(6)<<VRmin<<", "
+            <<setw(8)<<setprecision(6)<<TE<<", "
+            <<setw(8)<<setprecision(6)<<Vemax<<", "
+            <<setw(8)<<setprecision(6)<<KE<<", "
+            <<setw(8)<<SE75<<", "
+            <<setw(8)<<SE100<<", "
+            <<setw(8)<<setprecision(6)<<KC<<", "
+            <<setw(8)<<setprecision(6)<<KD<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<Efdmax<<" /";
 
     return osstream.str();
 }

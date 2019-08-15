@@ -797,30 +797,45 @@ void PUFLS::save()
     ;
 }
 
-string PUFLS::get_standard_model_string() const
+string PUFLS::get_standard_psse_string() const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
     size_t bus = load->get_load_bus();
-    string identifier = load->get_identifier();
-    osstream<<bus<<", "
-      <<"'"<<get_detailed_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setprecision(1)<<fixed<<(get_additional_stage_trigger_signal()==REALTIME_FREQUENCY ? 0 : 1)<<", "
-      <<setprecision(4)<<fixed<<get_frequency_sensor_time_in_s()<<", "
-      <<setprecision(4)<<fixed<<get_continuous_frequency_threshold_in_Hz()<<", "
-      <<setprecision(4)<<fixed<<get_scale_K_in_pu_per_Hz()<<", "
-      <<setprecision(4)<<fixed<<get_time_delay_in_s()<<", "
-      <<setprecision(4)<<fixed<<get_maximum_continuous_shed_scale_in_pu()<<", "
-      <<setprecision(4)<<fixed<<get_additional_stage_frequency_threshold_in_Hz()<<", "
-      <<setprecision(4)<<fixed<<get_additional_stage_time_delay_in_s()<<", "
-      <<setprecision(4)<<fixed<<get_additional_stage_shed_scale_in_pu()<<", "
-      <<setprecision(4)<<fixed<<get_discrete_stage_time_delay_in_s();
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
-        osstream<<", "
-          <<setprecision(4)<<fixed<<get_discrete_stage_shed_scale_in_pu(stage);
+    string identifier = "'"+load->get_identifier()+"'";
 
-    osstream<<"  /";
+    string model_name = "'"+get_model_name()+"'";
+
+    osstream<<setw(8)<<bus<<", "
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(5)<<(get_additional_stage_trigger_signal()==REALTIME_FREQUENCY ? 0 : 1)<<", "
+            <<setw(8)<<setprecision(5)<<get_frequency_sensor_time_in_s()<<", "
+            <<setw(8)<<setprecision(5)<<get_continuous_frequency_threshold_in_Hz()<<", "
+            <<setw(8)<<setprecision(5)<<get_scale_K_in_pu_per_Hz()<<", "
+            <<setw(8)<<setprecision(5)<<get_time_delay_in_s()<<", "
+            <<setw(8)<<setprecision(5)<<get_maximum_continuous_shed_scale_in_pu()<<", "
+            <<setw(8)<<setprecision(5)<<get_additional_stage_frequency_threshold_in_Hz()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(5)<<get_additional_stage_time_delay_in_s()<<", "
+            <<setw(8)<<setprecision(5)<<get_additional_stage_shed_scale_in_pu()<<", "
+            <<setw(8)<<setprecision(5)<<get_discrete_stage_time_delay_in_s()<<", ";
+    size_t n_content = 4;
+    size_t stage=0;
+    for(stage=0; stage!=(MAX_LOAD_RELAY_STAGE-1); ++stage)
+    {
+        osstream<<setw(8)<<setprecision(5)<<get_discrete_stage_shed_scale_in_pu(stage)<<", ";
+        n_content++;
+        if(n_content==10)
+        {
+            osstream<<"\n"
+                    <<setw(10)<<"";
+            n_content = 1;
+        }
+    }
+    stage = MAX_LOAD_RELAY_STAGE-1;
+    osstream<<setw(8)<<setprecision(5)<<get_discrete_stage_shed_scale_in_pu(stage)<<" /";
+
     return osstream.str();
 }
 

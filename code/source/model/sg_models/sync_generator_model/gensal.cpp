@@ -444,7 +444,7 @@ void GENSAL::check()
 void GENSAL::report()
 {
     ostringstream osstream;
-    osstream<<get_standard_model_string();
+    osstream<<get_standard_psse_string();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -454,28 +454,31 @@ void GENSAL::save()
     ;
 }
 
-string GENSAL::get_standard_model_string() const
+string GENSAL::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
     size_t bus = did.get_device_terminal().get_buses()[0];
-    string identifier = did.get_device_identifier();
+    string identifier = "'"+did.get_device_identifier()+"'";
+
+    string model_name = "'"+get_model_name()+"'";
 
     osstream<<setw(8)<<bus<<", "
-      <<"'"<<get_model_name()<<"', "
-      <<"'"<<identifier<<"', "
-      <<setw(8)<<setprecision(6)<<get_Td0p_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Td0pp_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_Tq0pp_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_H_in_s()<<", "
-      <<setw(8)<<setprecision(6)<<get_D()<<", "
-      <<setw(8)<<setprecision(6)<<get_Xd()<<", "
-      <<setw(8)<<setprecision(6)<<get_Xq()<<", "
-      <<setw(8)<<setprecision(6)<<get_Xdp()<<", "
-      <<setw(8)<<setprecision(6)<<get_Xpp()<<", "
-      <<setw(8)<<setprecision(6)<<get_Xl()<<", "
-      <<setw(8)<<setprecision(6)<<get_saturation_at_1()<<", "
-      <<setw(8)<<setprecision(6)<<get_saturation_at_1p2()<<"  /";
+            <<setw(10)<<model_name<<", "
+            <<setw(6)<<identifier<<", "
+            <<setw(8)<<setprecision(6)<<get_Td0p_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_Td0pp_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_Tq0pp_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_H_in_s()<<", "
+            <<setw(8)<<setprecision(6)<<get_D()<<", "
+            <<setw(8)<<setprecision(6)<<get_Xd()<<", "
+            <<setw(8)<<setprecision(6)<<get_Xq()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(6)<<get_Xdp()<<", "
+            <<setw(8)<<setprecision(6)<<get_Xpp()<<", "
+            <<setw(8)<<setprecision(6)<<get_Xl()<<", "
+            <<setw(8)<<setprecision(6)<<get_saturation_at_1()<<", "
+            <<setw(8)<<setprecision(6)<<get_saturation_at_1p2()<<" /";
     return osstream.str();
 }
 
