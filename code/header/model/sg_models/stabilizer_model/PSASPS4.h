@@ -94,6 +94,7 @@ class PSASPS4 : public STABILIZER_MODEL
 
         FIRST_ORDER_BLOCK speed_sensor, pelec_sensor;
         DIFFERENTIAL_BLOCK speed_dedc_block_1, speed_dedc_block_2, pelec_dedc_block_1, pelec_dedc_block_2;
+        //FIRST_ORDER_BLOCK pelec_dedc_block_1;
         double Ks;
         LEAD_LAG_BLOCK notch_filter_phase_tuner;
         FIRST_ORDER_BLOCK notch_filter_first_order_block_1, notch_filter_first_order_block_2, notch_filter_first_order_block_3, notch_filter_first_order_block_4;

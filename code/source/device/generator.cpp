@@ -615,14 +615,24 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                     comp->initialize();
                 STABILIZER_MODEL* pss = get_stabilizer_model();
                 if(pss!=NULL)
-                    pss->initialize();
+                {
+                    if(gen->get_model_name()=="GENCLS")
+                    {
+                        osstream<<"Warning. Stabilizer model "<<pss->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
+                                <<"Stabilizer model "<<pss->get_model_name()<<" will be removed.";
+                        toolkit.show_information_with_leading_time_stamp(osstream);
+                        clear_stabilizer_model();
+                    }
+                    else
+                        pss->initialize();
+                }
                 EXCITER_MODEL* exciter = get_exciter_model();
                 if(exciter!=NULL)
                 {
-                    if(exciter->get_model_name()=="PSASPE2" and gen->get_model_name()=="GENCLS")
+                    if(gen->get_model_name()=="GENCLS")
                     {
-                        osstream<<"Warning. Exciter model PSASPE2 is incompatible with generator model GENCLS for "<<get_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
-                                <<"Exciter model PSASPE2 will be removed.";
+                        osstream<<"Warning. Exciter model "<<exciter->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
+                                <<"Exciter model "<<exciter->get_model_name()<<" will be removed.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
                         clear_exciter_model();
                     }

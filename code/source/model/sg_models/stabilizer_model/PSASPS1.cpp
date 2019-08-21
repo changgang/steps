@@ -360,7 +360,20 @@ double PSASPS1::get_stabilizing_signal_in_pu() const
 
 void PSASPS1::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double vsmax = get_Vsmax();
+    double vsmin = get_Vsmin();
+
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    bool error_found = false;
+    if(vsmax<=vsmin)
+    {
+        osstream<<"Vsmax<=Vsmin was detected: Vsmax="<<vsmax<<", Vsmin="<<vsmin<<"\n";
+        error_found = true;
+    }
+    if(error_found)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PSASPS1::report()

@@ -300,6 +300,12 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
     for(size_t i=0; i!=n; ++i)
     {
         generator = generators[i];
+        METER meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(generator->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
         METER meter = setter.prepare_generator_mechanical_power_in_MW_meter(generator->get_device_id());
         append_meter(meter);
     }

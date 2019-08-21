@@ -488,10 +488,16 @@ void GENROU::check()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double xd = get_Xd();
+    double xq = get_Xq();
     double xdp = get_Xdp();
     double xqp = get_Xqp();
     double xpp = get_Xpp();
     double xl = get_Xl();
+    double td0p = get_Td0p_in_s();
+    double td0pp = get_Td0pp_in_s();
+    double tq0p = get_Tq0p_in_s();
+    double tq0pp = get_Tq0pp_in_s();
     osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
     bool error_found = false;
     if(xdp==xpp)
@@ -512,6 +518,41 @@ void GENROU::check()
     if(xqp==xl)
     {
         osstream<<"Xq'=Xl was detected: Xq'="<<xqp<<", Xl="<<xl<<"\n";
+        error_found = true;
+    }
+    if(xdp>=xd)
+    {
+        osstream<<"Xd'>=Xd was detected: Xd'="<<xdp<<", Xd="<<xd<<"\n";
+        error_found = true;
+    }
+    if(xqp>=xq)
+    {
+        osstream<<"Xq'>=Xq was detected: Xq'="<<xqp<<", Xq="<<xq<<"\n";
+        error_found = true;
+    }
+    if(xpp>=xdp)
+    {
+        osstream<<"X\">=Xdp was detected: X\"="<<xpp<<", Xd'="<<xdp<<"\n";
+        error_found = true;
+    }
+    if(xpp>=xqp)
+    {
+        osstream<<"X\">=Xqp was detected: X\"="<<xpp<<", Xq'="<<xqp<<"\n";
+        error_found = true;
+    }
+    if(xl>=xpp)
+    {
+        osstream<<"Xl>=X\" was detected: Xl="<<xl<<", X\"="<<xpp<<"\n";
+        error_found = true;
+    }
+    if(td0p<=td0pp)
+    {
+        osstream<<"Td0'<=Td0\" was detected: Td0'="<<td0p<<", Td0\"="<<td0pp<<"\n";
+        error_found = true;
+    }
+    if(tq0p<=tq0pp)
+    {
+        osstream<<"Tq0'<=Tq0\" was detected: Tq0'="<<tq0p<<", Tq0\"="<<tq0pp<<"\n";
         error_found = true;
     }
     if(error_found)
