@@ -827,7 +827,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
                     {
                         string iteration_info = osstream.str();
                         osstream.str("");
-                        osstream<<"Warning. Failed to get initial pitch angle in "<<iter_max<<" iterations."<<endl
+                        osstream<<"Error. Failed to get initial pitch angle in "<<iter_max<<" iterations."<<endl
                                 <<"Pitch angle is initialized as "<<pitch_new<<" deg."<<endl
                                 <<"Check "<<get_model_name()<<" model of "<<get_device_name()<<endl
                                 <<"Below are iteration:"<<endl

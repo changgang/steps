@@ -692,6 +692,8 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
                 meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(did);
             if(meter_type=="EXCITATION VOLTAGE IN PU")
                 meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
+            if(meter_type=="STABILIZING SIGNAL IN PU")
+                meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(did);
             if(meter_type=="MECHANICAL POWER IN MW")
                 meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
             if(meter_type=="MECHANICAL POWER REFERENCE IN MW")
@@ -766,6 +768,10 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meter(const DEVICE_ID& did
                 meter = setter.prepare_wt_generator_turbine_speed_in_pu_meter(did);
             if(meter_type=="ROTOR SPEED IN PU")
                 meter = setter.prepare_wt_generator_rotor_speed_in_pu_meter(did);
+            if(meter_type=="TURBINE SPEED DEVIATION IN PU")
+                meter = setter.prepare_wt_generator_turbine_speed_deviation_in_pu_meter(did);
+            if(meter_type=="ROTOR SPEED DEVIATION IN PU")
+                meter = setter.prepare_wt_generator_rotor_speed_deviation_in_pu_meter(did);
             if(meter_type=="ROTOR ANGLE IN DEG")
                 meter = setter.prepare_wt_generator_rotor_angle_in_deg_meter(did);
             if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
