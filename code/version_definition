@@ -12,9 +12,6 @@ If minor is increased by 1, it indicates that there are some compatible updates 
 
 If build is increased by 1, it indicates that there are some bugs are fixed in the new version. No changes are made to input or ouput data format or APIs definition.
 
-1.0.0 starts from 2018/08/29 with major updates of adding base frequency to BUS.
-
-
 
 2. pylibSTEPS version format
 
