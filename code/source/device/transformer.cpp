@@ -34,7 +34,7 @@ string TRANSFORMER::get_winding_name(TRANSFORMER_WINDING_SIDE winding) const
 
 void TRANSFORMER::set_identifier(string trans_id)
 {
-    this->identifier = trans_id;
+    this->identifier = trim_string(trans_id);
 }
 
 void TRANSFORMER::set_transformer_name(string trans_name)

@@ -71,7 +71,7 @@ void LINE::set_receiving_side_bus(size_t bus)
 
 void LINE::set_identifier(string line_id)
 {
-    this->identifier = line_id;
+    this->identifier = trim_string(line_id);
 }
 
 void LINE::set_sending_side_breaker_status(bool status)

@@ -2,20 +2,23 @@
 #define SG_MODEL_H
 
 #include "header/model/model.h"
+#include "header/device/bus.h"
 #include <complex>
 
 class GENERATOR;
 
 class SG_MODEL : public MODEL
 {
-public:
+    public:
         SG_MODEL();
         virtual ~SG_MODEL();
 
         GENERATOR* get_generator_pointer() const;
+        void set_bus_pointer();
+        BUS* get_bus_pointer() const;
         double get_mbase_in_MVA() const;
-        double get_bus_base_frequency_in_Hz() const;
-        complex<double> get_terminal_complex_voltage_in_pu() const;
+        double get_bus_base_frequency_in_Hz();
+        complex<double> get_terminal_complex_voltage_in_pu();
     public: // specific model level
         virtual string get_model_type() const = 0;
         virtual string get_model_name() const = 0;
@@ -45,5 +48,8 @@ public:
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+    private:
+        BUS* busptr;
+
 };
 #endif // SG_MODEL_H

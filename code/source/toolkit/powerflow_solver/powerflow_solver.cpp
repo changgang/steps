@@ -188,6 +188,25 @@ bool POWERFLOW_SOLVER::get_export_jacobian_matrix_step_by_step_logic() const
     return export_jacobian_matrix_step_by_step;
 }
 
+void POWERFLOW_SOLVER::show_powerflow_solver_configuration() const
+{
+    ostringstream osstream;
+    osstream<<"Configuration of powerflow solver:\n"
+            <<"Maximum iteration: "<<get_max_iteration()<<"\n"
+            <<"Iteration accelerator: "<<get_iteration_accelerator()<<"\n"
+            <<"Allowed maximum P mismatch: "<<get_allowed_max_active_power_imbalance_in_MW()<<" MW\n"
+            <<"Allowed maximum Q mismatch: "<<get_allowed_max_reactive_power_imbalance_in_MVar()<<"MVar\n"
+            <<"Maximum voltage change: "<<get_maximum_voltage_change_in_pu()<<" pu\n"
+            <<"Maximum angle change: "<<get_maximum_angle_change_in_deg()<<" deg ("<<get_maximum_angle_change_in_rad()<<" rad)\n"
+            <<"Flat start: "<<(get_flat_start_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Transformer tap adjustment: "<<(get_transformer_tap_adjustment_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Non-divergent solution: "<<(get_non_divergent_solution_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Var limit check: "<<(get_var_limit_check_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Export jacobian matrix step by step: "<<(get_export_jacobian_matrix_step_by_step_logic()?"Enabled":"Disabled");
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    toolkit.show_information_with_leading_time_stamp(osstream);
+}
+
 void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -232,6 +251,8 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             bool bus_type_changed = false;
             if(get_var_limit_check_logic()==true)
                 bus_type_changed = check_bus_type_constraints();
+            else
+                update_source_power_without_constraints();
 
             if(bus_type_changed)
             {
@@ -337,9 +358,9 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
             bool bus_type_changed = false;
             if(get_var_limit_check_logic()==true)
-            {
                 bus_type_changed = check_bus_type_constraints();
-            }
+            else
+                update_source_power_without_constraints();
 
             if(bus_type_changed)
             {
@@ -434,6 +455,8 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Initializing powerflow solver.");
     toolkit.show_information_with_leading_time_stamp(buffer);
+
+    show_powerflow_solver_configuration();
 
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     network_matrix.set_toolkit(toolkit);
@@ -1498,6 +1521,127 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_
     for(size_t i=0; i!=n; ++i)
         sources[i]->set_q_generation_in_MVar(sources[i]->get_q_max_in_MVar());
 }
+
+
+void POWERFLOW_SOLVER::update_source_power_without_constraints()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    size_t physical_bus;
+    BUS_TYPE btype;
+
+    vector<size_t> index;
+
+    vector<BUS*> buses = psdb.get_all_buses();
+
+    size_t nbus = buses.size();
+
+    for(size_t i=0; i!=nbus; ++i)
+    {
+        btype = buses[i]->get_bus_type();
+        if(btype == PQ_TYPE or btype == OUT_OF_SERVICE)
+            continue;
+
+        physical_bus = buses[i]->get_bus_number();
+
+        if(btype==SLACK_TYPE)
+            update_SLACK_bus_source_power_of_physical_bus(physical_bus);
+        else
+        {
+            if(btype == PV_TYPE)
+                update_PV_bus_source_power_of_physical_bus(physical_bus);
+            else
+                continue;
+        }
+    }
+    return;
+}
+
+void POWERFLOW_SOLVER::update_SLACK_bus_source_power_of_physical_bus(size_t physical_bus)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    BUS* bus = psdb.get_bus(physical_bus);
+
+    if(bus->get_bus_type()==SLACK_TYPE)
+    {
+        size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+        double sbase = psdb.get_system_base_power_in_MVA();
+        double bus_P_mismatch_in_MW = -bus_power[internal_bus].real()*sbase;
+        double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*sbase;
+
+        double total_p_max_in_MW = psdb.get_regulatable_p_max_at_physical_bus_in_MW(physical_bus);
+        double total_p_min_in_MW = psdb.get_regulatable_p_min_at_physical_bus_in_MW(physical_bus);
+        double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
+        double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+
+        double P_loading_percentage = (bus_P_mismatch_in_MW-total_p_min_in_MW);
+            P_loading_percentage /= (total_p_max_in_MW - total_p_min_in_MW);
+        double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
+            Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
+
+        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        size_t n;
+        n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == true)
+            {
+                double P_loading_in_MW = sources[i]->get_p_max_in_MW() - sources[i]->get_p_min_in_MW();
+                P_loading_in_MW = P_loading_in_MW*P_loading_percentage + sources[i]->get_p_min_in_MW();
+                sources[i]->set_p_generation_in_MW(P_loading_in_MW);
+
+                double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
+                Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
+                sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
+            }
+        }
+    }
+}
+
+bool POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(size_t physical_bus)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    BUS* bus = psdb.get_bus(physical_bus);
+
+    if(bus->get_bus_type()==PV_TYPE)
+    {
+        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+
+        size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+        double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
+
+        double total_q_max_in_MVar = psdb.get_regulatable_q_max_at_physical_bus_in_MVar(physical_bus);
+        double total_q_min_in_MVar = psdb.get_regulatable_q_min_at_physical_bus_in_MVar(physical_bus);
+
+        size_t n;
+
+        double Q_loading_percentage = (bus_Q_mismatch_in_MVar-total_q_min_in_MVar);
+        Q_loading_percentage /= (total_q_max_in_MVar - total_q_min_in_MVar);
+
+        vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(physical_bus);
+        n = sources.size();
+        for(size_t i=0; i!=n; ++i)
+        {
+            if(sources[i]->get_status() == true)
+            {
+                double Q_loading_in_MVar = sources[i]->get_q_max_in_MVar() - sources[i]->get_q_min_in_MVar();
+                Q_loading_in_MVar = Q_loading_in_MVar*Q_loading_percentage + sources[i]->get_q_min_in_MVar();
+                sources[i]->set_q_generation_in_MVar(Q_loading_in_MVar);
+            }
+        }
+    }
+}
+
+
 vector<double> POWERFLOW_SOLVER::get_bus_power_mismatch_vector_for_coupled_solution()
 {
     size_t nP = internal_P_equation_buses.size();

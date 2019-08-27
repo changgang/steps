@@ -62,6 +62,9 @@ void POWERFLOW_SOLVER_TEST::tear_down()
 
     psdb.clear();
 
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
+    powerflow_solver.clear();
+
     show_test_end_information();
 }
 
@@ -906,6 +909,7 @@ void POWERFLOW_SOLVER_TEST::check_Arthur_R_Bergen_3_bus_model_powerflow_result()
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-219.92)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-15.40361)<peps);
+    cout<<"gen 1 of Arthur system: p = "<<gen->get_p_generation_in_MW()<<", q = "<<gen->get_q_generation_in_MVar()<<endl;
 
     terminal.clear();
     terminal.append_bus(2);
@@ -914,6 +918,7 @@ void POWERFLOW_SOLVER_TEST::check_Arthur_R_Bergen_3_bus_model_powerflow_result()
     gen = psdb.get_generator(did);
     TEST_ASSERT(fabs(gen->get_p_generation_in_MW()-66.61)<peps);
     TEST_ASSERT(fabs(gen->get_q_generation_in_MVar()-165.8286)<peps);
+    cout<<"gen 2 of Arthur system: p = "<<gen->get_p_generation_in_MW()<<", q = "<<gen->get_q_generation_in_MVar()<<endl;
 }
 
 void POWERFLOW_SOLVER_TEST::check_IEEE_9_bus_model_powerflow_result()
@@ -1440,7 +1445,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_Yunnan_benchmark_100_bus_model_with_HVDC_
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.0001);
     powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.0001);
     powerflow_solver.solve_with_full_Newton_Raphson_solution();
-    TEST_ASSERT(not powerflow_solver.is_converged());
+    TEST_ASSERT(powerflow_solver.is_converged());
 
     BPA_IMEXPORTER exporter;
     exporter.set_toolkit(default_toolkit);

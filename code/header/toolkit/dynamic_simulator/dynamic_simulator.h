@@ -18,9 +18,9 @@ class DYNAMICS_SIMULATOR: public BASE
         virtual void clear();
 
         void set_dynamic_simulation_time_step_in_s(double delt);
-        double get_dynamic_simulation_time_step_in_s();
+        double get_dynamic_simulation_time_step_in_s() const;
         void set_dynamic_simulation_time_in_s(double time);
-        double get_dynamic_simulation_time_in_s();
+        double get_dynamic_simulation_time_in_s() const;
 
         NETWORK_MATRIX& get_network_matrix();
 
@@ -39,7 +39,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void set_max_update_event_iteration(size_t iteration);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
         void set_iteration_accelerator(double alpha);
-        void set_rotor_angle_stability_survilliance_flag(bool flag);
+        void set_rotor_angle_stability_surveillance_flag(bool flag);
         void set_rotor_angle_stability_threshold_in_deg(double angle_th);
 
         size_t get_max_DAE_iteration() const;
@@ -47,8 +47,10 @@ class DYNAMICS_SIMULATOR: public BASE
         size_t get_max_update_event_iteration() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
         double get_iteration_accelerator() const;
-        bool get_rotor_angle_stability_survilliance_flag() const;
+        bool get_rotor_angle_stability_surveillance_flag() const;
         double get_rotor_angle_stability_threshold_in_deg() const;
+
+        void show_dynamic_simulator_configuration() const;
 
         void prepare_meters();
         void prepare_bus_related_meters();
@@ -140,6 +142,8 @@ class DYNAMICS_SIMULATOR: public BASE
         void switch_on_equivalent_device();
 
     private:
+        void optimize_network_ordering();
+
         void integrate();
         void update();
         void update_relay_models();
@@ -160,6 +164,8 @@ class DYNAMICS_SIMULATOR: public BASE
         void add_loads_to_bus_current_mismatch();
         void add_hvdcs_to_bus_current_mismatch();
         void add_equivalent_devices_to_bus_current_mismatch();
+
+        complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus);
 
         bool is_converged();
         void get_bus_power_mismatch_in_MVA();
@@ -201,6 +207,8 @@ class DYNAMICS_SIMULATOR: public BASE
         size_t max_network_iteration, max_DAE_iteration, max_update_event_iteration;
         double alpha;
 
+        vector<BUS*> internal_bus_pointers;
+
         vector< complex<double> > I_mismatch, S_mismatch;
         vector<double> I_vec;
 
@@ -211,7 +219,7 @@ class DYNAMICS_SIMULATOR: public BASE
         vector<METER> meters;
         vector<double> meter_values;
 
-        bool flag_rotor_angle_stability_survilliance;
+        bool flag_rotor_angle_stability_surveillance;
         double rotor_angle_stability_threshold_in_deg;
         vector< vector<GENERATOR*> > generators_in_islands;
 

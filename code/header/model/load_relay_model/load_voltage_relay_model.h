@@ -10,8 +10,6 @@ class LOAD_VOLTAGE_RELAY_MODEL : public LOAD_RELAY_MODEL
         virtual ~LOAD_VOLTAGE_RELAY_MODEL();
 
         virtual string get_model_type() const;
-    public: // common input
-        double get_bus_voltage_in_pu() const;
 
     public: // other common
         virtual string get_model_name() const = 0;

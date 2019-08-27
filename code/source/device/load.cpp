@@ -65,7 +65,7 @@ void LOAD::set_load_bus(size_t load_bus)
 
 void LOAD::set_identifier(string load_id)
 {
-    this->identifier = load_id;
+    this->identifier = trim_string(load_id);
 }
 
 void LOAD::set_status(bool status)

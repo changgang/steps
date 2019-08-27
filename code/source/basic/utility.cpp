@@ -576,6 +576,7 @@ size_t generate_new_toolkit(string log_file)
         std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     }*/
 
+    ostringstream osstream;
     size_t index=INDEX_NOT_EXIST;
     while(true)
     {
@@ -585,7 +586,6 @@ size_t generate_new_toolkit(string log_file)
             if(toolkits[i]==NULL)
             {
                 index = i;
-                ostringstream osstream;
                 //osstream<<"NULL toolkit is found at "<<i<<endl;
                 //show_information_with_leading_time_stamp_with_default_toolkit(osstream);
                 osstream<<"TK "<<setfill('0')<<setw(4)<<num2str(index);
@@ -593,6 +593,7 @@ size_t generate_new_toolkit(string log_file)
                 toolkit_index_is_set = true;
                 break;
             }
+
         }
         if(toolkit_index_is_set==true)
             break;

@@ -52,6 +52,6 @@ Here is a complete procedure of how to build STEPS.
 ## How to use stepspy
 stepspy is a Python module of advanced APIs of STEPS. It enables most of STEPS applications. It is recommended to use stepspy in Python 3 of 64-bit version, though Python 2 is also supported.
 
-stepspy will be uploaded to pypi.org soon, and will be installed via:
+stepspy has been uploaded to pypi.org, and can be installed via:
 - pip3 install stepspy 
 - python -m pip install stepspy

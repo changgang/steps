@@ -44,7 +44,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double get_turbine_blade_radius_in_m() const;
         double get_nominal_wind_speed_in_mps() const;
         double get_nominal_air_density_in_kgpm3() const;
-        double get_nominal_turbine_speed_in_rad_per_s() const;
+        double get_nominal_turbine_speed_in_rad_per_s();
 
         void set_air_density_in_kgpm3(double rou);
         void set_turbine_speed_mode(WTG_TURBINE_SPEED_MODE mode);
@@ -58,14 +58,14 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
 
         double get_wind_speed_in_mps() const;
         double get_pitch_angle_in_deg() const;
-        double get_turbine_speed_in_rad_per_s() const;
-        double get_turbine_frequency_in_Hz() const;
+        double get_turbine_speed_in_rad_per_s();
+        double get_turbine_frequency_in_Hz();
 
         void set_initial_pitch_angle_in_deg(double pitch);
         void set_initial_turbine_speed_in_rad_per_s(double w);
         double get_initial_pitch_angle_in_deg() const;
         double get_initial_turbine_speed_in_rad_per_s() const;
-        double get_initial_turbine_speed_in_pu() const;
+        double get_initial_turbine_speed_in_pu();
         double get_total_wind_power_per_wt_generator_in_MW(double vwind) const;
 
 
@@ -74,8 +74,8 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
         double get_maximum_available_mechanical_power_per_wt_generator_in_MW(double vwind);
-        double get_turbine_mechanical_power_per_wt_generator_in_MW() const;
-        double get_turbine_mechanical_power_in_MW() const;
+        double get_turbine_mechanical_power_per_wt_generator_in_MW();
+        double get_turbine_mechanical_power_in_MW();
         double get_turbine_reference_speed_in_rad_per_s();
         double get_turbine_reference_speed_in_pu();
 

@@ -39,7 +39,7 @@ BUS_TEST::BUS_TEST()
     TEST_ADD(BUS_TEST::test_set_get_voltage_lower_limit);
     TEST_ADD(BUS_TEST::test_set_get_equivalent_bus_number);
     TEST_ADD(BUS_TEST::test_is_bus_overshadowed);
-    TEST_ADD(BUS_TEST::test_set_get_base_frequency);
+    TEST_ADD(BUS_TEST::test_set_get_base_frequency_period);
     TEST_ADD(BUS_TEST::test_set_get_voltage_to_regulate);
     TEST_ADD(BUS_TEST::test_is_valid);
     TEST_ADD(BUS_TEST::test_clear);
@@ -299,13 +299,14 @@ void BUS_TEST::test_is_bus_overshadowed()
     TEST_ASSERT(bus.is_bus_overshadowed()==false);
 }
 
-void BUS_TEST::test_set_get_base_frequency()
+void BUS_TEST::test_set_get_base_frequency_period()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
 
     TEST_ASSERT(fabs(bus.get_base_frequency_in_Hz()-50.0)<FLOAT_EPSILON);
     bus.set_base_frequency_in_Hz(60.0);
     TEST_ASSERT(fabs(bus.get_base_frequency_in_Hz()-60.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus.get_base_period_in_s()-(1.0/60.0))<FLOAT_EPSILON);
 }
 
 void BUS_TEST::test_set_get_voltage_to_regulate()

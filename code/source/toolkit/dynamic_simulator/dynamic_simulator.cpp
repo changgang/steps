@@ -38,12 +38,12 @@ void DYNAMICS_SIMULATOR::clear()
 
     set_dynamic_simulation_time_in_s(0.0);
 
-    set_max_DAE_iteration(200);
+    set_max_DAE_iteration(100);
     set_max_network_iteration(1);
-    set_max_update_event_iteration(200);
+    set_max_update_event_iteration(100);
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
-    set_rotor_angle_stability_survilliance_flag(false);
+    set_rotor_angle_stability_surveillance_flag(false);
     set_rotor_angle_stability_threshold_in_deg(360.0);
     generators_in_islands.clear();
 }
@@ -57,7 +57,7 @@ void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_step_in_s(double delt)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-double DYNAMICS_SIMULATOR::get_dynamic_simulation_time_step_in_s()
+double DYNAMICS_SIMULATOR::get_dynamic_simulation_time_step_in_s() const
 {
     return DELT;
 }
@@ -67,7 +67,7 @@ void DYNAMICS_SIMULATOR::set_dynamic_simulation_time_in_s(double time)
     TIME = time;
 }
 
-double DYNAMICS_SIMULATOR::get_dynamic_simulation_time_in_s()
+double DYNAMICS_SIMULATOR::get_dynamic_simulation_time_in_s() const
 {
     return TIME;
 }
@@ -141,9 +141,9 @@ void DYNAMICS_SIMULATOR::set_iteration_accelerator(double iter_alpha)
         this->alpha = iter_alpha;
 }
 
-void DYNAMICS_SIMULATOR::set_rotor_angle_stability_survilliance_flag(bool flag)
+void DYNAMICS_SIMULATOR::set_rotor_angle_stability_surveillance_flag(bool flag)
 {
-    this->flag_rotor_angle_stability_survilliance = flag;
+    this->flag_rotor_angle_stability_surveillance = flag;
 }
 
 void DYNAMICS_SIMULATOR::set_rotor_angle_stability_threshold_in_deg(double angle_th)
@@ -187,14 +187,40 @@ double DYNAMICS_SIMULATOR::get_iteration_accelerator() const
     return alpha;
 }
 
-bool DYNAMICS_SIMULATOR::get_rotor_angle_stability_survilliance_flag() const
+bool DYNAMICS_SIMULATOR::get_rotor_angle_stability_surveillance_flag() const
 {
-    return this->flag_rotor_angle_stability_survilliance;
+    return this->flag_rotor_angle_stability_surveillance;
 }
 
 double DYNAMICS_SIMULATOR::get_rotor_angle_stability_threshold_in_deg() const
 {
     return this->rotor_angle_stability_threshold_in_deg;
+}
+
+void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
+{
+    ostringstream osstream;
+    osstream<<"Configuration of dynamic simulator:\n"
+            <<"Time step: "<<get_dynamic_simulation_time_step_in_s()<<" s\n"
+            <<"Allowed maximum power imbalance: "<<get_allowed_max_power_imbalance_in_MVA()<<" MVA\n"
+            <<"Maximum iteration for DAE solution: "<<get_max_DAE_iteration()<<"\n"
+            <<"Maximum iteration for network: "<<get_max_network_iteration()<<"\n"
+            <<"Maximum iteration for updating event: "<<get_max_update_event_iteration()<<"\n"
+            <<"Network solution accelerator: "<<get_iteration_accelerator()<<"\n"
+            <<"Rotor angle stability surveillance: "<<(get_rotor_angle_stability_surveillance_flag()?"Enabled":"Disabled")<<"\n"
+            <<"Rotor angle stability threshold: "<<get_rotor_angle_stability_threshold_in_deg()<<" deg\n"
+            <<"CSV export: "<<(is_csv_file_export_enabled()?"Enabled":"Disabled")<<"\n"
+            <<"BIN export: "<<(is_bin_file_export_enabled()?"Enabled":"Disabled")<<"\n"
+            <<"JSON export: "<<(is_json_file_export_enabled()?"Enabled":"Disabled")<<"\n"
+            <<"Output file name: "<<get_output_file()<<"\n";
+
+    size_t n = meters.size();
+    osstream<<"Channel count: "<<n<<"\n";
+    for(size_t i=0; i!=n; ++i)
+        osstream<<"("<<setw(4)<<i+1<<") "<<meters[i].get_meter_name()<<"\n";
+
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
@@ -1588,11 +1614,37 @@ void DYNAMICS_SIMULATOR::save_meter_values()
     }
 }
 
+void DYNAMICS_SIMULATOR::optimize_network_ordering()
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    network_matrix.optimize_network_ordering();
+
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    size_t nbus = psdb.get_in_service_bus_count();
+
+    internal_bus_pointers.clear();
+    for(size_t internal_bus=0; internal_bus!=nbus; ++internal_bus)
+    {
+        size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
+        internal_bus_pointers.push_back(psdb.get_bus(physical_bus));
+    }
+}
+
+complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus)
+{
+    BUS* busptr = internal_bus_pointers[internal_bus];
+    return busptr->get_complex_voltage_in_pu();
+}
+
 void DYNAMICS_SIMULATOR::start()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWERFLOW_SOLVER& pf_solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    show_dynamic_simulator_configuration();
 
     ostringstream osstream;
     osstream<<"Dynamics initialization starts.";
@@ -1609,7 +1661,7 @@ void DYNAMICS_SIMULATOR::start()
 
     toolkit.set_dynamic_simulation_time_in_s(-2.0*toolkit.get_dynamic_simulation_time_step_in_s());
 
-    network_matrix.optimize_network_ordering();
+    optimize_network_ordering();
 
     run_all_models(INITIALIZE_MODE);
 
@@ -1621,7 +1673,7 @@ void DYNAMICS_SIMULATOR::start()
     //network_matrix.report_physical_internal_bus_number_pair();
 
 
-    if(get_rotor_angle_stability_survilliance_flag()==true)
+    if(get_rotor_angle_stability_surveillance_flag()==true)
         update_generators_in_islands();
 
     ITER_DAE = 0;
@@ -1705,7 +1757,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     update_with_event();
-    if(get_rotor_angle_stability_survilliance_flag()==false)
+    if(get_rotor_angle_stability_surveillance_flag()==false)
     {
         while(toolkit.get_dynamic_simulation_time_in_s()<=time-FLOAT_EPSILON)
             run_a_step();
@@ -1724,7 +1776,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
             {
                 ostringstream osstream;
                 osstream<<"At time "<<toolkit.get_dynamic_simulation_time_in_s()<<"s, "
-                        <<"system is detected to be unstable due to rotor angular stability survilliance logic."<<endl
+                        <<"system is detected to be unstable due to rotor angular stability surveillance logic."<<endl
                         <<"No further simulation will be performed.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 break;
@@ -1784,6 +1836,10 @@ void DYNAMICS_SIMULATOR::run_a_step()
                 max_angle_difference_old = max_angle_difference_new;
             else//converged
                 break;
+            /*if(fabs(max_angle_difference_new-max_angle_difference_old)<1e-8 and network_converged) // DAE solution converged
+                break;
+            else
+                max_angle_difference_old = max_angle_difference_new;*/
 
         }
         else
@@ -2310,7 +2366,8 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     for(int column=0; column!=nsize; ++column)
     {
         size_t column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(column);
-		complex<double> voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
+		//complex<double> voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
+		complex<double> voltage = get_bus_complex_voltage_in_pu_with_internal_bus_number(column);
 
         k_end = Y.get_starting_index_of_column(column+1);
         for(int k=k_start; k!=k_end; ++k)
@@ -2546,7 +2603,8 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
             S = edevices[i]->get_total_equivalent_power_as_load_in_MVA()/sbase;
 
-            V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
+            //V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
+            V = get_bus_complex_voltage_in_pu_with_internal_bus_number(internal_bus);
 
             I_mismatch[internal_bus] -= conj(S/V);
         }
@@ -2587,8 +2645,9 @@ void DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA()
     complex<double> V;
     for(size_t i= 0; i!=n; ++i)
     {
-        physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
+        /*physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+        V = psdb.get_bus_complex_voltage_in_pu(physical_bus);*/
+        V = get_bus_complex_voltage_in_pu_with_internal_bus_number(i);
         S_mismatch[i] = V*conj(S_mismatch[i])*sbase;
     }
 }
@@ -2647,8 +2706,9 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 
     for(size_t i=0; i!=n; ++i)
     {
-        physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        bus = psdb.get_bus(physical_bus);
+        //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+        //bus = psdb.get_bus(physical_bus);
+        bus = internal_bus_pointers[i];
         vang0 = bus->get_angle_in_rad();
         V0 = bus->get_complex_voltage_in_pu();
 
@@ -3062,7 +3122,7 @@ void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
 
             psdb.trip_bus(bus);
 
-            network_matrix.optimize_network_ordering();
+            optimize_network_ordering();
             network_matrix.build_dynamic_network_matrix();
             build_jacobian();
         }

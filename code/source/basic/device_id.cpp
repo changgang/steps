@@ -149,7 +149,10 @@ bool DEVICE_ID::is_given_terminal_acceptable(const TERMINAL& term)
 void DEVICE_ID::set_device_identifier(string identifier)
 {
     if(allow_identifier)
+    {
+        identifier = trim_string(identifier);
         this->device_identifier = identifier;
+    }
     else
         this->device_identifier = "";
 }

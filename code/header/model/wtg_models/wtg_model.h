@@ -2,23 +2,26 @@
 #define WTG_MODEL_H
 
 #include "header/model/model.h"
+#include "header/device/bus.h"
 #include <complex>
 
 class WT_GENERATOR;
 
 class WTG_MODEL : public MODEL
 {
-public:
+    public:
         WTG_MODEL();
         virtual ~WTG_MODEL();
 
         WT_GENERATOR* get_wt_generator_pointer() const;
+        void set_bus_pointer();
+        BUS* get_bus_pointer() const;
         double get_mbase_in_MVA() const;
-        complex<double> get_terminal_complex_voltage_in_pu() const;
+        complex<double> get_terminal_complex_voltage_in_pu();
 
         size_t get_number_of_lumped_wt_generators() const;
         double get_rated_power_per_wt_generator_in_MW() const;
-        double get_bus_base_frequency_in_Hz() const;
+        double get_bus_base_frequency_in_Hz();
         complex<double> get_source_impedance_in_pu_based_on_mbase() const;
 
     public: // specific model level
@@ -50,5 +53,7 @@ public:
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+    private:
+        BUS* busptr;
 };
 #endif // WTG_MODEL_H

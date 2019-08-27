@@ -43,6 +43,8 @@ class POWERFLOW_SOLVER : public BASE
         bool get_var_limit_check_logic() const;
         bool get_export_jacobian_matrix_step_by_step_logic() const;
 
+        void show_powerflow_solver_configuration() const;
+
         void solve_with_full_Newton_Raphson_solution();
         void solve_with_fast_decoupled_solution();
         void solve_with_modified_Gaussian_Seidel_solution();
@@ -86,6 +88,10 @@ class POWERFLOW_SOLVER : public BASE
         bool check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t physical_bus);
         void set_all_sources_at_physical_bus_to_q_min(size_t physical_bus);
         void set_all_sources_at_physical_bus_to_q_max(size_t physical_bus);
+
+        void update_source_power_without_constraints();
+        void update_SLACK_bus_source_power_of_physical_bus(size_t physical_bus);
+        bool update_PV_bus_source_power_of_physical_bus(size_t physical_bus);
 
         vector<double> get_bus_power_mismatch_vector_for_coupled_solution();
         vector<double> get_bus_P_power_mismatch_vector_for_decoupled_solution();

@@ -303,6 +303,7 @@ void IEEL::initialize()
     setup_block_toolkit_and_parameters();
 
     LOAD* load = get_load_pointer();
+
     complex<double> S = load->get_actual_total_load_in_MVA();
     double V = get_bus_voltage_in_pu();
 
@@ -335,13 +336,17 @@ void IEEL::run(DYNAMIC_MODE mode)
         set_flag_model_updated_as_true();
 }
 
-complex<double> IEEL::get_load_power_in_MVA() const
+complex<double> IEEL::get_load_power_in_MVA()
 {
     LOAD* load = get_load_pointer();
     double Vth = load->get_voltage_threshold_of_constant_power_load_in_pu();
 
     double V = get_bus_voltage_in_pu();
     double f = get_bus_frequency_deviation_in_pu();
+
+    complex<double> PQ0 = get_initial_load_power_in_MVA();
+    double P0 = PQ0.real();
+    double Q0 = PQ0.imag();
 
     double alpha1 = get_P_alpha_1();
     double alpha2 = get_P_alpha_2();
@@ -382,7 +387,7 @@ complex<double> IEEL::get_load_power_in_MVA() const
             P += (alpha3/Vth*V);
     }
 
-    P = get_initial_load_power_in_MVA().real()*P*(1.0+kf*f);
+    P = P0*P*(1.0+kf*f);
 
     alpha1 = get_Q_alpha_1();
     alpha2 = get_Q_alpha_2();
@@ -423,7 +428,7 @@ complex<double> IEEL::get_load_power_in_MVA() const
             Q += (alpha3/Vth*V);
     }
 
-    Q = get_initial_load_power_in_MVA().imag()*Q*(1.0+kf*f);
+    Q = Q0*Q*(1.0+kf*f);
 
     return complex<double>(P,Q);
 }

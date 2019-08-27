@@ -40,7 +40,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_set_get_max_update_event_iteration();
         void test_set_get_allowed_max_power_imbalance_in_MVA();
         void test_set_get_iteration_accelerator();
-        void test_set_get_rotor_angle_stability_survilliance_flag();
+        void test_set_get_rotor_angle_stability_surveillance_flag();
         void test_set_get_rotor_angle_stability_threshold();
 
         void test_append_and_get_meter();
@@ -64,7 +64,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
 
         void test_run_IEEE_9_bus_model_classic();
 
-        void test_run_IEEE_9_bus_model_classic_with_rotor_angle_survilliance();
+        void test_run_IEEE_9_bus_model_classic_with_rotor_angle_surveillance();
 
         void test_run_IEEE_9_bus_model_complete();
         void test_run_IEEE_39_bus_model_GENROU();

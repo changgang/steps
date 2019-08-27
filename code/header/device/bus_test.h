@@ -45,7 +45,7 @@ class BUS_TEST : public Test::Suite
         void test_set_get_voltage_lower_limit();
         void test_set_get_equivalent_bus_number();
         void test_is_bus_overshadowed();
-        void test_set_get_base_frequency();
+        void test_set_get_base_frequency_period();
         void test_set_get_voltage_to_regulate();
         void test_is_valid();
         void test_clear();

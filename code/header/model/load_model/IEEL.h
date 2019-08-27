@@ -53,7 +53,7 @@ class IEEL : public LOAD_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual complex<double> get_load_power_in_MVA() const;
+        virtual complex<double> get_load_power_in_MVA();
         virtual void check();
         virtual void clear();
         virtual void report();

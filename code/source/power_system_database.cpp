@@ -1,5 +1,6 @@
 #include "header/power_system_database.h"
 #include "header/STEPS.h"
+#include "header/steps_namespace.h"
 #include "header/basic/utility.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 #include "thirdparty/rapidjson/document.h"
@@ -44,6 +45,7 @@ double POWER_SYSTEM_DATABASE::get_zero_impedance_threshold_in_pu() const
 
 void POWER_SYSTEM_DATABASE::set_database_capacity()
 {
+    ostringstream osstream;
     size_t bus_capacity = 1000;
     size_t generator_capacity = size_t(round(bus_capacity*0.5));
     size_t wt_generator_capacity = size_t(round(bus_capacity*0.5));
@@ -114,7 +116,6 @@ void POWER_SYSTEM_DATABASE::set_database_capacity()
     else
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        ostringstream osstream;
         osstream<<"No configuration file <steps_config.json> is found. Use default power system database capacity.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }

@@ -180,6 +180,13 @@ void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value
     return;
 }
 
+void api_show_powerflow_solver_configuration(size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
+    solver.show_powerflow_solver_configuration();
+}
+
 void api_solve_powerflow(char* method, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

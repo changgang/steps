@@ -143,7 +143,7 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, size_t to
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="ANGLE STABILITY SURVILLIANCE LOGIC")
-        return ds.get_rotor_angle_stability_survilliance_flag();
+        return ds.get_rotor_angle_stability_surveillance_flag();
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
         return ds.is_bin_file_export_enabled();
     if(PARAMETER_NAME=="CSV EXPORT LOGIC")
@@ -165,7 +165,7 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="ANGLE STABILITY SURVILLIANCE LOGIC")
     {
-        ds.set_rotor_angle_stability_survilliance_flag(value);
+        ds.set_rotor_angle_stability_surveillance_flag(value);
         return;
     }
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
@@ -220,6 +220,13 @@ double api_get_dynamic_simulation_time(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     return toolkit.get_dynamic_simulation_time_in_s();
+}
+
+void api_show_dynamic_simulation_configuration(size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    ds.show_dynamic_simulator_configuration();
 }
 
 void api_prepare_meters(size_t toolkit_index)

@@ -7,6 +7,7 @@ using namespace std;
 
 STEPS::STEPS(string name, string log_file)
 {
+    ostringstream osstream;
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     if(log_file!="")

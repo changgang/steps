@@ -16,7 +16,6 @@ using namespace std;
 
 DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
 {
-
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_constructor);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_bin_file_export_enable_flag);
@@ -32,7 +31,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_event_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_survilliance_flag);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_surveillance_flag);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_threshold);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_append_and_get_meter);
@@ -52,7 +51,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus);
 
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic);
-    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle_survilliance);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle_surveillance);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1);
@@ -101,7 +100,7 @@ void DYNAMICS_SIMULATOR_TEST::test_constructor()
 
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     TEST_ASSERT(simulator.get_meter_count()==0);
-    TEST_ASSERT(simulator.get_max_DAE_iteration()==200);
+    TEST_ASSERT(simulator.get_max_DAE_iteration()==100);
     TEST_ASSERT(simulator.get_max_network_iteration()==1);
     TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.00001)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.0)<FLOAT_EPSILON);
@@ -225,16 +224,16 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator()
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.2)<FLOAT_EPSILON);
 }
 
-void DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_survilliance_flag()
+void DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_surveillance_flag()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
 
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
-    TEST_ASSERT(simulator.get_rotor_angle_stability_survilliance_flag()==false);
-    simulator.set_rotor_angle_stability_survilliance_flag(true);
-    TEST_ASSERT(simulator.get_rotor_angle_stability_survilliance_flag()==true);
-    simulator.set_rotor_angle_stability_survilliance_flag(false);
-    TEST_ASSERT(simulator.get_rotor_angle_stability_survilliance_flag()==false);
+    TEST_ASSERT(simulator.get_rotor_angle_stability_surveillance_flag()==false);
+    simulator.set_rotor_angle_stability_surveillance_flag(true);
+    TEST_ASSERT(simulator.get_rotor_angle_stability_surveillance_flag()==true);
+    simulator.set_rotor_angle_stability_surveillance_flag(false);
+    TEST_ASSERT(simulator.get_rotor_angle_stability_surveillance_flag()==false);
 }
 
 
@@ -494,6 +493,8 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    simulator.set_max_DAE_iteration(200);
+    simulator.set_max_network_iteration(1);
 
 
     DEVICE_ID did;
@@ -507,6 +508,8 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
 
     METER_SETTER setter;
     setter.set_toolkit(default_toolkit);
+
+    ostringstream osstream;
 
     METER meter;
     meter.set_toolkit(default_toolkit);
@@ -536,8 +539,6 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
     simulator.append_meter(meter);
     meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(did);
     simulator.append_meter(meter);
-
-    simulator.clear_meters();
 
     simulator.start();
     simulator.run_to(1.0);
@@ -782,7 +783,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
 
 
 
-void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle_survilliance()
+void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle_surveillance()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
 
@@ -816,10 +817,10 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.0083333);
 
     simulator.prepare_meters();
-    simulator.set_rotor_angle_stability_survilliance_flag(true);
+    simulator.set_rotor_angle_stability_surveillance_flag(true);
     simulator.set_rotor_angle_stability_threshold_in_deg(360.0);
 
-    simulator.set_output_file("test_log/IEEE9_test_with_classical_model_with_rotor_angle_survilliance");
+    simulator.set_output_file("test_log/IEEE9_test_with_classical_model_with_rotor_angle_surveillance");
 
     simulator.start();
     simulator.run_to(0.0);
@@ -1434,6 +1435,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
 
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
+    ostringstream osstream;
     string file = "test_log/";
     file += __FUNCTION__;
     file += ".txt";
@@ -1457,13 +1459,23 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
     powerflow_solver.solve_with_fast_decoupled_solution();
 
     simulator.prepare_meters();
-    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
 
     simulator.set_output_file("test_log/IEEE_39_bus_model_with_wind");
 
     simulator.start();
     simulator.run_to(1.0);
 
+    DEVICE_ID did;
+    did.set_device_type("GENERATOR");
+    TERMINAL terminal;
+    terminal.append_bus(30);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+    simulator.trip_generator(did);
+
+    simulator.run_to(10);
 
     default_toolkit.close_log_file();
 }

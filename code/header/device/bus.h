@@ -63,6 +63,7 @@ class BUS : public DEVICE
         double get_voltage_upper_limit_in_pu() const;
         double get_voltage_lower_limit_in_pu() const;
         double get_base_frequency_in_Hz() const;
+        double get_base_period_in_s() const;
         double get_voltage_to_regulate_in_pu() const;
         complex<double> get_complex_voltage_in_pu() const;
         complex<double> get_complex_voltage_in_kV() const;
@@ -101,7 +102,7 @@ class BUS : public DEVICE
         size_t bus_number;
         string bus_name;
         double base_voltage_in_kV;
-        double fn_Hz;
+        double fn_Hz, tn_s;
         BUS_TYPE bus_type;
         size_t area_number;
         size_t zone_number;

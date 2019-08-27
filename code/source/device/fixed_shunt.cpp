@@ -47,7 +47,7 @@ void FIXED_SHUNT::set_shunt_bus(size_t shunt_bus)
 
 void FIXED_SHUNT::set_identifier(string shunt_id)
 {
-    this->identifier = shunt_id;
+    this->identifier = trim_string(shunt_id);
 }
 
 void FIXED_SHUNT::set_status(bool status)

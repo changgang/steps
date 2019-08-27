@@ -45,7 +45,7 @@ void SOURCE::set_source_bus(size_t bus)
 
 void SOURCE::set_identifier(string id)
 {
-    source_identifier = id;
+    source_identifier = trim_string(id);
 }
 
 void SOURCE::set_status(bool status)

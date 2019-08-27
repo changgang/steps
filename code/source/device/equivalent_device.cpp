@@ -53,7 +53,7 @@ void EQUIVALENT_DEVICE::set_equivalent_device_bus(size_t device_bus)
 
 void EQUIVALENT_DEVICE::set_identifier(string identifier)
 {
-    this->identifier = identifier;
+    this->identifier = trim_string(identifier);
 }
 
 void EQUIVALENT_DEVICE::set_status(bool status)

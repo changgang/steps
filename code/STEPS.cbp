@@ -17,6 +17,7 @@
 					<Add option="-O3" />
 					<Add option="-Wall" />
 					<Add option="-std=c++1z" />
+					<Add option="-ffast-math" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
@@ -28,8 +29,10 @@
 					<Add directory="thirdparty/SuiteSparse/BTF/Include" />
 				</Compiler>
 				<Linker>
+					<Add option="-O3" />
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
+					<Add option="-ffast-math" />
 					<Add library="../build/bin/Release/libCSparse.a" />
 					<Add library="../build/bin/Release/libCpptest.a" />
 				</Linker>
@@ -355,13 +358,13 @@
 		<Unit filename="main_dynamics_simulation.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_gprof.cpp">
-			<Option link="0" />
-		</Unit>
+		<Unit filename="main_gprof.cpp" />
 		<Unit filename="main_powerflow.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_tests.cpp" />
+		<Unit filename="main_tests.cpp">
+			<Option link="0" />
+		</Unit>
 		<Unit filename="main_ufls_simulation.cpp">
 			<Option link="0" />
 		</Unit>

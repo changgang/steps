@@ -166,7 +166,7 @@ double WT_AERODYNAMIC_MODEL::get_nominal_air_density_in_kgpm3() const
     return nominal_air_density_in_kgpm3;
 }
 
-double WT_AERODYNAMIC_MODEL::get_nominal_turbine_speed_in_rad_per_s() const
+double WT_AERODYNAMIC_MODEL::get_nominal_turbine_speed_in_rad_per_s()
 {
     double fbase = get_bus_base_frequency_in_Hz();
     size_t npair = get_number_of_pole_pairs();
@@ -196,7 +196,7 @@ double WT_AERODYNAMIC_MODEL::get_initial_turbine_speed_in_rad_per_s() const
     return initial_turbine_speed_in_rad_per_s;
 }
 
-double WT_AERODYNAMIC_MODEL::get_initial_turbine_speed_in_pu() const
+double WT_AERODYNAMIC_MODEL::get_initial_turbine_speed_in_pu()
 {
     return get_initial_turbine_speed_in_rad_per_s()/get_nominal_turbine_speed_in_rad_per_s();
 }
@@ -275,7 +275,7 @@ double WT_AERODYNAMIC_MODEL::get_pitch_angle_in_deg() const
         return 0.0;
 }
 
-double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s() const
+double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s()
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();
     if(gen!=NULL)
@@ -290,7 +290,7 @@ double WT_AERODYNAMIC_MODEL::get_turbine_speed_in_rad_per_s() const
         return 0.0;
 }
 
-double WT_AERODYNAMIC_MODEL::get_turbine_frequency_in_Hz() const
+double WT_AERODYNAMIC_MODEL::get_turbine_frequency_in_Hz()
 {
     return radps2hz(get_turbine_speed_in_rad_per_s());
 }
@@ -873,7 +873,7 @@ double WT_AERODYNAMIC_MODEL::get_maximum_available_mechanical_power_per_wt_gener
     return pmax*cpmax;
 }
 
-double WT_AERODYNAMIC_MODEL::get_turbine_mechanical_power_per_wt_generator_in_MW() const
+double WT_AERODYNAMIC_MODEL::get_turbine_mechanical_power_per_wt_generator_in_MW()
 {
     double w = get_turbine_speed_in_rad_per_s();
     double pmech = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
@@ -881,7 +881,7 @@ double WT_AERODYNAMIC_MODEL::get_turbine_mechanical_power_per_wt_generator_in_MW
     return pmech*eta;
 }
 
-double WT_AERODYNAMIC_MODEL::get_turbine_mechanical_power_in_MW() const
+double WT_AERODYNAMIC_MODEL::get_turbine_mechanical_power_in_MW()
 {
     return get_turbine_mechanical_power_per_wt_generator_in_MW()*get_number_of_lumped_wt_generators();
 }

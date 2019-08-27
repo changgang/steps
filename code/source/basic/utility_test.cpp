@@ -308,6 +308,11 @@ void UTILITY_TEST::test_generate_and_delete_toolkit()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
+    ostringstream osstream;
+    osstream<<"If utility test stops at here, check if the configuration in steps_config.json is too great.\n"
+            <<"When you run STEPS in parallel mode, too great capacity may lead to failure of memory allocation, and STEPS may quit.";
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
+
     for(size_t k=0; k!=10; ++k)
     {
         TEST_ASSERT(toolkits[k]==NULL);
@@ -321,15 +326,18 @@ void UTILITY_TEST::test_generate_and_delete_toolkit()
     delete_toolkit(i);
     TEST_ASSERT(toolkits[i]==NULL);
 
-    for(size_t k=0; k!=10; ++k)
+    for(size_t k=0; k!=3; ++k)
     {
         i = generate_new_toolkit();
         TEST_ASSERT(i==k);
         TEST_ASSERT(toolkits[i]!=NULL);
         TEST_ASSERT(get_toolkit_count()==i+1);
-        toolkits[i]->show_information_with_leading_time_stamp("You should find this message in log.");
+        if(toolkits[i]!=NULL)
+            toolkits[i]->show_information_with_leading_time_stamp("You should find this message in log.");
+        else
+            toolkits[i]->show_information_with_leading_time_stamp("You should NOT find this message in log.");
     }
-    for(size_t k=0; k!=10; ++k)
+    for(size_t k=0; k!=3; ++k)
     {
         delete_toolkit(k);
         TEST_ASSERT(toolkits[k]==NULL);
@@ -339,20 +347,25 @@ void UTILITY_TEST::test_get_toolkit()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
-    for(size_t k=0; k!=10; ++k)
+    ostringstream osstream;
+    osstream<<"If utility test stops at here, check if the configuration in steps_config.json is too great.\n"
+            <<"When you run STEPS in parallel mode, too great capacity may lead to failure of memory allocation, and STEPS may quit.";
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
+
+    for(size_t k=0; k!=3; ++k)
     {
         generate_new_toolkit();
     }
     TEST_ASSERT(&get_toolkit(INDEX_NOT_EXIST)==&default_toolkit);
-    for(size_t k=0; k!=10; ++k)
+    for(size_t k=0; k!=3; ++k)
     {
         TEST_ASSERT(&(get_toolkit(k))==toolkits[k]);
     }
-    for(size_t k=10; k!=20; ++k)
+    for(size_t k=3; k!=6; ++k)
     {
         TEST_ASSERT(&(get_toolkit(k))==&(default_toolkit));
     }
-    for(size_t k=0; k!=10; ++k)
+    for(size_t k=0; k!=3; ++k)
     {
         delete_toolkit(k);
     }

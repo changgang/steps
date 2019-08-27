@@ -181,6 +181,7 @@ void BUS::set_base_frequency_in_Hz(double fn)
     if(fn==0.0)
         fn = 50.0;
     fn_Hz = fn;
+    tn_s = 1.0/fn_Hz;
 }
 
 
@@ -296,6 +297,11 @@ double BUS::get_voltage_lower_limit_in_pu() const
 double BUS::get_base_frequency_in_Hz() const
 {
     return fn_Hz;
+}
+
+double BUS::get_base_period_in_s() const
+{
+    return tn_s;
 }
 
 double BUS::get_voltage_to_regulate_in_pu() const

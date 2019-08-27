@@ -91,8 +91,10 @@ void BUS_FREQUENCY_MODEL::set_frequency_deviation_in_pu(double f)
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_pu() const
 {
-    double fbase = bus_ptr->get_base_frequency_in_Hz();
-    return get_frequency_deviation_in_Hz()/fbase;
+    /*double fbase = bus_ptr->get_base_frequency_in_Hz();
+    return get_frequency_deviation_in_Hz()/fbase;*/
+    double tbase = bus_ptr->get_base_period_in_s();
+    return get_frequency_deviation_in_Hz()*tbase;
 }
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_Hz() const

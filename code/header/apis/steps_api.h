@@ -275,6 +275,8 @@ EXPORT_STEPS_DLL void api_set_powerflow_solver_float_parameter(char* parameter_n
 EXPORT_STEPS_DLL bool api_get_powerflow_solver_boolean_parameter(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_powerflow_solver_boolean_parameter(char* parameter_name, bool value, size_t toolkit_index=INDEX_NOT_EXIST);
 
+EXPORT_STEPS_DLL void api_show_powerflow_solver_configuration(size_t toolkit_index=INDEX_NOT_EXIST);
+
 EXPORT_STEPS_DLL void api_solve_powerflow(char* method, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL bool api_is_powerflow_converged(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_show_powerflow_result(size_t toolkit_index=INDEX_NOT_EXIST);
@@ -306,6 +308,8 @@ EXPORT_STEPS_DLL const char* api_get_dynamic_simulator_output_file(size_t toolki
 EXPORT_STEPS_DLL void api_set_dynamic_simulation_time_step(double value, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_dynamic_simulation_time_step(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL double api_get_dynamic_simulation_time(size_t toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL void api_show_dynamic_simulation_configuration(size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_prepare_meters(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_bus_related_meters(size_t toolkit_index=INDEX_NOT_EXIST);
