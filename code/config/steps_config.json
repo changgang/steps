@@ -1,0 +1,15 @@
+{"bus":100000,
+"generator": 50000,
+"wtGenerator": 50000,
+"pvUnit":50000,
+"load":50000,
+"fixedShunt": 50000,
+"switchedShunt":50000,
+"line":200000,
+"transformer":200000,
+"hvdc":10000,
+"equivalentDevice":100,
+"area":10000,
+"zone":10000,
+"owner":10000
+}
