@@ -491,26 +491,6 @@ complex<double> GENCLS::get_internal_voltage_in_pu_in_xy_axis()
     return dq2xy_with_angle_in_rad(Edq, angle);
 }
 
-
-
-void GENCLS::set_rotor_angle_in_deg(double angle)
-{
-    INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
-
-    rotor_angle_block->set_output(deg2rad(angle));
-    rotor_angle_block->initialize(); // the initialize function is used to update STORE
-}
-
-void GENCLS::set_rotor_speed_deviation_in_pu(double speed)
-{
-    INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
-
-    rotor_speed_block->set_output(speed);
-    rotor_speed_block->initialize();
-}
-
-
-
 string GENCLS::get_dynamic_data_in_psse_format() const
 {
     return "";

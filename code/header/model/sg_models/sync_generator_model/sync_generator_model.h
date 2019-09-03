@@ -143,6 +143,11 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
+    public:
+        // the following two functions are used to model GENCLS as ideal voltage source
+        // with set_excitation_voltage_in_pu(), GENCLS is user controllable.
+        void set_rotor_angle_in_deg(double angle);
+        void set_rotor_speed_deviation_in_pu(double speed);
 
     private:
         void common_constructor();

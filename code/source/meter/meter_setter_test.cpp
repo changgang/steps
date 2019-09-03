@@ -506,6 +506,10 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="ROTOR SPEED DEVIATION IN HZ");
 
+    meter = setter.prepare_generator_terminal_voltage_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="TERMINAL VOLTAGE IN PU");
+
     meter = setter.prepare_generator_internal_voltage_in_pu_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="INTERNAL VOLTAGE IN PU");

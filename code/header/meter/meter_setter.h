@@ -60,6 +60,7 @@ class METER_SETTER : public BASE
         METER prepare_generator_rotor_speed_in_Hz_meter(const DEVICE_ID& device_id);
         METER prepare_generator_rotor_speed_deviation_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_generator_rotor_speed_deviation_in_Hz_meter(const DEVICE_ID& device_id);
+        METER prepare_generator_terminal_voltage_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_generator_internal_voltage_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_generator_terminal_current_in_pu_on_mbase_meter(const DEVICE_ID& device_id);
         METER prepare_generator_terminal_current_in_pu_on_sbase_meter(const DEVICE_ID& device_id);

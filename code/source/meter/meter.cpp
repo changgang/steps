@@ -61,6 +61,7 @@ vector<string> load_meters{ "CURRENT IN KA",
 vector<string> generator_meters{"ROTOR ANGLE IN DEG",
                                 "ROTOR SPEED IN PU",               "ROTOR SPEED IN HZ",
                                 "ROTOR SPEED DEVIATION IN PU",     "ROTOR SPEED DEVIATION IN HZ",
+                                "TERMINAL VOLTAGE IN PU",
                                 "INTERNAL VOLTAGE IN PU",
                                 "TERMINAL CURRENT IN PU ON MBASE", "TERMINAL CURRENT IN PU ON SBASE",
                                 "TERMINAL CURRENT IN KA",
@@ -1164,6 +1165,13 @@ double METER::get_meter_value_as_a_generator() const
                     return 0.0;
                 else
                     return fbase*gen_model->get_rotor_speed_deviation_in_pu();
+            }
+            if(meter_type =="TERMINAL VOLTAGE IN PU")
+            {
+                if(gen_model == NULL)
+                    return 0.0;
+                else
+                    return steps_fast_complex_abs(gen_model->get_terminal_voltage_in_pu());
             }
             if(meter_type =="INTERNAL VOLTAGE IN PU")
             {

@@ -79,3 +79,18 @@ complex<double> SG_MODEL::get_terminal_complex_voltage_in_pu()
             return 0.0;
     }
 }
+
+double SG_MODEL::get_terminal_voltage_in_pu()
+{
+    BUS* busptr =  get_bus_pointer();
+    if(busptr!=NULL)
+        return busptr->get_voltage_in_pu();
+    else
+    {
+        set_bus_pointer();
+        if(get_bus_pointer()!=NULL)
+            return get_terminal_voltage_in_pu();
+        else
+            return 0.0;
+    }
+}

@@ -292,7 +292,7 @@ bool PSASPS3::setup_model_with_steps_string_vector(vector<string>& data)
             set_Macc(macc);
             set_Iacc(iacc);
             set_Nacc(nacc);
-            set_dedc_1_flag(dedc1_flag);
+            set_dedc_1_flag((dedc1_flag==0?false:true));
             if(tacc == 0.0)
                 tacc = td;
             set_Tacc_in_s(tacc);
@@ -594,7 +594,7 @@ double PSASPS3::get_model_data_with_name(string par_name) const
     if(par_name=="NACC")
         return get_Nacc();
     if(par_name=="FLAG")
-        return get_dedc_1_flag();
+        return (get_dedc_1_flag()?1:0);
     if(par_name=="TACC")
         return get_Tacc_in_s();
     if(par_name=="TD")

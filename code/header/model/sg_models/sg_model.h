@@ -19,6 +19,7 @@ class SG_MODEL : public MODEL
         double get_mbase_in_MVA() const;
         double get_bus_base_frequency_in_Hz();
         complex<double> get_terminal_complex_voltage_in_pu();
+        double get_terminal_voltage_in_pu();
     public: // specific model level
         virtual string get_model_type() const = 0;
         virtual string get_model_name() const = 0;

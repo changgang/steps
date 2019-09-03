@@ -720,14 +720,30 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meter(const DEVICE_ID& did, s
                 meter = setter.prepare_generator_excitation_voltage_in_pu_meter(did);
             if(meter_type=="STABILIZING SIGNAL IN PU")
                 meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(did);
+            if(meter_type=="TERMINAL VOLTAGE IN PU")
+                meter = setter.prepare_generator_terminal_voltage_in_pu_meter(did);
+            if(meter_type=="INTERNAL VOLTAGE IN PU")
+                meter = setter.prepare_generator_internal_voltage_in_pu_meter(did);
             if(meter_type=="MECHANICAL POWER IN MW")
                 meter = setter.prepare_generator_mechanical_power_in_MW_meter(did);
+            if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
+                meter = setter.prepare_generator_mechanical_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="MECHANICAL POWER IN PU ON SBASE")
+                meter = setter.prepare_generator_mechanical_power_in_pu_on_sbase_meter(did);
             if(meter_type=="MECHANICAL POWER REFERENCE IN MW")
                 meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(did);
             if(meter_type=="TERMINAL ACTIVE POWER IN MW")
                 meter = setter.prepare_generator_terminal_active_power_in_MW_meter(did);
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
+                meter = setter.prepare_generator_terminal_active_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_generator_terminal_active_power_in_pu_on_sbase_meter(did);
             if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
                 meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
+                meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_mbase_meter(did);
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
+                meter = setter.prepare_generator_terminal_reactive_power_in_pu_on_sbase_meter(did);
             if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
                 meter = setter.prepare_generator_sync_generator_model_internal_variable_meter(did, var_name);
             if(meter_type=="COMPENSATOR MODEL INTERNAL VARIABLE")

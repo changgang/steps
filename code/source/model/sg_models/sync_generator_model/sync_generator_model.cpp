@@ -407,3 +407,19 @@ void SYNC_GENERATOR_MODEL::setup_block_toolkit_and_parameters()
     rotor_angle_block.set_toolkit(toolkit);
     rotor_speed_block.set_toolkit(toolkit);
 }
+
+void SYNC_GENERATOR_MODEL::set_rotor_angle_in_deg(double angle)
+{
+    INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
+
+    rotor_angle_block->set_output(deg2rad(angle));
+    rotor_angle_block->initialize(); // the initialize function is used to update STORE
+}
+
+void SYNC_GENERATOR_MODEL::set_rotor_speed_deviation_in_pu(double speed)
+{
+    INTEGRAL_BLOCK* rotor_speed_block = get_rotor_speed_block();
+
+    rotor_speed_block->set_output(speed);
+    rotor_speed_block->initialize();
+}

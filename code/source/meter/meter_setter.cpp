@@ -795,6 +795,19 @@ METER METER_SETTER::prepare_generator_rotor_speed_deviation_in_Hz_meter(const DE
     return meter;
 }
 
+METER METER_SETTER::prepare_generator_terminal_voltage_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter;
+    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+
+    bool successful = prepare_generator_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("TERMINAL VOLTAGE IN PU");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_generator_internal_voltage_in_pu_meter(const DEVICE_ID& device_id)
 {
     METER meter;
