@@ -79,6 +79,7 @@ class IEE2ST : public STABILIZER_MODEL
         virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
+
         FIRST_ORDER_BLOCK sensor_1, sensor_2;
         DIFFERENTIAL_BLOCK filter; FIRST_ORDER_BLOCK alternative_filter;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;

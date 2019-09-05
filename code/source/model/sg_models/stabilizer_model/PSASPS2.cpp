@@ -265,6 +265,8 @@ bool PSASPS2::setup_model_with_steps_string_vector(vector<string>& data)
     }
     else
         is_successful = false;
+
+    return is_successful;
 }
 
 bool PSASPS2::setup_model_with_psse_string(string data)
@@ -301,6 +303,7 @@ void PSASPS2::initialize()
     ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
+    DEVICE_ID did = generator->get_device_id();
     if(generator!=NULL)
     {
         EXCITER_MODEL* exciter = generator->get_exciter_model();
@@ -313,15 +316,15 @@ void PSASPS2::initialize()
 
             size_t bus = generator->get_generator_bus();
 
-            SIGNAL signal = prepare_signal_with_signal_type_and_bus(1, bus);
+            SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
             if(signal.is_valid())
                 set_input_signal_at_slot(0, signal);
 
-            signal = prepare_signal_with_signal_type_and_bus(3, bus);
+            signal = prepare_signal_with_signal_type_and_device_id(3, did);
             if(signal.is_valid())
                 set_input_signal_at_slot(1, signal);
 
-            signal = prepare_signal_with_signal_type_and_bus(7, bus);
+            signal = prepare_signal_with_signal_type_and_device_id(7, did);
             if(signal.is_valid())
                 set_input_signal_at_slot(2, signal);
 
@@ -600,6 +603,14 @@ void PSASPS2::prepare_model_internal_variable_table()
     add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 2", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 3", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@SPEED SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PELEC SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PMECH SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@DEDC BLOCK 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@DEDC BLOCK 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PHASE TUNER 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PHASE TUNER 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PHASE TUNER 3", i); i++;
 }
 
 double PSASPS2::get_model_internal_variable_with_name(string var_name)
@@ -637,6 +648,30 @@ double PSASPS2::get_model_internal_variable_with_name(string var_name)
 
     if(var_name == "STATE@PHASE TUNER 3")
         return phase_tuner_3.get_state();
+
+    if(var_name == "OUTPUT@SPEED SENSOR")
+        return sensor_w.get_output();
+
+    if(var_name == "OUTPUT@PELEC SENSOR")
+        return sensor_p.get_output();
+
+    if(var_name == "OUTPUT@PMECH SENSOR")
+        return sensor_t.get_output();
+
+    if(var_name == "OUTPUT@DEDC BLOCK 1")
+        return dedc_block_1.get_output();
+
+    if(var_name == "OUTPUT@DEDC BLOCK 2")
+        return dedc_block_2.get_output();
+
+    if(var_name == "OUTPUT@PHASE TUNER 1")
+        return phase_tuner_1.get_output();
+
+    if(var_name == "OUTPUT@PHASE TUNER 2")
+        return phase_tuner_2.get_output();
+
+    if(var_name == "OUTPUT@PHASE TUNER 3")
+        return phase_tuner_3.get_output();
 
     return 0.0;
 }

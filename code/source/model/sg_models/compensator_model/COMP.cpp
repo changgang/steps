@@ -125,8 +125,8 @@ void COMP::run(DYNAMIC_MODE mode)
 
 double COMP::get_compensated_voltage_in_pu() const
 {
-    complex<double> Vt = get_generator_terminal_voltage_in_pu();
-    complex<double> It = get_generator_terminal_current_in_pu();
+    complex<double> Vt = get_generator_terminal_complex_voltage_in_pu();
+    complex<double> It = get_generator_terminal_complex_current_in_pu();
     double xe = get_Xe();
     complex<double> j(0.0,1.0);
     complex<double> Vct = Vt-j*xe*It;

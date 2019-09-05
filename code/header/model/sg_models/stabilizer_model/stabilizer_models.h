@@ -7,5 +7,6 @@
 #include "header/model/sg_models/stabilizer_model/PSASPS3.h"
 #include "header/model/sg_models/stabilizer_model/PSASPS4.h"
 #include "header/model/sg_models/stabilizer_model/PSASPS5.h"
+#include "header/model/sg_models/stabilizer_model/PSASPS8.h"
 
 #endif // STABILIZER_MODELS_H

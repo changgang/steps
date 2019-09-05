@@ -225,3 +225,51 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
     }
     return signal;
 }
+
+SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_device_id(size_t signal_type, DEVICE_ID did)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    SIGNAL signal;
+    signal.set_toolkit(toolkit);
+
+    if(did.is_valid())
+    {
+        switch(signal_type)
+        {
+            case 1:
+            case 3:
+            case 4:
+            case 7:
+            {
+                GENERATOR* gen = psdb.get_generator(did);
+                if(gen!=NULL)
+                {
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+                }
+                break;
+            }
+            case 2:
+            case 5:
+            case 6:
+            {
+                TERMINAL terminal= did.get_device_terminal();
+                vector<size_t> buses = terminal.get_buses();
+                size_t bus = buses[0];
+                BUS* busptr = psdb.get_bus(bus);
+                if(busptr!=NULL)
+                {
+                    DEVICE_ID did = busptr->get_device_id();
+                    signal.set_device_id(did);
+                    signal.set_meter_type(convert_signal_type_number_to_string(signal_type));
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    return signal;
+}

@@ -23,7 +23,7 @@ string COMPENSATOR_MODEL::get_model_type() const
     return "COMPENSATOR";
 }
 
-complex<double> COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
+complex<double> COMPENSATOR_MODEL::get_generator_terminal_complex_voltage_in_pu() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     GENERATOR* generator = get_generator_pointer();
@@ -37,7 +37,7 @@ complex<double> COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
         return 0.0;
 }
 
-complex<double> COMPENSATOR_MODEL::get_generator_terminal_current_in_pu() const
+complex<double> COMPENSATOR_MODEL::get_generator_terminal_complex_current_in_pu() const
 {
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
@@ -55,4 +55,23 @@ complex<double> COMPENSATOR_MODEL::get_generator_terminal_current_in_pu() const
     }
     else
         return 0.0;
+}
+
+double COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    GENERATOR* generator = get_generator_pointer();
+    if(generator!=NULL)
+    {
+        size_t bus = generator->get_generator_bus();
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        return psdb.get_bus_voltage_in_pu(bus);
+    }
+    else
+        return 0.0;
+}
+
+double COMPENSATOR_MODEL::get_generator_terminal_current_in_pu() const
+{
+    return abs(get_generator_terminal_complex_current_in_pu());
 }

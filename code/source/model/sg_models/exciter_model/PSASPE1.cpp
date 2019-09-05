@@ -408,14 +408,14 @@ void PSASPE1::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("KA", i); i++;
 }
 
 double PSASPE1::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    if(par_name=="KA")
+        return get_KA();
 
     return 0.0;
 }
@@ -423,8 +423,8 @@ double PSASPE1::get_model_data_with_name(string par_name) const
 void PSASPE1::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+    if(par_name=="KA")
+        return set_KA(value);
 
     return;
 }

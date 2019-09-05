@@ -123,6 +123,9 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         model = gen->get_sync_generator_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";
+        model = gen->get_compensator_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string()<<"\n";
         model = gen->get_exciter_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";

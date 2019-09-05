@@ -21,8 +21,10 @@ class COMPENSATOR_MODEL : public SG_MODEL
     public: // compensator common
         virtual string get_model_type() const;
         // common inputs
-        complex<double> get_generator_terminal_voltage_in_pu() const;
-        complex<double> get_generator_terminal_current_in_pu() const;
+        complex<double> get_generator_terminal_complex_voltage_in_pu() const;
+        complex<double> get_generator_terminal_complex_current_in_pu() const;
+        double get_generator_terminal_voltage_in_pu() const;
+        double get_generator_terminal_current_in_pu() const;
     public: // specific compensator
         virtual string get_model_name() const = 0;
 

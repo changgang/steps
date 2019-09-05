@@ -359,7 +359,8 @@ void PSASPE2::initialize()
                 this->Vt0 = psdb.get_bus_voltage_in_pu(bus);
 
                 complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
-                complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+                //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+                complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 
                 double Efdmax = get_Efdmax_in_pu();
@@ -447,7 +448,8 @@ double PSASPE2::get_excitation_voltage_in_pu() const
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             size_t bus = generator->get_generator_bus();
             complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
-            complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+            //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
+            complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
             double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 
             double Efdmax = get_Efdmax_in_pu();

@@ -18,6 +18,7 @@
 					<Add option="-Wall" />
 					<Add option="-std=c++1z" />
 					<Add option="-ffast-math" />
+					<Add option="-fopenmp" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
@@ -33,6 +34,7 @@
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
 					<Add option="-ffast-math" />
+					<Add option="-fopenmp" />
 					<Add library="../build/bin/Release/libCSparse.a" />
 					<Add library="../build/bin/Release/libCpptest.a" />
 				</Linker>
@@ -209,6 +211,8 @@
 		<Unit filename="header/model/sg_models/compensator_model/COMP_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/IEEEVC.h" />
 		<Unit filename="header/model/sg_models/compensator_model/IEEEVC_test.h" />
+		<Unit filename="header/model/sg_models/compensator_model/PSASPVC.h" />
+		<Unit filename="header/model/sg_models/compensator_model/PSASPVC_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/compensator_model.h" />
 		<Unit filename="header/model/sg_models/compensator_model/compensator_model_test.h" />
 		<Unit filename="header/model/sg_models/compensator_model/compensator_models.h" />
@@ -245,6 +249,8 @@
 		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS4_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS5.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS5_test.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS8.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS8_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_models.h" />
@@ -555,6 +561,8 @@
 		<Unit filename="source/model/sg_models/compensator_model/COMP_test.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/IEEEVC.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/IEEEVC_test.cpp" />
+		<Unit filename="source/model/sg_models/compensator_model/PSASPVC.cpp" />
+		<Unit filename="source/model/sg_models/compensator_model/PSASPVC_test.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/compensator_model.cpp" />
 		<Unit filename="source/model/sg_models/compensator_model/compensator_model_test.cpp" />
 		<Unit filename="source/model/sg_models/exciter_model/CSEET1.cpp" />
@@ -592,6 +600,8 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS8.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS8_test.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model_test.cpp" />
 		<Unit filename="source/model/sg_models/sync_generator_model/gencls.cpp" />

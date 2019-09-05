@@ -133,12 +133,12 @@
 	"header/device/device.h"
 	"header/basic/steps_enum.h"
 
-1567414334 c:\users\lichg\steps\code\header\model\sg_models\sync_generator_model\sync_generator_model.h
+1567492488 c:\users\lichg\steps\code\header\model\sg_models\sync_generator_model\sync_generator_model.h
 	"header/model/sg_models/sg_model.h"
 	"header/block/integral_block.h"
 	"header/block/saturation_block.h"
 
-1567477406 c:\users\lichg\steps\code\header\model\sg_models\sg_model.h
+1567492488 c:\users\lichg\steps\code\header\model\sg_models\sg_model.h
 	"header/model/model.h"
 	"header/device/bus.h"
 	<complex>
@@ -149,7 +149,7 @@
 1566651733 c:\users\lichg\steps\code\header\block\saturation_block.h
 	"header/basic/steps_enum.h"
 
-1566651733 c:\users\lichg\steps\code\header\model\sg_models\compensator_model\compensator_model.h
+1567683581 c:\users\lichg\steps\code\header\model\sg_models\compensator_model\compensator_model.h
 	"header/model/sg_models/sg_model.h"
 	"header/block/integral_block.h"
 	<complex>
@@ -158,7 +158,7 @@
 	"header/model/sg_models/sg_model.h"
 	"header/block/integral_block.h"
 
-1566651733 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\stabilizer_model.h
+1567567488 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\stabilizer_model.h
 	"header/model/sg_models/sg_model.h"
 	"header/block/integral_block.h"
 	"header/basic/constants.h"
@@ -514,7 +514,7 @@
 	<cmath>
 	<ctime>
 
-1567477076 c:\users\lichg\steps\code\header\meter\meter_setter.h
+1567492488 c:\users\lichg\steps\code\header\meter\meter_setter.h
 	"header/meter/meter.h"
 
 1566651734 source:c:\users\lichg\steps\code\main_powerflow.cpp
@@ -525,7 +525,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1567247387 source:c:\users\lichg\steps\code\main_tests.cpp
+1567506542 source:c:\users\lichg\steps\code\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -601,6 +601,7 @@
 	"header/model/sg_models/stabilizer_model/PSASPS3_test.h"
 	"header/model/sg_models/stabilizer_model/PSASPS4_test.h"
 	"header/model/sg_models/stabilizer_model/PSASPS5_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS8_test.h"
 	"header/model/sg_models/turbine_governor_model/TGOV1_test.h"
 	"header/model/sg_models/turbine_governor_model/IEEEG1_test.h"
 	"header/model/sg_models/turbine_governor_model/IEEEG2_test.h"
@@ -950,7 +951,7 @@
 	"header/data_imexporter/steps_imexporter.h"
 	"header/STEPS.h"
 
-1566651733 c:\users\lichg\steps\code\header\data_imexporter\steps_imexporter.h
+1567684174 c:\users\lichg\steps\code\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -1184,7 +1185,7 @@
 	"header/STEPS.h"
 	"header/model/sg_models/sync_generator_model/gencls.h"
 
-1567414328 c:\users\lichg\steps\code\header\model\sg_models\sync_generator_model\gencls.h
+1567492488 c:\users\lichg\steps\code\header\model\sg_models\sync_generator_model\gencls.h
 	"header/model/sg_models/sync_generator_model/sync_generator_model.h"
 	"header/block/integral_block.h"
 
@@ -1391,7 +1392,7 @@
 	"header/model/sg_models/exciter_model/SEXS.h"
 	"header/power_system_database.h"
 
-1566651733 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\iee2st.h
+1567567454 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\iee2st.h
 	"header/model/sg_models/stabilizer_model/stabilizer_model.h"
 	"header/block/first_order_block.h"
 	"header/block/differential_block.h"
@@ -2005,9 +2006,10 @@
 	"header/model/sg_models/sync_generator_model/genrou.h"
 	"header/model/sg_models/sync_generator_model/gensal.h"
 
-1566651733 c:\users\lichg\steps\code\header\model\sg_models\compensator_model\compensator_models.h
+1567684173 c:\users\lichg\steps\code\header\model\sg_models\compensator_model\compensator_models.h
 	"header/model/sg_models/compensator_model/COMP.h"
 	"header/model/sg_models/compensator_model/IEEEVC.h"
+	"header/model/sg_models/compensator_model/PSASPVC.h"
 
 1566651733 c:\users\lichg\steps\code\header\model\sg_models\compensator_model\ieeevc.h
 	"header/model/sg_models/compensator_model/compensator_model.h"
@@ -2028,13 +2030,14 @@
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 
-1566651733 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\stabilizer_models.h
+1567506525 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\stabilizer_models.h
 	"header/model/sg_models/stabilizer_model/IEE2ST.h"
 	"header/model/sg_models/stabilizer_model/PSASPS1.h"
 	"header/model/sg_models/stabilizer_model/PSASPS2.h"
 	"header/model/sg_models/stabilizer_model/PSASPS3.h"
 	"header/model/sg_models/stabilizer_model/PSASPS4.h"
 	"header/model/sg_models/stabilizer_model/PSASPS5.h"
+	"header/model/sg_models/stabilizer_model/PSASPS8.h"
 
 1566651733 c:\users\lichg\steps\code\header\model\sg_models\turbine_governor_model\turbine_governor_models.h
 	"header/model/sg_models/turbine_governor_model/TGOV1.h"
@@ -2685,7 +2688,7 @@
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1566651734 source:c:\users\lichg\steps\code\source\block\differential_block.cpp
+1567525883 source:c:\users\lichg\steps\code\source\block\differential_block.cpp
 	"header/block/differential_block.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -2701,7 +2704,7 @@
 	<cstring>
 	<cstdio>
 
-1566651734 source:c:\users\lichg\steps\code\source\block\first_order_block.cpp
+1567525983 source:c:\users\lichg\steps\code\source\block\first_order_block.cpp
 	"header/block/first_order_block.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -2717,7 +2720,7 @@
 	<cstring>
 	<cstdio>
 
-1566651734 source:c:\users\lichg\steps\code\source\block\integral_block.cpp
+1567525983 source:c:\users\lichg\steps\code\source\block\integral_block.cpp
 	"header/block/integral_block.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -2733,7 +2736,7 @@
 	<cstring>
 	<cstdio>
 
-1566651734 source:c:\users\lichg\steps\code\source\block\lead_lag_block.cpp
+1567525983 source:c:\users\lichg\steps\code\source\block\lead_lag_block.cpp
 	"header/block/lead_lag_block.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -2898,7 +2901,7 @@
 	<iostream>
 	<cstdio>
 
-1566831195 source:c:\users\lichg\steps\code\source\data_imexporter\psse_dynamics_imexporter.cpp
+1567682743 source:c:\users\lichg\steps\code\source\data_imexporter\psse_dynamics_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
@@ -2936,7 +2939,7 @@
 	<istream>
 	<iostream>
 
-1566651734 source:c:\users\lichg\steps\code\source\data_imexporter\steps_dynamics_imexporter.cpp
+1567684173 source:c:\users\lichg\steps\code\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3062,7 +3065,7 @@
 	<cstdio>
 	<cstdlib>
 
-1566651734 source:c:\users\lichg\steps\code\source\device\generator.cpp
+1567684174 source:c:\users\lichg\steps\code\source\device\generator.cpp
 	"header/device/generator.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3273,7 +3276,7 @@
 	<cstdio>
 	<cmath>
 
-1567477455 source:c:\users\lichg\steps\code\source\meter\meter.cpp
+1567492488 source:c:\users\lichg\steps\code\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3282,13 +3285,13 @@
 	<istream>
 	<iostream>
 
-1567477091 source:c:\users\lichg\steps\code\source\meter\meter_setter.cpp
+1567492488 source:c:\users\lichg\steps\code\source\meter\meter_setter.cpp
 	"header/meter/meter_setter.h"
 	"header/basic/terminal.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1567477129 source:c:\users\lichg\steps\code\source\meter\meter_setter_test.cpp
+1567492488 source:c:\users\lichg\steps\code\source\meter\meter_setter_test.cpp
 	"header/meter/meter_setter_test.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -3801,7 +3804,7 @@
 	<cstdio>
 	<cmath>
 
-1566651734 source:c:\users\lichg\steps\code\source\model\sg_models\compensator_model\comp.cpp
+1567683606 source:c:\users\lichg\steps\code\source\model\sg_models\compensator_model\comp.cpp
 	"header/model/sg_models/compensator_model/COMP.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3813,7 +3816,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1566651734 source:c:\users\lichg\steps\code\source\model\sg_models\compensator_model\compensator_model.cpp
+1567683720 source:c:\users\lichg\steps\code\source\model\sg_models\compensator_model\compensator_model.cpp
 	"header/model/sg_models/compensator_model/compensator_model.h"
 	"header/device/generator.h"
 	"header/steps_namespace.h"
@@ -3828,7 +3831,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1566651734 source:c:\users\lichg\steps\code\source\model\sg_models\compensator_model\ieeevc.cpp
+1567683620 source:c:\users\lichg\steps\code\source\model\sg_models\compensator_model\ieeevc.cpp
 	"header/model/sg_models/compensator_model/IEEEVC.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3957,7 +3960,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1566651734 source:c:\users\lichg\steps\code\source\model\sg_models\exciter_model\psaspe2.cpp
+1567682185 source:c:\users\lichg\steps\code\source\model\sg_models\exciter_model\psaspe2.cpp
 	"header/model/sg_models/exciter_model/PSASPE2.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -3983,7 +3986,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1567477428 source:c:\users\lichg\steps\code\source\model\sg_models\sg_model.cpp
+1567492488 source:c:\users\lichg\steps\code\source\model\sg_models\sg_model.cpp
 	"header/model/sg_models/sg_model.h"
 	"header/basic/utility.h"
 	"header/power_system_database.h"
@@ -4000,7 +4003,7 @@
 	<cstdio>
 	<cmath>
 
-1566651734 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\iee2st.cpp
+1567567750 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\iee2st.cpp
 	"header/model/sg_models/stabilizer_model/IEE2ST.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
@@ -4012,7 +4015,7 @@
 	"header/model/sg_models/stabilizer_model/IEE2ST_test.h"
 	"header/basic/utility.h"
 
-1567481982 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps1.cpp
+1567567489 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps1.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS1.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
@@ -4024,7 +4027,7 @@
 	"header/model/sg_models/stabilizer_model/PSASPS1_test.h"
 	"header/basic/utility.h"
 
-1566651734 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps2.cpp
+1567567489 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps2.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS2.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
@@ -4036,7 +4039,7 @@
 	"header/model/sg_models/stabilizer_model/PSASPS2_test.h"
 	"header/basic/utility.h"
 
-1567491190 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps3.cpp
+1567567489 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps3.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS3.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
@@ -4048,7 +4051,7 @@
 	"header/model/sg_models/stabilizer_model/PSASPS3_test.h"
 	"header/basic/utility.h"
 
-1566651734 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps4.cpp
+1567567489 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps4.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS4.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
@@ -4069,7 +4072,7 @@
 	"header/basic/utility.h"
 	<vector>
 
-1566651734 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\stabilizer_model.cpp
+1567567489 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\stabilizer_model.cpp
 	"header/model/sg_models/stabilizer_model/stabilizer_model.h"
 	<cstdio>
 	"header/basic/utility.h"
@@ -4081,7 +4084,7 @@
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1567414342 source:c:\users\lichg\steps\code\source\model\sg_models\sync_generator_model\gencls.cpp
+1567492488 source:c:\users\lichg\steps\code\source\model\sg_models\sync_generator_model\gencls.cpp
 	"header/model/sg_models/sync_generator_model/gencls.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -4137,7 +4140,7 @@
 	<cstdio>
 	<cmath>
 
-1567414368 source:c:\users\lichg\steps\code\source\model\sg_models\sync_generator_model\sync_generator_model.cpp
+1567492488 source:c:\users\lichg\steps\code\source\model\sg_models\sync_generator_model\sync_generator_model.cpp
 	"header/model/sg_models/sync_generator_model/sync_generator_model.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -4980,7 +4983,7 @@
 	"header/data_imexporter/bpa_imexporter.h"
 	<cstdio>
 
-1567477177 source:c:\users\lichg\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
+1567582234 source:c:\users\lichg\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -4991,4 +4994,60 @@
 	<istream>
 	<iostream>
 	<ctime>
+	<omp.h>
+
+1567492762 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\psasps8.h
+	"header/model/sg_models/stabilizer_model/stabilizer_model.h"
+	"header/block/first_order_block.h"
+	"header/block/differential_block.h"
+	"header/block/lead_lag_block.h"
+
+1567492641 c:\users\lichg\steps\code\header\model\sg_models\stabilizer_model\psasps8_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS8.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1567567489 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps8.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS8.h"
+	"header/basic/constants.h"
+	"header/STEPS.h"
+	<cstdio>
+	"header/basic/utility.h"
+	<vector>
+
+1567506716 source:c:\users\lichg\steps\code\source\model\sg_models\stabilizer_model\psasps8_test.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS8_test.h"
+	"header/basic/utility.h"
+
+1567684173 c:\users\lichg\steps\code\header\model\sg_models\compensator_model\psaspvc.h
+	"header/model/sg_models/compensator_model/compensator_model.h"
+	"header/block/integral_block.h"
+
+1567684173 source:c:\users\lichg\steps\code\source\model\sg_models\compensator_model\psaspvc.cpp
+	"header/model/sg_models/compensator_model/PSASPVC.h"
+	"header/basic/utility.h"
+	"header/STEPS.h"
+	<istream>
+	<iostream>
+
+1567684173 source:c:\users\lichg\steps\code\source\model\sg_models\compensator_model\psaspvc_test.cpp
+	"header/model/sg_models/compensator_model/PSASPVC_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+
+1567684174 c:\users\lichg\steps\code\header\model\sg_models\compensator_model\psaspvc_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+	"header/model/sg_models/compensator_model/PSASPVC.h"
+	"header/model/sg_models/compensator_model/compensator_model_test.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
 

@@ -35,6 +35,7 @@ class STABILIZER_MODEL : public SG_MODEL
         string convert_signal_type_number_to_string(size_t signal_type) const;
         //
         SIGNAL prepare_signal_with_signal_type_and_bus(size_t signal_type, size_t bus);
+        SIGNAL prepare_signal_with_signal_type_and_device_id(size_t signal_type, DEVICE_ID did);
     public: // specific model level
         virtual string get_model_name() const = 0;
 

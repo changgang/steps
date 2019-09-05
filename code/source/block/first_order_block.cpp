@@ -158,8 +158,8 @@ void FIRST_ORDER_BLOCK::integrate()
             y = s;
 
             double ds = (k*x-s)/t;
-            if(fabs(ds)<FLOAT_EPSILON)
-                return;
+            //if(fabs(ds)<FLOAT_EPSILON)
+            //    return;
             //if(fabs(ds)>DSTATE_THRESHOLD)
             //    cout<<"Derivative of state is changed dramatically in FIRST_ORDER_BLOCK\n";
 

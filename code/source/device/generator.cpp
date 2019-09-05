@@ -215,6 +215,11 @@ void GENERATOR::set_compensator_model(const COMPENSATOR_MODEL* model)
                 IEEEVC* smodel = (IEEEVC*) (model);
                 new_model = (COMPENSATOR_MODEL*) new IEEEVC(*smodel);
             }
+            if(model_name=="PSASPVC")
+            {
+                PSASPVC* smodel = (PSASPVC*) (model);
+                new_model = (COMPENSATOR_MODEL*) new PSASPVC(*smodel);
+            }
 
             if(new_model!=NULL)
             {
@@ -364,6 +369,11 @@ void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
             {
                 PSASPS5* smodel = (PSASPS5*) (model);
                 new_model = (STABILIZER_MODEL*) new PSASPS5(*smodel);
+            }
+            if(model_name=="PSASPS8")
+            {
+                PSASPS8* smodel = (PSASPS8*) (model);
+                new_model = (STABILIZER_MODEL*) new PSASPS8(*smodel);
             }
             if(new_model!=NULL)
             {

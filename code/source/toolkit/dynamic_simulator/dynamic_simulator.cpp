@@ -8,7 +8,7 @@
 #include <istream>
 #include <iostream>
 #include <ctime>
-//#include <omp.h>
+#include <omp.h>
 
 using namespace std;
 
@@ -1848,15 +1848,14 @@ void DYNAMICS_SIMULATOR::run_a_step()
                         <<"New max angle difference is "<<max_angle_difference_new<<" deg while old is "<<max_angle_difference_old<<" deg (difference is "<<max_angle_difference_new-max_angle_difference_old<<" deg)";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
-            if(fabs(max_angle_difference_new-max_angle_difference_old)>1e-8) // DAE solution not converged
+            /*if(fabs(max_angle_difference_new-max_angle_difference_old)>1e-8) // DAE solution not converged
                 max_angle_difference_old = max_angle_difference_new;
             else//converged
-                break;
-            /*if(fabs(max_angle_difference_new-max_angle_difference_old)<1e-8 and network_converged) // DAE solution converged
+                break;*/
+            if(fabs(max_angle_difference_new/max_angle_difference_old-1.0)<1e-10) // DAE solution converged
                 break;
             else
-                max_angle_difference_old = max_angle_difference_new;*/
-
+                max_angle_difference_old = max_angle_difference_new;
         }
         else
         {
@@ -1967,7 +1966,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<GENERATOR*> generators = psdb.get_all_generators();
     GENERATOR* generator;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         generator = generators[i];
         if(generator->get_status()==true)
@@ -1978,7 +1977,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<WT_GENERATOR*> wtgens = psdb.get_all_wt_generators();
     WT_GENERATOR* wtgen;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         wtgen = wtgens[i];
         if(wtgen->get_status()==true)
@@ -1989,7 +1988,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<LOAD*> loads = psdb.get_all_loads();
     LOAD* load;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         load = loads[i];
         if(load->get_status()==true)
@@ -2000,7 +1999,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     HVDC* hvdc;
     //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    for(size_t i=0; i<n; ++i)
     {
         hvdc = hvdcs[i];
         if(hvdc->get_status()==true)

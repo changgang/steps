@@ -440,6 +440,7 @@ void PSASPS4::initialize()
     ostringstream osstream;
 
     GENERATOR* generator = get_generator_pointer();
+    DEVICE_ID did = generator->get_device_id();
     if(generator!=NULL)
     {
         EXCITER_MODEL* exciter = generator->get_exciter_model();
@@ -451,11 +452,11 @@ void PSASPS4::initialize()
             setup_block_toolkit_and_parameters();
             size_t bus = generator->get_generator_bus();
 
-            SIGNAL signal = prepare_signal_with_signal_type_and_bus(1, bus);
+            SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
             if(signal.is_valid())
                 set_input_signal_at_slot(0, signal);
 
-            signal = prepare_signal_with_signal_type_and_bus(3, bus);
+            signal = prepare_signal_with_signal_type_and_device_id(3, did);
             if(signal.is_valid())
                 set_input_signal_at_slot(1, signal);
 
@@ -725,6 +726,20 @@ void PSASPS4::prepare_model_internal_variable_table()
     add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 2", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 3", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@SPEED SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@SPEED DEDC BLOCK 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@SPEED DEDC BLOCK 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PELEC SENSOR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PELEC DEDC BLOCK 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PELEC DEDC BLOCK 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@NOTCH FILTER PHASE TUNER", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@NOTCH FILTER 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@NOTCH FILTER 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@NOTCH FILTER 3", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@NOTCH FILTER 4", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PHASE TUNER 1", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PHASE TUNER 2", i); i++;
+    add_model_inernal_variable_name_and_index_pair("OUTPUT@PHASE TUNER 3", i); i++;
 }
 
 double PSASPS4::get_model_internal_variable_with_name(string var_name)
@@ -777,6 +792,48 @@ double PSASPS4::get_model_internal_variable_with_name(string var_name)
 
     if(var_name == "STATE@PHASE TUNER 3")
         return phase_tuner_3.get_state();
+
+    if(var_name == "OUTPUT@SPEED SENSOR")
+        return speed_sensor.get_output();
+
+    if(var_name == "OUTPUT@SPEED DEDC BLOCK 1")
+        return speed_dedc_block_1.get_output();
+
+    if(var_name == "OUTPUT@SPEED DEDC BLOCK 2")
+        return speed_dedc_block_2.get_output();
+
+    if(var_name == "OUTPUT@PELEC SENSOR")
+        return pelec_sensor.get_output();
+
+    if(var_name == "OUTPUT@PELEC DEDC BLOCK 1")
+        return pelec_dedc_block_1.get_output();
+
+    if(var_name == "OUTPUT@PELEC DEDC BLOCK 2")
+        return pelec_dedc_block_2.get_output();
+
+    if(var_name == "OUTPUT@NOTCH FILTER PHASE TUNER")
+        return notch_filter_phase_tuner.get_output();
+
+    if(var_name == "OUTPUT@NOTCH FILTER 1")
+        return notch_filter_first_order_block_1.get_output();
+
+    if(var_name == "OUTPUT@NOTCH FILTER 2")
+        return notch_filter_first_order_block_2.get_output();
+
+    if(var_name == "OUTPUT@NOTCH FILTER 3")
+        return notch_filter_first_order_block_3.get_output();
+
+    if(var_name == "OUTPUT@NOTCH FILTER 4")
+        return notch_filter_first_order_block_4.get_output();
+
+    if(var_name == "OUTPUT@PHASE TUNER 1")
+        return phase_tuner_1.get_output();
+
+    if(var_name == "OUTPUT@PHASE TUNER 2")
+        return phase_tuner_2.get_output();
+
+    if(var_name == "OUTPUT@PHASE TUNER 3")
+        return phase_tuner_3.get_output();
 
     return 0.0;
 }

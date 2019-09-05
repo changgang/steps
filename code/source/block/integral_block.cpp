@@ -104,8 +104,8 @@ void INTEGRAL_BLOCK::integrate()
         double x = get_input();
 
         double ds = x/t;
-        if(fabs(ds)>FLOAT_EPSILON)
-        {
+        //if(fabs(ds)>FLOAT_EPSILON)
+        //{
             double s, z, y;
 
             z = get_store();
@@ -142,7 +142,7 @@ void INTEGRAL_BLOCK::integrate()
             }
             set_state(s);
             set_output(y);
-        }
+        //}
         //if(fabs(ds)>DSTATE_THRESHOLD)
         //    cout<<"Derivative of state is changed dramatically in INTEGRAL_BLOCK\n";
     }
