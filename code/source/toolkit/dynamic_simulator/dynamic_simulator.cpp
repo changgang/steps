@@ -1311,7 +1311,8 @@ void DYNAMICS_SIMULATOR::update_all_meters_value()
         if(meter_values.size()!=n)
             meter_values.resize(n,0.0);
 
-        for(size_t i=0; i!=n; ++i)
+        #pragma omp parallel for
+        for(size_t i=0; i<n; ++i)
             meter_values[i]=meters[i].get_meter_value();
         /*
         if(meter_values.size()==n)
@@ -1648,7 +1649,7 @@ void DYNAMICS_SIMULATOR::optimize_network_ordering()
     }
 }
 
-complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus)
+complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const
 {
     BUS* busptr = internal_bus_pointers[internal_bus];
     return busptr->get_complex_voltage_in_pu();
@@ -1964,55 +1965,56 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
     size_t n = psdb.get_generator_count();
     vector<GENERATOR*> generators = psdb.get_all_generators();
-    GENERATOR* generator;
-    //#pragma omp parallel for
-    for(size_t i=0; i<n; ++i)
+
+    //GENERATOR* generator;
+    #pragma omp parallel for
+    for(size_t i=0; i<n; i++)
     {
-        generator = generators[i];
+        GENERATOR* generator = generators[i];
         if(generator->get_status()==true)
             generator->run(mode);
     }
 
     n = psdb.get_wt_generator_count();
     vector<WT_GENERATOR*> wtgens = psdb.get_all_wt_generators();
-    WT_GENERATOR* wtgen;
-    //#pragma omp parallel for
+    //WT_GENERATOR* wtgen;
+    #pragma omp parallel for
     for(size_t i=0; i<n; ++i)
     {
-        wtgen = wtgens[i];
+        WT_GENERATOR* wtgen = wtgens[i];
         if(wtgen->get_status()==true)
             wtgen->run(mode);
     }
 
     n = psdb.get_load_count();
     vector<LOAD*> loads = psdb.get_all_loads();
-    LOAD* load;
-    //#pragma omp parallel for
+    //LOAD* load;
+    #pragma omp parallel for
     for(size_t i=0; i<n; ++i)
     {
-        load = loads[i];
+        LOAD* load = loads[i];
         if(load->get_status()==true)
             load->run(mode);
     }
 
     n = psdb.get_hvdc_count();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    HVDC* hvdc;
-    //#pragma omp parallel for
+    //HVDC* hvdc;
+    #pragma omp parallel for
     for(size_t i=0; i<n; ++i)
     {
-        hvdc = hvdcs[i];
+        HVDC* hvdc = hvdcs[i];
         if(hvdc->get_status()==true)
             hvdc->run(mode);
     }
 
     n = psdb.get_equivalent_device_count();
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
-    EQUIVALENT_DEVICE* edevice;
-    //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    //EQUIVALENT_DEVICE* edevice;
+    #pragma omp parallel for
+    for(size_t i=0; i<n; ++i)
     {
-        edevice = edevices[i];
+        EQUIVALENT_DEVICE* edevice = edevices[i];
         if(edevice->get_status()==true)
             edevice->run(mode);
     }
@@ -2021,11 +2023,11 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     {
         vector<BUS*> buses = psdb.get_all_in_service_buses();
         n = buses.size();
-        BUS* bus;
-        //#pragma omp parallel for
+        //BUS* bus;
+        #pragma omp parallel for
         for(size_t i=0; i<n; ++i)
         {
-            bus = buses[i];
+            BUS* bus = buses[i];
             BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
             switch(mode)
             {
@@ -2050,11 +2052,11 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<BUS*> buses = psdb.get_all_in_service_buses();
     size_t n = buses.size();
-    BUS* bus;
-    //#pragma omp parallel for
-    for(size_t i=0; i!=n; ++i)
+    //BUS* bus;
+    #pragma omp parallel for
+    for(size_t i=0; i<n; ++i)
     {
-        bus = buses[i];
+        BUS* bus = buses[i];
         if(bus->get_bus_type()!=OUT_OF_SERVICE)
         {
             BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
@@ -2172,7 +2174,8 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
-    for(size_t i=0; i!=n; ++i)
+    #pragma omp parallel for
+    for(size_t i=0; i<n; ++i)
     {
         HVDC_MODEL* model = hvdcs[i]->get_hvdc_model();
         if(model!=NULL)
@@ -2189,9 +2192,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     get_bus_currnet_into_network();
 
     size_t n = I_mismatch.size();
-    //#pragma omp parallel for
     for(size_t i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
+
     if(check_NAN)
     {
         for(size_t i = 0; i<n; ++i)
@@ -2372,34 +2375,40 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 	if(I_mismatch.size()!=nbus)
 		I_mismatch.resize(nbus, 0.0);
 
-	for (size_t i = 0; i != nbus; ++i)
+	for (size_t i = 0; i<nbus; ++i)
 		I_mismatch[i] = 0.0;
 
     int nsize = Y.get_matrix_size();
-    int k_start=0, k_end=0;
 
-    for(int column=0; column!=nsize; ++column)
+    // tho following codes can not be parallelized due to code I_mismatch[row] += Y.get_entry_value(k)*voltage;
+    for(int column=0; column<nsize; ++column)
     {
-        size_t column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(column);
 		//complex<double> voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
 		complex<double> voltage = get_bus_complex_voltage_in_pu_with_internal_bus_number(column);
 
-        k_end = Y.get_starting_index_of_column(column+1);
-        for(int k=k_start; k!=k_end; ++k)
+        int k_start = Y.get_starting_index_of_column(column);
+        int k_end = Y.get_starting_index_of_column(column+1);
+
+        // parallelization of the following codes is time-consuming since the k_end-k_start is usually very small
+        for(int k=k_start; k<k_end; ++k)
         {
             int row = Y.get_row_number_of_entry_index(k);
             I_mismatch[row] += Y.get_entry_value(k)*voltage;
-            complex<double> current = Y.get_entry_value(k)*voltage;
-            if(isnan(current.real()) or isnan(current.imag()))
+            if(check_NAN)
             {
-                osstream<<"NAN is detected in "<<__FUNCTION__<<"() with Y["
-                        <<row<<"("<<network_matrix.get_physical_bus_number_of_internal_bus(row)<<", "
-                        <<column<<"("<<column_physical_bus<<"] = "<<Y.get_entry_value(k)<<", voltage["
-                        <<column<<"("<<column_physical_bus<<"] = "<<voltage;
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                complex<double> current = Y.get_entry_value(k)*voltage;
+                if(isnan(current.real()) or isnan(current.imag()))
+                {
+                    size_t column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(column);
+                    osstream<<"NAN is detected in "<<__FUNCTION__<<"() with Y["
+                            <<row<<"("<<network_matrix.get_physical_bus_number_of_internal_bus(row)<<", "
+                            <<column<<"("<<column_physical_bus<<"] = "<<Y.get_entry_value(k)<<", voltage["
+                            <<column<<"("<<column_physical_bus<<"] = "<<voltage;
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
             }
         }
-        k_start = k_end;
+        //k_start = k_end;
     }
 /*
     ostringstream osstream;
@@ -2433,25 +2442,26 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 
     size_t ngen = generators.size();
 
-    complex<double> E, V, Z, I;
+    //complex<double> E, V, Z, I;
 
-    for(size_t i=0; i!=ngen; ++i)
+    #pragma omp parallel for
+    for(size_t i=0; i<ngen; ++i)
     {
         GENERATOR* generator = generators[i];
 
         if(generator->get_status() == true)
         {
-            physical_bus = generator->get_generator_bus();
+            size_t physical_bus = generator->get_generator_bus();
 
-            internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
                 //I = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-                I = gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
-
-                I_mismatch[internal_bus] += I;
+                //complex<double> I = gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                //I_mismatch[internal_bus] += I;
+                I_mismatch[internal_bus] += gen_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
 
                 /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
                 toolkit.show_information_with_leading_time_stamp(osstream);
@@ -2476,17 +2486,19 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 
     size_t ngen = generators.size();
 
-    complex<double> E, V, Z, I;
+    //complex<double> E, V, Z, I;
 
-    for(size_t i=0; i!=ngen; ++i)
+    #pragma omp parallel for
+    for(size_t i=0; i<ngen; ++i)
     {
+        complex<double> I;
         WT_GENERATOR* generator = generators[i];
 
         if(generator->get_status() == true)
         {
-            physical_bus = generator->get_generator_bus();
+            size_t physical_bus = generator->get_generator_bus();
 
-            internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             WT_GENERATOR_MODEL* gen_model = generator->get_wt_generator_model();
             if(gen_model!=NULL)
@@ -2520,7 +2532,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 
     size_t nload = loads.size();
 
-    //#pragma omp parallel for
+    #pragma omp parallel for
     for(size_t i=0; i<nload; ++i)
     {
         LOAD* load = loads[i];
@@ -2550,20 +2562,23 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
     size_t nhvdc = hvdcs.size();
 
-    complex<double> I;
+    //complex<double> I;
 
-    for(size_t i=0; i!=nhvdc; ++i)
+    #pragma omp parallel for
+    for(size_t i=0; i<nhvdc; ++i)
     {
+        complex<double> I;
         HVDC* hvdc = hvdcs[i];
         if(hvdc->get_status()==true)
         {
-            physical_bus = hvdcs[i]->get_converter_bus(RECTIFIER);
+            size_t physical_bus = hvdcs[i]->get_converter_bus(RECTIFIER);
 
-            internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
+            //I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
 
-            I_mismatch[internal_bus] -= I;
+            //I_mismatch[internal_bus] -= I;
+            I_mismatch[internal_bus] -= hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
 
             if(toolkit.is_detailed_log_enabled())
             {
@@ -2577,9 +2592,10 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
             internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
+            //I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
 
-            I_mismatch[internal_bus] -= I;
+            //I_mismatch[internal_bus] -= I;
+            I_mismatch[internal_bus] -= hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
 
             if(toolkit.is_detailed_log_enabled())
             {
@@ -2606,20 +2622,21 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
     size_t nedevice = edevices.size();
 
-    complex<double> I, V, S;
+    //complex<double> I, V, S;
 
-    for(size_t i=0; i!=nedevice; ++i)
+    #pragma omp parallel for
+    for(size_t i=0; i<nedevice; ++i)
     {
         if(edevices[i]->get_status() == true)
         {
-            physical_bus = edevices[i]->get_equivalent_device_bus();
+            size_t physical_bus = edevices[i]->get_equivalent_device_bus();
 
-            internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            S = edevices[i]->get_total_equivalent_power_as_load_in_MVA()/sbase;
+            complex<double> S = edevices[i]->get_total_equivalent_power_as_load_in_MVA()/sbase;
 
             //V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
-            V = get_bus_complex_voltage_in_pu_with_internal_bus_number(internal_bus);
+            complex<double> V = get_bus_complex_voltage_in_pu_with_internal_bus_number(internal_bus);
 
             I_mismatch[internal_bus] -= conj(S/V);
         }
@@ -2658,11 +2675,12 @@ void DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA()
     size_t n = I_mismatch.size();
     size_t physical_bus;
     complex<double> V;
-    for(size_t i= 0; i!=n; ++i)
+    #pragma omp parallel for
+    for(size_t i= 0; i<n; ++i)
     {
         /*physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
         V = psdb.get_bus_complex_voltage_in_pu(physical_bus);*/
-        V = get_bus_complex_voltage_in_pu_with_internal_bus_number(i);
+        complex<double> V = get_bus_complex_voltage_in_pu_with_internal_bus_number(i);
         S_mismatch[i] = V*conj(S_mismatch[i])*sbase;
     }
 }
@@ -2697,7 +2715,8 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 {
     size_t n = I_mismatch.size();
     I_vec.resize(n*2, 0.0);
-    for(size_t i=0; i!=n; ++i)
+
+    for(size_t i=0; i<n; ++i)
     {
         I_vec[i] = I_mismatch[i].imag();
         I_vec[i+n] = I_mismatch[i].real();
@@ -2715,29 +2734,30 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     n = n>>1;
 
     size_t physical_bus;
-    BUS* bus;
-    complex<double> V0, delta_v, V;
-    double vang0, vmag_new, vang_new, delta_vang;
+    //BUS* bus;
+    //complex<double> V0, delta_v, V;
+    //double vang0, vmag_new, vang_new, delta_vang;
 
-    for(size_t i=0; i!=n; ++i)
+    #pragma omp parallel for
+    for(size_t i=0; i<n; ++i)
     {
         //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
         //bus = psdb.get_bus(physical_bus);
-        bus = internal_bus_pointers[i];
-        vang0 = bus->get_angle_in_rad();
-        V0 = bus->get_complex_voltage_in_pu();
+        BUS* bus = internal_bus_pointers[i];
+        double vang0 = bus->get_angle_in_rad();
+        complex<double> V0 = bus->get_complex_voltage_in_pu();
 
-        delta_v = complex<double>(delta_V[i], delta_V[i+n]);
+        complex<double> delta_v = complex<double>(delta_V[i], delta_V[i+n]);
 
-        V = V0-delta_v*alpha;
+        complex<double> V = V0-delta_v*alpha;
 
-		vmag_new = steps_fast_complex_abs(V);
+		double vmag_new = steps_fast_complex_abs(V);
 
 		double x = V.real(), y = V.imag();
 		double x0 = V0.real(), y0 = V0.imag();
 		complex<double> z(x*x0 + y * y0, x0*y - y0 * x);
-        delta_vang = steps_fast_complex_arg(z);
-        vang_new = vang0+delta_vang;
+        double delta_vang = steps_fast_complex_arg(z);
+        double vang_new = vang0+delta_vang;
 
         if(vmag_new<0.0)
             vmag_new = 0.0;

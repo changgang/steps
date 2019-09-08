@@ -19,6 +19,7 @@
 					<Add option="-std=c++1z" />
 					<Add option="-ffast-math" />
 					<Add option="-fopenmp" />
+					<Add option="-march=native" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
@@ -35,6 +36,7 @@
 					<Add option="-static-libgcc" />
 					<Add option="-ffast-math" />
 					<Add option="-fopenmp" />
+					<Add option="-march=native" />
 					<Add library="../build/bin/Release/libCSparse.a" />
 					<Add library="../build/bin/Release/libCpptest.a" />
 				</Linker>

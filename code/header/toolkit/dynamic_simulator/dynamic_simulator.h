@@ -165,7 +165,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void add_hvdcs_to_bus_current_mismatch();
         void add_equivalent_devices_to_bus_current_mismatch();
 
-        complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus);
+        complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
 
         bool is_converged();
         void get_bus_power_mismatch_in_MVA();
