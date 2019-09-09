@@ -42,7 +42,7 @@ void DYNAMICS_SIMULATOR::clear()
 
     set_max_DAE_iteration(100);
     set_max_network_iteration(1);
-    set_max_update_event_iteration(100);
+    set_max_update_iteration(100);
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
     set_rotor_angle_stability_surveillance_flag(false);
@@ -122,10 +122,10 @@ void DYNAMICS_SIMULATOR::set_max_network_iteration(size_t iteration)
         this->max_network_iteration = iteration;
 }
 
-void DYNAMICS_SIMULATOR::set_max_update_event_iteration(size_t iteration)
+void DYNAMICS_SIMULATOR::set_max_update_iteration(size_t iteration)
 {
     if(iteration>0)
-        this->max_update_event_iteration = iteration;
+        this->max_update_iteration = iteration;
 }
 
 void DYNAMICS_SIMULATOR::set_allowed_max_power_imbalance_in_MVA(double tol)
@@ -174,9 +174,9 @@ size_t DYNAMICS_SIMULATOR::get_max_network_iteration() const
     return max_network_iteration;
 }
 
-size_t DYNAMICS_SIMULATOR::get_max_update_event_iteration() const
+size_t DYNAMICS_SIMULATOR::get_max_update_iteration() const
 {
-    return max_update_event_iteration;
+    return max_update_iteration;
 }
 
 double DYNAMICS_SIMULATOR::get_allowed_max_power_imbalance_in_MVA() const
@@ -207,7 +207,7 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"Allowed maximum power imbalance: "<<get_allowed_max_power_imbalance_in_MVA()<<" MVA\n"
             <<"Maximum iteration for DAE solution: "<<get_max_DAE_iteration()<<"\n"
             <<"Maximum iteration for network: "<<get_max_network_iteration()<<"\n"
-            <<"Maximum iteration for updating event: "<<get_max_update_event_iteration()<<"\n"
+            <<"Maximum iteration for updating: "<<get_max_update_iteration()<<"\n"
             <<"Network solution accelerator: "<<get_iteration_accelerator()<<"\n"
             <<"Rotor angle stability surveillance: "<<(get_rotor_angle_stability_surveillance_flag()?"Enabled":"Disabled")<<"\n"
             <<"Rotor angle stability threshold: "<<get_rotor_angle_stability_threshold_in_deg()<<" deg\n"
@@ -1702,6 +1702,7 @@ void DYNAMICS_SIMULATOR::start()
 
     bool converged = false;
     size_t iter_count  = 0;
+    current_max_network_iteration = get_max_network_iteration();
     while(true)
     {
 		++iter_count;
@@ -1825,6 +1826,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
     ITER_DAE = 0;
     ITER_NET = 0;
     double max_angle_difference_old = get_system_max_angle_difference_in_deg();
+    current_max_network_iteration = get_max_network_iteration();
     while(true)
     {
         ++ITER_DAE;
@@ -1886,12 +1888,13 @@ void DYNAMICS_SIMULATOR::update_with_event()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     bool network_converged = false;
-    size_t update_event_iter_max = get_max_update_event_iteration();
+    size_t update_event_iter_max = get_max_update_iteration();
 
     ITER_DAE = 0;
     ITER_NET = 0;
 
     size_t iter = 0;
+    current_max_network_iteration = get_max_update_iteration();
     while(true)
     {
         network_converged = solve_network();
@@ -1935,17 +1938,17 @@ void DYNAMICS_SIMULATOR::update()
     //cout<<"    elapsed time for update: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
     //start = clock();
 
-    size_t network_iter_max = get_max_network_iteration();
     bool network_converged = false;
 
+    current_max_network_iteration = get_max_update_iteration();
     network_converged = solve_network();
     ITER_NET += network_iteration_count;
 
-    if(not network_converged and get_max_network_iteration()>1)
+    if(not network_converged and get_max_update_iteration()>1)
     {
         char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %lu iterations when updating at time %f s.",
-                 network_iter_max, toolkit.get_dynamic_simulation_time_in_s());
+                 current_max_network_iteration, toolkit.get_dynamic_simulation_time_in_s());
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
     update_bus_frequency_blocks();
@@ -2150,7 +2153,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     }*/
     bool converged = false;
 
-    size_t network_iter_max = get_max_network_iteration();
+    size_t network_iter_max = current_max_network_iteration;
     size_t network_iter_count = 0;
 
     while(true)
