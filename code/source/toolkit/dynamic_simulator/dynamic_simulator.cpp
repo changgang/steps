@@ -10,6 +10,8 @@
 #include <ctime>
 #include <omp.h>
 
+#define STEPS_DYNAMIC_SIMULATOR_OPENMP
+
 using namespace std;
 
 DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR()
@@ -1311,7 +1313,9 @@ void DYNAMICS_SIMULATOR::update_all_meters_value()
         if(meter_values.size()!=n)
             meter_values.resize(n,0.0);
 
-        #pragma omp parallel for
+        #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+            #pragma omp parallel for schedule(static)
+        #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
         for(size_t i=0; i<n; ++i)
             meter_values[i]=meters[i].get_meter_value();
         /*
@@ -1967,7 +1971,9 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     vector<GENERATOR*> generators = psdb.get_all_generators();
 
     //GENERATOR* generator;
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; i++)
     {
         GENERATOR* generator = generators[i];
@@ -1978,7 +1984,9 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     n = psdb.get_wt_generator_count();
     vector<WT_GENERATOR*> wtgens = psdb.get_all_wt_generators();
     //WT_GENERATOR* wtgen;
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         WT_GENERATOR* wtgen = wtgens[i];
@@ -1989,7 +1997,9 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     n = psdb.get_load_count();
     vector<LOAD*> loads = psdb.get_all_loads();
     //LOAD* load;
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         LOAD* load = loads[i];
@@ -2000,7 +2010,9 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     n = psdb.get_hvdc_count();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     //HVDC* hvdc;
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         HVDC* hvdc = hvdcs[i];
@@ -2011,7 +2023,9 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     n = psdb.get_equivalent_device_count();
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     //EQUIVALENT_DEVICE* edevice;
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         EQUIVALENT_DEVICE* edevice = edevices[i];
@@ -2024,7 +2038,9 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         vector<BUS*> buses = psdb.get_all_in_service_buses();
         n = buses.size();
         //BUS* bus;
-        #pragma omp parallel for
+        #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+            #pragma omp parallel for schedule(static)
+        #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
         for(size_t i=0; i<n; ++i)
         {
             BUS* bus = buses[i];
@@ -2053,7 +2069,9 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
     vector<BUS*> buses = psdb.get_all_in_service_buses();
     size_t n = buses.size();
     //BUS* bus;
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         BUS* bus = buses[i];
@@ -2174,7 +2192,9 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         HVDC_MODEL* model = hvdcs[i]->get_hvdc_model();
@@ -2189,9 +2209,13 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& net = get_network_matrix();
+
     get_bus_currnet_into_network();
 
     size_t n = I_mismatch.size();
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
 
@@ -2375,6 +2399,9 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 	if(I_mismatch.size()!=nbus)
 		I_mismatch.resize(nbus, 0.0);
 
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
 	for (size_t i = 0; i<nbus; ++i)
 		I_mismatch[i] = 0.0;
 
@@ -2444,7 +2471,9 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 
     //complex<double> E, V, Z, I;
 
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<ngen; ++i)
     {
         GENERATOR* generator = generators[i];
@@ -2488,7 +2517,9 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 
     //complex<double> E, V, Z, I;
 
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<ngen; ++i)
     {
         complex<double> I;
@@ -2532,7 +2563,9 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 
     size_t nload = loads.size();
 
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<nload; ++i)
     {
         LOAD* load = loads[i];
@@ -2564,7 +2597,9 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
     //complex<double> I;
 
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<nhvdc; ++i)
     {
         complex<double> I;
@@ -2624,7 +2659,9 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
     //complex<double> I, V, S;
 
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<nedevice; ++i)
     {
         if(edevices[i]->get_status() == true)
@@ -2675,7 +2712,9 @@ void DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA()
     size_t n = I_mismatch.size();
     size_t physical_bus;
     complex<double> V;
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i= 0; i<n; ++i)
     {
         /*physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
@@ -2738,7 +2777,9 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     //complex<double> V0, delta_v, V;
     //double vang0, vmag_new, vang_new, delta_vang;
 
-    #pragma omp parallel for
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
