@@ -601,14 +601,17 @@ void WT3G2::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("N", i); i++;
+    add_model_data_name_and_index_pair("PN", i); i++;
 }
 
 double WT3G2::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    if(par_name=="N")
+        return get_number_of_lumped_wt_generators();
+    if(par_name=="PN")
+        return get_rated_power_per_wt_generator_in_MW();
 
     return 0.0;
 }
@@ -616,8 +619,18 @@ double WT3G2::get_model_data_with_name(string par_name) const
 void WT3G2::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+    if(par_name=="N")
+    {
+        WT_GENERATOR* gen = get_wt_generator_pointer();
+        if(gen!=NULL)
+            return gen->set_number_of_lumped_wt_generators(size_t(value));
+    }
+    if(par_name=="PN")
+    {
+        WT_GENERATOR* gen = get_wt_generator_pointer();
+        if(gen!=NULL)
+            return gen->set_rated_power_per_wt_generator_in_MW(value);
+    }
 
     return;
 }

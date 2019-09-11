@@ -2520,9 +2520,9 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 
     //complex<double> E, V, Z, I;
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //#ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //    #pragma omp parallel for schedule(static)
+    //#endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<ngen; ++i)
     {
         complex<double> I;

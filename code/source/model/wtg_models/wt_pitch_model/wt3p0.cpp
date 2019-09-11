@@ -305,9 +305,6 @@ void WT3P0::initialize()
 
             double pitch0 = get_initial_pitch_angle_in_deg_from_wt_aerodynamic_model();
 
-            pitch_integrator.set_output(pitch0);
-            pitch_integrator.initialize();
-
             double pmax = get_Pitchmax_in_deg();
             double pmin = get_Pitchmin_in_deg();
             if(pitch0>pmax)
@@ -322,6 +319,9 @@ void WT3P0::initialize()
                   <<"Pitch angle is "<<pitch0<<" deg, and Pitchmin is "<<pmin<<" deg.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
+
+            pitch_integrator.set_output(pitch0);
+            pitch_integrator.initialize();
 
             speed_controller.set_output(pitch0);
             speed_controller.initialize();
