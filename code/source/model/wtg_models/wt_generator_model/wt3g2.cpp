@@ -217,7 +217,7 @@ bool WT3G2::setup_model_with_steps_string_vector(vector<string>& data)
             WT_GENERATOR* gen = psdb.get_wt_generator(did);
             if(gen!=NULL)
             {
-                double mbase = gen->get_mbase_in_MVA();
+                /*double mbase = gen->get_mbase_in_MVA();
                 n_lumped_turbine = round(mbase/prate);
                 if(fabs(mbase-n_lumped_turbine*prate)>1e-2)
                 {
@@ -226,10 +226,11 @@ bool WT3G2::setup_model_with_steps_string_vector(vector<string>& data)
                            <<"Machine MBASE will be updated as "<<n_lumped_turbine*prate<<" MVA.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     gen->set_mbase_in_MVA(n_lumped_turbine*prate);
-                }
+                }*/
 
                 gen->set_number_of_lumped_wt_generators(n_lumped_turbine);
                 gen->set_rated_power_per_wt_generator_in_MW(prate);
+                gen->set_mbase_in_MVA(prate*n_lumped_turbine);
 
                 set_converter_activer_current_command_T_in_s(t_IPcmd);
                 set_LVPL_max_rate_of_active_current_change(lvpl_rate);
