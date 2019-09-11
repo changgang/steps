@@ -17,7 +17,6 @@
 				<Compiler>
 					<Add option="-O3" />
 					<Add option="-Wall" />
-					<Add option="-ffast-math" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
 					<Add directory="thirdparty/cpptest" />

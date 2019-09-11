@@ -3,6 +3,7 @@
 #include "header/STEPS.h"
 #include <fstream>
 #include <iostream>
+#include <set>
 using namespace std;
 
 class SUBLINE
@@ -2339,25 +2340,45 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
     BUS* bus;
     for(size_t i=0; i!=nislands; ++i)
     {
-        osstream<<"Physical buses in island "<<i<<":";
+        osstream<<"Island "<<i<<":";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        there_is_slack_bus_in_island = false;
+
+        osstream<<"Areas in island "<<i<<":\n";
         size_t nbus = islands[i].size();
+        set<size_t> areas_in_island;
         for(size_t j=0; j!=nbus; ++j)
         {
             physical_bus = islands[i][j];
             bus = psdb.get_bus(physical_bus);
-            if(bus->get_bus_type()!=SLACK_TYPE)
+            size_t area = bus->get_area_number();
+            areas_in_island.insert(area);
+        }
+        set<size_t>::iterator iter;
+        size_t area_count = 0;
+        for(iter = areas_in_island.begin() ; iter != areas_in_island.end() ; ++iter)
+        {
+            area_count++;
+            size_t area = *iter;
+            osstream<<"("<<setw(3)<<area_count<<") "<<area<<" ["<<psdb.area_number2area_name(area)<<"]\n";
+        }
+        toolkit.show_information_with_leading_time_stamp(osstream);
+
+
+        osstream<<"Physical buses in island "<<i<<":";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        there_is_slack_bus_in_island = false;
+        for(size_t j=0; j!=nbus; ++j)
+        {
+            physical_bus = islands[i][j];
+            bus = psdb.get_bus(physical_bus);
+            size_t area = bus->get_area_number();
+            osstream<<physical_bus<<" ["<<bus->get_bus_name()<<"  "<<bus->get_base_voltage_in_kV()<<"kV] AREA "<<area<<"["<<psdb.area_number2area_name(area)<<"]";
+            if(bus->get_bus_type()==SLACK_TYPE)
             {
-                osstream<<physical_bus<<" ["<<psdb.bus_number2bus_name(physical_bus)<<"  "<<psdb.get_bus_base_voltage_in_kV(physical_bus)<<"kV]";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-            else
-            {
-                osstream<<physical_bus<<" ["<<psdb.bus_number2bus_name(physical_bus)<<"  "<<psdb.get_bus_base_voltage_in_kV(physical_bus)<<"kV] (Slack bus)";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                osstream<<" (Slack bus)";
                 there_is_slack_bus_in_island = true;
             }
+            toolkit.show_information_with_leading_time_stamp(osstream);
         }
         if(not there_is_slack_bus_in_island)
         {

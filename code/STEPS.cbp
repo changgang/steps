@@ -18,7 +18,6 @@
 					<Add option="-Wall" />
 					<Add option="-std=c++1z" />
 					<Add option="-fPIC" />
-					<Add option="-ffast-math" />
 					<Add option="-fopenmp" />
 					<Add option="-march=native" />
 					<Add directory="../code" />
@@ -35,7 +34,6 @@
 					<Add option="-O3" />
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
-					<Add option="-ffast-math" />
 					<Add option="-fopenmp" />
 					<Add option="-march=native" />
 					<Add library="../build/bin/Release/libCSparse.a" />
