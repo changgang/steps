@@ -1987,9 +1987,9 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     n = psdb.get_wt_generator_count();
     vector<WT_GENERATOR*> wtgens = psdb.get_all_wt_generators();
     //WT_GENERATOR* wtgen;
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //#ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //    #pragma omp parallel for schedule(static)
+    //#endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         WT_GENERATOR* wtgen = wtgens[i];

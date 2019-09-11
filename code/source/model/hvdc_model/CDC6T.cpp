@@ -323,7 +323,7 @@ bool CDC6T::setup_model_with_steps_string_vector(vector<string>& data)
     set_inverter_ac_delayed_unbypassing_voltage_in_pu(vac_dunbypass);
     set_mininum_bypassing_time_in_s(t_bypass);
     set_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing(vdcmin_unblock);
-    set_minimum_dc_current_in_kA_following_unblocking(idcmin_unblock);
+    set_minimum_dc_current_in_kA_following_unblocking(idcmin_unblock*0.001);
     set_dc_voltage_command_recovery_rate_in_pu_per_second(vdc_ramp);
     set_dc_current_command_recovery_rate_in_pu_per_second(idc_ramp);
     set_minimum_dc_current_command_in_kA(c0*0.001);
