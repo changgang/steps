@@ -367,7 +367,7 @@ void WT_PITCH_MODEL_TEST::update_models()
 
 void WT_PITCH_MODEL_TEST::run_to_time(double tend)
 {
-    ostringstream oosstream;
+    ostringstream osstream;
 
     WT_GENERATOR_MODEL* genmodel = get_test_wt_generator_model();
     WT_AERODYNAMIC_MODEL* aerd = get_test_wt_aerodynamic_model();

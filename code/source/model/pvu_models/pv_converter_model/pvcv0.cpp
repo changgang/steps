@@ -286,7 +286,7 @@ void PVCV0::setup_block_toolkit_and_parameters()
 
 void PVCV0::initialize()
 {
-    ostringstream oosstream;
+    ostringstream osstream;
     if(not is_model_initialized())
     {
         PV_UNIT* pv_unit = get_pv_unit_pointer();
@@ -361,7 +361,7 @@ void PVCV0::initialize()
 
             set_flag_model_initialized_as_true();
 
-            oosstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
                     <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
                     <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
                     <<"(3) States of blocks"<<endl
@@ -373,7 +373,7 @@ void PVCV0::initialize()
                     <<"(4) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
                     <<"(5) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
                     <<"(6) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-            //show_information_with_leading_time_stamp(oosstream);
+            //show_information_with_leading_time_stamp(osstream);
         }
     }
 }

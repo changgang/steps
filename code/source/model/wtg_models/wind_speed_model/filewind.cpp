@@ -139,12 +139,12 @@ void FILEWIND::initialize()
 void FILEWIND::load_wind_speed_from_file()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    ostringstream oosstream;
+    ostringstream osstream;
     string file = get_wind_speed_serial_file();
     if(file.size()<1)
     {
-        oosstream<<"Initialization error. No file is provided for loading wind speed data. Check model "<<get_model_name()<<" of "<<get_device_name();
-        toolkit.show_information_with_leading_time_stamp(oosstream);
+        osstream<<"Initialization error. No file is provided for loading wind speed data. Check model "<<get_model_name()<<" of "<<get_device_name();
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     ifstream fid(file);
@@ -189,8 +189,8 @@ void FILEWIND::load_wind_speed_from_file()
     }
     else
     {
-        oosstream<<"Initialization error. Fail to load wind speed data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
-        toolkit.show_information_with_leading_time_stamp(oosstream);
+        osstream<<"Initialization error. Fail to load wind speed data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 

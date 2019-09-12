@@ -299,7 +299,8 @@ void WT3G2::setup_block_toolkit_and_parameters()
 
 void WT3G2::initialize()
 {
-    ostringstream oosstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    ostringstream osstream;
     if(not is_model_initialized())
     {
         WT_GENERATOR* wt_generator = get_wt_generator_pointer();
@@ -369,21 +370,23 @@ void WT3G2::initialize()
 
             set_flag_model_initialized_as_true();
 
-            oosstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                    <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
-                    <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
-                    <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
-                    <<"(4) States of blocks"<<endl
-                    <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
-                    <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
-                    <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
-                    <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
-                    <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
-                    <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
-                    <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
-                    <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            toolkit.show_information_with_leading_time_stamp(oosstream);
+            if(toolkit.is_detailed_log_enabled())
+            {
+                osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                        <<"(1) Initial active current command = "<<get_initial_active_current_command_in_pu_based_on_mbase()<<endl
+                        <<"(2) Initial reactive current command = "<<get_initial_reactive_current_command_in_pu_based_on_mbase()<<endl
+                        <<"(3) Initial reactive voltage command = "<<get_initial_reactive_voltage_command_in_pu()<<endl
+                        <<"(4) States of blocks"<<endl
+                        <<"    active_current_commander block state: "<<active_current_commander.get_state()<<endl
+                        <<"    reactive_voltage_commander block state: "<<reactive_voltage_commander.get_state()<<endl
+                        <<"    PLL_frequency_integrator block state: "<<PLL_frequency_integrator.get_state()<<endl
+                        <<"    PLL_angle_integrator block state: "<<PLL_angle_integrator.get_state()<<endl
+                        <<"    LVPL_voltage_sensor block state: "<<LVPL_voltage_sensor.get_state()<<endl
+                        <<"(5) active power generation :"<<get_terminal_active_power_in_MW()<<"MW"<<endl
+                        <<"(6) reactive power generation :"<<get_terminal_reactive_power_in_MVar()<<"MVar"<<endl
+                        <<"(7) terminal current :"<<get_terminal_current_in_pu_based_on_mbase()<<"pu";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
         }
     }
 }

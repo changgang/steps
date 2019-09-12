@@ -77,7 +77,7 @@ void COMPENSATOR_MODEL_TEST::export_meter_values()
 
 void COMPENSATOR_MODEL_TEST::initialize_models()
 {
-    ostringstream oosstream;
+    ostringstream osstream;
     double delt = 0.001;
     default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
     default_toolkit.set_dynamic_simulation_time_in_s(-2.0*delt);
@@ -85,8 +85,8 @@ void COMPENSATOR_MODEL_TEST::initialize_models()
     GENERATOR* genptr = get_test_generator();
     COMPENSATOR_MODEL* model = get_test_compensator_model();
 
-    oosstream<<"Model:"<<model->get_standard_psse_string()<<endl;
-    default_toolkit.show_information_with_leading_time_stamp(oosstream);
+    osstream<<"Model:"<<model->get_standard_psse_string()<<endl;
+    default_toolkit.show_information_with_leading_time_stamp(osstream);
 
     SYNC_GENERATOR_MODEL* genmodel = genptr->get_sync_generator_model();
     genmodel->initialize();

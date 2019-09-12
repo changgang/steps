@@ -72,7 +72,7 @@ void PVP0::setup_block_toolkit_and_parameters()
 
 void PVP0::initialize()
 {
-    ostringstream oosstream;
+    ostringstream osstream;
     if(not is_model_initialized())
     {
         PV_UNIT* pv_unit = get_pv_unit_pointer();
@@ -91,7 +91,7 @@ void PVP0::run(DYNAMIC_MODE mode)
 
 void PVP0::check()
 {
-    ostringstream oosstream;
+    ostringstream osstream;
 }
 
 void PVP0::clear()

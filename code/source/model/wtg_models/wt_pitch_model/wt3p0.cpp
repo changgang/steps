@@ -340,12 +340,15 @@ void WT3P0::initialize()
 
             set_flag_model_initialized_as_true();
 
-            osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                    <<"(1) speed regulator state: "<<speed_controller.get_state()<<endl
-                    <<"(2) frequency regulator state: "<<frequency_controller.get_state()<<endl
-                    <<"(3) pitch integrator state: "<<pitch_integrator.get_state()<<endl
-                    <<"(4) pitch angle is "<<get_pitch_angle_in_deg()<<" deg";
-            toolkit.show_information_with_leading_time_stamp(osstream);
+            if(toolkit.is_detailed_log_enabled())
+            {
+                osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                        <<"(1) speed regulator state: "<<speed_controller.get_state()<<endl
+                        <<"(2) frequency regulator state: "<<frequency_controller.get_state()<<endl
+                        <<"(3) pitch integrator state: "<<pitch_integrator.get_state()<<endl
+                        <<"(4) pitch angle is "<<get_pitch_angle_in_deg()<<" deg";
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
         }
     }
 }

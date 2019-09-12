@@ -267,7 +267,7 @@ bool AERD0::setup_model_with_bpa_string(string data)
 
 void AERD0::check()
 {
-    ostringstream oosstream;
+    ostringstream osstream;
 }
 
 void AERD0::clear()

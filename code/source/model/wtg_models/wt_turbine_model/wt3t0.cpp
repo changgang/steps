@@ -201,13 +201,16 @@ void WT3T0::initialize()
 
                 set_flag_model_initialized_as_true();
 
-                ostringstream oosstream;
-                oosstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
-                        <<"(1) Turbine speed is "<<get_turbine_speed_in_pu()<<" pu"<<endl
-                        <<"(2) Generator speed is "<<get_generator_speed_in_pu()<<" pu"<<endl
-                        <<"(3) Generator rotor angle is "<<get_rotor_angle_in_deg()<<" deg"<<endl
-                        <<"(4) Shaft block state is "<<shaft_twist_block.get_state();
-                toolkit.show_information_with_leading_time_stamp(oosstream);
+                ostringstream osstream;
+                if(toolkit.is_detailed_log_enabled())
+                {
+                    osstream<<get_model_name()<<" model of "<<get_device_name()<<" is initialized."<<endl
+                            <<"(1) Turbine speed is "<<get_turbine_speed_in_pu()<<" pu"<<endl
+                            <<"(2) Generator speed is "<<get_generator_speed_in_pu()<<" pu"<<endl
+                            <<"(3) Generator rotor angle is "<<get_rotor_angle_in_deg()<<" deg"<<endl
+                            <<"(4) Shaft block state is "<<shaft_twist_block.get_state();
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
             }
         }
     }

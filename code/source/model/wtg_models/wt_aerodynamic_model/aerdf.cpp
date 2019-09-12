@@ -59,11 +59,11 @@ string AERDF::get_Cp_file() const
 void AERDF::load_data_from_Cp_file()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    ostringstream oosstream;
+    ostringstream osstream;
     if(cp_file_name.size()<1)
     {
-        oosstream<<"Initialization error. No file is provided for loading wind turbine Cp data. Check model "<<get_model_name()<<" of "<<get_device_name();
-        toolkit.show_information_with_leading_time_stamp(oosstream);
+        osstream<<"Initialization error. No file is provided for loading wind turbine Cp data. Check model "<<get_model_name()<<" of "<<get_device_name();
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     ifstream fid(cp_file_name);
@@ -71,8 +71,8 @@ void AERDF::load_data_from_Cp_file()
         fid.close();
     else
     {
-        oosstream<<"Initialization error. Fail to open wind turbine Cp data file '"<<cp_file_name<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
-        toolkit.show_information_with_leading_time_stamp(oosstream);
+        osstream<<"Initialization error. Fail to open wind turbine Cp data file '"<<cp_file_name<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
 
@@ -331,7 +331,7 @@ bool AERDF::setup_model_with_bpa_string(string data)
 
 void AERDF::check()
 {
-    ostringstream oosstream;
+    ostringstream osstream;
 }
 
 void AERDF::clear()
