@@ -487,6 +487,36 @@ void PSASPS3::check()
         osstream<<"Vsmax<=Vsmin was detected: Vsmax="<<vsmax<<", Vsmin="<<vsmin<<"\n";
         error_found = true;
     }
+    if(get_Tacc_in_s()==0.0)
+    {
+        osstream<<"Tacc=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_TD_in_s()==0.0)
+    {
+        osstream<<"TD=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Ti1_in_s()==0.0)
+    {
+        osstream<<"Ti1=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Ti2_in_s()==0.0)
+    {
+        osstream<<"Ti2=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Ti3_in_s()==0.0)
+    {
+        osstream<<"Ti3=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Ti4_in_s()==0.0)
+    {
+        osstream<<"Ti4=0.0 was detected\n";
+        error_found = true;
+    }
     if(error_found)
         toolkit.show_information_with_leading_time_stamp(osstream);
 }

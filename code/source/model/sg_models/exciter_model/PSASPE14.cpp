@@ -440,7 +440,49 @@ double PSASPE14::get_excitation_voltage_in_pu() const
 
 void PSASPE14::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    bool error_found = false;
+    if(get_Ta_in_s()==0.0)
+    {
+        osstream<<"Ta=0 was detected\n";
+        error_found = true;
+    }
+    if(get_Tt_in_s()==0.0)
+    {
+        osstream<<"Tt=0 was detected\n";
+        error_found = true;
+    }
+    if(get_Tifd_in_s()==0.0)
+    {
+        osstream<<"Tifd=0 was detected\n";
+        error_found = true;
+    }
+    double vrmax = get_Vrmax_in_pu();
+    double vrmin = get_Vrmin_in_pu();
+    if(vrmax<=vrmin)
+    {
+        osstream<<"VRmax<=VRmin was detected: VRmax="<<vrmax<<", VRmin="<<vrmin<<"\n";
+        error_found = true;
+    }
+    double vfmax = get_Vfmax_in_pu();
+    double vfmin = get_Vfmin_in_pu();
+    if(vrmax<=vrmin)
+    {
+        osstream<<"Vfmax<=Vfmin was detected: Vfmax="<<vfmax<<", Vfmin="<<vfmin<<"\n";
+        error_found = true;
+    }
+    double efdmax = get_Efdmax_in_pu();
+    double efdmin = get_Efdmin_in_pu();
+    if(efdmax<=efdmin)
+    {
+        osstream<<"Efdmax<=Efdmin was detected: Efdmax="<<efdmax<<", Efdmin="<<efdmin<<"\n";
+        error_found = true;
+    }
+    if(error_found)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PSASPE14::report()

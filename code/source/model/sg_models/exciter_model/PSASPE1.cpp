@@ -353,7 +353,42 @@ double PSASPE1::get_excitation_voltage_in_pu() const
 }
 void PSASPE1::check()
 {
-    ;
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+    osstream<<"Error is detected at "<<get_model_name()<<" model of "<<get_device_name()<<".\n";
+    bool error_found = false;
+    if(get_TA_in_s()==0.0)
+    {
+        osstream<<"TA=0 was detected\n";
+        error_found = true;
+    }
+    if(get_TE_in_s()==0.0)
+    {
+        osstream<<"TE=0 was detected\n";
+        error_found = true;
+    }
+    if(get_TF_in_s()==0.0)
+    {
+        osstream<<"TF=0 was detected\n";
+        error_found = true;
+    }
+    double vamax = get_VAmax_in_pu();
+    double vamin = get_VAmin_in_pu();
+    if(vamax<=vamin)
+    {
+        osstream<<"VAmax<=VAmin was detected: VAmax="<<vamax<<", VAmin="<<vamin<<"\n";
+        error_found = true;
+    }
+    double efdmax = get_Efdmax_in_pu();
+    double efdmin = get_Efdmin_in_pu();
+    if(efdmax<=efdmin)
+    {
+        osstream<<"Efdmax<=Efdmin was detected: Efdmax="<<efdmax<<", Efdmin="<<efdmin<<"\n";
+        error_found = true;
+    }
+    if(error_found)
+        toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
 void PSASPE1::report()

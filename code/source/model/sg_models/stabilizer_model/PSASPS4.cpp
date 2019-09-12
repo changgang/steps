@@ -599,6 +599,71 @@ void PSASPS4::check()
         osstream<<"Vsmax<=Vsmin was detected: Vsmax="<<vsmax<<", Vsmin="<<vsmin<<"\n";
         error_found = true;
     }
+    if(get_Trw_in_s()==0.0)
+    {
+        osstream<<"Trw=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T5_in_s()==0.0)
+    {
+        osstream<<"T5=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T6_in_s()==0.0)
+    {
+        osstream<<"T6=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T7_in_s()==0.0)
+    {
+        osstream<<"T7=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Trp_in_s()==0.0)
+    {
+        osstream<<"Trp=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Tw_in_s()==0.0)
+    {
+        osstream<<"Tw=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Tw1_in_s()==0.0)
+    {
+        osstream<<"Tw1=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Tw_in_s()==0.0)
+    {
+        osstream<<"Tw2=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T10_in_s()==0.0)
+    {
+        osstream<<"T10=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T12_in_s()==0.0)
+    {
+        osstream<<"T12=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T2_in_s()==0.0)
+    {
+        osstream<<"T2=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T14_in_s()==0.0)
+    {
+        osstream<<"T14=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T4_in_s()==0.0)
+    {
+        osstream<<"T4=0.0 was detected\n";
+        error_found = true;
+    }
     if(error_found)
         toolkit.show_information_with_leading_time_stamp(osstream);
 }

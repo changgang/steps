@@ -433,6 +433,31 @@ void PSASPS2::check()
         osstream<<"Vsmax<=Vsmin was detected: Vsmax="<<vsmax<<", Vsmin="<<vsmin<<"\n";
         error_found = true;
     }
+    if(get_Tw1_in_s()==0.0)
+    {
+        osstream<<"Tw1=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_Tw2_in_s()==0.0)
+    {
+        osstream<<"Tw2=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T2_in_s()==0.0)
+    {
+        osstream<<"T2=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T4_in_s()==0.0)
+    {
+        osstream<<"T4=0.0 was detected\n";
+        error_found = true;
+    }
+    if(get_T6_in_s()==0.0)
+    {
+        osstream<<"T6=0.0 was detected\n";
+        error_found = true;
+    }
     if(error_found)
         toolkit.show_information_with_leading_time_stamp(osstream);
 }
