@@ -95,6 +95,7 @@
 #include "header/model/sg_models/stabilizer_model/PSASPS3_test.h"
 #include "header/model/sg_models/stabilizer_model/PSASPS4_test.h"
 #include "header/model/sg_models/stabilizer_model/PSASPS5_test.h"
+#include "header/model/sg_models/stabilizer_model/PSASPS6_test.h"
 #include "header/model/sg_models/stabilizer_model/PSASPS8_test.h"
 
 #include "header/model/sg_models/turbine_governor_model/TGOV1_test.h"
@@ -290,6 +291,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new PSASPS3_TEST));
         ts.add(unique_ptr<Test::Suite>(new PSASPS4_TEST));
         //ts.add(unique_ptr<Test::Suite>(new PSASPS5_TEST));
+        ts.add(unique_ptr<Test::Suite>(new PSASPS6_TEST));
         ts.add(unique_ptr<Test::Suite>(new PSASPS8_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new TGOV1_TEST));

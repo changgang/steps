@@ -5727,13 +5727,14 @@
 	"header/block/first_order_block.h"
 	"header/block/pi_block.h"
 
-1567841839 c:\users\dr.li\steps\code\header\model\sg_models\stabilizer_model\stabilizer_models.h
+1568307535 c:\users\dr.li\steps\code\header\model\sg_models\stabilizer_model\stabilizer_models.h
 	"header/model/sg_models/stabilizer_model/IEE2ST.h"
 	"header/model/sg_models/stabilizer_model/PSASPS1.h"
 	"header/model/sg_models/stabilizer_model/PSASPS2.h"
 	"header/model/sg_models/stabilizer_model/PSASPS3.h"
 	"header/model/sg_models/stabilizer_model/PSASPS4.h"
 	"header/model/sg_models/stabilizer_model/PSASPS5.h"
+	"header/model/sg_models/stabilizer_model/PSASPS6.h"
 	"header/model/sg_models/stabilizer_model/PSASPS8.h"
 
 1567841839 c:\users\dr.li\steps\code\header\model\sg_models\stabilizer_model\iee2st.h
@@ -7063,7 +7064,7 @@
 	<istream>
 	<iostream>
 
-1567841839 c:\users\dr.li\steps\code\header\data_imexporter\steps_imexporter.h
+1568307522 c:\users\dr.li\steps\code\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -9736,7 +9737,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1567841839 source:c:\users\dr.li\steps\code\main_tests.cpp
+1568307555 source:c:\users\dr.li\steps\code\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -9812,6 +9813,7 @@
 	"header/model/sg_models/stabilizer_model/PSASPS3_test.h"
 	"header/model/sg_models/stabilizer_model/PSASPS4_test.h"
 	"header/model/sg_models/stabilizer_model/PSASPS5_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS6_test.h"
 	"header/model/sg_models/stabilizer_model/PSASPS8_test.h"
 	"header/model/sg_models/turbine_governor_model/TGOV1_test.h"
 	"header/model/sg_models/turbine_governor_model/IEEEG1_test.h"
@@ -9890,7 +9892,7 @@
 	<istream>
 	<iostream>
 
-1567841839 source:c:\users\dr.li\steps\code\source\block\lead_lag_block.cpp
+1568292119 source:c:\users\dr.li\steps\code\source\block\lead_lag_block.cpp
 	"header/block/lead_lag_block.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -9907,7 +9909,7 @@
 	<istream>
 	<iostream>
 
-1567841839 source:c:\users\dr.li\steps\code\source\data_imexporter\steps_dynamics_imexporter.cpp
+1568307598 source:c:\users\dr.li\steps\code\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -9916,7 +9918,7 @@
 	<istream>
 	<iostream>
 
-1567841839 source:c:\users\dr.li\steps\code\source\device\generator.cpp
+1568307624 source:c:\users\dr.li\steps\code\source\device\generator.cpp
 	"header/device/generator.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -10032,7 +10034,7 @@
 	"header/basic/utility.h"
 	<vector>
 
-1568273752 source:c:\users\dr.li\steps\code\source\model\sg_models\stabilizer_model\psasps2.cpp
+1568305640 source:c:\users\dr.li\steps\code\source\model\sg_models\stabilizer_model\psasps2.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS2.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
@@ -10048,7 +10050,7 @@
 	"header/basic/utility.h"
 	<vector>
 
-1568273639 source:c:\users\dr.li\steps\code\source\model\sg_models\stabilizer_model\psasps4.cpp
+1568307753 source:c:\users\dr.li\steps\code\source\model\sg_models\stabilizer_model\psasps4.cpp
 	"header/model/sg_models/stabilizer_model/PSASPS4.h"
 	"header/basic/constants.h"
 	"header/STEPS.h"
@@ -10104,4 +10106,33 @@
 	<iostream>
 	<ctime>
 	<omp.h>
+
+1568307217 c:\users\dr.li\steps\code\header\model\sg_models\stabilizer_model\psasps6.h
+	"header/model/sg_models/stabilizer_model/stabilizer_model.h"
+	"header/block/first_order_block.h"
+	"header/block/differential_block.h"
+	"header/block/lead_lag_block.h"
+
+1568307478 source:c:\users\dr.li\steps\code\source\model\sg_models\stabilizer_model\psasps6.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS6.h"
+	"header/basic/constants.h"
+	"header/STEPS.h"
+	<cstdio>
+	"header/basic/utility.h"
+	<vector>
+	<iostream>
+
+1568307151 c:\users\dr.li\steps\code\header\model\sg_models\stabilizer_model\psasps6_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
+	"header/model/sg_models/stabilizer_model/PSASPS6.h"
+	"header/power_system_database.h"
+	"header/STEPS.h"
+
+1568307175 source:c:\users\dr.li\steps\code\source\model\sg_models\stabilizer_model\psasps6_test.cpp
+	"header/model/sg_models/stabilizer_model/PSASPS6_test.h"
+	"header/basic/utility.h"
 

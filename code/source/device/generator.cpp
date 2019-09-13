@@ -370,6 +370,11 @@ void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
                 PSASPS5* smodel = (PSASPS5*) (model);
                 new_model = (STABILIZER_MODEL*) new PSASPS5(*smodel);
             }
+            if(model_name=="PSASPS6")
+            {
+                PSASPS6* smodel = (PSASPS6*) (model);
+                new_model = (STABILIZER_MODEL*) new PSASPS6(*smodel);
+            }
             if(model_name=="PSASPS8")
             {
                 PSASPS8* smodel = (PSASPS8*) (model);

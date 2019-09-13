@@ -250,6 +250,8 @@
 		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS4_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS5.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS5_test.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS6.h" />
+		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS6_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS8.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/PSASPS8_test.h" />
 		<Unit filename="header/model/sg_models/stabilizer_model/stabilizer_model.h" />
@@ -601,6 +603,8 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS6.cpp" />
+		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS6_test.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS8.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/PSASPS8_test.cpp" />
 		<Unit filename="source/model/sg_models/stabilizer_model/stabilizer_model.cpp" />

@@ -114,6 +114,7 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="PSASPS3") { add_PSASPS3_model(data); return;}
     if(model_name=="PSASPS4") { add_PSASPS4_model(data); return;}
     if(model_name=="PSASPS5") { add_PSASPS5_model(data); return;}
+    if(model_name=="PSASPS6") { add_PSASPS6_model(data); return;}
     if(model_name=="PSASPS8") { add_PSASPS8_model(data); return;}
 
     if(model_name=="SEXS") { add_SEXS_model(data); return;}
@@ -692,6 +693,35 @@ void STEPS_IMEXPORTER::add_PSASPS5_model(vector<string>& data)
             {
                 ostringstream osstream;
                 osstream<<"Warning. Invalid PSASPS5 model is built, but will not be set for "<<generator->get_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::add_PSASPS6_model(vector<string>& data)
+{
+    if(get_dynamic_model_name(data) != "PSASPS6")
+        return;
+
+    if(data.size()>=3)
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        DEVICE_ID did = get_generator_device_id_from_string_vector(data);
+
+        GENERATOR* generator = psdb.get_generator(did);
+        if(generator != NULL)
+        {
+            PSASPS6 model;
+            model.set_toolkit(toolkit);
+            bool successful = model.setup_model_with_steps_string_vector(data);
+            if(successful)
+                generator->set_model(&model);
+            else
+            {
+                ostringstream osstream;
+                osstream<<"Warning. Invalid PSASPS6 model is built, but will not be set for "<<generator->get_device_name();
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
