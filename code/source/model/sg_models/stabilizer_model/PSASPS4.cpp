@@ -649,9 +649,9 @@ void PSASPS4::check()
         //osstream<<"T12=0.0 was detected\n";
         //error_found = true;
     }
-    if(get_Kp()>5.0)
+    if(get_Kp()>10.0)
     {
-        osstream<<"Kp>5.0 was detected. Kp="<<get_Kp()<<"\n";
+        osstream<<"Kp>10.0 was detected. Kp="<<get_Kp()<<"\n";
         error_found = true;
     }
     if(get_T2_in_s()==0.0)

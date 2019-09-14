@@ -443,7 +443,7 @@ void PSASPS2::check()
         osstream<<"Tw2=0.0 was detected\n";
         error_found = true;
     }
-    if(get_Tw1_in_s()>20.0)
+    /*if(get_Tw1_in_s()>20.0)
     {
         osstream<<"Tw1>20.0 was detected. Tw1="<<get_Tw1_in_s()<<"\n";
         error_found = true;
@@ -452,7 +452,7 @@ void PSASPS2::check()
     {
         osstream<<"Tw2>20.0 was detected. Tw2="<<get_Tw2_in_s()<<"\n";
         error_found = true;
-    }
+    }*/
     if(get_T2_in_s()==0.0)
     {
         osstream<<"T2=0.0 was detected\n";
