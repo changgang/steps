@@ -1540,6 +1540,29 @@ double HVDC_MODEL::get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter)
     return psdb.get_bus_voltage_in_pu(hvdc->get_converter_bus(converter));
 }
 
+double HVDC_MODEL::get_time_duration_to_the_last_bypass_in_s() const
+{
+    size_t n = record_of_bypass_time.size();
+    if(n==0)
+        return 0.0;
+    else
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double TIME = toolkit.get_dynamic_simulation_time_in_s();
+        double time = record_of_bypass_time[n-1];
+        return TIME - time;
+    }
+}
+
+double HVDC_MODEL::get_time_of_the_last_bypass_in_s() const
+{
+    size_t n = record_of_bypass_time.size();
+    if(n==0)
+        return INFINITE_THRESHOLD;
+    else
+        return record_of_bypass_time[n-1];
+}
+
 void HVDC_MODEL::set_common_timer_toolkit()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);

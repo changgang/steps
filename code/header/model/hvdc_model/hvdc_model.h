@@ -111,6 +111,9 @@ class HVDC_MODEL : public MODEL
         complex<double> get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter) const;
 
+        double get_time_duration_to_the_last_bypass_in_s() const;
+        double get_time_of_the_last_bypass_in_s() const;
+
     public: // specific exciter
         virtual string get_model_name() const = 0;
 

@@ -397,7 +397,12 @@ void CDC6T::initialize()
     setup_block_toolkit_and_parameters();
 
     rec_ac_blocking_timer.set_attached_device(hvdc);
+    inv_ac_blocking_signal_transmitting_timer.set_attached_device(hvdc);
+    rec_ac_unblocking_timer.set_attached_device(hvdc);
+    inv_ac_unblocking_timer.set_attached_device(hvdc);
+    inv_ac_unblocking_signal_transmitting_timer.set_attached_device(hvdc);
     inv_ac_bypassing_timer.set_attached_device(hvdc);
+    inv_ac_unbypassing_timer.set_attached_device(hvdc);
     set_attached_device_of_common_meters();
 
     double Vdcr = hvdc->get_converter_dc_voltage_in_kV(RECTIFIER);
@@ -753,10 +758,11 @@ void CDC6T::check_bypassing_logic()
         //double t_dunbypass = get_inverter_ac_delayed_unbypassing_time_in_s();
         if(not inv_ac_unbypassing_timer.is_started())
         {
-            if(vac_i>vac_dunbypass)
+            if(vac_i>vac_dunbypass and get_time_duration_to_the_last_bypass_in_s()>=get_mininum_bypassing_time_in_s())
             {
-                osstream<<hvdc->get_device_name()<<" inverter AC unbypassing timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage."<<endl;
-                osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.";
+                osstream<<hvdc->get_device_name()<<" inverter AC unbypassing timer is started at time "<<TIME<<" s due to recovery of inverter AC voltage and time to the last bypass exceeds."<<endl;
+                osstream<<"Inverter AC voltage is "<<vac_i<<" pu, and AC unbypassing voltage threshold is "<<vac_dunbypass<<" pu.\n"
+                        <<"The last bypass occurred at "<<get_time_of_the_last_bypass_in_s()<<" s.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
                 inv_ac_unbypassing_timer.start();
