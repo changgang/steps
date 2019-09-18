@@ -1,3 +1,7 @@
+1. install wheel and twine, use:
+
+python -m pip install wheel twine
+
 1. to build stepspy module, use:
 
 python setup.py sdist bdist_wheel
