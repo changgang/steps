@@ -20,6 +20,9 @@ class STEPS
         void set_toolkit_name(string name);
         string get_toolkit_name() const;
 
+        void set_thread_number(size_t n);
+        size_t get_thread_number() const;
+
         char get_next_alphabeta();
         void open_log_file(string file);
         void close_log_file();
@@ -66,5 +69,7 @@ class STEPS
         ofstream log_file;
         bool detailed_log_enabled;
         char current_alphabeta;
+
+        size_t thread_number;
 };
 #endif // STEPS_H

@@ -192,7 +192,7 @@ void api_set_bus_float_data(size_t bus, char* parameter_name, double value, size
             return busptr->set_angle_in_rad(value);
 
         if(PARAMETER_NAME=="ANGLE_DEG" or PARAMETER_NAME=="ANGLE IN DEG")
-            return busptr->set_angle_in_rad(value);
+            return busptr->set_angle_in_deg(value);
 
         if(PARAMETER_NAME=="VMAX_PU" or PARAMETER_NAME=="NORMAL VMAX IN PU")
             return busptr->set_normal_voltage_upper_limit_in_pu(value);

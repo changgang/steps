@@ -1,5 +1,6 @@
 #include "header/STEPS.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -28,8 +29,9 @@ STEPS::STEPS(string name, string log_file)
 
     network_matrix.set_toolkit(*this);
 
-    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" is created @ "+num2str(size_t(this)));
+    set_thread_number(1);
 
+    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" is created @ "+num2str(size_t(this)));
 
     clear();
 }
@@ -55,6 +57,16 @@ void STEPS::set_toolkit_name(string name)
 string STEPS::get_toolkit_name() const
 {
     return toolkit_name;
+}
+
+void STEPS::set_thread_number(size_t n)
+{
+    thread_number = n;
+}
+
+size_t STEPS::get_thread_number() const
+{
+    return thread_number;
 }
 
 void STEPS::clear()
@@ -175,17 +187,17 @@ void STEPS::show_information_with_leading_time_stamp(string info)
         string sys_time = get_system_time_stamp_string();
         if(log_file.is_open())
         {
-            log_file<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<"\n";
+            log_file<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<endl;
 
             for(size_t i=1; i!=info_size; ++i)
-                log_file<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<"\n";
+                log_file<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<endl;
         }
         else
         {
-            cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<"\n";
+            cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<endl;
 
             for(size_t i=1; i!=info_size; ++i)
-                cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<"\n";
+                cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<endl;
         }
     }
 }

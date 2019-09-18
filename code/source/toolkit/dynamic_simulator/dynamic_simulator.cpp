@@ -1661,18 +1661,10 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
 }
 void DYNAMICS_SIMULATOR::set_openmp_number_of_threads()
 {
-    int omp_num_thread = 1;
-    char* omp_num_threads_env = getenv("STEPS_NUM_THREADS");
-    if(omp_num_threads_env != NULL)
-        sscanf(omp_num_threads_env, "%d", &omp_num_thread);
-
-    if(omp_num_thread<0)
-        omp_num_thread = -omp_num_thread;
-
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    size_t omp_num_thread = toolkit.get_thread_number();
     if(omp_num_thread==0)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
         size_t nbus = toolkit.get_power_system_database().get_bus_count();
         if(nbus<=1000)
             omp_set_num_threads(1);

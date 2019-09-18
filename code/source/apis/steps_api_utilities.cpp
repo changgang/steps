@@ -38,6 +38,19 @@ void api_clear_toolkit(size_t toolkit_index)
     toolkit.get_power_system_database().clear();
     toolkit.get_dynamic_simulator().clear();
 }
+
+void api_set_toolkit_parallel_thread_number(size_t n, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    toolkit.set_thread_number(n);
+}
+
+size_t api_get_toolkit_parallel_thread_number(size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    return toolkit.get_thread_number();
+}
+
 double api_get_toolkit_float_data(char* parameter_name, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
