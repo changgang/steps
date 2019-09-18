@@ -48,6 +48,18 @@ Here is a complete procedure of how to build STEPS.
 4. Compile CppTest as static library. You can find CppTest.cbp in the code/ folder.
 5. Compile STEPS as dynamic library or exectuable file. Include libUMFPACK.a, libBLAS.a, libCSparse.a, and libCpptest.a. Put libBLAS.a after libUMFPACK.a.
 
+### Parallel and serial version
+Dynamic simulator has both parallel and serial version. Typically, the serial version is 2 times faster than the parallel version if paralle number is set to 1. Therefore, in stepspy both parallel and serial library should be provided.
+
+To build serial version, comment the following line in dynamic_simulator.cpp, then build with previous instructions to get libSTEPS.dll or libSTEPS.so:
+
+> #define STEPS_DYNAMIC_SIMULATOR_OPENMP
+
+To build parallel version, keep the following line in dynamic_simulator.cpp, then build with previous instructions to get another libSTEPS.dll or libSTEPS.so:
+
+> #define STEPS_DYNAMIC_SIMULATOR_OPENMP
+
+Then, you should change libSTEPS to libSTEPS-p, i.e., the library file becomes libSTEPS-p.dll or libSTEPS-p.so.
 
 ## How to use stepspy
 stepspy is a Python module of advanced APIs of STEPS. It enables most of STEPS applications. It is recommended to use stepspy in Python 3 of 64-bit version, though Python 2 is also supported.
@@ -55,3 +67,5 @@ stepspy is a Python module of advanced APIs of STEPS. It enables most of STEPS a
 stepspy has been uploaded to pypi.org, and can be installed via:
 - pip3 install stepspy 
 - python -m pip install stepspy
+
+Both parallel and serial library files should be built and copied to the stepspy folder.
