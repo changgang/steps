@@ -1,19 +1,71 @@
-stepspy: a Python module of Simulation Toolkit for Electrical Power Systems
+# stepspy
 
-Author: Changgang Li <lichgang@sdu.edu.cn> from the School of Electrical Engineering, Shandong University, China
+> stepspy
 
-stepspy provides almost all functions of STEPS (https://github.com/changgang/steps). It calls dynamic library of STEPS, and wraps it to advanced functions.
+stepspy is a Python module of Simulation Toolkit for Electrical Power Systems (STEPS).
 
-stepspy can now be automatically installed via pip with:
+## Table of Contents
 
+- [Background](#background)
+- [Release Note](#release-note)
+- [Install](#install)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Maintainers](#maintainers)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Background
+
+stepspy is a Python module of Simulation Toolkit for Electrical Power Systems (STEPS). It provides wrapper of APIs of STEPS in a dynamic library.
+
+STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scale power systems. It provides detailed models of bus, line, transformer, HVDC, generator, wind turbine generator, load, and fixed shunt. For more information about STEPS, see (https://github.com/changgang/steps).
+
+## Realse Note
+
+- 0.7.0. Sep. 18, 2019. Add new API to set parallel thread number. Update README.
+- 0.6.1. Aug. 27, 2019
+- 0.6.0. Aug. 25, 2019
+
+
+## Install
+
+### Install stepspy
+
+To install stepspy, you can run the following codes on your computer or server:
+
+```python
 python -m pip install stepspy
-
-After install the stepspy, you still need to install the dynamic library of STEPS.
+```
 
 If you want to manually install stepspy, follow the instructions:
+
 1. Go to https://github.com/changgang/steps to download or fork the latest version of STEPS.
+2. Go to python/ folder of STEPS, and copy the latest version of stepspy/ to PYTHONPATH/Lib/site-packages/.
+
+### Install dynamic library
+
+After install the stepspy, you still need to compile and install the dynamic library of STEPS.
+
+1. Go to [steps](https://github.com/changgang/steps) to download or fork the latest version of STEPS. The latest version is usually the [work] branch.
 2. Compile STEPS into dynamic library following instructions of STEPS.
-3. Go to python/ folder of STEPS, and copy the latest version of stepspy/ to PYTHONPATH/Lib/site-packages/.
-4, Move the dynamic library of STEPS to stepspy/libsteps/ in the PYTHONPATH/Lib/site-packages/.
-5, If the VC runtime is missing, download and install Microsoft Visual C++ 2017 Redistributable of 32 or 64 bit version.
+3, Move the dynamic library of STEPS to stepspy/libsteps/ in the PYTHONPATH/Lib/site-packages/.
+4, If the VC runtime is missing, download and install Microsoft Visual C++ 2017 Redistributable of 32 or 64 bit version.
 5, If VC runtime or Mingw Runtime is missing, install vcredit or copy libwinpthread-1.dll from mingw compiler/bin/ to c:/windows/system32 and c:/windows/SysWOW64
+
+## Usage
+
+## Examples
+
+
+## Maintainers
+
+[@changgang](https://github.com/changgang) <lichgang@sdu.edu.cn> from the School of Electrical Engineering, Shandong University, China
+
+## Contributing
+
+Feel free to dive in! [Open an issue](https://github.com/changgang/steps/issues/new).
+
+## License
+
+[MIT](LICENSE) © Changgang Li
