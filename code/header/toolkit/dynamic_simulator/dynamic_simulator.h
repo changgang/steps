@@ -198,6 +198,8 @@ class DYNAMICS_SIMULATOR: public BASE
         void update_generators_in_islands();
         bool is_system_angular_stable() const;
 
+        void set_openmp_number_of_threads();
+
         double DELT;
         double TIME;
 

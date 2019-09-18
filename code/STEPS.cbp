@@ -18,8 +18,11 @@
 					<Add option="-Wall" />
 					<Add option="-std=c++1z" />
 					<Add option="-fPIC" />
-					<Add option="-fopenmp" />
 					<Add option="-march=native" />
+					<Add option="-funroll-loops" />
+					<Add option="-malign-double" />
+					<Add option="-minline-all-stringops" />
+					<Add option="-fopenmp" />
 					<Add directory="../code" />
 					<Add directory="thirdparty/SuiteSparse/UMFPACK/Include" />
 					<Add directory="thirdparty/SuiteSparse/CSparse/Include" />
