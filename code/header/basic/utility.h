@@ -10,6 +10,9 @@
 string num2str(int number);
 string num2str(size_t number);
 string num2str(double number);
+string num2hex_str(int number);
+string num2hex_str(size_t number);
+string num2hex_str(double number);
 int str2int(string str);
 double str2double(string str);
 

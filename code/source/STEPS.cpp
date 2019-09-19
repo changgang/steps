@@ -31,15 +31,16 @@ STEPS::STEPS(string name, string log_file)
 
     set_thread_number(1);
 
-    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" is created @ "+num2str(size_t(this)));
+    if(toolkit_name!="TK DFLT")
+        show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is created.");
 
     clear();
 }
 
 STEPS::~STEPS()
 {
-    show_information_with_leading_time_stamp("STEPS simulation toolkit "+toolkit_name+" @ "+num2str(size_t(this))+" is deleted.");
-    //clear();
+    if(toolkit_name!="TK DFLT")
+        show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is deleted.");
     close_log_file();
 }
 

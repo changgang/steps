@@ -36,6 +36,25 @@ string num2str(double number)
     return string(str);
 }
 
+string num2hex_str(int number)
+{
+    char str[64];
+    sprintf(str, "%X", number);
+    return string(str);
+}
+
+string num2hex_str(size_t number)
+{
+    return num2hex_str(int(number));
+}
+
+string num2hex_str(double number)
+{
+    char str[64];
+    sprintf(str, "%A", number);
+    return string(str);
+}
+
 int str2int(string str)
 {
     return int(round(str2double(str)));
