@@ -10,7 +10,7 @@
 #include <ctime>
 #include <omp.h>
 
-//#define STEPS_DYNAMIC_SIMULATOR_OPENMP
+#define STEPS_DYNAMIC_SIMULATOR_OPENMP
 
 using namespace std;
 
@@ -2135,10 +2135,14 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     size_t n = edevices.size();
-    EQUIVALENT_DEVICE* edevice;
-    for(size_t i=0; i!=n; ++i)
+    //EQUIVALENT_DEVICE* edevice;
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        set_openmp_number_of_threads();
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    for(size_t i=0; i<n; ++i)
     {
-        edevice = edevices[i];
+        EQUIVALENT_DEVICE* edevice = edevices[i];
         edevice->update_meter_buffer();
     }
 }
@@ -2149,11 +2153,14 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     size_t n = edevices.size();
-    EQUIVALENT_DEVICE* edevice;
-    ostringstream osstream;
-    for(size_t i=0; i!=n; ++i)
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        set_openmp_number_of_threads();
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    for(size_t i=0; i<n; ++i)
     {
-        edevice = edevices[i];
+        ostringstream osstream;
+        EQUIVALENT_DEVICE* edevice = edevices[i];
         edevice->update_equivalent_outputs();
 
         osstream<<"At time "<<toolkit.get_dynamic_simulation_time_in_s()<<" s, equivalent load of "<<edevice->get_device_name()<<" is: "<<edevice->get_total_equivalent_power_as_load_in_MVA()<<"MVA";
@@ -2795,6 +2802,10 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
     size_t n = I_mismatch.size();
     I_vec.resize(n*2, 0.0);
 
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        set_openmp_number_of_threads();
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
         I_vec[i] = I_mismatch[i].imag();
