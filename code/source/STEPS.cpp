@@ -184,21 +184,15 @@ void STEPS::show_information_with_leading_time_stamp(string info)
     size_t info_size = splitted_info.size();
     if(info_size!=0)
     {
+        string info="";
         string sys_time = get_system_time_stamp_string();
+        info="["+get_toolkit_name()+"]"+sys_time+" "+splitted_info[0]+"\n";
+        for(size_t i=1; i!=info_size; ++i)
+            info+=("["+get_toolkit_name()+"]"+sys_time+" + "+splitted_info[i]+"\n");
         if(log_file.is_open())
-        {
-            log_file<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<endl;
-
-            for(size_t i=1; i!=info_size; ++i)
-                log_file<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<endl;
-        }
+            log_file<<info;
         else
-        {
-            cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" "<<splitted_info[0]<<endl;
-
-            for(size_t i=1; i!=info_size; ++i)
-                cout<<"["<<get_toolkit_name()<<"]"<<sys_time<<" + "<<splitted_info[i]<<endl;
-        }
+            cout<<info;
     }
 }
 
