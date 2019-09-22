@@ -60,6 +60,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void prepare_energy_storage_related_meters();
         void prepare_load_related_meters();
         void prepare_line_related_meters();
+        void prepare_transformer_related_meters();
         void prepare_hvdc_related_meters();
         void prepare_equivalent_device_related_meters();
 
@@ -70,6 +71,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void prepare_energy_storage_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_load_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_line_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
+        void prepare_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_hvdc_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name="");
         void prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
 

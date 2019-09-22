@@ -323,6 +323,7 @@ EXPORT_STEPS_DLL void api_prepare_pv_unit_related_meters(size_t toolkit_index=IN
 EXPORT_STEPS_DLL void api_prepare_energy_storage_related_meters(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_load_related_meters(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_line_related_meters(size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_prepare_transformer_related_meters(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_hvdc_related_meters(size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_equivalent_device_related_meters(size_t toolkit_index=INDEX_NOT_EXIST);
 
@@ -333,6 +334,7 @@ EXPORT_STEPS_DLL void api_prepare_pv_unit_related_meter(size_t bus, char* id, ch
 EXPORT_STEPS_DLL void api_prepare_energy_storage_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_prepare_transformer_related_meter(size_t ibus, size_t jbus, size_t kbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index=INDEX_NOT_EXIST);
 

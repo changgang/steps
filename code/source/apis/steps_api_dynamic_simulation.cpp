@@ -292,6 +292,13 @@ void api_prepare_line_related_meters(size_t toolkit_index)
     ds.prepare_line_related_meters();
 }
 
+void api_prepare_transformer_related_meters(size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    ds.prepare_transformer_related_meters();
+}
+
 void api_prepare_hvdc_related_meters(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -359,6 +366,14 @@ void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* me
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_line_device_id(ibus, jbus, id);
     ds.prepare_line_related_meter(did, meter_type, side, var_name);
+}
+
+void api_prepare_transformer_related_meter(size_t ibus, size_t jbus, size_t kbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, id);
+    ds.prepare_transformer_related_meter(did, meter_type, side, var_name);
 }
 
 void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index)

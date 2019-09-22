@@ -535,10 +535,55 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meters()
         append_meter(meter);
         meter = setter.prepare_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_sending_side_bus());
         append_meter(meter);
+        meter = setter.prepare_line_current_in_kA_meter(line->get_device_id(),line->get_sending_side_bus());
+        append_meter(meter);
         meter = setter.prepare_line_active_power_in_MW_meter(line->get_device_id(),line->get_receiving_side_bus());
         append_meter(meter);
         meter = setter.prepare_line_reactive_power_in_MVar_meter(line->get_device_id(),line->get_receiving_side_bus());
         append_meter(meter);
+        meter = setter.prepare_line_current_in_kA_meter(line->get_device_id(),line->get_receiving_side_bus());
+        append_meter(meter);
+    }
+}
+
+
+void DYNAMICS_SIMULATOR::prepare_transformer_related_meters()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    METER_SETTER setter;
+    setter.set_toolkit(toolkit);
+
+    size_t n;
+
+    n = psdb.get_transformer_count();
+    vector<TRANSFORMER*> transes = psdb.get_all_transformers();
+    TRANSFORMER* trans;
+    for(size_t i=0; i!=n; ++i)
+    {
+        trans = transes[i];
+        METER meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
+        append_meter(meter);
+        meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
+        append_meter(meter);
+        meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
+        append_meter(meter);
+        meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
+        append_meter(meter);
+        meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
+        append_meter(meter);
+        meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
+        append_meter(meter);
+        if(trans->is_three_winding_transformer())
+        {
+            meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
+            append_meter(meter);
+            meter = setter.prepare_transformer_reactive_power_in_MVar_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
+            append_meter(meter);
+            meter = setter.prepare_transformer_current_in_kA_meter(trans->get_device_id(), trans->get_winding_bus(SECONDARY_SIDE));
+            append_meter(meter);
+        }
     }
 }
 
@@ -1117,6 +1162,8 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
                 bus = line->get_sending_side_bus();
             if(side=="RECEIVING" or side=="R")
                 bus = line->get_receiving_side_bus();
+            if(bus==0)
+                return;
 
             if(meter_type=="ACTIVE POWER IN MW")
                 meter = setter.prepare_line_active_power_in_MW_meter(did, bus);
@@ -1142,6 +1189,65 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
     else
     {
         osstream<<"Warning. The device type of "<<did.get_device_name()<<" is not LINE when setting up meter with "<<__FUNCTION__;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+}
+
+void DYNAMICS_SIMULATOR::prepare_transformer_related_meter(const DEVICE_ID& did, string meter_type, string side, string var_name)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    if(did.get_device_type()=="TRANSFORMER")
+    {
+        if(psdb.is_line_exist(did))
+        {
+            METER_SETTER setter;
+            setter.set_toolkit(toolkit);
+
+            METER meter;
+            meter.set_toolkit(toolkit);
+
+            meter_type = string2upper(meter_type);
+            side = string2upper(side);
+
+            TRANSFORMER* trans = psdb.get_transformer(did);
+            size_t bus = 0;
+            if(side=="PRIMARY" or side=="P")
+                bus = trans->get_winding_bus(PRIMARY_SIDE);
+            if(side=="SECONDARY" or side=="S")
+                bus = trans->get_winding_bus(SECONDARY_SIDE);
+            if(side=="TERTIARY" or side=="T")
+                bus = trans->get_winding_bus(TERTIARY_SIDE);
+            if(bus==0)
+                return;
+
+            if(meter_type=="ACTIVE POWER IN MW")
+                meter = setter.prepare_transformer_active_power_in_MW_meter(did, bus);
+            if(meter_type=="REACTIVE POWER IN MVAR")
+                meter = setter.prepare_transformer_reactive_power_in_MVar_meter(did, bus);
+            if(meter_type=="CURRENT IN KA")
+                meter = setter.prepare_transformer_current_in_kA_meter(did, bus);
+
+            if(meter.is_valid())
+                append_meter(meter);
+            else
+            {
+                osstream<<"Warning. Invalid meter type ("<<meter_type<<") is given to set up meter for "<<did.get_device_name();
+                toolkit.show_information_with_leading_time_stamp(osstream);
+            }
+        }
+        else
+        {
+            osstream<<"Warning. Meter of "<<did.get_device_name()<<" cannot be set since the given device does not exist in the power system database";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
+    else
+    {
+        osstream<<"Warning. The device type of "<<did.get_device_name()<<" is not TRANSFORMER when setting up meter with "<<__FUNCTION__;
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
