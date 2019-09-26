@@ -288,7 +288,7 @@ bool SYNC_GENERATOR_MODEL::is_saturation_considered() const
     return saturation_block.is_saturation_considered();
 }
 
-double SYNC_GENERATOR_MODEL::get_saturation_with_flux(double flux) const
+double SYNC_GENERATOR_MODEL::get_saturation_with_flux(double flux)
 {
     if(is_saturation_considered())
         return saturation_block.get_saturation(flux);

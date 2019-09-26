@@ -72,7 +72,7 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         INTEGRAL_BLOCK* get_q_axis_subtransient_block();
 
         bool is_saturation_considered() const;
-        double get_saturation_with_flux(double flux) const;
+        double get_saturation_with_flux(double flux);
     public:
         // set initial efd and pmech for initialization
         void set_initial_mechanical_power_in_pu_based_on_mbase(double pmech);

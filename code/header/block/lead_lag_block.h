@@ -28,6 +28,8 @@ class LEAD_LAG_BLOCK : public BLOCK
         virtual void update();
         double K, T1, T2;
         FIRST_ORDER_BLOCK first_order_block;
+
+        double h_over_2t1, h_over_2t2, t1_over_t2, t2_over_t1, one_over_t1, one_over_t2, one_over_1_plus_h_over_2t2;
 };
 
 #endif // LEAD_LAG_BLOCK_H

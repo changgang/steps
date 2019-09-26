@@ -25,5 +25,7 @@ class FIRST_ORDER_BLOCK : public BLOCK
         virtual void integrate();
         virtual void update();
         double K, T;
+
+        double one_over_t, one_over_h, one_over_k, t_over_h, h_plus_2t, one_over_h_plus_2t, h_minus_2t;
 };
 #endif // FIRST_ORDER_BLOCK_H

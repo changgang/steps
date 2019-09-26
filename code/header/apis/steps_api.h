@@ -376,10 +376,20 @@ EXPORT_STEPS_DLL void api_manually_block_hvdc(size_t ibus, size_t jbus, char* id
 EXPORT_STEPS_DLL void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL double api_get_generator_power_reference_in_MW(size_t bus, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_generator_mechanical_power_reference_in_pu_based_on_mbase(size_t bus, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_generator_mechanical_power_reference_in_MW(size_t bus, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, double value, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_generator_mechanical_power_reference_in_pu_based_on_mbase(size_t bus, char* identifier, double value, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_generator_mechanical_power_reference_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL double api_get_generator_excitation_voltage_in_pu(size_t bus, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_generator_mechanical_power_in_pu_based_on_mbase(size_t bus, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL double api_get_generator_mechanical_power_in_MW(size_t bus, char* identifier, size_t toolkit_index=INDEX_NOT_EXIST);
+
+EXPORT_STEPS_DLL void api_set_generator_excitation_voltage_in_pu(size_t bus, char* identifier, double value, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_generator_mechanical_power_in_pu_based_on_mbase(size_t bus, char* identifier, double value, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_set_generator_mechanical_power_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index=INDEX_NOT_EXIST);
 
 
 EXPORT_STEPS_DLL void api_check_database(size_t toolkit_index=INDEX_NOT_EXIST);

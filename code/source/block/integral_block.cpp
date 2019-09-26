@@ -43,10 +43,14 @@ void INTEGRAL_BLOCK::initialize()
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
+        one_over_t = 1.0/t;
+        h_over_t = h*one_over_t;
+
         double s = y;
         double ds = 0.0;
         double x = 0.0;
-        double z = s+0.5*h/t*x;
+        //double z = s+0.5*h/t*x;
+        double z = s+0.5*h_over_t*x;
 
         set_state(s);
         set_store(z);
@@ -91,8 +95,8 @@ void INTEGRAL_BLOCK::run(DYNAMIC_MODE mode)
 
 void INTEGRAL_BLOCK::integrate()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
+    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double t = get_T_in_s();
     if(fabs(t)>FLOAT_EPSILON and fabs(t-INFINITE_THRESHOLD)>FLOAT_EPSILON)
@@ -103,13 +107,16 @@ void INTEGRAL_BLOCK::integrate()
 
         double x = get_input();
 
-        double ds = x/t;
+        //double ds = x/t;
+        //double ds = x*one_over_t;
+
         //if(fabs(ds)>FLOAT_EPSILON)
         //{
             double s, z, y;
 
             z = get_store();
-            s = z + 0.5*h/t*x;
+            //s = z + 0.5*h/t*x;
+            s = z + 0.5*h_over_t*x;
             y = s;
             if(limiter == WINDUP_LIMITER)
             {
@@ -150,9 +157,8 @@ void INTEGRAL_BLOCK::integrate()
 
 void INTEGRAL_BLOCK::update()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
-
+    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
     double t = get_T_in_s();
     if(fabs(t)>FLOAT_EPSILON and fabs(t-INFINITE_THRESHOLD)>FLOAT_EPSILON)
     {
@@ -164,7 +170,8 @@ void INTEGRAL_BLOCK::update()
 
         double s, z, ds, y;
 
-        ds = x/t;
+        //ds = x/t;
+        ds = x*one_over_t;
         s = get_state();
         y = s;
 
@@ -197,7 +204,8 @@ void INTEGRAL_BLOCK::update()
                 }
             }
         }
-        z = s+0.5*h/t*x;
+        //z = s+0.5*h/t*x;
+        z = s+0.5*h_over_t*x;
         set_store(z);
         set_dstate(ds);
         set_output(y);

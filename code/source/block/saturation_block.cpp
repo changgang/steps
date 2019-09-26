@@ -11,6 +11,9 @@ SATURATION_BLOCK::SATURATION_BLOCK()
     set_saturation_type(QUADRATIC_SATURATION_TYPE);
     set_S1(0.0);
     set_S2(0.0);
+    A = INFINITE_THRESHOLD;
+    B = INFINITE_THRESHOLD;
+    C = INFINITE_THRESHOLD;
 }
 
 SATURATION_BLOCK::~SATURATION_BLOCK()
@@ -76,7 +79,7 @@ bool SATURATION_BLOCK::is_saturation_considered() const
         return false;
 }
 
-double SATURATION_BLOCK::get_saturation(double V) const
+double SATURATION_BLOCK::get_saturation(double V)
 {
     if(is_saturation_considered())
     {
@@ -96,8 +99,17 @@ double SATURATION_BLOCK::get_saturation(double V) const
                 // division:
                 // S1/S2 = ((V1-A)/(V2-A))^2*(V2/V1)
                 // ((V1-A)/(V2-A))^2 = (S1/S2)/(V2/V1) = (S1*V1)/(S2*V2) = C2
-                double C2 = (S1*V1)/(S2*V2);
-                double C = sqrt(C2);
+
+                //double C2 = (S1*V1)/(S2*V2);
+                //double C = sqrt(C2);
+
+                if(C==INFINITE_THRESHOLD)
+                {
+                    double C2 = (S1*V1)/(S2*V2);
+                    C = sqrt(C2);
+                }
+
+
                 // V1-A = C*(V2-A)  or V1-A = -C*(V2-A)
                 // A = (C*V2-V1)/(C-1) or A = (V1+C*V2)/(1+C)
                 // to make sure S function is increasing with V, A must be less than min(V1, V2)
@@ -112,14 +124,16 @@ double SATURATION_BLOCK::get_saturation(double V) const
                 // (V1+C*V2)/(1+C)<V2, or V1<V2, which is wrong;
                 // if we choose A = (C*V2-V1)/(C-1), we should have
                 // (C*V2-V1)/(C-1)<V2, or V1>V2, which is correct.
-                double A;
+
                 /*if(C>=1.0)
                     A = (V1+C*V2)/(1.0+C);
                 else
                     A = (C*V2-V1)/(C-1.0);*/
-                A = (C*V2-V1)/(C-1.0);
+                if(A==INFINITE_THRESHOLD)
+                    A = (C*V2-V1)/(C-1.0);
                 // B=S1*V1/(V1-A)^2
-                double B = S1*V1/((V1-A)*(V1-A));
+                if(B==INFINITE_THRESHOLD)
+                    B = S1*V1/((V1-A)*(V1-A));
 
 
                 if(V>A)
@@ -136,8 +150,11 @@ double SATURATION_BLOCK::get_saturation(double V) const
                 //S2=A*V2^B
                 // division
                 // S1/S2 = (V1/V2)^B
-                double B = log(S1/S2)/log(V1/V2);
-                double A = S1/pow(V1,B);
+                if(B==INFINITE_THRESHOLD)
+                {
+                    B = log(S1/S2)/log(V1/V2);
+                    A = S1/pow(V1,B);
+                }
 
                 S=A*pow(V,B);
                 break;
@@ -149,8 +166,11 @@ double SATURATION_BLOCK::get_saturation(double V) const
                 //S2=A*B^V2
                 // division
                 // S1/S2 = B^(V1-V2)
-                double B = pow(S1/S2, 1.0/(V1-V2));
-                double A = S1/pow(B,V1);
+                if(B==INFINITE_THRESHOLD)
+                {
+                    B = pow(S1/S2, 1.0/(V1-V2));
+                    A = S1/pow(B,V1);
+                }
 
                 S=A*pow(B,V);
                 break;

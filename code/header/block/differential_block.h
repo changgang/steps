@@ -24,5 +24,7 @@ class DIFFERENTIAL_BLOCK : public BLOCK
         virtual void integrate();
         virtual void update();
         double K, T;
+
+        double k_over_t, t_over_h, one_over_t;
 };
 #endif // DIFFERENTIAL_BLOCK_H

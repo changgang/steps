@@ -10,7 +10,7 @@
 #include <ctime>
 #include <omp.h>
 
-#define STEPS_DYNAMIC_SIMULATOR_OPENMP
+//#define STEPS_DYNAMIC_SIMULATOR_OPENMP
 
 using namespace std;
 
@@ -1987,7 +1987,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
                 max_angle_difference_old = max_angle_difference_new;
             else//converged
                 break;*/
-            if(fabs(max_angle_difference_new/max_angle_difference_old-1.0)<1e-10) // DAE solution converged
+            if(ITER_DAE>=2 and fabs(max_angle_difference_new/max_angle_difference_old-1.0)<1e-10) // DAE solution converged
                 break;
             else
                 max_angle_difference_old = max_angle_difference_new;
@@ -2768,6 +2768,7 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
             if(toolkit.is_detailed_log_enabled())
             {
+                I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
                 I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(physical_bus)));
                 osstream<<"Current at rectifier side of "<<hvdc->get_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                         <<"Complex power = "<<sqrt(3.0)*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
@@ -2785,6 +2786,7 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
             if(toolkit.is_detailed_log_enabled())
             {
+                I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
                 I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(physical_bus)));
                 osstream<<"Current at inverter side of "<<hvdc->get_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
                         <<"Complex power = "<<sqrt(3.0)*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
@@ -3248,7 +3250,7 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
 
         if(toolkit.is_detailed_log_enabled())
         {
-            osstream<<"angle difference is island is "<<scaled_angle_difference<<" deg at time "<<toolkit.get_dynamic_simulation_time_in_s();
+            osstream<<"angle difference in island "<<island<<" is "<<scaled_angle_difference<<" deg at time "<<toolkit.get_dynamic_simulation_time_in_s();
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
         if(angle_difference>get_rotor_angle_stability_threshold_in_deg())
@@ -4373,6 +4375,126 @@ void DYNAMICS_SIMULATOR::manual_unblock_hvdc(const DEVICE_ID& hvdc_id)
 }
 
 
+double DYNAMICS_SIMULATOR::get_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        EXCITER_MODEL* exciter = generator->get_exciter_model();
+        if(exciter!=NULL)
+            return exciter->get_voltage_reference_in_pu();
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
+double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
+        if(tg!=NULL)
+            return tg->get_mechanical_power_reference_in_pu_based_on_mbase();
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
+double DYNAMICS_SIMULATOR::get_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
+        if(tg!=NULL)
+            return tg->get_mechanical_power_reference_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
+double DYNAMICS_SIMULATOR::get_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        EXCITER_MODEL* exciter = generator->get_exciter_model();
+        if(exciter!=NULL)
+            return exciter->get_excitation_voltage_in_pu();
+        else
+        {
+            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
+            if(sg!=NULL)
+                return sg->get_initial_excitation_voltage_in_pu();
+            else
+                return 0.0;
+        }
+    }
+    else
+        return 0.0;
+}
+
+double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
+        if(tg!=NULL)
+            return tg->get_mechanical_power_in_pu_based_on_mbase();
+        else
+        {
+            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
+            if(sg!=NULL)
+                return sg->get_initial_mechanical_power_in_pu_based_on_mbase();
+            else
+                return 0.0;
+        }
+    }
+    else
+        return 0.0;
+}
+double DYNAMICS_SIMULATOR::get_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
+        if(tg!=NULL)
+            return tg->get_mechanical_power_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
+        else
+        {
+            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
+            if(sg!=NULL)
+                return sg->get_initial_mechanical_power_in_pu_based_on_mbase()*generator->get_mbase_in_MVA();
+            else
+                return 0.0;
+        }
+    }
+    else
+        return 0.0;
+}
+
+
 void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -4384,9 +4506,15 @@ void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_I
         if(exciter!=NULL)
             exciter->set_voltage_reference_in_pu(vref);
     }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change excitation voltage in pu. No change is made";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
 }
 
-void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref)
+void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double Pref)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -4396,6 +4524,106 @@ void DYNAMICS_SIMULATOR::change_generator_power_reference_in_MW(const DEVICE_ID&
         TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
         if(tg!=NULL)
             tg->set_initial_mechanical_power_reference_in_pu_based_on_mbase(Pref);
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change mechanical power reference in pu based on MBASE. No change is made";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        double mbase = generator->get_mbase_in_MVA();
+        change_generator_mechanical_power_reference_in_pu_based_on_mbase(gen_id, Pref/mbase);
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change mechanical power reference in MW. No change is made";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::change_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id, double efd)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        EXCITER_MODEL* ex = generator->get_exciter_model();
+        if(ex!=NULL)
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Exciter model exists for "<<generator->get_device_name()<<". No manual change of excitation voltage is allowed.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        else
+        {
+            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
+            if(sg!=NULL)
+                sg->set_initial_excitation_voltage_in_pu(efd);
+        }
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change excitation voltage. No change is made";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double pmech)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        TURBINE_GOVERNOR_MODEL* tg = generator->get_turbine_governor_model();
+        if(tg!=NULL)
+        {
+            ostringstream osstream;
+            osstream<<"Warning. Turbine governor model exists for "<<generator->get_device_name()<<". No manual change of mechanical power is allowed.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+        else
+        {
+            SYNC_GENERATOR_MODEL* sg = generator->get_sync_generator_model();
+            if(sg!=NULL)
+                sg->set_initial_mechanical_power_in_pu_based_on_mbase(pmech);
+        }
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change mechanical power in pu based on MBASE. No change is made";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id, double pmech)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    GENERATOR* generator = psdb.get_generator(gen_id);
+    if(generator != NULL)
+    {
+        double mbase = generator->get_mbase_in_MVA();
+        change_generator_mechanical_power_in_pu_based_on_mbase(gen_id, pmech/mbase);
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change mechanical power in MW. No change is made";
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 

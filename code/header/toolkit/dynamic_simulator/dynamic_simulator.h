@@ -138,11 +138,23 @@ class DYNAMICS_SIMULATOR: public BASE
         void manual_unbypass_hvdc(const DEVICE_ID& hvdc_id);
         void manual_unblock_hvdc(const DEVICE_ID& hvdc_id);
 
+        double get_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id);
+        double get_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id);
+        double get_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id);
+
+        double get_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id);
+        double get_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id);
+        double get_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id);
+
         void change_generator_voltage_reference_in_pu(const DEVICE_ID& gen_id, double vref);
-        void change_generator_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref);
+        void change_generator_mechanical_power_reference_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double Pref);
+        void change_generator_mechanical_power_reference_in_MW(const DEVICE_ID& gen_id, double Pref);
+
+        void change_generator_excitation_voltage_in_pu(const DEVICE_ID& gen_id, double efd);
+        void change_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double pmech);
+        void change_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id, double pmech);
 
         void switch_on_equivalent_device();
-
     private:
         void optimize_network_ordering();
 

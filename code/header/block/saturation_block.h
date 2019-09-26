@@ -23,13 +23,15 @@ class SATURATION_BLOCK
         double get_S1() const;
         double get_S2() const;
 
-        double get_saturation(double V) const;
+        double get_saturation(double V);
         bool is_saturation_considered() const;
         virtual void check();
 
     private:
         SATURATION_TYPE type;
         double V1, V2, S1, S2;
+
+        double A, B, C;
         //S=B(V-A)^2/V or
         //S=A*V^X
 };

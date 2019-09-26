@@ -21,5 +21,7 @@ class INTEGRAL_BLOCK : public BLOCK
         virtual void integrate();
         virtual void update();
         double T;
+
+        double one_over_t, h_over_t;
 };
 #endif // INTEGRAL_BLOCK_H

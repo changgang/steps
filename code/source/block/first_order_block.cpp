@@ -48,12 +48,22 @@ void FIRST_ORDER_BLOCK::initialize()
 {
     double k = get_K();
     double t = get_T_in_s();
+    if(k!=0.0)
+        one_over_k = 1.0/k;
     if(t!=0.0)
     {
         ostringstream osstream;
 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         double h = toolkit.get_dynamic_simulation_time_step_in_s();
+
+        one_over_t = 1.0/t;
+        one_over_h = 1.0/h;
+        t_over_h = t*one_over_h;
+        h_plus_2t = h+2.0*t;
+        one_over_h_plus_2t = 1.0/h_plus_2t;
+        h_minus_2t = h-2.0*t;
+
 
         LIMITER_TYPE limiter_type = get_limiter_type();
         double vmax = get_upper_limit();
@@ -70,20 +80,17 @@ void FIRST_ORDER_BLOCK::initialize()
 
         double s, ds, z, x;
 
-        if(t!=0.0)
-        {
-            s = y;
-            //z = y-(1.0-2.0*t/h)*s;
-            z =2.0*t*s/h;
-        }
-        else
-        {
-            s = 0.0;
-            z = 0.0;
-        }
+        s = y;
+        //z = y-(1.0-2.0*t/h)*s;
+        //z =2.0*t/h*s;
+        z =2.0*t_over_h*s;
+
         ds = 0.0;
         if(k!=0)
-            x = y/k;
+        {
+            //x = y/k;
+            x = y*one_over_k;
+        }
         else
             x = 0.0;
 
@@ -115,7 +122,10 @@ void FIRST_ORDER_BLOCK::initialize()
         set_store(0.0);
         set_dstate(0.0);
         if(k!=0.0)
-            set_input(get_output()/get_K());
+        {
+            //set_input(get_output()/get_K());
+            set_input(get_output()*one_over_k);
+        }
         else
         {
             set_output(0.0);
@@ -154,10 +164,12 @@ void FIRST_ORDER_BLOCK::integrate()
         {
             z = get_store();
             //s = (z+k*x)/(1.0+2.0*t/h);
-            s = h*(z+k*x)/(h+2.0*t);
+            //s = h*(z+k*x)/(h+2.0*t);
+            s = h*(z+k*x)*one_over_h_plus_2t;
             y = s;
 
-            double ds = (k*x-s)/t;
+            //double ds = (k*x-s)/t;
+            //double ds = (k*x-s)*one_over_t;
             //if(fabs(ds)<FLOAT_EPSILON)
             //    return;
             //if(fabs(ds)>DSTATE_THRESHOLD)
@@ -207,8 +219,8 @@ void FIRST_ORDER_BLOCK::update()
     double k = get_K();
     if(k!=0.0)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        double h = toolkit.get_dynamic_simulation_time_step_in_s();
+        //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        //double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
         double t = get_T_in_s();
 
@@ -222,7 +234,8 @@ void FIRST_ORDER_BLOCK::update()
 
         if(t!=0.0)
         {
-            ds = x/t;
+            //ds = x/t;
+            ds = x*one_over_t;
             s = get_state();
             y = s;
             if(limiter_type != NO_LIMITER)
@@ -255,7 +268,8 @@ void FIRST_ORDER_BLOCK::update()
                 }
             }
             //z = k*x-(1.0-2.0*t/h)*s;
-            z = k*x-(h-2.0*t)*s/h;
+            //z = k*x-(h-2.0*t)*s/h;
+            z = k*x-h_minus_2t*s*one_over_h;
             set_dstate(ds);
             set_store(z);
         }

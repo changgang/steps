@@ -62,10 +62,22 @@ double LEAD_LAG_BLOCK::get_T2_in_s() const
 void LEAD_LAG_BLOCK::initialize()
 {
     double t1 = get_T1_in_s();
+    double t2 = get_T2_in_s();
     if(t1!=0.0)
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         double h = toolkit.get_dynamic_simulation_time_step_in_s();
+
+        one_over_t1 = 1.0/t1;
+        h_over_2t1 = 0.5*h*one_over_t1;
+        t2_over_t1 = t2*one_over_t1;
+        if(t2!=0.0)
+        {
+            one_over_t2 = 1.0/t2;
+            h_over_2t2 = 0.5*h*one_over_t2;
+            one_over_1_plus_h_over_2t2 = 1.0/(1.0+h_over_2t2);
+            t1_over_t2 = t1*one_over_t2;
+        }
 
         double k = get_K();
 
@@ -75,7 +87,8 @@ void LEAD_LAG_BLOCK::initialize()
 
         s = y;
         x = y/k;
-        z = (1.0-h/(2.0*t1))*s+h/(2.0*t1)*y;
+        //z = (1.0-h/(2.0*t1))*s+h/(2.0*t1)*y;
+        z = (1.0-h_over_2t1)*s+h_over_2t1*y;
         ds = 0.0;
 
         set_state(s);
@@ -126,12 +139,12 @@ void LEAD_LAG_BLOCK::run(DYNAMIC_MODE mode)
 
 void LEAD_LAG_BLOCK::integrate()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
+    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double k = get_K();
-    double t1 = get_T1_in_s();
-    double t2 = get_T2_in_s();
+    //double t1 = get_T1_in_s();
+    //double t2 = get_T2_in_s();
 
     double x = get_input();
 
@@ -144,10 +157,15 @@ void LEAD_LAG_BLOCK::integrate()
     // s = (z+h/(2.0*t1)*y)/(1.0+h/(2.0*t1));
     // we may solve y and s as
     // (1+h/(2*t2))*s = z+h/(2.0*t2)*k*x
-    s = (z+h/(2.0*t2)*k*x)/(1.0+h/(2.0*t2));
-    y = t1/t2*(k*x+(t2/t1-1.0)*s);
 
-    double ds = (k*x-s)/t2;
+    //s = (z+h/(2.0*t2)*k*x)/(1.0+h/(2.0*t2));
+    //y = t1/t2*(k*x+(t2/t1-1.0)*s);
+    //double ds = (k*x-s)/t2;
+
+    s = (z+h_over_2t2*k*x)*one_over_1_plus_h_over_2t2;
+    y = t1_over_t2*(k*x+(t2_over_t1-1.0)*s);
+    //double ds = (k*x-s)*one_over_t2;
+
     //if(fabs(ds)>FLOAT_EPSILON)
     //{
         set_state(s);
@@ -160,12 +178,12 @@ void LEAD_LAG_BLOCK::integrate()
 
 void LEAD_LAG_BLOCK::update()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
+    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double k = get_K();
-    double t1 = get_T1_in_s();
-    double t2 = get_T2_in_s();
+    //double t1 = get_T1_in_s();
+    //double t2 = get_T2_in_s();
 
     double x = get_input();
 
@@ -173,10 +191,14 @@ void LEAD_LAG_BLOCK::update()
 
 
     s = get_state();
-    y = t1/t2*(k*x+(t2/t1-1.0)*s);
+    //y = t1/t2*(k*x+(t2/t1-1.0)*s);
+    //ds = (y-s)/t1;
+    //z = (1.0-h/(2.0*t1))*s+h/(2.0*t1)*y;
 
-    ds = (y-s)/t1;
-    z = (1.0-h/(2.0*t1))*s+h/(2.0*t1)*y;
+    y = t1_over_t2*(k*x+(t2_over_t1-1.0)*s);
+    ds = (y-s)*one_over_t1;
+    //z = (1.0-h_over_2t1)*s+h_over_2t1*y;
+    z = s+h_over_2t1*(y-s);
 
     set_dstate(ds);
     set_store(z);

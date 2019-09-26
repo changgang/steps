@@ -56,14 +56,20 @@ void DIFFERENTIAL_BLOCK::initialize()
     double k = get_K();
     double t = get_T_in_s();
 
+    one_over_t = 1.0/t;
+    k_over_t = k*one_over_t;
+    t_over_h = t/h;
+
     double x = get_input();
 
     double y = 0.0;
 
     double s, ds, z;
 
-    s = x*k/t;
-    z = k/t*x-(1.0-2.0*t/h)*s;
+    //s = x*k/t;
+    //z = k/t*x-(1.0-2.0*t/h)*s;
+    s = x*k_over_t;
+    z = k_over_t*x-(1.0-2.0*t_over_h)*s;
     ds = 0.0;
 
     set_state(s);
@@ -81,21 +87,24 @@ void DIFFERENTIAL_BLOCK::run(DYNAMIC_MODE mode)
 
 void DIFFERENTIAL_BLOCK::integrate()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
+    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
-    double k = get_K();
-    double t = get_T_in_s();
+    //double k = get_K();
+    //double t = get_T_in_s();
 
     double x = get_input();
 
     double s, z, y;
     z = get_store();
 
-    s = (z+k/t*x)/(1.0+2.0*t/h);
-    y = k/t*x-s;
+    //s = (z+k/t*x)/(1.0+2.0*t/h);
+    //y = k/t*x-s;
+    //double ds = (k/t*x-s)/t;
+    s = (z+k_over_t*x)/(1.0+2.0*t_over_h);
+    y = k_over_t*x-s;
+    //double ds = (k_over_t*x-s)*one_over_t;
 
-    double ds = (k/t*x-s)/t;
     //if(fabs(ds)>FLOAT_EPSILON)
     //{
         set_state(s);
@@ -108,20 +117,23 @@ void DIFFERENTIAL_BLOCK::integrate()
 
 void DIFFERENTIAL_BLOCK::update()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double h = toolkit.get_dynamic_simulation_time_step_in_s();
+    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    //double h = toolkit.get_dynamic_simulation_time_step_in_s();
 
-    double k = get_K();
-    double t = get_T_in_s();
+    //double k = get_K();
+    //double t = get_T_in_s();
 
     double x = get_input();
 
     double s, ds, z, y;
 
     s = get_state();
-    y = k/t*x-s;
-    z = k/t*x-(1.0-2.0*t/h)*s;
-    ds = y/t;
+    //y = k/t*x-s;
+    //z = k/t*x-(1.0-2.0*t/h)*s;
+    //ds = y/t;
+    y = k_over_t*x-s;
+    z = k_over_t*x-(1.0-2.0*t_over_h)*s;
+    ds = y*one_over_t;
 
     set_dstate(ds);
     set_store(z);

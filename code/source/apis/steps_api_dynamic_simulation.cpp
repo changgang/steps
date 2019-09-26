@@ -906,91 +906,97 @@ void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier, size_
 double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_generator_device_id(bus, identifier);
-
-    GENERATOR* gen = psdb.get_generator(did);
-
-    if(gen==NULL)
-    {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-        return 0.0;
-    }
-
-    EXCITER_MODEL* avr = gen->get_exciter_model();
-    if(avr!=NULL)
-        return avr->get_voltage_reference_in_pu();
-    else
-        return 0.0;
+    return ds.get_generator_voltage_reference_in_pu(did);
 }
 
-double api_get_generator_power_reference_in_MW(size_t bus, char* identifier, size_t toolkit_index)
+double api_get_generator_mechanical_power_reference_in_pu_based_on_mbase(size_t bus, char* identifier, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_generator_device_id(bus, identifier);
+    return ds.get_generator_mechanical_power_reference_in_pu_based_on_mbase(did);
+}
 
-    GENERATOR* gen = psdb.get_generator(did);
-
-    if(gen==NULL)
-    {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-        return 0.0;
-    }
-
-    TURBINE_GOVERNOR_MODEL* tg = gen->get_turbine_governor_model();
-    if(tg!=NULL)
-        return tg->get_mechanical_power_reference_in_pu_based_on_mbase()*gen->get_mbase_in_MVA();
-    else
-        return 0.0;
+double api_get_generator_mechanical_power_reference_in_MW(size_t bus, char* identifier, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    return ds.get_generator_mechanical_power_reference_in_MW(did);
 }
 
 void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, double value, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
     DEVICE_ID did = get_generator_device_id(bus, identifier);
-
-    if(not psdb.is_generator_exist(did))
-    {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-        return;
-    }
-
     ds.change_generator_voltage_reference_in_pu(did, value);
 }
 
-void api_set_generator_power_reference_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index)
+void api_set_generator_mechanical_power_reference_in_pu_based_on_mbase(size_t bus, char* identifier, double value, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
     DEVICE_ID did = get_generator_device_id(bus, identifier);
+    ds.change_generator_mechanical_power_reference_in_pu_based_on_mbase(did, value);
+}
 
-    if(not psdb.is_generator_exist(did))
-    {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
-                 (did.get_device_name()).c_str(), __FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(buffer);
-        return;
-    }
+void api_set_generator_mechanical_power_reference_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    ds.change_generator_mechanical_power_reference_in_MW(did, value);
+}
 
-    ds.change_generator_power_reference_in_MW(did, value);
+double api_get_generator_excitation_voltage_in_pu(size_t bus, char* identifier, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    return ds.get_generator_excitation_voltage_in_pu(did);
+}
+
+double api_get_generator_mechanical_power_in_pu_based_on_mbase(size_t bus, char* identifier, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    return ds.get_generator_mechanical_power_in_pu_based_on_mbase(did);
+}
+
+double api_get_generator_mechanical_power_in_MW(size_t bus, char* identifier, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    return ds.get_generator_mechanical_power_in_MW(did);
+}
+
+void api_set_generator_excitation_voltage_in_pu(size_t bus, char* identifier, double value, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    ds.change_generator_excitation_voltage_in_pu(did, value);
+}
+
+void api_set_generator_mechanical_power_in_pu_based_on_mbase(size_t bus, char* identifier, double value, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    ds.change_generator_mechanical_power_in_pu_based_on_mbase(did, value);
+}
+
+void api_set_generator_mechanical_power_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_generator_device_id(bus, identifier);
+    ds.change_generator_mechanical_power_in_MW(did, value);
 }
 
 double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line, size_t toolkit_index)
