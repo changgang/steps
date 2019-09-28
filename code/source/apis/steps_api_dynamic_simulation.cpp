@@ -149,7 +149,7 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, size_t to
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="ANGLE STABILITY SURVILLIANCE LOGIC")
+    if(PARAMETER_NAME=="ANGLE STABILITY SURVEILLANCE LOGIC")
         return ds.get_rotor_angle_stability_surveillance_flag();
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
         return ds.is_bin_file_export_enabled();
@@ -170,7 +170,7 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="ANGLE STABILITY SURVILLIANCE LOGIC")
+    if(PARAMETER_NAME=="ANGLE STABILITY SURVEILLANCE LOGIC")
     {
         ds.set_rotor_angle_stability_surveillance_flag(value);
         return;

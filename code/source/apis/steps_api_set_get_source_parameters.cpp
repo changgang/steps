@@ -141,7 +141,7 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
         if(PARAMETER_NAME=="VREG_PU" or PARAMETER_NAME=="VOLTAGE TO REGULATE IN PU")
             return sourceptr->get_voltage_to_regulate_in_pu();
 
-        if(PARAMETER_NAME=="RSOURCR_PU" or PARAMETER_NAME=="SOURCE RESISTANCE IN PU")
+        if(PARAMETER_NAME=="RSOURCE_PU" or PARAMETER_NAME=="SOURCE RESISTANCE IN PU")
             return sourceptr->get_source_impedance_in_pu().real();
 
         if(PARAMETER_NAME=="XSOURCE_PU" or PARAMETER_NAME=="SOURCE REACTANCE IN PU")
