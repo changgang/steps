@@ -525,7 +525,7 @@
 	"header/basic/utility.h"
 	"header/data_imexporter/psse_imexporter.h"
 
-1569737069 source:c:\users\lichg\steps\code\main_tests.cpp
+1569752095 source:c:\users\lichg\steps\code\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -575,6 +575,7 @@
 	"header/block/pid_block_test.h"
 	"header/block/pi_block_test.h"
 	"header/block/pd_block_test.h"
+	"header/block/second_order_block_test.h"
 	"header/block/saturation_block_test.h"
 	"header/meter/continuous_buffer_test.h"
 	"header/meter/meter_test.h"
@@ -625,6 +626,7 @@
 	"header/model/wtg_models/wt_electrical_model/wt3e0_test.h"
 	"header/model/wtg_models/wt_pitch_model/wt3p0_test.h"
 	"header/model/wtg_models/wind_speed_model/filewind_test.h"
+	"header/model/pvu_models/pv_converter_model/pvgu1_test.h"
 	"header/toolkit/cct_searcher/cct_searcher_test.h"
 	"header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h"
 	"header/steps_namespace.h"
@@ -10203,4 +10205,34 @@
 	"header/model/pvu_models/pv_converter_model/pv_converter_model_test.h"
 	"header/model/pvu_models/pv_converter_model/pvgu1.h"
 	"header/STEPS.h"
+
+1569751732 source:c:\users\lichg\steps\code\source\block\second_order_block.cpp
+	"header/block/second_order_block.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<istream>
+	<iostream>
+
+1569750168 c:\users\lichg\steps\code\header\block\second_order_block.h
+	"header/block/block.h"
+	"header/block/proportional_block.h"
+	"header/block/first_order_block.h"
+
+1569751779 c:\users\lichg\steps\code\header\block\second_order_block_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+	"header/block/second_order_block.h"
+	"header/STEPS.h"
+
+1569751993 source:c:\users\lichg\steps\code\source\block\second_order_block_test.cpp
+	"header/block/second_order_block_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/basic/constants.h"
+	<cstdlib>
+	<cstring>
+	<cstdio>
 

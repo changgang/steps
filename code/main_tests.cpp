@@ -61,6 +61,7 @@
 #include "header/block/pid_block_test.h"
 #include "header/block/pi_block_test.h"
 #include "header/block/pd_block_test.h"
+#include "header/block/second_order_block_test.h"
 #include "header/block/saturation_block_test.h"
 
 #include "header/meter/continuous_buffer_test.h"
@@ -131,6 +132,8 @@
 #include "header/model/wtg_models/wt_pitch_model/wt3p0_test.h"
 
 #include "header/model/wtg_models/wind_speed_model/filewind_test.h"
+
+#include "header/model/pvu_models/pv_converter_model/pvgu1_test.h"
 
 #include "header/toolkit/cct_searcher/cct_searcher_test.h"
 
@@ -261,6 +264,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new PID_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new PI_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new PD_BLOCK_TEST));
+        ts.add(unique_ptr<Test::Suite>(new SECOND_ORDER_BLOCK));
         ts.add(unique_ptr<Test::Suite>(new SATURATION_BLOCK_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new CONTINUOUS_BUFFER_TEST));

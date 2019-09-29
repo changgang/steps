@@ -105,6 +105,8 @@
 		<Unit filename="header/block/proportional_block_test.h" />
 		<Unit filename="header/block/saturation_block.h" />
 		<Unit filename="header/block/saturation_block_test.h" />
+		<Unit filename="header/block/second_order_block.h" />
+		<Unit filename="header/block/second_order_block_test.h" />
 		<Unit filename="header/data_imexporter/bpa_imexporter.h" />
 		<Unit filename="header/data_imexporter/bpa_imexporter_test.h" />
 		<Unit filename="header/data_imexporter/data_imexporter.h" />
@@ -471,6 +473,8 @@
 		<Unit filename="source/block/proportional_block_test.cpp" />
 		<Unit filename="source/block/saturation_block.cpp" />
 		<Unit filename="source/block/saturation_block_test.cpp" />
+		<Unit filename="source/block/second_order_block.cpp" />
+		<Unit filename="source/block/second_order_block_test.cpp" />
 		<Unit filename="source/data_imexporter/bpa_dynamics_imexporter.cpp" />
 		<Unit filename="source/data_imexporter/bpa_imexporter_test.cpp" />
 		<Unit filename="source/data_imexporter/bpa_powerflow_imexporter.cpp" />
