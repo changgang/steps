@@ -99,7 +99,7 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     conv->initialize();
                 else
                 {
-                    osstream<<"Error. No PV_CONVERTER_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                    osstream<<"Error. No PV CONVERTER model is provided for "<<get_device_name()<<" for dynamic initialization.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                     return;
                 }
@@ -111,9 +111,9 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
                     panel->initialize();
                 else
                 {
-                    osstream<<"Error. No PV_PANEL_MODEL is provided for "<<get_device_name()<<" for dynamic initialization.";
+                    osstream<<"Error. No PV PANEL model is provided for "<<get_device_name()<<" for dynamic initialization.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
-                    return;
+                    //return;
                 }
 
                 if(elec!=NULL)
@@ -206,7 +206,7 @@ void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
     if(model!=NULL)
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        if(model->get_model_type()=="PV UNIT")
+        if(model->get_model_type()=="PV CONVERTER")
         {
             PV_CONVERTER_MODEL* oldmodel = get_pv_converter_model();
             if(oldmodel!=NULL)
@@ -217,10 +217,10 @@ void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
 
             PV_CONVERTER_MODEL *new_model = NULL;
             string model_name = model->get_model_name();
-            if(model_name=="XXX")
+            if(model_name=="PVGU1")
             {
-                //WT3G0* smodel = (WT3G0*) (model);
-                //new_model = (PV_UNIT_MODEL*) new WT3G0(*smodel);
+                PVGU1* smodel = (PVGU1*) (model);
+                new_model = (PV_CONVERTER_MODEL*) new PVGU1(*smodel);
             }
 
             if(new_model!=NULL)

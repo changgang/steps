@@ -196,6 +196,8 @@
 		<Unit filename="header/model/pvu_models/pv_converter_model/pv_converter_models.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pvcv0.h" />
 		<Unit filename="header/model/pvu_models/pv_converter_model/pvcv0_test.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pvgu1.h" />
+		<Unit filename="header/model/pvu_models/pv_converter_model/pvgu1_test.h" />
 		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_model.h" />
 		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_model_test.h" />
 		<Unit filename="header/model/pvu_models/pv_electrical_model/pv_electrical_models.h" />
@@ -551,6 +553,8 @@
 		<Unit filename="source/model/pvu_models/pv_converter_model/pv_converter_model_test.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvcv0.cpp" />
 		<Unit filename="source/model/pvu_models/pv_converter_model/pvcv0_test.cpp" />
+		<Unit filename="source/model/pvu_models/pv_converter_model/pvgu1.cpp" />
+		<Unit filename="source/model/pvu_models/pv_converter_model/pvgu1_test.cpp" />
 		<Unit filename="source/model/pvu_models/pv_electrical_model/pv_electrical_model.cpp" />
 		<Unit filename="source/model/pvu_models/pv_electrical_model/pv_electrical_model_test.cpp" />
 		<Unit filename="source/model/pvu_models/pv_irradiance_model/fileirrd.cpp" />

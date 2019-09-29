@@ -130,8 +130,9 @@ vector<string> pv_unit_meters{ "TERMINAL CURRENT IN PU", "TERMINAL CURRENT IN KA
                                "ACTIVE POWER COMMAND IN PU",
                                "REACTIVE POWER COMMAND IN PU",
                                "REACTIVE VOLTAGE COMMAND IN PU",
-                               "PV PANEL MODEL INTERNAL VARIABLE",
+                               "SOLAR IRRADIANCE IN PU",
                                "PV CONVERTER MODEL INTERNAL VARIABLE",
+                               "PV PANEL MODEL INTERNAL VARIABLE",
                                "PV ELECTRICAL MODEL INTERNAL VARIABLE",
                                "PV IRRADIANCE MODEL INTERNAL VARIABLE"};
 
@@ -362,10 +363,10 @@ bool METER::is_internal_variable_name_valid(string name) const
         if(get_device_type()=="PV UNIT")
         {
             PV_UNIT* ptr = (PV_UNIT*)get_device_pointer();
-            if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")
-                model = ptr->get_pv_panel_model();
             if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
                 model = ptr->get_pv_converter_model();
+            if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")
+                model = ptr->get_pv_panel_model();
             if(meter_type=="PV ELECTRICAL MODEL INTERNAL VARIABLE")
                 model = ptr->get_pv_electrical_model();
             if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
@@ -712,6 +713,8 @@ double METER::get_meter_value() const
             return get_meter_value_as_a_generator();
         if(device_type=="WT GENERATOR")
             return get_meter_value_as_a_wt_generator();
+        if(device_type=="PV UNIT")
+            return get_meter_value_as_a_pv_unit();
         if(device_type=="HVDC")
             return get_meter_value_as_an_hvdc();
         if(device_type=="EQUIVALENT DEVICE")
@@ -1816,6 +1819,207 @@ double METER::get_meter_value_as_a_wt_generator() const
             {
                 if(windspeed_model!=NULL)
                     return windspeed_model->get_model_internal_variable_with_name(internal_variable_name);
+                else
+                    return 0.0;
+            }
+            return 0.0;
+        }
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
+double METER::get_meter_value_as_a_pv_unit() const
+{
+    ostringstream osstream;
+
+    PV_UNIT* pv_unit = (PV_UNIT*) get_device_pointer();
+    if(pv_unit != NULL)
+    {
+        if(pv_unit->get_status()==true)
+        {
+            size_t bus = pv_unit->get_unit_bus();
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+            double fbase = psdb.get_bus_base_frequency_in_Hz(pv_unit->get_unit_bus());
+            double sbase = psdb.get_system_base_power_in_MVA();
+            double mbase = pv_unit->get_mbase_in_MVA();
+
+            PV_CONVERTER_MODEL* converter_model = pv_unit->get_pv_converter_model();
+            PV_PANEL_MODEL* panel_model = pv_unit->get_pv_panel_model();
+            PV_ELECTRICAL_MODEL* electrical_model = pv_unit->get_pv_electrical_model();
+            PV_IRRADIANCE_MODEL* irradiance_model = pv_unit->get_pv_irradiance_model();
+
+            if(meter_type=="TERMINAL CURRENT IN PU ON MBASE")
+            {
+                if(converter_model != NULL)
+                    return converter_model->get_terminal_current_in_pu_based_on_mbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
+            {
+                if(converter_model != NULL)
+                    return converter_model->get_terminal_current_in_pu_based_on_mbase()*mbase/sbase;
+                else
+                    return 0.0;
+            }
+
+            if(meter_type=="TERMINAL CURRENT IN KA")
+            {
+                if(converter_model != NULL)
+                {
+                    double vbase = psdb.get_bus_base_voltage_in_kV(bus);
+                    double ibase = mbase/(sqrt(3.0)*vbase);
+                    return converter_model->get_terminal_current_in_pu_based_on_mbase()*ibase;
+                }
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON MBASE")
+            {
+                if(converter_model != NULL)
+                    return converter_model->get_terminal_active_power_in_pu_based_on_mbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
+            {
+                if(converter_model != NULL)
+                    return converter_model->get_terminal_active_power_in_MW()/sbase;
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL ACTIVE POWER IN MW")
+            {
+                if(converter_model != NULL)
+                    return converter_model->get_terminal_active_power_in_MW();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON MBASE")
+            {
+                if(converter_model != NULL)
+                    return converter_model->get_terminal_reactive_power_in_pu_based_on_mbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
+            {
+                if(converter_model != NULL)
+                    return converter_model->get_terminal_reactive_power_in_MVar()/sbase;
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
+            {
+                if(converter_model != NULL)
+                    return converter_model->get_terminal_reactive_power_in_MVar();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL APPARENT POWER IN PU ON MBASE")
+            {
+                if(converter_model != NULL)
+                {
+                    double p = converter_model->get_terminal_active_power_in_pu_based_on_mbase();
+                    double q = converter_model->get_terminal_reactive_power_in_pu_based_on_mbase();
+                    return sqrt(p*p+q*q);
+                }
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL APPARENT POWER IN PU ON SBASE")
+            {
+                if(converter_model != NULL)
+                {
+                    double p = converter_model->get_terminal_active_power_in_MW()/sbase;
+                    double q = converter_model->get_terminal_reactive_power_in_MVar()/sbase;
+                    return sqrt(p*p+q*q);
+                }
+                else
+                    return 0.0;
+            }
+            if(meter_type=="TERMINAL APPARENT POWER IN MVAR")
+            {
+                if(converter_model != NULL)
+                {
+                    double p = converter_model->get_terminal_active_power_in_MW();
+                    double q = converter_model->get_terminal_reactive_power_in_MVar();
+                    return sqrt(p*p+q*q);
+                }
+                else
+                    return 0.0;
+            }
+            if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
+            {
+                if(electrical_model != NULL)
+                    return electrical_model->get_active_current_command_in_pu_based_on_mbase();
+                else
+                    return converter_model->get_active_current_command_in_pu_based_on_mbase();
+            }
+            if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
+            {
+                if(electrical_model != NULL)
+                    return electrical_model->get_reactive_current_command_in_pu_based_on_mbase();
+                else
+                    return converter_model->get_reactive_current_command_in_pu_based_on_mbase();
+            }
+            if(meter_type=="ACTIVE POWER COMMAND IN PU")
+            {
+                if(electrical_model != NULL)
+                    return electrical_model->get_active_power_command_in_pu_based_on_mbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="REACTIVE POWER COMMAND IN PU")
+            {
+                if(electrical_model != NULL)
+                    return electrical_model->get_reactive_power_command_in_pu_based_on_mbase();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
+            {
+                if(electrical_model != NULL)
+                    return electrical_model->get_reactive_voltage_command_in_pu();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="SOLAR IRRADIANCE IN PU")
+            {
+                if(irradiance_model != NULL)
+                    return irradiance_model->get_solar_irradiance_in_pu();
+                else
+                    return 0.0;
+            }
+            if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
+            {
+                if(converter_model!=NULL)
+                    return converter_model->get_model_internal_variable_with_name(internal_variable_name);
+                else
+                    return 0.0;
+            }
+            if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")
+            {
+                if(panel_model!=NULL)
+                    return panel_model->get_model_internal_variable_with_name(internal_variable_name);
+                else
+                    return 0.0;
+            }
+            if(meter_type=="PV ELECTRICAL MODEL INTERNAL VARIABLE")
+            {
+                if(electrical_model!=NULL)
+                    return electrical_model->get_model_internal_variable_with_name(internal_variable_name);
+                else
+                    return 0.0;
+            }
+            if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
+            {
+                if(irradiance_model!=NULL)
+                    return irradiance_model->get_model_internal_variable_with_name(internal_variable_name);
                 else
                     return 0.0;
             }

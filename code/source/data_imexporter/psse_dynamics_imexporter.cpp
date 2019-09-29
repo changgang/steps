@@ -164,6 +164,25 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";
     }
+    vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
+    PV_UNIT* pv = NULL;
+    n = pvs.size();
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv = pvs[i];
+        model = pv->get_pv_converter_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string()<<"\n";
+        model = pv->get_pv_panel_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string()<<"\n";
+        model = pv->get_pv_electrical_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string()<<"\n";
+        model = pv->get_pv_irradiance_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string()<<"\n";
+    }
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     HVDC* hvdc = NULL;
     n = hvdcs.size();

@@ -477,7 +477,71 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
 
 void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
 {
-    return;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    METER_SETTER setter;
+    setter.set_toolkit(toolkit);
+
+    size_t n;
+
+    n = psdb.get_wt_generator_count();
+    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+    PV_UNIT* pv_unit;
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv_unit = pv_units[i];
+        METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_meter(pv_unit->get_device_id());
+        append_meter(meter);
+    }
 }
 
 void DYNAMICS_SIMULATOR::prepare_energy_storage_related_meters()
@@ -932,51 +996,31 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meter(const DEVICE_ID& did, str
             meter_type = string2upper(meter_type);
 
             if(meter_type=="TERMINAL CURRENT IN KA")
-                meter = setter.prepare_wt_generator_terminal_current_in_kA_meter(did);
+                meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(did);
             if(meter_type=="TERMINAL ACTIVE POWER IN MW")
-                meter = setter.prepare_wt_generator_terminal_active_power_in_MW_meter(did);
+                meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(did);
             if(meter_type=="TERMINAL REACTIVE POWER IN MVAR")
-                meter = setter.prepare_wt_generator_terminal_reactive_power_in_MVar_meter(did);
-            if(meter_type=="MECHANICAL POWER IN MW")
-                meter = setter.prepare_wt_generator_mechanical_power_in_MW_meter(did);
-            if(meter_type=="MAX AVAILABLE MECHANICAL POWER IN MW")
-                meter = setter.prepare_wt_generator_max_available_mechanical_power_in_MW_meter(did);
-            if(meter_type=="SPEED REFERENCE IN PU")
-                meter = setter.prepare_wt_generator_speed_reference_in_pu_meter(did);
-            if(meter_type=="TURBINE SPEED IN PU")
-                meter = setter.prepare_wt_generator_turbine_speed_in_pu_meter(did);
-            if(meter_type=="ROTOR SPEED IN PU")
-                meter = setter.prepare_wt_generator_rotor_speed_in_pu_meter(did);
-            if(meter_type=="ROTOR ANGLE IN DEG")
-                meter = setter.prepare_wt_generator_rotor_angle_in_deg_meter(did);
+                meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(did);
             if(meter_type=="ACTIVE CURRENT COMMAND IN PU")
-                meter = setter.prepare_wt_generator_active_current_command_in_pu_meter(did);
+                meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(did);
             if(meter_type=="REACTIVE CURRENT COMMAND IN PU")
-                meter = setter.prepare_wt_generator_reactive_current_command_in_pu_meter(did);
+                meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(did);
             if(meter_type=="ACTIVE POWER COMMAND IN PU")
-                meter = setter.prepare_wt_generator_active_power_command_in_pu_meter(did);
+                meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(did);
             if(meter_type=="REACTIVE POWER COMMAND IN PU")
-                meter = setter.prepare_wt_generator_reactive_power_command_in_pu_meter(did);
+                meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(did);
             if(meter_type=="REACTIVE VOLTAGE COMMAND IN PU")
-                meter = setter.prepare_wt_generator_reactive_voltage_command_in_pu_meter(did);
-            if(meter_type=="PITCH ANGLE IN DEG")
-                meter = setter.prepare_wt_generator_pitch_angle_in_deg_meter(did);
-            if(meter_type=="WIND SPEED IN PU")
-                meter = setter.prepare_wt_generator_wind_speed_in_pu_meter(did);
-            if(meter_type=="WIND SPEED IN MPS")
-                meter = setter.prepare_wt_generator_wind_speed_in_mps_meter(did);
-            if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_generator_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WT AERODYNAMIC MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_aerodynamic_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WT TURBINE MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_turbine_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WT ELECTRICAL MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_electrical_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WT PITCH MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wt_pitch_model_internal_variable_meter(did, var_name);
-            if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
-                meter = setter.prepare_wind_speed_model_internal_variable_meter(did, var_name);
+                meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(did);
+            if(meter_type=="SOLAR IRRADIANCE IN PU")
+                meter = setter.prepare_pv_unit_solar_irradiance_in_pu_meter(did);
+            if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_pv_converter_model_internal_variable_meter(did, var_name);
+            if(meter_type=="PV PANEL MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_pv_panel_model_internal_variable_meter(did, var_name);
+            if(meter_type=="PV ELECTRICAL MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_pv_electrical_model_internal_variable_meter(did, var_name);
+            if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_pv_irradiance_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);
@@ -2126,6 +2170,19 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             wtgen->run(mode);
     }
 
+    n = psdb.get_pv_unit_count();
+    vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        set_openmp_number_of_threads();
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    for(size_t i=0; i<n; ++i)
+    {
+        PV_UNIT* pv = pvs[i];
+        if(pv->get_status()==true)
+            pv->run(mode);
+    }
+
     n = psdb.get_load_count();
     vector<LOAD*> loads = psdb.get_all_loads();
     //LOAD* load;
@@ -2428,6 +2485,27 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             }
         }
     }
+    add_pv_units_to_bus_current_mismatch();
+    if(check_NAN)
+    {
+        for(size_t i = 0; i<n; ++i)
+        {
+            if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
+            {
+                osstream<<"warning. NAN is detected when getting bus current mismatch after adding pv units when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
+                for(size_t j = 0; j<n; ++j)
+                {
+                    if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
+                    {
+                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
+                    }
+                }
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                break;
+            }
+        }
+    }
     add_loads_to_bus_current_mismatch();
     if(check_NAN)
     {
@@ -2695,6 +2773,57 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
                 toolkit.show_information_with_leading_time_stamp(osstream);
                 complex<double> Edq = gen_model->get_internal_voltage_in_pu_in_dq_axis();
                 complex<double> Exy = gen_model->get_internal_voltage_in_pu_in_xy_axis();
+                osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
+                toolkit.show_information_with_leading_time_stamp(osstream);*/
+            }
+        }
+    }
+}
+
+void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    size_t physical_bus, internal_bus;
+
+    vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
+
+    size_t npv = pvs.size();
+
+    //complex<double> E, V, Z, I;
+
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        set_openmp_number_of_threads();
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    for(size_t i=0; i<npv; ++i)
+    {
+        complex<double> I;
+        PV_UNIT* pv = pvs[i];
+
+        if(pv->get_status() == true)
+        {
+            size_t physical_bus = pv->get_unit_bus();
+
+            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+
+            PV_CONVERTER_MODEL* conv_model = pv->get_pv_converter_model();
+            if(conv_model!=NULL)
+            {
+                if(conv_model->is_current_source())
+                    I = conv_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                else
+                    I = conv_model->get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase();
+                //cout<<generator->get_device_name()<<" terminal or Norton current is: "<<I<<endl;
+
+                I_mismatch[internal_bus] += I;
+
+                /*os<< "Generator %u source current: %f + j%f",physical_bus, I.real(), I.imag());
+                toolkit.show_information_with_leading_time_stamp(osstream);
+                complex<double> Edq = conv_model->get_internal_voltage_in_pu_in_dq_axis();
+                complex<double> Exy = conv_model->get_internal_voltage_in_pu_in_xy_axis();
                 osstream<<"Generator %u internal voltage: %f + j%f (dq), %f + j%f (xy)",physical_bus, Edq.real(), Edq.imag(), Exy.real(), Exy.imag());
                 toolkit.show_information_with_leading_time_stamp(osstream);*/
             }

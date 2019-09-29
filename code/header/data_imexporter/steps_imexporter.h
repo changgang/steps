@@ -162,8 +162,11 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void add_FILEWIND_model(vector<string>& data);
         void add_WTRLY0_model(vector<string>& data);
 
+        void add_PVGU1_model(vector<string>& data);
+
         DEVICE_ID get_generator_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_wt_generator_device_id_from_string_vector(vector<string>& data);
+        DEVICE_ID get_pv_unit_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_load_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_line_device_id_from_string_vector(vector<string>& data);
         DEVICE_ID get_hvdc_device_id_from_string_vector(vector<string>& data);

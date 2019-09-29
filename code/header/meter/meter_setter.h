@@ -136,8 +136,9 @@ class METER_SETTER : public BASE
         METER prepare_pv_unit_active_power_command_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_pv_unit_reactive_power_command_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_pv_unit_reactive_voltage_command_in_pu_meter(const DEVICE_ID& device_id);
-        METER prepare_pv_panel_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_pv_unit_solar_irradiance_in_pu_meter(const DEVICE_ID& device_id);
         METER prepare_pv_converter_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
+        METER prepare_pv_panel_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_pv_electrical_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
         METER prepare_pv_irradiance_model_internal_variable_meter(const DEVICE_ID& device_id, string name);
 

@@ -175,6 +175,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void get_bus_currnet_into_network();
         void add_generators_to_bus_current_mismatch();
         void add_wt_generators_to_bus_current_mismatch();
+        void add_pv_units_to_bus_current_mismatch();
         void add_loads_to_bus_current_mismatch();
         void add_hvdcs_to_bus_current_mismatch();
         void add_equivalent_devices_to_bus_current_mismatch();

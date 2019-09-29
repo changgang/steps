@@ -1857,6 +1857,19 @@ METER METER_SETTER::prepare_pv_unit_reactive_voltage_command_in_pu_meter(const D
     return meter;
 }
 
+METER METER_SETTER::prepare_pv_unit_solar_irradiance_in_pu_meter(const DEVICE_ID& device_id)
+{
+    METER meter;
+    meter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
+
+    bool successful = prepare_pv_unit_meter(meter, device_id);
+
+    if(successful)
+        meter.set_meter_type("SOLAR IRRADIANCE IN PU");
+
+    return meter;
+}
+
 METER METER_SETTER::prepare_pv_panel_model_internal_variable_meter(const DEVICE_ID& device_id, string name)
 {
     METER meter;

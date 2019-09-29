@@ -838,6 +838,10 @@ void METER_SETTER_TEST::test_prepare_pv_unit_related_meters()
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="REACTIVE VOLTAGE COMMAND IN PU");
 
+    meter = setter.prepare_pv_unit_solar_irradiance_in_pu_meter(did);
+    TEST_ASSERT(meter.get_device_id()==did);
+    TEST_ASSERT(meter.get_meter_type()=="SOLAR IRRADIANCE IN PU");
+
     /*meter = setter.prepare_pv_panel_model_internal_variable_meter(did, "STATE@LVPL VOLTAGE SENSOR");
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="PV PANEL MODEL INTERNAL VARIABLE");
