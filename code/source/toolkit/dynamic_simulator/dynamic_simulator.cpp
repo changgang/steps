@@ -10,7 +10,7 @@
 #include <ctime>
 #include <omp.h>
 
-//#define STEPS_DYNAMIC_SIMULATOR_OPENMP
+#define STEPS_DYNAMIC_SIMULATOR_OPENMP
 
 using namespace std;
 

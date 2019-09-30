@@ -5223,7 +5223,7 @@
 	"header/basic/constants.h"
 	"header/meter/meter.h"
 
-1567397368 c:\users\dr.li\steps\code\header\meter\meter.h
+1569769282 c:\users\dr.li\steps\code\header\meter\meter.h
 	"header/basic/constants.h"
 	"header/basic/device_id.h"
 	"header/device/device.h"
@@ -5298,7 +5298,7 @@
 	"header/model/pvu_models/pv_electrical_model/pv_electrical_model.h"
 	"header/model/pvu_models/pv_irradiance_model/pv_irradiance_model.h"
 
-1567397369 c:\users\dr.li\steps\code\header\model\pvu_models\pv_converter_model\pv_converter_model.h
+1569769282 c:\users\dr.li\steps\code\header\model\pvu_models\pv_converter_model\pv_converter_model.h
 	"header/model/pvu_models/pvu_model.h"
 	"header/block/integral_block.h"
 	"header/block/saturation_block.h"
@@ -5311,7 +5311,7 @@
 	"header/model/pvu_models/pvu_model.h"
 	<cstdlib>
 
-1567397369 c:\users\dr.li\steps\code\header\model\pvu_models\pv_electrical_model\pv_electrical_model.h
+1569769282 c:\users\dr.li\steps\code\header\model\pvu_models\pv_electrical_model\pv_electrical_model.h
 	"header/model/pvu_models/pvu_model.h"
 	<complex>
 
@@ -5489,7 +5489,7 @@
 	"header/basic/sparse_matrix_define.h"
 	<ctime>
 
-1569518573 c:\users\dr.li\steps\code\header\toolkit\dynamic_simulator\dynamic_simulator.h
+1569769282 c:\users\dr.li\steps\code\header\toolkit\dynamic_simulator\dynamic_simulator.h
 	"header/basic/base.h"
 	"header/meter/meter.h"
 	"header/network/network_matrix.h"
@@ -5573,7 +5573,7 @@
 	<cmath>
 	<ctime>
 
-1568453573 c:\users\dr.li\steps\code\header\meter\meter_setter.h
+1569769282 c:\users\dr.li\steps\code\header\meter\meter_setter.h
 	"header/meter/meter.h"
 
 1567397369 source:c:\users\dr.li\steps\code\main_powerflow.cpp
@@ -6001,8 +6001,9 @@
 	"header/basic/timer.h"
 	"header/basic/constants.h"
 
-1567397369 c:\users\dr.li\steps\code\header\model\pvu_models\pv_converter_model\pv_converter_models.h
+1569769282 c:\users\dr.li\steps\code\header\model\pvu_models\pv_converter_model\pv_converter_models.h
 	"header/model/pvu_models/pv_converter_model/pvcv0.h"
+	"header/model/pvu_models/pv_converter_model/pvgu1.h"
 
 1567397369 c:\users\dr.li\steps\code\header\model\pvu_models\pv_converter_model\pvcv0.h
 	"header/model/pvu_models/pv_converter_model/pv_converter_model.h"
@@ -6012,7 +6013,7 @@
 
 1567397369 c:\users\dr.li\steps\code\header\model\pvu_models\pv_panel_model\pv_panel_models.h
 
-1567397369 c:\users\dr.li\steps\code\header\model\pvu_models\pv_electrical_model\pv_electrical_models.h
+1569769282 c:\users\dr.li\steps\code\header\model\pvu_models\pv_electrical_model\pv_electrical_models.h
 
 1567397369 c:\users\dr.li\steps\code\header\model\pvu_models\pv_irradiance_model\pv_irradiance_models.h
 
@@ -6110,7 +6111,7 @@
 	"header/apis/steps_api_search_buffer.h"
 	<iostream>
 
-1567397369 source:c:\users\dr.li\steps\code\source\apis\steps_api_search_devices.cpp
+1569856890 source:c:\users\dr.li\steps\code\source\apis\steps_api_search_devices.cpp
 	<istream>
 	"header/apis/steps_api.h"
 	"header/apis/steps_api_common.h"
@@ -7070,7 +7071,7 @@
 	<istream>
 	<iostream>
 
-1568453573 c:\users\dr.li\steps\code\header\data_imexporter\steps_imexporter.h
+1569769282 c:\users\dr.li\steps\code\header\data_imexporter\steps_imexporter.h
 	"header/data_imexporter/data_imexporter.h"
 	"header/device/source.h"
 	"header/device/transformer.h"
@@ -7370,7 +7371,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1567397369 source:c:\users\dr.li\steps\code\source\device\pv_unit.cpp
+1569817432 source:c:\users\dr.li\steps\code\source\device\pv_unit.cpp
 	"header/device/pv_unit.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -7935,7 +7936,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1567397369 source:c:\users\dr.li\steps\code\source\model\model.cpp
+1569769282 source:c:\users\dr.li\steps\code\source\model\model.cpp
 	"header/model/model.h"
 	<cstdio>
 	"header/basic/utility.h"
@@ -7975,7 +7976,7 @@
 	"header/model/model_var_table.h"
 	"header/STEPS.h"
 
-1567397369 source:c:\users\dr.li\steps\code\source\model\pvu_models\pv_converter_model\pv_converter_model.cpp
+1569769282 source:c:\users\dr.li\steps\code\source\model\pvu_models\pv_converter_model\pv_converter_model.cpp
 	"header/model/pvu_models/pv_converter_model/pv_converter_model.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -9744,7 +9745,7 @@
 	"header/power_system_database.h"
 	"header/STEPS.h"
 
-1568453574 source:c:\users\dr.li\steps\code\main_tests.cpp
+1569769282 source:c:\users\dr.li\steps\code\main_tests.cpp
 	<istream>
 	<cstdlib>
 	<cstring>
@@ -9794,6 +9795,7 @@
 	"header/block/pid_block_test.h"
 	"header/block/pi_block_test.h"
 	"header/block/pd_block_test.h"
+	"header/block/second_order_block_test.h"
 	"header/block/saturation_block_test.h"
 	"header/meter/continuous_buffer_test.h"
 	"header/meter/meter_test.h"
@@ -9844,6 +9846,7 @@
 	"header/model/wtg_models/wt_electrical_model/wt3e0_test.h"
 	"header/model/wtg_models/wt_pitch_model/wt3p0_test.h"
 	"header/model/wtg_models/wind_speed_model/filewind_test.h"
+	"header/model/pvu_models/pv_converter_model/pvgu1_test.h"
 	"header/toolkit/cct_searcher/cct_searcher_test.h"
 	"header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h"
 	"header/steps_namespace.h"
@@ -9906,7 +9909,7 @@
 	<istream>
 	<iostream>
 
-1568453574 source:c:\users\dr.li\steps\code\source\data_imexporter\psse_dynamics_imexporter.cpp
+1569769282 source:c:\users\dr.li\steps\code\source\data_imexporter\psse_dynamics_imexporter.cpp
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
@@ -9916,7 +9919,7 @@
 	<istream>
 	<iostream>
 
-1568453574 source:c:\users\dr.li\steps\code\source\data_imexporter\steps_dynamics_imexporter.cpp
+1569769282 source:c:\users\dr.li\steps\code\source\data_imexporter\steps_dynamics_imexporter.cpp
 	"header/data_imexporter/steps_imexporter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -9938,7 +9941,7 @@
 	<istream>
 	<iostream>
 
-1568453574 source:c:\users\dr.li\steps\code\source\meter\meter.cpp
+1569769282 source:c:\users\dr.li\steps\code\source\meter\meter.cpp
 	"header/meter/meter.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -9947,13 +9950,13 @@
 	<istream>
 	<iostream>
 
-1568453574 source:c:\users\dr.li\steps\code\source\meter\meter_setter.cpp
+1569769282 source:c:\users\dr.li\steps\code\source\meter\meter_setter.cpp
 	"header/meter/meter_setter.h"
 	"header/basic/terminal.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
 
-1568453574 source:c:\users\dr.li\steps\code\source\meter\meter_setter_test.cpp
+1569769282 source:c:\users\dr.li\steps\code\source\meter\meter_setter_test.cpp
 	"header/meter/meter_setter_test.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -10101,7 +10104,7 @@
 	<cstdio>
 	<iostream>
 
-1569674986 source:c:\users\dr.li\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
+1569817595 source:c:\users\dr.li\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -10235,4 +10238,68 @@
 	<cstdlib>
 	<cstring>
 	<cstdio>
+
+1569769282 c:\users\dr.li\steps\code\header\block\second_order_block_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"cpptest.h"
+	"header/block/second_order_block.h"
+	"header/STEPS.h"
+
+1569769282 c:\users\dr.li\steps\code\header\block\second_order_block.h
+	"header/block/block.h"
+	"header/block/proportional_block.h"
+	"header/block/first_order_block.h"
+
+1569769282 c:\users\dr.li\steps\code\header\model\pvu_models\pv_converter_model\pvgu1_test.h
+	<istream>
+	<cstdlib>
+	<cstring>
+	<iostream>
+	"header/model/pvu_models/pv_converter_model/pv_converter_model_test.h"
+	"header/model/pvu_models/pv_converter_model/pvgu1.h"
+	"header/STEPS.h"
+
+1569769282 c:\users\dr.li\steps\code\header\model\pvu_models\pv_converter_model\pvgu1.h
+	"header/model/pvu_models/pv_converter_model/pv_converter_model.h"
+	"header/model/wtg_models/wt_generator_model/lvpl.h"
+	"header/block/integral_block.h"
+	"header/block/first_order_block.h"
+
+1569769282 source:c:\users\dr.li\steps\code\source\block\second_order_block.cpp
+	"header/block/second_order_block.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<istream>
+	<iostream>
+
+1569769282 source:c:\users\dr.li\steps\code\source\block\second_order_block_test.cpp
+	"header/block/second_order_block_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	"header/basic/constants.h"
+	<cstdlib>
+	<cstring>
+	<cstdio>
+
+1569769282 source:c:\users\dr.li\steps\code\source\model\pvu_models\pv_converter_model\pvgu1.cpp
+	"header/model/pvu_models/pv_converter_model/pvgu1.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdio>
+	<istream>
+	<iostream>
+
+1569769282 source:c:\users\dr.li\steps\code\source\model\pvu_models\pv_converter_model\pvgu1_test.cpp
+	"header/model/pvu_models/pv_converter_model/pvgu1_test.h"
+	"header/basic/utility.h"
+	"header/steps_namespace.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<cmath>
 
