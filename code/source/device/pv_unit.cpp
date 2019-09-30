@@ -109,12 +109,6 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
 
                 if(panel!=NULL)
                     panel->initialize();
-                else
-                {
-                    osstream<<"Error. No PV PANEL model is provided for "<<get_device_name()<<" for dynamic initialization.";
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                    //return;
-                }
 
                 if(elec!=NULL)
                     elec->initialize();
@@ -123,8 +117,8 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
             }
             default:
             {
-                //if(irrd!=NULL)
-                //    irrd->run(mode);
+                if(irrd!=NULL)
+                    irrd->run(mode);
 
                 if(elec!=NULL)
                     elec->run(mode);
