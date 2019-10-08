@@ -2331,6 +2331,23 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
             }
         }
 
+        vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
+        size_t npv = pvs.size();
+        if(npv>0)
+        {
+            file<<"% PV unit"<<endl;
+            file<<"BUS,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(size_t i=0; i!=npv; ++i)
+            {
+                size_t bus = pvs[i]->get_unit_bus();
+                snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
+                         pvs[i]->get_unit_bus(),(pvs[i]->get_identifier()).c_str(),
+                         pvs[i]->get_p_generation_in_MW(), pvs[i]->get_q_generation_in_MVar(),
+                         psdb.get_bus_voltage_in_pu(bus));
+                file<<buffer<<endl;
+            }
+        }
+
         vector<LOAD*> loads = psdb.get_all_loads();
         size_t nload = loads.size();
         if(nload>0)
@@ -2560,6 +2577,24 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
             }
         }
 
+        vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
+        size_t npv = pvs.size();
+        if(npv>0)
+        {
+            file<<"% PV unit"<<endl;
+            file<<"BUS,NAME,ID,P/MW,Q/MVAR,VOLTAGE/PU"<<endl;
+            for(size_t i=0; i!=npv; ++i)
+            {
+                size_t bus = pvs[i]->get_unit_bus();
+                snprintf(buffer, 1000, "%lu,\"%s\",\"%s\",%.6f,%.6f,%.6f",
+                         bus, psdb.bus_number2bus_name(bus).c_str(),
+                         (pvs[i]->get_identifier()).c_str(),
+                         pvs[i]->get_p_generation_in_MW(), pvs[i]->get_q_generation_in_MVar(),
+                         psdb.get_bus_voltage_in_pu(bus));
+                file<<buffer<<endl;
+            }
+        }
+
         vector<LOAD*> loads = psdb.get_all_loads();
         size_t nload = loads.size();
         if(nload>0)
@@ -2587,7 +2622,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
         if(nline>0)
         {
             file<<"% Line"<<endl;
-            file<<"IBUS,INAME,JBUS,JNAMEID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,II/KA,IJ/KA"<<endl;
+            file<<"IBUS,INAME,JBUS,JNAME,ID,PI/MW,QI/MVAR,PJ/MW,QJ/MVAR,II/KA,IJ/KA"<<endl;
             for(size_t i=0; i!=nline; ++i)
             {
                 size_t ibus = lines[i]->get_sending_side_bus();
