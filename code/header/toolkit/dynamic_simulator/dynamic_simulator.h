@@ -158,6 +158,8 @@ class DYNAMICS_SIMULATOR: public BASE
     private:
         void optimize_network_ordering();
 
+        void prepare_devices_for_run();
+
         void integrate();
         void update();
         void update_relay_models();
@@ -224,6 +226,15 @@ class DYNAMICS_SIMULATOR: public BASE
         size_t max_network_iteration, max_DAE_iteration, max_update_iteration;
         size_t current_max_network_iteration;
         double alpha;
+
+        vector<GENERATOR*> generators;
+        vector<WT_GENERATOR*> wt_generators;
+        vector<PV_UNIT*> pv_units;
+        vector<ENERGY_STORAGE*> e_storages;
+        vector<LOAD*> loads;
+        vector<LINE*> lines;
+        vector<HVDC*> hvdcs;
+        vector<EQUIVALENT_DEVICE*> e_devices;
 
         vector<BUS*> internal_bus_pointers;
 

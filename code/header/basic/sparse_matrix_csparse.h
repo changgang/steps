@@ -64,6 +64,8 @@ private:
     csn    *LU;
     css    *LU_symbolic;
     double *LU_workspace;
+    double* bb;
+    size_t bb_size;
 };
 
 

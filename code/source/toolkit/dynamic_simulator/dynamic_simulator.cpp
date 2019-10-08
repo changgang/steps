@@ -1856,6 +1856,8 @@ void DYNAMICS_SIMULATOR::start()
 
     optimize_network_ordering();
 
+    prepare_devices_for_run();
+
     run_all_models(INITIALIZE_MODE);
 
     network_matrix.build_dynamic_network_matrix();
@@ -1900,6 +1902,24 @@ void DYNAMICS_SIMULATOR::start()
     save_meter_values();
 }
 
+void DYNAMICS_SIMULATOR::prepare_devices_for_run()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    generators = psdb.get_all_generators();
+    wt_generators = psdb.get_all_wt_generators();
+    pv_units = psdb.get_all_pv_units();
+    e_storages = psdb.get_all_energy_storages();
+
+    loads = psdb.get_all_loads();
+
+    lines = psdb.get_all_lines();
+    hvdcs = psdb.get_all_hvdcs();
+
+    e_devices = psdb.get_all_equivalent_devices();
+}
+
 void DYNAMICS_SIMULATOR::stop()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -1922,15 +1942,15 @@ double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<GENERATOR*> gens = psdb.get_all_generators();
-    size_t n = gens.size();
+
+    size_t n = generators.size();
     GENERATOR* gen;
     SYNC_GENERATOR_MODEL* model;
     double max_angle = -1e10, min_angle = 1e10;
     double angle;
     for(size_t i=0; i!=n; ++i)
     {
-        gen = gens[i];
+        gen = generators[i];
         if(gen->get_status()==true)
         {
             model = gen->get_sync_generator_model();
@@ -2143,7 +2163,6 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t n = psdb.get_generator_count();
-    vector<GENERATOR*> generators = psdb.get_all_generators();
 
     //GENERATOR* generator;
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
@@ -2158,33 +2177,30 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = psdb.get_wt_generator_count();
-    vector<WT_GENERATOR*> wtgens = psdb.get_all_wt_generators();
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
         #pragma omp parallel for schedule(static)
     #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
-        WT_GENERATOR* wtgen = wtgens[i];
+        WT_GENERATOR* wtgen = wt_generators[i];
         if(wtgen->get_status()==true)
             wtgen->run(mode);
     }
 
     n = psdb.get_pv_unit_count();
-    vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
         #pragma omp parallel for schedule(static)
     #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
-        PV_UNIT* pv = pvs[i];
+        PV_UNIT* pv = pv_units[i];
         if(pv->get_status()==true)
             pv->run(mode);
     }
 
     n = psdb.get_load_count();
-    vector<LOAD*> loads = psdb.get_all_loads();
     //LOAD* load;
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
@@ -2198,7 +2214,6 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = psdb.get_hvdc_count();
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     //HVDC* hvdc;
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
@@ -2212,7 +2227,6 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = psdb.get_equivalent_device_count();
-    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     //EQUIVALENT_DEVICE* edevice;
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
@@ -2220,7 +2234,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
-        EQUIVALENT_DEVICE* edevice = edevices[i];
+        EQUIVALENT_DEVICE* edevice = e_devices[i];
         if(edevice->get_status()==true)
             edevice->run(mode);
     }
@@ -2296,8 +2310,7 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
-    size_t n = edevices.size();
+    size_t n = e_devices.size();
     //EQUIVALENT_DEVICE* edevice;
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
@@ -2305,7 +2318,7 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
     #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
-        EQUIVALENT_DEVICE* edevice = edevices[i];
+        EQUIVALENT_DEVICE* edevice = e_devices[i];
         edevice->update_meter_buffer();
     }
 }
@@ -2314,8 +2327,7 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
-    size_t n = edevices.size();
+    size_t n = e_devices.size();
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
         #pragma omp parallel for schedule(static)
@@ -2323,7 +2335,7 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
     for(size_t i=0; i<n; ++i)
     {
         ostringstream osstream;
-        EQUIVALENT_DEVICE* edevice = edevices[i];
+        EQUIVALENT_DEVICE* edevice = e_devices[i];
         edevice->update_equivalent_outputs();
 
         osstream<<"At time "<<toolkit.get_dynamic_simulation_time_in_s()<<" s, equivalent load of "<<edevice->get_device_name()<<" is: "<<edevice->get_total_equivalent_power_as_load_in_MVA()<<"MVA";
@@ -2391,7 +2403,6 @@ void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t n = hvdcs.size();
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
@@ -2690,8 +2701,6 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 
     size_t physical_bus, internal_bus;
 
-    vector<GENERATOR*> generators = psdb.get_all_generators();
-
     size_t ngen = generators.size();
 
     //complex<double> E, V, Z, I;
@@ -2737,9 +2746,7 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 
     size_t physical_bus, internal_bus;
 
-    vector<WT_GENERATOR*> generators = psdb.get_all_wt_generators();
-
-    size_t ngen = generators.size();
+    size_t ngen = wt_generators.size();
 
     //complex<double> E, V, Z, I;
 
@@ -2750,7 +2757,7 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
     for(size_t i=0; i<ngen; ++i)
     {
         complex<double> I;
-        WT_GENERATOR* generator = generators[i];
+        WT_GENERATOR* generator = wt_generators[i];
 
         if(generator->get_status() == true)
         {
@@ -2788,9 +2795,7 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
 
     size_t physical_bus, internal_bus;
 
-    vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
-
-    size_t npv = pvs.size();
+    size_t npv = pv_units.size();
 
     //complex<double> E, V, Z, I;
 
@@ -2801,7 +2806,7 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
     for(size_t i=0; i<npv; ++i)
     {
         complex<double> I;
-        PV_UNIT* pv = pvs[i];
+        PV_UNIT* pv = pv_units[i];
 
         if(pv->get_status() == true)
         {
@@ -2837,8 +2842,6 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    vector<LOAD*> loads = psdb.get_all_loads();
-
     size_t nload = loads.size();
 
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
@@ -2869,8 +2872,6 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     size_t physical_bus, internal_bus;
-
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
 
     size_t nhvdc = hvdcs.size();
 
@@ -2935,9 +2936,7 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
     size_t physical_bus, internal_bus;
 
-    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
-
-    size_t nedevice = edevices.size();
+    size_t nedevice = e_devices.size();
 
     //complex<double> I, V, S;
 
@@ -2947,13 +2946,13 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
     #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<nedevice; ++i)
     {
-        if(edevices[i]->get_status() == true)
+        if(e_devices[i]->get_status() == true)
         {
-            size_t physical_bus = edevices[i]->get_equivalent_device_bus();
+            size_t physical_bus = e_devices[i]->get_equivalent_device_bus();
 
             size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            complex<double> S = edevices[i]->get_total_equivalent_power_as_load_in_MVA()/sbase;
+            complex<double> S = e_devices[i]->get_total_equivalent_power_as_load_in_MVA()/sbase;
 
             //V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
             complex<double> V = get_bus_complex_voltage_in_pu_with_internal_bus_number(internal_bus);

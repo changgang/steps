@@ -19,6 +19,8 @@ SPARSE_MATRIX_CSPARSE::SPARSE_MATRIX_CSPARSE():SPARSE_MATRIX()
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
+    bb = NULL;
+    bb_size = 0;
 
     clear();
 }
@@ -30,6 +32,8 @@ SPARSE_MATRIX_CSPARSE::SPARSE_MATRIX_CSPARSE(const SPARSE_MATRIX_CSPARSE& matrix
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
+    bb = NULL;
+    bb_size = 0;
 
     clear();
 
@@ -103,12 +107,15 @@ SPARSE_MATRIX_CSPARSE::~SPARSE_MATRIX_CSPARSE()
     if(LU!=NULL)          cs_nfree(LU);
     if(LU_symbolic!=NULL) cs_sfree(LU_symbolic);
     if(LU_workspace!=NULL) free(LU_workspace);
+    if(bb!=NULL) free(bb);
 
     matrix_real = NULL;
     matrix_imag = NULL;
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
+    bb = NULL;
+    bb_size = 0;
 }
 
 void SPARSE_MATRIX_CSPARSE::clear()
@@ -121,12 +128,15 @@ void SPARSE_MATRIX_CSPARSE::clear()
     if(LU!=NULL)          cs_nfree(LU);
     if(LU_symbolic!=NULL) cs_sfree(LU_symbolic);
     if(LU_workspace!=NULL) free(LU_workspace);
+    if(bb!=NULL) free(bb);
 
     matrix_real = NULL;
     matrix_imag = NULL;
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
+    bb = NULL;
+    bb_size = 0;
 
     matrix_real = cs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
     matrix_imag = cs_spalloc(1,1,1,1,1);
@@ -490,7 +500,24 @@ void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
 {
     ostringstream osstream;
     size_t n = b.size();
-    double* bb = (double*)malloc(n*sizeof(double));
+    if(bb!=NULL)
+    {
+        if(n<=bb_size)
+        {
+            ;
+        }
+        else
+        {
+            free(bb);
+            bb = (double*)malloc(n*sizeof(double));
+            bb_size = n;
+        }
+    }
+    else
+    {
+        bb = (double*)malloc(n*sizeof(double));
+        bb_size = n;
+    }
     if(bb!=NULL)
     {
         for(size_t i=0; i!=n; ++i) bb[i]=b[i]; // set bb
@@ -501,8 +528,6 @@ void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
         {
             // now solution is OK
             for(size_t i=0; i!=n; ++i) b[i]=LU_workspace[i]; // now reset b with bb
-
-            free(bb);
         }
         else
         {
@@ -523,7 +548,24 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
     char cbuffer[1000];
 
     size_t n = b.size();
-    double* bb = (double*)malloc(n*sizeof(double));
+    if(bb!=NULL)
+    {
+        if(n<=bb_size)
+        {
+            ;
+        }
+        else
+        {
+            free(bb);
+            bb = (double*)malloc(n*sizeof(double));
+            bb_size = n;
+        }
+    }
+    else
+    {
+        bb = (double*)malloc(n*sizeof(double));
+        bb_size = n;
+    }
     if(bb!=NULL)
     {
         for(size_t i=0; i!=n; ++i) LU_workspace[i]=b[i]; // set bb
@@ -534,8 +576,6 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
         {
             // now solution is OK
             for(size_t i=0; i!=n; ++i) b[i]=bb[i]; // now reset b with bb
-
-            free(bb);
         }
         else
         {
