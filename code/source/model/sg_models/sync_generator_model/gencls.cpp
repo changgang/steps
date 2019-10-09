@@ -8,6 +8,7 @@ using namespace std;
 GENCLS::GENCLS()
 {
     clear();
+    set_model_parameter_count(2);
 }
 
 GENCLS::~GENCLS()
@@ -67,7 +68,7 @@ void GENCLS::update_source_impedance()
 bool GENCLS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=5)
+    if(data.size()>=3+get_model_parameter_count())
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())

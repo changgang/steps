@@ -17,6 +17,8 @@ MODEL::MODEL()
     set_flag_model_updated_as_false();
 
     activate_model();
+
+    set_model_parameter_count(0);
 }
 
 MODEL::~MODEL()
@@ -53,6 +55,16 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
 string MODEL::get_allowed_device_type() const
 {
     return allowed_device_type;
+}
+
+void MODEL::set_model_parameter_count(size_t n)
+{
+    n_parameters = n;
+}
+
+size_t MODEL::get_model_parameter_count() const
+{
+    return n_parameters;
 }
 
 void MODEL::clear_model_data_table()

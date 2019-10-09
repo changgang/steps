@@ -10,7 +10,7 @@
 #include <ctime>
 #include <omp.h>
 
-#define STEPS_DYNAMIC_SIMULATOR_OPENMP
+//#define STEPS_DYNAMIC_SIMULATOR_OPENMP
 
 using namespace std;
 
@@ -1619,11 +1619,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 {
     ostringstream osstream;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
     size_t n = meters.size();
-    //osstream<<"save meter information: "<<n<<" meters were set. output file name is: "<<output_filename;
-    //toolkit.show_information_with_leading_time_stamp(osstream);
     if(n!=0)
     {
         open_meter_output_files();
@@ -1941,8 +1937,6 @@ void DYNAMICS_SIMULATOR::stop()
 double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
     size_t n = generators.size();
     GENERATOR* gen;
     SYNC_GENERATOR_MODEL* model;
@@ -2017,7 +2011,6 @@ void DYNAMICS_SIMULATOR::run_a_step()
     //bool DAE_converged = false;
     ITER_DAE = 0;
     ITER_NET = 0;
-    double max_angle_difference_old = get_system_max_angle_difference_in_deg();
     current_max_network_iteration = get_max_network_iteration();
     while(true)
     {
@@ -2034,27 +2027,13 @@ void DYNAMICS_SIMULATOR::run_a_step()
             bool network_converged = solve_network();
             ITER_NET += network_iteration_count;
 
-            double max_angle_difference_new = get_system_max_angle_difference_in_deg();
-            if(toolkit.is_detailed_log_enabled())
-            {
-                osstream<<"maximum angle difference with iteration "<<ITER_DAE<<" at time "<<toolkit.get_dynamic_simulation_time_in_s()<<" is "<<max_angle_difference_new;
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-
             if(toolkit.is_detailed_log_enabled() and (not network_converged))
             {
-                osstream<<"Failed to solve network in "<<max_network_iteration<<" iterations during DAE iteration "<<ITER_DAE<<" when integrating at time "<<TIME<<" s."
-                        <<"New max angle difference is "<<max_angle_difference_new<<" deg while old is "<<max_angle_difference_old<<" deg (difference is "<<max_angle_difference_new-max_angle_difference_old<<" deg)";
+                osstream<<"Failed to solve network in "<<max_network_iteration<<" iterations during DAE iteration "<<ITER_DAE<<" when integrating at time "<<TIME<<" s.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
-            /*if(fabs(max_angle_difference_new-max_angle_difference_old)>1e-8) // DAE solution not converged
-                max_angle_difference_old = max_angle_difference_new;
-            else//converged
-                break;*/
-            if(ITER_DAE>=2 and fabs(max_angle_difference_new/max_angle_difference_old-1.0)<1e-10) // DAE solution converged
+            if(ITER_DAE>=2 and network_converged) // DAE solution converged
                 break;
-            else
-                max_angle_difference_old = max_angle_difference_new;
         }
         else
         {
@@ -2143,7 +2122,7 @@ void DYNAMICS_SIMULATOR::update()
                  current_max_network_iteration, toolkit.get_dynamic_simulation_time_in_s());
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
-    update_bus_frequency_blocks();
+    //update_bus_frequency_blocks();
 
     //cout<<"    elapsed time for export meters: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
 }
@@ -2309,7 +2288,6 @@ bool DYNAMICS_SIMULATOR::get_relay_actiion_flag() const
 void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = e_devices.size();
     //EQUIVALENT_DEVICE* edevice;
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
@@ -2326,7 +2304,6 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t n = e_devices.size();
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
@@ -2705,10 +2682,7 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 
     //complex<double> E, V, Z, I;
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
-        #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
     for(size_t i=0; i<ngen; ++i)
     {
         GENERATOR* generator = generators[i];
@@ -2750,10 +2724,7 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 
     //complex<double> E, V, Z, I;
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
-        #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
     for(size_t i=0; i<ngen; ++i)
     {
         complex<double> I;
@@ -2799,10 +2770,7 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
 
     //complex<double> E, V, Z, I;
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
-        #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
     for(size_t i=0; i<npv; ++i)
     {
         complex<double> I;
@@ -2844,10 +2812,7 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 
     size_t nload = loads.size();
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
-        #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
     for(size_t i=0; i<nload; ++i)
     {
         LOAD* load = loads[i];
@@ -2877,10 +2842,7 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
     //complex<double> I;
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
-        #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
     for(size_t i=0; i<nhvdc; ++i)
     {
         complex<double> I;
@@ -2940,10 +2902,7 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
     //complex<double> I, V, S;
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
-        #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
     for(size_t i=0; i<nedevice; ++i)
     {
         if(e_devices[i]->get_status() == true)
@@ -3053,16 +3012,9 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     size_t n = delta_V.size();
     n = n>>1;
-
-    size_t physical_bus;
-    //BUS* bus;
-    //complex<double> V0, delta_v, V;
-    //double vang0, vmag_new, vang_new, delta_vang;
 
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
@@ -3070,8 +3022,6 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
-        //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        //bus = psdb.get_bus(physical_bus);
         BUS* bus = internal_bus_pointers[i];
         double vang0 = bus->get_angle_in_rad();
         complex<double> V0 = bus->get_complex_voltage_in_pu();

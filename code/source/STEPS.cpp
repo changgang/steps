@@ -33,6 +33,9 @@ STEPS::STEPS(string name, string log_file)
 
     if(toolkit_name!="TK DFLT")
         show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is created.");
+    else
+        show_information_with_leading_time_stamp("STEPS simulation toolkit is started.");
+
 
     clear();
 }
