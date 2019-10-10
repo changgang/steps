@@ -23,8 +23,8 @@ void WTRLY0_TEST::setup()
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     WTRLY0 model;
-    model.set_wind_spped_relay_pair_in_pu_s(0, 0.3, 0.0);
-    model.set_wind_spped_relay_pair_in_pu_s(1, 1.5, 0.0);
+    model.set_wind_speed_relay_pair_in_pu_s(0, 0.3, 0.0);
+    model.set_wind_speed_relay_pair_in_pu_s(1, 1.5, 0.0);
 
     model.set_rotor_speed_relay_pair_in_pu_s(0, 0.3, 0.0);
     model.set_rotor_speed_relay_pair_in_pu_s(1, 1.5, 0.0);
@@ -68,8 +68,8 @@ void WTRLY0_TEST::test_set_get_parameters()
 
     WTRLY0* model = (WTRLY0*) get_test_wt_relay_model();
 
-    model->set_wind_spped_relay_pair_in_pu_s(0, 0.3, 0.0);
-    model->set_wind_spped_relay_pair_in_pu_s(1, 1.5, 0.0);
+    model->set_wind_speed_relay_pair_in_pu_s(0, 0.3, 0.0);
+    model->set_wind_speed_relay_pair_in_pu_s(1, 1.5, 0.0);
 
     model->set_rotor_speed_relay_pair_in_pu_s(0, 0.3, 0.0);
     model->set_rotor_speed_relay_pair_in_pu_s(1, 1.5, 0.0);

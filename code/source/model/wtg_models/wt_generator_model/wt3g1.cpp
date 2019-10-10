@@ -18,6 +18,7 @@ WT3G1::~WT3G1()
 
 void WT3G1::clear()
 {
+    set_model_float_parameter_count(5);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -467,14 +468,26 @@ void WT3G1::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("XEQ", i); i++;
+    add_model_data_name_and_index_pair("KPLL", i); i++;
+    add_model_data_name_and_index_pair("KIPLL", i); i++;
+    add_model_data_name_and_index_pair("PLLMAX", i); i++;
+    add_model_data_name_and_index_pair("PN", i); i++;
 }
 
 double WT3G1::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    if(par_name=="XEQ")
+        return get_Xeq_in_pu();
+    if(par_name=="KPLL")
+        return get_KPLL();
+    if(par_name=="KIPLL")
+        return get_KIPLL();
+    if(par_name=="PLLMAX")
+        return get_PLLmax();
+    if(par_name=="PN")
+        return get_rated_power_per_wt_generator_in_MW();
 
     return 0.0;
 }
@@ -482,8 +495,24 @@ double WT3G1::get_model_data_with_name(string par_name) const
 void WT3G1::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+    if(par_name=="N")
+    {
+        WT_GENERATOR* gen = get_wt_generator_pointer();
+        if(gen!=NULL)
+            return gen->set_number_of_lumped_wt_generators(size_t(value));
+    }
+    if(par_name=="KPLL")
+        return set_KPLL(value);
+    if(par_name=="KIPLL")
+        return set_KIPLL(value);
+    if(par_name=="PLLMAX")
+        return set_PLLmax(value);
+    if(par_name=="PN")
+    {
+        WT_GENERATOR* gen = get_wt_generator_pointer();
+        if(gen!=NULL)
+            return gen->set_rated_power_per_wt_generator_in_MW(value);
+    }
 
     return;
 }

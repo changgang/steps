@@ -16,12 +16,13 @@ WTRLY0::~WTRLY0()
 
 void WTRLY0::clear()
 {
+    set_model_float_parameter_count(204);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {
-        set_wind_spped_relay_pair_in_pu_s(i, 0.0, 0.0);
+        set_wind_speed_relay_pair_in_pu_s(i, 0.0, 0.0);
         set_rotor_speed_relay_pair_in_pu_s(i, 0.0, 0.0);
         set_bus_frequency_relay_pair_in_pu_s(i, 0.0, 0.0);
         set_bus_voltage_relay_pair_in_pu_s(i, 0.0, 0.0);
@@ -34,7 +35,7 @@ void WTRLY0::copy_from_const_model(const WTRLY0& model)
 
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {
-        set_wind_spped_relay_pair_in_pu_s(i, model.get_wind_speed_relay_threshold_in_pu(i), model.get_wind_speed_relay_delay_in_s(i));
+        set_wind_speed_relay_pair_in_pu_s(i, model.get_wind_speed_relay_threshold_in_pu(i), model.get_wind_speed_relay_delay_in_s(i));
         set_rotor_speed_relay_pair_in_pu_s(i, model.get_rotor_speed_relay_threshold_in_pu(i), model.get_rotor_speed_relay_delay_in_s(i));
         set_bus_frequency_relay_pair_in_pu_s(i, model.get_bus_frequency_relay_threshold_in_pu(i), model.get_bus_frequency_relay_delay_in_s(i));
         set_bus_voltage_relay_pair_in_pu_s(i, model.get_bus_voltage_relay_threshold_in_pu(i), model.get_bus_voltage_relay_delay_in_s(i));
@@ -61,7 +62,7 @@ string WTRLY0::get_model_name() const
     return "WTRLY0";
 }
 
-void WTRLY0::set_wind_spped_relay_pair_in_pu_s(size_t index, double vwind, double tdelay)
+void WTRLY0::set_wind_speed_relay_pair_in_pu_s(size_t index, double vwind, double tdelay)
 {
     if(index<MAX_RELAY_COUNT)
     {
@@ -193,6 +194,58 @@ double WTRLY0::get_bus_voltage_relay_delay_in_s(size_t index) const
         return 0.0;
 }
 
+size_t WTRLY0::get_number_of_wind_speed_realy() const
+{
+    size_t n=0;
+    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
+    {
+        if(fabs(vwind_th[i])<FLOAT_EPSILON and fabs(vwind_th[i]-1.0)<FLOAT_EPSILON)
+            continue;
+        else
+            ++n;
+    }
+    return n;
+}
+
+size_t WTRLY0::get_number_of_rotor_speed_realy() const
+{
+    size_t n=0;
+    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
+    {
+        if(fabs(speed_th[i])<FLOAT_EPSILON and fabs(speed_th[i]-1.0)<FLOAT_EPSILON)
+            continue;
+        else
+            ++n;
+    }
+    return n;
+}
+
+size_t WTRLY0::get_number_of_bus_frequency_realy() const
+{
+    size_t n=0;
+    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
+    {
+        if(fabs(freq_th[i])<FLOAT_EPSILON and fabs(freq_th[i]-1.0)<FLOAT_EPSILON)
+            continue;
+        else
+            ++n;
+    }
+    return n;
+}
+
+size_t WTRLY0::get_number_of_bus_voltage_realy() const
+{
+    size_t n=0;
+    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
+    {
+        if(fabs(volt_th[i])<FLOAT_EPSILON and fabs(volt_th[i]-1.0)<FLOAT_EPSILON)
+            continue;
+        else
+            ++n;
+    }
+    return n;
+}
+
 bool WTRLY0::setup_model_with_steps_string_vector(vector<string>& data)
 {
     /*wtrly0  bus  ickt
@@ -216,7 +269,7 @@ bool WTRLY0::setup_model_with_steps_string_vector(vector<string>& data)
             {
                 v = get_double_data(data[i], "0.0"); ++i;
                 t = get_double_data(data[i], "0.0"); ++i;
-                set_wind_spped_relay_pair_in_pu_s(k, v, t);
+                set_wind_speed_relay_pair_in_pu_s(k, v, t);
                 //cout<<"wind speed relay pair: "<<k<<", "<<v<<", "<<t<<endl;
             }
 
@@ -672,14 +725,8 @@ string WTRLY0::get_standard_psse_string() const
             <<setw(6)<<identifier<<", \n"
             <<setw(10)<<"";
     size_t n_content = 0;
-    size_t n=0;
-    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
-    {
-        if(fabs(vwind_th[i])<FLOAT_EPSILON and fabs(vwind_th[i]-1.0)<FLOAT_EPSILON)
-            continue;
-        else
-            ++n;
-    }
+    size_t n=get_number_of_wind_speed_realy();
+
     osstream<<setw(8)<<n<<", ";
     n_content = 1;
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
@@ -695,14 +742,8 @@ string WTRLY0::get_standard_psse_string() const
     osstream<<"\n";
     osstream<<setw(10)<<"";
 
-    n = 0;
-    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
-    {
-        if(fabs(speed_th[i])<FLOAT_EPSILON and fabs(speed_th[i]-1.0)<FLOAT_EPSILON)
-            continue;
-        else
-            ++n;
-    }
+    n = get_number_of_rotor_speed_realy();
+
     osstream<<setw(8)<<n<<", ";
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {
@@ -717,14 +758,8 @@ string WTRLY0::get_standard_psse_string() const
     osstream<<"\n";
     osstream<<setw(10)<<"";
 
-    n = 0;
-    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
-    {
-        if(fabs(freq_th[i])<FLOAT_EPSILON and fabs(freq_th[i]-1.0)<FLOAT_EPSILON)
-            continue;
-        else
-            ++n;
-    }
+    n = get_number_of_bus_frequency_realy();
+
     osstream<<setw(8)<<n<<", ";
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {
@@ -739,14 +774,8 @@ string WTRLY0::get_standard_psse_string() const
     osstream<<"\n";
     osstream<<setw(10)<<"";
 
-    n = 0;
-    for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
-    {
-        if(fabs(volt_th[i])<FLOAT_EPSILON and fabs(volt_th[i]-1.0)<FLOAT_EPSILON)
-            continue;
-        else
-            ++n;
-    }
+    n = get_number_of_bus_voltage_realy();
+
     osstream<<setw(8)<<n;
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {
@@ -766,37 +795,113 @@ void WTRLY0::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=1;
-    //add_model_data_name_and_index_pair("TURBINE INERTIA", i); i++; /*1*/
+    add_model_data_name_and_index_pair("N WIND SPEED RELAY", i); i++;
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
+    {
+        string name = "VWIND "+num2str(j);
+        add_model_data_name_and_index_pair(name, i); i++;
+        name = "TWIND "+num2str(j);
+        add_model_data_name_and_index_pair(name, i); i++;
+    }
+    add_model_data_name_and_index_pair("N ROTOR SPEED RELAY", i); i++;
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
+    {
+        string name = "SPEED "+num2str(j);
+        add_model_data_name_and_index_pair(name, i); i++;
+        name = "TSPEED "+num2str(j);
+        add_model_data_name_and_index_pair(name, i); i++;
+    }
+    add_model_data_name_and_index_pair("N BUS FREQUENCY RELAY", i); i++;
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
+    {
+        string name = "FREQUENCY "+num2str(j);
+        add_model_data_name_and_index_pair(name, i); i++;
+        name = "TFREQUENCY "+num2str(j);
+        add_model_data_name_and_index_pair(name, i); i++;
+    }
+    add_model_data_name_and_index_pair("N BUS VOLTAGE RELAY", i); i++;
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
+    {
+        string name = "VOLTAGE "+num2str(j);
+        add_model_data_name_and_index_pair(name, i); i++;
+        name = "TVOLTAGE "+num2str(j);
+        add_model_data_name_and_index_pair(name, i); i++;
+    }
 }
 
 double WTRLY0::get_model_data_with_name(string par_name) const
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     par_name = string2upper(par_name);
-    if(is_model_data_exist(par_name))
+    if(par_name=="N WIND SPEED RELAY") return get_number_of_wind_speed_realy();
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
     {
-        //if(par_name=="TURBINE INERTIA") return get_Hturbine_in_s();
-        return 0.0;
+        string name = "VWIND "+num2str(j);
+        if(par_name==name) return get_wind_speed_relay_threshold_in_pu(j);
+        name = "TWIND "+num2str(j);
+        if(par_name==name) return get_wind_speed_relay_delay_in_s(j);
     }
-    else
+    if(par_name=="N ROTOR SPEED RELAY") return get_number_of_rotor_speed_realy();
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
     {
-        toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-        return 0.0;
+        string name = "SPEED "+num2str(j);
+        if(par_name==name) return get_rotor_speed_relay_threshold_in_pu(j);
+        name = "TSPEED "+num2str(j);
+        if(par_name==name) return get_rotor_speed_relay_delay_in_s(j);
     }
+    if(par_name=="N BUS FREQUENCY RELAY") return get_number_of_bus_frequency_realy();
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
+    {
+        string name = "FREQUENCY "+num2str(j);
+        if(par_name==name) return get_bus_frequency_relay_threshold_in_pu(j);
+        name = "TFREQUENCY "+num2str(j);
+        if(par_name==name) return get_bus_frequency_relay_delay_in_s(j);
+    }
+    if(par_name=="N BUS VOLTAGE RELAY") return get_number_of_bus_voltage_realy();
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
+    {
+        string name = "VOLTAGE "+num2str(j);
+        if(par_name==name) return get_bus_voltage_relay_threshold_in_pu(j);
+        name = "TVOLTAGE "+num2str(j);
+        if(par_name==name) return get_bus_voltage_relay_delay_in_s(j);
+    }
+
+    return 0.0;
 }
 
 void WTRLY0::set_model_data_with_name(string par_name, double value)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     par_name = string2upper(par_name);
-    if(is_model_data_exist(par_name))
+    if(par_name=="N WIND SPEED RELAY") return;
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
     {
-        //if(par_name=="TURBINE INERTIA") return set_Hturbine_in_s(value);
+        string name = "VWIND "+num2str(j);
+        if(par_name==name) return set_wind_speed_relay_pair_in_pu_s(j, value, get_wind_speed_relay_delay_in_s(j));
+        name = "TWIND "+num2str(j);
+        if(par_name==name) return set_wind_speed_relay_pair_in_pu_s(j, get_wind_speed_relay_threshold_in_pu(j), value);
     }
-    else
+    if(par_name=="N ROTOR SPEED RELAY") return;
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
     {
-        toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-        return;
+        string name = "SPEED "+num2str(j);
+        if(par_name==name) return set_rotor_speed_relay_pair_in_pu_s(j, value, get_rotor_speed_relay_delay_in_s(j));
+        name = "TSPEED "+num2str(j);
+        if(par_name==name) return set_rotor_speed_relay_pair_in_pu_s(j, get_rotor_speed_relay_threshold_in_pu(j), value);
+    }
+    if(par_name=="N BUS FREQUENCY RELAY") return;
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
+    {
+        string name = "FREQUENCY "+num2str(j);
+        if(par_name==name) return set_bus_frequency_relay_pair_in_pu_s(j, value, get_bus_frequency_relay_delay_in_s(j));
+        name = "TFREQUENCY "+num2str(j);
+        if(par_name==name) return set_bus_frequency_relay_pair_in_pu_s(j, get_bus_frequency_relay_threshold_in_pu(j), value);
+    }
+    if(par_name=="N BUS VOLTAGE RELAY") return;
+    for(size_t j=0; j<MAX_RELAY_COUNT; ++j)
+    {
+        string name = "VOLTAGE "+num2str(j);
+        if(par_name==name) return set_bus_voltage_relay_pair_in_pu_s(j, value, get_bus_voltage_relay_delay_in_s(j));
+        name = "TVOLTAGE "+num2str(j);
+        if(par_name==name) return set_bus_voltage_relay_pair_in_pu_s(j, get_bus_voltage_relay_threshold_in_pu(j), value);
     }
 }
 

@@ -15,7 +15,7 @@ class WTRLY0 : public WT_RELAY_MODEL
     public: // specific model level
         virtual string get_model_name() const;
 
-        void set_wind_spped_relay_pair_in_pu_s(size_t index, double vwind, double tdelay);
+        void set_wind_speed_relay_pair_in_pu_s(size_t index, double vwind, double tdelay);
         void set_rotor_speed_relay_pair_in_pu_s(size_t index, double speed, double tdelay);
         void set_bus_frequency_relay_pair_in_pu_s(size_t index, double freq, double tdelay);
         void set_bus_voltage_relay_pair_in_pu_s(size_t index, double volt, double tdelay);
@@ -28,6 +28,11 @@ class WTRLY0 : public WT_RELAY_MODEL
         double get_bus_frequency_relay_delay_in_s(size_t index) const;
         double get_bus_voltage_relay_threshold_in_pu(size_t index) const;
         double get_bus_voltage_relay_delay_in_s(size_t index) const;
+
+        size_t get_number_of_wind_speed_realy() const;
+        size_t get_number_of_rotor_speed_realy() const;
+        size_t get_number_of_bus_frequency_realy() const;
+        size_t get_number_of_bus_voltage_realy() const;
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);

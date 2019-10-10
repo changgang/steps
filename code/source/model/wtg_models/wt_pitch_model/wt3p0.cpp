@@ -17,6 +17,7 @@ WT3P0::~WT3P0()
 
 void WT3P0::clear()
 {
+    set_model_float_parameter_count(15);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 

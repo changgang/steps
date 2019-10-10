@@ -14,6 +14,7 @@ WT3T0::~WT3T0()
 
 void WT3T0::clear()
 {
+    set_model_float_parameter_count(5);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
@@ -367,40 +368,22 @@ void WT3T0::prepare_model_data_table()
 double WT3T0::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(is_model_data_exist(par_name))
-    {
-        if(par_name=="TURBINE INERTIA") return get_Hturbine_in_s();
-        if(par_name=="GENERATOR INERTIA") return get_Hgenerator_in_s();
-        if(par_name=="SHAFT K")           return get_Kshaft_in_pu();
-        if(par_name=="SHAFT DAMPING")     return get_Dshaft_in_pu();
-        if(par_name=="GENERATOR DAMPING") return get_damping_in_pu();
-        return 0.0;
-    }
-    else
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-        return 0.0;
-    }
+    if(par_name=="TURBINE INERTIA") return get_Hturbine_in_s();
+    if(par_name=="GENERATOR INERTIA") return get_Hgenerator_in_s();
+    if(par_name=="SHAFT K")           return get_Kshaft_in_pu();
+    if(par_name=="SHAFT DAMPING")     return get_Dshaft_in_pu();
+    if(par_name=="GENERATOR DAMPING") return get_damping_in_pu();
+    return 0.0;
 }
 
 void WT3T0::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(is_model_data_exist(par_name))
-    {
-        if(par_name=="TURBINE INERTIA") return set_Hturbine_in_s(value);
-        if(par_name=="GENERATOR INERTIA") return set_Hgenerator_in_s(value);
-        if(par_name=="SHAFT K")           return set_Kshaft_in_pu(value);
-        if(par_name=="SHAFT DAMPING")     return set_Dshaft_in_pu(value);
-        if(par_name=="GENERATOR DAMPING") return set_damping_in_pu(value);
-    }
-    else
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
-        return;
-    }
+    if(par_name=="TURBINE INERTIA") return set_Hturbine_in_s(value);
+    if(par_name=="GENERATOR INERTIA") return set_Hgenerator_in_s(value);
+    if(par_name=="SHAFT K")           return set_Kshaft_in_pu(value);
+    if(par_name=="SHAFT DAMPING")     return set_Dshaft_in_pu(value);
+    if(par_name=="GENERATOR DAMPING") return set_damping_in_pu(value);
 }
 
 
