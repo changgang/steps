@@ -15,6 +15,7 @@ IEEEG3::~IEEEG3()
 }
 void IEEEG3::clear()
 {
+    set_model_float_parameter_count(14);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -466,17 +467,54 @@ void IEEEG3::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
+    add_model_data_name_and_index_pair("TG", i); i++;
+    add_model_data_name_and_index_pair("TP", i); i++;
+    add_model_data_name_and_index_pair("UO", i); i++;
+    add_model_data_name_and_index_pair("UC", i); i++;
     add_model_data_name_and_index_pair("PMAX", i); i++;
     add_model_data_name_and_index_pair("PMIN", i); i++;
+    add_model_data_name_and_index_pair("SIGMA", i); i++;
+    add_model_data_name_and_index_pair("DELTA", i); i++;
+    add_model_data_name_and_index_pair("TR", i); i++;
+    add_model_data_name_and_index_pair("TW", i); i++;
+    add_model_data_name_and_index_pair("A11", i); i++;
+    add_model_data_name_and_index_pair("A13", i); i++;
+    add_model_data_name_and_index_pair("A21", i); i++;
+    add_model_data_name_and_index_pair("A23", i); i++;
 }
 
 double IEEEG3::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
+
+    if(par_name=="TG")
+        return get_TG_in_s();
+    if(par_name=="TP")
+        return get_TP_in_s();
+    if(par_name=="UO")
+        return get_Uo_in_pu();
+    if(par_name=="UC")
+        return get_Uc_in_pu();
     if(par_name=="PMAX")
         return get_Pmax_in_pu();
     if(par_name=="PMIN")
         return get_Pmin_in_pu();
+    if(par_name=="SIGMA")
+        return get_sigma();
+    if(par_name=="DELTA")
+        return get_delta();
+    if(par_name=="TR")
+        return get_TR_in_s();
+    if(par_name=="TW")
+        return get_TW_in_s();
+    if(par_name=="A11")
+        return get_a11();
+    if(par_name=="A13")
+        return get_a13();
+    if(par_name=="A21")
+        return get_a21();
+    if(par_name=="A23")
+        return get_a23();
 
     return 0.0;
 }
@@ -484,10 +522,35 @@ double IEEEG3::get_model_data_with_name(string par_name) const
 void IEEEG3::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
+
+    if(par_name=="TG")
+        return set_TG_in_s(value);
+    if(par_name=="TP")
+        return set_TP_in_s(value);
+    if(par_name=="UO")
+        return set_Uo_in_pu(value);
+    if(par_name=="UC")
+        return set_Uc_in_pu(value);
     if(par_name=="PMAX")
         return set_Pmax_in_pu(value);
     if(par_name=="PMIN")
         return set_Pmin_in_pu(value);
+    if(par_name=="SIGMA")
+        return set_sigma(value);
+    if(par_name=="DELTA")
+        return set_delta(value);
+    if(par_name=="TR")
+        return set_TR_in_s(value);
+    if(par_name=="TW")
+        return set_TW_in_s(value);
+    if(par_name=="A11")
+        return set_a11(value);
+    if(par_name=="A13")
+        return set_a13(value);
+    if(par_name=="A21")
+        return set_a21(value);
+    if(par_name=="A23")
+        return set_a23(value);
 }
 
 void IEEEG3::prepare_model_internal_variable_table()

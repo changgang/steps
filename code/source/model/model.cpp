@@ -18,7 +18,7 @@ MODEL::MODEL()
 
     activate_model();
 
-    set_model_parameter_count(0);
+    set_model_float_parameter_count(0);
 }
 
 MODEL::~MODEL()
@@ -57,12 +57,12 @@ string MODEL::get_allowed_device_type() const
     return allowed_device_type;
 }
 
-void MODEL::set_model_parameter_count(size_t n)
+void MODEL::set_model_float_parameter_count(size_t n)
 {
     n_parameters = n;
 }
 
-size_t MODEL::get_model_parameter_count() const
+size_t MODEL::get_model_float_parameter_count() const
 {
     return n_parameters;
 }

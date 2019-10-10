@@ -14,6 +14,7 @@ IEEL::~IEEL()
 
 void IEEL::clear()
 {
+    set_model_float_parameter_count(14);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
@@ -517,14 +518,54 @@ void IEEL::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("PA1", i); i++;
+    add_model_data_name_and_index_pair("PA2", i); i++;
+    add_model_data_name_and_index_pair("PA3", i); i++;
+    add_model_data_name_and_index_pair("QA1", i); i++;
+    add_model_data_name_and_index_pair("QA2", i); i++;
+    add_model_data_name_and_index_pair("QA3", i); i++;
+    add_model_data_name_and_index_pair("PKF", i); i++;
+    add_model_data_name_and_index_pair("QKF", i); i++;
+    add_model_data_name_and_index_pair("PN1", i); i++;
+    add_model_data_name_and_index_pair("PN2", i); i++;
+    add_model_data_name_and_index_pair("PN3", i); i++;
+    add_model_data_name_and_index_pair("QN1", i); i++;
+    add_model_data_name_and_index_pair("QN2", i); i++;
+    add_model_data_name_and_index_pair("QN3", i); i++;
 }
 
 double IEEL::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+
+    if(par_name=="PA1")
+        return get_P_alpha_1();
+    if(par_name=="PA2")
+        return get_P_alpha_2();
+    if(par_name=="PA3")
+        return get_P_alpha_3();
+    if(par_name=="QA1")
+        return get_Q_alpha_1();
+    if(par_name=="QA2")
+        return get_Q_alpha_2();
+    if(par_name=="QA3")
+        return get_Q_alpha_3();
+    if(par_name=="PKF")
+        return get_P_Kf();
+    if(par_name=="QKF")
+        return get_Q_Kf();
+    if(par_name=="PN1")
+        return get_P_n_power_1();
+    if(par_name=="PN2")
+        return get_P_n_power_2();
+    if(par_name=="PN3")
+        return get_P_n_power_3();
+    if(par_name=="QN1")
+        return get_Q_n_power_1();
+    if(par_name=="QN2")
+        return get_Q_n_power_2();
+    if(par_name=="QN3")
+        return get_Q_n_power_3();
 
     return 0.0;
 }
@@ -532,8 +573,35 @@ double IEEL::get_model_data_with_name(string par_name) const
 void IEEL::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+
+    if(par_name=="PA1")
+        return set_P_alpha_1(value);
+    if(par_name=="PA2")
+        return set_P_alpha_2(value);
+    if(par_name=="PA3")
+        return set_P_alpha_3(value);
+    if(par_name=="QA1")
+        return set_Q_alpha_1(value);
+    if(par_name=="QA2")
+        return set_Q_alpha_2(value);
+    if(par_name=="QA3")
+        return set_Q_alpha_3(value);
+    if(par_name=="PKF")
+        return set_P_Kf(value);
+    if(par_name=="QKF")
+        return set_Q_Kf(value);
+    if(par_name=="PN1")
+        return set_P_n_power_1(value);
+    if(par_name=="PN2")
+        return set_P_n_power_2(value);
+    if(par_name=="PN3")
+        return set_P_n_power_3(value);
+    if(par_name=="QN1")
+        return set_Q_n_power_1(value);
+    if(par_name=="QN2")
+        return set_Q_n_power_2(value);
+    if(par_name=="QN3")
+        return set_Q_n_power_3(value);
 
     return;
 }

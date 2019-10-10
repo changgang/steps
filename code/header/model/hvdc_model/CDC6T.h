@@ -25,7 +25,7 @@ class CDC6T: public HVDC_MODEL
         void set_rectifier_ac_instantaneous_blocking_voltage_in_pu(double v);
         void set_rectifier_ac_delayed_blocking_voltage_in_pu(double v);
         void set_rectifier_ac_delayed_blocking_time_in_s(double t);
-        void set_inverter_ac_instantenous_blocking_voltage_in_pu(double v);
+        void set_inverter_ac_instantaneous_blocking_voltage_in_pu(double v);
         void set_communication_delay_between_converters_in_s(double t);
         void set_rectifier_ac_delayed_unblocking_voltage_in_pu(double v);
         void set_rectifier_ac_delayed_unblocking_time_in_s(double t);
@@ -44,13 +44,13 @@ class CDC6T: public HVDC_MODEL
         double get_rectifier_ac_instantaneous_blocking_voltage_in_pu() const;
         double get_rectifier_ac_delayed_blocking_voltage_in_pu() const;
         double get_rectifier_ac_delayed_blocking_time_in_s() const;
-        double get_inverter_ac_instantenous_blocking_voltage_in_pu() const;
+        double get_inverter_ac_instantaneous_blocking_voltage_in_pu() const;
         double get_communication_delay_between_converters_in_s() const;
         double get_rectifier_ac_delayed_unblocking_voltage_in_pu() const;
         double get_rectifier_ac_delayed_unblocking_time_in_s() const;
         double get_inverter_ac_delayed_unblocking_time_in_s() const;
 
-        double get_inverter_dc_instantenous_bypassing_voltage_in_kV() const;
+        double get_inverter_dc_instantaneous_bypassing_voltage_in_kV() const;
         double get_inverter_ac_delayed_bypassing_voltage_in_pu() const;
         double get_inverter_ac_delayed_bypassing_time_in_s() const;
         double get_inverter_ac_delayed_unbypassing_voltage_in_pu() const;

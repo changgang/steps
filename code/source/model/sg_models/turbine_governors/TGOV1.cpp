@@ -13,6 +13,7 @@ TGOV1::~TGOV1()
 
 void TGOV1::clear()
 {
+    set_model_float_parameter_count(7);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -128,7 +129,7 @@ double TGOV1::get_D() const
 bool TGOV1::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=9)
+    if(data.size()>=10)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
@@ -288,18 +289,34 @@ void TGOV1::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
+    add_model_data_name_and_index_pair("R", i); i++;
+    add_model_data_name_and_index_pair("T1", i); i++;
     add_model_data_name_and_index_pair("VMAX", i); i++;
     add_model_data_name_and_index_pair("VMIN", i); i++;
+    add_model_data_name_and_index_pair("T2", i); i++;
+    add_model_data_name_and_index_pair("T3", i); i++;
+    add_model_data_name_and_index_pair("D", i); i++;
 }
 
 
 double TGOV1::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
+    if(par_name=="R")
+        return get_R();
+    if(par_name=="T1")
+        return get_T1_in_s();
     if(par_name=="VMAX")
         return get_Valvemax_in_pu();
     if(par_name=="VMIN")
         return get_Valvemin_in_pu();
+    if(par_name=="T2")
+        return get_T2_in_s();
+    if(par_name=="T3")
+        return get_T3_in_s();
+    if(par_name=="D")
+        return get_D();
+
 
     return 0.0;
 }
@@ -307,10 +324,20 @@ double TGOV1::get_model_data_with_name(string par_name) const
 void TGOV1::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
+    if(par_name=="R")
+        return set_R(value);
+    if(par_name=="T1")
+        return set_T1_in_s(value);
     if(par_name=="VMAX")
         return set_Valvemax_in_pu(value);
     if(par_name=="VMIN")
         return set_Valvemin_in_pu(value);
+    if(par_name=="T2")
+        return set_T2_in_s(value);
+    if(par_name=="T3")
+        return set_T3_in_s(value);
+    if(par_name=="D")
+        return set_D(value);
 }
 
 void TGOV1::prepare_model_internal_variable_table()

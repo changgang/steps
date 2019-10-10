@@ -16,6 +16,7 @@ PSASPS5::~PSASPS5()
 
 void PSASPS5::clear()
 {
+    set_model_float_parameter_count(13);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
@@ -373,14 +374,51 @@ void PSASPS5::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
+    add_model_data_name_and_index_pair("T1", i); i++;
+    add_model_data_name_and_index_pair("T2", i); i++;
+    add_model_data_name_and_index_pair("T3", i); i++;
+    add_model_data_name_and_index_pair("T4", i); i++;
+    add_model_data_name_and_index_pair("T5", i); i++;
+    add_model_data_name_and_index_pair("K1", i); i++;
+    add_model_data_name_and_index_pair("T6", i); i++;
+    add_model_data_name_and_index_pair("K2", i); i++;
     add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("P", i); i++;
+    add_model_data_name_and_index_pair("K", i); i++;
+    add_model_data_name_and_index_pair("VSMAX", i); i++;
+    add_model_data_name_and_index_pair("VSMIN", i); i++;
 }
 
 double PSASPS5::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
+
+    if(par_name=="T1")
+        return get_T1_in_s();
+    if(par_name=="T2")
+        return get_T2_in_s();
+    if(par_name=="T3")
+        return get_T3_in_s();
+    if(par_name=="T4")
+        return get_T4_in_s();
+    if(par_name=="T5")
+        return get_T5_in_s();
+    if(par_name=="K1")
+        return get_K1();
+    if(par_name=="T6")
+        return get_T6_in_s();
+    if(par_name=="K2")
+        return get_K2();
     if(par_name=="A")
-        return 0.0;
+        return get_a();
+    if(par_name=="P")
+        return get_p();
+    if(par_name=="K")
+        return get_K();
+    if(par_name=="VSMAX")
+        return get_Vsmax();
+    if(par_name=="VSMIN")
+        return get_Vsmin();
 
     return 0.0;
 }
@@ -388,8 +426,33 @@ double PSASPS5::get_model_data_with_name(string par_name) const
 void PSASPS5::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
+
+    if(par_name=="T1")
+        return set_T1_in_s(value);
+    if(par_name=="T2")
+        return set_T2_in_s(value);
+    if(par_name=="T3")
+        return set_T3_in_s(value);
+    if(par_name=="T4")
+        return set_T4_in_s(value);
+    if(par_name=="T5")
+        return set_T5_in_s(value);
+    if(par_name=="K1")
+        return set_K1(value);
+    if(par_name=="T6")
+        return set_T6_in_s(value);
+    if(par_name=="K2")
+        return set_K2(value);
     if(par_name=="A")
-        return;
+        return set_a(value);
+    if(par_name=="P")
+        return set_p(value);
+    if(par_name=="K")
+        return set_K(value);
+    if(par_name=="VSMAX")
+        return set_Vsmax(value);
+    if(par_name=="VSMIN")
+        return set_Vsmin(value);
 
     return;
 }

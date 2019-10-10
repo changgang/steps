@@ -16,6 +16,7 @@ LCFB1::~LCFB1()
 
 void LCFB1::clear()
 {
+    set_model_float_parameter_count(9);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -423,14 +424,39 @@ void LCFB1::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("F_FLAG", i); i++;
+    add_model_data_name_and_index_pair("P_FLAG", i); i++;
+    add_model_data_name_and_index_pair("FB", i); i++;
+    add_model_data_name_and_index_pair("TPELEC", i); i++;
+    add_model_data_name_and_index_pair("DB", i); i++;
+    add_model_data_name_and_index_pair("EMAX", i); i++;
+    add_model_data_name_and_index_pair("KP", i); i++;
+    add_model_data_name_and_index_pair("KI", i); i++;
+    add_model_data_name_and_index_pair("IRMAX", i); i++;
 }
 
 double LCFB1::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+
+    if(par_name == "F_FLAG")
+        return get_frequency_regulation_flag();
+    if(par_name == "P_FLAG")
+        return get_power_regulation_flag();
+    if(par_name=="FB")
+        return get_Fb();
+    if(par_name=="TPELEC")
+        return get_Tpelec_in_s();
+    if(par_name=="DB")
+        return get_db();
+    if(par_name=="EMAX")
+        return get_Emax();
+    if(par_name=="KP")
+        return get_Kp();
+    if(par_name=="KI")
+        return get_Ki();
+    if(par_name=="IRMAX")
+        return get_Irmax();
 
     return 0.0;
 }

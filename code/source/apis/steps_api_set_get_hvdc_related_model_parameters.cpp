@@ -79,4 +79,53 @@ void api_set_hvdc_related_model_float_parameter(size_t ibus, size_t jbus, char* 
     show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }
 
+size_t api_get_hvdc_related_model_float_parameter_count(size_t ibus, size_t jbus, char* identifier, char* model_type, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    HVDC* hvdc = psdb.get_hvdc(did);
+    if(hvdc==NULL)
+    {
+        show_device_not_exist_with_api(did, __FUNCTION__);
+        return 0;
+    }
+    string MODEL_TYPE = string2upper(model_type);
+    if(MODEL_TYPE=="HVDC")
+    {
+        HVDC_MODEL* model = hvdc->get_hvdc_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    return 0;
+}
 
+const char* api_get_hvdc_related_model_float_parameter_name(size_t ibus, size_t jbus, char* identifier, char* model_type, size_t parameter_index, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    HVDC* hvdc = psdb.get_hvdc(did);
+    string name = "";
+    if(hvdc==NULL)
+    {
+        show_device_not_exist_with_api(did, __FUNCTION__);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    string MODEL_TYPE = string2upper(model_type);
+    if(MODEL_TYPE=="HVDC")
+    {
+        HVDC_MODEL* model = hvdc->get_hvdc_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+    return toolkit.steps_char_buffer;
+}

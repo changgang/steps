@@ -37,6 +37,13 @@ AERD0& AERD0::operator=(const AERD0& model)
     return *this;
 }
 
+void AERD0::clear()
+{
+    set_model_float_parameter_count(16);
+    prepare_model_data_table();
+    prepare_model_internal_variable_table();
+}
+
 void AERD0::copy_from_const_model(const AERD0& model)
 {
     clear();
@@ -268,12 +275,6 @@ bool AERD0::setup_model_with_bpa_string(string data)
 void AERD0::check()
 {
     ostringstream osstream;
-}
-
-void AERD0::clear()
-{
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void AERD0::report()

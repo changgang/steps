@@ -16,6 +16,7 @@ IEE2ST::~IEE2ST()
 
 void IEE2ST::clear()
 {
+    set_model_float_parameter_count(16);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
@@ -548,14 +549,59 @@ void IEE2ST::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("K1", i); i++;
+    add_model_data_name_and_index_pair("K2", i); i++;
+    add_model_data_name_and_index_pair("T1", i); i++;
+    add_model_data_name_and_index_pair("T2", i); i++;
+    add_model_data_name_and_index_pair("T3", i); i++;
+    add_model_data_name_and_index_pair("T4", i); i++;
+    add_model_data_name_and_index_pair("T5", i); i++;
+    add_model_data_name_and_index_pair("T6", i); i++;
+    add_model_data_name_and_index_pair("T7", i); i++;
+    add_model_data_name_and_index_pair("T8", i); i++;
+    add_model_data_name_and_index_pair("T9", i); i++;
+    add_model_data_name_and_index_pair("T10", i); i++;
+    add_model_data_name_and_index_pair("VSMAX", i); i++;
+    add_model_data_name_and_index_pair("VSMIN", i); i++;
+    add_model_data_name_and_index_pair("VCMAX", i); i++;
+    add_model_data_name_and_index_pair("VCMIN", i); i++;
 }
 
 double IEE2ST::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    if(par_name=="K1")
+        return get_K1();
+    if(par_name=="K2")
+        return get_K2();
+    if(par_name=="T1")
+        return get_T1_in_s();
+    if(par_name=="T2")
+        return get_T2_in_s();
+    if(par_name=="T3")
+        return get_T3_in_s();
+    if(par_name=="T4")
+        return get_T4_in_s();
+    if(par_name=="T5")
+        return get_T5_in_s();
+    if(par_name=="T6")
+        return get_T6_in_s();
+    if(par_name=="T7")
+        return get_T7_in_s();
+    if(par_name=="T8")
+        return get_T8_in_s();
+    if(par_name=="T9")
+        return get_T9_in_s();
+    if(par_name=="T10")
+        return get_T10_in_s();
+    if(par_name=="VSMAX")
+        return get_Vsmax();
+    if(par_name=="VSMIN")
+        return get_Vsmin();
+    if(par_name=="VCMAX")
+        return get_Vcmax();
+    if(par_name=="VCMIN")
+        return get_Vcmin();
 
     return 0.0;
 }
@@ -563,8 +609,39 @@ double IEE2ST::get_model_data_with_name(string par_name) const
 void IEE2ST::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+
+    if(par_name=="K1")
+        return set_K1(value);
+    if(par_name=="K2")
+        return set_K2(value);
+    if(par_name=="T1")
+        return set_T1_in_s(value);
+    if(par_name=="T2")
+        return set_T2_in_s(value);
+    if(par_name=="T3")
+        return set_T3_in_s(value);
+    if(par_name=="T4")
+        return set_T4_in_s(value);
+    if(par_name=="T5")
+        return set_T5_in_s(value);
+    if(par_name=="T6")
+        return set_T6_in_s(value);
+    if(par_name=="T7")
+        return set_T7_in_s(value);
+    if(par_name=="T8")
+        return set_T8_in_s(value);
+    if(par_name=="T9")
+        return set_T9_in_s(value);
+    if(par_name=="T10")
+        return set_T10_in_s(value);
+    if(par_name=="VSMAX")
+        return set_Vsmax(value);
+    if(par_name=="VSMIN")
+        return set_Vsmin(value);
+    if(par_name=="VCMAX")
+        return set_Vcmax(value);
+    if(par_name=="VCMIN")
+        return set_Vcmin(value);
 
     return;
 }

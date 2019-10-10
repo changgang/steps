@@ -19,6 +19,7 @@ CDC6T::~CDC6T()
 
 void CDC6T::clear()
 {
+    set_model_float_parameter_count(32);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -51,13 +52,13 @@ void CDC6T::copy_from_const_model(const CDC6T& model)
     this->set_rectifier_ac_instantaneous_blocking_voltage_in_pu(model.get_rectifier_ac_instantaneous_blocking_voltage_in_pu());
     this->set_rectifier_ac_delayed_blocking_voltage_in_pu(model.get_rectifier_ac_delayed_blocking_voltage_in_pu());
     this->set_rectifier_ac_delayed_blocking_time_in_s(model.get_rectifier_ac_delayed_blocking_time_in_s());
-    this->set_inverter_ac_instantenous_blocking_voltage_in_pu(model.get_inverter_ac_instantenous_blocking_voltage_in_pu());
+    this->set_inverter_ac_instantaneous_blocking_voltage_in_pu(model.get_inverter_ac_instantaneous_blocking_voltage_in_pu());
     this->set_communication_delay_between_converters_in_s(model.get_communication_delay_between_converters_in_s());
     this->set_rectifier_ac_delayed_unblocking_voltage_in_pu(model.get_rectifier_ac_delayed_unblocking_voltage_in_pu());
     this->set_rectifier_ac_delayed_unblocking_time_in_s(model.get_rectifier_ac_delayed_unblocking_time_in_s());
     this->set_inverter_ac_delayed_unblocking_time_in_s(model.get_inverter_ac_delayed_unblocking_time_in_s());
     this->set_mininum_blocking_time_in_s(model.get_mininum_blocking_time_in_s());
-    this->set_inverter_dc_instantaneous_bypassing_voltage_in_kV(model.get_inverter_dc_instantenous_bypassing_voltage_in_kV());
+    this->set_inverter_dc_instantaneous_bypassing_voltage_in_kV(model.get_inverter_dc_instantaneous_bypassing_voltage_in_kV());
     this->set_inverter_ac_delayed_bypassing_voltage_in_pu(model.get_inverter_ac_delayed_bypassing_voltage_in_pu());
     this->set_inverter_ac_delayed_bypassing_time_in_s(model.get_inverter_ac_delayed_bypassing_time_in_s());
     this->set_inverter_ac_delayed_unbypassing_voltage_in_pu(model.get_inverter_ac_delayed_unbypassing_voltage_in_pu());
@@ -121,7 +122,7 @@ void CDC6T::set_rectifier_ac_delayed_blocking_time_in_s(double t)
     rec_ac_blocking_timer.set_timer_interval_in_s(t);
 }
 
-void CDC6T::set_inverter_ac_instantenous_blocking_voltage_in_pu(double v)
+void CDC6T::set_inverter_ac_instantaneous_blocking_voltage_in_pu(double v)
 {
     inverter_ac_instantaneous_blocking_voltage_in_pu = v;
 }
@@ -202,7 +203,7 @@ double CDC6T::get_rectifier_ac_delayed_blocking_time_in_s() const
     return rec_ac_blocking_timer.get_timer_interval_in_s();
 }
 
-double CDC6T::get_inverter_ac_instantenous_blocking_voltage_in_pu() const
+double CDC6T::get_inverter_ac_instantaneous_blocking_voltage_in_pu() const
 {
     return inverter_ac_instantaneous_blocking_voltage_in_pu;
 }
@@ -227,7 +228,7 @@ double CDC6T::get_inverter_ac_delayed_unblocking_time_in_s() const
     return inv_ac_unblocking_timer.get_timer_interval_in_s();
 }
 
-double CDC6T::get_inverter_dc_instantenous_bypassing_voltage_in_kV() const
+double CDC6T::get_inverter_dc_instantaneous_bypassing_voltage_in_kV() const
 {
     return inverter_dc_instantaneous_bypassing_voltage_in_kV;
 }
@@ -255,7 +256,7 @@ double CDC6T::get_inverter_ac_delayed_unbypassing_time_in_s() const
 bool CDC6T::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()<24)
+    if(data.size()<34)
         return is_successful;
 
     string model_name = get_string_data(data[0],"");
@@ -263,9 +264,9 @@ bool CDC6T::setup_model_with_steps_string_vector(vector<string>& data)
         return is_successful;
 
 
-    // iblcok iunblock for instantenous block or unblock
+    // iblcok iunblock for instantaneous block or unblock
     // dblcok dunblock for delayed block or unblock
-    // ibupass iunbupass for instantenous bupass or unbupass
+    // ibupass iunbupass for instantaneous bupass or unbupass
     // dbupass dunbupass for delayed bupass or unbupass
     double min_alpha, min_gamma, tvdci, tidc, vac_iblock, vac_dunblock, t_block,
            vdc_ibypass, vac_dunbypass, t_bypass,
@@ -339,7 +340,7 @@ bool CDC6T::setup_model_with_steps_string_vector(vector<string>& data)
     set_rectifier_ac_delayed_blocking_voltage_in_pu(vac_dblock);
     set_rectifier_ac_delayed_blocking_time_in_s(t_dblock);
     set_rectifier_ac_delayed_unblocking_time_in_s(t_dunblock);
-    set_inverter_ac_instantenous_blocking_voltage_in_pu(vaci_iblock);
+    set_inverter_ac_instantaneous_blocking_voltage_in_pu(vaci_iblock);
     set_communication_delay_between_converters_in_s(t_comm);
     set_inverter_ac_delayed_bypassing_voltage_in_pu(vac_dbypass);
     set_inverter_ac_delayed_bypassing_time_in_s(t_dbypass);
@@ -492,7 +493,7 @@ void CDC6T::check_blocking_logic()
         double vacr_iblock = get_rectifier_ac_instantaneous_blocking_voltage_in_pu();
         double vacr_dblock = get_rectifier_ac_delayed_blocking_voltage_in_pu();
         double tr_dblock = get_rectifier_ac_delayed_blocking_time_in_s();
-        double vaci_iblock = get_inverter_ac_instantenous_blocking_voltage_in_pu();
+        double vaci_iblock = get_inverter_ac_instantaneous_blocking_voltage_in_pu();
         double t_comm = get_communication_delay_between_converters_in_s();
 
         bool block_flag = false;
@@ -694,7 +695,7 @@ void CDC6T::check_bypassing_logic()
         if(t_unbypass==INFINITE_THRESHOLD) // not unbypassing
         {
             double vdc_i = get_converter_dc_voltage_in_kV(INVERTER);
-            double vdc_ibypass = get_inverter_dc_instantenous_bypassing_voltage_in_kV();
+            double vdc_ibypass = get_inverter_dc_instantaneous_bypassing_voltage_in_kV();
             bool bypass_logic = false;
             if(vdc_i<vdc_ibypass)
             {
@@ -882,7 +883,7 @@ string CDC6T::get_standard_psse_string() const
             <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_unblocking_voltage_in_pu()<<", "
             <<setw(8)<<setprecision(4)<<get_mininum_blocking_time_in_s()<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(4)<<get_inverter_dc_instantenous_bypassing_voltage_in_kV()<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_dc_instantaneous_bypassing_voltage_in_kV()<<", "
             <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_unbypassing_voltage_in_pu()<<", "
             <<setw(8)<<setprecision(4)<<get_mininum_bypassing_time_in_s()<<", "
             <<setw(8)<<setprecision(4)<<get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing()<<", "
@@ -902,7 +903,7 @@ string CDC6T::get_standard_psse_string() const
             <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_blocking_time_in_s()<<", "
             <<setw(8)<<setprecision(4)<<get_rectifier_ac_delayed_unblocking_time_in_s()<<", \n"
             <<setw(10)<<""
-            <<setw(8)<<setprecision(4)<<get_inverter_ac_instantenous_blocking_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_ac_instantaneous_blocking_voltage_in_pu()<<", "
             <<setw(8)<<setprecision(4)<<get_communication_delay_between_converters_in_s()<<", "
             <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_bypassing_voltage_in_pu()<<", "
             <<setw(8)<<setprecision(4)<<get_inverter_ac_delayed_bypassing_time_in_s()<<", "
@@ -917,14 +918,109 @@ void CDC6T::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("MIN ALPHA", i); i++;
+    add_model_data_name_and_index_pair("MIN GAMMA", i); i++;
+    add_model_data_name_and_index_pair("INVERTER TVDC", i); i++;
+    add_model_data_name_and_index_pair("TIDC", i); i++;
+    add_model_data_name_and_index_pair("RECTIFIER INSTANTANEOUS BLOCKING VAC", i); i++;
+    add_model_data_name_and_index_pair("RECTIFIER DELAYED UNBLOCKING VAC", i); i++;
+    add_model_data_name_and_index_pair("TMIN BLOCKING", i); i++;
+    add_model_data_name_and_index_pair("INVERTER BYPASSING VDC", i); i++;
+    add_model_data_name_and_index_pair("INVERTER UNBYPASSING VAC", i); i++;
+    add_model_data_name_and_index_pair("TMIN BYPASSING", i); i++;
+    add_model_data_name_and_index_pair("MIN VDC", i); i++;
+    add_model_data_name_and_index_pair("MIN IDC", i); i++;
+    add_model_data_name_and_index_pair("RATE VDC", i); i++;
+    add_model_data_name_and_index_pair("RATE IDC", i); i++;
+    add_model_data_name_and_index_pair("MIN IDC COMMAND", i); i++;
+    add_model_data_name_and_index_pair("VDCOL V0", i); i++;
+    add_model_data_name_and_index_pair("VDCOL I0", i); i++;
+    add_model_data_name_and_index_pair("VDCOL V1", i); i++;
+    add_model_data_name_and_index_pair("VDCOL I1", i); i++;
+    add_model_data_name_and_index_pair("VDCOL V2", i); i++;
+    add_model_data_name_and_index_pair("VDCOL I2", i); i++;
+    add_model_data_name_and_index_pair("TMIN SWITCH", i); i++;
+    add_model_data_name_and_index_pair("RECTIFIER DELAYED BLOCKING VAC", i); i++;
+    add_model_data_name_and_index_pair("RECTIFIER DELAYED BLOCKING T", i); i++;
+    add_model_data_name_and_index_pair("RECTIFIER DELAYED UNBLOCKING T", i); i++;
+    add_model_data_name_and_index_pair("INVERTER INSTANTANEOUS BLOCKING VAC", i); i++;
+    add_model_data_name_and_index_pair("TDELAY COMMUNICATION", i); i++;
+    add_model_data_name_and_index_pair("INVERTER DELAYED BYPASSING VAC", i); i++;
+    add_model_data_name_and_index_pair("INVERTER DELAYED BYPASSING T", i); i++;
+    add_model_data_name_and_index_pair("INVERTER DELAYED UNBLOCKING T", i); i++;
+    add_model_data_name_and_index_pair("INVERTER DELAYED UNBYPASSING T", i); i++;
+    add_model_data_name_and_index_pair("RECTIFIER TVDC", i); i++;
 }
 
 double CDC6T::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+
+    VDCOL vdcol_limiter = get_VDCOL();
+    if(par_name=="MIN ALPHA")
+        return get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER);
+    if(par_name=="MIN GAMMA")
+        return get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER);
+    if(par_name=="INVERTER TVDC")
+        return get_inverter_dc_voltage_sensor_T_in_s();
+    if(par_name=="TIDC")
+        return get_dc_current_sensor_T_in_s();
+    if(par_name=="RECTIFIER INSTANTANEOUS BLOCKING VAC")
+        return get_rectifier_ac_instantaneous_blocking_voltage_in_pu();
+    if(par_name=="RECTIFIER DELAYED UNBLOCKING VAC")
+        return get_rectifier_ac_delayed_unblocking_voltage_in_pu();
+    if(par_name=="TMIN BLOCKING")
+        return get_mininum_blocking_time_in_s();
+    if(par_name=="INVERTER BYPASSING VDC")
+        return get_inverter_dc_instantaneous_bypassing_voltage_in_kV();
+    if(par_name=="INVERTER UNBYPASSING VAC")
+        return get_inverter_ac_delayed_unbypassing_voltage_in_pu();
+    if(par_name=="TMIN BYPASSING")
+        return get_mininum_bypassing_time_in_s();
+    if(par_name=="MIN VDC")
+        return get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing();
+    if(par_name=="MIN IDC")
+        return get_minimum_dc_current_in_kA_following_unblocking()*1000.0;
+    if(par_name=="RATE VDC")
+        return get_dc_voltage_command_recovery_rate_in_pu_per_second();
+    if(par_name=="RATE IDC")
+        return get_dc_current_command_recovery_rate_in_pu_per_second();
+    if(par_name=="MIN IDC COMMAND")
+        return get_minimum_dc_current_command_in_kA()*1000.0;
+    if(par_name=="VDCOL V0")
+        return vdcol_limiter.get_vdcol_voltage_of_point_in_kV(0);
+    if(par_name=="VDCOL I0")
+        return vdcol_limiter.get_vdcol_current_of_point_in_kA(0)*1000.0;
+    if(par_name=="VDCOL V1")
+        return vdcol_limiter.get_vdcol_voltage_of_point_in_kV(1);
+    if(par_name=="VDCOL I1")
+        return vdcol_limiter.get_vdcol_current_of_point_in_kA(1)*1000.0;
+    if(par_name=="VDCOL V2")
+        return vdcol_limiter.get_vdcol_voltage_of_point_in_kV(2);
+    if(par_name=="VDCOL I2")
+        return vdcol_limiter.get_vdcol_current_of_point_in_kA(2)*1000.0;
+    if(par_name=="TMIN SWITCH")
+        return get_minimum_time_in_switched_mode_in_s();
+    if(par_name=="RECTIFIER DELAYED BLOCKING VAC")
+        return get_rectifier_ac_delayed_blocking_voltage_in_pu();
+    if(par_name=="RECTIFIER DELAYED BLOCKING T")
+        return get_rectifier_ac_delayed_blocking_time_in_s();
+    if(par_name=="RECTIFIER DELAYED UNBLOCKING T")
+        return get_rectifier_ac_delayed_unblocking_time_in_s();
+    if(par_name=="INVERTER INSTANTANEOUS BLOCKING VAC")
+        return get_inverter_ac_instantaneous_blocking_voltage_in_pu();
+    if(par_name=="TDELAY COMMUNICATION")
+        return get_communication_delay_between_converters_in_s();
+    if(par_name=="INVERTER DELAYED BYPASSING VAC")
+        return get_inverter_ac_delayed_bypassing_voltage_in_pu();
+    if(par_name=="INVERTER DELAYED BYPASSING T")
+        return get_inverter_ac_delayed_bypassing_time_in_s();
+    if(par_name=="INVERTER DELAYED UNBLOCKING T")
+        return get_inverter_ac_delayed_unblocking_time_in_s();
+    if(par_name=="INVERTER DELAYED UNBYPASSING T")
+        return get_inverter_ac_delayed_unbypassing_time_in_s();
+    if(par_name=="RECTIFIER TVDC")
+        return get_rectifier_dc_voltage_sensor_T_in_s();
 
     return 0.0;
 }
@@ -932,8 +1028,72 @@ double CDC6T::get_model_data_with_name(string par_name) const
 void CDC6T::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
+
+    if(par_name=="MIN ALPHA")
+        return set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, value);
+    if(par_name=="MIN GAMMA")
+        return set_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER, value);
+    if(par_name=="INVERTER TVDC")
+        return set_inverter_dc_voltage_sensor_T_in_s(value);
+    if(par_name=="TIDC")
+        return set_dc_current_sensor_T_in_s(value);
+    if(par_name=="RECTIFIER INSTANTANEOUS BLOCKING VAC")
+        return set_rectifier_ac_instantaneous_blocking_voltage_in_pu(value);
+    if(par_name=="RECTIFIER DELAYED UNBLOCKING VAC")
+        return set_rectifier_ac_delayed_unblocking_voltage_in_pu(value);
+    if(par_name=="TMIN BLOCKING")
+        return set_mininum_blocking_time_in_s(value);
+    if(par_name=="INVERTER BYPASSING VDC")
+        return set_inverter_dc_instantaneous_bypassing_voltage_in_kV(value);
+    if(par_name=="INVERTER UNBYPASSING VAC")
+        return set_inverter_ac_delayed_unbypassing_voltage_in_pu(value);
+    if(par_name=="TMIN BYPASSING")
+        return set_mininum_bypassing_time_in_s(value);
+    if(par_name=="MIN VDC")
+        return set_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing(value);
+    if(par_name=="MIN IDC")
+        return set_minimum_dc_current_in_kA_following_unblocking(value*0.001);
+    if(par_name=="RATE VDC")
+        return set_dc_voltage_command_recovery_rate_in_pu_per_second(value);
+    if(par_name=="RATE IDC")
+        return set_dc_current_command_recovery_rate_in_pu_per_second(value);
+    if(par_name=="MIN IDC COMMAND")
+        return set_minimum_dc_current_command_in_kA(value*0.001);
+    if(par_name=="VDCOL V0")
         return;
+    if(par_name=="VDCOL I0")
+        return;
+    if(par_name=="VDCOL V1")
+        return;
+    if(par_name=="VDCOL I1")
+        return;
+    if(par_name=="VDCOL V2")
+        return;
+    if(par_name=="VDCOL I2")
+        return;
+    if(par_name=="TMIN SWITCH")
+        return set_minimum_time_in_switched_mode_in_s(value);
+    if(par_name=="RECTIFIER DELAYED BLOCKING VAC")
+        return set_rectifier_ac_delayed_blocking_voltage_in_pu(value);
+    if(par_name=="RECTIFIER DELAYED BLOCKING T")
+        return set_rectifier_ac_delayed_blocking_time_in_s(value);
+    if(par_name=="RECTIFIER DELAYED UNBLOCKING T")
+        return set_rectifier_ac_delayed_unblocking_time_in_s(value);
+    if(par_name=="INVERTER INSTANTANEOUS BLOCKING VAC")
+        return set_inverter_ac_instantaneous_blocking_voltage_in_pu(value);
+    if(par_name=="TDELAY COMMUNICATION")
+        return set_communication_delay_between_converters_in_s(value);
+    if(par_name=="INVERTER DELAYED BYPASSING VAC")
+        return set_inverter_ac_delayed_bypassing_voltage_in_pu(value);
+    if(par_name=="INVERTER DELAYED BYPASSING T")
+        return set_inverter_ac_delayed_bypassing_time_in_s(value);
+    if(par_name=="INVERTER DELAYED UNBLOCKING T")
+        return set_inverter_ac_delayed_unblocking_time_in_s(value);
+    if(par_name=="INVERTER DELAYED UNBYPASSING T")
+        return set_inverter_ac_delayed_unbypassing_time_in_s(value);
+    if(par_name=="RECTIFIER TVDC")
+        return set_rectifier_dc_voltage_sensor_T_in_s(value);
+
 
     return;
 }

@@ -18,6 +18,7 @@ PVGU1::~PVGU1()
 
 void PVGU1::clear()
 {
+    set_model_float_parameter_count(9);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -476,14 +477,39 @@ void PVGU1::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("", i); i++;
+    add_model_data_name_and_index_pair("TV", i); i++;
+    add_model_data_name_and_index_pair("TI", i); i++;
+    add_model_data_name_and_index_pair("VL LVPL", i); i++;
+    add_model_data_name_and_index_pair("VH LVPL", i); i++;
+    add_model_data_name_and_index_pair("G LVPL", i); i++;
+    add_model_data_name_and_index_pair("V HVRC", i); i++;
+    add_model_data_name_and_index_pair("C HVRC", i); i++;
+    add_model_data_name_and_index_pair("CRATE LVPL", i); i++;
+    add_model_data_name_and_index_pair("TV LVPL", i); i++;
 }
 
 double PVGU1::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="")
-        return 0.0;
+    LVPL lvpl = get_LVPL();
+    if(par_name=="TV")
+        return get_converter_reactiver_voltage_command_T_in_s();
+    if(par_name=="TI")
+        return get_converter_activer_current_command_T_in_s();
+    if(par_name=="VL LVPL")
+        return lvpl.get_low_voltage_in_pu();
+    if(par_name=="VH LVPL")
+        return lvpl.get_high_voltage_in_pu();
+    if(par_name=="G LVPL")
+        return lvpl.get_gain_at_hig_voltage();
+    if(par_name=="V HVRC")
+        return get_HVRC_voltage_in_pu();
+    if(par_name=="C HVRC")
+        return get_HVRC_current_in_pu();
+    if(par_name=="CRATE LVPL")
+        return get_LVPL_max_rate_of_active_current_change();
+    if(par_name=="TV LVPL")
+        return get_LVPL_voltage_sensor_T_in_s();
 
     return 0.0;
 }
@@ -491,12 +517,24 @@ double PVGU1::get_model_data_with_name(string par_name) const
 void PVGU1::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="")
-    {
-        PV_UNIT* gen = get_pv_unit_pointer();
-        if(gen!=NULL)
-            return;
-    }
+    if(par_name=="TV")
+        return set_converter_reactiver_voltage_command_T_in_s(value);
+    if(par_name=="TI")
+        return set_converter_activer_current_command_T_in_s(value);
+    if(par_name=="VL LVPL")
+        return;
+    if(par_name=="VH LVPL")
+        return;
+    if(par_name=="G LVPL")
+        return;
+    if(par_name=="V HVRC")
+        return set_HVRC_voltage_in_pu(value);
+    if(par_name=="C HVRC")
+        return set_HVRC_current_in_pu(value);
+    if(par_name=="CRATE LVPL")
+        return set_LVPL_max_rate_of_active_current_change(value);
+    if(par_name=="TV LVPL")
+        return set_LVPL_voltage_sensor_T_in_s(value);
     return;
 }
 

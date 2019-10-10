@@ -28,6 +28,22 @@ WT3E1& WT3E1::operator=(const WT3E1& model)
     return *this;
 }
 
+void WT3E1::clear()
+{
+    set_model_float_parameter_count(36);
+    prepare_model_data_table();
+    prepare_model_internal_variable_table();
+
+    set_transformer_from_bus(0);
+    set_transformer_to_bus(0);
+    set_transformer_id("");
+    voltage_regulator_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    Q_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+
+    power_order_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+}
+
 void WT3E1::copy_from_const_model(const WT3E1& model)
 {
     clear();
@@ -917,21 +933,6 @@ void WT3E1::check()
     ;
 }
 
-void WT3E1::clear()
-{
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
-    set_transformer_from_bus(0);
-    set_transformer_to_bus(0);
-    set_transformer_id("");
-    voltage_regulator_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-    Q_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-    V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-
-    power_order_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-}
-
 void WT3E1::report()
 {
     ostringstream osstream;
@@ -1048,7 +1049,41 @@ void WT3E1::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("BUS TO REGULATE", i); i++;
+    add_model_data_name_and_index_pair("VAR CONTROL FLAG", i); i++;
+    add_model_data_name_and_index_pair("VOLTAGE FLAG", i); i++;
+    add_model_data_name_and_index_pair("XCOMP IN PU", i); i++;
+    add_model_data_name_and_index_pair("T VOLTAGE SENSOR IN S", i); i++;
+    add_model_data_name_and_index_pair("FN", i); i++;
+    add_model_data_name_and_index_pair("KP VOLTAGE ERROR", i); i++;
+    add_model_data_name_and_index_pair("TP VOLTAGE ERROR", i); i++;
+    add_model_data_name_and_index_pair("KI VOLTAGE ERROR", i); i++;
+    add_model_data_name_and_index_pair("QMIN IN PU", i); i++;
+    add_model_data_name_and_index_pair("QMAX IN PU", i); i++;
+    add_model_data_name_and_index_pair("T REACTIVE POWER FILTER IN S", i); i++;
+    add_model_data_name_and_index_pair("T ACTIVE POWER SENSOR IN S", i); i++;
+    add_model_data_name_and_index_pair("KI REACTIVE POWER ERROR", i); i++;
+    add_model_data_name_and_index_pair("VMIN IN PU", i); i++;
+    add_model_data_name_and_index_pair("VMAX IN PU", i); i++;
+    add_model_data_name_and_index_pair("KI VOLTAGE COMMAND", i); i++;
+    add_model_data_name_and_index_pair("EQMIN IN PU", i); i++;
+    add_model_data_name_and_index_pair("EQMAX IN PU", i); i++;
+    add_model_data_name_and_index_pair("T SPEED SENSOR IN S", i); i++;
+    add_model_data_name_and_index_pair("KP SPEED", i); i++;
+    add_model_data_name_and_index_pair("KI SPEED", i); i++;
+    add_model_data_name_and_index_pair("K VIRTUAL INERTIA", i); i++;
+    add_model_data_name_and_index_pair("T VIRTUAL INERTIA IN S", i); i++;
+    add_model_data_name_and_index_pair("K FREQUENCY DROOP", i); i++;
+    add_model_data_name_and_index_pair("T FREQUENCY DROOP IN S", i); i++;
+    add_model_data_name_and_index_pair("F LOWER IN PU", i); i++;
+    add_model_data_name_and_index_pair("F UPPER IN PU", i); i++;
+    add_model_data_name_and_index_pair("K SECONDARY FREQUENCY REGULATION", i); i++;
+    add_model_data_name_and_index_pair("P RATE MIN IN PU/S", i); i++;
+    add_model_data_name_and_index_pair("P RATE MAX IN PU/S", i); i++;
+    add_model_data_name_and_index_pair("T ACTIVE POWER COMMAND IN S", i); i++;
+    add_model_data_name_and_index_pair("PMIN IN PU", i); i++;
+    add_model_data_name_and_index_pair("PMAX IN PU", i); i++;
+    add_model_data_name_and_index_pair("ACTIVE CURRENT MAX IN PU", i); i++;
 }
 
 double WT3E1::get_model_data_with_name(string par_name) const

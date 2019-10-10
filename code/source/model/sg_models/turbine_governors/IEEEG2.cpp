@@ -15,6 +15,7 @@ IEEEG2::~IEEEG2()
 }
 void IEEEG2::clear()
 {
+    set_model_float_parameter_count(7);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -348,18 +349,33 @@ void IEEEG2::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
+    add_model_data_name_and_index_pair("K", i); i++;
+    add_model_data_name_and_index_pair("T1", i); i++;
+    add_model_data_name_and_index_pair("T2", i); i++;
+    add_model_data_name_and_index_pair("T3", i); i++;
     add_model_data_name_and_index_pair("PMAX", i); i++;
     add_model_data_name_and_index_pair("PMIN", i); i++;
+    add_model_data_name_and_index_pair("T4", i); i++;
 }
 
 double IEEEG2::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
 
+    if(par_name=="K")
+        return get_K();
+    if(par_name=="T1")
+        return get_T1_in_s();
+    if(par_name=="T2")
+        return get_T2_in_s();
+    if(par_name=="T3")
+        return get_T3_in_s();
     if(par_name=="PMAX")
         return get_Pmax_in_pu();
     if(par_name=="PMIN")
         return get_Pmin_in_pu();
+    if(par_name=="T4")
+        return get_T4_in_s();
 
     return 0.0;
 }
@@ -367,10 +383,21 @@ double IEEEG2::get_model_data_with_name(string par_name) const
 void IEEEG2::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
+
+    if(par_name=="K")
+        return set_K(value);
+    if(par_name=="T1")
+        return set_T1_in_s(value);
+    if(par_name=="T2")
+        return set_T2_in_s(value);
+    if(par_name=="T3")
+        return set_T3_in_s(value);
     if(par_name=="PMAX")
         return set_Pmax_in_pu(value);
     if(par_name=="PMIN")
         return set_Pmin_in_pu(value);
+    if(par_name=="T4")
+        return set_T4_in_s(value);
 }
 
 void IEEEG2::prepare_model_internal_variable_table()

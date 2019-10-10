@@ -19,6 +19,7 @@ CDC4T::~CDC4T()
 
 void CDC4T::clear()
 {
+    set_model_float_parameter_count(22);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -143,9 +144,9 @@ bool CDC4T::setup_model_with_steps_string_vector(vector<string>& data)
     if(model_name!=get_model_name())
         return is_successful;
 
-    // iblcok iunblock for instantenous block or unblock
+    // iblcok iunblock for instantaneous block or unblock
     // dblcok dunblock for delayed block or unblock
-    // ibupass iunbupass for instantenous bupass or unbupass
+    // ibupass iunbupass for instantaneous bupass or unbupass
     // dbupass dunbupass for delayed bupass or unbupass
     double min_alpha, min_gamma, tvdci, tidc, vac_iblock, vac_iunblock, t_block,
            vdc_ibypass, vac_iunbypass, t_bypass,
@@ -476,13 +477,35 @@ string CDC4T::get_standard_psse_string() const
     //size_t rbus = hvdc->get_converter_bus(RECTIFIER);
     //size_t ibus = hvdc->get_converter_bus(INVERTER);
     string dcname = hvdc->get_name();
+    string model_name = "'"+get_model_name()+"'";
 
-    osstream<<"  \""<<dcname<<"\", \"CDC4T\", ";
-    osstream<<setprecision(4)<<this->get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER)<<", "
-      <<setprecision(4)<<this->get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER)<<", "
-      <<setprecision(4)<<this->get_inverter_dc_voltage_sensor_T_in_s()<<", "
-      <<setprecision(4)<<this->get_dc_current_sensor_T_in_s()<<", "
-      <<" /";
+    VDCOL vdcol_limiter = get_VDCOL();
+    osstream<<setw(16)<<dcname<<", "
+            <<setw(10)<<model_name<<", "
+            <<setw(8)<<setprecision(4)<<get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER)<<", "
+            <<setw(8)<<setprecision(4)<<get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER)<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_dc_voltage_sensor_T_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_dc_current_sensor_T_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_rectifier_ac_instantaneous_blocking_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_rectifier_ac_instantaneous_unblocking_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_mininum_blocking_time_in_s()<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<get_inverter_dc_instantaneous_bypassing_voltage_in_kV()<<", "
+            <<setw(8)<<setprecision(4)<<get_inverter_ac_instantaneous_unbypassing_voltage_in_pu()<<", "
+            <<setw(8)<<setprecision(4)<<get_mininum_bypassing_time_in_s()<<", "
+            <<setw(8)<<setprecision(4)<<get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing()<<", "
+            <<setw(8)<<setprecision(4)<<get_minimum_dc_current_in_kA_following_unblocking()*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<get_dc_voltage_command_recovery_rate_in_pu_per_second()<<", "
+            <<setw(8)<<setprecision(4)<<get_dc_current_command_recovery_rate_in_pu_per_second()<<", "
+            <<setw(8)<<setprecision(4)<<get_minimum_dc_current_command_in_kA()*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(0)<<", \n"
+            <<setw(10)<<""
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(0)*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(1)<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(1)*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_voltage_of_point_in_kV(2)<<", "
+            <<setw(8)<<setprecision(4)<<vdcol_limiter.get_vdcol_current_of_point_in_kA(2)*1000.0<<", "
+            <<setw(8)<<setprecision(4)<<get_minimum_time_in_switched_mode_in_s()<<" /";
 
     return osstream.str();
 }
@@ -491,14 +514,78 @@ void CDC4T::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("MIN ALPHA", i); i++;
+    add_model_data_name_and_index_pair("MIN GAMMA", i); i++;
+    add_model_data_name_and_index_pair("INVERTER TVDC", i); i++;
+    add_model_data_name_and_index_pair("TIDC", i); i++;
+    add_model_data_name_and_index_pair("RECTIFIER INSTANTANEOUS BLOCKING VAC", i); i++;
+    add_model_data_name_and_index_pair("RECTIFIER INSTANTANEOUS UNBLOCKING VAC", i); i++;
+    add_model_data_name_and_index_pair("TMIN BLOCKING", i); i++;
+    add_model_data_name_and_index_pair("INVERTER BYPASSING VDC", i); i++;
+    add_model_data_name_and_index_pair("INVERTER UNBYPASSING VAC", i); i++;
+    add_model_data_name_and_index_pair("TMIN BYPASSING", i); i++;
+    add_model_data_name_and_index_pair("MIN VDC", i); i++;
+    add_model_data_name_and_index_pair("MIN IDC", i); i++;
+    add_model_data_name_and_index_pair("RATE VDC", i); i++;
+    add_model_data_name_and_index_pair("RATE IDC", i); i++;
+    add_model_data_name_and_index_pair("MIN IDC COMMAND", i); i++;
+    add_model_data_name_and_index_pair("VDCOL V0", i); i++;
+    add_model_data_name_and_index_pair("VDCOL I0", i); i++;
+    add_model_data_name_and_index_pair("VDCOL V1", i); i++;
+    add_model_data_name_and_index_pair("VDCOL I1", i); i++;
+    add_model_data_name_and_index_pair("VDCOL V2", i); i++;
+    add_model_data_name_and_index_pair("VDCOL I2", i); i++;
+    add_model_data_name_and_index_pair("TMIN SWITCH", i); i++;
 }
 
 double CDC4T::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    VDCOL vdcol_limiter = get_VDCOL();
+    if(par_name=="MIN ALPHA")
+        return get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER);
+    if(par_name=="MIN GAMMA")
+        return get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER);
+    if(par_name=="INVERTER TVDC")
+        return get_inverter_dc_voltage_sensor_T_in_s();
+    if(par_name=="TIDC")
+        return get_dc_current_sensor_T_in_s();
+    if(par_name=="RECTIFIER INSTANTANEOUS BLOCKING VAC")
+        return get_rectifier_ac_instantaneous_blocking_voltage_in_pu();
+    if(par_name=="RECTIFIER INSTANTANEOUS UNBLOCKING VAC")
+        return get_rectifier_ac_instantaneous_unblocking_voltage_in_pu();
+    if(par_name=="TMIN BLOCKING")
+        return get_mininum_blocking_time_in_s();
+    if(par_name=="INVERTER BYPASSING VDC")
+        return get_inverter_dc_instantaneous_bypassing_voltage_in_kV();
+    if(par_name=="INVERTER UNBYPASSING VAC")
+        return get_inverter_ac_instantaneous_unbypassing_voltage_in_pu();
+    if(par_name=="TMIN BYPASSING")
+        return get_mininum_bypassing_time_in_s();
+    if(par_name=="MIN VDC")
+        return get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing();
+    if(par_name=="MIN IDC")
+        return get_minimum_dc_current_in_kA_following_unblocking()*1000.0;
+    if(par_name=="RATE VDC")
+        return get_dc_voltage_command_recovery_rate_in_pu_per_second();
+    if(par_name=="RATE IDC")
+        return get_dc_current_command_recovery_rate_in_pu_per_second();
+    if(par_name=="MIN IDC COMMAND")
+        return get_minimum_dc_current_command_in_kA()*1000.0;
+    if(par_name=="VDCOL V0")
+        return vdcol_limiter.get_vdcol_voltage_of_point_in_kV(0);
+    if(par_name=="VDCOL I0")
+        return vdcol_limiter.get_vdcol_current_of_point_in_kA(0)*1000.0;
+    if(par_name=="VDCOL V1")
+        return vdcol_limiter.get_vdcol_voltage_of_point_in_kV(1);
+    if(par_name=="VDCOL I1")
+        return vdcol_limiter.get_vdcol_current_of_point_in_kA(1)*1000.0;
+    if(par_name=="VDCOL V2")
+        return vdcol_limiter.get_vdcol_voltage_of_point_in_kV(2);
+    if(par_name=="VDCOL I2")
+        return vdcol_limiter.get_vdcol_current_of_point_in_kA(2)*1000.0;
+    if(par_name=="TMIN SWITCH")
+        return get_minimum_time_in_switched_mode_in_s();
 
     return 0.0;
 }
@@ -506,8 +593,51 @@ double CDC4T::get_model_data_with_name(string par_name) const
 void CDC4T::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
+
+    if(par_name=="MIN ALPHA")
+        return set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, value);
+    if(par_name=="MIN GAMMA")
+        return set_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER, value);
+    if(par_name=="INVERTER TVDC")
+        return set_inverter_dc_voltage_sensor_T_in_s(value);
+    if(par_name=="TIDC")
+        return set_dc_current_sensor_T_in_s(value);
+    if(par_name=="RECTIFIER INSTANTANEOUS BLOCKING VAC")
+        return set_rectifier_ac_instantaneous_blocking_voltage_in_pu(value);
+    if(par_name=="RECTIFIER INSTANTANEOUS UNBLOCKING VAC")
+        return set_rectifier_ac_instantaneous_unblocking_voltage_in_pu(value);
+    if(par_name=="TMIN BLOCKING")
+        return set_mininum_blocking_time_in_s(value);
+    if(par_name=="INVERTER BYPASSING VDC")
+        return set_inverter_dc_instantaneous_bypassing_voltage_in_kV(value);
+    if(par_name=="INVERTER UNBYPASSING VAC")
+        return set_inverter_ac_instantaneous_unbypassing_voltage_in_pu(value);
+    if(par_name=="TMIN BYPASSING")
+        return set_mininum_bypassing_time_in_s(value);
+    if(par_name=="MIN VDC")
+        return set_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing(value);
+    if(par_name=="MIN IDC")
+        return set_minimum_dc_current_in_kA_following_unblocking(value*0.001);
+    if(par_name=="RATE VDC")
+        return set_dc_voltage_command_recovery_rate_in_pu_per_second(value);
+    if(par_name=="RATE IDC")
+        return set_dc_current_command_recovery_rate_in_pu_per_second(value);
+    if(par_name=="MIN IDC COMMAND")
+        return set_minimum_dc_current_command_in_kA(value*0.001);
+    if(par_name=="VDCOL V0")
         return;
+    if(par_name=="VDCOL I0")
+        return;
+    if(par_name=="VDCOL V1")
+        return;
+    if(par_name=="VDCOL I1")
+        return;
+    if(par_name=="VDCOL V2")
+        return;
+    if(par_name=="VDCOL I2")
+        return;
+    if(par_name=="TMIN SWITCH")
+        return set_minimum_time_in_switched_mode_in_s(value);
 
     return;
 }

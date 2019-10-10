@@ -25,6 +25,7 @@ PSASPS4::~PSASPS4()
 
 void PSASPS4::clear()
 {
+    set_model_float_parameter_count(23);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
@@ -450,7 +451,6 @@ void PSASPS4::initialize()
                 exciter->initialize();
 
             setup_block_toolkit_and_parameters();
-            size_t bus = generator->get_generator_bus();
 
             SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
             if(signal.is_valid())
@@ -755,14 +755,81 @@ void PSASPS4::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("KW", i); i++;
+    add_model_data_name_and_index_pair("TRW", i); i++;
+    add_model_data_name_and_index_pair("T5", i); i++;
+    add_model_data_name_and_index_pair("T6", i); i++;
+    add_model_data_name_and_index_pair("T7", i); i++;
+    add_model_data_name_and_index_pair("KR", i); i++;
+    add_model_data_name_and_index_pair("TRP", i); i++;
+    add_model_data_name_and_index_pair("TW", i); i++;
+    add_model_data_name_and_index_pair("TW1", i); i++;
+    add_model_data_name_and_index_pair("TW2", i); i++;
+    add_model_data_name_and_index_pair("KS", i); i++;
+    add_model_data_name_and_index_pair("T9", i); i++;
+    add_model_data_name_and_index_pair("T10", i); i++;
+    add_model_data_name_and_index_pair("T12", i); i++;
+    add_model_data_name_and_index_pair("KP", i); i++;
+    add_model_data_name_and_index_pair("T1", i); i++;
+    add_model_data_name_and_index_pair("T2", i); i++;
+    add_model_data_name_and_index_pair("T13", i); i++;
+    add_model_data_name_and_index_pair("T14", i); i++;
+    add_model_data_name_and_index_pair("T3", i); i++;
+    add_model_data_name_and_index_pair("T4", i); i++;
+    add_model_data_name_and_index_pair("VSMAX", i); i++;
+    add_model_data_name_and_index_pair("VSMIN", i); i++;
 }
 
 double PSASPS4::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+
+    if(par_name=="KW")
+        return get_Kw();
+    if(par_name=="TRW")
+        return get_Trw_in_s();
+    if(par_name=="T5")
+        return get_T5_in_s();
+    if(par_name=="T6")
+        return get_T6_in_s();
+    if(par_name=="T7")
+        return get_T7_in_s();
+    if(par_name=="KR")
+        return get_Kr();
+    if(par_name=="TRP")
+        return get_Trp_in_s();
+    if(par_name=="TW")
+        return get_Tw_in_s();
+    if(par_name=="TW1")
+        return get_Tw1_in_s();
+    if(par_name=="TW2")
+        return get_Tw2_in_s();
+    if(par_name=="KS")
+        return get_Ks();
+    if(par_name=="T9")
+        return get_T9_in_s();
+    if(par_name=="T10")
+        return get_T10_in_s();
+    if(par_name=="T12")
+        return get_T12_in_s();
+    if(par_name=="KP")
+        return get_Kp();
+    if(par_name=="T1")
+        return get_T1_in_s();
+    if(par_name=="T2")
+        return get_T2_in_s();
+    if(par_name=="T13")
+        return get_T13_in_s();
+    if(par_name=="T14")
+        return get_T14_in_s();
+    if(par_name=="T3")
+        return get_T3_in_s();
+    if(par_name=="T4")
+        return get_T4_in_s();
+    if(par_name=="VSMAX")
+        return get_Vsmax();
+    if(par_name=="VSMIN")
+        return get_Vsmin();
 
     return 0.0;
 }
@@ -770,8 +837,52 @@ double PSASPS4::get_model_data_with_name(string par_name) const
 void PSASPS4::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+    if(par_name=="KW")
+        return set_Kw(value);
+    if(par_name=="TRW")
+        return set_Trw_in_s(value);
+    if(par_name=="T5")
+        return set_T5_in_s(value);
+    if(par_name=="T6")
+        return set_T6_in_s(value);
+    if(par_name=="T7")
+        return set_T7_in_s(value);
+    if(par_name=="KR")
+        return set_Kr(value);
+    if(par_name=="TRP")
+        return set_Trp_in_s(value);
+    if(par_name=="TW")
+        return set_Tw_in_s(value);
+    if(par_name=="TW1")
+        return set_Tw1_in_s(value);
+    if(par_name=="TW2")
+        return set_Tw2_in_s(value);
+    if(par_name=="KS")
+        return set_Ks(value);
+    if(par_name=="T9")
+        return set_T9_in_s(value);
+    if(par_name=="T10")
+        return set_T10_in_s(value);
+    if(par_name=="T12")
+        return set_T12_in_s(value);
+    if(par_name=="KP")
+        return set_Kp(value);
+    if(par_name=="T1")
+        return set_T1_in_s(value);
+    if(par_name=="T2")
+        return set_T2_in_s(value);
+    if(par_name=="T13")
+        return set_T13_in_s(value);
+    if(par_name=="T14")
+        return set_T14_in_s(value);
+    if(par_name=="T3")
+        return set_T3_in_s(value);
+    if(par_name=="T4")
+        return set_T4_in_s(value);
+    if(par_name=="VSMAX")
+        return set_Vsmax(value);
+    if(par_name=="VSMIN")
+        return set_Vsmin(value);
 
     return;
 }

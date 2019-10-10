@@ -17,6 +17,7 @@ GENSAL::~GENSAL()
 
 void GENSAL::clear()
 {
+    set_model_float_parameter_count(12);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
@@ -34,6 +35,8 @@ void GENSAL::copy_from_const_model(const GENSAL& model)
     this->set_Td0p_in_s(model.get_Td0p_in_s());
     this->set_Td0pp_in_s(model.get_Td0pp_in_s());
     this->set_Tq0pp_in_s(model.get_Tq0pp_in_s());
+    this->set_saturation_at_1(model.get_saturation_at_1());
+    this->set_saturation_at_1p2(model.get_saturation_at_1p2());
 }
 
 GENSAL::GENSAL(const GENSAL& model):SYNC_GENERATOR_MODEL()
@@ -513,7 +516,7 @@ string GENSAL::get_standard_psse_string() const
 void GENSAL::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=1;
+    size_t i=0;
     add_model_data_name_and_index_pair("TD0'", i); i++;
     add_model_data_name_and_index_pair("TD0\"", i); i++;
     add_model_data_name_and_index_pair("TQ0\"", i); i++;

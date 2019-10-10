@@ -127,4 +127,88 @@ void api_set_load_related_model_float_parameter(size_t bus, char* identifier, ch
     show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }
 
+size_t api_get_load_related_model_float_parameter_count(size_t bus, char* identifier, char* model_type, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_load_device_id(bus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    LOAD* load = psdb.get_load(did);
+    if(load==NULL)
+    {
+        show_device_not_exist_with_api(did, __FUNCTION__);
+        return 0;
+    }
+    string MODEL_TYPE = string2upper(model_type);
+    if(MODEL_TYPE=="LOAD")
+    {
+        LOAD_MODEL* model = load->get_load_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+
+    if(MODEL_TYPE=="UFLS")
+    {
+        LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="UVLS")
+    {
+        LOAD_VOLTAGE_RELAY_MODEL* model = load->get_load_voltage_relay_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    return 0;
+}
+
+const char* api_get_load_related_model_float_parameter_name(size_t bus, char* identifier, char* model_type, size_t parameter_index, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_load_device_id(bus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    LOAD* load = psdb.get_load(did);
+    string name = "";
+    if(load==NULL)
+    {
+        show_device_not_exist_with_api(did, __FUNCTION__);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    string MODEL_TYPE = string2upper(model_type);
+    if(MODEL_TYPE=="LOAD")
+    {
+        LOAD_MODEL* model = load->get_load_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+
+    if(MODEL_TYPE=="UFLS")
+    {
+        LOAD_FREQUENCY_RELAY_MODEL* model = load->get_load_frequency_relay_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="UVLS")
+    {
+        LOAD_VOLTAGE_RELAY_MODEL* model = load->get_load_voltage_relay_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+    return toolkit.steps_char_buffer;
+}
 

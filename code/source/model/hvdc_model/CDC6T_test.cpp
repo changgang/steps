@@ -30,7 +30,7 @@ void CDC6T_TEST::setup()
     model.set_rectifier_ac_instantaneous_blocking_voltage_in_pu(0.7);
     model.set_rectifier_ac_delayed_blocking_voltage_in_pu(0.85);
     model.set_rectifier_ac_delayed_blocking_time_in_s(0.5);
-    model.set_inverter_ac_instantenous_blocking_voltage_in_pu(0.7);
+    model.set_inverter_ac_instantaneous_blocking_voltage_in_pu(0.7);
     model.set_communication_delay_between_converters_in_s(0.2);
 
     model.set_mininum_blocking_time_in_s(0.5);
@@ -101,14 +101,14 @@ void CDC6T_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_rectifier_ac_instantaneous_blocking_voltage_in_pu()-0.7)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_rectifier_ac_delayed_blocking_voltage_in_pu()-0.85)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_rectifier_ac_delayed_blocking_time_in_s()-0.5)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(model->get_inverter_ac_instantenous_blocking_voltage_in_pu()-0.7)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_inverter_ac_instantaneous_blocking_voltage_in_pu()-0.7)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_communication_delay_between_converters_in_s()-0.2)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_mininum_blocking_time_in_s()-0.5)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_rectifier_ac_delayed_unblocking_voltage_in_pu()-0.9)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_rectifier_ac_delayed_unblocking_time_in_s()-0.3)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_inverter_ac_delayed_unblocking_time_in_s()-0.5)<FLOAT_EPSILON);
 
-    TEST_ASSERT(fabs(model->get_inverter_dc_instantenous_bypassing_voltage_in_kV()-550.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_inverter_dc_instantaneous_bypassing_voltage_in_kV()-550.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_inverter_ac_delayed_bypassing_voltage_in_pu()-0.8)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_inverter_ac_delayed_bypassing_time_in_s()-0.2)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_mininum_bypassing_time_in_s()-0.3)<FLOAT_EPSILON);

@@ -148,3 +148,104 @@ void api_set_pv_unit_related_model_float_parameter(size_t bus, char* identifier,
     }
     show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
 }
+
+size_t api_get_pv_unit_related_model_float_parameter_count(size_t bus, char* identifier, char* model_type, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    if(pv_unit==NULL)
+    {
+        show_device_not_exist_with_api(did, __FUNCTION__);
+        return 0;
+    }
+    string MODEL_TYPE = string2upper(model_type);
+    if(MODEL_TYPE=="PVC" or MODEL_TYPE=="PV CONVERTER")
+    {
+        PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+
+    if(MODEL_TYPE=="PVP" or MODEL_TYPE=="PV PANEL")
+    {
+        PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="PVELEC" or MODEL_TYPE=="PV ELECTRICAL")
+    {
+        PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    if(MODEL_TYPE=="PVIRRD" or MODEL_TYPE=="PV IRRADIANCE")
+    {
+        PV_IRRADIANCE_MODEL* model = pv_unit->get_pv_irradiance_model();
+        if(model!=NULL)
+            return model->get_model_float_parameter_count();
+        else
+            return 0;
+    }
+    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    return 0;
+}
+
+const char* api_get_pv_unit_related_model_float_parameter_name(size_t bus, char* identifier, char* model_type, size_t parameter_index, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DEVICE_ID did = get_pv_unit_device_id(bus, identifier);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    PV_UNIT* pv_unit = psdb.get_pv_unit(did);
+    string name = "";
+    if(pv_unit==NULL)
+    {
+        show_device_not_exist_with_api(did, __FUNCTION__);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    string MODEL_TYPE = string2upper(model_type);
+    if(MODEL_TYPE=="PVC" or MODEL_TYPE=="PV CONVERTER")
+    {
+        PV_CONVERTER_MODEL* model = pv_unit->get_pv_converter_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+
+    if(MODEL_TYPE=="PVP" or MODEL_TYPE=="PV PANEL")
+    {
+        PV_PANEL_MODEL* model = pv_unit->get_pv_panel_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="PVELEC" or MODEL_TYPE=="PV ELECTRICAL")
+    {
+        PV_ELECTRICAL_MODEL* model = pv_unit->get_pv_electrical_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    if(MODEL_TYPE=="PVIRRD" or MODEL_TYPE=="PV IRRADIANCE")
+    {
+        PV_IRRADIANCE_MODEL* model = pv_unit->get_pv_irradiance_model();
+        if(model!=NULL)
+            name = model->get_model_data_name(parameter_index);
+        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+        return toolkit.steps_char_buffer;
+    }
+    show_parameter_not_supported_for_device_with_api(MODEL_TYPE, did, __FUNCTION__);
+    snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", name.c_str());
+    return toolkit.steps_char_buffer;
+}

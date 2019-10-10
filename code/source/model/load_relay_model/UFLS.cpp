@@ -17,6 +17,7 @@ UFLS::~UFLS()
 
 void UFLS::clear()
 {
+    set_model_float_parameter_count(52);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -513,14 +514,38 @@ void UFLS::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("TF", i); i++;
+    add_model_data_name_and_index_pair("TB", i); i++;
+    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    {
+        string name = "FTH "+num2str(stage);
+        add_model_data_name_and_index_pair(name, i); i++;
+        name = "TD "+num2str(stage);
+        add_model_data_name_and_index_pair(name, i); i++;
+        name = "P "+num2str(stage);
+        add_model_data_name_and_index_pair(name, i); i++;
+    }
 }
 
 double UFLS::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    if(par_name=="TF")
+        return get_frequency_sensor_time_in_s();
+    if(par_name=="TB")
+        return get_breaker_time_in_s();
+    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    {
+        string name = "FTH "+num2str(stage);
+        if(par_name==name)
+            return get_frequency_threshold_in_Hz_of_stage(stage);
+        name = "TD "+num2str(stage);
+        if(par_name==name)
+            return get_time_delay_in_s_of_stage(stage);
+        name = "P "+num2str(stage);
+        if(par_name==name)
+            return get_scale_in_pu_of_stage(stage);
+    }
 
     return 0.0;
 }
@@ -528,8 +553,22 @@ double UFLS::get_model_data_with_name(string par_name) const
 void UFLS::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+    if(par_name=="TF")
+        return set_frequency_sensor_time_in_s(value);
+    if(par_name=="TB")
+        return set_breaker_time_in_s(value);
+    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    {
+        string name = "FTH "+num2str(stage);
+        if(par_name==name)
+            return set_frequency_threshold_in_Hz_of_stage(stage, value);
+        name = "TD "+num2str(stage);
+        if(par_name==name)
+            return set_time_delay_in_s_of_stage(stage, value);
+        name = "P "+num2str(stage);
+        if(par_name==name)
+            return set_scale_in_pu_of_stage(stage, value);
+    }
 
     return;
 }

@@ -8,7 +8,6 @@ using namespace std;
 GENCLS::GENCLS()
 {
     clear();
-    set_model_parameter_count(2);
 }
 
 GENCLS::~GENCLS()
@@ -18,6 +17,7 @@ GENCLS::~GENCLS()
 
 void GENCLS::clear()
 {
+    set_model_float_parameter_count(2);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
@@ -68,7 +68,7 @@ void GENCLS::update_source_impedance()
 bool GENCLS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=3+get_model_parameter_count())
+    if(data.size()>=3+get_model_float_parameter_count())
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
@@ -325,7 +325,7 @@ string GENCLS::get_standard_psse_string() const
 void GENCLS::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=1;
+    size_t i=0;
     add_model_data_name_and_index_pair("H", i); i++;
     add_model_data_name_and_index_pair("D", i);
 }

@@ -18,6 +18,7 @@ PUFLS::~PUFLS()
 
 void PUFLS::clear()
 {
+    set_model_float_parameter_count(60);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -240,18 +241,14 @@ bool PUFLS::setup_model_with_steps_string_vector(vector<string>& data)
             set_additional_stage_time_delay_in_s(additional_time_delay);
             set_additional_stage_shed_scale_in_pu(additional_scale);
 
-            if(n>=12)
+            tdelay = get_double_data(data[i],"0.0"); i++;
+            set_discrete_stage_time_delay_in_s(tdelay);
+
+            for(size_t stage=0; i!=n and stage!=MAX_LOAD_RELAY_STAGE; ++i, ++stage)
             {
-                tdelay = get_double_data(data[i],"0.0"); i++;
-                set_discrete_stage_time_delay_in_s(tdelay);
-
-                for(size_t stage=0; i!=n and stage!=MAX_LOAD_RELAY_STAGE; ++i, ++stage)
-                {
-                    double scale = get_double_data(data[i],"0.0");
-                    set_discrete_stage_shed_scale_in_pu(stage, scale);
-                }
+                double scale = get_double_data(data[i],"0.0");
+                set_discrete_stage_shed_scale_in_pu(stage, scale);
             }
-
 
             if(model_name=="PUFLSAL")
                 set_subsystem_type(ALL_SYSTEM_TYPE);
@@ -843,14 +840,53 @@ void PUFLS::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("ADDITIONAL STAGE MODE", i); i++;
+    add_model_data_name_and_index_pair("TF", i); i++;
+    add_model_data_name_and_index_pair("FTH", i); i++;
+    add_model_data_name_and_index_pair("K", i); i++;
+    add_model_data_name_and_index_pair("TD", i); i++;
+    add_model_data_name_and_index_pair("PMAX", i); i++;
+    add_model_data_name_and_index_pair("FTH ADDITIONAL", i); i++;
+    add_model_data_name_and_index_pair("TD ADDITIONAL", i); i++;
+    add_model_data_name_and_index_pair("P ADDITIONAL", i); i++;
+    add_model_data_name_and_index_pair("TD DISCRETE", i); i++;
+    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    {
+        string name = "P DISCRETE "+num2str(stage);
+        add_model_data_name_and_index_pair(name, i); i++;
+    }
 }
 
 double PUFLS::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+
+    if(par_name=="ADDITIONAL STAGE MODE")
+        return get_additional_stage_trigger_signal();
+    if(par_name=="TF")
+        return get_frequency_sensor_time_in_s();
+    if(par_name=="FTH")
+        return get_continuous_frequency_threshold_in_Hz();
+    if(par_name=="K")
+        return get_scale_K_in_pu_per_Hz();
+    if(par_name=="TD")
+        return get_time_delay_in_s();
+    if(par_name=="PMAX")
+        return get_maximum_continuous_shed_scale_in_pu();
+    if(par_name=="FTH ADDITIONAL")
+        return get_additional_stage_frequency_threshold_in_Hz();
+    if(par_name=="TD ADDITIONAL")
+        return get_additional_stage_time_delay_in_s();
+    if(par_name=="P ADDITIONAL")
+        return get_additional_stage_shed_scale_in_pu();
+    if(par_name=="TD DISCRETE")
+        return get_discrete_stage_time_delay_in_s();
+    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    {
+        string name = "P DISCRETE "+num2str(stage);
+        if(par_name==name)
+            return get_discrete_stage_shed_scale_in_pu(stage);
+    }
 
     return 0.0;
 }
@@ -858,8 +894,36 @@ double PUFLS::get_model_data_with_name(string par_name) const
 void PUFLS::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return;
+
+    if(par_name=="ADDITIONAL STAGE MODE")
+    {
+        UFLS_TRIGGER_SIGNAL signal = (value==0 ? REALTIME_FREQUENCY : MINIMUM_FREQUENCY);
+        return set_additional_stage_trigger_signal(signal);
+    }
+    if(par_name=="TF")
+        return set_frequency_sensor_time_in_s(value);
+    if(par_name=="FTH")
+        return set_continuous_frequency_threshold_in_Hz(value);
+    if(par_name=="K")
+        return set_scale_K_in_pu_per_Hz(value);
+    if(par_name=="TD")
+        return set_time_delay_in_s(value);
+    if(par_name=="PMAX")
+        return set_maximum_continuous_shed_scale_in_pu(value);
+    if(par_name=="FTH ADDITIONAL")
+        return set_additional_stage_frequency_threshold_in_Hz(value);
+    if(par_name=="TD ADDITIONAL")
+        return set_additional_stage_time_delay_in_s(value);
+    if(par_name=="P ADDITIONAL")
+        return set_additional_stage_shed_scale_in_pu(value);
+    if(par_name=="TD DISCRETE")
+        return set_discrete_stage_time_delay_in_s(value);
+    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    {
+        string name = "P DISCRETE "+num2str(stage);
+        if(par_name==name)
+            return set_discrete_stage_shed_scale_in_pu(stage, value);
+    }
 
     return;
 }

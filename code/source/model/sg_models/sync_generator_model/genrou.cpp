@@ -16,6 +16,7 @@ GENROU::~GENROU()
 }
 void GENROU::clear()
 {
+    set_model_float_parameter_count(14);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 }
@@ -39,6 +40,8 @@ void GENROU::copy_from_const_model(const GENROU& model)
     this->set_Tq0pp_in_s(model.get_Tq0pp_in_s());
     this->set_Tj_in_s(model.get_Tj_in_s());
     this->set_D(model.get_D());
+    this->set_saturation_at_1(model.get_saturation_at_1());
+    this->set_saturation_at_1p2(model.get_saturation_at_1p2());
 }
 GENROU::GENROU(const GENROU& model):SYNC_GENERATOR_MODEL()
 {

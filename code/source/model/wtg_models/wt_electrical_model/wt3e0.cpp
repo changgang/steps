@@ -32,6 +32,24 @@ WT3E0& WT3E0::operator=(const WT3E0& model)
     return *this;
 }
 
+void WT3E0::clear()
+{
+    set_model_float_parameter_count(35);
+    prepare_model_data_table();
+    prepare_model_internal_variable_table();
+
+    set_voltage_flag(0);
+
+    voltage_regulator_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    Q_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+
+    power_order_integrator.set_limiter_type(NON_WINDUP_LIMITER);
+    frequency_integral_controller.set_limiter_type(NO_LIMITER);
+
+    frequency_regulation_enabled = true;
+}
+
 void WT3E0::copy_from_const_model(const WT3E0& model)
 {
     clear();
@@ -1099,23 +1117,6 @@ double WT3E0::get_reactive_voltage_command_in_pu() const
 void WT3E0::check()
 {
     ;
-}
-
-void WT3E0::clear()
-{
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
-    set_voltage_flag(0);
-
-    voltage_regulator_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-    Q_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-    V_error_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-
-    power_order_integrator.set_limiter_type(NON_WINDUP_LIMITER);
-    frequency_integral_controller.set_limiter_type(NO_LIMITER);
-
-    frequency_regulation_enabled = true;
 }
 
 void WT3E0::report()

@@ -18,8 +18,8 @@ class MODEL : public BASE
         void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type);
         string get_allowed_device_type() const;
 
-        void set_model_parameter_count(size_t n);
-        size_t get_model_parameter_count() const;
+        void set_model_float_parameter_count(size_t n);
+        size_t get_model_float_parameter_count() const;
 
         void clear_model_data_table();
         void add_model_data_name_and_index_pair(string var_name, size_t var_index);
