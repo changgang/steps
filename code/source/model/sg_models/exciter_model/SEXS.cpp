@@ -18,6 +18,7 @@ SEXS::~SEXS()
 
 void SEXS::clear()
 {
+    set_model_float_parameter_count(6);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -122,7 +123,7 @@ double SEXS::get_Efdmin_in_pu() const
 bool SEXS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    if(data.size()>=8)
+    if(data.size()>=9)
     {
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
@@ -314,8 +315,8 @@ void SEXS::prepare_model_data_table()
     add_model_data_name_and_index_pair("TB", i); i++;
     add_model_data_name_and_index_pair("K", i); i++;
     add_model_data_name_and_index_pair("TE", i); i++;
-    add_model_data_name_and_index_pair("EMAX", i); i++;
-    add_model_data_name_and_index_pair("EMIN", i);
+    add_model_data_name_and_index_pair("EFDMAX", i); i++;
+    add_model_data_name_and_index_pair("EFDMIN", i);
 }
 
 double SEXS::get_model_data_with_name(string par_name) const
@@ -327,8 +328,8 @@ double SEXS::get_model_data_with_name(string par_name) const
         if(par_name=="TB") return get_TB_in_s();
         if(par_name=="K") return get_K();
         if(par_name=="TE") return get_TE_in_s();
-        if(par_name=="EMAX") return get_Efdmax_in_pu();
-        if(par_name=="EMIN") return get_Efdmin_in_pu();
+        if(par_name=="EFDMAX") return get_Efdmax_in_pu();
+        if(par_name=="EFDMIN") return get_Efdmin_in_pu();
     }
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);
@@ -344,8 +345,8 @@ void SEXS::set_model_data_with_name(string par_name, double value)
         if(par_name=="TB") return set_TB_in_s(value);
         if(par_name=="K") return set_K(value);
         if(par_name=="TE") return set_TE_in_s(value);
-        if(par_name=="EMAX") return set_Efdmax_in_pu(value);
-        if(par_name=="EMIN") return set_Efdmin_in_pu(value);
+        if(par_name=="EFDMAX") return set_Efdmax_in_pu(value);
+        if(par_name=="EFDMIN") return set_Efdmin_in_pu(value);
     }
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_set_get_model_data_with_name_error(get_device_name(), get_model_name(), __FUNCTION__, par_name);

@@ -3938,12 +3938,17 @@ string POWER_SYSTEM_DATABASE::owner_number2owner_name(size_t number)
         return "";
 }
 
-void POWER_SYSTEM_DATABASE::check()
+void POWER_SYSTEM_DATABASE::check_powerflow_data()
 {
     check_all_devices();
     check_all_areas();
     check_all_zones();
     check_all_owners();
+}
+
+void POWER_SYSTEM_DATABASE::check()
+{
+    check_powerflow_data();
 }
 
 void POWER_SYSTEM_DATABASE::check_all_devices()
@@ -4070,9 +4075,10 @@ void POWER_SYSTEM_DATABASE::check_dynamic_data()
     check_generator_related_dynamic_data();
     check_wt_generator_related_dynamic_data();
     check_pv_unit_related_dynamic_data();
-    check_load_related_dynamic_data();
-    check_hvdc_related_dynamic_data();
     check_energy_storage_related_dynamic_data();
+    check_load_related_dynamic_data();
+    check_line_related_dynamic_data();
+    check_hvdc_related_dynamic_data();
     check_equivalent_device_related_dynamic_data();
 }
 
@@ -4090,11 +4096,6 @@ void POWER_SYSTEM_DATABASE::check_generator_related_dynamic_data()
         SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
         if(genmodel!=NULL)
             genmodel->check();
-        else
-        {
-            osstream<<"Error. Generator model is missing for "<<generator->get_device_name();
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
 
         EXCITER_MODEL* avrmodel = generator->get_exciter_model();
         if(avrmodel!=NULL)
@@ -4151,51 +4152,28 @@ void POWER_SYSTEM_DATABASE::check_wt_generator_related_dynamic_data()
 
 void POWER_SYSTEM_DATABASE::check_pv_unit_related_dynamic_data()
 {
-    ;
-}
-
-void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
-{
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    ostringstream osstream;
-    vector<LOAD*> loads = get_all_loads();
-    size_t n = loads.size();
-    LOAD* load;
+    vector<PV_UNIT*> pvs = get_all_pv_units();
+    size_t n = pvs.size();
+    PV_UNIT* pv;
     for(size_t i=0; i!=n; ++i)
     {
-        load = loads[i];
+        pv = pvs[i];
 
-        LOAD_MODEL* loadmodel = load->get_load_model();
-        if(loadmodel!=NULL)
-            loadmodel->check();
-        else
-        {
-            osstream<<"Warning. Load model is not found for "<<load->get_device_name();
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
+        PV_CONVERTER_MODEL* convmodel = pv->get_pv_converter_model();
+        if(convmodel!=NULL)
+            convmodel->check();
 
-        LOAD_VOLTAGE_RELAY_MODEL* uvlsmodel = load->get_load_voltage_relay_model();
-        if(uvlsmodel!=NULL)
-            uvlsmodel->check();
+        PV_PANEL_MODEL* panelmodel = pv->get_pv_panel_model();
+        if(panelmodel!=NULL)
+            panelmodel->check();
 
-        LOAD_FREQUENCY_RELAY_MODEL* uflsmodel = load->get_load_frequency_relay_model();
-        if(uflsmodel!=NULL)
-            uflsmodel->check();
-    }
-}
+        PV_ELECTRICAL_MODEL* elecmodel = pv->get_pv_electrical_model();
+        if(elecmodel!=NULL)
+            elecmodel->check();
 
-void POWER_SYSTEM_DATABASE::check_hvdc_related_dynamic_data()
-{
-    vector<HVDC*> hvdcs = get_all_hvdcs();
-    size_t n = hvdcs.size();
-    HVDC* hvdc;
-    for(size_t i=0; i!=n; ++i)
-    {
-        hvdc = hvdcs[i];
-
-        HVDC_MODEL* hvdcmodel = hvdc->get_hvdc_model();
-        if(hvdcmodel!=NULL)
-            hvdcmodel->check();
+        PV_IRRADIANCE_MODEL* irradmodel = pv->get_pv_irradiance_model();
+        if(irradmodel!=NULL)
+            irradmodel->check();
     }
 }
 
@@ -4214,6 +4192,55 @@ void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
     }
 }
 
+void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
+{
+    vector<LOAD*> loads = get_all_loads();
+    size_t n = loads.size();
+    LOAD* load;
+    for(size_t i=0; i!=n; ++i)
+    {
+        load = loads[i];
+
+        LOAD_MODEL* loadmodel = load->get_load_model();
+        if(loadmodel!=NULL)
+            loadmodel->check();
+
+        LOAD_VOLTAGE_RELAY_MODEL* uvlsmodel = load->get_load_voltage_relay_model();
+        if(uvlsmodel!=NULL)
+            uvlsmodel->check();
+
+        LOAD_FREQUENCY_RELAY_MODEL* uflsmodel = load->get_load_frequency_relay_model();
+        if(uflsmodel!=NULL)
+            uflsmodel->check();
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_line_related_dynamic_data()
+{
+    vector<LINE*> lines = get_all_lines();
+    size_t n = lines.size();
+    LINE* line;
+    for(size_t i=0; i!=n; ++i)
+    {
+        line = lines[i];
+    }
+}
+
+void POWER_SYSTEM_DATABASE::check_hvdc_related_dynamic_data()
+{
+    vector<HVDC*> hvdcs = get_all_hvdcs();
+    size_t n = hvdcs.size();
+    HVDC* hvdc;
+    for(size_t i=0; i!=n; ++i)
+    {
+        hvdc = hvdcs[i];
+
+        HVDC_MODEL* hvdcmodel = hvdc->get_hvdc_model();
+        if(hvdcmodel!=NULL)
+            hvdcmodel->check();
+    }
+}
+
 void POWER_SYSTEM_DATABASE::check_equivalent_device_related_dynamic_data()
 {
     vector<EQUIVALENT_DEVICE*> edevices = get_all_equivalent_devices();
@@ -4228,6 +4255,334 @@ void POWER_SYSTEM_DATABASE::check_equivalent_device_related_dynamic_data()
             eqmodel->check();
     }
 }
+
+
+void POWER_SYSTEM_DATABASE::check_missing_models()
+{
+    check_missing_generator_related_model();
+    check_missing_wt_generator_related_model();
+    check_missing_pv_unit_related_model();
+    check_missing_energy_storage_related_model();
+    check_missing_load_related_model();
+    check_missing_line_related_model();
+    check_missing_hvdc_related_model();
+    check_missing_equivalent_device_related_model();
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_generator_related_model()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    vector<GENERATOR*> generators = get_all_generators();
+    size_t n = generators.size();
+    GENERATOR* generator;
+
+    bool model_missing_detected = false;
+    osstream<<"Error. Synchronous generator model is missing for the following generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
+        if(genmodel==NULL)
+        {
+            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+
+    model_missing_detected = false;
+    osstream<<"Warning. Exciter model is missing for the following generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
+        if(genmodel!=NULL and genmodel->get_model_name()!="GENCLS")
+        {
+            EXCITER_MODEL* avrmodel = generator->get_exciter_model();
+            if(avrmodel==NULL)
+            {
+                osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+                model_missing_detected = true;
+            }
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+
+    model_missing_detected = false;
+    osstream<<"Warning. Turbine governor model is missing for the following generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+        TURBINE_GOVERNOR_MODEL* govmodel = generator->get_turbine_governor_model();
+        if(govmodel==NULL)
+        {
+            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_wt_generator_related_model()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    vector<WT_GENERATOR*> generators = get_all_wt_generators();
+    size_t n = generators.size();
+    WT_GENERATOR* generator;
+
+    bool model_missing_detected = false;
+    osstream<<"Error. WT generator model is missing for the following wt generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+
+        WT_GENERATOR_MODEL* genmodel = generator->get_wt_generator_model();
+        if(genmodel==NULL)
+        {
+            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+
+    model_missing_detected = false;
+    osstream<<"Error. WT turbine model is missing for the following wt generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+
+        WT_TURBINE_MODEL* turbmodel = generator->get_wt_turbine_model();
+        if(turbmodel==NULL)
+        {
+            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+
+    model_missing_detected = false;
+    osstream<<"Warning. WT electrical model is missing for the following wt generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+
+        WT_ELECTRICAL_MODEL* elecmodel = generator->get_wt_electrical_model();
+        if(elecmodel==NULL)
+        {
+            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+
+    model_missing_detected = false;
+    osstream<<"Warning. WT aerodynamic model is missing for the following wt generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+
+        WT_AERODYNAMIC_MODEL* aerdmodel = generator->get_wt_aerodynamic_model();
+        if(aerdmodel==NULL)
+        {
+            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+
+    model_missing_detected = false;
+    osstream<<"Warning. WT electrical model is missing for the following wt generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+
+        WT_ELECTRICAL_MODEL* elecmodel = generator->get_wt_electrical_model();
+        if(elecmodel==NULL)
+        {
+            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+
+    model_missing_detected = false;
+    osstream<<"Warning. WT pitch model is missing for the following wt generators:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        generator = generators[i];
+
+        WT_PITCH_MODEL* pitchmodel = generator->get_wt_pitch_model();
+        if(pitchmodel==NULL)
+        {
+            osstream<<generator->get_device_name()<<" ["<<bus_number2bus_name(generator->get_generator_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_pv_unit_related_model()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    vector<PV_UNIT*> pvs = get_all_pv_units();
+    size_t n = pvs.size();
+    PV_UNIT* pv;
+
+    bool model_missing_detected = false;
+    osstream<<"Error. PV converter model is missing for the following PV units:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        pv = pvs[i];
+
+        PV_CONVERTER_MODEL* convmodel = pv->get_pv_converter_model();
+        if(convmodel==NULL)
+        {
+            osstream<<pv->get_device_name()<<" ["<<bus_number2bus_name(pv->get_unit_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_energy_storage_related_model()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+    osstream<<"No energy storage is checked for model missing.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    return;
+
+    vector<ENERGY_STORAGE*> estorages = get_all_energy_storages();
+    size_t n = estorages.size();
+    ENERGY_STORAGE* estorage;
+
+    bool model_missing_detected = false;
+    osstream<<"Error. Energy storage model is missing for the following energy storages:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        estorage = estorages[i];
+
+        ENERGY_STORAGE_MODEL* esmodel = estorage->get_energy_storage_model();
+        if(esmodel==NULL)
+        {
+            osstream<<estorage->get_device_name()<<" ["<<bus_number2bus_name(estorage->get_energy_storage_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_load_related_model()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    vector<LOAD*> loads = get_all_loads();
+    size_t n = loads.size();
+    LOAD* load;
+
+    bool model_missing_detected = false;
+    osstream<<"Error. Load model is missing for the following loads:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        load = loads[i];
+
+        LOAD_MODEL* loadmodel = load->get_load_model();
+        if(loadmodel==NULL)
+        {
+            osstream<<load->get_device_name()<<" ["<<bus_number2bus_name(load->get_load_bus())<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_line_related_model()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+    osstream<<"No line is checked for model missing.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+    return;
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_hvdc_related_model()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    vector<HVDC*> hvdcs = get_all_hvdcs();
+    size_t n = hvdcs.size();
+    HVDC* hvdc;
+
+    bool model_missing_detected = false;
+    osstream<<"Error. HVDC model is missing for the following HVDC links:\n";
+    for(size_t i=0; i!=n; ++i)
+    {
+        hvdc = hvdcs[i];
+
+        HVDC_MODEL* hvdcmodel = hvdc->get_hvdc_model();
+        if(hvdcmodel==NULL)
+        {
+            osstream<<hvdc->get_device_name()<<" ["<<bus_number2bus_name(hvdc->get_converter_bus(RECTIFIER))<<" -- "<<bus_number2bus_name(hvdc->get_converter_bus(INVERTER))<<"]";
+            model_missing_detected = true;
+        }
+    }
+    if(model_missing_detected==true)
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    else
+        osstream.str("");
+}
+
+void POWER_SYSTEM_DATABASE::check_missing_equivalent_device_related_model()
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    osstream<<"No equivalent device is checked for model missing.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    return;
+}
+
 
 void POWER_SYSTEM_DATABASE::scale_load_power(const DEVICE_ID& did, double scale)
 {

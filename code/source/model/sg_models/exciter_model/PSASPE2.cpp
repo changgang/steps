@@ -18,6 +18,7 @@ PSASPE2::~PSASPE2()
 
 void PSASPE2::clear()
 {
+    set_model_float_parameter_count(16);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
@@ -579,14 +580,59 @@ void PSASPE2::prepare_model_data_table()
 {
     clear_model_data_table();
     size_t i=0;
-    add_model_data_name_and_index_pair("A", i); i++;
+    add_model_data_name_and_index_pair("KR", i); i++;
+    add_model_data_name_and_index_pair("TR", i); i++;
+    add_model_data_name_and_index_pair("K2", i); i++;
+    add_model_data_name_and_index_pair("T1", i); i++;
+    add_model_data_name_and_index_pair("T2", i); i++;
+    add_model_data_name_and_index_pair("T3", i); i++;
+    add_model_data_name_and_index_pair("T4", i); i++;
+    add_model_data_name_and_index_pair("KA", i); i++;
+    add_model_data_name_and_index_pair("TA", i); i++;
+    add_model_data_name_and_index_pair("EFDMAX", i); i++;
+    add_model_data_name_and_index_pair("EFDMIN", i); i++;
+    add_model_data_name_and_index_pair("VTA", i); i++;
+    add_model_data_name_and_index_pair("VTB", i); i++;
+    add_model_data_name_and_index_pair("KPT", i); i++;
+    add_model_data_name_and_index_pair("KIT", i); i++;
+    add_model_data_name_and_index_pair("KE", i);
 }
 
 double PSASPE2::get_model_data_with_name(string par_name) const
 {
     par_name = string2upper(par_name);
-    if(par_name=="A")
-        return 0.0;
+    if(par_name=="KR")
+        return get_KR();
+    if(par_name=="TR")
+        return get_TR_in_s();
+    if(par_name=="K2")
+        return get_K2();
+    if(par_name=="T1")
+        return get_T1_in_s();
+    if(par_name=="T2")
+        return get_T2_in_s();
+    if(par_name=="T3")
+        return get_T3_in_s();
+    if(par_name=="T4")
+        return get_T4_in_s();
+    if(par_name=="KA")
+        return get_KA();
+    if(par_name=="TA")
+        return get_TA_in_s();
+    if(par_name=="EFDMAX")
+        return get_Efdmax_in_pu();
+    if(par_name=="EFDMIN")
+        return get_Efdmin_in_pu();
+    if(par_name=="VTA")
+        return get_Vta_in_pu();
+    if(par_name=="VTB")
+        return get_Vtb_in_pu();
+    if(par_name=="KPT")
+        return get_Kpt();
+    if(par_name=="KIT")
+        return get_Kpi();
+    if(par_name=="KE")
+        return get_Ke();
 
     return 0.0;
 }

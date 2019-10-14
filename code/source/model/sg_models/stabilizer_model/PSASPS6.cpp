@@ -557,7 +557,7 @@ void PSASPS6::check()
         osstream<<"Tw2=0.0 was detected\n";
         error_found = true;
     }
-    if(get_Kp()>10.0)
+    if(get_Kp()>20.0)
     {
         osstream<<"Kp>10.0 was detected. Kp="<<get_Kp()<<"\n";
         error_found = true;

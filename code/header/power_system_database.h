@@ -34,6 +34,8 @@ class POWER_SYSTEM_DATABASE : public BASE
         POWER_SYSTEM_DATABASE();
         ~POWER_SYSTEM_DATABASE();
 
+        void check_powerflow_data();
+
         virtual void check();
         virtual void clear();
 
@@ -326,10 +328,21 @@ class POWER_SYSTEM_DATABASE : public BASE
         void check_generator_related_dynamic_data();
         void check_wt_generator_related_dynamic_data();
         void check_pv_unit_related_dynamic_data();
-        void check_load_related_dynamic_data();
-        void check_hvdc_related_dynamic_data();
         void check_energy_storage_related_dynamic_data();
+        void check_load_related_dynamic_data();
+        void check_line_related_dynamic_data();
+        void check_hvdc_related_dynamic_data();
         void check_equivalent_device_related_dynamic_data();
+
+        void check_missing_models();
+        void check_missing_generator_related_model();
+        void check_missing_wt_generator_related_model();
+        void check_missing_pv_unit_related_model();
+        void check_missing_energy_storage_related_model();
+        void check_missing_load_related_model();
+        void check_missing_line_related_model();
+        void check_missing_hvdc_related_model();
+        void check_missing_equivalent_device_related_model();
 
 
         void scale_load_power(const DEVICE_ID& did, double scale);

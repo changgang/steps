@@ -10,7 +10,7 @@
 #include <ctime>
 #include <omp.h>
 
-#define STEPS_DYNAMIC_SIMULATOR_OPENMP
+//#define STEPS_DYNAMIC_SIMULATOR_OPENMP
 
 using namespace std;
 
@@ -34,8 +34,8 @@ void DYNAMICS_SIMULATOR::clear()
 
     close_meter_output_files();
 
-    set_bin_file_export_enable_flag(true);
-    set_csv_file_export_enable_flag(false);
+    set_bin_file_export_enable_flag(false);
+    set_csv_file_export_enable_flag(true);
     set_json_file_export_enable_flag(false);
 
     set_dynamic_simulation_time_in_s(0.0);

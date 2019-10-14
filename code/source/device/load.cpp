@@ -542,6 +542,8 @@ void LOAD::run(DYNAMIC_MODE mode)
         {
             case INITIALIZE_MODE:
             {
+                set_load_manually_scale_factor_in_pu(0.0);
+
                 LOAD_MODEL* load = get_load_model();
                 if(load != NULL)
                 {
