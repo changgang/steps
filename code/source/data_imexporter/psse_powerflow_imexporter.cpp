@@ -386,8 +386,16 @@ string PSSE_IMEXPORTER::export_bus_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<BUS*> buses = psdb.get_all_buses();
-    size_t n = buses.size();
+    //vector<BUS*> buses = psdb.get_all_buses();
+    //size_t n = buses.size();
+
+    vector<size_t> buses_number = psdb.get_all_buses_number();
+    sort(buses_number.begin(), buses_number.end());
+    vector<BUS*> buses;
+    size_t n = buses_number.size();
+    for(size_t i=0; i!=n; ++i)
+        buses.push_back(psdb.get_bus(buses_number[i]));
+
     char buffer[1000];
     for(size_t i=0; i!=n; ++i)
     {
@@ -451,8 +459,16 @@ string PSSE_IMEXPORTER::export_load_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<LOAD*> loads = psdb.get_all_loads();
-    size_t n = loads.size();
+    //vector<LOAD*> loads = psdb.get_all_loads();
+    //size_t n = loads.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_loads_device_id();
+    sort(dids.begin(), dids.end());
+    vector<LOAD*> loads;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        loads.push_back(psdb.get_load(dids[i]));
+
     char buffer[1000];
     for(size_t i=0; i!=n; ++i)
     {
@@ -512,8 +528,16 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
-    size_t n = fshunts.size();
+    //vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
+    //size_t n = fshunts.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_fixed_shunts_device_id();
+    sort(dids.begin(), dids.end());
+    vector<FIXED_SHUNT*> fshunts;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        fshunts.push_back(psdb.get_fixed_shunt(dids[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         FIXED_SHUNT* shunt = fshunts[i];
@@ -555,8 +579,16 @@ string PSSE_IMEXPORTER::export_generator_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<GENERATOR*> generators = psdb.get_all_generators();
-    size_t n = generators.size();
+    //vector<GENERATOR*> generators = psdb.get_all_generators();
+    //size_t n = generators.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_generators_device_id();
+    sort(dids.begin(), dids.end());
+    vector<GENERATOR*> generators;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        generators.push_back(psdb.get_generator(dids[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         GENERATOR* generator = generators[i];
@@ -575,8 +607,16 @@ string PSSE_IMEXPORTER::export_wt_generator_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-    size_t n = wt_generators.size();
+    //vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
+    //size_t n = wt_generators.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_wt_generators_device_id();
+    sort(dids.begin(), dids.end());
+    vector<WT_GENERATOR*> wt_generators;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        wt_generators.push_back(psdb.get_wt_generator(dids[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         WT_GENERATOR* wt_generator = wt_generators[i];
@@ -597,8 +637,16 @@ string PSSE_IMEXPORTER::export_pv_unit_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
-    size_t n = pv_units.size();
+    //vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
+    //size_t n = pv_units.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_pv_units_device_id();
+    sort(dids.begin(), dids.end());
+    vector<PV_UNIT*> pv_units;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        pv_units.push_back(psdb.get_pv_unit(dids[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         PV_UNIT* pv_unit = pv_units[i];
@@ -620,8 +668,16 @@ string PSSE_IMEXPORTER::export_energy_storage_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<ENERGY_STORAGE*> estorages = psdb.get_all_energy_storages();
-    size_t n = estorages.size();
+    //vector<ENERGY_STORAGE*> estorages = psdb.get_all_energy_storages();
+    //size_t n = estorages.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_energy_storages_device_id();
+    sort(dids.begin(), dids.end());
+    vector<ENERGY_STORAGE*> estorages;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        estorages.push_back(psdb.get_energy_storage(dids[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         ENERGY_STORAGE* estorage = estorages[i];
@@ -714,8 +770,16 @@ string PSSE_IMEXPORTER::export_line_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<LINE*> lines = psdb.get_all_lines();
-    size_t n = lines.size();
+    //vector<LINE*> lines = psdb.get_all_lines();
+    //size_t n = lines.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_lines_device_id();
+    sort(dids.begin(), dids.end());
+    vector<LINE*> lines;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        lines.push_back(psdb.get_line(dids[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         LINE* line = lines[i];
@@ -772,8 +836,16 @@ string PSSE_IMEXPORTER::export_transformer_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
-    size_t n = transformers.size();
+    //vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
+    //size_t n = transformers.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_transformers_device_id();
+    sort(dids.begin(), dids.end());
+    vector<TRANSFORMER*> transformers;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        transformers.push_back(psdb.get_transformer(dids[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         TRANSFORMER* trans = transformers[i];
@@ -1061,8 +1133,16 @@ string PSSE_IMEXPORTER::export_area_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<AREA*> areas = psdb.get_all_areas();
-    size_t n = areas.size();
+    //vector<AREA*> areas = psdb.get_all_areas();
+    //size_t n = areas.size();
+
+    vector<size_t> areas_number = psdb.get_all_areas_number();
+    sort(areas_number.begin(), areas_number.end());
+    vector<AREA*> areas;
+    size_t n = areas_number.size();
+    for(size_t i=0; i!=n; ++i)
+        areas.push_back(psdb.get_area(areas_number[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         AREA* area = areas[i];
@@ -1088,8 +1168,16 @@ string PSSE_IMEXPORTER::export_hvdc_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t n = hvdcs.size();
+    //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    //size_t n = hvdcs.size();
+
+    vector<DEVICE_ID> dids = psdb.get_all_hvdcs_device_id();
+    sort(dids.begin(), dids.end());
+    vector<HVDC*> hvdcs;
+    size_t n = dids.size();
+    for(size_t i=0; i!=n; ++i)
+        hvdcs.push_back(psdb.get_hvdc(dids[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         HVDC* hvdc = hvdcs[i];
@@ -1199,8 +1287,16 @@ string PSSE_IMEXPORTER::export_zone_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<ZONE*> zones = psdb.get_all_zones();
-    size_t n = zones.size();
+    //vector<ZONE*> zones = psdb.get_all_zones();
+    //size_t n = zones.size();
+
+    vector<size_t> zones_number = psdb.get_all_zones_number();
+    sort(zones_number.begin(), zones_number.end());
+    vector<ZONE*> zones;
+    size_t n = zones_number.size();
+    for(size_t i=0; i!=n; ++i)
+        zones.push_back(psdb.get_zone(zones_number[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         ZONE* zone = zones[i];
@@ -1223,8 +1319,16 @@ string PSSE_IMEXPORTER::export_owner_data() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector<OWNER*> owners = psdb.get_all_owners();
-    size_t n = owners.size();
+    //vector<OWNER*> owners = psdb.get_all_owners();
+    //size_t n = owners.size();
+
+    vector<size_t> owners_number = psdb.get_all_owners_number();
+    sort(owners_number.begin(), owners_number.end());
+    vector<OWNER*> owners;
+    size_t n = owners_number.size();
+    for(size_t i=0; i!=n; ++i)
+        owners.push_back(psdb.get_owner(owners_number[i]));
+
     for(size_t i=0; i!=n; ++i)
     {
         OWNER* owner = owners[i];

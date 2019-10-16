@@ -630,7 +630,7 @@ double PSASPE2::get_model_data_with_name(string par_name) const
     if(par_name=="KPT")
         return get_Kpt();
     if(par_name=="KIT")
-        return get_Kpi();
+        return get_Kit();
     if(par_name=="KE")
         return get_Ke();
 
