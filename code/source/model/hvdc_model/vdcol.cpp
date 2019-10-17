@@ -21,7 +21,7 @@ VDCOL::VDCOL(const VDCOL& limiter)
 
 VDCOL::~VDCOL()
 {
-    clear();
+    //clear();
 }
 
 

@@ -11,7 +11,7 @@ PSASPS1::PSASPS1()
 
 PSASPS1::~PSASPS1()
 {
-    clear();
+    //clear();
 }
 
 void PSASPS1::clear()

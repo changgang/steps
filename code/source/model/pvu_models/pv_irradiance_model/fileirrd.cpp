@@ -12,7 +12,7 @@ FILEIRRAD::FILEIRRAD()
 
 FILEIRRAD::~FILEIRRAD()
 {
-    clear();
+    //clear();
 }
 
 void FILEIRRAD::clear()

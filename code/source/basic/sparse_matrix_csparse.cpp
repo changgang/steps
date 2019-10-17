@@ -109,13 +109,13 @@ SPARSE_MATRIX_CSPARSE::~SPARSE_MATRIX_CSPARSE()
     if(LU_workspace!=NULL) free(LU_workspace);
     if(bb!=NULL) free(bb);
 
-    matrix_real = NULL;
+    /*matrix_real = NULL;
     matrix_imag = NULL;
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
     bb = NULL;
-    bb_size = 0;
+    bb_size = 0;*/
 }
 
 void SPARSE_MATRIX_CSPARSE::clear()

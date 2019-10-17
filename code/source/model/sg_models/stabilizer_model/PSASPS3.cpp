@@ -11,7 +11,7 @@ PSASPS3::PSASPS3()
 
 PSASPS3::~PSASPS3()
 {
-    clear();
+    //clear();
 }
 
 void PSASPS3::clear()

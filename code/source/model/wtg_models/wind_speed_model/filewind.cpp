@@ -12,7 +12,7 @@ FILEWIND::FILEWIND()
 
 FILEWIND::~FILEWIND()
 {
-    clear();
+    //clear();
 }
 
 void FILEWIND::clear()

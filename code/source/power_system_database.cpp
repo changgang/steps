@@ -1290,34 +1290,35 @@ void POWER_SYSTEM_DATABASE::update_device_id(const DEVICE_ID& did_old, const DEV
 }
 void POWER_SYSTEM_DATABASE::append_dynamic_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() == model->get_allowed_device_type())
+    string device_type = did.get_device_type();
+    if(device_type == model->get_allowed_device_type())
     {
-        if(did.get_device_type()=="LOAD")
+        if(device_type=="LOAD")
         {
             append_load_related_model(did, model);
             return;
         }
-        if(did.get_device_type()=="GENERATOR")
+        if(device_type=="GENERATOR")
         {
             append_generator_related_model(did, model);
             return;
         }
-        if(did.get_device_type()=="WT GENERATOR")
+        if(device_type=="WT GENERATOR")
         {
             append_wt_generator_related_model(did, model);
             return;
         }
-        if(did.get_device_type()=="PV UNIT")
+        if(device_type=="PV UNIT")
         {
             append_pv_unit_related_model(did, model);
             return;
         }
-        if(did.get_device_type()=="ENERGY STORAGE")
+        if(device_type=="ENERGY STORAGE")
         {
             append_energy_storage_related_model(did, model);
             return;
         }
-        if(did.get_device_type()=="HVDC")
+        if(device_type=="HVDC")
         {
             append_hvdc_related_model(did, model);
             return;
@@ -1328,9 +1329,10 @@ void POWER_SYSTEM_DATABASE::append_dynamic_model(const DEVICE_ID& did, const MOD
 
 void POWER_SYSTEM_DATABASE::append_load_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() == model->get_allowed_device_type())
+    string device_type = did.get_device_type();
+    if(device_type == model->get_allowed_device_type())
     {
-        if(did.get_device_type()=="LOAD")
+        if(device_type=="LOAD")
         {
             LOAD* ptr = get_load(did);
             if(ptr!=NULL)
@@ -1341,9 +1343,10 @@ void POWER_SYSTEM_DATABASE::append_load_related_model(const DEVICE_ID& did, cons
 
 void POWER_SYSTEM_DATABASE::append_generator_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() == model->get_allowed_device_type())
+    string device_type = did.get_device_type();
+    if(device_type== model->get_allowed_device_type())
     {
-        if(did.get_device_type()=="GENERATOR")
+        if(device_type=="GENERATOR")
         {
             GENERATOR* ptr = get_generator(did);
             if(ptr!=NULL)
@@ -1354,9 +1357,10 @@ void POWER_SYSTEM_DATABASE::append_generator_related_model(const DEVICE_ID& did,
 
 void POWER_SYSTEM_DATABASE::append_wt_generator_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() == model->get_allowed_device_type())
+    string device_type = did.get_device_type();
+    if(device_type == model->get_allowed_device_type())
     {
-        if(did.get_device_type()=="WT GENERATOR")
+        if(device_type=="WT GENERATOR")
         {
             WT_GENERATOR* ptr = get_wt_generator(did);
             if(ptr!=NULL)
@@ -1367,9 +1371,10 @@ void POWER_SYSTEM_DATABASE::append_wt_generator_related_model(const DEVICE_ID& d
 
 void POWER_SYSTEM_DATABASE::append_pv_unit_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() == model->get_allowed_device_type())
+    string device_type = did.get_device_type();
+    if(device_type == model->get_allowed_device_type())
     {
-        if(did.get_device_type()=="PV UNIT")
+        if(device_type=="PV UNIT")
         {
             PV_UNIT* ptr = get_pv_unit(did);
             if(ptr!=NULL)
@@ -1380,9 +1385,10 @@ void POWER_SYSTEM_DATABASE::append_pv_unit_related_model(const DEVICE_ID& did, c
 
 void POWER_SYSTEM_DATABASE::append_energy_storage_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() == model->get_allowed_device_type())
+    string device_type = did.get_device_type();
+    if(device_type == model->get_allowed_device_type())
     {
-        if(did.get_device_type()=="ENERGY STORAGE")
+        if(device_type=="ENERGY STORAGE")
         {
             ENERGY_STORAGE* ptr = get_energy_storage(did);
             if(ptr!=NULL)
@@ -1392,9 +1398,10 @@ void POWER_SYSTEM_DATABASE::append_energy_storage_related_model(const DEVICE_ID&
 }
 void POWER_SYSTEM_DATABASE::append_hvdc_related_model(const DEVICE_ID& did, const MODEL* model)
 {
-    if(did.get_device_type() == model->get_allowed_device_type())
+    string device_type = did.get_device_type();
+    if(device_type == model->get_allowed_device_type())
     {
-        if(did.get_device_type()=="HVDC")
+        if(device_type=="HVDC")
         {
             HVDC* ptr = get_hvdc(did);
             if(ptr!=NULL)

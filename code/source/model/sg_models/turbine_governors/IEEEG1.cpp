@@ -11,7 +11,7 @@ IEEEG1::IEEEG1()
 
 IEEEG1::~IEEEG1()
 {
-    clear();
+    //clear();
 }
 void IEEEG1::clear()
 {

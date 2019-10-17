@@ -11,7 +11,7 @@ IEEEG2::IEEEG2()
 
 IEEEG2::~IEEEG2()
 {
-    clear();
+    //clear();
 }
 void IEEEG2::clear()
 {

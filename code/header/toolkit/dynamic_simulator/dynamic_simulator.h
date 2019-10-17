@@ -221,6 +221,7 @@ class DYNAMICS_SIMULATOR: public BASE
         double TIME;
 
         size_t ITER_DAE, ITER_NET;
+        double time_elapse_in_a_step;
         double P_threshold_in_MW, Q_threshold_in_MVar;
         size_t network_iteration_count, DAE_iteration_count;
         size_t max_network_iteration, max_DAE_iteration, max_update_iteration;

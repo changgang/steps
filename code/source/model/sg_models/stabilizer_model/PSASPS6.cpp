@@ -20,7 +20,7 @@ PSASPS6::PSASPS6()
 
 PSASPS6::~PSASPS6()
 {
-    clear();
+    //clear();
 }
 
 void PSASPS6::clear()

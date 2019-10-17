@@ -12,7 +12,7 @@ IEEEVC::IEEEVC()
 
 IEEEVC::~IEEEVC()
 {
-    clear();
+    //clear();
 }
 
 void IEEEVC::clear()

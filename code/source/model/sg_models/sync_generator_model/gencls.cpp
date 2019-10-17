@@ -12,7 +12,7 @@ GENCLS::GENCLS()
 
 GENCLS::~GENCLS()
 {
-    clear();
+    //clear();
 }
 
 void GENCLS::clear()

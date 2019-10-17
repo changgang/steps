@@ -206,8 +206,11 @@ void PID_BLOCK::run(DYNAMIC_MODE mode)
 
     if(mode==INTEGRATE_MODE)
         integrate();
-    if(mode==UPDATE_MODE)
-        update();
+    else
+    {
+        if(mode==UPDATE_MODE)
+            update();
+    }
 
     LIMITER_TYPE limiter = get_limiter_type();
     double vmax = get_upper_limit();

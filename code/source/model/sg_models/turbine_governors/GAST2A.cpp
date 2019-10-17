@@ -11,7 +11,7 @@ GAST2A::GAST2A()
 
 GAST2A::~GAST2A()
 {
-    clear();
+    //clear();
 }
 void GAST2A::clear()
 {

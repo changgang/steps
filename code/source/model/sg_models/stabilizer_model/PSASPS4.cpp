@@ -20,7 +20,7 @@ PSASPS4::PSASPS4()
 
 PSASPS4::~PSASPS4()
 {
-    clear();
+    //clear();
 }
 
 void PSASPS4::clear()

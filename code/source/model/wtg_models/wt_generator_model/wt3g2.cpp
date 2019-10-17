@@ -13,7 +13,7 @@ WT3G2::WT3G2()
 
 WT3G2::~WT3G2()
 {
-    clear();
+    //clear();
 }
 
 void WT3G2::clear()

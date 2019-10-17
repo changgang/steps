@@ -17,7 +17,7 @@ TERMINAL::TERMINAL()
 
 TERMINAL::~TERMINAL()
 {
-    buses.clear();
+    //buses.clear();
 }
 
 void TERMINAL::append_bus(size_t bus)

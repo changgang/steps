@@ -14,8 +14,8 @@ BUS_INDEX::BUS_INDEX()
 
 BUS_INDEX::~BUS_INDEX()
 {
-	max_bus_number = 0;
-    index.clear();
+	//max_bus_number = 0;
+    //index.clear();
 }
 void BUS_INDEX::set_max_bus_number(size_t max_bus_number)
 {

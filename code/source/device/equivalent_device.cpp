@@ -18,11 +18,9 @@ EQUIVALENT_DEVICE::EQUIVALENT_DEVICE()
 EQUIVALENT_DEVICE::~EQUIVALENT_DEVICE()
 {
     if(equivalent_model != NULL)
-    {
         delete equivalent_model;
-    }
 
-    clear();
+    //clear();
 }
 
 void EQUIVALENT_DEVICE::set_equivalent_device_bus(size_t device_bus)

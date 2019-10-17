@@ -17,7 +17,7 @@ ENERGY_STORAGE::ENERGY_STORAGE() : SOURCE()
 
 ENERGY_STORAGE::~ENERGY_STORAGE()
 {
-    clear();
+    //clear();
     if(energy_storage_model!=NULL)
         delete energy_storage_model;
 }

@@ -12,7 +12,7 @@ PSASPVC::PSASPVC()
 
 PSASPVC::~PSASPVC()
 {
-    clear();
+    //clear();
 }
 
 void PSASPVC::clear()

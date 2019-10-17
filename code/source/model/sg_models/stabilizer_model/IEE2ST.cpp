@@ -11,7 +11,7 @@ IEE2ST::IEE2ST()
 
 IEE2ST::~IEE2ST()
 {
-    clear();
+    //clear();
 }
 
 void IEE2ST::clear()

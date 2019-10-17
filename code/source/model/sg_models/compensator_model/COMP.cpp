@@ -12,7 +12,7 @@ COMP::COMP()
 
 COMP::~COMP()
 {
-    clear();
+    //clear();
 }
 
 void COMP::clear()

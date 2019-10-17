@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <istream>
 #include <iostream>
+#include <algorithm>
 using namespace std;
 
 PSSE_IMEXPORTER::PSSE_IMEXPORTER()

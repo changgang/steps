@@ -19,11 +19,6 @@
 #include "header/basic/bus_index.h"
 #include "header/basic/device_index_map.h"
 
-#include "header/model/sg_models/sync_generator_model/sync_generator_model.h"
-#include "header/model/sg_models/exciter_model/exciter_model.h"
-#include "header/model/sg_models/stabilizer_model/stabilizer_model.h"
-#include "header/model/sg_models/turbine_governor_model/turbine_governor_model.h"
-
 #include <string>
 
 using namespace std;

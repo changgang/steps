@@ -12,7 +12,7 @@ GENSAL::GENSAL()
 
 GENSAL::~GENSAL()
 {
-    clear();
+    //clear();
 }
 
 void GENSAL::clear()

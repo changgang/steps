@@ -1634,7 +1634,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 //    csv_output_file<<","<<meters[i].get_meter_type();
                 //csv_output_file<<endl;
 
-                csv_output_file<<"TIME,DAE INTEGRATION,NETWORK ITERATION,MISMATCH IN MVA";
+                csv_output_file<<"TIME,DAE INTEGRATION,NETWORK ITERATION,MISMATCH IN MVA,TIME ELAPSE IN MS";
 
                 for(size_t i=0; i!=n; ++i)
                     csv_output_file<<","<<meters[i].get_meter_name();
@@ -1651,7 +1651,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 //    json_output_file<<", \""<<meters[i].get_meter_type()<<"\"";
                 //json_output_file<<"],"<<endl<<endl;
 
-                json_output_file<<"    \"meter_name\" : [\"TIME\", \"DAE INTEGRATION\", \"NETWORK ITERATION\", \"MISMATCH IN MVA\"";
+                json_output_file<<"    \"meter_name\" : [\"TIME\", \"DAE INTEGRATION\", \"NETWORK ITERATION\", \"MISMATCH IN MVA\", \"TIME ELAPSE IN MS\"";
                 for(size_t i=0; i!=n; ++i)
                     json_output_file<<", \""<<meters[i].get_meter_name()<<"\"";
                 json_output_file<<"],"<<"\n\n";
@@ -1693,6 +1693,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 meter_names += "DAE INTEGRATION\n";
                 meter_names += "NETWORK INTEGRATION\n";
                 meter_names += "MISMATCH IN MVA\n";
+                meter_names += "TIME ELAPSE IN MS\n";
                 for(size_t i=0; i!=n; ++i)
                     meter_names += (meters[i].get_meter_name()+"\n");
 
@@ -1738,6 +1739,9 @@ void DYNAMICS_SIMULATOR::save_meter_values()
             fvalue = smax;
             bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
 
+            fvalue = time_elapse_in_a_step;
+            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+
             for (size_t i = 0; i != n; ++i)
             {
                 fvalue = meter_values[i];
@@ -1761,6 +1765,8 @@ void DYNAMICS_SIMULATOR::save_meter_values()
             snprintf(temp_buffer, 50, ",%3lu",ITER_NET);
             temp_str += temp_buffer;
             snprintf(temp_buffer, 50, ",%6.3f",smax);
+            temp_str += temp_buffer;
+            snprintf(temp_buffer, 50, ",%6.3f",time_elapse_in_a_step);
             temp_str += temp_buffer;
             for (size_t i = 0; i != n; ++i)
             {
@@ -1829,6 +1835,8 @@ void DYNAMICS_SIMULATOR::set_openmp_number_of_threads()
 
 void DYNAMICS_SIMULATOR::start()
 {
+    time_t clock_start = clock();
+
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWERFLOW_SOLVER& pf_solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -1893,6 +1901,10 @@ void DYNAMICS_SIMULATOR::start()
 
     osstream<<"Dynamics initialization finished.";
     toolkit.show_information_with_leading_time_stamp(osstream);
+
+
+    time_t clock_end = clock();
+    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_end-clock_start);
 
     save_meter_information();
     save_meter_values();
@@ -1995,6 +2007,7 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 
 void DYNAMICS_SIMULATOR::run_a_step()
 {
+    time_t clock_start = clock();
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
@@ -2050,11 +2063,16 @@ void DYNAMICS_SIMULATOR::run_a_step()
     }
     update();
     update_relay_models();
+
+    time_t clock_end = clock();
+    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_end-clock_start);
+
     save_meter_values();
 }
 
 void DYNAMICS_SIMULATOR::update_with_event()
 {
+    time_t clock_start = clock();
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
@@ -2089,6 +2107,10 @@ void DYNAMICS_SIMULATOR::update_with_event()
     }
     update_bus_frequency_blocks();
     update();
+
+    time_t clock_end = clock();
+    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_end-clock_start);
+
     save_meter_values();
 }
 

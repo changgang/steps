@@ -22,7 +22,7 @@ DEVICE_ID::DEVICE_ID(const DEVICE_ID& did)
 
 DEVICE_ID::~DEVICE_ID()
 {
-    clear();
+    //clear();
 }
 
 void DEVICE_ID::initialize_minimum_maximum_terminal_count()
@@ -70,6 +70,16 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         else
             allow_identifier = true;
 
+        if(device_type=="BUS") device_type_code = 1;
+        if(device_type_code==0 and device_type=="GENERATOR") device_type_code = 2;
+        if(device_type_code==0 and device_type=="WT GENERATOR") device_type_code = 3;
+        if(device_type_code==0 and device_type=="PV UNIT") device_type_code = 4;
+        if(device_type_code==0 and device_type=="ENERGY STORAGE") device_type_code = 5;
+        if(device_type_code==0 and device_type=="LOAD") device_type_code = 6;
+        if(device_type_code==0 and device_type=="FIXED SHUNT") device_type_code = 7;
+        if(device_type_code==0 and device_type=="SWITCHED SHUNT") device_type_code = 8;
+        if(device_type_code==0 and device_type=="EQUIVALENT DEVICE") device_type_code = 9;
+
         return;
     }
 
@@ -83,6 +93,12 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_maximum_allowed_terminal_count(2);
 
         allow_identifier = true;
+
+        if(device_type=="LINE") device_type_code = 10;
+        if(device_type_code==0 and device_type=="HVDC") device_type_code = 11;
+        if(device_type_code==0 and device_type=="VSC HVDC") device_type_code = 12;
+        if(device_type_code==0 and device_type=="FACTS") device_type_code = 13;
+
         return;
     }
 
@@ -92,6 +108,9 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_minimum_allowed_terminal_count(2);
         set_maximum_allowed_terminal_count(3);
         allow_identifier = true;
+
+        device_type_code = 14;
+
         return;
     }
 
@@ -101,6 +120,9 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_minimum_allowed_terminal_count(3);
         set_maximum_allowed_terminal_count(100);
         allow_identifier = true;
+
+        device_type_code = 15;
+
         return;
     }
 
@@ -110,6 +132,9 @@ void DEVICE_ID::set_device_type_and_allowed_terminal_count(string device_type)
         set_minimum_allowed_terminal_count(0);
         set_maximum_allowed_terminal_count(100);
         allow_identifier = true;
+
+        device_type_code = 16;
+
         return;
     }
 
@@ -163,6 +188,11 @@ string DEVICE_ID::get_device_type() const
         return device_type;
     else
         return "NONE";
+}
+
+size_t DEVICE_ID::get_device_type_code() const
+{
+    return device_type_code;
 }
 
 TERMINAL DEVICE_ID::get_device_terminal() const
@@ -269,7 +299,9 @@ string DEVICE_ID::get_device_name() const
 
 bool DEVICE_ID::is_valid() const
 {
-    if(get_device_type()=="GENERAL DEVICE" or (get_device_type()!="" and terminal.get_bus_count()!=0))
+    //if(get_device_type()=="GENERAL DEVICE" or (get_device_type()!="" and terminal.get_bus_count()!=0))
+    size_t device_type_code = get_device_type_code();
+    if(device_type_code==16 or (device_type_code!=0 and terminal.get_bus_count()!=0))
         return true;
     else
         return false;
@@ -278,6 +310,7 @@ bool DEVICE_ID::is_valid() const
 void DEVICE_ID::clear()
 {
     device_type = "";
+    device_type_code = 0;
     device_identifier = "";
     terminal.clear();
     initialize_minimum_maximum_terminal_count();
@@ -297,6 +330,41 @@ DEVICE_ID& DEVICE_ID::operator= (const DEVICE_ID& device_id)
 
 bool DEVICE_ID::operator< (const DEVICE_ID& device_id) const
 {
+    if(this->get_device_type_code() == device_id.get_device_type_code())
+    {
+        TERMINAL this_terminal = this->get_device_terminal();
+        TERMINAL to_compare_terminal = device_id.get_device_terminal();
+
+        vector<size_t> this_buses = this_terminal.get_buses();
+        vector<size_t> to_compare_buses = to_compare_terminal.get_buses();
+
+        size_t this_size = this_buses.size();
+        size_t to_compare_size = to_compare_buses.size();
+
+        size_t max_size = max(this_size, to_compare_size);
+
+        this_buses.resize(max_size, 0);
+        to_compare_buses.resize(max_size, 0);
+
+        int compare_sign = 0;
+
+        for(size_t i=0; compare_sign==0 and i!=max_size; ++i)
+            compare_sign = (int)this_buses[i]-(int)to_compare_buses[i];
+
+        if(compare_sign!=0)
+            return compare_sign<0;
+        else
+        {
+            string this_identifier = this->get_device_identifier();
+            string to_compare_identifier = device_id.get_device_identifier();
+
+            compare_sign = (this_identifier<to_compare_identifier?-1:(this_identifier>to_compare_identifier?1:0));
+            return compare_sign<0;
+        }
+    }
+    else// of different types, no comparison
+        return false;
+    /*
     if(this->get_device_type() == device_id.get_device_type())
     {
         TERMINAL this_terminal = this->get_device_terminal();
@@ -351,6 +419,7 @@ bool DEVICE_ID::operator< (const DEVICE_ID& device_id) const
     }
     else// of different types, no comparison
         return false;
+    */
 }
 
 bool DEVICE_ID::operator==(const DEVICE_ID& device_id) const

@@ -28,7 +28,7 @@ GENERATOR::GENERATOR() : SOURCE()
 
 GENERATOR::~GENERATOR()
 {
-    clear();
+    //clear();
     if(sync_generator_model!=NULL)
         delete sync_generator_model;
 

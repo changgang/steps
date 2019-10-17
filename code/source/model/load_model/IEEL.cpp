@@ -9,7 +9,7 @@ IEEL::IEEL()
 
 IEEL::~IEEL()
 {
-    clear();
+    //clear();
 }
 
 void IEEL::clear()

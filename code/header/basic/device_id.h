@@ -19,6 +19,7 @@ class DEVICE_ID
         void set_device_identifier(string device_identifier);
 
         string get_device_type() const;
+        size_t get_device_type_code() const;
         TERMINAL get_device_terminal() const;
         string get_device_identifier() const;
         size_t get_minimum_allowed_terminal_count() const;
@@ -42,6 +43,7 @@ class DEVICE_ID
 
     private:
         string device_type;
+        size_t device_type_code;
         size_t minimum_terminal_count, maximum_terminal_count; bool allow_identifier;
         TERMINAL terminal;
         string device_identifier;

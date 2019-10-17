@@ -318,7 +318,8 @@ bool METER::is_internal_variable_name_valid(string name) const
         name = string2upper(name);
         string meter_type = get_meter_type();
         MODEL* model=NULL;
-        if(get_device_type()=="LOAD")
+        string device_type = get_device_type();
+        if(device_type=="LOAD")
         {
             LOAD* ptr = (LOAD*)get_device_pointer();
             if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
@@ -328,7 +329,7 @@ bool METER::is_internal_variable_name_valid(string name) const
             if(meter_type=="VOLTAGE RELAY MODEL INTERNAL VARIABLE")
                 model = ptr->get_load_voltage_relay_model();
         }
-        if(get_device_type()=="GENERATOR")
+        if(device_type=="GENERATOR")
         {
             GENERATOR* ptr = (GENERATOR*)get_device_pointer();
             if(meter_type=="SYNC GENERATOR MODEL INTERNAL VARIABLE")
@@ -344,7 +345,7 @@ bool METER::is_internal_variable_name_valid(string name) const
             if(meter_type=="TURBINE LOAD CONTROLLER MODEL INTERNAL VARIABLE")
                 model = ptr->get_turbine_load_controller_model();
         }
-        if(get_device_type()=="WT GENERATOR")
+        if(device_type=="WT GENERATOR")
         {
             WT_GENERATOR* ptr = (WT_GENERATOR*)get_device_pointer();
             if(meter_type=="WT GENERATOR MODEL INTERNAL VARIABLE")
@@ -360,7 +361,7 @@ bool METER::is_internal_variable_name_valid(string name) const
             if(meter_type=="WIND SPEED MODEL INTERNAL VARIABLE")
                 model = ptr->get_wind_speed_model();
         }
-        if(get_device_type()=="PV UNIT")
+        if(device_type=="PV UNIT")
         {
             PV_UNIT* ptr = (PV_UNIT*)get_device_pointer();
             if(meter_type=="PV CONVERTER MODEL INTERNAL VARIABLE")
@@ -372,13 +373,13 @@ bool METER::is_internal_variable_name_valid(string name) const
             if(meter_type=="PV IRRADIANCE MODEL INTERNAL VARIABLE")
                 model = ptr->get_pv_irradiance_model();
         }
-        if(get_device_type()=="ENERGY STORAGE")
+        if(device_type=="ENERGY STORAGE")
         {
             ENERGY_STORAGE* ptr = (ENERGY_STORAGE*)get_device_pointer();
             if(meter_type=="ENERGY STORAGE MODEL INTERNAL VARIABLE")
                 model = ptr->get_energy_storage_model();
         }
-        if(get_device_type()=="HVDC")
+        if(device_type=="HVDC")
         {
             HVDC* ptr = (HVDC*)get_device_pointer();
             if(meter_type=="HVDC MODEL INTERNAL VARIABLE")

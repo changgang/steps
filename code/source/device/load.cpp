@@ -22,7 +22,7 @@ LOAD::LOAD()
 
 LOAD::~LOAD()
 {
-    clear();
+    //clear();
 
     if(load_model != NULL)
         delete load_model;

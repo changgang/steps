@@ -11,7 +11,7 @@ PSASPS8::PSASPS8()
 
 PSASPS8::~PSASPS8()
 {
-    clear();
+    //clear();
 }
 
 void PSASPS8::clear()

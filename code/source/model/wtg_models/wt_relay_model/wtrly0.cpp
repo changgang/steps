@@ -11,7 +11,7 @@ WTRLY0::WTRLY0()
 
 WTRLY0::~WTRLY0()
 {
-    clear();
+    //clear();
 }
 
 void WTRLY0::clear()

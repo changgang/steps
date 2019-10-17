@@ -12,7 +12,7 @@ UVLS::UVLS()
 
 UVLS::~UVLS()
 {
-    clear();
+    //clear();
 }
 
 void UVLS::clear()

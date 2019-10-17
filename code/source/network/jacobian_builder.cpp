@@ -16,10 +16,12 @@ JACOBIAN_BUILDER::JACOBIAN_BUILDER()
 
 JACOBIAN_BUILDER::~JACOBIAN_BUILDER()
 {
+    /*
     jacobian_delta_p_over_angle.clear();
     jacobian_delta_p_over_voltage.clear();
     jacobian_delta_q_over_angle.clear();
     jacobian_delta_q_over_voltage.clear();
+    */
 }
 
 

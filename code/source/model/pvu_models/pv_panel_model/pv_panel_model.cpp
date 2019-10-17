@@ -17,7 +17,7 @@ PV_PANEL_MODEL::PV_PANEL_MODEL(const PV_PANEL_MODEL& model)
 
 PV_PANEL_MODEL::~PV_PANEL_MODEL()
 {
-
+    ;
 }
 
 PV_PANEL_MODEL& PV_PANEL_MODEL::operator=(const PV_PANEL_MODEL& model)

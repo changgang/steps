@@ -11,7 +11,7 @@ URCSCT::URCSCT()
 
 URCSCT::~URCSCT()
 {
-    clear();
+    //clear();
 }
 void URCSCT::clear()
 {

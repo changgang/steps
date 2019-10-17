@@ -23,7 +23,10 @@ PV_UNIT::PV_UNIT() : SOURCE()
 
 PV_UNIT::~PV_UNIT()
 {
-    ;
+    if(pv_converter_model != NULL) delete pv_converter_model;
+    if(pv_panel_model != NULL) delete pv_panel_model;
+    if(pv_electrical_model != NULL) delete pv_electrical_model;
+    if(pv_irradiance_model != NULL) delete pv_irradiance_model;
 }
 
 void PV_UNIT::clear()

@@ -30,7 +30,14 @@ WT_GENERATOR::WT_GENERATOR() : SOURCE()
 
 WT_GENERATOR::~WT_GENERATOR()
 {
-    ;
+
+    if(wt_generator_model != NULL) delete wt_generator_model;
+    if(wt_aerodynamic_model != NULL) delete wt_aerodynamic_model;
+    if(wt_turbine_model != NULL) delete wt_turbine_model;
+    if(wt_electrical_model != NULL) delete wt_electrical_model;
+    if(wt_pitch_model != NULL) delete wt_pitch_model;
+    if(wind_speed_model != NULL) delete wind_speed_model;
+    if(wt_relay_model != NULL) delete wt_relay_model;
 }
 
 void WT_GENERATOR::clear()

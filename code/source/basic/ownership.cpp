@@ -9,7 +9,7 @@ OWNERSHIP::OWNERSHIP()
 }
 OWNERSHIP::~OWNERSHIP()
 {
-    ownership_pair.clear();
+    //ownership_pair.clear();
 }
 
 OWNERSHIP::OWNERSHIP(const OWNERSHIP& ownership)

@@ -12,7 +12,7 @@ PVCV0::PVCV0()
 
 PVCV0::~PVCV0()
 {
-    clear();
+    //clear();
 }
 
 void PVCV0::clear()
