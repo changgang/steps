@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/block/second_order_block_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -7,6 +8,7 @@
 #include <cstring>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 SECOND_ORDER_BLOCK_TEST::SECOND_ORDER_BLOCK_TEST()
@@ -105,3 +107,5 @@ void SECOND_ORDER_BLOCK_TEST::test_step_response_when_d_is_nonzero()
     show_test_information_for_function_of_class(__FUNCTION__,"SECOND_ORDER_BLOCK_TEST");
 
 }
+
+#endif

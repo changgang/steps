@@ -356,10 +356,12 @@ void PSASPE2::initialize()
                 this->Efd0 = Efd;
 
                 POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-                size_t bus = generator->get_generator_bus();
-                this->Vt0 = psdb.get_bus_voltage_in_pu(bus);
+                //size_t bus = generator->get_generator_bus();
+                //this->Vt0 = psdb.get_bus_voltage_in_pu(bus);
+                this->Vt0 = get_terminal_voltage_in_pu();
 
-                complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
+                //complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
+                complex<double> Vt = get_terminal_complex_voltage_in_pu();
                 //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
                 complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
                 double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
@@ -437,7 +439,7 @@ void PSASPE2::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPE2::get_excitation_voltage_in_pu() const
+double PSASPE2::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)

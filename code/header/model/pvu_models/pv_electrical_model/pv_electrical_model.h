@@ -62,10 +62,10 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
-        virtual double get_active_current_command_in_pu_based_on_mbase() const = 0;
+        virtual double get_active_current_command_in_pu_based_on_mbase() = 0;
         virtual double get_active_power_command_in_pu_based_on_mbase() const = 0;
-        virtual double get_reactive_current_command_in_pu_based_on_mbase() const = 0;
-        virtual double get_reactive_power_command_in_pu_based_on_mbase() const = 0;
+        virtual double get_reactive_current_command_in_pu_based_on_mbase() = 0;
+        virtual double get_reactive_power_command_in_pu_based_on_mbase() = 0;
         virtual double get_reactive_voltage_command_in_pu_based_on_mbase() const = 0;
         virtual double get_reactive_voltage_command_in_pu() const = 0;
         virtual void check() = 0;

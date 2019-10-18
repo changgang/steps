@@ -11,7 +11,6 @@ PSASPS8::PSASPS8()
 
 PSASPS8::~PSASPS8()
 {
-    //clear();
 }
 
 void PSASPS8::clear()
@@ -316,7 +315,7 @@ void PSASPS8::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPS8::get_stabilizing_signal_in_pu() const
+double PSASPS8::get_stabilizing_signal_in_pu()
 {
     double output = phase_tuner_3.get_output();
     if(output>Vsmax)

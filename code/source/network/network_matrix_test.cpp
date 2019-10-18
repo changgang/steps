@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/network/network_matrix_test.h"
 #include "header/basic/utility.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
@@ -9,6 +10,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 NETWORK_MATRIX_TEST::NETWORK_MATRIX_TEST()
@@ -367,3 +369,5 @@ void NETWORK_MATRIX_TEST::test_build_network_with_bus_out_of_service()
 
     network_matrix.check_network_connectivity();
 }
+
+#endif

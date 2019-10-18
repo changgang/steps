@@ -1,6 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/turbine_governor_model/GAST2A_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 GAST2A_TEST::GAST2A_TEST()
@@ -163,4 +166,4 @@ void GAST2A_TEST::test_get_standard_psse_string()
     show_test_information_for_function_of_class(__FUNCTION__,"GAST2A_TEST");
 }
 
-
+#endif

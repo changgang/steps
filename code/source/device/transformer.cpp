@@ -1012,11 +1012,6 @@ DEVICE_ID TRANSFORMER::get_device_id() const
     return did;
 }
 
-/*string TRANSFORMER::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
-
 complex<double> TRANSFORMER::get_star_bus_complex_voltage_in_pu() const
 {
     if(is_two_winding_transformer())

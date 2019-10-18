@@ -1,6 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/turbine_governor_model/IEEEG1_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 IEEEG1_TEST::IEEEG1_TEST()
@@ -163,4 +166,4 @@ void IEEEG1_TEST::test_get_standard_psse_string()
     show_test_information_for_function_of_class(__FUNCTION__,"IEEEG1_TEST");
 }
 
-
+#endif

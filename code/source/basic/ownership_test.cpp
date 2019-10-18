@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/ownership_test.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
@@ -8,6 +9,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 OWNERSHIP_TEST::OWNERSHIP_TEST()
@@ -299,3 +301,5 @@ void OWNERSHIP_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(fabs(new_ownership.get_fraction_of_owner(1)-0.23)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(new_ownership.get_fraction_of_owner(2)-0.1)<FLOAT_EPSILON);
 }
+
+#endif

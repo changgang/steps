@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/meter/meter_setter_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -10,6 +11,7 @@
 #include <cmath>
 
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 METER_SETTER_TEST::METER_SETTER_TEST()
@@ -1136,3 +1138,5 @@ void METER_SETTER_TEST::test_prepare_equivalent_device_related_meters()
     TEST_ASSERT(meter.get_meter_type()=="REACTIVE POWER NET LOAD IN PU");
 }
 
+
+#endif

@@ -9,6 +9,7 @@
 #include <complex>
 
 class HVDC;
+class BUS;
 
 class HVDC_MODEL : public MODEL
 {
@@ -64,6 +65,7 @@ class HVDC_MODEL : public MODEL
 
         double get_inverter_dc_voltage_command_in_kV();
         double get_rectifier_dc_current_command_in_kA(double Vdci_measured, double Idc_measured);
+
         // block and bypass logic
         void block_hvdc();
         void unblock_hvdc();
@@ -110,6 +112,7 @@ class HVDC_MODEL : public MODEL
         complex<double> get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE converter) const;
         complex<double> get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter) const;
+        double get_converter_ac_voltage_in_kV(HVDC_CONVERTER_SIDE converter) const;
 
         double get_time_duration_to_the_last_bypass_in_s() const;
         double get_time_of_the_last_bypass_in_s() const;

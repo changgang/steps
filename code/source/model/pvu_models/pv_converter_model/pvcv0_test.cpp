@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/pvu_models/pv_converter_model/pvcv0_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PVCV0_TEST::PVCV0_TEST() : PV_CONVERTER_MODEL_TEST()
@@ -141,3 +143,5 @@ void PVCV0_TEST::test_set_get_pll_angle()
     model->set_pll_angle_in_deg(10.0);
     TEST_ASSERT(fabs(model->get_pll_angle_in_deg()-10.0)<FLOAT_EPSILON);
 }
+
+#endif

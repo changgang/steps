@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/terminal_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -6,6 +7,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 TERMINAL_TEST::TERMINAL_TEST()
@@ -125,3 +127,5 @@ void TERMINAL_TEST::test_operator_bracket()
     TEST_ASSERT(terminal[3]==4);
     TEST_ASSERT(terminal[4]==5);
 }
+
+#endif

@@ -1,8 +1,11 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.h"
 #include "header/model/sg_models/sync_generator_model/gencls.h"
 #include "header/model/sg_models/turbine_governor_model/IEEEG1.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 TURBINE_LOAD_CONTROLLER_MODEL_TEST::TURBINE_LOAD_CONTROLLER_MODEL_TEST()
 {
@@ -94,3 +97,5 @@ void TURBINE_LOAD_CONTROLLER_MODEL_TEST::test_get_mechanical_power_reference()
     TEST_ASSERT(fabs(model->get_mechanical_power_reference_in_pu_based_on_mbase()-0.5)<FLOAT_EPSILON);
 }
 
+
+#endif

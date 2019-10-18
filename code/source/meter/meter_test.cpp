@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/meter/meter_test.h"
 #include "header/basic/utility.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
@@ -12,6 +13,7 @@
 #include <cmath>
 
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 METER_TEST::METER_TEST()
@@ -798,3 +800,5 @@ void METER_TEST::test_get_energy_storage_meter_value()
 }
 
 
+
+#endif

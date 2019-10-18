@@ -25,7 +25,10 @@ void FIXED_SHUNT::set_shunt_bus(size_t shunt_bus)
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         if(psdb.is_bus_exist(shunt_bus))
+        {
             this->bus = shunt_bus;
+            busptr = psdb.get_bus(shunt_bus);
+        }
         else
         {
             osstream<<"Bus "<<shunt_bus<<" does not exist in the power system database '"<<psdb.get_system_name()<<"' for setting up fixed shunt."<<endl
@@ -63,6 +66,11 @@ void FIXED_SHUNT::set_nominal_impedance_shunt_in_MVA(complex<double> s)
 size_t FIXED_SHUNT::get_shunt_bus() const
 {
     return bus;
+}
+
+BUS* FIXED_SHUNT::get_bus_pointer() const
+{
+    return busptr;
 }
 
 string FIXED_SHUNT::get_identifier() const
@@ -118,6 +126,7 @@ void FIXED_SHUNT::check()
 void FIXED_SHUNT::clear()
 {
     bus = 0;
+    busptr = NULL;
     set_identifier("");
     set_status(false);
     set_nominal_impedance_shunt_in_MVA(0.0);
@@ -206,11 +215,6 @@ DEVICE_ID FIXED_SHUNT::get_device_id() const
 
     return did;
 }
-
-/*string FIXED_SHUNT::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
 
 complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 {

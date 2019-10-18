@@ -12,7 +12,6 @@ IEEEVC::IEEEVC()
 
 IEEEVC::~IEEEVC()
 {
-    //clear();
 }
 
 void IEEEVC::clear()
@@ -132,7 +131,7 @@ void IEEEVC::run(DYNAMIC_MODE mode)
         set_flag_model_updated_as_true();
 }
 
-double IEEEVC::get_compensated_voltage_in_pu() const
+double IEEEVC::get_compensated_voltage_in_pu()
 {
     complex<double> Vt = get_generator_terminal_complex_voltage_in_pu();
     complex<double> It = get_generator_terminal_complex_current_in_pu();

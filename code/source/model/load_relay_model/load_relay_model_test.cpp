@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/load_relay_model/load_relay_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 LOAD_RELAY_MODEL_TEST::LOAD_RELAY_MODEL_TEST()
 {
@@ -67,3 +69,5 @@ LOAD* LOAD_RELAY_MODEL_TEST::get_load()
 {
     return loadptr;
 }
+
+#endif

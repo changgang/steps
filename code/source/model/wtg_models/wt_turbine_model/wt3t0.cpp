@@ -9,7 +9,6 @@ WT3T0::WT3T0()
 
 WT3T0::~WT3T0()
 {
-    //clear();
 }
 
 void WT3T0::clear()

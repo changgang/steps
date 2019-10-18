@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_electrical_model/wt_electrical_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -6,6 +7,7 @@
 #include "header/model/wtg_models/wt_aerodynamic_model/aerd0.h"
 #include "header/model/wtg_models/wt_turbine_model/wt3t0.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 WT_ELECTRICAL_MODEL_TEST::WT_ELECTRICAL_MODEL_TEST()
 {
@@ -379,3 +381,5 @@ void WT_ELECTRICAL_MODEL_TEST::test_get_standard_psse_string()
 
     default_toolkit.show_information_with_leading_time_stamp(model->get_standard_psse_string());
 }
+
+#endif

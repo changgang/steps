@@ -3,7 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
-
+#include "header/basic/test_macro.h"
 #include "header/device/engergy_storage_test.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
@@ -16,6 +16,8 @@
 #include <istream>
 #include <iostream>
 #include <cstdio>
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 ENERGY_STORAGE_TEST::ENERGY_STORAGE_TEST()
@@ -175,3 +177,5 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_model()
     TEST_ASSERT(fabs(((ESTR0*)modelptr)->get_Tp2_in_s()-2.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(((ESTR0*)modelptr)->get_Tr_in_s()-3.0)<FLOAT_EPSILON);
 }
+
+#endif

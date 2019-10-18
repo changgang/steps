@@ -20,7 +20,6 @@ PSASPS4::PSASPS4()
 
 PSASPS4::~PSASPS4()
 {
-    //clear();
 }
 
 void PSASPS4::clear()
@@ -572,7 +571,7 @@ void PSASPS4::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPS4::get_stabilizing_signal_in_pu() const
+double PSASPS4::get_stabilizing_signal_in_pu()
 {
     double output = phase_tuner_3.get_output();
     double vsmax = get_Vsmax();

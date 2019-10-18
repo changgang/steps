@@ -28,24 +28,12 @@ GENERATOR::GENERATOR() : SOURCE()
 
 GENERATOR::~GENERATOR()
 {
-    //clear();
-    if(sync_generator_model!=NULL)
-        delete sync_generator_model;
-
-    if(compensator_model!=NULL)
-        delete compensator_model;
-
-    if(exciter_model!=NULL)
-        delete exciter_model;
-
-    if(stabilizer_model!=NULL)
-        delete stabilizer_model;
-
-    if(turbine_governor_model!=NULL)
-        delete turbine_governor_model;
-
-    if(turbine_load_controller_model!=NULL)
-        delete turbine_load_controller_model;
+    if(sync_generator_model!=NULL) delete sync_generator_model;
+    if(compensator_model!=NULL) delete compensator_model;
+    if(exciter_model!=NULL) delete exciter_model;
+    if(stabilizer_model!=NULL) delete stabilizer_model;
+    if(turbine_governor_model!=NULL) delete turbine_governor_model;
+    if(turbine_load_controller_model!=NULL) delete turbine_load_controller_model;
 }
 
 void GENERATOR::set_generator_bus(size_t bus)
@@ -85,11 +73,6 @@ DEVICE_ID GENERATOR::get_device_id() const
 
     return did;
 }
-
-/*string GENERATOR::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
 
 void GENERATOR::set_model(const MODEL* model)
 {

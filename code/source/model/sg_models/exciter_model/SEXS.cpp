@@ -257,7 +257,7 @@ void SEXS::run(DYNAMIC_MODE mode)
     }
 }
 
-double SEXS::get_excitation_voltage_in_pu() const
+double SEXS::get_excitation_voltage_in_pu()
 {
     return exciter.get_output();
 }

@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/pvu_models/pv_converter_model/pv_converter_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PV_CONVERTER_MODEL_TEST::PV_CONVERTER_MODEL_TEST()
@@ -546,3 +548,5 @@ void PV_CONVERTER_MODEL_TEST::test_get_standard_psse_string()
     else
         TEST_ASSERT(false);
 }
+
+#endif

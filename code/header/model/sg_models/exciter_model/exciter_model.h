@@ -21,8 +21,8 @@ class EXCITER_MODEL : public SG_MODEL
         // get input for initialization
         double get_initial_excitation_voltage_in_pu_from_sync_generator_model() const;
         // get input for dynamics
-        double get_compensated_voltage_in_pu() const;
-        double get_stabilizing_signal_in_pu() const;
+        double get_compensated_voltage_in_pu();
+        double get_stabilizing_signal_in_pu();
         double get_field_current_in_pu() const;
         // reference
         void set_voltage_reference_in_pu(double vref);
@@ -38,7 +38,7 @@ class EXCITER_MODEL : public SG_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
-        virtual double get_excitation_voltage_in_pu() const = 0;
+        virtual double get_excitation_voltage_in_pu() = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;

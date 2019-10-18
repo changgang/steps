@@ -23,7 +23,7 @@ class WT_RELAY_MODEL : public WTG_MODEL
         double get_wind_speed_in_pu() const;
         double get_wt_generator_rotor_speed_in_pu() const;
         double get_bus_frequency_in_pu() const;
-        double get_bus_voltage_in_pu() const;
+        //double get_bus_voltage_in_pu() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
 

@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/turbine_governor_model/turbine_governor_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -5,6 +6,7 @@
 #include "header/model/sg_models/turbine_governor_model/TGOV1.h"
 #include "header/model/sg_models/sync_generator_model/gencls.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 TURBINE_GOVERNOR_MODEL_TEST::TURBINE_GOVERNOR_MODEL_TEST()
 {
@@ -153,3 +155,5 @@ void TURBINE_GOVERNOR_MODEL_TEST::test_get_rotor_speed()
 
     TEST_ASSERT(fabs(model.get_rotor_speed_deviation_in_pu_from_sync_generator_model()-genmodel->get_rotor_speed_deviation_in_pu())<FLOAT_EPSILON);
 }
+
+#endif

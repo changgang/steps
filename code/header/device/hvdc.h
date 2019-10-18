@@ -13,6 +13,7 @@
 
 using namespace std;
 
+class BUS;
 class HVDC_MODEL;
 
 class HVDC : public DEVICE
@@ -20,7 +21,6 @@ class HVDC : public DEVICE
     public:
         HVDC();
         virtual ~HVDC();
-
 
         void set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus);
         void set_converter_valve_side_bus_name(HVDC_CONVERTER_SIDE converter, string name);
@@ -57,6 +57,8 @@ class HVDC : public DEVICE
         void set_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter, const size_t ntap);
 
         size_t get_converter_bus(HVDC_CONVERTER_SIDE converter) const;
+        BUS* get_bus_pointer(HVDC_CONVERTER_SIDE converter) const;
+
         string get_converter_valve_side_bus_name(HVDC_CONVERTER_SIDE converter) const;
         string get_identifier() const;
         string get_name() const;
@@ -172,6 +174,8 @@ class HVDC : public DEVICE
         double solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_tap(HVDC_CONVERTER_SIDE converter, double Idc, double Tap);
 
         size_t converter_bus[2];
+        BUS* converter_busptr[2];
+
         string converter_valve_bus_name[2];
         string identifier;
         string hvdc_name;

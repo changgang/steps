@@ -2,12 +2,15 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#include "header/basic/test_macro.h"
+
 #include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 AREA_TEST::AREA_TEST()
@@ -187,3 +190,5 @@ void AREA_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(fabs(newarea.get_expected_power_leaving_area_in_MW()-100.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(newarea.get_area_power_mismatch_tolerance_in_MW()-20.0)<FLOAT_EPSILON);
 }
+
+#endif

@@ -29,8 +29,6 @@ BPA_IMEXPORTER::BPA_IMEXPORTER()
 
 BPA_IMEXPORTER::~BPA_IMEXPORTER()
 {
-    dat_data_in_ram.clear();
-    swi_data_in_ram.clear();
 }
 
 

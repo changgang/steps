@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/sync_generator_model/gencls_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 GENCLS_TEST::GENCLS_TEST()
@@ -129,3 +131,5 @@ void GENCLS_TEST::test_set_get_rotor_speed()
     model->set_rotor_speed_deviation_in_pu(0.1);
     TEST_ASSERT(fabs(model->get_rotor_speed_deviation_in_pu()-0.1)<FLOAT_EPSILON);
 }
+
+#endif

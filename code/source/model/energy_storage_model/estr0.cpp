@@ -12,7 +12,6 @@ ESTR0::ESTR0() : ENERGY_STORAGE_MODEL()
 
 ESTR0::~ESTR0()
 {
-    //clear();
 }
 
 void ESTR0::clear()

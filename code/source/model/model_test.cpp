@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 MODEL_TEST::MODEL_TEST()
@@ -112,3 +114,5 @@ void MODEL_TEST::test_activate_and_deactive_model()
     model.activate_model();
     TEST_ASSERT(model.is_model_active()==true);
 }
+
+#endif

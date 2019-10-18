@@ -412,11 +412,6 @@ DEVICE_ID BUS::get_device_id() const
     return did;
 }
 
-/*string BUS::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
-
 void BUS::set_fault(FAULT bus_fault)
 {
     ostringstream osstream;
@@ -537,14 +532,24 @@ void BUS::set_frequency_deviation_in_pu(double f)
     return bus_frequency_model.set_frequency_deviation_in_pu(f);
 }
 
-double BUS::get_frequency_deviation_in_pu()
+double BUS::get_frequency_deviation_in_pu() const
 {
     return bus_frequency_model.get_frequency_deviation_in_pu();
 }
 
-double BUS::get_frequency_deviation_in_Hz()
+double BUS::get_frequency_deviation_in_Hz() const
 {
     return bus_frequency_model.get_frequency_deviation_in_Hz();
+}
+
+double BUS::get_frequency_in_pu() const
+{
+    return get_frequency_deviation_in_pu()+1.0;
+}
+
+double BUS::get_frequency_in_Hz() const
+{
+    return get_frequency_deviation_in_Hz()+get_base_frequency_in_Hz();
 }
 
 void BUS::set_model(const MODEL* model)

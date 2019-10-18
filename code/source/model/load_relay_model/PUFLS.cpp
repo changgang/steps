@@ -13,7 +13,6 @@ PUFLS::PUFLS()
 
 PUFLS::~PUFLS()
 {
-    //clear();
 }
 
 void PUFLS::clear()

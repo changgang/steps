@@ -23,7 +23,7 @@ class COMPENSATOR_MODEL : public SG_MODEL
         // common inputs
         complex<double> get_generator_terminal_complex_voltage_in_pu() const;
         complex<double> get_generator_terminal_complex_current_in_pu() const;
-        double get_generator_terminal_voltage_in_pu() const;
+        double get_generator_terminal_voltage_in_pu();
         double get_generator_terminal_current_in_pu() const;
     public: // specific compensator
         virtual string get_model_name() const = 0;
@@ -36,7 +36,7 @@ class COMPENSATOR_MODEL : public SG_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
-        virtual double get_compensated_voltage_in_pu() const = 0; // output
+        virtual double get_compensated_voltage_in_pu() = 0; // output
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;

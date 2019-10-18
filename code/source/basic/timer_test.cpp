@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/timer_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -9,6 +10,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 TIMER_TEST::TIMER_TEST()
@@ -140,3 +142,5 @@ void TIMER_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(fabs(newtimer2.get_timer_interval_in_s()-2.0)<FLOAT_EPSILON);
 
 }
+
+#endif

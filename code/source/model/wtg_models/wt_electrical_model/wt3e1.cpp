@@ -836,7 +836,7 @@ void WT3E1::run(DYNAMIC_MODE mode)
     }
 }
 
-double WT3E1::get_active_current_command_in_pu_based_on_mbase() const
+double WT3E1::get_active_current_command_in_pu_based_on_mbase()
 {
     WT_GENERATOR* source = get_wt_generator_pointer();
     if(source!=NULL)
@@ -844,8 +844,9 @@ double WT3E1::get_active_current_command_in_pu_based_on_mbase() const
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t bus = source->get_source_bus();
-        double vterm = psdb.get_bus_voltage_in_pu(bus);
+        //size_t bus = source->get_source_bus();
+        //double vterm = psdb.get_bus_voltage_in_pu(bus);
+        double vterm = get_terminal_voltage_in_pu();
 
         double porder = get_active_power_command_in_pu_based_on_mbase();
         double IPcmd = porder/vterm;
@@ -865,7 +866,7 @@ double WT3E1::get_active_power_command_in_pu_based_on_mbase() const
     return power_order_integrator.get_output();
 }
 
-double WT3E1::get_reactive_current_command_in_pu_based_on_mbase() const
+double WT3E1::get_reactive_current_command_in_pu_based_on_mbase()
 {
     WT_GENERATOR* source = get_wt_generator_pointer();
     if(source!=NULL)
@@ -892,7 +893,7 @@ double WT3E1::get_reactive_current_command_in_pu_based_on_mbase() const
         return 0.0;
 }
 
-double WT3E1::get_reactive_power_command_in_pu_based_on_mbase() const
+double WT3E1::get_reactive_power_command_in_pu_based_on_mbase()
 {
     WT_GENERATOR* source = get_wt_generator_pointer();
     if(source!=NULL)
@@ -902,8 +903,9 @@ double WT3E1::get_reactive_power_command_in_pu_based_on_mbase() const
 
         if(get_voltage_flag()==0)
         {
-            size_t bus = source->get_source_bus();
-            double vterm = psdb.get_bus_voltage_in_pu(bus);
+            //size_t bus = source->get_source_bus();
+            //double vterm = psdb.get_bus_voltage_in_pu(bus);
+            double vterm = get_terminal_voltage_in_pu();
 
             double EQcmd = Q_error_integrator.get_output()-vterm;
             return EQcmd;

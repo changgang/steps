@@ -3,7 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
-
+#include "header/basic/test_macro.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter_test.h"
 #include "header/basic/utility.h"
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -541,3 +542,5 @@ void BPA_IMEXPORTER_TEST::test_load_dynamic_data()
 
 }
 
+
+#endif

@@ -3,7 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
-
+#include "header/basic/test_macro.h"
 #include "header/basic/inphno_test.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -171,3 +172,5 @@ void INPHNO_TEST::test_clear()
         TEST_ASSERT(result);
     }
 }
+
+#endif

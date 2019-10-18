@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/exciter_model/IEEET1_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 IEEET1_TEST::IEEET1_TEST() : EXCITER_MODEL_TEST()
 {
@@ -9,8 +11,6 @@ IEEET1_TEST::IEEET1_TEST() : EXCITER_MODEL_TEST()
     TEST_ADD(IEEET1_TEST::test_set_get_parameters);
     TEST_ADD(IEEET1_TEST::test_initialize);
 }
-
-
 
 void IEEET1_TEST::setup()
 {
@@ -97,3 +97,5 @@ void IEEET1_TEST::test_initialize()
     TEST_ASSERT(fabs(model->get_stabilizing_signal_in_pu()-0.0)<FLOAT_EPSILON);
 }
 
+
+#endif

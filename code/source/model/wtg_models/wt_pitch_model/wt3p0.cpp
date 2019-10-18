@@ -12,7 +12,6 @@ WT3P0::WT3P0()
 
 WT3P0::~WT3P0()
 {
-    //clear();
 }
 
 void WT3P0::clear()

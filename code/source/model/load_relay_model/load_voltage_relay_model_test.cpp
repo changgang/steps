@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/load_relay_model/load_voltage_relay_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 LOAD_VOLTAGE_RELAY_MODEL_TEST::LOAD_VOLTAGE_RELAY_MODEL_TEST() : LOAD_RELAY_MODEL_TEST()
 {
@@ -219,3 +221,5 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
 
     default_toolkit.close_log_file();
 }
+
+#endif

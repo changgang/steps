@@ -72,8 +72,6 @@ void CONTINUOUS_BUFFER::copy_from_constant_buffer(const CONTINUOUS_BUFFER& buffe
 
 CONTINUOUS_BUFFER::~CONTINUOUS_BUFFER()
 {
-    //time_buffer.clear();
-    //value_buffer.clear();
 }
 
 void CONTINUOUS_BUFFER::clear()

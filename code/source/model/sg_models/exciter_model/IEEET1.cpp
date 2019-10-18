@@ -364,7 +364,7 @@ void IEEET1::run(DYNAMIC_MODE mode)
     }
 }
 
-double IEEET1::get_excitation_voltage_in_pu() const
+double IEEET1::get_excitation_voltage_in_pu()
 {
     return exciter.get_output();
 }

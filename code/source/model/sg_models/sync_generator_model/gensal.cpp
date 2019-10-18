@@ -12,7 +12,6 @@ GENSAL::GENSAL()
 
 GENSAL::~GENSAL()
 {
-    //clear();
 }
 
 void GENSAL::clear()

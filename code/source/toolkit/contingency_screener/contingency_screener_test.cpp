@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/toolkit/contingency_screener/contingency_screener_test.h"
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
@@ -12,6 +13,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 CONTINGENCY_SCREENER_TEST::CONTINGENCY_SCREENER_TEST()
@@ -279,3 +281,5 @@ void CONTINGENCY_SCREENER_TEST::test_seach_cct_for_IEEE_9_bus_model_classic()
 
     default_toolkit.close_log_file();
 }
+
+#endif

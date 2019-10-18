@@ -7,9 +7,9 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Release">
-				<Option output="../build/bin/Release/libSTEPS" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
-				<Option object_output="../build/obj/Release/" />
+			<Target title="release">
+				<Option output="../build/bin/release/libSTEPS" imp_lib="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).a" def_file="$(TARGET_OUTPUT_DIR)$(TARGET_OUTPUT_BASENAME).def" prefix_auto="1" extension_auto="1" />
+				<Option object_output="../build/obj/release/" />
 				<Option type="3" />
 				<Option compiler="gcc" />
 				<Option parameters="--compiler " />
@@ -37,10 +37,11 @@
 					<Add option="-O3" />
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
+					<Add option="-static" />
 					<Add option="-fopenmp" />
 					<Add option="-march=native" />
-					<Add library="../build/bin/Release/libCSparse.a" />
-					<Add library="../build/bin/Release/libCpptest.a" />
+					<Add library="../build/bin/release/libCSparse.a" />
+					<Add library="../build/bin/release/libCpptest.a" />
 				</Linker>
 			</Target>
 		</Build>
@@ -80,6 +81,7 @@
 		<Unit filename="header/basic/steps_enum.h" />
 		<Unit filename="header/basic/terminal.h" />
 		<Unit filename="header/basic/terminal_test.h" />
+		<Unit filename="header/basic/test_macro.h" />
 		<Unit filename="header/basic/timer.h" />
 		<Unit filename="header/basic/timer_test.h" />
 		<Unit filename="header/basic/utility.h" />

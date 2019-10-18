@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/rating_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -6,6 +7,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 RATING_TEST::RATING_TEST()
@@ -109,3 +111,5 @@ void RATING_TEST::test_clear()
     TEST_ASSERT(fabs(rating.get_rating_B_MVA()-0.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(rating.get_rating_C_MVA()-0.0)<FLOAT_EPSILON);
 }
+
+#endif

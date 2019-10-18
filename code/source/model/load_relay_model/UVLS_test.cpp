@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/load_relay_model/UVLS_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 UVLS_TEST::UVLS_TEST() : LOAD_VOLTAGE_RELAY_MODEL_TEST()
 {
@@ -92,3 +94,5 @@ void UVLS_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_voltage_sensor_time_in_s()-0.1)<FLOAT_EPSILON);
 }
 
+
+#endif

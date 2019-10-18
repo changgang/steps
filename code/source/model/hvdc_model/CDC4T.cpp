@@ -313,8 +313,9 @@ void CDC4T::check_blocking_logic()
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
-    double vac_r = psdb.get_bus_voltage_in_pu(bus_r);
+    //size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
+    //double vac_r = psdb.get_bus_voltage_in_pu(bus_r);
+    double vac_r = get_converter_ac_voltage_in_pu(RECTIFIER);
 
     double vblock = get_rectifier_ac_instantaneous_blocking_voltage_in_pu();
     double vunblock = get_rectifier_ac_instantaneous_unblocking_voltage_in_pu();
@@ -386,8 +387,9 @@ void CDC4T::check_bypassing_logic()
     else
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        size_t bus_i = hvdc->get_converter_bus(INVERTER);
-        double vac_i = psdb.get_bus_voltage_in_pu(bus_i);
+        //size_t bus_i = hvdc->get_converter_bus(INVERTER);
+        //double vac_i = psdb.get_bus_voltage_in_pu(bus_i);
+        double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
 
         double vunbypass = get_inverter_ac_instantaneous_unbypassing_voltage_in_pu();
         if(is_bypass_timer_timed_out() and vac_i>vunbypass)

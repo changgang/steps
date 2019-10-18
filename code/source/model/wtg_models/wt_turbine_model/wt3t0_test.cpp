@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_turbine_model/wt3t0_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WT3T0_TEST::WT3T0_TEST() : WT_TURBINE_MODEL_TEST()
@@ -86,3 +88,5 @@ void WT3T0_TEST::test_initialize()
            <<"Rotor angle = "<<model->get_rotor_angle_in_deg()<<" deg";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
+
+#endif

@@ -96,8 +96,10 @@ class BUS : public DEVICE
 
         BUS_FREQUENCY_MODEL* get_bus_frequency_model();
         void set_frequency_deviation_in_pu(double f);
-        double get_frequency_deviation_in_pu();
-        double get_frequency_deviation_in_Hz();
+        double get_frequency_deviation_in_pu() const;
+        double get_frequency_deviation_in_Hz() const;
+        double get_frequency_in_pu() const;
+        double get_frequency_in_Hz() const;
     private:
         size_t bus_number;
         string bus_name;

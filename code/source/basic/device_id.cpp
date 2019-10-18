@@ -22,7 +22,6 @@ DEVICE_ID::DEVICE_ID(const DEVICE_ID& did)
 
 DEVICE_ID::~DEVICE_ID()
 {
-    //clear();
 }
 
 void DEVICE_ID::initialize_minimum_maximum_terminal_count()
@@ -364,62 +363,6 @@ bool DEVICE_ID::operator< (const DEVICE_ID& device_id) const
     }
     else// of different types, no comparison
         return false;
-    /*
-    if(this->get_device_type() == device_id.get_device_type())
-    {
-        TERMINAL this_terminal = this->get_device_terminal();
-        TERMINAL to_compare_terminal = device_id.get_device_terminal();
-        string this_identifier = this->get_device_identifier();
-        string to_compare_identifier = device_id.get_device_identifier();
-
-        size_t this_size = this_terminal.get_bus_count();
-        size_t to_compare_size = to_compare_terminal.get_bus_count();
-
-        size_t max_size = max(this_size, to_compare_size);
-
-        bool isless = false;
-        bool isgreater = false;
-
-        for(size_t i=0; i!=max_size; ++i)
-        {
-            if(this_terminal[i]<to_compare_terminal[i])
-            {
-                isless = true;
-                break;
-            }
-            else
-            {
-                if(this_terminal[i]>to_compare_terminal[i])
-                {
-                    isgreater = true;
-                    break;
-                }
-                else
-                    continue;
-            }
-        }
-
-        if((not isless) and (not isgreater))
-        {
-            if(this_identifier<to_compare_identifier)
-            {
-                isless = true;
-            }
-            else
-            {
-                if(this_identifier>to_compare_identifier)
-                {
-                    isgreater = true;
-                }
-            }
-        }
-
-        if(isless) return true;
-        else       return false;
-    }
-    else// of different types, no comparison
-        return false;
-    */
 }
 
 bool DEVICE_ID::operator==(const DEVICE_ID& device_id) const
@@ -626,40 +569,3 @@ DEVICE_ID get_general_device_id(vector<size_t> bus, string identifier)
 
     return did;
 }
-
-
-
-/*
-std::hash(const DEVICE_ID& did) const
-{
-    TERMINAL terminal  = did.get_device_terminal();
-    vector<size_t> buses = terminal.get_buses();
-    size_t n = buses.size();
-
-    size_t seed = 0;
-    for(size_t i=0; i!=n; ++i)
-        seed += std::hash<std::size_t>{}(buses[i]);
-    seed += std::hash<std::string>{}(did.get_device_identifier());
-
-    return seed;
-}
-namespace std
-{
-    template<> class hash<DEVICE_ID>
-    {
-        size_t operator()(const DEVICE_ID& did) const
-        {
-            TERMINAL terminal  = did.get_device_terminal();
-            vector<size_t> buses = terminal.get_buses();
-            size_t n = buses.size();
-
-            size_t seed = 0;
-            for(size_t i=0; i!=n; ++i)
-                seed += std::hash<std::size_t>{}(buses[i]);
-            seed += std::hash<std::string>{}(did.get_device_identifier());
-
-            return seed;
-        }
-    }
-}
-*/

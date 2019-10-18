@@ -20,8 +20,8 @@ class LOAD_MODEL : public MODEL
         // common load model
         virtual string get_model_type() const;
         // common inputs
-        double get_bus_voltage_in_pu();
-        double get_bus_frequency_deviation_in_pu();
+        double get_bus_voltage_in_pu() const;
+        double get_bus_frequency_deviation_in_pu() const;
         // common scale
         void set_subsystem_type(SUBSYSTEM_TYPE subtype);
         SUBSYSTEM_TYPE get_subsystem_type() const;
@@ -56,7 +56,6 @@ class LOAD_MODEL : public MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         SUBSYSTEM_TYPE subsystem_type;
-        BUS* busptr;
 
 };
 #endif // LOAD_MODEL_H

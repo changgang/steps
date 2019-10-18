@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/toolkit/powerflow_case_generator/powerflow_case_generator_test.h"
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
@@ -12,6 +13,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 POWERFLOW_CASE_GENERATOR_TEST::POWERFLOW_CASE_GENERATOR_TEST()
@@ -146,3 +148,5 @@ void POWERFLOW_CASE_GENERATOR_TEST::test_generate_cases()
     generator->generate_cases();
 }
 
+
+#endif

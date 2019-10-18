@@ -11,7 +11,6 @@ LCFB1::LCFB1()
 
 LCFB1::~LCFB1()
 {
-    //clear();
 }
 
 void LCFB1::clear()

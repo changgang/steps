@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/block/pd_block_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -7,6 +8,7 @@
 #include <cstring>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PD_BLOCK_TEST::PD_BLOCK_TEST()
@@ -119,3 +121,5 @@ void PD_BLOCK_TEST::test_step_response_without_limiter()
         TEST_ASSERT(fabs(block.get_output()-y)<1e-8);
     }
 }
+
+#endif

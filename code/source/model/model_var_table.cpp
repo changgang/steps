@@ -8,7 +8,6 @@ MODEL_VAR_TABLE::MODEL_VAR_TABLE()
 
 MODEL_VAR_TABLE::~MODEL_VAR_TABLE()
 {
-    //clear();
 }
 
 void MODEL_VAR_TABLE::clear()

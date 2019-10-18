@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/sg_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 SG_MODEL_TEST::SG_MODEL_TEST()
@@ -118,3 +120,5 @@ TURBINE_LOAD_CONTROLLER_MODEL* SG_MODEL_TEST::get_test_turbine_load_controller_m
         return NULL;
 }
 
+
+#endif

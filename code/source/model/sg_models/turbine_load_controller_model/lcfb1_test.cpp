@@ -1,5 +1,8 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/turbine_load_controller_model/lcfb1_test.h"
 #include "header/basic/utility.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 LCFB1_TEST::LCFB1_TEST() : TURBINE_LOAD_CONTROLLER_MODEL_TEST()
@@ -68,3 +71,5 @@ void LCFB1_TEST::test_set_get_parameters()
     model->set_Irmax(5.0);
     TEST_ASSERT(fabs(model->get_Irmax()-5.0)<FLOAT_EPSILON);
 }
+
+#endif

@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/load_relay_model/PUFLS_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 PUFLS_TEST::PUFLS_TEST() : LOAD_FREQUENCY_RELAY_MODEL_TEST()
 {
@@ -272,3 +274,5 @@ void PUFLS_TEST::test_composite_load_relay_scheme_with_minimum_frequency_additio
     string outputfile = "test_log/frequency_ramp_response_of_"+model->get_model_name()+"_model_composite_minimum_frequency.txt";
     LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(outputfile);
 }
+
+#endif

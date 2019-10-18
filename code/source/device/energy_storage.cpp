@@ -17,9 +17,7 @@ ENERGY_STORAGE::ENERGY_STORAGE() : SOURCE()
 
 ENERGY_STORAGE::~ENERGY_STORAGE()
 {
-    //clear();
-    if(energy_storage_model!=NULL)
-        delete energy_storage_model;
+    if(energy_storage_model!=NULL) delete energy_storage_model;
 }
 
 void ENERGY_STORAGE::set_energy_storage_bus(size_t bus)
@@ -59,11 +57,6 @@ DEVICE_ID ENERGY_STORAGE::get_device_id() const
 
     return did;
 }
-
-/*string ENERGY_STORAGE::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
 
 void ENERGY_STORAGE::set_model(const MODEL* model)
 {

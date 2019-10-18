@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver_test.h"
 #include "header/basic/utility.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
@@ -6,6 +7,7 @@
 #include "header/data_imexporter/bpa_imexporter.h"
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -1574,3 +1576,5 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_39_bus_model_with_WTG_with_full_Newt
 
     default_toolkit.close_log_file();
 }
+
+#endif

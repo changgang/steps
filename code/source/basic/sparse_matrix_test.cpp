@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/sparse_matrix_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdio>
 #include <complex>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 SPARSE_MATRIX_TEST::SPARSE_MATRIX_TEST()
@@ -447,3 +449,5 @@ void SPARSE_MATRIX_TEST::test_save_matrix_to_file()
 
     matrix.save_matrix_to_file("test_log/sparse_matrix_contents.csv");
 }
+
+#endif

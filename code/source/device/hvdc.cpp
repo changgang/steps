@@ -16,11 +16,8 @@ HVDC::HVDC()
 
 HVDC::~HVDC()
 {
-    if(hvdc_model!=NULL)
-        delete hvdc_model;
-
-    if(auxiliary_signal_model!=NULL)
-        delete auxiliary_signal_model;
+    if(hvdc_model!=NULL) delete hvdc_model;
+    if(auxiliary_signal_model!=NULL) delete auxiliary_signal_model;
 }
 
 string HVDC::get_converter_side_name(HVDC_CONVERTER_SIDE converter) const
@@ -45,7 +42,10 @@ void HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus)
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         if(psdb.is_bus_exist(bus))
+        {
             converter_bus[converter] = bus;
+            converter_busptr[converter] = psdb.get_bus(bus);
+        }
         else
         {
             osstream<<"Bus "<<bus<<" does not exist for setting up "<<converter_name<<" side bus of hvdc link."<<endl
@@ -439,6 +439,11 @@ void HVDC::set_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converte
 size_t HVDC::get_converter_bus(HVDC_CONVERTER_SIDE converter) const
 {
     return converter_bus[converter];
+}
+
+BUS* HVDC::get_bus_pointer(HVDC_CONVERTER_SIDE converter) const
+{
+    return converter_busptr[converter];
 }
 
 string HVDC::get_converter_valve_side_bus_name(HVDC_CONVERTER_SIDE converter) const
@@ -888,6 +893,8 @@ void HVDC::clear()
 {
     converter_bus[RECTIFIER] = 0;
     converter_bus[INVERTER] = 0;
+    converter_busptr[RECTIFIER] = NULL;
+    converter_busptr[INVERTER] = NULL;
     converter_valve_bus_name[RECTIFIER]="";
     converter_valve_bus_name[INVERTER]="";
     set_identifier(""); set_name(""); set_status(false);
@@ -1287,12 +1294,6 @@ DEVICE_ID HVDC::get_device_id() const
 
     return did;
 }
-
-/*string HVDC::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
-
 
 void HVDC::solve_steady_state()
 {

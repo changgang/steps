@@ -13,7 +13,6 @@ PVGU1::PVGU1()
 
 PVGU1::~PVGU1()
 {
-    //clear();
 }
 
 void PVGU1::clear()

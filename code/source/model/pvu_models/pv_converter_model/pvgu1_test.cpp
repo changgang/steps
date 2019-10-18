@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/pvu_models/pv_converter_model/pvgu1_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PVGU1_TEST::PVGU1_TEST() : PV_CONVERTER_MODEL_TEST()
@@ -111,3 +113,5 @@ void PVGU1_TEST::test_initialize_and_get_initialized_inputs()
     osstream<<"Terminal P = "<<model->get_terminal_active_power_in_MW()<<" MW, Q = "<<model->get_terminal_reactive_power_in_MVar()<<" MVar"<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
+
+#endif

@@ -27,7 +27,6 @@ NETWORK_MATRIX::NETWORK_MATRIX()
 
 NETWORK_MATRIX::~NETWORK_MATRIX()
 {
-    //clear();
 }
 
 void NETWORK_MATRIX::clear()

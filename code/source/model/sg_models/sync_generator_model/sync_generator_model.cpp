@@ -294,43 +294,8 @@ double SYNC_GENERATOR_MODEL::get_saturation_with_flux(double flux)
         return saturation_block.get_saturation(flux);
     else
         return 0.0;
-
-    /*
-    switch(get_saturation_type())
-    {
-        case EXPONENTIAL_SATURATION_TYPE:
-            return get_exponential_saturation_with_flux(flux);
-        case QUADRATIC_SATURATION_TYPE:
-            return get_quadratic_saturation_with_flux(flux);
-        default:
-            return 0.0;
-    }
-    */
-}
-/*
-double SYNC_GENERATOR_MODEL::get_exponential_saturation_with_flux(double flux) const
-{
-    double s1 = get_saturation_at_1();
-    double s2 = get_saturation_at_1p2();
-
-    double x = s1/s2;
-    x = log(x)/log(1.2);
-
-    return s1*pow(flux, x);
 }
 
-double SYNC_GENERATOR_MODEL::get_quadratic_saturation_with_flux(double flux) const
-{
-    double s1 = get_saturation_at_1();
-    double s2 = get_saturation_at_1p2();
-
-    double x = sqrt(s1/s2); // another version in PSS/E is x = sqrt(S1/(1.2*S2));
-    double A = (1.0-1.2*x)/(1.0-x);
-    double B = s1/((1.0-A)*(1.0-A));
-
-    return B*(flux-A)*(flux-A);
-}
-*/
 void SYNC_GENERATOR_MODEL::set_initial_mechanical_power_in_pu_based_on_mbase(double pmech)
 {
     Pmech0 = pmech;
@@ -376,7 +341,7 @@ double SYNC_GENERATOR_MODEL::get_mechanical_power_in_MW() const
     return get_mechanical_power_in_pu_based_on_mbase()*get_mbase_in_MVA();
 }
 
-double SYNC_GENERATOR_MODEL::get_excitation_voltage_in_pu() const
+double SYNC_GENERATOR_MODEL::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
     if(generator != NULL)

@@ -1,5 +1,8 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/stabilizer_model/IEE2ST_test.h"
 #include "header/basic/utility.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 IEE2ST_TEST::IEE2ST_TEST() : STABILIZER_MODEL_TEST()
@@ -72,3 +75,5 @@ void IEE2ST_TEST::test_set_get_parameters()
     model->set_T10_in_s(1.0);
     TEST_ASSERT(fabs(model->get_T10_in_s()-1.0)<FLOAT_EPSILON);
 }
+
+#endif

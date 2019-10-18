@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/device/source_test.h"
 #include "header/basic/constants.h"
@@ -13,6 +14,8 @@
 #include <istream>
 #include <iostream>
 #include <cstdio>
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 SOURCE_TEST::SOURCE_TEST()
@@ -230,3 +233,5 @@ void SOURCE_TEST::test_is_connected_to_bus()
     TEST_ASSERT(generator.is_connected_to_bus(1)==true);
     TEST_ASSERT(generator.is_connected_to_bus(2)==false);
 }
+
+#endif

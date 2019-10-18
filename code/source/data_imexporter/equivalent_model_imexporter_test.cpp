@@ -3,7 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
-
+#include "header/basic/test_macro.h"
 #include "header/data_imexporter/equivalent_model_imexporter_test.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/basic/utility.h"
@@ -15,8 +15,8 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
-
 
 EQUIVALENT_MODEL_IMEXPORTER_TEST::EQUIVALENT_MODEL_IMEXPORTER_TEST()
 {
@@ -83,3 +83,5 @@ void EQUIVALENT_MODEL_IMEXPORTER_TEST::test_load_ieee39_arxl_data()
 }
 
 
+
+#endif

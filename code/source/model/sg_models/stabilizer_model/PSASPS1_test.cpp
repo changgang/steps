@@ -1,5 +1,8 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/stabilizer_model/PSASPS1_test.h"
 #include "header/basic/utility.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PSASPS1_TEST::PSASPS1_TEST() : STABILIZER_MODEL_TEST()
@@ -74,3 +77,5 @@ void PSASPS1_TEST::test_set_get_parameters()
     model->set_Vsmin(2.0);
     TEST_ASSERT(fabs(model->get_Vsmin()-2.0)<FLOAT_EPSILON);
 }
+
+#endif

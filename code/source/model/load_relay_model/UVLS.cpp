@@ -12,7 +12,6 @@ UVLS::UVLS()
 
 UVLS::~UVLS()
 {
-    //clear();
 }
 
 void UVLS::clear()
@@ -236,7 +235,8 @@ void UVLS::initialize()
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        double volt = psdb.get_bus_voltage_in_pu(load->get_load_bus());
+        //double volt = psdb.get_bus_voltage_in_pu(load->get_load_bus());
+        double volt = get_bus_voltage_in_pu();
 
         for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
         {

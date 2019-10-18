@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/hvdc_model/CDC4T_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 CDC4T_TEST::CDC4T_TEST() : HVDC_MODEL_TEST()
 {
@@ -9,8 +11,6 @@ CDC4T_TEST::CDC4T_TEST() : HVDC_MODEL_TEST()
     TEST_ADD(CDC4T_TEST::test_get_model_name);
     TEST_ADD(CDC4T_TEST::test_set_get_parameters);
 }
-
-
 
 void CDC4T_TEST::setup()
 {
@@ -100,3 +100,5 @@ void CDC4T_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(limiter.get_vdcol_current_of_point_in_kA(2)-4.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_minimum_time_in_switched_mode_in_s()-0.1)<FLOAT_EPSILON);
 }
+
+#endif

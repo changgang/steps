@@ -10,7 +10,7 @@
 #include <ctime>
 #include <omp.h>
 
-//#define STEPS_DYNAMIC_SIMULATOR_OPENMP
+#define STEPS_DYNAMIC_SIMULATOR_OPENMP
 
 using namespace std;
 
@@ -2670,7 +2670,6 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
                 }
             }
         }
-        //k_start = k_end;
     }
 /*
     ostringstream osstream;
@@ -2845,9 +2844,6 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
             size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
-            /*ostringstream osstream;
-            osstream<<load->get_device_name()<<" source current: "<<load->get_dynamics_load_current_in_pu_based_on_system_base_power()<<", voltage = "<<psdb.get_bus_voltage_in_pu(physical_bus);
-            toolkit.show_information_with_leading_time_stamp(osstream);*/
         }
     }
 }
@@ -2981,8 +2977,6 @@ void DYNAMICS_SIMULATOR:: get_bus_power_mismatch_in_MVA()
     #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i= 0; i<n; ++i)
     {
-        /*physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        V = psdb.get_bus_complex_voltage_in_pu(physical_bus);*/
         complex<double> V = get_bus_complex_voltage_in_pu_with_internal_bus_number(i);
         S_mismatch[i] = V*conj(S_mismatch[i])*sbase;
     }
@@ -4301,30 +4295,12 @@ void DYNAMICS_SIMULATOR::scale_all_load(double percent)
     if(fabs(percent)>FLOAT_EPSILON)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        /*vector<DEVICE_ID> loads = psdb.get_all_loads_device_id();
-        DEVICE_ID load;
-        size_t n = loads.size();
-        for(size_t i=0; i!=n; ++i)
-        {
-            load = loads[i];
-            LOAD* loadptr = psdb.get_load(load);
-            if(loadptr==NULL)
-                continue;
-
-            if(loadptr->get_status()==false)
-                continue;
-
-            scale_load(load, percent);
-        }*/
-        vector<LOAD*> loads = psdb.get_all_loads();
         size_t n = loads.size();
         for(size_t i=0; i!=n; ++i)
         {
             if(loads[i]->get_status()==true)
                 scale_load(loads[i]->get_device_id(), percent);
         }
-
     }
     else
     {

@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/pvu_models/pv_panel_model/pvp0_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PVP0_TEST::PVP0_TEST() : PV_PANEL_MODEL_TEST()
@@ -46,3 +48,5 @@ void PVP0_TEST::test_set_get_parameters()
     show_test_information_for_function_of_class(__FUNCTION__,"PVP0_TEST");
 
 }
+
+#endif

@@ -1,8 +1,10 @@
+#include "header/basic/test_macro.h"
 #include "header/network/jacobian_builder_test.h"
 #include "header/basic/utility.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 #include <cstdio>
 
 using namespace std;
@@ -165,3 +167,5 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_Q_equations()
     B.report_brief();
 }
 
+
+#endif

@@ -8,6 +8,8 @@
 
 using namespace std;
 
+class BUS;
+
 class SOURCE : public DEVICE
 {
     public:
@@ -30,6 +32,7 @@ class SOURCE : public DEVICE
 
 
         size_t get_source_bus() const;
+        BUS* get_bus_pointer() const;
         string get_identifier() const;
         bool get_status() const;
         double get_mbase_in_MVA() const;
@@ -44,14 +47,13 @@ class SOURCE : public DEVICE
         size_t get_bus_to_regulate() const;
         complex<double> get_source_impedance_in_pu() const;
 
-        double get_base_voltage_in_kV() const;
-
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
         virtual bool is_connected_to_bus(size_t bus) const;
         virtual bool is_in_area(size_t area) const;
         virtual bool is_in_zone(size_t zone) const;
+
 
         virtual DEVICE_ID get_device_id() const = 0;
         //virtual string get_device_name() const = 0;
@@ -65,6 +67,8 @@ class SOURCE : public DEVICE
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power() = 0;
     private:
         size_t source_bus;
+        BUS* busptr;
+
         string source_identifier;
         bool status;
         double mbase_MVA;

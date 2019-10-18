@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/device/hvdc_test.h"
 #include "header/basic/constants.h"
@@ -17,6 +18,7 @@
 #include <cstdio>
 #include <algorithm>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 HVDC_TEST::HVDC_TEST()
@@ -1338,3 +1340,5 @@ void HVDC_TEST::test_set_get_hvdc_model()
 
     TEST_ASSERT(hvdc.get_hvdc_model()!=NULL);
 }
+
+#endif

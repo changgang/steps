@@ -12,7 +12,6 @@ PSASPVC::PSASPVC()
 
 PSASPVC::~PSASPVC()
 {
-    //clear();
 }
 
 void PSASPVC::clear()
@@ -129,7 +128,7 @@ void PSASPVC::run(DYNAMIC_MODE mode)
         set_flag_model_updated_as_true();
 }
 
-double PSASPVC::get_compensated_voltage_in_pu() const
+double PSASPVC::get_compensated_voltage_in_pu()
 {
     double Vt = get_generator_terminal_voltage_in_pu();
     double It = get_generator_terminal_current_in_pu();

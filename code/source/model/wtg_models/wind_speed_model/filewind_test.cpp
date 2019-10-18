@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wind_speed_model/filewind_test.h"
 #include "header/model/wtg_models/wind_speed_model/filewind.h"
 #include "header/basic/utility.h"
@@ -9,6 +10,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 FILEWIND_TEST::FILEWIND_TEST() : WIND_SPEED_MODEL_TEST()
@@ -197,3 +199,5 @@ void FILEWIND_TEST::test_get_wind_direction()
     default_toolkit.set_dynamic_simulation_time_in_s(100.0);
     TEST_ASSERT(fabs(model->get_wind_direction_in_deg()-9.0)<FLOAT_EPSILON);
 }
+
+#endif

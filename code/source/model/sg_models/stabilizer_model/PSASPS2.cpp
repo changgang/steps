@@ -11,7 +11,6 @@ PSASPS2::PSASPS2()
 
 PSASPS2::~PSASPS2()
 {
-    //clear();
 }
 
 void PSASPS2::clear()
@@ -409,7 +408,7 @@ void PSASPS2::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPS2::get_stabilizing_signal_in_pu() const
+double PSASPS2::get_stabilizing_signal_in_pu()
 {
     double output = phase_tuner_3.get_output();
     if(output>Vsmax)

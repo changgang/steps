@@ -41,6 +41,8 @@ void SOURCE::set_source_bus(size_t bus)
         return;
     }
     source_bus = bus;
+
+    busptr = psdb.get_bus(source_bus);
 }
 
 void SOURCE::set_identifier(string id)
@@ -66,25 +68,6 @@ void SOURCE::set_mbase_in_MVA(double mbase)
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     return;
-    /*
-    if(mbase>0.0)
-        this->mbase_MVA = mbase;
-    else
-    {
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        double mvabase = psdb.get_system_base_power_in_MVA();
-        if(mbase == 0.0)
-            this->mbase_MVA = mvabase;
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Negative MBASE (%f MVA) is not allowed for setting up power source '%s' at bus %u.\n"
-                         "System base MVA (%f MVA) will be set automatically.",mbase,get_identifier().c_str(),
-                         get_source_bus(),mvabase);
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            this->mbase_MVA = mvabase;
-        }
-    }*/
 }
 
 void SOURCE::set_p_generation_in_MW(double p_MW)
@@ -155,6 +138,11 @@ void SOURCE::set_source_impedance_in_pu(complex<double> z_pu)
 size_t SOURCE::get_source_bus() const
 {
     return source_bus;
+}
+
+BUS* SOURCE::get_bus_pointer() const
+{
+    return busptr;
 }
 
 string SOURCE::get_identifier() const
@@ -232,24 +220,6 @@ complex<double> SOURCE::get_source_impedance_in_pu() const
     return source_Z_pu;
 }
 
-double SOURCE::get_base_voltage_in_kV() const
-{
-    ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    BUS* bus = psdb.get_bus(get_source_bus());
-    if(bus!=NULL)
-        return bus->get_base_voltage_in_kV();
-    else
-    {
-        osstream<<"No bus "<<get_source_bus()<<" is found in power system database '"<<psdb.get_system_name()<<"'."<<endl
-          <<"Base voltage of source '"<<get_identifier()<<"' at bus "<<get_source_bus()<<" will be returned as 0.0.";
-        toolkit.show_information_with_leading_time_stamp(osstream);
-        return 0.0;
-    }
-}
-
 bool SOURCE::is_valid() const
 {
     if(get_source_bus()!=0)
@@ -284,12 +254,11 @@ void SOURCE::check()
 void SOURCE::clear()
 {
     source_bus = 0;
+    busptr = NULL;
+
     set_identifier("");
     set_status(false);
 
-    /*STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    set_mbase_in_MVA(psdb.get_system_base_power_in_MVA());*/
     set_mbase_in_MVA(0.0);
 
     set_p_generation_in_MW(0.0);

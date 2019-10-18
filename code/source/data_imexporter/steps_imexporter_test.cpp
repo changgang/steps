@@ -3,7 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
-
+#include "header/basic/test_macro.h"
 #include "header/data_imexporter/steps_imexporter_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -14,8 +14,8 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
-
 
 STEPS_IMEXPORTER_TEST::STEPS_IMEXPORTER_TEST()
 {
@@ -638,3 +638,5 @@ void STEPS_IMEXPORTER_TEST::test_load_dynamic_data()
     importer.load_dynamic_data("../../../bench/ieee9.dyr");
 }
 
+
+#endif

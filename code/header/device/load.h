@@ -10,6 +10,7 @@
 
 using namespace std;
 
+class BUS;
 class LOAD : public DEVICE
 {
     public:
@@ -29,6 +30,8 @@ class LOAD : public DEVICE
         void set_load_manually_scale_factor_in_pu(double scale);
 
         size_t get_load_bus() const;
+        BUS* get_bus_pointer() const;
+
         string get_identifier() const;
         bool get_status() const;
         complex<double> get_nominal_constant_power_load_in_MVA() const;
@@ -82,6 +85,8 @@ class LOAD : public DEVICE
         complex<double> get_dynamics_load_current_in_pu_based_on_system_base_power();
     private:
         size_t bus;
+        BUS* busptr;
+
         string identifier;
         bool status;
         complex<double> s_constant_power_in_MVA,

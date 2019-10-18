@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_generator_model/wt3g2_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WT3G2_TEST::WT3G2_TEST() : WT_GENERATOR_MODEL_TEST()
@@ -139,3 +141,5 @@ void WT3G2_TEST::test_set_get_pll_angle()
     model->set_pll_angle_in_deg(10.0);
     TEST_ASSERT(fabs(model->get_pll_angle_in_deg()-10.0)<FLOAT_EPSILON);
 }
+
+#endif

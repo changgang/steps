@@ -3,7 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
-
+#include "header/basic/test_macro.h"
 #include "header/basic/device_index_map_test.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
@@ -13,6 +13,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -673,3 +674,5 @@ void DEVICE_INDEX_MAP_TEST::test_index_performance_with_many_buses()
 
 
 
+
+#endif

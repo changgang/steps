@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_electrical_model/wt3e0_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WT3E0_TEST::WT3E0_TEST() : WT_ELECTRICAL_MODEL_TEST()
@@ -206,3 +208,5 @@ void WT3E0_TEST::test_initialize()
     default_toolkit.show_information_with_leading_time_stamp(osstream);
     */
 }
+
+#endif

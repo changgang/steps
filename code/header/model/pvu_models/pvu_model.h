@@ -14,10 +14,11 @@ public:
 
         PV_UNIT* get_pv_unit_pointer() const;
         double get_mbase_in_MVA() const;
-        complex<double> get_terminal_complex_voltage_in_pu() const;
 
         size_t get_number_of_lumped_pv_units() const;
         double get_rated_power_per_pv_unit_in_MW() const;
+        double get_terminal_voltage_in_pu() const;
+        complex<double> get_terminal_complex_voltage_in_pu() const;
         double get_bus_base_frequency_in_Hz() const;
         complex<double> get_source_impedance_in_pu_based_on_mbase() const;
 

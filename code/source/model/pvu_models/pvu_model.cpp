@@ -26,22 +26,6 @@ double PVU_MODEL::get_mbase_in_MVA() const
         return 0.0;
 }
 
-complex<double> PVU_MODEL::get_terminal_complex_voltage_in_pu() const
-{
-    PV_UNIT* gen = get_pv_unit_pointer();
-    if(gen!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        size_t bus = gen->get_unit_bus();
-        complex<double> Vxy = psdb.get_bus_complex_voltage_in_pu(bus);
-        return Vxy;
-    }
-    else
-        return 0.0;
-}
-
 size_t PVU_MODEL::get_number_of_lumped_pv_units() const
 {
     PV_UNIT* gen = get_pv_unit_pointer();
@@ -60,15 +44,46 @@ double PVU_MODEL::get_rated_power_per_pv_unit_in_MW() const
         return 0.0;
 }
 
+double PVU_MODEL::get_terminal_voltage_in_pu() const
+{
+    PV_UNIT* pvu = get_pv_unit_pointer();
+    if(pvu!=NULL)
+    {
+        BUS* bus = pvu->get_bus_pointer();
+        if(bus!=NULL)
+            return bus->get_voltage_in_pu();
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
+complex<double> PVU_MODEL::get_terminal_complex_voltage_in_pu() const
+{
+    PV_UNIT* pvu = get_pv_unit_pointer();
+    if(pvu!=NULL)
+    {
+        BUS* bus = pvu->get_bus_pointer();
+        if(bus!=NULL)
+            return bus->get_complex_voltage_in_pu();
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}
+
 double PVU_MODEL::get_bus_base_frequency_in_Hz() const
 {
     PV_UNIT* pvu = get_pv_unit_pointer();
     if(pvu!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        return psdb.get_bus_base_frequency_in_Hz(pvu->get_unit_bus());
+        BUS* bus = pvu->get_bus_pointer();
+        if(bus!=NULL)
+            return bus->get_base_frequency_in_Hz();
+        else
+            return 0.0;
     }
     else
         return 0.0;

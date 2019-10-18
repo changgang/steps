@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/exciter_model/CSEET2_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 CSEET2_TEST::CSEET2_TEST() : EXCITER_MODEL_TEST()
 {
@@ -188,3 +190,5 @@ void CSEET2_TEST::test_step_response_SELF_EXCIATION_and_stabilizer_AT_REGULATOR(
     default_toolkit.close_log_file();
 }
 
+
+#endif

@@ -26,6 +26,13 @@ enum SOURCE_TYPE
     ENERGY_STORAGE_SOURCE = 3
 };
 
+// line enums
+enum LINE_SIDE
+{
+    SENDING_SIDE = 0,
+    RECEIVING_SIDE = 1
+};
+
 // transformer enums
 enum TRANSFORMER_WINDING_SIDE
 {

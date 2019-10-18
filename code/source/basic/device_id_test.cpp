@@ -1,10 +1,14 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/device_id_test.h"
 #include "header/basic/utility.h"
+#include "header/basic/test_macro.h"
 #include <istream>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <cstdio>
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 DEVICE_ID_TEST::DEVICE_ID_TEST()
@@ -526,3 +530,5 @@ void DEVICE_ID_TEST::test_compare_equal_not_equal()
 
 
 
+
+#endif

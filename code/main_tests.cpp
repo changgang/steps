@@ -10,6 +10,8 @@
 
 #include "cpptest.h"
 
+#include "header/basic/test_macro.h"
+
 #include "header/basic/terminal_test.h"
 #include "header/basic/device_id_test.h"
 #include "header/basic/area_test.h"
@@ -202,6 +204,7 @@ int main(int argc, char* argv[])
 	try
 	{
         Test::Suite ts;
+        #ifdef ENABLE_STEPS_TEST
 /*
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
 
@@ -329,6 +332,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
+
+        #endif // ENABLE_STEPS_TEST
 
         // Run the tests
         unique_ptr<Test::Output> output(cmdline(argc, argv));

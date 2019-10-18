@@ -83,7 +83,7 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         // get inputs for dynamics run
         double get_mechanical_power_in_pu_based_on_mbase() const;
         double get_mechanical_power_in_MW() const;
-        double get_excitation_voltage_in_pu() const;
+        double get_excitation_voltage_in_pu();
     public:
 
     public: // specific sync generator model

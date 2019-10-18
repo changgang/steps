@@ -1,9 +1,11 @@
+#include "header/basic/test_macro.h"
 #include "header/model/hvdc_model/hvdc_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
 #include "header/model/hvdc_model/CDC4T.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 HVDC_MODEL_TEST::HVDC_MODEL_TEST()
 {
@@ -780,3 +782,5 @@ void HVDC_MODEL_TEST::test_get_auxiliary_signal()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"HVDC_MODEL_TEST");
 }
+
+#endif

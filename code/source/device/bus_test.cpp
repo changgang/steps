@@ -3,7 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
-
+#include "header/basic/test_macro.h"
 #include "header/device/bus_test.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
@@ -15,6 +15,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -506,3 +507,5 @@ void BUS_TEST::test_set_get_frequency_deviation()
     bus.set_frequency_deviation_in_pu(-0.01);
     TEST_ASSERT(fabs(bus.get_frequency_deviation_in_pu()+0.01)<FLOAT_EPSILON);
 }
+
+#endif

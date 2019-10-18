@@ -17,10 +17,7 @@ EQUIVALENT_DEVICE::EQUIVALENT_DEVICE()
 
 EQUIVALENT_DEVICE::~EQUIVALENT_DEVICE()
 {
-    if(equivalent_model != NULL)
-        delete equivalent_model;
-
-    //clear();
+    if(equivalent_model != NULL) delete equivalent_model;
 }
 
 void EQUIVALENT_DEVICE::set_equivalent_device_bus(size_t device_bus)
@@ -413,11 +410,6 @@ DEVICE_ID EQUIVALENT_DEVICE::get_device_id() const
 
     return did;
 }
-
-/*string EQUIVALENT_DEVICE::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
 
 void EQUIVALENT_DEVICE::set_model(const MODEL* model)
 {

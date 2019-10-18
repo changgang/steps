@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_pitch_model/wt3p0_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WT3P0_TEST::WT3P0_TEST() : WT_PITCH_MODEL_TEST()
@@ -131,3 +133,5 @@ void WT3P0_TEST::test_initialize()
     default_toolkit.show_information_with_leading_time_stamp(osstream);
     */
 }
+
+#endif

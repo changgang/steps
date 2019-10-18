@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/exciter_model/PSASPE14_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 PSASPE14_TEST::PSASPE14_TEST() : EXCITER_MODEL_TEST()
 {
@@ -60,3 +62,5 @@ void PSASPE14_TEST::test_initialize()
     model->initialize();
 
 }
+
+#endif

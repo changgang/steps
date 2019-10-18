@@ -4,6 +4,8 @@
 #include <cmath>
 #include "cpptest.h"
 
+#include "header/basic/test_macro.h"
+
 #include "header/basic/bus_index_test.h"
 #include "header/basic/constants.h"
 #include "header/basic/utility.h"
@@ -13,8 +15,8 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
-
 
 BUS_INDEX_TEST::BUS_INDEX_TEST()
 {
@@ -103,3 +105,5 @@ void BUS_INDEX_TEST::test_get_index_of_bus_and_operator_bracket()
     TEST_ASSERT(bus_index.get_index_of_bus(100000000)==INDEX_NOT_EXIST);
     TEST_ASSERT(bus_index[100000000]==INDEX_NOT_EXIST);
 }
+
+#endif

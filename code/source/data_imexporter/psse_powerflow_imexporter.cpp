@@ -23,8 +23,6 @@ PSSE_IMEXPORTER::PSSE_IMEXPORTER()
 
 PSSE_IMEXPORTER::~PSSE_IMEXPORTER()
 {
-    raw_data_in_ram.clear();
-    dyr_data_in_ram.clear();
 }
 
 void PSSE_IMEXPORTER::load_powerflow_data(string file)
@@ -474,25 +472,6 @@ string PSSE_IMEXPORTER::export_load_data() const
     for(size_t i=0; i!=n; ++i)
     {
         LOAD* load = loads[i];
-
-        /*osstream<<right
-          <<setw(8)
-          <<load->get_load_bus()<<", "
-          <<"\""<<left
-          <<load->get_identifier()<<"\""<<", "
-          <<right
-          <<load->get_status()<<", "
-          <<setw(4)<<load->get_area_number()<<", "
-          <<setw(4)<<load->get_zone_number()<<", "
-          <<setw(12)<<setprecision(6)<<fixed<<load->get_nominal_constant_power_load_in_MVA().real()<<", "
-          <<setw(12)<<setprecision(6)<<fixed<<load->get_nominal_constant_power_load_in_MVA().imag()<<", "
-          <<setw(12)<<setprecision(6)<<fixed<<load->get_nominal_constant_current_load_in_MVA().real()<<", "
-          <<setw(12)<<setprecision(6)<<fixed<<load->get_nominal_constant_current_load_in_MVA().imag()<<", "
-          <<setw(12)<<setprecision(6)<<fixed<<load->get_nominal_constant_impedance_load_in_MVA().real()<<", "
-          <<setw(12)<<setprecision(6)<<fixed<<-load->get_nominal_constant_impedance_load_in_MVA().imag()<<", "
-          <<setw(4)<<load->get_owner_number()<<", "
-          <<setw(2)<<fixed<<1<<", "
-          <<setw(2)<<load->get_flag_interruptable()<<endl;*/
 
         size_t bus = load->get_load_bus();
         string ickt = load->get_identifier();

@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 AERD0_TEST::AERD0_TEST() : WT_AERODYNAMIC_MODEL_TEST()
@@ -93,3 +95,5 @@ void AERD0_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_C7()-7.7)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_C8()-8.8)<FLOAT_EPSILON);
 }
+
+#endif

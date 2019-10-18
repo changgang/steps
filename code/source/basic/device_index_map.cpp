@@ -12,8 +12,6 @@ DEVICE_INDEX_MAP::DEVICE_INDEX_MAP()
 
 DEVICE_INDEX_MAP::~DEVICE_INDEX_MAP()
 {
-    //index_map.clear();
-    //index_umap.clear();
 }
 
 void DEVICE_INDEX_MAP::set_device_index(const DEVICE_ID& device_id, size_t index)

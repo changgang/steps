@@ -54,7 +54,7 @@ class PSASPS2 : public STABILIZER_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_stabilizing_signal_in_pu() const;
+        virtual double get_stabilizing_signal_in_pu();
 
         virtual void check();
         virtual void clear();

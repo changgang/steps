@@ -1040,7 +1040,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
 }
 
 
-double WT3E0::get_active_current_command_in_pu_based_on_mbase() const
+double WT3E0::get_active_current_command_in_pu_based_on_mbase()
 {
     double vterm = get_terminal_bus_voltage_in_pu();
     if(vterm==0.0)
@@ -1059,7 +1059,7 @@ double WT3E0::get_active_power_command_in_pu_based_on_mbase() const
     return power_order_integrator.get_output();
 }
 
-double WT3E0::get_reactive_current_command_in_pu_based_on_mbase() const
+double WT3E0::get_reactive_current_command_in_pu_based_on_mbase()
 {
     return 0.0;
     WT_GENERATOR* gen = get_wt_generator_pointer();
@@ -1075,7 +1075,7 @@ double WT3E0::get_reactive_current_command_in_pu_based_on_mbase() const
         return 0.0;
 }
 
-double WT3E0::get_reactive_power_command_in_pu_based_on_mbase() const
+double WT3E0::get_reactive_power_command_in_pu_based_on_mbase()
 {
     PE_VAR_CONTROL_MODE mode = get_var_control_mode();
     switch(mode)

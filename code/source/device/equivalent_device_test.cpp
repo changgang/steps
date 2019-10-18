@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
@@ -13,6 +14,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -262,3 +264,5 @@ void EQUIVALENT_DEVICE_TEST::test_get_device_id()
 
     TEST_ASSERT(did!=did2);
 }
+
+#endif

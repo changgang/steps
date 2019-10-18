@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_generator_model/wt_generator_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WT_GENERATOR_MODEL_TEST::WT_GENERATOR_MODEL_TEST()
@@ -632,3 +634,5 @@ void WT_GENERATOR_MODEL_TEST::test_current_source_flag()
         TEST_ASSERT(false);
 
 }
+
+#endif

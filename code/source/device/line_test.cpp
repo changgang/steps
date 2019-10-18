@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/device/line_test.h"
 #include "header/basic/constants.h"
@@ -14,6 +15,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 LINE_TEST::LINE_TEST()
@@ -798,3 +800,5 @@ void LINE_TEST::test_get_line_apparent_impedance_at_two_sides()
     TEST_ASSERT(abs(line.get_line_complex_apparent_impedance_at_receiving_side_in_ohm())>1e6);
 }
 
+
+#endif

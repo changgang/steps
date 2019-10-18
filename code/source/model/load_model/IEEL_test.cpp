@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/load_model/IEEL_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 IEEL_TEST::IEEL_TEST() : LOAD_MODEL_TEST()
 {
@@ -124,3 +126,5 @@ void IEEL_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_Q_Kf()-(-2.0))<FLOAT_EPSILON);
 }
 
+
+#endif

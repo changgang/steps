@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
@@ -13,6 +14,7 @@
 #include <cstdio>
 #include <cstdlib>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -199,3 +201,5 @@ void FIXED_SHUNT_TEST::test_get_actual_impedance_shunt()
     complex<double> s = s_Z*0.95*0.95;
     TEST_ASSERT(abs(fixed_shunt.get_actual_impedance_shunt_in_MVA()-s)<FLOAT_EPSILON);
 }
+
+#endif

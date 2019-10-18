@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/block/proportional_block_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -7,6 +8,7 @@
 #include <cstring>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PROPORTIONAL_BLOCK_TEST::PROPORTIONAL_BLOCK_TEST()
@@ -155,3 +157,5 @@ void PROPORTIONAL_BLOCK_TEST::test_step_response_with_limiter()
         TEST_ASSERT(fabs(block.get_output()-8.0)<FLOAT_EPSILON);
     }
 }
+
+#endif

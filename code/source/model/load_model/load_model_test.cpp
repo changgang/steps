@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/load_model/load_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 LOAD_MODEL_TEST::LOAD_MODEL_TEST()
@@ -351,3 +353,5 @@ void LOAD_MODEL_TEST::test_run_frequency_ramp_response()
 
 
 
+
+#endif

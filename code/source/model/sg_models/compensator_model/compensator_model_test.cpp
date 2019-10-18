@@ -1,8 +1,10 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/compensator_model/compensator_model_test.h"
 #include "header/model/sg_models/sync_generator_model/genrou.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 COMPENSATOR_MODEL_TEST::COMPENSATOR_MODEL_TEST()
 {
@@ -173,3 +175,5 @@ void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_current()
     TEST_ASSERT(abs(model.get_generator_terminal_current_in_pu()-complex<double>(1.0,-0.3)*0.5)<FLOAT_EPSILON);
 }
 
+
+#endif

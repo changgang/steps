@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/hvdc_model/vdcol_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 VDCOL_TEST::VDCOL_TEST()
 {
@@ -114,3 +116,5 @@ void VDCOL_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(fabs(limiter2.get_vdcol_current_of_point_in_kA(1)-3.0)<FLOAT_EPSILON);
 }
 
+
+#endif

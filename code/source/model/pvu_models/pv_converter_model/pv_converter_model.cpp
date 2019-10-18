@@ -77,7 +77,7 @@ double PV_CONVERTER_MODEL::get_initial_reactive_voltage_command_in_pu() const
     return EQ_command0;
 }
 
-double PV_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase() const
+double PV_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase()
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
     if(pv_unit!=NULL)
@@ -92,7 +92,7 @@ double PV_CONVERTER_MODEL::get_active_current_command_in_pu_based_on_mbase() con
         return 0.0;
 }
 
-double PV_CONVERTER_MODEL::get_reactive_current_command_in_pu_based_on_mbase() const
+double PV_CONVERTER_MODEL::get_reactive_current_command_in_pu_based_on_mbase()
 {
     PV_UNIT* pv_unit = get_pv_unit_pointer();
     if(pv_unit!=NULL)

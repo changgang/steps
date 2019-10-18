@@ -7,6 +7,7 @@
 
 using namespace std;
 
+class BUS;
 class FIXED_SHUNT : public DEVICE
 {
     public:
@@ -19,6 +20,7 @@ class FIXED_SHUNT : public DEVICE
         void set_nominal_impedance_shunt_in_MVA(complex<double> s);
 
         size_t get_shunt_bus() const;
+        BUS* get_bus_pointer() const;
         string get_identifier() const;
         bool get_status() const;
         complex<double> get_nominal_impedance_shunt_in_MVA() const;
@@ -43,6 +45,7 @@ class FIXED_SHUNT : public DEVICE
         complex<double> get_actual_impedance_shunt_in_MVA() const;
     private:
         size_t bus;
+        BUS* busptr;
         string identifier;
         bool status;
         complex<double> nominal_impedance_shunt_in_MVA;

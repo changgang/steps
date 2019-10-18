@@ -11,7 +11,6 @@ WTRLY0::WTRLY0()
 
 WTRLY0::~WTRLY0()
 {
-    //clear();
 }
 
 void WTRLY0::clear()
@@ -626,7 +625,8 @@ void WTRLY0::check_bus_voltage_relay()
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
-        double volt = get_bus_voltage_in_pu();
+        //double volt = get_bus_voltage_in_pu();
+        double volt = get_terminal_voltage_in_pu();
         if(volt<=2.0)
         {
             for(size_t i=0; i<MAX_RELAY_COUNT; ++i)

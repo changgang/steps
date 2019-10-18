@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_relay_model/wt_relay_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -10,6 +11,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WT_RELAY_MODEL_TEST::WT_RELAY_MODEL_TEST()
@@ -742,3 +744,5 @@ void WT_RELAY_MODEL_TEST::export_meter_values()
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
+
+#endif

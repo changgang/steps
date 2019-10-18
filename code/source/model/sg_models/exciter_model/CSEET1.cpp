@@ -847,7 +847,8 @@ void CSEET1::initialize()
                 }
 
                 double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
-                double Vt = psdb.get_bus_voltage_in_pu(generator->get_generator_bus());
+                //double Vt = psdb.get_bus_voltage_in_pu(generator->get_generator_bus());
+                double Vt = get_terminal_voltage_in_pu();
 
                 double Ve = get_initial_Ve_with_Fex_function();
                 if(Ve>get_Vemax_in_pu())
@@ -1061,7 +1062,8 @@ void CSEET1::run(DYNAMIC_MODE mode)
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             size_t bus = generator->get_generator_bus();
-            double Vt = psdb.get_bus_voltage_in_pu(bus);
+            //double Vt = psdb.get_bus_voltage_in_pu(bus);
+            double Vt = get_terminal_voltage_in_pu();
 
             if(get_excitation_source()==SELF_EXCITATION)
             {
@@ -1087,7 +1089,7 @@ void CSEET1::run(DYNAMIC_MODE mode)
     }
 }
 
-double CSEET1::get_excitation_voltage_in_pu() const
+double CSEET1::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)

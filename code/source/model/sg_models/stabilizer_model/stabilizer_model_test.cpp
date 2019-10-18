@@ -1,6 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/stabilizer_model/stabilizer_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 STABILIZER_MODEL_TEST::STABILIZER_MODEL_TEST()
 {
@@ -63,5 +66,4 @@ void STABILIZER_MODEL_TEST::test_get_stabilizing_signal()
     TEST_ASSERT(fabs(model->get_stabilizing_signal_in_pu()-0.0)<FLOAT_EPSILON);
 }
 
-
-
+#endif

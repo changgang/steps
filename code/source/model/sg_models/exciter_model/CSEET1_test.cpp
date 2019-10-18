@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/exciter_model/CSEET1_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 CSEET1_TEST::CSEET1_TEST()
 {
@@ -272,3 +274,5 @@ void CSEET1_TEST::test_step_response_SELF_EXCIATION_and_WITHOUT_BRUSH_and_feedba
 
     default_toolkit.close_log_file();
 }
+
+#endif

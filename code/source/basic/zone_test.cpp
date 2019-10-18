@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/zone_test.h"
 #include "header/basic/utility.h"
 
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 ZONE_TEST::ZONE_TEST()
@@ -93,3 +95,5 @@ void ZONE_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(newzone.get_zone_number()==1);
     TEST_ASSERT(newzone.get_zone_name()=="zone 1");
 }
+
+#endif

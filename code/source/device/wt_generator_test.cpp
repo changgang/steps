@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/device/wt_generator_test.h"
 #include "header/basic/constants.h"
@@ -14,6 +15,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WT_GENERATOR_TEST::WT_GENERATOR_TEST()
@@ -139,3 +141,5 @@ void WT_GENERATOR_TEST::test_get_device_id()
     TEST_ASSERT(did!=did2);
 }
 
+
+#endif

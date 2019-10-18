@@ -341,7 +341,7 @@ void PSASPE1::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPE1::get_excitation_voltage_in_pu() const
+double PSASPE1::get_excitation_voltage_in_pu()
 {
     double Efd = exciter.get_output();
     double Efdmax = get_Efdmax_in_pu();

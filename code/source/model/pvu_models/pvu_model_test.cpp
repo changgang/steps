@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/pvu_models/pvu_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PVU_MODEL_TEST::PVU_MODEL_TEST()
@@ -103,3 +105,5 @@ PV_IRRADIANCE_MODEL* PVU_MODEL_TEST::get_test_pv_irradiance_model()
         return pvptr->get_pv_irradiance_model();
 }
 
+
+#endif

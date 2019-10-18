@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/energy_storage_model/estr0_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 ESTR0_TEST::ESTR0_TEST() : ENERGY_STORAGE_MODEL_TEST()
@@ -120,3 +122,5 @@ void ESTR0_TEST::test_initialize_and_get_initialized_inputs()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"ESTR0_TEST");
 }
+
+#endif

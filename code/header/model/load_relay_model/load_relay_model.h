@@ -14,17 +14,15 @@ class LOAD_RELAY_MODEL : public MODEL
         virtual ~LOAD_RELAY_MODEL();
 
         LOAD* get_load_pointer() const;
-        void set_bus_pointer();
-        BUS* get_bus_pointer() const;
 
         void set_subsystem_type(SUBSYSTEM_TYPE subtype);
         SUBSYSTEM_TYPE get_subsystem_type() const;
         string get_detailed_model_name() const;
 
     public: // common input
-        double get_bus_frequency_in_Hz();
-        double get_bus_base_frequency_in_Hz();
-        double get_bus_voltage_in_pu();
+        double get_bus_frequency_in_Hz() const;
+        double get_bus_base_frequency_in_Hz() const;
+        double get_bus_voltage_in_pu() const;
 
         virtual string get_model_type() const = 0;
         virtual string get_model_name() const = 0;
@@ -56,7 +54,6 @@ class LOAD_RELAY_MODEL : public MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         SUBSYSTEM_TYPE subsystem_type;
-        BUS* busptr;
 };
 
 #endif // LOAD_RELAY_MODEL_H

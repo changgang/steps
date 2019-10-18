@@ -2,10 +2,11 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-
+#include "header/basic/test_macro.h"
 #include "header/basic/fault_test.h"
 #include "header/basic/utility.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 FAULT_TEST::FAULT_TEST()
@@ -118,3 +119,5 @@ void FAULT_TEST::test_copy_with_opeartor_equal()
     TEST_ASSERT(newfault.get_fault_shunt_in_pu()==y);
 }
 
+
+#endif

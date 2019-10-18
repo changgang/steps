@@ -12,7 +12,6 @@ UFLS::UFLS()
 
 UFLS::~UFLS()
 {
-    //clear();
 }
 
 void UFLS::clear()

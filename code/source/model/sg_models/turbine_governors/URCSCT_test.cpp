@@ -1,6 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/turbine_governor_model/URCSCT_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 URCSCT_TEST::URCSCT_TEST()
@@ -164,3 +167,5 @@ void URCSCT_TEST::test_get_standard_psse_string()
 }
 
 
+
+#endif

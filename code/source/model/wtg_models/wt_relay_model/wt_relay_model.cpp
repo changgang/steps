@@ -82,23 +82,3 @@ double WT_RELAY_MODEL::get_bus_frequency_in_pu() const
     else
         return 0.0;
 }
-
-double WT_RELAY_MODEL::get_bus_voltage_in_pu() const
-{
-    WT_GENERATOR* generator = get_wt_generator_pointer();
-    if(generator!=NULL)
-    {
-        size_t bus = generator->get_source_bus();
-        if(bus!=0)
-        {
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            return psdb.get_bus_voltage_in_pu(bus);
-        }
-        else
-            return 0.0;
-    }
-    else
-        return 0.0;
-
-}

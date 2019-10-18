@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/utility_test.h"
 #include "header/steps_namespace.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 UTILITY_TEST::UTILITY_TEST()
@@ -382,3 +384,5 @@ void UTILITY_TEST::test_get_toolkit()
     show_information_with_leading_time_stamp_with_default_toolkit("This line should be outputted to stdout.");
 }
 */
+
+#endif

@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/pvu_models/pv_panel_model/pv_panel_model_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PV_PANEL_MODEL_TEST::PV_PANEL_MODEL_TEST()
@@ -59,3 +61,5 @@ void PV_PANEL_MODEL_TEST::test_get_standard_psse_string()
         TEST_ASSERT(false);
 }
 
+
+#endif

@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/pvu_models/pv_irradiance_model/fileirrd_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 FILEIRRAD_TEST::FILEIRRAD_TEST() : PV_IRRADIANCE_MODEL_TEST()
@@ -60,3 +62,5 @@ void FILEIRRAD_TEST::test_get_solar_irradiance_direction()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"FILEIRRAD_TEST");
 }
+
+#endif

@@ -8,7 +8,6 @@ IEESGO::IEESGO()
 
 IEESGO::~IEESGO()
 {
-    //clear();
 }
 
 void IEESGO::clear()

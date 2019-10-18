@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator_test.h"
 #include "header/basic/utility.h"
 #include "header/data_imexporter/psse_imexporter.h"
@@ -12,6 +13,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
@@ -1780,3 +1782,5 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
 
     default_toolkit.close_log_file();
 }
+
+#endif

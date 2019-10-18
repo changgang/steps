@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/exciter_model/PSASPE2_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 PSASPE2_TEST::PSASPE2_TEST() : EXCITER_MODEL_TEST()
 {
@@ -97,3 +99,5 @@ void PSASPE2_TEST::test_initialize()
     TEST_ASSERT(fabs(model->get_voltage_reference_in_pu()-Vref)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_stabilizing_signal_in_pu()-0.0)<FLOAT_EPSILON);
 }
+
+#endif

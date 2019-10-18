@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/sync_generator_model/gensal_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 GENSAL_TEST::GENSAL_TEST()
@@ -102,3 +104,4 @@ void GENSAL_TEST::test_initialize_and_get_initialized_inputs()
     TEST_ASSERT(fabs(model->get_initial_mechanical_power_in_pu_based_on_mbase()-SS.real())<FLOAT_EPSILON);
 }
 
+#endif

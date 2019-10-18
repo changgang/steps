@@ -57,18 +57,9 @@ complex<double> COMPENSATOR_MODEL::get_generator_terminal_complex_current_in_pu(
         return 0.0;
 }
 
-double COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu() const
+double COMPENSATOR_MODEL::get_generator_terminal_voltage_in_pu()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    GENERATOR* generator = get_generator_pointer();
-    if(generator!=NULL)
-    {
-        size_t bus = generator->get_generator_bus();
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        return psdb.get_bus_voltage_in_pu(bus);
-    }
-    else
-        return 0.0;
+    return get_terminal_voltage_in_pu();
 }
 
 double COMPENSATOR_MODEL::get_generator_terminal_current_in_pu() const

@@ -11,7 +11,6 @@ PSASPS3::PSASPS3()
 
 PSASPS3::~PSASPS3()
 {
-    //clear();
 }
 
 void PSASPS3::clear()
@@ -453,7 +452,7 @@ void PSASPS3::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPS3::get_stabilizing_signal_in_pu() const
+double PSASPS3::get_stabilizing_signal_in_pu()
 {
     double s1 = phase_tuner_1.get_output();
     double s2 = phase_tuner_2.get_output();

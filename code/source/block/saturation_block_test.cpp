@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/block/saturation_block_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -7,6 +8,7 @@
 #include <cstring>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 SATURATION_BLOCK_TEST::SATURATION_BLOCK_TEST()
@@ -177,3 +179,5 @@ void SATURATION_BLOCK_TEST::test_get_saturation_exponential_type_input_as_expone
     V = 1.8;
     TEST_ASSERT(fabs(block.get_saturation(V)-(A*pow(B,V)))<FLOAT_EPSILON);
 }
+
+#endif

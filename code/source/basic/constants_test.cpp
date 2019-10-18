@@ -3,11 +3,13 @@
 #include <cstring>
 #include <iostream>
 
+#include "header/basic/test_macro.h"
+
 #include "header/basic/constants_test.h"
 #include "header/basic/utility.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
-
 CONSTANTS_TEST::CONSTANTS_TEST()
 {
     TEST_ADD(CONSTANTS_TEST::test_constants);
@@ -35,3 +37,5 @@ void CONSTANTS_TEST::test_constants()
     TEST_ASSERT(fabs(INDEX_NOT_EXIST)>1e8);
     TEST_ASSERT(fabs(MAX_TOOLKIT_SIZE)<INDEX_NOT_EXIST);
 }
+
+#endif

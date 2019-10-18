@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/device/generator_test.h"
 #include "header/basic/constants.h"
@@ -20,6 +21,8 @@
 #include <istream>
 #include <iostream>
 #include <cstdio>
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 GENERATOR_TEST::GENERATOR_TEST()
@@ -341,3 +344,5 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
     TEST_ASSERT(fabs(smodelptr->get_Valvemax_in_pu()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_Valvemin_in_pu()-0.2)<FLOAT_EPSILON);
 }
+
+#endif

@@ -11,6 +11,7 @@
 
 using namespace std;
 
+class BUS;
 class LINE : public DEVICE
 {
     public:
@@ -39,6 +40,9 @@ class LINE : public DEVICE
 
         size_t get_sending_side_bus() const;
         size_t get_receiving_side_bus() const;
+        BUS* get_sending_side_bus_pointer() const;
+        BUS* get_receiving_side_bus_pointer() const;
+
         string get_identifier() const;
         bool get_sending_side_breaker_status() const;
         bool get_receiving_side_breaker_status() const;
@@ -104,6 +108,7 @@ class LINE : public DEVICE
     private:
         //map<double,FAULT>::iterator get_iterator_of_fault_at_location_to_sending_side(double location);
         size_t sending_side_bus, receiving_side_bus;
+        BUS* sending_side_busptr, *receiving_side_busptr;
         string   identifier;
         bool sending_side_breaker_status, receiving_side_breaker_status;
         complex<double> line_z_12, line_z_0,

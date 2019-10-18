@@ -24,7 +24,7 @@ class PSASPVC: public COMPENSATOR_MODEL
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
-        virtual double get_compensated_voltage_in_pu() const;
+        virtual double get_compensated_voltage_in_pu();
         virtual void check();
         virtual void clear();
         virtual void report();

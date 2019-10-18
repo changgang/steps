@@ -12,7 +12,6 @@ GENROU::GENROU() : SYNC_GENERATOR_MODEL()
 
 GENROU::~GENROU()
 {
-    //clear();
 }
 void GENROU::clear()
 {

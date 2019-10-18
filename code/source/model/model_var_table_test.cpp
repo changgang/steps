@@ -1,6 +1,8 @@
+#include "header/basic/test_macro.h"
 #include "header/model/model_var_table_test.h"
 #include "header/basic/utility.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 MODEL_VAR_TABLE_TEST::MODEL_VAR_TABLE_TEST()
@@ -58,3 +60,5 @@ void MODEL_VAR_TABLE_TEST::test_add_get_variable_name_index_pair()
     TEST_ASSERT((*table)[1]=="DEF");
     TEST_ASSERT((*table)["acf"]==INDEX_NOT_EXIST);
 }
+
+#endif

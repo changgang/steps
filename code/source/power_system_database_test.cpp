@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/power_system_database_test.h"
 #include "header/basic/utility.h"
 #include "header/prepare_for_tests/prepare_models_for_test.h"
@@ -10,6 +11,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -8853,3 +8855,4 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_total_q_generation_of_sources_at_physi
     TEST_ASSERT(fabs(psdb.get_total_q_generation_at_physical_bus_in_MVar(2)-120.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(psdb.get_total_q_generation_at_physical_bus_in_MVar(3)-120.0)<FLOAT_EPSILON);
 }
+#endif

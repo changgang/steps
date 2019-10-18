@@ -20,7 +20,6 @@ PSASPS6::PSASPS6()
 
 PSASPS6::~PSASPS6()
 {
-    //clear();
 }
 
 void PSASPS6::clear()
@@ -490,7 +489,7 @@ void PSASPS6::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPS6::get_stabilizing_signal_in_pu() const
+double PSASPS6::get_stabilizing_signal_in_pu()
 {
     double output = phase_tuner_3.get_output();
     double vsmax = get_Vsmax();

@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/device/transformer_test.h"
 #include "header/steps_namespace.h"
@@ -13,6 +14,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -1010,3 +1012,5 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
+
+#endif

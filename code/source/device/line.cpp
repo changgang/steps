@@ -24,7 +24,10 @@ void LINE::set_sending_side_bus(size_t bus)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         if(psdb.is_bus_exist(bus))
+        {
             sending_side_bus = bus;
+            sending_side_busptr = psdb.get_bus(bus);
+        }
         else
         {
             osstream<<"Warning. Bus "<<bus<<" does not exist for setting up sending side bus of line."<<endl
@@ -50,7 +53,10 @@ void LINE::set_receiving_side_bus(size_t bus)
     {
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         if(psdb.is_bus_exist(bus))
+        {
             receiving_side_bus = bus;
+            receiving_side_busptr = psdb.get_bus(bus);
+        }
         else
         {
             osstream<<"Warning. Bus "<<bus<<" does not exist for setting up receiving side bus of line."<<endl
@@ -148,6 +154,16 @@ size_t LINE::get_sending_side_bus() const
 size_t LINE::get_receiving_side_bus() const
 {
     return receiving_side_bus;
+}
+
+BUS* LINE::get_sending_side_bus_pointer() const
+{
+    return sending_side_busptr;
+}
+
+BUS* LINE::get_receiving_side_bus_pointer() const
+{
+    return receiving_side_busptr;
 }
 
 string LINE::get_identifier() const
@@ -466,6 +482,8 @@ void LINE::clear()
 {
     sending_side_bus = 0;
     receiving_side_bus = 0;
+    sending_side_busptr = NULL;
+    receiving_side_busptr = NULL;
     set_identifier("");
     set_sending_side_breaker_status(false);
     set_receiving_side_breaker_status(false);
@@ -610,11 +628,6 @@ DEVICE_ID LINE::get_device_id() const
 
     return did;
 }
-
-/*string LINE::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
 
 double LINE::get_line_base_voltage_in_kV() const
 {

@@ -15,7 +15,6 @@ AREA::AREA()
 
 AREA::~AREA()
 {
-    //clear();
 }
 
 void AREA::set_area_number(size_t number)

@@ -1,6 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/turbine_governor_model/IEESGO_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 IEESGO_TEST::IEESGO_TEST()
@@ -150,4 +153,4 @@ void IEESGO_TEST::test_get_standard_psse_string()
     show_test_information_for_function_of_class(__FUNCTION__,"IEESGO_TEST");
 }
 
-
+#endif

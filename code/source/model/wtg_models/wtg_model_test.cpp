@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wtg_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -8,6 +9,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WTG_MODEL_TEST::WTG_MODEL_TEST()
@@ -127,3 +129,5 @@ WT_RELAY_MODEL* WTG_MODEL_TEST::get_test_wt_relay_model()
     else
         return genptr->get_wt_relay_model();
 }
+
+#endif

@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/basic/owner_test.h"
 #include "header/basic/utility.h"
 #include <istream>
@@ -6,6 +7,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 OWNER_TEST::OWNER_TEST()
@@ -93,3 +95,5 @@ void OWNER_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(newowner.get_owner_number()==1);
     TEST_ASSERT(newowner.get_owner_name()=="owner 1");
 }
+
+#endif

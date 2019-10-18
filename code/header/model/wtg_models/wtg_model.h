@@ -14,14 +14,13 @@ class WTG_MODEL : public MODEL
         virtual ~WTG_MODEL();
 
         WT_GENERATOR* get_wt_generator_pointer() const;
-        void set_bus_pointer();
-        BUS* get_bus_pointer() const;
         double get_mbase_in_MVA() const;
-        complex<double> get_terminal_complex_voltage_in_pu();
 
         size_t get_number_of_lumped_wt_generators() const;
         double get_rated_power_per_wt_generator_in_MW() const;
-        double get_bus_base_frequency_in_Hz();
+        double get_terminal_voltage_in_pu() const;
+        complex<double> get_terminal_complex_voltage_in_pu() const;
+        double get_bus_base_frequency_in_Hz() const;
         complex<double> get_source_impedance_in_pu_based_on_mbase() const;
 
     public: // specific model level
@@ -54,6 +53,5 @@ class WTG_MODEL : public MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
-        BUS* busptr;
 };
 #endif // WTG_MODEL_H

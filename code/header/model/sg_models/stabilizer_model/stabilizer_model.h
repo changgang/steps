@@ -47,7 +47,7 @@ class STABILIZER_MODEL : public SG_MODEL
 
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
-        virtual double get_stabilizing_signal_in_pu() const = 0;
+        virtual double get_stabilizing_signal_in_pu() = 0;
 
         virtual void check() = 0;
         virtual void clear() = 0;

@@ -12,7 +12,6 @@ COMP::COMP()
 
 COMP::~COMP()
 {
-    //clear();
 }
 
 void COMP::clear()
@@ -123,7 +122,7 @@ void COMP::run(DYNAMIC_MODE mode)
         set_flag_model_updated_as_true();
 }
 
-double COMP::get_compensated_voltage_in_pu() const
+double COMP::get_compensated_voltage_in_pu()
 {
     complex<double> Vt = get_generator_terminal_complex_voltage_in_pu();
     complex<double> It = get_generator_terminal_complex_current_in_pu();

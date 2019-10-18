@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/compensator_model/COMP_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 COMP_TEST::COMP_TEST()
 {
@@ -12,8 +14,6 @@ COMP_TEST::COMP_TEST()
     TEST_ADD(COMP_TEST::test_step_response);
     TEST_ADD(COMP_TEST::test_get_standard_psse_string);
 }
-
-
 
 void COMP_TEST::setup()
 {
@@ -98,3 +98,5 @@ void COMP_TEST::test_get_standard_psse_string()
 
 }
 
+
+#endif

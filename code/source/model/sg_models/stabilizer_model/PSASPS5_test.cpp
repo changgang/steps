@@ -1,5 +1,8 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/stabilizer_model/PSASPS5_test.h"
 #include "header/basic/utility.h"
+
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 PSASPS5_TEST::PSASPS5_TEST() : STABILIZER_MODEL_TEST()
@@ -73,3 +76,5 @@ void PSASPS5_TEST::test_set_get_parameters()
     model->set_T10_in_s(1.0);
     TEST_ASSERT(fabs(model->get_T10_in_s()-1.0)<FLOAT_EPSILON);
 }
+
+#endif

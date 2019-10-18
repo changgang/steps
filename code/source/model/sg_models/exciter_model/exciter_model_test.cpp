@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/exciter_model/exciter_model_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -7,6 +8,7 @@
 #include "header/model/sg_models/stabilizer_model/IEE2ST.h"
 #include "header/model/sg_models/sync_generator_model/gencls.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 EXCITER_MODEL_TEST::EXCITER_MODEL_TEST()
 {
@@ -225,3 +227,5 @@ void EXCITER_MODEL_TEST::test_get_standard_psse_string()
 
     default_toolkit.show_information_with_leading_time_stamp(model->get_standard_psse_string());
 }
+
+#endif

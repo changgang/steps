@@ -11,7 +11,6 @@ IEEEG3::IEEEG3()
 
 IEEEG3::~IEEEG3()
 {
-    //clear();
 }
 void IEEEG3::clear()
 {

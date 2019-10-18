@@ -3,6 +3,7 @@
 #endif
 #include <cmath>
 #include "cpptest.h"
+#include "header/basic/test_macro.h"
 
 #include "header/steps_namespace.h"
 #include "header/basic/utility.h"
@@ -16,6 +17,7 @@
 #include <iostream>
 #include <cstdio>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 
@@ -413,3 +415,5 @@ void LOAD_TEST::test_set_get_load_voltage_relay_model()
 {
     ;
 }
+
+#endif

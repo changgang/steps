@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/compensator_model/PSASPVC_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 PSASPVC_TEST::PSASPVC_TEST()
 {
@@ -98,3 +100,5 @@ void PSASPVC_TEST::test_get_standard_psse_string()
 
 }
 
+
+#endif

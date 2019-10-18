@@ -22,16 +22,9 @@ LOAD::LOAD()
 
 LOAD::~LOAD()
 {
-    //clear();
-
-    if(load_model != NULL)
-        delete load_model;
-
-    if(load_voltage_relay_model != NULL)
-        delete load_voltage_relay_model;
-
-    if(load_frequency_relay_model != NULL)
-        delete load_frequency_relay_model;
+    if(load_model != NULL) delete load_model;
+    if(load_voltage_relay_model != NULL) delete load_voltage_relay_model;
+    if(load_frequency_relay_model != NULL) delete load_frequency_relay_model;
 }
 
 void LOAD::set_load_bus(size_t load_bus)
@@ -52,6 +45,8 @@ void LOAD::set_load_bus(size_t load_bus)
             return;
         }
         this->bus = load_bus;
+
+        busptr = psdb.get_bus(load_bus);
     }
     else
     {
@@ -118,6 +113,11 @@ size_t LOAD::get_load_bus() const
     return bus;
 }
 
+BUS* LOAD::get_bus_pointer() const
+{
+    return busptr;
+}
+
 string LOAD::get_identifier() const
 {
     return identifier;
@@ -179,6 +179,7 @@ void LOAD::check()
 void LOAD::clear()
 {
     bus = 0;
+    busptr = NULL;
     set_identifier("");
     set_status(false);
     set_nominal_constant_power_load_in_MVA(0.0);
@@ -256,11 +257,6 @@ DEVICE_ID LOAD::get_device_id() const
 
     return did;
 }
-
-/*string LOAD::get_device_name() const
-{
-    return get_device_id().get_device_name();
-}*/
 
 complex<double> LOAD::get_nominal_total_load_in_MVA() const
 {

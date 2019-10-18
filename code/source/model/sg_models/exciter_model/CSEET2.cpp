@@ -733,7 +733,7 @@ void CSEET2::run(DYNAMIC_MODE mode)
     }
 }
 
-double CSEET2::get_excitation_voltage_in_pu() const
+double CSEET2::get_excitation_voltage_in_pu()
 {
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
@@ -749,8 +749,9 @@ double CSEET2::get_excitation_voltage_in_pu() const
 
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            size_t bus = generator->get_generator_bus();
-            double Vt = psdb.get_bus_voltage_in_pu(bus);
+            //size_t bus = generator->get_generator_bus();
+            //double Vt = psdb.get_bus_voltage_in_pu(bus);
+            double Vt = get_terminal_voltage_in_pu();
 
             if(get_excitation_source()==SELF_EXCITATION)
             {

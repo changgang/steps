@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/meter/continuous_buffer_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
@@ -10,6 +11,7 @@
 #include <cmath>
 
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 CONTINUOUS_BUFFER_TEST::CONTINUOUS_BUFFER_TEST()
@@ -366,3 +368,5 @@ void CONTINUOUS_BUFFER_TEST::test_get_delay_index_of_time()
     TEST_ASSERT(buffer.get_delay_index_of_time(0.03)==1);
     TEST_ASSERT(buffer.get_delay_index_of_time(0.06)==0);
 }
+
+#endif

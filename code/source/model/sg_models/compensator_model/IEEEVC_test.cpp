@@ -1,7 +1,9 @@
+#include "header/basic/test_macro.h"
 #include "header/model/sg_models/compensator_model/IEEEVC_test.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 IEEEVC_TEST::IEEEVC_TEST()
 {
@@ -103,3 +105,5 @@ void IEEEVC_TEST::test_get_standard_psse_string()
 
 }
 
+
+#endif

@@ -8,7 +8,6 @@ TGOV1::TGOV1()
 
 TGOV1::~TGOV1()
 {
-    //clear();
 }
 
 void TGOV1::clear()

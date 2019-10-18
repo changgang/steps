@@ -425,7 +425,7 @@ void PSASPE14::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPE14::get_excitation_voltage_in_pu() const
+double PSASPE14::get_excitation_voltage_in_pu()
 {
     double efd = rectifier.get_output();
     if(efd>get_Efdmax_in_pu())

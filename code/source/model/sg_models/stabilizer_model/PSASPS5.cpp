@@ -11,7 +11,6 @@ PSASPS5::PSASPS5()
 
 PSASPS5::~PSASPS5()
 {
-    //clear();
 }
 
 void PSASPS5::clear()
@@ -300,7 +299,7 @@ void PSASPS5::run(DYNAMIC_MODE mode)
     }
 }
 
-double PSASPS5::get_stabilizing_signal_in_pu() const
+double PSASPS5::get_stabilizing_signal_in_pu()
 {
     return 0.0;
 }

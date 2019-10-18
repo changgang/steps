@@ -14,9 +14,7 @@ STABILIZER_MODEL::STABILIZER_MODEL()
 
 STABILIZER_MODEL::~STABILIZER_MODEL()
 {
-    /*for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
-        signals[slot].clear();
-    */
+    ;
 }
 
 string STABILIZER_MODEL::get_model_type() const

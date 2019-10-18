@@ -1,3 +1,4 @@
+#include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_relay_model/wtrly0_test.h"
 #include "header/basic/utility.h"
 #include <cstdlib>
@@ -7,6 +8,7 @@
 #include <cstdio>
 #include <cmath>
 
+#ifdef ENABLE_STEPS_TEST
 using namespace std;
 
 WTRLY0_TEST::WTRLY0_TEST() : WT_RELAY_MODEL_TEST()
@@ -118,3 +120,5 @@ void WTRLY0_TEST::test_initialize()
     osstream<<"WTRLY0 model after initialized:"<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
+
+#endif
