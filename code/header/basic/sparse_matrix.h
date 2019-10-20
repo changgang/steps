@@ -63,7 +63,7 @@ public:
 
     virtual vector<size_t> get_reorder_permutation() = 0;
 
-    virtual void LU_factorization(int order=1, double tolerance = 1e-6) = 0;
+    virtual void LU_factorization(int order=1, double tolerance = 1e-13) = 0;
 
     virtual vector<double> solve_Ax_eq_b(vector<double>& b) = 0;
 

@@ -2095,7 +2095,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     */
 }
 
-void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
+void BPA_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line, POWERFLOW_DATA_SAVE_MODE save_mode)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);

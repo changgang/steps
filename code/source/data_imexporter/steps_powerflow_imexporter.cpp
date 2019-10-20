@@ -1934,7 +1934,7 @@ void STEPS_IMEXPORTER::load_switched_shunt_data()
 }
 
 
-void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line)
+void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impedance_line, POWERFLOW_DATA_SAVE_MODE save_mode)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -1949,6 +1949,7 @@ void STEPS_IMEXPORTER::export_powerflow_data(string file, bool export_zero_imped
     }
 
     set_export_zero_impedance_line_logic(export_zero_impedance_line);
+    set_powerflow_data_save_mode(save_mode);
 
     if(export_zero_impedance_line==false)
         psdb.update_overshadowed_bus_count();
@@ -2778,7 +2779,7 @@ string STEPS_IMEXPORTER::export_hvdc_data() const
             osstream<<setw(6)<<setprecision(4)<<fixed<<hvdc->get_converter_transformer_min_tap_in_pu(converter)<<", ";
             double tap_step = (hvdc->get_converter_transformer_max_tap_in_pu(converter)-
                                hvdc->get_converter_transformer_min_tap_in_pu(converter))/
-                               hvdc->get_converter_transformer_number_of_taps(converter);
+                               (hvdc->get_converter_transformer_number_of_taps(converter)-1);
             osstream<<setw(6)<<setprecision(5)<<fixed<<tap_step<<", ";
             osstream<<"0, 0, 0, \"1\", 0.0"<<endl;
         }

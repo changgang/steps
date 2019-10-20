@@ -332,8 +332,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         update_P_and_Q_equation_internal_buses();
         BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
         BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
-        //BP.LU_factorization(1, 1e-6);
-        //BQ.LU_factorization(1, 1e-6);
+        //BP.LU_factorization(1, 1e-13);
+        //BQ.LU_factorization(1, 1e-13);
         //BP.report_brief();
         //BQ.report_brief();
 
@@ -363,7 +363,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 update_P_and_Q_equation_internal_buses();
                 //BP = jacobian_builder.get_decoupled_B_jacobian_with_P_equation_internal_buses(internal_P_equation_buses);
                 BQ = jacobian_builder.get_decoupled_B_jacobian_with_Q_equation_internal_buses(internal_Q_equation_buses);
-                BQ.LU_factorization(1, 1e-6);
+                BQ.LU_factorization(1, 1e-13);
 
                 try_to_solve_hvdc_steady_state();
                 calculate_raw_bus_power_mismatch();

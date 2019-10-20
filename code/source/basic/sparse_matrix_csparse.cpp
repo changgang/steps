@@ -486,7 +486,7 @@ vector<double> SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
     }
     else
     {
-        LU_factorization(1, 1e-10);
+        LU_factorization(1, 1e-13);
 
         solve_Lx_eq_b(b);
 

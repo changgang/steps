@@ -16,9 +16,12 @@ class DATA_IMEXPORTER : public BASE
         void set_base_frequency_in_Hz(double fbase);
         void set_export_zero_impedance_line_logic(bool logic);
         void set_export_out_of_service_bus_logic(bool logic);
+        void set_powerflow_data_save_mode(POWERFLOW_DATA_SAVE_MODE mode);
         double get_base_frequency_in_Hz() const;
         bool get_export_zero_impedance_line_logic() const;
         bool get_export_out_of_service_bus_logic() const;
+        POWERFLOW_DATA_SAVE_MODE get_powerflow_data_save_mode() const;
+
 
         void export_shadowed_bus_pair(string file) const;
 
@@ -26,7 +29,7 @@ class DATA_IMEXPORTER : public BASE
         virtual void load_dynamic_data(string dy_source) = 0;
         virtual void load_sequence_data(string sq_source) = 0;
 
-        virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true) = 0;
+        virtual void export_powerflow_data(string file, bool export_zero_impedance_line=true, POWERFLOW_DATA_SAVE_MODE save_mode = KEEP_POWERFLOW_DATA) = 0;
         virtual void export_dynamic_data(string file) = 0;
         virtual void export_sequence_data(string file) = 0;
     private:
@@ -36,6 +39,7 @@ class DATA_IMEXPORTER : public BASE
         double base_frequency_in_Hz;
         bool export_zero_impedance_line;
         bool export_out_of_service_bus;
+        POWERFLOW_DATA_SAVE_MODE powerflow_data_save_mode;
 };
 
 #endif // DATA_IMEXPORTER_H

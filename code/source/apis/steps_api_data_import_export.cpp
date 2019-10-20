@@ -25,16 +25,36 @@ void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolk
     }
 }
 
-void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line, bool export_out_of_service_bus, size_t toolkit_index)
+void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line, bool export_out_of_service_bus, size_t powerflow_data_save_mode, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     string string_file_type = string2upper(file_type);
+    POWERFLOW_DATA_SAVE_MODE save_mode = KEEP_POWERFLOW_DATA;
+    switch(powerflow_data_save_mode)
+    {
+        case 2:
+        {
+            save_mode = OPTIMIZE_POWERFLOW_DATA;
+            break;
+        }
+        case 1:
+        {
+            save_mode = ORDER_POWERFLOW_DATA;
+            break;
+        }
+        case 0:
+        default:
+        {
+            save_mode = KEEP_POWERFLOW_DATA;
+            break;
+        }
+    }
     if(string_file_type=="PSSE" or string_file_type=="PSS/E")
     {
         PSSE_IMEXPORTER exporter;
         exporter.set_toolkit(toolkit);
         exporter.set_export_out_of_service_bus_logic(export_out_of_service_bus);
-        exporter.export_powerflow_data(file, export_zero_impedance_line);
+        exporter.export_powerflow_data(file, export_zero_impedance_line, save_mode);
     }
     else
     {
@@ -43,7 +63,7 @@ void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_ze
             BPA_IMEXPORTER exporter;
             exporter.set_toolkit(toolkit);
             exporter.set_export_out_of_service_bus_logic(export_out_of_service_bus);
-            exporter.export_powerflow_data(file, export_zero_impedance_line);
+            exporter.export_powerflow_data(file, export_zero_impedance_line, save_mode);
         }
     }
 }

@@ -9,6 +9,7 @@ DATA_IMEXPORTER::DATA_IMEXPORTER()
     set_base_frequency_in_Hz(50.0);
     set_export_zero_impedance_line_logic(true);
     set_export_zero_impedance_line_logic(true);
+    set_powerflow_data_save_mode(KEEP_POWERFLOW_DATA);
 }
 
 DATA_IMEXPORTER::~DATA_IMEXPORTER()
@@ -32,6 +33,11 @@ void DATA_IMEXPORTER::set_export_zero_impedance_line_logic(bool logic)
     export_zero_impedance_line = logic;
 }
 
+void DATA_IMEXPORTER::set_powerflow_data_save_mode(POWERFLOW_DATA_SAVE_MODE mode)
+{
+    powerflow_data_save_mode = mode;
+}
+
 bool DATA_IMEXPORTER::get_export_zero_impedance_line_logic() const
 {
     return export_zero_impedance_line;
@@ -45,6 +51,11 @@ void DATA_IMEXPORTER::set_export_out_of_service_bus_logic(bool logic)
 bool DATA_IMEXPORTER::get_export_out_of_service_bus_logic() const
 {
     return export_out_of_service_bus;
+}
+
+POWERFLOW_DATA_SAVE_MODE DATA_IMEXPORTER::get_powerflow_data_save_mode() const
+{
+    return powerflow_data_save_mode;
 }
 
 void DATA_IMEXPORTER::export_shadowed_bus_pair(string file) const
