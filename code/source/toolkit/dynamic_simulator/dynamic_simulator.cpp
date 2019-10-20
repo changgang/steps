@@ -18,6 +18,7 @@ DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR()
 {
     DELT = 0.01;
     clear();
+    detailed_log_enabled = false;
 }
 
 DYNAMICS_SIMULATOR::~DYNAMICS_SIMULATOR()
@@ -1847,6 +1848,8 @@ void DYNAMICS_SIMULATOR::start()
     POWERFLOW_SOLVER& pf_solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
+    detailed_log_enabled = toolkit.is_detailed_log_enabled();
+
     show_dynamic_simulator_configuration();
 
     ostringstream osstream;
@@ -2019,7 +2022,9 @@ void DYNAMICS_SIMULATOR::run_a_step()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     toolkit.set_dynamic_simulation_time_in_s(toolkit.get_dynamic_simulation_time_in_s()+ toolkit.get_dynamic_simulation_time_step_in_s());
-    if(toolkit.is_detailed_log_enabled())
+    if(not detailed_log_enabled)
+        ;
+    else
     {
         osstream<<"Run dynamic simulation at time "<<toolkit.get_dynamic_simulation_time_in_s();
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -2035,7 +2040,9 @@ void DYNAMICS_SIMULATOR::run_a_step()
     while(true)
     {
         ++ITER_DAE;
-        if(toolkit.is_detailed_log_enabled())
+        if(not detailed_log_enabled)
+            ;
+        else
         {
             osstream<<"Solve DAE with iteration "<<ITER_DAE<<" at time "<<toolkit.get_dynamic_simulation_time_in_s();
             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -2047,10 +2054,15 @@ void DYNAMICS_SIMULATOR::run_a_step()
             bool network_converged = solve_network();
             ITER_NET += network_iteration_count;
 
-            if(toolkit.is_detailed_log_enabled() and (not network_converged))
+            if(not detailed_log_enabled)
+                ;
+            else
             {
-                osstream<<"Failed to solve network in "<<max_network_iteration<<" iterations during DAE iteration "<<ITER_DAE<<" when integrating at time "<<TIME<<" s.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
+                if(not network_converged)
+                {
+                    osstream<<"Failed to solve network in "<<max_network_iteration<<" iterations during DAE iteration "<<ITER_DAE<<" when integrating at time "<<TIME<<" s.";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
             }
             if(ITER_DAE>=2 and network_converged) // DAE solution converged
                 break;
@@ -2426,7 +2438,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     for(size_t i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
 
-    if(toolkit.is_detailed_log_enabled())
+    if(not detailed_log_enabled)
+        ;
+    else
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2448,7 +2462,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     }
 
     add_generators_to_bus_current_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(not detailed_log_enabled)
+        ;
+    else
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2469,7 +2485,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_wt_generators_to_bus_current_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(not detailed_log_enabled)
+        ;
+    else
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2490,7 +2508,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_pv_units_to_bus_current_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(not detailed_log_enabled)
+        ;
+    else
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2511,7 +2531,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_loads_to_bus_current_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(not detailed_log_enabled)
+        ;
+    else
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2532,7 +2554,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_hvdcs_to_bus_current_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(not detailed_log_enabled)
+        ;
+    else
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2553,7 +2577,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_equivalent_devices_to_bus_current_mismatch();
-    if(toolkit.is_detailed_log_enabled())
+    if(not detailed_log_enabled)
+        ;
+    else
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2650,7 +2676,10 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
         {
             int row = Y.get_row_number_of_entry_index(k);
             I_mismatch[row] += Y.get_entry_value(k)*voltage;
-            if(toolkit.is_detailed_log_enabled())
+            /*
+            if(not detailed_log_enabled)
+                continue;
+            else
             {
                 complex<double> current = Y.get_entry_value(k)*voltage;
                 if(isnan(current.real()) or isnan(current.imag()))
@@ -2663,6 +2692,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
+            */
         }
     }
 /*
@@ -2870,7 +2900,9 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
             //I_mismatch[internal_bus] -= I;
             I_mismatch[internal_bus] -= hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
 
-            if(toolkit.is_detailed_log_enabled())
+            if(not detailed_log_enabled)
+                ;
+            else
             {
                 I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
                 I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(physical_bus)));
@@ -2888,7 +2920,9 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
             //I_mismatch[internal_bus] -= I;
             I_mismatch[internal_bus] -= hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
 
-            if(toolkit.is_detailed_log_enabled())
+            if(not detailed_log_enabled)
+                ;
+            else
             {
                 I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
                 I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(physical_bus)));
@@ -3336,7 +3370,9 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
         double angle_difference = angle_max - angle_min;
         double scaled_angle_difference = rad2deg(round_angle_in_rad_to_PI(deg2rad(angle_difference)));
 
-        if(toolkit.is_detailed_log_enabled())
+        if(not detailed_log_enabled)
+            ;
+        else
         {
             osstream<<"angle difference in island "<<island<<" is "<<scaled_angle_difference<<" deg at time "<<toolkit.get_dynamic_simulation_time_in_s();
             toolkit.show_information_with_leading_time_stamp(osstream);

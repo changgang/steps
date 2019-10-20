@@ -261,6 +261,8 @@ class DYNAMICS_SIMULATOR: public BASE
         bool csv_file_export_enabled, json_file_export_enabled, bin_file_export_enabled;
 
         bool relay_action_flag;
+
+        bool detailed_log_enabled;
     private:
         virtual bool is_valid() const;
         virtual void check();
