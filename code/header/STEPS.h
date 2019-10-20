@@ -71,5 +71,6 @@ class STEPS
         char current_alphabeta;
 
         size_t thread_number;
+
 };
 #endif // STEPS_H

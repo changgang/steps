@@ -157,6 +157,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void switch_on_equivalent_device();
     private:
         void optimize_network_ordering();
+        void set_internal_bus_pointer();
 
         void prepare_devices_for_run();
 
@@ -228,6 +229,7 @@ class DYNAMICS_SIMULATOR: public BASE
         size_t current_max_network_iteration;
         double alpha;
 
+        vector<BUS*> in_service_buses;
         vector<GENERATOR*> generators;
         vector<WT_GENERATOR*> wt_generators;
         vector<PV_UNIT*> pv_units;
@@ -259,8 +261,6 @@ class DYNAMICS_SIMULATOR: public BASE
         bool csv_file_export_enabled, json_file_export_enabled, bin_file_export_enabled;
 
         bool relay_action_flag;
-
-        bool check_NAN;
     private:
         virtual bool is_valid() const;
         virtual void check();

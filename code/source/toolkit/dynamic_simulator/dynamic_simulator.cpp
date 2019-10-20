@@ -18,7 +18,6 @@ DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR()
 {
     DELT = 0.01;
     clear();
-    check_NAN = true;
 }
 
 DYNAMICS_SIMULATOR::~DYNAMICS_SIMULATOR()
@@ -1794,10 +1793,16 @@ void DYNAMICS_SIMULATOR::optimize_network_ordering()
 
     network_matrix.optimize_network_ordering();
 
+    set_internal_bus_pointer();
+}
+
+void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
+{
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t nbus = psdb.get_in_service_bus_count();
 
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
     internal_bus_pointers.clear();
     for(size_t internal_bus=0; internal_bus!=nbus; ++internal_bus)
     {
@@ -1811,6 +1816,7 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
     BUS* busptr = internal_bus_pointers[internal_bus];
     return busptr->get_complex_voltage_in_pu();
 }
+
 void DYNAMICS_SIMULATOR::set_openmp_number_of_threads()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -1915,6 +1921,7 @@ void DYNAMICS_SIMULATOR::prepare_devices_for_run()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
+    in_service_buses = psdb.get_all_in_service_buses();
     generators = psdb.get_all_generators();
     wt_generators = psdb.get_all_wt_generators();
     pv_units = psdb.get_all_pv_units();
@@ -2240,42 +2247,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
             edevice->run(mode);
     }
 
-    if(mode==INITIALIZE_MODE or mode==INTEGRATE_MODE or mode==UPDATE_MODE)
-    {
-        vector<BUS*> buses = psdb.get_all_in_service_buses();
-        n = buses.size();
-        //BUS* bus;
-        #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-            set_openmp_number_of_threads();
-            #pragma omp parallel for schedule(static)
-        #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
-        for(size_t i=0; i<n; ++i)
-        {
-            BUS* bus = buses[i];
-            BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
-            switch(mode)
-            {
-                case INITIALIZE_MODE:
-                {
-                    model->initialize();
-                    break;
-                }
-                default:
-                {
-                    model->run(mode);
-                    break;
-                }
-            }
-        }
-    }
-}
-
-void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
-{
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<BUS*> buses = psdb.get_all_in_service_buses();
-    size_t n = buses.size();
+    //vector<BUS*> in_service_buses = psdb.get_all_in_service_buses();
+    n = in_service_buses.size();
     //BUS* bus;
     #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
         set_openmp_number_of_threads();
@@ -2283,12 +2256,33 @@ void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
     #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
     for(size_t i=0; i<n; ++i)
     {
-        BUS* bus = buses[i];
-        if(bus->get_bus_type()!=OUT_OF_SERVICE)
+        BUS* bus = in_service_buses[i];
+        BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
+        model->run(mode);
+    }
+}
+
+void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    //vector<BUS*> in_service_buses = psdb.get_all_in_service_buses();
+    size_t n = in_service_buses.size();
+    //BUS* bus;
+    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
+        set_openmp_number_of_threads();
+        #pragma omp parallel for schedule(static)
+    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    for(size_t i=0; i<n; ++i)
+    {
+        BUS* bus = in_service_buses[i];
+        BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
+        model->update_for_applying_event();
+        /*if(bus->get_bus_type()!=OUT_OF_SERVICE)
         {
             BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
             model->update_for_applying_event();
-        }
+        }*/
     }
 }
 
@@ -2432,7 +2426,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     for(size_t i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
 
-    if(check_NAN)
+    if(toolkit.is_detailed_log_enabled())
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2454,7 +2448,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     }
 
     add_generators_to_bus_current_mismatch();
-    if(check_NAN)
+    if(toolkit.is_detailed_log_enabled())
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2475,7 +2469,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_wt_generators_to_bus_current_mismatch();
-    if(check_NAN)
+    if(toolkit.is_detailed_log_enabled())
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2496,7 +2490,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_pv_units_to_bus_current_mismatch();
-    if(check_NAN)
+    if(toolkit.is_detailed_log_enabled())
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2517,7 +2511,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_loads_to_bus_current_mismatch();
-    if(check_NAN)
+    if(toolkit.is_detailed_log_enabled())
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2538,7 +2532,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_hvdcs_to_bus_current_mismatch();
-    if(check_NAN)
+    if(toolkit.is_detailed_log_enabled())
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2559,7 +2553,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         }
     }
     add_equivalent_devices_to_bus_current_mismatch();
-    if(check_NAN)
+    if(toolkit.is_detailed_log_enabled())
     {
         for(size_t i = 0; i<n; ++i)
         {
@@ -2656,7 +2650,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
         {
             int row = Y.get_row_number_of_entry_index(k);
             I_mismatch[row] += Y.get_entry_value(k)*voltage;
-            if(check_NAN)
+            if(toolkit.is_detailed_log_enabled())
             {
                 complex<double> current = Y.get_entry_value(k)*voltage;
                 if(isnan(current.real()) or isnan(current.imag()))
@@ -4707,17 +4701,13 @@ void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
-    size_t n = edevices.size();
+    //vector<EQUIVALENT_DEVICE*> e_devices = psdb.get_all_equivalent_devices();
+    size_t n = e_devices.size();
     ostringstream osstream;
     osstream<<"There are "<<n<<" equivalent devices to switch on";
     toolkit.show_information_with_leading_time_stamp(osstream);
-    EQUIVALENT_DEVICE* edevice;
     for(size_t i=0; i!=n; ++i)
-    {
-        edevice = edevices[i];
-        edevice->switch_on();
-    }
+        e_devices[i]->switch_on();
 }
 
 bool DYNAMICS_SIMULATOR::is_valid() const

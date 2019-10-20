@@ -63,12 +63,16 @@ class POWERFLOW_SOLVER : public BASE
         void save_bus_powerflow_result_to_file(string filename) const;
         size_t get_iteration_count() const;
     private:
+        void prepare_devices_for_solution();
         void initialize_bus_type();
         void initialize_bus_voltage_to_regulate();
         void initialize_bus_voltage();
 
-
         void optimize_bus_numbers();
+        void set_internal_bus_pointer();
+
+        complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
+        double get_bus_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
 
         void update_P_and_Q_equation_internal_buses();
         void update_P_and_Q_equation_internal_buses_with_generator_variables();
@@ -132,6 +136,20 @@ class POWERFLOW_SOLVER : public BASE
         vector< complex<double> > bus_current, bus_power;
 
         size_t iteration_count, max_iteration;
+
+        vector<BUS*> buses;
+        vector<SOURCE*> sources;
+        vector<GENERATOR*> generators;
+        vector<WT_GENERATOR*> wt_generators;
+        vector<PV_UNIT*> pv_units;
+        vector<ENERGY_STORAGE*> e_storages;
+        vector<LOAD*> loads;
+        vector<LINE*> lines;
+        vector<TRANSFORMER*> transformers;
+        vector<HVDC*> hvdcs;
+        vector<EQUIVALENT_DEVICE*> e_devices;
+
+        vector<BUS*> internal_bus_pointers;
     private:
         virtual bool is_valid() const;
         virtual void check();

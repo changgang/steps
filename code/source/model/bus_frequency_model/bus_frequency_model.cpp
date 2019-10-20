@@ -63,8 +63,16 @@ void BUS_FREQUENCY_MODEL::initialize()
 
 void BUS_FREQUENCY_MODEL::run(DYNAMIC_MODE mode)
 {
-    frequency_block.set_input(bus_ptr->get_angle_in_rad());
-    frequency_block.run(mode);
+    if(mode==INTEGRATE_MODE or mode==UPDATE_MODE)
+    {
+        frequency_block.set_input(bus_ptr->get_angle_in_rad());
+        frequency_block.run(mode);
+    }
+    else
+    {
+        if(mode==INITIALIZE_MODE)
+            initialize();
+    }
 }
 
 void BUS_FREQUENCY_MODEL::update_for_applying_event()
