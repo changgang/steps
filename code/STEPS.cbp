@@ -70,6 +70,7 @@
 		<Unit filename="header/basic/owner_test.h" />
 		<Unit filename="header/basic/ownership.h" />
 		<Unit filename="header/basic/ownership_test.h" />
+		<Unit filename="header/basic/power_mismatch_struct.h" />
 		<Unit filename="header/basic/rating.h" />
 		<Unit filename="header/basic/rating_test.h" />
 		<Unit filename="header/basic/sparse_matrix.h" />

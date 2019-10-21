@@ -2,6 +2,7 @@
 #define DYNAMICS_SIMULATOR_H
 
 #include "header/basic/base.h"
+#include "header/basic/power_mismatch_struct.h"
 #include "header/meter/meter.h"
 //#include "header/power_system_database.h"
 #include "header/network/network_matrix.h"
@@ -189,8 +190,8 @@ class DYNAMICS_SIMULATOR: public BASE
         complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
 
         bool is_converged();
-        void get_bus_power_mismatch_in_MVA();
-        double get_max_power_mismatch_in_MVA();
+        void calculate_bus_power_mismatch_in_MVA();
+        POWER_MISMATCH_STRUCT get_max_power_mismatch_struct();
 
         void build_bus_current_mismatch_vector();
 
