@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.6.0"
-libsteps_date = "2019/08/25"
+libsteps_version = "0.9.3"
+libsteps_date = "2019/10/21"
 
 def get_base_library(enable_parallel=False):
     dirname, filename = os.path.split(os.path.abspath(__file__))

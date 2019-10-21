@@ -158,6 +158,7 @@ class DYNAMICS_SIMULATOR: public BASE
     private:
         void optimize_network_ordering();
         void set_internal_bus_pointer();
+        void set_internal_bus_complex_voltage_vector();
 
         void prepare_devices_for_run();
 
@@ -172,6 +173,8 @@ class DYNAMICS_SIMULATOR: public BASE
         void save_meter_values();
 
         bool solve_network();
+        void initialize_internal_bus_voltage_vector();
+
         void solve_hvdcs_without_integration();
 
         void get_bus_current_mismatch();
@@ -240,6 +243,8 @@ class DYNAMICS_SIMULATOR: public BASE
         vector<EQUIVALENT_DEVICE*> e_devices;
 
         vector<BUS*> internal_bus_pointers;
+        vector<double> internal_bus_voltage_in_pu;
+        vector<complex<double> > internal_bus_complex_voltage_in_pu;
 
         vector< complex<double> > I_mismatch, S_mismatch;
         vector<double> I_vec;

@@ -190,6 +190,7 @@ bool POWERFLOW_SOLVER::get_export_jacobian_matrix_step_by_step_logic() const
 
 void POWERFLOW_SOLVER::show_powerflow_solver_configuration() const
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
     osstream<<"Configuration of powerflow solver:\n"
             <<"Maximum iteration: "<<get_max_iteration()<<"\n"
@@ -202,8 +203,8 @@ void POWERFLOW_SOLVER::show_powerflow_solver_configuration() const
             <<"Transformer tap adjustment: "<<(get_transformer_tap_adjustment_logic()?"Enabled":"Disabled")<<"\n"
             <<"Non-divergent solution: "<<(get_non_divergent_solution_logic()?"Enabled":"Disabled")<<"\n"
             <<"Var limit check: "<<(get_var_limit_check_logic()?"Enabled":"Disabled")<<"\n"
+            <<"Network ordering optimization: "<<toolkit.is_optimize_network_enabled()<<"\n"
             <<"Export jacobian matrix step by step: "<<(get_export_jacobian_matrix_step_by_step_logic()?"Enabled":"Disabled");
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
