@@ -29,6 +29,9 @@ class STEPS
         void enable_detailed_log();
         void disable_detailed_log();
         bool is_detailed_log_enabled();
+        void enable_optimize_network();
+        void disable_optimize_network();
+        bool is_optimize_network_enabled();
 
         void show_information_with_leading_time_stamp(string info);
         void show_information_with_leading_time_stamp(ostringstream& stream);
@@ -68,6 +71,7 @@ class STEPS
 
         ofstream log_file;
         bool detailed_log_enabled;
+        bool optimize_network_enabled;
         char current_alphabeta;
 
         size_t thread_number;

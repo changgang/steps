@@ -2246,7 +2246,10 @@ void NETWORK_MATRIX::optimize_network_ordering()
 {
     initialize_physical_internal_bus_pair();
     build_network_matrix();
-    reorder_physical_internal_bus_pair();
+
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    if(toolkit.is_optimize_network_enabled())
+        reorder_physical_internal_bus_pair();
 }
 
 bool NETWORK_MATRIX::is_condition_ok() const

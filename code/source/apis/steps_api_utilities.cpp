@@ -136,6 +136,10 @@ bool api_get_toolkit_bool_data(char* parameter_name, size_t toolkit_index)
     {
         return toolkit.is_detailed_log_enabled();
     }
+    if(PARAMETER_NAME=="OPTIMIZE NETWORK LOGIC")
+    {
+        return toolkit.is_optimize_network_enabled();
+    }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);
     return toolkit.steps_char_buffer;
@@ -153,6 +157,13 @@ void api_set_toolkit_bool_data(char* parameter_name, bool value, size_t toolkit_
             return toolkit.enable_detailed_log();
         else
             return toolkit.disable_detailed_log();
+    }
+    if(PARAMETER_NAME=="OPTIMIZE NETWORK LOGIC")
+    {
+        if(value==true)
+            return toolkit.enable_optimize_network();
+        else
+            return toolkit.disable_optimize_network();
     }
 
     show_parameter_not_supported_with_api(PARAMETER_NAME, __FUNCTION__);

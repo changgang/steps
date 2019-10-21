@@ -16,6 +16,8 @@ STEPS::STEPS(string name, string log_file)
 
     detailed_log_enabled = false;
 
+    optimize_network_enabled = true;
+
     clock_when_system_started=clock();
 
     toolkit_name = name;
@@ -117,6 +119,21 @@ void STEPS::disable_detailed_log()
 bool STEPS::is_detailed_log_enabled()
 {
     return detailed_log_enabled;
+}
+
+void STEPS::enable_optimize_network()
+{
+    optimize_network_enabled = true;
+}
+
+void STEPS::disable_optimize_network()
+{
+    optimize_network_enabled = false;
+}
+
+bool STEPS::is_optimize_network_enabled()
+{
+    return optimize_network_enabled;
 }
 
 void STEPS::reset()

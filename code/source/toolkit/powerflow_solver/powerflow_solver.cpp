@@ -624,6 +624,7 @@ void POWERFLOW_SOLVER::optimize_bus_numbers()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
+
     network_matrix.optimize_network_ordering();
 
     set_internal_bus_pointer();
