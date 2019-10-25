@@ -64,6 +64,8 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name, size_t to
         return ds.get_allowed_max_power_imbalance_in_MVA();
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         return ds.get_iteration_accelerator();
+    if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
+        return ds.get_non_divergent_solution_logic();
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
         return ds.get_rotor_angle_stability_threshold_in_deg();
 
@@ -89,6 +91,11 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
     {
         ds.set_iteration_accelerator(value);
+        return;
+    }
+    if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
+    {
+        ds.set_non_divergent_solution_logic(value);
         return;
     }
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")

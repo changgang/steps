@@ -1433,7 +1433,7 @@ complex<double> TRANSFORMER::get_primary_winding_complex_current_in_kA() const
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         double Vbase = psdb.get_bus_base_voltage_in_kV(get_winding_bus(PRIMARY_SIDE));
-        double Ibase = psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*Vbase);
+        double Ibase = psdb.get_system_base_power_in_MVA()/(SQRT3*Vbase);
 
         return get_primary_winding_complex_current_in_pu()*Ibase;
     }
@@ -1450,7 +1450,7 @@ complex<double> TRANSFORMER::get_secondary_winding_complex_current_in_kA() const
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         double Vbase = psdb.get_bus_base_voltage_in_kV(get_winding_bus(SECONDARY_SIDE));
-        double Ibase = psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*Vbase);
+        double Ibase = psdb.get_system_base_power_in_MVA()/(SQRT3*Vbase);
 
         return get_secondary_winding_complex_current_in_pu()*Ibase;
     }
@@ -1467,7 +1467,7 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_current_in_kA() const
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         double Vbase = psdb.get_bus_base_voltage_in_kV(get_winding_bus(TERTIARY_SIDE));
-        double Ibase = psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*Vbase);
+        double Ibase = psdb.get_system_base_power_in_MVA()/(SQRT3*Vbase);
 
         return get_tertiary_winding_complex_current_in_pu()*Ibase;
     }

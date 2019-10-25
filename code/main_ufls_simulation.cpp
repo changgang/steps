@@ -49,8 +49,8 @@ int main()
     {
         gen = generators[i];
         double pgen = gen->get_p_generation_in_MW();
-        double mbase = gen->get_mbase_in_MVA();
-        double pmax = pgen/mbase+SR;
+        double one_over_mbase = gen->get_one_over_mbase_in_one_over_MVA();
+        double pmax = pgen*one_over_mbase+SR;
 
         TURBINE_GOVERNOR_MODEL* tg_model = gen->get_turbine_governor_model();
         if(tg_model!=NULL)

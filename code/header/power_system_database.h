@@ -77,6 +77,7 @@ class POWER_SYSTEM_DATABASE : public BASE
 
         void set_system_base_power_in_MVA(const double s);
         double get_system_base_power_in_MVA() const;
+        double get_one_over_system_base_power_in_one_over_MVA() const;
 
         void set_case_information(const string& title);
         void set_case_additional_information(const string& title);
@@ -487,7 +488,7 @@ class POWER_SYSTEM_DATABASE : public BASE
         void check_energy_storage_status_for_out_of_service_bus(size_t bus);
 
         string system_name;
-        double system_base_power_in_MVA;
+        double system_base_power_in_MVA, one_over_system_base_power;
 
         string case_information, case_additional_information;
 

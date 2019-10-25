@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <iostream>
 #include <fstream>
+#include <ctime>
 using namespace std;
 
 SPARSE_MATRIX_CSPARSE::SPARSE_MATRIX_CSPARSE():SPARSE_MATRIX()
@@ -374,7 +375,6 @@ int SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
 
 complex<double> SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index)  const
 {
-    //if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
     if(index>=0 && index<=matrix_real->p[matrix_real->n]) // this condition is equivalent to previous line
         return complex<double>(matrix_real->x[index], matrix_imag->x[index]);
     else
@@ -487,7 +487,12 @@ vector<double> SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
     else
     {
         LU_factorization(1, 1e-13);
-
+        /*
+        cout<<"Div LU->L->n = "<<LU->L->n<<endl;
+        cout<<"Mul LU->L->p[n] = "<<LU->L->p[LU->L->n]<<endl;
+        cout<<"Div LU->U->n = "<<LU->U->n<<endl;
+        cout<<"Mul LU->U->p[n] = "<<LU->U->p[LU->U->n]<<endl;
+        */
         solve_Lx_eq_b(b);
 
         solve_xU_eq_b(b);

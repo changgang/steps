@@ -26,6 +26,15 @@ double SG_MODEL::get_mbase_in_MVA() const
         return 0.0;
 }
 
+double SG_MODEL::get_one_over_mbase_in_one_over_MVA() const
+{
+    GENERATOR* gen = get_generator_pointer();
+    if(gen!=NULL)
+        return gen->get_one_over_mbase_in_one_over_MVA();
+    else
+        return 0.0;
+}
+
 double SG_MODEL::get_bus_base_frequency_in_Hz() const
 {
     GENERATOR* generator = get_generator_pointer();

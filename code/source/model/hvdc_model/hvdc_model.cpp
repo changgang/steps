@@ -867,14 +867,14 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
     //osstream<<"rectifier and inverter side AC voltages are: "<<psdb.get_bus_voltage_in_pu(bus_r)<<", "<<psdb.get_bus_voltage_in_pu(bus_i);
     //toolkit.show_information_with_leading_time_stamp(osstream);
 
-    double eac_r = vac_r/tap_r*ebase_converter_r/ebase_grid_r;
-    double eac_i = vac_i/tap_i*ebase_converter_i/ebase_grid_i;
+    double eac_r = vac_r*ebase_converter_r/(tap_r*ebase_grid_r);
+    double eac_i = vac_i*ebase_converter_i/(tap_i*ebase_grid_i);
 
-    double vdc0_r = Nr*3.0*sqrt(2.0)/PI*eac_r;
-    double vdc0_i = Ni*3.0*sqrt(2.0)/PI*eac_i;
+    double vdc0_r = Nr*3.0*SQRT2*ONE_OVER_PI*eac_r;
+    double vdc0_i = Ni*3.0*SQRT2*ONE_OVER_PI*eac_i;
 
-    double rceq_r = Nr*(3.0/PI*Xc_r+2.0*Rc_r);
-    double rceq_i = Ni*(3.0/PI*Xc_i+2.0*Rc_i);
+    double rceq_r = Nr*(3.0*ONE_OVER_PI*Xc_r+2.0*Rc_r);
+    double rceq_i = Ni*(3.0*ONE_OVER_PI*Xc_i+2.0*Rc_i);
 
     double Vdci = Vset_kV - Rcomp*Iset_kA;
     double Vdcr = Vdci + Rdc*Iset_kA;
@@ -1126,14 +1126,14 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
     double vac_r = get_converter_ac_voltage_in_kV(RECTIFIER);
     //double vac_i = psdb.get_bus_voltage_in_kV(bus_i);
 
-    double eac_r = vac_r/tap_r*ebase_converter_r/ebase_grid_r;
-    //double eac_i = vac_i/tap_i*ebase_converter_i/ebase_grid_i;
+    double eac_r = vac_r*ebase_converter_r/(tap_r*ebase_grid_r);
+    //double eac_i = vac_i*ebase_converter_i/(tap_i*ebase_grid_i);
 
-    double vdc0_r = Nr*3.0*sqrt(2.0)/PI*eac_r;
-    //double vdc0_i = Ni*3.0*sqrt(2.0)/PI*eac_i;
+    double vdc0_r = Nr*3.0*SQRT2*ONE_OVER_PI*eac_r;
+    //double vdc0_i = Ni*3.0*SQRT2*ONE_OVER_PI*eac_i;
 
-    double rceq_r = Nr*(3.0/PI*Xc_r+2.0*Rc_r);
-    //double rceq_i = Ni*(3.0/PI*Xc_i+2.0*Rc_i);
+    double rceq_r = Nr*(3.0*ONE_OVER_PI*Xc_r+2.0*Rc_r);
+    //double rceq_i = Ni*(3.0*ONE_OVER_PI*Xc_i+2.0*Rc_i);
 
     double Vdci = 0.0;
     double Vdcr = Vdci + Rdc*Iset_kA;
@@ -1220,14 +1220,14 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
     double vac_r = get_converter_ac_voltage_in_pu(RECTIFIER);
     double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
 
-    double eac_r = vac_r/tap_r*ebase_converter_r/ebase_grid_r;
-    double eac_i = vac_i/tap_i*ebase_converter_i/ebase_grid_i;
+    double eac_r = vac_r*ebase_converter_r/(tap_r*ebase_grid_r);
+    double eac_i = vac_i*ebase_converter_i/(tap_i*ebase_grid_i);
 
-    double vdc0_r = Nr*3.0*sqrt(2.0)/PI*eac_r;
-    double vdc0_i = Ni*3.0*sqrt(2.0)/PI*eac_i;
+    double vdc0_r = Nr*3.0*SQRT2*ONE_OVER_PI*eac_r;
+    double vdc0_i = Ni*3.0*SQRT2*ONE_OVER_PI*eac_i;
 
-    double rceq_r = Nr*(3.0/PI*Xc_r+2.0*Rc_r);
-    double rceq_i = Ni*(3.0/PI*Xc_i+2.0*Rc_i);
+    double rceq_r = Nr*(3.0*ONE_OVER_PI*Xc_r+2.0*Rc_r);
+    double rceq_i = Ni*(3.0*ONE_OVER_PI*Xc_i+2.0*Rc_i);
 
     double Idc = Iset_kA;
     double Vdci = Vset_kV - Rcomp*get_converter_dc_current_in_kA(INVERTER);
@@ -1397,9 +1397,9 @@ double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER
     double vbase_grid = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter);
     double vbase_converter = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter);
     double tap = hvdc->get_converter_transformer_tap_in_pu(converter);
-    double eac = vac*vbase_converter/vbase_grid/tap;
+    double eac = vac*vbase_converter/(vbase_grid*tap);
 
-    double mu = cos(angle)-sqrt(2.0)*idc*xc/eac;
+    double mu = cos(angle)-SQRT2*idc*xc/eac;
     mu = acos(mu)-angle;
 
     return rad2deg(mu);
@@ -1467,9 +1467,9 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
     //double vac = psdb.get_bus_voltage_in_pu(bus);
     double vac = get_converter_ac_voltage_in_pu(converter);
 
-    double eac = vac/tap*ebase_converter/ebase_grid;
+    double eac = vac*ebase_converter/(tap*ebase_grid);
 
-    double vdc0 = N*3.0*sqrt(2.0)/PI*eac;
+    double vdc0 = N*3.0*SQRT2*ONE_OVER_PI*eac;
     double vdc = get_converter_dc_voltage_in_kV(converter);
 
     return rad2deg(acos(vdc/vdc0));*/
@@ -1501,9 +1501,9 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_pu(HVDC_CONVERTER_SIDE c
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
-    complex<double> S = get_converter_ac_complex_power_in_MVA(converter)/sbase;
+    complex<double> S = get_converter_ac_complex_power_in_MVA(converter)*one_over_sbase;
 
     complex<double> V = psdb.get_bus_complex_voltage_in_pu(hvdc->get_converter_bus(converter));
 
@@ -1528,7 +1528,7 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE c
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double vbase = psdb.get_bus_base_voltage_in_kV(bus);
     double sbase = psdb.get_system_base_power_in_MVA();
-    double ibase = sbase/(sqrt(3.0)*vbase);
+    double ibase = sbase/(SQRT3*vbase);
 
     return I*ibase;
 }

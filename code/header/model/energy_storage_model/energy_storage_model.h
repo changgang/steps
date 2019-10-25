@@ -14,6 +14,7 @@ public:
 
         ENERGY_STORAGE* get_energy_storage_pointer() const;
         double get_mbase_in_MVA() const;
+        double get_one_over_mbase_in_one_over_MVA() const;
         complex<double> get_terminal_bus_complex_voltage_in_pu() const;
         double get_terminal_bus_voltage_in_pu() const;
         double get_terminal_bus_angle_in_rad() const;

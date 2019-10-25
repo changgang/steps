@@ -170,13 +170,13 @@ void GENSAL::initialize()
 
 
     GENERATOR* generator = get_generator_pointer();
-    double mbase = get_mbase_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
 
     complex<double> Zsource(get_Rs(), get_Xpp());
 
     double P = generator->get_p_generation_in_MW();
     double Q = generator->get_q_generation_in_MVar();
-    complex<double> S(P/mbase,Q/mbase);
+    complex<double> S(P*one_over_mbase,Q*one_over_mbase);
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
 
@@ -232,13 +232,13 @@ void GENSAL::initialize_rotor_angle()
     INTEGRAL_BLOCK* rotor_angle_block = get_rotor_angle_block();
 
     GENERATOR* generator = get_generator_pointer();
-    double mbase = get_mbase_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
 
     complex<double> Zsource(get_Rs(), get_Xpp());
 
     double P = generator->get_p_generation_in_MW();
     double Q = generator->get_q_generation_in_MVar();
-    complex<double> S(P/mbase,Q/mbase);
+    complex<double> S(P*one_over_mbase,Q*one_over_mbase);
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
     complex<double> Ixy = conj(S/Vxy);
@@ -362,9 +362,9 @@ complex<double> GENSAL::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     double mbase = get_mbase_in_MVA();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
-    return Exy/Z*mbase/sbase;
+    return Exy/Z*(mbase*one_over_sbase);
 }
 
 complex<double> GENSAL::get_terminal_complex_current_in_pu_in_dq_axis_based_on_mbase()
@@ -396,9 +396,9 @@ complex<double> GENSAL::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
-    return Ixy*mbase/sbase;
+    return Ixy*(mbase*one_over_sbase);
 }
 
 double GENSAL::get_terminal_current_in_pu_based_on_mbase()
@@ -413,9 +413,9 @@ double GENSAL::get_terminal_current_in_pu_based_on_sbase()
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
-    return I*mbase/sbase;
+    return I*(mbase*one_over_sbase);
 }
 
 

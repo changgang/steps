@@ -6,7 +6,7 @@
 #include <thread>
 using namespace std;
 
-STEPS::STEPS(string name, string log_file)
+STEPS::STEPS(const string& name, const string& log_file)
 {
     ostringstream osstream;
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -49,7 +49,7 @@ STEPS::~STEPS()
     close_log_file();
 }
 
-void STEPS::set_toolkit_name(string name)
+void STEPS::set_toolkit_name(const string& name)
 {
     if(toolkit_name!=name)
     {
@@ -85,7 +85,7 @@ void STEPS::clear()
     dynamic_simulator.clear();
 }
 
-void STEPS::open_log_file(string file)
+void STEPS::open_log_file(const string& file)
 {
     if(log_file.is_open())
         close_log_file();
@@ -199,7 +199,7 @@ void STEPS::show_information_with_leading_time_stamp(ostringstream& stream)
     stream.str("");
 }
 
-void STEPS::show_information_with_leading_time_stamp(string info)
+void STEPS::show_information_with_leading_time_stamp(const string& info)
 {
     vector<string> splitted_info = split_string(info,"\n");
     size_t info_size = splitted_info.size();

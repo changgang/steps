@@ -36,6 +36,7 @@ class SOURCE : public DEVICE
         string get_identifier() const;
         bool get_status() const;
         double get_mbase_in_MVA() const;
+        double get_one_over_mbase_in_one_over_MVA() const;
         double get_p_generation_in_MW() const;
         double get_q_generation_in_MVar() const;
         complex<double> get_complex_generation_in_MVA() const;
@@ -71,7 +72,7 @@ class SOURCE : public DEVICE
 
         string source_identifier;
         bool status;
-        double mbase_MVA;
+        double mbase_MVA, one_over_mbase;
 
         double p_generation_MW, q_generation_MVar;
         double p_max_MW, p_min_MW, q_max_MVar, q_min_MVar;

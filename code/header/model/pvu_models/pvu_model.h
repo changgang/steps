@@ -14,6 +14,7 @@ public:
 
         PV_UNIT* get_pv_unit_pointer() const;
         double get_mbase_in_MVA() const;
+        double get_one_over_mbase_in_one_over_MVA() const;
 
         size_t get_number_of_lumped_pv_units() const;
         double get_rated_power_per_pv_unit_in_MW() const;

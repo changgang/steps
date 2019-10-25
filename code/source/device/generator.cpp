@@ -751,8 +751,8 @@ complex<double> GENERATOR::get_source_dynamic_current_in_pu_based_on_system_base
 
         complex<double> I = generator_model->get_terminal_current_in_pu_based_on_mbase();
         double mbase = get_mbase_in_MVA();
-        double sbase = psdb.get_system_base_power_in_MVA();
-        I *= (mbase/sbase);
+        double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+        I *= (mbase*one_over_sbase);
         return I;
     }
     else

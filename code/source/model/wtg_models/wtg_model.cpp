@@ -26,6 +26,15 @@ double WTG_MODEL::get_mbase_in_MVA() const
         return 0.0;
 }
 
+double WTG_MODEL::get_one_over_mbase_in_one_over_MVA() const
+{
+    WT_GENERATOR* gen = get_wt_generator_pointer();
+    if(gen!=NULL)
+        return gen->get_one_over_mbase_in_one_over_MVA();
+    else
+        return 0.0;
+}
+
 size_t WTG_MODEL::get_number_of_lumped_wt_generators() const
 {
     WT_GENERATOR* gen = get_wt_generator_pointer();

@@ -86,8 +86,8 @@ double WT_TURBINE_MODEL::get_mechanical_power_in_pu_from_wt_aerodynamic_model() 
             if(not aero_model->is_model_initialized())
                 aero_model->initialize();
 
-            double mbase = get_mbase_in_MVA();
-            return aero_model->get_turbine_mechanical_power_in_MW()/mbase;
+            double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
+            return aero_model->get_turbine_mechanical_power_in_MW()*one_over_mbase;
         }
         else
             return 0.0;

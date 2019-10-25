@@ -163,7 +163,7 @@ void UTILITY_TEST::test_rad2deg()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double angle = 0.234;
-    double angle2 = angle/PI*180.0;
+    double angle2 = angle*ONE_OVER_PI*180.0;
     TEST_ASSERT(fabs(rad2deg(angle)-angle2)<FLOAT_EPSILON);
 }
 
@@ -230,7 +230,7 @@ void UTILITY_TEST::test_radps2hz()
     show_test_information_for_function_of_class(__FUNCTION__,"UTILITY_TEST");
 
     double w = 1.0;
-    double f = w/PI2;
+    double f = w*ONE_OVER_PI2;
     TEST_ASSERT(fabs(radps2hz(w)-f)<FLOAT_EPSILON);
 }
 

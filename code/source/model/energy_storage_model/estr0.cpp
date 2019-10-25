@@ -367,10 +367,10 @@ void ESTR0::initialize()
     active_power_filter.set_lower_limit(-vamax);
 
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
-    double mbase = get_mbase_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
 
-    double P = estorage->get_p_generation_in_MW()/mbase;
-    double Q = estorage->get_q_generation_in_MVar()/mbase;
+    double P = estorage->get_p_generation_in_MW()*one_over_mbase;
+    double Q = estorage->get_q_generation_in_MVar()*one_over_mbase;
 
     double iP = P/V;
     double iQ = Q/V;
@@ -419,9 +419,9 @@ void ESTR0::initialize()
 void ESTR0::run(DYNAMIC_MODE mode)
 {
     ENERGY_STORAGE* estorage = get_energy_storage_pointer();
-    double mbase = get_mbase_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
 
-    double P = estorage->get_p_generation_in_MW()/mbase;
+    double P = estorage->get_p_generation_in_MW()*one_over_mbase;
 
     double df = get_terminal_bus_frequency_deviation_in_pu();
 
@@ -556,9 +556,9 @@ complex<double> ESTR0::get_terminal_complex_current_in_pu_based_on_sbase() const
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
-    return I*mbase/sbase;
+    return I*(mbase*one_over_sbase);
 }
 
 
@@ -575,7 +575,7 @@ complex<double> ESTR0::get_terminal_complex_current_in_kA() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double vbase = psdb.get_bus_base_voltage_in_kV(bus);
 
-    double ibase = mbase/(sqrt(3.0)*vbase);
+    double ibase = mbase/(SQRT3*vbase);
 
     return I*ibase;
 }

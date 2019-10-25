@@ -26,6 +26,15 @@ double ENERGY_STORAGE_MODEL::get_mbase_in_MVA() const
         return 0.0;
 }
 
+double ENERGY_STORAGE_MODEL::get_one_over_mbase_in_one_over_MVA() const
+{
+    ENERGY_STORAGE* estorage = get_energy_storage_pointer();
+    if(estorage!=NULL)
+        return estorage->get_one_over_mbase_in_one_over_MVA();
+    else
+        return 0.0;
+}
+
 string ENERGY_STORAGE_MODEL::get_model_type() const
 {
     return "ENERGY STORAGE";

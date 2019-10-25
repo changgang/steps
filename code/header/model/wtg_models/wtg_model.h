@@ -15,6 +15,7 @@ class WTG_MODEL : public MODEL
 
         WT_GENERATOR* get_wt_generator_pointer() const;
         double get_mbase_in_MVA() const;
+        double get_one_over_mbase_in_one_over_MVA() const;
 
         size_t get_number_of_lumped_wt_generators() const;
         double get_rated_power_per_wt_generator_in_MW() const;

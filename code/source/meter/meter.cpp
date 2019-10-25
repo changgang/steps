@@ -1061,7 +1061,7 @@ double METER::get_meter_value_as_a_load() const
                 POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
                 double sbase = psdb.get_system_base_power_in_MVA();
                 double vbase = psdb.get_bus_base_voltage_in_kV(load->get_load_bus());
-                double ibase = sbase/(sqrt(3.0)*vbase);
+                double ibase = sbase/(SQRT3*vbase);
                 return ibase* steps_fast_complex_abs(load->get_dynamics_load_current_in_pu_based_on_system_base_power());
             }
 
@@ -1126,6 +1126,8 @@ double METER::get_meter_value_as_a_generator() const
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
             double sbase = psdb.get_system_base_power_in_MVA();
+            double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+            double one_over_mbase = generator->get_one_over_mbase_in_one_over_MVA();
             double mbase = generator->get_mbase_in_MVA();
 
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
@@ -1205,7 +1207,7 @@ double METER::get_meter_value_as_a_generator() const
                 else
                 {
                     double vbase = psdb.get_bus_base_voltage_in_kV(generator->get_generator_bus());
-                    double ibase = sbase/(sqrt(3.0)*vbase);
+                    double ibase = sbase/(SQRT3*vbase);
                     return ibase*gen_model->get_terminal_current_in_pu_based_on_sbase();
                 }
             }
@@ -1214,14 +1216,14 @@ double METER::get_meter_value_as_a_generator() const
                 if(gen_model == NULL)
                     return 0.0;
                 else
-                    return gen_model->get_terminal_active_power_in_MW()/mbase;
+                    return gen_model->get_terminal_active_power_in_MW()*one_over_mbase;
             }
             if(meter_type =="TERMINAL ACTIVE POWER IN PU ON SBASE")
             {
                 if(gen_model == NULL)
                     return 0.0;
                 else
-                    return gen_model->get_terminal_active_power_in_MW()/sbase;
+                    return gen_model->get_terminal_active_power_in_MW()*one_over_sbase;
             }
             if(meter_type =="TERMINAL ACTIVE POWER IN MW")
             {
@@ -1235,14 +1237,14 @@ double METER::get_meter_value_as_a_generator() const
                 if(gen_model == NULL)
                     return 0.0;
                 else
-                    return gen_model->get_terminal_reactive_power_in_MVar()/mbase;
+                    return gen_model->get_terminal_reactive_power_in_MVar()*one_over_mbase;
             }
             if(meter_type =="TERMINAL REACTIVE POWER IN PU ON SBASE")
             {
                 if(gen_model == NULL)
                     return 0.0;
                 else
-                    return gen_model->get_terminal_reactive_power_in_MVar()/sbase;
+                    return gen_model->get_terminal_reactive_power_in_MVar()*one_over_sbase;
             }
             if(meter_type =="TERMINAL REACTIVE POWER IN MVAR")
             {
@@ -1270,7 +1272,7 @@ double METER::get_meter_value_as_a_generator() const
                 {
                     double p = gen_model->get_terminal_active_power_in_pu_based_on_mbase();
                     double q = gen_model->get_terminal_reactive_power_in_pu_based_on_mbase();
-                    return sqrt(p*p+q*q)*mbase/sbase;
+                    return sqrt(p*p+q*q)*(mbase*one_over_sbase);
                 }
             }
             if(meter_type =="TERMINAL APPRAENT POWER IN MVA")
@@ -1296,7 +1298,7 @@ double METER::get_meter_value_as_a_generator() const
                 if(gen_model == NULL)
                     return 0.0;
                 else
-                    return gen_model->get_air_gap_power_in_MW()/sbase;
+                    return gen_model->get_air_gap_power_in_MW()*one_over_sbase;
             }
             if(meter_type =="AIRGAP POWER IN MW")
             {
@@ -1317,7 +1319,7 @@ double METER::get_meter_value_as_a_generator() const
                 if(gen_model == NULL)
                     return 0.0;
                 else
-                    return gen_model->get_accelerating_power_in_MW()/sbase;
+                    return gen_model->get_accelerating_power_in_MW()*one_over_sbase;
             }
             if(meter_type =="ACCELERATING POWER IN MW")
             {
@@ -1338,7 +1340,7 @@ double METER::get_meter_value_as_a_generator() const
                 if(gen_model == NULL)
                     return 0.0;
                 else
-                    return gen_model->get_mechanical_power_in_MW()/sbase;
+                    return gen_model->get_mechanical_power_in_MW()*one_over_sbase;
             }
             if(meter_type =="MECHANICAL POWER IN MW")
             {
@@ -1359,7 +1361,7 @@ double METER::get_meter_value_as_a_generator() const
                 if(turbine_governor_model == NULL)
                     return 0.0;
                 else
-                    return turbine_governor_model->get_mechanical_power_reference_in_pu_based_on_mbase()*mbase/sbase;
+                    return turbine_governor_model->get_mechanical_power_reference_in_pu_based_on_mbase()*(mbase*one_over_sbase);
             }
             if(meter_type =="MECHANICAL POWER REFERENCE IN MW")
             {
@@ -1461,7 +1463,8 @@ double METER::get_meter_value_as_a_wt_generator() const
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
-            double sbase = psdb.get_system_base_power_in_MVA();
+            double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+            double one_over_mbase = generator->get_one_over_mbase_in_one_over_MVA();
             double mbase = generator->get_mbase_in_MVA();
 
             WT_GENERATOR_MODEL* gen_model = generator->get_wt_generator_model();
@@ -1481,7 +1484,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
             {
                 if(gen_model != NULL)
-                    return gen_model->get_terminal_current_in_pu_based_on_mbase()*mbase/sbase;
+                    return gen_model->get_terminal_current_in_pu_based_on_mbase()*(mbase*one_over_sbase);
                 else
                     return 0.0;
             }
@@ -1491,7 +1494,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 if(gen_model != NULL)
                 {
                     double vbase = psdb.get_bus_base_voltage_in_kV(bus);
-                    double ibase = mbase/(sqrt(3.0)*vbase);
+                    double ibase = mbase/(SQRT3*vbase);
                     return gen_model->get_terminal_current_in_pu_based_on_mbase()*ibase;
                 }
                 else
@@ -1507,7 +1510,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
             {
                 if(gen_model != NULL)
-                    return gen_model->get_terminal_active_power_in_MW()/sbase;
+                    return gen_model->get_terminal_active_power_in_MW()*one_over_sbase;
                 else
                     return 0.0;
             }
@@ -1528,7 +1531,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
             {
                 if(gen_model != NULL)
-                    return gen_model->get_terminal_reactive_power_in_MVar()/sbase;
+                    return gen_model->get_terminal_reactive_power_in_MVar()*one_over_sbase;
                 else
                     return 0.0;
             }
@@ -1554,8 +1557,8 @@ double METER::get_meter_value_as_a_wt_generator() const
             {
                 if(gen_model != NULL)
                 {
-                    double p = gen_model->get_terminal_active_power_in_MW()/sbase;
-                    double q = gen_model->get_terminal_reactive_power_in_MVar()/sbase;
+                    double p = gen_model->get_terminal_active_power_in_MW()*one_over_sbase;
+                    double q = gen_model->get_terminal_reactive_power_in_MVar()*one_over_sbase;
                     return sqrt(p*p+q*q);
                 }
                 else
@@ -1575,14 +1578,14 @@ double METER::get_meter_value_as_a_wt_generator() const
             if(meter_type=="MECHANICAL POWER IN PU ON MBASE")
             {
                 if(aerd_model != NULL)
-                    return aerd_model->get_turbine_mechanical_power_in_MW()/mbase;
+                    return aerd_model->get_turbine_mechanical_power_in_MW()*one_over_mbase;
                 else
                     return 0.0;
             }
             if(meter_type=="MECHANICAL POWER IN PU ON SBASE")
             {
                 if(aerd_model != NULL)
-                    return aerd_model->get_turbine_mechanical_power_in_MW()/sbase;
+                    return aerd_model->get_turbine_mechanical_power_in_MW()*one_over_sbase;
                 else
                     return 0.0;
             }
@@ -1600,7 +1603,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                     double vwind = aerd_model->get_wind_speed_in_mps();
                     double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
                     size_t n = generator->get_number_of_lumped_wt_generators();
-                    return pmax*n/mbase;
+                    return pmax*n*one_over_mbase;
                 }
                 else
                     return 0.0;
@@ -1612,7 +1615,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                     double vwind = aerd_model->get_wind_speed_in_mps();
                     double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
                     size_t n = generator->get_number_of_lumped_wt_generators();
-                    return pmax*n/sbase;
+                    return pmax*n*one_over_sbase;
                 }
                 else
                     return 0.0;
@@ -1844,8 +1847,7 @@ double METER::get_meter_value_as_a_pv_unit() const
             size_t bus = pv_unit->get_unit_bus();
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            double fbase = psdb.get_bus_base_frequency_in_Hz(pv_unit->get_unit_bus());
-            double sbase = psdb.get_system_base_power_in_MVA();
+            double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
             double mbase = pv_unit->get_mbase_in_MVA();
 
             PV_CONVERTER_MODEL* converter_model = pv_unit->get_pv_converter_model();
@@ -1863,7 +1865,7 @@ double METER::get_meter_value_as_a_pv_unit() const
             if(meter_type=="TERMINAL CURRENT IN PU ON SBASE")
             {
                 if(converter_model != NULL)
-                    return converter_model->get_terminal_current_in_pu_based_on_mbase()*mbase/sbase;
+                    return converter_model->get_terminal_current_in_pu_based_on_mbase()*(mbase*one_over_sbase);
                 else
                     return 0.0;
             }
@@ -1873,7 +1875,7 @@ double METER::get_meter_value_as_a_pv_unit() const
                 if(converter_model != NULL)
                 {
                     double vbase = psdb.get_bus_base_voltage_in_kV(bus);
-                    double ibase = mbase/(sqrt(3.0)*vbase);
+                    double ibase = mbase/(SQRT3*vbase);
                     return converter_model->get_terminal_current_in_pu_based_on_mbase()*ibase;
                 }
                 else
@@ -1889,7 +1891,7 @@ double METER::get_meter_value_as_a_pv_unit() const
             if(meter_type=="TERMINAL ACTIVE POWER IN PU ON SBASE")
             {
                 if(converter_model != NULL)
-                    return converter_model->get_terminal_active_power_in_MW()/sbase;
+                    return converter_model->get_terminal_active_power_in_MW()*one_over_sbase;
                 else
                     return 0.0;
             }
@@ -1910,7 +1912,7 @@ double METER::get_meter_value_as_a_pv_unit() const
             if(meter_type=="TERMINAL REACTIVE POWER IN PU ON SBASE")
             {
                 if(converter_model != NULL)
-                    return converter_model->get_terminal_reactive_power_in_MVar()/sbase;
+                    return converter_model->get_terminal_reactive_power_in_MVar()*one_over_sbase;
                 else
                     return 0.0;
             }
@@ -1936,8 +1938,8 @@ double METER::get_meter_value_as_a_pv_unit() const
             {
                 if(converter_model != NULL)
                 {
-                    double p = converter_model->get_terminal_active_power_in_MW()/sbase;
-                    double q = converter_model->get_terminal_reactive_power_in_MVar()/sbase;
+                    double p = converter_model->get_terminal_active_power_in_MW()*one_over_sbase;
+                    double q = converter_model->get_terminal_reactive_power_in_MVar()*one_over_sbase;
                     return sqrt(p*p+q*q);
                 }
                 else

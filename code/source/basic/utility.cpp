@@ -14,8 +14,8 @@
 
 using namespace std;
 
-double four_over_pi = 4.0/PI;
-double four_over_pi2 = 4.0/(PI*PI);
+double four_over_pi = 4.0*ONE_OVER_PI;
+double four_over_pi2 = 4.0*ONE_OVER_PI*ONE_OVER_PI;
 
 string num2str(int number)
 {
@@ -55,19 +55,19 @@ string num2hex_str(double number)
     return string(str);
 }
 
-int str2int(string str)
+int str2int(const string& str)
 {
     return int(round(str2double(str)));
 }
 
-double str2double(string str)
+double str2double(const string& str)
 {
     double num = 0.0;
     sscanf(str.c_str(),"%lf", &num);
     return num;
 }
 
-int get_integer_data(string strval, string strdefault)
+int get_integer_data(const string& strval, const string& strdefault)
 {
     if(strval.size()!=0)
         return str2int(strval);
@@ -75,7 +75,7 @@ int get_integer_data(string strval, string strdefault)
         return str2int(strdefault);
 }
 
-double get_double_data(string strval, string strdefault)
+double get_double_data(const string& strval, const string& strdefault)
 {
     if(strval.size()!=0)
         return str2double(strval);
@@ -83,7 +83,7 @@ double get_double_data(string strval, string strdefault)
         return str2double(strdefault);
 }
 
-string get_string_data(string strval, string strdefault)
+string get_string_data(string strval, const string& strdefault)
 {
     if(strval.size()==0) strval=strdefault;
     while(true)
@@ -93,13 +93,13 @@ string get_string_data(string strval, string strdefault)
         strval.erase(found,1);
     }
     strval =  trim_string(strval);
-    if(strval=="")
+    if(strval!="")
     {
-        return strdefault;
+        return strval;
     }
     else
     {
-        return strval;
+        return strdefault;
     }
 }
 
@@ -149,7 +149,7 @@ string string2upper(string str)
 
 double rad2deg(double angle)
 {
-    return angle*(180.0/PI);
+    return angle*(180.0*ONE_OVER_PI);
 }
 
 double deg2rad(double angle)
@@ -159,7 +159,7 @@ double deg2rad(double angle)
 
 double radps2hz(double w)
 {
-    return w/PI2;
+    return w*ONE_OVER_PI2;
     //return w/(2.0*PI);
 }
 
@@ -199,14 +199,14 @@ double round_angle_in_rad_to_PI(double angle)
 */
 }
 
-double steps_fast_complex_abs(complex<double> z)
+double steps_fast_complex_abs(const complex<double>& z)
 {
 	double x = z.real();
 	double y = z.imag();
 	return sqrt(x*x+y*y);
 }
 
-double steps_fast_complex_arg(complex<double> z)
+double steps_fast_complex_arg(const complex<double>& z)
 {
 	double x = z.real();
 	double y = z.imag();
@@ -323,7 +323,7 @@ double steps_fast_arctangent(double angle_in_rad)
     return 0.0;
 }
 
-string trim_string(string str, string garbage)
+string trim_string(string str, const string& garbage)
 {
     if(not str.empty())
     {
@@ -341,7 +341,7 @@ string trim_string(string str, string garbage)
     return str;
 }
 
-string replace_string_contents(string str, string source, string destination)
+string replace_string_contents(string str, const string& source, const string& destination)
 {
     size_t index = destination.find(source);
     if(index==string::npos)
@@ -435,7 +435,7 @@ string string2csv(string str)
     }
 }
 
-vector<string> split_string(string str, const string sep)
+vector<string> split_string(string str, const string& sep)
 {
     vector<string> splitted_str;
     str = trim_string(str);
@@ -473,7 +473,7 @@ string string_vector2csv(const vector<string>& vec)
     return str;
 }
 
-string swap_data_in_csv_string(string& data, size_t i, size_t j)
+string swap_data_in_csv_string(const string& data, size_t i, size_t j)
 {
     vector<string> record = split_string(data,",");
     size_t n = record.size();
@@ -488,26 +488,26 @@ string swap_data_in_csv_string(string& data, size_t i, size_t j)
         return data;
 }
 
-complex<double> xy2dq_with_angle_in_deg(complex<double> V, double angle)
+complex<double> xy2dq_with_angle_in_deg(const complex<double>& V, double angle)
 {
     angle = deg2rad(angle);
     return xy2dq_with_angle_in_rad(V, angle);
 }
 
-complex<double> xy2dq_with_angle_in_rad(complex<double> V, double angle)
+complex<double> xy2dq_with_angle_in_rad(const complex<double>& V, double angle)
 {
     // (Vx+jVy)*(sin+jcos) =(Vx*sin-Vy*cos)+j(Vx*cos+Vy*sin)
     complex<double> rotation(sin(angle), cos(angle));
     return V*rotation;
 }
 
-complex<double> dq2xy_with_angle_in_deg(complex<double> V, double angle)
+complex<double> dq2xy_with_angle_in_deg(const complex<double>& V, double angle)
 {
     angle = deg2rad(angle);
     return dq2xy_with_angle_in_rad(V, angle);
 }
 
-complex<double> dq2xy_with_angle_in_rad(complex<double> V, double angle)
+complex<double> dq2xy_with_angle_in_rad(const complex<double>& V, double angle)
 {
     // (Vd+jVq)*(sin-jcos) =(Vd*sin+Vq*cos)+j(Vq*sin-Vd*cos)
     complex<double> rotation(sin(angle), -cos(angle));
@@ -515,7 +515,7 @@ complex<double> dq2xy_with_angle_in_rad(complex<double> V, double angle)
 }
 
 
-bool is_file_exist(const string file)
+bool is_file_exist(const string& file)
 {
     // check if the file exist
     // date: Sep. 1, 2016
@@ -532,7 +532,7 @@ bool is_file_exist(const string file)
 }
 
 
-void show_information_with_leading_time_stamp_with_default_toolkit(string info)
+void show_information_with_leading_time_stamp_with_default_toolkit(const string& info)
 {
     STEPS& toolkit = get_default_toolkit();
     toolkit.show_information_with_leading_time_stamp(info);
@@ -544,7 +544,7 @@ void show_information_with_leading_time_stamp_with_default_toolkit(ostringstream
     toolkit.show_information_with_leading_time_stamp(stream);
 }
 
-void show_test_information_for_function_of_class(string func, string cls)
+void show_test_information_for_function_of_class(const string& func, const string& cls)
 {
     ostringstream osstream;
     osstream<<"--s--t--a--r--t-----------------------------------------------------\n"
@@ -559,7 +559,7 @@ void show_test_end_information()
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
 
-vector<string> psse_dyr_string2steps_string_vector(string& data)
+vector<string> psse_dyr_string2steps_string_vector(const string& data)
 {
     vector<string> record = split_string(data,",");
     string temp = record[0];
@@ -568,7 +568,7 @@ vector<string> psse_dyr_string2steps_string_vector(string& data)
     return record;
 }
 
-string psse_dyr_string2steps_string(string& data)
+string psse_dyr_string2steps_string(const string& data)
 {
     return swap_data_in_csv_string(data, 1, 2);
 }

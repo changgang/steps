@@ -13,12 +13,12 @@ string num2str(double number);
 string num2hex_str(int number);
 string num2hex_str(size_t number);
 string num2hex_str(double number);
-int str2int(string str);
-double str2double(string str);
+int str2int(const string& str);
+double str2double(const string& str);
 
-int get_integer_data(string strval, string strdefault);
-double get_double_data(string strval, string strdefault);
-string get_string_data(string strval, string strdefault);
+int get_integer_data(const string& strval, const string& strdefault);
+double get_double_data(const string& strval, const string& strdefault);
+string get_string_data(string strval, const string& strdefault);
 
 size_t get_sparse_matrix_identity(const SPARSE_MATRIX& matrix);
 size_t get_vector_identity(const vector<double>& vec);
@@ -32,8 +32,8 @@ double radps2hz(double w);
 double hz2radps(double f);
 
 double round_angle_in_rad_to_PI(double angle);
-double steps_fast_complex_abs(complex<double> z);
-double steps_fast_complex_arg(complex<double> z);
+double steps_fast_complex_abs(const complex<double>& z);
+double steps_fast_complex_arg(const complex<double>& z);
 double steps_fast_pow(double base, double exp);
 double steps_fast_sine(double angle_in_rad);
 double steps_fast_arcsine(double angle_in_rad);
@@ -42,30 +42,30 @@ double steps_fast_arccosine(double angle_in_rad);
 double steps_fast_tangent(double angle_in_rad);
 double steps_fast_arctangent(double angle_in_rad);
 
-string trim_string(string str, string garbage="");
-string replace_string_contents(string str, string source, string destination);
+string trim_string(string str, const string& garbage="");
+string replace_string_contents(string str, const string& source, const string& destination);
 string shrink_sucessive_blanks(string str);
 string string2csv(string str);
-vector<string> split_string(string str, const string sep);
+vector<string> split_string(string str, const string& sep);
 string string_vector2csv(const vector<string>& vec);
 string swap_data_in_csv_string(const string& data, size_t i, size_t j);
 
-complex<double> xy2dq_with_angle_in_deg(complex<double> V, double angle);
-complex<double> xy2dq_with_angle_in_rad(complex<double> V, double angle);
-complex<double> dq2xy_with_angle_in_deg(complex<double> V, double angle);
-complex<double> dq2xy_with_angle_in_rad(complex<double> V, double angle);
+complex<double> xy2dq_with_angle_in_deg(const complex<double>& V, double angle);
+complex<double> xy2dq_with_angle_in_rad(const complex<double>& V, double angle);
+complex<double> dq2xy_with_angle_in_deg(const complex<double>& V, double angle);
+complex<double> dq2xy_with_angle_in_rad(const complex<double>& V, double angle);
 
-bool is_file_exist(const string file);
+bool is_file_exist(const string& file);
 
-void show_information_with_leading_time_stamp_with_default_toolkit(string info);
+void show_information_with_leading_time_stamp_with_default_toolkit(const string& info);
 void show_information_with_leading_time_stamp_with_default_toolkit(ostringstream& stream);
 string get_system_time_stamp_string_with_default_toolkit();
 
-void show_test_information_for_function_of_class(string func, string cls);
+void show_test_information_for_function_of_class(const string& func, const string &cls);
 void show_test_end_information();
 
-vector<string> psse_dyr_string2steps_string_vector(string& data);
-string psse_dyr_string2steps_string(string& data);
+vector<string> psse_dyr_string2steps_string_vector(const string& data);
+string psse_dyr_string2steps_string(const string& data);
 
 void initialize_package();
 size_t generate_new_toolkit(string log_file="");

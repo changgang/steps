@@ -207,7 +207,7 @@ void BUS_TEST::test_set_get_angle()
 
     bus.set_angle_in_rad(0.5);
     TEST_ASSERT(bus.get_angle_in_rad()==0.5);
-    TEST_ASSERT(fabs(bus.get_angle_in_deg()-0.5/PI*180.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus.get_angle_in_deg()-0.5*ONE_OVER_PI*180.0)<FLOAT_EPSILON);
     bus.set_angle_in_deg(90.0);
     TEST_ASSERT(fabs(bus.get_angle_in_rad()-0.5*PI)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(bus.get_angle_in_deg()-90.0)<FLOAT_EPSILON);

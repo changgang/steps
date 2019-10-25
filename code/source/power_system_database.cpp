@@ -322,7 +322,10 @@ bool POWER_SYSTEM_DATABASE::is_bus_in_allowed_range(size_t bus) const
 void POWER_SYSTEM_DATABASE::set_system_base_power_in_MVA(const double s)
 {
     if(s>0.0)
+    {
         system_base_power_in_MVA = s;
+        one_over_system_base_power = 1.0/s;
+    }
     else
     {
         ostringstream osstream;
@@ -336,6 +339,11 @@ void POWER_SYSTEM_DATABASE::set_system_base_power_in_MVA(const double s)
 double POWER_SYSTEM_DATABASE::get_system_base_power_in_MVA() const
 {
     return system_base_power_in_MVA;
+}
+
+double POWER_SYSTEM_DATABASE::get_one_over_system_base_power_in_one_over_MVA() const
+{
+    return one_over_system_base_power;
 }
 
 void POWER_SYSTEM_DATABASE::set_case_information(const string& title)

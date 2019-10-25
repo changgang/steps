@@ -72,7 +72,6 @@ void show_area_zone_owner_not_exist_with_api(size_t no, string api_func, size_t 
 
 size_t get_owner_of_device(DEVICE* device, string parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="OWNER1")
     {
@@ -171,7 +170,6 @@ void set_owner_of_device(DEVICE* device, string parameter_name, int value, size_
 
 double get_owner_fraction_of_device(DEVICE* device, string parameter_name, size_t toolkit_index)
 {
-    STEPS& toolkit = get_toolkit(toolkit_index);
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="FRAC1")
     {

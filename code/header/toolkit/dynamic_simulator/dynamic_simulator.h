@@ -40,6 +40,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void set_max_update_iteration(size_t iteration);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
         void set_iteration_accelerator(double alpha);
+        void set_non_divergent_solution_logic(bool logic);
         void set_rotor_angle_stability_surveillance_flag(bool flag);
         void set_rotor_angle_stability_threshold_in_deg(double angle_th);
 
@@ -48,6 +49,7 @@ class DYNAMICS_SIMULATOR: public BASE
         size_t get_max_update_iteration() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
         double get_iteration_accelerator() const;
+        bool get_non_divergent_solution_logic() const;
         bool get_rotor_angle_stability_surveillance_flag() const;
         double get_rotor_angle_stability_threshold_in_deg() const;
 
@@ -157,6 +159,7 @@ class DYNAMICS_SIMULATOR: public BASE
 
         void switch_on_equivalent_device();
     private:
+        void check_if_parallel_simulation_is_valid();
         void optimize_network_ordering();
         void set_internal_bus_pointer();
         void set_internal_bus_complex_voltage_vector();
@@ -232,6 +235,7 @@ class DYNAMICS_SIMULATOR: public BASE
         size_t max_network_iteration, max_DAE_iteration, max_update_iteration;
         size_t current_max_network_iteration;
         double alpha;
+        bool non_divergent_solution_enabled;
 
         vector<BUS*> in_service_buses;
         vector<GENERATOR*> generators;

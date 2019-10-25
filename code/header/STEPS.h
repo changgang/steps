@@ -15,16 +15,16 @@ using namespace std;
 class STEPS
 {
     public:
-        STEPS(string name="TK DFLT", string log_file="");
+        STEPS(const string& name="TK DFLT", const string& log_file="");
         virtual ~STEPS();
-        void set_toolkit_name(string name);
+        void set_toolkit_name(const string& name);
         string get_toolkit_name() const;
 
         void set_thread_number(size_t n);
         size_t get_thread_number() const;
 
         char get_next_alphabeta();
-        void open_log_file(string file);
+        void open_log_file(const string& file);
         void close_log_file();
         void enable_detailed_log();
         void disable_detailed_log();
@@ -33,7 +33,7 @@ class STEPS
         void disable_optimize_network();
         bool is_optimize_network_enabled();
 
-        void show_information_with_leading_time_stamp(string info);
+        void show_information_with_leading_time_stamp(const string& info);
         void show_information_with_leading_time_stamp(ostringstream& stream);
         void show_set_get_model_data_with_index_error(string device, string model, string func, size_t index);
         void show_set_get_model_data_with_name_error(string device, string model, string func, string par_name);

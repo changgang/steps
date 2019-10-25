@@ -723,9 +723,9 @@ complex<double> LINE::get_line_complex_current_at_sending_side_in_kA() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double mvabase = psdb.get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
-    double Ibase_kA = mvabase/sqrt(3.0)/get_line_base_voltage_in_kV();
+    double Ibase_kA = sbase/(SQRT3*get_line_base_voltage_in_kV());
 
     return Ibase_kA*get_line_complex_current_at_sending_side_in_pu();
 }
@@ -735,9 +735,9 @@ complex<double> LINE::get_line_complex_current_at_receiving_side_in_kA() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double mvabase = psdb.get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
-    double Ibase_kA = mvabase/sqrt(3.0)/get_line_base_voltage_in_kV();
+    double Ibase_kA = sbase/(SQRT3*get_line_base_voltage_in_kV());
 
     return Ibase_kA*get_line_complex_current_at_receiving_side_in_pu();
 }
@@ -757,9 +757,9 @@ complex<double> LINE::get_line_complex_power_at_sending_side_in_MVA() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double mvabase = psdb.get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
-    return mvabase*get_line_complex_power_at_sending_side_in_pu();
+    return sbase*get_line_complex_power_at_sending_side_in_pu();
 }
 
 complex<double> LINE::get_line_complex_power_at_receiving_side_in_MVA() const
@@ -767,9 +767,9 @@ complex<double> LINE::get_line_complex_power_at_receiving_side_in_MVA() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double mvabase = psdb.get_system_base_power_in_MVA();
+    double sbase = psdb.get_system_base_power_in_MVA();
 
-    return mvabase*get_line_complex_power_at_receiving_side_in_pu();
+    return sbase*get_line_complex_power_at_receiving_side_in_pu();
 }
 
 complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_pu() const
@@ -793,12 +793,12 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double mvabase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
     if(get_sending_side_breaker_status()==true)
     {
         double Vbase_kV = get_line_base_voltage_in_kV();
-        double Zbase_ohm = Vbase_kV*Vbase_kV/mvabase;
+        double Zbase_ohm = Vbase_kV*Vbase_kV*one_over_sbase;
         return get_line_complex_apparent_impedance_at_sending_side_in_pu()*Zbase_ohm;
     }
     else
@@ -810,14 +810,12 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_o
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double mvabase = 100.0;
-
-    mvabase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
     if(get_receiving_side_breaker_status()==true)
     {
         double Vbase_kV = get_line_base_voltage_in_kV();
-        double Zbase_ohm = Vbase_kV*Vbase_kV/mvabase;
+        double Zbase_ohm = Vbase_kV*Vbase_kV*one_over_sbase;
         return get_line_complex_apparent_impedance_at_receiving_side_in_pu()*Zbase_ohm;
     }
     else

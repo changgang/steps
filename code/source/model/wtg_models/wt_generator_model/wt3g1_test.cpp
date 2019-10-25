@@ -89,8 +89,8 @@ void WT3G1_TEST::test_initialize_and_get_initialized_inputs()
 
     //complex<double> Z=wt_generator->get_source_impedance_in_pu();
     complex<double> S(wt_gen->get_p_generation_in_MW(), wt_gen->get_q_generation_in_MVar());
-    double mbase = wt_gen->get_mbase_in_MVA();
-    S = S/mbase;
+    double one_over_mbase = wt_gen->get_one_over_mbase_in_one_over_MVA();
+    S *= one_over_mbase;
 
     //model->set_Tj_in_s(6.0);
     //model->set_D(1.0);

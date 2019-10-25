@@ -604,9 +604,9 @@ complex<double> LOAD::get_dynamic_load_in_MVA()
 complex<double> LOAD::get_dynamic_load_in_pu()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double sbase = toolkit.get_power_system_database().get_system_base_power_in_MVA();
+    double one_over_sbase = toolkit.get_power_system_database().get_one_over_system_base_power_in_one_over_MVA();
 
-    return get_dynamic_load_in_MVA()/sbase;
+    return get_dynamic_load_in_MVA()*one_over_sbase;
 }
 
 double LOAD::get_load_total_scale_factor_in_pu() const
@@ -650,7 +650,7 @@ complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        complex<double> S = get_dynamic_load_in_MVA()/psdb.get_system_base_power_in_MVA();
+        complex<double> S = get_dynamic_load_in_pu();
 
         complex<double> V = psdb.get_bus_complex_voltage_in_pu(get_load_bus());
 

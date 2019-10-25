@@ -12,6 +12,7 @@ SOURCE::SOURCE()
 {
     clear();
 }
+
 SOURCE::~SOURCE()
 {
     ;
@@ -57,8 +58,11 @@ void SOURCE::set_status(bool status)
 
 void SOURCE::set_mbase_in_MVA(double mbase)
 {
-    if(mbase>=0.0)
+    if(mbase>0.0)
+    {
         this->mbase_MVA = mbase;
+        one_over_mbase = 1.0/mbase;
+    }
     else
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -157,14 +161,12 @@ bool SOURCE::get_status() const
 
 double SOURCE::get_mbase_in_MVA() const
 {
-    if(mbase_MVA!=0.0)
-        return mbase_MVA;
-    else
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        return psdb.get_system_base_power_in_MVA();
-    }
+    return mbase_MVA;
+}
+
+double SOURCE::get_one_over_mbase_in_one_over_MVA() const
+{
+    return one_over_mbase;
 }
 
 double SOURCE::get_p_generation_in_MW() const
@@ -259,7 +261,7 @@ void SOURCE::clear()
     set_identifier("");
     set_status(false);
 
-    set_mbase_in_MVA(0.0);
+    set_mbase_in_MVA(100.0);
 
     set_p_generation_in_MW(0.0);
     set_q_generation_in_MVar(0.0);

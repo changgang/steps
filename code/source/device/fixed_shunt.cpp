@@ -98,8 +98,8 @@ complex<double> FIXED_SHUNT::get_nominal_impedance_shunt_in_pu() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    double mvabase = psdb.get_system_base_power_in_MVA();
-    return conj(mvabase/get_nominal_impedance_shunt_in_MVA());
+    double sbase = psdb.get_system_base_power_in_MVA();
+    return conj(sbase/get_nominal_impedance_shunt_in_MVA());
 }
 
 complex<double> FIXED_SHUNT::get_nominal_admittance_shunt_in_pu() const

@@ -129,7 +129,6 @@ bool api_get_toolkit_bool_data(char* parameter_name, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s","");
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="DETAILED LOG LOGIC")
@@ -148,7 +147,6 @@ bool api_get_toolkit_bool_data(char* parameter_name, size_t toolkit_index)
 void api_set_toolkit_bool_data(char* parameter_name, bool value, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="DETAILED LOG LOGIC")

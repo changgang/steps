@@ -613,7 +613,7 @@ void LINE_TEST::test_get_line_current_at_two_sides()
 
     complex<double> Vs(1.1*cos(0.1), 1.1*sin(0.1)), Vr(1.05, 0.0);
     complex<double> Isr, Is, Ir;
-    double Ibase = 100.0/sqrt(3.0)/110.0;
+    double Ibase = 100.0/(SQRT3*110.0);
 
     Isr = (Vs-Vr)/Zline;
     Is = Isr+Vs*(0.5*Yline+Yshunt_s);

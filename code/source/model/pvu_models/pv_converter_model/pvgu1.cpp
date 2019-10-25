@@ -247,14 +247,14 @@ void PVGU1::initialize()
             double fbase = get_bus_base_frequency_in_Hz();
             double wbase = 2.0*PI*fbase;
 
-            double mbase = get_mbase_in_MVA();
+            double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
 
             complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
             double xeq = Zsource.imag();
 
             double P = pv_unit->get_p_generation_in_MW();
             double Q = pv_unit->get_q_generation_in_MVar();
-            complex<double> S(P/mbase,Q/mbase);
+            complex<double> S(P*one_over_mbase,Q*one_over_mbase);
 
 
             complex<double> Vxy = get_terminal_complex_voltage_in_pu();
@@ -350,7 +350,7 @@ complex<double> PVGU1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = get_mbase_in_MVA();
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();
@@ -395,7 +395,7 @@ complex<double> PVGU1::get_source_Norton_equivalent_complex_current_in_pu_in_xy_
     complex<double> Ixy(Ix, Iy);
     //cout<<"Norton Ixy based on mbase = "<<Ixy<<endl;
 
-    return Ixy*mbase/sbase;
+    return Ixy*(mbase*one_over_sbase);
 }
 
 complex<double> PVGU1::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase()
@@ -403,9 +403,9 @@ complex<double> PVGU1::get_terminal_complex_current_in_pu_in_xy_axis_based_on_mb
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
-    double mbase = get_mbase_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
     complex<double> Ixy = get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
-    return Ixy*sbase/mbase;
+    return Ixy*(sbase*one_over_mbase);
 }
 
 complex<double> PVGU1::get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase()
@@ -659,9 +659,9 @@ complex<double> PVGU1::get_internal_voltage_in_pu_in_xy_axis()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double sbase = psdb.get_system_base_power_in_MVA();
-    double mbase = get_mbase_in_MVA();
+    double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
 
-    Z = Z/mbase*sbase;
+    Z *= (one_over_mbase*sbase);
 
     return Ixy*Z;
 }

@@ -2186,9 +2186,9 @@ void NETWORK_MATRIX::add_generator_to_dynamic_network(const GENERATOR& gen)
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         complex<double> Z = gen.get_source_impedance_in_pu();
-        double mbase = gen.get_mbase_in_MVA();
-        double mvabase = psdb.get_system_base_power_in_MVA();
-        Z = Z/mbase*mvabase;
+        double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
+        double sbase = psdb.get_system_base_power_in_MVA();
+        Z *= (one_over_mbase*sbase);
 
         size_t bus = gen.get_generator_bus();
         size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
@@ -2220,9 +2220,9 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
             {
                 POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
                 complex<double> Z = gen.get_source_impedance_in_pu();
-                double mbase = gen.get_mbase_in_MVA();
-                double mvabase = psdb.get_system_base_power_in_MVA();
-                Z = Z/mbase*mvabase;
+                double one_over_mbase = gen.get_one_over_mbase_in_one_over_MVA();
+                double sbase = psdb.get_system_base_power_in_MVA();
+                Z *= (one_over_mbase*sbase);
 
                 size_t bus = gen.get_generator_bus();
                 size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
@@ -2249,7 +2249,14 @@ void NETWORK_MATRIX::optimize_network_ordering()
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(toolkit.is_optimize_network_enabled())
+    {
         reorder_physical_internal_bus_pair();
+        /*for(size_t i=0; i<1; ++i)
+        {
+            reorder_physical_internal_bus_pair();
+            build_network_matrix();
+        }*/
+    }
 }
 
 bool NETWORK_MATRIX::is_condition_ok() const

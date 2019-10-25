@@ -1057,7 +1057,7 @@ void BPA_IMEXPORTER::load_line_data()
             rate_current_in_A = format_bpa_data_to_readable_data(rate_current_in_A, "F4.0");
             double rate = get_double_data(rate_current_in_A, "0.0");
             double base_voltage = psdb.get_bus_base_voltage_in_kV(ibus);
-            rate = sqrt(3.0)*rate/1000.0*base_voltage;
+            rate = (SQRT3*0.001)*rate*base_voltage;
 
             length_str = format_bpa_data_to_readable_data(length_str, "F4.1");
             double length = get_double_data(length_str,"0.0");
@@ -1178,7 +1178,7 @@ void BPA_IMEXPORTER::load_line_data()
             rate_current_in_A = format_bpa_data_to_readable_data(rate_current_in_A, "F4.0");
             double rate = get_double_data(rate_current_in_A, "0.0");
             double base_voltage = psdb.get_bus_base_voltage_in_kV(ibus);
-            rate = sqrt(3.0)*rate*base_voltage;
+            rate = SQRT3*rate*base_voltage;
 
             LINE line;
             line.set_toolkit(toolkit);
@@ -2631,7 +2631,7 @@ string BPA_IMEXPORTER::export_line_data() const
         string receiving_side_bus_name = bus->get_bus_name();
         double receiving_side_base_voltage = bus->get_base_voltage_in_kV();
 
-        double rate_A = rate_MVA/sending_side_base_voltage/sqrt(3.0)*1000.0;
+        double rate_A = rate_MVA/(sending_side_base_voltage*SQRT3)*1000.0;
 
         osstream<<"."<<endl
           <<". Line "<<sending_side_bus_number<<"("<<sending_side_bus_name<<") to "

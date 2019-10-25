@@ -45,6 +45,7 @@ void DYNAMICS_SIMULATOR::clear()
     set_max_update_iteration(100);
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
+    set_non_divergent_solution_logic(false);
     set_rotor_angle_stability_surveillance_flag(false);
     set_rotor_angle_stability_threshold_in_deg(360.0);
     generators_in_islands.clear();
@@ -143,6 +144,11 @@ void DYNAMICS_SIMULATOR::set_iteration_accelerator(double iter_alpha)
         this->alpha = iter_alpha;
 }
 
+void DYNAMICS_SIMULATOR::set_non_divergent_solution_logic(bool logic)
+{
+    non_divergent_solution_enabled = logic;
+}
+
 void DYNAMICS_SIMULATOR::set_rotor_angle_stability_surveillance_flag(bool flag)
 {
     this->flag_rotor_angle_stability_surveillance = flag;
@@ -187,6 +193,11 @@ double DYNAMICS_SIMULATOR::get_allowed_max_power_imbalance_in_MVA() const
 double DYNAMICS_SIMULATOR::get_iteration_accelerator() const
 {
     return alpha;
+}
+
+bool DYNAMICS_SIMULATOR::get_non_divergent_solution_logic() const
+{
+    return non_divergent_solution_enabled;
 }
 
 bool DYNAMICS_SIMULATOR::get_rotor_angle_stability_surveillance_flag() const
@@ -1757,11 +1768,6 @@ void DYNAMICS_SIMULATOR::save_meter_values()
 
         if(is_csv_file_export_enabled() or is_json_file_export_enabled())
         {
-            ostringstream osstream;
-            //osstream<<setw(8)<<setprecision(4)<<fixed<<TIME<<","
-            //  <<setw(3)<<ITER_DAE<<","<<setw(3)<<ITER_NET<<","
-            //  <<setw(6)<<setprecision(3)<<fixed<<smax;
-
             char temp_buffer[50];
             string temp_str = "";
             snprintf(temp_buffer, 50, "%8.4f",TIME);
@@ -1781,17 +1787,13 @@ void DYNAMICS_SIMULATOR::save_meter_values()
                 snprintf(temp_buffer, 50, ",%16.12f", meter_values[i]);
                 temp_str += temp_buffer;
             }
-            osstream << temp_str;
-
-            /*for(size_t i=0; i!=n; ++i)
-                osstream<<","<<setw(16)<<setprecision(12)<<fixed<<meter_values[i];*/
 
             if(is_csv_file_export_enabled() and csv_output_file.is_open())
-                csv_output_file<<osstream.str()<<endl;
+                csv_output_file<<temp_str<<endl;
 
             if(is_json_file_export_enabled() and json_output_file.is_open())
                 json_output_file<<","<<endl
-                                <<"                       ["<<osstream.str()<<"]";
+                                <<"                       ["<<temp_str<<"]";
         }
     }
 }
@@ -1874,8 +1876,6 @@ void DYNAMICS_SIMULATOR::set_openmp_number_of_threads()
 
 void DYNAMICS_SIMULATOR::start()
 {
-    time_t clock_start = clock();
-
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWERFLOW_SOLVER& pf_solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
@@ -1883,6 +1883,9 @@ void DYNAMICS_SIMULATOR::start()
     detailed_log_enabled = toolkit.is_detailed_log_enabled();
 
     show_dynamic_simulator_configuration();
+    check_if_parallel_simulation_is_valid();
+
+    time_t clock_start = clock();
 
     ostringstream osstream;
     osstream<<"Dynamics initialization starts.";
@@ -1894,6 +1897,7 @@ void DYNAMICS_SIMULATOR::start()
                 <<"Any further simulation cannot be trusted.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
+
 
     meter_values.resize(meters.size(), 0.0);
 
@@ -1944,11 +1948,157 @@ void DYNAMICS_SIMULATOR::start()
     toolkit.show_information_with_leading_time_stamp(osstream);
 
 
-    time_t clock_end = clock();
-    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_end-clock_start);
+    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
 
     save_meter_information();
     save_meter_values();
+}
+
+void DYNAMICS_SIMULATOR::check_if_parallel_simulation_is_valid()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    if(toolkit.get_thread_number()!=1)
+    {
+        ostringstream osstream;
+        osstream<<"Warning. The following devices may cause simulation ERROR then parallel simulation is enable when parallel thread number is "<<toolkit.get_thread_number()<<"\n";
+
+        vector<BUS*> buses = psdb.get_all_buses();
+        size_t n = buses.size();
+        bool invalid_case_found = false;
+        for(size_t i=0; i<n; ++i)
+        {
+            BUS* bus = buses[i];
+            if(bus->get_bus_type()!=OUT_OF_SERVICE)
+            {
+                size_t bus_number = bus->get_bus_number();
+                size_t m = 0;
+
+                vector<GENERATOR*> generators = psdb.get_generators_connecting_to_bus(bus_number);
+                m = generators.size();
+                if(m!=1)
+                {
+                    GENERATOR* gen = nullptr;
+                    ostringstream tempstream;
+                    size_t device_count = 0;
+                    for(size_t j=0; j<m; ++j)
+                    {
+                        gen = generators[j];
+                        if(gen->get_status()==true)
+                        {
+                            ++device_count;
+                            tempstream<<gen->get_device_name()<<"\n";
+                        }
+                    }
+                    if(device_count>1)
+                    {
+                        osstream<<tempstream.str();
+                        invalid_case_found = true;
+                    }
+                }
+
+                vector<WT_GENERATOR*> wt_generators = psdb.get_wt_generators_connecting_to_bus(bus_number);
+                m = wt_generators.size();
+                if(m!=1)
+                {
+                    WT_GENERATOR* gen = nullptr;
+                    ostringstream tempstream;
+                    size_t device_count = 0;
+                    for(size_t j=0; j<m; ++j)
+                    {
+                        gen = wt_generators[j];
+                        if(gen->get_status()==true)
+                        {
+                            ++device_count;
+                            tempstream<<gen->get_device_name()<<"\n";
+                        }
+                    }
+                    if(device_count>1)
+                    {
+                        osstream<<tempstream.str();
+                        invalid_case_found = true;
+                    }
+                }
+
+                vector<PV_UNIT*> pv_units = psdb.get_pv_units_connecting_to_bus(bus_number);
+                m = pv_units.size();
+                if(m!=1)
+                {
+                    PV_UNIT* pv = nullptr;
+                    ostringstream tempstream;
+                    size_t device_count = 0;
+                    for(size_t j=0; j<m; ++j)
+                    {
+                        pv = pv_units[j];
+                        if(pv->get_status()==true)
+                        {
+                            ++device_count;
+                            tempstream<<pv->get_device_name()<<"\n";
+                        }
+                    }
+                    if(device_count>1)
+                    {
+                        osstream<<tempstream.str();
+                        invalid_case_found = true;
+                    }
+                }
+
+                vector<ENERGY_STORAGE*> e_storages = psdb.get_energy_storages_connecting_to_bus(bus_number);
+                m = e_storages.size();
+                if(m!=1)
+                {
+                    ENERGY_STORAGE* es = nullptr;
+                    ostringstream tempstream;
+                    size_t device_count = 0;
+                    for(size_t j=0; j<m; ++j)
+                    {
+                        es = e_storages[j];
+                        if(es->get_status()==true)
+                        {
+                            ++device_count;
+                            tempstream<<es->get_device_name()<<"\n";
+                        }
+                    }
+                    if(device_count>1)
+                    {
+                        osstream<<tempstream.str();
+                        invalid_case_found = true;
+                    }
+                }
+
+                vector<LOAD*> loads = psdb.get_loads_connecting_to_bus(bus_number);
+                m = loads.size();
+                if(m!=1)
+                {
+                    LOAD* load = nullptr;
+                    ostringstream tempstream;
+                    size_t device_count = 0;
+                    for(size_t j=0; j<m; ++j)
+                    {
+                        load = loads[j];
+                        if(load->get_status()==true)
+                        {
+                            ++device_count;
+                            tempstream<<load->get_device_name()<<"\n";
+                        }
+                    }
+                    if(device_count>1)
+                    {
+                        osstream<<tempstream.str();
+                        invalid_case_found = true;
+                    }
+                }
+            }
+        }
+        if(invalid_case_found==true)
+        {
+            toolkit.show_information_with_leading_time_stamp(osstream);
+
+            toolkit.set_thread_number(1);
+            osstream<<"Parallel simulation is then disabled.";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
+    }
 }
 
 void DYNAMICS_SIMULATOR::prepare_devices_for_run()
@@ -2112,8 +2262,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
     update();
     update_relay_models();
 
-    time_t clock_end = clock();
-    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_end-clock_start);
+    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
 
     save_meter_values();
 }
@@ -2156,8 +2305,7 @@ void DYNAMICS_SIMULATOR::update_with_event()
     update_bus_frequency_blocks();
     update();
 
-    time_t clock_end = clock();
-    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_end-clock_start);
+    time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
 
     save_meter_values();
 }
@@ -2374,35 +2522,71 @@ bool DYNAMICS_SIMULATOR::solve_network()
     bool converged = false;
 
     size_t network_iter_max = current_max_network_iteration;
-    size_t network_iter_count = 0;
+    size_t network_iter_count = 1;
 
-    while(true)
+    solve_hvdcs_without_integration();
+    get_bus_current_mismatch();
+    calculate_bus_power_mismatch_in_MVA();
+    double smax = get_max_power_mismatch_struct().greatest_mismatch_in_MVA;
+    if(smax<get_allowed_max_power_imbalance_in_MVA())
     {
-        ++network_iter_count;
-        //osstream<<"Sub network iteration "<<network_iter_count;
-        //toolkit.show_information_with_leading_time_stamp(osstream);
-        if(network_iter_count<=network_iter_max)
+        return true;
+    }
+    else
+    {
+        while(true)
         {
-            solve_hvdcs_without_integration();
-            get_bus_current_mismatch();
-            if(not is_converged())
+            if(network_iter_count<=network_iter_max)
             {
                 build_bus_current_mismatch_vector();
                 delta_V = I_vec/jacobian;
                 update_bus_voltage();
+                if(get_non_divergent_solution_logic()==true)
+                {
+                    size_t n_delta_V = delta_V.size();
+                    for(size_t i=0; i<n_delta_V; ++i)
+                        delta_V[i] = -delta_V[i];
+
+                    double original_alpha = get_iteration_accelerator();
+                    for(size_t i=0; i<5; ++i)
+                    {
+                        //++network_iter_count;
+                        solve_hvdcs_without_integration();
+                        get_bus_current_mismatch();
+                        calculate_bus_power_mismatch_in_MVA();
+                        double new_smax = get_max_power_mismatch_struct().greatest_mismatch_in_MVA;
+                        if(new_smax>=smax)
+                        {
+                            alpha *= 0.5;
+                            update_bus_voltage();
+                        }
+                        else
+                            break;
+                    }
+                    set_iteration_accelerator(original_alpha);
+                }
+                ++network_iter_count;
+
+                solve_hvdcs_without_integration();
+                get_bus_current_mismatch();
+                calculate_bus_power_mismatch_in_MVA();
+                double new_smax = get_max_power_mismatch_struct().greatest_mismatch_in_MVA;
+                if(new_smax>get_allowed_max_power_imbalance_in_MVA())
+                    continue;
+                else
+                {
+                    converged = true;
+                    break;
+                }
             }
             else
             {
-                converged = true;
+                --network_iter_count;
                 break;
             }
         }
-        else
-        {
-            --network_iter_count;
-            break;
-        }
     }
+
     network_iteration_count = network_iter_count;
 
     return converged;
@@ -2665,12 +2849,12 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     int nsize = Y.get_matrix_size();
 
     // tho following codes can not be parallelized due to code I_mismatch[row] += Y.get_entry_value(k)*voltage;
+    int k_start = Y.get_starting_index_of_column(0);
     for(int column=0; column<nsize; ++column)
     {
 		//complex<double> voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
 		complex<double> voltage = get_bus_complex_voltage_in_pu_with_internal_bus_number(column);
 
-        int k_start = Y.get_starting_index_of_column(column);
         int k_end = Y.get_starting_index_of_column(column+1);
 
         // parallelization of the following codes is time-consuming since the k_end-k_start is usually very small
@@ -2696,6 +2880,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
             }
             */
         }
+        k_start = k_end;
     }
 /*
     ostringstream osstream;
@@ -2905,9 +3090,9 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
             else
             {
                 I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
-                I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
                 osstream<<"Current at rectifier side of "<<hvdc->get_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
-                        <<"Complex power = "<<sqrt(3.0)*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                        <<"Complex power = "<<SQRT3*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
@@ -2925,9 +3110,9 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
             else
             {
                 I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
-                I *= (psdb.get_system_base_power_in_MVA()/(sqrt(3.0)*psdb.get_bus_base_voltage_in_kV(physical_bus)));
+                I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
                 osstream<<"Current at inverter side of "<<hvdc->get_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
-                        <<"Complex power = "<<sqrt(3.0)*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                        <<"Complex power = "<<SQRT3*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -2940,7 +3125,7 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
     size_t nedevice = e_devices.size();
 
@@ -2953,7 +3138,7 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
             size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            complex<double> S = e_devices[i]->get_total_equivalent_power_as_load_in_MVA()/sbase;
+            complex<double> S = e_devices[i]->get_total_equivalent_power_as_load_in_MVA()*one_over_sbase;
 
             //V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
             complex<double> V = get_bus_complex_voltage_in_pu_with_internal_bus_number(internal_bus);
@@ -3125,8 +3310,8 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT 
     double fault_b = fault.get_fault_shunt_in_pu().imag();
     double current_voltage = busptr->get_voltage_in_pu();
     double vbase = busptr->get_base_voltage_in_kV();
-    double sbase = psdb.get_system_base_power_in_MVA();
-    double zbase = vbase*vbase/sbase;
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double zbase = vbase*vbase*one_over_sbase;
     double fault_x = -zbase/fault_b;
     if(fault_x<1)
         busptr->set_voltage_in_pu(0.05);
@@ -4634,8 +4819,8 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_MW(const
     GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator != NULL)
     {
-        double mbase = generator->get_mbase_in_MVA();
-        change_generator_mechanical_power_reference_in_pu_based_on_mbase(gen_id, Pref/mbase);
+        double one_over_mbase = generator->get_one_over_mbase_in_one_over_MVA();
+        change_generator_mechanical_power_reference_in_pu_based_on_mbase(gen_id, Pref*one_over_mbase);
     }
     else
     {
@@ -4710,8 +4895,8 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID
     GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator != NULL)
     {
-        double mbase = generator->get_mbase_in_MVA();
-        change_generator_mechanical_power_in_pu_based_on_mbase(gen_id, pmech/mbase);
+        double one_over_mbase = generator->get_one_over_mbase_in_one_over_MVA();
+        change_generator_mechanical_power_in_pu_based_on_mbase(gen_id, pmech*one_over_mbase);
     }
     else
     {

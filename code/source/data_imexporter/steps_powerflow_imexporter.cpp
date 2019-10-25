@@ -1471,7 +1471,7 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
     double g = trans.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu().real();
     double b = trans.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu().imag();
 
-    double mvabase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
     double vbase, sbase;
 
     double r = 0.0, x = 0.0, s = 0.0;
@@ -1495,8 +1495,8 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
     {
         case IMPEDANCE_IN_PU_ON_SYSTEM_BASE_POWER_AND_WINDING_NOMINAL_VOLTAGE:
         {
-            r = r*s/mvabase;
-            x = x*s/mvabase;
+            r = r*s*one_over_sbase;
+            x = x*s*one_over_sbase;
             break;
         }
         case IMPEDANCE_LOSS_IN_WATT_AND_Z_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE:
@@ -1533,8 +1533,8 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
         {
             case IMPEDANCE_IN_PU_ON_SYSTEM_BASE_POWER_AND_WINDING_NOMINAL_VOLTAGE:
             {
-                r = r*s/mvabase;
-                x = x*s/mvabase;
+                r = r*s*one_over_sbase;
+                x = x*s*one_over_sbase;
                 break;
             }
             case IMPEDANCE_LOSS_IN_WATT_AND_Z_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE:
@@ -1569,8 +1569,8 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
         {
             case IMPEDANCE_IN_PU_ON_SYSTEM_BASE_POWER_AND_WINDING_NOMINAL_VOLTAGE:
             {
-                r = r*s/mvabase;
-                x = x*s/mvabase;
+                r = r*s*one_over_sbase;
+                x = x*s*one_over_sbase;
                 break;
             }
             case IMPEDANCE_LOSS_IN_WATT_AND_Z_IN_PU_ON_WINDINGS_POWER_AND_WINDING_NOMINAL_VOLTAGE:
