@@ -14,7 +14,7 @@ public:
     virtual SPARSE_MATRIX_UMFPACK& operator=(const SPARSE_MATRIX_UMFPACK& matrix);
     virtual ~SPARSE_MATRIX_UMFPACK();
 
-    virtual void add_entry(int row, int col, complex<double> value);
+    virtual void add_entry(int row, int col, const complex<double>& value);
 
     virtual void convert_to_triplet_form();
 
@@ -43,7 +43,7 @@ public:
     virtual vector<size_t> get_reorder_permutation();
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13);
-    virtual vector<double> solve_Ax_eq_b(vector<double>& b);
+    virtual vector<double>& solve_Ax_eq_b(vector<double>& b);
 
     virtual void report_brief()  const;
     virtual void report_full()  const;
@@ -64,5 +64,5 @@ private:
 };
 
 
-vector<double> operator/(vector<double>& b, SPARSE_MATRIX_UMFPACK& A);
+vector<double>& operator/(vector<double>& b, SPARSE_MATRIX_UMFPACK& A);
 #endif // SPARSE_MATRIX_UMFPACK_H

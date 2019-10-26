@@ -24,15 +24,15 @@ class LINE : public DEVICE
         void set_sending_side_breaker_status(bool status);
         void set_receiving_side_breaker_status(bool status);
 
-        void set_line_positive_sequence_z_in_pu(complex<double> z);
-        void set_line_positive_sequence_y_in_pu(complex<double> y);
-        void set_shunt_positive_sequence_y_at_sending_side_in_pu(complex<double> y);
-        void set_shunt_positive_sequence_y_at_receiving_side_in_pu(complex<double> y);
+        void set_line_positive_sequence_z_in_pu(const complex<double>& z);
+        void set_line_positive_sequence_y_in_pu(const complex<double>& y);
+        void set_shunt_positive_sequence_y_at_sending_side_in_pu(const complex<double>& y);
+        void set_shunt_positive_sequence_y_at_receiving_side_in_pu(const complex<double>& y);
 
-        void set_line_zero_sequence_z_in_pu(complex<double> z);
-        void set_line_zero_sequence_y_in_pu(complex<double> y);
-        void set_shunt_zero_sequence_y_at_sending_side_in_pu(complex<double> y);
-        void set_shunt_zero_sequence_y_at_receiving_side_in_pu(complex<double> y);
+        void set_line_zero_sequence_z_in_pu(const complex<double>& z);
+        void set_line_zero_sequence_y_in_pu(const complex<double>& y);
+        void set_shunt_zero_sequence_y_at_sending_side_in_pu(const complex<double>& y);
+        void set_shunt_zero_sequence_y_at_receiving_side_in_pu(const complex<double>& y);
 
         void set_rating(RATING rating);
         void set_meter_end_bus(size_t meter_bus);
@@ -62,7 +62,7 @@ class LINE : public DEVICE
 
         bool is_zero_impedance_line() const;
 
-        void set_fault(size_t to_bus, double location, FAULT& fault);
+        void set_fault(size_t to_bus, double location, const FAULT& fault);
         double get_fault_location_of_fault(size_t index) const;
         FAULT get_fault_at_location(size_t to_bus, double location) const;
         void clear_all_faults();

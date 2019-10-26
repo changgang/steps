@@ -34,16 +34,16 @@ class JACOBIAN_BUILDER : public BASE
         double get_jacobian_delta_q_over_angle_of_physical_bus(size_t ibus, size_t jbus);
         double get_jacobian_delta_q_over_voltage_of_physical_bus(size_t ibus, size_t jbus);
 
-        STEPS_SPARSE_MATRIX get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(const vector<size_t> internal_P_equation_buses,
-                                                                                    const vector<size_t> internal_Q_equation_buses);
+        STEPS_SPARSE_MATRIX get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(const vector<size_t>& internal_P_equation_buses,
+                                                                                    const vector<size_t>& internal_Q_equation_buses);
 
-        STEPS_SPARSE_MATRIX get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses);
+        STEPS_SPARSE_MATRIX get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t>& internal_P_equation_buses);
 
-        STEPS_SPARSE_MATRIX get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses);
+        STEPS_SPARSE_MATRIX get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t>& internal_Q_equation_buses);
 
 
         void show_seprate_jacobians();
-        void save_jacobian_matrix_to_file(string filename) const;
+        void save_jacobian_matrix_to_file(const string& filename) const;
     private:
         virtual bool is_valid() const;
         virtual void check();

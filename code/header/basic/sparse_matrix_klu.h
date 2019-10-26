@@ -15,7 +15,7 @@ public:
     virtual SPARSE_MATRIX_KLU& operator=(const SPARSE_MATRIX_KLU& matrix);
     virtual ~SPARSE_MATRIX_KLU();
 
-    virtual void add_entry(int row, int col, complex<double> value);
+    virtual void add_entry(int row, int col, const complex<double>& value);
 
     virtual void convert_to_triplet_form();
 
@@ -44,7 +44,7 @@ public:
     virtual vector<size_t> get_reorder_permutation();
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13);
-    virtual vector<double> solve_Ax_eq_b(vector<double>& b);
+    virtual vector<double>& solve_Ax_eq_b(vector<double>& b);
 
     virtual void report_brief()  const;
     virtual void report_full()  const;
@@ -64,8 +64,11 @@ private:
     klu_symbolic *Symbolic;
     klu_numeric *Numeric ;
     klu_common Common;
+
+    double * bb;
+    size_t bb_size;
 };
 
 
-vector<double> operator/(vector<double>&b, SPARSE_MATRIX_KLU& A);
+vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_KLU& A);
 #endif // SPARSE_MATRIX_KLU_H

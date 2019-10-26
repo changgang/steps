@@ -73,14 +73,14 @@ void SPARSE_MATRIX::change_entry_value(int index, double value)
     change_entry_value(index, complex<double>(value, 0.0));
 }
 
-void SPARSE_MATRIX::change_entry_value(int row, int col, complex<double> value)
+void SPARSE_MATRIX::change_entry_value(int row, int col, const complex<double>& value)
 {
     // get entry index of a compress matrix
     int index = get_entry_index(row, col); // if it is triplet format, will be converted into compressed format
     change_entry_value(index, value);
 }
 
-void SPARSE_MATRIX::change_entry_value(int index, complex<double> value)
+void SPARSE_MATRIX::change_entry_value(int index, const complex<double>& value)
 {
     if(index != INDEX_NOT_EXIST)
     {

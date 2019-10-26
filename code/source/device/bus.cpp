@@ -412,7 +412,7 @@ DEVICE_ID BUS::get_device_id() const
     return did;
 }
 
-void BUS::set_fault(FAULT bus_fault)
+void BUS::set_fault(const FAULT& bus_fault)
 {
     ostringstream osstream;
     if(not bus_fault.is_faulted())

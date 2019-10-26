@@ -29,13 +29,13 @@ public:
     complex<double> get_entry_value(int index)  const;
 
     void change_entry_value(int row, int col, double value);
-    void change_entry_value(int row, int col, complex<double> value);
+    void change_entry_value(int row, int col, const complex<double>& value);
     void change_entry_value(int index, double value);
-    void change_entry_value(int index, complex<double> value);
+    void change_entry_value(int index, const complex<double>& value);
 
     int get_column_number_of_entry_index(int index)  const;
 
-    virtual void add_entry(int row, int col, complex<double> value) = 0;
+    virtual void add_entry(int row, int col, const complex<double>& value) = 0;
 
     virtual void convert_to_triplet_form() = 0;
 
@@ -65,7 +65,7 @@ public:
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13) = 0;
 
-    virtual vector<double> solve_Ax_eq_b(vector<double>& b) = 0;
+    virtual vector<double>& solve_Ax_eq_b(vector<double>& b) = 0;
 
     virtual void report_brief()  const = 0;
     virtual void report_full()  const = 0;

@@ -21,7 +21,7 @@ class METER : public BASE
         void set_meter_side_bus(size_t meter_side);
 
         void change_device_id(DEVICE_ID did);
-        void change_meter_type(string meter_type);
+        void change_meter_type(const string& meter_type);
 
 
         DEVICE_ID get_device_id() const;
@@ -52,10 +52,10 @@ class METER : public BASE
         void set_device_pointer();
         void copy_from_const_meter(const METER& meter);
 
-        bool is_valid_meter_type(string meter_type) const;
-        bool is_valid_meter_type_of_device(string meter_type, string device_type) const;
+        bool is_valid_meter_type(string& meter_type) const;
+        bool is_valid_meter_type_of_device(const string& meter_type, string& device_type) const;
 
-        bool is_internal_variable_name_valid(string name) const;
+        bool is_internal_variable_name_valid(string& name) const;
 
         double get_meter_value_as_a_bus() const;
         double get_meter_value_as_a_line() const;

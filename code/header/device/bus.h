@@ -89,7 +89,7 @@ class BUS : public DEVICE
         virtual DEVICE_ID get_device_id() const;
         //virtual string get_device_name() const;
 
-        void set_fault(FAULT fault);
+        void set_fault(const FAULT& fault);
         FAULT get_fault() const;
         void clear_fault();
         bool is_faulted() const;

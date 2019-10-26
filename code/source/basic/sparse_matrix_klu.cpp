@@ -30,6 +30,9 @@ SPARSE_MATRIX_KLU::SPARSE_MATRIX_KLU():SPARSE_MATRIX()
     Symbolic = NULL;
     Numeric = NULL;
 
+    bb = NULL;
+    bb_size = 0;
+
     flag_matrix_in_triplet_form = true;
 
     clear();
@@ -152,6 +155,9 @@ void SPARSE_MATRIX_KLU::clear()
     Symbolic = NULL;
     Numeric = NULL;
 
+    if(bb!=NULL) free(bb);
+    bb = NULL;
+
     flag_matrix_in_triplet_form = true;
 
     update_clock_when_matrix_is_changed();
@@ -163,7 +169,7 @@ bool SPARSE_MATRIX_KLU::matrix_in_triplet_form() const
 }
 
 
-void SPARSE_MATRIX_KLU::add_entry(int row, int col, complex<double> value)
+void SPARSE_MATRIX_KLU::add_entry(int row, int col, const complex<double>& value)
 {
     if(matrix_in_triplet_form())
     {
@@ -466,16 +472,38 @@ void SPARSE_MATRIX_KLU::LU_factorization(int order, double tolerance)
     }
 }
 
-vector<double> SPARSE_MATRIX_KLU::solve_Ax_eq_b(vector<double>& b)
+vector<double>& SPARSE_MATRIX_KLU::solve_Ax_eq_b(vector<double>& b)
 {
     if(not LU_factorization_is_performed())   LU_factorization();
-    double * B = (double*)calloc(b.size(), sizeof(double));
-    for(size_t i=0; i<n_row; ++i) B[i] = b[i];
 
-    klu_solve (Symbolic, Numeric, n_row, 1, B, &Common) ;
+    size_t n = b.size();
+    if(bb!=NULL)
+    {
+        if(n<=bb_size)
+        {
+            ;
+        }
+        else
+        {
+            free(bb);
+            bb = (double*)malloc(n*sizeof(double));
+            bb_size = n;
+        }
+    }
+    else
+    {
+        bb = (double*)malloc(n*sizeof(double));
+        bb_size = n;
+    }
+    if(bb!=NULL)
+    {
+        for(size_t i=0; i!=n; ++i) bb[i]=b[i]; // set bb
 
-    for(size_t i=0; i<n_row; ++i) b[i] = B[i];
-    free(B);
+
+        klu_solve (Symbolic, Numeric, n_row, 1, bb, &Common) ;
+
+        for(size_t i=0; i<n_row; ++i) b[i] = bb[i];
+    }
     return b;
 }
 
@@ -548,7 +576,7 @@ void SPARSE_MATRIX_KLU::save_matrix_to_file(string filename) const
     }
 }
 
-vector<double> operator/(vector<double>&b, SPARSE_MATRIX_KLU& A)
+vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_KLU& A)
 {
     return A.solve_Ax_eq_b(b);
 }

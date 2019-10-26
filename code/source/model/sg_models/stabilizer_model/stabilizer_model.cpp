@@ -82,7 +82,7 @@ double STABILIZER_MODEL::get_signal_value_of_slot(size_t slot) const
         return 0.0;
 }
 
-size_t STABILIZER_MODEL::convert_signal_type_string_to_number(string signal_type) const
+size_t STABILIZER_MODEL::convert_signal_type_string_to_number(string& signal_type) const
 {
     signal_type = string2upper(signal_type);
     if(signal_type=="ROTOR SPEED DEVIATION IN PU")

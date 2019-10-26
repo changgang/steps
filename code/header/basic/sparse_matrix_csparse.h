@@ -19,7 +19,7 @@ public:
     virtual SPARSE_MATRIX_CSPARSE& operator=(const SPARSE_MATRIX_CSPARSE& matrix);
     virtual ~SPARSE_MATRIX_CSPARSE();
 
-    virtual void add_entry(int row, int col, complex<double> value);
+    virtual void add_entry(int row, int col, const complex<double>& value);
 
     virtual void convert_to_triplet_form();
 
@@ -49,7 +49,7 @@ public:
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13);
 
-    virtual vector<double> solve_Ax_eq_b(vector<double>& b);
+    virtual vector<double>& solve_Ax_eq_b(vector<double>& b);
 
     virtual void report_brief()  const;
     virtual void report_full()  const;
@@ -69,5 +69,5 @@ private:
 };
 
 
-vector<double> operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A);
+vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A);
 #endif // SPARSE_MATRIX_CSPARSE_H

@@ -783,8 +783,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_
 }
 
 STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(
-                                                                const vector<size_t> internal_P_equation_buses,
-                                                                const vector<size_t> internal_Q_equation_buses)
+                                                                const vector<size_t>& internal_P_equation_buses,
+                                                                const vector<size_t>& internal_Q_equation_buses)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -1010,7 +1010,7 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
     */
 }
 
-STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t> internal_P_equation_buses)
+STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t>& internal_P_equation_buses)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -1111,7 +1111,7 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_i
     return B_jacobian;
 }
 
-STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t> internal_Q_equation_buses)
+STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t>& internal_Q_equation_buses)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -1350,7 +1350,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
     }
 }
 
-void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(string filename) const
+void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(const string& filename) const
 {
     if(is_network_matrix_set())
     {

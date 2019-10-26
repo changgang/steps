@@ -506,8 +506,6 @@ bool WT3E1::setup_model_with_steps_string_vector(vector<string>& data)
             table.add_wind_turbine_power_and_speed_pair_in_pu(0.4, wp40);
             table.add_wind_turbine_power_and_speed_pair_in_pu(0.6, wp60);
             table.add_wind_turbine_power_and_speed_pair_in_pu(1.0, wp100);
-            vector<double> p = table.get_wind_turbine_power_table();
-            vector<double> s = table.get_wind_turbine_speed_table();
 
             set_wind_turbine_power_speed_lookup_table(table);
 
@@ -990,8 +988,8 @@ string WT3E1::get_standard_psse_string() const
     double tp = get_TP_in_s();
     double fn = get_Fn();
     WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table = get_wind_turbine_power_speed_lookup_table();
-    vector<double> speed = table.get_wind_turbine_speed_table();
-    vector<double> power = table.get_wind_turbine_power_table();
+    const vector<double>& speed = table.get_wind_turbine_speed_table();
+    const vector<double>& power = table.get_wind_turbine_power_table();
     double wmin = speed[0];
     double wp20 = table.get_reference_speed_with_power_in_pu(0.2);
     double wp40 = table.get_reference_speed_with_power_in_pu(0.4);

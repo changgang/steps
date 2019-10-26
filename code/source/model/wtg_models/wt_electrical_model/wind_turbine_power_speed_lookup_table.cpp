@@ -159,12 +159,12 @@ double WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_reference_power_with_speed_in_
     }
 }
 
-vector<double> WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_wind_turbine_power_table() const
+const vector<double>& WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_wind_turbine_power_table() const
 {
     return power_table;
 }
 
-vector<double> WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_wind_turbine_speed_table() const
+const vector<double>& WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_wind_turbine_speed_table() const
 {
     return speed_table;
 }

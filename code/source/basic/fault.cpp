@@ -21,7 +21,7 @@ void FAULT::set_fault_type(FAULT_TYPE fault)
     this->fault_type = fault;
 }
 
-void FAULT::set_fault_shunt_in_pu(complex<double> y)
+void FAULT::set_fault_shunt_in_pu(const complex<double>& y)
 {
     fault_shunt_in_pu = y;
 }

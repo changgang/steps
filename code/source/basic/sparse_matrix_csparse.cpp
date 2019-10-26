@@ -152,7 +152,7 @@ bool SPARSE_MATRIX_CSPARSE::matrix_in_triplet_form() const
 }
 
 
-void SPARSE_MATRIX_CSPARSE::add_entry(int row, int col, complex<double> value)
+void SPARSE_MATRIX_CSPARSE::add_entry(int row, int col, const complex<double>& value)
 {
     if(matrix_in_triplet_form())
     {
@@ -476,7 +476,7 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
     }
 }
 
-vector<double> SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
+vector<double>& SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
 {
     if(LU_factorization_is_performed())
     {
@@ -675,7 +675,7 @@ void SPARSE_MATRIX_CSPARSE::save_matrix_to_file(string filename) const
     }
 }
 
-vector<double> operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A)
+vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_CSPARSE& A)
 {
     return A.solve_Ax_eq_b(b);
 }

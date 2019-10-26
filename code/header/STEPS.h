@@ -35,8 +35,8 @@ class STEPS
 
         void show_information_with_leading_time_stamp(const string& info);
         void show_information_with_leading_time_stamp(ostringstream& stream);
-        void show_set_get_model_data_with_index_error(string device, string model, string func, size_t index);
-        void show_set_get_model_data_with_name_error(string device, string model, string func, string par_name);
+        void show_set_get_model_data_with_index_error(const string& device, const string& model, const string& func, size_t index);
+        void show_set_get_model_data_with_name_error(const string& device, const string& model, const string& func, const string& par_name);
         string get_system_time_stamp_string();
 
         void clear();

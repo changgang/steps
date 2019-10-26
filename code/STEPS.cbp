@@ -444,7 +444,6 @@
 		<Unit filename="source/basic/sparse_matrix.cpp" />
 		<Unit filename="source/basic/sparse_matrix_csparse.cpp" />
 		<Unit filename="source/basic/sparse_matrix_klu.cpp">
-			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
 		<Unit filename="source/basic/sparse_matrix_test.cpp" />

@@ -309,7 +309,7 @@ void METER::set_internal_variable_name(string name)
     }
 }
 
-bool METER::is_internal_variable_name_valid(string name) const
+bool METER::is_internal_variable_name_valid(string& name) const
 {
     if(get_device_pointer()!=NULL)
     {
@@ -414,7 +414,7 @@ void METER::change_device_id(DEVICE_ID did)
     set_device_id(did);
 }
 
-void METER::change_meter_type(string meter_type)
+void METER::change_meter_type(const string& meter_type)
 {
     this->meter_type = meter_type;
 }
@@ -423,7 +423,7 @@ void METER::check()
 {
     ;// method to disable BASE::check()
 }
-bool METER::is_valid_meter_type(string meter_type) const
+bool METER::is_valid_meter_type(string& meter_type) const
 {
     if(device_id.is_valid())
     {
@@ -436,7 +436,7 @@ bool METER::is_valid_meter_type(string meter_type) const
         return false;
 }
 
-bool METER::is_valid_meter_type_of_device(string meter_type, string device_type) const
+bool METER::is_valid_meter_type_of_device(const string& meter_type, string& device_type) const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);

@@ -163,7 +163,7 @@ bool SPARSE_MATRIX_UMFPACK::matrix_in_triplet_form() const
 }
 
 
-void SPARSE_MATRIX_UMFPACK::add_entry(int row, int col, complex<double> value)
+void SPARSE_MATRIX_UMFPACK::add_entry(int row, int col, const complex<double>& value)
 {
     if(matrix_in_triplet_form())
     {
@@ -463,7 +463,7 @@ void SPARSE_MATRIX_UMFPACK::LU_factorization(int order, double tolerance)
     }
 }
 
-vector<double> SPARSE_MATRIX_UMFPACK::solve_Ax_eq_b(vector<double>& b)
+vector<double>& SPARSE_MATRIX_UMFPACK::solve_Ax_eq_b(vector<double>& b)
 {
     if(not LU_factorization_is_performed())   LU_factorization();
     double * x = (double*)calloc(b.size(), sizeof(double));
@@ -550,7 +550,7 @@ void SPARSE_MATRIX_UMFPACK::save_matrix_to_file(string filename) const
     }
 }
 
-vector<double> operator/(vector<double>&b, SPARSE_MATRIX_UMFPACK& A)
+vector<double>& operator/(vector<double>&b, SPARSE_MATRIX_UMFPACK& A)
 {
     return A.solve_Ax_eq_b(b);
 }

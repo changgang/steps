@@ -145,7 +145,7 @@ void INPHNO::clear()
     internal_to_physical_lookup_table.clear();
 }
 
-size_t INPHNO::get_internal_bus_number_of_physical_bus_number(const size_t bus) const
+size_t INPHNO::get_internal_bus_number_of_physical_bus_number(size_t bus) const
 {
     if(not empty())
     {
@@ -159,7 +159,7 @@ size_t INPHNO::get_internal_bus_number_of_physical_bus_number(const size_t bus) 
         return INDEX_NOT_EXIST;
 }
 
-size_t INPHNO::get_physical_bus_number_of_internal_bus_number(const size_t bus) const
+size_t INPHNO::get_physical_bus_number_of_internal_bus_number(size_t bus) const
 {
     if(not empty())
     {

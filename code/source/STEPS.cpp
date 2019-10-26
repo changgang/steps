@@ -232,7 +232,7 @@ string STEPS::get_system_time_stamp_string()
 }
 
 
-void STEPS::show_set_get_model_data_with_index_error(string device, string model, string func, size_t index)
+void STEPS::show_set_get_model_data_with_index_error(const string& device, const string& model, const string& func, size_t index)
 {
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     if(func=="set_model_data_with_index")
@@ -251,7 +251,7 @@ void STEPS::show_set_get_model_data_with_index_error(string device, string model
     }
 }
 
-void STEPS::show_set_get_model_data_with_name_error(string device, string model, string func, string par_name)
+void STEPS::show_set_get_model_data_with_name_error(const string& device, const string& model, const string& func, const string& par_name)
 {
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     if(func=="set_model_data_with_name")

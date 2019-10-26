@@ -20,8 +20,8 @@ class INPHNO
         bool empty() const;
         void clear();
 
-        size_t get_internal_bus_number_of_physical_bus_number(const size_t bus) const;
-        size_t get_physical_bus_number_of_internal_bus_number(const size_t bus) const;
+        size_t get_internal_bus_number_of_physical_bus_number(size_t bus) const;
+        size_t get_physical_bus_number_of_internal_bus_number(size_t bus) const;
 
         void report() const;
 

@@ -105,12 +105,12 @@ class DYNAMICS_SIMULATOR: public BASE
     public: // events
         void change_dynamic_simulator_time_step(double newDELT);
 
-        void set_bus_fault(size_t bus, complex<double> fault_shunt);
+        void set_bus_fault(size_t bus, const complex<double>& fault_shunt);
         void clear_bus_fault(size_t bus);
         void trip_bus(size_t bus);
-        void trip_buses(const vector<size_t> buses);
+        void trip_buses(const vector<size_t>& buses);
 
-        void set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, complex<double> fault_shunt);
+        void set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, const complex<double>& fault_shunt);
         void clear_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location);
         void trip_line(const DEVICE_ID& line_id);
         void trip_line_breaker(const DEVICE_ID& line_id, size_t side_bus);
@@ -214,11 +214,11 @@ class DYNAMICS_SIMULATOR: public BASE
 
         void update_network_dynamic_matrix();
 
-        void guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT fault);
-        void guess_bus_voltage_with_bus_fault_cleared(size_t bus, FAULT fault);
+        void guess_bus_voltage_with_bus_fault_set(size_t bus, const FAULT& fault);
+        void guess_bus_voltage_with_bus_fault_cleared(size_t bus, const FAULT& fault);
 
-        void guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, size_t side_bus, double location, FAULT fault);
-        void guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, size_t side_bus, double location, FAULT fault);
+        void guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, size_t side_bus, double location, const FAULT& fault);
+        void guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, size_t side_bus, double location, const FAULT& fault);
 
         void update_generators_in_islands();
         bool is_system_angular_stable() const;

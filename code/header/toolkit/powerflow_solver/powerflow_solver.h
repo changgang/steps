@@ -56,11 +56,11 @@ class POWERFLOW_SOLVER : public BASE
         double get_maximum_reactive_power_mismatch_in_MVar() const;
 
         void show_powerflow_result();
-        void save_powerflow_result_to_file(string filename) const;
-        void save_extended_powerflow_result_to_file(string filename) const;
-        void save_network_matrix_to_file(string filename) const;
-        void save_jacobian_matrix_to_file(string filename);
-        void save_bus_powerflow_result_to_file(string filename) const;
+        void save_powerflow_result_to_file(const string& filename) const;
+        void save_extended_powerflow_result_to_file(const string& filename) const;
+        void save_network_matrix_to_file(const string& filename) const;
+        void save_jacobian_matrix_to_file(const string& filename);
+        void save_bus_powerflow_result_to_file(const string& filename) const;
         size_t get_iteration_count() const;
     private:
         void prepare_devices_for_solution();
@@ -95,11 +95,11 @@ class POWERFLOW_SOLVER : public BASE
 
         void update_source_power_without_constraints();
         void update_SLACK_bus_source_power_of_physical_bus(size_t physical_bus);
-        bool update_PV_bus_source_power_of_physical_bus(size_t physical_bus);
+        void update_PV_bus_source_power_of_physical_bus(size_t physical_bus);
 
-        vector<double> get_bus_power_mismatch_vector_for_coupled_solution();
-        vector<double> get_bus_P_power_mismatch_vector_for_decoupled_solution();
-        vector<double> get_bus_Q_power_mismatch_vector_for_decoupled_solution();
+        void build_bus_power_mismatch_vector_for_coupled_solution();
+        void build_bus_P_power_mismatch_vector_for_decoupled_solution();
+        void build_bus_Q_power_mismatch_vector_for_decoupled_solution();
 
         void update_bus_voltage_and_angle(vector<double>& update);
         void update_bus_voltage(vector<double>& update);
@@ -122,6 +122,8 @@ class POWERFLOW_SOLVER : public BASE
         vector<double> bus_active_power_mismatch_in_pu, bus_reactive_power_mismatch_in_pu;
 
         vector<size_t> internal_P_equation_buses, internal_Q_equation_buses;
+
+        vector<double> S_mismatch, P_mismatch, Q_mismatch;
 
         double P_threshold_in_MW, Q_threshold_in_MVar;
         bool flat_start_enabled, transformer_tap_adjustment_enabled;

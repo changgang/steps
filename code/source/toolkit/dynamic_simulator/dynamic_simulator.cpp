@@ -1897,6 +1897,7 @@ void DYNAMICS_SIMULATOR::start()
                 <<"Any further simulation cannot be trusted.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
+    pf_solver.clear();
 
 
     meter_values.resize(meters.size(), 0.0);
@@ -3302,7 +3303,7 @@ void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step(double newDELT)
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, const FAULT& fault)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3337,7 +3338,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, FAULT 
     internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_complex_voltage_in_pu();
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, FAULT fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, const FAULT& fault)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3377,7 +3378,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, FA
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, size_t side_bus, double location, FAULT fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, size_t side_bus, double location, const FAULT& fault)
 {
     if(location >=0.0 and location <= 1.0)
     {
@@ -3419,7 +3420,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& 
     }
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, size_t side_bus, double location, FAULT fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, size_t side_bus, double location, const FAULT& fault)
 {
     if(location >= 0.0 and location <= 1.0)
     {
@@ -3574,7 +3575,7 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
     return system_is_stable;
 }
 
-void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, complex<double> fault_shunt)
+void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, const complex<double>& fault_shunt)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -3663,14 +3664,14 @@ void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_buses(const vector<size_t> buses)
+void DYNAMICS_SIMULATOR::trip_buses(const vector<size_t>& buses)
 {
     size_t n = buses.size();
     for(size_t i=0; i!=n; ++i)
         trip_bus(buses[i]);
 }
 
-void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, complex<double> fault_shunt)
+void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, const complex<double>& fault_shunt)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();

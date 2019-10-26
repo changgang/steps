@@ -20,9 +20,9 @@ class LOAD : public DEVICE
         void set_load_bus(size_t bus);
         void set_identifier(string identifier);
         void set_status(bool status);
-        void set_nominal_constant_power_load_in_MVA(complex<double> s);
-        void set_nominal_constant_current_load_in_MVA(complex<double> s);
-        void set_nominal_constant_impedance_load_in_MVA(complex<double> s);
+        void set_nominal_constant_power_load_in_MVA(const complex<double>& s);
+        void set_nominal_constant_current_load_in_MVA(const complex<double>& s);
+        void set_nominal_constant_impedance_load_in_MVA(const complex<double>& s);
         void set_area_number(size_t num);
         void set_zone_number(size_t num);
         void set_owner_number(size_t num);

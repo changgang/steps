@@ -25,7 +25,7 @@ void ENERGY_STORAGE::set_energy_storage_bus(size_t bus)
     set_source_bus(bus);
 }
 
-void ENERGY_STORAGE::set_energy_storage_impedance_in_pu(complex<double> z_pu)
+void ENERGY_STORAGE::set_energy_storage_impedance_in_pu(const complex<double>& z_pu)
 {
     set_source_impedance_in_pu(z_pu);
 }

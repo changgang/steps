@@ -41,6 +41,10 @@ void POWERFLOW_SOLVER::clear()
 
     iteration_count = 0;
     set_iteration_accelerator(1.0);
+
+    S_mismatch.clear();
+    P_mismatch.clear();
+    Q_mismatch.clear();
 }
 
 NETWORK_MATRIX& POWERFLOW_SOLVER::get_network_matrix()
@@ -223,7 +227,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
         NETWORK_MATRIX& network_matrix = get_network_matrix();
 
         double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
-        vector<double> bus_power_mismatch, bus_delta_voltage_angle;
+        vector<double> bus_delta_voltage_angle;
     /*    JACOBIAN_BUILDER jacobian_builder;
         jacobian_builder.set_toolkit(toolkit);
 
@@ -284,7 +288,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
                 break;
             }
 
-            bus_power_mismatch = get_bus_power_mismatch_vector_for_coupled_solution();
+            build_bus_power_mismatch_vector_for_coupled_solution();
 
             jacobian_builder.update_seprate_jacobians();
 
@@ -295,7 +299,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
             {
                 jacobian.save_matrix_to_file("Jacobian-NR-Iter-"+num2str(get_iteration_count())+".csv");
             }
-            bus_delta_voltage_angle = bus_power_mismatch/jacobian;
+            bus_delta_voltage_angle = S_mismatch/jacobian;
 
             update_bus_voltage_and_angle(bus_delta_voltage_angle);
 
@@ -322,7 +326,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         NETWORK_MATRIX& network_matrix = get_network_matrix();
 
         double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
-        vector<double> P_power_mismatch, Q_power_mismatch, bus_delta_voltage, bus_delta_angle;
+        vector<double> bus_delta_voltage, bus_delta_angle;
 
         network_matrix.build_network_matrix();
 
@@ -399,19 +403,19 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
                 break;
             }
 
-            P_power_mismatch = get_bus_P_power_mismatch_vector_for_decoupled_solution();
+            build_bus_P_power_mismatch_vector_for_decoupled_solution();
             size_t n = internal_P_equation_buses.size();
             for(size_t i=0; i!=n; ++i)
             {
                 size_t internal_bus = internal_P_equation_buses[i];
                 //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
-                //P_power_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
-                P_power_mismatch[i] /= get_bus_voltage_in_pu_with_internal_bus_number(internal_bus);
+                //P_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
+                P_mismatch[i] /= get_bus_voltage_in_pu_with_internal_bus_number(internal_bus);
             }
-            bus_delta_angle = P_power_mismatch/BP;
+            bus_delta_angle = P_mismatch/BP;
             //BP.report_brief();
-            //for(size_t i=0; i<P_power_mismatch.size(); i++)
-            //    cout<<i<<","<<P_power_mismatch[i]<<endl;
+            //for(size_t i=0; i<P_mismatch.size(); i++)
+            //    cout<<i<<","<<P_mismatch[i]<<endl;
             //for(size_t i=0; i<internal_P_equation_buses.size(); ++i)
             //{
             //    cout<<bus_delta_angle[i]<<endl;
@@ -425,16 +429,16 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             max_P_mismatch_in_MW = get_maximum_active_power_mismatch_in_MW();
             max_Q_mismatch_in_MW = get_maximum_reactive_power_mismatch_in_MVar();
 
-            Q_power_mismatch = get_bus_Q_power_mismatch_vector_for_decoupled_solution();
+            build_bus_Q_power_mismatch_vector_for_decoupled_solution();
             n = internal_Q_equation_buses.size();
             for(size_t i=0; i!=n; ++i)
             {
                 size_t internal_bus = internal_Q_equation_buses[i];
                 //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
-                //Q_power_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
-                Q_power_mismatch[i] /= get_bus_voltage_in_pu_with_internal_bus_number(internal_bus);
+                //Q_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
+                Q_mismatch[i] /= get_bus_voltage_in_pu_with_internal_bus_number(internal_bus);
             }
-            bus_delta_voltage = Q_power_mismatch/BQ;
+            bus_delta_voltage = Q_mismatch/BQ;
 
             update_bus_voltage(bus_delta_voltage);
 
@@ -477,6 +481,11 @@ void POWERFLOW_SOLVER::initialize_powerflow_solver()
     optimize_bus_numbers();
     iteration_count = 0;
     set_convergence_flag(false);
+
+    size_t n_bus = psdb.get_bus_count();
+    S_mismatch.reserve(n_bus*2);
+    P_mismatch.reserve(n_bus);
+    Q_mismatch.reserve(n_bus);
 
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Done initializing powerflow solver.");
     toolkit.show_information_with_leading_time_stamp(buffer);
@@ -546,7 +555,6 @@ void POWERFLOW_SOLVER::initialize_bus_type()
 void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     //vector<SOURCE*> sources = psdb.get_all_sources();
     size_t nsource = sources.size();
     for(size_t i=0; i!=nsource; ++i)
@@ -583,7 +591,6 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
 void POWERFLOW_SOLVER::initialize_bus_voltage()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<BUS*> buses = psdb.get_all_buses();
     size_t nbus = buses.size();
@@ -623,7 +630,6 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
 
 void POWERFLOW_SOLVER::optimize_bus_numbers()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     network_matrix.optimize_network_ordering();
@@ -676,7 +682,6 @@ void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Updating powerflow P equation buses and Q equation buses.");
@@ -759,7 +764,6 @@ bool POWERFLOW_SOLVER::is_converged()
 void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t nhvdc = hvdcs.size();
     for(size_t i=0; i!=nhvdc; ++i)
@@ -1133,7 +1137,6 @@ double POWERFLOW_SOLVER::get_maximum_reactive_power_mismatch_in_MVar() const
 bool POWERFLOW_SOLVER::check_bus_type_constraints()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     bool system_bus_type_changed = false;
 
@@ -1577,7 +1580,6 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_
 void POWERFLOW_SOLVER::update_source_power_without_constraints()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t physical_bus;
     BUS_TYPE btype;
@@ -1656,7 +1658,7 @@ void POWERFLOW_SOLVER::update_SLACK_bus_source_power_of_physical_bus(size_t phys
     }
 }
 
-bool POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(size_t physical_bus)
+void POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(size_t physical_bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1668,8 +1670,6 @@ bool POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(size_t physica
 
     if(bus->get_bus_type()==PV_TYPE)
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-
         //size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
         double bus_Q_mismatch_in_MVar = -bus_power[internal_bus].imag()*psdb.get_system_base_power_in_MVA();
@@ -1697,65 +1697,58 @@ bool POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(size_t physica
 }
 
 
-vector<double> POWERFLOW_SOLVER::get_bus_power_mismatch_vector_for_coupled_solution()
+void POWERFLOW_SOLVER::build_bus_power_mismatch_vector_for_coupled_solution()
 {
     size_t nP = internal_P_equation_buses.size();
     size_t nQ = internal_Q_equation_buses.size();
 
-    vector<double> s_mismatch;
-    s_mismatch.reserve(nP+nQ);
+    S_mismatch.resize(nP+nQ);
 
     size_t internal_bus;
 
     for(size_t i=0; i!=nP; ++i)
     {
         internal_bus = internal_P_equation_buses[i];
-        s_mismatch.push_back(-bus_power[internal_bus].real());
+        //s_mismatch.push_back(-bus_power[internal_bus].real());
+        S_mismatch[i] = -bus_power[internal_bus].real();
     }
     for(size_t i=0; i!=nQ; ++i)
     {
         internal_bus = internal_Q_equation_buses[i];
-        s_mismatch.push_back(-bus_power[internal_bus].imag());
+        //s_mismatch.push_back(-bus_power[internal_bus].imag());
+        S_mismatch[nP+i] = -bus_power[internal_bus].imag();
     }
-    return s_mismatch;
 }
 
-vector<double> POWERFLOW_SOLVER::get_bus_P_power_mismatch_vector_for_decoupled_solution()
+void POWERFLOW_SOLVER::build_bus_P_power_mismatch_vector_for_decoupled_solution()
 {
     size_t nP = internal_P_equation_buses.size();
 
-    vector<double> P_mismatch;
-    P_mismatch.reserve(nP);
-    P_mismatch.clear();
+    P_mismatch.resize(nP);
 
     size_t internal_bus;
 
     for(size_t i=0; i!=nP; ++i)
     {
         internal_bus = internal_P_equation_buses[i];
-        P_mismatch.push_back(-bus_power[internal_bus].real());
+        P_mismatch[i] = -bus_power[internal_bus].real();
         //cout<<"Pmismatch vector, "<<i<<", "<<-bus_power[internal_bus].real()<<endl;
     }
-    return P_mismatch;
 }
 
-vector<double> POWERFLOW_SOLVER::get_bus_Q_power_mismatch_vector_for_decoupled_solution()
+void POWERFLOW_SOLVER::build_bus_Q_power_mismatch_vector_for_decoupled_solution()
 {
     size_t nQ = internal_Q_equation_buses.size();
 
-    vector<double> Q_mismatch;
-    Q_mismatch.reserve(nQ);
-    Q_mismatch.clear();
+    Q_mismatch.resize(nQ);
 
     size_t internal_bus;
     for(size_t i=0; i!=nQ; ++i)
     {
         internal_bus = internal_Q_equation_buses[i];
-        Q_mismatch.push_back(-bus_power[internal_bus].imag());
+        Q_mismatch[i] = -bus_power[internal_bus].imag();
         //cout<<"Qmismatch vector, "<<i<<", "<<-bus_power[internal_bus].imag()<<endl;
     }
-
-    return Q_mismatch;
 }
 
 void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
@@ -1763,8 +1756,6 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     ostringstream osstream;
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     size_t nP = internal_P_equation_buses.size();
     size_t nQ = internal_Q_equation_buses.size();
@@ -1806,10 +1797,6 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
 
     double Perror0 = get_maximum_active_power_mismatch_in_MW();
     double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
-
-    vector<size_t> s_mismatch;
-    s_mismatch.reserve(nP+nQ);
-    s_mismatch.clear();
 
     double alpha = get_iteration_accelerator();
     double alpha_P = alpha;
@@ -1900,7 +1887,6 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double limit = get_maximum_voltage_change_in_pu();
@@ -1925,7 +1911,7 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 
     double Qerror0 = get_maximum_reactive_power_mismatch_in_MVar();
 
-    size_t nP = internal_P_equation_buses.size();
+    //size_t nP = internal_P_equation_buses.size();
     size_t nQ = internal_Q_equation_buses.size();
 
     double alpha = get_iteration_accelerator();
@@ -1994,7 +1980,6 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double limit = get_maximum_angle_change_in_rad();
@@ -2246,7 +2231,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
-void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
+void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -2429,7 +2414,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(string filename) const
     }
 }
 
-void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) const
+void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -2635,28 +2620,24 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(string filename) c
     }
 }
 
-void POWERFLOW_SOLVER::save_network_matrix_to_file(string filename) const
+void POWERFLOW_SOLVER::save_network_matrix_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
     network_matrix.save_network_matrix_to_file(filename);
 }
 
-void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(string filename)
+void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(const string& filename)
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
-
     jacobian_builder.build_seprate_jacobians();
 
     jacobian_builder.save_jacobian_matrix_to_file(filename);
 }
 
-void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(string filename) const
+void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(const string& filename) const
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     ofstream file(filename);
     if(file.is_open())

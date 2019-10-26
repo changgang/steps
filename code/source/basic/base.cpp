@@ -25,7 +25,7 @@ bool BASE::is_toolkit_set() const
     return toolkit!=NULL;
 }
 
-STEPS& BASE::get_toolkit(const string calling_function) const
+STEPS& BASE::get_toolkit(const string& calling_function) const
 {
     if(is_toolkit_set())
         return (*toolkit);

@@ -2662,7 +2662,7 @@ void NETWORK_MATRIX::report_network_matrix_common() const
 }
 
 
-void NETWORK_MATRIX::save_network_matrix_to_file(string filename) const
+void NETWORK_MATRIX::save_network_matrix_to_file(const string& filename) const
 {
     ostringstream osstream;
 
@@ -2682,7 +2682,7 @@ void NETWORK_MATRIX::save_network_matrix_to_file(string filename) const
 }
 
 
-void NETWORK_MATRIX::save_decoupled_network_matrix_to_file(string filename) const
+void NETWORK_MATRIX::save_decoupled_network_matrix_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -2727,7 +2727,7 @@ void NETWORK_MATRIX::save_decoupled_network_matrix_to_file(string filename) cons
     }
 }
 
-void NETWORK_MATRIX::save_dc_network_matrix_to_file(string filename) const
+void NETWORK_MATRIX::save_dc_network_matrix_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -2770,7 +2770,7 @@ void NETWORK_MATRIX::save_dc_network_matrix_to_file(string filename) const
     }
 }
 
-void NETWORK_MATRIX::save_dynamic_network_matrix_to_file(string filename) const
+void NETWORK_MATRIX::save_dynamic_network_matrix_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;

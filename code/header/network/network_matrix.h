@@ -46,10 +46,10 @@ class NETWORK_MATRIX : public BASE
         void report_dynamic_network_matrix() const;
         void report_physical_internal_bus_number_pair() const;
 
-        void save_network_matrix_to_file(string filename) const;
-        void save_decoupled_network_matrix_to_file(string filename) const;
-        void save_dc_network_matrix_to_file(string filename) const;
-        void save_dynamic_network_matrix_to_file(string filename) const;
+        void save_network_matrix_to_file(const string& filename) const;
+        void save_decoupled_network_matrix_to_file(const string& filename) const;
+        void save_dc_network_matrix_to_file(const string& filename) const;
+        void save_dynamic_network_matrix_to_file(const string& filename) const;
     private:
         void add_lines_to_network();
         void add_transformers_to_network();
@@ -94,7 +94,7 @@ class NETWORK_MATRIX : public BASE
         void add_generators_to_sequential_network();
         void add_generator_to_sequential_network(const GENERATOR& gen);
         void add_wt_generators_to_sequential_network();
-        void add_wt_generator_to_sequential_network(WT_GENERATOR& gen);
+        void add_wt_generator_to_sequential_network(const WT_GENERATOR& gen);
 
         bool is_condition_ok() const;
         void initialize_physical_internal_bus_pair();

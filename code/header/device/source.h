@@ -28,7 +28,7 @@ class SOURCE : public DEVICE
         void set_q_min_in_MVar(double q_min_MVar);
         void set_voltage_to_regulate_in_pu(double v_pu);
         void set_bus_to_regulate(size_t bus);
-        void set_source_impedance_in_pu(complex<double> z_pu);
+        void set_source_impedance_in_pu(const complex<double>& z_pu);
 
 
         size_t get_source_bus() const;

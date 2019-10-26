@@ -90,42 +90,42 @@ void LINE::set_receiving_side_breaker_status(bool status)
     this->receiving_side_breaker_status = status;
 }
 
-void LINE::set_line_positive_sequence_z_in_pu(complex<double> z)
+void LINE::set_line_positive_sequence_z_in_pu(const complex<double>& z)
 {
     line_z_12 = z;
 }
 
-void LINE::set_line_positive_sequence_y_in_pu(complex<double> y)
+void LINE::set_line_positive_sequence_y_in_pu(const complex<double>& y)
 {
     line_y_12 = y;
 }
 
-void LINE::set_shunt_positive_sequence_y_at_sending_side_in_pu(complex<double> y)
+void LINE::set_shunt_positive_sequence_y_at_sending_side_in_pu(const complex<double>& y)
 {
     shunt_y_12_sending_side = y;
 }
 
-void LINE::set_shunt_positive_sequence_y_at_receiving_side_in_pu(complex<double> y)
+void LINE::set_shunt_positive_sequence_y_at_receiving_side_in_pu(const complex<double>& y)
 {
     shunt_y_12_receiving_side = y;
 }
 
-void LINE::set_line_zero_sequence_z_in_pu(complex<double> z)
+void LINE::set_line_zero_sequence_z_in_pu(const complex<double>& z)
 {
     line_z_0 = z;
 }
 
-void LINE::set_line_zero_sequence_y_in_pu(complex<double> y)
+void LINE::set_line_zero_sequence_y_in_pu(const complex<double>& y)
 {
     line_y_0 = y;
 }
 
-void LINE::set_shunt_zero_sequence_y_at_sending_side_in_pu(complex<double> y)
+void LINE::set_shunt_zero_sequence_y_at_sending_side_in_pu(const complex<double>& y)
 {
     shunt_y_0_sending_side = y;
 }
 
-void LINE::set_shunt_zero_sequence_y_at_receiving_side_in_pu(complex<double> y)
+void LINE::set_shunt_zero_sequence_y_at_receiving_side_in_pu(const complex<double>& y)
 {
     shunt_y_0_receiving_side = y;
 }
@@ -249,7 +249,7 @@ bool LINE::is_zero_impedance_line() const
         return false;
 }
 
-void LINE::set_fault(size_t to_bus, double location, FAULT& fault)
+void LINE::set_fault(size_t to_bus, double location, const FAULT& fault)
 {
     if(is_connected_to_bus(to_bus))
     {

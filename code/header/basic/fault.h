@@ -14,7 +14,7 @@ class FAULT
 
         void set_fault_type(FAULT_TYPE fault_type);
 
-        void set_fault_shunt_in_pu(complex<double> y);
+        void set_fault_shunt_in_pu(const complex<double>& y);
 
         FAULT_TYPE get_fault_type() const;
         string get_fault_type_string() const;

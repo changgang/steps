@@ -133,7 +133,7 @@ void SOURCE::set_bus_to_regulate(size_t bus)
     }
 }
 
-void SOURCE::set_source_impedance_in_pu(complex<double> z_pu)
+void SOURCE::set_source_impedance_in_pu(const complex<double>& z_pu)
 {
     source_Z_pu = z_pu;
 }

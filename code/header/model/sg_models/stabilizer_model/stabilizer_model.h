@@ -31,7 +31,7 @@ class STABILIZER_MODEL : public SG_MODEL
         SIGNAL get_input_signal_at_slot(size_t slot) const;
         bool is_slot_valid(size_t slot) const;
         double get_signal_value_of_slot(size_t slot) const;
-        size_t convert_signal_type_string_to_number(string signal_type) const;
+        size_t convert_signal_type_string_to_number(string& signal_type) const;
         string convert_signal_type_number_to_string(size_t signal_type) const;
         //
         SIGNAL prepare_signal_with_signal_type_and_bus(size_t signal_type, size_t bus);

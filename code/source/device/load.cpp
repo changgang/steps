@@ -68,17 +68,17 @@ void LOAD::set_status(bool status)
     this->status = status;
 }
 
-void LOAD::set_nominal_constant_power_load_in_MVA(complex<double> s)
+void LOAD::set_nominal_constant_power_load_in_MVA(const complex<double>& s)
 {
     s_constant_power_in_MVA = s;
 }
 
-void LOAD::set_nominal_constant_current_load_in_MVA(complex<double> s)
+void LOAD::set_nominal_constant_current_load_in_MVA(const complex<double>& s)
 {
     s_constant_current_in_MVA = s;
 }
 
-void LOAD::set_nominal_constant_impedance_load_in_MVA(complex<double> s)
+void LOAD::set_nominal_constant_impedance_load_in_MVA(const complex<double>& s)
 {
     s_constant_impedance_in_MVA = s;
 }

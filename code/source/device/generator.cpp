@@ -41,7 +41,7 @@ void GENERATOR::set_generator_bus(size_t bus)
     set_source_bus(bus);
 }
 
-void GENERATOR::set_generator_impedance_in_pu(complex<double> z_pu)
+void GENERATOR::set_generator_impedance_in_pu(const complex<double>& z_pu)
 {
     set_source_impedance_in_pu(z_pu);
 }
