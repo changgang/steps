@@ -64,8 +64,6 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name, size_t to
         return ds.get_allowed_max_power_imbalance_in_MVA();
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         return ds.get_iteration_accelerator();
-    if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
-        return ds.get_non_divergent_solution_logic();
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
         return ds.get_rotor_angle_stability_threshold_in_deg();
 
@@ -91,11 +89,6 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
     {
         ds.set_iteration_accelerator(value);
-        return;
-    }
-    if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
-    {
-        ds.set_non_divergent_solution_logic(value);
         return;
     }
     if(PARAMETER_NAME=="ANGLE STABILITY THRESHOLD IN DEG")
@@ -158,6 +151,8 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, size_t to
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="ANGLE STABILITY SURVEILLANCE LOGIC")
         return ds.get_rotor_angle_stability_surveillance_flag();
+    if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
+        return ds.get_non_divergent_solution_logic();
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
         return ds.is_bin_file_export_enabled();
     if(PARAMETER_NAME=="CSV EXPORT LOGIC")
@@ -180,6 +175,11 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
     if(PARAMETER_NAME=="ANGLE STABILITY SURVEILLANCE LOGIC")
     {
         ds.set_rotor_angle_stability_surveillance_flag(value);
+        return;
+    }
+    if(PARAMETER_NAME=="NON DIVERGENT SOLUTION LOGIC")
+    {
+        ds.set_non_divergent_solution_logic(value);
         return;
     }
     if(PARAMETER_NAME=="BIN EXPORT LOGIC")
