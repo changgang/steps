@@ -3,6 +3,7 @@
 #include "header/steps_namespace.h"
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
+#include "header/data_imexporter/steps_imexporter.h"
 
 void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolkit_index)
 {
@@ -23,6 +24,20 @@ void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolk
             importer.load_powerflow_data(file);
         }
     }
+}
+
+void api_load_powerflow_result_from_file(char* file, char* file_type, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    string string_file_type = string2upper(file_type);
+    if(string_file_type=="STEPS")
+    {
+        STEPS_IMEXPORTER importer;
+        importer.set_toolkit(toolkit);
+        importer.load_powerflow_result(file);
+    }
+
+
 }
 
 void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line, bool export_out_of_service_bus, size_t powerflow_data_save_mode, size_t toolkit_index)

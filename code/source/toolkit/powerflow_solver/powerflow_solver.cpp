@@ -1,5 +1,6 @@
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/basic/utility.h"
+#include "header/basic/constants.h"
 #include "header/steps_namespace.h"
 #include "header/network/jacobian_builder.h"
 #include <cstdio>
@@ -7,6 +8,8 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
+
+#define ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
 
 POWERFLOW_SOLVER::POWERFLOW_SOLVER()
 {
@@ -405,7 +408,12 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
             build_bus_P_power_mismatch_vector_for_decoupled_solution();
             size_t n = internal_P_equation_buses.size();
-            for(size_t i=0; i!=n; ++i)
+
+            #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                set_openmp_number_of_threads(toolkit.get_thread_number());
+                #pragma omp parallel for schedule(static)
+            #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            for(size_t i=0; i<n; ++i)
             {
                 size_t internal_bus = internal_P_equation_buses[i];
                 //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
@@ -431,7 +439,11 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
             build_bus_Q_power_mismatch_vector_for_decoupled_solution();
             n = internal_Q_equation_buses.size();
-            for(size_t i=0; i!=n; ++i)
+            #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                set_openmp_number_of_threads(toolkit.get_thread_number());
+                #pragma omp parallel for schedule(static)
+            #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            for(size_t i=0; i<n; ++i)
             {
                 size_t internal_bus = internal_Q_equation_buses[i];
                 //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
@@ -522,7 +534,11 @@ void POWERFLOW_SOLVER::initialize_bus_type()
 
     if(get_flat_start_logic()==true)
     {
-        for(size_t i=0; i!=nbus; ++i)
+        #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            set_openmp_number_of_threads(toolkit.get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        for(size_t i=0; i<nbus; ++i)
         {
             BUS_TYPE btype = buses[i]->get_bus_type();
             if(btype == PV_TO_PQ_TYPE_1 or btype == PV_TO_PQ_TYPE_2 or
@@ -531,7 +547,11 @@ void POWERFLOW_SOLVER::initialize_bus_type()
         }
     }
 
-    for(size_t i=0; i!=nbus; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nbus; ++i)
     {
         BUS_TYPE btype = buses[i]->get_bus_type();
         if(btype==PV_TYPE)
@@ -557,7 +577,11 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //vector<SOURCE*> sources = psdb.get_all_sources();
     size_t nsource = sources.size();
-    for(size_t i=0; i!=nsource; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nsource; ++i)
     {
         if(sources[i]->get_status()==true)
         {
@@ -575,7 +599,11 @@ void POWERFLOW_SOLVER::initialize_bus_voltage_to_regulate()
     }
     //vector<BUS*> buses = psdb.get_all_buses();
     size_t nbus = buses.size();
-    for(size_t i=0; i!=nbus; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nbus; ++i)
     {
         BUS_TYPE btype = buses[i]->get_bus_type();
         if(btype==PQ_TYPE or btype==OUT_OF_SERVICE)
@@ -597,7 +625,11 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
 
     if(get_flat_start_logic()==true)
     {
-        for(size_t i=0; i!=nbus; ++i)
+        #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            set_openmp_number_of_threads(toolkit.get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        for(size_t i=0; i<nbus; ++i)
         {
             switch(buses[i]->get_bus_type())
             {
@@ -766,7 +798,11 @@ void POWERFLOW_SOLVER::try_to_solve_hvdc_steady_state()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     size_t nhvdc = hvdcs.size();
-    for(size_t i=0; i!=nhvdc; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nhvdc; ++i)
     {
         if(hvdcs[i]->get_status()==true)
         {
@@ -799,7 +835,11 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
         }
     }
 
-    for(size_t i=0; i!=nbus; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nbus; ++i)
         bus_power[i] = -bus_power[i];
 
     add_source_to_bus_power_mismatch();
@@ -894,7 +934,11 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
     //complex<double> voltage;
     //size_t physical_bus_number;
 
-    for(size_t i=0; i!=nbus; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nbus; ++i)
     {
         //physical_bus_number = network_matrix.get_physical_bus_number_of_internal_bus(i);
         //voltage = psdb.get_bus_complex_voltage_in_pu(physical_bus_number);
@@ -928,10 +972,22 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
     const SPARSE_MATRIX& Y = network_matrix.get_network_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
-    bus_current.clear();
-    bus_current.reserve(nbus);
-    for(size_t i=0; i!=nbus; ++i)
-        bus_current.push_back(0.0);
+    if(bus_current.size()==0)
+    {
+        bus_current.clear();
+        bus_current.reserve(nbus);
+        for(size_t i=0; i!=nbus; ++i)
+            bus_current.push_back(0.0);
+    }
+    else
+    {
+        #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            set_openmp_number_of_threads(toolkit.get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        for(size_t i=0; i<nbus; ++i)
+            bus_current[i]=0.0;
+    }
 
     complex<double> voltage, y;
     //size_t physical_bus_number;
@@ -969,7 +1025,11 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 
     size_t nsource = sources.size();
 
-    for(size_t i=0; i!=nsource; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_generator_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nsource; ++i)
     {
         if(sources[i]->get_status() == true)
         {
@@ -1005,22 +1065,20 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 
     double Sbase = psdb.get_system_base_power_in_MVA();
 
-    size_t physical_bus, internal_bus;
-
-    //vector<LOAD*> loads = psdb.get_all_loads();
-
     size_t nload = loads.size();
 
-    complex<double> Sload;
-
-    for(size_t i=0; i!=nload; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_load_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nload; ++i)
     {
         if(loads[i]->get_status() == true)
         {
-            physical_bus = loads[i]->get_load_bus();
-            internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            size_t physical_bus = loads[i]->get_load_bus();
+            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            Sload = loads[i]->get_actual_total_load_in_MVA()/Sbase;
+            complex<double> Sload = loads[i]->get_actual_total_load_in_MVA()/Sbase;
 
             bus_power[internal_bus] -= Sload;
         }
@@ -1039,9 +1097,11 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 
     size_t nhvdc = hvdcs.size();
 
-    complex<double> S_rec, S_inv;
-
-    for(size_t i=0; i!=nhvdc; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_hvdc_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nhvdc; ++i)
     {
         if(hvdcs[i]->get_status() == true)
         {
@@ -1054,8 +1114,8 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
             //hvdcs[i]->solve_steady_state();
             //hvdcs[i]->show_solved_hvdc_steady_state();
 
-            S_rec = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER), hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER));
-            S_inv = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER), -hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER));
+            complex<double> S_rec = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(RECTIFIER), hvdcs[i]->get_converter_ac_reactive_power_in_MVar(RECTIFIER));
+            complex<double> S_inv = complex<double>(hvdcs[i]->get_converter_ac_active_power_in_MW(INVERTER), -hvdcs[i]->get_converter_ac_reactive_power_in_MVar(INVERTER));
 
             //ostringstream osstream;
             //osstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
@@ -1579,8 +1639,6 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_
 
 void POWERFLOW_SOLVER::update_source_power_without_constraints()
 {
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
     size_t physical_bus;
     BUS_TYPE btype;
 

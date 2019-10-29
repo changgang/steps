@@ -47,6 +47,7 @@ EXPORT_STEPS_DLL void api_set_owner_capacity(size_t cap, size_t toolkit_index=IN
 
 
 EXPORT_STEPS_DLL void api_load_powerflow_data_from_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_load_powerflow_result_from_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_powerflow_data_to_file(char* file, char* file_type, bool export_zero_impedance_line=true, bool export_out_of_service_bus=true, size_t powerflow_data_save_mode=0, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_load_dynamic_data_from_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_dynamic_data_to_file(char* file, char* file_type, size_t toolkit_index=INDEX_NOT_EXIST);

@@ -124,6 +124,11 @@ void BPA_IMEXPORTER::load_powerflow_data(string file)
 
 }
 
+void BPA_IMEXPORTER::load_powerflow_result(string pf_source)
+{
+    return;
+}
+
 void BPA_IMEXPORTER::load_sequence_data(string sq_source)
 {
     sq_source = string2upper(sq_source);

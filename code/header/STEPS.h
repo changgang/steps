@@ -23,6 +23,20 @@ class STEPS
         void set_thread_number(size_t n);
         size_t get_thread_number() const;
 
+        void update_device_thread_number();
+        size_t get_bus_thread_number() const;
+        size_t get_generator_thread_number() const;
+        size_t get_wt_generator_thread_number() const;
+        size_t get_pv_unit_thread_number() const;
+        size_t get_energy_storage_thread_number() const;
+        size_t get_load_thread_number() const;
+        size_t get_fixed_shunt_thread_number() const;
+        size_t get_line_thread_number() const;
+        size_t get_transformer_thread_number() const;
+        size_t get_hvdc_thread_number() const;
+        size_t get_vsc_hvdc_thread_number() const;
+        size_t get_equivalent_device_thread_number() const;
+
         char get_next_alphabeta();
         void open_log_file(const string& file);
         void close_log_file();
@@ -75,6 +89,9 @@ class STEPS
         char current_alphabeta;
 
         size_t thread_number;
+        size_t generator_thread_number, wt_generator_thread_number, pv_unit_thread_number, energy_storage_thread_number,
+               load_thread_number, fixed_shunt_thread_number, line_thread_number, transformer_thread_number, hvdc_thread_number, vsc_hvdc_thread_number,
+               equivalent_device_thread_number;
 
 };
 #endif // STEPS_H

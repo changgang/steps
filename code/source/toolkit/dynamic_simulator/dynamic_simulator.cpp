@@ -1,4 +1,5 @@
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
+#include "header/basic/constants.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 #include "header/meter/meter_setter.h"
@@ -8,11 +9,10 @@
 #include <istream>
 #include <iostream>
 #include <ctime>
-#include <omp.h>
-
-#define STEPS_DYNAMIC_SIMULATOR_OPENMP
 
 using namespace std;
+
+#define ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
 
 DYNAMICS_SIMULATOR::DYNAMICS_SIMULATOR()
 {
@@ -1468,16 +1468,17 @@ METER DYNAMICS_SIMULATOR::get_meter(size_t i)
 
 void DYNAMICS_SIMULATOR::update_all_meters_value()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t n = meters.size();
     if(n!=0)
     {
         if(meter_values.size()!=n)
             meter_values.resize(n,0.0);
 
-        #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-            set_openmp_number_of_threads();
+        #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+            set_openmp_number_of_threads(toolkit.get_thread_number());
             #pragma omp parallel for schedule(static)
-        #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+        #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         for(size_t i=0; i<n; ++i)
             meter_values[i]=meters[i].get_meter_value();
         /*
@@ -1827,11 +1828,12 @@ void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
 
 void DYNAMICS_SIMULATOR::initialize_internal_bus_voltage_vector()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t nbus = internal_bus_complex_voltage_in_pu.size();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t internal_bus=0; internal_bus<nbus; ++internal_bus)
         internal_bus_complex_voltage_in_pu[internal_bus] = internal_bus_pointers[internal_bus]->get_complex_voltage_in_pu();
 }
@@ -1852,28 +1854,6 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
     return v;
 }
 
-void DYNAMICS_SIMULATOR::set_openmp_number_of_threads()
-{
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t omp_num_thread = toolkit.get_thread_number();
-    if(omp_num_thread==0)
-    {
-        size_t nbus = toolkit.get_power_system_database().get_bus_count();
-        if(nbus<=1000)
-            omp_set_num_threads(1);
-        else
-        {
-            size_t ncores = omp_get_num_procs();
-            size_t nthreads = ncores;
-            if(nthreads==0) nthreads=1;
-            if(nthreads>5) nthreads=5;
-            omp_set_num_threads(nthreads);
-        }
-    }
-    else
-        omp_set_num_threads(omp_num_thread);
-}
-
 void DYNAMICS_SIMULATOR::start()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -1883,7 +1863,6 @@ void DYNAMICS_SIMULATOR::start()
     detailed_log_enabled = toolkit.is_detailed_log_enabled();
 
     show_dynamic_simulator_configuration();
-    check_if_parallel_simulation_is_valid();
 
     time_t clock_start = clock();
 
@@ -1953,153 +1932,6 @@ void DYNAMICS_SIMULATOR::start()
 
     save_meter_information();
     save_meter_values();
-}
-
-void DYNAMICS_SIMULATOR::check_if_parallel_simulation_is_valid()
-{
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    if(toolkit.get_thread_number()!=1)
-    {
-        ostringstream osstream;
-        osstream<<"Warning. The following devices may cause simulation ERROR then parallel simulation is enable when parallel thread number is "<<toolkit.get_thread_number()<<"\n";
-
-        vector<BUS*> buses = psdb.get_all_buses();
-        size_t n = buses.size();
-        bool invalid_case_found = false;
-        for(size_t i=0; i<n; ++i)
-        {
-            BUS* bus = buses[i];
-            if(bus->get_bus_type()!=OUT_OF_SERVICE)
-            {
-                size_t bus_number = bus->get_bus_number();
-                size_t m = 0;
-
-                vector<GENERATOR*> generators = psdb.get_generators_connecting_to_bus(bus_number);
-                m = generators.size();
-                if(m!=1)
-                {
-                    GENERATOR* gen = nullptr;
-                    ostringstream tempstream;
-                    size_t device_count = 0;
-                    for(size_t j=0; j<m; ++j)
-                    {
-                        gen = generators[j];
-                        if(gen->get_status()==true)
-                        {
-                            ++device_count;
-                            tempstream<<gen->get_device_name()<<"\n";
-                        }
-                    }
-                    if(device_count>1)
-                    {
-                        osstream<<tempstream.str();
-                        invalid_case_found = true;
-                    }
-                }
-
-                vector<WT_GENERATOR*> wt_generators = psdb.get_wt_generators_connecting_to_bus(bus_number);
-                m = wt_generators.size();
-                if(m!=1)
-                {
-                    WT_GENERATOR* gen = nullptr;
-                    ostringstream tempstream;
-                    size_t device_count = 0;
-                    for(size_t j=0; j<m; ++j)
-                    {
-                        gen = wt_generators[j];
-                        if(gen->get_status()==true)
-                        {
-                            ++device_count;
-                            tempstream<<gen->get_device_name()<<"\n";
-                        }
-                    }
-                    if(device_count>1)
-                    {
-                        osstream<<tempstream.str();
-                        invalid_case_found = true;
-                    }
-                }
-
-                vector<PV_UNIT*> pv_units = psdb.get_pv_units_connecting_to_bus(bus_number);
-                m = pv_units.size();
-                if(m!=1)
-                {
-                    PV_UNIT* pv = nullptr;
-                    ostringstream tempstream;
-                    size_t device_count = 0;
-                    for(size_t j=0; j<m; ++j)
-                    {
-                        pv = pv_units[j];
-                        if(pv->get_status()==true)
-                        {
-                            ++device_count;
-                            tempstream<<pv->get_device_name()<<"\n";
-                        }
-                    }
-                    if(device_count>1)
-                    {
-                        osstream<<tempstream.str();
-                        invalid_case_found = true;
-                    }
-                }
-
-                vector<ENERGY_STORAGE*> e_storages = psdb.get_energy_storages_connecting_to_bus(bus_number);
-                m = e_storages.size();
-                if(m!=1)
-                {
-                    ENERGY_STORAGE* es = nullptr;
-                    ostringstream tempstream;
-                    size_t device_count = 0;
-                    for(size_t j=0; j<m; ++j)
-                    {
-                        es = e_storages[j];
-                        if(es->get_status()==true)
-                        {
-                            ++device_count;
-                            tempstream<<es->get_device_name()<<"\n";
-                        }
-                    }
-                    if(device_count>1)
-                    {
-                        osstream<<tempstream.str();
-                        invalid_case_found = true;
-                    }
-                }
-
-                vector<LOAD*> loads = psdb.get_loads_connecting_to_bus(bus_number);
-                m = loads.size();
-                if(m!=1)
-                {
-                    LOAD* load = nullptr;
-                    ostringstream tempstream;
-                    size_t device_count = 0;
-                    for(size_t j=0; j<m; ++j)
-                    {
-                        load = loads[j];
-                        if(load->get_status()==true)
-                        {
-                            ++device_count;
-                            tempstream<<load->get_device_name()<<"\n";
-                        }
-                    }
-                    if(device_count>1)
-                    {
-                        osstream<<tempstream.str();
-                        invalid_case_found = true;
-                    }
-                }
-            }
-        }
-        if(invalid_case_found==true)
-        {
-            toolkit.show_information_with_leading_time_stamp(osstream);
-
-            toolkit.set_thread_number(1);
-            osstream<<"Parallel simulation is then disabled.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
 }
 
 void DYNAMICS_SIMULATOR::prepare_devices_for_run()
@@ -2362,10 +2194,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
     size_t n = psdb.get_generator_count();
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_generator_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; i++)
     {
         GENERATOR* generator = generators[i];
@@ -2374,10 +2206,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = psdb.get_wt_generator_count();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_wt_generator_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         WT_GENERATOR* wtgen = wt_generators[i];
@@ -2386,10 +2218,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = psdb.get_pv_unit_count();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_pv_unit_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         PV_UNIT* pv = pv_units[i];
@@ -2398,10 +2230,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = psdb.get_load_count();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_load_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         LOAD* load = loads[i];
@@ -2410,10 +2242,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = psdb.get_hvdc_count();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_hvdc_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         HVDC* hvdc = hvdcs[i];
@@ -2422,10 +2254,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = psdb.get_equivalent_device_count();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         EQUIVALENT_DEVICE* edevice = e_devices[i];
@@ -2434,10 +2266,10 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     }
 
     n = in_service_buses.size();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         BUS* bus = in_service_buses[i];
@@ -2448,12 +2280,13 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 
 void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t n = in_service_buses.size();
-    //BUS* bus;
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         BUS* bus = in_service_buses[i];
@@ -2484,12 +2317,13 @@ bool DYNAMICS_SIMULATOR::get_relay_actiion_flag() const
 
 void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t n = e_devices.size();
-    //EQUIVALENT_DEVICE* edevice;
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         EQUIVALENT_DEVICE* edevice = e_devices[i];
@@ -2501,10 +2335,10 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t n = e_devices.size();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         ostringstream osstream;
@@ -2596,11 +2430,12 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
 void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t n = hvdcs.size();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_hvdc_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         HVDC_MODEL* model = hvdcs[i]->get_hvdc_model();
@@ -2618,10 +2453,10 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     get_bus_currnet_into_network();
 
     size_t n = I_mismatch.size();
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
 
@@ -2840,10 +2675,10 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 	if(I_mismatch.size()!=nbus)
 		I_mismatch.resize(nbus, 0.0);
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
 	for (size_t i = 0; i<nbus; ++i)
 		I_mismatch[i] = 0.0;
 
@@ -2905,17 +2740,15 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
 
 void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     size_t ngen = generators.size();
 
-    //complex<double> E, V, Z, I;
-
-    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_generator_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<ngen; ++i)
     {
         GENERATOR* generator = generators[i];
@@ -2947,17 +2780,15 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     size_t ngen = wt_generators.size();
 
-    //complex<double> E, V, Z, I;
-
-    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_wt_generator_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<ngen; ++i)
     {
         complex<double> I;
@@ -2993,17 +2824,15 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     size_t npv = pv_units.size();
 
-    //complex<double> E, V, Z, I;
-
-    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_pv_unit_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<npv; ++i)
     {
         complex<double> I;
@@ -3039,15 +2868,15 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
 
 void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     size_t nload = loads.size();
 
-    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_load_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<nload; ++i)
     {
         LOAD* load = loads[i];
@@ -3070,7 +2899,10 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 
     size_t nhvdc = hvdcs.size();
 
-    //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_hvdc_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<nhvdc; ++i)
     {
         complex<double> I;
@@ -3171,10 +3003,10 @@ void DYNAMICS_SIMULATOR:: calculate_bus_power_mismatch_in_MVA()
 
     size_t n = I_mismatch.size();
     complex<double> V;
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i= 0; i<n; ++i)
     {
         //complex<double> V = ;
@@ -3208,13 +3040,14 @@ POWER_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatch_struct()
 
 void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t n = I_mismatch.size();
     I_vec.resize(n*2, 0.0);
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         I_vec[i] = I_mismatch[i].imag();
@@ -3225,13 +3058,14 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 
 void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t n = delta_V.size();
     n = n>>1;
 
-    #ifdef STEPS_DYNAMIC_SIMULATOR_OPENMP
-        set_openmp_number_of_threads();
+    #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
+        set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
-    #endif // STEPS_DYNAMIC_SIMULATOR_OPENMP
+    #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t i=0; i<n; ++i)
     {
         BUS* bus = internal_bus_pointers[i];

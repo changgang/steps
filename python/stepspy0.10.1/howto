@@ -1,0 +1,17 @@
+1. install wheel and twine, use:
+
+python -m pip install wheel twine
+
+2. change version of stepsy in setup.py
+
+3. to build stepspy module, use:
+
+python setup.py sdist bdist_wheel
+
+4. to upload stepspy module to pypi, use:
+
+python -m twine upload dist/*
+
+5. to check whether the built module is OK or not, use:
+
+python -m twine check dist/*

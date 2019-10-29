@@ -68,11 +68,183 @@ string STEPS::get_toolkit_name() const
 void STEPS::set_thread_number(size_t n)
 {
     thread_number = n;
+    generator_thread_number = 1;
+    wt_generator_thread_number = 1;
+    pv_unit_thread_number = 1;
+    energy_storage_thread_number = 1;
+    load_thread_number = 1;
+    fixed_shunt_thread_number = 1;
+    line_thread_number = 1;
+    transformer_thread_number = 1;
+    hvdc_thread_number = 1;
+    vsc_hvdc_thread_number = 1;;
+    equivalent_device_thread_number = 1;
+
+    if(power_system_db.get_bus_count()!=0)
+        update_device_thread_number();
 }
 
 size_t STEPS::get_thread_number() const
 {
     return thread_number;
+}
+
+
+void STEPS::update_device_thread_number()
+{
+    POWER_SYSTEM_DATABASE& psdb = get_power_system_database();
+    if(thread_number!=1)
+    {
+        generator_thread_number = thread_number;
+        wt_generator_thread_number = thread_number;
+        pv_unit_thread_number = thread_number;
+        energy_storage_thread_number = thread_number;
+        load_thread_number = thread_number;
+        fixed_shunt_thread_number = thread_number;
+        line_thread_number = thread_number;
+        transformer_thread_number = thread_number;
+        hvdc_thread_number = thread_number;
+        vsc_hvdc_thread_number = thread_number;;
+        equivalent_device_thread_number = thread_number;
+
+        vector<BUS*> buses = psdb.get_all_buses();
+        size_t n = buses.size();
+        for(size_t i=0; i<n; ++i)
+        {
+            BUS* bus = buses[i];
+            if(bus->get_bus_type()!=OUT_OF_SERVICE)
+            {
+                size_t bus_number = bus->get_bus_number();
+
+                if(generator_thread_number!=1)
+                {
+                    vector<GENERATOR*> devices = psdb.get_generators_connecting_to_bus(bus_number);
+                    if(devices.size()>1) generator_thread_number = 1;
+                }
+
+                if(wt_generator_thread_number!=1)
+                {
+                    vector<WT_GENERATOR*> devices = psdb.get_wt_generators_connecting_to_bus(bus_number);
+                    if(devices.size()>1) wt_generator_thread_number = 1;
+                }
+
+                if(pv_unit_thread_number!=1)
+                {
+                    vector<PV_UNIT*> devices = psdb.get_pv_units_connecting_to_bus(bus_number);
+                    if(devices.size()>1) pv_unit_thread_number = 1;
+                }
+
+                if(energy_storage_thread_number!=1)
+                {
+                    vector<ENERGY_STORAGE*> devices = psdb.get_energy_storages_connecting_to_bus(bus_number);
+                    if(devices.size()>1) energy_storage_thread_number = 1;
+                }
+
+                if(load_thread_number!=1)
+                {
+                    vector<LOAD*> devices = psdb.get_loads_connecting_to_bus(bus_number);
+                    if(devices.size()>1) load_thread_number = 1;
+                }
+
+                if(fixed_shunt_thread_number!=1)
+                {
+                    vector<FIXED_SHUNT*> devices = psdb.get_fixed_shunts_connecting_to_bus(bus_number);
+                    if(devices.size()>1) fixed_shunt_thread_number = 1;
+                }
+
+                if(line_thread_number!=1)
+                {
+                    vector<LINE*> devices = psdb.get_lines_connecting_to_bus(bus_number);
+                    if(devices.size()>1) line_thread_number = 1;
+                }
+
+                if(transformer_thread_number!=1)
+                {
+                    vector<TRANSFORMER*> devices = psdb.get_transformers_connecting_to_bus(bus_number);
+                    if(devices.size()>1) transformer_thread_number = 1;
+                }
+
+                if(hvdc_thread_number!=1)
+                {
+                    vector<HVDC*> devices = psdb.get_hvdcs_connecting_to_bus(bus_number);
+                    if(devices.size()>1) hvdc_thread_number = 1;
+                }
+
+                if(vsc_hvdc_thread_number!=1)
+                {
+                    //vector<VSC_HVDC*> devices = psdb.get_vsc_hvdcs_connecting_to_bus(bus_number);
+                    //if(devices.size()>1) vsc_hvdc_thread_number = 1;
+                }
+
+                if(equivalent_device_thread_number!=1)
+                {
+                    vector<EQUIVALENT_DEVICE*> devices = psdb.get_equivalent_devices_connecting_to_bus(bus_number);
+                    if(devices.size()>1) equivalent_device_thread_number = 1;
+                }
+            }
+        }
+    }
+}
+
+
+size_t STEPS::get_bus_thread_number() const
+{
+    return thread_number;
+}
+
+size_t STEPS::get_generator_thread_number() const
+{
+    return generator_thread_number;
+}
+
+size_t STEPS::get_wt_generator_thread_number() const
+{
+    return wt_generator_thread_number;
+}
+
+size_t STEPS::get_pv_unit_thread_number() const
+{
+    return pv_unit_thread_number;
+}
+
+size_t STEPS::get_energy_storage_thread_number() const
+{
+    return energy_storage_thread_number;
+}
+
+size_t STEPS::get_load_thread_number() const
+{
+    return load_thread_number;
+}
+
+size_t STEPS::get_fixed_shunt_thread_number() const
+{
+    return fixed_shunt_thread_number;
+}
+
+size_t STEPS::get_line_thread_number() const
+{
+    return line_thread_number;
+}
+
+size_t STEPS::get_transformer_thread_number() const
+{
+    return transformer_thread_number;
+}
+
+size_t STEPS::get_hvdc_thread_number() const
+{
+    return hvdc_thread_number;
+}
+
+size_t STEPS::get_vsc_hvdc_thread_number() const
+{
+    return vsc_hvdc_thread_number;
+}
+
+size_t STEPS::get_equivalent_device_thread_number() const
+{
+    return equivalent_device_thread_number;
 }
 
 void STEPS::clear()

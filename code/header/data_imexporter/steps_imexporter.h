@@ -13,6 +13,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         ~STEPS_IMEXPORTER();
 
         virtual void load_powerflow_data(string file);
+        virtual void load_powerflow_result(string file);
         virtual void load_dynamic_data(string dy_source);
         virtual void load_sequence_data(string sq_source);
         void load_powerflow_data_from_steps_vector(vector<vector<vector<string> > >& data);
@@ -94,6 +95,18 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         string export_facts_data() const;
         string export_switched_shunt_data() const;
 
+
+        size_t get_starting_index_of_device_powerflow_result(const vector<string>& data, const string& device_type);
+        size_t get_data_column_index_in_powerflow_result(const vector<string>& data, size_t starting_index, const string& data_name);
+
+        vector<string> load_powerflow_result_into_ram(string file);
+        void load_bus_powerflow_result(const vector<string>& data);
+        void load_generator_powerflow_result(const vector<string>& data);
+        void load_wt_generator_powerflow_result(const vector<string>& data);
+        void load_pv_unit_powerflow_result(const vector<string>& data);
+        void load_energy_storage_powerflow_result(const vector<string>& data);
+        void load_transformer_powerflow_result(const vector<string>& data);
+        void load_hvdc_powerflow_result(const vector<string>& data);
 
         void load_dynamic_data_into_ram(string file);
 

@@ -159,7 +159,6 @@ class DYNAMICS_SIMULATOR: public BASE
 
         void switch_on_equivalent_device();
     private:
-        void check_if_parallel_simulation_is_valid();
         void optimize_network_ordering();
         void set_internal_bus_pointer();
         void set_internal_bus_complex_voltage_vector();
@@ -222,8 +221,6 @@ class DYNAMICS_SIMULATOR: public BASE
 
         void update_generators_in_islands();
         bool is_system_angular_stable() const;
-
-        void set_openmp_number_of_threads();
 
         double DELT;
         double TIME;

@@ -50,6 +50,11 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
+void PSSE_IMEXPORTER::load_powerflow_result(string file)
+{
+    return;
+}
+
 void PSSE_IMEXPORTER::load_sequence_data(string sq_source)
 {
     sq_source = string2upper(sq_source);

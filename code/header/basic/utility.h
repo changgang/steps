@@ -74,5 +74,6 @@ size_t get_toolkit_count();
 STEPS& get_default_toolkit();
 STEPS& get_toolkit(size_t toolkit_index);
 
+void set_openmp_number_of_threads(size_t n);
 
 #endif // UTILITY_H

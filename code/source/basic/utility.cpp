@@ -11,6 +11,7 @@
 #include <chrono>
 #include <thread>
 #include <mutex>
+#include <omp.h>
 
 using namespace std;
 
@@ -667,4 +668,7 @@ STEPS& get_toolkit(size_t toolkit_index)
     }
 }
 
-
+void set_openmp_number_of_threads(size_t n)
+{
+    omp_set_num_threads(n);
+}

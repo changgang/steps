@@ -67,6 +67,34 @@ void STEPS_IMEXPORTER::load_all_devices()
     load_switched_shunt_data();
 }
 
+void STEPS_IMEXPORTER::load_powerflow_result(string file)
+{
+    ostringstream osstream;
+    osstream<<"Loading powerflow result from STEPS file: "<<file;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
+    vector<string> data_in_ram = load_powerflow_result_into_ram(file);
+    if(data_in_ram.size()==0)
+    {
+        osstream<<"No data in the given PSS/E file: "<<file<<endl
+          <<"Please check if the file exist or not.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+
+    load_bus_powerflow_result(data_in_ram);
+    load_generator_powerflow_result(data_in_ram);
+    load_wt_generator_powerflow_result(data_in_ram);
+    load_pv_unit_powerflow_result(data_in_ram);
+    load_energy_storage_powerflow_result(data_in_ram);
+    load_transformer_powerflow_result(data_in_ram);
+    load_hvdc_powerflow_result(data_in_ram);
+
+    osstream<<"Done loading powerflow result.";
+    toolkit.show_information_with_leading_time_stamp(osstream);
+}
+
 void STEPS_IMEXPORTER::load_sequence_data(string sq_source)
 {
     sq_source = string2upper(sq_source);
@@ -2071,7 +2099,6 @@ string STEPS_IMEXPORTER::export_load_data() const
 
     vector<LOAD*> loads = psdb.get_all_loads();
     size_t n = loads.size();
-    char buffer[1000];
     for(size_t i=0; i!=n; ++i)
     {
         LOAD* load = loads[i];
@@ -2860,6 +2887,438 @@ string STEPS_IMEXPORTER::export_switched_shunt_data() const
     return "";
 }
 
+size_t STEPS_IMEXPORTER::get_starting_index_of_device_powerflow_result(const vector<string>& data, const string& device_type)
+{
+    size_t n_data = data.size();
+    size_t starting_index = INDEX_NOT_EXIST;
+    for(size_t i=0; i<n_data; ++i)
+    {
+        if(data[i]==device_type)
+        {
+            starting_index = i;
+            break;
+        }
+    }
+    return starting_index;
+}
+
+size_t STEPS_IMEXPORTER::get_data_column_index_in_powerflow_result(const vector<string>& data, size_t starting_index, const string& data_name)
+{
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+    size_t n_header = header_contents.size();
+    size_t index=INDEX_NOT_EXIST;
+    for(size_t i=0; i<n_header; ++i)
+    {
+        if(header_contents[i]==data_name)
+        {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+
+
+vector<string> STEPS_IMEXPORTER::load_powerflow_result_into_ram(string file)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+
+    vector<string> result_in_ram;
+
+    FILE* fid = fopen(file.c_str(),"rt");
+    if(fid == NULL)
+    {
+        osstream<<"STEPS powerflow result file '"<<file<<"' is not accessible. Loading STEPS powerflow result is failed.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return result_in_ram;
+    }
+
+    char buffer[10240];
+    string sbuffer;
+
+    while(true)
+    {
+        if(fgets(buffer, 1024, fid)==NULL)
+        {
+            fclose(fid);
+            break;
+        }
+        sbuffer = buffer;
+        sbuffer = trim_string(sbuffer);
+        result_in_ram.push_back(sbuffer);
+    }
+    return result_in_ram;
+}
+
+void STEPS_IMEXPORTER::load_bus_powerflow_result(const vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Bus");
+    if(starting_index == INDEX_NOT_EXIST)
+    {
+        osstream<<"Warning! No bus powerflow result is found in the powerflow result file. No bus voltage and angle is updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+
+    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    size_t voltage_index = get_data_column_index_in_powerflow_result(data, starting_index, "VOLTAGE/PU");
+    size_t angle_index = get_data_column_index_in_powerflow_result(data, starting_index, "ANGLE/DEG");
+    if(bus_number_index==INDEX_NOT_EXIST or voltage_index==INDEX_NOT_EXIST or angle_index==INDEX_NOT_EXIST)
+    {
+        osstream<<"Index of bus contents not found. "<<bus_number_index<<", "<<voltage_index<<", "<<angle_index;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    // go load powerflow result
+    size_t n_data = data.size();
+    for(size_t i=starting_index+2; i<n_data; ++i)
+    {
+        string line = data[i];
+        if(line.size()==0 or line.at(0)=='%')
+            break;
+
+        vector<string> contents = split_string(line, ",");
+        size_t bus_number = str2int(contents[bus_number_index]);
+        double voltage = str2double(contents[voltage_index]);
+        double angle = str2double(contents[angle_index]);
+        BUS* bus = psdb.get_bus(bus_number);
+        if(bus!=NULL)
+        {
+            bus->set_voltage_in_pu(voltage);
+            bus->set_angle_in_deg(angle);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::load_generator_powerflow_result(const vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    size_t n_data = data.size();
+    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Generator");
+    if(starting_index == INDEX_NOT_EXIST)
+    {
+        osstream<<"Warning! No generator powerflow result is found in the powerflow result file. No generator P and Q is updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+
+    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    size_t P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    size_t Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
+    {
+        osstream<<"Index of generator contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    // go load powerflow result
+    for(size_t i=starting_index+2; i<n_data; ++i)
+    {
+        string line = data[i];
+        if(line.size()==0 or line.at(0)=='%')
+            break;
+
+        vector<string> contents = split_string(line, ",");
+        size_t bus_number = str2int(contents[bus_number_index]);
+        string identifier = contents[identifier_index];
+        identifier = trim_string(identifier, "\"\'");
+        double P = str2double(contents[P_index]);
+        double Q = str2double(contents[Q_index]);
+        DEVICE_ID did = get_generator_device_id(bus_number,identifier);
+        GENERATOR* gen = psdb.get_generator(did);
+        if(gen!=NULL)
+        {
+            gen->set_p_generation_in_MW(P);
+            gen->set_q_generation_in_MVar(Q);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::load_wt_generator_powerflow_result(const vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    size_t n_data = data.size();
+    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% WT generator");
+    if(starting_index == INDEX_NOT_EXIST)
+    {
+        osstream<<"Warning! No WT generator powerflow result is found in the powerflow result file. No WT generator P and Q is updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+
+    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    size_t P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    size_t Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
+    {
+        osstream<<"Index of WT generator contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    // go load powerflow result
+    for(size_t i=starting_index+2; i<n_data; ++i)
+    {
+        string line = data[i];
+        if(line.size()==0 or line.at(0)=='%')
+            break;
+
+        vector<string> contents = split_string(line, ",");
+        size_t bus_number = str2int(contents[bus_number_index]);
+        string identifier = contents[identifier_index];
+        identifier = trim_string(identifier, "\"\'");
+        double P = str2double(contents[P_index]);
+        double Q = str2double(contents[Q_index]);
+        DEVICE_ID did = get_wt_generator_device_id(bus_number,identifier);
+        WT_GENERATOR* gen = psdb.get_wt_generator(did);
+        if(gen!=NULL)
+        {
+            gen->set_p_generation_in_MW(P);
+            gen->set_q_generation_in_MVar(Q);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::load_pv_unit_powerflow_result(const vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    size_t n_data = data.size();
+    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% PV unit");
+    if(starting_index == INDEX_NOT_EXIST)
+    {
+        osstream<<"Warning! No PV unit powerflow result is found in the powerflow result file. No PV unit P and Q is updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+
+    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    size_t P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    size_t Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
+    {
+        osstream<<"Index of PV unit contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    // go load powerflow result
+    for(size_t i=starting_index+2; i<n_data; ++i)
+    {
+        string line = data[i];
+        if(line.size()==0 or line.at(0)=='%')
+            break;
+
+        vector<string> contents = split_string(line, ",");
+        size_t bus_number = str2int(contents[bus_number_index]);
+        string identifier = contents[identifier_index];
+        identifier = trim_string(identifier, "\"\'");
+        double P = str2double(contents[P_index]);
+        double Q = str2double(contents[Q_index]);
+        DEVICE_ID did = get_pv_unit_device_id(bus_number,identifier);
+        PV_UNIT* pv = psdb.get_pv_unit(did);
+        if(pv!=NULL)
+        {
+            pv->set_p_generation_in_MW(P);
+            pv->set_q_generation_in_MVar(Q);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::load_energy_storage_powerflow_result(const vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    size_t n_data = data.size();
+    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Energy storage");
+    if(starting_index == INDEX_NOT_EXIST)
+    {
+        osstream<<"Warning! No energy storage powerflow result is found in the powerflow result file. No energy storage P and Q is updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+
+    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    size_t P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    size_t Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
+    {
+        osstream<<"Index of energy storage contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    // go load powerflow result
+    for(size_t i=starting_index+2; i<n_data; ++i)
+    {
+        string line = data[i];
+        if(line.size()==0 or line.at(0)=='%')
+            break;
+
+        vector<string> contents = split_string(line, ",");
+        size_t bus_number = str2int(contents[bus_number_index]);
+        string identifier = contents[identifier_index];
+        identifier = trim_string(identifier, "\"\'");
+        double P = str2double(contents[P_index]);
+        double Q = str2double(contents[Q_index]);
+        DEVICE_ID did = get_energy_storage_device_id(bus_number,identifier);
+        ENERGY_STORAGE* es = psdb.get_energy_storage(did);
+        if(es!=NULL)
+        {
+            es->set_p_generation_in_MW(P);
+            es->set_q_generation_in_MVar(Q);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::load_transformer_powerflow_result(const vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    size_t n_data = data.size();
+    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Transformer");
+    if(starting_index == INDEX_NOT_EXIST)
+    {
+        osstream<<"Warning! No transformer powerflow result is found in the powerflow result file. No transformer off-nominal tap is updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+
+    size_t ibus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "IBUS");
+    size_t jbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "JBUS");
+    size_t kbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "KBUS");
+    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    size_t itap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KI/PU");
+    size_t jtap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KJ/PU");
+    size_t ktap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KK/PU");
+    if(ibus_number_index==INDEX_NOT_EXIST or jbus_number_index==INDEX_NOT_EXIST or kbus_number_index==INDEX_NOT_EXIST or
+       identifier_index==INDEX_NOT_EXIST or
+       itap_index==INDEX_NOT_EXIST or jtap_index==INDEX_NOT_EXIST or ktap_index==INDEX_NOT_EXIST)
+    {
+        osstream<<"Index of transformer contents not found. "<<ibus_number_index<<", "<<jbus_number_index<<", "<<kbus_number_index<<", "
+                <<identifier_index<<", "<<itap_index<<", "<<jtap_index<<", "<<ktap_index;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    // go load powerflow result
+    for(size_t i=starting_index+2; i<n_data; ++i)
+    {
+        string line = data[i];
+        if(line.size()==0 or line.at(0)=='%')
+            break;
+
+        vector<string> contents = split_string(line, ",");
+        size_t ibus_number = str2int(contents[ibus_number_index]);
+        size_t jbus_number = str2int(contents[jbus_number_index]);
+        size_t kbus_number = str2int(contents[kbus_number_index]);
+        string identifier = contents[identifier_index];
+        identifier = trim_string(identifier, "\"\'");
+        double itap = str2double(contents[itap_index]);
+        double jtap = str2double(contents[jtap_index]);
+        double ktap = str2double(contents[ktap_index]);
+        DEVICE_ID did = get_transformer_device_id(ibus_number,jbus_number,kbus_number,identifier);
+        TRANSFORMER* trans = psdb.get_transformer(did);
+        if(trans!=NULL)
+        {
+            trans->set_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(PRIMARY_SIDE, itap);
+            trans->set_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(SECONDARY_SIDE, jtap);
+            if(trans->is_three_winding_transformer())
+                trans->set_winding_turn_ratio_based_on_winding_nominal_voltage_in_pu(TERTIARY_SIDE, ktap);
+        }
+    }
+}
+
+void STEPS_IMEXPORTER::load_hvdc_powerflow_result(const vector<string>& data)
+{
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+
+    size_t n_data = data.size();
+    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Hvdc");
+    if(starting_index == INDEX_NOT_EXIST)
+    {
+        osstream<<"Warning! No HVDC powerflow result is found in the powerflow result file. No HVDC off-nominal tap and firing angle is updated.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    string header = data[starting_index+1];
+    vector<string> header_contents = split_string(header, ",");
+
+    size_t rbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "IBUS");
+    size_t ibus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "JBUS");
+    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    size_t rtap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KR/PU");
+    size_t itap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KI/PU");
+    size_t alpha_index = get_data_column_index_in_powerflow_result(data, starting_index, "ALPHA/DEG");
+    size_t gamma_index = get_data_column_index_in_powerflow_result(data, starting_index, "GAMMA/DEG");
+    if(rbus_number_index==INDEX_NOT_EXIST or ibus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or
+       rtap_index==INDEX_NOT_EXIST or itap_index==INDEX_NOT_EXIST or
+       alpha_index==INDEX_NOT_EXIST or gamma_index==INDEX_NOT_EXIST)
+    {
+        osstream<<"Index of transformer contents not found. "<<rbus_number_index<<", "<<ibus_number_index<<", "<<identifier_index<<", "
+                <<rtap_index<<", "<<itap_index<<", "<<alpha_index<<", "<<gamma_index;
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    // go load powerflow result
+    for(size_t i=starting_index+2; i<n_data; ++i)
+    {
+        string line = data[i];
+        if(line.size()==0 or line.at(0)=='%')
+            break;
+
+        vector<string> contents = split_string(line, ",");
+        size_t rbus_number = str2int(contents[rbus_number_index]);
+        size_t ibus_number = str2int(contents[ibus_number_index]);
+        string identifier = contents[identifier_index];
+        identifier = trim_string(identifier, "\"\'");
+        double rtap = str2double(contents[rtap_index]);
+        double itap = str2double(contents[itap_index]);
+        double alpha = str2double(contents[alpha_index]);
+        double gamma = str2double(contents[gamma_index]);
+        DEVICE_ID did = get_hvdc_device_id(rbus_number,ibus_number,identifier);
+        HVDC* hvdc = psdb.get_hvdc(did);
+        if(hvdc!=NULL)
+        {
+            hvdc->set_converter_alpha_or_gamma_in_deg(RECTIFIER, alpha);
+            hvdc->set_converter_alpha_or_gamma_in_deg(INVERTER, gamma);
+            hvdc->set_converter_transformer_tap_in_pu(RECTIFIER, rtap);
+            hvdc->set_converter_transformer_tap_in_pu(INVERTER, itap);
+        }
+    }
+}
 
 void STEPS_IMEXPORTER::export_sequence_data(string file)
 {
