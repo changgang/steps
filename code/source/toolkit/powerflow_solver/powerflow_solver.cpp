@@ -231,17 +231,11 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 
         double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
         vector<double> bus_delta_voltage_angle;
-    /*    JACOBIAN_BUILDER jacobian_builder;
-        jacobian_builder.set_toolkit(toolkit);
 
-        jacobian_builder.set_network_matrix(network_matrix);
-    */
         network_matrix.build_network_matrix();
-        //network_matrix.report_network_matrix();
 
         update_P_and_Q_equation_internal_buses();
         jacobian_builder.build_seprate_jacobians();
-        //jacobian_builder.show_seprate_jacobians();
 
         while(true)
         {
@@ -308,7 +302,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
 
             ++iteration_count;
         }
-        show_powerflow_result();
+        //show_powerflow_result();
     }
 }
 
@@ -456,7 +450,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
 
             iteration_count ++;
         }
-        show_powerflow_result();
+        //show_powerflow_result();
     }
 }
 
@@ -1003,7 +997,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
         complex<double> voltage = get_bus_complex_voltage_in_pu_with_internal_bus_number(column);
 
         int k_end = Y.get_starting_index_of_column(column+1);
-        for(int k=k_start; k!=k_end; ++k)
+        for(int k=k_start; k<k_end; ++k)
         {
             int row = Y.get_row_number_of_entry_index(k);
             complex<double> y = Y.get_entry_value(k);
@@ -1019,7 +1013,7 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double Sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
     //vector<SOURCE*> sources = psdb.get_all_sources();
 
@@ -1052,7 +1046,7 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
                     break;
             }
             size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
-            bus_power[internal_bus] += (Sgen/Sbase);
+            bus_power[internal_bus] += (Sgen*one_over_sbase);
         }
     }
 }
@@ -1063,7 +1057,7 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double Sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
     size_t nload = loads.size();
 
@@ -1078,7 +1072,7 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
             size_t physical_bus = loads[i]->get_load_bus();
             size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            complex<double> Sload = loads[i]->get_actual_total_load_in_MVA()/Sbase;
+            complex<double> Sload = loads[i]->get_actual_total_load_in_MVA()*one_over_sbase;
 
             bus_power[internal_bus] -= Sload;
         }
@@ -1091,7 +1085,7 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double Sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 
     //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
 
@@ -1121,8 +1115,8 @@ void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
             //osstream<<hvdcs[i]->get_device_name()<<": Srec = "<<S_rec<<" MVA, Sinv = "<<S_inv<<" MVA."<<endl;
             //toolkit.show_information_with_leading_time_stamp(osstream);
 
-            bus_power[internal_bus_rec] -= S_rec/Sbase;
-            bus_power[internal_bus_inv] += S_inv/Sbase;
+            bus_power[internal_bus_rec] -= S_rec*one_over_sbase;
+            bus_power[internal_bus_inv] += S_inv*one_over_sbase;
         }
     }
 }
@@ -1200,11 +1194,9 @@ bool POWERFLOW_SOLVER::check_bus_type_constraints()
 
     bool system_bus_type_changed = false;
 
-    //vector<BUS*> buses = psdb.get_all_buses();
-
     size_t nbus = buses.size();
 
-    for(size_t i=0; i!=nbus; ++i)
+    for(size_t i=0; i<nbus; ++i)
     {
         BUS_TYPE btype = buses[i]->get_bus_type();
         if(btype == PQ_TYPE or btype == OUT_OF_SERVICE)
@@ -1290,7 +1282,6 @@ bool POWERFLOW_SOLVER::check_PV_bus_constraint_of_physical_bus(size_t physical_b
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    //BUS* bus = psdb.get_bus(physical_bus);
     size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
     BUS* bus = internal_bus_pointers[internal_bus];
 
@@ -1379,7 +1370,6 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    //BUS* bus = psdb.get_bus(physical_bus);
     size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
     BUS* bus = internal_bus_pointers[internal_bus];
 
@@ -1639,22 +1629,20 @@ void POWERFLOW_SOLVER::set_all_sources_at_physical_bus_to_q_max(size_t physical_
 
 void POWERFLOW_SOLVER::update_source_power_without_constraints()
 {
-    size_t physical_bus;
-    BUS_TYPE btype;
-
-    vector<size_t> index;
-
-    //vector<BUS*> buses = psdb.get_all_buses();
-
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t nbus = buses.size();
 
-    for(size_t i=0; i!=nbus; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nbus; ++i)
     {
-        btype = buses[i]->get_bus_type();
+        BUS_TYPE btype = buses[i]->get_bus_type();
         if(btype == PQ_TYPE or btype == OUT_OF_SERVICE)
             continue;
 
-        physical_bus = buses[i]->get_bus_number();
+        size_t physical_bus = buses[i]->get_bus_number();
 
         if(btype==SLACK_TYPE)
             update_SLACK_bus_source_power_of_physical_bus(physical_bus);
@@ -1757,22 +1745,29 @@ void POWERFLOW_SOLVER::update_PV_bus_source_power_of_physical_bus(size_t physica
 
 void POWERFLOW_SOLVER::build_bus_power_mismatch_vector_for_coupled_solution()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t nP = internal_P_equation_buses.size();
     size_t nQ = internal_Q_equation_buses.size();
 
     S_mismatch.resize(nP+nQ);
 
-    size_t internal_bus;
-
-    for(size_t i=0; i!=nP; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nP; ++i)
     {
-        internal_bus = internal_P_equation_buses[i];
+        size_t internal_bus = internal_P_equation_buses[i];
         //s_mismatch.push_back(-bus_power[internal_bus].real());
         S_mismatch[i] = -bus_power[internal_bus].real();
     }
-    for(size_t i=0; i!=nQ; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nQ; ++i)
     {
-        internal_bus = internal_Q_equation_buses[i];
+        size_t internal_bus = internal_Q_equation_buses[i];
         //s_mismatch.push_back(-bus_power[internal_bus].imag());
         S_mismatch[nP+i] = -bus_power[internal_bus].imag();
     }
@@ -1780,15 +1775,18 @@ void POWERFLOW_SOLVER::build_bus_power_mismatch_vector_for_coupled_solution()
 
 void POWERFLOW_SOLVER::build_bus_P_power_mismatch_vector_for_decoupled_solution()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t nP = internal_P_equation_buses.size();
 
     P_mismatch.resize(nP);
 
-    size_t internal_bus;
-
-    for(size_t i=0; i!=nP; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nP; ++i)
     {
-        internal_bus = internal_P_equation_buses[i];
+        size_t internal_bus = internal_P_equation_buses[i];
         P_mismatch[i] = -bus_power[internal_bus].real();
         //cout<<"Pmismatch vector, "<<i<<", "<<-bus_power[internal_bus].real()<<endl;
     }
@@ -1796,14 +1794,18 @@ void POWERFLOW_SOLVER::build_bus_P_power_mismatch_vector_for_decoupled_solution(
 
 void POWERFLOW_SOLVER::build_bus_Q_power_mismatch_vector_for_decoupled_solution()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     size_t nQ = internal_Q_equation_buses.size();
 
     Q_mismatch.resize(nQ);
 
-    size_t internal_bus;
-    for(size_t i=0; i!=nQ; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nQ; ++i)
     {
-        internal_bus = internal_Q_equation_buses[i];
+        size_t internal_bus = internal_Q_equation_buses[i];
         Q_mismatch[i] = -bus_power[internal_bus].imag();
         //cout<<"Qmismatch vector, "<<i<<", "<<-bus_power[internal_bus].imag()<<endl;
     }
@@ -1838,7 +1840,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     if(max_dangle>limit)
     {
         double scale = limit/max_dangle;
-        for(size_t i=0; i!=nP; ++i)
+        #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            set_openmp_number_of_threads(toolkit.get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        for(size_t i=0; i<nP; ++i)
         {
             update[i] *= scale;
         }
@@ -1847,7 +1853,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     if(max_dv>limit)
     {
         double scale = limit/max_dv;
-        for(size_t i=nP; i!=nv; ++i)
+        #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            set_openmp_number_of_threads(toolkit.get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        for(size_t i=nP; i<nv; ++i)
         {
             update[i] *= scale;
         }
@@ -1860,7 +1870,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
     double alpha_P = alpha;
     double alpha_Q = alpha;
 
-    for(size_t i=0; i!=nP; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nP; ++i)
     {
         size_t internal_bus = internal_P_equation_buses[i];
         //size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
@@ -1874,7 +1888,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
         bus->set_angle_in_rad(current_angle + alpha_P*delta_angle);
     }
 
-    for(size_t i=0; i!=nQ; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nQ; ++i)
     {
         size_t internal_bus = internal_Q_equation_buses[i];
         //size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
@@ -1905,7 +1923,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                 if(P_is_worse)
                 {
                     alpha_P *= 0.5;
-                    for(size_t i=0; i!=nP; ++i)
+                    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                        set_openmp_number_of_threads(toolkit.get_thread_number());
+                        #pragma omp parallel for schedule(static)
+                    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                    for(size_t i=0; i<nP; ++i)
                     {
                         size_t internal_bus = internal_P_equation_buses[i];
                         //size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
@@ -1922,7 +1944,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                 if(Q_is_worse)
                 {
                     alpha_Q *= 0.5;
-                    for(size_t i=0; i!=nQ; ++i)
+                    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                        set_openmp_number_of_threads(toolkit.get_thread_number());
+                        #pragma omp parallel for schedule(static)
+                    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                    for(size_t i=0; i<nQ; ++i)
                     {
                         size_t internal_bus = internal_Q_equation_buses[i];
                         //size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
@@ -1952,16 +1978,28 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
         return;
 
     double max_dv=0.0;
+    size_t max_delta_v_bus = 0;
     size_t nv = update.size();
     for(size_t i=0; i!=nv; ++i)
     {
         if(max_dv<abs(update[i]))
+        {
             max_dv = abs(update[i]);
+            size_t internal_bus = internal_Q_equation_buses[i];
+            max_delta_v_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
+        }
     }
+    osstream<<"Maximum voltage change is: "<<max_dv<<" pu at physical bus "<<max_delta_v_bus;
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
     if(max_dv>limit)
     {
         double scale = limit/max_dv;
-        for(size_t i=0; i!=nv; ++i)
+        #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            set_openmp_number_of_threads(toolkit.get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        for(size_t i=0; i<nv; ++i)
         {
             update[i] *= scale;
         }
@@ -1974,10 +2012,11 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
 
     double alpha = get_iteration_accelerator();
 
-    double max_delta_v = 0.0;
-    size_t max_delta_v_bus = 0;
-
-    for(size_t i=0; i!=nQ; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nQ; ++i)
     {
         size_t internal_bus = internal_Q_equation_buses[i];
         size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
@@ -1989,12 +2028,6 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
         double delta_voltage = update[i];
 
         bus->set_voltage_in_pu(current_voltage + alpha*delta_voltage);
-
-        if(fabs(delta_voltage)> fabs(max_delta_v))
-        {
-            max_delta_v = delta_voltage;
-            max_delta_v_bus = physical_bus;
-        }
     }
 
     if(get_non_divergent_solution_logic()==true)
@@ -2007,8 +2040,11 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
             if(Qerror>Qerror0 and Qerror>get_allowed_max_reactive_power_imbalance_in_MVar())
             {
                 alpha *= 0.5;
-                max_delta_v *= 0.5;
-                for(size_t i=0; i!=nQ; ++i)
+                #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                    set_openmp_number_of_threads(toolkit.get_thread_number());
+                    #pragma omp parallel for schedule(static)
+                #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                for(size_t i=0; i<nQ; ++i)
                 {
                     size_t internal_bus = internal_Q_equation_buses[i];
                     //size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
@@ -2027,10 +2063,6 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
         }
     }
 
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Max voltage update: %f pu at physical bus %lu.",
-             max_delta_v,max_delta_v_bus);
-    toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
 
@@ -2045,16 +2077,28 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
         return;
 
     double max_dv=0.0;
+    size_t max_delta_angle_bus = 0;
     size_t nv = update.size();
     for(size_t i=0; i!=nv; ++i)
     {
         if(max_dv<abs(update[i]))
+        {
             max_dv = abs(update[i]);
+            size_t internal_bus = internal_P_equation_buses[i];
+            max_delta_angle_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
+        }
     }
+    osstream<<"Maximum angle   change is: "<<max_dv<<" rad ("<<rad2deg(max_dv)<<" deg) at physical bus "<<max_delta_angle_bus;
+    toolkit.show_information_with_leading_time_stamp(osstream);
+
     if(max_dv>limit)
     {
         double scale = limit/max_dv;
-        for(size_t i=0; i!=nv; ++i)
+        #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+            set_openmp_number_of_threads(toolkit.get_thread_number());
+            #pragma omp parallel for schedule(static)
+        #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        for(size_t i=0; i<nv; ++i)
         {
             update[i] *= scale;
         }
@@ -2066,10 +2110,11 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
 
     double alpha = get_iteration_accelerator();
 
-    double max_delta_angle = 0.0;
-    size_t max_delta_angle_bus = 0;
-
-    for(size_t i=0; i!=nP; ++i)
+    #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+        set_openmp_number_of_threads(toolkit.get_thread_number());
+        #pragma omp parallel for schedule(static)
+    #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+    for(size_t i=0; i<nP; ++i)
     {
         size_t internal_bus = internal_P_equation_buses[i];
         size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
@@ -2081,12 +2126,6 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
         double delta_angle = update[i];
 
         bus->set_angle_in_rad(current_angle + alpha*delta_angle);
-
-        if(fabs(delta_angle)> fabs(max_delta_angle))
-        {
-            max_delta_angle = delta_angle;
-            max_delta_angle_bus = physical_bus;
-        }
     }
 
 
@@ -2100,8 +2139,11 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
             if(Perror>Perror0 and Perror>get_allowed_max_active_power_imbalance_in_MW())
             {
                 alpha *= 0.5;
-                max_delta_angle *=0.5;
-                for(size_t i=0; i!=nP; ++i)
+                #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                    set_openmp_number_of_threads(toolkit.get_thread_number());
+                    #pragma omp parallel for schedule(static)
+                #endif // ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
+                for(size_t i=0; i<nP; ++i)
                 {
                     size_t internal_bus = internal_P_equation_buses[i];
                     //size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
@@ -2119,11 +2161,6 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
                 break;
         }
     }
-
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Max angle update: %f rad at physical bus %lu.",
-             max_delta_angle,max_delta_angle_bus);
-    toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
 void POWERFLOW_SOLVER::show_powerflow_result()
@@ -2361,7 +2398,6 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
             }
         }
 
-        //vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
         size_t npv = pv_units.size();
         if(npv>0)
         {
