@@ -303,6 +303,11 @@
 		<Unit filename="header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model.h" />
 		<Unit filename="header/model/sg_models/turbine_load_controller_model/turbine_load_controller_model_test.h" />
 		<Unit filename="header/model/sg_models/turbine_load_controller_model/turbine_load_controller_models.h" />
+		<Unit filename="header/model/vsc_hvdc_model/VSCT.h" />
+		<Unit filename="header/model/vsc_hvdc_model/VSCT_test.h" />
+		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_model.h" />
+		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_model_test.h" />
+		<Unit filename="header/model/vsc_hvdc_model/vsc_hvdc_models.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/filewind_test.h" />
 		<Unit filename="header/model/wtg_models/wind_speed_model/wind_speed_model.h" />
@@ -517,6 +522,8 @@
 		<Unit filename="source/device/source_test.cpp" />
 		<Unit filename="source/device/transformer.cpp" />
 		<Unit filename="source/device/transformer_test.cpp" />
+		<Unit filename="source/device/vsc_hvdc.cpp" />
+		<Unit filename="source/device/vsc_hvdc_test.cpp" />
 		<Unit filename="source/device/wt_generator.cpp" />
 		<Unit filename="source/device/wt_generator_test.cpp" />
 		<Unit filename="source/meter/continuous_buffer.cpp" />

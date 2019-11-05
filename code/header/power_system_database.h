@@ -23,6 +23,9 @@
 
 using namespace std;
 
+class MODEL;
+class SOURCE;
+
 class POWER_SYSTEM_DATABASE : public BASE
 {
     public:

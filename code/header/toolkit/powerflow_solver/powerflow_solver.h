@@ -1,12 +1,12 @@
 #ifndef POWERFLOW_SOLVER_H
 #define POWERFLOW_SOLVER_H
 
-#include "header/device/bus.h"
-#include "header/device/source.h"
 #include "header/network/network_matrix.h"
 #include "header/network/jacobian_builder.h"
 #include "header/basic/sparse_matrix_define.h"
 
+class BUS;
+class SOURCE;
 class POWERFLOW_SOLVER : public BASE
 {
     public:

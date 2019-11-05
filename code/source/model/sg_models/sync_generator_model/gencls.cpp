@@ -203,7 +203,7 @@ void GENCLS::run(DYNAMIC_MODE mode)
     double telec = get_air_gap_torque_in_pu_based_on_mbase();
 
     double delta_torque = tmech-telec-damping*speed;
-    //double input = pmech-pelec - D*speed;
+    //delta_torque = (tmech-telec)*omega-damping*speed;
     rotor_speed_block->set_input(delta_torque);
     rotor_speed_block->run(mode);
 

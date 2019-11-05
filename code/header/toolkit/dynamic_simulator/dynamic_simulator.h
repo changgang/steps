@@ -4,7 +4,6 @@
 #include "header/basic/base.h"
 #include "header/basic/power_mismatch_struct.h"
 #include "header/meter/meter.h"
-//#include "header/power_system_database.h"
 #include "header/network/network_matrix.h"
 #include "header/basic/sparse_matrix_define.h"
 #include <fstream>

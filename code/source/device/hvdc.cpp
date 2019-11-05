@@ -56,8 +56,8 @@ void HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus)
     }
     else
     {
-        osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<converter_name<<" bus of HVDC link."<<endl
-                <<"0 will be set to indicate invalid HVDC link.";
+        osstream<<"Warning. Zero bus number (0) is not allowed for setting up "<<converter_name<<" bus of hvdc link."<<endl
+                <<"0 will be set to indicate invalid hvdc link.";
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
         converter_bus[converter] = bus;
@@ -819,6 +819,10 @@ void HVDC::reverse_converters()
     size_t bus = converter_bus[0];
     converter_bus[0] = converter_bus[1];
     converter_bus[1] = bus;
+
+    BUS* busptr = converter_busptr[0];
+    converter_busptr[0] = converter_busptr[1];
+    converter_busptr[1] = busptr;
 
     size_t number = bridge_number[0];
     bridge_number[0] = bridge_number[1];

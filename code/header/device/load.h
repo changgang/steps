@@ -62,9 +62,12 @@ class LOAD : public DEVICE
         complex<double> get_actual_constant_power_load_in_MVA() const;
         complex<double> get_actual_constant_current_load_in_MVA() const;
         complex<double> get_actual_constant_impedance_load_in_MVA() const;
+        double get_load_scale_with_voltage(double exp, double v) const;
 
         static void set_voltage_threshold_of_constant_power_load_in_pu(double v);
+        static void set_voltage_threshold_of_constant_current_load_in_pu(double v);
         static double get_voltage_threshold_of_constant_power_load_in_pu();
+        static double get_voltage_threshold_of_constant_current_load_in_pu();
 
         virtual void set_model(const MODEL* model);
 
@@ -96,6 +99,7 @@ class LOAD : public DEVICE
         bool interruptable;
 
         static double voltage_threshold_of_constant_power_load_in_pu;
+        static double voltage_threshold_of_constant_current_load_in_pu;
 
         double manually_scale_in_pu;
 

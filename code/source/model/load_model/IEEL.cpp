@@ -315,7 +315,9 @@ void IEEL::initialize()
     double n2 = get_P_n_power_2();
     double n3 = get_P_n_power_3();
 
-    P0 = P/(alpha1*pow(V,n1)+alpha2*pow(V,n2)+alpha3*pow(V,n3));
+    P0 = P/(alpha1*load->get_load_scale_with_voltage(n1, V)+
+            alpha2*load->get_load_scale_with_voltage(n2, V)+
+            alpha3*load->get_load_scale_with_voltage(n3, V));
 
     double Q = S.imag();
     alpha1 = get_Q_alpha_1();
@@ -325,7 +327,9 @@ void IEEL::initialize()
     n2 = get_Q_n_power_2();
     n3 = get_Q_n_power_3();
 
-    Q0 = Q/(alpha1*pow(V,n1)+alpha2*pow(V,n2)+alpha3*pow(V,n3));
+    Q0 = Q/(alpha1*load->get_load_scale_with_voltage(n1, V)+
+            alpha2*load->get_load_scale_with_voltage(n2, V)+
+            alpha3*load->get_load_scale_with_voltage(n3, V));
 
     set_flag_model_initialized_as_true();
 }
@@ -339,7 +343,6 @@ void IEEL::run(DYNAMIC_MODE mode)
 complex<double> IEEL::get_load_power_in_MVA()
 {
     LOAD* load = get_load_pointer();
-    double Vth = load->get_voltage_threshold_of_constant_power_load_in_pu();
 
     double V = get_bus_voltage_in_pu();
     double f = get_bus_frequency_deviation_in_pu();
@@ -356,36 +359,9 @@ complex<double> IEEL::get_load_power_in_MVA()
     double n3 = get_P_n_power_3();
     double kf = get_P_Kf();
 
-    double P = 0.0;
-    if(fabs(n1)>FLOAT_EPSILON)
-        P += alpha1*steps_fast_pow(V,n1);
-    else
-    {
-        if(V>Vth)
-            P += alpha1;
-        else
-            P += (alpha1/Vth*V);
-    }
-
-    if(fabs(n2)>FLOAT_EPSILON)
-        P += alpha2*steps_fast_pow(V,n2);
-    else
-    {
-        if(V>Vth)
-            P += alpha2;
-        else
-            P += (alpha2/Vth*V);
-    }
-
-    if(fabs(n3)>FLOAT_EPSILON)
-        P += alpha3*steps_fast_pow(V,n3);
-    else
-    {
-        if(V>Vth)
-            P += alpha3;
-        else
-            P += (alpha3/Vth*V);
-    }
+    double P = alpha1*load->get_load_scale_with_voltage(n1, V) +
+               alpha2*load->get_load_scale_with_voltage(n2, V) +
+               alpha3*load->get_load_scale_with_voltage(n3, V);
 
     P = P0*P*(1.0+kf*f);
 
@@ -397,36 +373,9 @@ complex<double> IEEL::get_load_power_in_MVA()
     n3 = get_Q_n_power_3();
     kf = get_Q_Kf();
 
-    double Q = 0.0;
-    if(fabs(n1)>FLOAT_EPSILON)
-        Q += alpha1*steps_fast_pow(V,n1);
-    else
-    {
-        if(V>Vth)
-            Q += alpha1;
-        else
-            Q += (alpha1/Vth*V);
-    }
-
-    if(fabs(n2)>FLOAT_EPSILON)
-        Q += alpha2*steps_fast_pow(V,n2);
-    else
-    {
-        if(V>Vth)
-            Q += alpha2;
-        else
-            Q += (alpha2/Vth*V);
-    }
-
-    if(fabs(n3)<FLOAT_EPSILON)
-        Q += alpha3*steps_fast_pow(V,n3);
-    else
-    {
-        if(V>Vth)
-            Q += alpha3;
-        else
-            Q += (alpha3/Vth*V);
-    }
+    double Q = alpha1*load->get_load_scale_with_voltage(n1, V) +
+               alpha2*load->get_load_scale_with_voltage(n2, V) +
+               alpha3*load->get_load_scale_with_voltage(n3, V);
 
     Q = Q0*Q*(1.0+kf*f);
 

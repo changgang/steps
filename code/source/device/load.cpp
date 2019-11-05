@@ -10,6 +10,7 @@
 using namespace std;
 
 double LOAD::voltage_threshold_of_constant_power_load_in_pu = 0.7;
+double LOAD::voltage_threshold_of_constant_current_load_in_pu = 0.5;
 
 LOAD::LOAD()
 {
@@ -275,30 +276,10 @@ complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
     if(get_status() == true)
     {
         complex<double> S0 = get_nominal_constant_power_load_in_MVA();
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        BUS* busptr = psdb.get_bus(get_load_bus());
-        if(busptr!=NULL)
-        {
-            double v = busptr->get_voltage_in_pu();
+        double v = busptr->get_voltage_in_pu();
 
-            complex<double> s;
-            if(v>=get_voltage_threshold_of_constant_power_load_in_pu())
-                s = S0;
-            else
-                s = S0/get_voltage_threshold_of_constant_power_load_in_pu()*v;
-
-            return s;
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
-              <<get_device_name()<<" actual constant power load will be returned as it nominal power.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            return S0;
-        }
+        return S0*get_load_scale_with_voltage(0.0, v);
     }
     else
         return 0.0;
@@ -309,25 +290,9 @@ complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
     if(get_status() == true)
     {
         complex<double> S0 = get_nominal_constant_current_load_in_MVA();
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+        double v = busptr->get_voltage_in_pu();
 
-        BUS* busptr = psdb.get_bus(get_load_bus());
-        if(busptr!=NULL)
-        {
-            double v = busptr->get_voltage_in_pu();
-
-            complex<double> s = S0*v;
-            return s;
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
-              <<get_device_name()<<" actual constant current load will be returned as it nominal power.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            return S0;
-        }
+        return S0*get_load_scale_with_voltage(1.0, v);
     }
     else
         return 0.0;
@@ -338,30 +303,54 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
     if(get_status() == true)
     {
         complex<double> S0 = get_nominal_constant_impedance_load_in_MVA();
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        BUS* busptr = psdb.get_bus(get_load_bus());
-        if(busptr!=NULL)
-        {
-            double v = busptr->get_voltage_in_pu();
-
-            complex<double> s = S0*v*v;
-            return s;
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Bus "<<get_load_bus()<<" is not found in power system database '"<<psdb.get_system_name()<<"'."<<endl
-              <<get_device_name()<<" actual constant impedance load will be returned as it nominal power.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            return S0;
-        }
+        double v = busptr->get_voltage_in_pu();
+        complex<double> s = S0*v*v;
+        return s;
     }
     else
         return 0.0;
 }
 
+double LOAD::get_load_scale_with_voltage(double exp, double v) const
+{
+    if(exp>=2.0)// higher than constant impedance
+        return pow(v, exp);
+    else
+    {
+        if(exp==0.0) // constant power
+        {
+            double vth = get_voltage_threshold_of_constant_power_load_in_pu();
+            if(v>=vth)
+                return 1.0;
+            else
+            {
+                double Imax = 1.0/vth;
+                // (v-vth)^2/vth^2+I^2/Imax^2=1
+                //double vscale = v/vth-1.0;
+                double vscale = v/vth-1.0;
+
+                double I = sqrt(1.0-vscale*vscale)*Imax;
+                return v*I;
+            }
+        }
+        else // otherwise, including constant current
+        {
+            double vth = get_voltage_threshold_of_constant_current_load_in_pu();
+            if(v>=vth)
+                return pow(v, exp);
+            else
+            {
+                double Imax = 1.0/pow(vth, exp);
+                // (v-vth)^2/vth^2+I^2/Imax^2=1
+                //double vscale = v/vth-1.0;
+                double vscale = v/vth-1.0;
+
+                double I = sqrt(1.0-vscale*vscale)*Imax;
+                return v*I;
+            }
+        }
+    }
+}
 
 void LOAD::set_voltage_threshold_of_constant_power_load_in_pu(double v)
 {
@@ -369,11 +358,21 @@ void LOAD::set_voltage_threshold_of_constant_power_load_in_pu(double v)
         voltage_threshold_of_constant_power_load_in_pu = v;
 }
 
+void LOAD::set_voltage_threshold_of_constant_current_load_in_pu(double v)
+{
+    if(v>0.0)
+        voltage_threshold_of_constant_current_load_in_pu = v;
+}
+
 double LOAD::get_voltage_threshold_of_constant_power_load_in_pu()
 {
     return voltage_threshold_of_constant_power_load_in_pu;
 }
 
+double LOAD::get_voltage_threshold_of_constant_current_load_in_pu()
+{
+    return voltage_threshold_of_constant_current_load_in_pu;
+}
 
 void LOAD::set_model(const MODEL* model)
 {
