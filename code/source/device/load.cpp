@@ -279,7 +279,7 @@ complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
 
         double v = busptr->get_voltage_in_pu();
 
-        return S0*get_load_scale_with_voltage(0.0, v);
+        return S0*get_load_scale_with_voltage(0.0, v, LOAD_ELLIPTICAL_CV);
     }
     else
         return 0.0;
@@ -292,7 +292,7 @@ complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
         complex<double> S0 = get_nominal_constant_current_load_in_MVA();
         double v = busptr->get_voltage_in_pu();
 
-        return S0*get_load_scale_with_voltage(1.0, v);
+        return S0*get_load_scale_with_voltage(1.0, v, LOAD_ELLIPTICAL_CV);
     }
     else
         return 0.0;
@@ -311,7 +311,7 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
         return 0.0;
 }
 
-double LOAD::get_load_scale_with_voltage(double exp, double v) const
+double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type) const
 {
     if(exp>=2.0)// higher than constant impedance
         return pow(v, exp);
@@ -325,12 +325,7 @@ double LOAD::get_load_scale_with_voltage(double exp, double v) const
             else
             {
                 double Imax = 1.0/vth;
-                // (v-vth)^2/vth^2+I^2/Imax^2=1
-                //double vscale = v/vth-1.0;
-                double vscale = v/vth-1.0;
-
-                double I = sqrt(1.0-vscale*vscale)*Imax;
-                return v*I;
+                return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
             }
         }
         else // otherwise, including constant current
@@ -340,14 +335,34 @@ double LOAD::get_load_scale_with_voltage(double exp, double v) const
                 return pow(v, exp);
             else
             {
-                double Imax = 1.0/pow(vth, exp);
-                // (v-vth)^2/vth^2+I^2/Imax^2=1
-                //double vscale = v/vth-1.0;
-                double vscale = v/vth-1.0;
-
-                double I = sqrt(1.0-vscale*vscale)*Imax;
-                return v*I;
+                double Imax = 1.0/pow(vth, exp-1.0);
+                return get_load_scale_with_Imax_and_voltage(Imax, v, vth, cv_type);
             }
+        }
+    }
+}
+
+double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type) const
+{
+    switch(cv_type)
+    {
+        case LOAD_ELLIPTICAL_CV:
+        {
+            // (v-vth)^2/vth^2+I^2/Imax^2=1
+            //double vscale = v/vth-1.0;
+            double vscale = v/vth-1.0;
+
+            double I = sqrt(1.0-vscale*vscale)*Imax;
+            return v*I;
+        }
+        case LOAD_LINEAR_CV:
+        {
+            double I = Imax*v/vth;
+            return v*I;
+        }
+        default: // LOAD_CONSTANT_CV
+        {
+            return v*Imax;
         }
     }
 }

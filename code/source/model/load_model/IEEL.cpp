@@ -315,9 +315,9 @@ void IEEL::initialize()
     double n2 = get_P_n_power_2();
     double n3 = get_P_n_power_3();
 
-    P0 = P/(alpha1*load->get_load_scale_with_voltage(n1, V)+
-            alpha2*load->get_load_scale_with_voltage(n2, V)+
-            alpha3*load->get_load_scale_with_voltage(n3, V));
+    P0 = P/(alpha1*load->get_load_scale_with_voltage(n1, V, LOAD_ELLIPTICAL_CV)+
+            alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_ELLIPTICAL_CV)+
+            alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_ELLIPTICAL_CV));
 
     double Q = S.imag();
     alpha1 = get_Q_alpha_1();
@@ -327,9 +327,9 @@ void IEEL::initialize()
     n2 = get_Q_n_power_2();
     n3 = get_Q_n_power_3();
 
-    Q0 = Q/(alpha1*load->get_load_scale_with_voltage(n1, V)+
-            alpha2*load->get_load_scale_with_voltage(n2, V)+
-            alpha3*load->get_load_scale_with_voltage(n3, V));
+    Q0 = Q/(alpha1*load->get_load_scale_with_voltage(n1, V, LOAD_ELLIPTICAL_CV)+
+            alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_ELLIPTICAL_CV)+
+            alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_ELLIPTICAL_CV));
 
     set_flag_model_initialized_as_true();
 }
@@ -359,9 +359,9 @@ complex<double> IEEL::get_load_power_in_MVA()
     double n3 = get_P_n_power_3();
     double kf = get_P_Kf();
 
-    double P = alpha1*load->get_load_scale_with_voltage(n1, V) +
-               alpha2*load->get_load_scale_with_voltage(n2, V) +
-               alpha3*load->get_load_scale_with_voltage(n3, V);
+    double P = alpha1*load->get_load_scale_with_voltage(n1, V, LOAD_ELLIPTICAL_CV) +
+               alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_ELLIPTICAL_CV) +
+               alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_ELLIPTICAL_CV);
 
     P = P0*P*(1.0+kf*f);
 
@@ -373,9 +373,9 @@ complex<double> IEEL::get_load_power_in_MVA()
     n3 = get_Q_n_power_3();
     kf = get_Q_Kf();
 
-    double Q = alpha1*load->get_load_scale_with_voltage(n1, V) +
-               alpha2*load->get_load_scale_with_voltage(n2, V) +
-               alpha3*load->get_load_scale_with_voltage(n3, V);
+    double Q = alpha1*load->get_load_scale_with_voltage(n1, V, LOAD_ELLIPTICAL_CV) +
+               alpha2*load->get_load_scale_with_voltage(n2, V, LOAD_ELLIPTICAL_CV) +
+               alpha3*load->get_load_scale_with_voltage(n3, V, LOAD_ELLIPTICAL_CV);
 
     Q = Q0*Q*(1.0+kf*f);
 
