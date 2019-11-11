@@ -104,7 +104,7 @@ void DYNAMICS_SIMULATOR_TEST::test_constructor()
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     TEST_ASSERT(simulator.get_meter_count()==0);
     TEST_ASSERT(simulator.get_max_DAE_iteration()==100);
-    TEST_ASSERT(simulator.get_min_DAE_iteration()==2);
+    TEST_ASSERT(simulator.get_min_DAE_iteration()==3);
     TEST_ASSERT(simulator.get_max_network_iteration()==1);
     TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.00001)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.0)<FLOAT_EPSILON);

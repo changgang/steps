@@ -41,7 +41,7 @@ void DYNAMICS_SIMULATOR::clear()
     set_dynamic_simulation_time_in_s(0.0);
 
     set_max_DAE_iteration(100);
-    set_min_DAE_iteration(2);
+    set_min_DAE_iteration(3);
     set_max_network_iteration(1);
     set_max_update_iteration(100);
     set_allowed_max_power_imbalance_in_MVA(0.001);
