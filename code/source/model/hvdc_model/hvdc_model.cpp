@@ -297,22 +297,18 @@ double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, 
             return Iset;
         else
         {
-            if(is_unbypassing())
-                Icommand = Iset;
+            // no matter DC is in unbypassing or normal state, get current command as in normal state
+            double P_module = get_auxiliary_signal_in_MW();
+            if(hvdc->get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
+            {
+                if(hvdc->get_side_to_hold_dc_power()==RECTIFIER)
+                    Icommand = (Pset+P_module)/Vdcr_measured;
+                else
+                    Icommand = (Pset+P_module)/Vdci_measured;
+            }
             else
             {
-                double P_module = get_auxiliary_signal_in_MW();
-                if(hvdc->get_converter_operation_mode(RECTIFIER)==RECTIFIER_CONSTANT_POWER)
-                {
-                    if(hvdc->get_side_to_hold_dc_power()==RECTIFIER)
-                        Icommand = (Pset+P_module)/Vdcr_measured;
-                    else
-                        Icommand = (Pset+P_module)/Vdci_measured;
-                }
-                else
-                {
-                    Icommand = Iset+ (P_module/Vdcr_measured);
-                }
+                Icommand = Iset+ (P_module/Vdcr_measured);
             }
         }
     }
