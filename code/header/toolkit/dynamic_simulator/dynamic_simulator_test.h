@@ -36,6 +36,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_set_get_DELT();
         void test_set_get_TIME();
         void test_set_get_max_DAE_iteration();
+        void test_set_get_min_DAE_iteration();
         void test_set_get_max_network_iteration();
         void test_set_get_max_update_iteration();
         void test_set_get_allowed_max_power_imbalance_in_MVA();

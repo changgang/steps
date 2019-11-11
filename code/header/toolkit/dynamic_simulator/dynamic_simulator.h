@@ -35,6 +35,7 @@ class DYNAMICS_SIMULATOR: public BASE
         //double get_current_simulation_time_in_s() const;
 
         void set_max_DAE_iteration(size_t iteration);
+        void set_min_DAE_iteration(size_t iteration);
         void set_max_network_iteration(size_t iteration);
         void set_max_update_iteration(size_t iteration);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
@@ -44,6 +45,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void set_rotor_angle_stability_threshold_in_deg(double angle_th);
 
         size_t get_max_DAE_iteration() const;
+        size_t get_min_DAE_iteration() const;
         size_t get_max_network_iteration() const;
         size_t get_max_update_iteration() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
@@ -228,7 +230,7 @@ class DYNAMICS_SIMULATOR: public BASE
         double time_elapse_in_a_step;
         double P_threshold_in_MW, Q_threshold_in_MVar;
         size_t network_iteration_count, DAE_iteration_count;
-        size_t max_network_iteration, max_DAE_iteration, max_update_iteration;
+        size_t max_network_iteration, max_DAE_iteration, max_update_iteration, min_DAE_iteration;
         size_t current_max_network_iteration;
         double alpha;
         bool non_divergent_solution_enabled;

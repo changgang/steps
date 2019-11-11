@@ -12,11 +12,13 @@ size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name, size_t 
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
     string PARAMETER_NAME = string2upper(parameter_name);
-    if(PARAMETER_NAME=="MAX DAE ITERATION")
+    if(PARAMETER_NAME=="MAX_DAE_ITER" or PARAMETER_NAME=="MAX DAE ITERATION")
         return ds.get_max_DAE_iteration();
-    if(PARAMETER_NAME=="MAX NETWORK ITERATION")
+    if(PARAMETER_NAME=="MIN_DAE_ITER" or PARAMETER_NAME=="MIN DAE ITERATION")
+        return ds.get_min_DAE_iteration();
+    if(PARAMETER_NAME=="MAX_NET_ITER" or PARAMETER_NAME=="MAX NETWORK ITERATION")
         return ds.get_max_network_iteration();
-    if(PARAMETER_NAME=="MAX UPDATE ITERATION")
+    if(PARAMETER_NAME=="MAX_UPDATE_ITER" or PARAMETER_NAME=="MAX UPDATE ITERATION")
         return ds.get_max_update_iteration();
 
     char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
@@ -35,6 +37,11 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
     if(PARAMETER_NAME=="MAX_DAE_ITER" or PARAMETER_NAME=="MAX DAE ITERATION")
     {
         ds.set_max_DAE_iteration(value);
+        return;
+    }
+    if(PARAMETER_NAME=="MIN_DAE_ITER" or PARAMETER_NAME=="MIN DAE ITERATION")
+    {
+        ds.set_min_DAE_iteration(value);
         return;
     }
     if(PARAMETER_NAME=="MAX_NET_ITER" or PARAMETER_NAME=="MAX NETWORK ITERATION")

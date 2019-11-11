@@ -82,6 +82,7 @@ void FIRST_ORDER_BLOCK::initialize()
 
         s = y;
         //z = y-(1.0-2.0*t/h)*s;
+        //z = s-(1.0-2.0*t/h)*s;
         //z =2.0*t/h*s;
         z =2.0*t_over_h*s;
 
@@ -234,9 +235,9 @@ void FIRST_ORDER_BLOCK::update()
 
         if(t!=0.0)
         {
-            //ds = x/t;
-            ds = x*one_over_t;
             s = get_state();
+            //ds = (k*x-s)/t;
+            ds = (k*x-s)*one_over_t;
             y = s;
             if(limiter_type != NO_LIMITER)
             {

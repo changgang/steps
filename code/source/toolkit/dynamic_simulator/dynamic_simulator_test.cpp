@@ -29,6 +29,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_DELT);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_TIME);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_DAE_iteration);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_min_DAE_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA);
@@ -103,6 +104,7 @@ void DYNAMICS_SIMULATOR_TEST::test_constructor()
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     TEST_ASSERT(simulator.get_meter_count()==0);
     TEST_ASSERT(simulator.get_max_DAE_iteration()==100);
+    TEST_ASSERT(simulator.get_min_DAE_iteration()==2);
     TEST_ASSERT(simulator.get_max_network_iteration()==1);
     TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.00001)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.0)<FLOAT_EPSILON);
@@ -184,6 +186,17 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_max_DAE_iteration()
     TEST_ASSERT(simulator.get_max_DAE_iteration()==200);
     simulator.set_max_DAE_iteration(100);
     TEST_ASSERT(simulator.get_max_DAE_iteration()==100);
+}
+
+void DYNAMICS_SIMULATOR_TEST::test_set_get_min_DAE_iteration()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    simulator.set_min_DAE_iteration(20);
+    TEST_ASSERT(simulator.get_min_DAE_iteration()==20);
+    simulator.set_min_DAE_iteration(100);
+    TEST_ASSERT(simulator.get_min_DAE_iteration()==100);
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration()

@@ -41,6 +41,7 @@ void DYNAMICS_SIMULATOR::clear()
     set_dynamic_simulation_time_in_s(0.0);
 
     set_max_DAE_iteration(100);
+    set_min_DAE_iteration(2);
     set_max_network_iteration(1);
     set_max_update_iteration(100);
     set_allowed_max_power_imbalance_in_MVA(0.001);
@@ -117,6 +118,12 @@ void DYNAMICS_SIMULATOR::set_max_DAE_iteration(size_t iteration)
         this->max_DAE_iteration = iteration;
 }
 
+void DYNAMICS_SIMULATOR::set_min_DAE_iteration(size_t iteration)
+{
+    if(iteration>0)
+        this->min_DAE_iteration = iteration;
+}
+
 void DYNAMICS_SIMULATOR::set_max_network_iteration(size_t iteration)
 {
     if(iteration>0)
@@ -173,6 +180,11 @@ double DYNAMICS_SIMULATOR::get_current_simulation_time_in_s() const
 size_t DYNAMICS_SIMULATOR::get_max_DAE_iteration() const
 {
     return max_DAE_iteration;
+}
+
+size_t DYNAMICS_SIMULATOR::get_min_DAE_iteration() const
+{
+    return min_DAE_iteration;
 }
 
 size_t DYNAMICS_SIMULATOR::get_max_network_iteration() const
@@ -2076,7 +2088,7 @@ void DYNAMICS_SIMULATOR::run_a_step()
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
             }
-            if(ITER_DAE>=2 and network_converged) // DAE solution converged
+            if(ITER_DAE>=get_min_DAE_iteration() and network_converged) // DAE solution converged
                 break;
         }
         else
