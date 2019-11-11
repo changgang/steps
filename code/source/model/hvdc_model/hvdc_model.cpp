@@ -275,9 +275,9 @@ double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, 
 
     double Vdcr_measured = Vdci_measured+Idc_measured*Rdc;
 
-    double t_unblock =  get_unblocking_time();
     if(is_unblocking())
     {
+        double t_unblock =  get_unblocking_time();
         if(not dc_current_recovered_after_unblocking)
         {
             double delt_t = TIME - t_unblock;
@@ -298,7 +298,7 @@ double HVDC_MODEL::get_rectifier_dc_current_command_in_kA(double Vdci_measured, 
         else
         {
             if(is_unbypassing())
-                return Iset;
+                Icommand = Iset;
             else
             {
                 double P_module = get_auxiliary_signal_in_MW();
@@ -365,13 +365,11 @@ double HVDC_MODEL::get_inverter_dc_voltage_command_in_kV()
     }
     else
     {
-        //double t_unbypass = get_unbypassing_time();
         if(is_unbypassing()) // unbypassing
         {
-
-            Vcommand = Vset;
-            clear_unbypassing_time();
-            /*
+            /*Vcommand = Vset;
+            clear_unbypassing_time();*/
+            double t_unbypass = get_unbypassing_time();
             double delt_t = TIME - t_unbypass;
             double v_rate = get_dc_voltage_command_recovery_rate_in_pu_per_second();
             double v_min = get_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing();
@@ -381,7 +379,6 @@ double HVDC_MODEL::get_inverter_dc_voltage_command_in_kV()
                 Vcommand = Vset;
                 clear_unbypassing_time();
             }
-            */
         }
         else // mode switched or normal operation
             Vcommand = Vset;
