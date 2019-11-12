@@ -419,7 +419,7 @@ void PSASPS3::run(DYNAMIC_MODE mode)
 
         double input = Macc*(speed_deviation_pu-speed_deviation_ref_pu)+Iacc*(Pmech_pu-Pmech_ref_pu)-Nacc*(Pe_pu-Pe_ref_pu);
 
-        if(get_dedc_1_flag())
+        if(get_dedc_1_flag()==false)
         {
             dedc_block_1.set_input(input);
             dedc_block_1.run(mode);
