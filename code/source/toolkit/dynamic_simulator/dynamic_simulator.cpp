@@ -4636,7 +4636,7 @@ void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_I
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change excitation voltage in pu. No change is made";
+        osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist when trying to change excitation voltage in pu. No change is made";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -4655,7 +4655,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_pu_based
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change mechanical power reference in pu based on MBASE. No change is made";
+        osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist when trying to change mechanical power reference in pu based on MBASE. No change is made";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -4673,7 +4673,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_reference_in_MW(const
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change mechanical power reference in MW. No change is made";
+        osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist when trying to change mechanical power reference in MW. No change is made";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -4702,7 +4702,7 @@ void DYNAMICS_SIMULATOR::change_generator_excitation_voltage_in_pu(const DEVICE_
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change excitation voltage. No change is made";
+        osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist when trying to change excitation voltage. No change is made";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -4731,7 +4731,7 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_pu_based_on_mbase(
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change mechanical power in pu based on MBASE. No change is made";
+        osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist when trying to change mechanical power in pu based on MBASE. No change is made";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
@@ -4749,7 +4749,35 @@ void DYNAMICS_SIMULATOR::change_generator_mechanical_power_in_MW(const DEVICE_ID
     else
     {
         ostringstream osstream;
-        osstream<<"Warning. "<<generator->get_device_name()<<" does not exist when trying to change mechanical power in MW. No change is made";
+        osstream<<"Warning. "<<gen_id.get_device_name()<<" does not exist when trying to change mechanical power in MW. No change is made";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+double DYNAMICS_SIMULATOR::get_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+    if(hvdc != NULL)
+        return hvdc->get_nominal_dc_power_per_pole_in_MW();
+    else
+        return 0.0;
+}
+
+void DYNAMICS_SIMULATOR::change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder)
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    HVDC* hvdc = psdb.get_hvdc(hvdc_id);
+    if(hvdc != NULL)
+    {
+        hvdc->set_nominal_dc_power_per_pole_in_MW(porder);
+    }
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Warning. "<<hvdc_id.get_device_name()<<" does not exist when trying to change hvdc power order in MW. No change is made";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }

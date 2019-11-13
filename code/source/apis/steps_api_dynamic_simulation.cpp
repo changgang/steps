@@ -1013,6 +1013,22 @@ void api_set_generator_mechanical_power_in_MW(size_t bus, char* identifier, doub
     ds.change_generator_mechanical_power_in_MW(did, value);
 }
 
+double api_get_hvdc_power_order_in_MW(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    ds.get_hvdc_power_order_in_MW(did);
+}
+
+void api_set_hvdc_power_order_in_MW(size_t ibus, size_t jbus, char* identifier, double value, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
+    DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
+    ds.change_hvdc_power_order_in_MW(did, value);
+}
+
 double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);

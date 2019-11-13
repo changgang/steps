@@ -158,6 +158,9 @@ class DYNAMICS_SIMULATOR: public BASE
         void change_generator_mechanical_power_in_pu_based_on_mbase(const DEVICE_ID& gen_id, double pmech);
         void change_generator_mechanical_power_in_MW(const DEVICE_ID& gen_id, double pmech);
 
+        double get_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id);
+        void change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id, double porder);
+
         void switch_on_equivalent_device();
     private:
         void optimize_network_ordering();
