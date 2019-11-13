@@ -229,6 +229,7 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"Time step: "<<get_dynamic_simulation_time_step_in_s()<<" s\n"
             <<"Allowed maximum power imbalance: "<<get_allowed_max_power_imbalance_in_MVA()<<" MVA\n"
             <<"Maximum iteration for DAE solution: "<<get_max_DAE_iteration()<<"\n"
+            <<"Minimum iteration for DAE solution: "<<get_min_DAE_iteration()<<"\n"
             <<"Maximum iteration for network: "<<get_max_network_iteration()<<"\n"
             <<"Maximum iteration for updating: "<<get_max_update_iteration()<<"\n"
             <<"Network solution accelerator: "<<get_iteration_accelerator()<<"\n"
