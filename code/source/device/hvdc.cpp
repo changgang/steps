@@ -1066,7 +1066,7 @@ void HVDC::set_hvdc_model(const HVDC_MODEL* model)
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         ostringstream osstream;
-        if(model->get_allowed_device_type()=="HVDC")
+        if(model->has_allowed_device_type("HVDC"))
         {
             if(model->get_model_type()=="HVDC")
             {
@@ -1112,8 +1112,21 @@ void HVDC::set_hvdc_model(const HVDC_MODEL* model)
         }
         else
         {
-            osstream<<"Waring. Dynamic model of device type "<<model->get_allowed_device_type()<<" is not allowed to set up HVDC model for "<<get_device_name()<<endl
-                    <<"No HVDC model is set.";
+            vector<string> allowed_device_types = model->get_allowed_device_types();
+            size_t n = allowed_device_types.size();
+            if(n==1)
+            {
+                osstream<<"Waring. Dynamic model of device type "<<allowed_device_types[0]<<" is not allowed to set up HVDC model for "<<get_device_name()<<endl
+                        <<"No HVDC model is set.";
+            }
+            else
+            {
+                osstream<<"Waring. Dynamic model of device type ";
+                for(size_t i=0; i<n-1; ++i)
+                    osstream<<allowed_device_types[i]<<", ";
+                osstream<<"and "<<allowed_device_types[n-1]<<" is not allowed to set up HVDC model for "<<get_device_name()<<endl
+                        <<"No HVDC model is set.";
+            }
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }

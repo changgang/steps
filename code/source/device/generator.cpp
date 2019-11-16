@@ -76,7 +76,7 @@ DEVICE_ID GENERATOR::get_device_id() const
 
 void GENERATOR::set_model(const MODEL* model)
 {
-    if(model!=NULL and model->get_allowed_device_type()=="GENERATOR")
+    if(model!=NULL and model->has_allowed_device_type("GENERATOR"))
     {
         if(model->get_model_type()=="SYNC GENERATOR")
         {

@@ -218,7 +218,7 @@ void WT_GENERATOR::set_model(const MODEL* model)
 {
     if(model != NULL)
     {
-        if(model->get_allowed_device_type()=="WT GENERATOR")
+        if(model->has_allowed_device_type("WT GENERATOR"))
         {
             if(model->get_model_type()=="WT GENERATOR")
             {

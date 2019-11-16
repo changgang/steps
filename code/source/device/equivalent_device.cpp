@@ -414,7 +414,7 @@ DEVICE_ID EQUIVALENT_DEVICE::get_device_id() const
 
 void EQUIVALENT_DEVICE::set_model(const MODEL* model)
 {
-    if(model != NULL and model->get_allowed_device_type()=="EQUIVALENT DEVICE")
+    if(model != NULL and model->has_allowed_device_type("EQUIVALENT DEVICE"))
     {
         if(model->get_model_type()=="EQUIVALENT MODEL")
         {

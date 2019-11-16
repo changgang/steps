@@ -16,7 +16,8 @@ class MODEL : public BASE
         virtual ~MODEL();
 
         void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type);
-        string get_allowed_device_type() const;
+        vector<string> get_allowed_device_types() const;
+        bool has_allowed_device_type(string device_type) const;
 
         void set_model_float_parameter_count(size_t n);
         size_t get_model_float_parameter_count() const;
@@ -89,7 +90,7 @@ class MODEL : public BASE
     public:
         virtual bool is_valid() const;
     private:
-        string allowed_device_type;
+        vector<string> allowed_device_types;
         DEVICE* device_pointer;
 
         size_t n_parameters;

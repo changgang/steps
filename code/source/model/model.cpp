@@ -10,7 +10,7 @@ MODEL::MODEL()
 {
     device_pointer = NULL;
 
-    allowed_device_type = "";
+    allowed_device_types.clear();
 
     set_flag_model_initialized_as_false();
 
@@ -33,7 +33,10 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
        device_type=="LOAD" or device_type=="LINE" or device_type=="TRANSFORMER" or
        device_type=="HVDC" or device_type=="FIXED SHUNT" or device_type=="SWITCHED SHUNT" or
        device_type=="EQUIVALENT DEVICE" or device_type=="ENERGY STORAGE")
-        allowed_device_type = device_type;
+    {
+        if(not has_allowed_device_type(device_type))
+            allowed_device_types.push_back(device_type);
+    }
     else
     {
         ostringstream osstream;
@@ -42,9 +45,21 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
-string MODEL::get_allowed_device_type() const
+vector<string> MODEL::get_allowed_device_types() const
 {
-    return allowed_device_type;
+    return allowed_device_types;
+}
+
+bool MODEL::has_allowed_device_type(string device_type) const
+{
+    device_type = string2upper(device_type);
+    size_t n = allowed_device_types.size();
+    for(size_t i=0; i<n; ++i)
+    {
+        if(allowed_device_types[i]==device_type)
+            return true;
+    }
+    return false;
 }
 
 void MODEL::set_model_float_parameter_count(size_t n)
@@ -159,10 +174,13 @@ void MODEL::set_device_id(DEVICE_ID did)
         return;
     }
 
-    if(did.get_device_type()!=get_allowed_device_type())
+    if(not has_allowed_device_type(did.get_device_type()))
     {
-        osstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which "<<get_allowed_device_type()<<" is expected."
-          <<"Model device id will not be updated.";
+        osstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which the following types of devices is expected:\n";
+        size_t n = allowed_device_types.size();
+        for(size_t i=0; i<n; ++i)
+            osstream<<allowed_device_types[i]<<"\n";
+        osstream<<"Model device id will not be updated.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }

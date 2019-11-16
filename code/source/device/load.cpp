@@ -391,7 +391,7 @@ double LOAD::get_voltage_threshold_of_constant_current_load_in_pu()
 
 void LOAD::set_model(const MODEL* model)
 {
-    if(model->get_allowed_device_type()=="LOAD")
+    if(model->has_allowed_device_type("LOAD"))
     {
         if(model->get_model_type()=="LOAD CHARACTERISTICS")
         {

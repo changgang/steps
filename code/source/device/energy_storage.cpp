@@ -60,7 +60,7 @@ DEVICE_ID ENERGY_STORAGE::get_device_id() const
 
 void ENERGY_STORAGE::set_model(const MODEL* model)
 {
-    if(model!=NULL and model->get_allowed_device_type()=="ENERGY STORAGE")
+    if(model!=NULL and model->has_allowed_device_type("ENERGY STORAGE"))
     {
         if(model->get_model_type()=="ENERGY STORAGE")
         {

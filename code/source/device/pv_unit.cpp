@@ -163,7 +163,7 @@ void PV_UNIT::set_model(const MODEL* model)
 {
     if(model != NULL)
     {
-        if(model->get_allowed_device_type()=="PV UNIT")
+        if(model->has_allowed_device_type("PV UNIT"))
         {
             if(model->get_model_type()=="PV CONVERTER")
             {
