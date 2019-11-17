@@ -36,6 +36,7 @@ void PVU_MODEL_TEST::setup()
     psdb.append_bus(bus);
 
     PV_UNIT pv_unit;
+    pv_unit.set_toolkit(default_toolkit);
     pv_unit.set_unit_bus(1);
     pv_unit.set_identifier("#1");
     pv_unit.set_status(true);

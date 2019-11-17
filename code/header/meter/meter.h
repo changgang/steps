@@ -5,7 +5,7 @@
 #include "header/basic/device_id.h"
 #include "header/device/device.h"
 #include "header/basic/base.h"
-#include "header/meter/continuous_buffer.h"
+#include "header/basic/continuous_buffer.h"
 
 class METER : public BASE
 {

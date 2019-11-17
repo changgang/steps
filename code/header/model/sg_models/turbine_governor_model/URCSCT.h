@@ -6,7 +6,7 @@
 #include "header/block/first_order_block.h"
 #include "header/block/lead_lag_block.h"
 #include "header/block/pi_block.h"
-#include "header/meter/continuous_buffer.h"
+#include "header/basic/continuous_buffer.h"
 
 class URCSCT : public TURBINE_GOVERNOR_MODEL
 {

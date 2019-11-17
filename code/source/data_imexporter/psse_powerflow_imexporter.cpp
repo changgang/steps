@@ -76,13 +76,13 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
         return;
     }
 
-    char buffer[10240];
+    char buffer[4096];
     string sbuffer;
 
     vector<string> data_of_one_type;
     data_of_one_type.clear();
 
-    if(fgets(buffer, 1024, fid)==NULL)
+    if(fgets(buffer, 4096, fid)==NULL)
     {
         fclose(fid);
         return;

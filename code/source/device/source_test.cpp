@@ -126,7 +126,7 @@ void SOURCE_TEST::test_set_get_mbase()
     TEST_ASSERT(generator.get_mbase_in_MVA()==200.0);
     generator.set_mbase_in_MVA(100.0);
     TEST_ASSERT(generator.get_mbase_in_MVA()==psdb.get_system_base_power_in_MVA());
-    TEST_ASSERT(generator.get_one_over_mbase_in_one_over_MVA==1.0/100.0);
+    TEST_ASSERT(generator.get_one_over_mbase_in_one_over_MVA()==1.0/100.0);
     generator.set_mbase_in_MVA(-100.0);
     TEST_ASSERT(generator.get_mbase_in_MVA()==100.0);
 }

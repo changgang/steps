@@ -24,6 +24,8 @@
 #include "header/basic/fault_test.h"
 #include "header/basic/timer_test.h"
 #include "header/basic/constants_test.h"
+#include "header/basic/continuous_buffer_test.h"
+#include "header/basic/time_series_test.h"
 
 #include "header/basic/bus_index_test.h"
 #include "header/basic/device_index_map_test.h"
@@ -66,7 +68,6 @@
 #include "header/block/second_order_block_test.h"
 #include "header/block/saturation_block_test.h"
 
-#include "header/meter/continuous_buffer_test.h"
 #include "header/meter/meter_test.h"
 #include "header/meter/meter_setter_test.h"
 
@@ -205,7 +206,7 @@ int main(int argc, char* argv[])
 	{
         Test::Suite ts;
         #ifdef ENABLE_STEPS_TEST
-/*
+
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
@@ -222,6 +223,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new INPHNO_TEST));
         ts.add(unique_ptr<Test::Suite>(new TIMER_TEST));
         ts.add(unique_ptr<Test::Suite>(new CONSTANTS_TEST));
+        ts.add(unique_ptr<Test::Suite>(new CONTINUOUS_BUFFER_TEST));
+        ts.add(unique_ptr<Test::Suite>(new TIME_SERIES_TEST));
 
         //
         ts.add(unique_ptr<Test::Suite>(new BUS_TEST));
@@ -267,10 +270,9 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new PID_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new PI_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new PD_BLOCK_TEST));
-        ts.add(unique_ptr<Test::Suite>(new SECOND_ORDER_BLOCK));
+        ts.add(unique_ptr<Test::Suite>(new SECOND_ORDER_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new SATURATION_BLOCK_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new CONTINUOUS_BUFFER_TEST));
         ts.add(unique_ptr<Test::Suite>(new METER_TEST));
         ts.add(unique_ptr<Test::Suite>(new METER_SETTER_TEST));
 
@@ -327,9 +329,10 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
         ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new PVGU1_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new PVGU1_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
+
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));
 

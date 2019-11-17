@@ -82,7 +82,7 @@ void DYNAMICS_SIMULATOR_TEST::setup()
     psdb.set_allowed_max_bus_number(10000);
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
-    simulator.set_allowed_max_power_imbalance_in_MVA(0.00001);
+    simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
     simulator.set_csv_file_export_enable_flag(true);
 }
 
@@ -105,10 +105,11 @@ void DYNAMICS_SIMULATOR_TEST::test_constructor()
     TEST_ASSERT(simulator.get_meter_count()==0);
     TEST_ASSERT(simulator.get_max_DAE_iteration()==100);
     TEST_ASSERT(simulator.get_min_DAE_iteration()==3);
-    TEST_ASSERT(simulator.get_max_network_iteration()==1);
-    TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.00001)<FLOAT_EPSILON);
+    TEST_ASSERT(simulator.get_max_network_iteration()==20);
+    TEST_ASSERT(simulator.get_max_update_iteration()==100);
+    TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.001)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.0)<FLOAT_EPSILON);
-    TEST_ASSERT(simulator.is_bin_file_export_enabled()==true);
+    TEST_ASSERT(simulator.is_bin_file_export_enabled()==false);
     TEST_ASSERT(simulator.is_csv_file_export_enabled()==true);
     TEST_ASSERT(simulator.is_json_file_export_enabled()==false);
 }
@@ -461,8 +462,7 @@ void DYNAMICS_SIMULATOR_TEST::test_start()
     prepare_IEEE_9_bus_model();
     prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -496,8 +496,7 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
 {
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -507,9 +506,9 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
 
     powerflow_solver.solve_with_fast_decoupled_solution();
 
-    default_toolkit.set_dynamic_simulation_time_step_in_s(0.001);
+    default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_max_DAE_iteration(200);
-    simulator.set_max_network_iteration(1);
+    simulator.set_max_network_iteration(20);
 
 
     DEVICE_ID did;
@@ -565,7 +564,7 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 3, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 3, 0.0, complex<double>(0.0, -2e5));
 
     DEVICE_ID load_did;
     load_did.set_device_type("LOAD");
@@ -576,7 +575,7 @@ void DYNAMICS_SIMULATOR_TEST::run_single_machine_model_for_model_test()
 
     //simulator.scale_load(load_did, 0.1);
 
-    simulator.run_to(1.1);
+    simulator.run_to(1.05);
 
     simulator.clear_line_fault(did, 3, 0.0);
 
@@ -708,8 +707,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_trip_bus()
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -756,8 +754,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -784,7 +781,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.08333);
 
@@ -818,8 +815,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -848,7 +844,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_classic_with_rotor_angle
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.3);
 
@@ -879,8 +875,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -905,7 +900,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.5);
 
@@ -935,8 +930,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENSAL.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -961,7 +955,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENSAL()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.5);
 
@@ -993,8 +987,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU_IEEET1.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1019,7 +1012,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.5);
 
@@ -1050,8 +1043,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU_IEEEG1.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1076,7 +1068,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.5);
 
@@ -1107,8 +1099,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1133,7 +1124,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.5);
 
@@ -1163,8 +1154,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1189,7 +1179,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e10));
+    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e5));
 
     simulator.run_to(0.5);
 
@@ -1218,8 +1208,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1_LCFB1.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1282,8 +1271,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_with
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1341,8 +1329,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1_UFLS.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1401,8 +1388,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_PUFL
     importer.load_powerflow_data("../../../bench/IEEE39.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1_PUFLS.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1462,8 +1448,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind()
     importer.load_powerflow_data("../../../bench/IEEE39_wind.raw");
     importer.load_dynamic_data("../../../bench/IEEE39_wind.dyr");
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1520,8 +1505,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     for(size_t i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1601,8 +1585,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1645,7 +1628,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     simulator.set_allowed_max_power_imbalance_in_MVA(0.001);
     default_toolkit.set_dynamic_simulation_time_step_in_s(0.01);
     simulator.set_max_DAE_iteration(200);
-    simulator.set_max_network_iteration(1);
+    simulator.set_max_network_iteration(20);
     simulator.start();
     simulator.run_to(1.0);
 
@@ -1665,7 +1648,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_WT3_models()
     gendid_1.set_device_terminal(terminal);
     gendid_1.set_device_identifier("1");
 
-    /*simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e8));
+    /*simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
     simulator.run_to(1.1);
     simulator.clear_line_fault(did, 7, 0.0);
     simulator.trip_line(did);*/
@@ -1716,8 +1699,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     //prepare_IEEE_9_bus_model();
     //prepare_IEEE_9_bus_model_classical_dynamic_model();
 
-    POWERFLOW_SOLVER powerflow_solver;
-    powerflow_solver.set_toolkit(default_toolkit);
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
 
     powerflow_solver.set_max_iteration(30);
     powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
@@ -1785,7 +1767,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     gendid_1.set_device_terminal(terminal);
     gendid_1.set_device_identifier("1");
 
-    /*simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e8));
+    /*simulator.set_line_fault(did, 7, 0.0, complex<double>(0.0, -2e5));
     simulator.run_to(1.1);
     simulator.clear_line_fault(did, 7, 0.0);
     simulator.trip_line(did);*/

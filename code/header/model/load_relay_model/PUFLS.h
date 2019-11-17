@@ -3,7 +3,7 @@
 
 #include "header/model/load_relay_model/load_frequency_relay_model.h"
 #include "header/block/first_order_block.h"
-#include "header/meter/continuous_buffer.h"
+#include "header/basic/continuous_buffer.h"
 #include "header/basic/timer.h"
 #include "header/basic/constants.h"
 #include "header/basic/steps_enum.h"

@@ -172,7 +172,7 @@ void COMPENSATOR_MODEL_TEST::test_get_generator_terminal_current()
     model.set_toolkit(default_toolkit);
     model.set_device_id(genptr->get_device_id());
 
-    TEST_ASSERT(abs(model.get_generator_terminal_current_in_pu()-complex<double>(1.0,-0.3)*0.5)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(model.get_generator_terminal_complex_current_in_pu()-complex<double>(1.0,-0.3)*0.5)<FLOAT_EPSILON);
 }
 
 

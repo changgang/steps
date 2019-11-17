@@ -3,6 +3,7 @@
 
 #include "header/basic/base.h"
 #include "header/basic/device_id.h"
+#include "header/basic/time_series.h"
 #include "header/block/block.h"
 #include "header/model/model_var_table.h"
 
@@ -94,6 +95,9 @@ class MODEL : public BASE
         DEVICE* device_pointer;
 
         size_t n_parameters;
+
+        string user_input_time_series_file;
+        TIME_SERIES user_input_time_series;
 
         bool flag_model_initialized;
         bool flag_model_updated;

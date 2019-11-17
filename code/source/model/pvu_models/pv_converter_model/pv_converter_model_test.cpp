@@ -99,7 +99,7 @@ void PV_CONVERTER_MODEL_TEST::test_get_model_type()
     if(model!=NULL)
     {
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
-        TEST_ASSERT(model->get_model_type()=="WT GENERATOR");
+        TEST_ASSERT(model->get_model_type()=="PV CONVERTER");
     }
     else
         TEST_ASSERT(false);

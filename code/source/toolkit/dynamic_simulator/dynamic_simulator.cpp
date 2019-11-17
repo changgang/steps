@@ -42,7 +42,7 @@ void DYNAMICS_SIMULATOR::clear()
 
     set_max_DAE_iteration(100);
     set_min_DAE_iteration(3);
-    set_max_network_iteration(1);
+    set_max_network_iteration(20);
     set_max_update_iteration(100);
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
@@ -509,7 +509,7 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
 
     size_t n;
 
-    n = psdb.get_wt_generator_count();
+    n = psdb.get_pv_unit_count();
     vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
     PV_UNIT* pv_unit;
     for(size_t i=0; i!=n; ++i)
@@ -2369,8 +2369,10 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     bool converged = false;
 
+    network_iteration_count = 0;
+
     size_t network_iter_max = current_max_network_iteration;
-    size_t network_iter_count = 1;
+    size_t network_iter_count = 0;
 
     solve_hvdcs_without_integration();
     get_bus_current_mismatch();
@@ -2384,7 +2386,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
     {
         while(true)
         {
-            if(network_iter_count<=network_iter_max)
+            if(network_iter_count<network_iter_max)
             {
                 build_bus_current_mismatch_vector();
                 delta_V = I_vec/jacobian;
@@ -2429,7 +2431,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
             }
             else
             {
-                --network_iter_count;
+                //--network_iter_count;
                 break;
             }
         }

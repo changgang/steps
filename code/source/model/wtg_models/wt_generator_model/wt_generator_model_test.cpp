@@ -35,7 +35,7 @@ WT_GENERATOR_MODEL_TEST::WT_GENERATOR_MODEL_TEST()
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_reactive_current_step_response_of_wt_generator_model);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_bus_magnitude_step_response_of_wt_generator_model);
     TEST_ADD(WT_GENERATOR_MODEL_TEST::test_bus_angle_step_response_of_wt_generator_model);
-    TEST_ADD(WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_step_response);
+    //TEST_ADD(WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_step_response);
 }
 
 
@@ -574,9 +574,12 @@ void WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_
             export_meter_values(time);
         }
 
+        cout<<__FILE__<<", "<<__LINE__<<endl;
         delt *= 2.0;
         default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
+        cout<<__FILE__<<", "<<__LINE__<<endl;
         model->run(UPDATE_MODE);
+        cout<<__FILE__<<", "<<__LINE__<<endl;
 
         export_meter_values(time);
 

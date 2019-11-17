@@ -58,6 +58,8 @@
 		<Unit filename="header/basic/complex.h" />
 		<Unit filename="header/basic/constants.h" />
 		<Unit filename="header/basic/constants_test.h" />
+		<Unit filename="header/basic/continuous_buffer.h" />
+		<Unit filename="header/basic/continuous_buffer_test.h" />
 		<Unit filename="header/basic/device_id.h" />
 		<Unit filename="header/basic/device_id_test.h" />
 		<Unit filename="header/basic/device_index_map.h" />
@@ -84,6 +86,8 @@
 		<Unit filename="header/basic/terminal.h" />
 		<Unit filename="header/basic/terminal_test.h" />
 		<Unit filename="header/basic/test_macro.h" />
+		<Unit filename="header/basic/time_series.h" />
+		<Unit filename="header/basic/time_series_test.h" />
 		<Unit filename="header/basic/timer.h" />
 		<Unit filename="header/basic/timer_test.h" />
 		<Unit filename="header/basic/utility.h" />
@@ -147,8 +151,6 @@
 		<Unit filename="header/device/vsc_hvdc_test.h" />
 		<Unit filename="header/device/wt_generator.h" />
 		<Unit filename="header/device/wt_generator_test.h" />
-		<Unit filename="header/meter/continuous_buffer.h" />
-		<Unit filename="header/meter/continuous_buffer_test.h" />
 		<Unit filename="header/meter/meter.h" />
 		<Unit filename="header/meter/meter_setter.h" />
 		<Unit filename="header/meter/meter_setter_test.h" />
@@ -391,9 +393,7 @@
 		<Unit filename="main_powerflow.cpp">
 			<Option link="0" />
 		</Unit>
-		<Unit filename="main_tests.cpp">
-			<Option link="0" />
-		</Unit>
+		<Unit filename="main_tests.cpp" />
 		<Unit filename="main_ufls_simulation.cpp">
 			<Option link="0" />
 		</Unit>
@@ -434,6 +434,8 @@
 		<Unit filename="source/basic/bus_index.cpp" />
 		<Unit filename="source/basic/bus_index_test.cpp" />
 		<Unit filename="source/basic/constants_test.cpp" />
+		<Unit filename="source/basic/continuous_buffer.cpp" />
+		<Unit filename="source/basic/continuous_buffer_test.cpp" />
 		<Unit filename="source/basic/device_id.cpp" />
 		<Unit filename="source/basic/device_id_test.cpp" />
 		<Unit filename="source/basic/device_index_map.cpp" />
@@ -460,6 +462,8 @@
 		</Unit>
 		<Unit filename="source/basic/terminal.cpp" />
 		<Unit filename="source/basic/terminal_test.cpp" />
+		<Unit filename="source/basic/time_series.cpp" />
+		<Unit filename="source/basic/time_series_test.cpp" />
 		<Unit filename="source/basic/timer.cpp" />
 		<Unit filename="source/basic/timer_test.cpp" />
 		<Unit filename="source/basic/utility.cpp" />
@@ -526,8 +530,6 @@
 		<Unit filename="source/device/vsc_hvdc_test.cpp" />
 		<Unit filename="source/device/wt_generator.cpp" />
 		<Unit filename="source/device/wt_generator_test.cpp" />
-		<Unit filename="source/meter/continuous_buffer.cpp" />
-		<Unit filename="source/meter/continuous_buffer_test.cpp" />
 		<Unit filename="source/meter/meter.cpp" />
 		<Unit filename="source/meter/meter_setter.cpp" />
 		<Unit filename="source/meter/meter_setter_test.cpp" />

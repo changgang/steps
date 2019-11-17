@@ -6,7 +6,7 @@
 #include "header/block/first_order_block.h"
 #include "header/block/lead_lag_block.h"
 #include "header/block/pi_block.h"
-#include "header/meter/continuous_buffer.h"
+#include "header/basic/continuous_buffer.h"
 
 /*
 this model can be found in W.I. Rowen, "Simplified Mathematical Representations of Heavy-Duty Gas Turbines," ASME 83-GT-63, Engineering for Power, October 1983, pp.865.
