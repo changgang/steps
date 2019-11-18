@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.10.1"
-libsteps_date = "2019/10/29"
+libsteps_version = "0.11.0"
+libsteps_date = "2019/11/18"
 
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -528,22 +528,26 @@ def load_library():
     libsteps.api_save_jacobian_matrix.restype = None
     libsteps.api_save_jacobian_matrix.argtypes = (c_char_p, c_uint)
 
-    libsteps.api_build_network_matrix.restype = None
-    libsteps.api_build_network_matrix.argtypes = (c_uint, )
-    libsteps.api_build_decoupled_network_matrix.restype = None
-    libsteps.api_build_decoupled_network_matrix.argtypes = (c_uint, )
-    libsteps.api_build_dc_network_matrix.restype = None
-    libsteps.api_build_dc_network_matrix.argtypes = (c_uint, )
-    libsteps.api_build_dynamic_network_matrix.restype = None
-    libsteps.api_build_dynamic_network_matrix.argtypes = (c_uint, )
-    libsteps.api_save_network_matrix.restype = None
-    libsteps.api_save_network_matrix.argtypes = (c_char_p, c_uint)
-    libsteps.api_save_decoupled_network_matrix.restype = None
-    libsteps.api_save_decoupled_network_matrix.argtypes = (c_char_p, c_uint)
-    libsteps.api_save_dc_network_matrix.restype = None
-    libsteps.api_save_dc_network_matrix.argtypes = (c_char_p, c_uint)
-    libsteps.api_save_dynamic_network_matrix.restype = None
-    libsteps.api_save_dynamic_network_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_build_network_Y_matrix.restype = None
+    libsteps.api_build_network_Y_matrix.argtypes = (c_uint, )
+    libsteps.api_build_decoupled_network_B_matrix.restype = None
+    libsteps.api_build_decoupled_network_B_matrix.argtypes = (c_uint, )
+    libsteps.api_build_dc_network_B_matrix.restype = None
+    libsteps.api_build_dc_network_B_matrix.argtypes = (c_uint, )
+    libsteps.api_build_dynamic_network_Y_matrix.restype = None
+    libsteps.api_build_dynamic_network_Y_matrix.argtypes = (c_uint, )
+    libsteps.api_build_network_Z_matrix.restype = None
+    libsteps.api_build_network_Z_matrix.argtypes = (c_uint, )
+    libsteps.api_save_network_Y_matrix.restype = None
+    libsteps.api_save_network_Y_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_decoupled_network_B_matrix.restype = None
+    libsteps.api_save_decoupled_network_B_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_dc_network_B_matrix.restype = None
+    libsteps.api_save_dc_network_B_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_dynamic_network_Y_matrix.restype = None
+    libsteps.api_save_dynamic_network_Y_matrix.argtypes = (c_char_p, c_uint)
+    libsteps.api_save_network_Z_matrix.restype = None
+    libsteps.api_save_network_Z_matrix.argtypes = (c_char_p, c_uint)
 
     libsteps.api_get_dynamic_simulator_integer_parameter.restype = (c_uint)
     libsteps.api_get_dynamic_simulator_integer_parameter.argtypes = (c_char_p, c_uint)

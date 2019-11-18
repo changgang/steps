@@ -38,7 +38,7 @@ void NETWORK_MATRIX::clear()
     inphno.clear();
 }
 
-void NETWORK_MATRIX::build_network_matrix()
+void NETWORK_MATRIX::build_network_Y_matrix()
 {
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -52,15 +52,15 @@ void NETWORK_MATRIX::build_network_matrix()
     network_Y_matrix.compress_and_merge_duplicate_entries();
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_network_matrix()
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_network_Y_matrix()
 {
     if(network_Y_matrix.matrix_in_triplet_form())
-        build_network_matrix();
+        build_network_Y_matrix();
 
     return network_Y_matrix;
 }
 
-void NETWORK_MATRIX::build_decoupled_network_matrix()
+void NETWORK_MATRIX::build_decoupled_network_B_matrix()
 {
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -80,7 +80,7 @@ void NETWORK_MATRIX::build_decoupled_network_matrix()
 STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BP_matrix()
 {
     if(network_BP_matrix.matrix_in_triplet_form())
-        build_decoupled_network_matrix();
+        build_decoupled_network_B_matrix();
 
     return network_BP_matrix;
 }
@@ -88,12 +88,12 @@ STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BP_matrix()
 STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_decoupled_network_BQ_matrix()
 {
     if(network_BP_matrix.matrix_in_triplet_form())
-        build_decoupled_network_matrix();
+        build_decoupled_network_B_matrix();
 
     return network_BQ_matrix;
 }
 
-void NETWORK_MATRIX::build_dc_network_matrix()
+void NETWORK_MATRIX::build_dc_network_B_matrix()
 {
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -106,16 +106,16 @@ void NETWORK_MATRIX::build_dc_network_matrix()
     network_DC_B_matrix.compress_and_merge_duplicate_entries();
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_dc_network_matrix()
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_dc_network_B_matrix()
 {
     if(network_DC_B_matrix.matrix_in_triplet_form())
-        build_dc_network_matrix();
+        build_dc_network_B_matrix();
 
     return network_DC_B_matrix;
 }
 
 
-void NETWORK_MATRIX::build_dynamic_network_matrix()
+void NETWORK_MATRIX::build_dynamic_network_Y_matrix()
 {
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -132,12 +132,73 @@ void NETWORK_MATRIX::build_dynamic_network_matrix()
     network_Y_matrix.compress_and_merge_duplicate_entries();
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_dynamic_network_matrix()
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_dynamic_network_Y_matrix()
 {
     if(network_Y_matrix.matrix_in_triplet_form())
-        build_dynamic_network_matrix();
+        build_dynamic_network_Y_matrix();
 
     return network_Y_matrix;
+}
+
+void NETWORK_MATRIX::build_network_Z_matrix()
+{
+    STEPS_SPARSE_MATRIX jacobian;
+    int n = network_Y_matrix.get_matrix_size();
+    for(int j=0; j<n; ++j)
+    {
+        int k_start = network_Y_matrix.get_starting_index_of_column(j);
+        int k_end = network_Y_matrix.get_starting_index_of_column(j+1);
+        for(int k=k_start; k<k_end; ++k)
+        {
+            int i = network_Y_matrix.get_row_number_of_entry_index(k);
+            complex<double> y = network_Y_matrix.get_entry_value(k);
+            double g = y.real(), b= y.imag();
+
+            if(g!=0.0)
+            {
+                jacobian.add_entry(i,j,g);
+                jacobian.add_entry(i+n,j+n,g);
+            }
+            if(b!=0.0)
+            {
+                jacobian.add_entry(i,  j+n, -b);
+                jacobian.add_entry(i+n,j,   b);
+            }
+        }
+    }
+    jacobian.compress_and_merge_duplicate_entries();
+    jacobian.LU_factorization(1, 1e-13);
+
+    complex<double> temp(INFINITE_THRESHOLD,INFINITE_THRESHOLD);
+    for(int i=0; i<n; ++i)
+        for(int j=0; j<n; ++j)
+            network_Z_matrix.add_entry(i,j,temp);
+    network_Z_matrix.compress_and_merge_duplicate_entries();
+
+    int n2 = n+n;
+    for(int j=0; j<n; ++j)
+    {
+        vector<double> I;
+        I.reserve(n2);
+        for(int i=0; i<n2; ++i)
+            I.push_back(0.0);
+        I[j]=1.0;
+        vector<double> U = I/jacobian;
+        int k_start = network_Z_matrix.get_starting_index_of_column(j);
+        for(size_t i=0; i<n; ++i)
+        {
+            complex<double> z(U[i], U[i+n]);
+            if(z!=0.0)
+                network_Z_matrix.change_entry_value(k_start+i, z);
+        }
+    }
+}
+
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_network_Z_matrix()
+{
+    if(network_Z_matrix.get_matrix_size()<2)
+        build_network_Z_matrix();
+    return network_Z_matrix;
 }
 
 void NETWORK_MATRIX::add_lines_to_network()
@@ -2245,7 +2306,7 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
 void NETWORK_MATRIX::optimize_network_ordering()
 {
     initialize_physical_internal_bus_pair();
-    build_network_matrix();
+    build_network_Y_matrix();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(toolkit.is_optimize_network_enabled())
@@ -2254,7 +2315,7 @@ void NETWORK_MATRIX::optimize_network_ordering()
         /*for(size_t i=0; i<1; ++i)
         {
             reorder_physical_internal_bus_pair();
-            build_network_matrix();
+            build_network_Y_matrix();
         }*/
     }
 }
@@ -2418,7 +2479,7 @@ vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    //build_network_matrix();
+    //build_network_Y_matrix();
     //network_Y_matrix.report_brief();
 
     size_t nbus = psdb.get_in_service_bus_count();
@@ -2662,7 +2723,7 @@ void NETWORK_MATRIX::report_network_matrix_common() const
 }
 
 
-void NETWORK_MATRIX::save_network_matrix_to_file(const string& filename) const
+void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename) const
 {
     ostringstream osstream;
 
@@ -2682,7 +2743,7 @@ void NETWORK_MATRIX::save_network_matrix_to_file(const string& filename) const
 }
 
 
-void NETWORK_MATRIX::save_decoupled_network_matrix_to_file(const string& filename) const
+void NETWORK_MATRIX::save_decoupled_network_B_matrix_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -2727,7 +2788,7 @@ void NETWORK_MATRIX::save_decoupled_network_matrix_to_file(const string& filenam
     }
 }
 
-void NETWORK_MATRIX::save_dc_network_matrix_to_file(const string& filename) const
+void NETWORK_MATRIX::save_dc_network_B_matrix_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -2770,7 +2831,7 @@ void NETWORK_MATRIX::save_dc_network_matrix_to_file(const string& filename) cons
     }
 }
 
-void NETWORK_MATRIX::save_dynamic_network_matrix_to_file(const string& filename) const
+void NETWORK_MATRIX::save_dynamic_network_Y_matrix_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -2819,6 +2880,53 @@ void NETWORK_MATRIX::save_network_matrix_common(ofstream& file) const
         k_starting = k_ending;
     }
 }
+
+
+void NETWORK_MATRIX::save_network_Z_matrix_to_file(const string& filename) const
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    ostringstream osstream;
+
+    ofstream file(filename);
+    if(file.is_open())
+    {
+        file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
+
+        size_t i, ibus, jbus;
+        size_t n = network_Z_matrix.get_matrix_size();
+        int k_starting, k_ending;
+        k_starting = 0;
+        complex<double> z;
+        char buffer[1000];
+        for(size_t j=0; j!=n; ++j)
+        {
+            k_ending = network_Z_matrix.get_starting_index_of_column(j+1);
+            for(int k=k_starting; k!=k_ending; ++k)
+            {
+                z = network_Z_matrix.get_entry_value(k);
+                i = network_Z_matrix.get_row_number_of_entry_index(k);
+                ibus = get_physical_bus_number_of_internal_bus(i);
+                jbus = get_physical_bus_number_of_internal_bus(j);
+
+                if(z.real()!=INFINITE_THRESHOLD and z.imag()!=INFINITE_THRESHOLD)
+                {
+                    snprintf(buffer, 1000, "%lu,%lu,%lu,%lu,%.14f,%.14f",i, ibus, j, jbus, z.real(), z.imag());
+                    file<<buffer<<endl;
+                }
+            }
+            k_starting = k_ending;
+        }
+        file.close();
+    }
+    else
+    {
+        osstream<<"File '"<<filename<<"' cannot be opened for saving network Z matrix to file."<<endl
+          <<"No network Z matrix will be exported.";
+        toolkit.show_information_with_leading_time_stamp(osstream);
+    }
+}
+
+
 
 
 void NETWORK_MATRIX::report_physical_internal_bus_number_pair() const

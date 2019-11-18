@@ -25,13 +25,13 @@ class NETWORK_MATRIX_TEST : public Test::Suite
         virtual void setup();
         virtual void tear_down();
     private:
-        void test_build_and_get_network_matrix();
-        void test_build_and_get_decoupled_network_matrix();
-        void test_build_and_get_dynamic_network_matrix();
+        void test_build_and_get_network_Y_matrix();
+        void test_build_and_get_decoupled_network_B_matrix();
+        void test_build_and_get_dynamic_network_Y_matrix();
         void test_optimize_network_ordering();
         void test_check_network_connectivity();
         void test_get_islands();
-        void test_save_network_matrix_to_file();
+        void test_save_network_Y_matrix_to_file();
         void test_build_network_with_bus_out_of_service();
     private:
         NETWORK_MATRIX network_matrix;

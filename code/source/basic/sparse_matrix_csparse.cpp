@@ -448,6 +448,7 @@ void SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance)
         n = matrix_real->n ;
         LU_symbolic = cs_sqr (order, matrix_real, 0) ;              /* ordering and symbolic analysis */
         LU = cs_lu (matrix_real, LU_symbolic, tolerance) ;                 /* numeric LU factorization */
+
         ok = (LU_symbolic && LU) ; // check
         if(ok==1)
         {

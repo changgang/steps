@@ -1902,10 +1902,10 @@ void DYNAMICS_SIMULATOR::start()
 
     run_all_models(INITIALIZE_MODE);
 
-    network_matrix.build_dynamic_network_matrix();
+    network_matrix.build_dynamic_network_Y_matrix();
     build_jacobian();
 
-    //const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_matrix();
+    //const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
     //Y.report_brief();
     //network_matrix.report_physical_internal_bus_number_pair();
 
@@ -2684,7 +2684,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
-    const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_matrix();
+    const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
     size_t nbus = psdb.get_in_service_bus_count();
 
 	if(I_mismatch.size()!=nbus)
@@ -3119,7 +3119,7 @@ void DYNAMICS_SIMULATOR::build_jacobian()
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     jacobian.clear();
-    SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_matrix();
+    SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
     size_t nbus = Y.get_matrix_size();
     complex<double> y;
     double g, b;
@@ -3447,7 +3447,7 @@ void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, const complex<double>& fault_
             busptr->set_fault(fault);
             guess_bus_voltage_with_bus_fault_set(bus, fault);
 
-            network_matrix.build_dynamic_network_matrix();
+            network_matrix.build_dynamic_network_Y_matrix();
             build_jacobian();
         }
         else
@@ -3483,7 +3483,7 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(size_t bus)
         busptr->clear_fault();
         guess_bus_voltage_with_bus_fault_cleared(bus, fault);
 
-        network_matrix.build_dynamic_network_matrix();
+        network_matrix.build_dynamic_network_Y_matrix();
         build_jacobian();
     }
 }
@@ -3507,7 +3507,7 @@ void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
             psdb.trip_bus(bus);
 
             optimize_network_ordering();
-            network_matrix.build_dynamic_network_matrix();
+            network_matrix.build_dynamic_network_Y_matrix();
             build_jacobian();
         }
     }
@@ -3552,11 +3552,11 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bu
                         guess_bus_voltage_with_line_fault_set(line_id, side_bus, location, fault);
 
 
-                        //network_matrix.save_network_matrix_to_file("dynamic_network_matrix_before_event.csv");
+                        //network_matrix.save_network_Y_matrix_to_file("dynamic_network_matrix_before_event.csv");
                         //jacobian.save_matrix_to_file("dynamic_jacobian_with_fault_before_evnet.csv");
-                        network_matrix.build_dynamic_network_matrix();
+                        network_matrix.build_dynamic_network_Y_matrix();
                         build_jacobian();
-                        //network_matrix.save_network_matrix_to_file("dynamic_network_matrix_after_event.csv");
+                        //network_matrix.save_network_Y_matrix_to_file("dynamic_network_matrix_after_event.csv");
                         //jacobian.save_matrix_to_file("dynamic_jacobian_with_fault_after_event.csv");
                     }
                     else
@@ -3620,9 +3620,9 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, size_t side_
                     lineptr->clear_fault_at_location(side_bus, location);
                     guess_bus_voltage_with_line_fault_cleared(line_id, side_bus, location, fault);
 
-                    network_matrix.build_dynamic_network_matrix();
+                    network_matrix.build_dynamic_network_Y_matrix();
                     build_jacobian();
-                    //const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_matrix();
+                    //const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
                     //Y.report_brief();
                 }
                 else
@@ -3711,7 +3711,7 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, size_t side
                 if(lineptr->get_sending_side_breaker_status()==true)
                 {
                     lineptr->set_sending_side_breaker_status(false);
-                    network_matrix.build_dynamic_network_matrix();
+                    network_matrix.build_dynamic_network_Y_matrix();
                     build_jacobian();
 
                     osstream<<lineptr->get_device_name()<<" breaker at sending side (bus "<<lineptr->get_sending_side_bus()<<") is tripped at time "<<TIME<<" s.";
@@ -3725,7 +3725,7 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, size_t side
                     if(lineptr->get_receiving_side_breaker_status()==true)
                     {
                         lineptr->set_receiving_side_breaker_status(false);
-                        network_matrix.build_dynamic_network_matrix();
+                        network_matrix.build_dynamic_network_Y_matrix();
                         build_jacobian();
 
                         osstream<<lineptr->get_device_name()<<" breaker at receiving side (bus "<<lineptr->get_receiving_side_bus()<<") is tripped at time "<<TIME<<" s.";
@@ -3805,7 +3805,7 @@ void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, size_t sid
                 if(lineptr->get_sending_side_breaker_status()==false)
                 {
                     lineptr->set_sending_side_breaker_status(true);
-                    network_matrix.build_dynamic_network_matrix();
+                    network_matrix.build_dynamic_network_Y_matrix();
                     build_jacobian();
                     osstream<<lineptr->get_device_name()<<" breaker at sending side (bus "<<lineptr->get_sending_side_bus()<<") is closed at time "<<TIME<<" s.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -3818,7 +3818,7 @@ void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, size_t sid
                     if(lineptr->get_receiving_side_breaker_status()==false)
                     {
                         lineptr->set_receiving_side_breaker_status(true);
-                        network_matrix.build_dynamic_network_matrix();
+                        network_matrix.build_dynamic_network_Y_matrix();
                         build_jacobian();
                         osstream<<lineptr->get_device_name()<<" breaker at receiving side (bus "<<lineptr->get_sending_side_bus()<<") is closed at time "<<TIME<<" s.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -3901,7 +3901,7 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, siz
                 if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==true)
                 {
                     transptr->set_winding_breaker_status(PRIMARY_SIDE, false);
-                    network_matrix.build_dynamic_network_matrix();
+                    network_matrix.build_dynamic_network_Y_matrix();
                     build_jacobian();
 
                     osstream<<transptr->get_device_name()<<" breaker at primary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
@@ -3915,7 +3915,7 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, siz
                     if(transptr->get_winding_breaker_status(SECONDARY_SIDE)==true)
                     {
                         transptr->set_winding_breaker_status(SECONDARY_SIDE, false);
-                        network_matrix.build_dynamic_network_matrix();
+                        network_matrix.build_dynamic_network_Y_matrix();
                         build_jacobian();
 
                         osstream<<transptr->get_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
@@ -3929,7 +3929,7 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, siz
                         if(transptr->get_winding_breaker_status(TERTIARY_SIDE)==true)
                         {
                             transptr->set_winding_breaker_status(TERTIARY_SIDE, false);
-                            network_matrix.build_dynamic_network_matrix();
+                            network_matrix.build_dynamic_network_Y_matrix();
                             build_jacobian();
 
                             osstream<<transptr->get_device_name()<<" breaker at tertiary side (bus "<<side_bus<<") is tripped at time "<<TIME<<" s.";
@@ -4016,7 +4016,7 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, si
                 if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==false)
                 {
                     transptr->set_winding_breaker_status(PRIMARY_SIDE, true);
-                    network_matrix.build_dynamic_network_matrix();
+                    network_matrix.build_dynamic_network_Y_matrix();
                     build_jacobian();
                     osstream<<transptr->get_device_name()<<" breaker at primary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
                     toolkit.show_information_with_leading_time_stamp(osstream);
@@ -4029,7 +4029,7 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, si
                     if(transptr->get_winding_breaker_status(SECONDARY_SIDE)==false)
                     {
                         transptr->set_winding_breaker_status(SECONDARY_SIDE, true);
-                        network_matrix.build_dynamic_network_matrix();
+                        network_matrix.build_dynamic_network_Y_matrix();
                         build_jacobian();
                         osstream<<transptr->get_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -4042,7 +4042,7 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, si
                         if(transptr->get_winding_breaker_status(TERTIARY_SIDE)==false)
                         {
                             transptr->set_winding_breaker_status(TERTIARY_SIDE, true);
-                            network_matrix.build_dynamic_network_matrix();
+                            network_matrix.build_dynamic_network_Y_matrix();
                             build_jacobian();
                             osstream<<transptr->get_device_name()<<" breaker at secondary side (bus "<<side_bus<<") is closed at time "<<TIME<<" s.";
                             toolkit.show_information_with_leading_time_stamp(osstream);
@@ -4083,7 +4083,7 @@ void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
             {
                 generator->set_status(false);
 
-                network_matrix.build_dynamic_network_matrix();
+                network_matrix.build_dynamic_network_Y_matrix();
                 build_jacobian();
 
                 osstream<<generator->get_device_name()<<" is tripped at time "<<TIME<<" s.";
@@ -4128,7 +4128,7 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
                 osstream<<generator->get_mbase_in_MVA()<<" MVA.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
 
-                network_matrix.build_dynamic_network_matrix();
+                network_matrix.build_dynamic_network_Y_matrix();
                 build_jacobian();
             }
             else
@@ -4189,7 +4189,7 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
                         toolkit.show_information_with_leading_time_stamp(osstream);
                     }
 
-                    network_matrix.build_dynamic_network_matrix();
+                    network_matrix.build_dynamic_network_Y_matrix();
                     build_jacobian();
                 }
                 else
@@ -4231,7 +4231,7 @@ void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
             {
                 load->set_status(false);
 
-                network_matrix.build_dynamic_network_matrix();
+                network_matrix.build_dynamic_network_Y_matrix();
                 build_jacobian();
 
                 osstream<<load->get_device_name()<<" is tripped at time "<<TIME<<" s.";
@@ -4270,7 +4270,7 @@ void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
             {
                 load->set_status(true);
 
-                network_matrix.build_dynamic_network_matrix();
+                network_matrix.build_dynamic_network_Y_matrix();
                 build_jacobian();
 
                 osstream<<load->get_device_name()<<" is closed at time "<<TIME<<" s.";
@@ -4381,7 +4381,7 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
             {
                 shunt->set_status(false);
 
-                network_matrix.build_dynamic_network_matrix();
+                network_matrix.build_dynamic_network_Y_matrix();
                 build_jacobian();
 
                 osstream<<shunt->get_device_name()<<" is tripped at time "<<TIME<<" s.";
@@ -4420,7 +4420,7 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
             {
                 shunt->set_status(true);
 
-                network_matrix.build_dynamic_network_matrix();
+                network_matrix.build_dynamic_network_Y_matrix();
                 build_jacobian();
 
                 osstream<<shunt->get_device_name()<<" is closed at time "<<TIME<<" s.";

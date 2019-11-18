@@ -315,7 +315,7 @@ void PSSE_IMEXPORTER::export_powerflow_data(string file, bool export_zero_impeda
     {
         NETWORK_MATRIX& network = toolkit.get_network_matrix();
         network.optimize_network_ordering();
-        network.build_network_matrix();
+        network.build_network_Y_matrix();
     }
 
     if(export_zero_impedance_line==false)

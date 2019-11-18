@@ -23,6 +23,7 @@ STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scal
 
 ## Realse Note
 
+- 0.11.0. Nov. 18, 2019. Modify API of building and saving network matix. Add new API to build and save Z matrix. Not compatible with previous STEPS.
 - 0.10.2. Nov. 13, 2019. Add new API get/set_hvdc_power_order_in_MW() for changing HVDC power order in dynamic simulation.
 - 0.10.1. Oct. 29, 2019. Add new API load_powerflow_result() to load solved powerflow result for new non-flat start powerflow solution.
 - 0.10.0. Oct. 26, 2019. Remove loading of libSTEPS-p.so/dll. Use libSTEPS.so/dll for building STEPS.

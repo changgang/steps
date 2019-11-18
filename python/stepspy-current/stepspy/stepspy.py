@@ -6,8 +6,8 @@ global STEPS_LIB
 
 class STEPS():
     def info(self):
-        version = "0.10.1"
-        date = "2019/10/29"
+        version = "0.11.0"
+        date = "2019/11/18"
         authors = (("Changgang Li", "lichangang@sdu.edu.cn"),("Yue Wu","sduyuewu2018@163.com"))
         info = 'STEPS '+version+', built on '+date+', by '
         for author in authors:
@@ -1843,48 +1843,59 @@ class STEPS():
         STEPS_LIB.api_save_jacobian_matrix(file, self.toolkit_index)
         return
 
-    def build_network_matrix(self):
+    def build_network_Y_matrix(self):
         global STEPS_LIB
-        STEPS_LIB.api_build_network_matrix(self.toolkit_index)
+        STEPS_LIB.api_build_network_Y_matrix(self.toolkit_index)
         return
 
-    def build_decoupled_network_matrix(self):
+    def build_decoupled_network_B_matrix(self):
         global STEPS_LIB
-        STEPS_LIB.api_build_decoupled_network_matrix(self.toolkit_index)
+        STEPS_LIB.api_build_decoupled_network_B_matrix(self.toolkit_index)
         return
 
-    def build_dc_network_matrix(self):
+    def build_dc_network_B_matrix(self):
         global STEPS_LIB
-        STEPS_LIB.api_build_dc_network_matrix(self.toolkit_index)
+        STEPS_LIB.api_build_dc_network_B_matrix(self.toolkit_index)
         return
 
-    def build_dynamic_network_matrix(self):
+    def build_dynamic_network_Y_matrix(self):
         global STEPS_LIB
-        STEPS_LIB.api_build_dynamic_network_matrix(self.toolkit_index)
+        STEPS_LIB.api_build_dynamic_network_Y_matrix(self.toolkit_index)
         return
 
-    def save_network_matrix(self, file):
+    def build_network_Z_matrix(self):
         global STEPS_LIB
-        file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_network_matrix(file, self.toolkit_index)
+        STEPS_LIB.api_build_network_Z_matrix(self.toolkit_index)
         return
         
-    def save_decoupled_network_matrix(self, file):
+    def save_network_Y_matrix(self, file):
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_decoupled_network_matrix(file, self.toolkit_index)
+        STEPS_LIB.api_save_network_Y_matrix(file, self.toolkit_index)
         return
         
-    def save_dc_network_matrix(self, file):
+    def save_decoupled_network_B_matrix(self, file):
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_dc_network_matrix(file, self.toolkit_index)
+        STEPS_LIB.api_save_decoupled_network_B_matrix(file, self.toolkit_index)
         return
         
-    def save_dynamic_network_matrix(self, file):
+    def save_dc_network_B_matrix(self, file):
         global STEPS_LIB
         file = self.__get_c_char_p_of_string(file)
-        STEPS_LIB.api_save_dynamic_network_matrix(file, self.toolkit_index)
+        STEPS_LIB.api_save_dc_network_B_matrix(file, self.toolkit_index)
+        return
+        
+    def save_dynamic_network_Y_matrix(self, file):
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_dynamic_network_Y_matrix(file, self.toolkit_index)
+        return
+        
+    def save_network_Z_matrix(self, file):
+        global STEPS_LIB
+        file = self.__get_c_char_p_of_string(file)
+        STEPS_LIB.api_save_network_Z_matrix(file, self.toolkit_index)
         return
         
         

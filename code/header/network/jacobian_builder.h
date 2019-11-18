@@ -17,7 +17,7 @@ class JACOBIAN_BUILDER : public BASE
         ~JACOBIAN_BUILDER();
 
         void set_network_matrix(NETWORK_MATRIX& network_matrix);
-        NETWORK_MATRIX* get_network_matrix() const;
+        NETWORK_MATRIX* get_network_Y_matrix() const;
 
         bool is_network_matrix_set() const;
 

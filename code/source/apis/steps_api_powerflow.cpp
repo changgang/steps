@@ -2,6 +2,9 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
+#include <iostream>
+using namespace std;
+
 size_t api_get_powerflow_solver_integer_parameter(char* parameter_name, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
@@ -254,66 +257,82 @@ void api_save_jacobian_matrix(char* file, size_t toolkit_index)
     solver.save_jacobian_matrix_to_file(file);
 }
 
-void api_build_network_matrix(size_t toolkit_index)
+void api_build_network_Y_matrix(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_network_matrix();
+    network_matrix.build_network_Y_matrix();
 }
 
-void api_build_decoupled_network_matrix(size_t toolkit_index)
+void api_build_decoupled_network_B_matrix(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_decoupled_network_matrix();
+    network_matrix.build_decoupled_network_B_matrix();
 }
 
-void api_build_dc_network_matrix(size_t toolkit_index)
+void api_build_dc_network_B_matrix(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_dc_network_matrix();
+    network_matrix.build_dc_network_B_matrix();
 }
 
-void api_build_dynamic_network_matrix(size_t toolkit_index)
+void api_build_dynamic_network_Y_matrix(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_dynamic_network_matrix();
+    network_matrix.build_dynamic_network_Y_matrix();
 }
 
-void api_save_network_matrix(char* file, size_t toolkit_index)
+void api_build_network_Z_matrix(size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.save_network_matrix_to_file(file);
+    network_matrix.build_network_Z_matrix();
 }
 
-void api_save_decoupled_network_matrix(char* file, size_t toolkit_index)
+void api_save_network_Y_matrix(char* file, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.save_decoupled_network_matrix_to_file(file);
+    network_matrix.save_network_Y_matrix_to_file(file);
 }
 
-void api_save_dc_network_matrix(char* file, size_t toolkit_index)
+void api_save_decoupled_network_B_matrix(char* file, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.save_dc_network_matrix_to_file(file);
+    network_matrix.save_decoupled_network_B_matrix_to_file(file);
 }
 
-void api_save_dynamic_network_matrix(char* file, size_t toolkit_index)
+void api_save_dc_network_B_matrix(char* file, size_t toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.save_dynamic_network_matrix_to_file(file);
+    network_matrix.save_dc_network_B_matrix_to_file(file);
+}
+
+void api_save_dynamic_network_Y_matrix(char* file, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_dynamic_network_Y_matrix_to_file(file);
+}
+
+void api_save_network_Z_matrix(char* file, size_t toolkit_index)
+{
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
+    NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
+    network_matrix.save_network_Z_matrix_to_file(file);
 }

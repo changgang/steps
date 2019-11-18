@@ -262,7 +262,7 @@ void POWERFLOW_SOLVER_TEST::test_solve_IEEE_9_bus_model_with_full_Newton_Raphson
 
     check_IEEE_9_bus_model_powerflow_result();
 
-    powerflow_solver.save_network_matrix_to_file("test_log/IEEE9_network_matrix.csv");
+    powerflow_solver.save_network_Y_matrix_to_file("test_log/IEEE9_network_matrix.csv");
     powerflow_solver.save_bus_powerflow_result_to_file("test_log/IEEE9_bus_powerflow_result.csv");
     powerflow_solver.save_jacobian_matrix_to_file("test_log/IEEE9_jacobian_matrix.csv");
 

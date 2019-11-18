@@ -58,7 +58,7 @@ class POWERFLOW_SOLVER : public BASE
         void show_powerflow_result();
         void save_powerflow_result_to_file(const string& filename) const;
         void save_extended_powerflow_result_to_file(const string& filename) const;
-        void save_network_matrix_to_file(const string& filename) const;
+        void save_network_Y_matrix_to_file(const string& filename) const;
         void save_jacobian_matrix_to_file(const string& filename);
         void save_bus_powerflow_result_to_file(const string& filename) const;
         size_t get_iteration_count() const;

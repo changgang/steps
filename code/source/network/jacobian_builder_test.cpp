@@ -42,7 +42,7 @@ void JACOBIAN_BUILDER_TEST::test_form_and_show_seprate_jacobians()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"JACOBIAN_BUILDER_TEST");
 
-    network_matrix.build_network_matrix();
+    network_matrix.build_network_Y_matrix();
 
     jacobian_builder.build_seprate_jacobians();
 
@@ -57,7 +57,7 @@ void JACOBIAN_BUILDER_TEST::test_update_seprate_jacobians()
     show_test_information_for_function_of_class(__FUNCTION__,"JACOBIAN_BUILDER_TEST");
     ostringstream osstream;
 
-    network_matrix.build_network_matrix();
+    network_matrix.build_network_Y_matrix();
 
     jacobian_builder.build_seprate_jacobians();
 
@@ -80,7 +80,7 @@ void JACOBIAN_BUILDER_TEST::test_get_full_jacobian_for_coupled_P_and_Q_equations
     show_test_information_for_function_of_class(__FUNCTION__,"JACOBIAN_BUILDER_TEST");
     ostringstream osstream;
 
-    network_matrix.build_network_matrix();
+    network_matrix.build_network_Y_matrix();
 
     jacobian_builder.build_seprate_jacobians();
 
@@ -126,7 +126,7 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_P_equations()
     show_test_information_for_function_of_class(__FUNCTION__,"JACOBIAN_BUILDER_TEST");
     ostringstream osstream;
 
-    network_matrix.build_decoupled_network_matrix();
+    network_matrix.build_decoupled_network_B_matrix();
 
     vector<size_t> internal_P_equation_buses;
     internal_P_equation_buses.clear();
@@ -150,7 +150,7 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_Q_equations()
     show_test_information_for_function_of_class(__FUNCTION__,"JACOBIAN_BUILDER_TEST");
     ostringstream osstream;
 
-    network_matrix.build_decoupled_network_matrix();
+    network_matrix.build_decoupled_network_B_matrix();
 
     vector<size_t> internal_Q_equation_buses;
     internal_Q_equation_buses.clear();

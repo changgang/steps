@@ -303,14 +303,16 @@ EXPORT_STEPS_DLL void api_save_powerflow_result(char* file, size_t toolkit_index
 EXPORT_STEPS_DLL void api_save_extended_powerflow_result(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_save_jacobian_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
 
-EXPORT_STEPS_DLL void api_build_network_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_build_decoupled_network_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_build_dc_network_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_build_dynamic_network_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_save_network_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_save_decoupled_network_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_save_dc_network_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
-EXPORT_STEPS_DLL void api_save_dynamic_network_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_network_Y_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_decoupled_network_B_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_dc_network_B_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_dynamic_network_Y_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_build_network_Z_matrix(size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_network_Y_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_decoupled_network_B_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_dc_network_B_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_dynamic_network_Y_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
+EXPORT_STEPS_DLL void api_save_network_Z_matrix(char* file, size_t toolkit_index=INDEX_NOT_EXIST);
 
 
 EXPORT_STEPS_DLL size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);

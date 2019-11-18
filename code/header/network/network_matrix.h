@@ -17,20 +17,24 @@ class NETWORK_MATRIX : public BASE
         ~NETWORK_MATRIX();
         virtual void clear();
 
-        void build_network_matrix();
-        void build_decoupled_network_matrix();
-        void build_dc_network_matrix();
-        void build_dynamic_network_matrix();
-        void build_sequential_network_matrix();
+        void build_network_Y_matrix();
+        void build_decoupled_network_B_matrix();
+        void build_dc_network_B_matrix();
+        void build_dynamic_network_Y_matrix();
+        void build_sequential_network_Y_matrix();
 
-        STEPS_SPARSE_MATRIX& get_network_matrix();
+        void build_network_Z_matrix();
+
+        STEPS_SPARSE_MATRIX& get_network_Y_matrix();
         STEPS_SPARSE_MATRIX& get_decoupled_network_BP_matrix();
         STEPS_SPARSE_MATRIX& get_decoupled_network_BQ_matrix();
-        STEPS_SPARSE_MATRIX& get_dc_network_matrix();
-        STEPS_SPARSE_MATRIX& get_dynamic_network_matrix();
+        STEPS_SPARSE_MATRIX& get_dc_network_B_matrix();
+        STEPS_SPARSE_MATRIX& get_dynamic_network_Y_matrix();
         STEPS_SPARSE_MATRIX& get_sequential_network_Y1_matrix();
         STEPS_SPARSE_MATRIX& get_sequential_network_Y2_matrix();
         STEPS_SPARSE_MATRIX& get_sequential_network_Y0_matrix();
+
+        STEPS_SPARSE_MATRIX& get_network_Z_matrix();
 
         void optimize_network_ordering();
         void check_network_connectivity(bool remove_void_island=false);
@@ -46,10 +50,11 @@ class NETWORK_MATRIX : public BASE
         void report_dynamic_network_matrix() const;
         void report_physical_internal_bus_number_pair() const;
 
-        void save_network_matrix_to_file(const string& filename) const;
-        void save_decoupled_network_matrix_to_file(const string& filename) const;
-        void save_dc_network_matrix_to_file(const string& filename) const;
-        void save_dynamic_network_matrix_to_file(const string& filename) const;
+        void save_network_Y_matrix_to_file(const string& filename) const;
+        void save_decoupled_network_B_matrix_to_file(const string& filename) const;
+        void save_dc_network_B_matrix_to_file(const string& filename) const;
+        void save_dynamic_network_Y_matrix_to_file(const string& filename) const;
+        void save_network_Z_matrix_to_file(const string& filename) const;
     private:
         void add_lines_to_network();
         void add_transformers_to_network();
@@ -105,6 +110,7 @@ class NETWORK_MATRIX : public BASE
     private:
         STEPS_SPARSE_MATRIX network_Y_matrix, network_BP_matrix, network_BQ_matrix, network_DC_B_matrix,
                             network_Y1_matrix, network_Y2_matrix, network_Y3_matrix;
+        STEPS_SPARSE_MATRIX network_Z_matrix;
         INPHNO inphno;
     private:
         virtual bool is_valid() const;

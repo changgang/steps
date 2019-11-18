@@ -232,7 +232,7 @@ void POWERFLOW_SOLVER::solve_with_full_Newton_Raphson_solution()
         double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
         vector<double> bus_delta_voltage_angle;
 
-        network_matrix.build_network_matrix();
+        network_matrix.build_network_Y_matrix();
 
         update_P_and_Q_equation_internal_buses();
         jacobian_builder.build_seprate_jacobians();
@@ -325,10 +325,10 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
         double max_P_mismatch_in_MW, max_Q_mismatch_in_MW;
         vector<double> bus_delta_voltage, bus_delta_angle;
 
-        network_matrix.build_network_matrix();
+        network_matrix.build_network_Y_matrix();
 
-        network_matrix.build_decoupled_network_matrix();
-        //const SPARSE_MATRIX& Y = network_matrix.get_network_matrix();
+        network_matrix.build_decoupled_network_B_matrix();
+        //const SPARSE_MATRIX& Y = network_matrix.get_network_Y_matrix();
         //cout<<"Y matrix identity is: "<<get_sparse_matrix_identity(Y)<<endl;
 
         update_P_and_Q_equation_internal_buses();
@@ -883,7 +883,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_mismatch()
 
     size_t bus;
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX* network_matrix = get_network_matrix();
+    NETWORK_MATRIX* network_matrix = get_network_Y_matrix();
     double sbase = psdb.get_system_base_power_in_MVA();
     for(size_t i=0; i!=nbus; ++i)
     {
@@ -963,7 +963,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    const SPARSE_MATRIX& Y = network_matrix.get_network_matrix();
+    const SPARSE_MATRIX& Y = network_matrix.get_network_Y_matrix();
 
     size_t nbus = psdb.get_in_service_bus_count();
     if(bus_current.size()==0)
@@ -2714,11 +2714,11 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
     }
 }
 
-void POWERFLOW_SOLVER::save_network_matrix_to_file(const string& filename) const
+void POWERFLOW_SOLVER::save_network_Y_matrix_to_file(const string& filename) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
-    network_matrix.save_network_matrix_to_file(filename);
+    network_matrix.save_network_Y_matrix_to_file(filename);
 }
 
 void POWERFLOW_SOLVER::save_jacobian_matrix_to_file(const string& filename)
