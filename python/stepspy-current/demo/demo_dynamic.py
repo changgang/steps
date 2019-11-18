@@ -15,6 +15,13 @@ simulator.load_powerflow_data('IEEE39.raw','PSS/E')
 simulator.check_powerflow_data()
 simulator.check_network_connectivity()
 
+
+simulator.build_dynamic_network_Y_matrix()
+simulator.save_dynamic_network_Y_matrix('ymatrix_dyn.csv')
+
+simulator.build_network_Z_matrix()
+simulator.save_network_Z_matrix('zmatrix_dyn.csv')
+
 nbus = simulator.get_bus_count()
 print(nbus)
 nline = simulator.get_line_count()

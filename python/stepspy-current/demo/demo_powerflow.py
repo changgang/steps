@@ -177,11 +177,14 @@ simulator.set_powerflow_solver_parameter(data_type, data_name, value)
 simulator.solve_powerflow('NR')
 
 
+simulator.build_network_Y_matrix()
+simulator.save_network_Y_matrix('ymatrix_pf.csv')
 
-    
+simulator.build_decoupled_network_B_matrix()
+simulator.save_decoupled_network_B_matrix('bmatrix_pf.csv')
 
+simulator.build_dc_network_B_matrix()
+simulator.save_dc_network_B_matrix('bmatrix_dc_pf.csv')
 
-
-
-
-
+simulator.build_network_Z_matrix()
+simulator.save_network_Z_matrix('zmatrix_pf.csv')
