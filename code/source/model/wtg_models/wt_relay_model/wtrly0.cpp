@@ -625,7 +625,7 @@ void WTRLY0::check_bus_voltage_relay()
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         DYNAMICS_SIMULATOR& sim = toolkit.get_dynamic_simulator();
 
-        //double volt = get_bus_voltage_in_pu();
+        //double volt = get_bus_positive_sequence_voltage_in_pu();
         double volt = get_terminal_voltage_in_pu();
         if(volt<=2.0)
         {

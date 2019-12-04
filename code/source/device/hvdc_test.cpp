@@ -91,8 +91,8 @@ void HVDC_TEST::setup()
     BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(500.0);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_rad(1.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_rad(1.0);
     bus.set_bus_type(PQ_TYPE);
     psdb.append_bus(bus);
     bus.set_bus_number(2);
@@ -1203,25 +1203,25 @@ void HVDC_TEST::test_solve_hvdc()
     osstream<<"Test 2: solve with 0.8 AC voltage at rectifier side";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     BUS* busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
-    busptr->set_voltage_in_pu(0.8);
+    busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
     hvdc.show_solved_hvdc_steady_state();
 
     osstream<<"Test 3: solve with 0.8 AC voltage at inverter side";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
-    busptr->set_voltage_in_pu(1.0);
+    busptr->set_positive_sequence_voltage_in_pu(1.0);
     busptr = psdb.get_bus(hvdc.get_converter_bus(INVERTER));
-    busptr->set_voltage_in_pu(0.8);
+    busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
     hvdc.show_solved_hvdc_steady_state();
 
     osstream<<"Test 4: solve with 0.8 AC voltage at both sides";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     busptr = psdb.get_bus(hvdc.get_converter_bus(RECTIFIER));
-    busptr->set_voltage_in_pu(0.8);
+    busptr->set_positive_sequence_voltage_in_pu(0.8);
     busptr = psdb.get_bus(hvdc.get_converter_bus(INVERTER));
-    busptr->set_voltage_in_pu(0.8);
+    busptr->set_positive_sequence_voltage_in_pu(0.8);
     hvdc.solve_steady_state();
     hvdc.show_solved_hvdc_steady_state();
 

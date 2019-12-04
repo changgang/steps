@@ -32,24 +32,24 @@ void prepare_Arthur_R_Bergen_3_bus_model_buses()
     bus.set_zone_number(1);
     bus.set_owner_number(1);
     bus.set_bus_type(SLACK_TYPE);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_deg(0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_deg(0.0);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(2);
     bus.set_bus_name("BUS_2");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.05);
-    bus.set_angle_in_deg(0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.05);
+    bus.set_positive_sequence_angle_in_deg(0.0);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(3);
     bus.set_bus_name("BUS_3");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_deg(0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_deg(0.0);
 
     psdb.append_bus(bus);
 }

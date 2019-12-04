@@ -51,14 +51,14 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::test_get_bus_voltage()
     size_t bus = load->get_load_bus();
     BUS* busptr = psdb.get_bus(bus);
 
-    busptr->set_voltage_in_pu(1.0);
-    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu()-1)<FLOAT_EPSILON);
+    busptr->set_positive_sequence_voltage_in_pu(1.0);
+    TEST_ASSERT(fabs(model->get_bus_positive_sequence_voltage_in_pu()-1)<FLOAT_EPSILON);
 
-    busptr->set_voltage_in_pu(1.1);
-    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu()-1.1)<FLOAT_EPSILON);
+    busptr->set_positive_sequence_voltage_in_pu(1.1);
+    TEST_ASSERT(fabs(model->get_bus_positive_sequence_voltage_in_pu()-1.1)<FLOAT_EPSILON);
 
-    busptr->set_voltage_in_pu(0.5);
-    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu()-0.5)<FLOAT_EPSILON);
+    busptr->set_positive_sequence_voltage_in_pu(0.5);
+    TEST_ASSERT(fabs(model->get_bus_positive_sequence_voltage_in_pu()-0.5)<FLOAT_EPSILON);
 }
 
 
@@ -76,7 +76,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::export_meter_values()
 
     ostringstream osstream;
     osstream<<setprecision(6)<<fixed<<default_toolkit.get_dynamic_simulation_time_in_s()<<"\t"
-      <<setprecision(6)<<fixed<<model->get_bus_voltage_in_pu()<<"\t"
+      <<setprecision(6)<<fixed<<model->get_bus_positive_sequence_voltage_in_pu()<<"\t"
       <<setprecision(6)<<fixed<<model->get_total_shed_scale_factor_in_pu()<<endl;
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 }
@@ -112,7 +112,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
 
     size_t bus = load->get_load_bus();
     BUS* busptr = psdb.get_bus(bus);
-    busptr->set_voltage_in_pu(1.0);
+    busptr->set_positive_sequence_voltage_in_pu(1.0);
 
     model->initialize();
     export_meter_title();
@@ -132,7 +132,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
         export_meter_values();
     }
 
-    double volt = busptr->get_voltage_in_pu();
+    double volt = busptr->get_positive_sequence_voltage_in_pu();
     double rate = 0.2; // pu/s
 
     while(true)
@@ -145,7 +145,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
             break;
         }
         volt -= (rate*delt);
-        busptr->set_voltage_in_pu(volt);
+        busptr->set_positive_sequence_voltage_in_pu(volt);
 
         model->run(INTEGRATE_MODE);
         model->run(UPDATE_MODE);
@@ -162,7 +162,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
             break;
         }
         volt += (rate*delt);
-        busptr->set_voltage_in_pu(volt);
+        busptr->set_positive_sequence_voltage_in_pu(volt);
 
         model->run(INTEGRATE_MODE);
         model->run(UPDATE_MODE);
@@ -178,7 +178,7 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
             break;
         }
         volt -= (rate*delt);
-        busptr->set_voltage_in_pu(volt);
+        busptr->set_positive_sequence_voltage_in_pu(volt);
 
         model->run(INTEGRATE_MODE);
         model->run(UPDATE_MODE);
@@ -204,13 +204,13 @@ void LOAD_VOLTAGE_RELAY_MODEL_TEST::run_model(string outputfile)
     {
         default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()+delt);
         volt += (rate*delt);
-        busptr->set_voltage_in_pu(volt);
+        busptr->set_positive_sequence_voltage_in_pu(volt);
 
         if(default_toolkit.get_dynamic_simulation_time_in_s()>18.0+FLOAT_EPSILON)
         {
             default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-delt);
             volt -= (rate*delt);
-            busptr->set_voltage_in_pu(volt);
+            busptr->set_positive_sequence_voltage_in_pu(volt);
             break;
         }
         model->run(INTEGRATE_MODE);

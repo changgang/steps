@@ -60,7 +60,7 @@ double WTG_MODEL::get_terminal_voltage_in_pu() const
     {
         BUS* bus = generator->get_bus_pointer();
         if(bus!=NULL)
-            return bus->get_voltage_in_pu();
+            return bus->get_positive_sequence_voltage_in_pu();
         else
             return 0.0;
     }
@@ -75,7 +75,7 @@ complex<double> WTG_MODEL::get_terminal_complex_voltage_in_pu() const
     {
         BUS* bus = generator->get_bus_pointer();
         if(bus!=NULL)
-            return bus->get_complex_voltage_in_pu();
+            return bus->get_positive_sequence_complex_voltage_in_pu();
         else
             return 0.0;
     }

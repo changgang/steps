@@ -32,8 +32,8 @@ void LOAD_MODEL_TEST::setup()
     bus.set_bus_number(1);
     bus.set_bus_type(PV_TYPE);
     bus.set_base_voltage_in_kV(21.0);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_rad(0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_rad(0.0);
 
     psdb.append_bus(bus);
 
@@ -90,7 +90,7 @@ void LOAD_MODEL_TEST::test_get_bus_voltage()
     LOAD_MODEL* model = load->get_load_model();
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    TEST_ASSERT(fabs(model->get_bus_voltage_in_pu() - psdb.get_bus_voltage_in_pu(1))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_bus_positive_sequence_voltage_in_pu() - psdb.get_bus_positive_sequence_voltage_in_pu(1))<FLOAT_EPSILON);
 }
 
 void LOAD_MODEL_TEST::test_get_bus_frequency_deviation()
@@ -153,7 +153,7 @@ void LOAD_MODEL_TEST::export_meter_values(double time)
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
 
-    double volt = model->get_bus_voltage_in_pu();
+    double volt = model->get_bus_positive_sequence_voltage_in_pu();
     double freq = model->get_bus_frequency_deviation_in_pu();
 
     complex<double> S = model->get_load_power_in_MVA();
@@ -216,7 +216,7 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
             TIME -=delt;
             break;
         }
-        busptr->set_voltage_in_pu(busptr->get_voltage_in_pu()+rate*delt);
+        busptr->set_positive_sequence_voltage_in_pu(busptr->get_positive_sequence_voltage_in_pu()+rate*delt);
         P =  model->get_load_power_in_MVA().real();
         while(true)
         {
@@ -239,7 +239,7 @@ void LOAD_MODEL_TEST::test_run_voltage_ramp_response()
             TIME -=delt;
             break;
         }
-        busptr->set_voltage_in_pu(busptr->get_voltage_in_pu()-rate*delt);
+        busptr->set_positive_sequence_voltage_in_pu(busptr->get_positive_sequence_voltage_in_pu()-rate*delt);
         P =  model->get_load_power_in_MVA().real();
         while(true)
         {

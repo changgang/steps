@@ -303,7 +303,7 @@ void PSASPE13::initialize()
                 double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
 
                 //size_t bus = generator->get_generator_bus();
-                //double Vt = psdb.get_bus_voltage_in_pu(bus);
+                //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
                 double Vt = get_terminal_voltage_in_pu();
                 double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 
@@ -419,7 +419,7 @@ double PSASPE13::get_excitation_voltage_in_pu()
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             //size_t bus = generator->get_generator_bus();
-            //double Vt = psdb.get_bus_voltage_in_pu(bus);
+            //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
             double Vt = get_terminal_voltage_in_pu();
             double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
 

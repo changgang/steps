@@ -3171,7 +3171,7 @@ vector<BUS*> POWER_SYSTEM_DATABASE::get_buses_with_constraints(double vbase_kV_m
     for(size_t i=0; i!=n; ++i)
     {
         vbase = Bus[i].get_base_voltage_in_kV();
-        v = Bus[i].get_voltage_in_pu();
+        v = Bus[i].get_positive_sequence_voltage_in_pu();
         this_area = Bus[i].get_area_number();
         this_zone = Bus[i].get_zone_number();
         this_owner = Bus[i].get_owner_number();
@@ -3387,7 +3387,7 @@ vector<size_t> POWER_SYSTEM_DATABASE::get_buses_number_with_constraints(double v
     for(size_t i=0; i!=n; ++i)
     {
         vbase = Bus[i].get_base_voltage_in_kV();
-        v = Bus[i].get_voltage_in_pu();
+        v = Bus[i].get_positive_sequence_voltage_in_pu();
         this_area = Bus[i].get_area_number();
         this_zone = Bus[i].get_zone_number();
         this_owner = Bus[i].get_owner_number();
@@ -5710,7 +5710,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_complex_voltage_in_pu(size_t bus)
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
-        return busptr->get_complex_voltage_in_pu();
+        return busptr->get_positive_sequence_complex_voltage_in_pu();
     else
         return 0.0;
 
@@ -5720,7 +5720,7 @@ complex<double> POWER_SYSTEM_DATABASE::get_bus_complex_voltage_in_kV(size_t bus)
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
-        return busptr->get_complex_voltage_in_kV();
+        return busptr->get_positive_sequence_complex_voltage_in_kV();
     else
         return 0.0;
 }
@@ -5752,34 +5752,34 @@ double POWER_SYSTEM_DATABASE::get_bus_base_voltage_in_kV(size_t bus)
         return 0.0;
 }
 
-double POWER_SYSTEM_DATABASE::get_bus_voltage_in_pu(size_t bus)
+double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_voltage_in_pu(size_t bus)
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
-        return busptr->get_voltage_in_pu();
+        return busptr->get_positive_sequence_voltage_in_pu();
     else
         return 0.0;
 }
 
-double POWER_SYSTEM_DATABASE::get_bus_voltage_in_kV(size_t bus)
+double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_voltage_in_kV(size_t bus)
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
-        return busptr->get_voltage_in_kV();
+        return busptr->get_positive_sequence_voltage_in_kV();
     else
         return 0.0;
 }
 
-double POWER_SYSTEM_DATABASE::get_bus_angle_in_deg(size_t bus)
+double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_angle_in_deg(size_t bus)
 {
-    return rad2deg(get_bus_angle_in_rad(bus));
+    return rad2deg(get_bus_positive_sequence_angle_in_rad(bus));
 }
 
-double POWER_SYSTEM_DATABASE::get_bus_angle_in_rad(size_t bus)
+double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_angle_in_rad(size_t bus)
 {
     BUS* busptr = get_bus(bus);
     if(busptr!=NULL)
-        return busptr->get_angle_in_rad();
+        return busptr->get_positive_sequence_angle_in_rad();
     else
         return 0.0;
 }

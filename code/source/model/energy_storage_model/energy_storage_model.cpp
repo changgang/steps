@@ -61,7 +61,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_voltage_in_pu() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
-    return psdb.get_bus_voltage_in_pu(bus);
+    return psdb.get_bus_positive_sequence_voltage_in_pu(bus);
 }
 
 double ENERGY_STORAGE_MODEL::get_terminal_bus_angle_in_rad() const
@@ -73,7 +73,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_angle_in_rad() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     size_t bus = estorage->get_energy_storage_bus();
-    return psdb.get_bus_angle_in_rad(bus);
+    return psdb.get_bus_positive_sequence_angle_in_rad(bus);
 }
 
 

@@ -150,8 +150,8 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_bus_number()==101);
     TEST_ASSERT(bus->get_bus_name()=="NUC-A");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-21.6)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus->get_voltage_in_pu()-1.01)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus->get_angle_in_deg()-(-10.4286))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.01)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-10.4286))<FLOAT_EPSILON);
     TEST_ASSERT(bus->get_bus_type()==PV_TYPE);
     TEST_ASSERT(bus->get_area_number()==1);
     TEST_ASSERT(bus->get_zone_number()==1);
@@ -161,8 +161,8 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_bus_number()==201);
     TEST_ASSERT(bus->get_bus_name()=="HYDRO");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-500.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus->get_voltage_in_pu()-0.99007)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus->get_angle_in_deg()-(-18.7119))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.99007)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-18.7119))<FLOAT_EPSILON);
     TEST_ASSERT(bus->get_bus_type()==PQ_TYPE);
     TEST_ASSERT(bus->get_area_number()==2);
     TEST_ASSERT(bus->get_zone_number()==7);
@@ -172,8 +172,8 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_bus_number()==3001);
     TEST_ASSERT(bus->get_bus_name()=="MINE");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-230.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus->get_voltage_in_pu()-1.0237)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus->get_angle_in_deg()-(-4.0297))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-1.0237)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-(-4.0297))<FLOAT_EPSILON);
     TEST_ASSERT(bus->get_bus_type()==PQ_TYPE);
     TEST_ASSERT(bus->get_area_number()==5);
     TEST_ASSERT(bus->get_zone_number()==6);
@@ -183,8 +183,8 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     TEST_ASSERT(bus->get_bus_number()==93002);
     TEST_ASSERT(bus->get_bus_name()=="WINDBUS3");
     TEST_ASSERT(fabs(bus->get_base_voltage_in_kV()-0.69)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus->get_voltage_in_pu()-0.99622)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus->get_angle_in_deg()-1.4362)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus->get_positive_sequence_voltage_in_pu()-0.99622)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus->get_positive_sequence_angle_in_deg()-1.4362)<FLOAT_EPSILON);
     TEST_ASSERT(bus->get_bus_type()==PV_TYPE);
     TEST_ASSERT(bus->get_area_number()==5);
     TEST_ASSERT(bus->get_zone_number()==6);

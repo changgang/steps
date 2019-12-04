@@ -78,12 +78,12 @@ void BUS::set_owner_number(size_t number)
     owner_number = number;
 }
 
-void BUS::set_voltage_in_pu(double voltage)
+void BUS::set_positive_sequence_voltage_in_pu(double voltage)
 {
-    voltage_in_pu = voltage;
+    positive_sequence_voltage_in_pu = voltage;
     return;
     if(voltage>=0.0)
-        voltage_in_pu = voltage;
+        positive_sequence_voltage_in_pu = voltage;
     else
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -92,7 +92,7 @@ void BUS::set_voltage_in_pu(double voltage)
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
                <<"0.0 will be set automatically. [current dynamic simulation time is: "<<toolkit.get_dynamic_simulation_time_in_s()<<"s]";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        voltage_in_pu = 0.0;
+        positive_sequence_voltage_in_pu = 0.0;
         if(isnan(voltage))
         {
             osstream<<"STEPS will exit abnormally.";
@@ -102,32 +102,98 @@ void BUS::set_voltage_in_pu(double voltage)
     }
 }
 
-void BUS::set_voltage_in_kV(double voltage)
+void BUS::set_positive_sequence_voltage_in_kV(double voltage)
 {
     if(get_base_voltage_in_kV()!=0.0)
-        set_voltage_in_pu(voltage/get_base_voltage_in_kV());
+        set_positive_sequence_voltage_in_pu(voltage/get_base_voltage_in_kV());
     else
     {
         ostringstream osstream;
-        osstream<<"Invalid to set bus voltage ("<<voltage<<" kV) with zero base voltage for bus "
+        osstream<<"Invalid to set bus positive sequence voltage ("<<voltage<<" kV) with zero base voltage for bus "
                <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
                <<"0 will be set automatically.";
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
-        set_voltage_in_pu(0.0);
+        set_positive_sequence_voltage_in_pu(0.0);
     }
 }
 
-void BUS::set_angle_in_rad(double angle)
+void BUS::set_positive_sequence_angle_in_rad(double angle)
 {
-    angle_in_rad = angle;
-    Euler_complex_number = complex<double>(cos(angle_in_rad), sin(angle_in_rad));
+    positive_sequence_angle_in_rad = angle;
+    positive_sequence_Euler_complex_number = complex<double>(cos(positive_sequence_angle_in_rad), sin(positive_sequence_angle_in_rad));
 }
 
-void BUS::set_angle_in_deg(double angle)
+void BUS::set_positive_sequence_angle_in_deg(double angle)
 {
     angle = deg2rad(angle);
-    set_angle_in_rad(angle);
+    set_positive_sequence_angle_in_rad(angle);
+}
+
+void BUS::set_negative_sequence_voltage_in_pu(double voltage)
+{
+    negative_sequence_voltage_in_pu = voltage;
+}
+
+void BUS::set_negative_sequence_voltage_in_kV(double voltage)
+{
+    if(get_base_voltage_in_kV()!=0.0)
+        set_negative_sequence_voltage_in_pu(voltage/get_base_voltage_in_kV());
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Invalid to set bus negative sequence voltage ("<<voltage<<" kV) with zero base voltage for bus "
+               <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
+               <<"0 will be set automatically.";
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        set_negative_sequence_voltage_in_pu(0.0);
+    }
+}
+
+void BUS::set_negative_sequence_angle_in_rad(double angle)
+{
+    negative_sequence_angle_in_rad = angle;
+    negative_sequence_Euler_complex_number = complex<double>(cos(negative_sequence_angle_in_rad), sin(negative_sequence_angle_in_rad));
+}
+
+void BUS::set_negative_sequence_angle_in_deg(double angle)
+{
+    angle = deg2rad(angle);
+    set_negative_sequence_angle_in_rad(angle);
+}
+
+void BUS::set_zero_sequence_voltage_in_pu(double voltage)
+{
+    zero_sequence_voltage_in_pu = voltage;
+}
+
+void BUS::set_zero_sequence_voltage_in_kV(double voltage)
+{
+    if(get_base_voltage_in_kV()!=0.0)
+        set_zero_sequence_voltage_in_pu(voltage/get_base_voltage_in_kV());
+    else
+    {
+        ostringstream osstream;
+        osstream<<"Invalid to set bus zero sequence voltage ("<<voltage<<" kV) with zero base voltage for bus "
+               <<get_bus_number()<<" ("<<get_bus_name()<<")."<<endl
+               <<"0 will be set automatically.";
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        set_zero_sequence_voltage_in_pu(0.0);
+    }
+}
+
+void BUS::set_zero_sequence_angle_in_rad(double angle)
+{
+    zero_sequence_angle_in_rad = angle;
+    zero_sequence_Euler_complex_number = complex<double>(cos(zero_sequence_angle_in_rad), sin(zero_sequence_angle_in_rad));
+}
+
+void BUS::set_zero_sequence_angle_in_deg(double angle)
+{
+    angle = deg2rad(angle);
+    set_zero_sequence_angle_in_rad(angle);
 }
 
 void BUS::set_normal_voltage_upper_limit_in_pu(double voltage)
@@ -244,24 +310,66 @@ size_t BUS::get_owner_number() const
     return owner_number;
 }
 
-double BUS::get_voltage_in_pu() const
+double BUS::get_positive_sequence_voltage_in_pu() const
 {
-    return voltage_in_pu;
+    return positive_sequence_voltage_in_pu;
 }
 
-double BUS::get_voltage_in_kV() const
+double BUS::get_positive_sequence_voltage_in_kV() const
 {
-    return get_base_voltage_in_kV()*get_voltage_in_pu();
+    return get_base_voltage_in_kV()*get_positive_sequence_voltage_in_pu();
 }
 
-double BUS::get_angle_in_rad() const
+double BUS::get_positive_sequence_angle_in_rad() const
 {
-    return angle_in_rad;
+    return positive_sequence_angle_in_rad;
 }
 
-double BUS::get_angle_in_deg() const
+double BUS::get_positive_sequence_angle_in_deg() const
 {
-    return rad2deg(get_angle_in_rad());
+    return rad2deg(get_positive_sequence_angle_in_rad());
+}
+
+
+double BUS::get_negative_sequence_voltage_in_pu() const
+{
+    return negative_sequence_voltage_in_pu;
+}
+
+double BUS::get_negative_sequence_voltage_in_kV() const
+{
+    return get_base_voltage_in_kV()*get_negative_sequence_voltage_in_pu();
+}
+
+double BUS::get_negative_sequence_angle_in_rad() const
+{
+    return negative_sequence_angle_in_rad;
+}
+
+double BUS::get_negative_sequence_angle_in_deg() const
+{
+    return rad2deg(get_negative_sequence_angle_in_rad());
+}
+
+
+double BUS::get_zero_sequence_voltage_in_pu() const
+{
+    return zero_sequence_voltage_in_pu;
+}
+
+double BUS::get_zero_sequence_voltage_in_kV() const
+{
+    return get_base_voltage_in_kV()*get_zero_sequence_voltage_in_pu();
+}
+
+double BUS::get_zero_sequence_angle_in_rad() const
+{
+    return zero_sequence_angle_in_rad;
+}
+
+double BUS::get_zero_sequence_angle_in_deg() const
+{
+    return rad2deg(get_zero_sequence_angle_in_rad());
 }
 
 double BUS::get_normal_voltage_upper_limit_in_pu() const
@@ -309,14 +417,34 @@ double BUS::get_voltage_to_regulate_in_pu() const
     return voltage_to_regulate_in_pu;
 }
 
-complex<double> BUS::get_complex_voltage_in_pu() const
+complex<double> BUS::get_positive_sequence_complex_voltage_in_pu() const
 {
-    return Euler_complex_number*voltage_in_pu;
+    return positive_sequence_Euler_complex_number*positive_sequence_voltage_in_pu;
 }
 
-complex<double> BUS::get_complex_voltage_in_kV() const
+complex<double> BUS::get_positive_sequence_complex_voltage_in_kV() const
 {
-    return Euler_complex_number*voltage_in_pu*base_voltage_in_kV;
+    return positive_sequence_Euler_complex_number*positive_sequence_voltage_in_pu*base_voltage_in_kV;
+}
+
+complex<double> BUS::get_negative_sequence_complex_voltage_in_pu() const
+{
+    return negative_sequence_Euler_complex_number*negative_sequence_voltage_in_pu;
+}
+
+complex<double> BUS::get_negative_sequence_complex_voltage_in_kV() const
+{
+    return negative_sequence_Euler_complex_number*negative_sequence_voltage_in_pu*base_voltage_in_kV;
+}
+
+complex<double> BUS::get_zero_sequence_complex_voltage_in_pu() const
+{
+    return zero_sequence_Euler_complex_number*zero_sequence_voltage_in_pu;
+}
+
+complex<double> BUS::get_zero_sequence_complex_voltage_in_kV() const
+{
+    return zero_sequence_Euler_complex_number*zero_sequence_voltage_in_pu*base_voltage_in_kV;
 }
 
 
@@ -367,8 +495,12 @@ void BUS::clear()
     set_area_number(0);
     set_zone_number(0);
     set_owner_number(0);
-    set_voltage_in_pu(1.0);
-    set_angle_in_rad(0.0);
+    set_positive_sequence_voltage_in_pu(1.0);
+    set_positive_sequence_angle_in_rad(0.0);
+    set_negative_sequence_voltage_in_pu(0.0);
+    set_negative_sequence_angle_in_rad(0.0);
+    set_zero_sequence_voltage_in_pu(0.0);
+    set_zero_sequence_angle_in_rad(0.0);
     set_voltage_upper_limit_in_pu(1.1);
     set_voltage_lower_limit_in_pu(0.9);
     set_voltage_to_regulate_in_pu(0.0);
@@ -494,8 +626,8 @@ void BUS::copy_from_const_bus(const BUS& bus)
     set_area_number(bus.get_area_number());
     set_zone_number(bus.get_zone_number());
     set_owner_number(bus.get_owner_number());
-    set_voltage_in_pu(bus.get_voltage_in_pu());
-    set_angle_in_rad(bus.get_angle_in_rad());
+    set_positive_sequence_voltage_in_pu(bus.get_positive_sequence_voltage_in_pu());
+    set_positive_sequence_angle_in_rad(bus.get_positive_sequence_angle_in_rad());
     set_voltage_to_regulate_in_pu(bus.get_voltage_to_regulate_in_pu());
 
     if(bus.is_faulted())
@@ -512,8 +644,8 @@ void BUS::report() const
       <<"'"<<get_bus_name()<<"' "
       <<setprecision(3)<<get_base_voltage_in_kV()<<" kV, "<<get_base_frequency_in_Hz()<<" Hz: "
       <<(get_bus_type()==SLACK_TYPE?"Slack":(get_bus_type()==PQ_TYPE?"PQ":(get_bus_type()==OUT_OF_SERVICE?"Out of service":"PV")))<<", "
-      <<setprecision(6)<<fixed<<get_voltage_in_pu()<<" pu, "
-      <<setprecision(6)<<fixed<<get_angle_in_deg()<<" deg.";
+      <<setprecision(6)<<fixed<<get_positive_sequence_voltage_in_pu()<<" pu, "
+      <<setprecision(6)<<fixed<<get_positive_sequence_angle_in_deg()<<" deg.";
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }

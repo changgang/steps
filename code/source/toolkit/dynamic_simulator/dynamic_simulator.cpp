@@ -1848,7 +1848,7 @@ void DYNAMICS_SIMULATOR::initialize_internal_bus_voltage_vector()
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
     for(size_t internal_bus=0; internal_bus<nbus; ++internal_bus)
-        internal_bus_complex_voltage_in_pu[internal_bus] = internal_bus_pointers[internal_bus]->get_complex_voltage_in_pu();
+        internal_bus_complex_voltage_in_pu[internal_bus] = internal_bus_pointers[internal_bus]->get_positive_sequence_complex_voltage_in_pu();
 }
 
 complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const
@@ -1856,7 +1856,7 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
     return internal_bus_complex_voltage_in_pu[internal_bus];
 
     BUS* busptr = internal_bus_pointers[internal_bus];
-    complex<double> v= busptr->get_complex_voltage_in_pu();
+    complex<double> v= busptr->get_positive_sequence_complex_voltage_in_pu();
     if(v!=internal_bus_complex_voltage_in_pu[internal_bus])
     {
         ostringstream osstream;
@@ -2665,7 +2665,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             busmax = net.get_physical_bus_number_of_internal_bus(i);
         }
     }
-    osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<" or complex "<<cmaxmismatch<<", complex power = "<<psdb.get_bus_complex_voltage_in_pu(busmax)*conj(cmaxmismatch)*psdb.get_system_base_power_in_MVA()<<setprecision(10)<<", v="<<psdb.get_bus_voltage_in_pu(busmax)<<endl;
+    osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<" or complex "<<cmaxmismatch<<", complex power = "<<psdb.get_bus_complex_voltage_in_pu(busmax)*conj(cmaxmismatch)*psdb.get_system_base_power_in_MVA()<<setprecision(10)<<", v="<<psdb.get_bus_positive_sequence_voltage_in_pu(busmax)<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(size_t i=0; i<n; ++i)
@@ -3090,8 +3090,8 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     for(size_t i=0; i<n; ++i)
     {
         BUS* bus = internal_bus_pointers[i];
-        double vang0 = bus->get_angle_in_rad();
-        complex<double> V0 = bus->get_complex_voltage_in_pu();
+        double vang0 = bus->get_positive_sequence_angle_in_rad();
+        complex<double> V0 = bus->get_positive_sequence_complex_voltage_in_pu();
 
         complex<double> delta_v = complex<double>(delta_V[i], delta_V[i+n]);
 
@@ -3112,10 +3112,10 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
             vmag_new = 3.0;
 
 
-        bus->set_voltage_in_pu(vmag_new);
-        bus->set_angle_in_rad(vang_new);
+        bus->set_positive_sequence_voltage_in_pu(vmag_new);
+        bus->set_positive_sequence_angle_in_rad(vang_new);
 
-        internal_bus_complex_voltage_in_pu[i] = bus->get_complex_voltage_in_pu();
+        internal_bus_complex_voltage_in_pu[i] = bus->get_positive_sequence_complex_voltage_in_pu();
     }
 }
 
@@ -3164,33 +3164,33 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, const 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(bus);
     double fault_b = fault.get_fault_shunt_in_pu().imag();
-    double current_voltage = busptr->get_voltage_in_pu();
+    double current_voltage = busptr->get_positive_sequence_voltage_in_pu();
     double vbase = busptr->get_base_voltage_in_kV();
     double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
     double zbase = vbase*vbase*one_over_sbase;
     double fault_x = -zbase/fault_b;
     if(fault_x<1)
-        busptr->set_voltage_in_pu(0.05);
+        busptr->set_positive_sequence_voltage_in_pu(0.05);
     else
     {
         if(fault_x<5)
-            busptr->set_voltage_in_pu(0.1);
+            busptr->set_positive_sequence_voltage_in_pu(0.1);
         else
         {
             if(fault_x<10)
-                busptr->set_voltage_in_pu(0.2);
+                busptr->set_positive_sequence_voltage_in_pu(0.2);
             else
             {
                 if(fault_x<100)
-                    busptr->set_voltage_in_pu(0.5);
+                    busptr->set_positive_sequence_voltage_in_pu(0.5);
                 else
-                    busptr->set_voltage_in_pu(current_voltage-0.1);
+                    busptr->set_positive_sequence_voltage_in_pu(current_voltage-0.1);
             }
         }
     }
     NETWORK_MATRIX& network = get_network_matrix();
     size_t internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
-    internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_complex_voltage_in_pu();
+    internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
 void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, const FAULT& fault)
@@ -3199,37 +3199,37 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, co
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(bus);
     double fault_b = fault.get_fault_shunt_in_pu().imag();
-    double current_voltage = busptr->get_voltage_in_pu();
-    busptr->set_voltage_in_pu(0.8);;
+    double current_voltage = busptr->get_positive_sequence_voltage_in_pu();
+    busptr->set_positive_sequence_voltage_in_pu(0.8);;
     return;
 
     if(fault_b<-2e8)
-        busptr->set_voltage_in_pu(current_voltage+0.95);
+        busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.95);
     else
     {
         if(fault_b<-2e7)
-            busptr->set_voltage_in_pu(current_voltage+0.9);
+            busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.9);
         else
         {
             if(fault_b<-2e6)
-                busptr->set_voltage_in_pu(current_voltage+0.8);
+                busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.8);
             else
             {
                 if(fault_b<-2e5)
-                    busptr->set_voltage_in_pu(current_voltage+0.7);
+                    busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.7);
                 else
                 {
                     if(fault_b<-2e4)
-                        busptr->set_voltage_in_pu(current_voltage+0.6);
+                        busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.6);
                     else
-                        busptr->set_voltage_in_pu(current_voltage+0.1);
+                        busptr->set_positive_sequence_voltage_in_pu(current_voltage+0.1);
                 }
             }
         }
     }
     NETWORK_MATRIX& network = get_network_matrix();
     size_t internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
-    internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_complex_voltage_in_pu();
+    internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
 

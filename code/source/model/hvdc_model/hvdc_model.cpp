@@ -853,11 +853,11 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
 
     double margin = hvdc->get_current_power_margin();
 
-    //double vac_r = psdb.get_bus_voltage_in_kV(bus_r);
-    //double vac_i = psdb.get_bus_voltage_in_kV(bus_i);
+    //double vac_r = psdb.get_bus_positive_sequence_voltage_in_kV(bus_r);
+    //double vac_i = psdb.get_bus_positive_sequence_voltage_in_kV(bus_i);
     double vac_r = get_converter_ac_voltage_in_kV(RECTIFIER);
     double vac_i = get_converter_ac_voltage_in_kV(INVERTER);
-    //osstream<<"rectifier and inverter side AC voltages are: "<<psdb.get_bus_voltage_in_pu(bus_r)<<", "<<psdb.get_bus_voltage_in_pu(bus_i);
+    //osstream<<"rectifier and inverter side AC voltages are: "<<psdb.get_bus_positive_sequence_voltage_in_pu(bus_r)<<", "<<psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
     //toolkit.show_information_with_leading_time_stamp(osstream);
 
     double eac_r = vac_r*ebase_converter_r/(tap_r*ebase_grid_r);
@@ -1115,9 +1115,9 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
 
     //double margin = hvdc->get_current_power_margin();
 
-    //double vac_r = psdb.get_bus_voltage_in_kV(bus_r);
+    //double vac_r = psdb.get_bus_positive_sequence_voltage_in_kV(bus_r);
     double vac_r = get_converter_ac_voltage_in_kV(RECTIFIER);
-    //double vac_i = psdb.get_bus_voltage_in_kV(bus_i);
+    //double vac_i = psdb.get_bus_positive_sequence_voltage_in_kV(bus_i);
 
     double eac_r = vac_r*ebase_converter_r/(tap_r*ebase_grid_r);
     //double eac_i = vac_i*ebase_converter_i/(tap_i*ebase_grid_i);
@@ -1208,8 +1208,8 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
     double Rdc = hvdc->get_line_resistance_in_ohm();
     double Rcomp = hvdc->get_compensating_resistance_to_hold_dc_voltage_in_ohm();
 
-    //double vac_r = psdb.get_bus_voltage_in_pu(bus_r);
-    //double vac_i = psdb.get_bus_voltage_in_pu(bus_i);
+    //double vac_r = psdb.get_bus_positive_sequence_voltage_in_pu(bus_r);
+    //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
     double vac_r = get_converter_ac_voltage_in_pu(RECTIFIER);
     double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
 
@@ -1385,7 +1385,7 @@ double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER
     double angle = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
     double idc = get_converter_dc_current_in_kA(converter);
     double xc = hvdc->get_converter_transformer_impedance_in_ohm(converter).imag();
-    //double vac = psdb.get_bus_voltage_in_kV(hvdc->get_converter_bus(converter));
+    //double vac = psdb.get_bus_positive_sequence_voltage_in_kV(hvdc->get_converter_bus(converter));
     double vac = get_converter_ac_voltage_in_kV(converter);
     double vbase_grid = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter);
     double vbase_converter = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter);
@@ -1457,7 +1457,7 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
 
     size_t N = hvdc->get_converter_number_of_bridge(converter);
 
-    //double vac = psdb.get_bus_voltage_in_pu(bus);
+    //double vac = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
     double vac = get_converter_ac_voltage_in_pu(converter);
 
     double eac = vac*ebase_converter/(tap*ebase_grid);
@@ -1534,7 +1534,7 @@ double HVDC_MODEL::get_converter_ac_voltage_in_pu(HVDC_CONVERTER_SIDE converter)
     {
         BUS* bus = hvdc->get_bus_pointer(converter);
         if(bus!=NULL)
-            return bus->get_voltage_in_pu();
+            return bus->get_positive_sequence_voltage_in_pu();
         else
             return 0.0;
     }
@@ -1549,7 +1549,7 @@ double HVDC_MODEL::get_converter_ac_voltage_in_kV(HVDC_CONVERTER_SIDE converter)
     {
         BUS* bus = hvdc->get_bus_pointer(converter);
         if(bus!=NULL)
-            return bus->get_voltage_in_kV();
+            return bus->get_positive_sequence_voltage_in_kV();
         else
             return 0.0;
     }

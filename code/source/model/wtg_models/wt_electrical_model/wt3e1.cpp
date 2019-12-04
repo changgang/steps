@@ -843,7 +843,7 @@ double WT3E1::get_active_current_command_in_pu_based_on_mbase()
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         //size_t bus = source->get_source_bus();
-        //double vterm = psdb.get_bus_voltage_in_pu(bus);
+        //double vterm = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
         double vterm = get_terminal_voltage_in_pu();
 
         double porder = get_active_power_command_in_pu_based_on_mbase();
@@ -902,7 +902,7 @@ double WT3E1::get_reactive_power_command_in_pu_based_on_mbase()
         if(get_voltage_flag()==0)
         {
             //size_t bus = source->get_source_bus();
-            //double vterm = psdb.get_bus_voltage_in_pu(bus);
+            //double vterm = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
             double vterm = get_terminal_voltage_in_pu();
 
             double EQcmd = Q_error_integrator.get_output()-vterm;

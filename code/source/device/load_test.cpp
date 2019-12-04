@@ -64,7 +64,7 @@ void LOAD_TEST::setup()
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.1);
+    bus.set_positive_sequence_voltage_in_pu(1.1);
     psdb.append_bus(bus);
     bus.set_bus_number(2);
     psdb.append_bus(bus);
@@ -302,7 +302,7 @@ void LOAD_TEST::test_get_actual_total_load()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(load.get_load_bus());
-    bus->set_voltage_in_pu(0.5);
+    bus->set_positive_sequence_voltage_in_pu(0.5);
 
     //complex<double> s_total = s_P/0.7*0.5 + s_I*0.5+s_Z*0.5*0.5;
     //TEST_ASSERT(abs(load.get_actual_total_load_in_MVA()-s_total)<FLOAT_EPSILON);
@@ -321,14 +321,14 @@ void LOAD_TEST::test_get_actual_constant_power_load()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(load.get_load_bus());
-    bus->set_voltage_in_pu(0.95);
+    bus->set_positive_sequence_voltage_in_pu(0.95);
 
     TEST_ASSERT(abs(load.get_actual_constant_power_load_in_MVA()-s_P)<FLOAT_EPSILON);
 
-    bus->set_voltage_in_pu(0.7);
+    bus->set_positive_sequence_voltage_in_pu(0.7);
     TEST_ASSERT(abs(load.get_actual_constant_power_load_in_MVA()-s_P)<FLOAT_EPSILON);
 
-    bus->set_voltage_in_pu(0.5);
+    bus->set_positive_sequence_voltage_in_pu(0.5);
     //complex<double> s = s_P/0.7*0.5;
     //TEST_ASSERT(abs(load.get_actual_constant_power_load_in_MVA()-s)<FLOAT_EPSILON);
 }
@@ -344,7 +344,7 @@ void LOAD_TEST::test_get_actual_constant_current_load()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(load.get_load_bus());
 
-    bus->set_voltage_in_pu(0.95);
+    bus->set_positive_sequence_voltage_in_pu(0.95);
 
     complex<double> s = s_I*0.95;
     TEST_ASSERT(abs(load.get_actual_constant_current_load_in_MVA()-s)<FLOAT_EPSILON);
@@ -362,7 +362,7 @@ void LOAD_TEST::test_get_actual_constant_impedance_load()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(load.get_load_bus());
 
-    bus->set_voltage_in_pu(0.95);
+    bus->set_positive_sequence_voltage_in_pu(0.95);
 
     complex<double> s = s_Z*0.95*0.95;
     TEST_ASSERT(abs(load.get_actual_constant_impedance_load_in_MVA()-s)<FLOAT_EPSILON);

@@ -135,16 +135,16 @@ double api_get_bus_float_data(size_t bus, char* parameter_name, size_t toolkit_i
             return busptr->get_base_voltage_in_kV();
 
         if(PARAMETER_NAME=="V_PU" or PARAMETER_NAME=="VOLTAGE IN PU")
-            return busptr->get_voltage_in_pu();
+            return busptr->get_positive_sequence_voltage_in_pu();
 
         if(PARAMETER_NAME=="V_KV" or PARAMETER_NAME=="VOLTAGE IN KV")
-            return busptr->get_voltage_in_kV();
+            return busptr->get_positive_sequence_voltage_in_kV();
 
         if(PARAMETER_NAME=="ANGLE_RAD" or PARAMETER_NAME=="ANGLE IN RAD")
-            return busptr->get_angle_in_rad();
+            return busptr->get_positive_sequence_angle_in_rad();
 
         if(PARAMETER_NAME=="ANGLE_DEG" or PARAMETER_NAME=="ANGLE IN DEG")
-            return busptr->get_angle_in_deg();
+            return busptr->get_positive_sequence_angle_in_deg();
 
         if(PARAMETER_NAME=="VMAX_PU" or PARAMETER_NAME=="NORMAL VMAX IN PU")
             return busptr->get_normal_voltage_upper_limit_in_pu();
@@ -183,16 +183,16 @@ void api_set_bus_float_data(size_t bus, char* parameter_name, double value, size
             return busptr->set_base_voltage_in_kV(value);
 
         if(PARAMETER_NAME=="V_PU" or PARAMETER_NAME=="VOLTAGE IN PU")
-            return busptr->set_voltage_in_pu(value);
+            return busptr->set_positive_sequence_voltage_in_pu(value);
 
         if(PARAMETER_NAME=="V_KV" or PARAMETER_NAME=="VOLTAGE IN KV")
-            return busptr->set_voltage_in_kV(value);
+            return busptr->set_positive_sequence_voltage_in_kV(value);
 
         if(PARAMETER_NAME=="ANGLE_RAD" or PARAMETER_NAME=="ANGLE IN RAD")
-            return busptr->set_angle_in_rad(value);
+            return busptr->set_positive_sequence_angle_in_rad(value);
 
         if(PARAMETER_NAME=="ANGLE_DEG" or PARAMETER_NAME=="ANGLE IN DEG")
-            return busptr->set_angle_in_deg(value);
+            return busptr->set_positive_sequence_angle_in_deg(value);
 
         if(PARAMETER_NAME=="VMAX_PU" or PARAMETER_NAME=="NORMAL VMAX IN PU")
             return busptr->set_normal_voltage_upper_limit_in_pu(value);

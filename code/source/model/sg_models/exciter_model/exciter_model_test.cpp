@@ -128,7 +128,7 @@ void EXCITER_MODEL_TEST::export_meter_values(double time)
 
     EXCITER_MODEL* model = get_test_exciter_model();
 
-    double voltage = bus->get_voltage_in_pu();
+    double voltage = bus->get_positive_sequence_voltage_in_pu();
     double efd = model->get_excitation_voltage_in_pu();
     ostringstream osstream;
     osstream<<setw(6)<<setprecision(3)<<time<<"\t"
@@ -142,7 +142,7 @@ void EXCITER_MODEL_TEST::apply_voltage_drop_of_10_percent()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
 
-    bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
+    bus->set_positive_sequence_voltage_in_pu(bus->get_positive_sequence_voltage_in_pu()-0.1);
 }
 
 void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()

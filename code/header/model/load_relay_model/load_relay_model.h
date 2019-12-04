@@ -22,7 +22,7 @@ class LOAD_RELAY_MODEL : public MODEL
     public: // common input
         double get_bus_frequency_in_Hz() const;
         double get_bus_base_frequency_in_Hz() const;
-        double get_bus_voltage_in_pu() const;
+        double get_bus_positive_sequence_voltage_in_pu() const;
 
         virtual string get_model_type() const = 0;
         virtual string get_model_name() const = 0;

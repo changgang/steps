@@ -345,8 +345,8 @@ void PV_CONVERTER_MODEL_TEST::test_bus_magnitude_step_response_of_pv_converter_m
         }
 
         BUS* bus = psdb.get_bus(get_test_pv_unit()->get_unit_bus());
-        double vterm = bus->get_voltage_in_pu();
-        bus->set_voltage_in_pu(vterm*0.99);
+        double vterm = bus->get_positive_sequence_voltage_in_pu();
+        bus->set_positive_sequence_voltage_in_pu(vterm*0.99);
 
         model->run(UPDATE_MODE);
 
@@ -408,8 +408,8 @@ void PV_CONVERTER_MODEL_TEST::test_bus_angle_step_response_of_pv_converter_model
         }
 
         BUS* bus = psdb.get_bus(get_test_pv_unit()->get_unit_bus());
-        double angle = bus->get_angle_in_deg();
-        bus->set_angle_in_deg(angle+10.0);
+        double angle = bus->get_positive_sequence_angle_in_deg();
+        bus->set_positive_sequence_angle_in_deg(angle+10.0);
 
         model->run(UPDATE_MODE);
 

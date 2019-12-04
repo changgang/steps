@@ -446,7 +446,7 @@ double IEE2ST::get_stabilizing_signal_in_pu()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     //size_t bus = get_device_id().get_device_terminal()[0];
-    //double terminal_voltage = psdb.get_bus_voltage_in_pu(bus);
+    //double terminal_voltage = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
     double terminal_voltage = get_terminal_voltage_in_pu();
     if(vcmax!=0.0 and terminal_voltage>vcmax)
         output=0.0;

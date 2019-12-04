@@ -32,10 +32,18 @@ class BUS : public DEVICE
         void set_area_number(size_t number);
         void set_zone_number(size_t number);
         void set_owner_number(size_t number);
-        void set_voltage_in_pu(double voltage);
-        void set_voltage_in_kV(double voltage);
-        void set_angle_in_rad(double angle);
-        void set_angle_in_deg(double angle);
+        void set_positive_sequence_voltage_in_pu(double voltage);
+        void set_positive_sequence_voltage_in_kV(double voltage);
+        void set_positive_sequence_angle_in_rad(double angle);
+        void set_positive_sequence_angle_in_deg(double angle);
+        void set_negative_sequence_voltage_in_pu(double voltage);
+        void set_negative_sequence_voltage_in_kV(double voltage);
+        void set_negative_sequence_angle_in_rad(double angle);
+        void set_negative_sequence_angle_in_deg(double angle);
+        void set_zero_sequence_voltage_in_pu(double voltage);
+        void set_zero_sequence_voltage_in_kV(double voltage);
+        void set_zero_sequence_angle_in_rad(double angle);
+        void set_zero_sequence_angle_in_deg(double angle);
         void set_normal_voltage_upper_limit_in_pu(double voltage);
         void set_normal_voltage_lower_limit_in_pu(double voltage);
         void set_emergency_voltage_upper_limit_in_pu(double voltage);
@@ -52,10 +60,18 @@ class BUS : public DEVICE
         size_t get_area_number() const;
         size_t get_zone_number() const;
         size_t get_owner_number() const;
-        double get_voltage_in_pu() const;
-        double get_voltage_in_kV() const;
-        double get_angle_in_rad() const;
-        double get_angle_in_deg() const;
+        double get_positive_sequence_voltage_in_pu() const;
+        double get_positive_sequence_voltage_in_kV() const;
+        double get_positive_sequence_angle_in_rad() const;
+        double get_positive_sequence_angle_in_deg() const;
+        double get_negative_sequence_voltage_in_pu() const;
+        double get_negative_sequence_voltage_in_kV() const;
+        double get_negative_sequence_angle_in_rad() const;
+        double get_negative_sequence_angle_in_deg() const;
+        double get_zero_sequence_voltage_in_pu() const;
+        double get_zero_sequence_voltage_in_kV() const;
+        double get_zero_sequence_angle_in_rad() const;
+        double get_zero_sequence_angle_in_deg() const;
         double get_normal_voltage_upper_limit_in_pu() const;
         double get_normal_voltage_lower_limit_in_pu() const;
         double get_emergency_voltage_upper_limit_in_pu() const;
@@ -65,8 +81,12 @@ class BUS : public DEVICE
         double get_base_frequency_in_Hz() const;
         double get_base_period_in_s() const;
         double get_voltage_to_regulate_in_pu() const;
-        complex<double> get_complex_voltage_in_pu() const;
-        complex<double> get_complex_voltage_in_kV() const;
+        complex<double> get_positive_sequence_complex_voltage_in_pu() const;
+        complex<double> get_positive_sequence_complex_voltage_in_kV() const;
+        complex<double> get_negative_sequence_complex_voltage_in_pu() const;
+        complex<double> get_negative_sequence_complex_voltage_in_kV() const;
+        complex<double> get_zero_sequence_complex_voltage_in_pu() const;
+        complex<double> get_zero_sequence_complex_voltage_in_kV() const;
 
         void set_equivalent_bus_number(size_t number);
         size_t get_equivalent_bus_number() const;
@@ -110,9 +130,16 @@ class BUS : public DEVICE
         size_t zone_number;
         size_t owner_number;
 
-        double voltage_in_pu;
-        double angle_in_rad;
-        complex<double> Euler_complex_number;
+        double positive_sequence_voltage_in_pu;
+        double positive_sequence_angle_in_rad;
+        double negative_sequence_voltage_in_pu;
+        double negative_sequence_angle_in_rad;
+        double zero_sequence_voltage_in_pu;
+        double zero_sequence_angle_in_rad;
+
+        complex<double> positive_sequence_Euler_complex_number;
+        complex<double> negative_sequence_Euler_complex_number;
+        complex<double> zero_sequence_Euler_complex_number;
 
         double normal_voltage_upper_limit_in_pu;
         double normal_voltage_lower_limit_in_pu;

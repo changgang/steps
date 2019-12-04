@@ -683,7 +683,7 @@ void METER_TEST::test_get_bus_meter_value()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* busptr = psdb.get_bus(1);
-    busptr->set_voltage_in_pu(1.05);
+    busptr->set_positive_sequence_voltage_in_pu(1.05);
     TEST_ASSERT(fabs(meter.get_meter_value()-1.05)<FLOAT_EPSILON);
 }
 

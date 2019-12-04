@@ -380,8 +380,8 @@ void SYNC_GENERATOR_MODEL_TEST::test_bus_step_response_of_sync_generator_model()
         }
 
         BUS* bus = psdb.get_bus(1);
-        double vterm = bus->get_voltage_in_pu();
-        bus->set_voltage_in_pu(vterm*0.99);
+        double vterm = bus->get_positive_sequence_voltage_in_pu();
+        bus->set_positive_sequence_voltage_in_pu(vterm*0.99);
 
         model->run(UPDATE_MODE);
 

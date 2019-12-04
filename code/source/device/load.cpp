@@ -277,7 +277,7 @@ complex<double> LOAD::get_actual_constant_power_load_in_MVA() const
     {
         complex<double> S0 = get_nominal_constant_power_load_in_MVA();
 
-        double v = busptr->get_voltage_in_pu();
+        double v = busptr->get_positive_sequence_voltage_in_pu();
 
         return S0*get_load_scale_with_voltage(0.0, v, LOAD_ELLIPTICAL_CV);
     }
@@ -290,7 +290,7 @@ complex<double> LOAD::get_actual_constant_current_load_in_MVA() const
     if(get_status() == true)
     {
         complex<double> S0 = get_nominal_constant_current_load_in_MVA();
-        double v = busptr->get_voltage_in_pu();
+        double v = busptr->get_positive_sequence_voltage_in_pu();
 
         return S0*get_load_scale_with_voltage(1.0, v, LOAD_ELLIPTICAL_CV);
     }
@@ -303,7 +303,7 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
     if(get_status() == true)
     {
         complex<double> S0 = get_nominal_constant_impedance_load_in_MVA();
-        double v = busptr->get_voltage_in_pu();
+        double v = busptr->get_positive_sequence_voltage_in_pu();
         complex<double> s = S0*v*v;
         return s;
     }

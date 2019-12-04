@@ -231,7 +231,7 @@ complex<double> FIXED_SHUNT::get_actual_impedance_shunt_in_MVA() const
 
         if(busptr!=NULL)
         {
-            double v = busptr->get_voltage_in_pu();
+            double v = busptr->get_positive_sequence_voltage_in_pu();
             return S0*v*v;
         }
         else

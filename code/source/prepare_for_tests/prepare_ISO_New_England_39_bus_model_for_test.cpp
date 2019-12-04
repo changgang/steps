@@ -30,311 +30,311 @@ void prepare_ISO_New_England_39_bus_model_buses()
     bus.set_zone_number(1);
     bus.set_owner_number(1);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0475);
-    bus.set_angle_in_deg(-9.57);
+    bus.set_positive_sequence_voltage_in_pu(1.0475);
+    bus.set_positive_sequence_angle_in_deg(-9.57);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(2);
     bus.set_bus_name("BUS_2");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0490);
-    bus.set_angle_in_deg(-7.01);
+    bus.set_positive_sequence_voltage_in_pu(1.0490);
+    bus.set_positive_sequence_angle_in_deg(-7.01);
     psdb.append_bus(bus);
 
     bus.set_bus_number(3);
     bus.set_bus_name("BUS_3");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0304);
-    bus.set_angle_in_deg(-9.86);
+    bus.set_positive_sequence_voltage_in_pu(1.0304);
+    bus.set_positive_sequence_angle_in_deg(-9.86);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(4);
     bus.set_bus_name("BUS_4");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0038);
-    bus.set_angle_in_deg(-10.65);
+    bus.set_positive_sequence_voltage_in_pu(1.0038);
+    bus.set_positive_sequence_angle_in_deg(-10.65);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(5);
     bus.set_bus_name("BUS_5");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0050);
-    bus.set_angle_in_deg(-9.47);
+    bus.set_positive_sequence_voltage_in_pu(1.0050);
+    bus.set_positive_sequence_angle_in_deg(-9.47);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(6);
     bus.set_bus_name("BUS_6");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0074);
-    bus.set_angle_in_deg(-8.77);
+    bus.set_positive_sequence_voltage_in_pu(1.0074);
+    bus.set_positive_sequence_angle_in_deg(-8.77);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(7);
     bus.set_bus_name("BUS_7");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(0.9967);
-    bus.set_angle_in_deg(-10.97);
+    bus.set_positive_sequence_voltage_in_pu(0.9967);
+    bus.set_positive_sequence_angle_in_deg(-10.97);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(8);
     bus.set_bus_name("BUS_8");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(0.9957);
-    bus.set_angle_in_deg(-11.48);
+    bus.set_positive_sequence_voltage_in_pu(0.9957);
+    bus.set_positive_sequence_angle_in_deg(-11.48);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(9);
     bus.set_bus_name("BUS_9");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0281);
-    bus.set_angle_in_deg(-11.30);
+    bus.set_positive_sequence_voltage_in_pu(1.0281);
+    bus.set_positive_sequence_angle_in_deg(-11.30);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(10);
     bus.set_bus_name("BUS_10");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0170);
-    bus.set_angle_in_deg(-6.38);
+    bus.set_positive_sequence_voltage_in_pu(1.0170);
+    bus.set_positive_sequence_angle_in_deg(-6.38);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(11);
     bus.set_bus_name("BUS_11");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0125);
-    bus.set_angle_in_deg(-7.2);
+    bus.set_positive_sequence_voltage_in_pu(1.0125);
+    bus.set_positive_sequence_angle_in_deg(-7.2);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(12);
     bus.set_bus_name("BUS_12");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_deg(-7.21);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_deg(-7.21);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(13);
     bus.set_bus_name("BUS_4");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0142);
-    bus.set_angle_in_deg(-7.1);
+    bus.set_positive_sequence_voltage_in_pu(1.0142);
+    bus.set_positive_sequence_angle_in_deg(-7.1);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(14);
     bus.set_bus_name("BUS_14");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0117);
-    bus.set_angle_in_deg(-8.76);
+    bus.set_positive_sequence_voltage_in_pu(1.0117);
+    bus.set_positive_sequence_angle_in_deg(-8.76);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(15);
     bus.set_bus_name("BUS_15");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0158);
-    bus.set_angle_in_deg(-9.18);
+    bus.set_positive_sequence_voltage_in_pu(1.0158);
+    bus.set_positive_sequence_angle_in_deg(-9.18);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(16);
     bus.set_bus_name("BUS_16");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0322);
-    bus.set_angle_in_deg(-7.78);
+    bus.set_positive_sequence_voltage_in_pu(1.0322);
+    bus.set_positive_sequence_angle_in_deg(-7.78);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(17);
     bus.set_bus_name("BUS_17");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0339);
-    bus.set_angle_in_deg(-8.77);
+    bus.set_positive_sequence_voltage_in_pu(1.0339);
+    bus.set_positive_sequence_angle_in_deg(-8.77);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(18);
     bus.set_bus_name("BUS_18");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0313);
-    bus.set_angle_in_deg(-9.62);
+    bus.set_positive_sequence_voltage_in_pu(1.0313);
+    bus.set_positive_sequence_angle_in_deg(-9.62);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(19);
     bus.set_bus_name("BUS_19");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.05);
-    bus.set_angle_in_deg(-3.15);
+    bus.set_positive_sequence_voltage_in_pu(1.05);
+    bus.set_positive_sequence_angle_in_deg(-3.15);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(20);
     bus.set_bus_name("BUS_20");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(0.9910);
-    bus.set_angle_in_deg(-4.56);
+    bus.set_positive_sequence_voltage_in_pu(0.9910);
+    bus.set_positive_sequence_angle_in_deg(-4.56);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(21);
     bus.set_bus_name("BUS_21");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0321);
-    bus.set_angle_in_deg(-5.37);
+    bus.set_positive_sequence_voltage_in_pu(1.0321);
+    bus.set_positive_sequence_angle_in_deg(-5.37);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(22);
     bus.set_bus_name("BUS_22");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.05);
-    bus.set_angle_in_deg(-0.92);
+    bus.set_positive_sequence_voltage_in_pu(1.05);
+    bus.set_positive_sequence_angle_in_deg(-0.92);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(23);
     bus.set_bus_name("BUS_23");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.045);
-    bus.set_angle_in_deg(-1.12);
+    bus.set_positive_sequence_voltage_in_pu(1.045);
+    bus.set_positive_sequence_angle_in_deg(-1.12);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(24);
     bus.set_bus_name("BUS_24");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0378);
-    bus.set_angle_in_deg(-7.66);
+    bus.set_positive_sequence_voltage_in_pu(1.0378);
+    bus.set_positive_sequence_angle_in_deg(-7.66);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(25);
     bus.set_bus_name("BUS_25");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0575);
-    bus.set_angle_in_deg(-5.65);
+    bus.set_positive_sequence_voltage_in_pu(1.0575);
+    bus.set_positive_sequence_angle_in_deg(-5.65);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(26);
     bus.set_bus_name("BUS_26");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0522);
-    bus.set_angle_in_deg(-6.91);
+    bus.set_positive_sequence_voltage_in_pu(1.0522);
+    bus.set_positive_sequence_angle_in_deg(-6.91);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(27);
     bus.set_bus_name("BUS_27");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0379);
-    bus.set_angle_in_deg(-8.92);
+    bus.set_positive_sequence_voltage_in_pu(1.0379);
+    bus.set_positive_sequence_angle_in_deg(-8.92);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(28);
     bus.set_bus_name("BUS_28");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.0502);
-    bus.set_angle_in_deg(-3.39);
+    bus.set_positive_sequence_voltage_in_pu(1.0502);
+    bus.set_positive_sequence_angle_in_deg(-3.39);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(29);
     bus.set_bus_name("BUS_29");
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.05);
-    bus.set_angle_in_deg(-0.64);
+    bus.set_positive_sequence_voltage_in_pu(1.05);
+    bus.set_positive_sequence_angle_in_deg(-0.64);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(30);
     bus.set_bus_name("BUS_30");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.0475);
-    bus.set_angle_in_deg(-4.59);
+    bus.set_positive_sequence_voltage_in_pu(1.0475);
+    bus.set_positive_sequence_angle_in_deg(-4.59);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(31);
     bus.set_bus_name("BUS_31");
     bus.set_bus_type(SLACK_TYPE);
-    bus.set_voltage_in_pu(0.9820);
-    bus.set_angle_in_deg(0.0);
+    bus.set_positive_sequence_voltage_in_pu(0.9820);
+    bus.set_positive_sequence_angle_in_deg(0.0);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(32);
     bus.set_bus_name("BUS_32");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(0.9831);
-    bus.set_angle_in_deg(1.62);
+    bus.set_positive_sequence_voltage_in_pu(0.9831);
+    bus.set_positive_sequence_angle_in_deg(1.62);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(33);
     bus.set_bus_name("BUS_33");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(0.9972);
-    bus.set_angle_in_deg(2.06);
+    bus.set_positive_sequence_voltage_in_pu(0.9972);
+    bus.set_positive_sequence_angle_in_deg(2.06);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(34);
     bus.set_bus_name("BUS_34");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.0123);
-    bus.set_angle_in_deg(0.63);
+    bus.set_positive_sequence_voltage_in_pu(1.0123);
+    bus.set_positive_sequence_angle_in_deg(0.63);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(35);
     bus.set_bus_name("BUS_35");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.0493);
-    bus.set_angle_in_deg(4.04);
+    bus.set_positive_sequence_voltage_in_pu(1.0493);
+    bus.set_positive_sequence_angle_in_deg(4.04);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(36);
     bus.set_bus_name("BUS_36");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.0635);
-    bus.set_angle_in_deg(6.73);
+    bus.set_positive_sequence_voltage_in_pu(1.0635);
+    bus.set_positive_sequence_angle_in_deg(6.73);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(37);
     bus.set_bus_name("BUS_37");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.0278);
-    bus.set_angle_in_deg(1.14);
+    bus.set_positive_sequence_voltage_in_pu(1.0278);
+    bus.set_positive_sequence_angle_in_deg(1.14);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(38);
     bus.set_bus_name("BUS_38");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.0265);
-    bus.set_angle_in_deg(6.43);
+    bus.set_positive_sequence_voltage_in_pu(1.0265);
+    bus.set_positive_sequence_angle_in_deg(6.43);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(39);
     bus.set_bus_name("BUS_39");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.03);
-    bus.set_angle_in_deg(-11.11);
+    bus.set_positive_sequence_voltage_in_pu(1.03);
+    bus.set_positive_sequence_angle_in_deg(-11.11);
 
     psdb.append_bus(bus);
 }

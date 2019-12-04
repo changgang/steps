@@ -31,14 +31,14 @@ void prepare_psse_sample_model_buses()
     bus.set_zone_number(1);
     bus.set_owner_number(1);
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.01);
-    bus.set_angle_in_deg(-10.42868);
+    bus.set_positive_sequence_voltage_in_pu(1.01);
+    bus.set_positive_sequence_angle_in_deg(-10.42868);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(102);
     bus.set_bus_name("NUC-B");
-    bus.set_angle_in_deg(-10.78062);
+    bus.set_positive_sequence_angle_in_deg(-10.78062);
 
     psdb.append_bus(bus);
 
@@ -46,8 +46,8 @@ void prepare_psse_sample_model_buses()
     bus.set_bus_name("NUCPLNT");
     bus.set_base_voltage_in_kV(500.0);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.002194);
-    bus.set_angle_in_deg(-13.56857);
+    bus.set_positive_sequence_voltage_in_pu(1.002194);
+    bus.set_positive_sequence_angle_in_deg(-13.56857);
 
     psdb.append_bus(bus);
 
@@ -57,8 +57,8 @@ void prepare_psse_sample_model_buses()
     bus.set_base_voltage_in_kV(500.0);
     bus.set_zone_number(2);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.043773);
-    bus.set_angle_in_deg(-23.44061);
+    bus.set_positive_sequence_voltage_in_pu(1.043773);
+    bus.set_positive_sequence_angle_in_deg(-23.44061);
 
     psdb.append_bus(bus);
 
@@ -69,8 +69,8 @@ void prepare_psse_sample_model_buses()
     bus.set_zone_number(2);
     bus.set_owner_number(1);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.057206);
-    bus.set_angle_in_deg(-25.19197);
+    bus.set_positive_sequence_voltage_in_pu(1.057206);
+    bus.set_positive_sequence_angle_in_deg(-25.19197);
 
     psdb.append_bus(bus);
 
@@ -81,8 +81,8 @@ void prepare_psse_sample_model_buses()
     bus.set_zone_number(3);
     bus.set_owner_number(1);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(0.9918512);
-    bus.set_angle_in_deg(-32.48673);
+    bus.set_positive_sequence_voltage_in_pu(0.9918512);
+    bus.set_positive_sequence_angle_in_deg(-32.48673);
 
     psdb.append_bus(bus);
 
@@ -93,8 +93,8 @@ void prepare_psse_sample_model_buses()
     bus.set_zone_number(4);
     bus.set_owner_number(1);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.017227);
-    bus.set_angle_in_deg(-23.64);
+    bus.set_positive_sequence_voltage_in_pu(1.017227);
+    bus.set_positive_sequence_angle_in_deg(-23.64);
 
     psdb.append_bus(bus);
 
@@ -105,8 +105,8 @@ void prepare_psse_sample_model_buses()
     bus.set_zone_number(7);
     bus.set_owner_number(2);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(0.9900665);
-    bus.set_angle_in_deg(-18.71196);
+    bus.set_positive_sequence_voltage_in_pu(0.9900665);
+    bus.set_positive_sequence_angle_in_deg(-18.71196);
 
     psdb.append_bus(bus);
 
@@ -117,8 +117,8 @@ void prepare_psse_sample_model_buses()
     bus.set_zone_number(2);
     bus.set_owner_number(2);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.02108);
-    bus.set_angle_in_deg(-25.67049);
+    bus.set_positive_sequence_voltage_in_pu(1.02108);
+    bus.set_positive_sequence_angle_in_deg(-25.67049);
 
     psdb.append_bus(bus);
 }

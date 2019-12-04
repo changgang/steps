@@ -427,7 +427,7 @@ complex<double> ARXL::get_total_load_power_in_MVA() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     EQUIVALENT_DEVICE* edevice = get_equivalent_device_pointer();
-    double vbus = psdb.get_bus_voltage_in_pu(edevice->get_equivalent_device_bus());
+    double vbus = psdb.get_bus_positive_sequence_voltage_in_pu(edevice->get_equivalent_device_bus());
 
     return (get_equivalent_nominal_constant_power_load_in_MVA()+
             get_equivalent_nominal_constant_current_load_in_MVA()*vbus+

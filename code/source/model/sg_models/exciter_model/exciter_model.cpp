@@ -53,7 +53,7 @@ double EXCITER_MODEL::get_compensated_voltage_in_pu()
         else
         {
             //size_t bus = generator->get_generator_bus();
-            //return psdb.get_bus_voltage_in_pu(bus);
+            //return psdb.get_bus_positive_sequence_voltage_in_pu(bus);
             return get_terminal_voltage_in_pu();
         }
     }

@@ -411,8 +411,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             {
                 size_t internal_bus = internal_P_equation_buses[i];
                 //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i]);
-                //P_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
-                P_mismatch[i] /= get_bus_voltage_in_pu_with_internal_bus_number(internal_bus);
+                //P_mismatch[i] /= psdb.get_bus_positive_sequence_voltage_in_pu(physical_bus);
+                P_mismatch[i] /= get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(internal_bus);
             }
             bus_delta_angle = P_mismatch/BP;
             //BP.report_brief();
@@ -441,8 +441,8 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             {
                 size_t internal_bus = internal_Q_equation_buses[i];
                 //physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_Q_equation_buses[i]);
-                //Q_mismatch[i] /= psdb.get_bus_voltage_in_pu(physical_bus);
-                Q_mismatch[i] /= get_bus_voltage_in_pu_with_internal_bus_number(internal_bus);
+                //Q_mismatch[i] /= psdb.get_bus_positive_sequence_voltage_in_pu(physical_bus);
+                Q_mismatch[i] /= get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(internal_bus);
             }
             bus_delta_voltage = Q_mismatch/BQ;
 
@@ -628,15 +628,15 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
             switch(buses[i]->get_bus_type())
             {
                 case PQ_TYPE:
-                    buses[i]->set_voltage_in_pu(1.0);
+                    buses[i]->set_positive_sequence_voltage_in_pu(1.0);
                     break;
                 case OUT_OF_SERVICE:
                     continue;
                 default:
-                    buses[i]->set_voltage_in_pu(buses[i]->get_voltage_to_regulate_in_pu());
+                    buses[i]->set_positive_sequence_voltage_in_pu(buses[i]->get_voltage_to_regulate_in_pu());
             }
 
-            buses[i]->set_angle_in_rad(0.0);
+            buses[i]->set_positive_sequence_angle_in_rad(0.0);
         }
     }
 
@@ -649,7 +649,7 @@ void POWERFLOW_SOLVER::initialize_bus_voltage()
     for(size_t i=0; i!=nbus; ++i)
     {
         snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8lu %10.6f %10.6f",
-                 buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg());
+                 buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg());
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
 }
@@ -695,13 +695,13 @@ void POWERFLOW_SOLVER::set_internal_bus_pointer()
 complex<double> POWERFLOW_SOLVER::get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const
 {
     BUS* busptr = internal_bus_pointers[internal_bus];
-    return busptr->get_complex_voltage_in_pu();
+    return busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
-double POWERFLOW_SOLVER::get_bus_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const
+double POWERFLOW_SOLVER::get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const
 {
     BUS* busptr = internal_bus_pointers[internal_bus];
-    return busptr->get_voltage_in_pu();
+    return busptr->get_positive_sequence_voltage_in_pu();
 }
 
 void POWERFLOW_SOLVER::update_P_and_Q_equation_internal_buses()
@@ -1407,7 +1407,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
 
 
 
-    double bus_voltage = bus->get_voltage_in_pu();
+    double bus_voltage = bus->get_positive_sequence_voltage_in_pu();
 
     double voltage_to_regulated = psdb.get_voltage_to_regulate_of_physical_bus_in_pu(physical_bus);
 
@@ -1447,7 +1447,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
-                    bus->set_voltage_in_pu(voltage_to_regulated);
+                    bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
                     if(toolkit.is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
@@ -1483,7 +1483,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
-                    bus->set_voltage_in_pu(voltage_to_regulated);
+                    bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
                     if(toolkit.is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
@@ -1538,7 +1538,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
-                    bus->set_voltage_in_pu(voltage_to_regulated);
+                    bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
                     if(toolkit.is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
@@ -1590,7 +1590,7 @@ bool POWERFLOW_SOLVER::check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t phys
                 case PV_TO_PQ_TYPE_1:
                     bus->set_bus_type(PV_TYPE);
                     bus_type_changed = true;
-                    bus->set_voltage_in_pu(voltage_to_regulated);
+                    bus->set_positive_sequence_voltage_in_pu(voltage_to_regulated);
                     if(toolkit.is_detailed_log_enabled())
                     {
                         osstream<<"Bus "<<physical_bus<<" changed from PV_TO_PQ_TYPE_1 to PV_TYPE.";
@@ -1881,11 +1881,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
         //BUS* bus = psdb.get_bus(physical_bus);
         BUS* bus = internal_bus_pointers[internal_bus];
 
-        double current_angle = bus->get_angle_in_rad();
+        double current_angle = bus->get_positive_sequence_angle_in_rad();
 
         double delta_angle = update[i];
 
-        bus->set_angle_in_rad(current_angle + alpha_P*delta_angle);
+        bus->set_positive_sequence_angle_in_rad(current_angle + alpha_P*delta_angle);
     }
 
     #ifdef ENABLE_OPENMP_FOR_POWERFLOW_SOLVER
@@ -1899,11 +1899,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
         //BUS* bus = psdb.get_bus(physical_bus);
         BUS* bus = internal_bus_pointers[internal_bus];
 
-        double current_voltage = bus->get_voltage_in_pu();
+        double current_voltage = bus->get_positive_sequence_voltage_in_pu();
 
         double delta_voltage = update[nP+i];
 
-        bus->set_voltage_in_pu(current_voltage + alpha_Q*delta_voltage);
+        bus->set_positive_sequence_voltage_in_pu(current_voltage + alpha_Q*delta_voltage);
     }
 
     if(get_non_divergent_solution_logic()==true)
@@ -1934,11 +1934,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                         //BUS* bus = psdb.get_bus(physical_bus);
                         BUS* bus = internal_bus_pointers[internal_bus];
 
-                        double current_angle = bus->get_angle_in_rad();
+                        double current_angle = bus->get_positive_sequence_angle_in_rad();
 
                         double delta_angle = update[i];
 
-                        bus->set_angle_in_rad(current_angle - alpha_P*delta_angle);
+                        bus->set_positive_sequence_angle_in_rad(current_angle - alpha_P*delta_angle);
                     }
                 }
                 if(Q_is_worse)
@@ -1955,11 +1955,11 @@ void POWERFLOW_SOLVER::update_bus_voltage_and_angle(vector<double>& update)
                         //BUS* bus = psdb.get_bus(physical_bus);
                         BUS* bus = internal_bus_pointers[internal_bus];
 
-                        double current_voltage = bus->get_voltage_in_pu();
+                        double current_voltage = bus->get_positive_sequence_voltage_in_pu();
 
                         double delta_voltage = update[nP+i];
 
-                        bus->set_voltage_in_pu(current_voltage - alpha_Q*delta_voltage);
+                        bus->set_positive_sequence_voltage_in_pu(current_voltage - alpha_Q*delta_voltage);
                     }
                 }
             }
@@ -2023,11 +2023,11 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
         //BUS* bus = psdb.get_bus(physical_bus);
         BUS* bus = internal_bus_pointers[internal_bus];
 
-        double current_voltage = bus->get_voltage_in_pu();
+        double current_voltage = bus->get_positive_sequence_voltage_in_pu();
 
         double delta_voltage = update[i];
 
-        bus->set_voltage_in_pu(current_voltage + alpha*delta_voltage);
+        bus->set_positive_sequence_voltage_in_pu(current_voltage + alpha*delta_voltage);
     }
 
     if(get_non_divergent_solution_logic()==true)
@@ -2051,11 +2051,11 @@ void POWERFLOW_SOLVER::update_bus_voltage(vector<double>& update)
                     //BUS* bus = psdb.get_bus(physical_bus);
                     BUS* bus = internal_bus_pointers[internal_bus];
 
-                    double current_voltage = bus->get_voltage_in_pu();
+                    double current_voltage = bus->get_positive_sequence_voltage_in_pu();
 
                     double delta_voltage = update[i];
 
-                    bus->set_voltage_in_pu(current_voltage - alpha*delta_voltage);
+                    bus->set_positive_sequence_voltage_in_pu(current_voltage - alpha*delta_voltage);
                 }
             }
             else
@@ -2121,11 +2121,11 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
         //BUS* bus = psdb.get_bus(physical_bus);
         BUS* bus = internal_bus_pointers[internal_bus];
 
-        double current_angle = bus->get_angle_in_rad();
+        double current_angle = bus->get_positive_sequence_angle_in_rad();
 
         double delta_angle = update[i];
 
-        bus->set_angle_in_rad(current_angle + alpha*delta_angle);
+        bus->set_positive_sequence_angle_in_rad(current_angle + alpha*delta_angle);
     }
 
 
@@ -2150,11 +2150,11 @@ void POWERFLOW_SOLVER::update_bus_angle(vector<double>& update)
                     //BUS* bus = psdb.get_bus(physical_bus);
                     BUS* bus = internal_bus_pointers[internal_bus];
 
-                    double current_angle = bus->get_angle_in_rad();
+                    double current_angle = bus->get_positive_sequence_angle_in_rad();
 
                     double delta_angle = update[i];
 
-                    bus->set_angle_in_rad(current_angle - alpha*delta_angle);
+                    bus->set_positive_sequence_angle_in_rad(current_angle - alpha*delta_angle);
                 }
             }
             else
@@ -2199,7 +2199,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)>=1000.0)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2211,7 +2211,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)<1000.0 and fabs(smismatch)>=500.0)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2223,7 +2223,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)<500.0 and fabs(smismatch)>=400.0)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2235,7 +2235,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)<400.0 and fabs(smismatch)>=300.0)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2247,7 +2247,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)<300.0 and fabs(smismatch)>=200.0)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2259,7 +2259,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)<200.0 and fabs(smismatch)>=100.0)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2271,7 +2271,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)<100.0 and fabs(smismatch)>=10.0)
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2283,7 +2283,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)<10.0 and fabs(smismatch)>=get_allowed_max_active_power_imbalance_in_MW())
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s (error: %-8.3f MW + %-8.3f MVar)",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str(), smismatch.real(), smismatch.imag());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2295,7 +2295,7 @@ void POWERFLOW_SOLVER::show_powerflow_result()
         if(fabs(smismatch)<get_allowed_max_active_power_imbalance_in_MW())
         {
             snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%8u %12.6f %12.6f %s",
-                    buses[i]->get_bus_number(),buses[i]->get_voltage_in_pu(),buses[i]->get_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
+                    buses[i]->get_bus_number(),buses[i]->get_positive_sequence_voltage_in_pu(),buses[i]->get_positive_sequence_angle_in_deg(),(buses[i]->get_bus_name()).c_str());
             toolkit.show_information_with_leading_time_stamp(buffer);
         }
     }
@@ -2360,8 +2360,8 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f",
                          buses[i]->get_bus_number(),(buses[i]->get_bus_name()).c_str(),
                          buses[i]->get_base_voltage_in_kV(),
-                         buses[i]->get_voltage_in_pu(), buses[i]->get_angle_in_deg(),
-                         buses[i]->get_voltage_in_kV(), buses[i]->get_angle_in_rad());
+                         buses[i]->get_positive_sequence_voltage_in_pu(), buses[i]->get_positive_sequence_angle_in_deg(),
+                         buses[i]->get_positive_sequence_voltage_in_kV(), buses[i]->get_positive_sequence_angle_in_rad());
                 file<<buffer<<endl;
             }
         }
@@ -2377,7 +2377,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
                          generators[i]->get_generator_bus(),(generators[i]->get_identifier()).c_str(),
                          generators[i]->get_p_generation_in_MW(), generators[i]->get_q_generation_in_MVar(),
-                         (generators[i]->get_bus_pointer())->get_voltage_in_pu());
+                         (generators[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
                 file<<buffer<<endl;
             }
         }
@@ -2393,7 +2393,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
                          wt_generators[i]->get_generator_bus(),(wt_generators[i]->get_identifier()).c_str(),
                          wt_generators[i]->get_p_generation_in_MW(), wt_generators[i]->get_q_generation_in_MVar(),
-                         (wt_generators[i]->get_bus_pointer())->get_voltage_in_pu());
+                         (wt_generators[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
                 file<<buffer<<endl;
             }
         }
@@ -2408,7 +2408,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
                          pv_units[i]->get_unit_bus(),(pv_units[i]->get_identifier()).c_str(),
                          pv_units[i]->get_p_generation_in_MW(), pv_units[i]->get_q_generation_in_MVar(),
-                         (pv_units[i]->get_bus_pointer())->get_voltage_in_pu());
+                         (pv_units[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
                 file<<buffer<<endl;
             }
         }
@@ -2425,7 +2425,7 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                 snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f",
                          loads[i]->get_load_bus(),(loads[i]->get_identifier()).c_str(),
                          s.real(), s.imag(),
-                         (loads[i]->get_bus_pointer())->get_voltage_in_pu());
+                         (loads[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
                 file<<buffer<<endl;
             }
         }
@@ -2490,8 +2490,8 @@ void POWERFLOW_SOLVER::save_powerflow_result_to_file(const string& filename) con
                          hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER),
                          hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER),
                          hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER),
-                         (hvdcs[i]->get_bus_pointer(RECTIFIER))->get_voltage_in_pu(),
-                         (hvdcs[i]->get_bus_pointer(INVERTER))->get_voltage_in_pu(),
+                         (hvdcs[i]->get_bus_pointer(RECTIFIER))->get_positive_sequence_voltage_in_pu(),
+                         (hvdcs[i]->get_bus_pointer(INVERTER))->get_positive_sequence_voltage_in_pu(),
                          hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER),
                          hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER));
                 file<<buffer<<endl;
@@ -2542,8 +2542,8 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
                 snprintf(buffer, 1000, "%lu,\"%s\",%.6f,%.6f,%.6f,%.6f,%.6f",
                          buses[i]->get_bus_number(),(buses[i]->get_bus_name()).c_str(),
                          buses[i]->get_base_voltage_in_kV(),
-                         buses[i]->get_voltage_in_pu(), buses[i]->get_angle_in_deg(),
-                         buses[i]->get_voltage_in_kV(), buses[i]->get_angle_in_rad());
+                         buses[i]->get_positive_sequence_voltage_in_pu(), buses[i]->get_positive_sequence_angle_in_deg(),
+                         buses[i]->get_positive_sequence_voltage_in_kV(), buses[i]->get_positive_sequence_angle_in_rad());
                 file<<buffer<<endl;
             }
         }
@@ -2561,7 +2561,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
                          bus, psdb.bus_number2bus_name(bus).c_str(),
                          (generators[i]->get_identifier()).c_str(),
                          generators[i]->get_p_generation_in_MW(), generators[i]->get_q_generation_in_MVar(),
-                         (generators[i]->get_bus_pointer())->get_voltage_in_pu());
+                         (generators[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
                 file<<buffer<<endl;
             }
         }
@@ -2579,7 +2579,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
                          bus, psdb.bus_number2bus_name(bus).c_str(),
                          (wt_generators[i]->get_identifier()).c_str(),
                          wt_generators[i]->get_p_generation_in_MW(), wt_generators[i]->get_q_generation_in_MVar(),
-                         (wt_generators[i]->get_bus_pointer())->get_voltage_in_pu());
+                         (wt_generators[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
                 file<<buffer<<endl;
             }
         }
@@ -2597,7 +2597,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
                          bus, psdb.bus_number2bus_name(bus).c_str(),
                          (pv_units[i]->get_identifier()).c_str(),
                          pv_units[i]->get_p_generation_in_MW(), pv_units[i]->get_q_generation_in_MVar(),
-                         (pv_units[i]->get_bus_pointer())->get_voltage_in_pu());
+                         (pv_units[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
                 file<<buffer<<endl;
             }
         }
@@ -2616,7 +2616,7 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
                          bus, psdb.bus_number2bus_name(bus).c_str(),
                          (loads[i]->get_identifier()).c_str(),
                          s.real(), s.imag(),
-                         (loads[i]->get_bus_pointer())->get_voltage_in_pu());
+                         (loads[i]->get_bus_pointer())->get_positive_sequence_voltage_in_pu());
                 file<<buffer<<endl;
             }
         }
@@ -2695,8 +2695,8 @@ void POWERFLOW_SOLVER::save_extended_powerflow_result_to_file(const string& file
                          hvdcs[i]->get_converter_dc_voltage_in_kV(RECTIFIER),
                          hvdcs[i]->get_converter_dc_voltage_in_kV(INVERTER),
                          hvdcs[i]->get_converter_dc_current_in_kA(RECTIFIER),
-                         (hvdcs[i]->get_bus_pointer(RECTIFIER))->get_voltage_in_pu(),
-                         (hvdcs[i]->get_bus_pointer(INVERTER))->get_voltage_in_pu(),
+                         (hvdcs[i]->get_bus_pointer(RECTIFIER))->get_positive_sequence_voltage_in_pu(),
+                         (hvdcs[i]->get_bus_pointer(INVERTER))->get_positive_sequence_voltage_in_pu(),
                          hvdcs[i]->get_converter_transformer_tap_in_pu(RECTIFIER),
                          hvdcs[i]->get_converter_transformer_tap_in_pu(INVERTER));
                 file<<buffer<<endl;
@@ -2743,8 +2743,8 @@ void POWERFLOW_SOLVER::save_bus_powerflow_result_to_file(const string& filename)
         for(size_t i=0; i!=nbus; ++i)
         {
             file<<buses[i]->get_bus_number()<<","
-                <<setprecision(6)<<fixed<<buses[i]->get_voltage_in_pu()<<","
-                <<setprecision(6)<<fixed<<buses[i]->get_angle_in_deg()<<endl;
+                <<setprecision(6)<<fixed<<buses[i]->get_positive_sequence_voltage_in_pu()<<","
+                <<setprecision(6)<<fixed<<buses[i]->get_positive_sequence_angle_in_deg()<<endl;
         }
         file.close();
     }

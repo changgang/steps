@@ -52,7 +52,7 @@ void EQUIVALENT_DEVICE_TEST::setup()
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.1);
+    bus.set_positive_sequence_voltage_in_pu(1.1);
     psdb.append_bus(bus);
 }
 void EQUIVALENT_DEVICE_TEST::tear_down()

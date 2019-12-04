@@ -357,7 +357,7 @@ void PSASPE2::initialize()
 
                 POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
                 //size_t bus = generator->get_generator_bus();
-                //this->Vt0 = psdb.get_bus_voltage_in_pu(bus);
+                //this->Vt0 = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
                 this->Vt0 = get_terminal_voltage_in_pu();
 
                 //complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);

@@ -62,12 +62,12 @@ void LINE_TEST::setup()
     BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
-    bus.set_voltage_in_pu(1.1);
-    bus.set_angle_in_rad(0.1);
+    bus.set_positive_sequence_voltage_in_pu(1.1);
+    bus.set_positive_sequence_angle_in_rad(0.1);
     psdb.append_bus(bus);
     bus.set_bus_number(2);
-    bus.set_voltage_in_pu(1.05);
-    bus.set_angle_in_rad(0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.05);
+    bus.set_positive_sequence_angle_in_rad(0.0);
     psdb.append_bus(bus);
     bus.set_bus_number(3);
     psdb.append_bus(bus);

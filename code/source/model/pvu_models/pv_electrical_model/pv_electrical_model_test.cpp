@@ -65,9 +65,9 @@ void PV_ELECTRICAL_MODEL_TEST::test_get_terminal_bus_voltage()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     size_t bus = pvuptr->get_unit_bus();
 
-    TEST_ASSERT(fabs(model->get_terminal_bus_voltage_in_pu()-psdb.get_bus_voltage_in_pu(bus))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(model->get_terminal_bus_voltage_in_pu()-psdb.get_bus_positive_sequence_voltage_in_pu(bus))<FLOAT_EPSILON);
     BUS* busptr = psdb.get_bus(bus);
-    busptr->set_voltage_in_pu(1.1);
+    busptr->set_positive_sequence_voltage_in_pu(1.1);
     TEST_ASSERT(fabs(model->get_terminal_bus_voltage_in_pu()-1.1)<FLOAT_EPSILON);
 }
 
@@ -260,7 +260,7 @@ void PV_ELECTRICAL_MODEL_TEST::export_meter_values()
     PV_ELECTRICAL_MODEL* model = get_test_pv_electrical_model();
     PV_CONVERTER_MODEL* pvc_model = get_test_pv_converter_model();
 
-    double voltage = bus->get_voltage_in_pu();
+    double voltage = bus->get_positive_sequence_voltage_in_pu();
     double freq = bus->get_frequency_deviation_in_pu();
 
     ostringstream osstream;
@@ -279,7 +279,7 @@ void PV_ELECTRICAL_MODEL_TEST::apply_voltage_drop_of_10_percent()
 {
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
-    bus->set_voltage_in_pu(bus->get_voltage_in_pu()-0.1);
+    bus->set_positive_sequence_voltage_in_pu(bus->get_positive_sequence_voltage_in_pu()-0.1);
 }
 
 void PV_ELECTRICAL_MODEL_TEST::apply_frequency_drop_of_5_percent()

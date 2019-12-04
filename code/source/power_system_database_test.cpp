@@ -1201,15 +1201,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
 
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(110.0);
-    bus.set_voltage_in_pu(1.05);
-    bus.set_angle_in_rad(0.5);
+    bus.set_positive_sequence_voltage_in_pu(1.05);
+    bus.set_positive_sequence_angle_in_rad(0.5);
 
     psdb.append_bus(bus);
 
     bus.set_bus_number(2);
     bus.set_base_voltage_in_kV(220.0);
-    bus.set_voltage_in_pu(0.95);
-    bus.set_angle_in_rad(0.25);
+    bus.set_positive_sequence_voltage_in_pu(0.95);
+    bus.set_positive_sequence_angle_in_rad(0.25);
     psdb.append_bus(bus);
 
     TEST_ASSERT(psdb.get_bus_count()==2);
@@ -1220,8 +1220,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==1);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-110.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pbus->get_voltage_in_pu()-1.05)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pbus->get_angle_in_rad()-0.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(pbus->get_positive_sequence_voltage_in_pu()-1.05)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(pbus->get_positive_sequence_angle_in_rad()-0.5)<FLOAT_EPSILON);
 
     DEVICE_ID did;
     did.set_device_type("BUS");
@@ -1233,15 +1233,15 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==1);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-110.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pbus->get_voltage_in_pu()-1.05)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pbus->get_angle_in_rad()-0.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(pbus->get_positive_sequence_voltage_in_pu()-1.05)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(pbus->get_positive_sequence_angle_in_rad()-0.5)<FLOAT_EPSILON);
 
     pbus = psdb.get_bus(2);
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==2);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-220.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pbus->get_voltage_in_pu()-0.95)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pbus->get_angle_in_rad()-0.25)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(pbus->get_positive_sequence_voltage_in_pu()-0.95)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(pbus->get_positive_sequence_angle_in_rad()-0.25)<FLOAT_EPSILON);
 
     did.set_device_type("BUS");
     terminal.clear();
@@ -1252,8 +1252,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_bus()
     TEST_ASSERT(pbus!=NULL);
     TEST_ASSERT(pbus->get_bus_number()==2);
     TEST_ASSERT(fabs(pbus->get_base_voltage_in_kV()-220.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pbus->get_voltage_in_pu()-0.95)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(pbus->get_angle_in_rad()-0.25)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(pbus->get_positive_sequence_voltage_in_pu()-0.95)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(pbus->get_positive_sequence_angle_in_rad()-0.25)<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
@@ -1267,7 +1267,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_generator()
     BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
-    bus.set_voltage_in_pu(1.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
     psdb.append_bus(bus);
 
     GENERATOR generator;
@@ -1322,7 +1322,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_wt_generator()
     BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
-    bus.set_voltage_in_pu(1.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
     psdb.append_bus(bus);
 
     WT_GENERATOR wt_generator;
@@ -1379,7 +1379,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_pv_unit()
     BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(18.0);
-    bus.set_voltage_in_pu(1.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
     psdb.append_bus(bus);
 
     PV_UNIT pv_unit;
@@ -1435,7 +1435,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_append_and_get_load()
     BUS bus;
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(35.0);
-    bus.set_voltage_in_pu(1.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
     psdb.append_bus(bus);
 
     LOAD load;
@@ -8633,8 +8633,8 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_complex_voltage()
     prepare_database_for_test();
 
     BUS* bus = psdb.get_bus(1);
-    bus->set_voltage_in_pu(1.05);
-    bus->set_angle_in_rad(0.5);
+    bus->set_positive_sequence_voltage_in_pu(1.05);
+    bus->set_positive_sequence_angle_in_rad(0.5);
 
     complex<double> V(1.05*cos(0.5), 1.05*sin(0.5));
     TEST_ASSERT(abs(psdb.get_bus_complex_voltage_in_pu(1)-V)<FLOAT_EPSILON);
@@ -8671,11 +8671,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_voltage()
     prepare_database_for_test();
 
     BUS* bus = psdb.get_bus(1);
-    bus->set_voltage_in_pu(1.05);
+    bus->set_positive_sequence_voltage_in_pu(1.05);
 
 
-    TEST_ASSERT(fabs(psdb.get_bus_voltage_in_pu(1)-1.05)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(psdb.get_bus_voltage_in_kV(1)-1.05*110.0)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(psdb.get_bus_positive_sequence_voltage_in_pu(1)-1.05)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(psdb.get_bus_positive_sequence_voltage_in_kV(1)-1.05*110.0)<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_bus_angle()
@@ -8687,10 +8687,10 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_bus_angle()
     prepare_database_for_test();
 
     BUS* bus = psdb.get_bus(1);
-    bus->set_angle_in_rad(0.5);
+    bus->set_positive_sequence_angle_in_rad(0.5);
 
-    TEST_ASSERT(fabs(psdb.get_bus_angle_in_rad(1)-0.5)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(psdb.get_bus_angle_in_deg(1)-(0.5*ONE_OVER_PI*180.0))<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(psdb.get_bus_positive_sequence_angle_in_rad(1)-0.5)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(psdb.get_bus_positive_sequence_angle_in_deg(1)-(0.5*ONE_OVER_PI*180.0))<FLOAT_EPSILON);
 }
 
 void POWER_SYSTEM_DATABASE_TEST::test_get_voltage_to_regulate_of_physical_bus_in_pu()
@@ -8703,7 +8703,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_voltage_to_regulate_of_physical_bus_in
     prepare_database_for_test();
 
     BUS* bus = psdb.get_bus(1);
-    bus->set_voltage_in_pu(1.05);
+    bus->set_positive_sequence_voltage_in_pu(1.05);
     bus->set_voltage_to_regulate_in_pu(1.05);
 
     TEST_ASSERT(fabs(psdb.get_voltage_to_regulate_of_physical_bus_in_pu(1)-1.05)<FLOAT_EPSILON);

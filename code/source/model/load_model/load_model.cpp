@@ -24,14 +24,14 @@ string LOAD_MODEL::get_model_type() const
     return "LOAD CHARACTERISTICS";
 }
 
-double LOAD_MODEL::get_bus_voltage_in_pu() const
+double LOAD_MODEL::get_bus_positive_sequence_voltage_in_pu() const
 {
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {
         BUS* bus = load->get_bus_pointer();
         if(bus!=NULL)
-            return bus->get_voltage_in_pu();
+            return bus->get_positive_sequence_voltage_in_pu();
         else
             return 0.0;
     }

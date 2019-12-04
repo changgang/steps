@@ -323,12 +323,12 @@ void STEPS_IMEXPORTER::load_bus_data()
         }
         if(data.size()>0)
         {
-            bus.set_voltage_in_pu(get_double_data(data.front(),"1.0"));
+            bus.set_positive_sequence_voltage_in_pu(get_double_data(data.front(),"1.0"));
             data.erase(data.begin());
         }
         if(data.size()>0)
         {
-            bus.set_angle_in_deg(get_double_data(data.front(),"0.0"));
+            bus.set_positive_sequence_angle_in_deg(get_double_data(data.front(),"0.0"));
             data.erase(data.begin());
         }
         if(data.size()>0)
@@ -2081,7 +2081,7 @@ string STEPS_IMEXPORTER::export_bus_data() const
         snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
                  bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,
                  bus->get_area_number(), bus->get_zone_number(), bus->get_owner_number(),
-                 bus->get_voltage_in_pu(), bus->get_angle_in_deg(),
+                 bus->get_positive_sequence_voltage_in_pu(), bus->get_positive_sequence_angle_in_deg(),
                  bus->get_normal_voltage_upper_limit_in_pu(), bus->get_normal_voltage_lower_limit_in_pu(),
                  bus->get_emergency_voltage_upper_limit_in_pu(), bus->get_emergency_voltage_lower_limit_in_pu(),
                  bus->get_base_frequency_in_Hz());
@@ -2992,8 +2992,8 @@ void STEPS_IMEXPORTER::load_bus_powerflow_result(const vector<string>& data)
         BUS* bus = psdb.get_bus(bus_number);
         if(bus!=NULL)
         {
-            bus->set_voltage_in_pu(voltage);
-            bus->set_angle_in_deg(angle);
+            bus->set_positive_sequence_voltage_in_pu(voltage);
+            bus->set_positive_sequence_angle_in_deg(angle);
         }
     }
 }

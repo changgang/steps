@@ -64,10 +64,10 @@ void JACOBIAN_BUILDER_TEST::test_update_seprate_jacobians()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus;
     bus = psdb.get_bus(2);
-    bus->set_angle_in_deg(-2.9395);
+    bus->set_positive_sequence_angle_in_deg(-2.9395);
     bus = psdb.get_bus(3);
-    bus->set_voltage_in_pu(0.9638);
-    bus->set_angle_in_deg(-9.51111);
+    bus->set_positive_sequence_voltage_in_pu(0.9638);
+    bus->set_positive_sequence_angle_in_deg(-9.51111);
 
     osstream<<"Jacobian with voltage of the first iteration from Arthur R. Arthur_R_Bergen";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -104,10 +104,10 @@ void JACOBIAN_BUILDER_TEST::test_get_full_jacobian_for_coupled_P_and_Q_equations
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus;
     bus = psdb.get_bus(2);
-    bus->set_angle_in_deg(-2.9395);
+    bus->set_positive_sequence_angle_in_deg(-2.9395);
     bus = psdb.get_bus(3);
-    bus->set_voltage_in_pu(0.9638);
-    bus->set_angle_in_deg(-9.51111);
+    bus->set_positive_sequence_voltage_in_pu(0.9638);
+    bus->set_positive_sequence_angle_in_deg(-9.51111);
 
     jacobian_builder.update_seprate_jacobians();
 

@@ -48,7 +48,7 @@ void FIXED_SHUNT_TEST::setup()
     bus.set_bus_number(1);
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_type(PQ_TYPE);
-    bus.set_voltage_in_pu(1.1);
+    bus.set_positive_sequence_voltage_in_pu(1.1);
     psdb.append_bus(bus);
 }
 void FIXED_SHUNT_TEST::tear_down()
@@ -196,7 +196,7 @@ void FIXED_SHUNT_TEST::test_get_actual_impedance_shunt()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(fixed_shunt.get_shunt_bus());
 
-    bus->set_voltage_in_pu(0.95);
+    bus->set_positive_sequence_voltage_in_pu(0.95);
 
     complex<double> s = s_Z*0.95*0.95;
     TEST_ASSERT(abs(fixed_shunt.get_actual_impedance_shunt_in_MVA()-s)<FLOAT_EPSILON);

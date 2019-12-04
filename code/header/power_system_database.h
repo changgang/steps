@@ -446,10 +446,10 @@ class POWER_SYSTEM_DATABASE : public BASE
         BUS_TYPE get_bus_type(size_t bus);
         double get_bus_base_frequency_in_Hz(size_t bus);
         double get_bus_base_voltage_in_kV(size_t bus);
-        double get_bus_voltage_in_pu(size_t bus);
-        double get_bus_voltage_in_kV(size_t bus);
-        double get_bus_angle_in_deg(size_t bus);
-        double get_bus_angle_in_rad(size_t bus);
+        double get_bus_positive_sequence_voltage_in_pu(size_t bus);
+        double get_bus_positive_sequence_voltage_in_kV(size_t bus);
+        double get_bus_positive_sequence_angle_in_deg(size_t bus);
+        double get_bus_positive_sequence_angle_in_rad(size_t bus);
         double get_bus_frequency_deviation_in_pu(size_t bus);
         double get_bus_frequency_deviation_in_Hz(size_t bus);
         double get_bus_frequency_in_Hz(size_t bus);

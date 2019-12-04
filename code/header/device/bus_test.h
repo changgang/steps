@@ -34,9 +34,13 @@ class BUS_TEST : public Test::Suite
         void test_set_get_area_number();
         void test_set_get_zone_number();
         void test_set_get_owner_number();
-        void test_set_get_voltage_with_nonzero_base_voltage();
-        void test_set_get_voltage_with_zero_base_voltage();
-        void test_set_get_angle();
+        void test_set_get_positive_sequence_voltage_with_nonzero_base_voltage();
+        void test_set_get_positive_sequence_voltage_with_zero_base_voltage();
+        void test_set_get_positive_sequence_angle();
+        void test_set_get_negative_sequence_voltage_with_zero_base_voltage();
+        void test_set_get_negative_sequence_angle();
+        void test_set_get_zero_sequence_voltage_with_zero_base_voltage();
+        void test_set_get_zero_sequence_angle();
         void test_set_get_normal_voltage_upper_limit();
         void test_set_get_normal_voltage_lower_limit();
         void test_set_get_emergency_voltage_upper_limit();

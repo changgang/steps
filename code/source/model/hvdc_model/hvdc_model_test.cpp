@@ -30,8 +30,8 @@ void HVDC_MODEL_TEST::setup()
     bus.set_bus_name("RECBUS");
     bus.set_bus_type(PQ_TYPE);
     bus.set_base_voltage_in_kV(345.0);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_rad(0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_rad(0.0);
 
     psdb.append_bus(bus);
 
@@ -39,8 +39,8 @@ void HVDC_MODEL_TEST::setup()
     bus.set_bus_name("INVBUS");
     bus.set_bus_type(PQ_TYPE);
     bus.set_base_voltage_in_kV(525.0);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_rad(0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_rad(0.0);
 
     psdb.append_bus(bus);
 
@@ -138,8 +138,8 @@ void HVDC_MODEL_TEST::export_meter_values(double time)
     double p_rec, q_rec, alpha, mu_rec, p_inv, q_inv, gamma, mu_inv;
     double vdcr, vdci, idcr, idci;
 
-    volt_rec = psdb.get_bus_voltage_in_pu(1);
-    volt_inv = psdb.get_bus_voltage_in_pu(2);
+    volt_rec = psdb.get_bus_positive_sequence_voltage_in_pu(1);
+    volt_inv = psdb.get_bus_positive_sequence_voltage_in_pu(2);
 
     HVDC_CONVERTER_SIDE converter;
 
@@ -256,7 +256,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
         export_meter_values(TIME);
     }
 
-    double Vac_rec = psdb.get_bus_voltage_in_pu(1);
+    double Vac_rec = psdb.get_bus_positive_sequence_voltage_in_pu(1);
     BUS* bus = psdb.get_bus(1);
     double rate = 0.2;
 
@@ -264,7 +264,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
     {
         TIME += delt;
         Vac_rec -= (rate*delt);
-        bus->set_voltage_in_pu(Vac_rec);
+        bus->set_positive_sequence_voltage_in_pu(Vac_rec);
 
         if(TIME>5.0+FLOAT_EPSILON)
         {
@@ -317,7 +317,7 @@ void HVDC_MODEL_TEST::test_rectifier_voltage_ramp_response()
     {
         TIME += delt;
         Vac_rec += (rate*delt);
-        bus->set_voltage_in_pu(Vac_rec);
+        bus->set_positive_sequence_voltage_in_pu(Vac_rec);
 
         if(TIME>11.0+FLOAT_EPSILON)
         {
@@ -422,7 +422,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
         export_meter_values(TIME);
     }
 
-    double Vac_inv = psdb.get_bus_voltage_in_pu(2);
+    double Vac_inv = psdb.get_bus_positive_sequence_voltage_in_pu(2);
     BUS* bus = psdb.get_bus(2);
     double rate = 0.2;
 
@@ -430,7 +430,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
     {
         TIME += delt;
         Vac_inv -= (rate*delt);
-        bus->set_voltage_in_pu(Vac_inv);
+        bus->set_positive_sequence_voltage_in_pu(Vac_inv);
 
         if(TIME>5.0+FLOAT_EPSILON)
         {
@@ -483,7 +483,7 @@ void HVDC_MODEL_TEST::test_inverter_voltage_ramp_response()
     {
         TIME += delt;
         Vac_inv += (rate*delt);
-        bus->set_voltage_in_pu(Vac_inv);
+        bus->set_positive_sequence_voltage_in_pu(Vac_inv);
 
         if(TIME>11.0+FLOAT_EPSILON)
         {

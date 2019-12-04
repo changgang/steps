@@ -393,11 +393,11 @@ void DYNAMICS_SIMULATOR_TEST::test_get_all_meters_value()
     TEST_ASSERT(simulator.get_meter_count()==3);
 
     BUS* busptr = psdb.get_bus(1);
-    busptr->set_voltage_in_pu(1.0);
+    busptr->set_positive_sequence_voltage_in_pu(1.0);
     busptr = psdb.get_bus(2);
-    busptr->set_voltage_in_pu(1.1);
+    busptr->set_positive_sequence_voltage_in_pu(1.1);
     busptr = psdb.get_bus(3);
-    busptr->set_voltage_in_pu(0.9);
+    busptr->set_positive_sequence_voltage_in_pu(0.9);
 
     vector<double> values = simulator.get_all_meters_value();
 

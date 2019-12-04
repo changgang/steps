@@ -178,7 +178,7 @@ void WT3T0::initialize()
                 double wbase = 2.0*PI*fbase;
 
                 generator_rotor_angle_block.set_T_in_s(1.0/wbase);
-                generator_rotor_angle_block.set_output(psdb.get_bus_angle_in_rad(bus));
+                generator_rotor_angle_block.set_output(psdb.get_bus_positive_sequence_angle_in_rad(bus));
                 generator_rotor_angle_block.initialize();
 
                 double speed = get_initial_wind_turbine_speed_in_pu_from_wt_areodynamic_model();

@@ -63,22 +63,22 @@ void TRANSFORMER_TEST::setup()
     bus.set_bus_number(1);
     bus.set_bus_type(PQ_TYPE);
     bus.set_base_voltage_in_kV(13.8);
-    bus.set_voltage_in_pu(1.05);
-    bus.set_angle_in_deg(0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.05);
+    bus.set_positive_sequence_angle_in_deg(0.0);
     psdb.append_bus(bus);
 
     bus.set_bus_number(2);
     bus.set_bus_type(PQ_TYPE);
     bus.set_base_voltage_in_kV(220.0);
-    bus.set_voltage_in_pu(1.025);
-    bus.set_angle_in_deg(10.0);
+    bus.set_positive_sequence_voltage_in_pu(1.025);
+    bus.set_positive_sequence_angle_in_deg(10.0);
     psdb.append_bus(bus);
 
     bus.set_bus_number(3);
     bus.set_bus_type(PQ_TYPE);
     bus.set_base_voltage_in_kV(35.0);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_deg(6.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_deg(6.0);
     psdb.append_bus(bus);
 }
 void TRANSFORMER_TEST::tear_down()
@@ -708,13 +708,13 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_2_winding_trans()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     BUS* bus = psdb.get_bus(1);
     bus->set_base_voltage_in_kV(13.8);
-    bus->set_voltage_in_pu(1.05);
-    bus->set_angle_in_deg(0.0);
+    bus->set_positive_sequence_voltage_in_pu(1.05);
+    bus->set_positive_sequence_angle_in_deg(0.0);
 
     bus = psdb.get_bus(2);
     bus->set_base_voltage_in_kV(220.0);
-    bus->set_voltage_in_pu(1.025);
-    bus->set_angle_in_deg(10.0);
+    bus->set_positive_sequence_voltage_in_pu(1.025);
+    bus->set_positive_sequence_angle_in_deg(10.0);
 
     transformer.set_winding_breaker_status(PRIMARY_SIDE, true);
     transformer.set_winding_breaker_status(SECONDARY_SIDE, true);
@@ -803,18 +803,18 @@ void TRANSFORMER_TEST::test_get_winding_complex_current_power_3_winding_trans()
     BUS* bus;
     bus = psdb.get_bus(1);
     bus->set_base_voltage_in_kV(13.8);
-    bus->set_voltage_in_pu(1.05);
-    bus->set_angle_in_deg(0.0);
+    bus->set_positive_sequence_voltage_in_pu(1.05);
+    bus->set_positive_sequence_angle_in_deg(0.0);
 
     bus = psdb.get_bus(2);
     bus->set_base_voltage_in_kV(220.0);
-    bus->set_voltage_in_pu(1.025);
-    bus->set_angle_in_deg(10.0);
+    bus->set_positive_sequence_voltage_in_pu(1.025);
+    bus->set_positive_sequence_angle_in_deg(10.0);
 
     bus = psdb.get_bus(3);
     bus->set_base_voltage_in_kV(35.0);
-    bus->set_voltage_in_pu(1.0);
-    bus->set_angle_in_deg(6.0);
+    bus->set_positive_sequence_voltage_in_pu(1.0);
+    bus->set_positive_sequence_angle_in_deg(6.0);
 
     transformer.set_winding_breaker_status(PRIMARY_SIDE, true);
     transformer.set_winding_breaker_status(SECONDARY_SIDE, true);

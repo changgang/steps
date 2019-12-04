@@ -962,7 +962,7 @@ void VSC_HVDC::calculate_converter_power_factor_in_ac_voltage_control_mode(HVDC_
         double smax = get_converter_MVA_rating_in_MVA(converter);
         double imax = get_converter_current_rating_in_amp(converter)*0.001;
         BUS* bus = get_converter_bus_pointer(converter);
-        double v = bus->get_voltage_in_kV();
+        double v = bus->get_positive_sequence_voltage_in_kV();
         double smax2 = SQRT3*imax*v;
         if(smax2<smax) smax = smax2;
 

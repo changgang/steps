@@ -20,7 +20,7 @@ class LOAD_MODEL : public MODEL
         // common load model
         virtual string get_model_type() const;
         // common inputs
-        double get_bus_voltage_in_pu() const;
+        double get_bus_positive_sequence_voltage_in_pu() const;
         double get_bus_frequency_deviation_in_pu() const;
         // common scale
         void set_subsystem_type(SUBSYSTEM_TYPE subtype);

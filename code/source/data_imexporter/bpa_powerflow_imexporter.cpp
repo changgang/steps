@@ -602,7 +602,7 @@ void BPA_IMEXPORTER::load_bus_data()
             string voltage_str = data.substr(57, 4);
             voltage_str = format_bpa_data_to_readable_data(voltage_str, "F4.3");
             double voltage = get_double_data(voltage_str, "1.0");
-            bus.set_voltage_in_pu(voltage);
+            bus.set_positive_sequence_voltage_in_pu(voltage);
 
             BUS_TYPE bus_type;
             if(card_type=="B" or card_type == "BT" or card_type == "BC" or card_type == "BV" or
@@ -637,7 +637,7 @@ void BPA_IMEXPORTER::load_bus_data()
                 string angle_str = data.substr(61, 4);
                 angle_str = format_bpa_data_to_readable_data(angle_str, "F4.1");
                 double angle = get_double_data(angle_str, "0.0");
-                bus.set_angle_in_deg(angle);
+                bus.set_positive_sequence_angle_in_deg(angle);
             }
             psdb.append_bus(bus);
         }
@@ -2406,7 +2406,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         size_t zone_number = bus->get_zone_number();
         double vmax = bus->get_normal_voltage_upper_limit_in_pu();
         double vmin = bus->get_normal_voltage_lower_limit_in_pu();
-        double slack_angle = bus->get_angle_in_deg();
+        double slack_angle = bus->get_positive_sequence_angle_in_deg();
 
         osstream<<"."<<endl<<". Bus "<<bus_number<<": "<<bus_name<<endl;
 

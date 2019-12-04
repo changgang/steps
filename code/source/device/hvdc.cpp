@@ -1428,7 +1428,7 @@ void HVDC::show_solved_hvdc_steady_state() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Vdc = "<<get_converter_dc_voltage_in_kV(converter)<<" kV, "
-            <<"Vac = "<<psdb.get_bus_voltage_in_kV(get_converter_bus(converter))<<" kV";
+            <<"Vac = "<<psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter))<<" kV";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Transformer tap = "<<get_converter_transformer_tap_in_pu(converter)<<" pu.";
@@ -1491,7 +1491,7 @@ void HVDC::show_solved_hvdc_steady_state() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Vdc = "<<get_converter_dc_voltage_in_kV(converter)<<" kV, "
-            <<"Vac = "<<psdb.get_bus_voltage_in_kV(get_converter_bus(converter))<<" kV";
+            <<"Vac = "<<psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter))<<" kV";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     osstream<<"Transformer tap = "<<get_converter_transformer_tap_in_pu(converter)<<" pu.";
@@ -1574,7 +1574,7 @@ double HVDC::get_converter_commutating_overlap_angle_in_deg(HVDC_CONVERTER_SIDE 
 
     double TurnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
     double Tap = get_converter_transformer_tap_in_pu(converter);
-    double Vac = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
+    double Vac = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vac/(TurnRatio*Tap);
 
     double Xc = get_converter_transformer_impedance_in_ohm(converter).imag();
@@ -1658,7 +1658,7 @@ double HVDC::get_converter_ac_apparent_power_in_MVA(HVDC_CONVERTER_SIDE converte
         return Pac;
 /*
     double Iac = get_converter_ac_current_in_kA(converter);
-    double U = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
+    double U = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     return SQRT3*U*Iac;
 
     double turnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
@@ -1847,7 +1847,7 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
     double angle_min = get_converter_min_alpha_or_gamma_in_deg(converter);
     angle_min = deg2rad(angle_min);
 
-    double Vbus = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
+    double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
 
     double Eac_cosAngle = Vdc/N+(3.0*ONE_OVER_PI)*Z.imag()*Idc+2.0*Z.real()*Idc+Vdrop;
     Eac_cosAngle /= (3.0*SQRT2*ONE_OVER_PI);
@@ -1858,7 +1858,7 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
     if(Tap > maxTap) Tap = maxTap;
 
     //osstream<<"Best converter transformer tap with min angle: "<<Tap<<" for "<<get_converter_side_name(converter).c_str()<<endl
-    //        <<"Vbus = "<<psdb.get_bus_voltage_in_pu(get_converter_bus(converter));
+    //        <<"Vbus = "<<psdb.get_bus_positive_sequence_voltage_in_pu(get_converter_bus(converter));
     //toolkit.show_information_with_leading_time_stamp(osstream);
 
     set_converter_transformer_tap_in_pu(converter, Tap);
@@ -1963,7 +1963,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
 
     double VdcR, VdcI, Idc;
 
-    double VbusI = psdb.get_bus_voltage_in_kV(get_converter_bus(INVERTER));
+    double VbusI = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(INVERTER));
 
     double EacI, cosAlpha;
 
@@ -2147,8 +2147,8 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     size_t NR = get_converter_number_of_bridge(RECTIFIER);
     size_t NI = get_converter_number_of_bridge(INVERTER);
 
-    double VbusR = psdb.get_bus_voltage_in_kV(get_converter_bus(RECTIFIER));
-    double VbusI = psdb.get_bus_voltage_in_kV(get_converter_bus(INVERTER));
+    double VbusR = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(RECTIFIER));
+    double VbusI = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(INVERTER));
 
     double EacR = VbusR/(TurnRatioR*TapR);
     double EacI = VbusI/(TurnRatioI*TapI);
@@ -2195,7 +2195,7 @@ double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_an
 
     size_t N = get_converter_number_of_bridge(converter);
 
-    double Vbus = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
+    double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/(TurnRatio*Tap); // actual EacR
     double Eac_cosAngle = Vdc/N+(3.0*ONE_OVER_PI)*Z.imag()*Idc+2.0*Z.real()*Idc+Vdrop;
            Eac_cosAngle /= (3.0*SQRT2*ONE_OVER_PI);
@@ -2221,7 +2221,7 @@ double HVDC::solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_ta
 
     size_t N = get_converter_number_of_bridge(converter);
 
-    double Vbus = psdb.get_bus_voltage_in_kV(get_converter_bus(converter));
+    double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/(TurnRatio*Tap);
     double Vdc = N*((3.0*SQRT2*ONE_OVER_PI)*Eac*cos(angle_min)-(3.0*ONE_OVER_PI)*Z.imag()*Idc-2.0*Z.real()*Idc-Vdrop);
     return Vdc;

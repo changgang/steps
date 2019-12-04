@@ -305,7 +305,7 @@ void IEEL::initialize()
     LOAD* load = get_load_pointer();
 
     complex<double> S = load->get_actual_total_load_in_MVA();
-    double V = get_bus_voltage_in_pu();
+    double V = get_bus_positive_sequence_voltage_in_pu();
 
     double P = S.real();
     double alpha1 = get_P_alpha_1();
@@ -344,7 +344,7 @@ complex<double> IEEL::get_load_power_in_MVA()
 {
     LOAD* load = get_load_pointer();
 
-    double V = get_bus_voltage_in_pu();
+    double V = get_bus_positive_sequence_voltage_in_pu();
     double f = get_bus_frequency_deviation_in_pu();
 
     complex<double> PQ0 = get_initial_load_power_in_MVA();

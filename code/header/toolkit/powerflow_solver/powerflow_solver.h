@@ -72,7 +72,7 @@ class POWERFLOW_SOLVER : public BASE
         void set_internal_bus_pointer();
 
         complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
-        double get_bus_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
+        double get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
 
         void update_P_and_Q_equation_internal_buses();
         void update_P_and_Q_equation_internal_buses_with_generator_variables();

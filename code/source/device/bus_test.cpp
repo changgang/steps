@@ -29,9 +29,13 @@ BUS_TEST::BUS_TEST()
     TEST_ADD(BUS_TEST::test_set_get_area_number);
     TEST_ADD(BUS_TEST::test_set_get_zone_number);
     TEST_ADD(BUS_TEST::test_set_get_owner_number);
-    TEST_ADD(BUS_TEST::test_set_get_voltage_with_nonzero_base_voltage);
-    TEST_ADD(BUS_TEST::test_set_get_voltage_with_zero_base_voltage);
-    TEST_ADD(BUS_TEST::test_set_get_angle);
+    TEST_ADD(BUS_TEST::test_set_get_positive_sequence_voltage_with_nonzero_base_voltage);
+    TEST_ADD(BUS_TEST::test_set_get_positive_sequence_voltage_with_zero_base_voltage);
+    TEST_ADD(BUS_TEST::test_set_get_positive_sequence_angle);
+    TEST_ADD(BUS_TEST::test_set_get_negative_sequence_voltage_with_zero_base_voltage);
+    TEST_ADD(BUS_TEST::test_set_get_negative_sequence_angle);
+    TEST_ADD(BUS_TEST::test_set_get_zero_sequence_voltage_with_zero_base_voltage);
+    TEST_ADD(BUS_TEST::test_set_get_zero_sequence_angle);
     TEST_ADD(BUS_TEST::test_set_get_normal_voltage_upper_limit);
     TEST_ADD(BUS_TEST::test_set_get_normal_voltage_lower_limit);
     TEST_ADD(BUS_TEST::test_set_get_emergency_voltage_upper_limit);
@@ -83,9 +87,9 @@ void BUS_TEST::test_constructor()
     TEST_ASSERT(bus.get_area_number()== 0);
     TEST_ASSERT(bus.get_zone_number()== 0);
     TEST_ASSERT(bus.get_owner_number()== 0);
-    TEST_ASSERT(bus.get_voltage_in_pu()==1.0);
-    TEST_ASSERT(bus.get_angle_in_rad()==0.0);
-    TEST_ASSERT(bus.get_angle_in_deg()==0.0);
+    TEST_ASSERT(bus.get_positive_sequence_voltage_in_pu()==1.0);
+    TEST_ASSERT(bus.get_positive_sequence_angle_in_rad()==0.0);
+    TEST_ASSERT(bus.get_positive_sequence_angle_in_deg()==0.0);
     TEST_ASSERT(bus.get_base_frequency_in_Hz()==50.0);
     TEST_ASSERT(bus.get_voltage_to_regulate_in_pu()==0.0);
 
@@ -174,43 +178,94 @@ void BUS_TEST::test_set_get_owner_number()
     TEST_ASSERT(bus.get_owner_number()==2);
 }
 
-void BUS_TEST::test_set_get_voltage_with_nonzero_base_voltage()
+void BUS_TEST::test_set_get_positive_sequence_voltage_with_nonzero_base_voltage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
 
     bus.set_base_voltage_in_kV(100.00);
     TEST_ASSERT(bus.get_base_voltage_in_kV()==100.0);
-    bus.set_voltage_in_pu(1.1);
-    TEST_ASSERT(bus.get_voltage_in_pu()==1.1);
-    TEST_ASSERT(fabs(bus.get_voltage_in_kV()-110.0)<FLOAT_EPSILON);
-    bus.set_voltage_in_kV(220.0);
-    TEST_ASSERT(bus.get_voltage_in_pu()==2.2);
-    TEST_ASSERT(fabs(bus.get_voltage_in_kV()-220.0)<FLOAT_EPSILON);
+    bus.set_positive_sequence_voltage_in_pu(1.1);
+    TEST_ASSERT(bus.get_positive_sequence_voltage_in_pu()==1.1);
+    TEST_ASSERT(fabs(bus.get_positive_sequence_voltage_in_kV()-110.0)<FLOAT_EPSILON);
+    bus.set_positive_sequence_voltage_in_kV(220.0);
+    TEST_ASSERT(bus.get_positive_sequence_voltage_in_pu()==2.2);
+    TEST_ASSERT(fabs(bus.get_positive_sequence_voltage_in_kV()-220.0)<FLOAT_EPSILON);
 }
 
-void BUS_TEST::test_set_get_voltage_with_zero_base_voltage()
+void BUS_TEST::test_set_get_positive_sequence_voltage_with_zero_base_voltage()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
 
     bus.set_base_voltage_in_kV(0.0);
-    bus.set_voltage_in_pu(1.1);
-    TEST_ASSERT(bus.get_voltage_in_pu()==1.1);
-    TEST_ASSERT(bus.get_voltage_in_kV()==0.0);
-    bus.set_voltage_in_kV(110.0);
-    TEST_ASSERT(bus.get_voltage_in_pu()==0.0);
-    TEST_ASSERT(bus.get_voltage_in_kV()==0.0);
+    bus.set_positive_sequence_voltage_in_pu(1.1);
+    TEST_ASSERT(bus.get_positive_sequence_voltage_in_pu()==1.1);
+    TEST_ASSERT(bus.get_positive_sequence_voltage_in_kV()==0.0);
+    bus.set_positive_sequence_voltage_in_kV(110.0);
+    TEST_ASSERT(bus.get_positive_sequence_voltage_in_pu()==0.0);
+    TEST_ASSERT(bus.get_positive_sequence_voltage_in_kV()==0.0);
 }
 
-void BUS_TEST::test_set_get_angle()
+void BUS_TEST::test_set_get_positive_sequence_angle()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
 
-    bus.set_angle_in_rad(0.5);
-    TEST_ASSERT(bus.get_angle_in_rad()==0.5);
-    TEST_ASSERT(fabs(bus.get_angle_in_deg()-0.5*ONE_OVER_PI*180.0)<FLOAT_EPSILON);
-    bus.set_angle_in_deg(90.0);
-    TEST_ASSERT(fabs(bus.get_angle_in_rad()-0.5*PI)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(bus.get_angle_in_deg()-90.0)<FLOAT_EPSILON);
+    bus.set_positive_sequence_angle_in_rad(0.5);
+    TEST_ASSERT(bus.get_positive_sequence_angle_in_rad()==0.5);
+    TEST_ASSERT(fabs(bus.get_positive_sequence_angle_in_deg()-0.5*ONE_OVER_PI*180.0)<FLOAT_EPSILON);
+    bus.set_positive_sequence_angle_in_deg(90.0);
+    TEST_ASSERT(fabs(bus.get_positive_sequence_angle_in_rad()-0.5*PI)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus.get_positive_sequence_angle_in_deg()-90.0)<FLOAT_EPSILON);
+}
+
+
+void BUS_TEST::test_set_get_negative_sequence_voltage_with_zero_base_voltage()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
+
+    bus.set_base_voltage_in_kV(0.0);
+    bus.set_negative_sequence_voltage_in_pu(1.1);
+    TEST_ASSERT(bus.get_negative_sequence_voltage_in_pu()==1.1);
+    TEST_ASSERT(bus.get_negative_sequence_voltage_in_kV()==0.0);
+    bus.set_negative_sequence_voltage_in_kV(110.0);
+    TEST_ASSERT(bus.get_negative_sequence_voltage_in_pu()==0.0);
+    TEST_ASSERT(bus.get_negative_sequence_voltage_in_kV()==0.0);
+}
+
+void BUS_TEST::test_set_get_negative_sequence_angle()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
+
+    bus.set_negative_sequence_angle_in_rad(0.5);
+    TEST_ASSERT(bus.get_negative_sequence_angle_in_rad()==0.5);
+    TEST_ASSERT(fabs(bus.get_negative_sequence_angle_in_deg()-0.5*ONE_OVER_PI*180.0)<FLOAT_EPSILON);
+    bus.set_negative_sequence_angle_in_deg(90.0);
+    TEST_ASSERT(fabs(bus.get_negative_sequence_angle_in_rad()-0.5*PI)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus.get_negative_sequence_angle_in_deg()-90.0)<FLOAT_EPSILON);
+}
+
+void BUS_TEST::test_set_get_zero_sequence_voltage_with_zero_base_voltage()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
+
+    bus.set_base_voltage_in_kV(0.0);
+    bus.set_zero_sequence_voltage_in_pu(1.1);
+    TEST_ASSERT(bus.get_zero_sequence_voltage_in_pu()==1.1);
+    TEST_ASSERT(bus.get_zero_sequence_voltage_in_kV()==0.0);
+    bus.set_zero_sequence_voltage_in_kV(110.0);
+    TEST_ASSERT(bus.get_zero_sequence_voltage_in_pu()==0.0);
+    TEST_ASSERT(bus.get_zero_sequence_voltage_in_kV()==0.0);
+}
+
+void BUS_TEST::test_set_get_zero_sequence_angle()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
+
+    bus.set_zero_sequence_angle_in_rad(0.5);
+    TEST_ASSERT(bus.get_zero_sequence_angle_in_rad()==0.5);
+    TEST_ASSERT(fabs(bus.get_zero_sequence_angle_in_deg()-0.5*ONE_OVER_PI*180.0)<FLOAT_EPSILON);
+    bus.set_zero_sequence_angle_in_deg(90.0);
+    TEST_ASSERT(fabs(bus.get_zero_sequence_angle_in_rad()-0.5*PI)<FLOAT_EPSILON);
+    TEST_ASSERT(fabs(bus.get_zero_sequence_angle_in_deg()-90.0)<FLOAT_EPSILON);
 }
 
 
@@ -456,7 +511,7 @@ void BUS_TEST::test_clear()
     bus.set_bus_number(2);
     bus.set_bus_name("mybus");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.12);
+    bus.set_positive_sequence_voltage_in_pu(1.12);
 
     bus.clear();
 
@@ -470,7 +525,7 @@ void BUS_TEST::test_copy_with_operator_equal()
     bus.set_base_voltage_in_kV(100.0);
     bus.set_bus_name("mybus");
     bus.set_bus_type(PV_TYPE);
-    bus.set_voltage_in_pu(1.12);
+    bus.set_positive_sequence_voltage_in_pu(1.12);
     FAULT fault;
     fault.set_fault_type(SINGLE_PHASE_GROUNDED_FAULT);
     fault.set_fault_shunt_in_pu(complex<double>(0.0, -2e10));
@@ -480,7 +535,7 @@ void BUS_TEST::test_copy_with_operator_equal()
     TEST_ASSERT(newbus.get_bus_number()==2);
     TEST_ASSERT(newbus.get_bus_name()=="mybus");
     TEST_ASSERT(newbus.get_bus_type()==PV_TYPE);
-    TEST_ASSERT(newbus.get_voltage_in_pu()==1.12);
+    TEST_ASSERT(newbus.get_positive_sequence_voltage_in_pu()==1.12);
     TEST_ASSERT(newbus.is_faulted()==true);
     fault = newbus.get_fault();
     TEST_ASSERT(fault.get_fault_type()==SINGLE_PHASE_GROUNDED_FAULT);

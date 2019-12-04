@@ -235,8 +235,8 @@ void UVLS::initialize()
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        //double volt = psdb.get_bus_voltage_in_pu(load->get_load_bus());
-        double volt = get_bus_voltage_in_pu();
+        //double volt = psdb.get_bus_positive_sequence_voltage_in_pu(load->get_load_bus());
+        double volt = get_bus_positive_sequence_voltage_in_pu();
 
         for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
         {
@@ -263,7 +263,7 @@ void UVLS::run(DYNAMIC_MODE mode)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
-    double volt = get_bus_voltage_in_pu();
+    double volt = get_bus_positive_sequence_voltage_in_pu();
 
     voltage_sensor.set_input(volt);
     voltage_sensor.run(mode);

@@ -49,7 +49,7 @@ void BUS_FREQUENCY_MODEL::initialize()
         frequency_block.set_toolkit(toolkit);
         frequency_block.set_T_in_s(DELT*4.0);
 
-        frequency_block.set_input(bus_ptr->get_angle_in_rad());
+        frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
 
         frequency_block.initialize();
     }
@@ -65,7 +65,7 @@ void BUS_FREQUENCY_MODEL::run(DYNAMIC_MODE mode)
 {
     if(mode==INTEGRATE_MODE or mode==UPDATE_MODE)
     {
-        frequency_block.set_input(bus_ptr->get_angle_in_rad());
+        frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
         frequency_block.run(mode);
     }
     else
@@ -79,7 +79,7 @@ void BUS_FREQUENCY_MODEL::update_for_applying_event()
 {
     double temp = frequency_block.get_output();
 
-    frequency_block.set_input(bus_ptr->get_angle_in_rad());
+    frequency_block.set_input(bus_ptr->get_positive_sequence_angle_in_rad());
     double input = frequency_block.get_input();
     double K = frequency_block.get_K();
     double T = frequency_block.get_T_in_s();

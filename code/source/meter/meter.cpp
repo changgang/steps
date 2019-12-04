@@ -734,11 +734,11 @@ double METER::get_meter_value_as_a_bus() const
     if(bus->get_bus_type()!=OUT_OF_SERVICE)
     {
         if(meter_type=="VOLTAGE IN PU")
-            return bus->get_voltage_in_pu();
+            return bus->get_positive_sequence_voltage_in_pu();
         if(meter_type=="VOLTAGE IN KV")
-            return bus->get_voltage_in_pu();
+            return bus->get_positive_sequence_voltage_in_kV();
         if(meter_type=="ANGLE IN DEG")
-            return bus->get_angle_in_deg();
+            return bus->get_positive_sequence_angle_in_deg();
         if(meter_type=="FREQUENCY DEVIATION IN PU")
             return bus->get_frequency_deviation_in_pu();
         if(meter_type=="FREQUENCY DEVIATION IN HZ")

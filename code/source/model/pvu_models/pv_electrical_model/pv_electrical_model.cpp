@@ -135,7 +135,7 @@ void PV_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
         if(bus==0)
             bus = source->get_source_bus();
 
-        return set_voltage_reference_in_pu(psdb.get_bus_voltage_in_pu(bus));
+        return set_voltage_reference_in_pu(psdb.get_bus_positive_sequence_voltage_in_pu(bus));
     }
 }
 

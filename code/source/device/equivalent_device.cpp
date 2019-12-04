@@ -200,7 +200,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_MVA() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = get_equivalent_device_bus();
-    double V = psdb.get_bus_voltage_in_pu(bus);
+    double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
 
     return SP+SI*V+SZ*V*V;
 }
@@ -278,7 +278,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_pu() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = get_equivalent_device_bus();
-    double V = psdb.get_bus_voltage_in_pu(bus);
+    double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
 
     double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
 

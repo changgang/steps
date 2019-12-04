@@ -27,8 +27,8 @@ void WTG_MODEL_TEST::setup()
     bus.set_bus_number(1);
     bus.set_bus_type(PV_TYPE);
     bus.set_base_voltage_in_kV(0.69);
-    bus.set_voltage_in_pu(1.0);
-    bus.set_angle_in_deg(30.0);
+    bus.set_positive_sequence_voltage_in_pu(1.0);
+    bus.set_positive_sequence_angle_in_deg(30.0);
 
     psdb.append_bus(bus);
 
