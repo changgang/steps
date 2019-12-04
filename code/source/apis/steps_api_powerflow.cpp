@@ -294,7 +294,7 @@ void api_build_network_Z_matrix(size_t toolkit_index)
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = solver.get_network_matrix();
-    network_matrix.build_network_Z_matrix();
+    network_matrix.build_positive_sequence_network_Z_matrix();
 }
 
 void api_save_network_Y_matrix(char* file, size_t toolkit_index)

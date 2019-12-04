@@ -35,7 +35,19 @@ void NETWORK_MATRIX::clear()
     network_BP_matrix.clear();
     network_BQ_matrix.clear();
     network_DC_B_matrix.clear();
+
+    network_Y1_matrix.clear();
+    network_Y2_matrix.clear();
+    network_Y0_matrix.clear();
+
+    network_Z1_matrix.clear();
+    network_Z2_matrix.clear();
+    network_Z0_matrix.clear();
     inphno.clear();
+
+    this_Y_matrix_pointer = NULL;
+    this_Z_matrix_pointer = NULL;
+    this_jacobian.clear();
 }
 
 void NETWORK_MATRIX::build_network_Y_matrix()
@@ -44,6 +56,7 @@ void NETWORK_MATRIX::build_network_Y_matrix()
         initialize_physical_internal_bus_pair();
 
     network_Y_matrix.clear();
+    set_this_Y_and_Z_matrix_as(network_Y_matrix);
 
     add_lines_to_network();
     add_transformers_to_network();
@@ -120,7 +133,8 @@ void NETWORK_MATRIX::build_dynamic_network_Y_matrix()
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
 
-    network_Y_matrix.clear();
+    network_Y1_matrix.clear();
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
 
     add_bus_fault_to_dynamic_network();
     add_lines_to_dynamic_network();
@@ -129,51 +143,74 @@ void NETWORK_MATRIX::build_dynamic_network_Y_matrix()
     add_generators_to_dynamic_network();
     add_wt_generators_to_dynamic_network();
 
-    network_Y_matrix.compress_and_merge_duplicate_entries();
+    network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
 
 STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_dynamic_network_Y_matrix()
 {
-    if(network_Y_matrix.matrix_in_triplet_form())
+    if(network_Y1_matrix.matrix_in_triplet_form())
         build_dynamic_network_Y_matrix();
 
-    return network_Y_matrix;
+    return network_Y1_matrix;
 }
 
-void NETWORK_MATRIX::build_network_Z_matrix()
+void NETWORK_MATRIX::build_sequence_network_Y_matrix()
 {
-    STEPS_SPARSE_MATRIX jacobian;
-    int n = network_Y_matrix.get_matrix_size();
-    for(int j=0; j<n; ++j)
-    {
-        int k_start = network_Y_matrix.get_starting_index_of_column(j);
-        int k_end = network_Y_matrix.get_starting_index_of_column(j+1);
-        for(int k=k_start; k<k_end; ++k)
-        {
-            int i = network_Y_matrix.get_row_number_of_entry_index(k);
-            complex<double> y = network_Y_matrix.get_entry_value(k);
-            double g = y.real(), b= y.imag();
+    build_positive_sequence_network_Y_matrix();
+    build_negative_sequence_network_Y_matrix();
+    build_zero_sequence_network_Y_matrix();
+}
 
-            if(g!=0.0)
-            {
-                jacobian.add_entry(i,j,g);
-                jacobian.add_entry(i+n,j+n,g);
-            }
-            if(b!=0.0)
-            {
-                jacobian.add_entry(i,  j+n, -b);
-                jacobian.add_entry(i+n,j,   b);
-            }
-        }
-    }
-    jacobian.compress_and_merge_duplicate_entries();
-    jacobian.LU_factorization(1, 1e-13);
+void NETWORK_MATRIX::build_positive_sequence_network_Y_matrix()
+{
+    build_dynamic_network_Y_matrix();
+}
+
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_positive_sequence_network_Y_matrix()
+{
+    if(network_Y1_matrix.matrix_in_triplet_form())
+        build_positive_sequence_network_Y_matrix();
+
+    return network_Y1_matrix;
+}
+
+void NETWORK_MATRIX::build_negative_sequence_network_Y_matrix()
+{
+    ;
+}
+
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_negative_sequence_network_Y_matrix()
+{
+    if(network_Y2_matrix.matrix_in_triplet_form())
+        build_negative_sequence_network_Y_matrix();
+
+    return network_Y2_matrix;
+}
+
+void NETWORK_MATRIX::build_zero_sequence_network_Y_matrix()
+{
+    ;
+}
+
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Y_matrix()
+{
+    if(network_Y0_matrix.matrix_in_triplet_form())
+        build_zero_sequence_network_Y_matrix();
+
+    return network_Y0_matrix;
+}
+
+void NETWORK_MATRIX::build_network_Z_matrix_from_this_Y_matrix()
+{
+    build_this_jacobian_for_getting_impedance_from_this_Y_matrix();
+
+    int n = this_Y_matrix_pointer->get_matrix_size();
 
     complex<double> temp(INFINITE_THRESHOLD,INFINITE_THRESHOLD);
     for(int i=0; i<n; ++i)
         for(int j=0; j<n; ++j)
-            network_Z_matrix.add_entry(i,j,temp);
-    network_Z_matrix.compress_and_merge_duplicate_entries();
+            this_Z_matrix_pointer->add_entry(i,j,temp);
+    this_Z_matrix_pointer->compress_and_merge_duplicate_entries();
 
     int n2 = n+n;
     for(int j=0; j<n; ++j)
@@ -183,22 +220,219 @@ void NETWORK_MATRIX::build_network_Z_matrix()
         for(int i=0; i<n2; ++i)
             I.push_back(0.0);
         I[j]=1.0;
-        vector<double> U = I/jacobian;
-        int k_start = network_Z_matrix.get_starting_index_of_column(j);
+        vector<double> U = I/this_jacobian;
+        int k_start = this_Z_matrix_pointer->get_starting_index_of_column(j);
         for(size_t i=0; i<n; ++i)
         {
             complex<double> z(U[i], U[i+n]);
             if(z!=0.0)
-                network_Z_matrix.change_entry_value(k_start+i, z);
+                this_Z_matrix_pointer->change_entry_value(k_start+i, z);
         }
     }
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_network_Z_matrix()
+void NETWORK_MATRIX::build_sequence_network_Z_matrix()
 {
-    if(network_Z_matrix.get_matrix_size()<2)
-        build_network_Z_matrix();
-    return network_Z_matrix;
+    build_positive_sequence_network_Z_matrix();
+    build_negative_sequence_network_Z_matrix();
+    build_zero_sequence_network_Z_matrix();
+}
+
+void NETWORK_MATRIX::build_positive_sequence_network_Z_matrix()
+{
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+    build_network_Z_matrix_from_this_Y_matrix();
+}
+
+void NETWORK_MATRIX::build_negative_sequence_network_Z_matrix()
+{
+    set_this_Y_and_Z_matrix_as(network_Y2_matrix);
+    build_network_Z_matrix_from_this_Y_matrix();
+}
+
+void NETWORK_MATRIX::build_zero_sequence_network_Z_matrix()
+{
+    set_this_Y_and_Z_matrix_as(network_Y0_matrix);
+    build_network_Z_matrix_from_this_Y_matrix();
+}
+
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_positive_sequence_network_Z_matrix()
+{
+    if(network_Z1_matrix.get_matrix_size()<2)
+        build_positive_sequence_network_Z_matrix();
+    return network_Z1_matrix;
+}
+
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_negative_sequence_network_Z_matrix()
+{
+    if(network_Z2_matrix.get_matrix_size()<2)
+        build_negative_sequence_network_Z_matrix();
+    return network_Z2_matrix;
+}
+
+STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Z_matrix()
+{
+    if(network_Z0_matrix.get_matrix_size()<2)
+        build_zero_sequence_network_Z_matrix();
+    return network_Z0_matrix;
+}
+
+complex<double> NETWORK_MATRIX::get_positive_sequence_self_admittance_of_physical_bus(size_t bus)
+{
+    int b = get_internal_bus_number_of_physical_bus(bus);
+    return network_Y_matrix.get_entry_value(b, b);
+}
+
+complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus)
+{
+    int ib = get_internal_bus_number_of_physical_bus(ibus);
+    int jb = get_internal_bus_number_of_physical_bus(jbus);
+    return network_Y_matrix.get_entry_value(ib, jb);
+}
+
+void NETWORK_MATRIX::set_this_Y_and_Z_matrix_as(STEPS_SPARSE_MATRIX& matrix)
+{
+    this_Y_matrix_pointer = (& matrix);
+    if(this_Y_matrix_pointer == &network_Y1_matrix)
+        this_Z_matrix_pointer = &network_Z1_matrix;
+    else
+    {
+        if(this_Y_matrix_pointer == &network_Y2_matrix)
+            this_Z_matrix_pointer = &network_Z2_matrix;
+        else
+            this_Z_matrix_pointer = &network_Z0_matrix;
+    }
+}
+
+void NETWORK_MATRIX::build_this_jacobian_for_getting_impedance_from_this_Y_matrix()
+{
+    this_jacobian.clear();
+    int n = this_Y_matrix_pointer->get_matrix_size();
+    for(int j=0; j<n; ++j)
+    {
+        int k_start = this_Y_matrix_pointer->get_starting_index_of_column(j);
+        int k_end = this_Y_matrix_pointer->get_starting_index_of_column(j+1);
+        for(int k=k_start; k<k_end; ++k)
+        {
+            int i = this_Y_matrix_pointer->get_row_number_of_entry_index(k);
+            complex<double> y = this_Y_matrix_pointer->get_entry_value(k);
+            double g = y.real(), b= y.imag();
+
+            if(g!=0.0)
+            {
+                this_jacobian.add_entry(i,j,g);
+                this_jacobian.add_entry(i+n,j+n,g);
+            }
+            if(b!=0.0)
+            {
+                this_jacobian.add_entry(i,  j+n, -b);
+                this_jacobian.add_entry(i+n,j,   b);
+            }
+        }
+    }
+    this_jacobian.compress_and_merge_duplicate_entries();
+    this_jacobian.LU_factorization(1, 1e-13);
+}
+
+vector<double> NETWORK_MATRIX::get_impedance_of_column_from_this_Y_matrix(size_t col)
+{
+    build_this_jacobian_for_getting_impedance_from_this_Y_matrix();
+
+    int n = this_Y_matrix_pointer->get_matrix_size();
+    int n2 = n+n;
+    vector<double> I;
+    I.reserve(n2);
+    for(int i=0; i<n2; ++i)
+        I.push_back(0.0);
+    I[col]=1.0;
+    vector<double> Z = I/this_jacobian;
+    return Z;
+}
+
+complex<double> NETWORK_MATRIX::get_self_impedance_of_physical_bus_from_this_Y_matrix(size_t bus)
+{
+    int bus_number = get_internal_bus_number_of_physical_bus(bus);
+
+    vector<double> Z = get_impedance_of_column_from_this_Y_matrix(bus_number);
+    int n = this_Y_matrix_pointer->get_matrix_size();
+    complex<double> z(Z[bus_number], Z[bus_number+n]);
+    return z;
+}
+
+complex<double> NETWORK_MATRIX::get_self_impedance_between_physical_bus_from_this_Y_matrix(size_t ibus, size_t jbus)
+{
+    int ibus_number = get_internal_bus_number_of_physical_bus(ibus);
+    int jbus_number = get_internal_bus_number_of_physical_bus(jbus);
+
+    vector<double> Z = get_impedance_of_column_from_this_Y_matrix(jbus_number);
+    int n = this_Y_matrix_pointer->get_matrix_size();
+    complex<double> z(Z[ibus_number], Z[ibus_number+n]);
+    return z;
+}
+
+complex<double> NETWORK_MATRIX::get_positive_sequence_self_impedance_of_physical_bus(size_t bus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+    return get_self_impedance_of_physical_bus_from_this_Y_matrix(bus);
+}
+
+complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
+    return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
+}
+
+
+complex<double> NETWORK_MATRIX::get_negative_sequence_self_admittance_of_physical_bus(size_t bus)
+{
+    int b = get_internal_bus_number_of_physical_bus(bus);
+    return network_Y2_matrix.get_entry_value(b, b);
+}
+
+complex<double> NETWORK_MATRIX::get_negative_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus)
+{
+    int ib = get_internal_bus_number_of_physical_bus(ibus);
+    int jb = get_internal_bus_number_of_physical_bus(jbus);
+    return network_Y2_matrix.get_entry_value(ib, jb);
+}
+
+complex<double> NETWORK_MATRIX::get_negative_sequence_self_impedance_of_physical_bus(size_t bus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y2_matrix);
+    return get_self_impedance_of_physical_bus_from_this_Y_matrix(bus);
+}
+
+complex<double> NETWORK_MATRIX::get_negative_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y2_matrix);
+    return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
+}
+
+complex<double> NETWORK_MATRIX::get_zero_sequence_self_admittance_of_physical_bus(size_t bus)
+{
+    int b = get_internal_bus_number_of_physical_bus(bus);
+    return network_Y0_matrix.get_entry_value(b, b);
+}
+
+complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y0_matrix);
+
+    int ib = get_internal_bus_number_of_physical_bus(ibus);
+    int jb = get_internal_bus_number_of_physical_bus(jbus);
+    return network_Y0_matrix.get_entry_value(ib, jb);
+}
+
+complex<double> NETWORK_MATRIX::get_zero_sequence_self_impedance_of_physical_bus(size_t bus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y0_matrix);
+    return get_self_impedance_of_physical_bus_from_this_Y_matrix(bus);
+}
+
+complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus)
+{
+    set_this_Y_and_Z_matrix_as(network_Y0_matrix);
+    return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
 }
 
 void NETWORK_MATRIX::add_lines_to_network()
@@ -240,10 +474,10 @@ void NETWORK_MATRIX::add_line_to_network(const LINE& line)
         {
             Y = 1.0/Zline;
 
-            network_Y_matrix.add_entry(i,j, -Y);
-            network_Y_matrix.add_entry(j,i, -Y);
-            network_Y_matrix.add_entry(i,i, Y+0.5*Yline+Yshunt_sending);
-            network_Y_matrix.add_entry(j,j, Y+0.5*Yline+Yshunt_receiving);
+            this_Y_matrix_pointer->add_entry(i,j, -Y);
+            this_Y_matrix_pointer->add_entry(j,i, -Y);
+            this_Y_matrix_pointer->add_entry(i,i, Y+0.5*Yline+Yshunt_sending);
+            this_Y_matrix_pointer->add_entry(j,j, Y+0.5*Yline+Yshunt_receiving);
 
             return;
         }
@@ -253,7 +487,7 @@ void NETWORK_MATRIX::add_line_to_network(const LINE& line)
             Y = 0.5*Yline+Yshunt_receiving;
             Z = Zline + 1.0/Y;
             Y = 1.0/Z + 0.5*Yline+Yshunt_sending;
-            network_Y_matrix.add_entry(i,i, Y);
+            this_Y_matrix_pointer->add_entry(i,i, Y);
             return;
         }
 
@@ -262,7 +496,7 @@ void NETWORK_MATRIX::add_line_to_network(const LINE& line)
             Y = 0.5*Yline+Yshunt_sending;
             Z = Zline + 1.0/Y;
             Y = 1.0/Z + 0.5*Yline+Yshunt_receiving;
-            network_Y_matrix.add_entry(j,j, Y);
+            this_Y_matrix_pointer->add_entry(j,j, Y);
             return;
         }
     }
@@ -357,10 +591,10 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network(const TRANSFORMER& t
             I /= conj(kp);
             yps = I;
 
-            network_Y_matrix.add_entry(p,p,ypp);
-            network_Y_matrix.add_entry(p,s,yps);
-            network_Y_matrix.add_entry(s,p,ysp);
-            network_Y_matrix.add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,s,yps);
+            this_Y_matrix_pointer->add_entry(s,p,ysp);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
 
 
             kp = kp/ steps_fast_complex_abs(kp);
@@ -454,7 +688,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network(const TRANSFORMER& t
             I /= conj(kp);
             ypp = I;
 
-            network_Y_matrix.add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
 
             network_BP_matrix.add_entry(p,p,0.0);
 
@@ -484,7 +718,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network(const TRANSFORMER& t
             I /= conj(ks);
             yss = I;
 
-            network_Y_matrix.add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
 
             network_BP_matrix.add_entry(s,s,0.0);
 
@@ -611,15 +845,15 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
             I /= conj(ks);
             yst = I;
 
-            network_Y_matrix.add_entry(p,p,ypp);
-            network_Y_matrix.add_entry(p,s,yps);
-            network_Y_matrix.add_entry(p,t,ypt);
-            network_Y_matrix.add_entry(s,p,ysp);
-            network_Y_matrix.add_entry(s,s,yss);
-            network_Y_matrix.add_entry(s,t,yst);
-            network_Y_matrix.add_entry(t,p,ytp);
-            network_Y_matrix.add_entry(t,s,yts);
-            network_Y_matrix.add_entry(t,t,ytt);
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,s,yps);
+            this_Y_matrix_pointer->add_entry(p,t,ypt);
+            this_Y_matrix_pointer->add_entry(s,p,ysp);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(s,t,yst);
+            this_Y_matrix_pointer->add_entry(t,p,ytp);
+            this_Y_matrix_pointer->add_entry(t,s,yts);
+            this_Y_matrix_pointer->add_entry(t,t,ytt);
             return;
         }
 
@@ -654,10 +888,10 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
             I /= conj(kp);
             yps = I;
 
-            network_Y_matrix.add_entry(p,p,ypp);
-            network_Y_matrix.add_entry(p,s,yps);
-            network_Y_matrix.add_entry(s,p,ysp);
-            network_Y_matrix.add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,s,yps);
+            this_Y_matrix_pointer->add_entry(s,p,ysp);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
             return;
         }
 
@@ -692,10 +926,10 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
             I /= conj(kp);
             ypt = I;
 
-            network_Y_matrix.add_entry(p,p,ypp);
-            network_Y_matrix.add_entry(p,t,ypt);
-            network_Y_matrix.add_entry(t,p,ytp);
-            network_Y_matrix.add_entry(t,t,ytt);
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,t,ypt);
+            this_Y_matrix_pointer->add_entry(t,p,ytp);
+            this_Y_matrix_pointer->add_entry(t,t,ytt);
             return;
         }
 
@@ -729,10 +963,10 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
             I /= conj(ks);
             yst = I;
 
-            network_Y_matrix.add_entry(s,s,yss);
-            network_Y_matrix.add_entry(s,t,yst);
-            network_Y_matrix.add_entry(t,s,yts);
-            network_Y_matrix.add_entry(t,t,ytt);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(s,t,yst);
+            this_Y_matrix_pointer->add_entry(t,s,yts);
+            this_Y_matrix_pointer->add_entry(t,t,ytt);
             return;
         }
 
@@ -747,7 +981,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
             I /= conj(kp);
             ypp = I;
 
-            network_Y_matrix.add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
             return;
         }
 
@@ -762,7 +996,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
             I /= conj(ks);
             yss = I;
 
-            network_Y_matrix.add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
             return;
         }
 
@@ -777,7 +1011,7 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
             I /= conj(kt);
             ytt = I;
 
-            network_Y_matrix.add_entry(t,t,ytt);
+            this_Y_matrix_pointer->add_entry(t,t,ytt);
             return;
         }
     }
@@ -853,19 +1087,19 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network_v2(const TRANSFORMER
             I /= conj(kp);
             yps = I;
 
-            network_Y_matrix.add_entry(p,p,ypp);
-            network_Y_matrix.add_entry(p,s,yps);
-            network_Y_matrix.add_entry(s,p,ysp);
-            network_Y_matrix.add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(p,p,ypp);
+            this_Y_matrix_pointer->add_entry(p,s,yps);
+            this_Y_matrix_pointer->add_entry(s,p,ysp);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
 
             Ym = Ym_store;
-            network_Y_matrix.add_entry(p,p,Ym);
+            this_Y_matrix_pointer->add_entry(p,p,Ym);
             return;
         }
 
         if(trans.get_winding_breaker_status(PRIMARY_SIDE)==true and trans.get_winding_breaker_status(SECONDARY_SIDE)==false)
         {
-            network_Y_matrix.add_entry(p,p,Ym);
+            this_Y_matrix_pointer->add_entry(p,p,Ym);
             return;
         }
 
@@ -879,7 +1113,7 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network_v2(const TRANSFORMER
             I /= conj(ks);
             yss = I;
 
-            network_Y_matrix.add_entry(s,s,yss);
+            this_Y_matrix_pointer->add_entry(s,s,yss);
             return;
         }
     }
@@ -914,7 +1148,7 @@ void NETWORK_MATRIX::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
 
         complex<double> Yshunt = shunt.get_nominal_admittance_shunt_in_pu();
 
-        network_Y_matrix.add_entry(i,i, Yshunt);
+        this_Y_matrix_pointer->add_entry(i,i, Yshunt);
     }
 }
 
@@ -1006,7 +1240,7 @@ void NETWORK_MATRIX::add_line_to_decoupled_network(const LINE& line)
             Y = 0.5*Yline+Yshunt_sending;
             Z = Zline + 1.0/Y;
             Y = 1.0/Z + 0.5*Yline+Yshunt_receiving;
-            network_Y_matrix.add_entry(j,j, Y);
+            this_Y_matrix_pointer->add_entry(j,j, Y);
 
             network_BQ_matrix.add_entry(j,j, Y);
             return;
@@ -2021,7 +2255,7 @@ void NETWORK_MATRIX::add_bus_fault_to_dynamic_network()
                 FAULT fault = bus->get_fault();
                 complex<double> y = fault.get_fault_shunt_in_pu();
                 size_t j = inphno.get_internal_bus_number_of_physical_bus_number(bus->get_bus_number());
-                network_Y_matrix.add_entry(j,j, y);
+                this_Y_matrix_pointer->add_entry(j,j, y);
             }
         }
     }
@@ -2129,7 +2363,7 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
                 }
                 Y = Y+Yshunt_sending;
                 I = V*Y;
-                network_Y_matrix.add_entry(i,i, I);
+                this_Y_matrix_pointer->add_entry(i,i, I);
                 Y = Yshunt_sending;
                 I = I-V*Y;
                 for(size_t k=0; k!=n; ++k)
@@ -2147,8 +2381,8 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
                         I = I - V*yfault;
                     }
                 }
-                network_Y_matrix.add_entry(j,i, -I);
-                network_Y_matrix.add_entry(i,j, -I);
+                this_Y_matrix_pointer->add_entry(j,i, -I);
+                this_Y_matrix_pointer->add_entry(i,j, -I);
 
                 V = 1.0; // source at receiving side, sending side shorted
 
@@ -2168,7 +2402,7 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
                 }
                 Y = Y+Yshunt_receiving;
                 I = V*Y;
-                network_Y_matrix.add_entry(j,j, I);
+                this_Y_matrix_pointer->add_entry(j,j, I);
                 return;
             }
 
@@ -2193,7 +2427,7 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
                 }
                 Y = Y+Yshunt_sending;
                 I = V*Y;
-                network_Y_matrix.add_entry(i,i, I);
+                this_Y_matrix_pointer->add_entry(i,i, I);
                 return;
             }
 
@@ -2219,7 +2453,7 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
                 }
                 Y = Y+Yshunt_receiving;
                 I = V*Y;
-                network_Y_matrix.add_entry(j,j, I);
+                this_Y_matrix_pointer->add_entry(j,j, I);
                 return;
             }
         }
@@ -2253,7 +2487,7 @@ void NETWORK_MATRIX::add_generator_to_dynamic_network(const GENERATOR& gen)
 
         size_t bus = gen.get_generator_bus();
         size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
-        network_Y_matrix.add_entry(i,i,1.0/Z);
+        this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
     }
 }
 
@@ -2287,7 +2521,7 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
 
                 size_t bus = gen.get_generator_bus();
                 size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
-                network_Y_matrix.add_entry(i,i,1.0/Z);
+                this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
             }
             //else // is current source
             //    return;
@@ -2576,7 +2810,7 @@ size_t NETWORK_MATRIX::get_physical_bus_number_of_internal_bus(size_t bus) const
     return inphno.get_physical_bus_number_of_internal_bus_number(bus);
 }
 
-void NETWORK_MATRIX::report_network_matrix() const
+void NETWORK_MATRIX::report_network_matrix()
 {
     ostringstream osstream;
 
@@ -2584,6 +2818,7 @@ void NETWORK_MATRIX::report_network_matrix() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
+    set_this_Y_and_Z_matrix_as(network_Y_matrix);
     report_network_matrix_common();
 }
 
@@ -2674,7 +2909,7 @@ void NETWORK_MATRIX::report_dc_network_matrix() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-void NETWORK_MATRIX::report_dynamic_network_matrix() const
+void NETWORK_MATRIX::report_dynamic_network_matrix()
 {
     ostringstream osstream;
 
@@ -2682,6 +2917,7 @@ void NETWORK_MATRIX::report_dynamic_network_matrix() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
+    set_this_Y_and_Z_matrix_as(network_Y1_matrix);
 	report_network_matrix_common();
 }
 
@@ -2694,17 +2930,17 @@ void NETWORK_MATRIX::report_network_matrix_common() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     size_t i, ibus, jbus;
-    size_t n = network_Y_matrix.get_matrix_size();
+    size_t n = this_Y_matrix_pointer->get_matrix_size();
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> y;
     for(size_t j=0; j!=n; ++j)
     {
-        k_ending = network_Y_matrix.get_starting_index_of_column(j+1);
+        k_ending = this_Y_matrix_pointer->get_starting_index_of_column(j+1);
         for(int k=k_starting; k!=k_ending; ++k)
         {
-            y = network_Y_matrix.get_entry_value(k);
-            i = network_Y_matrix.get_row_number_of_entry_index(k);
+            y = this_Y_matrix_pointer->get_entry_value(k);
+            i = this_Y_matrix_pointer->get_row_number_of_entry_index(k);
             ibus = get_physical_bus_number_of_internal_bus(i);
             jbus = get_physical_bus_number_of_internal_bus(j);
 
@@ -2723,7 +2959,7 @@ void NETWORK_MATRIX::report_network_matrix_common() const
 }
 
 
-void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename) const
+void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename)
 {
     ostringstream osstream;
 
@@ -2731,6 +2967,7 @@ void NETWORK_MATRIX::save_network_Y_matrix_to_file(const string& filename) const
     ofstream file(filename);
     if(file.is_open())
     {
+        set_this_Y_and_Z_matrix_as(network_Y_matrix);
         save_network_matrix_common(file);
         file.close();
     }
@@ -2831,7 +3068,7 @@ void NETWORK_MATRIX::save_dc_network_B_matrix_to_file(const string& filename) co
     }
 }
 
-void NETWORK_MATRIX::save_dynamic_network_Y_matrix_to_file(const string& filename) const
+void NETWORK_MATRIX::save_dynamic_network_Y_matrix_to_file(const string& filename)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -2839,6 +3076,7 @@ void NETWORK_MATRIX::save_dynamic_network_Y_matrix_to_file(const string& filenam
     ofstream file(filename);
     if(file.is_open())
     {
+        set_this_Y_and_Z_matrix_as(network_Y1_matrix);
         save_network_matrix_common(file);
         file.close();
     }
@@ -2856,18 +3094,18 @@ void NETWORK_MATRIX::save_network_matrix_common(ofstream& file) const
     file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
 
     size_t i, ibus, jbus;
-    size_t n = network_Y_matrix.get_matrix_size();
+    size_t n = this_Y_matrix_pointer->get_matrix_size();
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> y;
     char buffer[1000];
     for(size_t j=0; j!=n; ++j)
     {
-        k_ending = network_Y_matrix.get_starting_index_of_column(j+1);
+        k_ending = this_Y_matrix_pointer->get_starting_index_of_column(j+1);
         for(int k=k_starting; k!=k_ending; ++k)
         {
-            y = network_Y_matrix.get_entry_value(k);
-            i = network_Y_matrix.get_row_number_of_entry_index(k);
+            y = this_Y_matrix_pointer->get_entry_value(k);
+            i = this_Y_matrix_pointer->get_row_number_of_entry_index(k);
             ibus = get_physical_bus_number_of_internal_bus(i);
             jbus = get_physical_bus_number_of_internal_bus(j);
 
@@ -2893,18 +3131,18 @@ void NETWORK_MATRIX::save_network_Z_matrix_to_file(const string& filename) const
         file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
 
         size_t i, ibus, jbus;
-        size_t n = network_Z_matrix.get_matrix_size();
+        size_t n = network_Z1_matrix.get_matrix_size();
         int k_starting, k_ending;
         k_starting = 0;
         complex<double> z;
         char buffer[1000];
         for(size_t j=0; j!=n; ++j)
         {
-            k_ending = network_Z_matrix.get_starting_index_of_column(j+1);
+            k_ending = network_Z1_matrix.get_starting_index_of_column(j+1);
             for(int k=k_starting; k!=k_ending; ++k)
             {
-                z = network_Z_matrix.get_entry_value(k);
-                i = network_Z_matrix.get_row_number_of_entry_index(k);
+                z = network_Z1_matrix.get_entry_value(k);
+                i = network_Z1_matrix.get_row_number_of_entry_index(k);
                 ibus = get_physical_bus_number_of_internal_bus(i);
                 jbus = get_physical_bus_number_of_internal_bus(j);
 
