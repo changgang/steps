@@ -1039,8 +1039,8 @@ complex<double> TRANSFORMER::get_two_winding_trans_star_bus_complex_voltage_in_p
 
             complex<double> Y = get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
 
-            complex<double> V_primary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
-            complex<double> V_secondary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+            complex<double> V_primary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+            complex<double> V_secondary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
 
             double tap_primary = get_primary_winding_off_nominal_turn_ratio_in_pu();
             double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
@@ -1101,9 +1101,9 @@ complex<double> TRANSFORMER::get_three_winding_trans_star_bus_complex_voltage_in
 
             complex<double> Y = get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
 
-            complex<double> V_primary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
-            complex<double> V_secondary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
-            complex<double> V_tertiary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
+            complex<double> V_primary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+            complex<double> V_secondary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+            complex<double> V_tertiary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
 
             double tap_primary = get_primary_winding_off_nominal_turn_ratio_in_pu();
             double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
@@ -1262,7 +1262,7 @@ complex<double> TRANSFORMER::get_two_winding_trans_primary_winding_complex_curre
 
         complex<double> k_primary(tap_primary*cos(angle_primary),tap_primary*sin(angle_primary));
 
-        complex<double> V_primary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+        complex<double> V_primary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
 
         complex<double> Vp = V_primary/k_primary;
 
@@ -1294,7 +1294,7 @@ complex<double> TRANSFORMER::get_two_winding_trans_secondary_winding_complex_cur
 
         complex<double> k_secondary(tap_secondary*cos(angle_secondary),tap_secondary*sin(angle_secondary));
 
-        complex<double> V_secondary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+        complex<double> V_secondary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
 
         complex<double> Vs = V_secondary/k_secondary;
 
@@ -1322,7 +1322,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_primary_winding_complex_cur
 
         complex<double> Zp = 0.5*(Zps_original+Zpt_original-Zst_original);
 
-        complex<double> V_primary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+        complex<double> V_primary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
 
         double tap_primary = get_primary_winding_off_nominal_turn_ratio_in_pu();
         double angle_primary = get_winding_angle_shift_in_deg(PRIMARY_SIDE);
@@ -1356,7 +1356,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_secondary_winding_complex_c
 
         complex<double> Zs = 0.5*(Zps_original+Zst_original-Zpt_original);
 
-        complex<double> V_secondary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+        complex<double> V_secondary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
 
         double tap_secondary = get_secondary_winding_off_nominal_turn_ratio_in_pu();
         double angle_secondary = get_winding_angle_shift_in_deg(SECONDARY_SIDE);
@@ -1390,7 +1390,7 @@ complex<double> TRANSFORMER::get_three_winding_trans_tertiary_winding_complex_cu
 
         complex<double> Zt = 0.5*(Zpt_original+Zst_original-Zps_original);
 
-        complex<double> V_tertiary = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
+        complex<double> V_tertiary = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
 
         double tap_tertiary = get_tertiary_winding_off_nominal_turn_ratio_in_pu();
         double angle_tertiary = get_winding_angle_shift_in_deg(TERTIARY_SIDE);
@@ -1498,7 +1498,7 @@ complex<double> TRANSFORMER::get_primary_winding_complex_power_in_pu() const
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         complex<double> V, I;
-        V = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
+        V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(PRIMARY_SIDE));
         I = get_primary_winding_complex_current_in_pu();
         return V*conj(I);
     }
@@ -1515,7 +1515,7 @@ complex<double> TRANSFORMER::get_secondary_winding_complex_power_in_pu() const
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         complex<double> V, I;
-        V = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
+        V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(SECONDARY_SIDE));
         I = get_secondary_winding_complex_current_in_pu();
         return V*conj(I);
     }
@@ -1532,7 +1532,7 @@ complex<double> TRANSFORMER::get_tertiary_winding_complex_power_in_pu() const
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         complex<double> V, I;
-        V = psdb.get_bus_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
+        V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_winding_bus(TERTIARY_SIDE));
         I = get_tertiary_winding_complex_current_in_pu();
         return V*conj(I);
     }

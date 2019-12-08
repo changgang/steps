@@ -61,7 +61,7 @@ void PV_CONVERTER_MODEL_TEST::test_get_terminal_complex_voltage_in_pu()
     PV_CONVERTER_MODEL* model = get_test_pv_converter_model();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     size_t bus = pv_unit->get_unit_bus();
-    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb.get_bus_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
 }
 
 void PV_CONVERTER_MODEL_TEST::test_get_number_of_lumped_pv_units()

@@ -555,13 +555,10 @@ complex<double> ESTR0::get_terminal_complex_current_in_pu_based_on_sbase() const
     double mbase = get_mbase_in_MVA();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return I*(mbase*one_over_sbase);
 }
-
-
 
 complex<double> ESTR0::get_terminal_complex_current_in_kA() const
 {

@@ -63,7 +63,7 @@ void WT_GENERATOR_MODEL_TEST::test_get_terminal_complex_voltage_in_pu()
     WT_GENERATOR_MODEL* model = get_test_wt_generator_model();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     size_t bus = wt_gen->get_generator_bus();
-    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb.get_bus_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(model->get_terminal_complex_voltage_in_pu()-psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus))<FLOAT_EPSILON);
 }
 
 void WT_GENERATOR_MODEL_TEST::test_get_number_of_lumped_wt_generators()

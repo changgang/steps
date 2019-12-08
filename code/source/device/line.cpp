@@ -642,28 +642,28 @@ complex<double> LINE::get_line_complex_voltage_at_sending_side_in_pu() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.get_bus_complex_voltage_in_pu(get_sending_side_bus());
+    return psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_sending_side_bus());
 }
 
 complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_pu() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.get_bus_complex_voltage_in_pu(get_receiving_side_bus());
+    return psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_receiving_side_bus());
 }
 
 complex<double> LINE::get_line_complex_voltage_at_sending_side_in_kV() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.get_bus_complex_voltage_in_kV(get_sending_side_bus());
+    return psdb.get_bus_positive_sequence_complex_voltage_in_kV(get_sending_side_bus());
 }
 
 complex<double> LINE::get_line_complex_voltage_at_receiving_side_in_kV() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    return psdb.get_bus_complex_voltage_in_kV(get_receiving_side_bus());
+    return psdb.get_bus_positive_sequence_complex_voltage_in_kV(get_receiving_side_bus());
 }
 
 complex<double> LINE::get_line_complex_current_at_sending_side_in_pu() const
@@ -791,9 +791,7 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_p
 complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     if(get_sending_side_breaker_status()==true)
     {
@@ -808,9 +806,7 @@ complex<double> LINE::get_line_complex_apparent_impedance_at_sending_side_in_ohm
 complex<double> LINE::get_line_complex_apparent_impedance_at_receiving_side_in_ohm() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     if(get_receiving_side_breaker_status()==true)
     {

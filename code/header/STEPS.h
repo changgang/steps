@@ -62,6 +62,9 @@ class STEPS
         DYNAMICS_SIMULATOR& get_dynamic_simulator();
         NETWORK_MATRIX& get_network_matrix();
 
+        double get_system_base_power_in_MVA() const;
+        double get_one_over_system_base_power_in_one_over_MVA() const;
+
         void set_dynamic_simulation_time_step_in_s(double delt);
         double get_dynamic_simulation_time_step_in_s();
         void set_dynamic_simulation_time_in_s(double time);

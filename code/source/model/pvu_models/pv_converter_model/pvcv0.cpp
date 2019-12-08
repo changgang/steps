@@ -459,8 +459,7 @@ void PVCV0::run(DYNAMIC_MODE mode)
 complex<double> PVCV0::get_source_Norton_equivalent_complex_current_in_pu_in_xy_axis_based_on_sbase()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = get_mbase_in_MVA();
 
     complex<double> Vxy = get_terminal_complex_voltage_in_pu();

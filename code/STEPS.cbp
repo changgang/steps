@@ -178,6 +178,8 @@
 		<Unit filename="header/model/hvdc_model/hvdc_models.h" />
 		<Unit filename="header/model/hvdc_model/vdcol.h" />
 		<Unit filename="header/model/hvdc_model/vdcol_test.h" />
+		<Unit filename="header/model/load_model/CIM6.h" />
+		<Unit filename="header/model/load_model/CIM6_test.h" />
 		<Unit filename="header/model/load_model/IEEL.h" />
 		<Unit filename="header/model/load_model/IEEL_test.h" />
 		<Unit filename="header/model/load_model/MOTOR.h" />
@@ -552,6 +554,8 @@
 		<Unit filename="source/model/hvdc_model/hvdc_model_test.cpp" />
 		<Unit filename="source/model/hvdc_model/vdcol.cpp" />
 		<Unit filename="source/model/hvdc_model/vdcol_test.cpp" />
+		<Unit filename="source/model/load_model/CIM6.cpp" />
+		<Unit filename="source/model/load_model/CIM6_test.cpp" />
 		<Unit filename="source/model/load_model/IEEL.cpp" />
 		<Unit filename="source/model/load_model/IEEL_test.cpp" />
 		<Unit filename="source/model/load_model/load_model.cpp" />

@@ -293,6 +293,11 @@ bool IEEL::setup_model_with_bpa_string(string data)
     return false;
 }
 
+complex<double> IEEL::get_dynamic_source_admittance_in_pu_based_on_SBASE()
+{
+    return 0.0;
+}
+
 void IEEL::setup_block_toolkit_and_parameters()
 {
     ;
@@ -381,6 +386,17 @@ complex<double> IEEL::get_load_power_in_MVA()
 
     return complex<double>(P,Q);
 }
+
+complex<double> IEEL::get_load_current_in_pu_based_on_SBASE()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+
+    complex<double> S = get_load_power_in_MVA();
+    complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
+    return conj(S*one_over_sbase/V);
+}
+
 void IEEL::check()
 {
     ;

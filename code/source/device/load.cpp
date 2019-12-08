@@ -618,7 +618,7 @@ complex<double> LOAD::get_dynamic_load_in_MVA()
 complex<double> LOAD::get_dynamic_load_in_pu()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double one_over_sbase = toolkit.get_power_system_database().get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return get_dynamic_load_in_MVA()*one_over_sbase;
 }
@@ -662,17 +662,26 @@ complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power
 {
     if(get_status()==true)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double scale = 1.0+get_load_total_scale_factor_in_pu();
+
+        LOAD_MODEL* load_model = get_load_model();
+        if(load_model!=NULL)
+            return scale*(load_model->get_load_current_in_pu_based_on_SBASE());
+        else
+        {
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+            double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+            complex<double> V = get_bus_pointer()->get_positive_sequence_complex_voltage_in_pu();
+            return (scale*one_over_sbase)*conj(get_actual_total_load_in_MVA()/V);
+        }
+        /*STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         complex<double> S = get_dynamic_load_in_pu();
 
-        complex<double> V = psdb.get_bus_complex_voltage_in_pu(get_load_bus());
+        complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_load_bus());
 
-        return conj(S/V);
+        return conj(S/V);*/
     }
     else
         return 0.0;
 }
-
-
-

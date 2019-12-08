@@ -77,7 +77,7 @@ void PSASPVC_TEST::test_initialize()
     model->initialize();
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    complex<double> V = psdb.get_bus_complex_voltage_in_pu(1);
+    complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(1);
     complex<double> I = genmodel->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
 
     double ecomp = steps_fast_complex_abs(V - 0.1*I*complex<double>(0,1.0));

@@ -1499,7 +1499,7 @@ void STEPS_IMEXPORTER::add_transformer_impedance_admittance_data(TRANSFORMER& tr
     double g = trans.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu().real();
     double b = trans.get_magnetizing_admittance_based_on_primary_winding_bus_base_voltage_and_system_base_power_in_pu().imag();
 
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double vbase, sbase;
 
     double r = 0.0, x = 0.0, s = 0.0;

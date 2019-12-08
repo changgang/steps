@@ -5706,25 +5706,6 @@ void POWER_SYSTEM_DATABASE::calibrate_generators_pmax_and_pmin_with_turbine_gove
     }
 }
 
-complex<double> POWER_SYSTEM_DATABASE::get_bus_complex_voltage_in_pu(size_t bus)
-{
-    BUS* busptr = get_bus(bus);
-    if(busptr!=NULL)
-        return busptr->get_positive_sequence_complex_voltage_in_pu();
-    else
-        return 0.0;
-
-}
-
-complex<double> POWER_SYSTEM_DATABASE::get_bus_complex_voltage_in_kV(size_t bus)
-{
-    BUS* busptr = get_bus(bus);
-    if(busptr!=NULL)
-        return busptr->get_positive_sequence_complex_voltage_in_kV();
-    else
-        return 0.0;
-}
-
 BUS_TYPE POWER_SYSTEM_DATABASE::get_bus_type(size_t bus)
 {
     BUS* busptr = get_bus(bus);
@@ -5784,6 +5765,23 @@ double POWER_SYSTEM_DATABASE::get_bus_positive_sequence_angle_in_rad(size_t bus)
         return 0.0;
 }
 
+complex<double> POWER_SYSTEM_DATABASE::get_bus_positive_sequence_complex_voltage_in_pu(size_t bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_positive_sequence_complex_voltage_in_pu();
+    else
+        return 0.0;
+}
+
+complex<double> POWER_SYSTEM_DATABASE::get_bus_positive_sequence_complex_voltage_in_kV(size_t bus)
+{
+    BUS* busptr = get_bus(bus);
+    if(busptr!=NULL)
+        return busptr->get_positive_sequence_complex_voltage_in_kV();
+    else
+        return 0.0;
+}
 
 double POWER_SYSTEM_DATABASE::get_bus_frequency_deviation_in_pu(size_t bus)
 {

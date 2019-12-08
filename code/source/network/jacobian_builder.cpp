@@ -415,7 +415,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
-        complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
+        complex<double> Vi = psdb.get_bus_positive_sequence_complex_voltage_in_pu(IBUS), Vj;
         complex<double> y;
         double g, b;
         double Vim, Vjm, anglei, anglej, dangle;
@@ -431,7 +431,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
             if(y!=0.0)
             {
                 JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-                Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
+                Vj = psdb.get_bus_positive_sequence_complex_voltage_in_pu(JBUS);
                 Vjm = steps_fast_complex_abs(Vj);
                 anglej = steps_fast_complex_arg(Vj);
                 g = y.real();
@@ -452,7 +452,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
                 if(y!=0.0 and ibus != jbus)
                 {
                     JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-                    Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
+                    Vj = psdb.get_bus_positive_sequence_complex_voltage_in_pu(JBUS);
                     Vjm = steps_fast_complex_abs(Vj);
                     anglej = steps_fast_complex_arg(Vj);
                     g = y.real();
@@ -480,7 +480,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
-        complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
+        complex<double> Vi = psdb.get_bus_positive_sequence_complex_voltage_in_pu(IBUS), Vj;
         complex<double> y;
         double g, b;
         double Vim, Vjm, anglei, anglej, dangle;
@@ -496,7 +496,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
             if(y!=0.0)
             {
                 JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-                Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
+                Vj = psdb.get_bus_positive_sequence_complex_voltage_in_pu(JBUS);
                 Vjm = steps_fast_complex_abs(Vj);
                 anglej = steps_fast_complex_arg(Vj);
                 g = y.real();
@@ -517,7 +517,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
                 if(y!=0.0)
                 {
                     JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-                    Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
+                    Vj = psdb.get_bus_positive_sequence_complex_voltage_in_pu(JBUS);
                     Vjm = steps_fast_complex_abs(Vj);
                     anglej = steps_fast_complex_arg(Vj);
                     g = y.real();
@@ -548,7 +548,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
-        complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
+        complex<double> Vi = psdb.get_bus_positive_sequence_complex_voltage_in_pu(IBUS), Vj;
         complex<double> y;
         double g, b;
         double Vim, Vjm, anglei, anglej, dangle;
@@ -564,7 +564,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
             if(y!=0.0)
             {
                 JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-                Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
+                Vj = psdb.get_bus_positive_sequence_complex_voltage_in_pu(JBUS);
                 Vjm = steps_fast_complex_abs(Vj);
                 anglej = steps_fast_complex_arg(Vj);
                 g = y.real();
@@ -585,7 +585,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
                 if(y!=0.0 and ibus != jbus)
                 {
                     JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-                    Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
+                    Vj = psdb.get_bus_positive_sequence_complex_voltage_in_pu(JBUS);
                     Vjm = steps_fast_complex_abs(Vj);
                     anglej = steps_fast_complex_arg(Vj);
                     g = y.real();
@@ -613,7 +613,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
-        complex<double> Vi = psdb.get_bus_complex_voltage_in_pu(IBUS), Vj;
+        complex<double> Vi = psdb.get_bus_positive_sequence_complex_voltage_in_pu(IBUS), Vj;
         complex<double> y;
         double g, b;
         double Vim, Vjm, anglei, anglej, dangle;
@@ -629,7 +629,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
             if(y!=0.0)
             {
                 JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-                Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
+                Vj = psdb.get_bus_positive_sequence_complex_voltage_in_pu(JBUS);
                 Vjm = steps_fast_complex_abs(Vj);
                 anglej = steps_fast_complex_arg(Vj);
                 g = y.real();
@@ -650,7 +650,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
                 if(y!=0.0)
                 {
                     JBUS = nw_db->get_physical_bus_number_of_internal_bus(jbus);
-                    Vj = psdb.get_bus_complex_voltage_in_pu(JBUS);
+                    Vj = psdb.get_bus_positive_sequence_complex_voltage_in_pu(JBUS);
                     Vjm = steps_fast_complex_abs(Vj);
                     anglej = steps_fast_complex_arg(Vj);
                     g = y.real();

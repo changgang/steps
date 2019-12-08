@@ -223,14 +223,13 @@ complex<double> GENCLS::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Z(get_Rs(), get_Xdp());
     double mbase = get_mbase_in_MVA();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     complex<double> I = Exy/Z*(mbase*one_over_sbase);
     if(isnan(I.real()) or isnan(I.imag()))
     {
         ostringstream osstream;
         osstream<<"NAN is detected when getting Norton current of GENCLS model of "<<get_generator_pointer()->get_device_name()<<endl
-                <<"Exy = "<<Exy<<", Z = "<<Z<<", mbase="<<mbase<<", sbase="<<psdb.get_system_base_power_in_MVA();
+                <<"Exy = "<<Exy<<", Z = "<<Z<<", mbase="<<mbase<<", sbase="<<toolkit.get_system_base_power_in_MVA();
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
 
@@ -262,8 +261,7 @@ complex<double> GENCLS::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
     double mbase = get_mbase_in_MVA();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return Ixy*(mbase*one_over_sbase);
 }
@@ -279,8 +277,7 @@ double GENCLS::get_terminal_current_in_pu_based_on_sbase()
     double mbase = get_mbase_in_MVA();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return I*(mbase*one_over_sbase);
 }

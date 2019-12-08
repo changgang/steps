@@ -21,23 +21,27 @@ class LOAD_MODEL : public MODEL
         virtual string get_model_type() const;
         // common inputs
         double get_bus_positive_sequence_voltage_in_pu() const;
+        complex<double> get_bus_positive_sequence_complex_voltage_in_pu() const;
         double get_bus_frequency_deviation_in_pu() const;
+        double get_bus_base_frequency_in_Hz() const;
         // common scale
         void set_subsystem_type(SUBSYSTEM_TYPE subtype);
         SUBSYSTEM_TYPE get_subsystem_type() const;
         string get_detailed_model_name() const;
     public: // specific model level
         virtual string get_model_name() const = 0;
-
         virtual bool setup_model_with_steps_string_vector(vector<string>& data) = 0;
         virtual bool setup_model_with_psse_string(string data) = 0;
         virtual bool setup_model_with_bpa_string(string data) = 0;
 
         virtual void setup_block_toolkit_and_parameters() = 0;
 
+        virtual complex<double> get_dynamic_source_admittance_in_pu_based_on_SBASE() = 0;
+
         virtual void initialize() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual complex<double> get_load_power_in_MVA() = 0;
+        virtual complex<double> get_load_current_in_pu_based_on_SBASE() = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;

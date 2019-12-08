@@ -360,7 +360,7 @@ void PSASPE2::initialize()
                 //this->Vt0 = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
                 this->Vt0 = get_terminal_voltage_in_pu();
 
-                //complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
+                //complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
                 complex<double> Vt = get_terminal_complex_voltage_in_pu();
                 //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
                 complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
@@ -450,7 +450,7 @@ double PSASPE2::get_excitation_voltage_in_pu()
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             size_t bus = generator->get_generator_bus();
-            complex<double> Vt = psdb.get_bus_complex_voltage_in_pu(bus);
+            complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
             //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
             complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
             double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();

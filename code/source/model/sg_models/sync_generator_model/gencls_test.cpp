@@ -77,7 +77,7 @@ void GENCLS_TEST::test_initialize_and_get_initialized_inputs()
     GENERATOR* genptr = get_test_generator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    complex<double> V=psdb.get_bus_complex_voltage_in_pu(1);
+    complex<double> V=psdb.get_bus_positive_sequence_complex_voltage_in_pu(1);
 
     SYNC_GENERATOR_MODEL* model = (GENCLS*) get_test_sync_generator_model();
 

@@ -421,7 +421,7 @@ void POWERFLOW_SOLVER::solve_with_fast_decoupled_solution()
             //for(size_t i=0; i<internal_P_equation_buses.size(); ++i)
             //{
             //    cout<<bus_delta_angle[i]<<endl;
-            //    //bus_delta_angle[i] /= abs(psdb.get_bus_complex_voltage_in_pu(network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
+            //    //bus_delta_angle[i] /= abs(psdb.get_bus_positive_sequence_complex_voltage_in_pu(network_matrix.get_physical_bus_number_of_internal_bus(internal_P_equation_buses[i])));
             //}
             update_bus_angle(bus_delta_angle);
 
@@ -935,7 +935,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_power_into_network()
     for(size_t i=0; i<nbus; ++i)
     {
         //physical_bus_number = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        //voltage = psdb.get_bus_complex_voltage_in_pu(physical_bus_number);
+        //voltage = psdb.get_bus_positive_sequence_complex_voltage_in_pu(physical_bus_number);
         complex<double> voltage = get_bus_complex_voltage_in_pu_with_internal_bus_number(i);
 
         bus_power[i] = voltage*conj(bus_current[i]);
@@ -993,7 +993,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
     for(int column=0; column!=nsize; ++column)
     {
         //column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(column);
-        //voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
+        //voltage = psdb.get_bus_positive_sequence_complex_voltage_in_pu(column_physical_bus);
         complex<double> voltage = get_bus_complex_voltage_in_pu_with_internal_bus_number(column);
 
         int k_end = Y.get_starting_index_of_column(column+1);
@@ -1010,12 +1010,9 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
 void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
-
-    //vector<SOURCE*> sources = psdb.get_all_sources();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     size_t nsource = sources.size();
 
@@ -1029,7 +1026,6 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
         {
             size_t physical_bus = sources[i]->get_source_bus();
 
-            //BUS* busptr = psdb.get_bus(physical_bus);
             BUS* busptr = sources[i]->get_bus_pointer();
 
             complex<double> Sgen;
@@ -1054,10 +1050,9 @@ void POWERFLOW_SOLVER::add_source_to_bus_power_mismatch()
 void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     size_t nload = loads.size();
 
@@ -1082,12 +1077,9 @@ void POWERFLOW_SOLVER::add_load_to_bus_power_mismatch()
 void POWERFLOW_SOLVER::add_hvdc_to_bus_power_mismatch()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
-
-    //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     size_t nhvdc = hvdcs.size();
 

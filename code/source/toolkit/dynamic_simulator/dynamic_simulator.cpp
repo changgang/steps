@@ -2665,7 +2665,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
             busmax = net.get_physical_bus_number_of_internal_bus(i);
         }
     }
-    osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<" or complex "<<cmaxmismatch<<", complex power = "<<psdb.get_bus_complex_voltage_in_pu(busmax)*conj(cmaxmismatch)*psdb.get_system_base_power_in_MVA()<<setprecision(10)<<", v="<<psdb.get_bus_positive_sequence_voltage_in_pu(busmax)<<endl;
+    osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<" or complex "<<cmaxmismatch<<", complex power = "<<psdb.get_bus_positive_sequence_complex_voltage_in_pu(busmax)*conj(cmaxmismatch)*psdb.get_system_base_power_in_MVA()<<setprecision(10)<<", v="<<psdb.get_bus_positive_sequence_voltage_in_pu(busmax)<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     for(size_t i=0; i<n; ++i)
@@ -2709,7 +2709,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     int k_start = Y.get_starting_index_of_column(0);
     for(int column=0; column<nsize; ++column)
     {
-		//complex<double> voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
+		//complex<double> voltage = psdb.get_bus_positive_sequence_complex_voltage_in_pu(column_physical_bus);
 		complex<double> voltage = get_bus_complex_voltage_in_pu_with_internal_bus_number(column);
 
         int k_end = Y.get_starting_index_of_column(column+1);
@@ -2750,7 +2750,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     for(size_t i=0; i!=nbus; ++i)Warning. Network solution converged in
     {
         column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
-        voltage = psdb.get_bus_complex_voltage_in_pu(column_physical_bus);
+        voltage = psdb.get_bus_positive_sequence_complex_voltage_in_pu(column_physical_bus);
         s = voltage*conj(bus_current[i]);
 
         osstream<<"%-8u %-10f %-10f %-10f %-10f",column_physical_bus, bus_current[i].real(), bus_current[i].imag(), s.real(), s.imag());
@@ -2946,7 +2946,7 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
                 I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
                 I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
                 osstream<<"Current at rectifier side of "<<hvdc->get_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
-                        <<"Complex power = "<<SQRT3*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                        <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
 
@@ -2966,7 +2966,7 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
                 I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(INVERTER);
                 I *= (psdb.get_system_base_power_in_MVA()/(SQRT3*psdb.get_bus_base_voltage_in_kV(physical_bus)));
                 osstream<<"Current at inverter side of "<<hvdc->get_device_name()<<": "<<I<<"kA or "<<abs(I)<<"kA"<<endl
-                        <<"Complex power = "<<SQRT3*psdb.get_bus_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
+                        <<"Complex power = "<<SQRT3*psdb.get_bus_positive_sequence_complex_voltage_in_kV(physical_bus)*conj(I)<<" MVA";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
         }
@@ -2976,10 +2976,9 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
 void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     size_t nedevice = e_devices.size();
 
@@ -2994,7 +2993,6 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
             complex<double> S = e_devices[i]->get_total_equivalent_power_as_load_in_MVA()*one_over_sbase;
 
-            //V = psdb.get_bus_complex_voltage_in_pu(physical_bus);
             complex<double> V = get_bus_complex_voltage_in_pu_with_internal_bus_number(internal_bus);
 
             I_mismatch[internal_bus] -= conj(S/V);
@@ -3166,7 +3164,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, const 
     double fault_b = fault.get_fault_shunt_in_pu().imag();
     double current_voltage = busptr->get_positive_sequence_voltage_in_pu();
     double vbase = busptr->get_base_voltage_in_kV();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double zbase = vbase*vbase*one_over_sbase;
     double fault_x = -zbase/fault_b;
     if(fault_x<1)

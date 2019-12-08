@@ -441,8 +441,6 @@ class POWER_SYSTEM_DATABASE : public BASE
         void calibrate_sources_pmax_and_pmin_with_dynamic_model();
         void calibrate_generators_pmax_and_pmin_with_turbine_governor_model();
 
-        complex<double> get_bus_complex_voltage_in_pu(size_t bus);
-        complex<double> get_bus_complex_voltage_in_kV(size_t bus);
         BUS_TYPE get_bus_type(size_t bus);
         double get_bus_base_frequency_in_Hz(size_t bus);
         double get_bus_base_voltage_in_kV(size_t bus);
@@ -450,6 +448,8 @@ class POWER_SYSTEM_DATABASE : public BASE
         double get_bus_positive_sequence_voltage_in_kV(size_t bus);
         double get_bus_positive_sequence_angle_in_deg(size_t bus);
         double get_bus_positive_sequence_angle_in_rad(size_t bus);
+        complex<double> get_bus_positive_sequence_complex_voltage_in_pu(size_t bus);
+        complex<double> get_bus_positive_sequence_complex_voltage_in_kV(size_t bus);
         double get_bus_frequency_deviation_in_pu(size_t bus);
         double get_bus_frequency_deviation_in_Hz(size_t bus);
         double get_bus_frequency_in_Hz(size_t bus);

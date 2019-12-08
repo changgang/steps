@@ -1382,8 +1382,8 @@ void HVDC::show_solved_hvdc_steady_state() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double sbase = toolkit.get_system_base_power_in_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     ostringstream osstream;
     osstream<<"Solved steady state of HVDC '"<<get_name()<<"':";
@@ -1444,7 +1444,7 @@ void HVDC::show_solved_hvdc_steady_state() const
     double P = get_converter_ac_active_power_in_MW(converter);
     double Q = get_converter_ac_reactive_power_in_MVar(converter);
     complex<double> S(P,Q);
-    complex<double> V = psdb.get_bus_complex_voltage_in_pu(get_converter_bus(converter));
+    complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_converter_bus(converter));
     S *=  one_over_sbase;
     complex<double> I = conj(S/V);
     I *= (sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_converter_bus(converter))));
@@ -1507,7 +1507,7 @@ void HVDC::show_solved_hvdc_steady_state() const
     P = get_converter_ac_active_power_in_MW(converter);
     Q = get_converter_ac_reactive_power_in_MVar(converter);
     S = complex<double>(P,Q);
-    V = psdb.get_bus_complex_voltage_in_pu(get_converter_bus(converter));
+    V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(get_converter_bus(converter));
     S *=  one_over_sbase;
     I = conj(S/V);
     I *= (sbase/(SQRT3*psdb.get_bus_base_voltage_in_kV(get_converter_bus(converter))));

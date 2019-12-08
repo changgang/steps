@@ -361,8 +361,7 @@ complex<double> GENSAL::get_source_Norton_equivalent_complex_current_in_pu_in_xy
     complex<double> Z(get_Rs(), get_Xpp());
     double mbase = get_mbase_in_MVA();
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return Exy/Z*(mbase*one_over_sbase);
 }
@@ -395,8 +394,7 @@ complex<double> GENSAL::get_terminal_complex_current_in_pu_in_xy_axis_based_on_s
     double mbase = get_mbase_in_MVA();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return Ixy*(mbase*one_over_sbase);
 }
@@ -412,8 +410,7 @@ double GENSAL::get_terminal_current_in_pu_based_on_sbase()
     double mbase = get_mbase_in_MVA();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return I*(mbase*one_over_sbase);
 }

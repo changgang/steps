@@ -85,7 +85,7 @@ void GENROU_TEST::test_initialize_and_get_initialized_inputs()
 
     SYNC_GENERATOR_MODEL* model = (GENROU*) get_test_sync_generator_model();
 
-    complex<double> V=psdb.get_bus_complex_voltage_in_pu(1);
+    complex<double> V=psdb.get_bus_positive_sequence_complex_voltage_in_pu(1);
 
     complex<double> Z=genptr->get_source_impedance_in_pu();
     complex<double> S(genptr->get_p_generation_in_MW(), genptr->get_q_generation_in_MVar());

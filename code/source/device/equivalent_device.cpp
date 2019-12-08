@@ -181,7 +181,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_generation_in_MVA() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = get_equivalent_device_bus();
-    complex<double> V = psdb.get_bus_complex_voltage_in_pu(bus);
+    complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
 
     complex<double> I = (E-V)/Z;
 
@@ -209,21 +209,21 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_MVA() const
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_power_load_in_pu() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double one_over_sbase = toolkit.get_power_system_database().get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return equivalent_load_s_constant_power_in_MVA*one_over_sbase;
 }
 
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_current_load_in_pu() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double one_over_sbase = toolkit.get_power_system_database().get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return equivalent_load_s_constant_current_in_MVA*one_over_sbase;
 }
 
 complex<double> EQUIVALENT_DEVICE::get_equivalent_nominal_constant_impedance_load_in_pu() const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double one_over_sbase = toolkit.get_power_system_database().get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     return equivalent_load_s_constant_impedance_in_MVA*one_over_sbase;
 }
 
@@ -240,8 +240,7 @@ complex<double> EQUIVALENT_DEVICE::get_total_equivalent_power_as_load_in_pu() co
         S -= get_equivalent_generation_in_MVA();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-   POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return S*one_over_sbase;
 }
@@ -257,11 +256,11 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_generation_in_pu() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     size_t bus = get_equivalent_device_bus();
-    complex<double> V = psdb.get_bus_complex_voltage_in_pu(bus);
+    complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
 
     complex<double> I = (E-V)/Z;
 
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return V*conj(I)*one_over_sbase;
 }
@@ -280,7 +279,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_pu() const
     size_t bus = get_equivalent_device_bus();
     double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
 
-    double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
     return (SP+SI*V+SZ*V*V)*one_over_sbase;
 }

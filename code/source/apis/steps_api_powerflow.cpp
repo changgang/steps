@@ -43,17 +43,16 @@ double api_get_powerflow_solver_float_parameter(char* parameter_name, size_t too
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWERFLOW_SOLVER& solver = toolkit.get_powerflow_solver();
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string PARAMETER_NAME = string2upper(parameter_name);
     if(PARAMETER_NAME=="MAX ACTIVE POWER IMBALANCE IN MW")
         return solver.get_allowed_max_active_power_imbalance_in_MW();
     if(PARAMETER_NAME=="MAX ACTIVE POWER IMBALANCE IN PU")
-        return solver.get_allowed_max_active_power_imbalance_in_MW()*psdb.get_one_over_system_base_power_in_one_over_MVA();
+        return solver.get_allowed_max_active_power_imbalance_in_MW()*toolkit.get_one_over_system_base_power_in_one_over_MVA();
     if(PARAMETER_NAME=="MAX REACTIVE POWER IMBALANCE IN MVAR")
         return solver.get_allowed_max_reactive_power_imbalance_in_MVar();
     if(PARAMETER_NAME=="MAX REACTIVE POWER IMBALANCE IN PU")
-        return solver.get_allowed_max_reactive_power_imbalance_in_MVar()*psdb.get_one_over_system_base_power_in_one_over_MVA();
+        return solver.get_allowed_max_reactive_power_imbalance_in_MVar()*toolkit.get_one_over_system_base_power_in_one_over_MVA();
     if(PARAMETER_NAME=="ITERATION ACCELERATOR")
         return solver.get_iteration_accelerator();
     if(PARAMETER_NAME=="MAX VOLTAGE CHANGE IN PU")

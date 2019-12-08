@@ -12,7 +12,9 @@ LOAD_MODEL_TEST::LOAD_MODEL_TEST()
     TEST_ADD(LOAD_MODEL_TEST::test_get_model_name);
     TEST_ADD(LOAD_MODEL_TEST::test_get_detailed_model_name);
     TEST_ADD(LOAD_MODEL_TEST::test_get_bus_voltage);
+    TEST_ADD(LOAD_MODEL_TEST::test_get_bus_complex_voltage);
     TEST_ADD(LOAD_MODEL_TEST::test_get_bus_frequency_deviation);
+    TEST_ADD(LOAD_MODEL_TEST::test_get_bus_base_frequency);
     TEST_ADD(LOAD_MODEL_TEST::test_set_get_subsystem_type);
     TEST_ADD(LOAD_MODEL_TEST::test_initialize);
     TEST_ADD(LOAD_MODEL_TEST::test_run_voltage_ramp_response);
@@ -93,6 +95,17 @@ void LOAD_MODEL_TEST::test_get_bus_voltage()
     TEST_ASSERT(fabs(model->get_bus_positive_sequence_voltage_in_pu() - psdb.get_bus_positive_sequence_voltage_in_pu(1))<FLOAT_EPSILON);
 }
 
+void LOAD_MODEL_TEST::test_get_bus_complex_voltage()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"LOAD_MODEL_TEST");
+
+    LOAD* load = get_load();
+    LOAD_MODEL* model = load->get_load_model();
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    TEST_ASSERT(abs(model->get_bus_positive_sequence_complex_voltage_in_pu() - psdb.get_bus_positive_sequence_complex_voltage_in_pu(1))<FLOAT_EPSILON);
+}
+
 void LOAD_MODEL_TEST::test_get_bus_frequency_deviation()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"LOAD_MODEL_TEST");
@@ -102,6 +115,23 @@ void LOAD_MODEL_TEST::test_get_bus_frequency_deviation()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu() - psdb.get_bus_frequency_deviation_in_pu(1))<FLOAT_EPSILON);
+}
+
+void LOAD_MODEL_TEST::test_get_bus_base_frequency()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"LOAD_MODEL_TEST");
+
+    LOAD* load = get_load();
+    LOAD_MODEL* model = load->get_load_model();
+    BUS* bus = load->get_bus_pointer();
+
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+
+    bus->set_base_frequency_in_Hz(50.0);
+    TEST_ASSERT(fabs(model->get_bus_base_frequency_in_Hz() - psdb.get_bus_base_frequency_in_Hz(1))<FLOAT_EPSILON);
+
+    bus->set_base_frequency_in_Hz(60.0);
+    TEST_ASSERT(fabs(model->get_bus_base_frequency_in_Hz() - psdb.get_bus_base_frequency_in_Hz(1))<FLOAT_EPSILON);
 }
 
 void LOAD_MODEL_TEST::test_set_get_subsystem_type()

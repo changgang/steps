@@ -1126,7 +1126,7 @@ double METER::get_meter_value_as_a_generator() const
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
             double sbase = psdb.get_system_base_power_in_MVA();
-            double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+            double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
             double one_over_mbase = generator->get_one_over_mbase_in_one_over_MVA();
             double mbase = generator->get_mbase_in_MVA();
 
@@ -1463,7 +1463,7 @@ double METER::get_meter_value_as_a_wt_generator() const
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
-            double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+            double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
             double one_over_mbase = generator->get_one_over_mbase_in_one_over_MVA();
             double mbase = generator->get_mbase_in_MVA();
 
@@ -1847,7 +1847,7 @@ double METER::get_meter_value_as_a_pv_unit() const
             size_t bus = pv_unit->get_unit_bus();
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            double one_over_sbase = psdb.get_one_over_system_base_power_in_one_over_MVA();
+            double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
             double mbase = pv_unit->get_mbase_in_MVA();
 
             PV_CONVERTER_MODEL* converter_model = pv_unit->get_pv_converter_model();

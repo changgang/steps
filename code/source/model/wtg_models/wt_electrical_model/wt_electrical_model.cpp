@@ -52,7 +52,7 @@ complex<double> WT_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() co
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
         size_t bus = gen->get_generator_bus();
-        return psdb.get_bus_complex_voltage_in_pu(bus);
+        return psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
     }
     else
         return 0.0;
