@@ -433,6 +433,11 @@ void LOAD::set_load_model(const LOAD_MODEL* model)
             IEEL* smodel = (IEEL*) (model);
             new_model = (LOAD_MODEL*) new IEEL(*smodel);
         }
+        if(model_name=="CIM6")
+        {
+            CIM6* smodel = (CIM6*) (model);
+            new_model = (LOAD_MODEL*) new CIM6(*smodel);
+        }
 
         if(new_model!=NULL)
         {

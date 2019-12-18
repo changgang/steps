@@ -2173,11 +2173,9 @@ void DYNAMICS_SIMULATOR::update()
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    //clock_t start = clock();
+
     update_equivalent_devices_buffer();
     run_all_models(UPDATE_MODE);
-    //cout<<"    elapsed time for update: "<<double(clock()-start)/CLOCKS_PER_SEC*1000.0<<" ms"<<endl;
-    //start = clock();
 
     bool network_converged = false;
 
@@ -4266,6 +4264,7 @@ void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
             if(load->get_status()==false)
             {
                 load->set_status(true);
+                load->get_load_model()->initialize_to_start();
 
                 //network_matrix.build_dynamic_network_Y_matrix();
                 //build_jacobian();

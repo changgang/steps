@@ -19,7 +19,21 @@ void CIM6_TEST::setup()
     CIM6 model;
     model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
-    model.set_Ra_in_pu(0.5);
+    model.set_motor_type(1);
+    model.set_Ra_in_pu(0.01);
+    model.set_Xa_in_pu(0.09);
+    model.set_Xm_in_pu(4.2);
+    model.set_R1_in_pu(0.035);
+    model.set_X1_in_pu(0.09);
+    model.set_R2_in_pu(0.0);
+    model.set_X2_in_pu(0.0);
+    model.set_Mbase_in_MVA(0.0);
+    model.set_Pmult(1.5);
+    model.set_H_in_s(1.5);
+    model.set_A(0.0);
+    model.set_B(0.1);
+    model.set_C(1.0);
+    model.set_D(0.0);
 
     LOAD* load = get_load();
     load->set_model(&model);
@@ -70,9 +84,85 @@ void CIM6_TEST::test_set_get_parameters()
     LOAD* load = get_load();
     CIM6* model = (CIM6*) load->get_load_model();
 
+    model->set_motor_type(1);
+    TEST_ASSERT(model->get_motor_type()==1);
+    model->set_motor_type(2);
+    TEST_ASSERT(model->get_motor_type()==2);
+
     model->set_Ra_in_pu(0.5);
     TEST_ASSERT(fabs(model->get_Ra_in_pu()-0.5)<FLOAT_EPSILON);
+    model->set_Ra_in_pu(1.0);
+    TEST_ASSERT(fabs(model->get_Ra_in_pu()-1.0)<FLOAT_EPSILON);
 
+    model->set_Xa_in_pu(0.5);
+    TEST_ASSERT(fabs(model->get_Xa_in_pu()-0.5)<FLOAT_EPSILON);
+    model->set_Xa_in_pu(1.0);
+    TEST_ASSERT(fabs(model->get_Xa_in_pu()-1.0)<FLOAT_EPSILON);
+
+    model->set_Xm_in_pu(0.5);
+    TEST_ASSERT(fabs(model->get_Xm_in_pu()-0.5)<FLOAT_EPSILON);
+    model->set_Xm_in_pu(1.0);
+    TEST_ASSERT(fabs(model->get_Xm_in_pu()-1.0)<FLOAT_EPSILON);
+
+    model->set_R1_in_pu(0.5);
+    TEST_ASSERT(fabs(model->get_R1_in_pu()-0.5)<FLOAT_EPSILON);
+    model->set_R1_in_pu(1.0);
+    TEST_ASSERT(fabs(model->get_R1_in_pu()-1.0)<FLOAT_EPSILON);
+
+    model->set_X1_in_pu(0.5);
+    TEST_ASSERT(fabs(model->get_X1_in_pu()-0.5)<FLOAT_EPSILON);
+    model->set_X1_in_pu(1.0);
+    TEST_ASSERT(fabs(model->get_X1_in_pu()-1.0)<FLOAT_EPSILON);
+
+    model->set_R2_in_pu(0.5);
+    TEST_ASSERT(fabs(model->get_R2_in_pu()-0.5)<FLOAT_EPSILON);
+    model->set_R2_in_pu(1.0);
+    TEST_ASSERT(fabs(model->get_R2_in_pu()-1.0)<FLOAT_EPSILON);
+
+    model->set_X2_in_pu(0.5);
+    TEST_ASSERT(fabs(model->get_X2_in_pu()-0.5)<FLOAT_EPSILON);
+    model->set_X2_in_pu(1.0);
+    TEST_ASSERT(fabs(model->get_X2_in_pu()-1.0)<FLOAT_EPSILON);
+
+    model->set_Mbase_in_MVA(0.5);
+    TEST_ASSERT(fabs(model->get_Mbase_in_MVA()-0.5)<FLOAT_EPSILON);
+    model->set_Mbase_in_MVA(1.0);
+    TEST_ASSERT(fabs(model->get_Mbase_in_MVA()-1.0)<FLOAT_EPSILON);
+
+    model->set_Pmult(0.5);
+    TEST_ASSERT(fabs(model->get_Pmult()-0.5)<FLOAT_EPSILON);
+    model->set_Pmult(1.0);
+    TEST_ASSERT(fabs(model->get_Pmult()-1.0)<FLOAT_EPSILON);
+
+    model->set_H_in_s(0.5);
+    TEST_ASSERT(fabs(model->get_H_in_s()-0.5)<FLOAT_EPSILON);
+    model->set_H_in_s(1.0);
+    TEST_ASSERT(fabs(model->get_H_in_s()-1.0)<FLOAT_EPSILON);
+
+    model->set_A(0.5);
+    TEST_ASSERT(fabs(model->get_A()-0.5)<FLOAT_EPSILON);
+    model->set_A(1.0);
+    TEST_ASSERT(fabs(model->get_A()-1.0)<FLOAT_EPSILON);
+
+    model->set_B(0.5);
+    TEST_ASSERT(fabs(model->get_B()-0.5)<FLOAT_EPSILON);
+    model->set_B(1.0);
+    TEST_ASSERT(fabs(model->get_B()-1.0)<FLOAT_EPSILON);
+
+    model->set_C(0.5);
+    TEST_ASSERT(fabs(model->get_C()-0.5)<FLOAT_EPSILON);
+    model->set_C(1.0);
+    TEST_ASSERT(fabs(model->get_C()-1.0)<FLOAT_EPSILON);
+
+    model->set_D(0.5);
+    TEST_ASSERT(fabs(model->get_D()-0.5)<FLOAT_EPSILON);
+    model->set_D(1.0);
+    TEST_ASSERT(fabs(model->get_D()-1.0)<FLOAT_EPSILON);
+
+    model->set_E(0.5);
+    TEST_ASSERT(fabs(model->get_E()-0.5)<FLOAT_EPSILON);
+    model->set_E(1.0);
+    TEST_ASSERT(fabs(model->get_E()-1.0)<FLOAT_EPSILON);
 }
 
 

@@ -21,6 +21,7 @@ class LOAD_MODEL : public MODEL
         virtual string get_model_type() const;
         // common inputs
         double get_bus_positive_sequence_voltage_in_pu() const;
+        double get_bus_positive_sequence_voltage_in_kV() const;
         complex<double> get_bus_positive_sequence_complex_voltage_in_pu() const;
         double get_bus_frequency_deviation_in_pu() const;
         double get_bus_base_frequency_in_Hz() const;
@@ -39,6 +40,7 @@ class LOAD_MODEL : public MODEL
         virtual complex<double> get_dynamic_source_admittance_in_pu_based_on_SBASE() = 0;
 
         virtual void initialize() = 0;
+        virtual void initialize_to_start() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual complex<double> get_load_power_in_MVA() = 0;
         virtual complex<double> get_load_current_in_pu_based_on_SBASE() = 0;

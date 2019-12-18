@@ -2,6 +2,10 @@
 #include "header/basic/utility.h"
 #include "header/STEPS.h"
 #include <cstdio>
+#include <iostream>
+
+class STEPS_SPARSE_MATRIX;
+using namespace std;
 CIM6::CIM6()
 {
     clear();
@@ -17,6 +21,7 @@ void CIM6::clear()
     prepare_model_data_table();
     prepare_model_internal_variable_table();
     saturation.set_saturation_type(QUADRATIC_SATURATION_TYPE);
+    set_Mbase_in_MVA(0.0);
 }
 
 void CIM6::copy_from_const_model(const CIM6& model)
@@ -317,6 +322,15 @@ double CIM6::get_Tnom_in_pu() const
     return Tnominal;
 }
 
+double CIM6::get_slip_in_pu()
+{
+    return speed_block.get_output()-get_bus_frequency_deviation_in_pu();
+}
+
+double CIM6::get_slip_in_Hz()
+{
+    return get_slip_in_pu()*W0;
+}
 
 bool CIM6::setup_model_with_steps_string_vector(vector<string>& data)
 {
@@ -443,26 +457,25 @@ void CIM6::setup_block_toolkit_and_parameters()
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     speed_block.set_toolkit(toolkit);
-    angle_block.set_toolkit(toolkit);
-    transient_block_d_axis.set_toolkit(toolkit);
-    subtransient_block_d_axis.set_toolkit(toolkit);
-    transient_block_q_axis.set_toolkit(toolkit);
-    subtransient_block_q_axis.set_toolkit(toolkit);
-
+    transient_block_x_axis.set_toolkit(toolkit);
+    subtransient_block_x_axis.set_toolkit(toolkit);
+    transient_block_y_axis.set_toolkit(toolkit);
+    subtransient_block_y_axis.set_toolkit(toolkit);
     saturation.set_saturation_type(QUADRATIC_SATURATION_TYPE);
 
-    transient_block_d_axis.set_T_in_s(Tp);
-    transient_block_q_axis.set_T_in_s(Tp);
+    transient_block_x_axis.set_T_in_s(Tp);
+    transient_block_y_axis.set_T_in_s(Tp);
     if(not is_single_cage)
     {
-        subtransient_block_d_axis.set_T_in_s(Tpp);
-        subtransient_block_q_axis.set_T_in_s(Tpp);
+        subtransient_block_x_axis.set_T_in_s(Tpp);
+        subtransient_block_y_axis.set_T_in_s(Tpp);
     }
+    speed_block.set_T_in_s(2.0*get_H_in_s());
 }
 
 void CIM6::setup_model_dynamic_parameters()
 {
-    if(get_R2_in_pu()==0.0 or get_X2_in_pu()==0.0)// single cage
+    if(get_R2_in_pu()==0.0 or get_X2_in_pu()==0.0)
         is_single_cage = true;
     else
         is_single_cage = false;
@@ -503,6 +516,7 @@ void CIM6::setup_model_dynamic_parameters()
             Xp_minum_Xleakage = Xp-Xleakage;
             Xp_minum_Xpp = Xp-Xpp;
             Xp_minum_Xpp_over_Xp_minum_Xleakage = Xp_minum_Xpp/Xp_minum_Xleakage;
+            Xp_minum_Xpp_over_Xp_minum_Xleakage_square = Xp_minum_Xpp_over_Xp_minum_Xleakage/Xp_minum_Xleakage;
         }
         else
         {
@@ -520,6 +534,7 @@ void CIM6::setup_model_dynamic_parameters()
             Xp_minum_Xleakage = Xp-Xleakage;
             Xp_minum_Xpp = Xp-Xpp;
             Xp_minum_Xpp_over_Xp_minum_Xleakage = Xp_minum_Xpp/Xp_minum_Xleakage;
+            Xp_minum_Xpp_over_Xp_minum_Xleakage_square = Xp_minum_Xpp_over_Xp_minum_Xleakage/Xp_minum_Xleakage;
         }
     }
 
@@ -531,23 +546,128 @@ void CIM6::setup_model_dynamic_parameters()
 
 void CIM6::initialize()
 {
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double sbase = toolkit.get_system_base_power_in_MVA();
+
     setup_block_toolkit_and_parameters();
 
     LOAD* load = get_load_pointer();
 
-    complex<double> S = load->get_actual_total_load_in_MVA();
-    double V = get_bus_positive_sequence_voltage_in_pu();
+    // treat model as generating power
+    complex<double> S = -load->get_actual_total_load_in_MVA()/Mbase;
+    double Pload0 = S.real(), Qload0 = S.imag();
+    complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
+    double Vr = V.real(), Vi = V.imag();
 
-    complex<double> I = conj(S/(Mbase*V));
-    complex<double> Esource = V-I*Zsource;
+    complex<double> I = conj(S/V); // guess
+    complex<double> Esource = V+I*Zsource;
 
+    double R = Zsource.real(), X = Zsource.imag();
     complex<double> Ep, Epp;
-
+    size_t n_iteration = 0;
     if(is_single_cage)
-        Ep = Esource;
+    {
+        // five vars to solve
+        double Erp = Esource.real(), Eip = Esource.imag();
+        double Ir = I.real(), Ii = I.imag();
+        double slip = 0.0;
+
+        vector<double> Error;
+        Error.reserve(5);
+        while(true)
+        {
+            ++n_iteration;
+
+            Error.clear();
+            Error.push_back(-Erp+Xs_minum_Xp*Ii-Eip*Tp*slip); // x-axis dEr'/dt=0
+            Error.push_back(-Eip-Xs_minum_Xp*Ir+Erp*Tp*slip); // y-axis dEi'/dt=0
+            Error.push_back((Erp-Vr)*R+(Eip-Vi)*X-(R*R+X*X)*Ir); // x-axis current Ir
+            Error.push_back((Eip-Vi)*R-(Erp-Vr)*X-(R*R+X*X)*Ii); // y-axis current Ii
+            Error.push_back(Erp*Ir+Eip*Ii-R*(Ir*Ir+Ii*Ii)-Pload0); // active power balance
+
+            double maxerror = 0.0;
+            for(size_t i=0; i<5; ++i)
+            {
+                if(maxerror<fabs(Error[i]))
+                    maxerror = fabs(Error[i]);
+            }
+            if(maxerror<FLOAT_EPSILON or n_iteration>20)
+            {
+                double speed = slip/W0;
+                speed_block.set_output(speed);
+                speed_block.initialize();
+
+                Esource = complex<double>(Erp, Eip);
+                I = complex<double>(Ir, Ii);
+                complex<double> Smotor = Esource*conj(I);
+                double pelec = Smotor.real();
+                speed = 1.0+speed;
+                double temp = get_A()*speed*speed +
+                              get_B()*speed +
+                              get_C() +
+                              get_D()*pow(speed, get_E());
+                initial_load_torque = -pelec/(speed*temp);
+
+                complex<double> S = V*conj(I);
+                double Qshunt = Qload0-S.imag();
+                nominal_shunt_in_MVar = Qshunt/(abs(V)*abs(V))*Mbase;
+
+                Ep = Esource;
+
+                if(n_iteration>20)
+                {
+                    ostringstream osstream;
+                    osstream<<"Warning. Fail to initialize CIM6 model of "<<get_device_name()<<" in 20 iterations.\n"
+                            <<"Max error is "<<maxerror<<" with the best estimation:\n"
+                            <<"(1) Er\' ="<<Erp<<"\n"
+                            <<"(2) Ei\' ="<<Eip<<"\n"
+                            <<"(3) Ir  ="<<Ir<<"\n"
+                            <<"(4) Ii  ="<<Ii<<"\n"
+                            <<"(5) slip="<<slip/W0<<"\n"
+                            <<"(6) Q0  ="<<nominal_shunt_in_MVar<<" MVar";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+
+                break;
+            }
+            STEPS_SPARSE_MATRIX J;
+
+            J.add_entry(0,0, -1);
+            J.add_entry(0,1, -Tp*slip);
+            J.add_entry(0,3, Xs_minum_Xp);
+            J.add_entry(0,4, -Eip*Tp);
+
+            J.add_entry(1,0, Tp*slip);
+            J.add_entry(1,1, -1);
+            J.add_entry(1,2, -Xs_minum_Xp);
+            J.add_entry(1,4, Erp*Tp);
+
+            J.add_entry(2,0, R);
+            J.add_entry(2,1, X);
+            J.add_entry(2,2, -(R*R+X*X));
+
+            J.add_entry(3,0, -X);
+            J.add_entry(3,1, R);
+            J.add_entry(3,3, -(R*R+X*X));
+
+            J.add_entry(4,0, Ir);
+            J.add_entry(4,1, Ii);
+            J.add_entry(4,2, Erp-2*R*Ir);
+            J.add_entry(4,3, Eip-2*R*Ii);
+
+            J.compress_and_merge_duplicate_entries();
+
+            vector<double> update = Error/J;
+
+            Erp -= update[0];
+            Eip -= update[1];
+            Ir  -= update[2];
+            Ii  -= update[3];
+            slip-= update[4];
+        }
+    }
     else
     {
-        complex<double> Fpp = Esource*complex<double>(0, 1);
         double speed = speed_block.get_output();
         double A = -W0*speed*Tpp;
         complex<double> complex_1_A(1.0, A);
@@ -557,19 +677,138 @@ void CIM6::initialize()
         Epp = (Ep-unit_imag*I*Xp_minum_Xleakage)/complex_1_A;
     }
 
-    transient_block_d_axis.set_output(Ep.real());
-    transient_block_q_axis.set_output(Ep.imag());
+    transient_block_x_axis.set_output(Ep.real());
+    transient_block_x_axis.initialize();
+    transient_block_y_axis.set_output(Ep.imag());
+    transient_block_y_axis.initialize();
     if(not is_single_cage)
     {
-        subtransient_block_d_axis.set_output(Epp.real());
-        subtransient_block_q_axis.set_output(Epp.imag());
+        subtransient_block_x_axis.set_output(Epp.real());
+        subtransient_block_x_axis.initialize();
+        subtransient_block_y_axis.set_output(Epp.imag());
+        subtransient_block_y_axis.initialize();
     }
-
     set_flag_model_initialized_as_true();
+}
+
+void CIM6::initialize_to_start()
+{
+    if(not is_model_initialized())
+    {
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        double sbase = toolkit.get_system_base_power_in_MVA();
+
+        setup_block_toolkit_and_parameters();
+
+        LOAD* load = get_load_pointer();
+
+        complex<double> Ep, Epp;
+
+        transient_block_x_axis.set_output(Ep.real());
+        transient_block_x_axis.initialize();
+        transient_block_y_axis.set_output(Ep.imag());
+        transient_block_y_axis.initialize();
+
+        subtransient_block_x_axis.set_output(Epp.real());
+        subtransient_block_x_axis.initialize();
+        subtransient_block_y_axis.set_output(Epp.imag());
+        subtransient_block_y_axis.initialize();
+
+        speed_block.set_output(-1);
+        speed_block.initialize();
+
+        initial_load_torque = get_Tnom_in_pu();
+        nominal_shunt_in_MVar = 0.0;
+
+        set_flag_model_initialized_as_true();
+    }
 }
 
 void CIM6::run(DYNAMIC_MODE mode)
 {
+    double Pelec = 0.0;
+    double slip = get_slip_in_Hz();
+    complex<double> Vterm = get_bus_positive_sequence_complex_voltage_in_pu();
+    if(is_single_cage)
+    {
+
+        complex<double> Ep = get_internal_voltage_in_pu();
+        complex<double> I = (Ep-Vterm)/Zsource;
+
+        double Epr = transient_block_x_axis.get_output();
+        double Epi = transient_block_y_axis.get_output();
+
+        double input = 0.0;
+        // x-axis
+        input = -Epi*Tp*slip - Epr + Xs_minum_Xp*I.imag();
+        transient_block_x_axis.set_input(input);
+        transient_block_x_axis.run(mode);
+        // y-axis
+        input = Epr*Tp*slip - Epi - Xs_minum_Xp*I.real();
+        transient_block_y_axis.set_input(input);
+        transient_block_y_axis.run(mode);
+
+        Ep = get_internal_voltage_in_pu();
+        I = (Ep-Vterm)/Zsource;
+        complex<double> S = Ep*conj(I);
+        Pelec = S.real();
+    }
+    else
+    {
+        complex<double> Epp = get_internal_voltage_in_pu();
+        complex<double> I = (Epp-Vterm)/Zsource;
+
+        double Epr = transient_block_x_axis.get_output();
+        double Epi = transient_block_y_axis.get_output();
+        double Ekr = subtransient_block_x_axis.get_output();
+        double Eki = subtransient_block_y_axis.get_output();
+
+        double EppMag = abs(Epp);
+        double sat = saturation.get_saturation(EppMag);
+
+        double input = 0.0, temp = 0.0;
+        // x-axis
+        temp = I.imag()*Xp_minum_Xleakage+Epr-Ekr;
+
+        input = Epp.imag()/EppMag*sat -
+                Epi*Tp*slip -
+                Epr +
+                Xs_minum_Xp*(I.imag()-Xp_minum_Xpp_over_Xp_minum_Xleakage_square*temp);
+        transient_block_x_axis.set_input(input);
+        transient_block_x_axis.run(mode);
+
+        input = temp - Eki*Tpp*slip;
+        subtransient_block_x_axis.set_input(input);
+        subtransient_block_x_axis.run(mode);
+        // y-axis
+        temp = -I.real()*Xp_minum_Xleakage+Epi-Eki;
+
+        input = -Epp.real()/EppMag*sat +
+                Epr*Tp*slip -
+                Epi -
+                Xs_minum_Xp*(I.real()+Xp_minum_Xpp_over_Xp_minum_Xleakage_square*temp);
+        transient_block_y_axis.set_input(input);
+        transient_block_y_axis.run(mode);
+
+        input = temp + Ekr*Tpp*slip;
+        subtransient_block_y_axis.set_input(input);
+        subtransient_block_y_axis.run(mode);
+
+        Epp = get_internal_voltage_in_pu();
+        I = (Epp-Vterm)/Zsource;
+        complex<double> S = Epp*conj(I);
+        Pelec = S.real();
+    }
+
+    double speed = 1.0+speed_block.get_output();
+    double temp = get_A()*speed*speed +
+                  get_B()*speed +
+                  get_C() +
+                  get_D()*pow(speed, get_E());
+    double Tload = initial_load_torque*temp;
+    speed_block.set_input(-Pelec/speed - Tload);
+    speed_block.run(mode);
+
     if(mode==UPDATE_MODE)
         set_flag_model_updated_as_true();
 }
@@ -578,18 +817,29 @@ complex<double> CIM6::get_load_power_in_MVA()
 {
     complex<double> E = get_internal_voltage_in_pu();
     complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
-    return -V*conj((E-V)/Zsource)*Mbase;
+    complex<double> I = (E-V)/Zsource;
+    double V2 = abs(V)*abs(V);
+
+    complex<double> Smotor = V*conj(I)*Mbase;
+    complex<double> Sload = Smotor + complex<double>(0.0, nominal_shunt_in_MVar*V2);
+    return -Sload;
 }
 
 complex<double> CIM6::get_internal_voltage_in_pu() const
 {
     if(is_single_cage)
     {
-        return 0.0;
+        double Erp = transient_block_x_axis.get_output();
+        double Eip = transient_block_y_axis.get_output();
+        return complex<double>(Erp, Eip);
     }
     else
     {
-        return 0.0;
+        double Erpp = subtransient_block_x_axis.get_output()*Xp_minum_Xpp_over_Xp_minum_Xleakage+
+                      transient_block_x_axis.get_output()*(1.0-Xp_minum_Xpp_over_Xp_minum_Xleakage);
+        double Eipp = subtransient_block_y_axis.get_output()*Xp_minum_Xpp_over_Xp_minum_Xleakage+
+                      transient_block_y_axis.get_output()*(1.0-Xp_minum_Xpp_over_Xp_minum_Xleakage);
+        return complex<double>(Erpp, Eipp);
     }
 }
 
@@ -598,10 +848,10 @@ complex<double> CIM6::get_load_current_in_pu_based_on_SBASE()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
-    complex<double> E = get_internal_voltage_in_pu();
-    complex<double> I = E/Zsource;
+    complex<double> S = get_load_power_in_MVA()*one_over_sbase;
+    complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
 
-    return -I*(Mbase*one_over_sbase);
+    return conj(S/V);
 }
 
 void CIM6::check()
@@ -808,8 +1058,17 @@ void CIM6::prepare_model_internal_variable_table()
 
     add_model_inernal_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
     add_model_inernal_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;
-    add_model_inernal_variable_name_and_index_pair("INITIAL ACTIVE POWER LOAD IN MW", i); i++;
-    add_model_inernal_variable_name_and_index_pair("INITIAL REACTIVE POWER LOAD IN MVAR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("MOTOR ACTIVE POWER LOAD IN MW", i); i++;
+    add_model_inernal_variable_name_and_index_pair("MOTOR REACTIVE POWER LOAD IN MVAR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("SHUNT REACTIVE POWER LOAD IN MVAR", i); i++;
+    add_model_inernal_variable_name_and_index_pair("TOTAL CURRENT IN KA", i); i++;
+    add_model_inernal_variable_name_and_index_pair("MOTOR CURRENT IN KA", i); i++;
+    add_model_inernal_variable_name_and_index_pair("MOTOR SPEED DEVIATION IN PU", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TRANSIENT BLOCK OF X AXIS", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@TRANSIENT BLOCK OF Y AXIS", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SUBTRANSIENT BLOCK OF X AXIS", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SUBTRANSIENT BLOCK OF Y AXIS", i); i++;
+    add_model_inernal_variable_name_and_index_pair("STATE@SPEED BLOCK", i); i++;
 }
 
 double CIM6::get_model_internal_variable_with_name(string var_name)
@@ -819,10 +1078,50 @@ double CIM6::get_model_internal_variable_with_name(string var_name)
         return get_load_power_in_MVA().real();
     if(var_name == "TOTAL REACTIVE POWER LOAD IN MVAR")
         return get_load_power_in_MVA().imag();
-    if(var_name == "INITIAL ACTIVE POWER LOAD IN MW")
-        return get_initial_load_power_in_MVA().real();
-    if(var_name == "INITIAL REACTIVE POWER LOAD IN MVAR")
-        return get_initial_load_power_in_MVA().imag();
+    if(var_name == "MOTOR ACTIVE POWER LOAD IN MW")
+        return get_load_power_in_MVA().real();
+    if(var_name == "MOTOR REACTIVE POWER LOAD IN MVAR")
+    {
+        complex<double> E = get_internal_voltage_in_pu();
+        complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
+        complex<double> I = (E-V)/Zsource;
+        complex<double> S = V*conj(I)*Mbase;
+        return -S.imag();
+    }
+    if(var_name == "SHUNT REACTIVE POWER LOAD IN MVAR")
+    {
+        double V = get_bus_positive_sequence_voltage_in_pu();
+        double V2 = V*V;
+        double Q = nominal_shunt_in_MVar*V2;
+        return -Q;
+    }
+    if(var_name == "TOTAL CURRENT IN KA")
+    {
+        double S = abs(get_load_power_in_MVA());
+        double V = get_bus_positive_sequence_voltage_in_kV();
+        return S/(SQRT3*V);
+    }
+    if(var_name == "MOTOR CURRENT IN KA")
+    {
+        complex<double> E = get_internal_voltage_in_pu();
+        complex<double> Vcomplex = get_bus_positive_sequence_complex_voltage_in_pu();
+        complex<double> I = (E-Vcomplex)/Zsource;
+        complex<double> S = Vcomplex*conj(I)*Mbase;
+        double V = get_bus_positive_sequence_voltage_in_kV();
+        return abs(S)/(SQRT3*V);
+    }
+    if(var_name == "MOTOR SPEED DEVIATION IN PU")
+        return speed_block.get_output();
+    if(var_name == "STATE@TRANSIENT BLOCK OF X AXIS")
+        return transient_block_x_axis.get_state();
+    if(var_name == "STATE@TRANSIENT BLOCK OF Y AXIS")
+        return transient_block_y_axis.get_state();
+    if(var_name == "STATE@SUBTRANSIENT BLOCK OF X AXIS")
+        return subtransient_block_x_axis.get_state();
+    if(var_name == "STATE@SUBTRANSIENT BLOCK OF Y AXIS")
+        return subtransient_block_y_axis.get_state();
+    if(var_name == "STATE@SPEED BLOCK")
+        return speed_block.get_state();
 
     return 0.0;
 }

@@ -113,6 +113,7 @@
 
 #include "header/model/load_model/load_model_test.h"
 #include "header/model/load_model/IEEL_test.h"
+#include "header/model/load_model/CIM6_test.h"
 
 #include "header/model/load_relay_model/UVLS_test.h"
 #include "header/model/load_relay_model/UFLS_test.h"
@@ -207,7 +208,7 @@ int main(int argc, char* argv[])
         Test::Suite ts;
         #ifdef ENABLE_STEPS_TEST
 
-        ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
+        /*ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
         ts.add(unique_ptr<Test::Suite>(new AREA_TEST));
@@ -310,10 +311,11 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new IEESGO_TEST));
         ts.add(unique_ptr<Test::Suite>(new IEEEG1SB_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new LCFB1_TEST));
+        ts.add(unique_ptr<Test::Suite>(new LCFB1_TEST));*/
 
         ts.add(unique_ptr<Test::Suite>(new IEEL_TEST));
-        ts.add(unique_ptr<Test::Suite>(new UVLS_TEST));
+        ts.add(unique_ptr<Test::Suite>(new CIM6_TEST));
+        /*ts.add(unique_ptr<Test::Suite>(new UVLS_TEST));
         ts.add(unique_ptr<Test::Suite>(new UFLS_TEST));
         ts.add(unique_ptr<Test::Suite>(new PUFLS_TEST));
 
@@ -331,7 +333,7 @@ int main(int argc, char* argv[])
 
         ts.add(unique_ptr<Test::Suite>(new PVGU1_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
+        ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));*/
 
         //ts.add(unique_ptr<Test::Suite>(new CCT_SEARCHER_TEST));
         //ts.add(unique_ptr<Test::Suite>(new POWERFLOW_CASE_GENERATOR_TEST));

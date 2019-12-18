@@ -66,6 +66,9 @@ class CIM6 : public LOAD_MODEL
         double get_E() const;
         double get_Tnom_in_pu() const;
     public:
+        double get_slip_in_pu();
+        double get_slip_in_Hz();
+
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
@@ -75,6 +78,7 @@ class CIM6 : public LOAD_MODEL
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
+        virtual void initialize_to_start();
         virtual void run(DYNAMIC_MODE mode);
         complex<double> get_internal_voltage_in_pu() const;
         virtual complex<double> get_load_power_in_MVA();
@@ -111,14 +115,17 @@ class CIM6 : public LOAD_MODEL
         double A, B, C, D, E;
         double Tnominal;
 
-        INTEGRAL_BLOCK speed_block, angle_block;
-        INTEGRAL_BLOCK transient_block_d_axis, subtransient_block_d_axis;
-        INTEGRAL_BLOCK transient_block_q_axis, subtransient_block_q_axis;
+        INTEGRAL_BLOCK speed_block;
+        INTEGRAL_BLOCK transient_block_x_axis, subtransient_block_x_axis;
+        INTEGRAL_BLOCK transient_block_y_axis, subtransient_block_y_axis;
 
         bool is_single_cage;
         double Xs, Xp, Xpp, Xleakage, Tp, Tpp;
         double W0;
-        double Xs_minum_Xp, Xp_minum_Xleakage, Xp_minum_Xpp, Xp_minum_Xpp_over_Xp_minum_Xleakage;
+        double Xs_minum_Xp, Xp_minum_Xleakage, Xp_minum_Xpp, Xp_minum_Xpp_over_Xp_minum_Xleakage,
+               Xp_minum_Xpp_over_Xp_minum_Xleakage_square;
         complex<double> Zsource;
+        double initial_load_torque;
+        double nominal_shunt_in_MVar;
 };
 #endif // CIM6_H

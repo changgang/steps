@@ -1392,6 +1392,29 @@ void STEPS_IMEXPORTER::add_IEEL_model(vector<string>& data)
     }
 }
 
+void STEPS_IMEXPORTER::add_CIM6_model(vector<string>& data)
+{
+    string model_name = get_dynamic_model_name(data);
+    if(model_name!="CIM6AL" and model_name!="CIM6AR" and model_name!="CIM6ZN" and
+       model_name!="CIM6BL")
+        return;
+
+    if(data.size()<3)
+        return;
+
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    CIM6 model;
+    model.set_toolkit(toolkit);
+    bool successful = model.setup_model_with_steps_string_vector(data);
+    if(successful)
+    {
+        vector<LOAD*> loads = get_all_loads_of(data);
+        size_t n = loads.size();
+        for(size_t i=0; i!=n; ++i)
+            loads[i]->set_model(&model);
+    }
+}
+
 void STEPS_IMEXPORTER::add_UVLS_model(vector<string>& data)
 {
     string model_name = get_dynamic_model_name(data);

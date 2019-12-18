@@ -1,4 +1,4 @@
-from stepspy import STEPS
+from stepspy import STEPS, POUCH_CSV
 
 simulator = STEPS(is_default = False, log_file = 'test.log', enable_parallel = False)
 simulator.info()
@@ -109,3 +109,5 @@ simulator.clear_bus_fault(15, 'three phase fault')
 simulator.run_dynamic_simulation_to_time(5.0)
 
 simulator.stop_dynamic_simulation()
+
+time, value, dychannel = POUCH_CSV('ieee39.csv')

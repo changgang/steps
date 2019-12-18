@@ -339,6 +339,12 @@ void IEEL::initialize()
     set_flag_model_initialized_as_true();
 }
 
+void IEEL::initialize_to_start()
+{
+    if(not is_model_initialized())
+        initialize();
+}
+
 void IEEL::run(DYNAMIC_MODE mode)
 {
     if(mode==UPDATE_MODE)

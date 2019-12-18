@@ -155,6 +155,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         vector<LOAD*> remove_loads_with_different_identifier(vector<LOAD*> loads, string identifier);
 
         void add_IEEL_model(vector<string>& data);
+        void add_CIM6_model(vector<string>& data);
 
         void add_UVLS_model(vector<string>& data);
 
