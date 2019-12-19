@@ -56,9 +56,9 @@ class STEPS():
     def __get_c_char_p_of_string(self, data):
         python_version = platform.python_version_tuple()
         python_version = python_version[0]
-        if python_version is '3':
+        if python_version == '3':
             return c_char_p(bytes(data, 'utf-8'))
-        elif python_version is '2':
+        elif python_version == '2':
             return c_char_p(bytes(data))
         else:
             return None
@@ -66,9 +66,9 @@ class STEPS():
     def __get_string_from_c_char_p(self, data):
         python_version = platform.python_version_tuple()
         python_version = python_version[0]
-        if python_version is '3':
+        if python_version == '3':
             return str(data, encoding='utf-8')
-        elif python_version is '2':
+        elif python_version == '2':
             return str(data)
         else:
             return None

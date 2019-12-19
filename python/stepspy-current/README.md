@@ -23,6 +23,7 @@ STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scal
 
 ## Realse Note
 
+- 0.11.2. Dec. 19, 2019. Update 'is' to '==' when comparing string in stepspy.py.
 - 0.11.1. Dec. 18, 2019. Add POUCH_CSV and POUCH_STEPS to stepspy for loading dynamic simulation result.
 - 0.11.0. Nov. 18, 2019. Modify API of building and saving network matix. Add new API to build and save Z matrix. Not compatible with previous STEPS.
 - 0.10.2. Nov. 13, 2019. Add new API get/set_hvdc_power_order_in_MW() for changing HVDC power order in dynamic simulation.
