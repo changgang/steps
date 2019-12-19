@@ -50,6 +50,7 @@ class IEEL : public LOAD_MODEL
         virtual bool setup_model_with_bpa_string(string data);
 
         virtual complex<double> get_dynamic_source_admittance_in_pu_based_on_SBASE();
+        virtual complex<double> get_additional_admittance_in_pu_based_on_SBASE();
 
         virtual void setup_block_toolkit_and_parameters();
 
@@ -58,6 +59,7 @@ class IEEL : public LOAD_MODEL
         virtual void run(DYNAMIC_MODE mode);
         virtual complex<double> get_load_power_in_MVA();
         virtual complex<double> get_load_current_in_pu_based_on_SBASE();
+        virtual complex<double> get_norton_current_in_pu_based_on_SBASE();
         virtual void check();
         virtual void clear();
         virtual void report();

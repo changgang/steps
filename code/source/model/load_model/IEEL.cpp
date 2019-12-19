@@ -13,6 +13,8 @@ IEEL::~IEEL()
 
 void IEEL::clear()
 {
+    set_voltage_source_flag(false);
+
     set_model_float_parameter_count(14);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
@@ -298,6 +300,11 @@ complex<double> IEEL::get_dynamic_source_admittance_in_pu_based_on_SBASE()
     return 0.0;
 }
 
+complex<double> IEEL::get_additional_admittance_in_pu_based_on_SBASE()
+{
+    return 0.0;
+}
+
 void IEEL::setup_block_toolkit_and_parameters()
 {
     ;
@@ -401,6 +408,11 @@ complex<double> IEEL::get_load_current_in_pu_based_on_SBASE()
     complex<double> S = get_load_power_in_MVA();
     complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
     return conj(S*one_over_sbase/V);
+}
+
+complex<double> IEEL::get_norton_current_in_pu_based_on_SBASE()
+{
+    return 0.0;
 }
 
 void IEEL::check()

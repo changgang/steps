@@ -74,6 +74,7 @@ class CIM6 : public LOAD_MODEL
         virtual bool setup_model_with_bpa_string(string data);
 
         virtual complex<double> get_dynamic_source_admittance_in_pu_based_on_SBASE();
+        virtual complex<double> get_additional_admittance_in_pu_based_on_SBASE();
 
         virtual void setup_block_toolkit_and_parameters();
 
@@ -83,6 +84,7 @@ class CIM6 : public LOAD_MODEL
         complex<double> get_internal_voltage_in_pu() const;
         virtual complex<double> get_load_power_in_MVA();
         virtual complex<double> get_load_current_in_pu_based_on_SBASE();
+        virtual complex<double> get_norton_current_in_pu_based_on_SBASE();
         virtual void check();
         virtual void clear();
         virtual void report();
@@ -122,7 +124,9 @@ class CIM6 : public LOAD_MODEL
         bool is_single_cage;
         double Xs, Xp, Xpp, Xleakage, Tp, Tpp;
         double W0;
-        double Xs_minum_Xp, Xp_minum_Xleakage, Xp_minum_Xpp, Xp_minum_Xpp_over_Xp_minum_Xleakage,
+        double Xs_minum_Xp, Xp_minum_Xleakage, Xp_minum_Xpp,
+               Xp_minum_Xpp_over_Xp_minum_Xleakage,
+               Xpp_minum_Xleakage_over_Xp_minum_Xleakage,
                Xp_minum_Xpp_over_Xp_minum_Xleakage_square;
         complex<double> Zsource;
         double initial_load_torque;

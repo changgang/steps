@@ -25,8 +25,8 @@ void CIM6_TEST::setup()
     model.set_Xm_in_pu(4.2);
     model.set_R1_in_pu(0.035);
     model.set_X1_in_pu(0.09);
-    model.set_R2_in_pu(0.0);
-    model.set_X2_in_pu(0.0);
+    model.set_R2_in_pu(0.012);
+    model.set_X2_in_pu(0.04);
     model.set_Mbase_in_MVA(0.0);
     model.set_Pmult(1.5);
     model.set_H_in_s(1.5);
@@ -34,6 +34,7 @@ void CIM6_TEST::setup()
     model.set_B(0.1);
     model.set_C(1.0);
     model.set_D(0.0);
+    model.set_E(0.5);
 
     LOAD* load = get_load();
     load->set_model(&model);

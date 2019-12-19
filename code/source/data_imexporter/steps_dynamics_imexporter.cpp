@@ -141,6 +141,9 @@ void STEPS_IMEXPORTER::load_one_model(vector<string>& data)
     if(model_name=="IEELAL" or model_name=="IEELAR" or model_name=="IEELZN" or
        model_name=="IEELOW" or model_name=="IEELBL") { add_IEEL_model(data); return;}
 
+    if(model_name=="CIM6AL" or model_name=="CIM6AR" or model_name=="CIM6ZN" or
+       model_name=="CIM6OW" or model_name=="CIM6BL") { add_CIM6_model(data); return;}
+
     if(model_name=="UVLSAL" or model_name=="UVLSAR" or model_name=="UVLSZN" or
        model_name=="UVLSOW" or model_name=="UVLSBL") { add_UVLS_model(data); return;}
 
@@ -1285,6 +1288,8 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
        model_name!="IEELBL" and
        model_name!="CIM5AL" and model_name!="CIM5AR" and model_name!="CIM5ZN" and
        model_name!="CIM5BL" and
+       model_name!="CIM6AL" and model_name!="CIM6AR" and model_name!="CIM6ZN" and
+       model_name!="CIM6BL" and
        model_name!="UVLSAL" and model_name!="UVLSAR" and model_name!="UVLSZN" and
        model_name!="UVLSBL" and
        model_name!="UFLSAL" and model_name!="UFLSAR" and model_name!="UFLSZN" and

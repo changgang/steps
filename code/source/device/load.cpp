@@ -690,3 +690,19 @@ complex<double> LOAD::get_dynamics_load_current_in_pu_based_on_system_base_power
     else
         return 0.0;
 }
+
+complex<double> LOAD::get_dynamics_load_norton_current_in_pu_based_on_system_base_power()
+{
+    if(get_status()==true)
+    {
+        double scale = 1.0+get_load_total_scale_factor_in_pu();
+
+        LOAD_MODEL* load_model = get_load_model();
+        if(load_model!=NULL)
+            return scale*load_model->get_norton_current_in_pu_based_on_SBASE();
+        else
+            return 0.0;
+    }
+    else
+        return 0.0;
+}

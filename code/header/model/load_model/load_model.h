@@ -15,6 +15,10 @@ class LOAD_MODEL : public MODEL
         virtual ~LOAD_MODEL();
         LOAD* get_load_pointer() const;
 
+        void set_voltage_source_flag(bool flag);
+        bool get_voltage_source_flag() const;
+        bool is_voltage_source() const;
+
         void set_bus_pointer();
         BUS* get_bus_pointer() const;
         // common load model
@@ -38,12 +42,14 @@ class LOAD_MODEL : public MODEL
         virtual void setup_block_toolkit_and_parameters() = 0;
 
         virtual complex<double> get_dynamic_source_admittance_in_pu_based_on_SBASE() = 0;
+        virtual complex<double> get_additional_admittance_in_pu_based_on_SBASE() = 0;
 
         virtual void initialize() = 0;
         virtual void initialize_to_start() = 0;
         virtual void run(DYNAMIC_MODE mode) = 0;
         virtual complex<double> get_load_power_in_MVA() = 0;
         virtual complex<double> get_load_current_in_pu_based_on_SBASE() = 0;
+        virtual complex<double> get_norton_current_in_pu_based_on_SBASE() = 0;
         virtual void check() = 0;
         virtual void clear() = 0;
         virtual void report() = 0;
@@ -62,6 +68,7 @@ class LOAD_MODEL : public MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         SUBSYSTEM_TYPE subsystem_type;
+        bool voltage_source_flag;
 
 };
 #endif // LOAD_MODEL_H

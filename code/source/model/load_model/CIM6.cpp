@@ -17,6 +17,8 @@ CIM6::~CIM6()
 
 void CIM6::clear()
 {
+    set_voltage_source_flag(true);
+
     set_model_float_parameter_count(23);
     prepare_model_data_table();
     prepare_model_internal_variable_table();
@@ -439,16 +441,20 @@ bool CIM6::setup_model_with_bpa_string(string data)
     return false;
 }
 
-
 complex<double> CIM6::get_dynamic_source_admittance_in_pu_based_on_SBASE()
 {
-    setup_model_dynamic_parameters();
     complex<double> y = 1.0/Zsource;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    double sbase = psdb.get_system_base_power_in_MVA();
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
     double mbase = Mbase;
-    return y*(mbase/sbase);
+    return y*mbase*one_over_sbase;
+}
+
+complex<double> CIM6::get_additional_admittance_in_pu_based_on_SBASE()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    return complex<double>(0.0, nominal_shunt_in_MVar*one_over_sbase);
 }
 
 void CIM6::setup_block_toolkit_and_parameters()
@@ -516,6 +522,7 @@ void CIM6::setup_model_dynamic_parameters()
             Xp_minum_Xleakage = Xp-Xleakage;
             Xp_minum_Xpp = Xp-Xpp;
             Xp_minum_Xpp_over_Xp_minum_Xleakage = Xp_minum_Xpp/Xp_minum_Xleakage;
+            Xpp_minum_Xleakage_over_Xp_minum_Xleakage = 1.0-Xp_minum_Xpp_over_Xp_minum_Xleakage;
             Xp_minum_Xpp_over_Xp_minum_Xleakage_square = Xp_minum_Xpp_over_Xp_minum_Xleakage/Xp_minum_Xleakage;
         }
         else
@@ -534,6 +541,7 @@ void CIM6::setup_model_dynamic_parameters()
             Xp_minum_Xleakage = Xp-Xleakage;
             Xp_minum_Xpp = Xp-Xpp;
             Xp_minum_Xpp_over_Xp_minum_Xleakage = Xp_minum_Xpp/Xp_minum_Xleakage;
+            Xpp_minum_Xleakage_over_Xp_minum_Xleakage = 1.0-Xp_minum_Xpp_over_Xp_minum_Xleakage;
             Xp_minum_Xpp_over_Xp_minum_Xleakage_square = Xp_minum_Xpp_over_Xp_minum_Xleakage/Xp_minum_Xleakage;
         }
     }
@@ -542,12 +550,13 @@ void CIM6::setup_model_dynamic_parameters()
         Zsource = complex<double>(Ra, Xp);
     else
         Zsource = complex<double>(Ra, Xpp);
+
+    cout<<"Xs = "<<Xs<<", Xp = "<<Xp<<", Xpp = "<<Xpp<<", Xl = "<<Xleakage<<", Tp = "<<Tp<<", Tpp = "<<Tpp<<endl;
 }
 
 void CIM6::initialize()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    double sbase = toolkit.get_system_base_power_in_MVA();
 
     setup_block_toolkit_and_parameters();
 
@@ -563,7 +572,7 @@ void CIM6::initialize()
     complex<double> Esource = V+I*Zsource;
 
     double R = Zsource.real(), X = Zsource.imag();
-    complex<double> Ep, Epp;
+    complex<double> Ep, Ek;
     size_t n_iteration = 0;
     if(is_single_cage)
     {
@@ -624,7 +633,8 @@ void CIM6::initialize()
                             <<"(3) Ir  ="<<Ir<<"\n"
                             <<"(4) Ii  ="<<Ii<<"\n"
                             <<"(5) slip="<<slip/W0<<"\n"
-                            <<"(6) Q0  ="<<nominal_shunt_in_MVar<<" MVar";
+                            <<"(6) T0  ="<<initial_load_torque<<"\n"
+                            <<"(7) Q0  ="<<nominal_shunt_in_MVar<<" MVar";
                     toolkit.show_information_with_leading_time_stamp(osstream);
                 }
 
@@ -668,26 +678,167 @@ void CIM6::initialize()
     }
     else
     {
-        double speed = speed_block.get_output();
-        double A = -W0*speed*Tpp;
-        complex<double> complex_1_A(1.0, A);
-        complex<double> temp = Xp_minum_Xpp_over_Xp_minum_Xleakage+(1.0-Xp_minum_Xpp_over_Xp_minum_Xleakage)*complex_1_A;
-        complex<double> unit_imag(0.0, 1.0);
-        Ep = (Esource*complex_1_A+unit_imag*I*Xp_minum_Xpp)/temp;
-        Epp = (Ep-unit_imag*I*Xp_minum_Xleakage)/complex_1_A;
+        // nine vars to solve
+        double Erpp = Esource.real(), Eipp = Esource.imag();
+        double Erk = Erpp, Eik = Eipp;
+        double Erp = Erpp, Eip = Eipp;
+        double Ir = I.real(), Ii = I.imag();
+        double slip = 0.0;
+
+        double EppMag = 0.0;
+        double Sat = 0.0;
+        vector<double> Error;
+        Error.reserve(9);
+        while(true)
+        {
+            ++n_iteration;
+
+            EppMag = abs(Esource);
+            Sat = saturation.get_saturation(EppMag);
+
+            Error.clear();
+            Error.push_back(-Erpp+Xp_minum_Xpp_over_Xp_minum_Xleakage*Erk+Xpp_minum_Xleakage_over_Xp_minum_Xleakage*Erp); // x-axis Er"=xxx
+            Error.push_back(-Eipp+Xp_minum_Xpp_over_Xp_minum_Xleakage*Eik+Xpp_minum_Xleakage_over_Xp_minum_Xleakage*Eip); // y-axis Ei"=xxx
+            Error.push_back(-Erk-Eik*Tpp*slip+Erp+Xp_minum_Xleakage*Ii); // x-axis dErk/dt=0
+            Error.push_back(Erk*Tpp*slip-Eik+Eip-Xp_minum_Xleakage*Ir); // x-axis dErk/dt=0
+            Error.push_back(Sat/EppMag*Eipp+Xp_minum_Xpp_over_Xp_minum_Xleakage_square*Xs_minum_Xp*Erk-
+                            (1.0+Xp_minum_Xpp_over_Xp_minum_Xleakage_square*Xs_minum_Xp)*Erp-
+                            Eip*Tp*slip+
+                            Xpp_minum_Xleakage_over_Xp_minum_Xleakage*Xs_minum_Xp*Ii); // x-axis dEr'/dt=0
+            Error.push_back(-Sat/EppMag*Erpp+Xp_minum_Xpp_over_Xp_minum_Xleakage_square*Xs_minum_Xp*Eik+
+                            Erp*Tp*slip-
+                            (1.0+Xp_minum_Xpp_over_Xp_minum_Xleakage_square*Xs_minum_Xp)*Eip-
+                            Xpp_minum_Xleakage_over_Xp_minum_Xleakage*Xs_minum_Xp*Ir); // x-axis dEr'/dt=0
+            Error.push_back((Erpp-Vr)*R+(Eipp-Vi)*X-(R*R+X*X)*Ir); // x-axis current Ir
+            Error.push_back((Eipp-Vi)*R-(Erpp-Vr)*X-(R*R+X*X)*Ii); // y-axis current Ii
+            Error.push_back(Erpp*Ir+Eipp*Ii-R*(Ir*Ir+Ii*Ii)-Pload0); // active power balance
+
+            double maxerror = 0.0;
+            for(size_t i=0; i<9; ++i)
+            {
+                if(maxerror<fabs(Error[i]))
+                    maxerror = fabs(Error[i]);
+            }
+            if(maxerror<FLOAT_EPSILON or n_iteration>20)
+            {
+                double speed = slip/W0;
+                speed_block.set_output(speed);
+                speed_block.initialize();
+
+                Esource = complex<double>(Erpp, Eipp);
+                I = complex<double>(Ir, Ii);
+                complex<double> Smotor = Esource*conj(I);
+                double pelec = Smotor.real();
+                speed = 1.0+speed;
+                double temp = get_A()*speed*speed +
+                              get_B()*speed +
+                              get_C() +
+                              get_D()*pow(speed, get_E());
+                initial_load_torque = -pelec/(speed*temp);
+
+                complex<double> S = V*conj(I);
+                double Qshunt = Qload0-S.imag();
+                nominal_shunt_in_MVar = Qshunt/(abs(V)*abs(V))*Mbase;
+
+                Ek = complex<double>(Erk, Eik);
+                Ep = complex<double>(Erp, Eip);
+
+                if(n_iteration>20)
+                {
+                    ostringstream osstream;
+                    osstream<<"Warning. Fail to initialize CIM6 model of "<<get_device_name()<<" in 20 iterations.\n"
+                            <<"Max error is "<<maxerror<<" with the best estimation:\n"
+                            <<"(1) Er\" ="<<Erpp<<"\n"
+                            <<"(2) Ei\" ="<<Eipp<<"\n"
+                            <<"(3) Erk ="<<Erk<<"\n"
+                            <<"(4) Eik ="<<Eik<<"\n"
+                            <<"(5) Er\' ="<<Erp<<"\n"
+                            <<"(6) Ei\' ="<<Eip<<"\n"
+                            <<"(7) Ir  ="<<Ir<<"\n"
+                            <<"(8) Ii  ="<<Ii<<"\n"
+                            <<"(9) slip="<<slip/W0<<"\n"
+                            <<"(10) T0  ="<<initial_load_torque<<"\n"
+                            <<"(11) Q0  ="<<nominal_shunt_in_MVar<<" MVar";
+                    toolkit.show_information_with_leading_time_stamp(osstream);
+                }
+
+                break;
+            }
+            STEPS_SPARSE_MATRIX J;
+
+            J.add_entry(0,0, -1);
+            J.add_entry(0,2, Xp_minum_Xpp_over_Xp_minum_Xleakage);
+            J.add_entry(0,4, Xpp_minum_Xleakage_over_Xp_minum_Xleakage);
+
+            J.add_entry(1,1, -1);
+            J.add_entry(1,3, Xp_minum_Xpp_over_Xp_minum_Xleakage);
+            J.add_entry(1,5, Xpp_minum_Xleakage_over_Xp_minum_Xleakage);
+
+            J.add_entry(2,2, -1);
+            J.add_entry(2,3, -Tpp*slip);
+            J.add_entry(2,4, 1);
+            J.add_entry(2,7, Xp_minum_Xleakage);
+            J.add_entry(2,8, -Eik*Tpp);
+
+            J.add_entry(3,2, Tpp*slip);
+            J.add_entry(3,3, -1);
+            J.add_entry(3,5, 1);
+            J.add_entry(3,6, -Xp_minum_Xleakage);
+            J.add_entry(3,8, Erk*Tpp);
+
+            J.add_entry(4,1, Sat/EppMag);
+            J.add_entry(4,2, Xp_minum_Xpp_over_Xp_minum_Xleakage_square*Xs_minum_Xp);
+            J.add_entry(4,4, -(1+Xp_minum_Xpp_over_Xp_minum_Xleakage_square*Xs_minum_Xp));
+            J.add_entry(4,5, -Tp*slip);
+            J.add_entry(4,7, Xpp_minum_Xleakage_over_Xp_minum_Xleakage*Xs_minum_Xp);
+            J.add_entry(4,8, -Eip*Tp);
+
+            J.add_entry(5,0, -Sat/EppMag);
+            J.add_entry(5,3, Xp_minum_Xpp_over_Xp_minum_Xleakage_square*Xs_minum_Xp);
+            J.add_entry(5,4, Tp*slip);
+            J.add_entry(5,5, -(1+Xp_minum_Xpp_over_Xp_minum_Xleakage_square*Xs_minum_Xp));
+            J.add_entry(5,6, -Xpp_minum_Xleakage_over_Xp_minum_Xleakage*Xs_minum_Xp);
+            J.add_entry(5,8, Erp*Tp);
+
+            J.add_entry(6,0, R);
+            J.add_entry(6,1, X);
+            J.add_entry(6,6, -(R*R+X*X));
+
+            J.add_entry(7,0, -X);
+            J.add_entry(7,1, R);
+            J.add_entry(7,7, -(R*R+X*X));
+
+            J.add_entry(8,0, Ir);
+            J.add_entry(8,1, Ii);
+            J.add_entry(8,6, Erpp-2*R*Ir);
+            J.add_entry(8,7, Eipp-2*R*Ii);
+
+            J.compress_and_merge_duplicate_entries();
+
+            vector<double> update = Error/J;
+
+            Erpp -= update[0];
+            Eipp -= update[1];
+            Erk  -= update[2];
+            Eik  -= update[3];
+            Erp  -= update[4];
+            Eip  -= update[5];
+            Ir   -= update[6];
+            Ii   -= update[7];
+            slip -= update[8];
+        }
+
     }
 
     transient_block_x_axis.set_output(Ep.real());
     transient_block_x_axis.initialize();
     transient_block_y_axis.set_output(Ep.imag());
     transient_block_y_axis.initialize();
-    if(not is_single_cage)
-    {
-        subtransient_block_x_axis.set_output(Epp.real());
-        subtransient_block_x_axis.initialize();
-        subtransient_block_y_axis.set_output(Epp.imag());
-        subtransient_block_y_axis.initialize();
-    }
+    subtransient_block_x_axis.set_output(Ek.real());
+    subtransient_block_x_axis.initialize();
+    subtransient_block_y_axis.set_output(Ek.imag());
+    subtransient_block_y_axis.initialize();
+
     set_flag_model_initialized_as_true();
 }
 
@@ -695,23 +846,16 @@ void CIM6::initialize_to_start()
 {
     if(not is_model_initialized())
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        double sbase = toolkit.get_system_base_power_in_MVA();
-
         setup_block_toolkit_and_parameters();
 
-        LOAD* load = get_load_pointer();
-
-        complex<double> Ep, Epp;
-
-        transient_block_x_axis.set_output(Ep.real());
+        transient_block_x_axis.set_output(0);
         transient_block_x_axis.initialize();
-        transient_block_y_axis.set_output(Ep.imag());
+        transient_block_y_axis.set_output(0);
         transient_block_y_axis.initialize();
 
-        subtransient_block_x_axis.set_output(Epp.real());
+        subtransient_block_x_axis.set_output(0);
         subtransient_block_x_axis.initialize();
-        subtransient_block_y_axis.set_output(Epp.imag());
+        subtransient_block_y_axis.set_output(0);
         subtransient_block_y_axis.initialize();
 
         speed_block.set_output(-1);
@@ -852,6 +996,16 @@ complex<double> CIM6::get_load_current_in_pu_based_on_SBASE()
     complex<double> V = get_bus_positive_sequence_complex_voltage_in_pu();
 
     return conj(S/V);
+}
+
+complex<double> CIM6::get_norton_current_in_pu_based_on_SBASE()
+{
+    complex<double> E = get_internal_voltage_in_pu();
+    complex<double> I = E/Zsource;
+
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+    return I*Mbase*one_over_sbase;
 }
 
 void CIM6::check()

@@ -1183,6 +1183,8 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meter(const DEVICE_ID& did, string
                 meter = setter.prepare_load_manually_scale_in_pu_meter(did);
             if(meter_type=="RELAY SHED SCALE IN PU")
                 meter = setter.prepare_load_relay_shed_scale_in_pu_meter(did);
+            if(meter_type=="LOAD MODEL INTERNAL VARIABLE")
+                meter = setter.prepare_load_load_model_internal_variable_meter(did, var_name);
 
             if(meter.is_valid())
                 append_meter(meter);
@@ -2905,7 +2907,11 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
 
             size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
-            I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
+            LOAD_MODEL* model = load->get_load_model();
+            if(not model->is_voltage_source())
+                I_mismatch[internal_bus] -= load->get_dynamics_load_current_in_pu_based_on_system_base_power();
+            else
+                I_mismatch[internal_bus] += load->get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
         }
     }
 }

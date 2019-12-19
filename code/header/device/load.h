@@ -87,6 +87,7 @@ class LOAD : public DEVICE
         double get_load_manually_scale_factor_in_pu() const;
         double get_load_relay_shed_scale_factor_in_pu() const;
         complex<double> get_dynamics_load_current_in_pu_based_on_system_base_power();
+        complex<double> get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
     private:
         size_t bus;
         BUS* busptr;

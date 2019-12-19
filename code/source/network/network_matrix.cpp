@@ -142,6 +142,7 @@ void NETWORK_MATRIX::build_dynamic_network_Y_matrix()
     add_fixed_shunts_to_network();
     add_generators_to_dynamic_network();
     add_wt_generators_to_dynamic_network();
+    add_motor_loads_to_dynamic_network();
 
     network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
@@ -2533,6 +2534,47 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
                     <<"Its source impedance will not be added to network matrix.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             return;
+        }
+    }
+}
+
+
+void NETWORK_MATRIX::add_motor_loads_to_dynamic_network()
+{
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    vector<LOAD*> loads = psdb.get_all_loads();
+
+    size_t n= loads.size();
+
+    for(size_t i=0; i!=n; ++i)
+    {
+        LOAD* load = loads[i];
+        LOAD_MODEL* model = load->get_load_model();
+        if(model!=NULL)
+        {
+            if(model->is_voltage_source())
+                add_motor_load_to_dynamic_network(*(loads[i]));
+        }
+    }
+}
+
+void NETWORK_MATRIX::add_motor_load_to_dynamic_network(const LOAD& load)
+{
+    LOAD_MODEL* model = load.get_load_model();
+    if(model!=NULL)
+    {
+        if(model->is_voltage_source())
+        {
+            complex<double> ysource = model->get_dynamic_source_admittance_in_pu_based_on_SBASE();
+            complex<double> yshunt = model->get_additional_admittance_in_pu_based_on_SBASE();
+            complex<double> y = ysource+yshunt;
+            if(y!=0.0)
+            {
+                size_t bus = load.get_load_bus();
+                size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+                this_Y_matrix_pointer->add_entry(i,i,y);
+            }
         }
     }
 }

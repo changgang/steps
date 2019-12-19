@@ -118,6 +118,8 @@ class NETWORK_MATRIX : public BASE
         void add_generator_to_dynamic_network(const GENERATOR& gen);
         void add_wt_generators_to_dynamic_network();
         void add_wt_generator_to_dynamic_network(WT_GENERATOR& gen);
+        void add_motor_loads_to_dynamic_network();
+        void add_motor_load_to_dynamic_network(const LOAD& load);
 
         void add_lines_to_sequence_network();
         void add_faulted_line_to_sequence_network(const LINE& line);

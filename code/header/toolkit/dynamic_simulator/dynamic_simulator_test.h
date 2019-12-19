@@ -74,6 +74,7 @@ class DYNAMICS_SIMULATOR_TEST : public Test::Suite
         void test_run_IEEE_39_bus_model_GENROU_IEEEG1();
         void test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1();
         void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1();
+        void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_CIM6();
         void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB1();
         void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_without_UFLS();
         void test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_UFLS();

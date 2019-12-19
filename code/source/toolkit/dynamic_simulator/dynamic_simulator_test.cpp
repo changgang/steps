@@ -61,6 +61,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEEG1);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_IEEET1_IEEEG1);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_CIM6);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_LCFB1);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_with_wind);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_without_UFLS);
@@ -1184,6 +1185,106 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1()
     simulator.run_to(0.5);
 
     simulator.clear_line_fault(did, 17, 0.0);
+    simulator.trip_line(did);
+
+    simulator.run_to(5.0);
+
+    default_toolkit.close_log_file();
+}
+
+
+void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_39_bus_model_GENROU_SEXS_IEEEG1_CIM6()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+
+    string file = "test_log/";
+    file += __FUNCTION__;
+    file += ".txt";
+    default_toolkit.open_log_file(file);
+
+    PSSE_IMEXPORTER importer;
+    importer.set_toolkit(default_toolkit);
+
+    importer.load_powerflow_data("../../../bench/IEEE39.raw");
+    importer.load_dynamic_data("../../../bench/IEEE39_GENROU_SEXS_IEEEG1_CIM6.dyr");
+
+    POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
+
+    powerflow_solver.set_max_iteration(30);
+    powerflow_solver.set_allowed_max_active_power_imbalance_in_MW(0.00001);
+    powerflow_solver.set_allowed_max_reactive_power_imbalance_in_MVar(0.00001);
+    powerflow_solver.set_flat_start_logic(false);
+    powerflow_solver.set_transformer_tap_adjustment_logic(true);
+
+    powerflow_solver.solve_with_fast_decoupled_solution();
+
+    simulator.set_max_DAE_iteration(3);
+    simulator.set_max_network_iteration(50);
+    simulator.set_dynamic_simulation_time_step_in_s(0.001);
+    simulator.prepare_meters();
+
+    DEVICE_ID load_did;
+    load_did.set_device_type("LOAD");
+    TERMINAL load_terminal;
+    load_terminal.append_bus(3);
+    load_did.set_device_terminal(load_terminal);
+    load_did.set_device_identifier("1");
+
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "MOTOR SPEED DEVIATION IN PU");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "MOTOR CURRENT IN KA");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@TRANSIENT BLOCK OF X AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@TRANSIENT BLOCK OF Y AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SUBTRANSIENT BLOCK OF X AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SUBTRANSIENT BLOCK OF Y AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SPEED BLOCK");
+
+    load_terminal.clear();
+    load_terminal.append_bus(4);
+    load_did.set_device_terminal(load_terminal);
+    load_did.set_device_identifier("1");
+
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "MOTOR SPEED DEVIATION IN PU");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "MOTOR CURRENT IN KA");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@TRANSIENT BLOCK OF X AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@TRANSIENT BLOCK OF Y AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SUBTRANSIENT BLOCK OF X AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SUBTRANSIENT BLOCK OF Y AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SPEED BLOCK");
+
+    load_terminal.clear();
+    load_terminal.append_bus(7);
+    load_did.set_device_terminal(load_terminal);
+    load_did.set_device_identifier("1");
+
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "MOTOR SPEED DEVIATION IN PU");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "MOTOR CURRENT IN KA");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@TRANSIENT BLOCK OF X AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@TRANSIENT BLOCK OF Y AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SUBTRANSIENT BLOCK OF X AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SUBTRANSIENT BLOCK OF Y AXIS");
+    simulator.prepare_load_related_meter(load_did, "LOAD MODEL INTERNAL VARIABLE", "STATE@SPEED BLOCK");
+
+
+    simulator.set_output_file("test_log/IEEE_39_bus_model_dynamic_test_result_GENROU_SEXS_IEEEG1_CIM6");
+
+    simulator.start();
+    simulator.run_to(1.0);
+
+    DEVICE_ID did;
+    did.set_device_type("LINE");
+    TERMINAL terminal;
+    terminal.append_bus(17);
+    terminal.append_bus(18);
+    did.set_device_terminal(terminal);
+    did.set_device_identifier("1");
+
+    simulator.set_line_fault(did, 17, 0.0, complex<double>(0.0, -2e5));
+
+    simulator.run_to(1.8);
+
+    simulator.clear_line_fault(did,17, 0.0);
     simulator.trip_line(did);
 
     simulator.run_to(5.0);
