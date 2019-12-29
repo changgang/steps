@@ -249,6 +249,22 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
+
+void DYNAMICS_SIMULATOR::set_network_matrix_update_as_unrequired()
+{
+    network_matrix_update_required = false;
+}
+
+void DYNAMICS_SIMULATOR::set_network_matrix_update_as_required()
+{
+    network_matrix_update_required = true;
+}
+
+bool DYNAMICS_SIMULATOR::is_network_matrix_update_required() const
+{
+    return network_matrix_update_required;
+}
+
 void DYNAMICS_SIMULATOR::append_meter(const METER& meter)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -2065,6 +2081,12 @@ void DYNAMICS_SIMULATOR::run_a_step()
     update_equivalent_devices_buffer();
     update_equivalent_devices_output();
 
+    if(is_network_matrix_update_required())
+    {
+        NETWORK_MATRIX& network = get_network_matrix();
+        network.build_dynamic_network_Y_matrix();
+        set_network_matrix_update_as_unrequired();
+    }
     //bool network_converged = false;
     //bool DAE_converged = false;
     ITER_DAE = 0;

@@ -38,7 +38,7 @@ class STEPS
         size_t get_equivalent_device_thread_number() const;
 
         char get_next_alphabeta();
-        void open_log_file(const string& file);
+        void open_log_file(const string& file, bool log_file_append_mode=false);
         void close_log_file();
         void enable_detailed_log();
         void disable_detailed_log();

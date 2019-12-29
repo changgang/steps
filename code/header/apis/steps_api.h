@@ -14,7 +14,9 @@
 extern "C" {
 #endif
 
-EXPORT_STEPS_DLL void api_set_default_toolkit_log_file(char* log_fie=NULL);
+EXPORT_STEPS_DLL size_t api_get_const_INDEX_NOT_EXIST();
+
+EXPORT_STEPS_DLL void api_set_toolkit_log_file(char* log_file, bool log_file_append_mode=false, size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL size_t api_generate_new_toolkit(char* log_fie=NULL);
 EXPORT_STEPS_DLL void api_delete_toolkit(size_t toolkit_index=INDEX_NOT_EXIST);
@@ -24,7 +26,6 @@ EXPORT_STEPS_DLL void api_clear_toolkit(size_t toolkit_index=INDEX_NOT_EXIST);
 
 EXPORT_STEPS_DLL void api_set_toolkit_parallel_thread_number(size_t n, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL size_t api_get_toolkit_parallel_thread_number(size_t toolkit_index=INDEX_NOT_EXIST);
-
 
 EXPORT_STEPS_DLL double api_get_toolkit_float_data(char* parameter_name, size_t toolkit_index=INDEX_NOT_EXIST);
 EXPORT_STEPS_DLL void api_set_toolkit_float_data(char* parameter_name, double value, size_t toolkit_index=INDEX_NOT_EXIST);

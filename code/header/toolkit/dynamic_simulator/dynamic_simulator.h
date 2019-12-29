@@ -56,6 +56,10 @@ class DYNAMICS_SIMULATOR: public BASE
 
         void show_dynamic_simulator_configuration() const;
 
+        void set_network_matrix_update_as_unrequired();
+        void set_network_matrix_update_as_required();
+        bool is_network_matrix_update_required() const;
+
         void prepare_meters();
         void prepare_bus_related_meters();
         void prepare_generator_related_meters();
@@ -274,6 +278,8 @@ class DYNAMICS_SIMULATOR: public BASE
         bool relay_action_flag;
 
         bool detailed_log_enabled;
+
+        bool network_matrix_update_required;
     private:
         virtual bool is_valid() const;
         virtual void check();

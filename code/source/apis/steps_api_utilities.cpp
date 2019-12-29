@@ -3,12 +3,18 @@
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
 
-void api_set_default_toolkit_log_file(char* log_fie)
+size_t api_get_const_INDEX_NOT_EXIST()
+{
+    return INDEX_NOT_EXIST;
+}
+
+void api_set_toolkit_log_file(char* log_file, bool log_file_append_mode, size_t toolkit_index)
 {
     string log_file_name = "";
-    if(log_fie!=NULL)
-        log_file_name = log_fie;
-    default_toolkit.open_log_file(log_file_name);
+    if(log_file!=NULL)
+        log_file_name = log_file;
+    STEPS& toolkit = get_toolkit(toolkit_index);
+    return toolkit.open_log_file(log_file_name, log_file_append_mode);
 }
 
 size_t api_generate_new_toolkit(char* log_fie)
@@ -24,7 +30,6 @@ void api_delete_toolkit(size_t toolkit_index)
 {
     delete_toolkit(toolkit_index);
 }
-
 
 void api_initialize_toolkit(size_t toolkit_index)
 {

@@ -6,8 +6,8 @@ global STEPS_LIB
 
 class STEPS():
     def info(self):
-        version = "0.11.0"
-        date = "2019/11/18"
+        version = "0.11.3"
+        date = "2019/12/27"
         authors = (("Changgang Li", "lichangang@sdu.edu.cn"),("Yue Wu","sduyuewu2018@163.com"))
         info = 'STEPS '+version+', built on '+date+', by '
         for author in authors:
@@ -22,8 +22,7 @@ class STEPS():
             STEPS_LIB = pylibsteps.load_library()
 
         if is_default==True:
-            #STEPS_LIB.api_set_default_toolkit_log_file(log_file)
-            self.toolkit_index = 1000000000
+            self.toolkit_index = STEPS_LIB.api_get_const_INDEX_NOT_EXIST()
         else:
             log_file = self.__get_c_char_p_of_string(log_file)
             self.toolkit_index = STEPS_LIB.api_generate_new_toolkit(log_file)
@@ -72,6 +71,12 @@ class STEPS():
             return str(data)
         else:
             return None
+            
+    def set_toolkit_log_file(self, log_file="", log_file_append_mode=False):
+        global STEPS_LIB
+        log_file = self.__get_c_char_p_of_string(log_file)
+        STEPS_LIB.api_set_toolkit_log_file(log_file, log_file_append_mode, self.toolkit_index)
+        return      
 
     def set_parallel_thread_number(self, num=1):
         global STEPS_LIB
@@ -91,7 +96,7 @@ class STEPS():
         global STEPS_LIB
         STEPS_LIB = None
         #STEPS_LIB.api_terminate_toolkit(self.toolkit_index)
-        return
+        return          
     
     def get_toolkit_float_data(self, dataname):
         global STEPS_LIB

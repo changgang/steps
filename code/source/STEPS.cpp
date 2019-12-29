@@ -12,7 +12,7 @@ STEPS::STEPS(const string& name, const string& log_file)
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
     if(log_file!="")
-        open_log_file(log_file);
+        open_log_file(log_file, false);
 
     detailed_log_enabled = false;
 
@@ -257,13 +257,18 @@ void STEPS::clear()
     dynamic_simulator.clear();
 }
 
-void STEPS::open_log_file(const string& file)
+void STEPS::open_log_file(const string& file, bool log_file_append_mode)
 {
     if(log_file.is_open())
         close_log_file();
 
     if(file!="")
-        log_file.open(file);
+    {
+        if(log_file_append_mode==false)
+            log_file.open(file);
+        else
+            log_file.open(file, ios_base::app);
+    }
 }
 
 void STEPS::close_log_file()
