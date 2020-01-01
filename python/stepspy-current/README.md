@@ -23,6 +23,8 @@ STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scal
 
 ## Realse Note
 
+- 0.11.4. Jan.  2, 2020. Fix bug of c_unit in pylibsteps.py. 
+- 0.11.3. Dec. 27, 2019. Add API to set toolkit log file: set_toolkit_log_file(log_file, log_file_append_mode). This version has fatal bug. DONOT use it. Use new version instead.
 - 0.11.2. Dec. 19, 2019. Update 'is' to '==' when comparing string in stepspy.py.
 - 0.11.1. Dec. 18, 2019. Add POUCH_CSV and POUCH_STEPS to stepspy for loading dynamic simulation result.
 - 0.11.0. Nov. 18, 2019. Modify API of building and saving network matix. Add new API to build and save Z matrix. Not compatible with previous STEPS.

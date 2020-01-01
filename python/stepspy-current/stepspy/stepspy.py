@@ -6,8 +6,8 @@ global STEPS_LIB
 
 class STEPS():
     def info(self):
-        version = "0.11.3"
-        date = "2019/12/27"
+        version = "0.11.4"
+        date = "2020/1/2"
         authors = (("Changgang Li", "lichangang@sdu.edu.cn"),("Yue Wu","sduyuewu2018@163.com"))
         info = 'STEPS '+version+', built on '+date+', by '
         for author in authors:

@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.11.0"
-libsteps_date = "2019/11/18"
+libsteps_version = "0.11.1"
+libsteps_date = "2020/1/2"
 
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -36,7 +36,7 @@ def load_library():
     else:
         return None
 
-    libsteps.api_get_const_INDEX_NOT_EXIST.restype = c_unit
+    libsteps.api_get_const_INDEX_NOT_EXIST.restype = c_uint
     libsteps.api_get_const_INDEX_NOT_EXIST.argtype = None
     
     libsteps.api_set_toolkit_log_file.restype = None
