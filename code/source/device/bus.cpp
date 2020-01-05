@@ -419,32 +419,32 @@ double BUS::get_voltage_to_regulate_in_pu() const
 
 complex<double> BUS::get_positive_sequence_complex_voltage_in_pu() const
 {
-    return positive_sequence_Euler_complex_number*positive_sequence_voltage_in_pu;
+    return positive_sequence_voltage_in_pu*positive_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_positive_sequence_complex_voltage_in_kV() const
 {
-    return positive_sequence_Euler_complex_number*positive_sequence_voltage_in_pu*base_voltage_in_kV;
+    return base_voltage_in_kV*positive_sequence_voltage_in_pu*positive_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_negative_sequence_complex_voltage_in_pu() const
 {
-    return negative_sequence_Euler_complex_number*negative_sequence_voltage_in_pu;
+    return negative_sequence_voltage_in_pu*negative_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_negative_sequence_complex_voltage_in_kV() const
 {
-    return negative_sequence_Euler_complex_number*negative_sequence_voltage_in_pu*base_voltage_in_kV;
+    return base_voltage_in_kV*negative_sequence_voltage_in_pu*negative_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_zero_sequence_complex_voltage_in_pu() const
 {
-    return zero_sequence_Euler_complex_number*zero_sequence_voltage_in_pu;
+    return zero_sequence_voltage_in_pu*zero_sequence_Euler_complex_number;
 }
 
 complex<double> BUS::get_zero_sequence_complex_voltage_in_kV() const
 {
-    return zero_sequence_Euler_complex_number*zero_sequence_voltage_in_pu*base_voltage_in_kV;
+    return base_voltage_in_kV*zero_sequence_voltage_in_pu*zero_sequence_Euler_complex_number;
 }
 
 

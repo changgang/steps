@@ -32,6 +32,7 @@ class BUS_FREQUENCY_MODEL : public BASE
         DIFFERENTIAL_BLOCK frequency_block;
         size_t bus;
         BUS* bus_ptr;
+        double fbase_Hz, tbase_s;
 };
 
 #endif // BUS_FREQUENCY_MODEL_H

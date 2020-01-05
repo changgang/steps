@@ -42,6 +42,9 @@ void BUS_FREQUENCY_MODEL::initialize()
 
     if(bus_ptr!=NULL)
     {
+        fbase_Hz = bus_ptr->get_base_frequency_in_Hz();
+        tbase_s = bus_ptr->get_base_period_in_s();
+
         STEPS& toolkit = bus_ptr->get_toolkit(__PRETTY_FUNCTION__);
         set_toolkit(toolkit);
 
@@ -93,16 +96,12 @@ void BUS_FREQUENCY_MODEL::update_for_applying_event()
 
 void BUS_FREQUENCY_MODEL::set_frequency_deviation_in_pu(double f)
 {
-    double fbase = bus_ptr->get_base_frequency_in_Hz();
-    frequency_block.set_output(f*fbase);
+    frequency_block.set_output(f*fbase_Hz);
 }
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_pu() const
 {
-    /*double fbase = bus_ptr->get_base_frequency_in_Hz();
-    return get_frequency_deviation_in_Hz()/fbase;*/
-    double tbase = bus_ptr->get_base_period_in_s();
-    return get_frequency_deviation_in_Hz()*tbase;
+    return get_frequency_deviation_in_Hz()*tbase_s;
 }
 
 double BUS_FREQUENCY_MODEL::get_frequency_deviation_in_Hz() const
@@ -117,8 +116,7 @@ double BUS_FREQUENCY_MODEL::get_frequency_in_pu() const
 
 double BUS_FREQUENCY_MODEL::get_frequency_in_Hz() const
 {
-    double fbase = bus_ptr->get_base_frequency_in_Hz();
-    return fbase+get_frequency_deviation_in_Hz();
+    return fbase_Hz+get_frequency_deviation_in_Hz();
 }
 
 

@@ -747,9 +747,9 @@ complex<double> GENERATOR::get_source_dynamic_current_in_pu_based_on_system_base
     if(get_status()==true and generator_model!=NULL)
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        complex<double> I = generator_model->get_terminal_current_in_pu_based_on_mbase();
         double mbase = get_mbase_in_MVA();
         double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
+        complex<double> I = generator_model->get_terminal_current_in_pu_based_on_mbase();
         I *= (mbase*one_over_sbase);
         return I;
     }

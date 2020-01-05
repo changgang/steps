@@ -1873,6 +1873,7 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
 {
     return internal_bus_complex_voltage_in_pu[internal_bus];
 
+    /*
     BUS* busptr = internal_bus_pointers[internal_bus];
     complex<double> v= busptr->get_positive_sequence_complex_voltage_in_pu();
     if(v!=internal_bus_complex_voltage_in_pu[internal_bus])
@@ -1883,6 +1884,7 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     return v;
+    */
 }
 
 void DYNAMICS_SIMULATOR::start()
