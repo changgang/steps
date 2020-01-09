@@ -1018,7 +1018,7 @@ double api_get_hvdc_power_order_in_MW(size_t ibus, size_t jbus, char* identifier
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
-    ds.get_hvdc_power_order_in_MW(did);
+    return ds.get_hvdc_power_order_in_MW(did);
 }
 
 void api_set_hvdc_power_order_in_MW(size_t ibus, size_t jbus, char* identifier, double value, size_t toolkit_index)

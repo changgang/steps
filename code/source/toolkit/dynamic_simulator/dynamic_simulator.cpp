@@ -3466,13 +3466,14 @@ void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, const complex<double>& fault_
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
+        string busname = busptr->get_bus_name();
         if(steps_fast_complex_abs(fault_shunt)>FLOAT_EPSILON)
         {
             FAULT fault;
             fault.set_fault_type(THREE_PHASES_FAULT);
             fault.set_fault_shunt_in_pu(fault_shunt);
 
-            osstream<<fault.get_fault_type_string()<<" will be set for bus "<<bus<<" at time "<<TIME<<" s."<<endl
+            osstream<<fault.get_fault_type_string()<<" will be set for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s."<<endl
                    <<"Fault shunt is"<<fault_shunt<<" pu.";
             toolkit.show_information_with_leading_time_stamp(osstream);
 
@@ -3484,8 +3485,8 @@ void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, const complex<double>& fault_
         }
         else
         {
-            osstream<<"Zero fault shunt is given for bus "<<bus<<"."<<endl
-                   <<"No fault will be set for bus "<<bus<<" at time "<<TIME<<" s.";
+            osstream<<"Zero fault shunt is given for bus "<<bus<<"["<<busname<<"]."<<endl
+                   <<"No fault will be set for bus "<<bus<<"["<<busname<<"] at time "<<TIME<<" s.";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }
     }
@@ -3506,9 +3507,10 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(size_t bus)
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
+        string busname = busptr->get_bus_name();
         ostringstream osstream;
 
-        osstream<<"Fault at bus "<<bus<<" will be cleared at time "<<TIME<<" s.";
+        osstream<<"Fault at bus "<<bus<<"["<<busname<<"] will be cleared at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         FAULT fault = busptr->get_fault();
@@ -3529,11 +3531,12 @@ void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
     {
+        string busname = busptr->get_bus_name();
         if(busptr->get_bus_type()!=OUT_OF_SERVICE)
         {
             ostringstream osstream;
 
-            osstream<<"Bus "<<bus<<" will be tripped at time "<<TIME<<" s. Devices connecting to bus "<<bus<<" will also be tripped.";
+            osstream<<"Bus "<<bus<<"["<<busname<<"] will be tripped at time "<<TIME<<" s. Devices connecting to bus "<<bus<<" will also be tripped.";
             toolkit.show_information_with_leading_time_stamp(osstream);
 
             psdb.trip_bus(bus);
@@ -3565,6 +3568,8 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bu
         LINE* lineptr = psdb.get_line(line_id);
         if(lineptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
             if(lineptr->is_connected_to_bus(side_bus))
             {
                 if(location>=0.0 and location<=1.0)
@@ -3635,6 +3640,8 @@ void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, size_t side_
         LINE* lineptr = psdb.get_line(line_id);
         if(lineptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
             if(lineptr->is_connected_to_bus(side_bus))
             {
                 if(location>=0.0 and location<=1.0)
@@ -3691,6 +3698,8 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
         LINE* lineptr = psdb.get_line(line_id);
         if(lineptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
             if(lineptr->get_sending_side_breaker_status()==true or lineptr->get_receiving_side_breaker_status()==true)
             {
                 osstream<<lineptr->get_device_name()<<" is tripped by taking the following actions at time "<<TIME<<" s."<<endl;
@@ -3731,6 +3740,8 @@ void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, size_t side
         LINE* lineptr = psdb.get_line(line_id);
         if(lineptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
             if(lineptr->get_sending_side_bus()==side_bus)
             {
                 if(lineptr->get_sending_side_breaker_status()==true)
@@ -3785,6 +3796,8 @@ void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
         LINE* lineptr = psdb.get_line(line_id);
         if(lineptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
             if(lineptr->get_sending_side_breaker_status()==false or lineptr->get_receiving_side_breaker_status()==false)
             {
                 osstream<<lineptr->get_device_name()<<" is closed by taking the following actions at time "<<TIME<<" s."<<endl;
@@ -3825,6 +3838,8 @@ void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, size_t sid
         LINE* lineptr = psdb.get_line(line_id);
         if(lineptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(lineptr->get_sending_side_bus());
+            string jbusname = psdb.bus_number2bus_name(lineptr->get_receiving_side_bus());
             if(lineptr->get_sending_side_bus()==side_bus)
             {
                 if(lineptr->get_sending_side_breaker_status()==false)
@@ -3877,6 +3892,12 @@ void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
         if(transptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(transptr->get_winding_bus(PRIMARY_SIDE));
+            string jbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(SECONDARY_SIDE));
+            string kbusname = "";
+            if(transptr->is_three_winding_transformer())
+                kbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(TERTIARY_SIDE));
+
             if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==true or transptr->get_winding_breaker_status(SECONDARY_SIDE)==true or
                (transptr->is_three_winding_transformer() and transptr->get_winding_breaker_status(TERTIARY_SIDE)==true) )
             {
@@ -3921,6 +3942,12 @@ void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, siz
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
         if(transptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(transptr->get_winding_bus(PRIMARY_SIDE));
+            string jbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(SECONDARY_SIDE));
+            string kbusname = "";
+            if(transptr->is_three_winding_transformer())
+                kbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(TERTIARY_SIDE));
+
             if(transptr->get_winding_bus(PRIMARY_SIDE)==side_bus)
             {
                 if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==true)
@@ -3992,6 +4019,12 @@ void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
         if(transptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(transptr->get_winding_bus(PRIMARY_SIDE));
+            string jbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(SECONDARY_SIDE));
+            string kbusname = "";
+            if(transptr->is_three_winding_transformer())
+                kbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(TERTIARY_SIDE));
+
             if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==false or transptr->get_winding_breaker_status(SECONDARY_SIDE)==false or
                (transptr->is_three_winding_transformer() and transptr->get_winding_breaker_status(TERTIARY_SIDE)==false))
             {
@@ -4036,6 +4069,12 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, si
         TRANSFORMER* transptr = psdb.get_transformer(trans_id);
         if(transptr!=NULL)
         {
+            string ibusname = psdb.bus_number2bus_name(transptr->get_winding_bus(PRIMARY_SIDE));
+            string jbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(SECONDARY_SIDE));
+            string kbusname = "";
+            if(transptr->is_three_winding_transformer())
+                kbusname = psdb.bus_number2bus_name(transptr->get_winding_bus(TERTIARY_SIDE));
+
             if(transptr->get_winding_bus(PRIMARY_SIDE)==side_bus)
             {
                 if(transptr->get_winding_breaker_status(PRIMARY_SIDE)==false)
@@ -4104,6 +4143,8 @@ void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
         GENERATOR* generator = psdb.get_generator(gen_id);
         if(generator!=NULL)
         {
+            string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+
             if(generator->get_status()==true)
             {
                 generator->set_status(false);
@@ -4143,6 +4184,8 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
         GENERATOR* generator = psdb.get_generator(gen_id);
         if(generator!=NULL)
         {
+            string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+
             if(fabs(percent)>FLOAT_EPSILON)
             {
                 double mbase = generator->get_mbase_in_MVA();
@@ -4192,6 +4235,8 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
         WT_GENERATOR* generator = psdb.get_wt_generator(gen_id);
         if(generator!=NULL)
         {
+            string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+
             if(generator->get_status()==true)
             {
                 if(n!=0)
@@ -4252,6 +4297,8 @@ void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
         LOAD* load = psdb.get_load(load_id);
         if(load!=NULL)
         {
+            string busname = psdb.bus_number2bus_name(load->get_load_bus());
+
             if(load->get_status()==true)
             {
                 load->set_status(false);
@@ -4291,6 +4338,8 @@ void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
         LOAD* load = psdb.get_load(load_id);
         if(load!=NULL)
         {
+            string busname = psdb.bus_number2bus_name(load->get_load_bus());
+
             if(load->get_status()==false)
             {
                 load->set_status(true);
@@ -4329,6 +4378,8 @@ void DYNAMICS_SIMULATOR::scale_load(const DEVICE_ID& load_id, double percent)
         LOAD* load = psdb.get_load(load_id);
         if(load!=NULL)
         {
+            string busname = psdb.bus_number2bus_name(load->get_load_bus());
+
             if(fabs(percent)>FLOAT_EPSILON)
             {
                 if(load->get_status()==true)
@@ -4403,6 +4454,8 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
         FIXED_SHUNT* shunt = psdb.get_fixed_shunt(shunt_id);
         if(shunt!=NULL)
         {
+            string busname = psdb.bus_number2bus_name(shunt->get_shunt_bus());
+
             if(shunt->get_status()==true)
             {
                 shunt->set_status(false);
@@ -4442,6 +4495,8 @@ void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
         FIXED_SHUNT* shunt = psdb.get_fixed_shunt(shunt_id);
         if(shunt!=NULL)
         {
+            string busname = psdb.bus_number2bus_name(shunt->get_shunt_bus());
+
             if(shunt->get_status()==false)
             {
                 shunt->set_status(true);
@@ -4657,9 +4712,16 @@ void DYNAMICS_SIMULATOR::change_generator_voltage_reference_in_pu(const DEVICE_I
     GENERATOR* generator = psdb.get_generator(gen_id);
     if(generator != NULL)
     {
+        string busname = psdb.bus_number2bus_name(generator->get_generator_bus());
+
         EXCITER_MODEL* exciter = generator->get_exciter_model();
         if(exciter!=NULL)
+        {
             exciter->set_voltage_reference_in_pu(vref);
+            ostringstream osstream;
+            osstream<<"Voltage reference of "<<gen_id.get_device_name()<<" does not exist when trying to change excitation voltage in pu. No change is made";
+            toolkit.show_information_with_leading_time_stamp(osstream);
+        }
     }
     else
     {

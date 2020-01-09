@@ -4109,6 +4109,19 @@ void POWER_SYSTEM_DATABASE::check_generator_related_dynamic_data()
         TURBINE_GOVERNOR_MODEL* govmodel = generator->get_turbine_governor_model();
         if(govmodel!=NULL)
             govmodel->check();
+
+        TURBINE_LOAD_CONTROLLER_MODEL* tlcmodel = generator->get_turbine_load_controller_model();
+        if(tlcmodel!=NULL)
+            tlcmodel->check();
+
+        osstream<<"Model entry address of "<<generator->get_device_name()<<":\n"
+                <<"Compensator: "<<compmodel<<"\n"
+                <<"PSS:         "<<pssmodel<<"\n"
+                <<"Exciter:     "<<avrmodel<<"\n"
+                <<"TurbineLCtrl:"<<tlcmodel<<"\n"
+                <<"Turbine:     "<<govmodel<<"\n"
+                <<"Generator:   "<<genmodel;
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 
@@ -4191,6 +4204,8 @@ void POWER_SYSTEM_DATABASE::check_energy_storage_related_dynamic_data()
 
 void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
 {
+    ostringstream osstream;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     vector<LOAD*> loads = get_all_loads();
     size_t n = loads.size();
     LOAD* load;
@@ -4209,6 +4224,12 @@ void POWER_SYSTEM_DATABASE::check_load_related_dynamic_data()
         LOAD_FREQUENCY_RELAY_MODEL* uflsmodel = load->get_load_frequency_relay_model();
         if(uflsmodel!=NULL)
             uflsmodel->check();
+
+        osstream<<"Model entry address of "<<load->get_device_name()<<":\n"
+                <<"uvls: "<<uvlsmodel<<"\n"
+                <<"ufls: "<<uflsmodel<<"\n"
+                <<"load: "<<loadmodel;
+        toolkit.show_information_with_leading_time_stamp(osstream);
     }
 }
 

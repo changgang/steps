@@ -21,6 +21,20 @@ void PSSE_IMEXPORTER::load_dynamic_data(string file)
 
     osstream<<"Done loading dynamic data.";
     toolkit.show_information_with_leading_time_stamp(osstream);
+/*
+    cout<<"GENROU: "<<sizeof(GENROU)<<endl
+        <<"GENCLS: "<<sizeof(GENCLS)<<endl
+        <<"GENSAL: "<<sizeof(GENSAL)<<endl
+        <<"PSASPE1: "<<sizeof(PSASPE1)<<endl
+        <<"PSASPE2: "<<sizeof(PSASPE2)<<endl
+        <<"PSASPE13: "<<sizeof(PSASPE13)<<endl
+        <<"PSASPE14: "<<sizeof(PSASPE14)<<endl
+        <<"CSEET1: "<<sizeof(CSEET1)<<endl
+        <<"CSEET2: "<<sizeof(CSEET2)<<endl
+        <<"1st: "<<sizeof(FIRST_ORDER_BLOCK)<<endl
+        <<"lead-lag: "<<sizeof(LEAD_LAG_BLOCK)<<endl
+        <<"pid: "<<sizeof(PID_BLOCK)<<endl;
+        */
 }
 
 void PSSE_IMEXPORTER::load_dynamic_data_into_ram(string file)
