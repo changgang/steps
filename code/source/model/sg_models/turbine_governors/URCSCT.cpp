@@ -6,6 +6,9 @@
 using namespace std;
 URCSCT::URCSCT()
 {
+    gas_fuel_control = new CONTINUOUS_BUFFER;
+    gas_combustor = new CONTINUOUS_BUFFER;
+    gas_turbine_exhaust = new CONTINUOUS_BUFFER;
     clear();
 }
 
@@ -869,8 +872,8 @@ void URCSCT::setup_block_toolkit_and_parameters()
     gas_governor_iso.set_upper_limit(get_gas_max_in_pu());
     gas_governor_iso.set_lower_limit(get_gas_min_in_pu());
 
-    gas_fuel_control.set_toolkit(toolkit);
-    gas_fuel_control.set_buffer_size(round(get_gas_T_in_s()/delt));
+    gas_fuel_control->set_toolkit(toolkit);
+    gas_fuel_control->set_buffer_size(round(get_gas_T_in_s()/delt));
 
     gas_valve_positioner.set_toolkit(toolkit);
     gas_valve_positioner.set_K(get_gas_a()/get_gas_c());
@@ -880,11 +883,11 @@ void URCSCT::setup_block_toolkit_and_parameters()
     gas_fuel_system.set_K(1.0);
     gas_fuel_system.set_T_in_s(get_gas_Tf_in_s());
 
-    gas_combustor.set_toolkit(toolkit);
-    gas_combustor.set_buffer_size(round(get_gas_ECR_in_s()/delt));
+    gas_combustor->set_toolkit(toolkit);
+    gas_combustor->set_buffer_size(round(get_gas_ECR_in_s()/delt));
 
-    gas_turbine_exhaust.set_toolkit(toolkit);
-    gas_turbine_exhaust.set_buffer_size(round(get_gas_ETD_in_s()/delt));
+    gas_turbine_exhaust->set_toolkit(toolkit);
+    gas_turbine_exhaust->set_buffer_size(round(get_gas_ETD_in_s()/delt));
 
     gas_radiation_shield.set_toolkit(toolkit);
     gas_radiation_shield.set_K(get_gas_K5());
@@ -983,9 +986,9 @@ void URCSCT::initialize()
                 gas_turbine_dynamic.set_output(wf2);
                 gas_turbine_dynamic.initialize();
 
-                gas_combustor.initialize_buffer(time, wf2);
+                gas_combustor->initialize_buffer(time, wf2);
 
-                gas_turbine_exhaust.initialize_buffer(time, wf2);
+                gas_turbine_exhaust->initialize_buffer(time, wf2);
 
                 double wf1 = wf2;
 
@@ -1007,7 +1010,7 @@ void URCSCT::initialize()
                 gas_valve_positioner.initialize();
 
                 double gfc = gas_valve_positioner.get_input()+get_gas_Kf()*wf2-get_gas_K6();
-                gas_fuel_control.initialize_buffer(time, gfc);
+                gas_fuel_control->initialize_buffer(time, gfc);
 
                 double output = gfc/get_gas_K3();
                 if(output>get_gas_max_in_pu())
@@ -1113,9 +1116,9 @@ void URCSCT::run(DYNAMIC_MODE mode)
 
     input = output*(1.0+speed)*get_gas_K3();
 
-    gas_fuel_control.append_data(time, input);
+    gas_fuel_control->append_data(time, input);
 
-    output = gas_fuel_control.get_buffer_value_at_head();
+    output = gas_fuel_control->get_buffer_value_at_head();
 
     input = output + get_gas_K6() - get_gas_Kf()*gas_fuel_system.get_output();
 
@@ -1125,13 +1128,13 @@ void URCSCT::run(DYNAMIC_MODE mode)
     gas_fuel_system.set_input(gas_valve_positioner.get_output());
     gas_fuel_system.run(mode);
 
-    gas_combustor.append_data(time, gas_fuel_system.get_output());
+    gas_combustor->append_data(time, gas_fuel_system.get_output());
 
-    double wf = gas_combustor.get_buffer_value_at_head();
+    double wf = gas_combustor->get_buffer_value_at_head();
 
-    gas_turbine_exhaust.append_data(time, wf);
+    gas_turbine_exhaust->append_data(time, wf);
 
-    double wf1 = gas_turbine_exhaust.get_buffer_time_at_head();
+    double wf1 = gas_turbine_exhaust->get_buffer_time_at_head();
     double f1 = get_gas_TR_in_deg()-get_gas_af1()*(1.0-wf1)-get_gas_bf1()*speed;
 
     gas_radiation_shield.set_input(f1);

@@ -9,12 +9,13 @@ STABILIZER_MODEL::STABILIZER_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
     for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
-        signals[slot].clear();
+        signals[slot] = new SIGNAL;
 }
 
 STABILIZER_MODEL::~STABILIZER_MODEL()
 {
-    ;
+    for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
+        delete signals[slot];
 }
 
 string STABILIZER_MODEL::get_model_type() const
@@ -39,21 +40,21 @@ void STABILIZER_MODEL::set_input_signal_at_slot(size_t slot, SIGNAL& signal)
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-    if(signals[slot].is_valid())
+    if(signals[slot]->is_valid())
     {
-        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signals[slot].get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
+        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signals[slot]->get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
           <<"It will be deleted and new signal ("<<signal.get_meter_name()<<") will be set.";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        signals[slot].clear();
+        signals[slot]->clear();
     }
-    signals[slot] = signal;
+    (*signals[slot]) = signal;
 }
 
 SIGNAL STABILIZER_MODEL::get_input_signal_at_slot(size_t slot) const
 {
     SIGNAL signal;
     if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
-        return signals[slot];
+        return (*signals[slot]);
     else
         return signal;
 }
@@ -62,7 +63,7 @@ bool STABILIZER_MODEL::is_slot_valid(size_t slot) const
 {
     if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
     {
-        if(signals[slot].is_valid())
+        if(signals[slot]->is_valid())
             return true;
         else
             return false;
@@ -75,8 +76,8 @@ double STABILIZER_MODEL::get_signal_value_of_slot(size_t slot) const
 {
     if(this->is_slot_valid(slot))
     {
-        SIGNAL signal = signals[slot];
-        return signal.get_meter_value();
+        SIGNAL *signal = signals[slot];
+        return signal->get_meter_value();
     }
     else
         return 0.0;

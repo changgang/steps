@@ -81,9 +81,9 @@ class ARXL : public EQUIVALENT_MODEL
         virtual void prepare_model_data_table();
         virtual void prepare_model_internal_variable_table();
 
-        vector<METER> p_meters, q_meters;
-        vector< vector<size_t> > p_delays, q_delays;
-        vector< vector<double> > p_coefficients, q_coefficients;
+        vector<METER> *p_meters, *q_meters;
+        vector< vector<size_t> > *p_delays, *q_delays;
+        vector< vector<double> > *p_coefficients, *q_coefficients;
     private:
         complex<double> equivalent_voltage_source_V, equivalent_voltage_source_Z;
         complex<double> equivalent_load_constant_power, equivalent_load_constant_current, equivalent_load_constant_impedance;

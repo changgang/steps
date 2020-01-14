@@ -55,8 +55,8 @@ class FILEWIND : public WIND_SPEED_MODEL
         void search_wind_data_at_simulation_time();
         void set_previous_position(size_t pos);
         size_t get_previous_position() const;
-        string wind_speed_file;
-        vector<double> time, wind_speed, wind_direction;
+        string *wind_speed_file;
+        vector<double> *time, *wind_speed, *wind_direction;
         double current_time, current_wind_speed, current_wind_direction;
         size_t previous_position;
 };

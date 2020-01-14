@@ -91,20 +91,20 @@ class MODEL : public BASE
     public:
         virtual bool is_valid() const;
     private:
-        vector<string> allowed_device_types;
+        vector<string> *allowed_device_types;
         DEVICE* device_pointer;
 
         size_t n_parameters;
-
-        string user_input_time_series_file;
-        TIME_SERIES user_input_time_series;
 
         bool flag_model_initialized;
         bool flag_model_updated;
 
         bool flag_model_active;
 
-        MODEL_VAR_TABLE model_data_table, model_internal_variable_table;
+        MODEL_VAR_TABLE *model_data_table, *model_internal_variable_table;
+
+        string *user_input_time_series_file;
+        TIME_SERIES *user_input_time_series;
 };
 
 #endif // MODEL_H

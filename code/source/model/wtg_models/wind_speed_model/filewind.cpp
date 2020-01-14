@@ -7,11 +7,19 @@
 using namespace std;
 FILEWIND::FILEWIND()
 {
+    wind_speed_file = new string;
+    time = new vector<double>;
+    wind_speed = new vector<double>;
+    wind_direction = new vector<double>;
     clear();
 }
 
 FILEWIND::~FILEWIND()
 {
+    delete wind_speed_file;
+    delete time;
+    delete wind_speed;
+    delete wind_direction;
 }
 
 void FILEWIND::clear()
@@ -19,9 +27,9 @@ void FILEWIND::clear()
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
-    time.clear();
-    wind_speed.clear();
-    wind_direction.clear();
+    time->clear();
+    wind_speed->clear();
+    wind_direction->clear();
 
     current_time = -INFINITE_THRESHOLD;
     current_wind_speed = 0.0;
@@ -59,12 +67,12 @@ string FILEWIND::get_model_name() const
 
 void FILEWIND::set_wind_speed_serial_file(string file)
 {
-    wind_speed_file = file;
+    (*wind_speed_file) = file;
 }
 
 string FILEWIND::get_wind_speed_serial_file() const
 {
-    return wind_speed_file;
+    return (*wind_speed_file);
 }
 
 bool FILEWIND::setup_model_with_steps_string_vector(vector<string>& data)
@@ -119,15 +127,15 @@ void FILEWIND::initialize()
 
     current_time = -INFINITE_THRESHOLD;
 
-	if (wind_speed.size() == 0)
+	if (wind_speed->size() == 0)
 		current_wind_speed = 1.0;
 	else
-		current_wind_speed = wind_speed[0];
+		current_wind_speed = (*wind_speed)[0];
 
-	if (wind_direction.size() == 0)
+	if (wind_direction->size() == 0)
 		current_wind_direction = 0.0;
 	else
-		current_wind_direction = wind_direction[0];
+		current_wind_direction = (*wind_direction)[0];
 
     set_previous_position(0);
 
@@ -149,9 +157,9 @@ void FILEWIND::load_wind_speed_from_file()
     ifstream fid(file);
     if(fid.is_open())
     {
-        time.clear();
-        wind_speed.clear();
-        wind_direction.clear();
+        time->clear();
+        wind_speed->clear();
+        wind_direction->clear();
 
         string data;
         vector<string> datavec;
@@ -180,9 +188,9 @@ void FILEWIND::load_wind_speed_from_file()
                 datavec.erase(datavec.begin());
             }
 
-            time.push_back(t);
-            wind_speed.push_back(v);
-            wind_direction.push_back(direction);
+            time->push_back(t);
+            wind_speed->push_back(v);
+            wind_direction->push_back(direction);
         }
         fid.close();
     }
@@ -203,7 +211,7 @@ void FILEWIND::run(DYNAMIC_MODE mode)
 
 double FILEWIND::get_wind_speed_in_pu()
 {
-    if(time.size()==0)
+    if(time->size()==0)
         return 1.0;
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -219,7 +227,7 @@ double FILEWIND::get_wind_speed_in_pu()
 
 double FILEWIND::get_wind_direction_in_deg()
 {
-    if(time.size()==0)
+    if(time->size()==0)
         return 0.0;
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -254,10 +262,10 @@ double FILEWIND::get_wind_speed_in_pu()
 */
 void FILEWIND::set_previous_position(size_t pos)
 {
-    if(pos<=time.size()-1)
+    if(pos<=time->size()-1)
         previous_position = pos;
     else
-        previous_position = time.size()-1;
+        previous_position = time->size()-1;
 }
 
 size_t FILEWIND::get_previous_position() const
@@ -271,34 +279,34 @@ void FILEWIND::search_wind_data_at_simulation_time()
 
     current_time = simulation_time;
 
-    size_t n = time.size();
-    double time_min = time[0];
-    double time_max = time[n-1];
+    size_t n = time->size();
+    double time_min = (*time)[0];
+    double time_max = (*time)[n-1];
 
     if(current_time<=time_min)
     {
-        current_wind_speed = wind_speed[0];
-        current_wind_direction = wind_direction[0];
+        current_wind_speed = (*wind_speed)[0];
+        current_wind_direction = (*wind_direction)[0];
     }
     else
     {
         if(current_time>=time_max)
         {
-            current_wind_speed = wind_speed[n-1];
-            current_wind_direction = wind_direction[n-1];
+            current_wind_speed = (*wind_speed)[n-1];
+            current_wind_direction = (*wind_direction)[n-1];
         }
         else
         {
             size_t previous_index = 0, next_index = n-1;
-            //size_t previous_time = time[previous_index], next_time = time[next_index];
+            //size_t previous_time = (*time)[previous_index], next_time = (*time)[next_index];
             while(true)
             {
                 size_t temp_index = ((previous_index+next_index)>>1);
-                double temp_time = time[temp_index];
+                double temp_time = (*time)[temp_index];
                 if(fabs(temp_time-current_time)<FLOAT_EPSILON)
                 {
-                    current_wind_speed = wind_speed[temp_index];
-                    current_wind_direction = wind_direction[temp_index];
+                    current_wind_speed = (*wind_speed)[temp_index];
+                    current_wind_direction = (*wind_direction)[temp_index];
                     break;
                 }
                 else
@@ -306,22 +314,22 @@ void FILEWIND::search_wind_data_at_simulation_time()
                     if(temp_time>current_time)
                     {
                         next_index = temp_index;
-                        //next_time = time[next_index];
+                        //next_time = (*time)[next_index];
                     }
                     else
                     {
                         previous_index = temp_index;
-                        //previous_time = time[previous_index];
+                        //previous_time = (*time)[previous_index];
                     }
 
                     if(next_index-previous_index==1)
                     {
                         double slope;
-                        slope = (wind_speed[next_index]-wind_speed[previous_index])/(time[next_index]-time[previous_index]);
-                        current_wind_speed = wind_speed[previous_index]+slope*(current_time-time[previous_index]);
+                        slope = ((*wind_speed)[next_index]-(*wind_speed)[previous_index])/((*time)[next_index]-(*time)[previous_index]);
+                        current_wind_speed = (*wind_speed)[previous_index]+slope*(current_time-(*time)[previous_index]);
 
-                        slope = (wind_direction[next_index]-wind_direction[previous_index])/(time[next_index]-time[previous_index]);
-                        current_wind_direction = wind_direction[previous_index]+slope*(current_time-time[previous_index]);
+                        slope = ((*wind_direction)[next_index]-(*wind_direction)[previous_index])/((*time)[next_index]-(*time)[previous_index]);
+                        current_wind_direction = (*wind_direction)[previous_index]+slope*(current_time-(*time)[previous_index]);
                         break;
                     }
                 }

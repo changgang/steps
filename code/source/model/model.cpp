@@ -10,7 +10,11 @@ MODEL::MODEL()
 {
     device_pointer = NULL;
 
-    allowed_device_types.clear();
+    allowed_device_types = new vector<string>;
+    allowed_device_types->clear();
+
+    model_data_table = new MODEL_VAR_TABLE;
+    model_internal_variable_table = new MODEL_VAR_TABLE;
 
     set_flag_model_initialized_as_false();
 
@@ -19,11 +23,20 @@ MODEL::MODEL()
     activate_model();
 
     set_model_float_parameter_count(0);
+
+    user_input_time_series_file = new string;
+    user_input_time_series = new TIME_SERIES;
 }
 
 MODEL::~MODEL()
 {
-    ;
+    delete allowed_device_types;
+
+    delete model_data_table;
+    delete model_internal_variable_table;
+
+    delete user_input_time_series_file;
+    delete user_input_time_series;
 }
 
 void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type)
@@ -35,7 +48,7 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
        device_type=="EQUIVALENT DEVICE" or device_type=="ENERGY STORAGE")
     {
         if(not has_allowed_device_type(device_type))
-            allowed_device_types.push_back(device_type);
+            allowed_device_types->push_back(device_type);
     }
     else
     {
@@ -47,16 +60,16 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
 }
 vector<string> MODEL::get_allowed_device_types() const
 {
-    return allowed_device_types;
+    return *allowed_device_types;
 }
 
 bool MODEL::has_allowed_device_type(string device_type) const
 {
     device_type = string2upper(device_type);
-    size_t n = allowed_device_types.size();
+    size_t n = allowed_device_types->size();
     for(size_t i=0; i<n; ++i)
     {
-        if(allowed_device_types[i]==device_type)
+        if((*allowed_device_types)[i]==device_type)
             return true;
     }
     return false;
@@ -74,32 +87,32 @@ size_t MODEL::get_model_float_parameter_count() const
 
 void MODEL::clear_model_data_table()
 {
-    model_data_table.clear();
+    model_data_table->clear();
 }
 
 void MODEL::add_model_data_name_and_index_pair(string var_name, size_t var_index)
 {
-    model_data_table.add_variable_name_index_pair(var_name, var_index);
+    model_data_table->add_variable_name_index_pair(var_name, var_index);
 }
 
 size_t MODEL::get_model_data_index(string var_name) const
 {
-    return model_data_table[var_name];
+    return (*model_data_table)[var_name];
 }
 
 string MODEL::get_model_data_name(size_t var_index) const
 {
-    return model_data_table[var_index];
+    return (*model_data_table)[var_index];
 }
 
 bool MODEL::is_model_data_exist(string var_name) const
 {
-    return model_data_table[var_name]!=INDEX_NOT_EXIST;
+    return (*model_data_table)[var_name]!=INDEX_NOT_EXIST;
 }
 
 bool MODEL::is_model_data_exist(size_t var_index) const
 {
-    return model_data_table[var_index]!="";
+    return (*model_data_table)[var_index]!="";
 }
 
 void MODEL::set_model_data_with_index(size_t index, double value)
@@ -127,32 +140,32 @@ double MODEL::get_model_data_with_index(size_t index)
 
 void MODEL::clear_model_internal_variable_table()
 {
-    model_internal_variable_table.clear();
+    model_internal_variable_table->clear();
 }
 
 void MODEL::add_model_inernal_variable_name_and_index_pair(string var_name, size_t var_index)
 {
-    model_internal_variable_table.add_variable_name_index_pair(var_name, var_index);
+    model_internal_variable_table->add_variable_name_index_pair(var_name, var_index);
 }
 
 size_t MODEL::get_model_inernal_variable_index(string var_name) const
 {
-    return model_internal_variable_table[var_name];
+    return (*model_internal_variable_table)[var_name];
 }
 
 string MODEL::get_model_inernal_variable_name(size_t var_index) const
 {
-    return model_internal_variable_table[var_index];
+    return (*model_internal_variable_table)[var_index];
 }
 
 bool MODEL::is_model_inernal_variable_exist(string var_name) const
 {
-    return model_internal_variable_table[var_name]!=INDEX_NOT_EXIST;
+    return (*model_internal_variable_table)[var_name]!=INDEX_NOT_EXIST;
 }
 
 bool MODEL::is_model_inernal_variable_exist(size_t var_index) const
 {
-    return model_internal_variable_table[var_index]!="";
+    return (*model_internal_variable_table)[var_index]!="";
 }
 
 double MODEL::get_model_internal_variable_with_index(size_t index)
@@ -177,9 +190,9 @@ void MODEL::set_device_id(DEVICE_ID did)
     if(not has_allowed_device_type(did.get_device_type()))
     {
         osstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which the following types of devices is expected:\n";
-        size_t n = allowed_device_types.size();
+        size_t n = allowed_device_types->size();
         for(size_t i=0; i<n; ++i)
-            osstream<<allowed_device_types[i]<<"\n";
+            osstream<<(*allowed_device_types)[i]<<"\n";
         osstream<<"Model device id will not be updated.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;

@@ -101,7 +101,7 @@ class WT_ELECTRICAL_MODEL : public WTG_MODEL
         double reactive_power_reference_in_pu;
         double power_factor_reference_in_pu;
         PE_VAR_CONTROL_MODE pe_var_control_mode;
-        WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE power_speed_table;
+        WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE *power_speed_table;
 };
 
 #endif // WT_ELECTRICAL_MODEL_H

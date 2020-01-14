@@ -67,7 +67,7 @@ class STABILIZER_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
 
     private:
-        SIGNAL signals[MAX_STABILIZER_INPUT_SIGNAL_SLOT];
+        SIGNAL *signals[MAX_STABILIZER_INPUT_SIGNAL_SLOT];
 };
 
 #endif // STABILIZER_MODEL_H

@@ -180,7 +180,7 @@ class URCSCT : public TURBINE_GOVERNOR_MODEL
 
         double gas_K3;
         double gas_T;
-        CONTINUOUS_BUFFER gas_fuel_control;
+        CONTINUOUS_BUFFER *gas_fuel_control;
 
         double gas_K6, gas_Kf;
 
@@ -190,10 +190,10 @@ class URCSCT : public TURBINE_GOVERNOR_MODEL
         FIRST_ORDER_BLOCK gas_fuel_system;
 
         double gas_ECR;
-        CONTINUOUS_BUFFER gas_combustor;
+        CONTINUOUS_BUFFER *gas_combustor;
 
         double gas_ETD;
-        CONTINUOUS_BUFFER gas_turbine_exhaust;
+        CONTINUOUS_BUFFER *gas_turbine_exhaust;
         double gas_TR, gas_af1, gas_bf1;
 
         double gas_K4;

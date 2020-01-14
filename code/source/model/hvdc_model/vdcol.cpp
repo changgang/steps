@@ -9,12 +9,14 @@ using namespace std;
 
 VDCOL::VDCOL()
 {
+    vdcol_parameters = new vector< vector<double> >;
     clear();
 }
 
 
 VDCOL::VDCOL(const VDCOL& limiter)
 {
+    delete vdcol_parameters;
     clear();
     copy_from_const_vdcol(limiter);
 }
@@ -28,7 +30,7 @@ double VDCOL::get_vdcol_voltage_of_last_point_in_kV() const
 {
     size_t n = get_vdcol_point_count();
     if(n>0)
-        return vdcol_parameters[n-1][0];
+        return (*vdcol_parameters)[n-1][0];
     else
         return 0.0;
 }
@@ -37,7 +39,7 @@ double VDCOL::get_vdcol_current_of_last_point_in_kA() const
 {
     size_t n = get_vdcol_point_count();
     if(n>0)
-        return vdcol_parameters[n-1][1];
+        return (*vdcol_parameters)[n-1][1];
     else
         return 0.0;
 }
@@ -52,7 +54,7 @@ void VDCOL::append_vdcol_point_in_kV_kA(double V_in_kV, double I_in_kA)
         vector<double> point;
         point.push_back(V_in_kV);
         point.push_back(I_in_kA);
-        vdcol_parameters.push_back(point);
+        vdcol_parameters->push_back(point);
     }
     else
     {
@@ -71,7 +73,7 @@ void VDCOL::append_vdcol_point_in_kV_kA(double V_in_kV, double I_in_kA)
             vector<double> point;
             point.push_back(V_in_kV);
             point.push_back(I_in_kA);
-            vdcol_parameters.push_back(point);
+            vdcol_parameters->push_back(point);
         }
         else
         {
@@ -103,14 +105,14 @@ void VDCOL::append_vdcol_point_in_kV_kA(double V_in_kV, double I_in_kA)
                 point.push_back(get_vdcol_current_of_point_in_kA(i));
                 temp.push_back(point);
             }
-            vdcol_parameters = temp;
+            (*vdcol_parameters) = temp;
         }
     }
 }
 
 size_t VDCOL::get_vdcol_point_count() const
 {
-    return vdcol_parameters.size();
+    return vdcol_parameters->size();
 }
 
 double VDCOL::get_vdcol_voltage_of_point_in_kV(size_t index) const
@@ -118,7 +120,7 @@ double VDCOL::get_vdcol_voltage_of_point_in_kV(size_t index) const
     if(index>=get_vdcol_point_count())
         return get_vdcol_voltage_of_last_point_in_kV();
     else
-        return vdcol_parameters[index][0];
+        return (*vdcol_parameters)[index][0];
 }
 
 double VDCOL::get_vdcol_current_of_point_in_kA(size_t index) const
@@ -126,7 +128,7 @@ double VDCOL::get_vdcol_current_of_point_in_kA(size_t index) const
     if(index>=get_vdcol_point_count())
         return get_vdcol_current_of_last_point_in_kA();
     else
-        return vdcol_parameters[index][1];
+        return (*vdcol_parameters)[index][1];
 }
 
 double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_in_kV(double Vdci_in_kV) const
@@ -165,7 +167,7 @@ double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_i
 
 void VDCOL::clear()
 {
-    vdcol_parameters.clear();
+    vdcol_parameters->clear();
 }
 
 bool VDCOL::is_valid() const

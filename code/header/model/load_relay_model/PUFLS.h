@@ -118,7 +118,7 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         TIMER discrete_stage_timer[MAX_LOAD_RELAY_STAGE];
         bool flag_discrete_stage_is_tripped[MAX_LOAD_RELAY_STAGE];
 
-        CONTINUOUS_BUFFER history_minimum_frequency_buffer;
+        CONTINUOUS_BUFFER *history_minimum_frequency_buffer;
 
         double current_continuous_shed_command_in_pu;
 };

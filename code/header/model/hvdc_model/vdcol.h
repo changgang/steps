@@ -34,7 +34,7 @@ class VDCOL
         bool is_valid() const;
         void check();
 
-        vector< vector<double> > vdcol_parameters;
+        vector< vector<double> > *vdcol_parameters;
 };
 
 #endif // VDCOL_H

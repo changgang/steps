@@ -8,6 +8,10 @@ using namespace std;
 
 AERDF::AERDF()
 {
+    cp_file_name = new string;
+    pitch_angles = new vector<double>;
+    tip_speed_ratios = new vector<double>;
+    Cp_Matrix = new vector<vector<double> >;
     clear();
 }
 
@@ -18,7 +22,10 @@ AERDF::AERDF(const AERDF& model):WT_AERODYNAMIC_MODEL()
 
 AERDF::~AERDF()
 {
-    ;
+    delete cp_file_name;
+    delete pitch_angles;
+    delete tip_speed_ratios;
+    delete Cp_Matrix;
 }
 
 AERDF& AERDF::operator=(const AERDF& model)
@@ -39,39 +46,39 @@ void AERDF::copy_from_const_model(const AERDF& model)
 void AERDF::set_Cp_file(string file)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    cp_file_name = file;
+    (*cp_file_name) = file;
     load_data_from_Cp_file();
-    if(pitch_angles.size()==0)
+    if(pitch_angles->size()==0)
     {
         ostringstream osstream;
         osstream<<"Error. Fail to load wind turbine Cp data from file '"<<file<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
         toolkit.show_information_with_leading_time_stamp(osstream);
-        cp_file_name = "";
+        (*cp_file_name) = "";
         return;
     }
 }
 
 string AERDF::get_Cp_file() const
 {
-    return cp_file_name;
+    return (*cp_file_name);
 }
 
 void AERDF::load_data_from_Cp_file()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
-    if(cp_file_name.size()<1)
+    if(cp_file_name->size()<1)
     {
         osstream<<"Initialization error. No file is provided for loading wind turbine Cp data. Check model "<<get_model_name()<<" of "<<get_device_name();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-    ifstream fid(cp_file_name);
+    ifstream fid((*cp_file_name));
     if(fid.is_open())
         fid.close();
     else
     {
-        osstream<<"Initialization error. Fail to open wind turbine Cp data file '"<<cp_file_name<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
+        osstream<<"Initialization error. Fail to open wind turbine Cp data file '"<<(*cp_file_name)<<"'. Check model "<<get_model_name()<<" of "<<get_device_name();
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -83,9 +90,9 @@ void AERDF::load_data_from_Cp_file()
 
 void AERDF::load_pitch_angles()
 {
-    pitch_angles.clear();
+    pitch_angles->clear();
 
-    ifstream fid(cp_file_name);
+    ifstream fid((*cp_file_name));
 
     string data;
     vector<string> datavec;
@@ -104,7 +111,7 @@ void AERDF::load_pitch_angles()
     {
         double pitch = get_double_data(datavec.front(),"0.0");
         datavec.erase(datavec.begin());
-        pitch_angles.push_back(pitch);
+        pitch_angles->push_back(pitch);
     }
 
     fid.close();
@@ -113,9 +120,9 @@ void AERDF::load_pitch_angles()
 void AERDF::load_tip_speed_ratios()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    tip_speed_ratios.clear();
+    tip_speed_ratios->clear();
 
-    ifstream fid(cp_file_name);
+    ifstream fid((*cp_file_name));
     ostringstream osstream;
 
     string data;
@@ -135,12 +142,12 @@ void AERDF::load_tip_speed_ratios()
         size_t n = datavec.size();
         if(n==0)
         {
-            osstream<<"Warning. No more tip speed ratio lines in wind turbine Cp data file '"<<cp_file_name<<"' of "<<get_model_name()<<" of "<<get_device_name()<<".";
+            osstream<<"Warning. No more tip speed ratio lines in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_device_name()<<".";
             toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
         double tsr = get_double_data(datavec.front(),"0.0");
-        tip_speed_ratios.push_back(tsr);
+        tip_speed_ratios->push_back(tsr);
     }
     fid.close();
 }
@@ -148,9 +155,9 @@ void AERDF::load_tip_speed_ratios()
 void AERDF::load_Cp_matrix()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    Cp_Matrix.clear();
+    Cp_Matrix->clear();
 
-    ifstream fid(cp_file_name);
+    ifstream fid((*cp_file_name));
     ostringstream osstream;
 
     string data;
@@ -158,7 +165,7 @@ void AERDF::load_Cp_matrix()
     getline(fid, data); // skip the head line
     getline(fid, data); // get the first valid line of pitch angles
 
-    size_t N_pitch = pitch_angles.size();
+    size_t N_pitch = pitch_angles->size();
     vector<double> cp_line;
     while(true)
     {
@@ -172,9 +179,9 @@ void AERDF::load_Cp_matrix()
         size_t n = datavec.size();
         if(n<N_pitch+1)
         {
-            osstream<<"Warning. Different length of tip speed ratio line is detected in wind turbine Cp data file '"<<cp_file_name<<"' of "<<get_model_name()<<" of "<<get_device_name()<<":"<<endl
+            osstream<<"Warning. Different length of tip speed ratio line is detected in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_device_name()<<":"<<endl
                     <<data<<endl
-                    <<"No more data will be loaded from Cp data file '"<<cp_file_name<<"'.";
+                    <<"No more data will be loaded from Cp data file '"<<(*cp_file_name)<<"'.";
             toolkit.show_information_with_leading_time_stamp(osstream);
             break;
         }
@@ -186,7 +193,7 @@ void AERDF::load_Cp_matrix()
             datavec.erase(datavec.begin());
             cp_line.push_back(cp);
         }
-        Cp_Matrix.push_back(cp_line);
+        Cp_Matrix->push_back(cp_line);
     }
 
     fid.close();
@@ -200,31 +207,31 @@ double AERDF::get_Cp(double lambda, double pitch_deg) const
 
 bool AERDF::is_Cp_point_exist(double pitch, double lambda)
 {
-    size_t N_pitch = pitch_angles.size();
+    size_t N_pitch = pitch_angles->size();
     bool pitch_found = false;
     for(size_t i=0; i<N_pitch; ++i)
     {
-        if(fabs(pitch_angles[i]-pitch)<FLOAT_EPSILON)
+        if(fabs((*pitch_angles)[i]-pitch)<FLOAT_EPSILON)
         {
             pitch_found = true;
             break;
         }
-        if(pitch_angles[i]>pitch)
+        if((*pitch_angles)[i]>pitch)
             break;
     }
     if(pitch_found==false)
         return false;
 
-    size_t N_lambda = tip_speed_ratios.size();
+    size_t N_lambda = tip_speed_ratios->size();
     bool lambda_found = false;
     for(size_t i=0; i<N_lambda; ++i)
     {
-        if(fabs(tip_speed_ratios[i]-lambda)<FLOAT_EPSILON)
+        if(fabs((*tip_speed_ratios)[i]-lambda)<FLOAT_EPSILON)
         {
             lambda_found = true;
             break;
         }
-        if(tip_speed_ratios[i]>lambda)
+        if((*tip_speed_ratios)[i]>lambda)
             break;
     }
     if(lambda_found==false)
@@ -339,10 +346,10 @@ void AERDF::clear()
     prepare_model_data_table();
     prepare_model_internal_variable_table();
 
-    cp_file_name = "";
-    pitch_angles.clear();
-    tip_speed_ratios.clear();
-    Cp_Matrix.clear();
+    (*cp_file_name) = "";
+    pitch_angles->clear();
+    tip_speed_ratios->clear();
+    Cp_Matrix->clear();
 }
 
 void AERDF::report()

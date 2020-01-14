@@ -8,11 +8,13 @@ using namespace std;
 
 PUFLS::PUFLS()
 {
+    history_minimum_frequency_buffer = new CONTINUOUS_BUFFER;
     clear();
 }
 
 PUFLS::~PUFLS()
 {
+    delete history_minimum_frequency_buffer;
 }
 
 void PUFLS::clear()
@@ -301,7 +303,7 @@ void PUFLS::setup_block_toolkit_and_parameters()
     additional_stage_timer.set_toolkit(toolkit);
     for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
         discrete_stage_timer[i].set_toolkit(toolkit);
-    history_minimum_frequency_buffer.set_toolkit(toolkit);
+    history_minimum_frequency_buffer->set_toolkit(toolkit);
 }
 
 void PUFLS::initialize()
@@ -327,8 +329,8 @@ void PUFLS::initialize()
 
         double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
-        history_minimum_frequency_buffer.set_buffer_size(2*(size_t)(t_delay/delt)+2);
-        history_minimum_frequency_buffer.initialize_buffer(current_time, fbase);
+        history_minimum_frequency_buffer->set_buffer_size(2*(size_t)(t_delay/delt)+2);
+        history_minimum_frequency_buffer->initialize_buffer(current_time, fbase);
 
         additional_stage_timer.reset();
         flag_additional_stage_is_tripped = false;
@@ -408,14 +410,14 @@ void PUFLS::append_new_minimum_frequency()
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double current_freq = frequency_sensor.get_output();
-    //double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
-    double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_time(current_time-delt);
+    //double previous_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_head();
+    double previous_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_time(current_time-delt);
     //cout<<"at time "<<toolkit.get_dynamic_simulation_time_in_s()<<": freq = "<<current_freq<<", previous minimum = "<<previous_minimum_freq<<endl;
 
     if(current_freq<previous_minimum_freq)
-        history_minimum_frequency_buffer.append_data(current_time, current_freq);
+        history_minimum_frequency_buffer->append_data(current_time, current_freq);
     else
-        history_minimum_frequency_buffer.append_data(current_time, previous_minimum_freq);
+        history_minimum_frequency_buffer->append_data(current_time, previous_minimum_freq);
 /*
     size_t bus = ((LOAD*) get_device_pointer())->get_load_bus();
     if(bus==3)
@@ -424,9 +426,9 @@ void PUFLS::append_new_minimum_frequency()
                 <<"At time "<<current_time<<"s, "<<get_device_name()<<endl
                 <<"Current bus frequency is: "<<get_bus_frequency_in_Hz()<<"Hz"<<endl
                 <<"Current sensed frequency is: "<<frequency_sensor.get_output()<<"Hz"<<endl
-                <<"Current minimum frequency is: "<<history_minimum_frequency_buffer.get_buffer_value_at_head()<<"Hz";
+                <<"Current minimum frequency is: "<<history_minimum_frequency_buffer->get_buffer_value_at_head()<<"Hz";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        history_minimum_frequency_buffer.show_buffer();
+        history_minimum_frequency_buffer->show_buffer();
     }
 */
 }
@@ -444,7 +446,7 @@ void PUFLS::update_continuous_shed_command()
 
     if(is_minimum_frequency_declining())
     {
-        double delayed_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_time(current_time-delay);
+        double delayed_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_time(current_time-delay);
         if(delayed_minimum_freq<f_th)
         {
             double delta_frequency = f_th-delayed_minimum_freq;
@@ -456,11 +458,11 @@ void PUFLS::update_continuous_shed_command()
                         <<"At time "<<current_time<<"s, "<<get_device_name()<<" minimum frequency is declining."<<endl
                         <<"Current bus frequency is: "<<get_bus_frequency_in_Hz()<<"Hz"<<endl
                         <<"Current sensed frequency is: "<<frequency_sensor.get_output()<<"Hz"<<endl
-                        <<"Current minimum frequency is: "<<history_minimum_frequency_buffer.get_buffer_value_at_head()<<"Hz"<<endl
+                        <<"Current minimum frequency is: "<<history_minimum_frequency_buffer->get_buffer_value_at_head()<<"Hz"<<endl
                         <<"Delayed minimum frequency is: "<<delayed_minimum_freq<<"Hz"<<endl
                         <<"Current shed command is: "<<current_continuous_shed_command_in_pu;
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                history_minimum_frequency_buffer.show_buffer();
+                history_minimum_frequency_buffer->show_buffer();
             }*/
         }
     }
@@ -739,15 +741,15 @@ void PUFLS::reset_additional_stage_timer()
 bool PUFLS::is_frequency_recovering_beyond_current_minimum_frequency() const
 {
     double current_freq = frequency_sensor.get_output();
-    double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
+    double current_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_head();
 
     return (current_freq-current_minimum_freq)>FLOAT_EPSILON;
 }
 
 bool PUFLS::is_minimum_frequency_declining() const
 {
-    double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
-    double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_delay_index(1);
+    double current_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_head();
+    double previous_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_delay_index(1);
 
     return (current_minimum_freq-previous_minimum_freq)<-FLOAT_EPSILON;
 }

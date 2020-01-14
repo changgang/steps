@@ -47,10 +47,10 @@ class AERDF : public WT_AERODYNAMIC_MODEL
         void load_Cp_matrix();
         bool is_Cp_point_exist(double pitch, double lambda);
         // Cp function parameters
-        string cp_file_name;
-        vector<double> pitch_angles;
-        vector<double> tip_speed_ratios;
-        vector<vector<double> > Cp_Matrix;
+        string *cp_file_name;
+        vector<double> *pitch_angles;
+        vector<double> *tip_speed_ratios;
+        vector<vector<double> > *Cp_Matrix;
 
 };
 
