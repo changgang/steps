@@ -46,6 +46,10 @@ void FILEWIND::copy_from_const_model(const FILEWIND& model)
 
 FILEWIND::FILEWIND(const FILEWIND& model)
 {
+    wind_speed_file = new string;
+    time = new vector<double>;
+    wind_speed = new vector<double>;
+    wind_direction = new vector<double>;
     copy_from_const_model(model);
 }
 

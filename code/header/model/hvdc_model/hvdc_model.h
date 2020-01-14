@@ -167,7 +167,7 @@ class HVDC_MODEL : public MODEL
         double minimum_dc_current_command_in_kA;
         VDCOL vdcol_limiter;
 
-        vector<double> record_of_bypass_time;
+        vector<double> *record_of_bypass_time;
         size_t max_count_of_bypass_before_blocked;
 };
 

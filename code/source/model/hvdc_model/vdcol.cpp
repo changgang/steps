@@ -16,13 +16,14 @@ VDCOL::VDCOL()
 
 VDCOL::VDCOL(const VDCOL& limiter)
 {
-    delete vdcol_parameters;
+    vdcol_parameters = new vector< vector<double> >;
     clear();
     copy_from_const_vdcol(limiter);
 }
 
 VDCOL::~VDCOL()
 {
+    delete vdcol_parameters;
 }
 
 

@@ -608,7 +608,7 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
     meter = setter.prepare_generator_compensator_model_internal_variable_meter(did, "COMPENSATED VOLTAGE IN PU");
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="COMPENSATOR MODEL INTERNAL VARIABLE");
-    TEST_ASSERT(meter.get_internal_variable_name()=="");
+    TEST_ASSERT(meter.get_internal_variable_name()=="COMPENSATED VOLTAGE IN PU");
 
     meter = setter.prepare_generator_stabilizer_model_internal_variable_meter(did, "STATE@PHASE TUNER 3");
     TEST_ASSERT(meter.get_device_id()==did);
@@ -634,12 +634,12 @@ void METER_SETTER_TEST::test_prepare_generator_related_meters()
 void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_SETTER_TEST");
-
+    cout<<__FILE__<<__LINE__<<endl;
     prepare_basic_wt_generators();
-
+    cout<<__FILE__<<__LINE__<<endl;
     METER meter;
     meter.set_toolkit(default_toolkit);
-
+    cout<<__FILE__<<__LINE__<<endl;
     DEVICE_ID did;
     TERMINAL terminal;
 
@@ -647,6 +647,8 @@ void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
     terminal.append_bus(1);
     did.set_device_terminal(terminal);
     did.set_device_identifier("1#");
+
+    cout<<__FILE__<<__LINE__<<endl;
 
     meter = setter.prepare_wt_generator_terminal_current_in_pu_on_mbase_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
@@ -683,6 +685,7 @@ void METER_SETTER_TEST::test_prepare_wt_generator_related_meters()
     meter = setter.prepare_wt_generator_speed_reference_in_rad_per_s_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);
     TEST_ASSERT(meter.get_meter_type()=="SPEED REFERENCE IN RAD/S");
+    cout<<__FILE__<<__LINE__<<endl;
 
     meter = setter.prepare_wt_generator_turbine_speed_deviation_in_pu_meter(did);
     TEST_ASSERT(meter.get_device_id()==did);

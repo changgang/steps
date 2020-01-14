@@ -1045,7 +1045,9 @@ void HVDC::save() const
 void HVDC::set_model(const MODEL* model)
 {
     if(model->get_model_type()=="HVDC")
+    {
         set_hvdc_model((HVDC_MODEL*) model);
+    }
     else
     {
         if(model->get_model_type()=="AUXILIARY SIGNAL")

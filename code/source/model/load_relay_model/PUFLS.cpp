@@ -12,6 +12,12 @@ PUFLS::PUFLS()
     clear();
 }
 
+PUFLS::PUFLS(const PUFLS& model) : LOAD_FREQUENCY_RELAY_MODEL()
+{
+    history_minimum_frequency_buffer = new CONTINUOUS_BUFFER;
+    copy_from_const_model(model);
+}
+
 PUFLS::~PUFLS()
 {
     delete history_minimum_frequency_buffer;
@@ -63,11 +69,6 @@ void PUFLS::copy_from_const_model(const PUFLS& model)
     set_discrete_stage_time_delay_in_s(model.get_discrete_stage_time_delay_in_s());
     for(size_t stage =0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
         set_discrete_stage_shed_scale_in_pu(stage, model.get_discrete_stage_shed_scale_in_pu(stage));
- }
-
-PUFLS::PUFLS(const PUFLS& model) : LOAD_FREQUENCY_RELAY_MODEL()
-{
-    copy_from_const_model(model);
 }
 
 PUFLS& PUFLS::operator=(const PUFLS& model)

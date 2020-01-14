@@ -37,7 +37,7 @@ HVDC_MODEL::HVDC_MODEL()
 
     set_maximum_count_of_bypassing_before_blocked(999999);
 
-    record_of_bypass_time.clear();
+    record_of_bypass_time = new vector<double>;
 
     manual_blocked = false;
     manual_bypassed = false;
@@ -45,7 +45,7 @@ HVDC_MODEL::HVDC_MODEL()
 
 HVDC_MODEL::~HVDC_MODEL()
 {
-    ;
+    delete record_of_bypass_time;
 }
 
 HVDC* HVDC_MODEL::get_hvdc_pointer() const
@@ -414,7 +414,7 @@ void HVDC_MODEL::block_hvdc()
         time_when_unblocking = INFINITE_THRESHOLD;
 
         block_timer.start();
-        record_of_bypass_time.clear();
+        record_of_bypass_time->clear();
 
         osstream<<hvdc->get_device_name()<<" is blocked at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -597,8 +597,8 @@ void HVDC_MODEL::bypass_hvdc()
         osstream<<hvdc->get_device_name()<<" is bypassed at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
-        record_of_bypass_time.push_back(TIME);
-        if(record_of_bypass_time.size()>=get_maximum_count_of_bypassing_before_blocked())
+        record_of_bypass_time->push_back(TIME);
+        if(record_of_bypass_time->size()>=get_maximum_count_of_bypassing_before_blocked())
         {
             osstream<<hvdc->get_device_name()<<" will be blocked at time "<<setprecision(5)<<fixed<<TIME
               <<" s since the max count of bypassing is reached.";
@@ -1559,25 +1559,25 @@ double HVDC_MODEL::get_converter_ac_voltage_in_kV(HVDC_CONVERTER_SIDE converter)
 
 double HVDC_MODEL::get_time_duration_to_the_last_bypass_in_s() const
 {
-    size_t n = record_of_bypass_time.size();
+    size_t n = record_of_bypass_time->size();
     if(n==0)
         return 0.0;
     else
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
-        double time = record_of_bypass_time[n-1];
+        double time = (*record_of_bypass_time)[n-1];
         return TIME - time;
     }
 }
 
 double HVDC_MODEL::get_time_of_the_last_bypass_in_s() const
 {
-    size_t n = record_of_bypass_time.size();
+    size_t n = record_of_bypass_time->size();
     if(n==0)
         return INFINITE_THRESHOLD;
     else
-        return record_of_bypass_time[n-1];
+        return (*record_of_bypass_time)[n-1];
 }
 
 void HVDC_MODEL::set_common_timer_toolkit()

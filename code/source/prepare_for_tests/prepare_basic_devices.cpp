@@ -2,7 +2,9 @@
 #include "header/model/all_supported_models.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include <iostream>
 
+using namespace std;
 
 void prepare_basic_buses()
 {

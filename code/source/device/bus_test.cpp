@@ -555,6 +555,9 @@ void BUS_TEST::test_set_get_frequency_deviation()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"BUS_TEST");
 
+    BUS_FREQUENCY_MODEL * bus_model = bus.get_bus_frequency_model();
+    bus_model->run(INITIALIZE_MODE);
+
     bus.set_frequency_deviation_in_pu(0.0);
     TEST_ASSERT(fabs(bus.get_frequency_deviation_in_pu()-0.0)<FLOAT_EPSILON);
     bus.set_frequency_deviation_in_pu(0.01);

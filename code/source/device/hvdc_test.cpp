@@ -1333,7 +1333,6 @@ void HVDC_TEST::test_set_get_hvdc_model()
     show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
 
     TEST_ASSERT(hvdc.get_hvdc_model()==NULL);
-
     CDC4T model;
     model.set_inverter_dc_voltage_sensor_T_in_s(0.1);
     hvdc.set_model(&model);

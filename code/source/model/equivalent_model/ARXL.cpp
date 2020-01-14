@@ -38,6 +38,13 @@ void ARXL::copy_from_constant_model(const ARXL& model)
 
 ARXL::ARXL(const ARXL& model) : EQUIVALENT_MODEL()
 {
+    p_meters = new vector<METER>;
+    q_meters = new vector<METER>;
+    p_delays = new vector< vector<size_t> >;
+    q_delays = new vector< vector<size_t> >;
+    p_coefficients = new vector< vector<double> >;
+    q_coefficients = new vector< vector<double> >;
+
     copy_from_constant_model(model);
 }
 

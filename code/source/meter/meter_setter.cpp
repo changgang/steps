@@ -2,6 +2,9 @@
 #include "header/basic/terminal.h"
 #include "header/basic/utility.h"
 #include "header/steps_namespace.h"
+#include <iostream>
+
+using namespace std;
 
 METER_SETTER::METER_SETTER()
 {

@@ -14,7 +14,6 @@ CDC4T::CDC4T()
 
 CDC4T::~CDC4T()
 {
-    ;
 }
 
 void CDC4T::clear()

@@ -574,12 +574,9 @@ void WT_GENERATOR_MODEL_TEST::test_variable_step_simulation_with_active_current_
             export_meter_values(time);
         }
 
-        cout<<__FILE__<<", "<<__LINE__<<endl;
         delt *= 2.0;
         default_toolkit.set_dynamic_simulation_time_step_in_s(delt);
-        cout<<__FILE__<<", "<<__LINE__<<endl;
         model->run(UPDATE_MODE);
-        cout<<__FILE__<<", "<<__LINE__<<endl;
 
         export_meter_values(time);
 

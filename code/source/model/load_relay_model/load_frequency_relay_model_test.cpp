@@ -53,6 +53,8 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::test_get_bus_frequency()
 
     BUS_FREQUENCY_MODEL* bus_model = busptr->get_bus_frequency_model();
 
+    bus_model->run(INITIALIZE_MODE);
+
     bus_model->set_frequency_deviation_in_pu(0.0);
     TEST_ASSERT(fabs(model->get_bus_frequency_in_Hz()-50.0*(1.0-0.0))<FLOAT_EPSILON);
 
