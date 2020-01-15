@@ -32,14 +32,16 @@ class WT_GENERATOR : public SOURCE
         size_t get_number_of_lumped_wt_generators() const;
         double get_rated_power_per_wt_generator_in_MW() const;
 
-        void set_model(const MODEL* model);
-        void set_wt_generator_model(const WT_GENERATOR_MODEL* model);
-        void set_wt_aerodynamic_model(const WT_AERODYNAMIC_MODEL* model);
-        void set_wt_turbine_model(const WT_TURBINE_MODEL* model);
-        void set_wt_electrical_model(const WT_ELECTRICAL_MODEL* model);
-        void set_wt_pitch_model(const WT_PITCH_MODEL* model);
-        void set_wind_speed_model(const WIND_SPEED_MODEL* model);
-        void set_wt_relay_model(const WT_RELAY_MODEL* model);
+        virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
+
+        void set_wt_generator_model(WT_GENERATOR_MODEL* model);
+        void set_wt_aerodynamic_model(WT_AERODYNAMIC_MODEL* model);
+        void set_wt_turbine_model(WT_TURBINE_MODEL* model);
+        void set_wt_electrical_model(WT_ELECTRICAL_MODEL* model);
+        void set_wt_pitch_model(WT_PITCH_MODEL* model);
+        void set_wind_speed_model(WIND_SPEED_MODEL* model);
+        void set_wt_relay_model(WT_RELAY_MODEL* model);
 
         WT_GENERATOR_MODEL* get_wt_generator_model();
         WT_AERODYNAMIC_MODEL* get_wt_aerodynamic_model();
@@ -48,14 +50,6 @@ class WT_GENERATOR : public SOURCE
         WT_PITCH_MODEL* get_wt_pitch_model();
         WIND_SPEED_MODEL* get_wind_speed_model();
         WT_RELAY_MODEL* get_wt_relay_model();
-
-        void clear_wt_generator_model();
-        void clear_wt_aerodynamic_model();
-        void clear_wt_turbine_model();
-        void clear_wt_electrical_model();
-        void clear_wt_pitch_model();
-        void clear_wind_speed_model();
-        void clear_wt_relay_model();
 
         virtual void run(DYNAMIC_MODE mode);
         virtual void report() const;

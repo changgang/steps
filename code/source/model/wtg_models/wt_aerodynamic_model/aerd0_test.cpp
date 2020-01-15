@@ -1,6 +1,7 @@
 #include "header/basic/test_macro.h"
 #include "header/model/wtg_models/wt_aerodynamic_model/aerd0_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -24,6 +25,10 @@ void AERD0_TEST::setup()
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     AERD0 model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(wt_gen->get_device_id());
+
     model.set_number_of_pole_pairs(2);
     model.set_generator_to_turbine_gear_ratio(100.0);
     model.set_gear_efficiency(1.0);
@@ -47,12 +52,15 @@ void AERD0_TEST::setup()
     model.set_C5(21.0);
     model.set_C6(0.0068);
 
-    wt_gen->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void AERD0_TEST::tear_down()
 {
     WT_AERODYNAMIC_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 
     show_test_end_information();
 }

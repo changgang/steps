@@ -16,9 +16,6 @@ PVCV0::~PVCV0()
 
 void PVCV0::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
     set_current_source_flag(true);
 
     active_current_commander.set_limiter_type(NO_LIMITER);

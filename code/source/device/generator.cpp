@@ -17,23 +17,10 @@ using namespace std;
 GENERATOR::GENERATOR() : SOURCE()
 {
     clear();
-
-    sync_generator_model = NULL;
-    compensator_model = NULL;
-    exciter_model = NULL;
-    stabilizer_model = NULL;
-    turbine_governor_model = NULL;
-    turbine_load_controller_model = NULL;
 }
 
 GENERATOR::~GENERATOR()
 {
-    if(sync_generator_model!=NULL) delete sync_generator_model;
-    if(compensator_model!=NULL) delete compensator_model;
-    if(exciter_model!=NULL) delete exciter_model;
-    if(stabilizer_model!=NULL) delete stabilizer_model;
-    if(turbine_governor_model!=NULL) delete turbine_governor_model;
-    if(turbine_load_controller_model!=NULL) delete turbine_load_controller_model;
 }
 
 void GENERATOR::set_generator_bus(size_t bus)
@@ -59,6 +46,13 @@ complex<double> GENERATOR::get_generator_impedance_in_pu() const
 void GENERATOR::clear()
 {
     SOURCE::clear();
+
+    sync_generator_model = NULL;
+    compensator_model = NULL;
+    exciter_model = NULL;
+    stabilizer_model = NULL;
+    turbine_governor_model = NULL;
+    turbine_load_controller_model = NULL;
 }
 
 DEVICE_ID GENERATOR::get_device_id() const
@@ -115,451 +109,58 @@ void GENERATOR::set_model(const MODEL* model)
     }
 }
 
-void GENERATOR::set_sync_generator_model(const SYNC_GENERATOR_MODEL* model)
+MODEL* GENERATOR::get_model_of_type(string model_type)
+{
+    model_type = string2upper(model_type);
+    if(model_type=="SYNC GENERATOR")
+        return get_sync_generator_model();
+    if(model_type=="COMPENSATOR")
+        return get_compensator_model();
+    if(model_type=="EXCITER")
+        return get_exciter_model();
+    if(model_type=="STABILIZER")
+        return get_stabilizer_model();
+    if(model_type=="TURBINE GOVERNOR")
+        return get_turbine_governor_model();
+    if(model_type=="TURBINE LOAD CONTROLLER")
+        return get_turbine_load_controller_model();
+    return nullptr;
+}
+
+void GENERATOR::set_sync_generator_model(SYNC_GENERATOR_MODEL* model)
 {
     if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        if(model->get_model_type()=="SYNC GENERATOR")
-        {
-            SYNC_GENERATOR_MODEL* oldmodel = get_sync_generator_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                sync_generator_model = NULL;
-            }
-
-            SYNC_GENERATOR_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(model_name=="GENCLS")
-            {
-                GENCLS* smodel = (GENCLS*) (model);
-                new_model = (SYNC_GENERATOR_MODEL*) new GENCLS(*smodel);
-            }
-            if(model_name=="GENROU")
-            {
-                GENROU* smodel = (GENROU*) (model);
-                new_model = (SYNC_GENERATOR_MODEL*) new GENROU(*smodel);
-            }
-            if(model_name=="GENSAL")
-            {
-                GENSAL* smodel = (GENSAL*) (model);
-                new_model = (SYNC_GENERATOR_MODEL*) new GENSAL(*smodel);
-            }
-
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                sync_generator_model = new_model;
-            }
-            else
-            {
-                ostringstream osstream;
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append sync generator model of "<<get_device_name();
-                STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up sync generator model.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-            return;
-        }
-    }
+        sync_generator_model = model;
 }
 
-void GENERATOR::set_compensator_model(const COMPENSATOR_MODEL* model)
+void GENERATOR::set_compensator_model(COMPENSATOR_MODEL* model)
 {
     if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-        if(model->get_model_type()=="COMPENSATOR")
-        {
-            COMPENSATOR_MODEL* oldmodel = get_compensator_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                compensator_model=NULL;
-            }
-
-            COMPENSATOR_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(model_name=="COMP")
-            {
-                COMP* smodel = (COMP*) (model);
-                new_model = (COMPENSATOR_MODEL*) new COMP(*smodel);
-            }
-            if(model_name=="IEEEVC")
-            {
-                IEEEVC* smodel = (IEEEVC*) (model);
-                new_model = (COMPENSATOR_MODEL*) new IEEEVC(*smodel);
-            }
-            if(model_name=="PSASPVC")
-            {
-                PSASPVC* smodel = (PSASPVC*) (model);
-                new_model = (COMPENSATOR_MODEL*) new PSASPVC(*smodel);
-            }
-
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                compensator_model = new_model;
-            }
-            else
-            {
-                ostringstream osstream;
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append compensator model of "<<get_device_name();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up compensator model.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+        compensator_model = model;
 }
 
-void GENERATOR::set_exciter_model(const EXCITER_MODEL* model)
+void GENERATOR::set_exciter_model(EXCITER_MODEL* model)
 {
     if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-        if(model->get_model_type()=="EXCITER")
-        {
-            EXCITER_MODEL* oldmodel = get_exciter_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                exciter_model=NULL;
-            }
-
-            EXCITER_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(model_name=="SEXS")
-            {
-                SEXS* smodel = (SEXS*) (model);
-                new_model = (EXCITER_MODEL*) new SEXS(*smodel);
-            }
-            if(model_name=="IEEET1")
-            {
-                IEEET1* smodel = (IEEET1*) (model);
-                new_model = (EXCITER_MODEL*) new IEEET1(*smodel);
-            }
-            if(model_name=="PSASPE1")
-            {
-                PSASPE1* smodel = (PSASPE1*) (model);
-                new_model = (EXCITER_MODEL*) new PSASPE1(*smodel);
-            }
-            if(model_name=="PSASPE2")
-            {
-                PSASPE2* smodel = (PSASPE2*) (model);
-                new_model = (EXCITER_MODEL*) new PSASPE2(*smodel);
-            }
-            if(model_name=="CSEET1")
-            {
-                CSEET1* smodel = (CSEET1*) (model);
-                new_model = (EXCITER_MODEL*) new CSEET1(*smodel);
-            }
-            if(model_name=="CSEET2")
-            {
-                CSEET2* smodel = (CSEET2*) (model);
-                new_model = (EXCITER_MODEL*) new CSEET2(*smodel);
-            }
-            if(model_name=="PSASPE13")
-            {
-                PSASPE13* smodel = (PSASPE13*) (model);
-                new_model = (EXCITER_MODEL*) new PSASPE13(*smodel);
-            }
-            if(model_name=="PSASPE14")
-            {
-                PSASPE14* smodel = (PSASPE14*) (model);
-                new_model = (EXCITER_MODEL*) new PSASPE14(*smodel);
-            }
-
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                exciter_model = new_model;
-            }
-            else
-            {
-                ostringstream osstream;
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append exciter model of "<<get_device_name();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up exciter model.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+        exciter_model = model;
 }
 
-void GENERATOR::set_stabilizer_model(const STABILIZER_MODEL* model)
+void GENERATOR::set_stabilizer_model(STABILIZER_MODEL* model)
 {
     if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        ostringstream osstream;
-        if(model->get_model_type()=="STABILIZER")
-        {
-            STABILIZER_MODEL* oldmodel = get_stabilizer_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                stabilizer_model=NULL;
-            }
-
-            STABILIZER_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(model_name=="IEE2ST")
-            {
-                IEE2ST* smodel = (IEE2ST*) (model);
-                new_model = (STABILIZER_MODEL*) new IEE2ST(*smodel);
-            }
-            if(model_name=="PSASPS1")
-            {
-                PSASPS1* smodel = (PSASPS1*) (model);
-                new_model = (STABILIZER_MODEL*) new PSASPS1(*smodel);
-            }
-            if(model_name=="PSASPS2")
-            {
-                PSASPS2* smodel = (PSASPS2*) (model);
-                new_model = (STABILIZER_MODEL*) new PSASPS2(*smodel);
-            }
-            if(model_name=="PSASPS3")
-            {
-                PSASPS3* smodel = (PSASPS3*) (model);
-                new_model = (STABILIZER_MODEL*) new PSASPS3(*smodel);
-            }
-            if(model_name=="PSASPS4")
-            {
-                PSASPS4* smodel = (PSASPS4*) (model);
-                new_model = (STABILIZER_MODEL*) new PSASPS4(*smodel);
-            }
-            if(model_name=="PSASPS5")
-            {
-                PSASPS5* smodel = (PSASPS5*) (model);
-                new_model = (STABILIZER_MODEL*) new PSASPS5(*smodel);
-            }
-            if(model_name=="PSASPS6")
-            {
-                PSASPS6* smodel = (PSASPS6*) (model);
-                new_model = (STABILIZER_MODEL*) new PSASPS6(*smodel);
-            }
-            if(model_name=="PSASPS8")
-            {
-                PSASPS8* smodel = (PSASPS8*) (model);
-                new_model = (STABILIZER_MODEL*) new PSASPS8(*smodel);
-            }
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                stabilizer_model = new_model;
-            }
-            else
-            {
-                ostringstream osstream;
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append stabilizer model of "<<get_device_name();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up stabilizer model.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+        stabilizer_model = model;
 }
 
-void GENERATOR::set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model)
+void GENERATOR::set_turbine_governor_model(TURBINE_GOVERNOR_MODEL* model)
 {
     if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        if(model->get_model_type()=="TURBINE GOVERNOR")
-        {
-            TURBINE_GOVERNOR_MODEL* oldmodel = get_turbine_governor_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                turbine_governor_model=NULL;
-            }
-
-            TURBINE_GOVERNOR_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(model_name=="TGOV1")
-            {
-                TGOV1* smodel = (TGOV1*) (model);
-                new_model = (TURBINE_GOVERNOR_MODEL*) new TGOV1(*smodel);
-            }
-            if(model_name=="IEEEG1")
-            {
-                IEEEG1* smodel = (IEEEG1*) (model);
-                new_model = (TURBINE_GOVERNOR_MODEL*) new IEEEG1(*smodel);
-            }
-            if(model_name=="IEEEG2")
-            {
-                IEEEG2* smodel = (IEEEG2*) (model);
-                new_model = (TURBINE_GOVERNOR_MODEL*) new IEEEG2(*smodel);
-            }
-            if(model_name=="IEEEG3")
-            {
-                IEEEG3* smodel = (IEEEG3*) (model);
-                new_model = (TURBINE_GOVERNOR_MODEL*) new IEEEG3(*smodel);
-            }
-            if(model_name=="IEESGO")
-            {
-                IEESGO* smodel = (IEESGO*) (model);
-                new_model = (TURBINE_GOVERNOR_MODEL*) new IEESGO(*smodel);
-            }
-            if(model_name=="IEEEG1SB")
-            {
-                IEEEG1SB* smodel = (IEEEG1SB*) (model);
-                new_model = (TURBINE_GOVERNOR_MODEL*) new IEEEG1SB(*smodel);
-            }
-            if(model_name=="GAST2A")
-            {
-                GAST2A* smodel = (GAST2A*) (model);
-                new_model = (TURBINE_GOVERNOR_MODEL*) new GAST2A(*smodel);
-            }
-            if(model_name=="URCSCT")
-            {
-                URCSCT* smodel = (URCSCT*) (model);
-                new_model = (TURBINE_GOVERNOR_MODEL*) new URCSCT(*smodel);
-            }
-
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                turbine_governor_model = new_model;
-            }
-            else
-            {
-                ostringstream osstream;
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append turbine governor model of "<<get_device_name();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up turbine governor model.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+        turbine_governor_model = model;
 }
 
-void GENERATOR::set_turbine_load_controller_model(const TURBINE_LOAD_CONTROLLER_MODEL* model)
+void GENERATOR::set_turbine_load_controller_model(TURBINE_LOAD_CONTROLLER_MODEL* model)
 {
     if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-        if(model->get_model_type()=="TURBINE LOAD CONTROLLER")
-        {
-            TURBINE_LOAD_CONTROLLER_MODEL* oldmodel = get_turbine_load_controller_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                turbine_load_controller_model=NULL;
-            }
-
-            TURBINE_LOAD_CONTROLLER_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(model_name=="LCFB1")
-            {
-                LCFB1* smodel = (LCFB1*) (model);
-                new_model = (TURBINE_LOAD_CONTROLLER_MODEL*) new LCFB1(*smodel);
-            }
-
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                turbine_load_controller_model = new_model;
-            }
-            else
-            {
-                ostringstream osstream;
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append turbine load controller model of "<<get_device_name();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up turbine load controller model.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
-}
-
-void GENERATOR::clear_sync_generator_model()
-{
-    if(sync_generator_model!=NULL)
-    {
-        delete sync_generator_model;
-        sync_generator_model = NULL;
-    }
-}
-
-void GENERATOR::clear_compensator_model()
-{
-    if(compensator_model!=NULL)
-    {
-        delete compensator_model;
-        compensator_model = NULL;
-    }
-}
-
-void GENERATOR::clear_exciter_model()
-{
-    if(exciter_model!=NULL)
-    {
-        delete exciter_model;
-        exciter_model = NULL;
-    }
-}
-
-void GENERATOR::clear_stabilizer_model()
-{
-    if(stabilizer_model!=NULL)
-    {
-        delete stabilizer_model;
-        stabilizer_model = NULL;
-    }
-}
-
-void GENERATOR::clear_turbine_governor_model()
-{
-    if(turbine_governor_model!=NULL)
-    {
-        delete turbine_governor_model;
-        turbine_governor_model = NULL;
-    }
-}
-
-void GENERATOR::clear_turbine_load_controller_model()
-{
-    if(turbine_load_controller_model!=NULL)
-    {
-        delete turbine_load_controller_model;
-        turbine_load_controller_model = NULL;
-    }
+        turbine_load_controller_model = model;
 }
 
 SYNC_GENERATOR_MODEL* GENERATOR::get_sync_generator_model() const
@@ -619,7 +220,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                         osstream<<"Warning. Stabilizer model "<<pss->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
                                 <<"Stabilizer model "<<pss->get_model_name()<<" will be removed.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
-                        clear_stabilizer_model();
+                        pss->deactivate_model();
                     }
                     else
                         pss->initialize();
@@ -632,7 +233,7 @@ void GENERATOR::run(DYNAMIC_MODE mode)
                         osstream<<"Warning. Exciter model "<<exciter->get_model_name()<<" is incompatible with generator model GENCLS for "<<get_device_name()<<"["<<psdb.bus_number2bus_name(get_generator_bus())<<"]\n"
                                 <<"Exciter model "<<exciter->get_model_name()<<" will be removed.";
                         toolkit.show_information_with_leading_time_stamp(osstream);
-                        clear_exciter_model();
+                        exciter->deactivate_model();
                     }
                     else
                         exciter->initialize();

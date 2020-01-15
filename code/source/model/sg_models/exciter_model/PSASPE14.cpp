@@ -17,9 +17,6 @@ PSASPE14::~PSASPE14()
 }
 void PSASPE14::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
     regulator_pi.set_limiter_type(NON_WINDUP_LIMITER);
     current_pi.set_limiter_type(NON_WINDUP_LIMITER);
 }

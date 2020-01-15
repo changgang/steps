@@ -31,16 +31,23 @@ void GENCLS_TEST::setup()
     GENERATOR* genptr = get_test_generator();
 
     GENCLS model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
+
     model.set_H_in_s(3.0);
     model.set_D(2.0);
     model.set_Xdp(0.2);
 
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void GENCLS_TEST::tear_down()
 {
     SYNC_GENERATOR_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 
     show_test_end_information();
 }

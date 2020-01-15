@@ -15,8 +15,6 @@ IEEEG2::~IEEEG2()
 void IEEEG2::clear()
 {
     set_model_float_parameter_count(7);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     droop.set_limiter_type(NO_LIMITER);
     tuner.set_limiter_type(NO_LIMITER);

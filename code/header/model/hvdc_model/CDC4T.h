@@ -37,6 +37,9 @@ class CDC4T: public HVDC_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
@@ -60,8 +63,6 @@ class CDC4T: public HVDC_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const CDC4T& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         FIRST_ORDER_BLOCK inverter_dc_voltage_sensor, dc_current_sensor;
         double rectifier_ac_instantaneous_blocking_voltage_in_pu, rectifier_ac_instantaneous_unblocking_voltage_in_pu;

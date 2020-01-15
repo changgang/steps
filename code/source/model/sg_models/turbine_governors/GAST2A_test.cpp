@@ -25,6 +25,10 @@ void GAST2A_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
     GAST2A model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
+
     model.set_K(20.0);
     model.set_T1_in_s(0.1);
     model.set_T2_in_s(0.5);
@@ -40,12 +44,15 @@ void GAST2A_TEST::setup()
     model.set_T6_in_s(1.0);
     model.set_K5(0.4);
 
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void GAST2A_TEST::tear_down()
 {
     TURBINE_GOVERNOR_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 void GAST2A_TEST::test_get_model_type()

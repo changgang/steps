@@ -116,6 +116,9 @@ class CSEET1: public EXCITER_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
@@ -136,8 +139,6 @@ class CSEET1: public EXCITER_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const CSEET1& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
         double get_initial_Ve_with_Fex_function() const;
         double get_Fex(double Ve, double Ifd) const;
 

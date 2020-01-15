@@ -19,8 +19,6 @@ CDC4T::~CDC4T()
 void CDC4T::clear()
 {
     set_model_float_parameter_count(22);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     set_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER, 90.0);
     set_converter_dynamic_max_alpha_or_gamma_in_deg(INVERTER, 90.0);
@@ -239,6 +237,8 @@ void CDC4T::initialize()
     HVDC* hvdc = get_hvdc_pointer();
     if(hvdc==NULL)
         return;
+
+    allocate_record_of_bypass_time();
 
     setup_block_toolkit_and_parameters();
 

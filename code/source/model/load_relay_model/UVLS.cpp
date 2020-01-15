@@ -17,8 +17,6 @@ UVLS::~UVLS()
 void UVLS::clear()
 {
     set_model_float_parameter_count(52);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     voltage_sensor.set_limiter_type(NO_LIMITER);
     voltage_sensor.set_K(1.0);

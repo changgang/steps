@@ -29,15 +29,25 @@ void EXCITER_MODEL_TEST::setup()
     GENERATOR* genptr = get_test_generator();
 
     GENCLS gen_model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    gen_model.set_toolkit(default_toolkit);
+    gen_model.set_device_id(genptr->get_device_id());
+
     gen_model.set_Tj_in_s(6.0);
     gen_model.set_D(2.0);
-    genptr->set_model(&gen_model);
+    dmdb.add_model(&gen_model);
 
     COMP comp_model;
+    comp_model.set_toolkit(default_toolkit);
+    comp_model.set_device_id(genptr->get_device_id());
+
     comp_model.set_Xe(0.1);
-    genptr->set_model(&comp_model);
+    dmdb.add_model(&comp_model);
 
     IEE2ST pss_model;
+    pss_model.set_toolkit(default_toolkit);
+    pss_model.set_device_id(genptr->get_device_id());
+
     pss_model.set_K1(1.0);
     pss_model.set_T1_in_s(0.1);
     pss_model.set_K2(1.0);
@@ -51,11 +61,16 @@ void EXCITER_MODEL_TEST::setup()
     pss_model.set_T9_in_s(3.0);
     pss_model.set_T10_in_s(4.0);
 
-    genptr->set_model(&pss_model);
+    dmdb.add_model(&pss_model);
 }
 
 void EXCITER_MODEL_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+    dmdb.remove_the_last_model();
+    dmdb.remove_the_last_model();
+
     SG_MODEL_TEST::tear_down();
 
     show_test_end_information();
@@ -149,7 +164,7 @@ void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
 {
     ostringstream osstream;
     GENERATOR* genptr = get_test_generator();
-    genptr->clear_compensator_model();
+    //genptr->clear_compensator_model();
 
     SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();
     genmodel->initialize();

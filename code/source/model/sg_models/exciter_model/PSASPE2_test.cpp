@@ -18,9 +18,12 @@ void PSASPE2_TEST::setup()
 {
     EXCITER_MODEL_TEST::setup();
 
-    PSASPE2 model;
-
     GENERATOR* genptr = get_test_generator();
+
+    PSASPE2 model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
 
     model.set_KR(1.0);
     model.set_TR_in_s(0.02);
@@ -39,12 +42,15 @@ void PSASPE2_TEST::setup()
     model.set_Kit(0.25);
     model.set_Ke(0.12);
 
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void PSASPE2_TEST::tear_down()
 {
     EXCITER_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 void PSASPE2_TEST::test_get_model_name()

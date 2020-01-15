@@ -20,6 +20,9 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
@@ -71,8 +74,6 @@ class UFLS : public LOAD_FREQUENCY_RELAY_MODEL
         void update_breaker_timer_of_stage(size_t i);
     private:
         void copy_from_const_model(const UFLS& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         FIRST_ORDER_BLOCK frequency_sensor;
 

@@ -14,19 +14,10 @@ using namespace std;
 PV_UNIT::PV_UNIT() : SOURCE()
 {
     clear();
-
-    pv_converter_model = NULL;
-    pv_panel_model = NULL;
-    pv_electrical_model = NULL;
-    pv_irradiance_model = NULL;
 }
 
 PV_UNIT::~PV_UNIT()
 {
-    if(pv_converter_model != NULL) delete pv_converter_model;
-    if(pv_panel_model != NULL) delete pv_panel_model;
-    if(pv_electrical_model != NULL) delete pv_electrical_model;
-    if(pv_irradiance_model != NULL) delete pv_irradiance_model;
 }
 
 void PV_UNIT::clear()
@@ -34,6 +25,11 @@ void PV_UNIT::clear()
     SOURCE::clear();
     set_number_of_lumped_pv_units(1);
     set_rated_power_per_pv_unit_in_MW(0.0);
+
+    pv_converter_model = NULL;
+    pv_panel_model = NULL;
+    pv_electrical_model = NULL;
+    pv_irradiance_model = NULL;
 }
 
 DEVICE_ID PV_UNIT::get_device_id() const
@@ -197,72 +193,42 @@ void PV_UNIT::set_model(const MODEL* model)
     }
 }
 
-void PV_UNIT::set_pv_converter_model(const PV_CONVERTER_MODEL* model)
+MODEL* PV_UNIT::get_model_of_type(string model_type)
 {
-    ostringstream osstream;
-    if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        if(model->get_model_type()=="PV CONVERTER")
-        {
-            PV_CONVERTER_MODEL* oldmodel = get_pv_converter_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                pv_converter_model = NULL;
-            }
-
-            PV_CONVERTER_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(model_name=="PVGU1")
-            {
-                PVGU1* smodel = (PVGU1*) (model);
-                new_model = (PV_CONVERTER_MODEL*) new PVGU1(*smodel);
-            }
-
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                pv_converter_model = new_model;
-
-                set_number_of_lumped_pv_units(new_model->get_number_of_lumped_pv_units());
-                set_rated_power_per_pv_unit_in_MW(new_model->get_rated_power_per_pv_unit_in_MW());
-            }
-            else
-            {
-                ostringstream osstream;
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append pv converter model of "<<get_device_name()<<".";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up pv converter model.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+    model_type = string2upper(model_type);
+    if(model_type=="PV CONVERTER")
+        return get_pv_converter_model();
+    if(model_type=="PV PANEL")
+        return get_pv_panel_model();
+    if(model_type=="PV ELECTRICAL")
+        return get_pv_electrical_model();
+    if(model_type=="PV IRRADIANCE")
+        return get_pv_irradiance_model();
+    return nullptr;
 }
 
-void PV_UNIT::set_pv_panel_model(const PV_PANEL_MODEL* model)
+void PV_UNIT::set_pv_converter_model(PV_CONVERTER_MODEL* model)
 {
-    ostringstream osstream;
     if(model!=NULL)
-        return;
+        pv_converter_model = model;
 }
 
-void PV_UNIT::set_pv_electrical_model(const PV_ELECTRICAL_MODEL* model)
+void PV_UNIT::set_pv_panel_model(PV_PANEL_MODEL* model)
 {
-    ostringstream osstream;
     if(model!=NULL)
-        return;
+        pv_panel_model = model;
 }
 
-void PV_UNIT::set_pv_irradiance_model(const PV_IRRADIANCE_MODEL* model)
+void PV_UNIT::set_pv_electrical_model(PV_ELECTRICAL_MODEL* model)
 {
-    ostringstream osstream;
     if(model!=NULL)
-        return;
+        pv_electrical_model = model;
+}
+
+void PV_UNIT::set_pv_irradiance_model(PV_IRRADIANCE_MODEL* model)
+{
+    if(model!=NULL)
+        pv_irradiance_model = model;
 }
 
 PV_CONVERTER_MODEL* PV_UNIT::get_pv_converter_model()
@@ -283,42 +249,6 @@ PV_ELECTRICAL_MODEL* PV_UNIT::get_pv_electrical_model()
 PV_IRRADIANCE_MODEL* PV_UNIT::get_pv_irradiance_model()
 {
     return pv_irradiance_model;
-}
-
-void PV_UNIT::clear_pv_converter_model()
-{
-    if(pv_converter_model!=NULL)
-    {
-        delete pv_converter_model;
-        pv_converter_model = NULL;
-    }
-}
-
-void PV_UNIT::clear_pv_panel_model()
-{
-    if(pv_panel_model!=NULL)
-    {
-        delete pv_panel_model;
-        pv_panel_model = NULL;
-    }
-}
-
-void PV_UNIT::clear_pv_electrical_model()
-{
-    if(pv_electrical_model!=NULL)
-    {
-        delete pv_electrical_model;
-        pv_electrical_model = NULL;
-    }
-}
-
-void PV_UNIT::clear_pv_irradiance_model()
-{
-    if(pv_irradiance_model!=NULL)
-    {
-        delete pv_irradiance_model;
-        pv_irradiance_model = NULL;
-    }
 }
 
 PV_UNIT& PV_UNIT::operator=(const PV_UNIT& gen)

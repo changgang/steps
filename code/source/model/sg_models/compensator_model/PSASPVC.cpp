@@ -16,8 +16,6 @@ PSASPVC::~PSASPVC()
 
 void PSASPVC::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void PSASPVC::copy_from_const_model(const PSASPVC& model)

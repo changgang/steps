@@ -16,9 +16,12 @@ void CDC6T_TEST::setup()
 {
     HVDC_MODEL_TEST::setup();
 
-    CDC6T model;
-
     HVDC* hvdcptr = get_test_hvdc();
+
+    CDC6T model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(hvdcptr->get_device_id());
 
     model.set_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER, 5.0);
     model.set_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER, 5.0);
@@ -60,13 +63,15 @@ void CDC6T_TEST::setup()
     model.set_VDCOL(limiter);
     model.set_minimum_time_in_switched_mode_in_s(0.1);
 
-    hvdcptr->set_model(&model);
-
+    dmdb.add_model(&model);
 }
 
 void CDC6T_TEST::tear_down()
 {
     HVDC_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 void CDC6T_TEST::test_get_model_type()

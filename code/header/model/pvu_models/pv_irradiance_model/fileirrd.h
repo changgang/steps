@@ -20,6 +20,9 @@ class FILEIRRAD : public PV_IRRADIANCE_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
@@ -42,8 +45,6 @@ class FILEIRRAD : public PV_IRRADIANCE_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const FILEIRRAD& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 };
 
 #endif // FILEIRRAD_H

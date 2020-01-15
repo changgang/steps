@@ -13,13 +13,12 @@ class INTEGRAL_BLOCK : public BLOCK
         void set_T_in_s(double T);
         double get_T_in_s() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE);
+        void initialize();
+        void run(DYNAMIC_MODE);
         virtual void check();
-
     private:
-        virtual void integrate();
-        virtual void update();
+        void integrate();
+        void update();
         double T;
 
         double one_over_t, h_over_t;

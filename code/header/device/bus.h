@@ -156,6 +156,7 @@ class BUS : public DEVICE
     private:
         void copy_from_const_bus(const BUS& bus);
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
 };
 
 #endif // BUS_H

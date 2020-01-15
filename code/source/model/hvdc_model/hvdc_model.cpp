@@ -37,7 +37,7 @@ HVDC_MODEL::HVDC_MODEL()
 
     set_maximum_count_of_bypassing_before_blocked(999999);
 
-    record_of_bypass_time = new vector<double>;
+    record_of_bypass_time = nullptr;
 
     manual_blocked = false;
     manual_bypassed = false;
@@ -45,7 +45,8 @@ HVDC_MODEL::HVDC_MODEL()
 
 HVDC_MODEL::~HVDC_MODEL()
 {
-    delete record_of_bypass_time;
+    if(record_of_bypass_time!=nullptr)
+        delete record_of_bypass_time;
 }
 
 HVDC* HVDC_MODEL::get_hvdc_pointer() const
@@ -1578,6 +1579,12 @@ double HVDC_MODEL::get_time_of_the_last_bypass_in_s() const
         return INFINITE_THRESHOLD;
     else
         return (*record_of_bypass_time)[n-1];
+}
+
+void HVDC_MODEL::allocate_record_of_bypass_time()
+{
+    if(record_of_bypass_time==nullptr)
+        record_of_bypass_time = new vector<double>;
 }
 
 void HVDC_MODEL::set_common_timer_toolkit()

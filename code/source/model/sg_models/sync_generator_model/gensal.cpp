@@ -17,8 +17,6 @@ GENSAL::~GENSAL()
 void GENSAL::clear()
 {
     set_model_float_parameter_count(12);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void GENSAL::copy_from_const_model(const GENSAL& model)

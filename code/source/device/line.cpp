@@ -570,8 +570,16 @@ void LINE::set_model(const MODEL* model)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
+    osstream<<"LINE::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
     toolkit.show_information_with_leading_time_stamp(osstream);
+}
+
+MODEL* LINE::get_model_of_type(string model_type)
+{
+    model_type = string2upper(model_type);
+    if(model_type=="LINE RELAY")
+        return nullptr;
+    return nullptr;
 }
 
 LINE& LINE::operator=(const LINE& line)

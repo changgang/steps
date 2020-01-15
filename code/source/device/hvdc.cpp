@@ -16,8 +16,6 @@ HVDC::HVDC()
 
 HVDC::~HVDC()
 {
-    if(hvdc_model!=NULL) delete hvdc_model;
-    if(auxiliary_signal_model!=NULL) delete auxiliary_signal_model;
 }
 
 string HVDC::get_converter_side_name(HVDC_CONVERTER_SIDE converter) const
@@ -946,11 +944,11 @@ void HVDC::clear()
     set_converter_transformer_tap_in_pu(RECTIFIER, 1.0);
     set_converter_transformer_tap_in_pu(INVERTER, 1.0);
 
-    hvdc_model = NULL;
-    auxiliary_signal_model = NULL;
-
     converter_firing_angle_fixed[RECTIFIER] = false;
     converter_firing_angle_fixed[INVERTER] = false;
+
+    hvdc_model = NULL;
+    auxiliary_signal_model = NULL;
 }
 
 bool HVDC::is_connected_to_bus(size_t bus) const
@@ -1062,133 +1060,26 @@ void HVDC::set_model(const MODEL* model)
     }
 }
 
-void HVDC::set_hvdc_model(const HVDC_MODEL* model)
+MODEL* HVDC::get_model_of_type(string model_type)
+{
+    model_type = string2upper(model_type);
+    if(model_type=="HVDC")
+        return get_hvdc_model();
+    if(model_type=="AUXILIARY SIGNAL")
+        return get_auxiliary_signal_model();
+    return nullptr;
+}
+
+void HVDC::set_hvdc_model(HVDC_MODEL* model)
 {
     if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        ostringstream osstream;
-        if(model->has_allowed_device_type("HVDC"))
-        {
-            if(model->get_model_type()=="HVDC")
-            {
-                HVDC_MODEL* oldmodel = get_hvdc_model();
-                if(oldmodel!=NULL)
-                {
-                    delete oldmodel;
-                    hvdc_model = NULL;
-                }
-
-                HVDC_MODEL *new_model = NULL;
-                string model_name = model->get_model_name();
-                if(model_name=="CDC4T")
-                {
-                    CDC4T* smodel = (CDC4T*) (model);
-                    new_model = (HVDC_MODEL*) new CDC4T(*smodel);
-                }
-                if(model_name=="CDC6T")
-                {
-                    CDC6T* smodel = (CDC6T*) (model);
-                    new_model = (HVDC_MODEL*) new CDC6T(*smodel);
-                }
-
-                if(new_model!=NULL)
-                {
-                    new_model->set_toolkit(toolkit);
-                    new_model->set_device_id(get_device_id());
-                    hvdc_model = new_model;
-                }
-                else
-                {
-                    ostringstream osstream;
-                    osstream<<"Warning. Model '"<<model_name<<"' is not supported when append HVDC model of "<<get_device_name();
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-            }
-            else
-            {
-                osstream<<"Waring. "<<model->get_model_type()<<" model is not allowed to set up HVDC model for "<<get_device_name()<<endl
-                        <<"No HVDC model is set.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            vector<string> allowed_device_types = model->get_allowed_device_types();
-            size_t n = allowed_device_types.size();
-            if(n==1)
-            {
-                osstream<<"Waring. Dynamic model of device type "<<allowed_device_types[0]<<" is not allowed to set up HVDC model for "<<get_device_name()<<endl
-                        <<"No HVDC model is set.";
-            }
-            else
-            {
-                osstream<<"Waring. Dynamic model of device type ";
-                for(size_t i=0; i<n-1; ++i)
-                    osstream<<allowed_device_types[i]<<", ";
-                osstream<<"and "<<allowed_device_types[n-1]<<" is not allowed to set up HVDC model for "<<get_device_name()<<endl
-                        <<"No HVDC model is set.";
-            }
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+        hvdc_model = model;
 }
 
-void HVDC::set_auxiliary_signal_model(const AUXILIARY_SIGNAL_MODEL* model)
+void HVDC::set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model)
 {
     if(model != NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        ostringstream osstream;
-        if(model->get_model_type()=="AUXILIARY SIGNAL")
-        {
-            AUXILIARY_SIGNAL_MODEL* oldmodel = get_auxiliary_signal_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                auxiliary_signal_model = NULL;
-            }
-
-            AUXILIARY_SIGNAL_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                auxiliary_signal_model = new_model;
-            }
-            else
-            {
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append AUXILIARY SIGNAL model of "<<get_device_name();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Waring. "<< model->get_model_type()<<" model is not allowed to set up AUXILIARY SIGNAL model for "<<get_device_name()<<endl
-                    <<"No AUXILIARY SIGNAL model is set.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
-}
-
-
-void HVDC::clear_hvdc_model()
-{
-    if(hvdc_model!=NULL)
-    {
-        delete hvdc_model;
-        hvdc_model = NULL;
-    }
-}
-
-void HVDC::clear_auxiliary_signal_model()
-{
-    if(auxiliary_signal_model!=NULL)
-    {
-        delete auxiliary_signal_model;
-        auxiliary_signal_model = NULL;
-    }
+        auxiliary_signal_model = model;
 }
 
 HVDC_MODEL* HVDC::get_hvdc_model() const
@@ -1625,7 +1516,7 @@ double HVDC::get_converter_ac_active_power_in_MW(HVDC_CONVERTER_SIDE converter) 
 
     return S*pf;*/
 
-    double Iac = get_converter_ac_current_in_kA(converter);
+    //double Iac = get_converter_ac_current_in_kA(converter);
     double Idc = get_converter_dc_current_in_kA(converter);
 
     size_t N = get_converter_number_of_bridge(converter);
@@ -1690,7 +1581,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_voltage()
     temp_converter_firing_angle_fixed[INVERTER] = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //osstream<<"Solve "<<get_device_name()<<" as constant power (R) + constant voltage (I) mode.";
     //show_information_with_leading_time_stamp(osstream);
 
@@ -1872,7 +1763,7 @@ void HVDC::solve_as_rectifier_regulating_current_and_inverter_regulating_voltage
     temp_converter_firing_angle_fixed[INVERTER] = false;
 
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    //STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     //os<<"Solve %s as constant current (R) + constant voltage (I) mode.",
     //              get_device_name().c_str());
     //show_information_with_leading_time_stamp(osstream);

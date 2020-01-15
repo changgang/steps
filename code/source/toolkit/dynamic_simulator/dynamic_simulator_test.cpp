@@ -92,9 +92,6 @@ void DYNAMICS_SIMULATOR_TEST::tear_down()
     DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
     simulator.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    psdb.clear();
-
     show_test_end_information();
 }
 

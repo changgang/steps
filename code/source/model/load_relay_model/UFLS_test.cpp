@@ -1,6 +1,7 @@
 #include "header/basic/test_macro.h"
 #include "header/model/load_relay_model/UFLS_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -25,6 +26,10 @@ void UFLS_TEST::setup()
     LOAD* load = get_load();
 
     UFLS model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(load->get_device_id());
+
     size_t stage = 0;
     model.set_frequency_threshold_in_Hz_of_stage(stage, 49.0);
     model.set_time_delay_in_s_of_stage(stage, 0.2);
@@ -48,12 +53,15 @@ void UFLS_TEST::setup()
     model.set_breaker_time_in_s(0.05);
     model.set_frequency_sensor_time_in_s(0.1);
 
-    load->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void UFLS_TEST::tear_down()
 {
     LOAD_FREQUENCY_RELAY_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 void UFLS_TEST::test_model_name()

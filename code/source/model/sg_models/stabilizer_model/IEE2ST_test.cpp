@@ -1,6 +1,7 @@
 #include "header/basic/test_macro.h"
 #include "header/model/sg_models/stabilizer_model/IEE2ST_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
@@ -17,12 +18,19 @@ void IEE2ST_TEST::setup()
     STABILIZER_MODEL_TEST::setup();
     GENERATOR* genptr = get_test_generator();
     IEE2ST model;
-    genptr->set_model(&model);
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
+
+    dmdb.add_model(&model);
  }
 
 void IEE2ST_TEST::tear_down()
 {
     STABILIZER_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 

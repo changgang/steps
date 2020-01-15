@@ -378,6 +378,8 @@ void LOAD_TEST::test_set_get_load_model()
     load.set_status(true);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     psdb.append_load(load);
 
     DEVICE_ID did = load.get_device_id();
@@ -385,6 +387,8 @@ void LOAD_TEST::test_set_get_load_model()
     LOAD* ld = psdb.get_load(did);
 
     IEEL model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(did);
 
     model.set_subsystem_type(AREA_SUBSYSTEM_TYPE);
     model.set_P_alpha_1(0.1);
@@ -392,8 +396,7 @@ void LOAD_TEST::test_set_get_load_model()
     model.set_P_alpha_3(0.4);
     model.set_Q_alpha_1(0.6);
 
-
-    ld->set_model(&model);
+    dmdb.add_model(&model);
 
     LOAD_MODEL* modelptr = ld->get_load_model();
     TEST_ASSERT(modelptr!=NULL);
@@ -404,6 +407,8 @@ void LOAD_TEST::test_set_get_load_model()
     TEST_ASSERT(fabs(smodelptr->get_P_alpha_2()-0.5)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_P_alpha_3()-0.4)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_Q_alpha_1()-0.6)<FLOAT_EPSILON);
+
+    dmdb.remove_the_last_model();
 }
 
 void LOAD_TEST::test_set_get_load_frequency_relay_model()

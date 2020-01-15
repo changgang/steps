@@ -25,6 +25,8 @@ STEPS::STEPS(const string& name, const string& log_file)
     power_system_db.set_toolkit(*this);
     power_system_db.set_database_capacity();
 
+    dynamic_model_db.set_toolkit(*this);
+
     powerflow_solver.set_toolkit(*this);
 
     dynamic_simulator.set_toolkit(*this);
@@ -32,6 +34,8 @@ STEPS::STEPS(const string& name, const string& log_file)
     network_matrix.set_toolkit(*this);
 
     set_thread_number(1);
+
+    set_dynamic_model_database_size_in_bytes(STEPS_10M);
 
     if(toolkit_name!="TK DFLT")
         show_information_with_leading_time_stamp("STEPS simulation toolkit ["+toolkit_name+"] @ 0X"+num2hex_str(size_t(this))+" is created.");
@@ -88,7 +92,6 @@ size_t STEPS::get_thread_number() const
 {
     return thread_number;
 }
-
 
 void STEPS::update_device_thread_number()
 {
@@ -247,11 +250,22 @@ size_t STEPS::get_equivalent_device_thread_number() const
     return equivalent_device_thread_number;
 }
 
+void STEPS::set_dynamic_model_database_size_in_bytes(size_t n)
+{
+    dynamic_model_db_size = n;
+}
+
+size_t STEPS::get_dynamic_model_database_size_in_bytes()
+{
+    return dynamic_model_db_size;
+}
+
 void STEPS::clear()
 {
     current_alphabeta = 'Z';
 
     power_system_db.clear();
+    dynamic_model_db.clear();
 
     powerflow_solver.clear();
     dynamic_simulator.clear();
@@ -333,6 +347,11 @@ void STEPS::terminate()
 POWER_SYSTEM_DATABASE& STEPS::get_power_system_database()
 {
     return power_system_db;
+}
+
+DYNAMIC_MODEL_DATABASE& STEPS::get_dynamic_model_database()
+{
+    return dynamic_model_db;
 }
 
 POWERFLOW_SOLVER& STEPS::get_powerflow_solver()

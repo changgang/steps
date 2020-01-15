@@ -16,6 +16,8 @@ class MODEL : public BASE
         MODEL();
         virtual ~MODEL();
 
+        virtual void destroy_manually_allocated_storage();
+
         void set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type);
         vector<string> get_allowed_device_types() const;
         bool has_allowed_device_type(string device_type) const;
@@ -88,10 +90,13 @@ class MODEL : public BASE
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
 
+        void allocate_model_variables();
+
     public:
         virtual bool is_valid() const;
     private:
-        vector<string> *allowed_device_types;
+        //vector<string> *allowed_device_types;
+        char allowed_device_types[STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT][STEPS_SHORT_STRING_SIZE];
         DEVICE* device_pointer;
 
         size_t n_parameters;

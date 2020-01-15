@@ -850,6 +850,14 @@ void TRANSFORMER::set_model(const MODEL* model)
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
+MODEL* TRANSFORMER::get_model_of_type(string model_type)
+{
+    model_type = string2upper(model_type);
+    if(model_type=="")
+        return nullptr;
+    return nullptr;
+}
+
 TRANSFORMER& TRANSFORMER::operator=(const TRANSFORMER& transformer)
 {
     if(this == (&transformer)) return *this;

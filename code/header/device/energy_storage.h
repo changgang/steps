@@ -26,10 +26,9 @@ class ENERGY_STORAGE : public SOURCE
         //virtual string get_device_name() const;
 
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
 
-        void set_energy_storage_model(const ENERGY_STORAGE_MODEL* model);
-
-        void clear_energy_storage_model();
+        void set_energy_storage_model(ENERGY_STORAGE_MODEL* model);
 
         ENERGY_STORAGE_MODEL* get_energy_storage_model() const;
 

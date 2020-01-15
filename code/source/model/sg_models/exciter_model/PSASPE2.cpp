@@ -19,8 +19,6 @@ PSASPE2::~PSASPE2()
 void PSASPE2::clear()
 {
     set_model_float_parameter_count(16);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     sensor.set_limiter_type(NO_LIMITER);
     tuner1_lead_lag.set_limiter_type(NO_LIMITER);

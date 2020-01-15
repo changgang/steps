@@ -16,8 +16,6 @@ void IEEL::clear()
     set_voltage_source_flag(false);
 
     set_model_float_parameter_count(14);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void IEEL::copy_from_const_model(const IEEL& model)

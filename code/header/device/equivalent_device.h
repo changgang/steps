@@ -76,8 +76,9 @@ class EQUIVALENT_DEVICE : public DEVICE
         ////virtual string get_device_name() const;
 
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
 
-        void set_equivalent_model(const EQUIVALENT_MODEL* model);
+        void set_equivalent_model(EQUIVALENT_MODEL* model);
 
         EQUIVALENT_MODEL* get_equivalent_model() const;
 

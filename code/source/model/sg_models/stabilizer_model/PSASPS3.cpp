@@ -16,8 +16,6 @@ PSASPS3::~PSASPS3()
 void PSASPS3::clear()
 {
     set_model_float_parameter_count(18);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void PSASPS3::copy_from_const_model(const PSASPS3& model)

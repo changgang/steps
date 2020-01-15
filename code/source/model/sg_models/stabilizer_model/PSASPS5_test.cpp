@@ -18,12 +18,19 @@ void PSASPS5_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
     PSASPS5 model;
-    genptr->set_model(&model);
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
+
+    dmdb.add_model(&model);
 }
 
 void PSASPS5_TEST::tear_down()
 {
     STABILIZER_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 

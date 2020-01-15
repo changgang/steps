@@ -49,6 +49,9 @@ class IEEL : public LOAD_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual complex<double> get_dynamic_source_admittance_in_pu_based_on_SBASE();
         virtual complex<double> get_additional_admittance_in_pu_based_on_SBASE();
 
@@ -77,8 +80,6 @@ class IEEL : public LOAD_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const IEEL& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         double P0, Q0;
         double P_alpha_1, P_alpha_2, P_alpha_3, Q_alpha_1, Q_alpha_2, Q_alpha_3;

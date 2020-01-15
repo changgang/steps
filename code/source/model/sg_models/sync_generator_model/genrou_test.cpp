@@ -25,7 +25,13 @@ void GENROU_TEST::setup()
 {
     SYNC_GENERATOR_MODEL_TEST::setup();
 
+    GENERATOR* genptr = get_test_generator();
+
     GENROU model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
+
     model.set_Rs(0.01);
     model.set_Xd(1.7);
     model.set_Xq(1.6);
@@ -40,13 +46,15 @@ void GENROU_TEST::setup()
     model.set_Tj_in_s(6.0);
     model.set_D(2.0);
 
-    GENERATOR* genptr = get_test_generator();
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void GENROU_TEST::tear_down()
 {
     SYNC_GENERATOR_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 
     show_test_end_information();
 }

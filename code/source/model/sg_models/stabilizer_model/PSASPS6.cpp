@@ -24,8 +24,6 @@ PSASPS6::~PSASPS6()
 
 void PSASPS6::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void PSASPS6::copy_from_const_model(const PSASPS6& model)

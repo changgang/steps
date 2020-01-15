@@ -16,8 +16,6 @@ PSASPS2::~PSASPS2()
 void PSASPS2::clear()
 {
     set_model_float_parameter_count(14);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void PSASPS2::copy_from_const_model(const PSASPS2& model)

@@ -37,13 +37,12 @@ class PID_BLOCK : public BLOCK
         double get_dstate() const;
         double get_store() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
+        void initialize();
+        void run(DYNAMIC_MODE mode);
         virtual void check();
-
     private:
-        virtual void integrate();
-        virtual void update();
+        void integrate();
+        void update();
         PROPORTIONAL_BLOCK p_block;
         INTEGRAL_BLOCK i_block;
         DIFFERENTIAL_BLOCK d_block;

@@ -117,6 +117,8 @@ class HVDC_MODEL : public MODEL
         double get_time_duration_to_the_last_bypass_in_s() const;
         double get_time_of_the_last_bypass_in_s() const;
 
+        void allocate_record_of_bypass_time();
+
     public: // specific exciter
         virtual string get_model_name() const = 0;
 

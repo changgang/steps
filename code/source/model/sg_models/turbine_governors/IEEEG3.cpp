@@ -15,8 +15,6 @@ IEEEG3::~IEEEG3()
 void IEEEG3::clear()
 {
     set_model_float_parameter_count(14);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     governor.set_limiter_type(NON_WINDUP_LIMITER);
     servo_motor.set_limiter_type(NON_WINDUP_LIMITER);

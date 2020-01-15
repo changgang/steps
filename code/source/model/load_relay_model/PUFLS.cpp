@@ -8,26 +8,25 @@ using namespace std;
 
 PUFLS::PUFLS()
 {
-    history_minimum_frequency_buffer = new CONTINUOUS_BUFFER;
+    history_minimum_frequency_buffer = nullptr;
     clear();
 }
 
 PUFLS::PUFLS(const PUFLS& model) : LOAD_FREQUENCY_RELAY_MODEL()
 {
-    history_minimum_frequency_buffer = new CONTINUOUS_BUFFER;
+    history_minimum_frequency_buffer = nullptr;
     copy_from_const_model(model);
 }
 
 PUFLS::~PUFLS()
 {
-    delete history_minimum_frequency_buffer;
+    if(history_minimum_frequency_buffer!=nullptr)
+        delete history_minimum_frequency_buffer;
 }
 
 void PUFLS::clear()
 {
     set_model_float_parameter_count(60);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     set_frequency_sensor_time_in_s(1.0);
     set_continuous_frequency_threshold_in_Hz(0.0);
@@ -309,6 +308,10 @@ void PUFLS::setup_block_toolkit_and_parameters()
 
 void PUFLS::initialize()
 {
+    if(is_model_initialized())
+        return;
+
+    history_minimum_frequency_buffer = new CONTINUOUS_BUFFER;
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {

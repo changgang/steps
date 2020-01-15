@@ -31,20 +31,14 @@ class GENERATOR : public SOURCE
         //virtual string get_device_name() const;
 
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
 
-        void set_sync_generator_model(const SYNC_GENERATOR_MODEL* model);
-        void set_compensator_model(const COMPENSATOR_MODEL* model);
-        void set_exciter_model(const EXCITER_MODEL* model);
-        void set_stabilizer_model(const STABILIZER_MODEL* model);
-        void set_turbine_governor_model(const TURBINE_GOVERNOR_MODEL* model);
-        void set_turbine_load_controller_model(const TURBINE_LOAD_CONTROLLER_MODEL* model);
-
-        void clear_sync_generator_model();
-        void clear_compensator_model();
-        void clear_exciter_model();
-        void clear_stabilizer_model();
-        void clear_turbine_governor_model();
-        void clear_turbine_load_controller_model();
+        void set_sync_generator_model(SYNC_GENERATOR_MODEL* model);
+        void set_compensator_model(COMPENSATOR_MODEL* model);
+        void set_exciter_model(EXCITER_MODEL* model);
+        void set_stabilizer_model(STABILIZER_MODEL* model);
+        void set_turbine_governor_model(TURBINE_GOVERNOR_MODEL* model);
+        void set_turbine_load_controller_model(TURBINE_LOAD_CONTROLLER_MODEL* model);
 
         SYNC_GENERATOR_MODEL* get_sync_generator_model() const;
         COMPENSATOR_MODEL* get_compensator_model() const;

@@ -20,6 +20,10 @@ void COMPENSATOR_MODEL_TEST::setup()
     GENERATOR* genptr = get_test_generator();
 
     GENROU genmodel;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    genmodel.set_toolkit(default_toolkit);
+    genmodel.set_device_id(genptr->get_device_id());
+
     genmodel.set_Rs(0.01);
     genmodel.set_Xd(0.5);
     genmodel.set_Xq(0.4);
@@ -36,11 +40,14 @@ void COMPENSATOR_MODEL_TEST::setup()
     genmodel.set_saturation_at_1(0.1);
     genmodel.set_saturation_at_1p2(0.5);
 
-    genptr->set_model(&genmodel);
+    dmdb.add_model(&genmodel);
 }
 
 void COMPENSATOR_MODEL_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     SG_MODEL_TEST::tear_down();
 
     show_test_end_information();

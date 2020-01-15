@@ -19,13 +19,12 @@ class LEAD_LAG_BLOCK : public BLOCK
         double get_T1_in_s() const;
         double get_T2_in_s() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
+        void initialize();
+        void run(DYNAMIC_MODE mode);
         virtual void check();
-
     private:
-        virtual void integrate();
-        virtual void update();
+        void integrate();
+        void update();
         double K, T1, T2;
         FIRST_ORDER_BLOCK first_order_block;
 

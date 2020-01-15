@@ -21,23 +21,31 @@ WT3T0_TEST::WT3T0_TEST() : WT_TURBINE_MODEL_TEST()
 
 void WT3T0_TEST::setup()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     WT_TURBINE_MODEL_TEST::setup();
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     WT3T0 model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(wt_gen->get_device_id());
+
     model.set_Hturbine_in_s(5.0);
     model.set_Hgenerator_in_s(3.0);
     model.set_Kshaft_in_pu(20.0);
     model.set_damping_in_pu(1.0);
     model.set_Dshaft_in_pu(1.0);
 
-    wt_gen->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void WT3T0_TEST::tear_down()
 {
     WT_TURBINE_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 
     show_test_end_information();
 }

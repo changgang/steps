@@ -1332,12 +1332,34 @@ void HVDC_TEST::test_set_get_hvdc_model()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"HVDC_TEST");
 
-    TEST_ASSERT(hvdc.get_hvdc_model()==NULL);
-    CDC4T model;
-    model.set_inverter_dc_voltage_sensor_T_in_s(0.1);
-    hvdc.set_model(&model);
+    hvdc.set_converter_bus(RECTIFIER, 1);
+    hvdc.set_converter_bus(INVERTER, 2);
+    hvdc.set_identifier("abc");
 
-    TEST_ASSERT(hvdc.get_hvdc_model()!=NULL);
+    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
+    psdb.append_hvdc(hvdc);
+
+    DEVICE_ID did = hvdc.get_device_id();
+
+    HVDC* hvdcptr = psdb.get_hvdc(did);
+    TEST_ASSERT(hvdcptr!=NULL);
+    TEST_ASSERT(hvdcptr->get_hvdc_model()==NULL);
+
+    CDC4T model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(did);
+
+    model.set_inverter_dc_voltage_sensor_T_in_s(0.1);
+    dmdb.add_model(&model);
+
+    CDC4T* hvdcmodel = (CDC4T*) hvdcptr->get_hvdc_model();
+
+    TEST_ASSERT(hvdcmodel!=NULL);
+    TEST_ASSERT(fabs(hvdcmodel->get_inverter_dc_voltage_sensor_T_in_s()-0.1)<FLOAT_EPSILON);
+
+    dmdb.remove_the_last_model();
 }
 
 #endif

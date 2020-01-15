@@ -43,9 +43,12 @@ METER_TEST::METER_TEST()
 
 void METER_TEST::setup()
 {
+    default_toolkit.clear();
+
     meter.set_toolkit(default_toolkit);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
 
     BUS bus;
     bus.set_bus_number(1);
@@ -82,8 +85,10 @@ void METER_TEST::setup()
     generator.set_identifier("#1");
     psdb.append_generator(generator);
     GENCLS model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(generator.get_device_id());
     model.set_H_in_s(3.0);
-    psdb.append_dynamic_model(get_generator_device_id(1,"#1"),&model);
+    dmdb.add_model(&model);
 
     LOAD load;
     load.set_toolkit(default_toolkit);
@@ -124,8 +129,7 @@ void METER_TEST::tear_down()
 {
     meter.clear();
 
-    POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    psdb.clear();
+    default_toolkit.clear();
 
     show_test_end_information();
 }

@@ -59,6 +59,10 @@ void WT_AERODYNAMIC_MODEL_TEST::setup()
     wt_gen->set_number_of_lumped_wt_generators(20);
 
     WT3G0 genmodel;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    genmodel.set_toolkit(default_toolkit);
+    genmodel.set_device_id(wt_gen->get_device_id());
+
     genmodel.set_converter_activer_current_command_T_in_s(0.2);
     genmodel.set_converter_reactiver_voltage_command_T_in_s(0.2);
     genmodel.set_KPLL(20.0);
@@ -74,11 +78,14 @@ void WT_AERODYNAMIC_MODEL_TEST::setup()
     genmodel.set_LVPL_max_rate_of_active_current_change(0.2);
     genmodel.set_LVPL_voltage_sensor_T_in_s(0.1);
 
-    wt_gen->set_model(&genmodel);
+    dmdb.add_model(&genmodel);
 }
 
 void WT_AERODYNAMIC_MODEL_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     WTG_MODEL_TEST::tear_down();
 }
 

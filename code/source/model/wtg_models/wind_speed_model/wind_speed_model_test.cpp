@@ -32,12 +32,19 @@ void WIND_SPEED_MODEL_TEST::setup()
     wt_gen->set_number_of_lumped_wt_generators(20);
 
     AERD0 aeromodel;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    aeromodel.set_toolkit(default_toolkit);
+    aeromodel.set_device_id(wt_gen->get_device_id());
+
     aeromodel.set_nominal_wind_speed_in_mps(13.0);
-    wt_gen->set_model(&aeromodel);
+    dmdb.add_model(&aeromodel);
 }
 
 void WIND_SPEED_MODEL_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     WTG_MODEL_TEST::tear_down();
 }
 

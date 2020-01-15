@@ -31,12 +31,17 @@ void WT_TURBINE_MODEL_TEST::setup()
 {
     WTG_MODEL_TEST::setup();
 
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     WT_GENERATOR* wt_gen = get_test_wt_generator();
     wt_gen->set_p_generation_in_MW(28.0);
     wt_gen->set_rated_power_per_wt_generator_in_MW(1.5);
     wt_gen->set_number_of_lumped_wt_generators(20);
 
     WT3G0 genmodel;
+    genmodel.set_toolkit(default_toolkit);
+    genmodel.set_device_id(wt_gen->get_device_id());
+
     genmodel.set_converter_activer_current_command_T_in_s(0.2);
     genmodel.set_converter_reactiver_voltage_command_T_in_s(0.2);
     genmodel.set_KPLL(20.0);
@@ -52,9 +57,12 @@ void WT_TURBINE_MODEL_TEST::setup()
     genmodel.set_LVPL_max_rate_of_active_current_change(0.2);
     genmodel.set_LVPL_voltage_sensor_T_in_s(0.1);
 
-    wt_gen->set_model(&genmodel);
+    dmdb.add_model(&genmodel);
 
     AERD0 aeromodel;
+    aeromodel.set_toolkit(default_toolkit);
+    aeromodel.set_device_id(wt_gen->get_device_id());
+
     aeromodel.set_number_of_pole_pairs(2);
     aeromodel.set_generator_to_turbine_gear_ratio(100.0);
     aeromodel.set_gear_efficiency(1.0);
@@ -78,7 +86,7 @@ void WT_TURBINE_MODEL_TEST::setup()
     aeromodel.set_C5(21.0);
     aeromodel.set_C6(0.0068);
 
-    wt_gen->set_model(&aeromodel);
+    dmdb.add_model(&aeromodel);
 }
 
 void WT_TURBINE_MODEL_TEST::tear_down()

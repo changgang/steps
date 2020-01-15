@@ -343,9 +343,6 @@ void AERDF::check()
 
 void AERDF::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
     (*cp_file_name) = "";
     pitch_angles->clear();
     tip_speed_ratios->clear();

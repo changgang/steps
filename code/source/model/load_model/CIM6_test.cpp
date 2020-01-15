@@ -16,7 +16,13 @@ void CIM6_TEST::setup()
 {
     LOAD_MODEL_TEST::setup();
 
+    LOAD* load = get_load();
+
     CIM6 model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(load->get_device_id());
+
     model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
     model.set_motor_type(1);
@@ -36,13 +42,15 @@ void CIM6_TEST::setup()
     model.set_D(0.0);
     model.set_E(0.5);
 
-    LOAD* load = get_load();
-    load->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void CIM6_TEST::tear_down()
 {
     LOAD_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 void CIM6_TEST::test_get_model_name()

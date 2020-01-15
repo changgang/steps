@@ -17,9 +17,6 @@ PSASPE13::~PSASPE13()
 }
 void PSASPE13::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
     sensor.set_limiter_type(NO_LIMITER);
     sensor.set_K(1.0);
     tuner.set_limiter_type(NO_LIMITER);

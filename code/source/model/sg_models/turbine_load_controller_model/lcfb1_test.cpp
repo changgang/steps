@@ -1,6 +1,7 @@
 #include "header/basic/test_macro.h"
 #include "header/model/sg_models/turbine_load_controller_model/lcfb1_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 
 #ifdef ENABLE_STEPS_TEST
 using namespace std;
@@ -17,12 +18,20 @@ void LCFB1_TEST::setup()
 
     GENERATOR* genptr = get_test_generator();
     LCFB1 model;
-    genptr->set_model(&model);
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
+
+    dmdb.add_model(&model);
 }
 
 void LCFB1_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     TURBINE_LOAD_CONTROLLER_MODEL_TEST::tear_down();
+
 }
 
 

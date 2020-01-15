@@ -85,6 +85,7 @@ class TRANSFORMER : public DEVICE
         virtual void report() const;
         virtual void save() const;
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
         virtual TRANSFORMER& operator=(const TRANSFORMER& transformer);
 
         bool is_two_winding_transformer() const;

@@ -24,7 +24,11 @@ void ESTR0_TEST::setup()
 {
     ENERGY_STORAGE_MODEL_TEST::setup();
 
+    ENERGY_STORAGE* esptr = get_test_energy_storage();
+
     ESTR0 model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(esptr->get_device_id());
 
     model.set_Tp1_in_s(0.01);
     model.set_Tp2_in_s(0.05);
@@ -48,13 +52,17 @@ void ESTR0_TEST::setup()
     model.set_Kq(3.0);
     model.set_Dq(0.5);
 
-    ENERGY_STORAGE* esptr = get_test_energy_storage();
-    esptr->set_model(&model);
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.add_model(&model);
 }
 
 void ESTR0_TEST::tear_down()
 {
     ENERGY_STORAGE_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     show_test_end_information();
 }
 

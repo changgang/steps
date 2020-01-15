@@ -14,8 +14,6 @@ WT3T0::~WT3T0()
 void WT3T0::clear()
 {
     set_model_float_parameter_count(5);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void WT3T0::copy_from_const_model(const WT3T0& model)

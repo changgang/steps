@@ -35,8 +35,6 @@ WT3E0& WT3E0::operator=(const WT3E0& model)
 void WT3E0::clear()
 {
     set_model_float_parameter_count(35);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     set_voltage_flag(0);
 

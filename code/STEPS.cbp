@@ -152,6 +152,7 @@
 		<Unit filename="header/device/vsc_hvdc_test.h" />
 		<Unit filename="header/device/wt_generator.h" />
 		<Unit filename="header/device/wt_generator_test.h" />
+		<Unit filename="header/dynamic_model_database.h" />
 		<Unit filename="header/meter/meter.h" />
 		<Unit filename="header/meter/meter_setter.h" />
 		<Unit filename="header/meter/meter_setter_test.h" />
@@ -535,6 +536,7 @@
 		<Unit filename="source/device/vsc_hvdc_test.cpp" />
 		<Unit filename="source/device/wt_generator.cpp" />
 		<Unit filename="source/device/wt_generator_test.cpp" />
+		<Unit filename="source/dynamic_model_database.cpp" />
 		<Unit filename="source/meter/meter.cpp" />
 		<Unit filename="source/meter/meter_setter.cpp" />
 		<Unit filename="source/meter/meter_setter_test.cpp" />

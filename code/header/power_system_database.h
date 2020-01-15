@@ -105,8 +105,6 @@ class POWER_SYSTEM_DATABASE : public BASE
 
         void update_device_id(const DEVICE_ID& did_old, const DEVICE_ID& did_new);
 
-        void append_dynamic_model(const DEVICE_ID& did, const MODEL* model);
-
         void update_all_bus_base_frequency(double fbase_Hz);
 
         bool is_bus_exist(size_t bus) const;
@@ -475,13 +473,6 @@ class POWER_SYSTEM_DATABASE : public BASE
         void update_overshadowed_bus_count();
         size_t get_equivalent_bus_of_bus(size_t bus);
     private:
-        void append_load_related_model(const DEVICE_ID& did, const MODEL* model);
-        void append_generator_related_model(const DEVICE_ID& did, const MODEL* model);
-        void append_wt_generator_related_model(const DEVICE_ID& did, const MODEL* model);
-        void append_pv_unit_related_model(const DEVICE_ID& did, const MODEL* model);
-        void append_energy_storage_related_model(const DEVICE_ID& did, const MODEL* model);
-        void append_hvdc_related_model(const DEVICE_ID& did, const MODEL* model);
-
         void check_source_status_for_out_of_service_bus(size_t bus);
         void check_load_status_for_out_of_service_bus(size_t bus);
         void check_fixed_shunt_status_for_out_of_service_bus(size_t bus);

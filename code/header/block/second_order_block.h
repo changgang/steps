@@ -24,13 +24,13 @@ class SECOND_ORDER_BLOCK : public BLOCK
         double get_d() const;
         double get_e() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
+        void initialize();
+        void run(DYNAMIC_MODE mode);
         virtual void check();
 
     private:
-        virtual void integrate();
-        virtual void update();
+        void integrate();
+        void update();
         double a, b, c, d, e;
         FIRST_ORDER_BLOCK block1, block2;
 

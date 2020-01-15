@@ -687,8 +687,12 @@ double BUS::get_frequency_in_Hz() const
 void BUS::set_model(const MODEL* model)
 {
     ostringstream osstream;
-    osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
+    osstream<<"BUS::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
+MODEL* BUS::get_model_of_type(string model_type)
+{
+    return nullptr;
+}

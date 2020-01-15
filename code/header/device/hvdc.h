@@ -112,12 +112,10 @@ class HVDC : public DEVICE
         virtual void save() const;
 
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
 
-        void set_hvdc_model(const HVDC_MODEL* model);
-        void set_auxiliary_signal_model(const AUXILIARY_SIGNAL_MODEL* model);
-
-        void clear_hvdc_model();
-        void clear_auxiliary_signal_model();
+        void set_hvdc_model(HVDC_MODEL* model);
+        void set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model);
 
         HVDC_MODEL* get_hvdc_model() const;
         AUXILIARY_SIGNAL_MODEL* get_auxiliary_signal_model() const;

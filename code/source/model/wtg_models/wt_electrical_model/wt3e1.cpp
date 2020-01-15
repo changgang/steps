@@ -31,8 +31,6 @@ WT3E1& WT3E1::operator=(const WT3E1& model)
 void WT3E1::clear()
 {
     set_model_float_parameter_count(36);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     set_transformer_from_bus(0);
     set_transformer_to_bus(0);

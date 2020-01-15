@@ -18,8 +18,6 @@ WT3G1::~WT3G1()
 void WT3G1::clear()
 {
     set_model_float_parameter_count(5);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     set_current_source_flag(false);
 

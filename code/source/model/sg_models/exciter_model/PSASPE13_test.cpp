@@ -17,10 +17,12 @@ PSASPE13_TEST::PSASPE13_TEST() : EXCITER_MODEL_TEST()
 void PSASPE13_TEST::setup()
 {
     EXCITER_MODEL_TEST::setup();
+    GENERATOR* genptr = get_test_generator();
 
     PSASPE13 model;
-
-    GENERATOR* genptr = get_test_generator();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
 
     model.set_TR_in_s(0.03);
     model.set_VImax_in_pu(2.0);
@@ -37,12 +39,15 @@ void PSASPE13_TEST::setup()
     model.set_Efdmin_in_pu(0.0);
     model.set_KC(0.12);
 
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void PSASPE13_TEST::tear_down()
 {
     EXCITER_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 void PSASPE13_TEST::test_get_model_name()

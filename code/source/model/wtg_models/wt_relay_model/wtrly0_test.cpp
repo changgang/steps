@@ -20,11 +20,16 @@ WTRLY0_TEST::WTRLY0_TEST() : WT_RELAY_MODEL_TEST()
 
 void WTRLY0_TEST::setup()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     WT_RELAY_MODEL_TEST::setup();
 
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     WTRLY0 model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(wt_gen->get_device_id());
+
     model.set_wind_speed_relay_pair_in_pu_s(0, 0.3, 0.0);
     model.set_wind_speed_relay_pair_in_pu_s(1, 1.5, 0.0);
 
@@ -40,12 +45,15 @@ void WTRLY0_TEST::setup()
     model.set_bus_voltage_relay_pair_in_pu_s(3, 1.3, 0.0);
 
 
-    wt_gen->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void WTRLY0_TEST::tear_down()
 {
     WT_RELAY_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 
     show_test_end_information();
 }

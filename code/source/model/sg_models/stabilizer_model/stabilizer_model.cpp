@@ -9,18 +9,51 @@ STABILIZER_MODEL::STABILIZER_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
     for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
-        signals[slot] = new SIGNAL;
+    {
+        signals[slot] = nullptr;
+        signal_type[slot] = 0;
+        signal_bus[slot] = 0;
+    }
 }
 
 STABILIZER_MODEL::~STABILIZER_MODEL()
 {
     for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
-        delete signals[slot];
+    {
+        if(signals[slot]!=nullptr)
+            delete signals[slot];
+    }
 }
 
 string STABILIZER_MODEL::get_model_type() const
 {
     return "STABILIZER";
+}
+
+
+void STABILIZER_MODEL::set_signal_type_at_slot(size_t slot, size_t signal_type)
+{
+    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
+        this->signal_type[slot] = signal_type;
+}
+void STABILIZER_MODEL::set_signal_bus_at_slot(size_t slot, size_t signal_bus)
+{
+    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
+        this->signal_bus[slot] = signal_bus;
+}
+size_t STABILIZER_MODEL::get_signal_type_at_slot(size_t slot)
+{
+    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
+        return this->signal_type[slot];
+    else
+        return 0;
+}
+size_t STABILIZER_MODEL::get_signal_bus_at_slot(size_t slot)
+{
+    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
+        return this->signal_bus[slot];
+    else
+        return 0;
 }
 
 void STABILIZER_MODEL::set_input_signal_at_slot(size_t slot, SIGNAL& signal)

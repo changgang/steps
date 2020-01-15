@@ -16,8 +16,6 @@ PSASPS1::~PSASPS1()
 void PSASPS1::clear()
 {
     set_model_float_parameter_count(11);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     dedc_block.set_K(1.0);
     phase_tuner_1.set_T1_in_s(1.0);

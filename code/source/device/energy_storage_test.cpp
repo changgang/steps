@@ -155,6 +155,8 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_model()
     energy_storage.set_status(true);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     psdb.append_energy_storage(energy_storage);
 
     DEVICE_ID did = energy_storage.get_device_id();
@@ -162,12 +164,14 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_model()
     ENERGY_STORAGE* estorage = psdb.get_energy_storage(did);
 
     ESTR0 model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(did);
 
     model.set_Tp1_in_s(1.0);
     model.set_Tp2_in_s(2.0);
     model.set_Tr_in_s(3.0);
 
-    estorage->set_model(&model);
+    dmdb.add_model(&model);
 
 
     ENERGY_STORAGE_MODEL* modelptr = estorage->get_energy_storage_model();
@@ -176,6 +180,8 @@ void ENERGY_STORAGE_TEST::test_set_get_energy_storage_model()
     TEST_ASSERT(fabs(((ESTR0*)modelptr)->get_Tp1_in_s()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(((ESTR0*)modelptr)->get_Tp2_in_s()-2.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(((ESTR0*)modelptr)->get_Tr_in_s()-3.0)<FLOAT_EPSILON);
+
+    dmdb.remove_the_last_model();
 }
 
 #endif

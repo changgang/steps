@@ -23,8 +23,12 @@ GENSAL_TEST::GENSAL_TEST()
 void GENSAL_TEST::setup()
 {
     SYNC_GENERATOR_MODEL_TEST::setup();
+    GENERATOR* genptr = get_test_generator();
 
     GENSAL model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
 
     model.set_Rs(0.001);
     model.set_Xd(0.4);
@@ -38,12 +42,14 @@ void GENSAL_TEST::setup()
     model.set_Tj_in_s(6.0);
     model.set_D(2.0);
 
-    GENERATOR* genptr = get_test_generator();
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void GENSAL_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     SYNC_GENERATOR_MODEL_TEST::tear_down();
 
     show_test_end_information();

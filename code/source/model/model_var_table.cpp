@@ -1,5 +1,8 @@
 #include "header/model/model_var_table.h"
 #include "header/basic/utility.h"
+#include <iostream>
+
+using namespace std;
 
 MODEL_VAR_TABLE::MODEL_VAR_TABLE()
 {
@@ -52,6 +55,7 @@ size_t MODEL_VAR_TABLE::get_variable_index_from_variable_name(string var_name) c
 {
     var_name = string2upper(var_name);
     map<string, size_t>::const_iterator iter = var_name2index_map.begin();
+
     iter = var_name2index_map.find(var_name);
     if(iter!=var_name2index_map.end())
         return iter->second;

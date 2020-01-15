@@ -41,6 +41,9 @@ class ARXL : public EQUIVALENT_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
@@ -78,8 +81,6 @@ class ARXL : public EQUIVALENT_MODEL
         string get_load_meter_string(const METER& meter) const;
     private:
         void copy_from_constant_model(const ARXL& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         vector<METER> *p_meters, *q_meters;
         vector< vector<size_t> > *p_delays, *q_delays;

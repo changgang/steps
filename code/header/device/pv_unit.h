@@ -29,21 +29,18 @@ class PV_UNIT : public SOURCE
         size_t get_number_of_lumped_pv_units() const;
         double get_rated_power_per_pv_unit_in_MW() const;
 
-        void set_model(const MODEL* model);
-        void set_pv_converter_model(const PV_CONVERTER_MODEL* model);
-        void set_pv_panel_model(const PV_PANEL_MODEL* model);
-        void set_pv_electrical_model(const PV_ELECTRICAL_MODEL* model);
-        void set_pv_irradiance_model(const PV_IRRADIANCE_MODEL* model);
+        virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
+
+        void set_pv_converter_model(PV_CONVERTER_MODEL* model);
+        void set_pv_panel_model(PV_PANEL_MODEL* model);
+        void set_pv_electrical_model(PV_ELECTRICAL_MODEL* model);
+        void set_pv_irradiance_model(PV_IRRADIANCE_MODEL* model);
 
         PV_CONVERTER_MODEL* get_pv_converter_model();
         PV_PANEL_MODEL* get_pv_panel_model();
         PV_ELECTRICAL_MODEL* get_pv_electrical_model();
         PV_IRRADIANCE_MODEL* get_pv_irradiance_model();
-
-        void clear_pv_converter_model();
-        void clear_pv_panel_model();
-        void clear_pv_electrical_model();
-        void clear_pv_irradiance_model();
 
         virtual void run(DYNAMIC_MODE mode);
         virtual void report() const;

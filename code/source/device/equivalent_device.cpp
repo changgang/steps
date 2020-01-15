@@ -11,13 +11,10 @@ using namespace std;
 EQUIVALENT_DEVICE::EQUIVALENT_DEVICE()
 {
     clear();
-
-    equivalent_model = NULL;
 }
 
 EQUIVALENT_DEVICE::~EQUIVALENT_DEVICE()
 {
-    if(equivalent_model != NULL) delete equivalent_model;
 }
 
 void EQUIVALENT_DEVICE::set_equivalent_device_bus(size_t device_bus)
@@ -322,6 +319,7 @@ void EQUIVALENT_DEVICE::clear()
     set_equivalent_nominal_constant_power_load_in_MVA(0.0);
     set_equivalent_nominal_constant_current_load_in_MVA(0.0);
     set_equivalent_nominal_constant_impedance_load_in_MVA(0.0);
+    equivalent_model = NULL;
 }
 
 bool EQUIVALENT_DEVICE::is_connected_to_bus(size_t target_bus) const
@@ -423,40 +421,19 @@ void EQUIVALENT_DEVICE::set_model(const MODEL* model)
     }
 }
 
-void EQUIVALENT_DEVICE::set_equivalent_model(const EQUIVALENT_MODEL* model)
+MODEL* EQUIVALENT_DEVICE::get_model_of_type(string model_type)
 {
-    if(model!=NULL and model->get_model_type()=="EQUIVALENT MODEL")
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    model_type = string2upper(model_type);
+    if(model_type=="EQUIVALENT MODEL")
+        return get_equivalent_model();
+    else
+        return nullptr;
+}
 
-        EQUIVALENT_MODEL* oldmodel = get_equivalent_model();
-        if(oldmodel!=NULL)
-        {
-            delete oldmodel;
-            equivalent_model = NULL;
-        }
-
-        EQUIVALENT_MODEL *new_model = NULL;
-        string model_name = model->get_model_name();
-        if(model_name=="ARXL")
-        {
-            ARXL* smodel = (ARXL*) (model);
-            new_model = (EQUIVALENT_MODEL*) new ARXL(*smodel);
-        }
-
-        if(new_model!=NULL)
-        {
-            new_model->set_toolkit(toolkit);
-            new_model->set_device_id(get_device_id());
-            equivalent_model = new_model;
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model '"<<model_name<<"' is not supported when append equivalent model of "<<get_device_name();
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+void EQUIVALENT_DEVICE::set_equivalent_model(EQUIVALENT_MODEL* model)
+{
+    if(model!=NULL)
+        equivalent_model = model;
 }
 
 

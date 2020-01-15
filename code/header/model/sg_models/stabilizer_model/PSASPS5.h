@@ -48,6 +48,9 @@ class PSASPS5 : public STABILIZER_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
@@ -69,8 +72,6 @@ class PSASPS5 : public STABILIZER_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const PSASPS5& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         FIRST_ORDER_BLOCK sensor_1, sensor_2;
         DIFFERENTIAL_BLOCK dedc_block_1, dedc_block_2, dedc_block_3;

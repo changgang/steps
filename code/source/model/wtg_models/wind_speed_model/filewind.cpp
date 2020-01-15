@@ -3,33 +3,36 @@
 #include "header/steps_namespace.h"
 #include <istream>
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 FILEWIND::FILEWIND()
 {
-    wind_speed_file = new string;
-    time = new vector<double>;
-    wind_speed = new vector<double>;
-    wind_direction = new vector<double>;
+    wind_speed_file[0] = '\0';
+    time = nullptr;
+    wind_speed = nullptr;
+    wind_direction = nullptr;
     clear();
 }
 
 FILEWIND::~FILEWIND()
 {
-    delete wind_speed_file;
-    delete time;
-    delete wind_speed;
-    delete wind_direction;
+    if(time!=nullptr)
+        delete time;
+    if(wind_speed!=nullptr)
+        delete wind_speed;
+    if(wind_direction!=nullptr)
+        delete wind_direction;
 }
 
 void FILEWIND::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
-    time->clear();
-    wind_speed->clear();
-    wind_direction->clear();
+    if(time!=nullptr)
+        time->clear();
+    if(wind_speed!=nullptr)
+        wind_speed->clear();
+    if(wind_direction!=nullptr)
+        wind_direction->clear();
 
     current_time = -INFINITE_THRESHOLD;
     current_wind_speed = 0.0;
@@ -46,10 +49,10 @@ void FILEWIND::copy_from_const_model(const FILEWIND& model)
 
 FILEWIND::FILEWIND(const FILEWIND& model)
 {
-    wind_speed_file = new string;
-    time = new vector<double>;
-    wind_speed = new vector<double>;
-    wind_direction = new vector<double>;
+    wind_speed_file[0] = '\0';
+    time = nullptr;
+    wind_speed = nullptr;
+    wind_direction = nullptr;
     copy_from_const_model(model);
 }
 
@@ -71,12 +74,13 @@ string FILEWIND::get_model_name() const
 
 void FILEWIND::set_wind_speed_serial_file(string file)
 {
-    (*wind_speed_file) = file;
+    strncpy(wind_speed_file, file.c_str(), STEPS_LONG_STRING_SIZE-1);
+    wind_speed_file[STEPS_LONG_STRING_SIZE-1]='\0';
 }
 
 string FILEWIND::get_wind_speed_serial_file() const
 {
-    return (*wind_speed_file);
+    return wind_speed_file;
 }
 
 bool FILEWIND::setup_model_with_steps_string_vector(vector<string>& data)
@@ -158,6 +162,11 @@ void FILEWIND::load_wind_speed_from_file()
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
+
+    time = new vector<double>;
+    wind_speed = new vector<double>;
+    wind_direction = new vector<double>;
+
     ifstream fid(file);
     if(fid.is_open())
     {

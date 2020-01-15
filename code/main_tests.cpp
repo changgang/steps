@@ -147,6 +147,8 @@
 
 #include "header/steps_namespace.h"
 
+#define ENABLE_STEPS_TEST
+
 using namespace std;
 
 enum OutputType
@@ -274,10 +276,10 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new SECOND_ORDER_BLOCK_TEST));
         ts.add(unique_ptr<Test::Suite>(new SATURATION_BLOCK_TEST));
 
+        ts.add(unique_ptr<Test::Suite>(new MODEL_VAR_TABLE_TEST));
+
         ts.add(unique_ptr<Test::Suite>(new METER_TEST));
         ts.add(unique_ptr<Test::Suite>(new METER_SETTER_TEST));
-
-        ts.add(unique_ptr<Test::Suite>(new MODEL_VAR_TABLE_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new MODEL_TEST));
 

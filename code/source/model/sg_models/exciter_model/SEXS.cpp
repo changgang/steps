@@ -19,8 +19,6 @@ SEXS::~SEXS()
 void SEXS::clear()
 {
     set_model_float_parameter_count(6);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     exciter.set_limiter_type(WINDUP_LIMITER);
 }

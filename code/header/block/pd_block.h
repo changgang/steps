@@ -25,13 +25,12 @@ class PD_BLOCK : public BLOCK
         double get_differentiator_dstate() const;
         double get_differentiator_store() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
+        void initialize();
+        void run(DYNAMIC_MODE mode);
         virtual void check();
-
     private:
-        virtual void integrate();
-        virtual void update();
+        void integrate();
+        void update();
         PROPORTIONAL_BLOCK p_block;
         DIFFERENTIAL_BLOCK d_block;
 };

@@ -22,13 +22,20 @@ void TURBINE_GOVERNOR_MODEL_TEST::setup()
     GENERATOR* genptr = get_test_generator();
 
     GENCLS gen_model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    gen_model.set_toolkit(default_toolkit);
+    gen_model.set_device_id(genptr->get_device_id());
+
     gen_model.set_Tj_in_s(6.0);
     gen_model.set_D(2.0);
-    genptr->set_model(&gen_model);
+    dmdb.add_model(&gen_model);
 }
 
 void TURBINE_GOVERNOR_MODEL_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     SG_MODEL_TEST::tear_down();
 
     show_test_end_information();

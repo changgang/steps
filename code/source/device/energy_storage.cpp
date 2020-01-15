@@ -12,12 +12,11 @@ using namespace std;
 ENERGY_STORAGE::ENERGY_STORAGE() : SOURCE()
 {
     clear();
-    energy_storage_model = NULL;
 }
 
 ENERGY_STORAGE::~ENERGY_STORAGE()
 {
-    if(energy_storage_model!=NULL) delete energy_storage_model;
+    ;
 }
 
 void ENERGY_STORAGE::set_energy_storage_bus(size_t bus)
@@ -43,6 +42,7 @@ complex<double> ENERGY_STORAGE::get_energy_storage_impedance_in_pu() const
 void ENERGY_STORAGE::clear()
 {
     SOURCE::clear();
+    energy_storage_model = NULL;
 }
 
 DEVICE_ID ENERGY_STORAGE::get_device_id() const
@@ -63,69 +63,31 @@ void ENERGY_STORAGE::set_model(const MODEL* model)
     if(model!=NULL and model->has_allowed_device_type("ENERGY STORAGE"))
     {
         if(model->get_model_type()=="ENERGY STORAGE")
-        {
             set_energy_storage_model((ENERGY_STORAGE_MODEL*) model);
-            return;
-        }
-        ostringstream osstream;
-        osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        toolkit.show_information_with_leading_time_stamp(osstream);
-    }
-}
-
-void ENERGY_STORAGE::set_energy_storage_model(const ENERGY_STORAGE_MODEL* model)
-{
-    if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        if(model->get_model_type()=="ENERGY STORAGE")
-        {
-            ENERGY_STORAGE_MODEL* oldmodel = get_energy_storage_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                energy_storage_model = NULL;
-            }
-
-            ENERGY_STORAGE_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(model_name=="ESTR0")
-            {
-                ESTR0* smodel = (ESTR0*) (model);
-                new_model = (ENERGY_STORAGE_MODEL*) new ESTR0(*smodel);
-            }
-
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                energy_storage_model = new_model;
-            }
-            else
-            {
-                ostringstream osstream;
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append energy storage model of "<<get_device_name();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
         else
         {
             ostringstream osstream;
-            osstream<<"Warning. Model of type '"<<model->get_model_type()<<"' is not allowed when setting up energy storage model.";
+            osstream<<"Warning. Unsupported model type '"<<model->get_model_type()<<"' when setting up energy storage-related model.";
+            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             toolkit.show_information_with_leading_time_stamp(osstream);
-            return;
         }
     }
 }
 
-void ENERGY_STORAGE::clear_energy_storage_model()
+MODEL* ENERGY_STORAGE::get_model_of_type(string model_type)
 {
-    if(energy_storage_model!=NULL)
-    {
-        delete energy_storage_model;
-        energy_storage_model = NULL;
-    }
+    model_type = string2upper(model_type);
+    if(model_type=="ENERGY STORAGE")
+        return get_energy_storage_model();
+    else
+        return nullptr;
+}
+
+void ENERGY_STORAGE::set_energy_storage_model(ENERGY_STORAGE_MODEL* model)
+{
+
+    if(model!=NULL)
+        energy_storage_model = model;
 }
 
 ENERGY_STORAGE_MODEL* ENERGY_STORAGE::get_energy_storage_model() const

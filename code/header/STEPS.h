@@ -2,6 +2,7 @@
 #define STEPS_H
 
 #include "header/power_system_database.h"
+#include "header/dynamic_model_database.h"
 #include "header/toolkit/powerflow_solver/powerflow_solver.h"
 #include "header/toolkit/dynamic_simulator/dynamic_simulator.h"
 #include "header/network/network_matrix.h"
@@ -37,6 +38,9 @@ class STEPS
         size_t get_vsc_hvdc_thread_number() const;
         size_t get_equivalent_device_thread_number() const;
 
+        void set_dynamic_model_database_size_in_bytes(size_t n);
+        size_t get_dynamic_model_database_size_in_bytes();
+
         char get_next_alphabeta();
         void open_log_file(const string& file, bool log_file_append_mode=false);
         void close_log_file();
@@ -58,6 +62,7 @@ class STEPS
         void terminate();
 
         POWER_SYSTEM_DATABASE& get_power_system_database();
+        DYNAMIC_MODEL_DATABASE& get_dynamic_model_database();
         POWERFLOW_SOLVER& get_powerflow_solver();
         DYNAMICS_SIMULATOR& get_dynamic_simulator();
         NETWORK_MATRIX& get_network_matrix();
@@ -78,6 +83,7 @@ class STEPS
         string toolkit_name;
 
         POWER_SYSTEM_DATABASE power_system_db;
+        DYNAMIC_MODEL_DATABASE dynamic_model_db;
 
         POWERFLOW_SOLVER powerflow_solver;
         DYNAMICS_SIMULATOR dynamic_simulator;
@@ -95,6 +101,7 @@ class STEPS
         size_t generator_thread_number, wt_generator_thread_number, pv_unit_thread_number, energy_storage_thread_number,
                load_thread_number, fixed_shunt_thread_number, line_thread_number, transformer_thread_number, hvdc_thread_number, vsc_hvdc_thread_number,
                equivalent_device_thread_number;
+        size_t dynamic_model_db_size;
 
 };
 #endif // STEPS_H

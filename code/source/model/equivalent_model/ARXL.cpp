@@ -65,9 +65,6 @@ string ARXL::get_model_name() const
 
 void ARXL::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
     p_meters->clear();
     q_meters->clear();
     p_delays->clear();

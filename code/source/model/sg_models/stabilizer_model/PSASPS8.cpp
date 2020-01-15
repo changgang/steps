@@ -15,8 +15,6 @@ PSASPS8::~PSASPS8()
 
 void PSASPS8::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void PSASPS8::copy_from_const_model(const PSASPS8& model)

@@ -16,8 +16,6 @@ WTRLY0::~WTRLY0()
 void WTRLY0::clear()
 {
     set_model_float_parameter_count(204);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     for(size_t i=0; i<MAX_RELAY_COUNT; ++i)
     {

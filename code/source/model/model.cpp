@@ -4,17 +4,18 @@
 #include "header/STEPS.h"
 
 #include <iostream>
+#include <cstring>
 using namespace std;
 
 MODEL::MODEL()
 {
     device_pointer = NULL;
 
-    allowed_device_types = new vector<string>;
-    allowed_device_types->clear();
+    for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+        allowed_device_types[i][0]='\0';
 
-    model_data_table = new MODEL_VAR_TABLE;
-    model_internal_variable_table = new MODEL_VAR_TABLE;
+    model_data_table = nullptr;
+    model_internal_variable_table = nullptr;
 
     set_flag_model_initialized_as_false();
 
@@ -24,19 +25,45 @@ MODEL::MODEL()
 
     set_model_float_parameter_count(0);
 
-    user_input_time_series_file = new string;
-    user_input_time_series = new TIME_SERIES;
+    user_input_time_series_file = nullptr;
+    user_input_time_series = nullptr;
 }
 
 MODEL::~MODEL()
 {
-    delete allowed_device_types;
+    /*if(allowed_device_types!=nullptr)
+        delete allowed_device_types;*/
 
-    delete model_data_table;
-    delete model_internal_variable_table;
+    destroy_manually_allocated_storage();
+}
 
-    delete user_input_time_series_file;
-    delete user_input_time_series;
+void MODEL::allocate_model_variables()
+{
+    /*if(allowed_device_types==nullptr)
+        allowed_device_types = new vector<string>;*/
+
+    if(model_data_table==nullptr)
+        model_data_table =  new MODEL_VAR_TABLE;
+    if(model_internal_variable_table==nullptr)
+        model_internal_variable_table =  new MODEL_VAR_TABLE;
+
+    if(user_input_time_series_file==nullptr)
+        user_input_time_series_file = new string;
+    if(user_input_time_series==nullptr)
+        user_input_time_series = new TIME_SERIES;
+}
+
+void MODEL::destroy_manually_allocated_storage()
+{
+    if(model_data_table!=nullptr)
+        delete model_data_table;
+    if(model_internal_variable_table!=nullptr)
+        delete model_internal_variable_table;
+
+    if(user_input_time_series_file!=nullptr)
+        delete user_input_time_series_file;
+    if(user_input_time_series!=nullptr)
+        delete user_input_time_series;
 }
 
 void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR(string device_type)
@@ -48,7 +75,16 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
        device_type=="EQUIVALENT DEVICE" or device_type=="ENERGY STORAGE")
     {
         if(not has_allowed_device_type(device_type))
-            allowed_device_types->push_back(device_type);
+        {
+            for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+            {
+                if(allowed_device_types[i][0]=='\0')
+                {
+                    strcpy(allowed_device_types[i],device_type.c_str());
+                    break;
+                }
+            }
+        }
     }
     else
     {
@@ -60,17 +96,25 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
 }
 vector<string> MODEL::get_allowed_device_types() const
 {
-    return *allowed_device_types;
+    vector<string> temp;
+    for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+    {
+        if(allowed_device_types[i][0]!='\0')
+            temp.push_back(allowed_device_types[i]);
+    }
+    return temp;
 }
 
 bool MODEL::has_allowed_device_type(string device_type) const
 {
     device_type = string2upper(device_type);
-    size_t n = allowed_device_types->size();
-    for(size_t i=0; i<n; ++i)
+    for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
     {
-        if((*allowed_device_types)[i]==device_type)
-            return true;
+        if(allowed_device_types[i][0]!='\0')
+        {
+            if(allowed_device_types[i]==device_type)
+                return true;
+        }
     }
     return false;
 }
@@ -87,32 +131,46 @@ size_t MODEL::get_model_float_parameter_count() const
 
 void MODEL::clear_model_data_table()
 {
-    model_data_table->clear();
+    if(model_data_table!=nullptr)
+        model_data_table->clear();
 }
 
 void MODEL::add_model_data_name_and_index_pair(string var_name, size_t var_index)
 {
-    model_data_table->add_variable_name_index_pair(var_name, var_index);
+    if(model_data_table!=nullptr)
+        model_data_table->add_variable_name_index_pair(var_name, var_index);
 }
 
 size_t MODEL::get_model_data_index(string var_name) const
 {
-    return (*model_data_table)[var_name];
+    if(model_data_table!=nullptr)
+        return (*model_data_table)[var_name];
+    else
+        return INDEX_NOT_EXIST;
 }
 
 string MODEL::get_model_data_name(size_t var_index) const
 {
-    return (*model_data_table)[var_index];
+    if(model_data_table!=nullptr)
+        return (*model_data_table)[var_index];
+    else
+        return "";
 }
 
 bool MODEL::is_model_data_exist(string var_name) const
 {
-    return (*model_data_table)[var_name]!=INDEX_NOT_EXIST;
+    if(model_data_table!=nullptr)
+        return (*model_data_table)[var_name]!=INDEX_NOT_EXIST;
+    else
+        return false;
 }
 
 bool MODEL::is_model_data_exist(size_t var_index) const
 {
-    return (*model_data_table)[var_index]!="";
+    if(model_data_table!=nullptr)
+        return (*model_data_table)[var_index]!="";
+    else
+        return false;
 }
 
 void MODEL::set_model_data_with_index(size_t index, double value)
@@ -140,32 +198,46 @@ double MODEL::get_model_data_with_index(size_t index)
 
 void MODEL::clear_model_internal_variable_table()
 {
-    model_internal_variable_table->clear();
+    if(model_internal_variable_table!=nullptr)
+        model_internal_variable_table->clear();
 }
 
 void MODEL::add_model_inernal_variable_name_and_index_pair(string var_name, size_t var_index)
 {
-    model_internal_variable_table->add_variable_name_index_pair(var_name, var_index);
+    if(model_internal_variable_table!=nullptr)
+        model_internal_variable_table->add_variable_name_index_pair(var_name, var_index);
 }
 
 size_t MODEL::get_model_inernal_variable_index(string var_name) const
 {
-    return (*model_internal_variable_table)[var_name];
+    if(model_internal_variable_table!=nullptr)
+        return (*model_internal_variable_table)[var_name];
+    else
+        return INDEX_NOT_EXIST;
 }
 
 string MODEL::get_model_inernal_variable_name(size_t var_index) const
 {
-    return (*model_internal_variable_table)[var_index];
+    if(model_internal_variable_table!=nullptr)
+        return (*model_internal_variable_table)[var_index];
+    else
+        return "";
 }
 
 bool MODEL::is_model_inernal_variable_exist(string var_name) const
 {
-    return (*model_internal_variable_table)[var_name]!=INDEX_NOT_EXIST;
+    if(model_internal_variable_table!=nullptr)
+        return (*model_internal_variable_table)[var_name]!=INDEX_NOT_EXIST;
+    else
+        return false;
 }
 
 bool MODEL::is_model_inernal_variable_exist(size_t var_index) const
 {
-    return (*model_internal_variable_table)[var_index]!="";
+    if(model_internal_variable_table!=nullptr)
+        return (*model_internal_variable_table)[var_index]!="";
+    else
+        return false;
 }
 
 double MODEL::get_model_internal_variable_with_index(size_t index)
@@ -190,9 +262,11 @@ void MODEL::set_device_id(DEVICE_ID did)
     if(not has_allowed_device_type(did.get_device_type()))
     {
         osstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which the following types of devices is expected:\n";
-        size_t n = allowed_device_types->size();
-        for(size_t i=0; i<n; ++i)
-            osstream<<(*allowed_device_types)[i]<<"\n";
+        for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+        {
+            if(allowed_device_types[i][0]!='\0')
+                osstream<<allowed_device_types[i]<<"\n";
+        }
         osstream<<"Model device id will not be updated.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
@@ -206,7 +280,6 @@ void MODEL::set_device_id(DEVICE_ID did)
           <<"New device ("<<did.get_device_name()<<") will be updated.";
         toolkit.show_information_with_leading_time_stamp(osstream);
     }*/
-
 
     device_pointer = psdb.get_device(did);
 

@@ -25,8 +25,6 @@ PSASPS4::~PSASPS4()
 void PSASPS4::clear()
 {
     set_model_float_parameter_count(23);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void PSASPS4::copy_from_const_model(const PSASPS4& model)

@@ -63,6 +63,7 @@ class SOURCE : public DEVICE
         virtual void save() const = 0;
 
         virtual void set_model(const MODEL* model) = 0;
+        virtual MODEL* get_model_of_type(string model_type) = 0;
 
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const = 0;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power() = 0;

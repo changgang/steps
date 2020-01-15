@@ -181,9 +181,18 @@ void FIXED_SHUNT::save() const
 void FIXED_SHUNT::set_model(const MODEL* model)
 {
     ostringstream osstream;
-    osstream<<"TRANSFORMER::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
+    osstream<<"FIXED_SHUNT::"<<__FUNCTION__<<"() has not been implemented yet. Input model name is:"<<(model==NULL?"":model->get_model_name());
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
+}
+
+MODEL* FIXED_SHUNT::get_model_of_type(string model_type)
+{
+    model_type = string2upper(model_type);
+    if(model_type=="FIXED SHUNT")
+        return nullptr;
+    else
+        return nullptr;
 }
 
 FIXED_SHUNT& FIXED_SHUNT::operator=(const FIXED_SHUNT& fixed_shunt)

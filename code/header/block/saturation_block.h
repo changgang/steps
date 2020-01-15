@@ -26,7 +26,6 @@ class SATURATION_BLOCK
         double get_saturation(double V);
         bool is_saturation_considered() const;
         virtual void check();
-
     private:
         SATURATION_TYPE type;
         double V1, V2, S1, S2;

@@ -17,13 +17,13 @@ class FIRST_ORDER_BLOCK : public BLOCK
         double get_K() const;
         double get_T_in_s() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
+        void initialize();
+        void run(DYNAMIC_MODE mode);
         virtual void check();
 
     private:
-        virtual void integrate();
-        virtual void update();
+        void integrate();
+        void update();
         double K, T;
 
         double one_over_t, one_over_h, one_over_k, t_over_h, h_plus_2t, one_over_h_plus_2t, h_minus_2t;

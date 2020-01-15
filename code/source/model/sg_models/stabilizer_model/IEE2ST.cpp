@@ -16,8 +16,6 @@ IEE2ST::~IEE2ST()
 void IEE2ST::clear()
 {
     set_model_float_parameter_count(16);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void IEE2ST::copy_from_const_model(const IEE2ST& model)
@@ -246,9 +244,8 @@ bool IEE2ST::setup_model_with_steps_string_vector(vector<string>& data)
 
             for(size_t i=0; i<2; ++i)
             {
-                SIGNAL signal = prepare_signal_with_signal_type_and_bus(signal_type[i], bus[i]);
-                if(signal.is_valid())
-                    set_input_signal_at_slot(i, signal);
+                set_signal_type_at_slot(i, signal_type[i]);
+                set_signal_bus_at_slot(i, bus[i]);
             }
 
             k1 = get_double_data(data[i],"0.0"); i++;
@@ -327,6 +324,17 @@ void IEE2ST::setup_block_toolkit_and_parameters()
 void IEE2ST::initialize()
 {
     ostringstream osstream;
+    if(is_model_initialized())
+        return;
+
+    for(size_t i=0; i<2; ++i)
+    {
+        size_t signal_type = get_signal_type_at_slot(i);
+        size_t signal_bus = get_signal_bus_at_slot(i);
+        SIGNAL signal = prepare_signal_with_signal_type_and_bus(signal_type, signal_bus);
+        if(signal.is_valid())
+            set_input_signal_at_slot(i, signal);
+    }
 
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)

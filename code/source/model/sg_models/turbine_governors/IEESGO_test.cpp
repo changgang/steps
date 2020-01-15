@@ -23,9 +23,12 @@ void IEESGO_TEST::setup()
 {
     TURBINE_GOVERNOR_MODEL_TEST::setup();
 
-    IEESGO model;
-
     GENERATOR* genptr = get_test_generator();
+
+    IEESGO model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
 
     model.set_K1(25.0);
     model.set_K2(0.7);
@@ -39,12 +42,15 @@ void IEESGO_TEST::setup()
     model.set_Pmax_in_pu(1.0);
     model.set_Pmin_in_pu(0.0);
 
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void IEESGO_TEST::tear_down()
 {
     TURBINE_GOVERNOR_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 void IEESGO_TEST::test_get_model_type()

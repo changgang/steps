@@ -1,6 +1,7 @@
 #include "header/basic/test_macro.h"
 #include "header/model/pvu_models/pv_converter_model/pvcv0_test.h"
 #include "header/basic/utility.h"
+#include "header/steps_namespace.h"
 #include <cstdlib>
 #include <cstring>
 #include <istream>
@@ -25,6 +26,10 @@ void PVCV0_TEST::setup()
     PV_UNIT* pv_unit = get_test_pv_unit();
 
     PVCV0 model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(pv_unit->get_device_id());
+
     pv_unit->set_number_of_lumped_pv_units(50);
     pv_unit->set_rated_power_per_pv_unit_in_MW(2.0);
     model.set_converter_activer_current_command_T_in_s(0.2);
@@ -43,11 +48,14 @@ void PVCV0_TEST::setup()
     model.set_LVPL_max_rate_of_active_current_change(0.2);
     model.set_LVPL_voltage_sensor_T_in_s(0.1);
 
-    pv_unit->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void PVCV0_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     PV_CONVERTER_MODEL_TEST::tear_down();
 
     show_test_end_information();

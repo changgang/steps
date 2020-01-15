@@ -22,10 +22,12 @@ IEEEG2_TEST::IEEEG2_TEST()
 void IEEEG2_TEST::setup()
 {
     TURBINE_GOVERNOR_MODEL_TEST::setup();
+    GENERATOR* genptr = get_test_generator();
 
     IEEEG2 model;
-
-    GENERATOR* genptr = get_test_generator();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
 
     model.set_K(20.0);
     model.set_T1_in_s(0.1);
@@ -35,12 +37,15 @@ void IEEEG2_TEST::setup()
     model.set_Pmin_in_pu(0.0);
     model.set_T4_in_s(2.0);
 
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void IEEEG2_TEST::tear_down()
 {
     TURBINE_GOVERNOR_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 void IEEEG2_TEST::test_get_model_type()

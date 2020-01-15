@@ -86,7 +86,7 @@ class VSC_HVDC : public DEVICE
     public:
         void initialize_dc_power_and_voltage_command();
 
-        double set_nominal_dc_current_command_in_kA(double I);
+        void set_nominal_dc_current_command_in_kA(double I);
         void set_converter_actual_dc_power_command_in_MW(HVDC_CONVERTER_SIDE converter, double P);
         void set_converter_actual_dc_voltage_command_in_kV(HVDC_CONVERTER_SIDE converter, double V);
         void set_actual_dc_current_command_in_kA(double I);
@@ -110,12 +110,10 @@ class VSC_HVDC : public DEVICE
         virtual void save() const;
 
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
 
-        void set_vsc_hvdc_model(const VSC_HVDC_MODEL* model);
-        void set_auxiliary_signal_model(const AUXILIARY_SIGNAL_MODEL* model);
-
-        void clear_vsc_hvdc_model();
-        void clear_auxiliary_signal_model();
+        void set_vsc_hvdc_model(VSC_HVDC_MODEL* model);
+        void set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model);
 
         VSC_HVDC_MODEL* get_vsc_hvdc_model() const;
         AUXILIARY_SIGNAL_MODEL* get_auxiliary_signal_model() const;

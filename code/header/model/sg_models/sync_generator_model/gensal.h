@@ -21,6 +21,9 @@ class GENSAL : public SYNC_GENERATOR_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void initialize();
         virtual void initialize_rotor_angle();
         virtual void run(DYNAMIC_MODE mode);
@@ -71,8 +74,6 @@ class GENSAL : public SYNC_GENERATOR_MODEL
         void set_rotor_speed_deviation_in_pu(double speed);
     private:
         void copy_from_const_model(const GENSAL& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         /*INTEGRAL_BLOCK transient_block_d_axis, subtransient_block_d_axis;
         INTEGRAL_BLOCK subtransient_block_q_axis;

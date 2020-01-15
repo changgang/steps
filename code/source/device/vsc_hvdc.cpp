@@ -16,8 +16,6 @@ VSC_HVDC::VSC_HVDC()
 
 VSC_HVDC::~VSC_HVDC()
 {
-    if(vsc_hvdc_model!=NULL) delete vsc_hvdc_model;
-    if(auxiliary_signal_model!=NULL) delete auxiliary_signal_model;
 }
 
 string VSC_HVDC::get_converter_side_name(HVDC_CONVERTER_SIDE converter) const
@@ -395,7 +393,7 @@ void VSC_HVDC::initialize_dc_power_and_voltage_command()
     nominal_dc_setpoints_initialized = true;
 }
 
-double VSC_HVDC::set_nominal_dc_current_command_in_kA(double I)
+void VSC_HVDC::set_nominal_dc_current_command_in_kA(double I)
 {
     nominal_dc_current_in_amp = I*1000.0;
 }
@@ -582,7 +580,6 @@ void VSC_HVDC::clear()
     vsc_hvdc_model = NULL;
     auxiliary_signal_model = NULL;
 
-
     nominal_dc_setpoints_initialized = false;
     actual_dc_power_command_MW[0] = 0.0; actual_dc_power_command_MW[1] = 0.0;
     actual_dc_voltage_command_kV[0] = 0.0; actual_dc_voltage_command_kV[1] = 0.0;
@@ -700,128 +697,27 @@ void VSC_HVDC::set_model(const MODEL* model)
     }
 }
 
-void VSC_HVDC::set_vsc_hvdc_model(const VSC_HVDC_MODEL* model)
+
+MODEL* VSC_HVDC::get_model_of_type(string model_type)
+{
+    model_type = string2upper(model_type);
+    if(model_type=="VSC HVDC")
+        return get_vsc_hvdc_model();
+    if(model_type=="AUXILIARY SIGNAL")
+        return get_auxiliary_signal_model();
+    return nullptr;
+}
+
+void VSC_HVDC::set_vsc_hvdc_model(VSC_HVDC_MODEL* model)
 {
     if(model!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        ostringstream osstream;
-        if(model->has_allowed_device_type("VSC_HVDC"))
-        {
-            if(model->get_model_type()=="VSC_HVDC")
-            {
-                VSC_HVDC_MODEL* oldmodel = get_vsc_hvdc_model();
-                if(oldmodel!=NULL)
-                {
-                    delete oldmodel;
-                    vsc_hvdc_model = NULL;
-                }
-
-                VSC_HVDC_MODEL *new_model = NULL;
-                string model_name = model->get_model_name();
-                if(model_name=="CDC6T")
-                {
-                    CDC6T* smodel = (CDC6T*) (model);
-                    new_model = (VSC_HVDC_MODEL*) new CDC6T(*smodel);
-                }
-
-                if(new_model!=NULL)
-                {
-                    new_model->set_toolkit(toolkit);
-                    new_model->set_device_id(get_device_id());
-                    vsc_hvdc_model = new_model;
-                }
-                else
-                {
-                    ostringstream osstream;
-                    osstream<<"Warning. Model '"<<model_name<<"' is not supported when append VSC_HVDC model of "<<get_device_name();
-                    toolkit.show_information_with_leading_time_stamp(osstream);
-                }
-            }
-            else
-            {
-                osstream<<"Waring. "<<model->get_model_type()<<" model is not allowed to set up VSC_HVDC model for "<<get_device_name()<<endl
-                        <<"No VSC_HVDC model is set.";
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            vector<string> allowed_device_types = model->get_allowed_device_types();
-            size_t n = allowed_device_types.size();
-            if(n==1)
-            {
-                osstream<<"Waring. Dynamic model of device type "<<allowed_device_types[0]<<" is not allowed to set up VSC_HVDC model for "<<get_device_name()<<endl
-                        <<"No VSC_HVDC model is set.";
-            }
-            else
-            {
-                osstream<<"Waring. Dynamic model of device type ";
-                for(size_t i=0; i<n-1; ++i)
-                    osstream<<allowed_device_types[i]<<", ";
-                osstream<<"and "<<allowed_device_types[n-1]<<" is not allowed to set up VSC_HVDC model for "<<get_device_name()<<endl
-                        <<"No VSC_HVDC model is set.";
-            }
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+        vsc_hvdc_model = model;
 }
 
-void VSC_HVDC::set_auxiliary_signal_model(const AUXILIARY_SIGNAL_MODEL* model)
+void VSC_HVDC::set_auxiliary_signal_model(AUXILIARY_SIGNAL_MODEL* model)
 {
     if(model != NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        ostringstream osstream;
-        if(model->get_model_type()=="AUXILIARY SIGNAL")
-        {
-            AUXILIARY_SIGNAL_MODEL* oldmodel = get_auxiliary_signal_model();
-            if(oldmodel!=NULL)
-            {
-                delete oldmodel;
-                auxiliary_signal_model = NULL;
-            }
-
-            AUXILIARY_SIGNAL_MODEL *new_model = NULL;
-            string model_name = model->get_model_name();
-            if(new_model!=NULL)
-            {
-                new_model->set_toolkit(toolkit);
-                new_model->set_device_id(get_device_id());
-                auxiliary_signal_model = new_model;
-            }
-            else
-            {
-                osstream<<"Warning. Model '"<<model_name<<"' is not supported when append AUXILIARY SIGNAL model of "<<get_device_name();
-                toolkit.show_information_with_leading_time_stamp(osstream);
-            }
-        }
-        else
-        {
-            osstream<<"Waring. "<< model->get_model_type()<<" model is not allowed to set up AUXILIARY SIGNAL model for "<<get_device_name()<<endl
-                    <<"No AUXILIARY SIGNAL model is set.";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
-}
-
-
-void VSC_HVDC::clear_vsc_hvdc_model()
-{
-    if(vsc_hvdc_model!=NULL)
-    {
-        delete vsc_hvdc_model;
-        vsc_hvdc_model = NULL;
-    }
-}
-
-void VSC_HVDC::clear_auxiliary_signal_model()
-{
-    if(auxiliary_signal_model!=NULL)
-    {
-        delete auxiliary_signal_model;
-        auxiliary_signal_model = NULL;
-    }
+        auxiliary_signal_model = model;
 }
 
 VSC_HVDC_MODEL* VSC_HVDC::get_vsc_hvdc_model() const

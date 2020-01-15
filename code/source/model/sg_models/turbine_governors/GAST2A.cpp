@@ -6,20 +6,23 @@
 using namespace std;
 GAST2A::GAST2A()
 {
-    gas_fuel_control = new CONTINUOUS_BUFFER;
-    gas_combustor = new CONTINUOUS_BUFFER;
-    gas_turbine_exhaust = new CONTINUOUS_BUFFER;
+    gas_fuel_control = nullptr;
+    gas_combustor = nullptr;
+    gas_turbine_exhaust = nullptr;
     clear();
 }
 
 GAST2A::~GAST2A()
 {
+    if(gas_fuel_control!=nullptr)
+        delete gas_fuel_control;
+    if(gas_combustor!=nullptr)
+        delete gas_combustor;
+    if(gas_turbine_exhaust!=nullptr)
+        delete gas_turbine_exhaust;
 }
 void GAST2A::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
     gas_governor_droop.set_limiter_type(NON_WINDUP_LIMITER);
     gas_governor_iso.set_limiter_type(NON_WINDUP_LIMITER);
     gas_valve_positioner.set_limiter_type(NO_LIMITER);
@@ -100,6 +103,10 @@ void GAST2A::copy_from_const_model(const GAST2A& model)
 
 GAST2A::GAST2A(const GAST2A&model) : TURBINE_GOVERNOR_MODEL()
 {
+    gas_fuel_control = nullptr;
+    gas_combustor = nullptr;
+    gas_turbine_exhaust = nullptr;
+
     copy_from_const_model(model);
 }
 
@@ -557,6 +564,10 @@ void GAST2A::initialize()
     ostringstream osstream;
     if(not is_model_initialized())
     {
+        gas_fuel_control = new CONTINUOUS_BUFFER;
+        gas_combustor = new CONTINUOUS_BUFFER;
+        gas_turbine_exhaust = new CONTINUOUS_BUFFER;
+
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {

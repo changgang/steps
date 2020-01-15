@@ -19,15 +19,23 @@ void COMP_TEST::setup()
 {
     COMPENSATOR_MODEL_TEST::setup();
 
-    COMP model;
     GENERATOR* generator  = get_test_generator();
+
+    COMP model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(generator->get_device_id());
+
     model.set_Xe(0.1);
-    generator->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void COMP_TEST::tear_down()
 {
     COMPENSATOR_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 }
 
 

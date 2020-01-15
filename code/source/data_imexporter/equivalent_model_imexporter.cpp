@@ -322,6 +322,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = toolkit.get_dynamic_model_database();
 
     ostringstream osstream;
 
@@ -345,6 +346,8 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     EQUIVALENT_DEVICE* pedevice = psdb.get_equivalent_device(did);
 
     ARXL model;
+    model.set_toolkit(toolkit);
+    model.set_device_id(did);
 
     did.set_device_type("LINE");
     terminal.clear();
@@ -387,7 +390,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
     METER p_meter = p_meters[0];
     string meter_type = p_meter.get_meter_type();
 
-    pedevice->set_model(&model);
+    dmdb.add_model(&model);
 
     EQUIVALENT_MODEL* emodel = pedevice->get_equivalent_model();
 

@@ -73,6 +73,9 @@ class CIM6 : public LOAD_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual complex<double> get_dynamic_source_admittance_in_pu_based_on_SBASE();
         virtual complex<double> get_additional_admittance_in_pu_based_on_SBASE();
 
@@ -103,8 +106,6 @@ class CIM6 : public LOAD_MODEL
     private:
         void copy_from_const_model(const CIM6& model);
         void setup_model_dynamic_parameters();
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         double P0, Q0;
 

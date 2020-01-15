@@ -17,9 +17,6 @@ PSASPE1::~PSASPE1()
 }
 void PSASPE1::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
-
     sensor.set_limiter_type(NO_LIMITER);
     regulator.set_limiter_type(NO_LIMITER);
     exciter.set_limiter_type(WINDUP_LIMITER);

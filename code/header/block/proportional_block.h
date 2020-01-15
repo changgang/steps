@@ -13,13 +13,13 @@ class PROPORTIONAL_BLOCK : public BLOCK
         void set_K(double K);
         double get_K() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
+        void initialize();
+        void run(DYNAMIC_MODE mode);
         virtual void check();
 
     private:
-        virtual void integrate();
-        virtual void update();
+        void integrate();
+        void update();
         double K;
 };
 #endif // PROPORTIONAL_BLOCK_H

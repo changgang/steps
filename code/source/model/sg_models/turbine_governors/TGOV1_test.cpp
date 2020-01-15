@@ -23,9 +23,12 @@ void TGOV1_TEST::setup()
 {
     TURBINE_GOVERNOR_MODEL_TEST::setup();
 
-    TGOV1 model;
-
     GENERATOR* genptr = get_test_generator();
+
+    TGOV1 model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(genptr->get_device_id());
 
     model.set_R(0.05);
     model.set_T1_in_s(0.1);
@@ -35,11 +38,14 @@ void TGOV1_TEST::setup()
     model.set_Valvemax_in_pu(1.0);
     model.set_Valvemin_in_pu(0.0);
 
-    genptr->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void TGOV1_TEST::tear_down()
 {
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
+
     TURBINE_GOVERNOR_MODEL_TEST::tear_down();
 }
 

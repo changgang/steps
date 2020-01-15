@@ -80,6 +80,7 @@ class LINE : public DEVICE
         virtual void save() const;
 
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
 
         virtual LINE& operator=(const LINE& line);
 

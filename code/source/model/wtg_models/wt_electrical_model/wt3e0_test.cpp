@@ -26,6 +26,10 @@ void WT3E0_TEST::setup()
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     WT3E0 model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(wt_gen->get_device_id());
+
     model.set_bus_to_regulate(0);
     model.set_voltage_flag(1);
     model.set_var_control_mode(CONSTANT_VOLTAGE_MODE);
@@ -59,12 +63,15 @@ void WT3E0_TEST::setup()
     model.set_Pmax_in_pu(1.2);
     model.set_IPmax_in_pu(1.5);
 
-    wt_gen->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void WT3E0_TEST::tear_down()
 {
     WT_ELECTRICAL_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 
     show_test_end_information();
 }

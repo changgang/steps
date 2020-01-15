@@ -13,8 +13,6 @@ TGOV1::~TGOV1()
 void TGOV1::clear()
 {
     set_model_float_parameter_count(7);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     governor.set_limiter_type(WINDUP_LIMITER);
     turbine.set_K(1.0);

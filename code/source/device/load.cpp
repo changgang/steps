@@ -15,17 +15,10 @@ double LOAD::voltage_threshold_of_constant_current_load_in_pu = 0.5;
 LOAD::LOAD()
 {
     clear();
-
-    load_model = NULL;
-    load_voltage_relay_model = NULL;
-    load_frequency_relay_model = NULL;
 }
 
 LOAD::~LOAD()
 {
-    if(load_model != NULL) delete load_model;
-    if(load_voltage_relay_model != NULL) delete load_voltage_relay_model;
-    if(load_frequency_relay_model != NULL) delete load_frequency_relay_model;
 }
 
 void LOAD::set_load_bus(size_t load_bus)
@@ -191,6 +184,10 @@ void LOAD::clear()
     set_owner_number(0);
     set_flag_interruptable(false);
     set_load_manually_scale_factor_in_pu(0.0);
+
+    load_model = NULL;
+    load_voltage_relay_model = NULL;
+    load_frequency_relay_model = NULL;
 }
 
 bool LOAD::is_connected_to_bus(size_t target_bus) const
@@ -411,126 +408,34 @@ void LOAD::set_model(const MODEL* model)
     }
 }
 
-void LOAD::set_load_model(const LOAD_MODEL* model)
+MODEL* LOAD::get_model_of_type(string model_type)
 {
-    if(model!=NULL and model->get_model_type()=="LOAD CHARACTERISTICS")
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-
-        LOAD_MODEL* oldmodel = get_load_model();
-        if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
-        {
-            delete oldmodel;
-            load_model = NULL;
-        }
-        if(load_model!=NULL)
-            return;
-
-        LOAD_MODEL *new_model = NULL;
-        string model_name = model->get_model_name();
-        if(model_name=="IEEL")
-        {
-            IEEL* smodel = (IEEL*) (model);
-            new_model = (LOAD_MODEL*) new IEEL(*smodel);
-        }
-        if(model_name=="CIM6")
-        {
-            CIM6* smodel = (CIM6*) (model);
-            new_model = (LOAD_MODEL*) new CIM6(*smodel);
-        }
-
-        if(new_model!=NULL)
-        {
-            new_model->set_toolkit(toolkit);
-            new_model->set_device_id(get_device_id());
-            load_model = new_model;
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load model of "<<get_device_name()<<".";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+    model_type = string2upper(model_type);
+    if(model_type=="LOAD CHARACTERISTICS")
+        return get_load_model();
+    if(model_type=="LOAD VOLTAGE RELAY")
+        return get_load_voltage_relay_model();
+    if(model_type=="LOAD FREQUENCY RELAY")
+        return get_load_frequency_relay_model();
+    return nullptr;
 }
 
-void LOAD::set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* model)
+void LOAD::set_load_model(LOAD_MODEL* model)
 {
-    if(model != NULL and model->get_model_type()=="LOAD FREQUENCY RELAY")
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        LOAD_FREQUENCY_RELAY_MODEL* oldmodel = get_load_frequency_relay_model();
-        if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
-        {
-            delete oldmodel;
-            load_frequency_relay_model = NULL;
-        }
-        if(load_frequency_relay_model!=NULL)
-            return;
-
-        LOAD_FREQUENCY_RELAY_MODEL *new_model = NULL;
-        string model_name = model->get_model_name();
-        if(model_name=="UFLS")
-        {
-            UFLS* smodel = (UFLS*) (model);
-            new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new UFLS(*smodel);
-        }
-        if(model_name=="PUFLS")
-        {
-            PUFLS* smodel = (PUFLS*) (model);
-            new_model = (LOAD_FREQUENCY_RELAY_MODEL*) new PUFLS(*smodel);
-        }
-
-        if(new_model!=NULL)
-        {
-            new_model->set_toolkit(toolkit);
-            new_model->set_device_id(get_device_id());
-            load_frequency_relay_model = new_model;
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load frequency relay model of "<<get_device_name()<<".";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+    if(model!=NULL)
+        load_model = model;
 }
 
-void LOAD::set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model)
+void LOAD::set_load_frequency_relay_model(LOAD_FREQUENCY_RELAY_MODEL* model)
 {
-    if(model != NULL and model->get_model_type()=="LOAD VOLTAGE RELAY")
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        LOAD_VOLTAGE_RELAY_MODEL* oldmodel = get_load_voltage_relay_model();
-        if(oldmodel!=NULL and oldmodel->get_subsystem_type()>=model->get_subsystem_type())
-        {
-            delete oldmodel;
-            load_voltage_relay_model = NULL;
-        }
-        if(load_voltage_relay_model!=NULL)
-            return;
+    if(model != NULL)
+        load_frequency_relay_model = model;
+}
 
-        LOAD_VOLTAGE_RELAY_MODEL *new_model = NULL;
-        string model_name = model->get_model_name();
-        if(model_name=="UVLS")
-        {
-            UVLS* smodel = (UVLS*) (model);
-            new_model = (LOAD_VOLTAGE_RELAY_MODEL*) new UVLS(*smodel);
-        }
-
-        if(new_model!=NULL)
-        {
-            new_model->set_toolkit(toolkit);
-            new_model->set_device_id(get_device_id());
-            load_voltage_relay_model = new_model;
-        }
-        else
-        {
-            ostringstream osstream;
-            osstream<<"Warning. Model '"<<model_name<<"' is not supported when append load voltage relay model of "<<get_device_name()<<".";
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        }
-    }
+void LOAD::set_load_voltage_relay_model(LOAD_VOLTAGE_RELAY_MODEL* model)
+{
+    if(model != NULL)
+        load_voltage_relay_model = model;
 }
 
 

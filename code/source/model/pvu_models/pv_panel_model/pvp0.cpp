@@ -96,8 +96,6 @@ void PVP0::check()
 
 void PVP0::clear()
 {
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void PVP0::report()

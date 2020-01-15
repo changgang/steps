@@ -24,6 +24,9 @@ class AERDF : public WT_AERODYNAMIC_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void check();
         virtual void clear();
         virtual void report();
@@ -39,8 +42,6 @@ class AERDF : public WT_AERODYNAMIC_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const AERDF& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
         void load_data_from_Cp_file();
         void load_pitch_angles();
         void load_tip_speed_ratios();

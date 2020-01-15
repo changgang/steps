@@ -17,8 +17,6 @@ UFLS::~UFLS()
 void UFLS::clear()
 {
     set_model_float_parameter_count(52);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     frequency_sensor.set_limiter_type(NO_LIMITER);
     frequency_sensor.set_K(1.0);

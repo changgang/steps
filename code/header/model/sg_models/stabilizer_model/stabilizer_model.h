@@ -27,6 +27,10 @@ class STABILIZER_MODEL : public SG_MODEL
     public: // stabilizer common
         virtual string get_model_type() const;
         // common inputs
+        void set_signal_type_at_slot(size_t slot, size_t signal_type);
+        void set_signal_bus_at_slot(size_t slot, size_t signal_bus);
+        size_t get_signal_type_at_slot(size_t slot);
+        size_t get_signal_bus_at_slot(size_t slot);
         void set_input_signal_at_slot(size_t slot, SIGNAL& signal);
         SIGNAL get_input_signal_at_slot(size_t slot) const;
         bool is_slot_valid(size_t slot) const;
@@ -68,6 +72,8 @@ class STABILIZER_MODEL : public SG_MODEL
 
     private:
         SIGNAL *signals[MAX_STABILIZER_INPUT_SIGNAL_SLOT];
+        size_t signal_type[MAX_STABILIZER_INPUT_SIGNAL_SLOT], signal_bus[MAX_STABILIZER_INPUT_SIGNAL_SLOT];
+
 };
 
 #endif // STABILIZER_MODEL_H

@@ -15,8 +15,6 @@ IEEEG1SB::~IEEEG1SB()
 void IEEEG1SB::clear()
 {
     set_model_float_parameter_count(27);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 
     servo_motor.set_limiter_type(NON_WINDUP_LIMITER);
     servo_motor.set_T_in_s(1.0);

@@ -62,6 +62,9 @@ class PSASPS6 : public STABILIZER_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
@@ -83,8 +86,6 @@ class PSASPS6 : public STABILIZER_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     private:
         void copy_from_const_model(const PSASPS6& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         FIRST_ORDER_BLOCK speed_sensor, pelec_sensor;
         DIFFERENTIAL_BLOCK speed_dedc_block_1, speed_dedc_block_2, pelec_dedc_block_1, pelec_dedc_block_2;

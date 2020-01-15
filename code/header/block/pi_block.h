@@ -22,13 +22,13 @@ class PI_BLOCK : public BLOCK
         double get_dstate() const;
         double get_store() const;
 
-        virtual void initialize();
-        virtual void run(DYNAMIC_MODE mode);
+        void initialize();
+        void run(DYNAMIC_MODE mode);
         virtual void check();
 
     private:
-        virtual void integrate();
-        virtual void update();
+        void integrate();
+        void update();
         PID_BLOCK pid_block;
 };
 #endif // PI_BLOCK_H

@@ -31,6 +31,9 @@ class WT3G1 : public WT_GENERATOR_MODEL
         virtual bool setup_model_with_psse_string(string data);
         virtual bool setup_model_with_bpa_string(string data);
 
+        virtual void prepare_model_data_table();
+        virtual void prepare_model_internal_variable_table();
+
         virtual void setup_block_toolkit_and_parameters();
 
         virtual void initialize();
@@ -76,8 +79,6 @@ class WT3G1 : public WT_GENERATOR_MODEL
         void set_pll_angle_in_deg(double angle);
     private:
         void copy_from_const_model(const WT3G1& model);
-        virtual void prepare_model_data_table();
-        virtual void prepare_model_internal_variable_table();
 
         double Xeq;
         FIRST_ORDER_BLOCK active_current_commander;

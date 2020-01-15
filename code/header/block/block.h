@@ -14,10 +14,6 @@ class BLOCK : public BASE
         BLOCK();
         virtual ~BLOCK();
 
-        virtual void initialize() = 0;
-        virtual void integrate() = 0;
-        virtual void update() = 0;
-
         virtual bool is_valid() const;
         virtual void check() = 0;
         virtual void clear();

@@ -20,8 +20,7 @@ void CIM6::clear()
     set_voltage_source_flag(true);
 
     set_model_float_parameter_count(23);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
+
     saturation.set_saturation_type(QUADRATIC_SATURATION_TYPE);
     set_Mbase_in_MVA(0.0);
 }

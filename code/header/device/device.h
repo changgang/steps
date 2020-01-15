@@ -38,6 +38,7 @@ class DEVICE : public BASE
         string get_device_name() const;
 
         virtual void set_model(const MODEL* model) = 0;
+        virtual MODEL* get_model_of_type(string model_type) = 0;
     private:
         OWNERSHIP ownership;
 

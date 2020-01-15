@@ -26,6 +26,10 @@ void WT3G2_TEST::setup()
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     WT3G2 model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(wt_gen->get_device_id());
+
     wt_gen->set_number_of_lumped_wt_generators(50);
     wt_gen->set_rated_power_per_wt_generator_in_MW(2.0);
     model.set_converter_activer_current_command_T_in_s(0.2);
@@ -43,12 +47,15 @@ void WT3G2_TEST::setup()
     model.set_LVPL_max_rate_of_active_current_change(0.2);
     model.set_LVPL_voltage_sensor_T_in_s(0.1);
 
-    wt_gen->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void WT3G2_TEST::tear_down()
 {
     WT_GENERATOR_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 
     show_test_end_information();
 }

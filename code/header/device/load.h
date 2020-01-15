@@ -71,10 +71,11 @@ class LOAD : public DEVICE
         static double get_voltage_threshold_of_constant_current_load_in_pu();
 
         virtual void set_model(const MODEL* model);
+        virtual MODEL* get_model_of_type(string model_type);
 
-        void set_load_model(const LOAD_MODEL* model);
-        void set_load_frequency_relay_model(const LOAD_FREQUENCY_RELAY_MODEL* model);
-        void set_load_voltage_relay_model(const LOAD_VOLTAGE_RELAY_MODEL* model);
+        void set_load_model(LOAD_MODEL* model);
+        void set_load_frequency_relay_model(LOAD_FREQUENCY_RELAY_MODEL* model);
+        void set_load_voltage_relay_model(LOAD_VOLTAGE_RELAY_MODEL* model);
 
         LOAD_MODEL* get_load_model() const;
         LOAD_FREQUENCY_RELAY_MODEL* get_load_frequency_relay_model() const;

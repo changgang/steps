@@ -40,8 +40,6 @@ AERD0& AERD0::operator=(const AERD0& model)
 void AERD0::clear()
 {
     set_model_float_parameter_count(16);
-    prepare_model_data_table();
-    prepare_model_internal_variable_table();
 }
 
 void AERD0::copy_from_const_model(const AERD0& model)

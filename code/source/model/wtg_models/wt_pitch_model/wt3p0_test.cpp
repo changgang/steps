@@ -26,6 +26,10 @@ void WT3P0_TEST::setup()
     WT_GENERATOR* wt_gen = get_test_wt_generator();
 
     WT3P0 model;
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(wt_gen->get_device_id());
+
     model.set_Tp_in_s(0.5);
     model.set_Kp_speed_controller(1.0);
     model.set_Ki_speed_controller(2.0);
@@ -37,12 +41,15 @@ void WT3P0_TEST::setup()
     model.set_Pitchmin_in_deg(0.0);
     model.set_Pitchmax_in_deg(30.0);
 
-    wt_gen->set_model(&model);
+    dmdb.add_model(&model);
 }
 
 void WT3P0_TEST::tear_down()
 {
     WT_PITCH_MODEL_TEST::tear_down();
+
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+    dmdb.remove_the_last_model();
 
     show_test_end_information();
 }

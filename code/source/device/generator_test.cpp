@@ -164,6 +164,8 @@ void GENERATOR_TEST::test_set_get_sync_generator_model()
     generator.set_status(true);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -171,13 +173,15 @@ void GENERATOR_TEST::test_set_get_sync_generator_model()
     GENERATOR* gen = psdb.get_generator(did);
 
     GENCLS model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(did);
 
     model.set_Rs(0.0);
     model.set_Xdp(0.1);
     model.set_Tj_in_s(6.0);
     model.set_D(0.0);
 
-    gen->set_model(&model);
+    dmdb.add_model(&model);
 
     SYNC_GENERATOR_MODEL* modelptr = gen->get_sync_generator_model();
     TEST_ASSERT(modelptr!=NULL);
@@ -186,7 +190,10 @@ void GENERATOR_TEST::test_set_get_sync_generator_model()
     TEST_ASSERT(fabs(modelptr->get_Xdp()-0.1)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(modelptr->get_Tj_in_s()-6.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(modelptr->get_D()-0.0)<FLOAT_EPSILON);
+
+    dmdb.remove_the_last_model();
 }
+
 void GENERATOR_TEST::test_set_get_compensator_model()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENERATOR_TEST");
@@ -196,6 +203,8 @@ void GENERATOR_TEST::test_set_get_compensator_model()
     generator.set_status(true);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -203,18 +212,24 @@ void GENERATOR_TEST::test_set_get_compensator_model()
     GENERATOR* gen = psdb.get_generator(did);
 
     COMP model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(did);
 
     model.set_Xe(0.1);
 
-    gen->set_model(&model);
+    dmdb.add_model(&model);
 
     COMPENSATOR_MODEL* modelptr = gen->get_compensator_model();
+
     TEST_ASSERT(modelptr!=NULL);
 
     COMP* smodelptr = (COMP*) modelptr;
 
     TEST_ASSERT(fabs(smodelptr->get_Xe()-0.1)<FLOAT_EPSILON);
+
+    dmdb.remove_the_last_model();
 }
+
 void GENERATOR_TEST::test_set_get_exciter_model()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENERATOR_TEST");
@@ -224,6 +239,8 @@ void GENERATOR_TEST::test_set_get_exciter_model()
     generator.set_status(true);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -231,6 +248,8 @@ void GENERATOR_TEST::test_set_get_exciter_model()
     GENERATOR* gen = psdb.get_generator(did);
 
     SEXS model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(did);
 
     model.set_TA_in_s(0.1);
     model.set_TB_in_s(0.3);
@@ -239,7 +258,7 @@ void GENERATOR_TEST::test_set_get_exciter_model()
     model.set_Efdmax_in_pu(10.0);
     model.set_Efdmin_in_pu(2.0);
 
-    gen->set_model(&model);
+    dmdb.add_model(&model);
 
     EXCITER_MODEL* modelptr = gen->get_exciter_model();
     TEST_ASSERT(modelptr!=NULL);
@@ -252,6 +271,8 @@ void GENERATOR_TEST::test_set_get_exciter_model()
     TEST_ASSERT(fabs(smodelptr->get_TE_in_s()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_Efdmax_in_pu()-10.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_Efdmin_in_pu()-2.0)<FLOAT_EPSILON);
+
+    dmdb.remove_the_last_model();
 }
 void GENERATOR_TEST::test_set_get_stabilizer_model()
 {
@@ -262,6 +283,8 @@ void GENERATOR_TEST::test_set_get_stabilizer_model()
     generator.set_status(true);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -269,6 +292,8 @@ void GENERATOR_TEST::test_set_get_stabilizer_model()
     GENERATOR* gen = psdb.get_generator(did);
 
     IEE2ST model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(did);
 
     model.set_K1(1.0);
     model.set_K2(2.0);
@@ -284,7 +309,7 @@ void GENERATOR_TEST::test_set_get_stabilizer_model()
     model.set_T10_in_s(10.0);
 
 
-    gen->set_model(&model);
+    dmdb.add_model(&model);
 
     STABILIZER_MODEL* modelptr = gen->get_stabilizer_model();
     TEST_ASSERT(modelptr!=NULL);
@@ -303,7 +328,10 @@ void GENERATOR_TEST::test_set_get_stabilizer_model()
     TEST_ASSERT(fabs(smodelptr->get_T8_in_s()-8.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_T9_in_s()-9.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_T10_in_s()-10.0)<FLOAT_EPSILON);
+
+    dmdb.remove_the_last_model();
 }
+
 void GENERATOR_TEST::test_set_get_turbine_governor_model()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"GENERATOR_TEST");
@@ -313,6 +341,8 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
     generator.set_status(true);
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
+    DYNAMIC_MODEL_DATABASE& dmdb = default_toolkit.get_dynamic_model_database();
+
     psdb.append_generator(generator);
 
     DEVICE_ID did = generator.get_device_id();
@@ -320,6 +350,8 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
     GENERATOR* gen = psdb.get_generator(did);
 
     TGOV1 model;
+    model.set_toolkit(default_toolkit);
+    model.set_device_id(did);
 
     model.set_R(0.5);
     model.set_D(2.0);
@@ -329,7 +361,7 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
     model.set_Valvemax_in_pu(1.0);
     model.set_Valvemin_in_pu(0.2);
 
-    gen->set_model(&model);
+    dmdb.add_model(&model);
 
     TURBINE_GOVERNOR_MODEL* modelptr = gen->get_turbine_governor_model();
     TEST_ASSERT(modelptr!=NULL);
@@ -343,6 +375,8 @@ void GENERATOR_TEST::test_set_get_turbine_governor_model()
     TEST_ASSERT(fabs(smodelptr->get_T3_in_s()-5.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_Valvemax_in_pu()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(smodelptr->get_Valvemin_in_pu()-0.2)<FLOAT_EPSILON);
+
+    dmdb.remove_the_last_model();
 }
 
 #endif
