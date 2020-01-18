@@ -19,10 +19,10 @@ class GENERATOR : public SOURCE
         GENERATOR();
         virtual ~GENERATOR();
 
-        void set_generator_bus(size_t bus);
+        void set_generator_bus(unsigned int bus);
         void set_generator_impedance_in_pu(const complex<double>& z_pu);
 
-        size_t get_generator_bus() const;
+        unsigned int get_generator_bus() const;
         complex<double> get_generator_impedance_in_pu() const;
 
         virtual void clear();

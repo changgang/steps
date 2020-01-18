@@ -5,7 +5,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_fixed_shunt_integer_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
+int api_get_fixed_shunt_integer_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
@@ -27,7 +27,7 @@ int api_get_fixed_shunt_integer_data(size_t bus, char* identifier, char* paramet
     }
 }
 
-void api_set_fixed_shunt_integer_data(size_t bus, char* identifier, char* parameter_name, int value, size_t toolkit_index)
+void api_set_fixed_shunt_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
@@ -45,7 +45,7 @@ void api_set_fixed_shunt_integer_data(size_t bus, char* identifier, char* parame
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-double api_get_fixed_shunt_float_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
+double api_get_fixed_shunt_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
@@ -84,7 +84,7 @@ double api_get_fixed_shunt_float_data(size_t bus, char* identifier, char* parame
     }
 }
 
-void api_set_fixed_shunt_float_data(size_t bus, char* identifier, char* parameter_name, double value, size_t toolkit_index)
+void api_set_fixed_shunt_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
@@ -171,14 +171,14 @@ void api_set_fixed_shunt_float_data(size_t bus, char* identifier, char* paramete
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-const char* api_get_fixed_shunt_string_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
+const char* api_get_fixed_shunt_string_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     FIXED_SHUNT* shuntptr = psdb.get_fixed_shunt(did);
     if(shuntptr!=NULL)
@@ -195,7 +195,7 @@ const char* api_get_fixed_shunt_string_data(size_t bus, char* identifier, char* 
     }
 }
 
-void api_set_fixed_shunt_string_data(size_t bus, char* identifier, char* parameter_name, char* value, size_t toolkit_index)
+void api_set_fixed_shunt_string_data(unsigned int bus, char* identifier, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
@@ -213,7 +213,7 @@ void api_set_fixed_shunt_string_data(size_t bus, char* identifier, char* paramet
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-bool api_get_fixed_shunt_boolean_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
+bool api_get_fixed_shunt_boolean_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);
@@ -238,7 +238,7 @@ bool api_get_fixed_shunt_boolean_data(size_t bus, char* identifier, char* parame
     }
 }
 
-void api_set_fixed_shunt_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value, size_t toolkit_index)
+void api_set_fixed_shunt_boolean_data(unsigned int bus, char* identifier, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_fixed_shunt_device_id(bus, identifier);

@@ -68,7 +68,7 @@ void PSSE_IMEXPORTER_TEST::test_load_bus_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<BUS*> buses = psdb.get_all_buses();
-    size_t n = buses.size();
+    unsigned int n = buses.size();
 
     TEST_ASSERT(n==42);
 
@@ -124,7 +124,7 @@ void PSSE_IMEXPORTER_TEST::test_load_load_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<LOAD*> loads = psdb.get_all_loads();
-    size_t n = loads.size();
+    unsigned int n = loads.size();
 
     TEST_ASSERT(n==20);
 
@@ -178,7 +178,7 @@ void PSSE_IMEXPORTER_TEST::test_load_fixed_shunt_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
-    size_t n = shunts.size();
+    unsigned int n = shunts.size();
 
     TEST_ASSERT(n==13);
 
@@ -223,7 +223,7 @@ void PSSE_IMEXPORTER_TEST::test_load_generator_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<GENERATOR*> generators = psdb.get_all_generators();
-    size_t n = generators.size();
+    unsigned int n = generators.size();
 
     TEST_ASSERT(n==12);
 
@@ -286,7 +286,7 @@ void PSSE_IMEXPORTER_TEST::test_load_wt_generator_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-    size_t n = wt_generators.size();
+    unsigned int n = wt_generators.size();
 
     TEST_ASSERT(n==3);
 
@@ -333,7 +333,7 @@ void PSSE_IMEXPORTER_TEST::test_load_line_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
-    size_t n = lines.size();
+    unsigned int n = lines.size();
 
     TEST_ASSERT(n==30);
 
@@ -399,7 +399,7 @@ void PSSE_IMEXPORTER_TEST::test_load_transformer_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<TRANSFORMER*> trans = psdb.get_all_transformers();
-    size_t n = trans.size();
+    unsigned int n = trans.size();
 
     TEST_ASSERT(n==18);
 
@@ -429,7 +429,7 @@ void PSSE_IMEXPORTER_TEST::test_load_transformer_data()
     TEST_ASSERT(fabs(transptr->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, SECONDARY_SIDE)-1210.0)<FLOAT_EPSILON);
 
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         trans[i]->report();
 }
 
@@ -439,7 +439,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<AREA*> areas = psdb.get_all_areas();
-    size_t n = areas.size();
+    unsigned int n = areas.size();
 
     TEST_ASSERT(n==6);
 
@@ -494,7 +494,7 @@ void PSSE_IMEXPORTER_TEST::test_load_area_data()
     TEST_ASSERT(fabs(area->get_area_power_mismatch_tolerance_in_MW()-20.0)<FLOAT_EPSILON);
     TEST_ASSERT(area->get_area_name()=="EAST_COGEN2");
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         areas[i]->report();
 }
 
@@ -504,11 +504,11 @@ void PSSE_IMEXPORTER_TEST::test_load_hvdc_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t n = hvdcs.size();
+    unsigned int n = hvdcs.size();
 
     TEST_ASSERT(n==2);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->report();
 }
 
@@ -518,7 +518,7 @@ void PSSE_IMEXPORTER_TEST::test_load_zone_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<ZONE*> zones = psdb.get_all_zones();
-    size_t n = zones.size();
+    unsigned int n = zones.size();
 
     TEST_ASSERT(n==9);
 
@@ -569,7 +569,7 @@ void PSSE_IMEXPORTER_TEST::test_load_zone_data()
     TEST_ASSERT(zone->get_zone_number()==9);
     TEST_ASSERT(zone->get_zone_name()=="ALL_A4_A6");
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         zones[i]->report();
 }
 
@@ -579,7 +579,7 @@ void PSSE_IMEXPORTER_TEST::test_load_owner_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<OWNER*> owners = psdb.get_all_owners();
-    size_t n = owners.size();
+    unsigned int n = owners.size();
 
     TEST_ASSERT(n==5);
 
@@ -610,7 +610,7 @@ void PSSE_IMEXPORTER_TEST::test_load_owner_data()
     TEST_ASSERT(owner->get_owner_number()==5);
     TEST_ASSERT(owner->get_owner_name()=="OWNER 5");
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         owners[i]->report();
 }
 

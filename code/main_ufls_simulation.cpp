@@ -43,9 +43,9 @@ int main()
     // change spinning reserve
     double SR = 0.0001;
     vector<GENERATOR*> generators = psdb.get_all_generators();
-    size_t n = generators.size();
+    unsigned int n = generators.size();
     GENERATOR* gen;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         gen = generators[i];
         double pgen = gen->get_p_generation_in_MW();
@@ -71,7 +71,7 @@ int main()
     simulator.start();
     simulator.run_to(1.0);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         gen = generators[i];
         simulator.shed_generator(gen->get_device_id(), 0.25);

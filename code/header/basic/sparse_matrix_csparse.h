@@ -45,7 +45,7 @@ public:
 
     virtual void clear();
 
-    virtual vector<size_t> get_reorder_permutation();
+    virtual vector<unsigned int> get_reorder_permutation();
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13);
 
@@ -65,7 +65,7 @@ private:
     css    *LU_symbolic;
     double *LU_workspace;
     double* bb;
-    size_t bb_size;
+    unsigned int bb_size;
 };
 
 

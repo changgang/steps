@@ -211,7 +211,7 @@ bool WT3P0::setup_model_with_steps_string_vector(vector<string>& data)
             int hold_speed_flag = 0;
             double tp, kps, kis, tf, fup, flow, kpf, kif, kdf, tdf, rpmax, pmax, pmin, tspeed;
 
-            size_t i=3;
+            unsigned int i=3;
             hold_speed_flag = get_integer_data(data[i],"0"); i++;
             tspeed = get_double_data(data[i],"0.0"); i++;
             kps = get_double_data(data[i],"0.0"); i++;
@@ -455,7 +455,7 @@ string WT3P0::get_standard_psse_string() const
     double tp = get_Tp_in_s();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -485,7 +485,7 @@ string WT3P0::get_standard_psse_string() const
 void WT3P0::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("HOLD SPEED FLAG", i); i++; /*1*/
     add_model_data_name_and_index_pair("T SPEED IN S", i); i++; /*2*/
     add_model_data_name_and_index_pair("KP SPEED", i); i++; /*3*/
@@ -562,7 +562,7 @@ void WT3P0::set_model_data_with_name(string par_name, double value)
 void WT3P0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SPEED REGULATOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@FREQUENCY SENSOR", i); i++;

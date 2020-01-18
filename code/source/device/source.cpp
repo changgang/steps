@@ -18,7 +18,7 @@ SOURCE::~SOURCE()
     ;
 }
 
-void SOURCE::set_source_bus(size_t bus)
+void SOURCE::set_source_bus(unsigned int bus)
 {
     ostringstream osstream;
 
@@ -118,7 +118,7 @@ void SOURCE::set_voltage_to_regulate_in_pu(double v_pu)
     voltage_to_regulate_pu = v_pu;
 }
 
-void SOURCE::set_bus_to_regulate(size_t bus)
+void SOURCE::set_bus_to_regulate(unsigned int bus)
 {
     if(bus==0 or bus==get_source_bus())
         bus_to_regulate = get_source_bus();
@@ -139,7 +139,7 @@ void SOURCE::set_source_impedance_in_pu(const complex<double>& z_pu)
 }
 
 
-size_t SOURCE::get_source_bus() const
+unsigned int SOURCE::get_source_bus() const
 {
     return source_bus;
 }
@@ -209,7 +209,7 @@ double SOURCE::get_voltage_to_regulate_in_pu() const
     return voltage_to_regulate_pu;
 }
 
-size_t SOURCE::get_bus_to_regulate() const
+unsigned int SOURCE::get_bus_to_regulate() const
 {
     if(bus_to_regulate!=0)
         return bus_to_regulate;
@@ -238,7 +238,7 @@ void SOURCE::check()
 
     string error_leading_string = "Error detected when checking "+get_device_name()+": ";
 
-    size_t bus = get_source_bus();
+    unsigned int bus = get_source_bus();
     double qmax = get_q_max_in_MVar();
     double qmin = get_q_min_in_MVar();
     if(fabs(qmax-qmin)<FLOAT_EPSILON)
@@ -274,13 +274,13 @@ void SOURCE::clear()
     set_source_impedance_in_pu(0.0);
 }
 
-bool SOURCE::is_connected_to_bus(size_t bus) const
+bool SOURCE::is_connected_to_bus(unsigned int bus) const
 {
     if(get_source_bus()==bus) return true;
     else                      return false;
 }
 
-bool SOURCE::is_in_area(size_t area) const
+bool SOURCE::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -293,7 +293,7 @@ bool SOURCE::is_in_area(size_t area) const
         return false;
 }
 
-bool SOURCE::is_in_zone(size_t zone) const
+bool SOURCE::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

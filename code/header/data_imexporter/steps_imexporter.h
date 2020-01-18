@@ -29,11 +29,11 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         virtual void export_dynamic_data(string file);
         virtual void export_sequence_data(string file);
 
-        size_t get_data_version() const;
+        unsigned int get_data_version() const;
 
     private:
         string trim_steps_comment(string str);
-        void set_data_version(size_t version);
+        void set_data_version(unsigned int version);
 
         void load_powerflow_data_into_ram(string file);
 
@@ -96,8 +96,8 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         string export_switched_shunt_data() const;
 
 
-        size_t get_starting_index_of_device_powerflow_result(const vector<string>& data, const string& device_type);
-        size_t get_data_column_index_in_powerflow_result(const vector<string>& data, size_t starting_index, const string& data_name);
+        unsigned int get_starting_index_of_device_powerflow_result(const vector<string>& data, const string& device_type);
+        unsigned int get_data_column_index_in_powerflow_result(const vector<string>& data, unsigned int starting_index, const string& data_name);
 
         vector<string> load_powerflow_result_into_ram(string file);
         void load_bus_powerflow_result(const vector<string>& data);
@@ -194,7 +194,7 @@ class STEPS_IMEXPORTER : public DATA_IMEXPORTER
         void load_load_dynamic_data();
         void load_line_dynamic_data();
 
-        size_t data_version;
+        unsigned int data_version;
         vector< vector< vector<string> > > splitted_sraw_data_in_ram;
         // [
         //   [ [a,b,c,d],[info, info]],

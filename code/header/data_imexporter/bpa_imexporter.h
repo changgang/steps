@@ -27,11 +27,11 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
 
         string convert_data_into_bpa_format(string data, string format) const;
         string convert_data_into_bpa_format(double data, string format) const;
-        string convert_data_into_bpa_format(size_t data, string format) const;
+        string convert_data_into_bpa_format(unsigned int data, string format) const;
         string convert_data_into_bpa_format(int data, string format) const;
 
-        void set_data_version(size_t version);
-        size_t get_data_version() const;
+        void set_data_version(unsigned int version);
+        unsigned int get_data_version() const;
 
     private:
         bool is_comment_line(string str);
@@ -50,7 +50,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         void update_bus_number_with_bus_name_and_number_pair_file(string file);
 
         string format_bpa_data_to_readable_data(string original_data, string format);
-        string grow_string_to_at_least_size(string data, size_t least_size);
+        string grow_string_to_at_least_size(string data, unsigned int least_size);
 
         void load_case_data();
         void load_area_data();
@@ -101,7 +101,7 @@ class BPA_IMEXPORTER : public DATA_IMEXPORTER
         void load_load_dynamic_data();
         void load_line_dynamic_data();
 
-        size_t data_version;
+        unsigned int data_version;
         vector<string> dat_data_in_ram;
         vector<string> swi_data_in_ram;
 

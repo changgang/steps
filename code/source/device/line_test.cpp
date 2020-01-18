@@ -314,18 +314,18 @@ void LINE_TEST::test_set_get_fault()
     line.set_identifier("1#");
 
 
-    size_t sending_side_bus = line.get_sending_side_bus();
-    size_t receiving_side_bus = line.get_receiving_side_bus();
+    unsigned int sending_side_bus = line.get_sending_side_bus();
+    unsigned int receiving_side_bus = line.get_receiving_side_bus();
 
     double location[6] = {0.0, 0.2, 0.3, 0.5, 0.6, 1.0};
     // actual location  [0.0, 0.8, 0.3, 0.5, 0.6, 1.0]
-    size_t fault_bus[6] = {sending_side_bus, receiving_side_bus, sending_side_bus, receiving_side_bus, sending_side_bus, sending_side_bus};
+    unsigned int fault_bus[6] = {sending_side_bus, receiving_side_bus, sending_side_bus, receiving_side_bus, sending_side_bus, sending_side_bus};
     complex<double> y[6] = {complex<double>(0.0, -0.01), complex<double>(0.0, -0.1),
                            complex<double>(0.1, 0.0),   complex<double>(0.0, -0.02),
                            complex<double>(0.0, 0.5),   complex<double>(0.0, -0.001)};
     FAULT fault;
 
-    for(size_t i=0; i!=6; ++i)
+    for(unsigned int i=0; i!=6; ++i)
     {
         fault.set_fault_type(THREE_PHASES_FAULT);
         fault.set_fault_shunt_in_pu(y[i]);
@@ -333,7 +333,7 @@ void LINE_TEST::test_set_get_fault()
     }
     //index of location [0.0, 0.8, 0.3, 0.5, 0.6, 1.0]
     //                   0    4    1    2    3    5
-    for(size_t i=0; i!=6; ++i)
+    for(unsigned int i=0; i!=6; ++i)
     {
         double loc = line.get_fault_location_of_fault(i);
         FAULT fault2 = line.get_fault_at_location(line.get_sending_side_bus(),loc);
@@ -380,18 +380,18 @@ void LINE_TEST::test_clear_fault()
     line.set_identifier("1#");
 
 
-    size_t sending_side_bus = line.get_sending_side_bus();
-    size_t receiving_side_bus = line.get_receiving_side_bus();
+    unsigned int sending_side_bus = line.get_sending_side_bus();
+    unsigned int receiving_side_bus = line.get_receiving_side_bus();
 
     double location[6] = {0.0, 0.2, 0.3, 0.5, 0.6, 1.0};
     // actual location  [0.0, 0.8, 0.3, 0.5, 0.6, 1.0]
-    size_t fault_bus[6] = {sending_side_bus, receiving_side_bus, sending_side_bus, receiving_side_bus, sending_side_bus, sending_side_bus};
+    unsigned int fault_bus[6] = {sending_side_bus, receiving_side_bus, sending_side_bus, receiving_side_bus, sending_side_bus, sending_side_bus};
     complex<double> y[6] = {complex<double>(0.0, -0.01), complex<double>(0.0, -0.1),
                            complex<double>(0.1, 0.0),   complex<double>(0.0, -0.02),
                            complex<double>(0.0, 0.5),   complex<double>(0.0, -0.001)};
     FAULT fault;
 
-    for(size_t i=0; i!=6; ++i)
+    for(unsigned int i=0; i!=6; ++i)
     {
         fault.set_fault_type(THREE_PHASES_FAULT);
         fault.set_fault_shunt_in_pu(y[i]);
@@ -421,18 +421,18 @@ void LINE_TEST::test_get_fault_count()
     line.set_identifier("1#");
 
 
-    size_t sending_side_bus = line.get_sending_side_bus();
-    size_t receiving_side_bus = line.get_receiving_side_bus();
+    unsigned int sending_side_bus = line.get_sending_side_bus();
+    unsigned int receiving_side_bus = line.get_receiving_side_bus();
 
     double location[6] = {0.0, 0.2, 0.3, 0.5, 0.6, 1.0};
     // actual location  [0.0, 0.8, 0.3, 0.5, 0.6, 1.0]
-    size_t fault_bus[6] = {sending_side_bus, receiving_side_bus, sending_side_bus, receiving_side_bus, sending_side_bus, sending_side_bus};
+    unsigned int fault_bus[6] = {sending_side_bus, receiving_side_bus, sending_side_bus, receiving_side_bus, sending_side_bus, sending_side_bus};
     complex<double> y[6] = {complex<double>(0.0, -0.01), complex<double>(0.0, -0.1),
                            complex<double>(0.1, 0.0),   complex<double>(0.0, -0.02),
                            complex<double>(0.0, 0.5),   complex<double>(0.0, -0.001)};
     FAULT fault;
 
-    for(size_t i=0; i!=6; ++i)
+    for(unsigned int i=0; i!=6; ++i)
     {
         fault.set_fault_type(THREE_PHASES_FAULT);
         fault.set_fault_shunt_in_pu(y[i]);
@@ -449,18 +449,18 @@ void LINE_TEST::test_is_faulted()
     line.set_identifier("1#");
 
 
-    size_t sending_side_bus = line.get_sending_side_bus();
-    size_t receiving_side_bus = line.get_receiving_side_bus();
+    unsigned int sending_side_bus = line.get_sending_side_bus();
+    unsigned int receiving_side_bus = line.get_receiving_side_bus();
 
     double location[6] = {0.0, 0.2, 0.3, 0.5, 0.6, 1.0};
     // actual location  [0.0, 0.8, 0.3, 0.5, 0.6, 1.0]
-    size_t fault_bus[6] = {sending_side_bus, receiving_side_bus, sending_side_bus, receiving_side_bus, sending_side_bus, sending_side_bus};
+    unsigned int fault_bus[6] = {sending_side_bus, receiving_side_bus, sending_side_bus, receiving_side_bus, sending_side_bus, sending_side_bus};
     complex<double> y[6] = {complex<double>(0.0, -0.01), complex<double>(0.0, -0.1),
                            complex<double>(0.1, 0.0),   complex<double>(0.0, -0.02),
                            complex<double>(0.0, 0.5),   complex<double>(0.0, -0.001)};
     FAULT fault;
 
-    for(size_t i=0; i!=6; ++i)
+    for(unsigned int i=0; i!=6; ++i)
     {
         fault.set_fault_type(THREE_PHASES_FAULT);
         fault.set_fault_shunt_in_pu(y[i]);

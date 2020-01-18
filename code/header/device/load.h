@@ -17,19 +17,19 @@ class LOAD : public DEVICE
         LOAD();
         virtual ~LOAD();
 
-        void set_load_bus(size_t bus);
+        void set_load_bus(unsigned int bus);
         void set_identifier(string identifier);
         void set_status(bool status);
         void set_nominal_constant_power_load_in_MVA(const complex<double>& s);
         void set_nominal_constant_current_load_in_MVA(const complex<double>& s);
         void set_nominal_constant_impedance_load_in_MVA(const complex<double>& s);
-        void set_area_number(size_t num);
-        void set_zone_number(size_t num);
-        void set_owner_number(size_t num);
+        void set_area_number(unsigned int num);
+        void set_zone_number(unsigned int num);
+        void set_owner_number(unsigned int num);
         void set_flag_interruptable(bool flag);
         void set_load_manually_scale_factor_in_pu(double scale);
 
-        size_t get_load_bus() const;
+        unsigned int get_load_bus() const;
         BUS* get_bus_pointer() const;
 
         string get_identifier() const;
@@ -37,17 +37,17 @@ class LOAD : public DEVICE
         complex<double> get_nominal_constant_power_load_in_MVA() const;
         complex<double> get_nominal_constant_current_load_in_MVA() const;
         complex<double> get_nominal_constant_impedance_load_in_MVA() const;
-        size_t get_area_number() const;
-        size_t get_zone_number() const;
-        size_t get_owner_number() const;
+        unsigned int get_area_number() const;
+        unsigned int get_zone_number() const;
+        unsigned int get_owner_number() const;
         bool get_flag_interruptable() const;
 
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
-        virtual bool is_connected_to_bus(size_t bus) const;
-        virtual bool is_in_area(size_t area) const;
-        virtual bool is_in_zone(size_t zone) const;
+        virtual bool is_connected_to_bus(unsigned int bus) const;
+        virtual bool is_in_area(unsigned int area) const;
+        virtual bool is_in_zone(unsigned int zone) const;
         virtual void report() const;
         virtual void save() const;
 
@@ -90,7 +90,7 @@ class LOAD : public DEVICE
         complex<double> get_dynamics_load_current_in_pu_based_on_system_base_power();
         complex<double> get_dynamics_load_norton_current_in_pu_based_on_system_base_power();
     private:
-        size_t bus;
+        unsigned int bus;
         BUS* busptr;
 
         string identifier;
@@ -98,7 +98,7 @@ class LOAD : public DEVICE
         complex<double> s_constant_power_in_MVA,
                         s_constant_current_in_MVA,
                         s_constant_impedance_in_MVA;
-        size_t area_number, zone_number, owner_number;
+        unsigned int area_number, zone_number, owner_number;
         bool interruptable;
 
         static double voltage_threshold_of_constant_power_load_in_pu;

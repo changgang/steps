@@ -66,7 +66,7 @@ bool PSASPVC::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double xc;
 
-            size_t i=3;
+            unsigned int i=3;
             xc = get_double_data(data[i],"0.0");
 
             set_Xc(xc);
@@ -153,7 +153,7 @@ string PSASPVC::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -168,7 +168,7 @@ string PSASPVC::get_standard_psse_string() const
 void PSASPVC::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("XC", i); i++;
 }
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include <istream>
 #include <iostream>
+#include <cstring>
 
 using namespace std;
 
@@ -186,7 +187,7 @@ vector<string> equivalent_device_meters{"VOLTAGE SOURCE VOLTAGE IN PU",
                                          "ACTIVE POWER NET LOAD IN PU",
                                          "REACTIVE POWER NET LOAD IN PU"};
 
-map<string, vector<string>> SUPPORTED_METERS{   {"BUS",         bus_meters},
+map<string, vector<string>> SUPPORTED_METERS{ {"BUS",         bus_meters},
                                                 {"LINE",        line_meters},
                                                 {"TRANSFORMER", transformer_meters},
                                                 {"LOAD",        load_meters},
@@ -205,15 +206,12 @@ void METER::copy_from_const_meter(const METER& meter)
 {
     clear();
     set_toolkit(meter.get_toolkit(__PRETTY_FUNCTION__));
-    set_buffer_size(meter.get_buffer_size());
     set_device_id(meter.get_device_id());
     set_meter_type(meter.get_meter_type());
+    string meter_type = this->meter_type;
     if(meter_type.find("INTERNAL VARIABLE") != string::npos)
         set_internal_variable_name(meter.get_internal_variable_name());
     set_meter_side_bus(meter.get_meter_side_bus());
-
-    if(meter.get_device_pointer()!=NULL)
-        set_device_pointer();
 }
 
 METER::METER(const METER& meter)
@@ -245,33 +243,33 @@ void METER::set_device_id(const DEVICE_ID& did)
         osstream<<"Warning. Device id is invalid for setting up meter.";
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
     }
-    this->device_id =did;
-    set_device_pointer();
+    set_device_pointer(did);
 }
 
 void METER::set_meter_type(string meter_type)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(device_id.is_valid())
+    if(device_pointer!=nullptr)
     {
         meter_type = string2upper(meter_type);
 
         if(is_valid_meter_type(meter_type))
         {
-            this->meter_type = meter_type;
+            change_meter_type(meter_type);
         }
         else
         {
-            osstream<<"Warning, Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_id.get_device_name()<<".";
+            osstream<<"Warning, Invalid meter type '"<<meter_type<<"' is not supported for setting up meter type of "<<device_pointer->get_device_name()<<".";
             toolkit.show_information_with_leading_time_stamp(osstream);
-            this->meter_type = "";
+            change_meter_type("");
         }
     }
     else
     {
-        osstream<<"Warning. Device id is invalid for setting up meter type. Set up proper device id first.";
+        osstream<<"Warning. Device pointer is NULL for setting up meter type. Set up proper device id first.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -281,29 +279,32 @@ void METER::set_internal_variable_name(string name)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
-    if(device_id.is_valid())
+    if(device_pointer!=nullptr)
     {
+        string meter_type = this->meter_type;
         if(meter_type.find("INTERNAL VARIABLE") != string::npos)
         {
             if(is_internal_variable_name_valid(name))
-                this->internal_variable_name = name;
+            {
+                change_meter_internal_variable_name(name);
+            }
             else
             {
                 osstream<<"Warning, Internal variable name '"<<name<<"' is not valid. No internal variable name will be set.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                this->internal_variable_name = "";
+                change_meter_internal_variable_name("");
             }
         }
         else
         {
             osstream<<"Warning, Meter type '"<<meter_type<<"' is not valid Internal Variable Meter. No internal variable name will be set.";
             toolkit.show_information_with_leading_time_stamp(osstream);
-            this->internal_variable_name = "";
+            change_meter_internal_variable_name("");
         }
     }
     else
     {
-        osstream<<"Warning. Device id is invalid for setting up meter internal variable name. Set up proper device id first.";
+        osstream<<"Warning. Device pointer is NULL for setting up meter internal variable name. Set up proper device id first.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
@@ -399,7 +400,7 @@ bool METER::is_internal_variable_name_valid(string& name) const
         return false;
 }
 
-void METER::set_meter_side_bus(size_t meter_side)
+void METER::set_meter_side_bus(unsigned int meter_side)
 {
     DEVICE* device = get_device_pointer();
     if(device->is_connected_to_bus(meter_side))
@@ -416,7 +417,14 @@ void METER::change_device_id(DEVICE_ID did)
 
 void METER::change_meter_type(const string& meter_type)
 {
-    this->meter_type = meter_type;
+    strncpy(this->meter_type, meter_type.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
+    this->meter_type[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';
+}
+
+void METER::change_meter_internal_variable_name(const string& name)
+{
+    strncpy(this->internal_variable_name, name.c_str(), STEPS_METER_TYPE_STRING_SIZE-1);
+    this->internal_variable_name[STEPS_METER_TYPE_STRING_SIZE-1] = '\0';
 }
 
 void METER::check()
@@ -425,9 +433,9 @@ void METER::check()
 }
 bool METER::is_valid_meter_type(string& meter_type) const
 {
-    if(device_id.is_valid())
+    if(device_pointer!=nullptr)
     {
-        string device_type = device_id.get_device_type();
+        string device_type = get_device_type();
         meter_type = string2upper(meter_type);
 
         return is_valid_meter_type_of_device(meter_type, device_type);
@@ -446,9 +454,9 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, string& devi
     if(it!=SUPPORTED_METERS.end())
     {
         vector<string> supported_meters = it->second;
-        size_t n = supported_meters.size();
+        unsigned int n = supported_meters.size();
         bool flag_valid = false;
-        for(size_t i=0; i!=n; ++i)
+        for(unsigned int i=0; i!=n; ++i)
         {
             if(meter_type == supported_meters[i])
             {
@@ -468,7 +476,11 @@ bool METER::is_valid_meter_type_of_device(const string& meter_type, string& devi
 
 DEVICE_ID METER::get_device_id() const
 {
-    return device_id;
+    DEVICE_ID did;
+    if(device_pointer!=nullptr)
+        return device_pointer->get_device_id();
+    else
+        return did;
 }
 
 string METER::get_meter_type() const
@@ -476,14 +488,17 @@ string METER::get_meter_type() const
     return meter_type;
 }
 
-size_t METER::get_meter_side_bus() const
+unsigned int METER::get_meter_side_bus() const
 {
     return meter_side_bus;
 }
 
 string METER::get_device_type() const
 {
-    return device_id.get_device_type();
+    if(device_pointer!=nullptr)
+        return device_pointer->get_device_id().get_device_type();
+    else
+        return "NONE";
 }
 
 string METER::get_internal_variable_name() const
@@ -522,9 +537,9 @@ string METER::get_meter_name() const
 
 bool METER::is_valid() const
 {
-    if(device_id.is_valid() and meter_type!="")
+    if(device_pointer!=nullptr and meter_type[0]!='\0')
     {
-        string device_type = device_id.get_device_type();
+        string device_type = get_device_type();
         if(device_type=="LINE" or device_type=="TRANSFORMER")
         {
             if(get_meter_side_bus()!=0)
@@ -541,14 +556,10 @@ bool METER::is_valid() const
 
 void METER::clear()
 {
-    device_id.clear();
-    device_pointer = NULL;
-    meter_type = "";
+    device_pointer = nullptr;
+    meter_type[0] = '\0';
     meter_side_bus = 0;
-    internal_variable_name = "";
-
-    set_buffer_size(1);
-    buffer.clear();
+    internal_variable_name[0] = '\0';
 }
 
 
@@ -576,24 +587,24 @@ bool METER::operator!=(const METER& meter)
     return not ((*this)==meter);
 }
 
-void METER::set_device_pointer()
+void METER::set_device_pointer(DEVICE_ID device_id)
 {
     ostringstream osstream;
 
     if(not device_id.is_valid())
     {
-        device_pointer = NULL;
+        device_pointer = nullptr;
         return;
     }
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     string device_type = device_id.get_device_type();
-    DEVICE* deviceptr = NULL;
+    DEVICE* deviceptr = nullptr;
     if(device_type=="BUS")
     {
         TERMINAL terminal = device_id.get_device_terminal();
-        vector<size_t> tbuses = terminal.get_buses();
+        vector<unsigned int> tbuses = terminal.get_buses();
         deviceptr = (DEVICE*) psdb.get_bus(tbuses[0]);
     }
     if(device_type=="LINE")
@@ -632,71 +643,6 @@ void METER::set_device_pointer()
     }
 }
 
-void METER::set_buffer_size(size_t bsize)
-{
-    buffer.set_buffer_size(bsize);
-}
-
-size_t METER::get_buffer_size() const
-{
-    return buffer.get_buffer_size();
-}
-
-void METER::initialize_meter_buffer()
-{
-    if(get_device_pointer()!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        double current_time = toolkit.get_dynamic_simulation_time_in_s();
-
-        double value = get_meter_value();
-        buffer.initialize_buffer(current_time, value);
-    }
-    else
-    {
-        set_device_pointer();
-
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        double current_time = toolkit.get_dynamic_simulation_time_in_s();
-
-        double value = get_meter_value();
-        buffer.initialize_buffer(current_time, value);
-    }
-}
-
-void METER::update_meter_buffer()
-{
-    if(get_device_pointer()!=NULL)
-    {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        double current_time = toolkit.get_dynamic_simulation_time_in_s();
-        buffer.append_data(current_time, get_meter_value());
-    }
-    else
-    {
-        set_device_pointer();
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        double current_time = toolkit.get_dynamic_simulation_time_in_s();
-        buffer.append_data(current_time, get_meter_value());
-    }
-}
-
-
-double METER::get_meter_value_from_buffer_with_delay(size_t index) const
-{
-    return buffer.get_buffer_value_at_delay_index(index);
-}
-
-double METER::get_meter_value_from_buffer_at_time(double time) const
-{
-    return buffer.get_buffer_value_at_time(time);
-}
-
-size_t METER::get_delay_index_of_time(double time) const
-{
-    return buffer.get_delay_index_of_time(time);
-}
-
 double METER::get_meter_value() const
 {
     if(get_device_pointer()!=NULL)
@@ -733,6 +679,7 @@ double METER::get_meter_value_as_a_bus() const
     BUS* bus = (BUS*) get_device_pointer();
     if(bus->get_bus_type()!=OUT_OF_SERVICE)
     {
+        string meter_type = this->meter_type;
         if(meter_type=="VOLTAGE IN PU")
             return bus->get_positive_sequence_voltage_in_pu();
         if(meter_type=="VOLTAGE IN KV")
@@ -761,7 +708,8 @@ double METER::get_meter_value_as_a_line() const
     {
         if(line->get_sending_side_breaker_status()==true or line->get_receiving_side_breaker_status()==true)
         {
-            size_t metered_bus = get_meter_side_bus();
+            string meter_type = this->meter_type;
+            unsigned int metered_bus = get_meter_side_bus();
             if(meter_type=="CURRENT IN KA")
             {
                 if(metered_bus!=line->get_receiving_side_bus())
@@ -878,7 +826,8 @@ double METER::get_meter_value_as_a_transformer() const
     TRANSFORMER* trans = (TRANSFORMER*) get_device_pointer();
     if(trans != NULL)
     {
-        size_t metered_bus = get_meter_side_bus();
+        string meter_type = this->meter_type;
+        unsigned int metered_bus = get_meter_side_bus();
         if(trans->is_two_winding_transformer())
         {
             if(meter_type=="CURRENT IN KA")
@@ -1044,6 +993,7 @@ double METER::get_meter_value_as_a_load() const
     {
         if(load->get_status()==true)
         {
+            string meter_type = this->meter_type;
             if(meter_type=="ACTIVE POWER IN MW")
                 return (load->get_dynamic_load_in_MVA()).real();
 
@@ -1122,6 +1072,7 @@ double METER::get_meter_value_as_a_generator() const
     {
         if(generator->get_status()==true)
         {
+            string meter_type = this->meter_type;
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
@@ -1459,7 +1410,8 @@ double METER::get_meter_value_as_a_wt_generator() const
     {
         if(generator->get_status()==true)
         {
-            size_t bus = generator->get_generator_bus();
+            string meter_type = this->meter_type;
+            unsigned int bus = generator->get_generator_bus();
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             double fbase = psdb.get_bus_base_frequency_in_Hz(generator->get_generator_bus());
@@ -1602,7 +1554,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 {
                     double vwind = aerd_model->get_wind_speed_in_mps();
                     double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
-                    size_t n = generator->get_number_of_lumped_wt_generators();
+                    unsigned int n = generator->get_number_of_lumped_wt_generators();
                     return pmax*n*one_over_mbase;
                 }
                 else
@@ -1614,7 +1566,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 {
                     double vwind = aerd_model->get_wind_speed_in_mps();
                     double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
-                    size_t n = generator->get_number_of_lumped_wt_generators();
+                    unsigned int n = generator->get_number_of_lumped_wt_generators();
                     return pmax*n*one_over_sbase;
                 }
                 else
@@ -1626,7 +1578,7 @@ double METER::get_meter_value_as_a_wt_generator() const
                 {
                     double vwind = aerd_model->get_wind_speed_in_mps();
                     double pmax = aerd_model->get_maximum_available_mechanical_power_per_wt_generator_in_MW(vwind);
-                    size_t n = generator->get_number_of_lumped_wt_generators();
+                    unsigned int n = generator->get_number_of_lumped_wt_generators();
                     return pmax*n;
                 }
                 else
@@ -1844,7 +1796,8 @@ double METER::get_meter_value_as_a_pv_unit() const
     {
         if(pv_unit->get_status()==true)
         {
-            size_t bus = pv_unit->get_unit_bus();
+            string meter_type = this->meter_type;
+            unsigned int bus = pv_unit->get_unit_bus();
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
@@ -2042,6 +1995,7 @@ double METER::get_meter_value_as_an_hvdc() const
     {
         if(hvdc->get_status()==true)
         {
+            string meter_type = this->meter_type;
             HVDC_MODEL* hvdc_model = hvdc->get_hvdc_model();
             if(hvdc_model != NULL)
             {
@@ -2122,6 +2076,7 @@ double METER::get_meter_value_as_an_equivalent_device() const
     EQUIVALENT_DEVICE* edevice = (EQUIVALENT_DEVICE*) get_device_pointer();
     if(edevice != NULL)
     {
+        string meter_type = this->meter_type;
         if(meter_type=="VOLTAGE SOURCE VOLTAGE IN PU")
         {
             return steps_fast_complex_abs(edevice->get_equivalent_voltage_source_voltage_in_pu());
@@ -2378,6 +2333,7 @@ double METER::get_meter_value_as_an_energy_storage() const
         ENERGY_STORAGE_MODEL* model = estorage->get_energy_storage_model();
         if(model!=NULL)
         {
+            string meter_type = this->meter_type;
             if(meter_type=="STATE OF ENERGY IN PU")
                 return model->get_energy_state_in_pu();
 

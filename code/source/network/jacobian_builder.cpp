@@ -70,7 +70,7 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
 
         int n = Y.get_matrix_entry_count();
         int row, column;
-        size_t ibus, jbus;
+        unsigned int ibus, jbus;
         ostringstream osstream;
         for(int k=0; k!=n; ++k)
         {
@@ -146,13 +146,13 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
-        size_t nbus = psdb.get_in_service_bus_count();
+        unsigned int nbus = psdb.get_in_service_bus_count();
         double der;
         complex<double> y;
         int k_start, k_end;
         k_start = 0;
-        size_t ibus;
-        for(size_t jbus = 0; jbus!=nbus; ++jbus)
+        unsigned int ibus;
+        for(unsigned int jbus = 0; jbus!=nbus; ++jbus)
         {
             k_end = Y.get_starting_index_of_column(jbus+1);
             for(int k=k_start; k!=k_end; ++k)
@@ -180,9 +180,9 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
         }
         return;
 
-        for(size_t i=0; i!=nbus; ++i)
+        for(unsigned int i=0; i!=nbus; ++i)
         {
-            for(size_t j=0; j!=nbus; ++j)
+            for(unsigned int j=0; j!=nbus; ++j)
             {
                 if(i!=j)
                 {
@@ -212,13 +212,13 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
-        size_t nbus = psdb.get_in_service_bus_count();
+        unsigned int nbus = psdb.get_in_service_bus_count();
         double der;
         complex<double> y;
         int k_start, k_end;
         k_start = 0;
-        size_t ibus;
-        for(size_t jbus = 0; jbus!=nbus; ++jbus)
+        unsigned int ibus;
+        for(unsigned int jbus = 0; jbus!=nbus; ++jbus)
         {
             k_end = Y.get_starting_index_of_column(jbus+1);
             for(int k=k_start; k!=k_end; ++k)
@@ -247,9 +247,9 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
         return;
 
 
-        for(size_t i=0; i!=nbus; ++i)
+        for(unsigned int i=0; i!=nbus; ++i)
         {
-            for(size_t j=0; j!=nbus; ++j)
+            for(unsigned int j=0; j!=nbus; ++j)
             {
                 if(i!=j)
                 {
@@ -279,14 +279,14 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
-        size_t nbus = psdb.get_in_service_bus_count();
+        unsigned int nbus = psdb.get_in_service_bus_count();
         double der;
         complex<double> y;
 
         int k_start, k_end;
         k_start = 0;
-        size_t ibus;
-        for(size_t jbus = 0; jbus!=nbus; ++jbus)
+        unsigned int ibus;
+        for(unsigned int jbus = 0; jbus!=nbus; ++jbus)
         {
             k_end = Y.get_starting_index_of_column(jbus+1);
             for(int k=k_start; k!=k_end; ++k)
@@ -314,9 +314,9 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
         }
         return;
 
-        for(size_t i=0; i!=nbus; ++i)
+        for(unsigned int i=0; i!=nbus; ++i)
         {
-            for(size_t j=0; j!=nbus; ++j)
+            for(unsigned int j=0; j!=nbus; ++j)
             {
                 if(i!=j)
                 {
@@ -346,14 +346,14 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
         const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
-        size_t nbus = psdb.get_in_service_bus_count();
+        unsigned int nbus = psdb.get_in_service_bus_count();
         double der;
         complex<double> y;
 
         int k_start, k_end;
         k_start = 0;
-        size_t ibus;
-        for(size_t jbus = 0; jbus!=nbus; ++jbus)
+        unsigned int ibus;
+        for(unsigned int jbus = 0; jbus!=nbus; ++jbus)
         {
             k_end = Y.get_starting_index_of_column(jbus+1);
             for(int k=k_start; k!=k_end; ++k)
@@ -381,9 +381,9 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
         }
         return;
 
-        for(size_t i=0; i!=nbus; ++i)
+        for(unsigned int i=0; i!=nbus; ++i)
         {
-            for(size_t j=0; j!=nbus; ++j)
+            for(unsigned int j=0; j!=nbus; ++j)
             {
                 if(i!=j)
                 {
@@ -404,7 +404,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
     }
 }
 
-double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t ibus, size_t jbus)
+double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(unsigned int ibus, unsigned int jbus)
 {
     if(is_network_matrix_set())
     {
@@ -414,7 +414,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
+        unsigned int IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
         complex<double> Vi = psdb.get_bus_positive_sequence_complex_voltage_in_pu(IBUS), Vj;
         complex<double> y;
         double g, b;
@@ -469,7 +469,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(size_t 
         return 0.0;
 }
 
-double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_t ibus, size_t jbus)
+double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(unsigned int ibus, unsigned int jbus)
 {
     if(is_network_matrix_set())
     {
@@ -479,7 +479,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
+        unsigned int IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
         complex<double> Vi = psdb.get_bus_positive_sequence_complex_voltage_in_pu(IBUS), Vj;
         complex<double> y;
         double g, b;
@@ -537,7 +537,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(size_
         return 0.0;
 }
 
-double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t ibus, size_t jbus)
+double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(unsigned int ibus, unsigned int jbus)
 {
     if(is_network_matrix_set())
     {
@@ -547,7 +547,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
+        unsigned int IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
         complex<double> Vi = psdb.get_bus_positive_sequence_complex_voltage_in_pu(IBUS), Vj;
         complex<double> y;
         double g, b;
@@ -602,7 +602,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(size_t 
         return 0.0;
 }
 
-double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_t ibus, size_t jbus)
+double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(unsigned int ibus, unsigned int jbus)
 {
     if(is_network_matrix_set())
     {
@@ -612,7 +612,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
+        unsigned int IBUS = nw_db->get_physical_bus_number_of_internal_bus(ibus), JBUS;
         complex<double> Vi = psdb.get_bus_positive_sequence_complex_voltage_in_pu(IBUS), Vj;
         complex<double> y;
         double g, b;
@@ -670,7 +670,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(size_
         return 0.0;
 }
 
-double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_physical_bus(size_t ibus, size_t jbus)
+double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     if(is_network_matrix_set())
     {
@@ -680,8 +680,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_physical_bus(size_t 
 
         if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
         {
-            size_t ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
-            size_t jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
+            unsigned int ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
+            unsigned int jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
 
             return get_jacobian_delta_p_over_angle_of_internal_bus(ibus_internal, jbus_internal);
         }
@@ -698,7 +698,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_physical_bus(size_t 
         return 0.0;
 }
 
-double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_physical_bus(size_t ibus, size_t jbus)
+double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     if(is_network_matrix_set())
     {
@@ -708,8 +708,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_physical_bus(size_
 
         if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
         {
-            size_t ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
-            size_t jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
+            unsigned int ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
+            unsigned int jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
 
             return get_jacobian_delta_p_over_voltage_of_internal_bus(ibus_internal, jbus_internal);
         }
@@ -726,7 +726,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_physical_bus(size_
         return 0.0;
 }
 
-double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_physical_bus(size_t ibus, size_t jbus)
+double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     if(is_network_matrix_set())
     {
@@ -736,8 +736,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_physical_bus(size_t 
 
         if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
         {
-            size_t ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
-            size_t jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
+            unsigned int ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
+            unsigned int jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
 
             return get_jacobian_delta_q_over_angle_of_internal_bus(ibus_internal, jbus_internal);
         }
@@ -754,7 +754,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_physical_bus(size_t 
         return 0.0;
 }
 
-double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_t ibus, size_t jbus)
+double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     if(is_network_matrix_set())
     {
@@ -764,8 +764,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_
 
         if(psdb.is_bus_exist(ibus) and psdb.is_bus_exist(jbus))
         {
-            size_t ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
-            size_t jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
+            unsigned int ibus_internal = nw_db->get_internal_bus_number_of_physical_bus(ibus);
+            unsigned int jbus_internal = nw_db->get_internal_bus_number_of_physical_bus(jbus);
 
             return get_jacobian_delta_q_over_voltage_of_internal_bus(ibus_internal, jbus_internal);
         }
@@ -783,8 +783,8 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_physical_bus(size_
 }
 
 STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(
-                                                                const vector<size_t>& internal_P_equation_buses,
-                                                                const vector<size_t>& internal_Q_equation_buses)
+                                                                const vector<unsigned int>& internal_P_equation_buses,
+                                                                const vector<unsigned int>& internal_Q_equation_buses)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -801,31 +801,31 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
     const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t n_internal_P_equation_buses = internal_P_equation_buses.size(),
+    unsigned int n_internal_P_equation_buses = internal_P_equation_buses.size(),
            n_internal_Q_equation_buses = internal_Q_equation_buses.size();
 
     vector<bool> is_a_P_equation_bus, is_a_Q_equation_bus;
-    vector<size_t> index_of_a_P_equation_bus, index_of_a_Q_equation_bus;
-    size_t n = psdb.get_in_service_bus_count();
+    vector<unsigned int> index_of_a_P_equation_bus, index_of_a_Q_equation_bus;
+    unsigned int n = psdb.get_in_service_bus_count();
     is_a_P_equation_bus.reserve(n);
     is_a_Q_equation_bus.reserve(n);
     index_of_a_P_equation_bus.reserve(n);
     index_of_a_Q_equation_bus.reserve(n);
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         is_a_P_equation_bus.push_back(false);
         is_a_Q_equation_bus.push_back(false);
         index_of_a_P_equation_bus.push_back(INDEX_NOT_EXIST);
         index_of_a_Q_equation_bus.push_back(INDEX_NOT_EXIST);
     }
-    size_t bus;
-    for(size_t i=0; i!=n_internal_P_equation_buses; ++i)
+    unsigned int bus;
+    for(unsigned int i=0; i!=n_internal_P_equation_buses; ++i)
     {
         bus = internal_P_equation_buses[i];
         is_a_P_equation_bus[bus] = true;
         index_of_a_P_equation_bus[bus] = i;
     }
-    for(size_t i=0; i!=n_internal_Q_equation_buses; ++i)
+    for(unsigned int i=0; i!=n_internal_Q_equation_buses; ++i)
     {
         bus = internal_Q_equation_buses[i];
         is_a_Q_equation_bus[bus] = true;
@@ -839,10 +839,10 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
 
     complex<double> cvalue;
     double rvalue;
-    size_t ibus, jbus;
 
-    size_t i,j;
+    unsigned int i,j;
     /* the following codes are replace on June 28, 2019 for higher performance
+    unsigned int ibus, jbus;
     int nentry = Y.get_matrix_entry_count();
 
     for(int k=0; k!=nentry; ++k)
@@ -944,9 +944,9 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
     return full_jacobian;
 
     /*
-    size_t n_internal_P_equation_buses = internal_P_equation_buses.size(),
+    unsigned int n_internal_P_equation_buses = internal_P_equation_buses.size(),
            n_internal_Q_equation_buses = internal_Q_equation_buses.size();
-    size_t row, col;
+    unsigned int row, col;
     complex<double>cvalue;
     double rvalue;
 
@@ -954,10 +954,10 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
 
     full_jacobian.clear();
 
-    for(size_t i=0; i!=n_internal_P_equation_buses; ++i)
+    for(unsigned int i=0; i!=n_internal_P_equation_buses; ++i)
     {
         row = internal_P_equation_buses[i];
-        for(size_t j=0; j!=n_internal_P_equation_buses; ++j)
+        for(unsigned int j=0; j!=n_internal_P_equation_buses; ++j)
         {
             col = internal_P_equation_buses[j];
             cvalue = jacobian_delta_p_over_angle.get_entry_value(row,col);
@@ -967,10 +967,10 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
         }
     }
 
-    for(size_t i=0; i!=n_internal_P_equation_buses; ++i)
+    for(unsigned int i=0; i!=n_internal_P_equation_buses; ++i)
     {
         row = internal_P_equation_buses[i];
-        for(size_t j=0; j!=n_internal_Q_equation_buses; ++j)
+        for(unsigned int j=0; j!=n_internal_Q_equation_buses; ++j)
         {
             col = internal_Q_equation_buses[j];
             cvalue = jacobian_delta_p_over_voltage.get_entry_value(row,col);
@@ -980,10 +980,10 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
         }
     }
 
-    for(size_t i=0; i!=n_internal_Q_equation_buses; ++i)
+    for(unsigned int i=0; i!=n_internal_Q_equation_buses; ++i)
     {
         row = internal_Q_equation_buses[i];
-        for(size_t j=0; j!=n_internal_P_equation_buses; ++j)
+        for(unsigned int j=0; j!=n_internal_P_equation_buses; ++j)
         {
             col = internal_P_equation_buses[j];
             cvalue = jacobian_delta_q_over_angle.get_entry_value(row,col);
@@ -993,10 +993,10 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
         }
     }
 
-    for(size_t i=0; i!=n_internal_Q_equation_buses; ++i)
+    for(unsigned int i=0; i!=n_internal_Q_equation_buses; ++i)
     {
         row = internal_Q_equation_buses[i];
-        for(size_t j=0; j!=n_internal_Q_equation_buses; ++j)
+        for(unsigned int j=0; j!=n_internal_Q_equation_buses; ++j)
         {
             col = internal_Q_equation_buses[j];
             cvalue = jacobian_delta_q_over_voltage.get_entry_value(row,col);
@@ -1010,7 +1010,7 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
     */
 }
 
-STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t>& internal_P_equation_buses)
+STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<unsigned int>& internal_P_equation_buses)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -1028,20 +1028,20 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_i
 
     const STEPS_SPARSE_MATRIX& BP = nw_db->get_decoupled_network_BP_matrix();
 
-    size_t n_internal_P_equation_buses = internal_P_equation_buses.size();
+    unsigned int n_internal_P_equation_buses = internal_P_equation_buses.size();
 
     vector<bool> is_a_P_equation_bus;
-    vector<size_t> index_of_a_P_equation_bus;
-    size_t n = psdb.get_in_service_bus_count();
+    vector<unsigned int> index_of_a_P_equation_bus;
+    unsigned int n = psdb.get_in_service_bus_count();
     is_a_P_equation_bus.reserve(n);
     index_of_a_P_equation_bus.reserve(n);
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         is_a_P_equation_bus.push_back(false);
         index_of_a_P_equation_bus.push_back(INDEX_NOT_EXIST);
     }
-    size_t bus;
-    for(size_t i=0; i!=n_internal_P_equation_buses; ++i)
+    unsigned int bus;
+    for(unsigned int i=0; i!=n_internal_P_equation_buses; ++i)
     {
         bus = internal_P_equation_buses[i];
         is_a_P_equation_bus[bus] = true;
@@ -1055,11 +1055,10 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_i
 
     complex<double> cvalue;
     double rvalue;
-    size_t ibus, jbus;
-
-    size_t i,j;
 
     /* the following codes are replace on June 28, 2019 for higher performance
+    unsigned int ibus, jbus;
+    unsigned int i,j;
     int nentry = BP.get_matrix_entry_count();
 
     for(int k=0; k!=nentry; ++k)
@@ -1111,7 +1110,7 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_P_equation_i
     return B_jacobian;
 }
 
-STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t>& internal_Q_equation_buses)
+STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<unsigned int>& internal_Q_equation_buses)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -1129,20 +1128,20 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_i
 
     const STEPS_SPARSE_MATRIX& BQ = nw_db->get_decoupled_network_BQ_matrix();
 
-    size_t n_internal_Q_equation_buses = internal_Q_equation_buses.size();
+    unsigned int n_internal_Q_equation_buses = internal_Q_equation_buses.size();
 
     vector<bool> is_a_Q_equation_bus;
-    vector<size_t> index_of_a_Q_equation_bus;
-    size_t n = psdb.get_in_service_bus_count();
+    vector<unsigned int> index_of_a_Q_equation_bus;
+    unsigned int n = psdb.get_in_service_bus_count();
     is_a_Q_equation_bus.reserve(n);
     index_of_a_Q_equation_bus.reserve(n);
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         is_a_Q_equation_bus.push_back(false);
         index_of_a_Q_equation_bus.push_back(INDEX_NOT_EXIST);
     }
-    size_t bus;
-    for(size_t i=0; i!=n_internal_Q_equation_buses; ++i)
+    unsigned int bus;
+    for(unsigned int i=0; i!=n_internal_Q_equation_buses; ++i)
     {
         bus = internal_Q_equation_buses[i];
         is_a_Q_equation_bus[bus] = true;
@@ -1156,11 +1155,10 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_decoupled_B_jacobian_with_Q_equation_i
 
     complex<double> cvalue;
     double rvalue;
-    size_t ibus, jbus;
-
-    size_t i,j;
 
     /* the following codes are replace on June 28, 2019 for higher performance
+    unsigned int ibus, jbus;
+    unsigned int i,j;
     int nentry = BQ.get_matrix_entry_count();
 
     for(int k=0; k!=nentry; ++k)
@@ -1220,18 +1218,18 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
-        size_t MAX_ENTRIES_TO_SHOW = 50;
+        unsigned int MAX_ENTRIES_TO_SHOW = 50;
 
         ostringstream osstream;
         int row, col;
-        size_t row_bus, col_bus;
+        unsigned int row_bus, col_bus;
         complex<double> cvalue;
         double rvalue;
 
         int nentry = jacobian_delta_p_over_angle.get_matrix_entry_count();
-        size_t entries_to_show = MAX_ENTRIES_TO_SHOW;
-        if(entries_to_show > size_t(nentry))
-            entries_to_show = size_t(nentry);
+        unsigned int entries_to_show = MAX_ENTRIES_TO_SHOW;
+        if(entries_to_show > (unsigned int)(nentry))
+            entries_to_show = (unsigned int)(nentry);
         if(entries_to_show == 1)
             entries_to_show = 0;
 
@@ -1239,7 +1237,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
           <<"row      row_bus  column   col_bus  value";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
-        for(size_t k=0; k!=entries_to_show; ++k)
+        for(unsigned int k=0; k!=entries_to_show; ++k)
         {
             row = jacobian_delta_p_over_angle.get_row_number_of_entry_index(k);
             col = jacobian_delta_p_over_angle.get_column_number_of_entry_index(k);
@@ -1260,8 +1258,8 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
 
         nentry = jacobian_delta_p_over_voltage.get_matrix_entry_count();
         entries_to_show = MAX_ENTRIES_TO_SHOW;
-        if(entries_to_show > size_t(nentry))
-            entries_to_show = size_t(nentry);
+        if(entries_to_show > (unsigned int)(nentry))
+            entries_to_show = (unsigned int)(nentry);
         if(entries_to_show == 1)
             entries_to_show = 0;
 
@@ -1269,7 +1267,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
           <<"row      row_bus  column   col_bus  value";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
-        for(size_t k=0; k!=entries_to_show; ++k)
+        for(unsigned int k=0; k!=entries_to_show; ++k)
         {
             row = jacobian_delta_p_over_voltage.get_row_number_of_entry_index(k);
             col = jacobian_delta_p_over_voltage.get_column_number_of_entry_index(k);
@@ -1290,8 +1288,8 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
 
         nentry = jacobian_delta_q_over_angle.get_matrix_entry_count();
         entries_to_show = MAX_ENTRIES_TO_SHOW;
-        if(entries_to_show > size_t(nentry))
-            entries_to_show = size_t(nentry);
+        if(entries_to_show > (unsigned int)(nentry))
+            entries_to_show = (unsigned int)(nentry);
         if(entries_to_show == 1)
             entries_to_show = 0;
 
@@ -1299,7 +1297,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
           <<"row      row_bus  column   col_bus  value";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
-        for(size_t k=0; k!=entries_to_show; ++k)
+        for(unsigned int k=0; k!=entries_to_show; ++k)
         {
             row = jacobian_delta_q_over_angle.get_row_number_of_entry_index(k);
             col = jacobian_delta_q_over_angle.get_column_number_of_entry_index(k);
@@ -1320,8 +1318,8 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
 
         nentry = jacobian_delta_q_over_voltage.get_matrix_entry_count();
         entries_to_show = MAX_ENTRIES_TO_SHOW;
-        if(entries_to_show > size_t(nentry))
-            entries_to_show = size_t(nentry);
+        if(entries_to_show > (unsigned int)(nentry))
+            entries_to_show = (unsigned int)(nentry);
         if(entries_to_show == 1)
             entries_to_show = 0;
 
@@ -1329,7 +1327,7 @@ void JACOBIAN_BUILDER::show_seprate_jacobians()
           <<"row      row_bus  column   col_bus  value";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
-        for(size_t k=0; k!=entries_to_show; ++k)
+        for(unsigned int k=0; k!=entries_to_show; ++k)
         {
             row = jacobian_delta_q_over_voltage.get_row_number_of_entry_index(k);
             col = jacobian_delta_q_over_voltage.get_column_number_of_entry_index(k);
@@ -1369,13 +1367,13 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(const string& filename) cons
             NETWORK_MATRIX* nw_db = get_network_Y_matrix();
 
             int row, col;
-            size_t row_bus, col_bus;
+            unsigned int row_bus, col_bus;
             complex<double> cvalue;
             double rvalue;
 
-            size_t nentry;
-            nentry = (size_t) jacobian_delta_p_over_angle.get_matrix_entry_count();
-            for(size_t k=0; k!=nentry; ++k)
+            unsigned int nentry;
+            nentry = (unsigned int) jacobian_delta_p_over_angle.get_matrix_entry_count();
+            for(unsigned int k=0; k!=nentry; ++k)
             {
                 row = jacobian_delta_p_over_angle.get_row_number_of_entry_index(k);
                 col = jacobian_delta_p_over_angle.get_column_number_of_entry_index(k);
@@ -1388,12 +1386,12 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(const string& filename) cons
 
                 /*file<<"P,A,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
                     <<setprecision(6)<<fixed<<rvalue<<endl;*/
-                snprintf(buffer, 1000, "P,A,%d,%lu,%d,%lu,%.6f",row, row_bus, col, col_bus, rvalue);
+                snprintf(buffer, 1000, "P,A,%d,%u,%d,%u,%.6f",row, row_bus, col, col_bus, rvalue);
                 file<<buffer<<endl;
             }
 
-            nentry = (size_t) jacobian_delta_p_over_voltage.get_matrix_entry_count();
-            for(size_t k=0; k!=nentry; ++k)
+            nentry = (unsigned int) jacobian_delta_p_over_voltage.get_matrix_entry_count();
+            for(unsigned int k=0; k!=nentry; ++k)
             {
                 row = jacobian_delta_p_over_voltage.get_row_number_of_entry_index(k);
                 col = jacobian_delta_p_over_voltage.get_column_number_of_entry_index(k);
@@ -1406,12 +1404,12 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(const string& filename) cons
 
                 /*file<<"P,V,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
                     <<setprecision(6)<<fixed<<rvalue<<endl;*/
-                snprintf(buffer, 1000, "P,V,%d,%lu,%d,%lu,%.6f",row, row_bus, col, col_bus, rvalue);
+                snprintf(buffer, 1000, "P,V,%d,%u,%d,%u,%.6f",row, row_bus, col, col_bus, rvalue);
                 file<<buffer<<endl;
             }
 
-            nentry = (size_t) jacobian_delta_q_over_angle.get_matrix_entry_count();
-            for(size_t k=0; k!=nentry; ++k)
+            nentry = (unsigned int) jacobian_delta_q_over_angle.get_matrix_entry_count();
+            for(unsigned int k=0; k!=nentry; ++k)
             {
                 row = jacobian_delta_q_over_angle.get_row_number_of_entry_index(k);
                 col = jacobian_delta_q_over_angle.get_column_number_of_entry_index(k);
@@ -1424,12 +1422,12 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(const string& filename) cons
 
                 /*file<<"Q,A,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
                     <<setprecision(6)<<fixed<<rvalue<<endl;*/
-                snprintf(buffer, 1000, "Q,A,%d,%lu,%d,%lu,%.6f",row, row_bus, col, col_bus, rvalue);
+                snprintf(buffer, 1000, "Q,A,%d,%u,%d,%u,%.6f",row, row_bus, col, col_bus, rvalue);
                 file<<buffer<<endl;
             }
 
-            nentry = (size_t) jacobian_delta_q_over_voltage.get_matrix_entry_count();
-            for(size_t k=0; k!=nentry; ++k)
+            nentry = (unsigned int) jacobian_delta_q_over_voltage.get_matrix_entry_count();
+            for(unsigned int k=0; k!=nentry; ++k)
             {
                 row = jacobian_delta_q_over_voltage.get_row_number_of_entry_index(k);
                 col = jacobian_delta_q_over_voltage.get_column_number_of_entry_index(k);
@@ -1442,7 +1440,7 @@ void JACOBIAN_BUILDER::save_jacobian_matrix_to_file(const string& filename) cons
 
                 /*file<<"Q,V,"<<row<<","<<row_bus<<","<<col<<","<<col_bus<<","
                     <<setprecision(6)<<fixed<<rvalue<<endl;*/
-                snprintf(buffer, 1000, "Q,V,%d,%lu,%d,%lu,%.6f",row, row_bus, col, col_bus, rvalue);
+                snprintf(buffer, 1000, "Q,V,%d,%u,%d,%u,%.6f",row, row_bus, col, col_bus, rvalue);
                 file<<buffer<<endl;
             }
             file.close();

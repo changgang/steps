@@ -21,15 +21,15 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_equivalent_model(string file)
 {
     load_data_into_ram(file);
 
-    size_t n = data_in_ram.size();
+    unsigned int n = data_in_ram.size();
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         vector< vector<string> > model = data_in_ram[i];
         add_equivalent_device(model);
     }
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         vector< vector<string> > model = data_in_ram[i];
 
@@ -93,7 +93,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_data_into_ram(string file)
 
 void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >& model_data)
 {
-    size_t n = model_data.size();
+    unsigned int n = model_data.size();
     if(n==0)
         return;
 
@@ -105,7 +105,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     vector<string> data_line = model_data[0];
 
     // new ARX model found
-    size_t side_bus = get_integer_data(data_line[4],"0");
+    unsigned int side_bus = get_integer_data(data_line[4],"0");
 
     EQUIVALENT_DEVICE edevice;
     edevice.set_equivalent_device_bus(side_bus);
@@ -118,7 +118,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::add_equivalent_device(vector< vector<string> >
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
-METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & data_line, size_t& delay, double& coefficient)
+METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & data_line, unsigned int& delay, double& coefficient)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -138,7 +138,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
 
     if(data_line[1]=="BUS")
     {
-        size_t bus = get_integer_data(data_line[3],"0");
+        unsigned int bus = get_integer_data(data_line[3],"0");
         delay = get_integer_data(data_line[4],"0");
         coefficient = get_double_data(data_line[5],"0.0");
 
@@ -180,7 +180,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
         did.set_device_terminal(terminal);
         did.set_device_identifier(get_string_data(data_line[5],""));
 
-        size_t side_bus = get_integer_data(data_line[6],"0");
+        unsigned int side_bus = get_integer_data(data_line[6],"0");
 
         delay = get_integer_data(data_line[7],"0");
         coefficient = get_double_data(data_line[8],"0.0");
@@ -216,7 +216,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
         did.set_device_terminal(terminal);
         did.set_device_identifier(get_string_data(data_line[5],""));
 
-        size_t side_bus = get_integer_data(data_line[6],"0");
+        unsigned int side_bus = get_integer_data(data_line[6],"0");
 
         delay = get_integer_data(data_line[7],"0");
         coefficient = get_double_data(data_line[8],"0.0");
@@ -244,7 +244,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
 
     if(data_line[1]=="GENERATOR")
     {
-        size_t bus = get_integer_data(data_line[3],"0");
+        unsigned int bus = get_integer_data(data_line[3],"0");
         string identifier = get_string_data(data_line[4],"");
         delay = get_integer_data(data_line[5],"0");
         coefficient = get_double_data(data_line[6],"0.0");
@@ -283,7 +283,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
 
     if(data_line[1]=="LOAD")
     {
-        size_t bus = get_integer_data(data_line[3],"0");
+        unsigned int bus = get_integer_data(data_line[3],"0");
         string identifier = get_string_data(data_line[4],"");
         delay = get_integer_data(data_line[5],"0");
         coefficient = get_double_data(data_line[6],"0.0");
@@ -316,7 +316,7 @@ METER EQUIVALENT_MODEL_IMEXPORTER::get_meter_from_data(const vector<string> & da
 
 void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& model_data)
 {
-    size_t n = model_data.size();
+    unsigned int n = model_data.size();
     if(n==0)
         return;
 
@@ -331,10 +331,10 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
         return;
 
     // new ARX model found
-    size_t ibus = get_integer_data(data_line[1],"0");
-    size_t jbus = get_integer_data(data_line[2],"0");
+    unsigned int ibus = get_integer_data(data_line[1],"0");
+    unsigned int jbus = get_integer_data(data_line[2],"0");
     string identifier = get_string_data(data_line[3],"");
-    size_t side_bus = get_integer_data(data_line[4],"0");
+    unsigned int side_bus = get_integer_data(data_line[4],"0");
 
     DEVICE_ID did;
     did.set_device_type("EQUIVALENT DEVICE");
@@ -363,9 +363,9 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
 
     METER meter;
     meter.set_toolkit(toolkit);
-    size_t delay = 0;
+    unsigned int delay = 0;
     double coefficient = 0.0;
-    for(size_t i=1; i!=n; ++i)
+    for(unsigned int i=1; i!=n; ++i)
     {
         data_line = model_data[i];
 
@@ -380,7 +380,7 @@ void EQUIVALENT_MODEL_IMEXPORTER::load_ARXL_model(vector< vector<string> >& mode
         else
         {
             osstream<<"Warning. Invalid meter is detected in ARXL model data: "<<endl;
-            for(size_t k=0; k<data_line.size(); ++k)
+            for(unsigned int k=0; k<data_line.size(); ++k)
                osstream<<data_line[k]<<", ";
             toolkit.show_information_with_leading_time_stamp(osstream);
         }

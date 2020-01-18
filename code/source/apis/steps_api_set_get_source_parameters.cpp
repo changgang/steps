@@ -5,7 +5,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
+int api_get_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -41,8 +41,8 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
     }
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "0 will be returned.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
@@ -51,7 +51,7 @@ int api_get_source_integer_data(size_t bus, char* identifier, char* parameter_na
     }
 }
 
-void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_name, int value, size_t toolkit_index)
+void api_set_source_integer_data(unsigned int bus, char* identifier, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -85,8 +85,8 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "Nothing will be changed.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
@@ -94,7 +94,7 @@ void api_set_source_integer_data(size_t bus, char* identifier, char* parameter_n
     }
 }
 
-double api_get_source_float_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
+double api_get_source_float_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -156,8 +156,8 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "0.0 will be returned.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
@@ -166,7 +166,7 @@ double api_get_source_float_data(size_t bus, char* identifier, char* parameter_n
     }
 }
 
-void api_set_source_float_data(size_t bus, char* identifier, char* parameter_name, double value, size_t toolkit_index)
+void api_set_source_float_data(unsigned int bus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -232,8 +232,8 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
     }
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "Nothing will be changed.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
@@ -241,7 +241,7 @@ void api_set_source_float_data(size_t bus, char* identifier, char* parameter_nam
     }
 }
 
-const char* api_get_source_string_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
+const char* api_get_source_string_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -252,7 +252,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     SOURCE* sourceptr = NULL;
     sourceptr = psdb.get_source(generator_did);
@@ -272,8 +272,8 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     }
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "EMPTY STRING will be returned.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
@@ -282,7 +282,7 @@ const char* api_get_source_string_data(size_t bus, char* identifier, char* param
     }
 }
 
-void api_set_source_string_data(size_t bus, char* identifier, char* parameter_name, char* value, size_t toolkit_index)
+void api_set_source_string_data(unsigned int bus, char* identifier, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -311,8 +311,8 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
     }
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "Nothing will be changed.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
@@ -320,7 +320,7 @@ void api_set_source_string_data(size_t bus, char* identifier, char* parameter_na
     }
 }
 
-bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_name, size_t toolkit_index)
+bool api_get_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -352,8 +352,8 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "False will be returned.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);
@@ -362,7 +362,7 @@ bool api_get_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     }
 }
 
-void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_name, bool value, size_t toolkit_index)
+void api_set_source_boolean_data(unsigned int bus, char* identifier, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID generator_did, wt_generator_did, pv_unit_did, energy_storage_did;
@@ -394,8 +394,8 @@ void api_set_source_boolean_data(size_t bus, char* identifier, char* parameter_n
     }
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "None of %s, %s, %s, and %s exists in database when retrieving data with api %s."
                  "Nothing will be changed.",
                  (generator_did.get_device_name()).c_str(), (wt_generator_did.get_device_name()).c_str(),
                  (pv_unit_did.get_device_name()).c_str(), (energy_storage_did.get_device_name()).c_str(), __FUNCTION__);

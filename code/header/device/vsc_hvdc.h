@@ -22,7 +22,7 @@ class VSC_HVDC : public DEVICE
         VSC_HVDC();
         virtual ~VSC_HVDC();
 
-        void set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus);
+        void set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned int bus);
         void set_identifier(const string identifier);
         void set_name(const string name);
         void set_status(const bool status);
@@ -48,10 +48,10 @@ class VSC_HVDC : public DEVICE
         void set_converter_Qmax_in_MVar(HVDC_CONVERTER_SIDE converter, double Q);
         void set_converter_Qmin_in_MVar(HVDC_CONVERTER_SIDE converter, double Q);
 
-        void set_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter, size_t bus);
+        void set_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter, unsigned int bus);
         void set_converter_remote_regulation_percent(HVDC_CONVERTER_SIDE converter, double rmpct);
 
-        size_t get_converter_bus(HVDC_CONVERTER_SIDE converter) const;
+        unsigned int get_converter_bus(HVDC_CONVERTER_SIDE converter) const;
         BUS* get_converter_bus_pointer(HVDC_CONVERTER_SIDE converter) const;
 
         string get_identifier() const;
@@ -80,7 +80,7 @@ class VSC_HVDC : public DEVICE
         double get_converter_Qmax_in_MVar(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_Qmin_in_MVar(HVDC_CONVERTER_SIDE converter) const;
 
-        size_t get_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter) const;
+        unsigned int get_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_remote_regulation_percent(HVDC_CONVERTER_SIDE converter) const;
 
     public:
@@ -103,9 +103,9 @@ class VSC_HVDC : public DEVICE
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
-        virtual bool is_connected_to_bus(size_t bus) const;
-        virtual bool is_in_area(size_t area) const;
-        virtual bool is_in_zone(size_t zone) const;
+        virtual bool is_connected_to_bus(unsigned int bus) const;
+        virtual bool is_in_area(unsigned int area) const;
+        virtual bool is_in_zone(unsigned int zone) const;
         virtual void report() const;
         virtual void save() const;
 
@@ -133,7 +133,7 @@ class VSC_HVDC : public DEVICE
     private:
         string get_converter_side_name(HVDC_CONVERTER_SIDE converter) const;
 
-        size_t converter_bus[2];
+        unsigned int converter_bus[2];
         BUS* converter_busptr[2];
 
         string identifier;
@@ -154,7 +154,7 @@ class VSC_HVDC : public DEVICE
         double power_weighting_factor[2];
         double Qmax_MVar[2], Qmin_MVar[2];
 
-        size_t remote_bus_to_regulate[2];
+        unsigned int remote_bus_to_regulate[2];
         double remote_regulation_percent[2];
     private:
         bool nominal_dc_setpoints_initialized;

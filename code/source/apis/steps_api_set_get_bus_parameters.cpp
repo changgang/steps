@@ -5,7 +5,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_bus_integer_data(size_t bus, char* parameter_name, size_t toolkit_index)
+int api_get_bus_integer_data(unsigned int bus, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
@@ -61,7 +61,7 @@ int api_get_bus_integer_data(size_t bus, char* parameter_name, size_t toolkit_in
     }
 }
 
-void api_set_bus_integer_data(size_t bus, char* parameter_name, int value, size_t toolkit_index)
+void api_set_bus_integer_data(unsigned int bus, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
@@ -120,7 +120,7 @@ void api_set_bus_integer_data(size_t bus, char* parameter_name, int value, size_
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-double api_get_bus_float_data(size_t bus, char* parameter_name, size_t toolkit_index)
+double api_get_bus_float_data(unsigned int bus, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
@@ -168,7 +168,7 @@ double api_get_bus_float_data(size_t bus, char* parameter_name, size_t toolkit_i
     }
 }
 
-void api_set_bus_float_data(size_t bus, char* parameter_name, double value, size_t toolkit_index)
+void api_set_bus_float_data(unsigned int bus, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
@@ -212,14 +212,14 @@ void api_set_bus_float_data(size_t bus, char* parameter_name, double value, size
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-const char* api_get_bus_string_data(size_t bus, char* parameter_name, size_t toolkit_index)
+const char* api_get_bus_string_data(unsigned int bus, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
@@ -227,7 +227,7 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name, size_t too
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "NAME" or PARAMETER_NAME == "BUS NAME")
 		{
-			snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (busptr->get_bus_name()).c_str());
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (busptr->get_bus_name()).c_str());
 			return toolkit.steps_char_buffer;
 		}
 
@@ -241,7 +241,7 @@ const char* api_get_bus_string_data(size_t bus, char* parameter_name, size_t too
     }
 }
 
-void api_set_bus_string_data(size_t bus, char* parameter_name, char* value, size_t toolkit_index)
+void api_set_bus_string_data(unsigned int bus, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
@@ -261,7 +261,7 @@ void api_set_bus_string_data(size_t bus, char* parameter_name, char* value, size
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-bool api_get_bus_boolean_data(size_t bus, char* parameter_name, size_t toolkit_index)
+bool api_get_bus_boolean_data(unsigned int bus, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_bus_device_id(bus);
@@ -283,11 +283,11 @@ bool api_get_bus_boolean_data(size_t bus, char* parameter_name, size_t toolkit_i
     }
 }
 
-void api_set_bus_boolean_data(size_t bus, char* parameter_name, bool value, size_t toolkit_index)
+void api_set_bus_boolean_data(unsigned int bus, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %lu, %s, %s.",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %u, %s, %s.",
              __FUNCTION__, bus, parameter_name, (value==true?"True":"False"));
     toolkit.show_information_with_leading_time_stamp(buffer);
     return;

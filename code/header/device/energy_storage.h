@@ -14,10 +14,10 @@ class ENERGY_STORAGE : public SOURCE
         ENERGY_STORAGE();
         virtual ~ENERGY_STORAGE();
 
-        void set_energy_storage_bus(size_t bus);
+        void set_energy_storage_bus(unsigned int bus);
         void set_energy_storage_impedance_in_pu(const complex<double>& z_pu);
 
-        size_t get_energy_storage_bus() const;
+        unsigned int get_energy_storage_bus() const;
         complex<double> get_energy_storage_impedance_in_pu() const;
 
         virtual void clear();

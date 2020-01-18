@@ -51,7 +51,7 @@ void DEVICE_ID_TEST::setup()
     terminal_4_bus.append_bus(4);
 
     terminal_100_bus = terminal_4_bus;
-    for(size_t i=5; i<=100; ++i)
+    for(unsigned int i=5; i<=100; ++i)
         terminal_100_bus.append_bus(i);
 
     terminal_101_bus = terminal_100_bus;

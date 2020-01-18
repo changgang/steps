@@ -53,17 +53,17 @@ DEVICE_ID WT_GENERATOR::get_device_id() const
 }
 
 
-void WT_GENERATOR::set_generator_bus(size_t bus)
+void WT_GENERATOR::set_generator_bus(unsigned int bus)
 {
     set_source_bus(bus);
 }
 
-size_t WT_GENERATOR::get_generator_bus() const
+unsigned int WT_GENERATOR::get_generator_bus() const
 {
     return get_source_bus();
 }
 
-void WT_GENERATOR::set_number_of_lumped_wt_generators(size_t n)
+void WT_GENERATOR::set_number_of_lumped_wt_generators(unsigned int n)
 {
     if(n==0)
         n = 1;
@@ -75,7 +75,7 @@ void WT_GENERATOR::set_rated_power_per_wt_generator_in_MW(double P)
     rated_power_per_wt_generator_in_MW = P;
 }
 
-size_t WT_GENERATOR::get_number_of_lumped_wt_generators() const
+unsigned int WT_GENERATOR::get_number_of_lumped_wt_generators() const
 {
     return number_of_lumped_wt_generators;
 }

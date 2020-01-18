@@ -75,7 +75,7 @@ void AREA_TEST::test_set_get_area_number()
 
     show_test_information_for_function_of_class(__FUNCTION__,"AREA_TEST");
 
-    // area number is size_t,
+    // area number is unsigned int,
     // when constructing area, 0 is set
     // however, when setting with setter function,
     // 0 is not allowed.

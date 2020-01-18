@@ -12,10 +12,10 @@ class OWNER : public BASE
         OWNER();
         virtual ~OWNER();
 
-        void set_owner_number(size_t owner_number);
+        void set_owner_number(unsigned int owner_number);
         void set_owner_name(string owner_name);
 
-        size_t get_owner_number() const;
+        unsigned int get_owner_number() const;
         string get_owner_name() const;
 
         virtual bool is_valid() const;
@@ -24,7 +24,7 @@ class OWNER : public BASE
         void report() const;
         virtual OWNER& operator=(const OWNER& owner);
     private:
-        size_t owner_number;
+        unsigned int owner_number;
         string owner_name;
 };
 #endif // OWNER_H

@@ -315,12 +315,12 @@ void UTILITY_TEST::test_generate_and_delete_toolkit()
             <<"When you run STEPS in parallel mode, too great capacity may lead to failure of memory allocation, and STEPS may quit.";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    for(size_t k=0; k!=10; ++k)
+    for(unsigned int k=0; k!=10; ++k)
     {
         TEST_ASSERT(toolkits[k]==NULL);
     }
 
-    size_t i=INFINITE_THRESHOLD;
+    unsigned int i=INFINITE_THRESHOLD;
     i = generate_new_toolkit();
     TEST_ASSERT(i==0);
     TEST_ASSERT(toolkits[i]!=NULL);
@@ -328,7 +328,7 @@ void UTILITY_TEST::test_generate_and_delete_toolkit()
     delete_toolkit(i);
     TEST_ASSERT(toolkits[i]==NULL);
 
-    for(size_t k=0; k!=3; ++k)
+    for(unsigned int k=0; k!=3; ++k)
     {
         i = generate_new_toolkit();
         TEST_ASSERT(i==k);
@@ -339,7 +339,7 @@ void UTILITY_TEST::test_generate_and_delete_toolkit()
         else
             toolkits[i]->show_information_with_leading_time_stamp("You should NOT find this message in log.");
     }
-    for(size_t k=0; k!=3; ++k)
+    for(unsigned int k=0; k!=3; ++k)
     {
         delete_toolkit(k);
         TEST_ASSERT(toolkits[k]==NULL);
@@ -354,20 +354,20 @@ void UTILITY_TEST::test_get_toolkit()
             <<"When you run STEPS in parallel mode, too great capacity may lead to failure of memory allocation, and STEPS may quit.";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    for(size_t k=0; k!=3; ++k)
+    for(unsigned int k=0; k!=3; ++k)
     {
         generate_new_toolkit();
     }
     TEST_ASSERT(&get_toolkit(INDEX_NOT_EXIST)==&default_toolkit);
-    for(size_t k=0; k!=3; ++k)
+    for(unsigned int k=0; k!=3; ++k)
     {
         TEST_ASSERT(&(get_toolkit(k))==toolkits[k]);
     }
-    for(size_t k=3; k!=6; ++k)
+    for(unsigned int k=3; k!=6; ++k)
     {
         TEST_ASSERT(&(get_toolkit(k))==&(default_toolkit));
     }
-    for(size_t k=0; k!=3; ++k)
+    for(unsigned int k=0; k!=3; ++k)
     {
         delete_toolkit(k);
     }

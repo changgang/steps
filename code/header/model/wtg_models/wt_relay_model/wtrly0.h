@@ -15,24 +15,24 @@ class WTRLY0 : public WT_RELAY_MODEL
     public: // specific model level
         virtual string get_model_name() const;
 
-        void set_wind_speed_relay_pair_in_pu_s(size_t index, double vwind, double tdelay);
-        void set_rotor_speed_relay_pair_in_pu_s(size_t index, double speed, double tdelay);
-        void set_bus_frequency_relay_pair_in_pu_s(size_t index, double freq, double tdelay);
-        void set_bus_voltage_relay_pair_in_pu_s(size_t index, double volt, double tdelay);
+        void set_wind_speed_relay_pair_in_pu_s(unsigned int index, double vwind, double tdelay);
+        void set_rotor_speed_relay_pair_in_pu_s(unsigned int index, double speed, double tdelay);
+        void set_bus_frequency_relay_pair_in_pu_s(unsigned int index, double freq, double tdelay);
+        void set_bus_voltage_relay_pair_in_pu_s(unsigned int index, double volt, double tdelay);
 
-        double get_wind_speed_relay_threshold_in_pu(size_t index) const;
-        double get_wind_speed_relay_delay_in_s(size_t index) const;
-        double get_rotor_speed_relay_threshold_in_pu(size_t index) const;
-        double get_rotor_speed_relay_delay_in_s(size_t index) const;
-        double get_bus_frequency_relay_threshold_in_pu(size_t index) const;
-        double get_bus_frequency_relay_delay_in_s(size_t index) const;
-        double get_bus_voltage_relay_threshold_in_pu(size_t index) const;
-        double get_bus_voltage_relay_delay_in_s(size_t index) const;
+        double get_wind_speed_relay_threshold_in_pu(unsigned int index) const;
+        double get_wind_speed_relay_delay_in_s(unsigned int index) const;
+        double get_rotor_speed_relay_threshold_in_pu(unsigned int index) const;
+        double get_rotor_speed_relay_delay_in_s(unsigned int index) const;
+        double get_bus_frequency_relay_threshold_in_pu(unsigned int index) const;
+        double get_bus_frequency_relay_delay_in_s(unsigned int index) const;
+        double get_bus_voltage_relay_threshold_in_pu(unsigned int index) const;
+        double get_bus_voltage_relay_delay_in_s(unsigned int index) const;
 
-        size_t get_number_of_wind_speed_realy() const;
-        size_t get_number_of_rotor_speed_realy() const;
-        size_t get_number_of_bus_frequency_realy() const;
-        size_t get_number_of_bus_voltage_realy() const;
+        unsigned int get_number_of_wind_speed_realy() const;
+        unsigned int get_number_of_rotor_speed_realy() const;
+        unsigned int get_number_of_bus_frequency_realy() const;
+        unsigned int get_number_of_bus_voltage_realy() const;
     public:
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);
         virtual bool setup_model_with_psse_string(string data);
@@ -67,13 +67,13 @@ class WTRLY0 : public WT_RELAY_MODEL
         void check_bus_voltage_relay();
 
         //  threshold, time delay, start time
-        double vwind_th[MAX_RELAY_COUNT];
-        double speed_th[MAX_RELAY_COUNT];
-        double freq_th[MAX_RELAY_COUNT];
-        double volt_th[MAX_RELAY_COUNT];
+        double vwind_th[STEPS_MAX_RELAY_COUNT];
+        double speed_th[STEPS_MAX_RELAY_COUNT];
+        double freq_th[STEPS_MAX_RELAY_COUNT];
+        double volt_th[STEPS_MAX_RELAY_COUNT];
 
-        TIMER vwind_relay_timer[MAX_RELAY_COUNT], speed_relay_timer[MAX_RELAY_COUNT],
-              freq_relay_timer[MAX_RELAY_COUNT], volt_relay_timer[MAX_RELAY_COUNT];
+        TIMER vwind_relay_timer[STEPS_MAX_RELAY_COUNT], speed_relay_timer[STEPS_MAX_RELAY_COUNT],
+              freq_relay_timer[STEPS_MAX_RELAY_COUNT], volt_relay_timer[STEPS_MAX_RELAY_COUNT];
 };
 
 #endif // WTRLY0_H

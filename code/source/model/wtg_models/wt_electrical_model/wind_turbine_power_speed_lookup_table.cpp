@@ -26,145 +26,173 @@ WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE& WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::op
 
 void WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::copy_from_const_table(const WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE& table)
 {
-    this->power_table = table.get_wind_turbine_power_table();
-    this->speed_table = table.get_wind_turbine_speed_table();
+    clear();
+    vector<vector<double> > old_table = table.get_wind_turbine_power_speed_table();
+    for(unsigned int i=0; i<STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE; ++i)
+    {
+        power_speed_table[i][0] = old_table[i][0];
+        power_speed_table[i][1] = old_table[i][1];
+    }
 }
 
 void WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::clear()
 {
-    power_table.clear();
-    speed_table.clear();
+    for(unsigned int i=0; i<STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE; ++i)
+    {
+        power_speed_table[i][0] = 0.0;
+        power_speed_table[i][1] = 0.0;
+    }
 }
 
 void WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::add_wind_turbine_power_and_speed_pair_in_pu(double power, double speed)
 {
-    size_t n = power_table.size();
-    if(n==0)
-    {
-        power_table.push_back(power);
-        speed_table.push_back(speed);
-    }
-    else
-    {
-        if(n==1)
-        {
-            if(power<power_table[0] and speed<speed_table[0])
-            {
-                power_table.insert(power_table.begin(),power);
-                speed_table.insert(speed_table.begin(),speed);
-            }
-            else
-            {
-                if(power>power_table[0] and speed>speed_table[0])
-                {
-                    power_table.push_back(power);
-                    speed_table.push_back(speed);
-                }
-            }
-        }
-        else
-        {
-            double min_power = power_table[0];
-            double min_speed = speed_table[0];
-            double max_power = power_table[n-1];
-            double max_speed = speed_table[n-1];
-            if(power<min_power and speed<min_speed)
-            {
-                power_table.insert(power_table.begin(), power);
-                speed_table.insert(speed_table.begin(), speed);
-            }
-            else
-            {
-                if(power>max_power and speed>max_speed)
-                {
-                    power_table.push_back(power);
-                    speed_table.push_back(speed);
-                }
-                else
-                {
-                    for(size_t i=1; i!=n; ++i)
-                    {
-                        if(power>power_table[i-1] and power<power_table[i] and
-                           speed>speed_table[i-1] and speed<speed_table[i])
-                        {
-                            power_table.insert(power_table.begin()+i, power);
-                            speed_table.insert(speed_table.begin()+i, speed);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    size_t new_n = power_table.size();
-    if(new_n==n)
+    unsigned int n = get_valid_record_size();
+    if(n>=STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE)
     {
         ostringstream osstream;
-        osstream<<"The wind power generation and turbine speed pair ("<<power<<", "<<speed<<") is invalid. No wind power generation and speed lookup table is updated.";
+        osstream<<"Warning. Wind turbine power-speed lookup table is full (size "<<STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE<<").\n"
+                <<"No more power-speed record will be added.";
         show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        return;
+    }
+
+    if(is_power_record_exist(power))
+    {
+        ostringstream osstream;
+        osstream<<"Warning. Duplicate wind power-speed record is identified with the same power "<<power<<" MW.\n"
+                <<"Input power-speed record ("<<power<<" MW, "<<speed<<") will not be added.";
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        return;
+    }
+
+    power_speed_table[n][0] = power;
+    power_speed_table[n][1] = speed;
+
+    reorder_records();
+}
+
+unsigned int WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_valid_record_size() const
+{
+    unsigned int valid_record_count = STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE;
+    for(unsigned int i=0; i<STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE; ++i)
+    {
+        if(power_speed_table[i][0]==0.0)
+        {
+            valid_record_count = i;
+            break;
+        }
+    }
+    return valid_record_count;
+}
+
+
+bool WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::is_power_record_exist(double power) const
+{
+    unsigned int n = get_valid_record_size();
+    bool record_exist = false;
+    for(unsigned int i=0; i<n; ++i)
+    {
+        if(fabs(power_speed_table[i][0]-power)<FLOAT_EPSILON)
+        {
+            record_exist = true;
+            break;
+        }
+    }
+    return record_exist;
+}
+
+void WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::reorder_records()
+{
+    unsigned int n = get_valid_record_size();
+    if(n<=1)
+        return;
+    else
+    {
+        for(unsigned int k=0; k<n-1; ++k)
+        {
+            bool swapped = false;
+            for(unsigned int i=0; i<n-1; ++i)
+            {
+                if(power_speed_table[i][0]>power_speed_table[i+1][0])
+                {
+                    double temp_power = power_speed_table[i][0];
+                    double temp_speed = power_speed_table[i][1];
+                    power_speed_table[i][0] = power_speed_table[i+1][0];
+                    power_speed_table[i][1] = power_speed_table[i+1][1];
+                    power_speed_table[i+1][0] = temp_power;
+                    power_speed_table[i+1][1] = temp_speed;
+                    swapped = true;
+                }
+            }
+            if(swapped==false)
+                break;
+        }
     }
 }
 
 double WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_reference_speed_with_power_in_pu(double power)
 {
-    size_t n = power_table.size();
+    unsigned int n = get_valid_record_size();
     if(n<2)
         return 0.0;
 
-    if(power<=power_table[0])
-        return speed_table[0];
-    else
-    {
-        if(power>=power_table[n-1])
-            return speed_table[n-1];
-        else
-        {
-            for(size_t i=1; i!=n; ++i)
-            {
-                if(power>=power_table[i-1] and power<power_table[i])
-                {
-                    double slope = (speed_table[i]-speed_table[i-1])/(power_table[i]-power_table[i-1]);
-                    return speed_table[i-1]+slope*(power-power_table[i-1]);
-                }
-            }
-            return 0.0;
-        }
-    }
+    unsigned int i_less = get_the_last_record_with_power_less_than_or_equal_to(power);
+    if(i_less==INDEX_NOT_EXIST)
+        return get_speed_of_record(0);
+    if(i_less == n-1)
+        return get_speed_of_record(n-1);
+
+    unsigned int i_greater = i_less + 1;
+
+    double power_less = get_power_of_record(i_less);
+    double speed_less = get_speed_of_record(i_less);
+    double power_greater = get_power_of_record(i_greater);
+    double speed_greater = get_speed_of_record(i_greater);
+
+    double slope = (speed_greater-speed_less)/(power_greater-power_less);
+    return speed_less + slope*(power-power_less);
 }
 
-double WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_reference_power_with_speed_in_pu(double speed)
+
+unsigned int WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_the_last_record_with_power_less_than_or_equal_to(double power)
 {
-    size_t n = speed_table.size();
-    if(n<2)
+    unsigned int n = get_valid_record_size();
+    unsigned int index = INDEX_NOT_EXIST;
+    for(unsigned int i=0; i<n; ++i)
+    {
+        if(get_power_of_record(i)<=power)
+            index = i;
+        else
+            break;
+    }
+    return index;
+}
+
+const vector<vector<double> > WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_wind_turbine_power_speed_table() const
+{
+    vector< vector<double> > table;
+    table.reserve(STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE);
+    for(unsigned int i=0; i<STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE; ++i)
+    {
+        vector<double> record;
+        record.push_back(power_speed_table[i][0]);
+        record.push_back(power_speed_table[i][1]);
+        table.push_back(record);
+    }
+    return table;
+}
+
+double WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_power_of_record(unsigned int i) const
+{
+    if(i<STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE)
+        return power_speed_table[i][0];
+    else
         return 0.0;
-
-    if(speed<=speed_table[0])
-        return power_table[0];
+}
+double WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_speed_of_record(unsigned int i) const
+{
+    if(i<STEPS_MAX_WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE_SIZE)
+        return power_speed_table[i][1];
     else
-    {
-        if(speed>=speed_table[n-1])
-            return power_table[n-1];
-        else
-        {
-            for(size_t i=1; i!=n; ++i)
-            {
-                if(speed>=speed_table[i-1] and speed<speed_table[i])
-                {
-                    double slope = (power_table[i]-power_table[i-1])/(speed_table[i]-speed_table[i-1]);
-                    return power_table[i-1]+slope*(speed-speed_table[i-1]);
-                }
-            }
-            return 0.0;
-        }
-    }
-}
-
-const vector<double>& WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_wind_turbine_power_table() const
-{
-    return power_table;
-}
-
-const vector<double>& WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE::get_wind_turbine_speed_table() const
-{
-    return speed_table;
+        return 0.0;
 }

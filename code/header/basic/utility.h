@@ -8,9 +8,10 @@
 #include <complex>
 
 string num2str(int number);
-string num2str(size_t number);
+string num2str(unsigned int number);
 string num2str(double number);
 string num2hex_str(int number);
+string num2hex_str(unsigned int number);
 string num2hex_str(size_t number);
 string num2hex_str(double number);
 int str2int(const string& str);
@@ -20,8 +21,8 @@ int get_integer_data(const string& strval, const string& strdefault);
 double get_double_data(const string& strval, const string& strdefault);
 string get_string_data(string strval, const string& strdefault);
 
-size_t get_sparse_matrix_identity(const SPARSE_MATRIX& matrix);
-size_t get_vector_identity(const vector<double>& vec);
+unsigned int get_sparse_matrix_identity(const SPARSE_MATRIX& matrix);
+unsigned int get_vector_identity(const vector<double>& vec);
 
 string string2upper(string str);
 
@@ -48,7 +49,7 @@ string shrink_sucessive_blanks(string str);
 string string2csv(string str);
 vector<string> split_string(string str, const string& sep);
 string string_vector2csv(const vector<string>& vec);
-string swap_data_in_csv_string(const string& data, size_t i, size_t j);
+string swap_data_in_csv_string(const string& data, unsigned int i, unsigned int j);
 
 complex<double> xy2dq_with_angle_in_deg(const complex<double>& V, double angle);
 complex<double> xy2dq_with_angle_in_rad(const complex<double>& V, double angle);
@@ -68,12 +69,12 @@ vector<string> psse_dyr_string2steps_string_vector(const string& data);
 string psse_dyr_string2steps_string(const string& data);
 
 void initialize_package();
-size_t generate_new_toolkit(string log_file="");
-void delete_toolkit(size_t toolkit_index);
-size_t get_toolkit_count();
+unsigned int generate_new_toolkit(string log_file="");
+void delete_toolkit(unsigned int toolkit_index);
+unsigned int get_toolkit_count();
 STEPS& get_default_toolkit();
-STEPS& get_toolkit(size_t toolkit_index);
+STEPS& get_toolkit(unsigned int toolkit_index);
 
-void set_openmp_number_of_threads(size_t n);
+void set_openmp_number_of_threads(unsigned int n);
 
 #endif // UTILITY_H

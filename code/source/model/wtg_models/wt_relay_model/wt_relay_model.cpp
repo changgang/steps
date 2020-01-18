@@ -69,7 +69,7 @@ double WT_RELAY_MODEL::get_bus_frequency_in_pu() const
     WT_GENERATOR* generator = get_wt_generator_pointer();
     if(generator!=NULL)
     {
-        size_t bus = generator->get_source_bus();
+        unsigned int bus = generator->get_source_bus();
         if(bus!=0)
         {
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);

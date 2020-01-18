@@ -200,7 +200,7 @@ bool IEEET1::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double tr, ka, ta, vrmax, vrmin, ke, te, kf, tf, e1, se1, e2, se2;
 
-            size_t i=3;
+            unsigned int i=3;
             tr = get_double_data(data[i],"0.0"); i++;
             ka = get_double_data(data[i],"0.0"); i++;
             ta = get_double_data(data[i],"0.0"); i++;
@@ -387,7 +387,7 @@ string IEEET1::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -432,7 +432,7 @@ string IEEET1::get_standard_psse_string() const
 void IEEET1::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
 
@@ -457,7 +457,7 @@ void IEEET1::set_model_data_with_name(string par_name, double value)
 void IEEET1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@REGULATOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;

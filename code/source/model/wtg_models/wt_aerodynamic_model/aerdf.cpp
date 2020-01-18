@@ -103,11 +103,11 @@ void AERDF::load_pitch_angles()
     data = string2csv(data);
     datavec = split_string(data,",");
 
-    size_t n = datavec.size();
+    unsigned int n = datavec.size();
     if(n<2)
         return;
 
-    for(size_t i=1; i<n; ++i)
+    for(unsigned int i=1; i<n; ++i)
     {
         double pitch = get_double_data(datavec.front(),"0.0");
         datavec.erase(datavec.begin());
@@ -139,7 +139,7 @@ void AERDF::load_tip_speed_ratios()
         data = string2csv(data);
         datavec = split_string(data,",");
 
-        size_t n = datavec.size();
+        unsigned int n = datavec.size();
         if(n==0)
         {
             osstream<<"Warning. No more tip speed ratio lines in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_device_name()<<".";
@@ -165,7 +165,7 @@ void AERDF::load_Cp_matrix()
     getline(fid, data); // skip the head line
     getline(fid, data); // get the first valid line of pitch angles
 
-    size_t N_pitch = pitch_angles->size();
+    unsigned int N_pitch = pitch_angles->size();
     vector<double> cp_line;
     while(true)
     {
@@ -176,7 +176,7 @@ void AERDF::load_Cp_matrix()
         data = string2csv(data);
         datavec = split_string(data,",");
 
-        size_t n = datavec.size();
+        unsigned int n = datavec.size();
         if(n<N_pitch+1)
         {
             osstream<<"Warning. Different length of tip speed ratio line is detected in wind turbine Cp data file '"<<(*cp_file_name)<<"' of "<<get_model_name()<<" of "<<get_device_name()<<":"<<endl
@@ -187,7 +187,7 @@ void AERDF::load_Cp_matrix()
         }
 
         cp_line.clear();
-        for(size_t i=1; i<N_pitch+1; ++i)
+        for(unsigned int i=1; i<N_pitch+1; ++i)
         {
             double cp = get_double_data(datavec.front(),"0.0");
             datavec.erase(datavec.begin());
@@ -207,9 +207,9 @@ double AERDF::get_Cp(double lambda, double pitch_deg) const
 
 bool AERDF::is_Cp_point_exist(double pitch, double lambda)
 {
-    size_t N_pitch = pitch_angles->size();
+    unsigned int N_pitch = pitch_angles->size();
     bool pitch_found = false;
-    for(size_t i=0; i<N_pitch; ++i)
+    for(unsigned int i=0; i<N_pitch; ++i)
     {
         if(fabs((*pitch_angles)[i]-pitch)<FLOAT_EPSILON)
         {
@@ -222,9 +222,9 @@ bool AERDF::is_Cp_point_exist(double pitch, double lambda)
     if(pitch_found==false)
         return false;
 
-    size_t N_lambda = tip_speed_ratios->size();
+    unsigned int N_lambda = tip_speed_ratios->size();
     bool lambda_found = false;
-    for(size_t i=0; i<N_lambda; ++i)
+    for(unsigned int i=0; i<N_lambda; ++i)
     {
         if(fabs((*tip_speed_ratios)[i]-lambda)<FLOAT_EPSILON)
         {
@@ -265,14 +265,14 @@ bool AERDF::setup_model_with_steps_string_vector(vector<string>& data)
         if(model_name==get_model_name())
         {
             int speed_mode_flag=0;
-            size_t n;
+            unsigned int n;
             double vwind0, gear_eta, rou0_air, min_speed, max_speed;
             double rou_air;
             string file;
 
-            size_t i=3;
+            unsigned int i=3;
             speed_mode_flag = get_integer_data(data[i],"0"); i++;
-            n = size_t(get_integer_data(data[i],"1")); i++;
+            n = (unsigned int)(get_integer_data(data[i],"1")); i++;
             vwind0 = get_double_data(data[i],"0.0"); i++;
             gear_eta = get_double_data(data[i],"0.0"); i++;
             rou0_air = get_double_data(data[i],"0.0"); i++;
@@ -363,7 +363,7 @@ string AERDF::get_standard_psse_string() const
 {
     ostringstream osstream;
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -387,7 +387,7 @@ string AERDF::get_standard_psse_string() const
             break;
         }
     }
-    size_t n = get_number_of_pole_pairs();
+    unsigned int n = get_number_of_pole_pairs();
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
@@ -409,7 +409,7 @@ string AERDF::get_standard_psse_string() const
 void AERDF::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
 
@@ -511,7 +511,7 @@ void AERDF::set_model_data_with_name(string par_name, double value)
 void AERDF::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("SPEED MODE", i); i++;
     add_model_data_name_and_index_pair("POLE PAIR", i); i++;
     add_model_data_name_and_index_pair("NOMINAL WIND SPEED IN M/S", i); i++;

@@ -112,25 +112,25 @@ bool DYNAMICS_SIMULATOR::is_bin_file_export_enabled() const
     return bin_file_export_enabled;
 }
 
-void DYNAMICS_SIMULATOR::set_max_DAE_iteration(size_t iteration)
+void DYNAMICS_SIMULATOR::set_max_DAE_iteration(unsigned int iteration)
 {
     if(iteration>0)
         this->max_DAE_iteration = iteration;
 }
 
-void DYNAMICS_SIMULATOR::set_min_DAE_iteration(size_t iteration)
+void DYNAMICS_SIMULATOR::set_min_DAE_iteration(unsigned int iteration)
 {
     if(iteration>0)
         this->min_DAE_iteration = iteration;
 }
 
-void DYNAMICS_SIMULATOR::set_max_network_iteration(size_t iteration)
+void DYNAMICS_SIMULATOR::set_max_network_iteration(unsigned int iteration)
 {
     if(iteration>0)
         this->max_network_iteration = iteration;
 }
 
-void DYNAMICS_SIMULATOR::set_max_update_iteration(size_t iteration)
+void DYNAMICS_SIMULATOR::set_max_update_iteration(unsigned int iteration)
 {
     if(iteration>0)
         this->max_update_iteration = iteration;
@@ -177,22 +177,22 @@ double DYNAMICS_SIMULATOR::get_current_simulation_time_in_s() const
     return TIME;
 }*/
 
-size_t DYNAMICS_SIMULATOR::get_max_DAE_iteration() const
+unsigned int DYNAMICS_SIMULATOR::get_max_DAE_iteration() const
 {
     return max_DAE_iteration;
 }
 
-size_t DYNAMICS_SIMULATOR::get_min_DAE_iteration() const
+unsigned int DYNAMICS_SIMULATOR::get_min_DAE_iteration() const
 {
     return min_DAE_iteration;
 }
 
-size_t DYNAMICS_SIMULATOR::get_max_network_iteration() const
+unsigned int DYNAMICS_SIMULATOR::get_max_network_iteration() const
 {
     return max_network_iteration;
 }
 
-size_t DYNAMICS_SIMULATOR::get_max_update_iteration() const
+unsigned int DYNAMICS_SIMULATOR::get_max_update_iteration() const
 {
     return max_update_iteration;
 }
@@ -240,9 +240,9 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"JSON export: "<<(is_json_file_export_enabled()?"Enabled":"Disabled")<<"\n"
             <<"Output file name: "<<get_output_file()<<"\n";
 
-    size_t n = meters.size();
+    unsigned int n = meters.size();
     osstream<<"Channel count: "<<n<<"\n";
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<"("<<setw(4)<<i+1<<") "<<meters[i].get_meter_name()<<"\n";
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -304,28 +304,28 @@ void DYNAMICS_SIMULATOR::prepare_bus_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n = psdb.get_bus_count();
+    unsigned int n = psdb.get_bus_count();
     vector<BUS*> buses = psdb.get_all_buses();
     BUS* bus;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         bus = buses[i];
         METER meter = setter.prepare_bus_voltage_in_pu_meter(bus->get_bus_number());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         bus = buses[i];
         METER meter = setter.prepare_bus_angle_in_deg_meter(bus->get_bus_number());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         bus = buses[i];
         METER meter = setter.prepare_bus_frequency_deviation_in_pu_meter(bus->get_bus_number());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         bus = buses[i];
         METER meter = setter.prepare_bus_frequency_in_Hz_meter(bus->get_bus_number());
@@ -342,54 +342,54 @@ void DYNAMICS_SIMULATOR::prepare_generator_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n;
+    unsigned int n;
 
     n = psdb.get_generator_count();
     vector<GENERATOR*> generators = psdb.get_all_generators();
     GENERATOR* generator;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_rotor_angle_in_deg_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_rotor_speed_deviation_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_excitation_voltage_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_stabilizing_signal_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_mechanical_power_in_MW_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_mechanical_power_reference_in_MW_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_terminal_active_power_in_MW_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_generator_terminal_reactive_power_in_MVar_meter(generator->get_device_id());
@@ -405,108 +405,108 @@ void DYNAMICS_SIMULATOR::prepare_wt_generator_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n;
+    unsigned int n;
 
     n = psdb.get_wt_generator_count();
     vector<WT_GENERATOR*> generators = psdb.get_all_wt_generators();
     WT_GENERATOR* generator;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_terminal_current_in_kA_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_terminal_active_power_in_MW_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_terminal_reactive_power_in_MVar_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_mechanical_power_in_MW_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_max_available_mechanical_power_in_MW_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_speed_reference_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_turbine_speed_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_rotor_speed_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_rotor_angle_in_deg_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_active_current_command_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_reactive_current_command_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_active_power_command_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_reactive_power_command_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_reactive_voltage_command_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_pitch_angle_in_deg_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_wind_speed_in_pu_meter(generator->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         METER meter = setter.prepare_wt_generator_wind_speed_in_mps_meter(generator->get_device_id());
@@ -523,60 +523,60 @@ void DYNAMICS_SIMULATOR::prepare_pv_unit_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n;
+    unsigned int n;
 
     n = psdb.get_pv_unit_count();
     vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
     PV_UNIT* pv_unit;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_current_in_kA_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_active_power_in_MW_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_terminal_reactive_power_in_MVar_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_active_current_command_in_pu_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_reactive_current_command_in_pu_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_active_power_command_in_pu_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_reactive_power_command_in_pu_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_reactive_voltage_command_in_pu_meter(pv_unit->get_device_id());
         append_meter(meter);
     }
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv_unit = pv_units[i];
         METER meter = setter.prepare_pv_unit_solar_irradiance_in_pu_meter(pv_unit->get_device_id());
@@ -597,12 +597,12 @@ void DYNAMICS_SIMULATOR::prepare_load_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n;
+    unsigned int n;
 
     n = psdb.get_load_count();
     vector<LOAD*> loads = psdb.get_all_loads();
     LOAD* load;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         METER meter = setter.prepare_load_active_power_in_MW_meter(load->get_device_id());
@@ -627,12 +627,12 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n;
+    unsigned int n;
 
     n = psdb.get_line_count();
     vector<LINE*> lines = psdb.get_all_lines();
     LINE* line;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         line = lines[i];
         METER meter = setter.prepare_line_active_power_in_MW_meter(line->get_device_id(),line->get_sending_side_bus());
@@ -659,12 +659,12 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n;
+    unsigned int n;
 
     n = psdb.get_transformer_count();
     vector<TRANSFORMER*> transes = psdb.get_all_transformers();
     TRANSFORMER* trans;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         trans = transes[i];
         METER meter = setter.prepare_transformer_active_power_in_MW_meter(trans->get_device_id(), trans->get_winding_bus(PRIMARY_SIDE));
@@ -699,12 +699,12 @@ void DYNAMICS_SIMULATOR::prepare_hvdc_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n;
+    unsigned int n;
 
     n = psdb.get_hvdc_count();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     HVDC* hvdc;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         hvdc = hvdcs[i];
 
@@ -772,12 +772,12 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
     METER_SETTER setter;
     setter.set_toolkit(toolkit);
 
-    size_t n;
+    unsigned int n;
 
     n = psdb.get_equivalent_device_count();
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
     EQUIVALENT_DEVICE* edevice;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         edevice = edevices[i];
 
@@ -801,7 +801,7 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meters()
     }
 }
 
-void DYNAMICS_SIMULATOR::prepare_bus_related_meter(size_t bus, string meter_type)
+void DYNAMICS_SIMULATOR::prepare_bus_related_meter(unsigned int bus, string meter_type)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -1243,7 +1243,7 @@ void DYNAMICS_SIMULATOR::prepare_line_related_meter(const DEVICE_ID& did, string
             side = string2upper(side);
 
             LINE* line = psdb.get_line(did);
-            size_t bus = 0;
+            unsigned int bus = 0;
             if(side=="SENDING" or side=="S")
                 bus = line->get_sending_side_bus();
             if(side=="RECEIVING" or side=="R")
@@ -1300,7 +1300,7 @@ void DYNAMICS_SIMULATOR::prepare_transformer_related_meter(const DEVICE_ID& did,
             side = string2upper(side);
 
             TRANSFORMER* trans = psdb.get_transformer(did);
-            size_t bus = 0;
+            unsigned int bus = 0;
             if(side=="PRIMARY" or side=="P")
                 bus = trans->get_winding_bus(PRIMARY_SIDE);
             if(side=="SECONDARY" or side=="S")
@@ -1476,12 +1476,12 @@ void DYNAMICS_SIMULATOR::prepare_equivalent_device_related_meter(const DEVICE_ID
 }
 
 
-size_t DYNAMICS_SIMULATOR::get_meter_count() const
+unsigned int DYNAMICS_SIMULATOR::get_meter_count() const
 {
     return meters.size();
 }
 
-METER DYNAMICS_SIMULATOR::get_meter(size_t i)
+METER DYNAMICS_SIMULATOR::get_meter(unsigned int i)
 {
     METER voidmeter;
     voidmeter.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
@@ -1500,7 +1500,7 @@ METER DYNAMICS_SIMULATOR::get_meter(size_t i)
 void DYNAMICS_SIMULATOR::update_all_meters_value()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t n = meters.size();
+    unsigned int n = meters.size();
     if(n!=0)
     {
         if(meter_values.size()!=n)
@@ -1510,12 +1510,12 @@ void DYNAMICS_SIMULATOR::update_all_meters_value()
             set_openmp_number_of_threads(toolkit.get_thread_number());
             #pragma omp parallel for schedule(static)
         #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-        for(size_t i=0; i<n; ++i)
+        for(unsigned int i=0; i<n; ++i)
             meter_values[i]=meters[i].get_meter_value();
         /*
         if(meter_values.size()==n)
         {
-            for(size_t i=0; i!=n; ++i)
+            for(unsigned int i=0; i!=n; ++i)
                 meter_values[i]=meters[i].get_meter_value();
         }
         else
@@ -1662,7 +1662,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 {
     ostringstream osstream;
 
-    size_t n = meters.size();
+    unsigned int n = meters.size();
     if(n!=0)
     {
         open_meter_output_files();
@@ -1673,13 +1673,13 @@ void DYNAMICS_SIMULATOR::save_meter_information()
             if(is_csv_file_export_enabled() and csv_output_file.is_open())
             {
                 //csv_output_file<<"TIME,ITERATION,MISMATCH IN MVA";
-                //for(size_t i=0; i!=n; ++i)
+                //for(unsigned int i=0; i!=n; ++i)
                 //    csv_output_file<<","<<meters[i].get_meter_type();
                 //csv_output_file<<endl;
 
                 csv_output_file<<"TIME,DAE INTEGRATION,NETWORK ITERATION,MISMATCH IN MVA,MISMATCH BUS,TIME ELAPSE IN MS";
 
-                for(size_t i=0; i!=n; ++i)
+                for(unsigned int i=0; i!=n; ++i)
                     csv_output_file<<","<<meters[i].get_meter_name();
                 csv_output_file<<"\n";
             }
@@ -1690,12 +1690,12 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 json_output_file<<"{"<<"\n";
 
                 //json_output_file<<"    \"meter_type\" : [\"TIME\", \"ITERATION\", \"MISMATCH IN MVA\"";
-                //for(size_t i=0; i!=n; ++i)
+                //for(unsigned int i=0; i!=n; ++i)
                 //    json_output_file<<", \""<<meters[i].get_meter_type()<<"\"";
                 //json_output_file<<"],"<<endl<<endl;
 
                 json_output_file<<"    \"meter_name\" : [\"TIME\", \"DAE INTEGRATION\", \"NETWORK ITERATION\", \"MISMATCH IN MVA\", \"MISMATCH BUS\", \"TIME ELAPSE IN MS\"";
-                for(size_t i=0; i!=n; ++i)
+                for(unsigned int i=0; i!=n; ++i)
                     json_output_file<<", \""<<meters[i].get_meter_name()<<"\"";
                 json_output_file<<"],"<<"\n\n";
                 json_output_file<<"    \"meter_value\" : ["<<"\n";
@@ -1705,18 +1705,18 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 
             if(is_bin_file_export_enabled() and bin_output_file.is_open())
             {
-                size_t bin_version=0;
+                unsigned int bin_version=0;
                 bin_output_file.write((char *)(&bin_version), sizeof(bin_version));
 
                 time_t tt = time(NULL);
                 tm* local_time= localtime(&tt);
 
-                size_t year = local_time->tm_year + 1900;
-                size_t month = local_time->tm_mon + 1;
-                size_t day = local_time->tm_mday;
-                size_t hour = local_time->tm_hour;
-                size_t minute = local_time->tm_min;
-                size_t second = local_time->tm_sec;
+                unsigned int year = local_time->tm_year + 1900;
+                unsigned int month = local_time->tm_mon + 1;
+                unsigned int day = local_time->tm_mday;
+                unsigned int hour = local_time->tm_hour;
+                unsigned int minute = local_time->tm_min;
+                unsigned int second = local_time->tm_sec;
 
                 bin_output_file.write((char *)(&year), sizeof(year));
                 bin_output_file.write((char *)(&month), sizeof(month));
@@ -1725,10 +1725,10 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 bin_output_file.write((char *)(&minute), sizeof(minute));
                 bin_output_file.write((char *)(&second), sizeof(second));
 
-                size_t float_size=sizeof(float);
+                unsigned int float_size=sizeof(float);
                 bin_output_file.write((char *)(&float_size), sizeof(float_size));
 
-                size_t m = 4+n;
+                unsigned int m = 4+n;
                 bin_output_file.write((char *)(&m), sizeof(m));
                 string meter_names ="";
 
@@ -1738,10 +1738,10 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 meter_names += "MISMATCH IN MVA\n";
                 meter_names += "MISMATCH BUS\n";
                 meter_names += "TIME ELAPSE IN MS\n";
-                for(size_t i=0; i!=n; ++i)
+                for(unsigned int i=0; i!=n; ++i)
                     meter_names += (meters[i].get_meter_name()+"\n");
 
-                size_t n_meter_string_size = strlen(meter_names.c_str());
+                unsigned int n_meter_string_size = strlen(meter_names.c_str());
                 bin_output_file.write((char *)(&n_meter_string_size), sizeof(n_meter_string_size));
 
                 char * pmeter_name = new char[n_meter_string_size+1];
@@ -1757,14 +1757,14 @@ void DYNAMICS_SIMULATOR::save_meter_information()
 
 void DYNAMICS_SIMULATOR::save_meter_values()
 {
-    size_t n = meters.size();
+    unsigned int n = meters.size();
     if(n!=0 and (csv_output_file.is_open() or json_output_file.is_open() or bin_output_file.is_open()))
     {
         get_bus_current_mismatch();
         calculate_bus_power_mismatch_in_MVA();
         POWER_MISMATCH_STRUCT s_mismatch = get_max_power_mismatch_struct();
         double smax = s_mismatch.greatest_mismatch_in_MVA;
-        size_t smax_bus = s_mismatch.bus_with_greatest_mismatch;
+        unsigned int smax_bus = s_mismatch.bus_with_greatest_mismatch;
 
         update_all_meters_value();
 
@@ -1791,7 +1791,7 @@ void DYNAMICS_SIMULATOR::save_meter_values()
             fvalue = time_elapse_in_a_step;
             bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
 
-            for (size_t i = 0; i != n; ++i)
+            for (unsigned int i = 0; i != n; ++i)
             {
                 fvalue = meter_values[i];
                 bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
@@ -1804,17 +1804,17 @@ void DYNAMICS_SIMULATOR::save_meter_values()
             string temp_str = "";
             snprintf(temp_buffer, 50, "%8.4f",TIME);
             temp_str += temp_buffer;
-            snprintf(temp_buffer, 50, ",%3lu",ITER_DAE);
+            snprintf(temp_buffer, 50, ",%3u",ITER_DAE);
             temp_str += temp_buffer;
-            snprintf(temp_buffer, 50, ",%3lu",ITER_NET);
+            snprintf(temp_buffer, 50, ",%3u",ITER_NET);
             temp_str += temp_buffer;
             snprintf(temp_buffer, 50, ",%6.3f",smax);
             temp_str += temp_buffer;
-            snprintf(temp_buffer, 50, ",%6d",smax_bus);
+            snprintf(temp_buffer, 50, ",%6u",smax_bus);
             temp_str += temp_buffer;
             snprintf(temp_buffer, 50, ",%6.3f",time_elapse_in_a_step);
             temp_str += temp_buffer;
-            for (size_t i = 0; i != n; ++i)
+            for (unsigned int i = 0; i != n; ++i)
             {
                 snprintf(temp_buffer, 50, ",%16.12f", meter_values[i]);
                 temp_str += temp_buffer;
@@ -1843,13 +1843,13 @@ void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t nbus = psdb.get_in_service_bus_count();
+    unsigned int nbus = psdb.get_in_service_bus_count();
 
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     internal_bus_pointers.clear();
-    for(size_t internal_bus=0; internal_bus!=nbus; ++internal_bus)
+    for(unsigned int internal_bus=0; internal_bus!=nbus; ++internal_bus)
     {
-        size_t physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
+        unsigned int physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(internal_bus);
         internal_bus_pointers.push_back(psdb.get_bus(physical_bus));
     }
 
@@ -1860,16 +1860,16 @@ void DYNAMICS_SIMULATOR::set_internal_bus_pointer()
 void DYNAMICS_SIMULATOR::initialize_internal_bus_voltage_vector()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t nbus = internal_bus_complex_voltage_in_pu.size();
+    unsigned int nbus = internal_bus_complex_voltage_in_pu.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t internal_bus=0; internal_bus<nbus; ++internal_bus)
+    for(unsigned int internal_bus=0; internal_bus<nbus; ++internal_bus)
         internal_bus_complex_voltage_in_pu[internal_bus] = internal_bus_pointers[internal_bus]->get_positive_sequence_complex_voltage_in_pu();
 }
 
-complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const
+complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const
 {
     return internal_bus_complex_voltage_in_pu[internal_bus];
 
@@ -1937,7 +1937,7 @@ void DYNAMICS_SIMULATOR::start()
     ITER_NET = 0;
 
     bool converged = false;
-    size_t iter_count  = 0;
+    unsigned int iter_count  = 0;
     current_max_network_iteration = get_max_network_iteration();
     while(true)
     {
@@ -2004,12 +2004,12 @@ void DYNAMICS_SIMULATOR::stop()
 
 double DYNAMICS_SIMULATOR::get_system_max_angle_difference_in_deg()
 {
-    size_t n = generators.size();
+    unsigned int n = generators.size();
     GENERATOR* gen;
     SYNC_GENERATOR_MODEL* model;
     double max_angle = -1e10, min_angle = 1e10;
     double angle;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         gen = generators[i];
         if(gen->get_status()==true)
@@ -2128,8 +2128,8 @@ void DYNAMICS_SIMULATOR::run_a_step()
         {
             if(max_DAE_iteration!=2)
             {
-                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve DAE in %lu iterations when integrating at time %f s.",
+                char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve DAE in %u iterations when integrating at time %f s.",
                          max_DAE_iteration, TIME);
                 toolkit.show_information_with_leading_time_stamp(buffer);
             }
@@ -2152,12 +2152,12 @@ void DYNAMICS_SIMULATOR::update_with_event()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     bool network_converged = false;
-    size_t update_event_iter_max = get_max_update_iteration();
+    unsigned int update_event_iter_max = get_max_update_iteration();
 
     ITER_DAE = 0;
     ITER_NET = 0;
 
-    size_t iter = 0;
+    unsigned int iter = 0;
     current_max_network_iteration = get_max_update_iteration();
     while(true)
     {
@@ -2170,8 +2170,8 @@ void DYNAMICS_SIMULATOR::update_with_event()
                 continue;
             else
             {
-                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %lu iterations when updating with event at time %f s.",
+                char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %u iterations when updating with event at time %f s.",
                          update_event_iter_max, TIME);
                 toolkit.show_information_with_leading_time_stamp(buffer);
                 break;
@@ -2211,8 +2211,8 @@ void DYNAMICS_SIMULATOR::update()
 
     if(not network_converged and get_max_update_iteration()>1)
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %lu iterations when updating at time %f s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %u iterations when updating at time %f s.",
                  current_max_network_iteration, TIME);
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
@@ -2235,13 +2235,13 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t n = psdb.get_generator_count();
+    unsigned int n = psdb.get_generator_count();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_generator_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; i++)
+    for(unsigned int i=0; i<n; i++)
     {
         GENERATOR* generator = generators[i];
         if(generator->get_status()==true)
@@ -2253,7 +2253,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         set_openmp_number_of_threads(toolkit.get_wt_generator_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         WT_GENERATOR* wtgen = wt_generators[i];
         if(wtgen->get_status()==true)
@@ -2265,7 +2265,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         set_openmp_number_of_threads(toolkit.get_pv_unit_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         PV_UNIT* pv = pv_units[i];
         if(pv->get_status()==true)
@@ -2277,7 +2277,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         set_openmp_number_of_threads(toolkit.get_load_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         LOAD* load = loads[i];
         if(load->get_status()==true)
@@ -2289,7 +2289,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         set_openmp_number_of_threads(toolkit.get_hvdc_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         HVDC* hvdc = hvdcs[i];
         if(hvdc->get_status()==true)
@@ -2301,7 +2301,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         EQUIVALENT_DEVICE* edevice = e_devices[i];
         if(edevice->get_status()==true)
@@ -2313,7 +2313,7 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         BUS* bus = in_service_buses[i];
         BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
@@ -2324,13 +2324,13 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t n = in_service_buses.size();
+    unsigned int n = in_service_buses.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         BUS* bus = in_service_buses[i];
         BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
@@ -2361,13 +2361,13 @@ bool DYNAMICS_SIMULATOR::get_relay_actiion_flag() const
 void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t n = e_devices.size();
+    unsigned int n = e_devices.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         EQUIVALENT_DEVICE* edevice = e_devices[i];
         edevice->update_meter_buffer();
@@ -2377,12 +2377,12 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_buffer()
 void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t n = e_devices.size();
+    unsigned int n = e_devices.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_equivalent_device_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         ostringstream osstream;
         EQUIVALENT_DEVICE* edevice = e_devices[i];
@@ -2401,8 +2401,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     network_iteration_count = 0;
 
-    size_t network_iter_max = current_max_network_iteration;
-    size_t network_iter_count = 0;
+    unsigned int network_iter_max = current_max_network_iteration;
+    unsigned int network_iter_count = 0;
 
     solve_hvdcs_without_integration();
     get_bus_current_mismatch();
@@ -2423,12 +2423,12 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 update_bus_voltage();
                 if(get_non_divergent_solution_logic()==true)
                 {
-                    size_t n_delta_V = delta_V.size();
-                    for(size_t i=0; i<n_delta_V; ++i)
+                    unsigned int n_delta_V = delta_V.size();
+                    for(unsigned int i=0; i<n_delta_V; ++i)
                         delta_V[i] = -delta_V[i];
 
                     double original_alpha = get_iteration_accelerator();
-                    for(size_t i=0; i<5; ++i)
+                    for(unsigned int i=0; i<5; ++i)
                     {
                         //++network_iter_count;
                         solve_hvdcs_without_integration();
@@ -2476,12 +2476,12 @@ bool DYNAMICS_SIMULATOR::solve_network()
 void DYNAMICS_SIMULATOR::solve_hvdcs_without_integration()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t n = hvdcs.size();
+    unsigned int n = hvdcs.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_hvdc_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         HVDC_MODEL* model = hvdcs[i]->get_hvdc_model();
         if(model!=NULL)
@@ -2497,28 +2497,28 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
 
     get_bus_currnet_into_network();
 
-    size_t n = I_mismatch.size();
+    unsigned int n = I_mismatch.size();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i = 0; i<n; ++i)
+    for(unsigned int i = 0; i<n; ++i)
         I_mismatch[i] = -I_mismatch[i];
 
     if(not detailed_log_enabled)
         ;
     else
     {
-        for(size_t i = 0; i<n; ++i)
+        for(unsigned int i = 0; i<n; ++i)
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
                 osstream<<"warning. NAN is detected when getting bus current mismatch after get_bus_currnet_into_network() when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
-                for(size_t j = 0; j<n; ++j)
+                for(unsigned int j = 0; j<n; ++j)
                 {
                     if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
                     {
-                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
@@ -2533,16 +2533,16 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         ;
     else
     {
-        for(size_t i = 0; i<n; ++i)
+        for(unsigned int i = 0; i<n; ++i)
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding generators when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
-                for(size_t j = 0; j<n; ++j)
+                for(unsigned int j = 0; j<n; ++j)
                 {
                     if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
                     {
-                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
@@ -2556,16 +2556,16 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         ;
     else
     {
-        for(size_t i = 0; i<n; ++i)
+        for(unsigned int i = 0; i<n; ++i)
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding wt generators when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
-                for(size_t j = 0; j<n; ++j)
+                for(unsigned int j = 0; j<n; ++j)
                 {
                     if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
                     {
-                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
@@ -2579,16 +2579,16 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         ;
     else
     {
-        for(size_t i = 0; i<n; ++i)
+        for(unsigned int i = 0; i<n; ++i)
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding pv units when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
-                for(size_t j = 0; j<n; ++j)
+                for(unsigned int j = 0; j<n; ++j)
                 {
                     if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
                     {
-                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
@@ -2602,16 +2602,16 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         ;
     else
     {
-        for(size_t i = 0; i<n; ++i)
+        for(unsigned int i = 0; i<n; ++i)
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding loads when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
-                for(size_t j = 0; j<n; ++j)
+                for(unsigned int j = 0; j<n; ++j)
                 {
                     if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
                     {
-                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
@@ -2625,16 +2625,16 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         ;
     else
     {
-        for(size_t i = 0; i<n; ++i)
+        for(unsigned int i = 0; i<n; ++i)
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding hvdcs when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
-                for(size_t j = 0; j<n; ++j)
+                for(unsigned int j = 0; j<n; ++j)
                 {
                     if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
                     {
-                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[j]<<endl;
                     }
                 }
@@ -2648,16 +2648,16 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
         ;
     else
     {
-        for(size_t i = 0; i<n; ++i)
+        for(unsigned int i = 0; i<n; ++i)
         {
             if(isnan(I_mismatch[i].real()) or isnan(I_mismatch[i].imag()))
             {
                 osstream<<"warning. NAN is detected when getting bus current mismatch after adding equivalent devices when calling DYNAMICS_SIMULATOR::"<<__FUNCTION__<<"():"<<endl;
-                for(size_t j = 0; j<n; ++j)
+                for(unsigned int j = 0; j<n; ++j)
                 {
                     if(isnan(I_mismatch[j].real()) or isnan(I_mismatch[j].imag()))
                     {
-                        size_t ibus = net.get_physical_bus_number_of_internal_bus(j);
+                        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(j);
                         osstream<<"Physical bus: "<<ibus<<", internal bus: "<<j<<", "<<I_mismatch[i].real()<<","<<I_mismatch[i].imag()<<endl;
                     }
                 }
@@ -2669,9 +2669,9 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     /*
     osstream<<"bus current mismatch:"<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
-        size_t ibus = net.get_physical_bus_number_of_internal_bus(i);
+        unsigned int ibus = net.get_physical_bus_number_of_internal_bus(i);
         //osstream<<ibus<<", "<<I_mismatch[i]<<endl;
         //toolkit.show_information_with_leading_time_stamp(osstream);
     }
@@ -2679,8 +2679,8 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     /*
     double maxmismatch = 0.0;
     complex<double> cmaxmismatch = 0.0;
-    size_t busmax = 0;
-    for(size_t i=0; i<n; ++i)
+    unsigned int busmax = 0;
+    for(unsigned int i=0; i<n; ++i)
     {
         if(maxmismatch<abs(I_mismatch[i]))
         {
@@ -2692,7 +2692,7 @@ void DYNAMICS_SIMULATOR::get_bus_current_mismatch()
     osstream<<"max mismatch @ bus "<<busmax<<", "<<maxmismatch<<" or complex "<<cmaxmismatch<<", complex power = "<<psdb.get_bus_positive_sequence_complex_voltage_in_pu(busmax)*conj(cmaxmismatch)*psdb.get_system_base_power_in_MVA()<<setprecision(10)<<", v="<<psdb.get_bus_positive_sequence_voltage_in_pu(busmax)<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         if(abs(I_mismatch[i])>0.0001)
         {
@@ -2715,7 +2715,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
     const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
-    size_t nbus = psdb.get_in_service_bus_count();
+    unsigned int nbus = psdb.get_in_service_bus_count();
 
 	if(I_mismatch.size()!=nbus)
 		I_mismatch.resize(nbus, 0.0);
@@ -2724,7 +2724,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-	for (size_t i = 0; i<nbus; ++i)
+	for (unsigned int i = 0; i<nbus; ++i)
 		I_mismatch[i] = 0.0;
 
     int nsize = Y.get_matrix_size();
@@ -2751,7 +2751,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
                 complex<double> current = Y.get_entry_value(k)*voltage;
                 if(isnan(current.real()) or isnan(current.imag()))
                 {
-                    size_t column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(column);
+                    unsigned int column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(column);
                     osstream<<"NAN is detected in "<<__FUNCTION__<<"() with Y["
                             <<row<<"("<<network_matrix.get_physical_bus_number_of_internal_bus(row)<<", "
                             <<column<<"("<<column_physical_bus<<"] = "<<Y.get_entry_value(k)<<", voltage["
@@ -2771,7 +2771,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     complex<double> s;
-    for(size_t i=0; i!=nbus; ++i)Warning. Network solution converged in
+    for(unsigned int i=0; i!=nbus; ++i)Warning. Network solution converged in
     {
         column_physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
         voltage = psdb.get_bus_positive_sequence_complex_voltage_in_pu(column_physical_bus);
@@ -2788,21 +2788,21 @@ void DYNAMICS_SIMULATOR::add_generators_to_bus_current_mismatch()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    size_t ngen = generators.size();
+    unsigned int ngen = generators.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_generator_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<ngen; ++i)
+    for(unsigned int i=0; i<ngen; ++i)
     {
         GENERATOR* generator = generators[i];
 
         if(generator->get_status() == true)
         {
-            size_t physical_bus = generator->get_generator_bus();
+            unsigned int physical_bus = generator->get_generator_bus();
 
-            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
@@ -2828,22 +2828,22 @@ void DYNAMICS_SIMULATOR::add_wt_generators_to_bus_current_mismatch()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    size_t ngen = wt_generators.size();
+    unsigned int ngen = wt_generators.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_wt_generator_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<ngen; ++i)
+    for(unsigned int i=0; i<ngen; ++i)
     {
         complex<double> I;
         WT_GENERATOR* generator = wt_generators[i];
 
         if(generator->get_status() == true)
         {
-            size_t physical_bus = generator->get_generator_bus();
+            unsigned int physical_bus = generator->get_generator_bus();
 
-            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             WT_GENERATOR_MODEL* gen_model = generator->get_wt_generator_model();
             if(gen_model!=NULL)
@@ -2872,22 +2872,22 @@ void DYNAMICS_SIMULATOR::add_pv_units_to_bus_current_mismatch()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    size_t npv = pv_units.size();
+    unsigned int npv = pv_units.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_pv_unit_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<npv; ++i)
+    for(unsigned int i=0; i<npv; ++i)
     {
         complex<double> I;
         PV_UNIT* pv = pv_units[i];
 
         if(pv->get_status() == true)
         {
-            size_t physical_bus = pv->get_unit_bus();
+            unsigned int physical_bus = pv->get_unit_bus();
 
-            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             PV_CONVERTER_MODEL* conv_model = pv->get_pv_converter_model();
             if(conv_model!=NULL)
@@ -2916,20 +2916,20 @@ void DYNAMICS_SIMULATOR::add_loads_to_bus_current_mismatch()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    size_t nload = loads.size();
+    unsigned int nload = loads.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_load_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<nload; ++i)
+    for(unsigned int i=0; i<nload; ++i)
     {
         LOAD* load = loads[i];
         if(load->get_status()==true)
         {
-            size_t physical_bus = load->get_load_bus();
+            unsigned int physical_bus = load->get_load_bus();
 
-            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             LOAD_MODEL* model = load->get_load_model();
             if(not model->is_voltage_source())
@@ -2946,21 +2946,21 @@ void DYNAMICS_SIMULATOR::add_hvdcs_to_bus_current_mismatch()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    size_t nhvdc = hvdcs.size();
+    unsigned int nhvdc = hvdcs.size();
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_hvdc_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<nhvdc; ++i)
+    for(unsigned int i=0; i<nhvdc; ++i)
     {
         complex<double> I;
         HVDC* hvdc = hvdcs[i];
         if(hvdc->get_status()==true)
         {
-            size_t physical_bus = hvdcs[i]->get_converter_bus(RECTIFIER);
+            unsigned int physical_bus = hvdcs[i]->get_converter_bus(RECTIFIER);
 
-            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             //I = hvdcs[i]->get_converter_dynamic_current_in_pu_based_on_system_base_power(RECTIFIER);
 
@@ -3008,16 +3008,16 @@ void DYNAMICS_SIMULATOR::add_equivalent_devices_to_bus_current_mismatch()
 
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
 
-    size_t nedevice = e_devices.size();
+    unsigned int nedevice = e_devices.size();
 
     //The following codes should not be parallelized. If more than one device is connecting to the same bus, unintended sum of I_mismatch[internal_bus] will occur.
-    for(size_t i=0; i<nedevice; ++i)
+    for(unsigned int i=0; i<nedevice; ++i)
     {
         if(e_devices[i]->get_status() == true)
         {
-            size_t physical_bus = e_devices[i]->get_equivalent_device_bus();
+            unsigned int physical_bus = e_devices[i]->get_equivalent_device_bus();
 
-            size_t internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
+            unsigned int internal_bus = network_matrix.get_internal_bus_number_of_physical_bus(physical_bus);
 
             complex<double> S = e_devices[i]->get_total_equivalent_power_as_load_in_MVA()*one_over_sbase;
 
@@ -3048,13 +3048,13 @@ void DYNAMICS_SIMULATOR:: calculate_bus_power_mismatch_in_MVA()
 
     S_mismatch = I_mismatch;
 
-    size_t n = I_mismatch.size();
+    unsigned int n = I_mismatch.size();
     complex<double> V;
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i= 0; i<n; ++i)
+    for(unsigned int i= 0; i<n; ++i)
     {
         //complex<double> V = ;
         S_mismatch[i] = get_bus_complex_voltage_in_pu_with_internal_bus_number(i)*conj(S_mismatch[i])*sbase;
@@ -3066,9 +3066,9 @@ POWER_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatch_struct()
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     double smax = 0.0;
-    size_t smax_bus = 0;
-    size_t n = S_mismatch.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int smax_bus = 0;
+    unsigned int n = S_mismatch.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         double s = steps_fast_complex_abs(S_mismatch[i]);
         if(s>smax)
@@ -3088,14 +3088,14 @@ POWER_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatch_struct()
 void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t n = I_mismatch.size();
+    unsigned int n = I_mismatch.size();
     I_vec.resize(n*2, 0.0);
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         I_vec[i] = I_mismatch[i].imag();
         I_vec[i+n] = I_mismatch[i].real();
@@ -3106,14 +3106,14 @@ void DYNAMICS_SIMULATOR::build_bus_current_mismatch_vector()
 void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t n = delta_V.size();
+    unsigned int n = delta_V.size();
     n = n>>1;
 
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
     #endif // ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         BUS* bus = internal_bus_pointers[i];
         double vang0 = bus->get_positive_sequence_angle_in_rad();
@@ -3152,16 +3152,16 @@ void DYNAMICS_SIMULATOR::build_jacobian()
 
     jacobian.clear();
     SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
-    size_t nbus = Y.get_matrix_size();
+    unsigned int nbus = Y.get_matrix_size();
     complex<double> y;
     double g, b;
-    size_t row, col;
-    size_t starting_index=0, ending_index;
-    for(size_t i=0; i!=nbus; ++i)
+    unsigned int row, col;
+    unsigned int starting_index=0, ending_index;
+    for(unsigned int i=0; i!=nbus; ++i)
     {
         ending_index = Y.get_starting_index_of_column(i+1);
         col = i;
-        for(size_t k=starting_index; k!=ending_index; ++k)
+        for(unsigned int k=starting_index; k!=ending_index; ++k)
         {
             y = Y.get_entry_value(k);
             g = y.real();
@@ -3184,7 +3184,7 @@ void DYNAMICS_SIMULATOR::change_dynamic_simulator_time_step(double newDELT)
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, const FAULT& fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(unsigned int bus, const FAULT& fault)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3215,11 +3215,11 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_set(size_t bus, const 
         }
     }
     NETWORK_MATRIX& network = get_network_matrix();
-    size_t internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
+    unsigned int internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
     internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, const FAULT& fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(unsigned int bus, const FAULT& fault)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -3254,12 +3254,12 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_bus_fault_cleared(size_t bus, co
         }
     }
     NETWORK_MATRIX& network = get_network_matrix();
-    size_t internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
+    unsigned int internal_bus = network.get_internal_bus_number_of_physical_bus(bus);
     internal_bus_complex_voltage_in_pu[internal_bus] = busptr->get_positive_sequence_complex_voltage_in_pu();
 }
 
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, size_t side_bus, double location, const FAULT& fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
 {
     if(location >=0.0 and location <= 1.0)
     {
@@ -3270,11 +3270,11 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& 
         {
             if(location<=0.5)
             {
-                size_t ibus = line->get_sending_side_bus();
-                size_t jbus = line->get_receiving_side_bus();
+                unsigned int ibus = line->get_sending_side_bus();
+                unsigned int jbus = line->get_receiving_side_bus();
 
-                size_t this_bus = side_bus;
-                size_t other_bus = (ibus==side_bus? jbus:ibus);
+                unsigned int this_bus = side_bus;
+                unsigned int other_bus = (ibus==side_bus? jbus:ibus);
 
                 double this_location = location;
                 double other_location = 1.0-location;
@@ -3288,8 +3288,8 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& 
             }
             else
             {
-                size_t ibus = line->get_sending_side_bus();
-                size_t jbus = line->get_receiving_side_bus();
+                unsigned int ibus = line->get_sending_side_bus();
+                unsigned int jbus = line->get_receiving_side_bus();
 
                 location = 1.0-location;
 
@@ -3301,7 +3301,7 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_set(const DEVICE_ID& 
     }
 }
 
-void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, size_t side_bus, double location, const FAULT& fault)
+void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault)
 {
     if(location >= 0.0 and location <= 1.0)
     {
@@ -3312,11 +3312,11 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_
         {
             if(location<=0.5)
             {
-                size_t ibus = line->get_sending_side_bus();
-                size_t jbus = line->get_receiving_side_bus();
+                unsigned int ibus = line->get_sending_side_bus();
+                unsigned int jbus = line->get_receiving_side_bus();
 
-                size_t this_bus = side_bus;
-                size_t other_bus = (ibus==side_bus? jbus:ibus);
+                unsigned int this_bus = side_bus;
+                unsigned int other_bus = (ibus==side_bus? jbus:ibus);
 
                 double this_location = location;
                 double other_location = 1.0-location;
@@ -3330,8 +3330,8 @@ void DYNAMICS_SIMULATOR::guess_bus_voltage_with_line_fault_cleared(const DEVICE_
             }
             else
             {
-                size_t ibus = line->get_sending_side_bus();
-                size_t jbus = line->get_receiving_side_bus();
+                unsigned int ibus = line->get_sending_side_bus();
+                unsigned int jbus = line->get_receiving_side_bus();
 
                 location = 1.0-location;
 
@@ -3351,27 +3351,27 @@ void DYNAMICS_SIMULATOR::update_generators_in_islands()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    vector< vector<size_t> > islands = network_matrix.get_islands_with_physical_bus_number();
+    vector< vector<unsigned int> > islands = network_matrix.get_islands_with_physical_bus_number();
     if(islands.size()==generators_in_islands.size()) // won't update if islands doesn't change
         return;
 
     generators_in_islands.clear();
 
-    size_t nislands = islands.size();
-    for(size_t i=0; i!=nislands; ++i)
+    unsigned int nislands = islands.size();
+    for(unsigned int i=0; i!=nislands; ++i)
     {
-        vector<size_t> island = islands[i];
+        vector<unsigned int> island = islands[i];
 
         vector<GENERATOR*> generators_in_island;
         vector<GENERATOR*> generators_at_bus;
 
-        size_t nisland = island.size();
-        for(size_t j=0; j!=nisland; ++j)
+        unsigned int nisland = island.size();
+        for(unsigned int j=0; j!=nisland; ++j)
         {
-            size_t bus = island[j];
+            unsigned int bus = island[j];
             generators_at_bus = psdb.get_generators_connecting_to_bus(bus);
-            size_t n = generators_at_bus.size();
-            for(size_t k=0; k!=n; ++k)
+            unsigned int n = generators_at_bus.size();
+            for(unsigned int k=0; k!=n; ++k)
             {
                 GENERATOR* generator = generators_at_bus[k];
                 generators_in_island.push_back(generator);
@@ -3388,16 +3388,16 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double TIME = TIME;
     bool system_is_stable = true;
-    size_t nislands = generators_in_islands.size();
+    unsigned int nislands = generators_in_islands.size();
     vector<double> angles;
-    for(size_t island=0; island!=nislands; island++)
+    for(unsigned int island=0; island!=nislands; island++)
     {
         vector<GENERATOR*> generators_in_island = generators_in_islands[island];
-        size_t n = generators_in_island.size();
+        unsigned int n = generators_in_island.size();
         angles.resize(n, 0.0);
         angles.clear();
 
-        for(size_t i=0; i!=n; ++i)
+        for(unsigned int i=0; i!=n; ++i)
         {
             GENERATOR* generator = generators_in_island[i];
             if(generator->get_status()==true)
@@ -3407,17 +3407,17 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
             }
         }
         double angle_max = 0.0, angle_min = 0.0;
-        size_t nangle = angles.size();
+        unsigned int nangle = angles.size();
         if(nangle>0)
         {
             angle_max = angles[0];
             angle_min = angles[0];
-            for(size_t i=1; i!=nangle; ++i)
+            for(unsigned int i=1; i!=nangle; ++i)
             {
                 if(angles[i]>angle_max)
                     angle_max = angles[i];
             }
-            for(size_t i=1; i!=nangle; ++i)
+            for(unsigned int i=1; i!=nangle; ++i)
             {
                 if(angles[i]<angle_min)
                     angle_min = angles[i];
@@ -3439,8 +3439,8 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
             osstream<<"The following island is detected to be unstable at time "<<TIME<<" s. Maximum angle difference is :"<<angle_difference<<" deg (a.k.a. "<<scaled_angle_difference<<" deg)"<<endl
                    <<"Generator          Rotor angle in deg"<<endl;
 
-            size_t n = generators_in_island.size();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = generators_in_island.size();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 GENERATOR* generator = generators_in_island[i];
                 if(generator->get_status()==true)
@@ -3456,12 +3456,11 @@ bool DYNAMICS_SIMULATOR::is_system_angular_stable() const
     return system_is_stable;
 }
 
-void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, const complex<double>& fault_shunt)
+void DYNAMICS_SIMULATOR::set_bus_fault(unsigned int bus, const complex<double>& fault_shunt)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
@@ -3498,11 +3497,10 @@ void DYNAMICS_SIMULATOR::set_bus_fault(size_t bus, const complex<double>& fault_
     }
 }
 
-void DYNAMICS_SIMULATOR::clear_bus_fault(size_t bus)
+void DYNAMICS_SIMULATOR::clear_bus_fault(unsigned int bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
@@ -3522,11 +3520,10 @@ void DYNAMICS_SIMULATOR::clear_bus_fault(size_t bus)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
+void DYNAMICS_SIMULATOR::trip_bus(unsigned int bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     BUS* busptr = psdb.get_bus(bus);
     if(busptr!=NULL)
@@ -3548,17 +3545,16 @@ void DYNAMICS_SIMULATOR::trip_bus(size_t bus)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_buses(const vector<size_t>& buses)
+void DYNAMICS_SIMULATOR::trip_buses(const vector<unsigned int>& buses)
 {
-    size_t n = buses.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = buses.size();
+    for(unsigned int i=0; i!=n; ++i)
         trip_bus(buses[i]);
 }
 
-void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, const complex<double>& fault_shunt)
+void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -3627,10 +3623,9 @@ void DYNAMICS_SIMULATOR::set_line_fault(const DEVICE_ID& line_id, size_t side_bu
     }
 }
 
-void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location)
+void DYNAMICS_SIMULATOR::clear_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -3727,10 +3722,9 @@ void DYNAMICS_SIMULATOR::trip_line(const DEVICE_ID& line_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, size_t side_bus)
+void DYNAMICS_SIMULATOR::trip_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -3825,10 +3819,9 @@ void DYNAMICS_SIMULATOR::close_line(const DEVICE_ID& line_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, size_t side_bus)
+void DYNAMICS_SIMULATOR::close_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -3929,10 +3922,9 @@ void DYNAMICS_SIMULATOR::trip_transformer(const DEVICE_ID& trans_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus)
+void DYNAMICS_SIMULATOR::trip_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4056,10 +4048,9 @@ void DYNAMICS_SIMULATOR::close_transformer(const DEVICE_ID& trans_id)
     }
 }
 
-void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus)
+void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4133,7 +4124,6 @@ void DYNAMICS_SIMULATOR::close_transformer_breaker(const DEVICE_ID& trans_id, si
 void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4174,7 +4164,6 @@ void DYNAMICS_SIMULATOR::trip_generator(const DEVICE_ID& gen_id)
 void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4222,10 +4211,9 @@ void DYNAMICS_SIMULATOR::shed_generator(const DEVICE_ID& gen_id,double percent)
 }
 
 
-void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
+void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, unsigned int n)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4241,7 +4229,7 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
             {
                 if(n!=0)
                 {
-                    size_t N = generator->get_number_of_lumped_wt_generators();
+                    unsigned int N = generator->get_number_of_lumped_wt_generators();
                     if(n<N)
                     {
                         generator->set_number_of_lumped_wt_generators(N-n);
@@ -4287,7 +4275,6 @@ void DYNAMICS_SIMULATOR::trip_wt_generator(const DEVICE_ID& gen_id, size_t n)
 void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4328,7 +4315,6 @@ void DYNAMICS_SIMULATOR::trip_load(const DEVICE_ID& load_id)
 void DYNAMICS_SIMULATOR::close_load(const DEVICE_ID& load_id)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4425,8 +4411,8 @@ void DYNAMICS_SIMULATOR::scale_all_load(double percent)
     ostringstream osstream;
     if(fabs(percent)>FLOAT_EPSILON)
     {
-        size_t n = loads.size();
-        for(size_t i=0; i!=n; ++i)
+        unsigned int n = loads.size();
+        for(unsigned int i=0; i!=n; ++i)
         {
             if(loads[i]->get_status()==true)
                 scale_load(loads[i]->get_device_id(), percent);
@@ -4444,7 +4430,6 @@ void DYNAMICS_SIMULATOR::scale_all_load(double percent)
 void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4485,7 +4470,6 @@ void DYNAMICS_SIMULATOR::trip_fixed_shunt(const DEVICE_ID& shunt_id)
 void DYNAMICS_SIMULATOR::close_fixed_shunt(const DEVICE_ID& shunt_id)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     ostringstream osstream;
 
@@ -4875,11 +4859,11 @@ void DYNAMICS_SIMULATOR::change_hvdc_power_order_in_MW(const DEVICE_ID& hvdc_id,
 void DYNAMICS_SIMULATOR::switch_on_equivalent_device()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    size_t n = e_devices.size();
+    unsigned int n = e_devices.size();
     ostringstream osstream;
     osstream<<"There are "<<n<<" equivalent devices to switch on";
     toolkit.show_information_with_leading_time_stamp(osstream);
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         e_devices[i]->switch_on();
 }
 

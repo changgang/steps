@@ -5,7 +5,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_owner_integer_data(size_t owner, char* parameter_name, size_t toolkit_index)
+int api_get_owner_integer_data(unsigned int owner, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -27,7 +27,7 @@ int api_get_owner_integer_data(size_t owner, char* parameter_name, size_t toolki
     }
 }
 
-void api_set_owner_integer_data(size_t owner, char* parameter_name, int value, size_t toolkit_index)
+void api_set_owner_integer_data(unsigned int owner, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -45,7 +45,7 @@ void api_set_owner_integer_data(size_t owner, char* parameter_name, int value, s
         show_area_zone_owner_not_exist_with_api(owner, __FUNCTION__);
 }
 
-double api_get_owner_float_data(size_t owner, char* parameter_name, size_t toolkit_index)
+double api_get_owner_float_data(unsigned int owner, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -65,22 +65,22 @@ double api_get_owner_float_data(size_t owner, char* parameter_name, size_t toolk
     }
 }
 
-void api_set_owner_float_data(size_t owner, char* parameter_name, double value, size_t toolkit_index)
+void api_set_owner_float_data(unsigned int owner, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %lu, %s, %f.",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %u, %s, %f.",
              __FUNCTION__,owner, parameter_name, value);
     toolkit.show_information_with_leading_time_stamp(buffer);
     return;
 }
 
-const char* api_get_owner_string_data(size_t owner, char* parameter_name, size_t toolkit_index)
+const char* api_get_owner_string_data(unsigned int owner, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     OWNER* ownerptr = psdb.get_owner(owner);
     if(ownerptr!=NULL)
@@ -88,7 +88,7 @@ const char* api_get_owner_string_data(size_t owner, char* parameter_name, size_t
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "NAME" or PARAMETER_NAME == "OWNER NAME")
 		{
-			snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (ownerptr->get_owner_name()).c_str());
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (ownerptr->get_owner_name()).c_str());
 			return toolkit.steps_char_buffer;
 		}
 
@@ -102,7 +102,7 @@ const char* api_get_owner_string_data(size_t owner, char* parameter_name, size_t
     }
 }
 
-void api_set_owner_string_data(size_t owner, char* parameter_name, char* value, size_t toolkit_index)
+void api_set_owner_string_data(unsigned int owner, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -121,7 +121,7 @@ void api_set_owner_string_data(size_t owner, char* parameter_name, char* value, 
         show_area_zone_owner_not_exist_with_api(owner, __FUNCTION__);
 }
 
-bool api_get_owner_boolean_data(size_t owner, char* parameter_name, size_t toolkit_index)
+bool api_get_owner_boolean_data(unsigned int owner, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -141,11 +141,11 @@ bool api_get_owner_boolean_data(size_t owner, char* parameter_name, size_t toolk
     }
 }
 
-void api_set_owner_boolean_data(size_t owner, char* parameter_name, bool value, size_t toolkit_index)
+void api_set_owner_boolean_data(unsigned int owner, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %lu, %s, %s.",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s() has not been implemented. Input parameters are provided: %u, %s, %s.",
              __FUNCTION__, owner, parameter_name, (value==true?"True":"False"));
     toolkit.show_information_with_leading_time_stamp(buffer);
     return;

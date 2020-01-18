@@ -16,7 +16,7 @@ FIXED_SHUNT::~FIXED_SHUNT()
     ;
 }
 
-void FIXED_SHUNT::set_shunt_bus(size_t shunt_bus)
+void FIXED_SHUNT::set_shunt_bus(unsigned int shunt_bus)
 {
     ostringstream osstream;
 
@@ -63,7 +63,7 @@ void FIXED_SHUNT::set_nominal_impedance_shunt_in_MVA(complex<double> s)
     nominal_impedance_shunt_in_MVA = s;
 }
 
-size_t FIXED_SHUNT::get_shunt_bus() const
+unsigned int FIXED_SHUNT::get_shunt_bus() const
 {
     return bus;
 }
@@ -132,13 +132,13 @@ void FIXED_SHUNT::clear()
     set_nominal_impedance_shunt_in_MVA(0.0);
 }
 
-bool FIXED_SHUNT::is_connected_to_bus(size_t target_bus) const
+bool FIXED_SHUNT::is_connected_to_bus(unsigned int target_bus) const
 {
     if(target_bus==get_shunt_bus()) return true;
     else                            return false;
 }
 
-bool FIXED_SHUNT::is_in_area(size_t area) const
+bool FIXED_SHUNT::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -151,7 +151,7 @@ bool FIXED_SHUNT::is_in_area(size_t area) const
         return false;
 }
 
-bool FIXED_SHUNT::is_in_zone(size_t zone) const
+bool FIXED_SHUNT::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

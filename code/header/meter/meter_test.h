@@ -27,7 +27,6 @@ class METER_TEST : public Test::Suite
     private:
         void test_constructor();
         void test_set_get_device_id_and_type();
-        void test_set_get_buffer_size();
         void test_set_get_bus_meter_type();
         void test_set_get_line_meter_type();
         void test_set_get_transformer_meter_type();

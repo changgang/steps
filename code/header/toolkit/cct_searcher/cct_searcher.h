@@ -12,35 +12,35 @@ class CCT_SEARCHER
         CCT_SEARCHER();
         virtual ~CCT_SEARCHER();
 
-        void set_power_system_database_maximum_bus_number(size_t number);
+        void set_power_system_database_maximum_bus_number(unsigned int number);
         void set_search_title(string title);
 
         void set_powerflow_data_filename(string filename);
         void set_dynamic_data_filename(string filename);
 
         void set_fault_device(DEVICE_ID did);
-        void set_fault_side_bus(size_t bus);
+        void set_fault_side_bus(unsigned int bus);
         void set_fault_location_to_fault_side_bus_in_pu(double location);
         void set_fault_shunt_in_pu(complex<double> shunt);
         void set_flag_trip_line_after_clearing_fault(bool flag);
 
-        void set_simulator_max_iteration(size_t iteration);
+        void set_simulator_max_iteration(unsigned int iteration);
         void set_simulator_allowed_max_power_imbalance_in_MVA(double tol);
         void set_simulator_iteration_accelerator(double alpha);
 
-        size_t get_power_system_database_maximum_bus_number() const;
+        unsigned int get_power_system_database_maximum_bus_number() const;
         string get_search_title() const;
 
         string get_powerflow_data_filename() const;
         string get_dynamic_data_filename() const;
 
         DEVICE_ID get_fault_device() const;
-        size_t get_fault_side_bus() const;
+        unsigned int get_fault_side_bus() const;
         double get_fault_location_to_fault_side_bus_in_pu() const;
         complex<double> get_fault_shunt_in_pu() const;
         bool get_flag_trip_line_after_clearing_fault() const;
 
-        size_t get_simulator_max_iteration() const;
+        unsigned int get_simulator_max_iteration() const;
         double get_simulator_allowed_max_power_imbalance_in_MVA() const;
         double get_simulator_iteration_accelerator() const;
 
@@ -78,7 +78,7 @@ class CCT_SEARCHER
         string powerflow_data_filename, dynamic_data_filename;
 
         DEVICE_ID fault_device;
-        size_t fault_side_bus;
+        unsigned int fault_side_bus;
         double fault_location;
         complex<double> fault_shunt_in_pu;
         double fault_time_in_s;
@@ -88,7 +88,7 @@ class CCT_SEARCHER
         double angle_difference_threshold_in_deg;
 
         double P_threshold_in_MW, Q_threshold_in_MVar, alpha;
-        size_t max_iteration;
+        unsigned int max_iteration;
         double delt;
 
         vector< vector<GENERATOR*> > generators_in_islands;

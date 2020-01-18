@@ -48,7 +48,7 @@ complex<double> ENERGY_STORAGE_MODEL::get_terminal_bus_complex_voltage_in_pu() c
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = estorage->get_energy_storage_bus();
+    unsigned int bus = estorage->get_energy_storage_bus();
     return psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
 }
 
@@ -60,7 +60,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_voltage_in_pu() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = estorage->get_energy_storage_bus();
+    unsigned int bus = estorage->get_energy_storage_bus();
     return psdb.get_bus_positive_sequence_voltage_in_pu(bus);
 }
 
@@ -72,7 +72,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_angle_in_rad() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = estorage->get_energy_storage_bus();
+    unsigned int bus = estorage->get_energy_storage_bus();
     return psdb.get_bus_positive_sequence_angle_in_rad(bus);
 }
 
@@ -86,7 +86,7 @@ double ENERGY_STORAGE_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = estorage->get_energy_storage_bus();
+    unsigned int bus = estorage->get_energy_storage_bus();
     return psdb.get_bus_frequency_deviation_in_pu(bus);
 }
 

@@ -83,8 +83,8 @@ void BPA_IMEXPORTER_TEST::test_load_zone_data()
     vector<ZONE*> zones = psdb.get_all_zones();
 
     osstream<<"Zone count: "<<zones.size()<<endl;
-    size_t n = zones.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = zones.size();
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<zones[i]->get_zone_name()<<", "<<zones[i]->get_zone_number()<<endl;
 
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
@@ -99,8 +99,8 @@ void BPA_IMEXPORTER_TEST::test_load_owner_data()
     vector<OWNER*> owners = psdb.get_all_owners();
 
     osstream<<"Owner count: "<<owners.size()<<endl;
-    size_t n = owners.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = owners.size();
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<owners[i]->get_owner_name()<<", "<<owners[i]->get_owner_number()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
@@ -115,8 +115,8 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
 
     osstream<<"Bus count: "<<buses.size()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    size_t n = buses.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = buses.size();
+    for(unsigned int i=0; i!=n; ++i)
         buses[i]->report();
 }
 void BPA_IMEXPORTER_TEST::test_load_area_data()
@@ -129,8 +129,8 @@ void BPA_IMEXPORTER_TEST::test_load_area_data()
     vector<AREA*> areas = psdb.get_all_areas();
 
     osstream<<"Area count: "<<areas.size()<<endl;
-    size_t n = areas.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = areas.size();
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<areas[i]->get_area_name()<<", "<<areas[i]->get_area_number()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 }
@@ -141,7 +141,7 @@ void BPA_IMEXPORTER_TEST::test_load_bus_data()
     show_test_information_for_function_of_class(__FUNCTION__,"BPA_IMEXPORTER_TEST");
 
     vector<BUS*> buses = psdb.get_all_buses();
-    size_t n = buses.size();
+    unsigned int n = buses.size();
 
     TEST_ASSERT(n==42);
 
@@ -202,8 +202,8 @@ void BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data()
 
     osstream<<"Load count: "<<loads.size()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    size_t n = loads.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = loads.size();
+    for(unsigned int i=0; i!=n; ++i)
         loads[i]->report();
 
     vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
@@ -211,7 +211,7 @@ void BPA_IMEXPORTER_TEST::test_load_load_and_fixed_shunt_data()
     osstream<<"Fixed shunt count: "<<fshunts.size()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
     n = fshunts.size();
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         fshunts[i]->report();
 }
 
@@ -232,8 +232,8 @@ void BPA_IMEXPORTER_TEST::test_load_generator_data()
     osstream<<"Generator count: "<<generators.size()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
-    size_t n = generators.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = generators.size();
+    for(unsigned int i=0; i!=n; ++i)
         generators[i]->report();
 
     return;
@@ -301,7 +301,7 @@ void BPA_IMEXPORTER_TEST::test_load_wt_generator_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-    size_t n = wt_generators.size();
+    unsigned int n = wt_generators.size();
 
     TEST_ASSERT(n==3);
 
@@ -353,8 +353,8 @@ void BPA_IMEXPORTER_TEST::test_load_line_data()
 
     osstream<<"Line count: "<<lines.size()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    size_t n = lines.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = lines.size();
+    for(unsigned int i=0; i!=n; ++i)
         lines[i]->report();
 
     return;
@@ -428,8 +428,8 @@ void BPA_IMEXPORTER_TEST::test_load_transformer_data()
 
     osstream<<"Transformer count: "<<trans.size()<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    size_t n = trans.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = trans.size();
+    for(unsigned int i=0; i!=n; ++i)
         trans[i]->report();
 }
 
@@ -441,11 +441,11 @@ void BPA_IMEXPORTER_TEST::test_load_hvdc_data()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t n = hvdcs.size();
+    unsigned int n = hvdcs.size();
 
     //TEST_ASSERT(n==2);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->report();
 }
 
@@ -458,9 +458,9 @@ void BPA_IMEXPORTER_TEST::test_convert_data_into_bpa_format()
     TEST_ASSERT(importer.convert_data_into_bpa_format("AB", "A3")=="AB ");
     TEST_ASSERT(importer.convert_data_into_bpa_format("ABCD", "A3")=="ABC");
 
-    TEST_ASSERT(importer.convert_data_into_bpa_format(size_t(1), "I3")=="  1");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(size_t(10), "I3")==" 10");
-    TEST_ASSERT(importer.convert_data_into_bpa_format(size_t(999), "I3")=="999");
+    TEST_ASSERT(importer.convert_data_into_bpa_format((unsigned int)(1), "I3")=="  1");
+    TEST_ASSERT(importer.convert_data_into_bpa_format((unsigned int)(10), "I3")==" 10");
+    TEST_ASSERT(importer.convert_data_into_bpa_format((unsigned int)(999), "I3")=="999");
 
     TEST_ASSERT(importer.convert_data_into_bpa_format(int(1), "I3")=="  1");
     TEST_ASSERT(importer.convert_data_into_bpa_format(int(10), "I3")==" 10");

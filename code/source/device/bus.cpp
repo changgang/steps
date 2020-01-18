@@ -26,7 +26,7 @@ BUS::~BUS()
     ;
 }
 
-void BUS::set_bus_number(size_t number)
+void BUS::set_bus_number(unsigned int number)
 {
     if(number!=0)
         bus_number = number;
@@ -63,17 +63,17 @@ void BUS::set_bus_type(BUS_TYPE type)
     bus_type = type;
 }
 
-void BUS::set_area_number(size_t number)
+void BUS::set_area_number(unsigned int number)
 {
     area_number = number;
 }
 
-void BUS::set_zone_number(size_t number)
+void BUS::set_zone_number(unsigned int number)
 {
     zone_number = number;
 }
 
-void BUS::set_owner_number(size_t number)
+void BUS::set_owner_number(unsigned int number)
 {
     owner_number = number;
 }
@@ -275,7 +275,7 @@ void BUS::set_voltage_to_regulate_in_pu(double voltage)
     }
 }
 
-size_t BUS::get_bus_number() const
+unsigned int BUS::get_bus_number() const
 {
     return bus_number;
 }
@@ -295,17 +295,17 @@ BUS_TYPE BUS::get_bus_type() const
     return bus_type;
 }
 
-size_t BUS::get_area_number() const
+unsigned int BUS::get_area_number() const
 {
     return area_number;
 }
 
-size_t BUS::get_zone_number() const
+unsigned int BUS::get_zone_number() const
 {
     return zone_number;
 }
 
-size_t BUS::get_owner_number() const
+unsigned int BUS::get_owner_number() const
 {
     return owner_number;
 }
@@ -448,12 +448,12 @@ complex<double> BUS::get_zero_sequence_complex_voltage_in_kV() const
 }
 
 
-void BUS::set_equivalent_bus_number(size_t number)
+void BUS::set_equivalent_bus_number(unsigned int number)
 {
     equivalent_bus_number = number;
 }
 
-size_t BUS::get_equivalent_bus_number() const
+unsigned int BUS::get_equivalent_bus_number() const
 {
     return equivalent_bus_number;
 }
@@ -476,10 +476,10 @@ bool BUS::is_valid() const
 
 void BUS::check()
 {
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     if(get_bus_number()==0)
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid bus number 0 is detected.");
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid bus number 0 is detected.");
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
     }
@@ -510,18 +510,18 @@ void BUS::clear()
     fault.clear();
 }
 
-bool BUS::is_connected_to_bus(size_t bus) const
+bool BUS::is_connected_to_bus(unsigned int bus) const
 {
     if(get_bus_number()==bus) return true;
     else                      return false;
 }
 
-bool BUS::is_in_area(size_t area) const
+bool BUS::is_in_area(unsigned int area) const
 {
     return get_area_number()==area;
 }
 
-bool BUS::is_in_zone(size_t zone) const
+bool BUS::is_in_zone(unsigned int zone) const
 {
     return get_zone_number()==zone;
 }

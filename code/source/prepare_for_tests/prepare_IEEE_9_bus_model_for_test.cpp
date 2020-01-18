@@ -447,15 +447,12 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     did.set_device_terminal(terminal);
     did.set_device_identifier("1");
 
-    GENERATOR* generator;
-
     GENCLS gen1_model;
     gen1_model.set_toolkit(default_toolkit);
     gen1_model.set_device_id(did);
 
     gen1_model.set_H_in_s(9.5515);
 
-    generator = psdb.get_generator(did);
     dmdb.add_model(&gen1_model);
 
     terminal.clear();
@@ -468,7 +465,6 @@ void prepare_IEEE_9_bus_model_dynamic_model()
 
     gen2_model.set_H_in_s(3.3333);
 
-    generator = psdb.get_generator(did);
     dmdb.add_model(&gen2_model);
 
     terminal.clear();
@@ -481,7 +477,6 @@ void prepare_IEEE_9_bus_model_dynamic_model()
 
     gen3_model.set_H_in_s(2.3516);
 
-    generator = psdb.get_generator(did);
     dmdb.add_model(&gen3_model);
 
     did.set_device_type("LOAD");
@@ -508,8 +503,8 @@ void prepare_IEEE_9_bus_model_dynamic_model()
     load_model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
     vector<LOAD*> loads = psdb.get_all_loads();
-    size_t n = psdb.get_load_count();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = psdb.get_load_count();
+    for(unsigned int i=0; i!=n; ++i)
     {
         load_model.set_device_id(loads[i]->get_device_id());
         dmdb.add_model(&load_model);
@@ -599,8 +594,8 @@ void prepare_IEEE_9_bus_model_classical_dynamic_model()
     load_model.set_subsystem_type(BUS_SUBSYSTEM_TYPE);
 
     vector<LOAD*> loads = psdb.get_all_loads();
-    size_t n = psdb.get_load_count();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = psdb.get_load_count();
+    for(unsigned int i=0; i!=n; ++i)
     {
         load_model.set_device_id(loads[i]->get_device_id());
         dmdb.add_model(&load_model);

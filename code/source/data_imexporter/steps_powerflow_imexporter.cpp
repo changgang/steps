@@ -151,7 +151,7 @@ void STEPS_IMEXPORTER::load_powerflow_data_into_ram(string file)
     splitted_data_of_one_type.push_back(splitted_buffer);
 
     splitted_buffer.clear();
-    for(size_t i=0; i!=2; ++i)
+    for(unsigned int i=0; i!=2; ++i)
     {
         if(fgets(buffer, 1024, fid)==NULL)
         {
@@ -253,12 +253,12 @@ void STEPS_IMEXPORTER::load_case_data()
 }
 
 
-void STEPS_IMEXPORTER::set_data_version(size_t version)
+void STEPS_IMEXPORTER::set_data_version(unsigned int version)
 {
     data_version = version;
 }
 
-size_t STEPS_IMEXPORTER::get_data_version() const
+unsigned int STEPS_IMEXPORTER::get_data_version() const
 {
     return data_version;
 }
@@ -273,8 +273,8 @@ void STEPS_IMEXPORTER::load_bus_data()
     vector<vector<string> > DATA = splitted_sraw_data_in_ram[1];
     vector<string> data;
 
-    size_t ndata = DATA.size();
-    for(size_t i=0; i!=ndata; ++i)
+    unsigned int ndata = DATA.size();
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
         BUS bus;
@@ -369,9 +369,9 @@ void STEPS_IMEXPORTER::load_load_data()
     vector<vector<string> > DATA = splitted_sraw_data_in_ram[2];
     vector<string> data;
 
-    size_t ndata = DATA.size();
+    unsigned int ndata = DATA.size();
     double p = 0.0, q = 0.0;
-    for(size_t i=0; i!=ndata; ++i)
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
         LOAD load;
@@ -459,10 +459,10 @@ void STEPS_IMEXPORTER::load_fixed_shunt_data()
     vector<vector<string> > DATA = splitted_sraw_data_in_ram[3];
     vector<string> data;
 
-    size_t ndata = DATA.size();
-    size_t n=0;
+    unsigned int ndata = DATA.size();
+    unsigned int n=0;
     double p = 0.0, q = 0.0;
-    for(size_t i=0; i!=ndata; ++i)
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
         FIXED_SHUNT shunt;
@@ -508,14 +508,14 @@ void STEPS_IMEXPORTER::load_source_data()
     vector<vector<string> > DATA = splitted_sraw_data_in_ram[4];
     vector<string> data;
 
-    size_t ndata = DATA.size();
+    unsigned int ndata = DATA.size();
 
-    size_t SOURCE_TYPE_INDEX = 28;
-    for(size_t i=0; i!=ndata; ++i)
+    unsigned int SOURCE_TYPE_INDEX = 28;
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
 
-        size_t n = data.size();
+        unsigned int n = data.size();
 
         SOURCE_TYPE source_type = SYNC_GENERATOR_SOURCE;
         if(n>SOURCE_TYPE_INDEX)
@@ -564,8 +564,8 @@ void STEPS_IMEXPORTER::load_source_data()
             }
             default:
             {
-                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid source type is detected in STEPS sraw file of line:\n%s",string_vector2csv(data).c_str());
+                char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Invalid source type is detected in STEPS sraw file of line:\n%s",string_vector2csv(data).c_str());
                 STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
                 toolkit.show_information_with_leading_time_stamp(buffer);
                 break;
@@ -575,7 +575,7 @@ void STEPS_IMEXPORTER::load_source_data()
     /*
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<SOURCE*> sources = psdb.get_all_sources();
-    for(size_t i=0; i<sources.size(); ++i)
+    for(unsigned int i=0; i<sources.size(); ++i)
         sources[i]->report();
     */
 }
@@ -833,13 +833,13 @@ void STEPS_IMEXPORTER::load_line_data()
     vector<vector<string> >DATA = splitted_sraw_data_in_ram[5];
     vector<string> data;
 
-    size_t ndata = DATA.size();
-    size_t n=0;
+    unsigned int ndata = DATA.size();
+    unsigned int n=0;
     double r = 0.0, x = 0.0, g = 0.0, b = 0.0;
     int status;
     RATING rating;
     int meterend;
-    for(size_t i=0; i!=ndata; ++i)
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
         LINE line;
@@ -949,7 +949,7 @@ void STEPS_IMEXPORTER::load_line_data()
         }
         OWNERSHIP os;
         int owner=0; double frac=0.0;
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             owner = 0;
             frac = 0.0;
@@ -985,10 +985,10 @@ void STEPS_IMEXPORTER::load_transformer_data()
 
     vector<string> data;
 
-    size_t ndata = DATA.size();
+    unsigned int ndata = DATA.size();
 
     vector<vector<string> > trans_data;
-    for(size_t i=0; i!=ndata; ++i)
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         trans_data.clear();
 
@@ -1235,7 +1235,7 @@ void STEPS_IMEXPORTER::add_transformer_basic_data(TRANSFORMER& trans, vector<str
 
     OWNERSHIP os;
     int owner=0; double frac=0.0;
-    for(size_t j=0; j!=4; ++j)
+    for(unsigned int j=0; j!=4; ++j)
     {
         owner = 0;
         frac = 0.0;
@@ -1646,9 +1646,9 @@ void STEPS_IMEXPORTER::load_area_data()
 
     vector<string> data;
 
-    size_t ndata = DATA.size();
+    unsigned int ndata = DATA.size();
 
-    for(size_t i=0; i!=ndata; ++i)
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
 
@@ -1673,11 +1673,11 @@ void STEPS_IMEXPORTER::load_hvdc_data()
 
     vector<string> data;
 
-    size_t ndata = DATA.size();
+    unsigned int ndata = DATA.size();
     RATING rating;
 
     vector<vector<string> > hvdc_data;
-    for(size_t i=0; i!=ndata; ++i)
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         hvdc_data.clear();
 
@@ -1903,9 +1903,9 @@ void STEPS_IMEXPORTER::load_zone_data()
 
     vector<string> data;
 
-    size_t ndata = DATA.size();
+    unsigned int ndata = DATA.size();
 
-    for(size_t i=0; i!=ndata; ++i)
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
 
@@ -1935,9 +1935,9 @@ void STEPS_IMEXPORTER::load_owner_data()
 
     vector<string> data;
 
-    size_t ndata = DATA.size();
+    unsigned int ndata = DATA.size();
 
-    for(size_t i=0; i!=ndata; ++i)
+    for(unsigned int i=0; i!=ndata; ++i)
     {
         data = DATA[i];
 
@@ -2038,7 +2038,7 @@ string STEPS_IMEXPORTER::export_case_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     char buffer[1000];
-    vector<size_t> buses = psdb.get_all_buses_number();
+    vector<unsigned int> buses = psdb.get_all_buses_number();
     double fbase = 50.0;
     if(buses.size()!=0)
         fbase = psdb.get_bus_base_frequency_in_Hz(buses[0]);
@@ -2058,9 +2058,9 @@ string STEPS_IMEXPORTER::export_bus_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<BUS*> buses = psdb.get_all_buses();
-    size_t n = buses.size();
+    unsigned int n = buses.size();
     char buffer[1000];
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         BUS* bus = buses[i];
         if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus->get_bus_number())!=0)
@@ -2078,7 +2078,7 @@ string STEPS_IMEXPORTER::export_bus_data() const
         if(bus_type == SLACK_TYPE) type = 3;
         if(bus_type == OUT_OF_SERVICE) type = 4;
 
-        snprintf(buffer, 1000, "%8lu, \"%-16s\", %8.2f, %2d, %4lu, %4lu, %4lu, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
+        snprintf(buffer, 1000, "%8u, \"%-16s\", %8.2f, %2d, %4u, %4u, %4u, %10.6f, %10.6f, %6.4f, %6.4f, %6.4f, %6.4f, %4.1f",
                  bus->get_bus_number(), (bus->get_bus_name()).c_str(), bus->get_base_voltage_in_kV(), type,
                  bus->get_area_number(), bus->get_zone_number(), bus->get_owner_number(),
                  bus->get_positive_sequence_voltage_in_pu(), bus->get_positive_sequence_angle_in_deg(),
@@ -2098,12 +2098,12 @@ string STEPS_IMEXPORTER::export_load_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<LOAD*> loads = psdb.get_all_loads();
-    size_t n = loads.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = loads.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         LOAD* load = loads[i];
 
-        size_t bus = load->get_load_bus();
+        unsigned int bus = load->get_load_bus();
         string ickt = load->get_identifier();
         if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
         {
@@ -2143,12 +2143,12 @@ string STEPS_IMEXPORTER::export_fixed_shunt_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
-    size_t n = fshunts.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = fshunts.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         FIXED_SHUNT* shunt = fshunts[i];
 
-        size_t bus = shunt->get_shunt_bus();
+        unsigned int bus = shunt->get_shunt_bus();
         string ickt = shunt->get_identifier();
         if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
         {
@@ -2190,8 +2190,8 @@ string STEPS_IMEXPORTER::export_generator_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<GENERATOR*> generators = psdb.get_all_generators();
-    size_t n = generators.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = generators.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         GENERATOR* generator = generators[i];
         if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(generator->get_source_bus())==OUT_OF_SERVICE)
@@ -2210,8 +2210,8 @@ string STEPS_IMEXPORTER::export_wt_generator_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<WT_GENERATOR*> wt_generators = psdb.get_all_wt_generators();
-    size_t n = wt_generators.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = wt_generators.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         WT_GENERATOR* wt_generator = wt_generators[i];
         if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(wt_generator->get_source_bus())==OUT_OF_SERVICE)
@@ -2232,8 +2232,8 @@ string STEPS_IMEXPORTER::export_pv_unit_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<PV_UNIT*> pv_units = psdb.get_all_pv_units();
-    size_t n = pv_units.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = pv_units.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         PV_UNIT* pv_unit = pv_units[i];
         if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(pv_unit->get_source_bus())==OUT_OF_SERVICE)
@@ -2255,8 +2255,8 @@ string STEPS_IMEXPORTER::export_energy_storage_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<ENERGY_STORAGE*> estorages = psdb.get_all_energy_storages();
-    size_t n = estorages.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = estorages.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         ENERGY_STORAGE* estorage = estorages[i];
         if(get_export_out_of_service_bus_logic()==false and psdb.get_bus_type(estorage->get_source_bus())==OUT_OF_SERVICE)
@@ -2276,8 +2276,8 @@ string STEPS_IMEXPORTER::export_source_common_data(SOURCE* source) const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = source->get_source_bus();
-    size_t bus_to_regulate = source->get_bus_to_regulate();
+    unsigned int bus = source->get_source_bus();
+    unsigned int bus_to_regulate = source->get_bus_to_regulate();
     string ickt = source->get_identifier();
     if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
     {
@@ -2351,13 +2351,13 @@ string STEPS_IMEXPORTER::export_line_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<LINE*> lines = psdb.get_all_lines();
-    size_t n = lines.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = lines.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         LINE* line = lines[i];
 
-        size_t ibus = line->get_sending_side_bus();
-        size_t jbus = line->get_receiving_side_bus();
+        unsigned int ibus = line->get_sending_side_bus();
+        unsigned int jbus = line->get_receiving_side_bus();
         string ickt = line->get_identifier();
         if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(ibus)!=0 or psdb.get_equivalent_bus_of_bus(jbus)!=0))
         {
@@ -2373,7 +2373,7 @@ string STEPS_IMEXPORTER::export_line_data() const
         if(ibus==jbus)
             continue;
 
-        size_t meterend = 1;
+        unsigned int meterend = 1;
         if(line->get_meter_end_bus()==line->get_receiving_side_bus())
             meterend = 2;
 
@@ -2411,15 +2411,15 @@ string STEPS_IMEXPORTER::export_transformer_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
-    size_t n = transformers.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = transformers.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         TRANSFORMER* trans = transformers[i];
 
 
-        size_t ibus = trans->get_winding_bus(PRIMARY_SIDE);
-        size_t jbus = trans->get_winding_bus(SECONDARY_SIDE);
-        size_t kbus = trans->get_winding_bus(TERTIARY_SIDE);
+        unsigned int ibus = trans->get_winding_bus(PRIMARY_SIDE);
+        unsigned int jbus = trans->get_winding_bus(SECONDARY_SIDE);
+        unsigned int kbus = trans->get_winding_bus(TERTIARY_SIDE);
         string ickt = trans->get_identifier();
         if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(ibus)!=0 or psdb.get_equivalent_bus_of_bus(jbus)!=0 or psdb.get_equivalent_bus_of_bus(kbus)!=0))
         {
@@ -2442,7 +2442,7 @@ string STEPS_IMEXPORTER::export_transformer_data() const
                 continue;
         }
 
-        size_t nonmeterend = 2;
+        unsigned int nonmeterend = 2;
         if(trans->is_two_winding_transformer())
         {
             if(trans->get_non_metered_end_bus() == trans->get_winding_bus(PRIMARY_SIDE))
@@ -2468,7 +2468,7 @@ string STEPS_IMEXPORTER::export_transformer_data() const
             }
         }
 
-        size_t status = 1;
+        unsigned int status = 1;
         if(trans->is_two_winding_transformer())
         {
             if(trans->get_winding_breaker_status(PRIMARY_SIDE)==false or trans->get_winding_breaker_status(SECONDARY_SIDE)==false)
@@ -2519,7 +2519,7 @@ string STEPS_IMEXPORTER::export_transformer_data() const
 
             TRANSFORMER_WINDING_SIDE winding = PRIMARY_SIDE;
 
-            size_t control_mode;
+            unsigned int control_mode;
             switch(trans->get_winding_control_mode(winding))
             {
                 case TRANSFORMER_TAP_NO_CONTROL:
@@ -2610,14 +2610,14 @@ string STEPS_IMEXPORTER::export_transformer_data() const
               <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, TERTIARY_SIDE)<<", "
               <<"1.0, 0.0"<<endl;
 
-            for(size_t j=1; j!=4; ++j)
+            for(unsigned int j=1; j!=4; ++j)
             {
                 TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
                 if(j==1) winding = PRIMARY_SIDE;
                 if(j==2) winding = SECONDARY_SIDE;
                 if(j==3) winding = TERTIARY_SIDE;
 
-                size_t control_mode;
+                unsigned int control_mode;
                 switch(trans->get_winding_control_mode(winding))
                 {
                     case TRANSFORMER_TAP_NO_CONTROL:
@@ -2702,12 +2702,12 @@ string STEPS_IMEXPORTER::export_area_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<AREA*> areas = psdb.get_all_areas();
-    size_t n = areas.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = areas.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         AREA* area = areas[i];
 
-        size_t bus = area->get_area_swing_bus();
+        unsigned int bus = area->get_area_swing_bus();
         if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
         {
             bus = psdb.get_equivalent_bus_of_bus(bus);
@@ -2729,13 +2729,13 @@ string STEPS_IMEXPORTER::export_hvdc_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t n = hvdcs.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         HVDC* hvdc = hvdcs[i];
 
-        size_t rbus = hvdc->get_converter_bus(RECTIFIER);
-        size_t ibus = hvdc->get_converter_bus(INVERTER);
+        unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
+        unsigned int ibus = hvdc->get_converter_bus(INVERTER);
         string ickt = hvdc->get_identifier();
         if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(rbus)!=0 or psdb.get_equivalent_bus_of_bus(ibus)!=0))
         {
@@ -2783,10 +2783,10 @@ string STEPS_IMEXPORTER::export_hvdc_data() const
         osstream<<"\""<<(hvdc->get_meter_end()==RECTIFIER?"R":"I")<<"\", ";
         osstream<<"0.0, 20, 1.0"<<endl;
 
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             HVDC_CONVERTER_SIDE converter=RECTIFIER;
-            size_t bus = rbus;
+            unsigned int bus = rbus;
             if(j==0) converter = RECTIFIER;
             if(j==1){converter = INVERTER; bus = ibus;}
 
@@ -2842,8 +2842,8 @@ string STEPS_IMEXPORTER::export_zone_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<ZONE*> zones = psdb.get_all_zones();
-    size_t n = zones.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = zones.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         ZONE* zone = zones[i];
 
@@ -2866,8 +2866,8 @@ string STEPS_IMEXPORTER::export_owner_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<OWNER*> owners = psdb.get_all_owners();
-    size_t n = owners.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = owners.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         OWNER* owner = owners[i];
 
@@ -2887,11 +2887,11 @@ string STEPS_IMEXPORTER::export_switched_shunt_data() const
     return "";
 }
 
-size_t STEPS_IMEXPORTER::get_starting_index_of_device_powerflow_result(const vector<string>& data, const string& device_type)
+unsigned int STEPS_IMEXPORTER::get_starting_index_of_device_powerflow_result(const vector<string>& data, const string& device_type)
 {
-    size_t n_data = data.size();
-    size_t starting_index = INDEX_NOT_EXIST;
-    for(size_t i=0; i<n_data; ++i)
+    unsigned int n_data = data.size();
+    unsigned int starting_index = INDEX_NOT_EXIST;
+    for(unsigned int i=0; i<n_data; ++i)
     {
         if(data[i]==device_type)
         {
@@ -2902,13 +2902,13 @@ size_t STEPS_IMEXPORTER::get_starting_index_of_device_powerflow_result(const vec
     return starting_index;
 }
 
-size_t STEPS_IMEXPORTER::get_data_column_index_in_powerflow_result(const vector<string>& data, size_t starting_index, const string& data_name)
+unsigned int STEPS_IMEXPORTER::get_data_column_index_in_powerflow_result(const vector<string>& data, unsigned int starting_index, const string& data_name)
 {
     string header = data[starting_index+1];
     vector<string> header_contents = split_string(header, ",");
-    size_t n_header = header_contents.size();
-    size_t index=INDEX_NOT_EXIST;
-    for(size_t i=0; i<n_header; ++i)
+    unsigned int n_header = header_contents.size();
+    unsigned int index=INDEX_NOT_EXIST;
+    for(unsigned int i=0; i<n_header; ++i)
     {
         if(header_contents[i]==data_name)
         {
@@ -2958,7 +2958,7 @@ void STEPS_IMEXPORTER::load_bus_powerflow_result(const vector<string>& data)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Bus");
+    unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% Bus");
     if(starting_index == INDEX_NOT_EXIST)
     {
         osstream<<"Warning! No bus powerflow result is found in the powerflow result file. No bus voltage and angle is updated.";
@@ -2968,9 +2968,9 @@ void STEPS_IMEXPORTER::load_bus_powerflow_result(const vector<string>& data)
     string header = data[starting_index+1];
     vector<string> header_contents = split_string(header, ",");
 
-    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
-    size_t voltage_index = get_data_column_index_in_powerflow_result(data, starting_index, "VOLTAGE/PU");
-    size_t angle_index = get_data_column_index_in_powerflow_result(data, starting_index, "ANGLE/DEG");
+    unsigned int bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    unsigned int voltage_index = get_data_column_index_in_powerflow_result(data, starting_index, "VOLTAGE/PU");
+    unsigned int angle_index = get_data_column_index_in_powerflow_result(data, starting_index, "ANGLE/DEG");
     if(bus_number_index==INDEX_NOT_EXIST or voltage_index==INDEX_NOT_EXIST or angle_index==INDEX_NOT_EXIST)
     {
         osstream<<"Index of bus contents not found. "<<bus_number_index<<", "<<voltage_index<<", "<<angle_index;
@@ -2978,15 +2978,15 @@ void STEPS_IMEXPORTER::load_bus_powerflow_result(const vector<string>& data)
         return;
     }
     // go load powerflow result
-    size_t n_data = data.size();
-    for(size_t i=starting_index+2; i<n_data; ++i)
+    unsigned int n_data = data.size();
+    for(unsigned int i=starting_index+2; i<n_data; ++i)
     {
         string line = data[i];
         if(line.size()==0 or line.at(0)=='%')
             break;
 
         vector<string> contents = split_string(line, ",");
-        size_t bus_number = str2int(contents[bus_number_index]);
+        unsigned int bus_number = str2int(contents[bus_number_index]);
         double voltage = str2double(contents[voltage_index]);
         double angle = str2double(contents[angle_index]);
         BUS* bus = psdb.get_bus(bus_number);
@@ -3004,8 +3004,8 @@ void STEPS_IMEXPORTER::load_generator_powerflow_result(const vector<string>& dat
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t n_data = data.size();
-    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Generator");
+    unsigned int n_data = data.size();
+    unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% Generator");
     if(starting_index == INDEX_NOT_EXIST)
     {
         osstream<<"Warning! No generator powerflow result is found in the powerflow result file. No generator P and Q is updated.";
@@ -3015,10 +3015,10 @@ void STEPS_IMEXPORTER::load_generator_powerflow_result(const vector<string>& dat
     string header = data[starting_index+1];
     vector<string> header_contents = split_string(header, ",");
 
-    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
-    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
-    size_t P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
-    size_t Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    unsigned int bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    unsigned int identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    unsigned int P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    unsigned int Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
     if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
     {
         osstream<<"Index of generator contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
@@ -3026,14 +3026,14 @@ void STEPS_IMEXPORTER::load_generator_powerflow_result(const vector<string>& dat
         return;
     }
     // go load powerflow result
-    for(size_t i=starting_index+2; i<n_data; ++i)
+    for(unsigned int i=starting_index+2; i<n_data; ++i)
     {
         string line = data[i];
         if(line.size()==0 or line.at(0)=='%')
             break;
 
         vector<string> contents = split_string(line, ",");
-        size_t bus_number = str2int(contents[bus_number_index]);
+        unsigned int bus_number = str2int(contents[bus_number_index]);
         string identifier = contents[identifier_index];
         identifier = trim_string(identifier, "\"\'");
         double P = str2double(contents[P_index]);
@@ -3054,8 +3054,8 @@ void STEPS_IMEXPORTER::load_wt_generator_powerflow_result(const vector<string>& 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t n_data = data.size();
-    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% WT generator");
+    unsigned int n_data = data.size();
+    unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% WT generator");
     if(starting_index == INDEX_NOT_EXIST)
     {
         osstream<<"Warning! No WT generator powerflow result is found in the powerflow result file. No WT generator P and Q is updated.";
@@ -3065,10 +3065,10 @@ void STEPS_IMEXPORTER::load_wt_generator_powerflow_result(const vector<string>& 
     string header = data[starting_index+1];
     vector<string> header_contents = split_string(header, ",");
 
-    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
-    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
-    size_t P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
-    size_t Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    unsigned int bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    unsigned int identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    unsigned int P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    unsigned int Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
     if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
     {
         osstream<<"Index of WT generator contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
@@ -3076,14 +3076,14 @@ void STEPS_IMEXPORTER::load_wt_generator_powerflow_result(const vector<string>& 
         return;
     }
     // go load powerflow result
-    for(size_t i=starting_index+2; i<n_data; ++i)
+    for(unsigned int i=starting_index+2; i<n_data; ++i)
     {
         string line = data[i];
         if(line.size()==0 or line.at(0)=='%')
             break;
 
         vector<string> contents = split_string(line, ",");
-        size_t bus_number = str2int(contents[bus_number_index]);
+        unsigned int bus_number = str2int(contents[bus_number_index]);
         string identifier = contents[identifier_index];
         identifier = trim_string(identifier, "\"\'");
         double P = str2double(contents[P_index]);
@@ -3104,8 +3104,8 @@ void STEPS_IMEXPORTER::load_pv_unit_powerflow_result(const vector<string>& data)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t n_data = data.size();
-    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% PV unit");
+    unsigned int n_data = data.size();
+    unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% PV unit");
     if(starting_index == INDEX_NOT_EXIST)
     {
         osstream<<"Warning! No PV unit powerflow result is found in the powerflow result file. No PV unit P and Q is updated.";
@@ -3115,10 +3115,10 @@ void STEPS_IMEXPORTER::load_pv_unit_powerflow_result(const vector<string>& data)
     string header = data[starting_index+1];
     vector<string> header_contents = split_string(header, ",");
 
-    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
-    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
-    size_t P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
-    size_t Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    unsigned int bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    unsigned int identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    unsigned int P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    unsigned int Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
     if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
     {
         osstream<<"Index of PV unit contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
@@ -3126,14 +3126,14 @@ void STEPS_IMEXPORTER::load_pv_unit_powerflow_result(const vector<string>& data)
         return;
     }
     // go load powerflow result
-    for(size_t i=starting_index+2; i<n_data; ++i)
+    for(unsigned int i=starting_index+2; i<n_data; ++i)
     {
         string line = data[i];
         if(line.size()==0 or line.at(0)=='%')
             break;
 
         vector<string> contents = split_string(line, ",");
-        size_t bus_number = str2int(contents[bus_number_index]);
+        unsigned int bus_number = str2int(contents[bus_number_index]);
         string identifier = contents[identifier_index];
         identifier = trim_string(identifier, "\"\'");
         double P = str2double(contents[P_index]);
@@ -3154,8 +3154,8 @@ void STEPS_IMEXPORTER::load_energy_storage_powerflow_result(const vector<string>
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t n_data = data.size();
-    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Energy storage");
+    unsigned int n_data = data.size();
+    unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% Energy storage");
     if(starting_index == INDEX_NOT_EXIST)
     {
         osstream<<"Warning! No energy storage powerflow result is found in the powerflow result file. No energy storage P and Q is updated.";
@@ -3165,10 +3165,10 @@ void STEPS_IMEXPORTER::load_energy_storage_powerflow_result(const vector<string>
     string header = data[starting_index+1];
     vector<string> header_contents = split_string(header, ",");
 
-    size_t bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
-    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
-    size_t P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
-    size_t Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
+    unsigned int bus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "BUS");
+    unsigned int identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    unsigned int P_index = get_data_column_index_in_powerflow_result(data, starting_index, "P/MW");
+    unsigned int Q_index = get_data_column_index_in_powerflow_result(data, starting_index, "Q/MVAR");
     if(bus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or P_index==INDEX_NOT_EXIST or Q_index==INDEX_NOT_EXIST)
     {
         osstream<<"Index of energy storage contents not found. "<<bus_number_index<<", "<<identifier_index<<", "<<P_index<<", "<<Q_index;
@@ -3176,14 +3176,14 @@ void STEPS_IMEXPORTER::load_energy_storage_powerflow_result(const vector<string>
         return;
     }
     // go load powerflow result
-    for(size_t i=starting_index+2; i<n_data; ++i)
+    for(unsigned int i=starting_index+2; i<n_data; ++i)
     {
         string line = data[i];
         if(line.size()==0 or line.at(0)=='%')
             break;
 
         vector<string> contents = split_string(line, ",");
-        size_t bus_number = str2int(contents[bus_number_index]);
+        unsigned int bus_number = str2int(contents[bus_number_index]);
         string identifier = contents[identifier_index];
         identifier = trim_string(identifier, "\"\'");
         double P = str2double(contents[P_index]);
@@ -3204,8 +3204,8 @@ void STEPS_IMEXPORTER::load_transformer_powerflow_result(const vector<string>& d
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t n_data = data.size();
-    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Transformer");
+    unsigned int n_data = data.size();
+    unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% Transformer");
     if(starting_index == INDEX_NOT_EXIST)
     {
         osstream<<"Warning! No transformer powerflow result is found in the powerflow result file. No transformer off-nominal tap is updated.";
@@ -3215,13 +3215,13 @@ void STEPS_IMEXPORTER::load_transformer_powerflow_result(const vector<string>& d
     string header = data[starting_index+1];
     vector<string> header_contents = split_string(header, ",");
 
-    size_t ibus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "IBUS");
-    size_t jbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "JBUS");
-    size_t kbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "KBUS");
-    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
-    size_t itap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KI/PU");
-    size_t jtap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KJ/PU");
-    size_t ktap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KK/PU");
+    unsigned int ibus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "IBUS");
+    unsigned int jbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "JBUS");
+    unsigned int kbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "KBUS");
+    unsigned int identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    unsigned int itap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KI/PU");
+    unsigned int jtap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KJ/PU");
+    unsigned int ktap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KK/PU");
     if(ibus_number_index==INDEX_NOT_EXIST or jbus_number_index==INDEX_NOT_EXIST or kbus_number_index==INDEX_NOT_EXIST or
        identifier_index==INDEX_NOT_EXIST or
        itap_index==INDEX_NOT_EXIST or jtap_index==INDEX_NOT_EXIST or ktap_index==INDEX_NOT_EXIST)
@@ -3232,16 +3232,16 @@ void STEPS_IMEXPORTER::load_transformer_powerflow_result(const vector<string>& d
         return;
     }
     // go load powerflow result
-    for(size_t i=starting_index+2; i<n_data; ++i)
+    for(unsigned int i=starting_index+2; i<n_data; ++i)
     {
         string line = data[i];
         if(line.size()==0 or line.at(0)=='%')
             break;
 
         vector<string> contents = split_string(line, ",");
-        size_t ibus_number = str2int(contents[ibus_number_index]);
-        size_t jbus_number = str2int(contents[jbus_number_index]);
-        size_t kbus_number = str2int(contents[kbus_number_index]);
+        unsigned int ibus_number = str2int(contents[ibus_number_index]);
+        unsigned int jbus_number = str2int(contents[jbus_number_index]);
+        unsigned int kbus_number = str2int(contents[kbus_number_index]);
         string identifier = contents[identifier_index];
         identifier = trim_string(identifier, "\"\'");
         double itap = str2double(contents[itap_index]);
@@ -3265,8 +3265,8 @@ void STEPS_IMEXPORTER::load_hvdc_powerflow_result(const vector<string>& data)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t n_data = data.size();
-    size_t starting_index = get_starting_index_of_device_powerflow_result(data, "% Hvdc");
+    unsigned int n_data = data.size();
+    unsigned int starting_index = get_starting_index_of_device_powerflow_result(data, "% Hvdc");
     if(starting_index == INDEX_NOT_EXIST)
     {
         osstream<<"Warning! No HVDC powerflow result is found in the powerflow result file. No HVDC off-nominal tap and firing angle is updated.";
@@ -3276,13 +3276,13 @@ void STEPS_IMEXPORTER::load_hvdc_powerflow_result(const vector<string>& data)
     string header = data[starting_index+1];
     vector<string> header_contents = split_string(header, ",");
 
-    size_t rbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "IBUS");
-    size_t ibus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "JBUS");
-    size_t identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
-    size_t rtap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KR/PU");
-    size_t itap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KI/PU");
-    size_t alpha_index = get_data_column_index_in_powerflow_result(data, starting_index, "ALPHA/DEG");
-    size_t gamma_index = get_data_column_index_in_powerflow_result(data, starting_index, "GAMMA/DEG");
+    unsigned int rbus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "IBUS");
+    unsigned int ibus_number_index = get_data_column_index_in_powerflow_result(data, starting_index, "JBUS");
+    unsigned int identifier_index = get_data_column_index_in_powerflow_result(data, starting_index, "ID");
+    unsigned int rtap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KR/PU");
+    unsigned int itap_index = get_data_column_index_in_powerflow_result(data, starting_index, "KI/PU");
+    unsigned int alpha_index = get_data_column_index_in_powerflow_result(data, starting_index, "ALPHA/DEG");
+    unsigned int gamma_index = get_data_column_index_in_powerflow_result(data, starting_index, "GAMMA/DEG");
     if(rbus_number_index==INDEX_NOT_EXIST or ibus_number_index==INDEX_NOT_EXIST or identifier_index==INDEX_NOT_EXIST or
        rtap_index==INDEX_NOT_EXIST or itap_index==INDEX_NOT_EXIST or
        alpha_index==INDEX_NOT_EXIST or gamma_index==INDEX_NOT_EXIST)
@@ -3293,15 +3293,15 @@ void STEPS_IMEXPORTER::load_hvdc_powerflow_result(const vector<string>& data)
         return;
     }
     // go load powerflow result
-    for(size_t i=starting_index+2; i<n_data; ++i)
+    for(unsigned int i=starting_index+2; i<n_data; ++i)
     {
         string line = data[i];
         if(line.size()==0 or line.at(0)=='%')
             break;
 
         vector<string> contents = split_string(line, ",");
-        size_t rbus_number = str2int(contents[rbus_number_index]);
-        size_t ibus_number = str2int(contents[ibus_number_index]);
+        unsigned int rbus_number = str2int(contents[rbus_number_index]);
+        unsigned int ibus_number = str2int(contents[ibus_number_index]);
         string identifier = contents[identifier_index];
         identifier = trim_string(identifier, "\"\'");
         double rtap = str2double(contents[rtap_index]);

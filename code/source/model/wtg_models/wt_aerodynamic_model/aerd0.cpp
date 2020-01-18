@@ -185,14 +185,14 @@ bool AERD0::setup_model_with_steps_string_vector(vector<string>& data)
         if(model_name==get_model_name())
         {
             int speed_mode_flag=0;
-            size_t n;
+            unsigned int n;
             double vwind0, gear_eta, rou0_air, min_speed, max_speed;
             double rou_air;
             double c1, c2, c3, c4, c5, c6, c7, c8;
 
-            size_t i=3;
+            unsigned int i=3;
             speed_mode_flag = get_integer_data(data[i],"0"); i++;
-            n = size_t(get_integer_data(data[i],"1")); i++;
+            n = (unsigned int)(get_integer_data(data[i],"1")); i++;
             vwind0 = get_double_data(data[i],"0.0"); i++;
             gear_eta = get_double_data(data[i],"0.0"); i++;
             rou0_air = get_double_data(data[i],"0.0"); i++;
@@ -289,7 +289,7 @@ string AERD0::get_standard_psse_string() const
 {
     ostringstream osstream;
     WT_GENERATOR* gen = get_wt_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -314,7 +314,7 @@ string AERD0::get_standard_psse_string() const
             break;
         }
     }
-    size_t n = get_number_of_pole_pairs();
+    unsigned int n = get_number_of_pole_pairs();
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
@@ -343,7 +343,7 @@ string AERD0::get_standard_psse_string() const
 void AERD0::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("SPEED MODE", i); i++;
     add_model_data_name_and_index_pair("POLE PAIR", i); i++;
     add_model_data_name_and_index_pair("NOMINAL WIND SPEED IN M/S", i); i++;
@@ -509,7 +509,7 @@ void AERD0::set_model_data_with_name(string par_name, double value)
 void AERD0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("BLADE RADIUS IN M", i); i++;
 }
 

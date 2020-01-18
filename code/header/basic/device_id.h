@@ -19,11 +19,11 @@ class DEVICE_ID
         void set_device_identifier(string device_identifier);
 
         string get_device_type() const;
-        size_t get_device_type_code() const;
+        unsigned int get_device_type_code() const;
         TERMINAL get_device_terminal() const;
         string get_device_identifier() const;
-        size_t get_minimum_allowed_terminal_count() const;
-        size_t get_maximum_allowed_terminal_count() const;
+        unsigned int get_minimum_allowed_terminal_count() const;
+        unsigned int get_maximum_allowed_terminal_count() const;
 
         string get_device_name() const;
 
@@ -36,48 +36,48 @@ class DEVICE_ID
         bool operator!=(const DEVICE_ID& device_id) const;
     private:
         void initialize_minimum_maximum_terminal_count();
-        void set_minimum_allowed_terminal_count(size_t n);
-        void set_maximum_allowed_terminal_count(size_t n);
+        void set_minimum_allowed_terminal_count(unsigned int n);
+        void set_maximum_allowed_terminal_count(unsigned int n);
         void set_device_type_and_allowed_terminal_count(string device_type);
         bool is_given_terminal_acceptable(const TERMINAL& terminal);
 
     private:
         string device_type;
-        size_t device_type_code;
-        size_t minimum_terminal_count, maximum_terminal_count; bool allow_identifier;
+        unsigned int device_type_code;
+        unsigned int minimum_terminal_count, maximum_terminal_count; bool allow_identifier;
         TERMINAL terminal;
         string device_identifier;
 };
 
 
-DEVICE_ID get_bus_device_id(size_t bus_number);
-DEVICE_ID get_generator_device_id(size_t bus, const string& identifier);
-DEVICE_ID get_wt_generator_device_id(size_t bus, const string& identifier);
-DEVICE_ID get_pv_unit_device_id(size_t bus, const string& identifier);
-DEVICE_ID get_energy_storage_device_id(size_t bus, const string& identifier);
-DEVICE_ID get_load_device_id(size_t bus, const string& identifier);
-DEVICE_ID get_fixed_shunt_device_id(size_t bus, const string& identifier);
-DEVICE_ID get_line_device_id(size_t ibus, size_t jbus, const string& identifier);
-DEVICE_ID get_hvdc_device_id(size_t ibus, size_t jbus, const string& identifier);
-DEVICE_ID get_transformer_device_id(size_t ibus, size_t jbus, size_t kbus, const string& identifier);
-DEVICE_ID get_equivalent_device_id(size_t bus, const string& identifier);
-DEVICE_ID get_general_device_id(const vector<size_t>& bus, const string& identifier);
+DEVICE_ID get_bus_device_id(unsigned int bus_number);
+DEVICE_ID get_generator_device_id(unsigned int bus, const string& identifier);
+DEVICE_ID get_wt_generator_device_id(unsigned int bus, const string& identifier);
+DEVICE_ID get_pv_unit_device_id(unsigned int bus, const string& identifier);
+DEVICE_ID get_energy_storage_device_id(unsigned int bus, const string& identifier);
+DEVICE_ID get_load_device_id(unsigned int bus, const string& identifier);
+DEVICE_ID get_fixed_shunt_device_id(unsigned int bus, const string& identifier);
+DEVICE_ID get_line_device_id(unsigned int ibus, unsigned int jbus, const string& identifier);
+DEVICE_ID get_hvdc_device_id(unsigned int ibus, unsigned int jbus, const string& identifier);
+DEVICE_ID get_transformer_device_id(unsigned int ibus, unsigned int jbus, unsigned int kbus, const string& identifier);
+DEVICE_ID get_equivalent_device_id(unsigned int bus, const string& identifier);
+DEVICE_ID get_general_device_id(const vector<unsigned int>& bus, const string& identifier);
 
 namespace std
 {
     template<> class hash<DEVICE_ID>
     {
         public:
-        size_t operator()(const DEVICE_ID& did) const
+        unsigned int operator()(const DEVICE_ID& did) const
         {
             TERMINAL terminal  = did.get_device_terminal();
-            vector<size_t> buses = terminal.get_buses();
-            size_t n = buses.size();
+            vector<unsigned int> buses = terminal.get_buses();
+            unsigned int n = buses.size();
 
-            size_t seed = 0;
-            for(size_t i=0; i!=n; ++i)
+            unsigned int seed = 0;
+            for(unsigned int i=0; i!=n; ++i)
             {
-                size_t bus = buses[i];
+                unsigned int bus = buses[i];
                 if(bus!=0)
                 {
                     size_t hash_value = std::hash<std::size_t>{}(bus);

@@ -11,7 +11,7 @@ MODEL::MODEL()
 {
     device_pointer = NULL;
 
-    for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+    for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
         allowed_device_types[i][0]='\0';
 
     model_data_table = nullptr;
@@ -76,7 +76,7 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
     {
         if(not has_allowed_device_type(device_type))
         {
-            for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+            for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
             {
                 if(allowed_device_types[i][0]=='\0')
                 {
@@ -97,7 +97,7 @@ void MODEL::set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRU
 vector<string> MODEL::get_allowed_device_types() const
 {
     vector<string> temp;
-    for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+    for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
     {
         if(allowed_device_types[i][0]!='\0')
             temp.push_back(allowed_device_types[i]);
@@ -108,7 +108,7 @@ vector<string> MODEL::get_allowed_device_types() const
 bool MODEL::has_allowed_device_type(string device_type) const
 {
     device_type = string2upper(device_type);
-    for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+    for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
     {
         if(allowed_device_types[i][0]!='\0')
         {
@@ -119,12 +119,12 @@ bool MODEL::has_allowed_device_type(string device_type) const
     return false;
 }
 
-void MODEL::set_model_float_parameter_count(size_t n)
+void MODEL::set_model_float_parameter_count(unsigned int n)
 {
     n_parameters = n;
 }
 
-size_t MODEL::get_model_float_parameter_count() const
+unsigned int MODEL::get_model_float_parameter_count() const
 {
     return n_parameters;
 }
@@ -135,13 +135,13 @@ void MODEL::clear_model_data_table()
         model_data_table->clear();
 }
 
-void MODEL::add_model_data_name_and_index_pair(string var_name, size_t var_index)
+void MODEL::add_model_data_name_and_index_pair(string var_name, unsigned int var_index)
 {
     if(model_data_table!=nullptr)
         model_data_table->add_variable_name_index_pair(var_name, var_index);
 }
 
-size_t MODEL::get_model_data_index(string var_name) const
+unsigned int MODEL::get_model_data_index(string var_name) const
 {
     if(model_data_table!=nullptr)
         return (*model_data_table)[var_name];
@@ -149,7 +149,7 @@ size_t MODEL::get_model_data_index(string var_name) const
         return INDEX_NOT_EXIST;
 }
 
-string MODEL::get_model_data_name(size_t var_index) const
+string MODEL::get_model_data_name(unsigned int var_index) const
 {
     if(model_data_table!=nullptr)
         return (*model_data_table)[var_index];
@@ -165,7 +165,7 @@ bool MODEL::is_model_data_exist(string var_name) const
         return false;
 }
 
-bool MODEL::is_model_data_exist(size_t var_index) const
+bool MODEL::is_model_data_exist(unsigned int var_index) const
 {
     if(model_data_table!=nullptr)
         return (*model_data_table)[var_index]!="";
@@ -173,7 +173,7 @@ bool MODEL::is_model_data_exist(size_t var_index) const
         return false;
 }
 
-void MODEL::set_model_data_with_index(size_t index, double value)
+void MODEL::set_model_data_with_index(unsigned int index, double value)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     string var_name = get_model_data_name(index);
@@ -183,7 +183,7 @@ void MODEL::set_model_data_with_index(size_t index, double value)
         toolkit.show_set_get_model_data_with_index_error(get_device_name(), get_model_name(), __FUNCTION__, index);
 }
 
-double MODEL::get_model_data_with_index(size_t index)
+double MODEL::get_model_data_with_index(unsigned int index)
 {
     string var_name = get_model_data_name(index);
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -202,13 +202,13 @@ void MODEL::clear_model_internal_variable_table()
         model_internal_variable_table->clear();
 }
 
-void MODEL::add_model_inernal_variable_name_and_index_pair(string var_name, size_t var_index)
+void MODEL::add_model_inernal_variable_name_and_index_pair(string var_name, unsigned int var_index)
 {
     if(model_internal_variable_table!=nullptr)
         model_internal_variable_table->add_variable_name_index_pair(var_name, var_index);
 }
 
-size_t MODEL::get_model_inernal_variable_index(string var_name) const
+unsigned int MODEL::get_model_inernal_variable_index(string var_name) const
 {
     if(model_internal_variable_table!=nullptr)
         return (*model_internal_variable_table)[var_name];
@@ -216,7 +216,7 @@ size_t MODEL::get_model_inernal_variable_index(string var_name) const
         return INDEX_NOT_EXIST;
 }
 
-string MODEL::get_model_inernal_variable_name(size_t var_index) const
+string MODEL::get_model_inernal_variable_name(unsigned int var_index) const
 {
     if(model_internal_variable_table!=nullptr)
         return (*model_internal_variable_table)[var_index];
@@ -232,7 +232,7 @@ bool MODEL::is_model_inernal_variable_exist(string var_name) const
         return false;
 }
 
-bool MODEL::is_model_inernal_variable_exist(size_t var_index) const
+bool MODEL::is_model_inernal_variable_exist(unsigned int var_index) const
 {
     if(model_internal_variable_table!=nullptr)
         return (*model_internal_variable_table)[var_index]!="";
@@ -240,7 +240,7 @@ bool MODEL::is_model_inernal_variable_exist(size_t var_index) const
         return false;
 }
 
-double MODEL::get_model_internal_variable_with_index(size_t index)
+double MODEL::get_model_internal_variable_with_index(unsigned int index)
 {
     string var_name = get_model_inernal_variable_name(index);
     if(var_name!="") return get_model_internal_variable_with_name(var_name);
@@ -262,7 +262,7 @@ void MODEL::set_device_id(DEVICE_ID did)
     if(not has_allowed_device_type(did.get_device_type()))
     {
         osstream<<"Warning. Invalid device type ("<<did.get_device_type()<<") is given to build model for which the following types of devices is expected:\n";
-        for(size_t i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
+        for(unsigned int i=0; i<STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT; ++i)
         {
             if(allowed_device_types[i][0]!='\0')
                 osstream<<allowed_device_types[i]<<"\n";

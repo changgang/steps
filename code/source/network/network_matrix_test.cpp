@@ -123,12 +123,12 @@ void NETWORK_MATRIX_TEST::test_optimize_network_ordering()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     network_matrix.build_dynamic_network_Y_matrix();
 
-    size_t nbus = psdb.get_in_service_bus_count();
+    unsigned int nbus = psdb.get_in_service_bus_count();
     osstream<<"Initial physical bus : internal bus pair:";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    size_t physical_bus;
-    for(size_t i=0; i!=nbus; ++i)
+    unsigned int physical_bus;
+    for(unsigned int i=0; i!=nbus; ++i)
     {
         physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
         osstream<<setw(8)<<physical_bus<<" : "<<setw(8)<<i;
@@ -140,7 +140,7 @@ void NETWORK_MATRIX_TEST::test_optimize_network_ordering()
     osstream<<"Optimized physical bus : internal bus pair:";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
 
-    for(size_t i=0; i!=nbus; ++i)
+    for(unsigned int i=0; i!=nbus; ++i)
     {
         physical_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
         osstream<<setw(8)<<physical_bus<<" : "<<setw(8)<<i;
@@ -210,10 +210,10 @@ void NETWORK_MATRIX_TEST::test_get_islands()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    vector< vector<size_t> > islands_internal = network_matrix.get_islands_with_internal_bus_number();
-    vector< vector<size_t> > islands_physical = network_matrix.get_islands_with_physical_bus_number();
+    vector< vector<unsigned int> > islands_internal = network_matrix.get_islands_with_internal_bus_number();
+    vector< vector<unsigned int> > islands_physical = network_matrix.get_islands_with_physical_bus_number();
 
-    size_t n = islands_internal.size();
+    unsigned int n = islands_internal.size();
     TEST_ASSERT(n==1);
     n = islands_physical.size();
     TEST_ASSERT(n==1);
@@ -281,24 +281,24 @@ void NETWORK_MATRIX_TEST::test_get_islands()
     n = islands_physical.size();
     TEST_ASSERT(n==3);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         TEST_ASSERT(islands_internal[i].size()==islands_physical[i].size());
-        size_t m = islands_internal[i].size();
-        for(size_t j=0; j!=m; ++j)
+        unsigned int m = islands_internal[i].size();
+        for(unsigned int j=0; j!=m; ++j)
             TEST_ASSERT(network_matrix.get_physical_bus_number_of_internal_bus(islands_internal[i][j])==islands_physical[i][j]);
     }
 
     // 1,4
     // 2, 7, 5
     // 3, 6, 8, 9
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         bool island_of_bus_1 = false;
         bool island_of_bus_2 = false;
         bool island_of_bus_3 = false;
 
-        for(size_t j=0; j!= islands_physical[i].size(); ++j)
+        for(unsigned int j=0; j!= islands_physical[i].size(); ++j)
         {
             if(islands_physical[i][j]==1)
             {
@@ -321,21 +321,21 @@ void NETWORK_MATRIX_TEST::test_get_islands()
         if(island_of_bus_1)
         {
             TEST_ASSERT(islands_physical[i].size()==2);
-            for(size_t j=0; j!= islands_physical[i].size(); ++j)
+            for(unsigned int j=0; j!= islands_physical[i].size(); ++j)
                 TEST_ASSERT(islands_physical[i][j]==1 or islands_physical[i][j]==4);
             continue;
         }
         if(island_of_bus_2)
         {
             TEST_ASSERT(islands_physical[i].size()==3);
-            for(size_t j=0; j!= islands_physical[i].size(); ++j)
+            for(unsigned int j=0; j!= islands_physical[i].size(); ++j)
                 TEST_ASSERT(islands_physical[i][j]==2 or islands_physical[i][j]==5 or islands_physical[i][j]==7);
             continue;
         }
         if(island_of_bus_3)
         {
             TEST_ASSERT(islands_physical[i].size()==4);
-            for(size_t j=0; j!= islands_physical[i].size(); ++j)
+            for(unsigned int j=0; j!= islands_physical[i].size(); ++j)
                 TEST_ASSERT(islands_physical[i][j]==3 or islands_physical[i][j]==6 or
                             islands_physical[i][j]==8 or islands_physical[i][j]==9);
             continue;

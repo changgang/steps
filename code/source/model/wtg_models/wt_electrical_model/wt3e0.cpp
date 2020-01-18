@@ -163,7 +163,7 @@ void WT3E0::set_Vmin_in_pu(double v)
     Q_error_integrator.set_lower_limit(v);
 }
 
-void WT3E0::set_voltage_flag(size_t flag)
+void WT3E0::set_voltage_flag(unsigned int flag)
 {
     if(flag<3)
         Voltage_Flag = flag;
@@ -341,7 +341,7 @@ double WT3E0::get_Vmin_in_pu() const
     return Q_error_integrator.get_lower_limit();
 }
 
-size_t WT3E0::get_voltage_flag() const
+unsigned int WT3E0::get_voltage_flag() const
 {
     return Voltage_Flag;
 }
@@ -474,17 +474,17 @@ bool WT3E0::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t bus, voltage_flag;
+            unsigned int bus, voltage_flag;
             int var_control_flag;
             double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
                    ipmax, trv, rpmax, rpmin, tspeed, kqi, vmax, vmin,
                    kqv, eqmax, eqmin, tv, tp, fn,
                    kvi, tvi, kdroop, tdroop, fupper, flower, kint;
 
-            size_t i=3;
+            unsigned int i=3;
             bus = get_integer_data(data[i],"0"); i++;
             var_control_flag = get_integer_data(data[i],"0"); i++;
-            voltage_flag = size_t(get_integer_data(data[i],"0")); i++;
+            voltage_flag = (unsigned int)(get_integer_data(data[i],"0")); i++;
             xc = get_double_data(data[i],"0.0"); i++;
             trv = get_double_data(data[i],"0.0"); i++;
             fn = get_double_data(data[i],"0.0"); i++;
@@ -720,7 +720,7 @@ void WT3E0::initialize()
                         double eqcmd = iqcmd*(-xsource);
 
                         double verror = 0.0;
-                        size_t vflag = get_voltage_flag();
+                        unsigned int vflag = get_voltage_flag();
                         if(vflag == 0)
                         {
                             V_error_integrator.set_output(0.0);
@@ -1011,7 +1011,7 @@ void WT3E0::run(DYNAMIC_MODE mode)
             Q_error_integrator.run(mode);
             //osstream<<"Q_error_integrator input = "<<input<<", output = "<<Q_error_integrator.get_output()<<endl;
 
-            size_t vflag = get_voltage_flag();
+            unsigned int vflag = get_voltage_flag();
             if(vflag == 1 or vflag == 2)
             {
                 if(vflag == 1)
@@ -1100,7 +1100,7 @@ double WT3E0::get_reactive_power_command_in_pu_based_on_mbase()
 
 double WT3E0::get_reactive_voltage_command_in_pu() const
 {
-    size_t voltage_flag = get_voltage_flag();
+    unsigned int voltage_flag = get_voltage_flag();
     if(voltage_flag==0)
     {
         double vterm = get_terminal_bus_voltage_in_pu();
@@ -1134,15 +1134,15 @@ string WT3E0::get_standard_psse_string() const
 {
     ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
-    size_t bus = source->get_source_bus();
+    unsigned int bus = source->get_source_bus();
     string identifier = "'"+source->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
 
-    size_t bus_reg = get_bus_to_regulate();
+    unsigned int bus_reg = get_bus_to_regulate();
     PE_VAR_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0: (mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
-    size_t voltage_flag = get_voltage_flag();
+    unsigned int voltage_flag = get_voltage_flag();
     double xc = get_Xcomp_in_pu();
     double trv = get_TRV_in_s();
     double fn = get_Fn();
@@ -1225,7 +1225,7 @@ string WT3E0::get_standard_psse_string() const
 void WT3E0::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("BUS TO REGULATE", i); i++;
     add_model_data_name_and_index_pair("VAR CONTROL FLAG", i); i++;
     add_model_data_name_and_index_pair("VOLTAGE FLAG", i); i++;
@@ -1312,7 +1312,7 @@ void WT3E0::set_model_data_with_name(string par_name, double value)
 {
     par_name = string2upper(par_name);
 
-    if(par_name == "BUS TO REGULATE") return set_bus_to_regulate(size_t(value));
+    if(par_name == "BUS TO REGULATE") return set_bus_to_regulate((unsigned int)(value));
 
     if(par_name == "VAR CONTROL FLAG")
     {
@@ -1338,7 +1338,7 @@ void WT3E0::set_model_data_with_name(string par_name, double value)
 
     if(par_name == "VOLTAGE FLAG")
     {
-        size_t flag = size_t(value);
+        unsigned int flag = (unsigned int)(value);
         return set_voltage_flag(flag);
     }
     if(par_name == "XCOMP IN PU")           return set_Xcomp_in_pu(value);
@@ -1383,7 +1383,7 @@ void WT3E0::set_model_data_with_name(string par_name, double value)
 void WT3E0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@SPEED REFERENCE SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@TORQUE REGULATOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@VIRTUAL INERTIA CONTROL", i); i++;

@@ -29,7 +29,7 @@ string HVDC::get_converter_side_name(HVDC_CONVERTER_SIDE converter) const
     }
 }
 
-void HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus)
+void HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned int bus)
 {
     ostringstream osstream;
     string converter_name = get_converter_side_name(converter);
@@ -294,7 +294,7 @@ void HVDC::set_converter_operation_mode(HVDC_CONVERTER_SIDE converter, const HVD
     }
 }
 
-void HVDC::set_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter, const size_t nbridge)
+void HVDC::set_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter, const unsigned int nbridge)
 {
     if(nbridge > 0)
         this->bridge_number[converter] = nbridge;
@@ -426,7 +426,7 @@ void HVDC::set_converter_transformer_min_tap_in_pu(HVDC_CONVERTER_SIDE converter
         this->converter_transformer_min_tap_in_pu[converter] = 1.0;
 }
 
-void HVDC::set_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter, const size_t ntap)
+void HVDC::set_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter, const unsigned int ntap)
 {
     if(ntap>1)
         this->converter_transformer_number_of_taps[converter] = ntap;
@@ -434,7 +434,7 @@ void HVDC::set_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converte
         this->converter_transformer_number_of_taps[converter] = 1;
 }
 
-size_t HVDC::get_converter_bus(HVDC_CONVERTER_SIDE converter) const
+unsigned int HVDC::get_converter_bus(HVDC_CONVERTER_SIDE converter) const
 {
     return converter_bus[converter];
 }
@@ -545,7 +545,7 @@ HVDC_OPERATION_MODE HVDC::get_converter_operation_mode(HVDC_CONVERTER_SIDE conve
     return operation_mode[converter];
 }
 
-size_t HVDC::get_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter) const
+unsigned int HVDC::get_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter) const
 {
     return bridge_number[converter];
 }
@@ -604,7 +604,7 @@ double HVDC::get_converter_transformer_min_tap_in_pu(HVDC_CONVERTER_SIDE convert
     return converter_transformer_min_tap_in_pu[converter];
 }
 
-size_t HVDC::get_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter) const
+unsigned int HVDC::get_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter) const
 {
     return converter_transformer_number_of_taps[converter];
 }
@@ -814,7 +814,7 @@ double HVDC::get_inverter_nominal_dc_voltage_command_in_kV() const
 
 void HVDC::reverse_converters()
 {
-    size_t bus = converter_bus[0];
+    unsigned int bus = converter_bus[0];
     converter_bus[0] = converter_bus[1];
     converter_bus[1] = bus;
 
@@ -822,7 +822,7 @@ void HVDC::reverse_converters()
     converter_busptr[0] = converter_busptr[1];
     converter_busptr[1] = busptr;
 
-    size_t number = bridge_number[0];
+    unsigned int number = bridge_number[0];
     bridge_number[0] = bridge_number[1];
     bridge_number[1] = number;
 
@@ -863,7 +863,7 @@ void HVDC::reverse_converters()
     converter_transformer_min_tap_in_pu[0] = converter_transformer_min_tap_in_pu[1];
     converter_transformer_min_tap_in_pu[1] = tap;
 
-    size_t n = converter_transformer_number_of_taps[0];
+    unsigned int n = converter_transformer_number_of_taps[0];
     converter_transformer_number_of_taps[0] = converter_transformer_number_of_taps[1];
     converter_transformer_number_of_taps[1] = n;
 
@@ -951,13 +951,13 @@ void HVDC::clear()
     auxiliary_signal_model = NULL;
 }
 
-bool HVDC::is_connected_to_bus(size_t bus) const
+bool HVDC::is_connected_to_bus(unsigned int bus) const
 {
     if(get_converter_bus(RECTIFIER)==bus || get_converter_bus(INVERTER)==bus) return true;
     else                                                                      return false;
 }
 
-bool HVDC::is_in_area(size_t area) const
+bool HVDC::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -976,7 +976,7 @@ bool HVDC::is_in_area(size_t area) const
         return false;
 }
 
-bool HVDC::is_in_zone(size_t zone) const
+bool HVDC::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -1496,7 +1496,7 @@ double HVDC::get_converter_dc_current_in_kA(HVDC_CONVERTER_SIDE converter) const
 
 double HVDC::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE converter) const
 {
-    size_t N = get_converter_number_of_bridge(converter);
+    unsigned int N = get_converter_number_of_bridge(converter);
     double Idc = get_line_dc_current_in_kA();
     double turnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
     double tap = get_converter_transformer_tap_in_pu(converter);
@@ -1519,7 +1519,7 @@ double HVDC::get_converter_ac_active_power_in_MW(HVDC_CONVERTER_SIDE converter) 
     //double Iac = get_converter_ac_current_in_kA(converter);
     double Idc = get_converter_dc_current_in_kA(converter);
 
-    size_t N = get_converter_number_of_bridge(converter);
+    unsigned int N = get_converter_number_of_bridge(converter);
     double R = get_converter_transformer_impedance_in_ohm(converter).real();
     //double loss = SQRT3*Iac*Iac*R/N;
     double loss = 2.0*Idc*Idc*R*N;
@@ -1683,7 +1683,7 @@ bool HVDC::solve_converter_transformer_tap_and_desired_firing_angle(HVDC_CONVERT
             minAngleReached = true;
             double Tapmax = get_converter_transformer_min_tap_in_pu(converter);
             double Tapmin = get_converter_transformer_min_tap_in_pu(converter);
-            size_t nTap = get_converter_transformer_number_of_taps(converter);
+            unsigned int nTap = get_converter_transformer_number_of_taps(converter);
             if(nTap==1 or fabs(Tapmax-Tapmin)<FLOAT_EPSILON) // tap not changeable
                 break;
             if(fabs(Tap-Tapmin)<FLOAT_EPSILON) //reach the minimum
@@ -1718,12 +1718,12 @@ void HVDC::solve_best_converter_transformer_tap_with_min_angle(HVDC_CONVERTER_SI
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t N = get_converter_number_of_bridge(converter);
+    unsigned int N = get_converter_number_of_bridge(converter);
 
     double TurnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
     double maxTap = get_converter_transformer_max_tap_in_pu(converter);
     double minTap = get_converter_transformer_min_tap_in_pu(converter);
-    size_t nTap = get_converter_transformer_number_of_taps(converter);
+    unsigned int nTap = get_converter_transformer_number_of_taps(converter);
 
     if(fabs(maxTap-minTap)<FLOAT_EPSILON or nTap == 1)
     {
@@ -1851,7 +1851,7 @@ void HVDC::solve_as_rectifier_regulating_power_and_inverter_regulating_gamma()
     double alpha_min = get_converter_min_alpha_or_gamma_in_deg(RECTIFIER); alpha_min = deg2rad(alpha_min);
     double gamma_min = get_converter_min_alpha_or_gamma_in_deg(INVERTER);  gamma_min = deg2rad(gamma_min);
 
-    size_t NI = get_converter_number_of_bridge(INVERTER);
+    unsigned int NI = get_converter_number_of_bridge(INVERTER);
 
 
     double VdcR, VdcI, Idc;
@@ -2037,8 +2037,8 @@ void HVDC::solve_with_solved_tap_and_firing_angle()
     complex<double> ZR = get_converter_transformer_impedance_in_ohm(RECTIFIER);
     complex<double> ZI = get_converter_transformer_impedance_in_ohm(INVERTER);
 
-    size_t NR = get_converter_number_of_bridge(RECTIFIER);
-    size_t NI = get_converter_number_of_bridge(INVERTER);
+    unsigned int NR = get_converter_number_of_bridge(RECTIFIER);
+    unsigned int NI = get_converter_number_of_bridge(INVERTER);
 
     double VbusR = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(RECTIFIER));
     double VbusI = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(INVERTER));
@@ -2086,7 +2086,7 @@ double HVDC::solve_desired_converter_cosAngle_with_desired_dc_voltage_current_an
     double TurnRatio = get_converter_transformer_grid_side_base_voltage_in_kV(converter)/get_converter_transformer_converter_side_base_voltage_in_kV(converter);
     complex<double> Z = get_converter_transformer_impedance_in_ohm(converter);
 
-    size_t N = get_converter_number_of_bridge(converter);
+    unsigned int N = get_converter_number_of_bridge(converter);
 
     double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/(TurnRatio*Tap); // actual EacR
@@ -2112,7 +2112,7 @@ double HVDC::solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_ta
     double angle_min = get_converter_min_alpha_or_gamma_in_deg(converter);
     angle_min = deg2rad(angle_min);
 
-    size_t N = get_converter_number_of_bridge(converter);
+    unsigned int N = get_converter_number_of_bridge(converter);
 
     double Vbus = psdb.get_bus_positive_sequence_voltage_in_kV(get_converter_bus(converter));
     double Eac = Vbus/(TurnRatio*Tap);

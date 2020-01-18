@@ -6,20 +6,11 @@
 using namespace std;
 URCSCT::URCSCT()
 {
-    gas_fuel_control = nullptr;
-    gas_combustor = nullptr;
-    gas_turbine_exhaust = nullptr;
     clear();
 }
 
 URCSCT::~URCSCT()
 {
-    if(gas_fuel_control!=nullptr)
-        delete gas_fuel_control;
-    if(gas_combustor!=nullptr)
-        delete gas_combustor;
-    if(gas_turbine_exhaust!=nullptr)
-        delete gas_turbine_exhaust;
 }
 void URCSCT::clear()
 {
@@ -156,10 +147,6 @@ void URCSCT::copy_from_const_model(const URCSCT& model)
 
 URCSCT::URCSCT(const URCSCT&model) : TURBINE_GOVERNOR_MODEL()
 {
-    gas_fuel_control = nullptr;
-    gas_combustor = nullptr;
-    gas_turbine_exhaust = nullptr;
-
     copy_from_const_model(model);
 }
 
@@ -194,7 +181,7 @@ void URCSCT::set_gas_Y_in_s(double T)
     gas_governor_Y = T;
 }
 
-void URCSCT::set_gas_Z(size_t Z)
+void URCSCT::set_gas_Z(unsigned int Z)
 {
     gas_governor_Z = Z;
 }
@@ -486,7 +473,7 @@ double URCSCT::get_gas_Y_in_s() const
     return gas_governor_Y;
 }
 
-size_t URCSCT::get_gas_Z() const
+unsigned int URCSCT::get_gas_Z() const
 {
     return gas_governor_Z;
 }
@@ -769,9 +756,7 @@ bool URCSCT::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            double k, t1, t2, t3, uo, uc, pmax, pmin, t4, k1, k2, t5, k3, k4, t6, k5, k6, t7, k7, k8;
-
-            size_t i=3;
+            unsigned int i=3;
             set_gas_W(get_double_data(data[i],"0.0")); i++;
             set_gas_X_in_s(get_double_data(data[i],"0.0")); i++;
             set_gas_Y_in_s(get_double_data(data[i],"0.0")); i++;
@@ -879,8 +864,8 @@ void URCSCT::setup_block_toolkit_and_parameters()
     gas_governor_iso.set_upper_limit(get_gas_max_in_pu());
     gas_governor_iso.set_lower_limit(get_gas_min_in_pu());
 
-    gas_fuel_control->set_toolkit(toolkit);
-    gas_fuel_control->set_buffer_size(round(get_gas_T_in_s()/delt));
+    gas_fuel_control.set_toolkit(toolkit);
+    gas_fuel_control.set_buffer_size(round(get_gas_T_in_s()/delt));
 
     gas_valve_positioner.set_toolkit(toolkit);
     gas_valve_positioner.set_K(get_gas_a()/get_gas_c());
@@ -890,11 +875,11 @@ void URCSCT::setup_block_toolkit_and_parameters()
     gas_fuel_system.set_K(1.0);
     gas_fuel_system.set_T_in_s(get_gas_Tf_in_s());
 
-    gas_combustor->set_toolkit(toolkit);
-    gas_combustor->set_buffer_size(round(get_gas_ECR_in_s()/delt));
+    gas_combustor.set_toolkit(toolkit);
+    gas_combustor.set_buffer_size(round(get_gas_ECR_in_s()/delt));
 
-    gas_turbine_exhaust->set_toolkit(toolkit);
-    gas_turbine_exhaust->set_buffer_size(round(get_gas_ETD_in_s()/delt));
+    gas_turbine_exhaust.set_toolkit(toolkit);
+    gas_turbine_exhaust.set_buffer_size(round(get_gas_ETD_in_s()/delt));
 
     gas_radiation_shield.set_toolkit(toolkit);
     gas_radiation_shield.set_K(get_gas_K5());
@@ -927,10 +912,6 @@ void URCSCT::initialize()
     ostringstream osstream;
     if(not is_model_initialized())
     {
-        gas_fuel_control = new CONTINUOUS_BUFFER;
-        gas_combustor = new CONTINUOUS_BUFFER;
-        gas_turbine_exhaust = new CONTINUOUS_BUFFER;
-
         GENERATOR* generator = get_generator_pointer();
         if(generator!=NULL)
         {
@@ -997,9 +978,9 @@ void URCSCT::initialize()
                 gas_turbine_dynamic.set_output(wf2);
                 gas_turbine_dynamic.initialize();
 
-                gas_combustor->initialize_buffer(time, wf2);
+                gas_combustor.initialize_buffer(time, wf2);
 
-                gas_turbine_exhaust->initialize_buffer(time, wf2);
+                gas_turbine_exhaust.initialize_buffer(time, wf2);
 
                 double wf1 = wf2;
 
@@ -1021,7 +1002,7 @@ void URCSCT::initialize()
                 gas_valve_positioner.initialize();
 
                 double gfc = gas_valve_positioner.get_input()+get_gas_Kf()*wf2-get_gas_K6();
-                gas_fuel_control->initialize_buffer(time, gfc);
+                gas_fuel_control.initialize_buffer(time, gfc);
 
                 double output = gfc/get_gas_K3();
                 if(output>get_gas_max_in_pu())
@@ -1127,9 +1108,9 @@ void URCSCT::run(DYNAMIC_MODE mode)
 
     input = output*(1.0+speed)*get_gas_K3();
 
-    gas_fuel_control->append_data(time, input);
+    gas_fuel_control.append_data(time, input);
 
-    output = gas_fuel_control->get_buffer_value_at_head();
+    output = gas_fuel_control.get_buffer_value_at_head();
 
     input = output + get_gas_K6() - get_gas_Kf()*gas_fuel_system.get_output();
 
@@ -1139,13 +1120,13 @@ void URCSCT::run(DYNAMIC_MODE mode)
     gas_fuel_system.set_input(gas_valve_positioner.get_output());
     gas_fuel_system.run(mode);
 
-    gas_combustor->append_data(time, gas_fuel_system.get_output());
+    gas_combustor.append_data(time, gas_fuel_system.get_output());
 
-    double wf = gas_combustor->get_buffer_value_at_head();
+    double wf = gas_combustor.get_buffer_value_at_head();
 
-    gas_turbine_exhaust->append_data(time, wf);
+    gas_turbine_exhaust.append_data(time, wf);
 
-    double wf1 = gas_turbine_exhaust->get_buffer_time_at_head();
+    double wf1 = gas_turbine_exhaust.get_buffer_time_at_head();
     double f1 = get_gas_TR_in_deg()-get_gas_af1()*(1.0-wf1)-get_gas_bf1()*speed;
 
     gas_radiation_shield.set_input(f1);
@@ -1272,7 +1253,7 @@ string URCSCT::get_standard_psse_string() const
     double K8 = get_K8();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -1351,7 +1332,7 @@ string URCSCT::get_standard_psse_string() const
 void URCSCT::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("PMAX", i); i++;
     add_model_data_name_and_index_pair("PMIN", i); i++;
 }
@@ -1379,7 +1360,7 @@ void URCSCT::set_model_data_with_name(string par_name, double value)
 void URCSCT::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@DROOP", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SERVO MOTOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 1", i); i++;

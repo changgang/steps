@@ -47,7 +47,7 @@ void PUFLS_TEST::setup()
     model.set_additional_stage_shed_scale_in_pu(0.1);
 
     model.set_discrete_stage_time_delay_in_s(0.1);
-    size_t stage = 0;
+    unsigned int stage = 0;
     model.set_discrete_stage_shed_scale_in_pu(stage, 0.05); ++stage;
     model.set_discrete_stage_shed_scale_in_pu(stage, 0.05); ++stage;
     model.set_discrete_stage_shed_scale_in_pu(stage, 0.05); ++stage;
@@ -122,7 +122,7 @@ void PUFLS_TEST::test_continuous_load_relay_scheme_with_realtime_frequency_addit
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
         model->set_discrete_stage_shed_scale_in_pu(stage, 0.);
 
     string outputfile = "test_log/frequency_ramp_response_of_"+model->get_model_name()+"_model_continuous_realtime_frequency.txt";
@@ -147,7 +147,7 @@ void PUFLS_TEST::test_continuous_load_relay_scheme_with_minimum_frequency_additi
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
         model->set_discrete_stage_shed_scale_in_pu(stage, 0.);
 
     string outputfile = "test_log/frequency_ramp_response_of_"+model->get_model_name()+"_model_continuous_minimum_frequency.txt";
@@ -172,7 +172,7 @@ void PUFLS_TEST::test_discrete_load_relay_scheme_with_realtime_frequency_additio
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
-    size_t stage = 0;
+    unsigned int stage = 0;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.02); ++stage;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.03); ++stage;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.04); ++stage;
@@ -204,7 +204,7 @@ void PUFLS_TEST::test_discrete_load_relay_scheme_with_minimum_frequency_addition
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
-    size_t stage = 0;
+    unsigned int stage = 0;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.02); ++stage;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.03); ++stage;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.04); ++stage;
@@ -236,7 +236,7 @@ void PUFLS_TEST::test_composite_load_relay_scheme_with_realtime_frequency_additi
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
-    size_t stage = 0;
+    unsigned int stage = 0;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.02); ++stage;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.03); ++stage;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.04); ++stage;
@@ -268,7 +268,7 @@ void PUFLS_TEST::test_composite_load_relay_scheme_with_minimum_frequency_additio
 
     model->set_discrete_stage_time_delay_in_s(0.1);
 
-    size_t stage = 0;
+    unsigned int stage = 0;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.02); ++stage;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.03); ++stage;
     model->set_discrete_stage_shed_scale_in_pu(stage, 0.04); ++stage;

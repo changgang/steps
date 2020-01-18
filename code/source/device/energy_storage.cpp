@@ -19,7 +19,7 @@ ENERGY_STORAGE::~ENERGY_STORAGE()
     ;
 }
 
-void ENERGY_STORAGE::set_energy_storage_bus(size_t bus)
+void ENERGY_STORAGE::set_energy_storage_bus(unsigned int bus)
 {
     set_source_bus(bus);
 }
@@ -29,7 +29,7 @@ void ENERGY_STORAGE::set_energy_storage_impedance_in_pu(const complex<double>& z
     set_source_impedance_in_pu(z_pu);
 }
 
-size_t ENERGY_STORAGE::get_energy_storage_bus() const
+unsigned int ENERGY_STORAGE::get_energy_storage_bus() const
 {
     return get_source_bus();
 }

@@ -93,7 +93,7 @@ bool GENROU::setup_model_with_steps_string_vector(vector<string>& data)
             double H, D;
             double s1, s1p2;
 
-            size_t i=3;
+            unsigned int i=3;
             td0p = get_double_data(data[i],"0.0"); i++;
             td0pp = get_double_data(data[i],"0.0"); i++;
             tq0p = get_double_data(data[i],"0.0"); i++;
@@ -155,7 +155,6 @@ bool GENROU::setup_model_with_bpa_string(string data)
 void GENROU::initialize()
 {
     ostringstream osstream;
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     setup_block_toolkit_and_parameters();
 
     update_source_impedance();
@@ -574,7 +573,7 @@ string GENROU::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -604,7 +603,7 @@ string GENROU::get_standard_psse_string() const
 void GENROU::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("TD0'", i); i++;
     add_model_data_name_and_index_pair("TD0\"", i); i++;
     add_model_data_name_and_index_pair("TQ0'", i); i++;
@@ -674,7 +673,7 @@ void GENROU::set_model_data_with_name(string par_name, double value)
 void GENROU::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@D-AXIS TRANSIENT BLOCK", i); i++;

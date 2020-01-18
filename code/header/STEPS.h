@@ -21,25 +21,25 @@ class STEPS
         void set_toolkit_name(const string& name);
         string get_toolkit_name() const;
 
-        void set_thread_number(size_t n);
-        size_t get_thread_number() const;
+        void set_thread_number(unsigned int n);
+        unsigned int get_thread_number() const;
 
         void update_device_thread_number();
-        size_t get_bus_thread_number() const;
-        size_t get_generator_thread_number() const;
-        size_t get_wt_generator_thread_number() const;
-        size_t get_pv_unit_thread_number() const;
-        size_t get_energy_storage_thread_number() const;
-        size_t get_load_thread_number() const;
-        size_t get_fixed_shunt_thread_number() const;
-        size_t get_line_thread_number() const;
-        size_t get_transformer_thread_number() const;
-        size_t get_hvdc_thread_number() const;
-        size_t get_vsc_hvdc_thread_number() const;
-        size_t get_equivalent_device_thread_number() const;
+        unsigned int get_bus_thread_number() const;
+        unsigned int get_generator_thread_number() const;
+        unsigned int get_wt_generator_thread_number() const;
+        unsigned int get_pv_unit_thread_number() const;
+        unsigned int get_energy_storage_thread_number() const;
+        unsigned int get_load_thread_number() const;
+        unsigned int get_fixed_shunt_thread_number() const;
+        unsigned int get_line_thread_number() const;
+        unsigned int get_transformer_thread_number() const;
+        unsigned int get_hvdc_thread_number() const;
+        unsigned int get_vsc_hvdc_thread_number() const;
+        unsigned int get_equivalent_device_thread_number() const;
 
-        void set_dynamic_model_database_size_in_bytes(size_t n);
-        size_t get_dynamic_model_database_size_in_bytes();
+        void set_dynamic_model_database_size_in_bytes(unsigned int n);
+        unsigned int get_dynamic_model_database_size_in_bytes();
 
         char get_next_alphabeta();
         void open_log_file(const string& file, bool log_file_append_mode=false);
@@ -53,7 +53,7 @@ class STEPS
 
         void show_information_with_leading_time_stamp(const string& info);
         void show_information_with_leading_time_stamp(ostringstream& stream);
-        void show_set_get_model_data_with_index_error(const string& device, const string& model, const string& func, size_t index);
+        void show_set_get_model_data_with_index_error(const string& device, const string& model, const string& func, unsigned int index);
         void show_set_get_model_data_with_name_error(const string& device, const string& model, const string& func, const string& par_name);
         string get_system_time_stamp_string();
 
@@ -76,7 +76,7 @@ class STEPS
         double get_dynamic_simulation_time_in_s();
 
     public:
-        char steps_char_buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+        char steps_char_buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         STEPS_API_SEARCH_BUFFER api_search_buffer;
 
     private:
@@ -97,11 +97,11 @@ class STEPS
         bool optimize_network_enabled;
         char current_alphabeta;
 
-        size_t thread_number;
-        size_t generator_thread_number, wt_generator_thread_number, pv_unit_thread_number, energy_storage_thread_number,
+        unsigned int thread_number;
+        unsigned int generator_thread_number, wt_generator_thread_number, pv_unit_thread_number, energy_storage_thread_number,
                load_thread_number, fixed_shunt_thread_number, line_thread_number, transformer_thread_number, hvdc_thread_number, vsc_hvdc_thread_number,
                equivalent_device_thread_number;
-        size_t dynamic_model_db_size;
+        unsigned int dynamic_model_db_size;
 
 };
 #endif // STEPS_H

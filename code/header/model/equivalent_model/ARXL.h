@@ -3,6 +3,7 @@
 
 #include "header/model/equivalent_model/equivalent_model.h"
 #include "header/meter/meter.h"
+#include "header/basic/continuous_buffer.h"
 #include <complex>
 
 class ARXL : public EQUIVALENT_MODEL
@@ -15,23 +16,23 @@ class ARXL : public EQUIVALENT_MODEL
 
         virtual string get_model_name() const;
 
-        void set_output_line(DEVICE_ID did, size_t meter_side);
+        void set_output_line(DEVICE_ID did, unsigned int meter_side);
 
-        void add_P_input_item(METER meter, size_t delay, double coef);
-        void add_Q_input_item(METER meter, size_t delay, double coef);
+        void add_P_input_item(METER meter, unsigned int delay, double coef);
+        void add_Q_input_item(METER meter, unsigned int delay, double coef);
 
         vector<METER> get_P_meters() const;
-        vector< vector<size_t> > get_P_delays() const;
+        vector< vector<unsigned int> > get_P_delays() const;
         vector< vector<double> > get_P_coefficients() const;
 
         vector<METER> get_Q_meters() const;
-        vector< vector<size_t> > get_Q_delays() const;
+        vector< vector<unsigned int> > get_Q_delays() const;
         vector< vector<double> > get_Q_coefficients() const;
 
         virtual void switch_output_to_equivalent_device();
     private:
-        size_t get_P_meter_index(METER meter);
-        size_t get_Q_meter_index(METER meter);
+        unsigned int get_P_meter_index(METER meter);
+        unsigned int get_Q_meter_index(METER meter);
         bool is_P_meter_exist(METER meter);
         bool is_Q_meter_exist(METER meter);
         void add_P_meter(METER meter);
@@ -82,9 +83,10 @@ class ARXL : public EQUIVALENT_MODEL
     private:
         void copy_from_constant_model(const ARXL& model);
 
-        vector<METER> *p_meters, *q_meters;
-        vector< vector<size_t> > *p_delays, *q_delays;
-        vector< vector<double> > *p_coefficients, *q_coefficients;
+        vector<METER> p_meters, q_meters;
+        vector<CONTINUOUS_BUFFER> p_meter_buffers, q_meter_buffers;
+        vector< vector<unsigned int> > p_delays, q_delays;
+        vector< vector<double> > p_coefficients, q_coefficients;
     private:
         complex<double> equivalent_voltage_source_V, equivalent_voltage_source_Z;
         complex<double> equivalent_load_constant_power, equivalent_load_constant_current, equivalent_load_constant_impedance;

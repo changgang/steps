@@ -562,7 +562,7 @@ double CSEET1::get_initial_Ve_with_Fex_function() const
     double Ve = 0.0;
     double oldFex=0.0;
 
-    size_t iter_count = 0;
+    unsigned int iter_count = 0;
     while(true)
     {
         ++iter_count;
@@ -637,18 +637,18 @@ bool CSEET1::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t excitation_source, exciter_brush, feedback_slot, tuner_type;
+            unsigned int excitation_source, exciter_brush, feedback_slot, tuner_type;
             double tr;
             // serial
             double serial_k;
-            size_t serial_kv;
+            unsigned int serial_kv;
             double t1, t2, va1max, va1min, t3, t4;
             // parallel
             double parallel_kp, parallel_ki, vimax, vimin, parallel_kd, parallel_td, vdmax, vdmin;
             // common
             double ka, ta, vamax, vamin, kh, kf, tf, kb, t5, vrmax, vrmin, te, vemax, ke, se75, se100, kc, kd, efdmax;
 
-            size_t i=3;
+            unsigned int i=3;
             excitation_source = get_integer_data(data[i],"0"); i++; if(excitation_source!=0) excitation_source = 1;
             exciter_brush = get_integer_data(data[i],"0"); i++; if(exciter_brush!=0) exciter_brush = 1;
             feedback_slot = get_integer_data(data[i],"0"); i++; if(feedback_slot!=0) feedback_slot = 1;
@@ -810,7 +810,6 @@ void CSEET1::initialize()
         if(generator!=NULL)
         {
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
             {
@@ -1057,9 +1056,6 @@ void CSEET1::run(DYNAMIC_MODE mode)
             double Vrmax = get_VRmax_in_pu();
             double Vrmin = get_VRmin_in_pu();
 
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            size_t bus = generator->get_generator_bus();
             //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
             double Vt = get_terminal_voltage_in_pu();
 
@@ -1212,12 +1208,12 @@ string CSEET1::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
 
-    size_t source_index = 0;
+    unsigned int source_index = 0;
     switch(get_excitation_source())
     {
         case SELF_EXCITATION:
@@ -1227,7 +1223,7 @@ string CSEET1::get_standard_psse_string() const
             source_index = 1;
             break;
     }
-    size_t brush_index = 0;
+    unsigned int brush_index = 0;
     switch(get_exciter_brush())
     {
         case WITHOUT_BRUSH:
@@ -1237,7 +1233,7 @@ string CSEET1::get_standard_psse_string() const
             brush_index = 1;
             break;
     }
-    size_t feedback_index = 0;
+    unsigned int feedback_index = 0;
     switch(get_feedback_slot())
     {
         case AT_VOLTAGE_ERROR:
@@ -1247,7 +1243,7 @@ string CSEET1::get_standard_psse_string() const
             feedback_index = 1;
             break;
     }
-    size_t tuner_type = 0;
+    unsigned int tuner_type = 0;
     switch(get_tuner_type())
     {
         case SERIAL_TUNER:
@@ -1270,7 +1266,7 @@ string CSEET1::get_standard_psse_string() const
             <<setw(10)<<""
             <<setw(8)<<setprecision(6)<<TR<<", ";
 
-    bool tuner_KV; size_t tuner_selector; double tuner_K, tuner_T1, tuner_T2, tuner_VA1max, tuner_VA1min, tuner_T3, tuner_T4;
+    bool tuner_KV; unsigned int tuner_selector; double tuner_K, tuner_T1, tuner_T2, tuner_VA1max, tuner_VA1min, tuner_T3, tuner_T4;
     double tuner_KP, tuner_KI, tuner_VImax, tuner_VImin, tuner_KD, tuner_TD, tuner_VDmax, tuner_VDmin;
 
     if(get_tuner_type()==SERIAL_TUNER)
@@ -1367,7 +1363,7 @@ string CSEET1::get_standard_psse_string() const
 void CSEET1::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
 
@@ -1392,7 +1388,7 @@ void CSEET1::set_model_data_with_name(string par_name, double value)
 void CSEET1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@TUNER1", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@TUNER2", i); i++;

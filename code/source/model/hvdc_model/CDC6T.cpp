@@ -276,7 +276,7 @@ bool CDC6T::setup_model_with_steps_string_vector(vector<string>& data)
            t_dunbypass, tvdcr;
 
 
-    size_t i=2;
+    unsigned int i=2;
     min_alpha = get_double_data(data[i],"0.0"); i++;
     min_gamma = get_double_data(data[i],"0.0"); i++;
     tvdci = get_double_data(data[i],"0.0"); i++;
@@ -393,8 +393,6 @@ void CDC6T::initialize()
     if(hvdc==NULL)
         return;
 
-    allocate_record_of_bypass_time();
-
     setup_block_toolkit_and_parameters();
 
     rec_ac_blocking_timer.set_attached_device(hvdc);
@@ -482,9 +480,8 @@ void CDC6T::check_blocking_logic()
 
     ostringstream osstream;
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    //size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
-    //size_t bus_i = hvdc->get_converter_bus(INVERTER);
+    //unsigned int bus_r = hvdc->get_converter_bus(RECTIFIER);
+    //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
     //double vac_r = psdb.get_bus_positive_sequence_voltage_in_pu(bus_r);
     //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
     double vac_r = get_converter_ac_voltage_in_pu(RECTIFIER);
@@ -684,7 +681,6 @@ void CDC6T::check_bypassing_logic()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     ostringstream osstream;
 
     if(not is_bypassed())
@@ -754,8 +750,7 @@ void CDC6T::check_bypassing_logic()
     }
     else
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        //size_t bus_i = hvdc->get_converter_bus(INVERTER);
+        //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
         //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
         double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
 
@@ -871,8 +866,8 @@ string CDC6T::get_standard_psse_string() const
     ostringstream osstream;
 
     HVDC* hvdc = get_hvdc_pointer();
-    //size_t rbus = hvdc->get_converter_bus(RECTIFIER);
-    //size_t ibus = hvdc->get_converter_bus(INVERTER);
+    //unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
+    //unsigned int ibus = hvdc->get_converter_bus(INVERTER);
     string dcname = "'"+hvdc->get_name()+"'";
     string model_name = "'"+get_model_name()+"'";
 
@@ -921,7 +916,7 @@ string CDC6T::get_standard_psse_string() const
 void CDC6T::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("MIN ALPHA", i); i++;
     add_model_data_name_and_index_pair("MIN GAMMA", i); i++;
     add_model_data_name_and_index_pair("INVERTER TVDC", i); i++;

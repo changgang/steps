@@ -5,7 +5,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
+int api_get_transformer_integer_data(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
@@ -80,7 +80,7 @@ int api_get_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char
     }
 }
 
-void api_set_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, int value, size_t toolkit_index)
+void api_set_transformer_integer_data(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, char* side, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
@@ -151,7 +151,7 @@ void api_set_transformer_integer_data(size_t ibus, size_t jbus, size_t kbus, cha
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
+double api_get_transformer_float_data(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
@@ -284,7 +284,7 @@ double api_get_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, cha
 
 }
 
-void api_set_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, double value, size_t toolkit_index)
+void api_set_transformer_float_data(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, char* side, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
@@ -453,14 +453,14 @@ void api_set_transformer_float_data(size_t ibus, size_t jbus, size_t kbus, char*
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
+const char* api_get_transformer_string_data(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     TRANSFORMER* transptr = psdb.get_transformer(did);
     if(transptr!=NULL)
@@ -477,7 +477,7 @@ const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbu
         {
 			if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
 			{
-				snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (transptr->get_identifier()).c_str());
+				snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (transptr->get_identifier()).c_str());
 				return toolkit.steps_char_buffer;
 			}
         }
@@ -492,7 +492,7 @@ const char* api_get_transformer_string_data(size_t ibus, size_t jbus, size_t kbu
     }
 }
 
-void api_set_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, char* value, size_t toolkit_index)
+void api_set_transformer_string_data(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, char* side, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
@@ -528,7 +528,7 @@ void api_set_transformer_string_data(size_t ibus, size_t jbus, size_t kbus, char
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-bool api_get_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
+bool api_get_transformer_boolean_data(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);
@@ -572,7 +572,7 @@ bool api_get_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, cha
     }
 }
 
-void api_set_transformer_boolean_data(size_t ibus, size_t jbus, size_t kbus, char* identifier, char* side, char* parameter_name, bool value, size_t toolkit_index)
+void api_set_transformer_boolean_data(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, char* side, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_transformer_device_id(ibus, jbus, kbus, identifier);

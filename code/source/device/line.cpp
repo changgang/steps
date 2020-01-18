@@ -16,7 +16,7 @@ LINE::~LINE()
     ;
 }
 
-void LINE::set_sending_side_bus(size_t bus)
+void LINE::set_sending_side_bus(unsigned int bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -45,7 +45,7 @@ void LINE::set_sending_side_bus(size_t bus)
     }
 }
 
-void LINE::set_receiving_side_bus(size_t bus)
+void LINE::set_receiving_side_bus(unsigned int bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -135,7 +135,7 @@ void LINE::set_rating(RATING line_rating)
     this->rating = line_rating;
 }
 
-void LINE::set_meter_end_bus(size_t meter_bus)
+void LINE::set_meter_end_bus(unsigned int meter_bus)
 {
     if(meter_bus == get_receiving_side_bus()) meter_end_bus = get_receiving_side_bus();
     else                                      meter_end_bus = get_sending_side_bus();
@@ -146,12 +146,12 @@ void LINE::set_length(double line_length)
     if(line_length>=0.0) this->length = line_length;
 }
 
-size_t LINE::get_sending_side_bus() const
+unsigned int LINE::get_sending_side_bus() const
 {
     return sending_side_bus;
 }
 
-size_t LINE::get_receiving_side_bus() const
+unsigned int LINE::get_receiving_side_bus() const
 {
     return receiving_side_bus;
 }
@@ -226,7 +226,7 @@ RATING LINE::get_rating() const
     return rating;
 }
 
-size_t LINE::get_meter_end_bus() const
+unsigned int LINE::get_meter_end_bus() const
 {
     return meter_end_bus;
 }
@@ -249,7 +249,7 @@ bool LINE::is_zero_impedance_line() const
         return false;
 }
 
-void LINE::set_fault(size_t to_bus, double location, const FAULT& fault)
+void LINE::set_fault(unsigned int to_bus, double location, const FAULT& fault)
 {
     if(is_connected_to_bus(to_bus))
     {
@@ -300,13 +300,13 @@ void LINE::set_fault(size_t to_bus, double location, const FAULT& fault)
     }
 }
 
-double LINE::get_fault_location_of_fault(size_t index) const
+double LINE::get_fault_location_of_fault(unsigned int index) const
 {
     if(index<get_fault_count())
     {
         map<double,FAULT>::const_iterator iter=faults.begin();
 
-        for(size_t i=0; i!=index; ++i)
+        for(unsigned int i=0; i!=index; ++i)
             ++iter;
 
         return iter->first;
@@ -321,7 +321,7 @@ double LINE::get_fault_location_of_fault(size_t index) const
     }
 }
 
-FAULT LINE::get_fault_at_location(size_t to_bus, double location) const
+FAULT LINE::get_fault_at_location(unsigned int to_bus, double location) const
 {
     FAULT nofault;
     if(is_connected_to_bus(to_bus) and (location>=0.0 and location<=1.0))
@@ -349,7 +349,7 @@ void LINE::clear_all_faults()
     faults.clear();
 }
 
-void LINE::clear_fault_at_location(size_t to_bus, double location)
+void LINE::clear_fault_at_location(unsigned int to_bus, double location)
 {
     if(is_connected_to_bus(to_bus) and (location>=0.0 and location<=1.0))
     {
@@ -383,7 +383,7 @@ void LINE::clear_fault_at_location(size_t to_bus, double location)
     }
 }
 
-size_t LINE::get_fault_count() const
+unsigned int LINE::get_fault_count() const
 {
     return faults.size();
 }
@@ -410,8 +410,8 @@ void LINE::check()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t ibus = get_sending_side_bus();
-    size_t jbus = get_receiving_side_bus();
+    unsigned int ibus = get_sending_side_bus();
+    unsigned int jbus = get_receiving_side_bus();
     double ivbase = psdb.get_bus_base_voltage_in_kV(ibus);
     double jvbase = psdb.get_bus_base_voltage_in_kV(jbus);
 
@@ -419,7 +419,7 @@ void LINE::check()
             <<psdb.bus_number2bus_name(get_sending_side_bus())<<"-"
             <<psdb.bus_number2bus_name(get_receiving_side_bus())<<"]:\n";
 
-    size_t error_count = 0;
+    unsigned int error_count = 0;
 
     if( ivbase!= jvbase)
     {
@@ -505,13 +505,13 @@ void LINE::clear()
     clear_all_faults();
 }
 
-bool LINE::is_connected_to_bus(size_t bus) const
+bool LINE::is_connected_to_bus(unsigned int bus) const
 {
     if(get_sending_side_bus()==bus or get_receiving_side_bus()==bus) return true;
     else                                                             return false;
 }
 
-bool LINE::is_in_area(size_t area) const
+bool LINE::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -530,7 +530,7 @@ bool LINE::is_in_area(size_t area) const
         return false;
 }
 
-bool LINE::is_in_zone(size_t zone) const
+bool LINE::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -608,8 +608,8 @@ LINE& LINE::operator=(const LINE& line)
     set_length(line.get_length());
     if(line.is_faulted())
     {
-        size_t nfault = line.get_fault_count();
-        for(size_t i=0; i!=nfault; ++i)
+        unsigned int nfault = line.get_fault_count();
+        for(unsigned int i=0; i!=nfault; ++i)
         {
             double location = line.get_fault_location_of_fault(i);
             FAULT fault = line.get_fault_at_location(line.get_sending_side_bus(),location);

@@ -45,7 +45,7 @@ CCT_SEARCHER::~CCT_SEARCHER()
     ;
 }
 
-void CCT_SEARCHER::set_power_system_database_maximum_bus_number(size_t number)
+void CCT_SEARCHER::set_power_system_database_maximum_bus_number(unsigned int number)
 {
     STEPS& toolkit = get_default_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -73,7 +73,7 @@ void CCT_SEARCHER::set_fault_device(DEVICE_ID did)
         fault_device = did;
 }
 
-void CCT_SEARCHER::set_fault_side_bus(size_t bus)
+void CCT_SEARCHER::set_fault_side_bus(unsigned int bus)
 {
     fault_side_bus = bus;
 }
@@ -119,7 +119,7 @@ void CCT_SEARCHER::set_angle_difference_threshold_in_deg(double angle)
     angle_difference_threshold_in_deg = angle;
 }
 
-void CCT_SEARCHER::set_simulator_max_iteration(size_t iteration)
+void CCT_SEARCHER::set_simulator_max_iteration(unsigned int iteration)
 {
     if(iteration>0)
         this->max_iteration = iteration;
@@ -140,7 +140,7 @@ void CCT_SEARCHER::set_simulator_iteration_accelerator(double iter_alpha)
         this->alpha = iter_alpha;
 }
 
-size_t CCT_SEARCHER::get_power_system_database_maximum_bus_number() const
+unsigned int CCT_SEARCHER::get_power_system_database_maximum_bus_number() const
 {
     STEPS& toolkit = get_default_toolkit();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -168,7 +168,7 @@ DEVICE_ID CCT_SEARCHER::get_fault_device() const
     return fault_device;
 }
 
-size_t CCT_SEARCHER::get_fault_side_bus() const
+unsigned int CCT_SEARCHER::get_fault_side_bus() const
 {
     return fault_side_bus;
 }
@@ -213,7 +213,7 @@ double CCT_SEARCHER::get_angle_difference_threshold_in_deg() const
     return angle_difference_threshold_in_deg;
 }
 
-size_t CCT_SEARCHER::get_simulator_max_iteration() const
+unsigned int CCT_SEARCHER::get_simulator_max_iteration() const
 {
     return max_iteration;
 }
@@ -457,22 +457,22 @@ void CCT_SEARCHER::prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator)
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     NETWORK_MATRIX& network_matrix = toolkit.get_network_matrix();
-    vector< vector<size_t> > islands = network_matrix.get_islands_with_physical_bus_number();
-    size_t nislands = islands.size();
-    for(size_t i=0; i!=nislands; ++i)
+    vector< vector<unsigned int> > islands = network_matrix.get_islands_with_physical_bus_number();
+    unsigned int nislands = islands.size();
+    for(unsigned int i=0; i!=nislands; ++i)
     {
-        vector<size_t> island = islands[i];
+        vector<unsigned int> island = islands[i];
 
         vector<GENERATOR*> generators_in_island;
         vector<GENERATOR*> generators_at_bus;
 
-        size_t nisland = island.size();
-        for(size_t j=0; j!=nisland; ++j)
+        unsigned int nisland = island.size();
+        for(unsigned int j=0; j!=nisland; ++j)
         {
-            size_t bus = island[j];
+            unsigned int bus = island[j];
             generators_at_bus = psdb.get_generators_connecting_to_bus(bus);
-            size_t n = generators_at_bus.size();
-            for(size_t k=0; k!=n; ++k)
+            unsigned int n = generators_at_bus.size();
+            for(unsigned int k=0; k!=n; ++k)
             {
                 GENERATOR* generator = generators_at_bus[k];
                 if(generator->get_status()==true)
@@ -487,7 +487,7 @@ void CCT_SEARCHER::prepare_generators_in_islands(DYNAMICS_SIMULATOR& simulator)
 void CCT_SEARCHER::apply_fault(DYNAMICS_SIMULATOR& simulator)
 {
     DEVICE_ID did = get_fault_device();
-    size_t bus = get_fault_side_bus();
+    unsigned int bus = get_fault_side_bus();
     double location = get_fault_location_to_fault_side_bus_in_pu();
     complex<double> shunt = get_fault_shunt_in_pu();
     simulator.set_line_fault(did, bus, location, shunt);
@@ -496,7 +496,7 @@ void CCT_SEARCHER::apply_fault(DYNAMICS_SIMULATOR& simulator)
 void CCT_SEARCHER::clear_fault(DYNAMICS_SIMULATOR& simulator)
 {
     DEVICE_ID did = get_fault_device();
-    size_t bus = get_fault_side_bus();
+    unsigned int bus = get_fault_side_bus();
     double location = get_fault_location_to_fault_side_bus_in_pu();
     simulator.clear_line_fault(did, bus, location);
 
@@ -512,13 +512,13 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
     STEPS& toolkit = get_default_toolkit();
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
     bool system_is_stable = true;
-    size_t n = generators_in_islands.size();
-    for(size_t island=0; island!=n; island++)
+    unsigned int n = generators_in_islands.size();
+    for(unsigned int island=0; island!=n; island++)
     {
         vector<GENERATOR*> generators_in_island = generators_in_islands[island];
         vector<double> angles;
-        size_t n = generators_in_island.size();
-        for(size_t i=0; i!=n; ++i)
+        unsigned int n = generators_in_island.size();
+        for(unsigned int i=0; i!=n; ++i)
         {
             GENERATOR* generator = generators_in_island[i];
             if(generator->get_status()==true)
@@ -528,12 +528,12 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
             }
         }
         double angle_max=0.0, angle_min = 0.0;
-        size_t nangle = angles.size();
+        unsigned int nangle = angles.size();
         if(nangle>0)
         {
             angle_max = angles[0];
             angle_min = angles[0];
-            for(size_t i=1; i!=nangle; ++i)
+            for(unsigned int i=1; i!=nangle; ++i)
             {
                 if(angles[i]>angle_max)
                     angle_max = angles[i];
@@ -550,8 +550,8 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
             osstream<<"The following island is detected to be unstable at time "<<TIME<<" s. Maximum angle difference is :"<<angle_difference<<" deg (a.k.a. "<<scaled_angle_difference<<" deg)"<<endl
                    <<"Generator          Rotor angle in deg"<<endl;
 
-            size_t n = generators_in_island.size();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = generators_in_island.size();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 GENERATOR* generator = generators_in_island[i];
                 SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
@@ -566,12 +566,12 @@ bool CCT_SEARCHER::check_if_system_is_stable() const
     /*
     vector<double> angles = simulator.get_all_meters_value();
     double angle_max=0.0, angle_min = 0.0;
-    size_t n = angles.size();
+    unsigned int n = angles.size();
     if(n>0)
     {
         angle_max = angles[0];
         angle_min = angles[0];
-        for(size_t i=1; i!=n; ++i)
+        for(unsigned int i=1; i!=n; ++i)
         {
             if(angles[i]>angle_max)
                 angle_max = angles[i];

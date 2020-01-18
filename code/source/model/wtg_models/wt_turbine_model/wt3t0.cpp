@@ -98,7 +98,7 @@ bool WT3T0::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double ht, hg, damp, kshaft, dshaft;
 
-            size_t i=3;
+            unsigned int i=3;
             ht = get_double_data(data[i],"0.0"); i++;
             hg = get_double_data(data[i],"0.0"); i++;
             kshaft = get_double_data(data[i],"0.0"); i++;
@@ -170,7 +170,7 @@ void WT3T0::initialize()
 
                 setup_block_toolkit_and_parameters();
 
-                size_t bus = gen->get_generator_bus();
+                unsigned int bus = gen->get_generator_bus();
 
                 double fbase = get_bus_base_frequency_in_Hz();
                 double wbase = 2.0*PI*fbase;
@@ -335,7 +335,7 @@ string WT3T0::get_standard_psse_string() const
     double dshaft = get_Dshaft_in_pu();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -354,7 +354,7 @@ string WT3T0::get_standard_psse_string() const
 void WT3T0::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=1;
+    unsigned int i=1;
     add_model_data_name_and_index_pair("TURBINE INERTIA", i); i++; /*1*/
     add_model_data_name_and_index_pair("GENERATOR INERTIA", i); i++; /*2*/
     add_model_data_name_and_index_pair("SHAFT K", i); i++; /*3*/
@@ -387,7 +387,7 @@ void WT3T0::set_model_data_with_name(string par_name, double value)
 void WT3T0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=1;
+    unsigned int i=1;
     add_model_inernal_variable_name_and_index_pair("STATE@TURBINE SPEED BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@GENERATOR SPEED BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SHAFT TORSION BLOCK", i); i++;

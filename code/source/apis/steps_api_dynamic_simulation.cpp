@@ -6,7 +6,7 @@
 
 using namespace std;
 
-size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name, size_t toolkit_index)
+unsigned int api_get_dynamic_simulator_integer_parameter(char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -21,14 +21,14 @@ size_t api_get_dynamic_simulator_integer_parameter(char* parameter_name, size_t 
     if(PARAMETER_NAME=="MAX_UPDATE_ITER" or PARAMETER_NAME=="MAX UPDATE ITERATION")
         return ds.get_max_update_iteration();
 
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
              "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
     return 0;
 }
 
-void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value, size_t toolkit_index)
+void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -55,13 +55,13 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
         return;
     }
 
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-double api_get_dynamic_simulator_float_parameter(char* parameter_name, size_t toolkit_index)
+double api_get_dynamic_simulator_float_parameter(char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -75,14 +75,14 @@ double api_get_dynamic_simulator_float_parameter(char* parameter_name, size_t to
         return ds.get_rotor_angle_stability_threshold_in_deg();
 
 
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
              "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
     return 0.0;
 }
 
-void api_set_dynamic_simulator_float_parameter(char* parameter_name, double value, size_t toolkit_index)
+void api_set_dynamic_simulator_float_parameter(char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -103,33 +103,33 @@ void api_set_dynamic_simulator_float_parameter(char* parameter_name, double valu
         ds.set_rotor_angle_stability_threshold_in_deg(value);
         return;
     }
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-const char* api_get_dynamic_simulator_string_parameter(char* parameter_name, size_t toolkit_index)
+const char* api_get_dynamic_simulator_string_parameter(char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
     string PARAMETER_NAME = string2upper(parameter_name);
     if (PARAMETER_NAME == "OUTPUT FILENAME")
     {
-        snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (ds.get_output_file()).c_str());
+        snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (ds.get_output_file()).c_str());
         return toolkit.steps_char_buffer;
     }
 
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
              "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
     return toolkit.steps_char_buffer;
 }
 
-void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* value, size_t toolkit_index)
+void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -144,13 +144,13 @@ void api_set_dynamic_simulator_string_parameter(char* parameter_name, char* valu
         //toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, size_t toolkit_index)
+bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -167,13 +167,13 @@ bool api_get_dynamic_simulator_boolean_parameter(char* parameter_name, size_t to
     if(PARAMETER_NAME=="JSON EXPORT LOGIC")
         return ds.is_json_file_export_enabled();
 
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
              "0 will be returned.", PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
     return false;
 }
-void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool value, size_t toolkit_index)
+void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -204,137 +204,137 @@ void api_set_dynamic_simulator_boolean_parameter(char* parameter_name, bool valu
         ds.set_json_file_export_enable_flag(value);
         return;
     }
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n",
              PARAMETER_NAME.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void api_set_dynamic_simulator_output_file(char* file, size_t toolkit_index)
+void api_set_dynamic_simulator_output_file(char* file, unsigned int toolkit_index)
 {
     string parameter_name = "OUTPUT FILENAME";
     api_set_dynamic_simulator_string_parameter((char*)parameter_name.c_str(), file, toolkit_index);
 }
 
-const char* api_get_dynamic_simulator_output_file(size_t toolkit_index)
+const char* api_get_dynamic_simulator_output_file(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", ds.get_output_file().c_str());
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", ds.get_output_file().c_str());
 	return toolkit.steps_char_buffer;
 }
 
-void api_set_dynamic_simulation_time_step(double value, size_t toolkit_index)
+void api_set_dynamic_simulation_time_step(double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     toolkit.set_dynamic_simulation_time_step_in_s(value);
 }
 
-double api_get_dynamic_simulation_time_step(size_t toolkit_index)
+double api_get_dynamic_simulation_time_step(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     return toolkit.get_dynamic_simulation_time_step_in_s();
 }
 
-double api_get_dynamic_simulation_time(size_t toolkit_index)
+double api_get_dynamic_simulation_time(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     return toolkit.get_dynamic_simulation_time_in_s();
 }
 
-void api_show_dynamic_simulation_configuration(size_t toolkit_index)
+void api_show_dynamic_simulation_configuration(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.show_dynamic_simulator_configuration();
 }
 
-void api_prepare_meters(size_t toolkit_index)
+void api_prepare_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_meters();
 }
 
-void api_prepare_bus_related_meters(size_t toolkit_index)
+void api_prepare_bus_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_bus_related_meters();
 }
 
-void api_prepare_generator_related_meters(size_t toolkit_index)
+void api_prepare_generator_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_generator_related_meters();
 }
 
-void api_prepare_wt_generator_related_meters(size_t toolkit_index)
+void api_prepare_wt_generator_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_wt_generator_related_meters();
 }
 
-void api_prepare_pv_unit_related_meters(size_t toolkit_index)
+void api_prepare_pv_unit_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_pv_unit_related_meters();
 }
 
-void api_prepare_energy_storage_related_meters(size_t toolkit_index)
+void api_prepare_energy_storage_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_energy_storage_related_meters();
 }
 
-void api_prepare_load_related_meters(size_t toolkit_index)
+void api_prepare_load_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_load_related_meters();
 }
 
-void api_prepare_line_related_meters(size_t toolkit_index)
+void api_prepare_line_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_line_related_meters();
 }
 
-void api_prepare_transformer_related_meters(size_t toolkit_index)
+void api_prepare_transformer_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_transformer_related_meters();
 }
 
-void api_prepare_hvdc_related_meters(size_t toolkit_index)
+void api_prepare_hvdc_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_hvdc_related_meters();
 }
 
-void api_prepare_equivalent_device_related_meters(size_t toolkit_index)
+void api_prepare_equivalent_device_related_meters(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_equivalent_device_related_meters();
 }
 
-void api_prepare_bus_related_meter(size_t bus, char* meter_type, size_t toolkit_index)
+void api_prepare_bus_related_meter(unsigned int bus, char* meter_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.prepare_bus_related_meter(bus, meter_type);
 }
 
-void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
+void api_prepare_generator_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -342,7 +342,7 @@ void api_prepare_generator_related_meter(size_t bus, char* id, char* meter_type,
     ds.prepare_generator_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
+void api_prepare_wt_generator_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -350,7 +350,7 @@ void api_prepare_wt_generator_related_meter(size_t bus, char* id, char* meter_ty
     ds.prepare_wt_generator_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_pv_unit_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
+void api_prepare_pv_unit_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -358,7 +358,7 @@ void api_prepare_pv_unit_related_meter(size_t bus, char* id, char* meter_type, c
     ds.prepare_pv_unit_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_energy_storage_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
+void api_prepare_energy_storage_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -366,7 +366,7 @@ void api_prepare_energy_storage_related_meter(size_t bus, char* id, char* meter_
     ds.prepare_energy_storage_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
+void api_prepare_load_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -374,7 +374,7 @@ void api_prepare_load_related_meter(size_t bus, char* id, char* meter_type, char
     ds.prepare_load_related_meter(did, meter_type, var_name);
 }
 
-void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index)
+void api_prepare_line_related_meter(unsigned int ibus, unsigned int jbus, char* id, char* meter_type, char* side, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -382,7 +382,7 @@ void api_prepare_line_related_meter(size_t ibus, size_t jbus, char* id, char* me
     ds.prepare_line_related_meter(did, meter_type, side, var_name);
 }
 
-void api_prepare_transformer_related_meter(size_t ibus, size_t jbus, size_t kbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index)
+void api_prepare_transformer_related_meter(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* id, char* meter_type, char* side, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -390,7 +390,7 @@ void api_prepare_transformer_related_meter(size_t ibus, size_t jbus, size_t kbus
     ds.prepare_transformer_related_meter(did, meter_type, side, var_name);
 }
 
-void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* meter_type, char* side, char* var_name, size_t toolkit_index)
+void api_prepare_hvdc_related_meter(unsigned int ibus, unsigned int jbus, char* id, char* meter_type, char* side, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -398,7 +398,7 @@ void api_prepare_hvdc_related_meter(size_t ibus, size_t jbus, char* id, char* me
     ds.prepare_hvdc_related_meter(did, meter_type, side, var_name);
 }
 
-void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* meter_type, char* var_name, size_t toolkit_index)
+void api_prepare_equivalent_device_related_meter(unsigned int bus, char* id, char* meter_type, char* var_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -406,35 +406,35 @@ void api_prepare_equivalent_device_related_meter(size_t bus, char* id, char* met
     ds.prepare_equivalent_device_related_meter(did, meter_type, var_name);
 }
 
-void api_start_dynamic_simulation(size_t toolkit_index)
+void api_start_dynamic_simulation(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.start();
 }
 
-void api_stop_dynamic_simulation(size_t toolkit_index)
+void api_stop_dynamic_simulation(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.stop();
 }
 
-void api_run_simulation_to_time(double t_end, size_t toolkit_index)
+void api_run_simulation_to_time(double t_end, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.run_to(t_end);
 }
 
-void api_run_a_step(size_t toolkit_index)
+void api_run_a_step(unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.run_a_step();
 }
 
-void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double fault_B, size_t toolkit_index)
+void api_set_bus_fault(unsigned int bus, char* fault_type, double fault_G, double fault_B, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -444,13 +444,13 @@ void api_set_bus_fault(size_t bus, char* fault_type, double fault_G, double faul
         ds.set_bus_fault(bus, complex<double>(fault_G, fault_B));
         return;
     }
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
              string_fault_type.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void api_clear_bus_fault(size_t bus, char* fault_type, size_t toolkit_index)
+void api_clear_bus_fault(unsigned int bus, char* fault_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -460,20 +460,20 @@ void api_clear_bus_fault(size_t bus, char* fault_type, size_t toolkit_index)
         ds.clear_bus_fault(bus);
         return;
     }
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
              string_fault_type.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void api_trip_bus(size_t bus, size_t toolkit_index)
+void api_trip_bus(unsigned int bus, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
     ds.trip_bus(bus);
 }
 
-void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, size_t toolkit_index)
+void api_set_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, char* fault_type, double fault_location, double fault_G, double fault_B, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -483,8 +483,8 @@ void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_
 
     if(not psdb.is_line_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -496,13 +496,13 @@ void api_set_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_
         ds.set_line_fault(did, ibus, fault_location, complex<double>(fault_G, fault_B));
         return;
     }
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
              string_fault_type.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* fault_type, double fault_location, size_t toolkit_index)
+void api_clear_line_fault(unsigned int ibus, unsigned int jbus, char* identifier, char* fault_type, double fault_location, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -512,8 +512,8 @@ void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* faul
 
     if(not psdb.is_line_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -525,13 +525,13 @@ void api_clear_line_fault(size_t ibus, size_t jbus, char* identifier, char* faul
         ds.clear_line_fault(did, ibus, fault_location);
         return;
     }
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Fault type '%s' is not supported for dynamic simulator with api %s.",
              string_fault_type.c_str(), __FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(buffer);
 }
 
-void api_trip_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+void api_trip_line(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -541,8 +541,8 @@ void api_trip_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_in
 
     if(not psdb.is_line_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -551,7 +551,7 @@ void api_trip_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_in
     ds.trip_line(did);
 }
 
-void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+void api_trip_line_breaker(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -561,8 +561,8 @@ void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t to
 
     if(not psdb.is_line_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -571,7 +571,7 @@ void api_trip_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t to
     ds.trip_line_breaker(did, ibus);
 }
 
-void api_close_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+void api_close_line(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -581,8 +581,8 @@ void api_close_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_i
 
     if(not psdb.is_line_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -591,7 +591,7 @@ void api_close_line(size_t ibus, size_t jbus, char* identifier, size_t toolkit_i
     ds.close_line(did);
 }
 
-void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+void api_close_line_breaker(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -601,8 +601,8 @@ void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t t
 
     if(not psdb.is_line_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -611,7 +611,7 @@ void api_close_line_breaker(size_t ibus, size_t jbus, char* identifier, size_t t
     ds.close_line_breaker(did, ibus);
 }
 
-void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifier, size_t toolkit_index)
+void api_trip_transformer(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -621,8 +621,8 @@ void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifie
 
     if(not psdb.is_transformer_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -631,7 +631,7 @@ void api_trip_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifie
     ds.trip_transformer(did);
 }
 
-void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* identifier, size_t toolkit_index)
+void api_trip_transformer_breaker(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -641,8 +641,8 @@ void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* i
 
     if(not psdb.is_transformer_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -651,7 +651,7 @@ void api_trip_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* i
     ds.trip_transformer_breaker(did, ibus);
 }
 
-void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifier, size_t toolkit_index)
+void api_close_transformer(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -661,8 +661,8 @@ void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifi
 
     if(not psdb.is_transformer_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -671,7 +671,7 @@ void api_close_transformer(size_t ibus, size_t jbus, size_t kbus, char* identifi
     ds.close_transformer(did);
 }
 
-void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* identifier, size_t toolkit_index)
+void api_close_transformer_breaker(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -681,8 +681,8 @@ void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* 
 
     if(not psdb.is_transformer_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -691,7 +691,7 @@ void api_close_transformer_breaker(size_t ibus, size_t jbus, size_t kbus, char* 
     ds.close_transformer_breaker(did, ibus);
 }
 
-void api_trip_generator(size_t bus, char* identifier, size_t toolkit_index)
+void api_trip_generator(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -701,8 +701,8 @@ void api_trip_generator(size_t bus, char* identifier, size_t toolkit_index)
 
     if(not psdb.is_generator_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -711,7 +711,7 @@ void api_trip_generator(size_t bus, char* identifier, size_t toolkit_index)
     ds.trip_generator(did);
 }
 
-void api_shed_generator(size_t bus, char* identifier, double percent, size_t toolkit_index)
+void api_shed_generator(unsigned int bus, char* identifier, double percent, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -721,8 +721,8 @@ void api_shed_generator(size_t bus, char* identifier, double percent, size_t too
 
     if(not psdb.is_generator_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -731,7 +731,7 @@ void api_shed_generator(size_t bus, char* identifier, double percent, size_t too
     ds.shed_generator(did, percent);
 }
 
-void api_trip_load(size_t bus, char* identifier, size_t toolkit_index)
+void api_trip_load(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -741,8 +741,8 @@ void api_trip_load(size_t bus, char* identifier, size_t toolkit_index)
 
     if(not psdb.is_load_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -751,7 +751,7 @@ void api_trip_load(size_t bus, char* identifier, size_t toolkit_index)
     ds.trip_load(did);
 }
 
-void api_close_load(size_t bus, char* identifier, size_t toolkit_index)
+void api_close_load(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -761,8 +761,8 @@ void api_close_load(size_t bus, char* identifier, size_t toolkit_index)
 
     if(not psdb.is_load_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -771,7 +771,7 @@ void api_close_load(size_t bus, char* identifier, size_t toolkit_index)
     ds.close_load(did);
 }
 
-void api_scale_load(size_t bus, char* identifier, double percent, size_t toolkit_index)
+void api_scale_load(unsigned int bus, char* identifier, double percent, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -781,8 +781,8 @@ void api_scale_load(size_t bus, char* identifier, double percent, size_t toolkit
 
     if(not psdb.is_load_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -791,7 +791,7 @@ void api_scale_load(size_t bus, char* identifier, double percent, size_t toolkit
     ds.scale_load(did, percent);
 }
 
-void api_scale_all_loads(double percent, size_t toolkit_index)
+void api_scale_all_loads(double percent, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -799,7 +799,7 @@ void api_scale_all_loads(double percent, size_t toolkit_index)
     ds.scale_all_load(percent);
 }
 
-void api_trip_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
+void api_trip_fixed_shunt(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -809,8 +809,8 @@ void api_trip_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
 
     if(not psdb.is_fixed_shunt_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -819,7 +819,7 @@ void api_trip_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
     ds.trip_fixed_shunt(did);
 }
 
-void api_close_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
+void api_close_fixed_shunt(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -829,8 +829,8 @@ void api_close_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
 
     if(not psdb.is_load_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -839,7 +839,7 @@ void api_close_fixed_shunt(size_t bus, char* identifier, size_t toolkit_index)
     ds.close_fixed_shunt(did);
 }
 
-void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+void api_manually_bypass_hvdc(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -849,8 +849,8 @@ void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier, size_t
 
     if(not psdb.is_hvdc_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -859,7 +859,7 @@ void api_manually_bypass_hvdc(size_t ibus, size_t jbus, char* identifier, size_t
     ds.manual_bypass_hvdc(did);
 }
 
-void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+void api_manually_unbypass_hvdc(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -869,8 +869,8 @@ void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier, size
 
     if(not psdb.is_hvdc_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -879,7 +879,7 @@ void api_manually_unbypass_hvdc(size_t ibus, size_t jbus, char* identifier, size
     ds.manual_unbypass_hvdc(did);
 }
 
-void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+void api_manually_block_hvdc(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -889,8 +889,8 @@ void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier, size_t 
 
     if(not psdb.is_hvdc_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -898,7 +898,7 @@ void api_manually_block_hvdc(size_t ibus, size_t jbus, char* identifier, size_t 
     ds.manual_block_hvdc(did);
 }
 
-void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+void api_manually_unblock_hvdc(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -908,8 +908,8 @@ void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier, size_
 
     if(not psdb.is_hvdc_exist(did))
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s does not exist in database for dynamic simulator with api %s.",
                  (did.get_device_name()).c_str(), __FUNCTION__);
         toolkit.show_information_with_leading_time_stamp(buffer);
         return;
@@ -917,7 +917,7 @@ void api_manually_unblock_hvdc(size_t ibus, size_t jbus, char* identifier, size_
     ds.manual_unblock_hvdc(did);
 }
 
-double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier, size_t toolkit_index)
+double api_get_generator_voltage_reference_in_pu(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -925,7 +925,7 @@ double api_get_generator_voltage_reference_in_pu(size_t bus, char* identifier, s
     return ds.get_generator_voltage_reference_in_pu(did);
 }
 
-double api_get_generator_mechanical_power_reference_in_pu_based_on_mbase(size_t bus, char* identifier, size_t toolkit_index)
+double api_get_generator_mechanical_power_reference_in_pu_based_on_mbase(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -933,7 +933,7 @@ double api_get_generator_mechanical_power_reference_in_pu_based_on_mbase(size_t 
     return ds.get_generator_mechanical_power_reference_in_pu_based_on_mbase(did);
 }
 
-double api_get_generator_mechanical_power_reference_in_MW(size_t bus, char* identifier, size_t toolkit_index)
+double api_get_generator_mechanical_power_reference_in_MW(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -941,7 +941,7 @@ double api_get_generator_mechanical_power_reference_in_MW(size_t bus, char* iden
     return ds.get_generator_mechanical_power_reference_in_MW(did);
 }
 
-void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, double value, size_t toolkit_index)
+void api_set_generator_voltage_reference_in_pu(unsigned int bus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -949,7 +949,7 @@ void api_set_generator_voltage_reference_in_pu(size_t bus, char* identifier, dou
     ds.change_generator_voltage_reference_in_pu(did, value);
 }
 
-void api_set_generator_mechanical_power_reference_in_pu_based_on_mbase(size_t bus, char* identifier, double value, size_t toolkit_index)
+void api_set_generator_mechanical_power_reference_in_pu_based_on_mbase(unsigned int bus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -957,7 +957,7 @@ void api_set_generator_mechanical_power_reference_in_pu_based_on_mbase(size_t bu
     ds.change_generator_mechanical_power_reference_in_pu_based_on_mbase(did, value);
 }
 
-void api_set_generator_mechanical_power_reference_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index)
+void api_set_generator_mechanical_power_reference_in_MW(unsigned int bus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -965,7 +965,7 @@ void api_set_generator_mechanical_power_reference_in_MW(size_t bus, char* identi
     ds.change_generator_mechanical_power_reference_in_MW(did, value);
 }
 
-double api_get_generator_excitation_voltage_in_pu(size_t bus, char* identifier, size_t toolkit_index)
+double api_get_generator_excitation_voltage_in_pu(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -973,7 +973,7 @@ double api_get_generator_excitation_voltage_in_pu(size_t bus, char* identifier, 
     return ds.get_generator_excitation_voltage_in_pu(did);
 }
 
-double api_get_generator_mechanical_power_in_pu_based_on_mbase(size_t bus, char* identifier, size_t toolkit_index)
+double api_get_generator_mechanical_power_in_pu_based_on_mbase(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -981,7 +981,7 @@ double api_get_generator_mechanical_power_in_pu_based_on_mbase(size_t bus, char*
     return ds.get_generator_mechanical_power_in_pu_based_on_mbase(did);
 }
 
-double api_get_generator_mechanical_power_in_MW(size_t bus, char* identifier, size_t toolkit_index)
+double api_get_generator_mechanical_power_in_MW(unsigned int bus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -989,7 +989,7 @@ double api_get_generator_mechanical_power_in_MW(size_t bus, char* identifier, si
     return ds.get_generator_mechanical_power_in_MW(did);
 }
 
-void api_set_generator_excitation_voltage_in_pu(size_t bus, char* identifier, double value, size_t toolkit_index)
+void api_set_generator_excitation_voltage_in_pu(unsigned int bus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -997,7 +997,7 @@ void api_set_generator_excitation_voltage_in_pu(size_t bus, char* identifier, do
     ds.change_generator_excitation_voltage_in_pu(did, value);
 }
 
-void api_set_generator_mechanical_power_in_pu_based_on_mbase(size_t bus, char* identifier, double value, size_t toolkit_index)
+void api_set_generator_mechanical_power_in_pu_based_on_mbase(unsigned int bus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -1005,7 +1005,7 @@ void api_set_generator_mechanical_power_in_pu_based_on_mbase(size_t bus, char* i
     ds.change_generator_mechanical_power_in_pu_based_on_mbase(did, value);
 }
 
-void api_set_generator_mechanical_power_in_MW(size_t bus, char* identifier, double value, size_t toolkit_index)
+void api_set_generator_mechanical_power_in_MW(unsigned int bus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -1013,7 +1013,7 @@ void api_set_generator_mechanical_power_in_MW(size_t bus, char* identifier, doub
     ds.change_generator_mechanical_power_in_MW(did, value);
 }
 
-double api_get_hvdc_power_order_in_MW(size_t ibus, size_t jbus, char* identifier, size_t toolkit_index)
+double api_get_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -1021,7 +1021,7 @@ double api_get_hvdc_power_order_in_MW(size_t ibus, size_t jbus, char* identifier
     return ds.get_hvdc_power_order_in_MW(did);
 }
 
-void api_set_hvdc_power_order_in_MW(size_t ibus, size_t jbus, char* identifier, double value, size_t toolkit_index)
+void api_set_hvdc_power_order_in_MW(unsigned int ibus, unsigned int jbus, char* identifier, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DYNAMICS_SIMULATOR& ds = toolkit.get_dynamic_simulator();
@@ -1029,7 +1029,7 @@ void api_set_hvdc_power_order_in_MW(size_t ibus, size_t jbus, char* identifier, 
     ds.change_hvdc_power_order_in_MW(did, value);
 }
 
-double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, char* id, size_t sidebus, size_t trip_line, size_t toolkit_index)
+double api_search_cct(char* pf_file, char* dy_file, unsigned int ibus, unsigned int jbus, char* id, unsigned int sidebus, unsigned int trip_line, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     ostringstream osstream;
@@ -1060,12 +1060,12 @@ double api_search_cct(char* pf_file, char* dy_file, size_t ibus, size_t jbus, ch
         searcher.set_flag_trip_line_after_clearing_fault(true);
 
 
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Now go searching CCT for fault at side %lu of %s.",
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Now go searching CCT for fault at side %u of %s.",
              searcher.get_fault_side_bus(), (did.get_device_name()).c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
     double cct = searcher.search_cct();
-    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Now done searching CCT for fault at side %lu of %s.",
+    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Now done searching CCT for fault at side %u of %s.",
              searcher.get_fault_side_bus(), (did.get_device_name()).c_str());
     toolkit.show_information_with_leading_time_stamp(buffer);
 

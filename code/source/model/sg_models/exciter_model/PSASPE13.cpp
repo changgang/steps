@@ -210,7 +210,7 @@ bool PSASPE13::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t i=3;
+            unsigned int i=3;
             double tr = get_double_data(data[i],"0.0"); i++;
             double vimax = get_double_data(data[i],"0.0"); i++;
             double vimin = get_double_data(data[i],"0.0"); i++;
@@ -286,7 +286,6 @@ void PSASPE13::initialize()
         if(generator!=NULL)
         {
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
             SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
             if(gen_model!=NULL)
@@ -299,7 +298,7 @@ void PSASPE13::initialize()
                 double Ecomp = get_compensated_voltage_in_pu();
                 double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
 
-                //size_t bus = generator->get_generator_bus();
+                //unsigned int bus = generator->get_generator_bus();
                 //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
                 double Vt = get_terminal_voltage_in_pu();
                 double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
@@ -413,9 +412,7 @@ double PSASPE13::get_excitation_voltage_in_pu()
         SYNC_GENERATOR_MODEL* gen_model = generator->get_sync_generator_model();
         if(gen_model!=NULL)
         {
-            STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-            POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            //size_t bus = generator->get_generator_bus();
+            //unsigned int bus = generator->get_generator_bus();
             //double Vt = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
             double Vt = get_terminal_voltage_in_pu();
             double Ifd = gen_model->get_field_current_in_pu_based_on_mbase();
@@ -503,7 +500,7 @@ string PSASPE13::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -548,7 +545,7 @@ string PSASPE13::get_standard_psse_string() const
 void PSASPE13::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
 
@@ -574,7 +571,7 @@ void PSASPE13::set_model_data_with_name(string par_name, double value)
 void PSASPE13::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@TUNER", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@REGULATOR", i); i++;

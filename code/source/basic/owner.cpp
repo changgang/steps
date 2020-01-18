@@ -17,7 +17,7 @@ OWNER::~OWNER()
     ;
 }
 
-void OWNER::set_owner_number(size_t number)
+void OWNER::set_owner_number(unsigned int number)
 {
     if(number != 0)
         this->owner_number = number;
@@ -36,7 +36,7 @@ void OWNER::set_owner_name(string name)
     this->owner_name = trim_string(name);
 }
 
-size_t OWNER::get_owner_number() const
+unsigned int OWNER::get_owner_number() const
 {
     return owner_number;
 }

@@ -35,7 +35,7 @@ double PVU_MODEL::get_one_over_mbase_in_one_over_MVA() const
         return 0.0;
 }
 
-size_t PVU_MODEL::get_number_of_lumped_pv_units() const
+unsigned int PVU_MODEL::get_number_of_lumped_pv_units() const
 {
     PV_UNIT* gen = get_pv_unit_pointer();
     if(gen!=NULL)

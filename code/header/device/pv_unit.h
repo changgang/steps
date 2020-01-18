@@ -20,13 +20,13 @@ class PV_UNIT : public SOURCE
     public:
         virtual DEVICE_ID get_device_id() const;
 
-        void set_unit_bus(size_t bus);
-        size_t get_unit_bus() const;
+        void set_unit_bus(unsigned int bus);
+        unsigned int get_unit_bus() const;
 
-        void set_number_of_lumped_pv_units(size_t n);
+        void set_number_of_lumped_pv_units(unsigned int n);
         void set_rated_power_per_pv_unit_in_MW(double P);
 
-        size_t get_number_of_lumped_pv_units() const;
+        unsigned int get_number_of_lumped_pv_units() const;
         double get_rated_power_per_pv_unit_in_MW() const;
 
         virtual void set_model(const MODEL* model);
@@ -52,7 +52,7 @@ class PV_UNIT : public SOURCE
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
     private:
 
-        size_t number_of_lumped_pv_units;
+        unsigned int number_of_lumped_pv_units;
         double rated_power_per_pv_unit_in_MW;
 
         PV_CONVERTER_MODEL* pv_converter_model;

@@ -72,7 +72,7 @@ bool GENCLS::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double H, D;
 
-            size_t i=3;
+            unsigned int i=3;
             H = get_double_data(data[i],"0.0"); i++;
             D = get_double_data(data[i],"0.0");
 
@@ -303,7 +303,7 @@ string GENCLS::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -319,7 +319,7 @@ string GENCLS::get_standard_psse_string() const
 void GENCLS::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("H", i); i++;
     add_model_data_name_and_index_pair("D", i);
 }
@@ -353,7 +353,7 @@ void GENCLS::set_model_data_with_name(string par_name, double value)
 void GENCLS::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=1;
+    unsigned int i=1;
     add_model_inernal_variable_name_and_index_pair("STATE@ROTOR ANGLE BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@ROTOR SPEED BLOCK", i); i++;
 }

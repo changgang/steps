@@ -36,6 +36,7 @@ void FILEWIND_TEST::setup()
     model.set_device_id(wt_gen->get_device_id());
 
     model.set_wind_speed_serial_file(file);
+    model.load_wind_speed_from_file();
     dmdb.add_model(&model);
 }
 

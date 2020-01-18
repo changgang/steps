@@ -95,7 +95,7 @@ void PSSE_IMEXPORTER::load_powerflow_data_into_ram(string file)
 
     data_of_one_type.clear();
 
-    for(size_t i=0; i!=2; ++i)
+    for(unsigned int i=0; i!=2; ++i)
     {
         if(fgets(buffer, 1024, fid)==NULL)
         {
@@ -179,15 +179,15 @@ vector<vector<vector<string> > >  PSSE_IMEXPORTER::convert_psse_raw_data2steps_v
     return data;
 }
 
-vector<vector<string> > PSSE_IMEXPORTER::convert_i_th_type_data2steps_vector(size_t i) const
+vector<vector<string> > PSSE_IMEXPORTER::convert_i_th_type_data2steps_vector(unsigned int i) const
 {
     vector<vector<string> > data;
-    size_t n = raw_data_in_ram.size();
+    unsigned int n = raw_data_in_ram.size();
     if(i<n)
     {
         vector<string> DATA = raw_data_in_ram[i];
-        size_t m = DATA.size();
-        for(size_t j=0; j<m; ++j)
+        unsigned int m = DATA.size();
+        for(unsigned int j=0; j<m; ++j)
             data.push_back(split_string(DATA[j],","));
     }
     return data;
@@ -217,11 +217,11 @@ vector<vector<string> > PSSE_IMEXPORTER::convert_source_data2steps_vector() cons
 {
     vector<vector<string> > source_lines = convert_i_th_type_data2steps_vector(5);
     vector<string> source_line;
-    size_t n = source_lines.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = source_lines.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         source_line =  source_lines[i];
-        size_t nz = source_line.size();
+        unsigned int nz = source_line.size();
         if(nz>=29)
             continue;
         else
@@ -378,7 +378,7 @@ string PSSE_IMEXPORTER::export_case_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     char buffer[1000];
-    vector<size_t> buses = psdb.get_all_buses_number();
+    vector<unsigned int> buses = psdb.get_all_buses_number();
     double fbase = 50.0;
     if(buses.size()!=0)
         fbase = psdb.get_bus_base_frequency_in_Hz(buses[0]);
@@ -404,12 +404,12 @@ string PSSE_IMEXPORTER::export_all_bus_data() const
         case OPTIMIZE_POWERFLOW_DATA:
         {
             NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            size_t n = psdb.get_in_service_bus_count();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = psdb.get_in_service_bus_count();
+            for(unsigned int i=0; i!=n; ++i)
                 buses.push_back(psdb.get_bus(network.get_physical_bus_number_of_internal_bus(i)));
             n = psdb.get_bus_count();
-            vector<size_t> buses_number = psdb.get_all_buses_number();
-            for(size_t i=0; i!=n; ++i)
+            vector<unsigned int> buses_number = psdb.get_all_buses_number();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 BUS* bus = psdb.get_bus(buses_number[i]);
                 if(bus->get_bus_type()==OUT_OF_SERVICE)
@@ -419,10 +419,10 @@ string PSSE_IMEXPORTER::export_all_bus_data() const
         }
         case ORDER_POWERFLOW_DATA:
         {
-            vector<size_t> buses_number = psdb.get_all_buses_number();
+            vector<unsigned int> buses_number = psdb.get_all_buses_number();
             sort(buses_number.begin(), buses_number.end());
-            size_t n = buses_number.size();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = buses_number.size();
+            for(unsigned int i=0; i!=n; ++i)
                 buses.push_back(psdb.get_bus(buses_number[i]));
             break;
         }
@@ -434,8 +434,8 @@ string PSSE_IMEXPORTER::export_all_bus_data() const
         }
     }
 
-    size_t n = buses.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = buses.size();
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_bus_data(buses[i], buses);
 
     return osstream.str();
@@ -454,7 +454,7 @@ string PSSE_IMEXPORTER::export_bus_data(const BUS* bus, const vector<BUS*> buses
     if(get_export_out_of_service_bus_logic()==false and bus_type==OUT_OF_SERVICE)
         return "";
 
-    size_t n = buses.size();
+    unsigned int n = buses.size();
 
     int type = 4;
     if(bus_type == PQ_TYPE) type = 1;
@@ -466,8 +466,8 @@ string PSSE_IMEXPORTER::export_bus_data(const BUS* bus, const vector<BUS*> buses
 
     if(get_export_zero_impedance_line_logic()==false)
     {
-        size_t bus_number = bus->get_bus_number();
-        for(size_t j=0; j!=n; ++j)
+        unsigned int bus_number = bus->get_bus_number();
+        for(unsigned int j=0; j!=n; ++j)
         {
             BUS* tbus = buses[j];
             if(tbus->get_equivalent_bus_number()==bus_number)
@@ -522,24 +522,24 @@ string PSSE_IMEXPORTER::export_all_load_data() const
         case OPTIMIZE_POWERFLOW_DATA:
         {
             NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            size_t n = psdb.get_in_service_bus_count();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = psdb.get_in_service_bus_count();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 vector<LOAD*> loads_at_bus = psdb.get_loads_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(i));
-                size_t m = loads_at_bus.size();
-                for(size_t j=0; j!=m; ++j)
+                unsigned int m = loads_at_bus.size();
+                for(unsigned int j=0; j!=m; ++j)
                     loads.push_back(loads_at_bus[j]);
             }
             n = psdb.get_bus_count();
-            vector<size_t> buses_number = psdb.get_all_buses_number();
-            for(size_t i=0; i!=n; ++i)
+            vector<unsigned int> buses_number = psdb.get_all_buses_number();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 BUS* bus = psdb.get_bus(buses_number[i]);
                 if(bus->get_bus_type()==OUT_OF_SERVICE)
                 {
                     vector<LOAD*> loads_at_bus = psdb.get_loads_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(buses_number[i]));
-                    size_t m = loads_at_bus.size();
-                    for(size_t j=0; j!=m; ++j)
+                    unsigned int m = loads_at_bus.size();
+                    for(unsigned int j=0; j!=m; ++j)
                         loads.push_back(loads_at_bus[j]);
                 }
             }
@@ -549,8 +549,8 @@ string PSSE_IMEXPORTER::export_all_load_data() const
         {
             vector<DEVICE_ID> dids = psdb.get_all_loads_device_id();
             sort(dids.begin(), dids.end());
-            size_t n = dids.size();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = dids.size();
+            for(unsigned int i=0; i!=n; ++i)
                 loads.push_back(psdb.get_load(dids[i]));
             break;
         }
@@ -562,8 +562,8 @@ string PSSE_IMEXPORTER::export_all_load_data() const
         }
     }
 
-    size_t n = loads.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = loads.size();
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_load_data(loads[i]);
     return osstream.str();
 }
@@ -574,7 +574,7 @@ string PSSE_IMEXPORTER::export_load_data(const LOAD* load) const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = load->get_load_bus();
+    unsigned int bus = load->get_load_bus();
     string ickt = load->get_identifier();
     if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
     {
@@ -609,16 +609,16 @@ string PSSE_IMEXPORTER::export_all_fixed_shunt_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<FIXED_SHUNT*> fshunts = psdb.get_all_fixed_shunts();
-    //size_t n = fshunts.size();
+    //unsigned int n = fshunts.size();
 
     vector<DEVICE_ID> dids = psdb.get_all_fixed_shunts_device_id();
     sort(dids.begin(), dids.end());
     vector<FIXED_SHUNT*> fshunts;
-    size_t n = dids.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = dids.size();
+    for(unsigned int i=0; i!=n; ++i)
         fshunts.push_back(psdb.get_fixed_shunt(dids[i]));
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_fixed_shunt_data(fshunts[i]);
     return osstream.str();
 }
@@ -629,7 +629,7 @@ string PSSE_IMEXPORTER::export_fixed_shunt_data(const FIXED_SHUNT* shunt) const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = shunt->get_shunt_bus();
+    unsigned int bus = shunt->get_shunt_bus();
     string ickt = shunt->get_identifier();
     if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
     {
@@ -672,24 +672,24 @@ string PSSE_IMEXPORTER::export_all_generator_data() const
         case OPTIMIZE_POWERFLOW_DATA:
         {
             NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            size_t n = psdb.get_in_service_bus_count();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = psdb.get_in_service_bus_count();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 vector<GENERATOR*> gens_at_bus = psdb.get_generators_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(i));
-                size_t m = gens_at_bus.size();
-                for(size_t j=0; j!=m; ++j)
+                unsigned int m = gens_at_bus.size();
+                for(unsigned int j=0; j!=m; ++j)
                     generators.push_back(gens_at_bus[j]);
             }
             n = psdb.get_bus_count();
-            vector<size_t> buses_number = psdb.get_all_buses_number();
-            for(size_t i=0; i!=n; ++i)
+            vector<unsigned int> buses_number = psdb.get_all_buses_number();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 BUS* bus = psdb.get_bus(buses_number[i]);
                 if(bus->get_bus_type()==OUT_OF_SERVICE)
                 {
                     vector<GENERATOR*> gens_at_bus = psdb.get_generators_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(buses_number[i]));
-                    size_t m = gens_at_bus.size();
-                    for(size_t j=0; j!=m; ++j)
+                    unsigned int m = gens_at_bus.size();
+                    for(unsigned int j=0; j!=m; ++j)
                         generators.push_back(gens_at_bus[j]);
                 }
             }
@@ -699,8 +699,8 @@ string PSSE_IMEXPORTER::export_all_generator_data() const
         {
             vector<DEVICE_ID> dids = psdb.get_all_generators_device_id();
             sort(dids.begin(), dids.end());
-            size_t n = dids.size();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = dids.size();
+            for(unsigned int i=0; i!=n; ++i)
                 generators.push_back(psdb.get_generator(dids[i]));
             break;
         }
@@ -712,8 +712,8 @@ string PSSE_IMEXPORTER::export_all_generator_data() const
         }
     }
 
-    size_t n = generators.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = generators.size();
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_generator_data(generators[i]);
     return osstream.str();
 }
@@ -745,24 +745,24 @@ string PSSE_IMEXPORTER::export_all_wt_generator_data() const
         case OPTIMIZE_POWERFLOW_DATA:
         {
             NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            size_t n = psdb.get_in_service_bus_count();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = psdb.get_in_service_bus_count();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 vector<WT_GENERATOR*> gens_at_bus = psdb.get_wt_generators_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(i));
-                size_t m = gens_at_bus.size();
-                for(size_t j=0; j!=m; ++j)
+                unsigned int m = gens_at_bus.size();
+                for(unsigned int j=0; j!=m; ++j)
                     wt_generators.push_back(gens_at_bus[j]);
             }
             n = psdb.get_bus_count();
-            vector<size_t> buses_number = psdb.get_all_buses_number();
-            for(size_t i=0; i!=n; ++i)
+            vector<unsigned int> buses_number = psdb.get_all_buses_number();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 BUS* bus = psdb.get_bus(buses_number[i]);
                 if(bus->get_bus_type()==OUT_OF_SERVICE)
                 {
                     vector<WT_GENERATOR*> gens_at_bus = psdb.get_wt_generators_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(buses_number[i]));
-                    size_t m = gens_at_bus.size();
-                    for(size_t j=0; j!=m; ++j)
+                    unsigned int m = gens_at_bus.size();
+                    for(unsigned int j=0; j!=m; ++j)
                         wt_generators.push_back(gens_at_bus[j]);
                 }
             }
@@ -772,8 +772,8 @@ string PSSE_IMEXPORTER::export_all_wt_generator_data() const
         {
             vector<DEVICE_ID> dids = psdb.get_all_wt_generators_device_id();
             sort(dids.begin(), dids.end());
-            size_t n = dids.size();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = dids.size();
+            for(unsigned int i=0; i!=n; ++i)
                 wt_generators.push_back(psdb.get_wt_generator(dids[i]));
             break;
         }
@@ -785,8 +785,8 @@ string PSSE_IMEXPORTER::export_all_wt_generator_data() const
         }
     }
 
-    size_t n = wt_generators.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = wt_generators.size();
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_wt_generator_data(wt_generators[i]);
     return osstream.str();
 }
@@ -822,24 +822,24 @@ string PSSE_IMEXPORTER::export_all_pv_unit_data() const
         case OPTIMIZE_POWERFLOW_DATA:
         {
             NETWORK_MATRIX& network = toolkit.get_network_matrix();
-            size_t n = psdb.get_in_service_bus_count();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = psdb.get_in_service_bus_count();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 vector<PV_UNIT*> pvs_at_bus = psdb.get_pv_units_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(i));
-                size_t m = pvs_at_bus.size();
-                for(size_t j=0; j!=m; ++j)
+                unsigned int m = pvs_at_bus.size();
+                for(unsigned int j=0; j!=m; ++j)
                     pv_units.push_back(pvs_at_bus[j]);
             }
             n = psdb.get_bus_count();
-            vector<size_t> buses_number = psdb.get_all_buses_number();
-            for(size_t i=0; i!=n; ++i)
+            vector<unsigned int> buses_number = psdb.get_all_buses_number();
+            for(unsigned int i=0; i!=n; ++i)
             {
                 BUS* bus = psdb.get_bus(buses_number[i]);
                 if(bus->get_bus_type()==OUT_OF_SERVICE)
                 {
                     vector<PV_UNIT*> pvs_at_bus = psdb.get_pv_units_connecting_to_bus(network.get_physical_bus_number_of_internal_bus(buses_number[i]));
-                    size_t m = pvs_at_bus.size();
-                    for(size_t j=0; j!=m; ++j)
+                    unsigned int m = pvs_at_bus.size();
+                    for(unsigned int j=0; j!=m; ++j)
                         pv_units.push_back(pvs_at_bus[j]);
                 }
             }
@@ -849,8 +849,8 @@ string PSSE_IMEXPORTER::export_all_pv_unit_data() const
         {
             vector<DEVICE_ID> dids = psdb.get_all_pv_units_device_id();
             sort(dids.begin(), dids.end());
-            size_t n = dids.size();
-            for(size_t i=0; i!=n; ++i)
+            unsigned int n = dids.size();
+            for(unsigned int i=0; i!=n; ++i)
                 pv_units.push_back(psdb.get_pv_unit(dids[i]));
             break;
         }
@@ -862,8 +862,8 @@ string PSSE_IMEXPORTER::export_all_pv_unit_data() const
         }
     }
 
-    size_t n = pv_units.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = pv_units.size();
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_pv_unit_data(pv_units[i]);
     return osstream.str();
 }
@@ -893,16 +893,16 @@ string PSSE_IMEXPORTER::export_all_energy_storage_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<ENERGY_STORAGE*> estorages = psdb.get_all_energy_storages();
-    //size_t n = estorages.size();
+    //unsigned int n = estorages.size();
 
     vector<DEVICE_ID> dids = psdb.get_all_energy_storages_device_id();
     sort(dids.begin(), dids.end());
     vector<ENERGY_STORAGE*> estorages;
-    size_t n = dids.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = dids.size();
+    for(unsigned int i=0; i!=n; ++i)
         estorages.push_back(psdb.get_energy_storage(dids[i]));
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_energy_storage_data(estorages[i]);
     return osstream.str();
 }
@@ -930,8 +930,8 @@ string PSSE_IMEXPORTER::export_source_common_data(const SOURCE* source) const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = source->get_source_bus();
-    size_t bus_to_regulate = source->get_bus_to_regulate();
+    unsigned int bus = source->get_source_bus();
+    unsigned int bus_to_regulate = source->get_bus_to_regulate();
     string ickt = source->get_identifier();
     if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
     {
@@ -1003,16 +1003,16 @@ string PSSE_IMEXPORTER::export_all_line_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<LINE*> lines = psdb.get_all_lines();
-    //size_t n = lines.size();
+    //unsigned int n = lines.size();
 
     vector<DEVICE_ID> dids = psdb.get_all_lines_device_id();
     sort(dids.begin(), dids.end());
     vector<LINE*> lines;
-    size_t n = dids.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = dids.size();
+    for(unsigned int i=0; i!=n; ++i)
         lines.push_back(psdb.get_line(dids[i]));
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_line_data(lines[i]);
     return osstream.str();
 }
@@ -1023,8 +1023,8 @@ string PSSE_IMEXPORTER::export_line_data(const LINE* line) const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t ibus = line->get_sending_side_bus();
-    size_t jbus = line->get_receiving_side_bus();
+    unsigned int ibus = line->get_sending_side_bus();
+    unsigned int jbus = line->get_receiving_side_bus();
     string ickt = line->get_identifier();
     if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(ibus)!=0 or psdb.get_equivalent_bus_of_bus(jbus)!=0))
     {
@@ -1040,7 +1040,7 @@ string PSSE_IMEXPORTER::export_line_data(const LINE* line) const
     if(ibus==jbus)
         return "";
 
-    size_t meterend = 1;
+    unsigned int meterend = 1;
     if(line->get_meter_end_bus()==line->get_receiving_side_bus())
         meterend = 2;
 
@@ -1076,16 +1076,16 @@ string PSSE_IMEXPORTER::export_all_transformer_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
-    //size_t n = transformers.size();
+    //unsigned int n = transformers.size();
 
     vector<DEVICE_ID> dids = psdb.get_all_transformers_device_id();
     sort(dids.begin(), dids.end());
     vector<TRANSFORMER*> transformers;
-    size_t n = dids.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = dids.size();
+    for(unsigned int i=0; i!=n; ++i)
         transformers.push_back(psdb.get_transformer(dids[i]));
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_transformer_data(transformers[i]);
     return osstream.str();
 }
@@ -1096,9 +1096,9 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t ibus = trans->get_winding_bus(PRIMARY_SIDE);
-    size_t jbus = trans->get_winding_bus(SECONDARY_SIDE);
-    size_t kbus = trans->get_winding_bus(TERTIARY_SIDE);
+    unsigned int ibus = trans->get_winding_bus(PRIMARY_SIDE);
+    unsigned int jbus = trans->get_winding_bus(SECONDARY_SIDE);
+    unsigned int kbus = trans->get_winding_bus(TERTIARY_SIDE);
     string ickt = trans->get_identifier();
     if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(ibus)!=0 or psdb.get_equivalent_bus_of_bus(jbus)!=0 or psdb.get_equivalent_bus_of_bus(kbus)!=0))
     {
@@ -1121,7 +1121,7 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
             return "";
     }
 
-    size_t nonmeterend = 2;
+    unsigned int nonmeterend = 2;
     if(trans->is_two_winding_transformer())
     {
         if(trans->get_non_metered_end_bus() == trans->get_winding_bus(PRIMARY_SIDE))
@@ -1147,7 +1147,7 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
         }
     }
 
-    size_t status = 1;
+    unsigned int status = 1;
     if(trans->is_two_winding_transformer())
     {
         if(trans->get_winding_breaker_status(PRIMARY_SIDE)==false or trans->get_winding_breaker_status(SECONDARY_SIDE)==false)
@@ -1196,7 +1196,7 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
 
         TRANSFORMER_WINDING_SIDE winding = PRIMARY_SIDE;
 
-        size_t control_mode;
+        unsigned int control_mode;
         switch(trans->get_winding_control_mode(winding))
         {
             case TRANSFORMER_TAP_NO_CONTROL:
@@ -1287,14 +1287,14 @@ string PSSE_IMEXPORTER::export_transformer_data(const TRANSFORMER* trans) const
           <<setw(8)<<setprecision(2)<<fixed<<trans->get_winding_nominal_capacity_in_MVA(PRIMARY_SIDE, TERTIARY_SIDE)<<", "
           <<"1.0, 0.0"<<endl;
 
-        for(size_t j=1; j!=4; ++j)
+        for(unsigned int j=1; j!=4; ++j)
         {
             TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
             if(j==1) winding = PRIMARY_SIDE;
             if(j==2) winding = SECONDARY_SIDE;
             if(j==3) winding = TERTIARY_SIDE;
 
-            size_t control_mode;
+            unsigned int control_mode;
             switch(trans->get_winding_control_mode(winding))
             {
                 case TRANSFORMER_TAP_NO_CONTROL:
@@ -1379,16 +1379,16 @@ string PSSE_IMEXPORTER::export_all_area_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<AREA*> areas = psdb.get_all_areas();
-    //size_t n = areas.size();
+    //unsigned int n = areas.size();
 
-    vector<size_t> areas_number = psdb.get_all_areas_number();
+    vector<unsigned int> areas_number = psdb.get_all_areas_number();
     sort(areas_number.begin(), areas_number.end());
     vector<AREA*> areas;
-    size_t n = areas_number.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = areas_number.size();
+    for(unsigned int i=0; i!=n; ++i)
         areas.push_back(psdb.get_area(areas_number[i]));
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_area_data(areas[i]);
 
     return osstream.str();
@@ -1400,7 +1400,7 @@ string PSSE_IMEXPORTER::export_area_data(const AREA* area) const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = area->get_area_swing_bus();
+    unsigned int bus = area->get_area_swing_bus();
     if(get_export_zero_impedance_line_logic()==false and psdb.get_equivalent_bus_of_bus(bus)!=0)
     {
         bus = psdb.get_equivalent_bus_of_bus(bus);
@@ -1422,16 +1422,16 @@ string PSSE_IMEXPORTER::export_all_hvdc_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    //size_t n = hvdcs.size();
+    //unsigned int n = hvdcs.size();
 
     vector<DEVICE_ID> dids = psdb.get_all_hvdcs_device_id();
     sort(dids.begin(), dids.end());
     vector<HVDC*> hvdcs;
-    size_t n = dids.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = dids.size();
+    for(unsigned int i=0; i!=n; ++i)
         hvdcs.push_back(psdb.get_hvdc(dids[i]));
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_hvdc_data(hvdcs[i]);
 
     return osstream.str();
@@ -1443,8 +1443,8 @@ string PSSE_IMEXPORTER::export_hvdc_data(const HVDC* hvdc) const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t rbus = hvdc->get_converter_bus(RECTIFIER);
-    size_t ibus = hvdc->get_converter_bus(INVERTER);
+    unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
+    unsigned int ibus = hvdc->get_converter_bus(INVERTER);
     string ickt = hvdc->get_identifier();
     if(get_export_zero_impedance_line_logic()==false and (psdb.get_equivalent_bus_of_bus(rbus)!=0 or psdb.get_equivalent_bus_of_bus(ibus)!=0))
     {
@@ -1490,10 +1490,10 @@ string PSSE_IMEXPORTER::export_hvdc_data(const HVDC* hvdc) const
     osstream<<"\""<<(hvdc->get_meter_end()==RECTIFIER?"R":"I")<<"\", ";
     osstream<<"0.0, 20, 1.0"<<endl;
 
-    for(size_t j=0; j!=2; ++j)
+    for(unsigned int j=0; j!=2; ++j)
     {
         HVDC_CONVERTER_SIDE converter=RECTIFIER;
-        size_t bus = rbus;
+        unsigned int bus = rbus;
         if(j==0) converter = RECTIFIER;
         if(j==1){converter = INVERTER; bus = ibus;}
 
@@ -1548,16 +1548,16 @@ string PSSE_IMEXPORTER::export_all_zone_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<ZONE*> zones = psdb.get_all_zones();
-    //size_t n = zones.size();
+    //unsigned int n = zones.size();
 
-    vector<size_t> zones_number = psdb.get_all_zones_number();
+    vector<unsigned int> zones_number = psdb.get_all_zones_number();
     sort(zones_number.begin(), zones_number.end());
     vector<ZONE*> zones;
-    size_t n = zones_number.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = zones_number.size();
+    for(unsigned int i=0; i!=n; ++i)
         zones.push_back(psdb.get_zone(zones_number[i]));
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_zone_data(zones[i]);
 
     return osstream.str();
@@ -1585,16 +1585,16 @@ string PSSE_IMEXPORTER::export_all_owner_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     //vector<OWNER*> owners = psdb.get_all_owners();
-    //size_t n = owners.size();
+    //unsigned int n = owners.size();
 
-    vector<size_t> owners_number = psdb.get_all_owners_number();
+    vector<unsigned int> owners_number = psdb.get_all_owners_number();
     sort(owners_number.begin(), owners_number.end());
     vector<OWNER*> owners;
-    size_t n = owners_number.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = owners_number.size();
+    for(unsigned int i=0; i!=n; ++i)
         owners.push_back(psdb.get_owner(owners_number[i]));
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<export_owner_data(owners[i]);
 
     return osstream.str();

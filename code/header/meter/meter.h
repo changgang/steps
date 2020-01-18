@@ -5,7 +5,6 @@
 #include "header/basic/device_id.h"
 #include "header/device/device.h"
 #include "header/basic/base.h"
-#include "header/basic/continuous_buffer.h"
 
 class METER : public BASE
 {
@@ -18,16 +17,17 @@ class METER : public BASE
         void set_device_id(const DEVICE_ID& device_id);
         void set_meter_type(string meter_type);
         void set_internal_variable_name(string name);
-        void set_meter_side_bus(size_t meter_side);
+        void set_meter_side_bus(unsigned int meter_side);
 
         void change_device_id(DEVICE_ID did);
         void change_meter_type(const string& meter_type);
+        void change_meter_internal_variable_name(const string& name);
 
 
         DEVICE_ID get_device_id() const;
         string get_device_type() const;
         string get_meter_type() const;
-        size_t get_meter_side_bus() const;
+        unsigned int get_meter_side_bus() const;
         string get_internal_variable_name() const;
 
         string get_meter_name() const;
@@ -39,17 +39,9 @@ class METER : public BASE
 
         DEVICE* get_device_pointer() const;
 
-        void set_buffer_size(size_t bsize);
-        size_t get_buffer_size() const;
-        void initialize_meter_buffer();
-        void update_meter_buffer();
         double get_meter_value() const;
-        double get_meter_value_from_buffer_with_delay(size_t index=0) const;
-        double get_meter_value_from_buffer_at_time(double time) const;
-        size_t get_delay_index_of_time(double time) const;
-
     private:
-        void set_device_pointer();
+        void set_device_pointer(DEVICE_ID device_id);
         void copy_from_const_meter(const METER& meter);
 
         bool is_valid_meter_type(string& meter_type) const;
@@ -70,13 +62,10 @@ class METER : public BASE
 
         virtual void check();
 
-        DEVICE_ID device_id;
         DEVICE* device_pointer;
-        string meter_type;
-        size_t meter_side_bus;
-        string internal_variable_name;
-
-        CONTINUOUS_BUFFER buffer;
+        char meter_type[STEPS_METER_TYPE_STRING_SIZE];
+        unsigned int meter_side_bus;
+        char internal_variable_name[STEPS_METER_TYPE_STRING_SIZE];
 };
 
 

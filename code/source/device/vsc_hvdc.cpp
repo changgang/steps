@@ -29,7 +29,7 @@ string VSC_HVDC::get_converter_side_name(HVDC_CONVERTER_SIDE converter) const
     }
 }
 
-void VSC_HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus)
+void VSC_HVDC::set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned int bus)
 {
     ostringstream osstream;
     string converter_name = get_converter_side_name(converter);
@@ -175,7 +175,7 @@ void VSC_HVDC::set_converter_Qmin_in_MVar(HVDC_CONVERTER_SIDE converter, double 
     Qmin_MVar[converter] = Q;
 }
 
-void VSC_HVDC::set_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter, size_t bus)
+void VSC_HVDC::set_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter, unsigned int bus)
 {
     remote_bus_to_regulate[converter] = bus;
 }
@@ -185,7 +185,7 @@ void VSC_HVDC::set_converter_remote_regulation_percent(HVDC_CONVERTER_SIDE conve
     remote_regulation_percent[converter] = rmpct;
 }
 
-size_t VSC_HVDC::get_converter_bus(HVDC_CONVERTER_SIDE converter) const
+unsigned int VSC_HVDC::get_converter_bus(HVDC_CONVERTER_SIDE converter) const
 {
     return converter_bus[converter];
 }
@@ -285,7 +285,7 @@ double VSC_HVDC::get_converter_Qmin_in_MVar(HVDC_CONVERTER_SIDE converter) const
     return Qmin_MVar[converter];
 }
 
-size_t VSC_HVDC::get_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter) const
+unsigned int VSC_HVDC::get_converter_remote_bus_to_regulate(HVDC_CONVERTER_SIDE converter) const
 {
     return remote_bus_to_regulate[converter];
 }
@@ -446,7 +446,7 @@ double VSC_HVDC::get_converter_actual_ac_power_factor_command(HVDC_CONVERTER_SID
 
 void VSC_HVDC::reverse_converters()
 {
-    size_t bus = converter_bus[0];
+    unsigned int bus = converter_bus[0];
     converter_bus[0] = converter_bus[1];
     converter_bus[1] = bus;
 
@@ -523,7 +523,7 @@ void VSC_HVDC::reverse_converters()
     Qmin_MVar[0] = Qmin_MVar[1];
     Qmin_MVar[1] = qmin;
 
-    size_t rbus;
+    unsigned int rbus;
     rbus = remote_bus_to_regulate[0];
     remote_bus_to_regulate[0] = remote_bus_to_regulate[1];
     remote_bus_to_regulate[1] = rbus;
@@ -587,13 +587,13 @@ void VSC_HVDC::clear()
     actual_ac_power_factor_command[0] = 1.0; actual_ac_power_factor_command[1] = 1.0;
 }
 
-bool VSC_HVDC::is_connected_to_bus(size_t bus) const
+bool VSC_HVDC::is_connected_to_bus(unsigned int bus) const
 {
     if(get_converter_bus(RECTIFIER)==bus || get_converter_bus(INVERTER)==bus) return true;
     else                                                                      return false;
 }
 
-bool VSC_HVDC::is_in_area(size_t area) const
+bool VSC_HVDC::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -612,7 +612,7 @@ bool VSC_HVDC::is_in_area(size_t area) const
         return false;
 }
 
-bool VSC_HVDC::is_in_zone(size_t zone) const
+bool VSC_HVDC::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -861,25 +861,13 @@ void VSC_HVDC::calculate_converter_power_factor_in_ac_voltage_control_mode(HVDC_
         double v = bus->get_positive_sequence_voltage_in_kV();
         double smax2 = SQRT3*imax*v;
         if(smax2<smax) smax = smax2;
-
-        double P = get_converter_nominal_dc_power_command_in_MW(converter);
-        double I = get_nominal_dc_current_command_in_kA();
-        double eta = get_converter_actual_ac_power_factor_command(converter);
-
-
-
     }
-
 }
 
 void VSC_HVDC::solve_steady_state()
 {
     if(nominal_dc_setpoints_initialized==false)
         initialize_dc_power_and_voltage_command();
-
-    double Porder = get_converter_actual_dc_power_command_in_MW(RECTIFIER);
-
-
 }
 
 void VSC_HVDC::show_solved_hvdc_steady_state() const

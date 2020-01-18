@@ -151,7 +151,7 @@ bool CDC4T::setup_model_with_steps_string_vector(vector<string>& data)
            c0, v1, c1, v2, c2, v3, c3,  t_switched;
 
 
-    size_t i=2;
+    unsigned int i=2;
     min_alpha = get_double_data(data[i],"0.0"); i++;
     min_gamma = get_double_data(data[i],"0.0"); i++;
     tvdci = get_double_data(data[i],"0.0"); i++;
@@ -238,8 +238,6 @@ void CDC4T::initialize()
     if(hvdc==NULL)
         return;
 
-    allocate_record_of_bypass_time();
-
     setup_block_toolkit_and_parameters();
 
     set_attached_device_of_common_meters();
@@ -311,8 +309,7 @@ void CDC4T::check_blocking_logic()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     double TIME = toolkit.get_dynamic_simulation_time_in_s();
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    //size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
+    //unsigned int bus_r = hvdc->get_converter_bus(RECTIFIER);
     //double vac_r = psdb.get_bus_positive_sequence_voltage_in_pu(bus_r);
     double vac_r = get_converter_ac_voltage_in_pu(RECTIFIER);
 
@@ -385,8 +382,7 @@ void CDC4T::check_bypassing_logic()
     }
     else
     {
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        //size_t bus_i = hvdc->get_converter_bus(INVERTER);
+        //unsigned int bus_i = hvdc->get_converter_bus(INVERTER);
         //double vac_i = psdb.get_bus_positive_sequence_voltage_in_pu(bus_i);
         double vac_i = get_converter_ac_voltage_in_pu(INVERTER);
 
@@ -475,9 +471,9 @@ string CDC4T::get_standard_psse_string() const
     ostringstream osstream;
 
     HVDC* hvdc = get_hvdc_pointer();
-    //size_t rbus = hvdc->get_converter_bus(RECTIFIER);
-    //size_t ibus = hvdc->get_converter_bus(INVERTER);
-    string dcname = hvdc->get_name();
+    //unsigned int rbus = hvdc->get_converter_bus(RECTIFIER);
+    //unsigned int ibus = hvdc->get_converter_bus(INVERTER);
+    string dcname = "'"+hvdc->get_name()+"'";
     string model_name = "'"+get_model_name()+"'";
 
     VDCOL vdcol_limiter = get_VDCOL();
@@ -514,7 +510,7 @@ string CDC4T::get_standard_psse_string() const
 void CDC4T::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("MIN ALPHA", i); i++;
     add_model_data_name_and_index_pair("MIN GAMMA", i); i++;
     add_model_data_name_and_index_pair("INVERTER TVDC", i); i++;
@@ -646,7 +642,7 @@ void CDC4T::set_model_data_with_name(string par_name, double value)
 void CDC4T::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@INVERTER DC VOLTAGE SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@DC CURRENT SENSOR", i); i++;
 }

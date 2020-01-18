@@ -4,7 +4,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-void api_remove_bus(size_t bus_number, size_t toolkit_index)
+void api_remove_bus(unsigned int bus_number, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -12,7 +12,7 @@ void api_remove_bus(size_t bus_number, size_t toolkit_index)
         psdb.clear_bus(bus_number);
 }
 
-void api_remove_generator(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_remove_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -21,7 +21,7 @@ void api_remove_generator(size_t bus_number, char* identifier, size_t toolkit_in
         psdb.clear_generator(did);
 }
 
-void api_remove_wt_generator(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_remove_wt_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -30,7 +30,7 @@ void api_remove_wt_generator(size_t bus_number, char* identifier, size_t toolkit
         psdb.clear_wt_generator(did);
 }
 
-void api_remove_pv_unit(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_remove_pv_unit(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -39,7 +39,7 @@ void api_remove_pv_unit(size_t bus_number, char* identifier, size_t toolkit_inde
         psdb.clear_pv_unit(did);
 }
 
-void api_remove_load(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_remove_load(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -48,7 +48,7 @@ void api_remove_load(size_t bus_number, char* identifier, size_t toolkit_index)
         psdb.clear_load(did);
 }
 
-void api_remove_fixed_shunt(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_remove_fixed_shunt(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -57,7 +57,7 @@ void api_remove_fixed_shunt(size_t bus_number, char* identifier, size_t toolkit_
         psdb.clear_fixed_shunt(did);
 }
 
-void api_remove_line(size_t sending_side_bus_number, size_t receiving_side_bus_number, char* identifier, size_t toolkit_index)
+void api_remove_line(unsigned int sending_side_bus_number, unsigned int receiving_side_bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -66,7 +66,7 @@ void api_remove_line(size_t sending_side_bus_number, size_t receiving_side_bus_n
         psdb.clear_line(did);
 }
 
-void api_remove_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char* identifier, size_t toolkit_index)
+void api_remove_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -75,7 +75,7 @@ void api_remove_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, ch
         psdb.clear_hvdc(did);
 }
 
-void api_remove_transformer(size_t primary_side_bus_number, size_t secondary_side_bus_number, size_t tertiary_side_bus_number, char* identifier, size_t toolkit_index)
+void api_remove_transformer(unsigned int primary_side_bus_number, unsigned int secondary_side_bus_number, unsigned int tertiary_side_bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -84,7 +84,7 @@ void api_remove_transformer(size_t primary_side_bus_number, size_t secondary_sid
         psdb.clear_transformer(did);
 }
 
-void api_remove_equivalent_device(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_remove_equivalent_device(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -93,7 +93,7 @@ void api_remove_equivalent_device(size_t bus_number, char* identifier, size_t to
         psdb.clear_equivalent_device(did);
 }
 
-void api_remove_energy_storage(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_remove_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -102,7 +102,7 @@ void api_remove_energy_storage(size_t bus_number, char* identifier, size_t toolk
         psdb.clear_energy_storage(did);
 }
 
-void api_remove_area(size_t area_number, size_t toolkit_index)
+void api_remove_area(unsigned int area_number, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -110,7 +110,7 @@ void api_remove_area(size_t area_number, size_t toolkit_index)
         psdb.clear_area(area_number);
 }
 
-void api_remove_zone(size_t zone_number, size_t toolkit_index)
+void api_remove_zone(unsigned int zone_number, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -118,7 +118,7 @@ void api_remove_zone(size_t zone_number, size_t toolkit_index)
         psdb.clear_zone(zone_number);
 }
 
-void api_remove_owner(size_t owner_number, size_t toolkit_index)
+void api_remove_owner(unsigned int owner_number, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

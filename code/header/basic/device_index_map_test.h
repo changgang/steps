@@ -43,9 +43,9 @@ class DEVICE_INDEX_MAP_TEST : public Test::Suite
 
         void test_index_performance_with_many_buses();
 
-        TERMINAL prepare_terminal(size_t bus);
-        TERMINAL prepare_terminal(size_t ibus,size_t jbus);
-        TERMINAL prepare_terminal(size_t ibus,size_t jbus, size_t kbus);
+        TERMINAL prepare_terminal(unsigned int bus);
+        TERMINAL prepare_terminal(unsigned int ibus,unsigned int jbus);
+        TERMINAL prepare_terminal(unsigned int ibus,unsigned int jbus, unsigned int kbus);
     private:
         DEVICE_INDEX_MAP device_index_map;
 

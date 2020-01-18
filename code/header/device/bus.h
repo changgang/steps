@@ -25,13 +25,13 @@ class BUS : public DEVICE
         BUS(const BUS& bus);
         virtual ~BUS();
 
-        void set_bus_number(size_t number);
+        void set_bus_number(unsigned int number);
         void set_bus_name(string name);
         void set_base_voltage_in_kV(double voltage);
         void set_bus_type(BUS_TYPE type);
-        void set_area_number(size_t number);
-        void set_zone_number(size_t number);
-        void set_owner_number(size_t number);
+        void set_area_number(unsigned int number);
+        void set_zone_number(unsigned int number);
+        void set_owner_number(unsigned int number);
         void set_positive_sequence_voltage_in_pu(double voltage);
         void set_positive_sequence_voltage_in_kV(double voltage);
         void set_positive_sequence_angle_in_rad(double angle);
@@ -53,13 +53,13 @@ class BUS : public DEVICE
         void set_base_frequency_in_Hz(double fn);
         void set_voltage_to_regulate_in_pu(double voltage);
 
-        size_t get_bus_number() const;
+        unsigned int get_bus_number() const;
         string get_bus_name() const;
         double get_base_voltage_in_kV() const;
         BUS_TYPE get_bus_type() const;
-        size_t get_area_number() const;
-        size_t get_zone_number() const;
-        size_t get_owner_number() const;
+        unsigned int get_area_number() const;
+        unsigned int get_zone_number() const;
+        unsigned int get_owner_number() const;
         double get_positive_sequence_voltage_in_pu() const;
         double get_positive_sequence_voltage_in_kV() const;
         double get_positive_sequence_angle_in_rad() const;
@@ -88,8 +88,8 @@ class BUS : public DEVICE
         complex<double> get_zero_sequence_complex_voltage_in_pu() const;
         complex<double> get_zero_sequence_complex_voltage_in_kV() const;
 
-        void set_equivalent_bus_number(size_t number);
-        size_t get_equivalent_bus_number() const;
+        void set_equivalent_bus_number(unsigned int number);
+        unsigned int get_equivalent_bus_number() const;
 
         bool is_bus_overshadowed() const;
 
@@ -97,9 +97,9 @@ class BUS : public DEVICE
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
-        virtual bool is_connected_to_bus(size_t bus) const;
-        virtual bool is_in_area(size_t area) const;
-        virtual bool is_in_zone(size_t zone) const;
+        virtual bool is_connected_to_bus(unsigned int bus) const;
+        virtual bool is_in_area(unsigned int area) const;
+        virtual bool is_in_zone(unsigned int zone) const;
         virtual void report() const;
         virtual void save() const;
 
@@ -121,14 +121,14 @@ class BUS : public DEVICE
         double get_frequency_in_pu() const;
         double get_frequency_in_Hz() const;
     private:
-        size_t bus_number;
+        unsigned int bus_number;
         string bus_name;
         double base_voltage_in_kV;
         double fn_Hz, tn_s;
         BUS_TYPE bus_type;
-        size_t area_number;
-        size_t zone_number;
-        size_t owner_number;
+        unsigned int area_number;
+        unsigned int zone_number;
+        unsigned int owner_number;
 
         double positive_sequence_voltage_in_pu;
         double positive_sequence_angle_in_rad;
@@ -148,7 +148,7 @@ class BUS : public DEVICE
 
         double voltage_to_regulate_in_pu;
 
-        size_t equivalent_bus_number;
+        unsigned int equivalent_bus_number;
 
         BUS_FREQUENCY_MODEL bus_frequency_model;
 

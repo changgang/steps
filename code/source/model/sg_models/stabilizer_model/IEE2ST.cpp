@@ -25,7 +25,7 @@ void IEE2ST::copy_from_const_model(const IEE2ST& model)
     //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
-    for(size_t i=0; i!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
     {
         if(model.is_slot_valid(i))
         {
@@ -232,20 +232,21 @@ bool IEE2ST::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t signal_type[2], bus[2];
+            unsigned int signal_type[2], bus[2];
             double k1, t1, k2, t2, t3, t4, t5, t6, t7, t8, t9, t10,
                    vsmax, vsmin, vcl, vcu;
 
-            size_t i=3;
+            unsigned int i=3;
             signal_type[0] = get_integer_data(data[i],"0"); i++;
             bus[0] = get_integer_data(data[i],"0"); i++;
             signal_type[1] = get_integer_data(data[i],"0"); i++;
             bus[1] = get_integer_data(data[i],"0"); i++;
 
-            for(size_t i=0; i<2; ++i)
+            for(unsigned int i=0; i<2; ++i)
             {
-                set_signal_type_at_slot(i, signal_type[i]);
-                set_signal_bus_at_slot(i, bus[i]);
+                SIGNAL signal = prepare_signal_with_signal_type_and_bus(signal_type[i], bus[i]);
+                if(signal.is_valid())
+                    set_input_signal_at_slot(i, signal);
             }
 
             k1 = get_double_data(data[i],"0.0"); i++;
@@ -326,15 +327,6 @@ void IEE2ST::initialize()
     ostringstream osstream;
     if(is_model_initialized())
         return;
-
-    for(size_t i=0; i<2; ++i)
-    {
-        size_t signal_type = get_signal_type_at_slot(i);
-        size_t signal_bus = get_signal_bus_at_slot(i);
-        SIGNAL signal = prepare_signal_with_signal_type_and_bus(signal_type, signal_bus);
-        if(signal.is_valid())
-            set_input_signal_at_slot(i, signal);
-    }
 
     GENERATOR* generator = get_generator_pointer();
     if(generator!=NULL)
@@ -451,9 +443,7 @@ double IEE2ST::get_stabilizing_signal_in_pu()
     double vcmax = get_Vcmax();
     double vcmin = get_Vcmin();
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    //size_t bus = get_device_id().get_device_terminal()[0];
+    //unsigned int bus = get_device_id().get_device_terminal()[0];
     //double terminal_voltage = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
     double terminal_voltage = get_terminal_voltage_in_pu();
     if(vcmax!=0.0 and terminal_voltage>vcmax)
@@ -504,7 +494,7 @@ string IEE2ST::get_standard_psse_string() const
     double Vcmin = get_Vcmin();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -518,11 +508,11 @@ string IEE2ST::get_standard_psse_string() const
     string signal1_type = signal1.get_meter_type();
     string signal2_type = signal2.get_meter_type();
 
-    size_t signal1_type_number = convert_signal_type_string_to_number(signal1_type);
-    size_t signal2_type_number = convert_signal_type_string_to_number(signal2_type);
+    unsigned int signal1_type_number = convert_signal_type_string_to_number(signal1_type);
+    unsigned int signal2_type_number = convert_signal_type_string_to_number(signal2_type);
 
-    size_t signal1_bus = did1.get_device_terminal().get_buses()[0];
-    size_t signal2_bus = did2.get_device_terminal().get_buses()[0];
+    unsigned int signal1_bus = did1.get_device_terminal().get_buses()[0];
+    unsigned int signal2_bus = did2.get_device_terminal().get_buses()[0];
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
@@ -556,7 +546,7 @@ string IEE2ST::get_standard_psse_string() const
 void IEE2ST::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("K1", i); i++;
     add_model_data_name_and_index_pair("K2", i); i++;
     add_model_data_name_and_index_pair("T1", i); i++;
@@ -657,7 +647,7 @@ void IEE2ST::set_model_data_with_name(string par_name, double value)
 void IEE2ST::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SENSOR 1", i); i++;

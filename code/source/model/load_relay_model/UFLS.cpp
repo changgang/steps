@@ -21,7 +21,7 @@ void UFLS::clear()
     frequency_sensor.set_limiter_type(NO_LIMITER);
     frequency_sensor.set_K(1.0);
 
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
     {
         set_frequency_threshold_in_Hz_of_stage(i, 0.0);
         set_time_delay_in_s_of_stage(i, 0.0);
@@ -41,7 +41,7 @@ void UFLS::copy_from_const_model(const UFLS& model)
 {
     clear();
     set_frequency_sensor_time_in_s(model.get_frequency_sensor_time_in_s());
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
     {
         this->set_frequency_threshold_in_Hz_of_stage(i, model.get_frequency_threshold_in_Hz_of_stage(i));
         this->set_time_delay_in_s_of_stage(i, model.get_time_delay_in_s_of_stage(i));
@@ -77,27 +77,27 @@ void UFLS::set_frequency_sensor_time_in_s(double t)
     frequency_sensor.set_T_in_s(t);
 }
 
-void UFLS::set_frequency_threshold_in_Hz_of_stage(size_t i, double f)
+void UFLS::set_frequency_threshold_in_Hz_of_stage(unsigned int i, double f)
 {
-    if(i<MAX_LOAD_RELAY_STAGE)
+    if(i<STEPS_MAX_LOAD_RELAY_STAGE)
         frequency_threshold_in_Hz[i] = f;
 }
 
-void UFLS::set_time_delay_in_s_of_stage(size_t i, double t)
+void UFLS::set_time_delay_in_s_of_stage(unsigned int i, double t)
 {
-    if(i<MAX_LOAD_RELAY_STAGE)
+    if(i<STEPS_MAX_LOAD_RELAY_STAGE)
         stage_timer[i].set_timer_interval_in_s(t);
 }
 
-void UFLS::set_scale_in_pu_of_stage(size_t i, double s)
+void UFLS::set_scale_in_pu_of_stage(unsigned int i, double s)
 {
-    if(i<MAX_LOAD_RELAY_STAGE)
+    if(i<STEPS_MAX_LOAD_RELAY_STAGE)
         scale_in_pu[i] = s;
 }
 
 void UFLS::set_breaker_time_in_s(double t)
 {
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
         breaker_timer[i].set_timer_interval_in_s(t);
 }
 
@@ -106,25 +106,25 @@ double UFLS::get_frequency_sensor_time_in_s() const
     return frequency_sensor.get_T_in_s();
 }
 
-double UFLS::get_frequency_threshold_in_Hz_of_stage(size_t i) const
+double UFLS::get_frequency_threshold_in_Hz_of_stage(unsigned int i) const
 {
-    if(i<MAX_LOAD_RELAY_STAGE)
+    if(i<STEPS_MAX_LOAD_RELAY_STAGE)
         return frequency_threshold_in_Hz[i];
     else
         return 0.0;
 }
 
-double UFLS::get_time_delay_in_s_of_stage(size_t i) const
+double UFLS::get_time_delay_in_s_of_stage(unsigned int i) const
 {
-    if(i<MAX_LOAD_RELAY_STAGE)
+    if(i<STEPS_MAX_LOAD_RELAY_STAGE)
         return stage_timer[i].get_timer_interval_in_s();
     else
         return 0.0;
 }
 
-double UFLS::get_scale_in_pu_of_stage(size_t i) const
+double UFLS::get_scale_in_pu_of_stage(unsigned int i) const
 {
-    if(i<MAX_LOAD_RELAY_STAGE)
+    if(i<STEPS_MAX_LOAD_RELAY_STAGE)
         return scale_in_pu[i];
     else
         return 0.0;
@@ -145,7 +145,7 @@ bool UFLS::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double t_sensor, tbreak, fth, tdelay, scale;
 
-            size_t i=3;
+            unsigned int i=3;
 
             t_sensor = get_double_data(data[i],"0.0"); ++i;
             set_frequency_sensor_time_in_s(t_sensor);
@@ -153,9 +153,9 @@ bool UFLS::setup_model_with_steps_string_vector(vector<string>& data)
             tbreak = get_double_data(data[i],"0.0"); ++i;
             set_breaker_time_in_s(tbreak);
 
-            size_t stage = 0;
+            unsigned int stage = 0;
 
-            size_t n = data.size()-2;
+            unsigned int n = data.size()-2;
             for(i=5; i<n; i=i+3)
             {
                 fth = get_double_data(data[i],"0.0");
@@ -217,7 +217,7 @@ void UFLS::setup_block_toolkit_and_parameters()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     frequency_sensor.set_toolkit(toolkit);
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
     {
         stage_timer[i].set_toolkit(toolkit);
         breaker_timer[i].set_toolkit(toolkit);
@@ -233,7 +233,7 @@ void UFLS::initialize()
 
         double fbase = get_bus_base_frequency_in_Hz();
 
-        for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+        for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
         {
             stage_timer[i].set_attached_device(load);
             breaker_timer[i].set_attached_device(load);
@@ -242,7 +242,7 @@ void UFLS::initialize()
         frequency_sensor.set_output(fbase);
         frequency_sensor.initialize();
 
-        for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+        for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
         {
             stage_timer[i].reset();
             breaker_timer[i].reset();
@@ -267,7 +267,7 @@ void UFLS::run(DYNAMIC_MODE mode)
     {
         double f = frequency_sensor.get_output();
 
-        for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+        for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
         {
             if(is_stage_tripped(i)) // already tripped
                 continue;
@@ -328,28 +328,28 @@ void UFLS::run(DYNAMIC_MODE mode)
 double UFLS::get_total_shed_scale_factor_in_pu() const
 {
     double total_scale = 0.0;
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
         total_scale += (is_stage_tripped(i)*get_scale_in_pu_of_stage(i));
     return total_scale;
 }
 
-bool UFLS::is_stage_delayer_timer_started(size_t i) const
+bool UFLS::is_stage_delayer_timer_started(unsigned int i) const
 {
     return stage_timer[i].is_started();
 }
 
-bool UFLS::is_stage_breaker_timer_started(size_t i) const
+bool UFLS::is_stage_breaker_timer_started(unsigned int i) const
 {
     return breaker_timer[i].is_started();
 }
 
-void UFLS::start_stage_delayer_timer(size_t i)
+void UFLS::start_stage_delayer_timer(unsigned int i)
 {
     if(not stage_timer[i].is_started())
         stage_timer[i].start();
 }
 
-void UFLS::start_stage_breaker_timer(size_t i)
+void UFLS::start_stage_breaker_timer(unsigned int i)
 {
     if(not breaker_timer[i].is_started())
     {
@@ -358,19 +358,19 @@ void UFLS::start_stage_breaker_timer(size_t i)
     }
 }
 
-void UFLS::reset_stage_delayer_timer(size_t i)
+void UFLS::reset_stage_delayer_timer(unsigned int i)
 {
     if(stage_timer[i].is_started())
         stage_timer[i].reset();
 }
 
-void UFLS::reset_stage_breaker_timer(size_t i)
+void UFLS::reset_stage_breaker_timer(unsigned int i)
 {
     if(breaker_timer[i].is_started())
         breaker_timer[i].reset();
 }
 
-bool UFLS::is_stage_delayer_timer_timed_out(size_t i) const
+bool UFLS::is_stage_delayer_timer_timed_out(unsigned int i) const
 {
     if(stage_timer[i].is_started())
         return stage_timer[i].is_timed_out();
@@ -378,7 +378,7 @@ bool UFLS::is_stage_delayer_timer_timed_out(size_t i) const
         return false;
 }
 
-bool UFLS::is_stage_breaker_timer_timed_out(size_t i) const
+bool UFLS::is_stage_breaker_timer_timed_out(unsigned int i) const
 {
     if(breaker_timer[i].is_started())
         return breaker_timer[i].is_timed_out();
@@ -386,11 +386,11 @@ bool UFLS::is_stage_breaker_timer_timed_out(size_t i) const
         return false;
 }
 
-void UFLS::trip_stage(size_t i)
+void UFLS::trip_stage(unsigned int i)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    if(i<MAX_LOAD_RELAY_STAGE)
+    if(i<STEPS_MAX_LOAD_RELAY_STAGE)
     {
         if(not is_stage_tripped(i))
         {
@@ -402,9 +402,9 @@ void UFLS::trip_stage(size_t i)
     }
 }
 
-bool UFLS::is_stage_tripped(size_t i) const
+bool UFLS::is_stage_tripped(unsigned int i) const
 {
-    if(i<MAX_LOAD_RELAY_STAGE)
+    if(i<STEPS_MAX_LOAD_RELAY_STAGE)
         return flag_stage_is_tripped[i];
     else
         return false;
@@ -429,7 +429,7 @@ string UFLS::get_standard_psse_string() const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
-    size_t bus = load->get_load_bus();
+    unsigned int bus = load->get_load_bus();
     string identifier = "'"+load->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -440,10 +440,10 @@ string UFLS::get_standard_psse_string() const
             <<setw(8)<<setprecision(4)<<fixed<<get_frequency_sensor_time_in_s()<<", "
             <<setw(8)<<setprecision(4)<<fixed<<get_breaker_time_in_s()<<", ";
 
-    size_t n_content = 5;
+    unsigned int n_content = 5;
     double fth, tdelay, scale;
-    size_t i=0;
-    for(i=0; i!=(MAX_LOAD_RELAY_STAGE-1); ++i)
+    unsigned int i=0;
+    for(i=0; i!=(STEPS_MAX_LOAD_RELAY_STAGE-1); ++i)
     {
         fth = get_frequency_threshold_in_Hz_of_stage(i);
         tdelay = get_time_delay_in_s_of_stage(i);
@@ -475,7 +475,7 @@ string UFLS::get_standard_psse_string() const
             n_content = 1;
         }
     }
-    i = MAX_LOAD_RELAY_STAGE - 1;
+    i = STEPS_MAX_LOAD_RELAY_STAGE - 1;
     fth = get_frequency_threshold_in_Hz_of_stage(i);
     tdelay = get_time_delay_in_s_of_stage(i);
     scale = get_scale_in_pu_of_stage(i);
@@ -510,10 +510,10 @@ string UFLS::get_standard_psse_string() const
 void UFLS::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("TF", i); i++;
     add_model_data_name_and_index_pair("TB", i); i++;
-    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage<STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         string name = "FTH "+num2str(stage);
         add_model_data_name_and_index_pair(name, i); i++;
@@ -531,7 +531,7 @@ double UFLS::get_model_data_with_name(string par_name) const
         return get_frequency_sensor_time_in_s();
     if(par_name=="TB")
         return get_breaker_time_in_s();
-    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage<STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         string name = "FTH "+num2str(stage);
         if(par_name==name)
@@ -554,7 +554,7 @@ void UFLS::set_model_data_with_name(string par_name, double value)
         return set_frequency_sensor_time_in_s(value);
     if(par_name=="TB")
         return set_breaker_time_in_s(value);
-    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage<STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         string name = "FTH "+num2str(stage);
         if(par_name==name)
@@ -573,7 +573,7 @@ void UFLS::set_model_data_with_name(string par_name, double value)
 void UFLS::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("SHED SCALE IN PU", i); i++;
 }
 

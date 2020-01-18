@@ -13,9 +13,9 @@ class MOTOR : public LOAD_MODEL
         virtual ~MOTOR();
 
         virtual string get_model_name() const;
-        virtual double get_model_data_with_index(size_t index) const;
+        virtual double get_model_data_with_index(unsigned int index) const;
         virtual double get_model_data_with_name(string par_name) const;
-        virtual void set_model_data_with_index(size_t index, double value);
+        virtual void set_model_data_with_index(unsigned int index, double value);
         virtual void set_model_data_with_name(string par_name, double value);
 
         virtual bool setup_model_with_steps_string_vector(vector<string>& data);

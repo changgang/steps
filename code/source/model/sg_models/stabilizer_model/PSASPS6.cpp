@@ -33,7 +33,7 @@ void PSASPS6::copy_from_const_model(const PSASPS6& model)
     //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
-    for(size_t i=0; i!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
     {
         if(model.is_slot_valid(i))
         {
@@ -298,7 +298,7 @@ bool PSASPS6::setup_model_with_steps_string_vector(vector<string>& data)
             double kw, trw, t5, t6, t7, kr, trp, tw, tw1, tw2, ks, kp, t1, t2, t13, t14, t3, t4,
                    vsmax, vsmin;
 
-            size_t i=3;
+            unsigned int i=3;
             kw = get_double_data(data[i],"0.0"); i++;
             trw = get_double_data(data[i],"0.0"); i++;
             t5 = get_double_data(data[i],"0.0"); i++;
@@ -396,7 +396,6 @@ void PSASPS6::initialize()
                 exciter->initialize();
 
             setup_block_toolkit_and_parameters();
-            size_t bus = generator->get_generator_bus();
 
             SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
             if(signal.is_valid())
@@ -597,7 +596,7 @@ string PSASPS6::get_standard_psse_string() const
     ostringstream osstream;
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -653,7 +652,7 @@ string PSASPS6::get_standard_psse_string() const
 void PSASPS6::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
 
@@ -678,7 +677,7 @@ void PSASPS6::set_model_data_with_name(string par_name, double value)
 void PSASPS6::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SPEED SENSOR", i); i++;

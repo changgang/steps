@@ -29,7 +29,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         void set_KQI(double K);
         void set_Vmax_in_pu(double v);
         void set_Vmin_in_pu(double v);
-        void set_voltage_flag(size_t flag);
+        void set_voltage_flag(unsigned int flag);
         void set_KQV(double K);
         void set_EQmax_in_pu(double I);
         void set_EQmin_in_pu(double I);
@@ -64,7 +64,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         double get_KQI() const;
         double get_Vmax_in_pu() const;
         double get_Vmin_in_pu() const;
-        size_t get_voltage_flag() const;
+        unsigned int get_voltage_flag() const;
         double get_KQV() const;
         double get_EQmax_in_pu() const;
         double get_EQmin_in_pu() const;
@@ -135,7 +135,7 @@ class WT3E0: public WT_ELECTRICAL_MODEL
         FIRST_ORDER_BLOCK voltage_regulator_filter;
         FIRST_ORDER_BLOCK active_power_sensor;
         INTEGRAL_BLOCK Q_error_integrator;
-        size_t Voltage_Flag;
+        unsigned int Voltage_Flag;
         INTEGRAL_BLOCK V_error_integrator;
         double EQmax, EQmin;
 

@@ -51,7 +51,7 @@ complex<double> PV_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() co
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t bus = pv_unit->get_unit_bus();
+        unsigned int bus = pv_unit->get_unit_bus();
         return psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
     }
     else
@@ -78,7 +78,7 @@ double PV_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t bus = pv_unit->get_unit_bus();
+        unsigned int bus = pv_unit->get_unit_bus();
         return psdb.get_bus_frequency_deviation_in_pu(bus);
     }
     else
@@ -108,12 +108,12 @@ double PV_ELECTRICAL_MODEL::get_pv_unit_terminal_current_in_pu() const
 }
 // reference
 
-void PV_ELECTRICAL_MODEL::set_bus_to_regulate(size_t bus)
+void PV_ELECTRICAL_MODEL::set_bus_to_regulate(unsigned int bus)
 {
     bus_to_regulate = bus;
 }
 
-size_t PV_ELECTRICAL_MODEL::get_bus_to_regulate()  const
+unsigned int PV_ELECTRICAL_MODEL::get_bus_to_regulate()  const
 {
     return bus_to_regulate;
 }
@@ -131,7 +131,7 @@ void PV_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t bus = get_bus_to_regulate();
+        unsigned int bus = get_bus_to_regulate();
         if(bus==0)
             bus = source->get_source_bus();
 

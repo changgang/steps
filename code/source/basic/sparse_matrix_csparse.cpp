@@ -419,15 +419,15 @@ void SPARSE_MATRIX_CSPARSE::change_imag_entry_value(int index, double value)
 }
 
 
-vector<size_t> SPARSE_MATRIX_CSPARSE::get_reorder_permutation()
+vector<unsigned int> SPARSE_MATRIX_CSPARSE::get_reorder_permutation()
 {
     csi* p = cs_amd(1,matrix_real); // use the real part for re-ordering
 
-    vector<size_t> permutation;
+    vector<unsigned int> permutation;
     permutation.reserve(get_matrix_size());
     int n = get_matrix_size();
     for(int i = 0; i!=n; ++i)
-        permutation.push_back(size_t(p[i]));
+        permutation.push_back((unsigned int)(p[i]));
 
     free(p);
 
@@ -505,7 +505,7 @@ vector<double>& SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
 void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
 {
     ostringstream osstream;
-    size_t n = b.size();
+    unsigned int n = b.size();
     if(bb!=NULL)
     {
         if(n<=bb_size)
@@ -526,14 +526,14 @@ void SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
     }
     if(bb!=NULL)
     {
-        for(size_t i=0; i!=n; ++i) bb[i]=b[i]; // set bb
+        for(unsigned int i=0; i!=n; ++i) bb[i]=b[i]; // set bb
 
         cs_ipvec(LU->pinv, bb, LU_workspace, matrix_real->n) ;       /* x = b(p) */
         int OK = cs_lsolve (LU->L, LU_workspace) ;               /* x = L\x */
         if(OK == 1)
         {
             // now solution is OK
-            for(size_t i=0; i!=n; ++i) b[i]=LU_workspace[i]; // now reset b with bb
+            for(unsigned int i=0; i!=n; ++i) b[i]=LU_workspace[i]; // now reset b with bb
         }
         else
         {
@@ -553,7 +553,7 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
     string buffer;
     char cbuffer[1000];
 
-    size_t n = b.size();
+    unsigned int n = b.size();
     if(bb!=NULL)
     {
         if(n<=bb_size)
@@ -574,14 +574,14 @@ void SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
     }
     if(bb!=NULL)
     {
-        for(size_t i=0; i!=n; ++i) LU_workspace[i]=b[i]; // set bb
+        for(unsigned int i=0; i!=n; ++i) LU_workspace[i]=b[i]; // set bb
         int OK = cs_usolve(LU->U, LU_workspace) ;               /* x = U\x */
         cs_ipvec(LU_symbolic->q, LU_workspace, bb, matrix_real->n) ;          /* b(q) = x */
 
         if(OK == 1)
         {
             // now solution is OK
-            for(size_t i=0; i!=n; ++i) b[i]=bb[i]; // now reset b with bb
+            for(unsigned int i=0; i!=n; ++i) b[i]=bb[i]; // now reset b with bb
         }
         else
         {

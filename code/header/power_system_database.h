@@ -41,42 +41,42 @@ class POWER_SYSTEM_DATABASE : public BASE
         double get_zero_impedance_threshold_in_pu() const;
 
         void set_database_capacity();
-        size_t get_bus_capacity() const;
-        size_t get_generator_capacity() const;
-        size_t get_wt_generator_capacity() const;
-        size_t get_pv_unit_capacity() const;
-        size_t get_load_capacity() const;
-        size_t get_fixed_shunt_capacity() const;
-        size_t get_line_capacity() const;
-        size_t get_transformer_capacity() const;
-        size_t get_hvdc_capacity() const;
-        size_t get_equivalent_device_capacity() const;
-        size_t get_energy_storage_capacity() const;
-        size_t get_area_capacity() const;
-        size_t get_zone_capacity() const;
-        size_t get_owner_capacity() const;
+        unsigned int get_bus_capacity() const;
+        unsigned int get_generator_capacity() const;
+        unsigned int get_wt_generator_capacity() const;
+        unsigned int get_pv_unit_capacity() const;
+        unsigned int get_load_capacity() const;
+        unsigned int get_fixed_shunt_capacity() const;
+        unsigned int get_line_capacity() const;
+        unsigned int get_transformer_capacity() const;
+        unsigned int get_hvdc_capacity() const;
+        unsigned int get_equivalent_device_capacity() const;
+        unsigned int get_energy_storage_capacity() const;
+        unsigned int get_area_capacity() const;
+        unsigned int get_zone_capacity() const;
+        unsigned int get_owner_capacity() const;
 
-        void set_bus_capacity(size_t n);
-        void set_generator_capacity(size_t n);
-        void set_wt_generator_capacity(size_t n);
-        void set_pv_unit_capacity(size_t n);
-        void set_load_capacity(size_t n);
-        void set_fixed_shunt_capacity(size_t n);
-        void set_line_capacity(size_t n);
-        void set_transformer_capacity(size_t n);
-        void set_hvdc_capacity(size_t n);
-        void set_equivalent_device_capacity(size_t n);
-        void set_energy_storage_capacity(size_t n);
-        void set_area_capacity(size_t n);
-        void set_zone_capacity(size_t n);
-        void set_owner_capacity(size_t n);
+        void set_bus_capacity(unsigned int n);
+        void set_generator_capacity(unsigned int n);
+        void set_wt_generator_capacity(unsigned int n);
+        void set_pv_unit_capacity(unsigned int n);
+        void set_load_capacity(unsigned int n);
+        void set_fixed_shunt_capacity(unsigned int n);
+        void set_line_capacity(unsigned int n);
+        void set_transformer_capacity(unsigned int n);
+        void set_hvdc_capacity(unsigned int n);
+        void set_equivalent_device_capacity(unsigned int n);
+        void set_energy_storage_capacity(unsigned int n);
+        void set_area_capacity(unsigned int n);
+        void set_zone_capacity(unsigned int n);
+        void set_owner_capacity(unsigned int n);
 
         void set_system_name(const string& name);
         string get_system_name() const;
 
-        void set_allowed_max_bus_number(size_t max_bus_num);
-        size_t get_allowed_max_bus_number() const;
-        bool is_bus_in_allowed_range(size_t bus) const;
+        void set_allowed_max_bus_number(unsigned int max_bus_num);
+        unsigned int get_allowed_max_bus_number() const;
+        bool is_bus_in_allowed_range(unsigned int bus) const;
 
         void set_system_base_power_in_MVA(const double s);
         double get_system_base_power_in_MVA() const;
@@ -107,7 +107,7 @@ class POWER_SYSTEM_DATABASE : public BASE
 
         void update_all_bus_base_frequency(double fbase_Hz);
 
-        bool is_bus_exist(size_t bus) const;
+        bool is_bus_exist(unsigned int bus) const;
         bool is_generator_exist(const DEVICE_ID& device_id) const;
         bool is_wt_generator_exist(const DEVICE_ID& device_id) const;
         bool is_pv_unit_exist(const DEVICE_ID& device_id) const;
@@ -118,14 +118,14 @@ class POWER_SYSTEM_DATABASE : public BASE
         bool is_hvdc_exist(const DEVICE_ID& device_id) const;
         bool is_equivalent_device_exist(const DEVICE_ID& device_id) const;
         bool is_energy_storage_exist(const DEVICE_ID& device_id) const;
-        bool is_area_exist(const size_t no) const;
-        bool is_zone_exist(const size_t no) const;
-        bool is_owner_exist(const size_t no) const;
+        bool is_area_exist(const unsigned int no) const;
+        bool is_zone_exist(const unsigned int no) const;
+        bool is_owner_exist(const unsigned int no) const;
 
-        void change_bus_number(size_t original_bus_number, size_t new_bus_number);
+        void change_bus_number(unsigned int original_bus_number, unsigned int new_bus_number);
 
         DEVICE* get_device(const DEVICE_ID& device_id);
-        BUS* get_bus(size_t bus);
+        BUS* get_bus(unsigned int bus);
         BUS* get_bus(const DEVICE_ID & device_id);
         GENERATOR* get_generator(const DEVICE_ID & device_id);
         WT_GENERATOR* get_wt_generator(const DEVICE_ID & device_id);
@@ -138,95 +138,95 @@ class POWER_SYSTEM_DATABASE : public BASE
         HVDC* get_hvdc(const DEVICE_ID & device_id);
         EQUIVALENT_DEVICE* get_equivalent_device(const DEVICE_ID & device_id);
         ENERGY_STORAGE* get_energy_storage(const DEVICE_ID & device_id);
-        AREA* get_area(const size_t no);
-        ZONE* get_zone(const size_t no);
-        OWNER* get_owner(const size_t no);
+        AREA* get_area(const unsigned int no);
+        ZONE* get_zone(const unsigned int no);
+        OWNER* get_owner(const unsigned int no);
 
-        vector<DEVICE*> get_all_devices_connecting_to_bus(const size_t bus);
-        vector<GENERATOR*> get_generators_connecting_to_bus(const size_t bus);
-        vector<WT_GENERATOR*> get_wt_generators_connecting_to_bus(const size_t bus);
-        vector<PV_UNIT*> get_pv_units_connecting_to_bus(const size_t bus);
-        vector<SOURCE*> get_sources_connecting_to_bus(const size_t bus);
-        vector<LOAD*> get_loads_connecting_to_bus(const size_t bus);
-        vector<LINE*> get_lines_connecting_to_bus(const size_t bus);
-        vector<TRANSFORMER*> get_transformers_connecting_to_bus(const size_t bus);
-        vector<FIXED_SHUNT*> get_fixed_shunts_connecting_to_bus(const size_t bus);
-        vector<HVDC*> get_hvdcs_connecting_to_bus(const size_t bus);
-        vector<EQUIVALENT_DEVICE*> get_equivalent_devices_connecting_to_bus(const size_t bus);
-        vector<ENERGY_STORAGE*> get_energy_storages_connecting_to_bus(const size_t bus);
+        vector<DEVICE*> get_all_devices_connecting_to_bus(const unsigned int bus);
+        vector<GENERATOR*> get_generators_connecting_to_bus(const unsigned int bus);
+        vector<WT_GENERATOR*> get_wt_generators_connecting_to_bus(const unsigned int bus);
+        vector<PV_UNIT*> get_pv_units_connecting_to_bus(const unsigned int bus);
+        vector<SOURCE*> get_sources_connecting_to_bus(const unsigned int bus);
+        vector<LOAD*> get_loads_connecting_to_bus(const unsigned int bus);
+        vector<LINE*> get_lines_connecting_to_bus(const unsigned int bus);
+        vector<TRANSFORMER*> get_transformers_connecting_to_bus(const unsigned int bus);
+        vector<FIXED_SHUNT*> get_fixed_shunts_connecting_to_bus(const unsigned int bus);
+        vector<HVDC*> get_hvdcs_connecting_to_bus(const unsigned int bus);
+        vector<EQUIVALENT_DEVICE*> get_equivalent_devices_connecting_to_bus(const unsigned int bus);
+        vector<ENERGY_STORAGE*> get_energy_storages_connecting_to_bus(const unsigned int bus);
 
-        vector<DEVICE_ID> get_all_devices_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_generators_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_wt_generators_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_pv_units_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_sources_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_loads_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_lines_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_transformers_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_fixed_shunts_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_hvdcs_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_equivalent_devices_device_id_connecting_to_bus(const size_t bus);
-        vector<DEVICE_ID> get_energy_storages_device_id_connecting_to_bus(const size_t bus);
+        vector<DEVICE_ID> get_all_devices_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_generators_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_wt_generators_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_pv_units_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_sources_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_loads_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_lines_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_transformers_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_fixed_shunts_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_hvdcs_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_equivalent_devices_device_id_connecting_to_bus(const unsigned int bus);
+        vector<DEVICE_ID> get_energy_storages_device_id_connecting_to_bus(const unsigned int bus);
 
-        vector<DEVICE*> get_all_devices_in_area(const size_t area);
-        vector<BUS*> get_buses_in_area(const size_t area);
-        vector<GENERATOR*> get_generators_in_area(const size_t area);
-        vector<WT_GENERATOR*> get_wt_generators_in_area(const size_t area);
-        vector<PV_UNIT*> get_pv_units_in_area(const size_t area);
-        vector<SOURCE*> get_sources_in_area(const size_t area);
-        vector<LOAD*> get_loads_in_area(const size_t area);
-        vector<LINE*> get_lines_in_area(const size_t area);
-        vector<TRANSFORMER*> get_transformers_in_area(const size_t area);
-        vector<FIXED_SHUNT*> get_fixed_shunts_in_area(const size_t area);
-        vector<HVDC*> get_hvdcs_in_area(const size_t area);
-        vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_area(const size_t area);
-        vector<ENERGY_STORAGE*> get_energy_storages_in_area(const size_t area);
+        vector<DEVICE*> get_all_devices_in_area(const unsigned int area);
+        vector<BUS*> get_buses_in_area(const unsigned int area);
+        vector<GENERATOR*> get_generators_in_area(const unsigned int area);
+        vector<WT_GENERATOR*> get_wt_generators_in_area(const unsigned int area);
+        vector<PV_UNIT*> get_pv_units_in_area(const unsigned int area);
+        vector<SOURCE*> get_sources_in_area(const unsigned int area);
+        vector<LOAD*> get_loads_in_area(const unsigned int area);
+        vector<LINE*> get_lines_in_area(const unsigned int area);
+        vector<TRANSFORMER*> get_transformers_in_area(const unsigned int area);
+        vector<FIXED_SHUNT*> get_fixed_shunts_in_area(const unsigned int area);
+        vector<HVDC*> get_hvdcs_in_area(const unsigned int area);
+        vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_area(const unsigned int area);
+        vector<ENERGY_STORAGE*> get_energy_storages_in_area(const unsigned int area);
 
-        vector<DEVICE_ID> get_all_devices_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_buses_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_generators_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_wt_generators_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_pv_units_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_sources_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_loads_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_lines_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_transformers_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_fixed_shunts_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_hvdcs_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_equivalent_devices_device_id_in_area(const size_t area);
-        vector<DEVICE_ID> get_energy_storages_device_id_in_area(const size_t area);
+        vector<DEVICE_ID> get_all_devices_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_buses_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_generators_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_wt_generators_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_pv_units_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_sources_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_loads_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_lines_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_transformers_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_fixed_shunts_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_hvdcs_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_equivalent_devices_device_id_in_area(const unsigned int area);
+        vector<DEVICE_ID> get_energy_storages_device_id_in_area(const unsigned int area);
 
-        vector<DEVICE*> get_all_devices_in_zone(const size_t zone);
-        vector<BUS*> get_buses_in_zone(const size_t zone);
-        vector<GENERATOR*> get_generators_in_zone(const size_t zone);
-        vector<WT_GENERATOR*> get_wt_generators_in_zone(const size_t zone);
-        vector<PV_UNIT*> get_pv_units_in_zone(const size_t zone);
-        vector<SOURCE*> get_sources_in_zone(const size_t zone);
-        vector<LOAD*> get_loads_in_zone(const size_t zone);
-        vector<LINE*> get_lines_in_zone(const size_t zone);
-        vector<TRANSFORMER*> get_transformers_in_zone(const size_t zone);
-        vector<FIXED_SHUNT*> get_fixed_shunts_in_zone(const size_t zone);
-        vector<HVDC*> get_hvdcs_in_zone(const size_t zone);
-        vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_zone(const size_t zone);
-        vector<ENERGY_STORAGE*> get_energy_storages_in_zone(const size_t zone);
+        vector<DEVICE*> get_all_devices_in_zone(const unsigned int zone);
+        vector<BUS*> get_buses_in_zone(const unsigned int zone);
+        vector<GENERATOR*> get_generators_in_zone(const unsigned int zone);
+        vector<WT_GENERATOR*> get_wt_generators_in_zone(const unsigned int zone);
+        vector<PV_UNIT*> get_pv_units_in_zone(const unsigned int zone);
+        vector<SOURCE*> get_sources_in_zone(const unsigned int zone);
+        vector<LOAD*> get_loads_in_zone(const unsigned int zone);
+        vector<LINE*> get_lines_in_zone(const unsigned int zone);
+        vector<TRANSFORMER*> get_transformers_in_zone(const unsigned int zone);
+        vector<FIXED_SHUNT*> get_fixed_shunts_in_zone(const unsigned int zone);
+        vector<HVDC*> get_hvdcs_in_zone(const unsigned int zone);
+        vector<EQUIVALENT_DEVICE*> get_equivalent_devices_in_zone(const unsigned int zone);
+        vector<ENERGY_STORAGE*> get_energy_storages_in_zone(const unsigned int zone);
 
-        vector<DEVICE_ID> get_all_devices_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_buses_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_generators_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_wt_generators_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_pv_units_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_sources_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_loads_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_lines_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_transformers_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_fixed_shunts_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_hvdcs_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_equivalent_devices_device_id_in_zone(const size_t zone);
-        vector<DEVICE_ID> get_energy_storages_device_id_in_zone(const size_t zone);
+        vector<DEVICE_ID> get_all_devices_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_buses_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_generators_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_wt_generators_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_pv_units_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_sources_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_loads_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_lines_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_transformers_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_fixed_shunts_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_hvdcs_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_equivalent_devices_device_id_in_zone(const unsigned int zone);
+        vector<DEVICE_ID> get_energy_storages_device_id_in_zone(const unsigned int zone);
 
         vector<DEVICE*> get_all_devices();
         vector<BUS*> get_all_buses();
-        vector<BUS*> get_buses_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
+        vector<BUS*> get_buses_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, unsigned int area, unsigned int zone, unsigned int owner);
         vector<BUS*> get_all_in_service_buses();
         vector<GENERATOR*> get_all_generators();
         vector<WT_GENERATOR*> get_all_wt_generators();
@@ -243,9 +243,9 @@ class POWER_SYSTEM_DATABASE : public BASE
         vector<ZONE*> get_all_zones();
         vector<OWNER*> get_all_owners();
 
-        vector<size_t> get_all_buses_number();
-        vector<size_t> get_buses_number_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, size_t area, size_t zone, size_t owner);
-        vector<size_t> get_all_in_service_buses_number();
+        vector<unsigned int> get_all_buses_number();
+        vector<unsigned int> get_buses_number_with_constraints(double vbase_kV_min, double vbase_kV_max, double v_pu_min, double v_pu_max, unsigned int area, unsigned int zone, unsigned int owner);
+        vector<unsigned int> get_all_in_service_buses_number();
         vector<DEVICE_ID> get_all_generators_device_id();
         vector<DEVICE_ID> get_all_wt_generators_device_id();
         vector<DEVICE_ID> get_all_pv_units_device_id();
@@ -257,52 +257,52 @@ class POWER_SYSTEM_DATABASE : public BASE
         vector<DEVICE_ID> get_all_hvdcs_device_id();
         vector<DEVICE_ID> get_all_equivalent_devices_device_id();
         vector<DEVICE_ID> get_all_energy_storages_device_id();
-        vector<size_t> get_all_areas_number();
-        vector<size_t> get_all_zones_number();
-        vector<size_t> get_all_owners_number();
+        vector<unsigned int> get_all_areas_number();
+        vector<unsigned int> get_all_zones_number();
+        vector<unsigned int> get_all_owners_number();
 
-        size_t get_bus_count() const;
-        size_t get_in_service_bus_count() const;
-        size_t get_overshadowed_bus_count() const;
-        size_t get_generator_count() const;
-        size_t get_wt_generator_count() const;
-        size_t get_pv_unit_count() const;
-        size_t get_source_count() const;
-        size_t get_load_count() const;
-        size_t get_line_count() const;
-        size_t get_transformer_count() const;
-        size_t get_fixed_shunt_count() const;
-        size_t get_hvdc_count() const;
-        size_t get_switched_shunt_count() const;
-        size_t get_equivalent_device_count() const;
-        size_t get_energy_storage_count() const;
-        size_t get_area_count() const;
-        size_t get_zone_count() const;
-        size_t get_owner_count() const;
+        unsigned int get_bus_count() const;
+        unsigned int get_in_service_bus_count() const;
+        unsigned int get_overshadowed_bus_count() const;
+        unsigned int get_generator_count() const;
+        unsigned int get_wt_generator_count() const;
+        unsigned int get_pv_unit_count() const;
+        unsigned int get_source_count() const;
+        unsigned int get_load_count() const;
+        unsigned int get_line_count() const;
+        unsigned int get_transformer_count() const;
+        unsigned int get_fixed_shunt_count() const;
+        unsigned int get_hvdc_count() const;
+        unsigned int get_switched_shunt_count() const;
+        unsigned int get_equivalent_device_count() const;
+        unsigned int get_energy_storage_count() const;
+        unsigned int get_area_count() const;
+        unsigned int get_zone_count() const;
+        unsigned int get_owner_count() const;
 
-        size_t get_bus_index(size_t bus) const;
-        size_t get_generator_index(const DEVICE_ID & device_id) const;
-        size_t get_wt_generator_index(const DEVICE_ID & device_id) const;
-        size_t get_pv_unit_index(const DEVICE_ID & device_id) const;
-        size_t get_load_index(const DEVICE_ID & device_id) const;
-        size_t get_line_index(const DEVICE_ID & device_id) const;
-        size_t get_transformer_index(const DEVICE_ID & device_id) const;
-        size_t get_fixed_shunt_index(const DEVICE_ID & device_id) const;
-        size_t get_hvdc_index(const DEVICE_ID & device_id) const;
-        size_t get_equivalent_device_index(const DEVICE_ID & device_id) const;
-        size_t get_energy_storage_index(const DEVICE_ID & device_id) const;
-        size_t get_area_index(const size_t no) const;
-        size_t get_zone_index(const size_t no) const;
-        size_t get_owner_index(const size_t no) const;
+        unsigned int get_bus_index(unsigned int bus) const;
+        unsigned int get_generator_index(const DEVICE_ID & device_id) const;
+        unsigned int get_wt_generator_index(const DEVICE_ID & device_id) const;
+        unsigned int get_pv_unit_index(const DEVICE_ID & device_id) const;
+        unsigned int get_load_index(const DEVICE_ID & device_id) const;
+        unsigned int get_line_index(const DEVICE_ID & device_id) const;
+        unsigned int get_transformer_index(const DEVICE_ID & device_id) const;
+        unsigned int get_fixed_shunt_index(const DEVICE_ID & device_id) const;
+        unsigned int get_hvdc_index(const DEVICE_ID & device_id) const;
+        unsigned int get_equivalent_device_index(const DEVICE_ID & device_id) const;
+        unsigned int get_energy_storage_index(const DEVICE_ID & device_id) const;
+        unsigned int get_area_index(const unsigned int no) const;
+        unsigned int get_zone_index(const unsigned int no) const;
+        unsigned int get_owner_index(const unsigned int no) const;
 
-        size_t bus_name2bus_number(const string& name) const;
-        size_t area_name2area_number(const string& name) const;
-        size_t zone_name2zone_number(const string& name) const;
-        size_t owner_name2owner_number(const string& name) const;
-        string bus_number2bus_name(size_t number);
-        string area_number2area_name(size_t number);
-        string zone_number2zone_name(size_t number);
-        string owner_number2owner_name(size_t number);
+        unsigned int bus_name2bus_number(const string& name) const;
+        unsigned int area_name2area_number(const string& name) const;
+        unsigned int zone_name2zone_number(const string& name) const;
+        unsigned int owner_name2owner_number(const string& name) const;
+        string bus_number2bus_name(unsigned int number);
+        string area_number2area_name(unsigned int number);
+        string zone_number2zone_name(unsigned int number);
+        string owner_number2owner_name(unsigned int number);
 
         void check_all_devices();
         void check_all_buses();
@@ -344,124 +344,124 @@ class POWER_SYSTEM_DATABASE : public BASE
 
         void scale_load_power(const DEVICE_ID& did, double scale);
         void scale_all_loads_power(double scale);
-        void scale_loads_power_at_bus(size_t bus, double scale);
-        void scale_loads_power_in_area(size_t area_number, double scale);
-        void scale_loads_power_in_zone(size_t zone_number, double scale);
+        void scale_loads_power_at_bus(unsigned int bus, double scale);
+        void scale_loads_power_in_area(unsigned int area_number, double scale);
+        void scale_loads_power_in_zone(unsigned int zone_number, double scale);
 
         void scale_source_power(const DEVICE_ID& did, double scale);
         void scale_all_sources_power(double scale);
-        void scale_sources_power_at_bus(size_t bus, double scale);
-        void scale_sources_power_in_area(size_t area_number, double scale);
-        void scale_sources_power_in_zone(size_t zone_number, double scale);
+        void scale_sources_power_at_bus(unsigned int bus, double scale);
+        void scale_sources_power_in_area(unsigned int area_number, double scale);
+        void scale_sources_power_in_zone(unsigned int zone_number, double scale);
 
         void scale_generator_power(const DEVICE_ID& did, double scale);
         void scale_all_generators_power(double scale);
-        void scale_generators_power_at_bus(size_t bus, double scale);
-        void scale_generators_power_in_area(size_t area_number, double scale);
-        void scale_generators_power_in_zone(size_t zone_number, double scale);
+        void scale_generators_power_at_bus(unsigned int bus, double scale);
+        void scale_generators_power_in_area(unsigned int area_number, double scale);
+        void scale_generators_power_in_zone(unsigned int zone_number, double scale);
 
         void scale_wt_generator_power(const DEVICE_ID& did, double scale);
         void scale_all_wt_generators_power(double scale);
-        void scale_wt_generators_power_at_bus(size_t bus, double scale);
-        void scale_wt_generators_power_in_area(size_t area_number, double scale);
-        void scale_wt_generators_power_in_zone(size_t zone_number, double scale);
+        void scale_wt_generators_power_at_bus(unsigned int bus, double scale);
+        void scale_wt_generators_power_in_area(unsigned int area_number, double scale);
+        void scale_wt_generators_power_in_zone(unsigned int zone_number, double scale);
 
         void scale_pv_unit_power(const DEVICE_ID& did, double scale);
         void scale_all_pv_units_power(double scale);
-        void scale_pv_units_power_at_bus(size_t bus, double scale);
-        void scale_pv_units_power_in_area(size_t area_number, double scale);
-        void scale_pv_units_power_in_zone(size_t zone_number, double scale);
+        void scale_pv_units_power_at_bus(unsigned int bus, double scale);
+        void scale_pv_units_power_in_area(unsigned int area_number, double scale);
+        void scale_pv_units_power_in_zone(unsigned int zone_number, double scale);
 
         void scale_energy_storage_power(const DEVICE_ID& did, double scale);
         void scale_all_energy_storages_power(double scale);
-        void scale_energy_storages_power_at_bus(size_t bus, double scale);
-        void scale_energy_storages_power_in_area(size_t area_number, double scale);
-        void scale_energy_storages_power_in_zone(size_t zone_number, double scale);
+        void scale_energy_storages_power_at_bus(unsigned int bus, double scale);
+        void scale_energy_storages_power_in_area(unsigned int area_number, double scale);
+        void scale_energy_storages_power_in_zone(unsigned int zone_number, double scale);
 
-        void clear_bus(size_t bus);
+        void clear_bus(unsigned int bus);
         void clear_all_buses();
 
         void clear_generator(const DEVICE_ID& device_id);
-        void clear_generators_connecting_to_bus(const size_t bus);
+        void clear_generators_connecting_to_bus(const unsigned int bus);
         void clear_all_generators();
 
         void clear_wt_generator(const DEVICE_ID& device_id);
-        void clear_wt_generators_connecting_to_bus(const size_t bus);
+        void clear_wt_generators_connecting_to_bus(const unsigned int bus);
         void clear_all_wt_generators();
 
         void clear_pv_unit(const DEVICE_ID& device_id);
-        void clear_pv_units_connecting_to_bus(const size_t bus);
+        void clear_pv_units_connecting_to_bus(const unsigned int bus);
         void clear_all_pv_units();
 
-        void clear_sources_connecting_to_bus(const size_t bus);
+        void clear_sources_connecting_to_bus(const unsigned int bus);
         void clear_all_sources();
 
         void clear_load(const DEVICE_ID& device_id);
-        void clear_loads_connecting_to_bus(const size_t bus);
+        void clear_loads_connecting_to_bus(const unsigned int bus);
         void clear_all_loads();
 
         void clear_line(const DEVICE_ID& device_id);
-        void clear_lines_connecting_to_bus(const size_t bus);
+        void clear_lines_connecting_to_bus(const unsigned int bus);
         void clear_all_lines();
 
         void clear_transformer(const DEVICE_ID& device_id);
-        void clear_transformers_connecting_to_bus(const size_t bus);
+        void clear_transformers_connecting_to_bus(const unsigned int bus);
         void clear_all_transformers();
 
         void clear_fixed_shunt(const DEVICE_ID& device_id);
-        void clear_fixed_shunts_connecting_to_bus(const size_t bus);
+        void clear_fixed_shunts_connecting_to_bus(const unsigned int bus);
         void clear_all_fixed_shunts();
 
         void clear_hvdc(const DEVICE_ID& device_id);
-        void clear_hvdcs_connecting_to_bus(const size_t bus);
+        void clear_hvdcs_connecting_to_bus(const unsigned int bus);
         void clear_all_hvdcs();
 
         void clear_equivalent_device(const DEVICE_ID& device_id);
-        void clear_equivalent_devices_connecting_to_bus(const size_t bus);
+        void clear_equivalent_devices_connecting_to_bus(const unsigned int bus);
         void clear_all_equivalent_devices();
 
         void clear_energy_storage(const DEVICE_ID& device_id);
-        void clear_energy_storages_connecting_to_bus(const size_t bus);
+        void clear_energy_storages_connecting_to_bus(const unsigned int bus);
         void clear_all_energy_storages();
 
-        void clear_area(size_t area);
+        void clear_area(unsigned int area);
         void clear_all_areas();
 
-        void clear_zone(size_t zone);
+        void clear_zone(unsigned int zone);
         void clear_all_zones();
 
-        void clear_owner(size_t owner);
+        void clear_owner(unsigned int owner);
         void clear_all_owners();
 
-        void trip_bus(size_t bus);
+        void trip_bus(unsigned int bus);
 
         void check_device_status_for_out_of_service_buses();
         void calibrate_sources_pmax_and_pmin_with_dynamic_model();
         void calibrate_generators_pmax_and_pmin_with_turbine_governor_model();
 
-        BUS_TYPE get_bus_type(size_t bus);
-        double get_bus_base_frequency_in_Hz(size_t bus);
-        double get_bus_base_voltage_in_kV(size_t bus);
-        double get_bus_positive_sequence_voltage_in_pu(size_t bus);
-        double get_bus_positive_sequence_voltage_in_kV(size_t bus);
-        double get_bus_positive_sequence_angle_in_deg(size_t bus);
-        double get_bus_positive_sequence_angle_in_rad(size_t bus);
-        complex<double> get_bus_positive_sequence_complex_voltage_in_pu(size_t bus);
-        complex<double> get_bus_positive_sequence_complex_voltage_in_kV(size_t bus);
-        double get_bus_frequency_deviation_in_pu(size_t bus);
-        double get_bus_frequency_deviation_in_Hz(size_t bus);
-        double get_bus_frequency_in_Hz(size_t bus);
-        double get_bus_frequency_in_pu(size_t bus);
+        BUS_TYPE get_bus_type(unsigned int bus);
+        double get_bus_base_frequency_in_Hz(unsigned int bus);
+        double get_bus_base_voltage_in_kV(unsigned int bus);
+        double get_bus_positive_sequence_voltage_in_pu(unsigned int bus);
+        double get_bus_positive_sequence_voltage_in_kV(unsigned int bus);
+        double get_bus_positive_sequence_angle_in_deg(unsigned int bus);
+        double get_bus_positive_sequence_angle_in_rad(unsigned int bus);
+        complex<double> get_bus_positive_sequence_complex_voltage_in_pu(unsigned int bus);
+        complex<double> get_bus_positive_sequence_complex_voltage_in_kV(unsigned int bus);
+        double get_bus_frequency_deviation_in_pu(unsigned int bus);
+        double get_bus_frequency_deviation_in_Hz(unsigned int bus);
+        double get_bus_frequency_in_Hz(unsigned int bus);
+        double get_bus_frequency_in_pu(unsigned int bus);
 
-        double get_voltage_to_regulate_of_physical_bus_in_pu(size_t bus);
-        double get_regulatable_p_max_at_physical_bus_in_MW(size_t bus);
-        double get_regulatable_p_min_at_physical_bus_in_MW(size_t bus);
-        double get_regulatable_q_max_at_physical_bus_in_MVar(size_t bus);
-        double get_regulatable_q_min_at_physical_bus_in_MVar(size_t bus);
-        double get_total_regulating_p_generation_at_physical_bus_in_MW(size_t bus);
-        double get_total_regulating_q_generation_at_physical_bus_in_MVar(size_t bus);
-        double get_total_p_generation_at_physical_bus_in_MW(size_t bus);
-        double get_total_q_generation_at_physical_bus_in_MVar(size_t bus);
+        double get_voltage_to_regulate_of_physical_bus_in_pu(unsigned int bus);
+        double get_regulatable_p_max_at_physical_bus_in_MW(unsigned int bus);
+        double get_regulatable_p_min_at_physical_bus_in_MW(unsigned int bus);
+        double get_regulatable_q_max_at_physical_bus_in_MVar(unsigned int bus);
+        double get_regulatable_q_min_at_physical_bus_in_MVar(unsigned int bus);
+        double get_total_regulating_p_generation_at_physical_bus_in_MW(unsigned int bus);
+        double get_total_regulating_q_generation_at_physical_bus_in_MVar(unsigned int bus);
+        double get_total_p_generation_at_physical_bus_in_MW(unsigned int bus);
+        double get_total_q_generation_at_physical_bus_in_MVar(unsigned int bus);
 
         complex<double> get_total_load_power_in_MVA();
         complex<double> get_total_generation_power_in_MVA();
@@ -471,15 +471,15 @@ class POWER_SYSTEM_DATABASE : public BASE
         void update_in_service_bus_count();
         void set_all_buses_un_overshadowed();
         void update_overshadowed_bus_count();
-        size_t get_equivalent_bus_of_bus(size_t bus);
+        unsigned int get_equivalent_bus_of_bus(unsigned int bus);
     private:
-        void check_source_status_for_out_of_service_bus(size_t bus);
-        void check_load_status_for_out_of_service_bus(size_t bus);
-        void check_fixed_shunt_status_for_out_of_service_bus(size_t bus);
-        void check_line_status_for_out_of_service_bus(size_t bus);
-        void check_transformer_status_for_out_of_service_bus(size_t bus);
-        void check_hvdc_status_for_out_of_service_bus(size_t bus);
-        void check_energy_storage_status_for_out_of_service_bus(size_t bus);
+        void check_source_status_for_out_of_service_bus(unsigned int bus);
+        void check_load_status_for_out_of_service_bus(unsigned int bus);
+        void check_fixed_shunt_status_for_out_of_service_bus(unsigned int bus);
+        void check_line_status_for_out_of_service_bus(unsigned int bus);
+        void check_transformer_status_for_out_of_service_bus(unsigned int bus);
+        void check_hvdc_status_for_out_of_service_bus(unsigned int bus);
+        void check_energy_storage_status_for_out_of_service_bus(unsigned int bus);
 
         string system_name;
         double system_base_power_in_MVA, one_over_system_base_power;
@@ -503,13 +503,13 @@ class POWER_SYSTEM_DATABASE : public BASE
 
         double zero_impedance_threshold;
 
-        size_t in_service_bus_count;
-        size_t overshadowed_bus_count;
+        unsigned int in_service_bus_count;
+        unsigned int overshadowed_bus_count;
 
         BUS_INDEX bus_index;
         DEVICE_INDEX_MAP generator_index, wt_generator_index, pv_unit_index, load_index, fixed_shunt_index, switched_shunt_index,
                             line_index, transformer_index, hvdc_index, equivalent_device_index, energy_storage_index;
-        map<size_t,  size_t> area_index, zone_index, owner_index;
+        map<unsigned int,  unsigned int> area_index, zone_index, owner_index;
 
     private:
         virtual bool is_valid() const;

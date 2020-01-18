@@ -173,11 +173,11 @@ void SPARSE_MATRIX_KLU::add_entry(int row, int col, const complex<double>& value
 {
     if(matrix_in_triplet_form())
     {
-        size_t nz = get_matrix_entry_count();
-        for(size_t i=0; i<nz; ++i)
+        unsigned int nz = get_matrix_entry_count();
+        for(unsigned int i=0; i<nz; ++i)
         {
-            size_t r = triplet_row_index[i];
-            size_t c = triplet_column_index[i];
+            int r = int(triplet_row_index[i]);
+            int c = int(triplet_column_index[i]);
             if(r==row and c==col)
             {
                 triplet_matrix_real[i] += value.real();
@@ -190,8 +190,8 @@ void SPARSE_MATRIX_KLU::add_entry(int row, int col, const complex<double>& value
         triplet_matrix_real.push_back(value.real());
         triplet_matrix_imag.push_back(value.imag());
 
-        if(row+1>n_row) n_row = row+1;
-        if(col+1>n_column) n_column = col+1;
+        if(row+1>int(n_row)) n_row = row+1;
+        if(col+1>int(n_column)) n_column = col+1;
         update_clock_when_matrix_is_changed();
     }
     else
@@ -209,8 +209,8 @@ void SPARSE_MATRIX_KLU::add_entry(int row, int col, const complex<double>& value
             triplet_column_index.push_back(col);
             triplet_matrix_real.push_back(value.real());
             triplet_matrix_imag.push_back(value.imag());
-            if(row+1>n_row) n_row = row+1;
-            if(col+1>n_column) n_column = col+1;
+            if(row+1>int(n_row)) n_row = row+1;
+            if(col+1>int(n_column)) n_column = col+1;
             compress_and_merge_duplicate_entries();
         }
     }
@@ -226,15 +226,15 @@ void SPARSE_MATRIX_KLU::convert_to_triplet_form()
         triplet_matrix_imag.clear();
 
         int row, col;
-        size_t nz = get_matrix_entry_count();
-        for(int k=0; k!=nz; ++k)
+        unsigned int nz = get_matrix_entry_count();
+        for(unsigned int k=0; k!=nz; ++k)
         {
-            row = get_row_number_of_entry_index(k);
-            col = get_column_number_of_entry_index(k);
+            row = get_row_number_of_entry_index(int(k));
+            col = get_column_number_of_entry_index(int(k));
             triplet_row_index.push_back(row);
             triplet_column_index.push_back(col);
-            triplet_matrix_real.push_back(get_real_entry_value(k));
-            triplet_matrix_imag.push_back(get_imag_entry_value(k));
+            triplet_matrix_real.push_back(get_real_entry_value(int(k)));
+            triplet_matrix_imag.push_back(get_imag_entry_value(int(k)));
         }
         update_clock_when_matrix_is_changed();
 
@@ -252,12 +252,12 @@ void SPARSE_MATRIX_KLU::compress_and_merge_duplicate_entries()
     // compress the sparse matrix
     if(matrix_in_triplet_form())
     {
-        size_t nz = triplet_matrix_real.size();
+        unsigned int nz = triplet_matrix_real.size();
         int* row_index = (int*)calloc(nz, sizeof(int));
         int* col_index = (int*)calloc(nz, sizeof(int));
         double* vreal = (double*)calloc(nz, sizeof(double));
         double* vimag = (double*)calloc(nz, sizeof(double));
-        for(size_t i=0; i<nz; ++i)
+        for(unsigned int i=0; i<nz; ++i)
         {
             row_index[i] = triplet_row_index[i];
             col_index[i] = triplet_column_index[i];
@@ -296,7 +296,7 @@ void SPARSE_MATRIX_KLU::transpose()
     if(matrix_in_triplet_form()) // if in triplet format, convert to compressed format
         compress_and_merge_duplicate_entries(); // convert
 
-    size_t nz = get_matrix_entry_count();
+    unsigned int nz = get_matrix_entry_count();
 
     int *temp_column_starting_index = (int *) calloc ((n_column+1), sizeof (int)) ;
     int *temp_row_index = (int *) calloc (nz, sizeof (int)) ;
@@ -329,7 +329,7 @@ void SPARSE_MATRIX_KLU::transpose()
     free(temp_rvalue);
     free(temp_ivalue);
 
-    size_t stemp;
+    unsigned int stemp;
     stemp = n_row;
     n_row = n_column;
     n_column = stemp;
@@ -442,16 +442,16 @@ void SPARSE_MATRIX_KLU::change_imag_entry_value(int index, double value)
 }
 
 
-vector<size_t> SPARSE_MATRIX_KLU::get_reorder_permutation()
+vector<unsigned int> SPARSE_MATRIX_KLU::get_reorder_permutation()
 {
     if(matrix_in_triplet_form())
         compress_and_merge_duplicate_entries();
 
-    vector<size_t> permutation;
+    vector<unsigned int> permutation;
     permutation.reserve(n_column);
     int *P = (int*) calloc(n_column, sizeof(int));
     amd_order (n_column, compressed_column_starting_index, compressed_row_index, P, (double *) NULL, (double *) NULL) ;
-    for(size_t i=0; i<n_column; ++i)
+    for(unsigned int i=0; i<n_column; ++i)
         permutation[i]=P[i];
     free(P);
 
@@ -476,7 +476,7 @@ vector<double>& SPARSE_MATRIX_KLU::solve_Ax_eq_b(vector<double>& b)
 {
     if(not LU_factorization_is_performed())   LU_factorization();
 
-    size_t n = b.size();
+    unsigned int n = b.size();
     if(bb!=NULL)
     {
         if(n<=bb_size)
@@ -497,12 +497,12 @@ vector<double>& SPARSE_MATRIX_KLU::solve_Ax_eq_b(vector<double>& b)
     }
     if(bb!=NULL)
     {
-        for(size_t i=0; i!=n; ++i) bb[i]=b[i]; // set bb
+        for(unsigned int i=0; i!=n; ++i) bb[i]=b[i]; // set bb
 
 
         klu_solve (Symbolic, Numeric, n_row, 1, bb, &Common) ;
 
-        for(size_t i=0; i<n_row; ++i) b[i] = bb[i];
+        for(unsigned int i=0; i<n_row; ++i) b[i] = bb[i];
     }
     return b;
 }

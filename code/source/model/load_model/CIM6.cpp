@@ -80,7 +80,7 @@ string CIM6::get_model_name() const
     return "CIM6";
 }
 
-void CIM6::set_motor_type(size_t t)
+void CIM6::set_motor_type(unsigned int t)
 {
     if(t==1)
         Motor_type = 1;
@@ -203,7 +203,7 @@ void CIM6::set_Tnom_in_pu(double t)
     Tnominal = t;
 }
 
-size_t CIM6::get_motor_type() const
+unsigned int CIM6::get_motor_type() const
 {
     return Motor_type;
 }
@@ -341,10 +341,10 @@ bool CIM6::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name=="CIM6AL" or model_name=="CIM6BL" or model_name=="CIM6AR" or model_name=="CIM6ZN" or model_name=="CIM6OW")
         {
-            size_t motor_type;
+            unsigned int motor_type;
             double ra, xa, xm, r1, x1, r2, x2, e1, se1, e2, se2, mbase, pmult, h, vi, ti, tb, a, b, c, d, e, tnom;
 
-            size_t i=3;
+            unsigned int i=3;
             motor_type = get_integer_data(data[i],"1"); i++;
             ra = get_double_data(data[i],"0.0"); i++;
             xa = get_double_data(data[i],"0.0"); i++;
@@ -572,7 +572,7 @@ void CIM6::initialize()
 
     double R = Zsource.real(), X = Zsource.imag();
     complex<double> Ep, Ek;
-    size_t n_iteration = 0;
+    unsigned int n_iteration = 0;
     if(is_single_cage)
     {
         // five vars to solve
@@ -594,7 +594,7 @@ void CIM6::initialize()
             Error.push_back(Erp*Ir+Eip*Ii-R*(Ir*Ir+Ii*Ii)-Pload0); // active power balance
 
             double maxerror = 0.0;
-            for(size_t i=0; i<5; ++i)
+            for(unsigned int i=0; i<5; ++i)
             {
                 if(maxerror<fabs(Error[i]))
                     maxerror = fabs(Error[i]);
@@ -713,7 +713,7 @@ void CIM6::initialize()
             Error.push_back(Erpp*Ir+Eipp*Ii-R*(Ir*Ir+Ii*Ii)-Pload0); // active power balance
 
             double maxerror = 0.0;
-            for(size_t i=0; i<9; ++i)
+            for(unsigned int i=0; i<9; ++i)
             {
                 if(maxerror<fabs(Error[i]))
                     maxerror = fabs(Error[i]);
@@ -1026,7 +1026,7 @@ string CIM6::get_standard_psse_string() const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
-    size_t bus = load->get_load_bus();
+    unsigned int bus = load->get_load_bus();
     string identifier = "'"+load->get_identifier()+"'";
 
     string model_name = "'CIM6BL'";
@@ -1069,7 +1069,7 @@ string CIM6::get_standard_psse_string() const
 void CIM6::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("RA", i); i++;
     add_model_data_name_and_index_pair("XA", i); i++;
     add_model_data_name_and_index_pair("XM", i); i++;
@@ -1207,7 +1207,7 @@ void CIM6::set_model_data_with_name(string par_name, double value)
 void CIM6::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
 
     add_model_inernal_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
     add_model_inernal_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;

@@ -47,14 +47,14 @@ void DEVICE_INDEX_MAP_TEST::tear_down()
     show_test_end_information();
 }
 
-TERMINAL DEVICE_INDEX_MAP_TEST::prepare_terminal(size_t bus)
+TERMINAL DEVICE_INDEX_MAP_TEST::prepare_terminal(unsigned int bus)
 {
     TERMINAL terminal;
     terminal.append_bus(bus);
     return terminal;
 }
 
-TERMINAL DEVICE_INDEX_MAP_TEST::prepare_terminal(size_t ibus,size_t jbus)
+TERMINAL DEVICE_INDEX_MAP_TEST::prepare_terminal(unsigned int ibus,unsigned int jbus)
 {
     TERMINAL terminal;
     terminal.append_bus(ibus);
@@ -62,7 +62,7 @@ TERMINAL DEVICE_INDEX_MAP_TEST::prepare_terminal(size_t ibus,size_t jbus)
     return terminal;
 }
 
-TERMINAL DEVICE_INDEX_MAP_TEST::prepare_terminal(size_t ibus,size_t jbus, size_t kbus)
+TERMINAL DEVICE_INDEX_MAP_TEST::prepare_terminal(unsigned int ibus,unsigned int jbus, unsigned int kbus)
 {
     TERMINAL terminal;
     terminal.append_bus(ibus);
@@ -649,11 +649,11 @@ void DEVICE_INDEX_MAP_TEST::test_index_performance_with_many_buses()
     device_id.set_device_type("TRANSFORMER");
 
     TERMINAL terminal;
-    size_t MAX_TRANSFORMERS = 10000;
+    unsigned int MAX_TRANSFORMERS = 10000;
 
-    size_t index;
+    unsigned int index;
 
-    for(size_t i=1; i<=MAX_TRANSFORMERS; ++i)
+    for(unsigned int i=1; i<=MAX_TRANSFORMERS; ++i)
     {
         terminal = prepare_terminal(i,i+1,i+2);
         device_id.set_device_terminal(terminal);
@@ -663,7 +663,7 @@ void DEVICE_INDEX_MAP_TEST::test_index_performance_with_many_buses()
     ostringstream osstream;
     osstream<<"now performing indexing";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
-    for(size_t i=1; i<=MAX_TRANSFORMERS; ++i)
+    for(unsigned int i=1; i<=MAX_TRANSFORMERS; ++i)
     {
         terminal = prepare_terminal(i,i+1,i+2);
         device_id.set_device_terminal(terminal);

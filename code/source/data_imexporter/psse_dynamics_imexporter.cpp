@@ -91,7 +91,7 @@ void PSSE_IMEXPORTER::load_dynamic_data_into_ram(string file)
     }
     fclose(fid);
 
-    //for(size_t i=0; i<dyr_data_in_ram.size(); ++i)
+    //for(unsigned int i=0; i<dyr_data_in_ram.size(); ++i)
     //    cout<<dyr_data_in_ram[i]<<endl;
 }
 
@@ -105,7 +105,7 @@ void PSSE_IMEXPORTER::load_all_models()
 void PSSE_IMEXPORTER::load_one_model(string data)
 {
     vector<string> record = psse_dyr_string2steps_string_vector(data);
-    //for(size_t i=0; i<record.size();++i)
+    //for(unsigned int i=0; i<record.size();++i)
     //    cout<<record[i]<<endl;
     STEPS_IMEXPORTER importer;
     importer.set_toolkit(get_toolkit(__PRETTY_FUNCTION__));
@@ -127,33 +127,36 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
         return;
     }
     MODEL* model=NULL;
-    size_t n=0;
+    unsigned int n=0;
     vector<GENERATOR*> gens = psdb.get_all_generators();
     GENERATOR* gen = NULL;
     n = gens.size();
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         gen = gens[i];
-        model = gen->get_sync_generator_model();
-        if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
         model = gen->get_compensator_model();
-        if(model!=NULL)
-            ofs<<model->get_standard_psse_string()<<"\n";
-        model = gen->get_exciter_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";
         model = gen->get_stabilizer_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";
+        model = gen->get_exciter_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string()<<"\n";
+        model = gen->get_turbine_load_controller_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string()<<"\n";
         model = gen->get_turbine_governor_model();
+        if(model!=NULL)
+            ofs<<model->get_standard_psse_string()<<"\n";
+        model = gen->get_sync_generator_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";
     }
     vector<WT_GENERATOR*> wt_gens = psdb.get_all_wt_generators();
     WT_GENERATOR* wt_gen = NULL;
     n = wt_gens.size();
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         wt_gen = wt_gens[i];
         model = wt_gen->get_wt_generator_model();
@@ -181,7 +184,7 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
     vector<PV_UNIT*> pvs = psdb.get_all_pv_units();
     PV_UNIT* pv = NULL;
     n = pvs.size();
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         pv = pvs[i];
         model = pv->get_pv_converter_model();
@@ -200,7 +203,7 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
     HVDC* hvdc = NULL;
     n = hvdcs.size();
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         hvdc = hvdcs[i];
         model = hvdc->get_hvdc_model();
@@ -213,16 +216,16 @@ void PSSE_IMEXPORTER::export_dynamic_data(string file)
     vector<LOAD*> loads = psdb.get_all_loads();
     LOAD* load = NULL;
     n = loads.size();
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
-        model = load->get_load_model();
+        model = load->get_load_voltage_relay_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";
         model = load->get_load_frequency_relay_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";
-        model = load->get_load_voltage_relay_model();
+        model = load->get_load_model();
         if(model!=NULL)
             ofs<<model->get_standard_psse_string()<<"\n";
     }

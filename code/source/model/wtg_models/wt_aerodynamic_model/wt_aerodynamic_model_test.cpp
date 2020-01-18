@@ -225,7 +225,7 @@ void WT_AERODYNAMIC_MODEL_TEST::test_get_nominal_turbine_speed()
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
         double fbase = model->get_bus_base_frequency_in_Hz();
-        size_t npole = model->get_number_of_pole_pairs();
+        unsigned int npole = model->get_number_of_pole_pairs();
         double turn_ratio = model->get_generator_to_turbine_gear_ratio();
         double w = 2*PI*fbase;
         w = w/npole/turn_ratio;

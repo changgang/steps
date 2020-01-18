@@ -5,46 +5,27 @@
 #include <cstdio>
 ARXL::ARXL() : EQUIVALENT_MODEL()
 {
-    p_meters = new vector<METER>;
-    q_meters = new vector<METER>;
-    p_delays = new vector< vector<size_t> >;
-    q_delays = new vector< vector<size_t> >;
-    p_coefficients = new vector< vector<double> >;
-    q_coefficients = new vector< vector<double> >;
     clear();
 }
 
 ARXL::~ARXL()
 {
-    delete p_meters;
-    delete q_meters;
-    delete p_delays;
-    delete q_delays;
-    delete p_coefficients;
-    delete q_coefficients;
 }
 
 void ARXL::copy_from_constant_model(const ARXL& model)
 {
     clear();
 
-    (*p_meters) = model.get_P_meters();
-    (*p_delays) = model.get_P_delays();
-    (*p_coefficients) = model.get_P_coefficients();
-    (*q_meters) = model.get_Q_meters();
-    (*q_delays) = model.get_Q_delays();
-    (*q_coefficients) = model.get_Q_coefficients();
+    p_meters = model.get_P_meters();
+    p_delays = model.get_P_delays();
+    p_coefficients = model.get_P_coefficients();
+    q_meters = model.get_Q_meters();
+    q_delays = model.get_Q_delays();
+    q_coefficients = model.get_Q_coefficients();
 }
 
 ARXL::ARXL(const ARXL& model) : EQUIVALENT_MODEL()
 {
-    p_meters = new vector<METER>;
-    q_meters = new vector<METER>;
-    p_delays = new vector< vector<size_t> >;
-    q_delays = new vector< vector<size_t> >;
-    p_coefficients = new vector< vector<double> >;
-    q_coefficients = new vector< vector<double> >;
-
     copy_from_constant_model(model);
 }
 
@@ -65,15 +46,15 @@ string ARXL::get_model_name() const
 
 void ARXL::clear()
 {
-    p_meters->clear();
-    q_meters->clear();
-    p_delays->clear();
-    q_delays->clear();
-    p_coefficients->clear();
-    q_coefficients->clear();
+    p_meters.clear();
+    q_meters.clear();
+    p_delays.clear();
+    q_delays.clear();
+    p_coefficients.clear();
+    q_coefficients.clear();
 }
 
-void ARXL::set_output_line(DEVICE_ID did, size_t meter_side)
+void ARXL::set_output_line(DEVICE_ID did, unsigned int meter_side)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -117,7 +98,7 @@ void ARXL::set_output_line(DEVICE_ID did, size_t meter_side)
     add_Q_input_item(meter, 0, 0.0);
 }
 
-void ARXL::add_P_input_item(METER meter, size_t delay, double coef)
+void ARXL::add_P_input_item(METER meter, unsigned int delay, double coef)
 {
     if(not is_P_meter_exist(meter))
         add_P_meter(meter);
@@ -125,14 +106,14 @@ void ARXL::add_P_input_item(METER meter, size_t delay, double coef)
     if(fabs(coef)<FLOAT_EPSILON)
         return;
 
-    size_t index = get_P_meter_index(meter);
-    if((*p_meters)[index].get_buffer_size()<delay+1)
-        (*p_meters)[index].set_buffer_size(delay+1);
-    (*p_delays)[index].push_back(delay);
-    (*p_coefficients)[index].push_back(coef);
+    unsigned int index = get_P_meter_index(meter);
+    if(p_meter_buffers[index].get_buffer_size()<delay+1)
+        p_meter_buffers[index].set_buffer_size(delay+1);
+    p_delays[index].push_back(delay);
+    p_coefficients[index].push_back(coef);
 }
 
-void ARXL::add_Q_input_item(METER meter, size_t delay, double coef)
+void ARXL::add_Q_input_item(METER meter, unsigned int delay, double coef)
 {
     if(not is_Q_meter_exist(meter))
         add_Q_meter(meter);
@@ -140,20 +121,20 @@ void ARXL::add_Q_input_item(METER meter, size_t delay, double coef)
     if(coef==0.0)
         return;
 
-    size_t index = get_Q_meter_index(meter);
-    if((*q_meters)[index].get_buffer_size()<delay+1)
-        (*q_meters)[index].set_buffer_size(delay+1);
-    (*q_delays)[index].push_back(delay);
-    (*q_coefficients)[index].push_back(coef);
+    unsigned int index = get_Q_meter_index(meter);
+    if(q_meter_buffers[index].get_buffer_size()<delay+1)
+        q_meter_buffers[index].set_buffer_size(delay+1);
+    q_delays[index].push_back(delay);
+    q_coefficients[index].push_back(coef);
 }
 
-size_t ARXL::get_P_meter_index(METER meter)
+unsigned int ARXL::get_P_meter_index(METER meter)
 {
-    size_t index = INDEX_NOT_EXIST;
-    size_t n = p_meters->size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int index = INDEX_NOT_EXIST;
+    unsigned int n = p_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
-        if((*p_meters)[i]==meter)
+        if(p_meters[i]==meter)
         {
             index = i;
             break;
@@ -162,13 +143,13 @@ size_t ARXL::get_P_meter_index(METER meter)
     return index;
 }
 
-size_t ARXL::get_Q_meter_index(METER meter)
+unsigned int ARXL::get_Q_meter_index(METER meter)
 {
-    size_t index = INDEX_NOT_EXIST;
-    size_t n = q_meters->size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int index = INDEX_NOT_EXIST;
+    unsigned int n = q_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
-        if((*q_meters)[i]==meter)
+        if(q_meters[i]==meter)
         {
             index = i;
             break;
@@ -195,58 +176,62 @@ bool ARXL::is_Q_meter_exist(METER meter)
 
 void ARXL::add_P_meter(METER meter)
 {
-    vector<size_t> A;
+    vector<unsigned int> A;
     vector<double> B;
+    CONTINUOUS_BUFFER buffer;
 
     if(not is_P_meter_exist(meter))
     {
-        p_meters->push_back(meter);
-        p_delays->push_back(A);
-        p_coefficients->push_back(B);
+        p_meters.push_back(meter);
+        p_meter_buffers.push_back(buffer);
+        p_delays.push_back(A);
+        p_coefficients.push_back(B);
     }
 }
 
 void ARXL::add_Q_meter(METER meter)
 {
-    vector<size_t> A;
+    vector<unsigned int> A;
     vector<double> B;
+    CONTINUOUS_BUFFER buffer;
 
     if(not is_Q_meter_exist(meter))
     {
-        q_meters->push_back(meter);
-        q_delays->push_back(A);
-        q_coefficients->push_back(B);
+        q_meters.push_back(meter);
+        q_meter_buffers.push_back(buffer);
+        q_delays.push_back(A);
+        q_coefficients.push_back(B);
     }
 }
 
 vector<METER> ARXL::get_P_meters() const
 {
-    return (*p_meters);
+    return p_meters;
 }
 
-vector< vector<size_t> > ARXL::get_P_delays() const
+vector< vector<unsigned int> > ARXL::get_P_delays() const
 {
-    return (*p_delays);
+    return p_delays;
 }
 
 vector< vector<double> > ARXL::get_P_coefficients() const
 {
-    return (*p_coefficients);
+    return p_coefficients;
 }
 
 vector<METER> ARXL::get_Q_meters() const
 {
-    return (*q_meters);
+    return q_meters;
 }
 
-vector< vector<size_t> > ARXL::get_Q_delays() const
+vector< vector<unsigned int> > ARXL::get_Q_delays() const
 {
-    return (*q_delays);
+    return q_delays;
 }
 
 vector< vector<double> > ARXL::get_Q_coefficients() const
 {
-    return (*q_coefficients);
+    return q_coefficients;
 }
 
 bool ARXL::setup_model_with_steps_string_vector(vector<string>& data)
@@ -277,40 +262,48 @@ bool ARXL::setup_model_with_bpa_string(string data)
 
 void ARXL::setup_block_toolkit_and_parameters()
 {
-    ;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    unsigned int n = p_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
+        p_meter_buffers[i].set_toolkit(toolkit);
+    n = q_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
+        q_meter_buffers[i].set_toolkit(toolkit);
 }
 
 void ARXL::initialize()
 {
     setup_block_toolkit_and_parameters();
 
-    size_t n = p_meters->size();
-    for(size_t i=0; i!=n; ++i)
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double time = toolkit.get_dynamic_simulation_time_in_s();
+    unsigned int n = p_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
-        size_t m = (*p_delays)[i].size();
-        size_t max_delay = 0;
-        for(size_t j=0; j!=m; ++j)
+        unsigned int m = p_delays[i].size();
+        unsigned int max_delay = 0;
+        for(unsigned int j=0; j!=m; ++j)
         {
-            if((*p_delays)[i][j]>max_delay)
-                max_delay = (*p_delays)[i][j];
+            if(p_delays[i][j]>max_delay)
+                max_delay = p_delays[i][j];
         }
-        (*p_meters)[i].set_buffer_size(max_delay+2);
+        p_meter_buffers[i].set_buffer_size(max_delay+2);
 
-        (*p_meters)[i].initialize_meter_buffer();
+        p_meter_buffers[i].initialize_buffer(time, p_meters[i].get_meter_value());
     }
-    n = q_meters->size();
-    for(size_t i=0; i!=n; ++i)
+    n = q_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
-        size_t m = (*q_delays)[i].size();
-        size_t max_delay = 0;
-        for(size_t j=0; j!=m; ++j)
+        unsigned int m = q_delays[i].size();
+        unsigned int max_delay = 0;
+        for(unsigned int j=0; j!=m; ++j)
         {
-            if((*q_delays)[i][j]>max_delay)
-                max_delay = (*q_delays)[i][j];
+            if(q_delays[i][j]>max_delay)
+                max_delay = q_delays[i][j];
         }
-        (*q_meters)[i].set_buffer_size(max_delay+2);
+        q_meter_buffers[i].set_buffer_size(max_delay+2);
 
-        (*q_meters)[i].initialize_meter_buffer();
+        q_meter_buffers[i].initialize_buffer(time, q_meters[i].get_meter_value());
     }
 
     set_flag_model_initialized_as_true();
@@ -328,23 +321,18 @@ void ARXL::run(DYNAMIC_MODE mode)
 
 void ARXL::update_meters_buffer()
 {
-    size_t n = p_meters->size();
-    for(size_t i=0; i!=n; ++i)
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double time = toolkit.get_dynamic_simulation_time_in_s();
+
+    unsigned int n = p_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
-        (*p_meters)[i].update_meter_buffer();
-        /*osstream<<"P_INPUT meter "<<(*p_meters)[i].get_meter_name()<<" buffer:"<<endl;
-        for(size_t j=0; j!=10; j++)
-            osstream<<(*p_meters)[i].get_meter_value_from_buffer_with_delay(j)<<", ";
-        osstream<<endl;*/
+        p_meter_buffers[i].append_data(time, p_meters[i].get_meter_value());
     }
-    n = q_meters->size();
-    for(size_t i=0; i!=n; ++i)
+    n = q_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
-        (*q_meters)[i].update_meter_buffer();
-        /*osstream<<"Q_INPUT meter "<<(*q_meters)[i].get_meter_name()<<" buffer:"<<endl;
-        for(size_t j=0; j!=MAX_HISTORY_METER_BUFFER; j++)
-            osstream<<(*q_meters)[i].get_meter_value_from_buffer_with_delay(j)<<", ";
-        osstream<<endl;*/
+        q_meter_buffers[i].append_data(time, q_meters[i].get_meter_value());
     }
     //show_information_with_leading_time_stamp(osstream);
 }
@@ -360,50 +348,50 @@ void ARXL::update_equivalent_constant_power_load()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
     double P = 0.0;
-    size_t n = p_meters->size();
+    unsigned int n = p_meters.size();
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
-        size_t m = (*p_delays)[i].size();
-        for(size_t j=0; j!=m; ++j)
+        unsigned int m = p_delays[i].size();
+        for(unsigned int j=0; j!=m; ++j)
         {
-            size_t delay = (*p_delays)[i][j];
+            unsigned int delay = p_delays[i][j];
             if(delay==0)
             {
                 osstream<<"fatal erro. 0 delay is detected in ARXL model.";
                 toolkit.show_information_with_leading_time_stamp(osstream);
             }
-            double coef = (*p_coefficients)[i][j];
+            double coef = p_coefficients[i][j];
 
-            double v = (*p_meters)[i].get_meter_value_from_buffer_with_delay(delay)-(*p_meters)[i].get_meter_value_from_buffer_with_delay(delay+1);
+            double v = p_meter_buffers[i].get_buffer_value_at_delay_index(delay)-p_meter_buffers[i].get_buffer_value_at_delay_index(delay+1);
 
-            //osstream<<"Meter "<<(*p_meters)[i].get_meter_name()<<", delay = "<<delay<<", coefficient = "<<coef<<", difference = "<<v<<endl;
+            //osstream<<"Meter "<<p_meters[i].get_meter_name()<<", delay = "<<delay<<", coefficient = "<<coef<<", difference = "<<v<<endl;
             //osstream<<"i"<<i<<"j"<<j<<"d"<<delay<<"c"<<setprecision(6)<<fixed<<coef<<"D"<<setprecision(9)<<fixed<<v;
             P += (coef*v);
         }
     }
     //show_information_with_leading_time_stamp(osstream);
 
-    P += (*p_meters)[0].get_meter_value_from_buffer_with_delay(1);//meter[0] is the output meter
+    P += p_meter_buffers[0].get_buffer_value_at_delay_index(1);//meter[0] is the output meter
 
 
     double Q = 0.0;
-    n = q_meters->size();
+    n = q_meters.size();
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
-        size_t m = (*q_delays)[i].size();
-        for(size_t j=0; j!=m; ++j)
+        unsigned int m = q_delays[i].size();
+        for(unsigned int j=0; j!=m; ++j)
         {
-            size_t delay = (*q_delays)[i][j];
-            double coef = (*q_coefficients)[i][j];
+            unsigned int delay = q_delays[i][j];
+            double coef = q_coefficients[i][j];
 
-            double v = (*q_meters)[i].get_meter_value_from_buffer_with_delay(delay)-(*q_meters)[i].get_meter_value_from_buffer_with_delay(delay+1);
+            double v = q_meter_buffers[i].get_buffer_value_at_delay_index(delay)-q_meter_buffers[i].get_buffer_value_at_delay_index(delay+1);
 
             Q += coef*v;
         }
     }
-    Q += (*q_meters)[0].get_meter_value_from_buffer_with_delay(1);//meter[0] is the output meter
+    Q += q_meter_buffers[0].get_buffer_value_at_delay_index(1);//meter[0] is the output meter
 
 
     equivalent_load_constant_power = complex<double>(P, Q);
@@ -468,15 +456,15 @@ void ARXL::switch_output_to_equivalent_device()
 
     double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
-    DEVICE_ID did = (*p_meters)[0].get_device_id();
+    DEVICE_ID did = p_meters[0].get_device_id();
 
     LINE* line = psdb.get_line(did);
-    size_t arxl_bus;
-    //size_t other_bus;
+    unsigned int arxl_bus;
+    //unsigned int other_bus;
     complex<double> arxl_power, other_power;
 
-    string meter_type = (*p_meters)[0].get_meter_type();
-    arxl_bus = (*p_meters)[0].get_meter_side_bus();
+    string meter_type = p_meters[0].get_meter_type();
+    arxl_bus = p_meters[0].get_meter_side_bus();
     if(arxl_bus==line->get_sending_side_bus())
         arxl_power = line->get_line_complex_power_at_sending_side_in_MVA();
     else
@@ -516,21 +504,21 @@ void ARXL::switch_output_to_equivalent_device()
 
     DEVICE_ID  edevice_did = edevice->get_device_id();
 
-    osstream<<"P_meters[0] was "<<(*p_meters)[0].get_meter_name()<<endl
-           <<"Q_meters[0] was "<<(*q_meters)[0].get_meter_name()<<endl;
+    osstream<<"P_meters[0] was "<<p_meters[0].get_meter_name()<<endl
+           <<"Q_meters[0] was "<<q_meters[0].get_meter_name()<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     METER meter = setter.prepare_equivalent_device_nominal_active_constant_power_load_in_MW_meter(edevice_did);
-    (*p_meters)[0].change_device_id(meter.get_device_id());
-    (*p_meters)[0].change_meter_type(meter.get_meter_type());
+    p_meters[0].change_device_id(meter.get_device_id());
+    p_meters[0].change_meter_type(meter.get_meter_type());
 
     meter = setter.prepare_equivalent_device_nominal_reactive_constant_power_load_in_MVar_meter(edevice_did);
-    (*q_meters)[0].change_device_id(meter.get_device_id());
-    (*q_meters)[0].change_meter_type(meter.get_meter_type());
+    q_meters[0].change_device_id(meter.get_device_id());
+    q_meters[0].change_meter_type(meter.get_meter_type());
 
 
-    osstream<<"P_meters[0] is "<<(*p_meters)[0].get_meter_name()<<endl
-           <<"Q_meters[0] is "<<(*q_meters)[0].get_meter_name()<<endl;
+    osstream<<"P_meters[0] is "<<p_meters[0].get_meter_name()<<endl
+           <<"Q_meters[0] is "<<q_meters[0].get_meter_name()<<endl;
     toolkit.show_information_with_leading_time_stamp(osstream);
 }
 
@@ -555,36 +543,36 @@ string ARXL::get_standard_psse_string() const
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    DEVICE_ID did = (*p_meters)[0].get_device_id();
+    DEVICE_ID did = p_meters[0].get_device_id();
     LINE* line = psdb.get_line(did);
 
     data += "ARXL,"+num2str(line->get_sending_side_bus())+","+num2str(line->get_receiving_side_bus())+","+line->get_identifier()+",";
-    data += num2str((*p_meters)[0].get_meter_side_bus())+"\n";;
+    data += num2str(p_meters[0].get_meter_side_bus())+"\n";;
 
-    size_t n = p_meters->size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = p_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
-        vector<size_t> p_delay = (*p_delays)[i];
-        vector<double> p_coefficient = (*p_coefficients)[i];
-        size_t m = p_delay.size();
-        for(size_t j=0; j!=m; ++j)
+        vector<unsigned int> p_delay = p_delays[i];
+        vector<double> p_coefficient = p_coefficients[i];
+        unsigned int m = p_delay.size();
+        for(unsigned int j=0; j!=m; ++j)
         {
             data += "P_INPUT,";
-            data += get_meter_string((*p_meters)[i]);
+            data += get_meter_string(p_meters[i]);
             data += ","+num2str(p_delay[j])+","+num2str(p_coefficient[j])+"\n";
         }
     }
 
-    n = q_meters->size();
-    for(size_t i=0; i!=n; ++i)
+    n = q_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
-        vector<size_t> q_delay = (*q_delays)[i];
-        vector<double> q_coefficient = (*q_coefficients)[i];
-        size_t m = q_delay.size();
-        for(size_t j=0; j!=m; ++j)
+        vector<unsigned int> q_delay = q_delays[i];
+        vector<double> q_coefficient = q_coefficients[i];
+        unsigned int m = q_delay.size();
+        for(unsigned int j=0; j!=m; ++j)
         {
             data += "Q_INPUT,";
-            data += get_meter_string((*q_meters)[i]);
+            data += get_meter_string(q_meters[i]);
             data += ","+num2str(q_delay[j])+","+num2str(q_coefficient[j])+"\n";
         }
     }
@@ -747,7 +735,7 @@ string ARXL::get_load_meter_string(const METER& meter) const
 void ARXL::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("A", i); i++;
 }
 
@@ -772,7 +760,7 @@ void ARXL::set_model_data_with_name(string par_name, double value)
 void ARXL::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
     add_model_inernal_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;
 }

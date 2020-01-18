@@ -332,7 +332,7 @@ void SPARSE_MATRIX_TEST::test_get_reorder_permutation()
 
     matrix.compress_and_merge_duplicate_entries();
 
-    vector<size_t> perm = matrix.get_reorder_permutation();
+    vector<unsigned int> perm = matrix.get_reorder_permutation();
     // only the last one is checked. the cs_amd is approximate
     // others are not tested.
 

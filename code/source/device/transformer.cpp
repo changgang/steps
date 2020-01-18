@@ -41,7 +41,7 @@ void TRANSFORMER::set_transformer_name(string trans_name)
 {
     this->name = trim_string(trans_name);
 }
-void TRANSFORMER::set_non_metered_end_bus(size_t bus)
+void TRANSFORMER::set_non_metered_end_bus(unsigned int bus)
 {
     if(bus==0)
     {
@@ -79,7 +79,7 @@ void TRANSFORMER::set_magnetizing_admittance_based_on_primary_winding_bus_base_v
     y_magnetizing_in_pu = y;
 }
 
-void TRANSFORMER::set_winding_bus(TRANSFORMER_WINDING_SIDE winding, size_t bus)
+void TRANSFORMER::set_winding_bus(TRANSFORMER_WINDING_SIDE winding, unsigned int bus)
 {
     ostringstream osstream;
     if(bus==0 and winding==TERTIARY_SIDE)
@@ -123,7 +123,7 @@ void TRANSFORMER::set_winding_connection_type(TRANSFORMER_WINDING_SIDE winding, 
 
 void TRANSFORMER::set_winding_nominal_voltage_in_kV(TRANSFORMER_WINDING_SIDE winding, double v)
 {
-    size_t bus = get_winding_bus(winding);
+    unsigned int bus = get_winding_bus(winding);
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -229,7 +229,7 @@ void TRANSFORMER::set_winding_rating_in_MVA(TRANSFORMER_WINDING_SIDE winding, RA
     winding_rating_in_MVA[winding] = rate;
 }
 
-void TRANSFORMER::set_winding_number_of_taps(TRANSFORMER_WINDING_SIDE winding, size_t n)
+void TRANSFORMER::set_winding_number_of_taps(TRANSFORMER_WINDING_SIDE winding, unsigned int n)
 {
     winding_number_of_taps[winding] = n;
 }
@@ -259,11 +259,11 @@ void TRANSFORMER::set_winding_control_mode(TRANSFORMER_WINDING_SIDE winding, TRA
     winding_control_mode[winding] = mode;
 }
 
-void TRANSFORMER::set_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding, size_t bus)
+void TRANSFORMER::set_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding, unsigned int bus)
 {
     ostringstream osstream;
 
-    size_t winding_bus = get_winding_bus(winding);
+    unsigned int winding_bus = get_winding_bus(winding);
 
     if(bus==0 or bus==winding_bus)
         winding_controlled_bus[winding] = winding_bus;
@@ -324,7 +324,7 @@ string TRANSFORMER::get_transformer_name() const
     return name;
 }
 
-size_t TRANSFORMER::get_non_metered_end_bus() const
+unsigned int TRANSFORMER::get_non_metered_end_bus() const
 {
     return non_metered_end_bus;
 }
@@ -334,7 +334,7 @@ complex<double> TRANSFORMER::get_magnetizing_admittance_based_on_primary_winding
     return y_magnetizing_in_pu;
 }
 
-size_t TRANSFORMER::get_winding_bus(TRANSFORMER_WINDING_SIDE winding) const
+unsigned int TRANSFORMER::get_winding_bus(TRANSFORMER_WINDING_SIDE winding) const
 {
     return winding_bus[winding];
 }
@@ -425,7 +425,7 @@ RATING TRANSFORMER::get_winding_rating_in_MVA(TRANSFORMER_WINDING_SIDE winding) 
     return winding_rating_in_MVA[winding];
 }
 
-size_t TRANSFORMER::get_winding_number_of_taps(TRANSFORMER_WINDING_SIDE winding) const
+unsigned int TRANSFORMER::get_winding_number_of_taps(TRANSFORMER_WINDING_SIDE winding) const
 {
     return winding_number_of_taps[winding];
 }
@@ -455,7 +455,7 @@ TRANSFORMER_WINDING_CONTROL_MODE TRANSFORMER::get_winding_control_mode(TRANSFORM
     return winding_control_mode[winding];
 }
 
-size_t TRANSFORMER::get_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding) const
+unsigned int TRANSFORMER::get_winding_controlled_bus(TRANSFORMER_WINDING_SIDE winding) const
 {
     return winding_controlled_bus[winding];
 }
@@ -506,9 +506,9 @@ void TRANSFORMER::check()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t ibus = get_winding_bus(PRIMARY_SIDE);
-    size_t jbus = get_winding_bus(SECONDARY_SIDE);
-    size_t kbus = get_winding_bus(TERTIARY_SIDE);
+    unsigned int ibus = get_winding_bus(PRIMARY_SIDE);
+    unsigned int jbus = get_winding_bus(SECONDARY_SIDE);
+    unsigned int kbus = get_winding_bus(TERTIARY_SIDE);
 
     if(is_two_winding_transformer())
         osstream<<"Warning detected when checking "<<get_device_name()+"["
@@ -520,10 +520,10 @@ void TRANSFORMER::check()
                 <<psdb.bus_number2bus_name(jbus)<<"-"
                 <<psdb.bus_number2bus_name(kbus)<<"]: \n";
 
-    size_t error_count = 0;
+    unsigned int error_count = 0;
 
     complex<double> zij = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(PRIMARY_SIDE,SECONDARY_SIDE);
-    double r = zij.real(), x = zij.imag();
+    double x = zij.imag();
     /*if(fabs(r)>10.0)
     {
         error_count++;
@@ -546,7 +546,7 @@ void TRANSFORMER::check()
     {
         complex<double> zjk = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
         complex<double> zki = get_leakage_impedance_between_windings_based_on_winding_nominals_in_pu(TERTIARY_SIDE, PRIMARY_SIDE);
-        r = zjk.real(); x = zjk.imag();
+        x = zjk.imag();
         /*if(fabs(r)>10.0)
         {
             error_count++;
@@ -565,7 +565,7 @@ void TRANSFORMER::check()
             osstream<<"("<<error_count<<") Positive sequence X between secondary and tertiary side is too little: "
                     <<"Xjk = "<<x<<"pu.\n";
         }
-        r = zki.real(); x = zki.imag();
+        x = zki.imag();
         /*if(fabs(r)>10.0)
         {
             error_count++;
@@ -711,7 +711,7 @@ void TRANSFORMER::clear()
     set_controlled_min_active_power_into_winding_in_MW(TERTIARY_SIDE, 0.0);
 }
 
-bool TRANSFORMER::is_connected_to_bus(size_t bus) const
+bool TRANSFORMER::is_connected_to_bus(unsigned int bus) const
 {
     if(bus != 0)
     {
@@ -726,7 +726,7 @@ bool TRANSFORMER::is_connected_to_bus(size_t bus) const
         return false;
 }
 
-bool TRANSFORMER::is_in_area(size_t area) const
+bool TRANSFORMER::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -767,7 +767,7 @@ bool TRANSFORMER::is_in_area(size_t area) const
     }
 }
 
-bool TRANSFORMER::is_in_zone(size_t zone) const
+bool TRANSFORMER::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

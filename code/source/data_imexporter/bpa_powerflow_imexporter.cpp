@@ -57,8 +57,8 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
         else
         {
             char tempc;
-            size_t total_bits=0, decimal_bits=0;
-            sscanf(format.c_str(),"%c%lu.%lu",&tempc, &total_bits, &decimal_bits);
+            unsigned int total_bits=0, decimal_bits=0;
+            sscanf(format.c_str(),"%c%u.%u",&tempc, &total_bits, &decimal_bits);
 
             data = original_data.substr(0, total_bits-decimal_bits)+"."+ original_data.substr(total_bits-decimal_bits, decimal_bits);
             return data;
@@ -75,9 +75,9 @@ string BPA_IMEXPORTER::format_bpa_data_to_readable_data(string original_data, st
     return original_data;
 }
 
-string BPA_IMEXPORTER::grow_string_to_at_least_size(string data, size_t least_size)
+string BPA_IMEXPORTER::grow_string_to_at_least_size(string data, unsigned int least_size)
 {
-    size_t n = data.size();
+    unsigned int n = data.size();
     if(n>=least_size)
         return data;
 
@@ -158,7 +158,7 @@ void BPA_IMEXPORTER::load_powerflow_data_into_ram(string file)
     }
     dat_file.close();
 
-    //for(size_t i=0; i<dat_data_in_ram.size(); ++i)
+    //for(unsigned int i=0; i<dat_data_in_ram.size(); ++i)
     //    cout<<dat_data_in_ram[i]<<endl;
 }
 
@@ -403,12 +403,12 @@ void BPA_IMEXPORTER::load_case_data()
 }
 
 
-void BPA_IMEXPORTER::set_data_version(size_t version)
+void BPA_IMEXPORTER::set_data_version(unsigned int version)
 {
     data_version = version;
 }
 
-size_t BPA_IMEXPORTER::get_data_version() const
+unsigned int BPA_IMEXPORTER::get_data_version() const
 {
     return data_version;
 }
@@ -426,7 +426,7 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
     }
     char buffer[1024];
     string sbuffer;
-    unordered_map<string, size_t> bus_name_number_pair;
+    unordered_map<string, unsigned int> bus_name_number_pair;
     vector<string> data;
     while(true)
     {
@@ -438,8 +438,8 @@ void BPA_IMEXPORTER::update_bus_number_with_bus_name_and_number_pair_file(string
             continue;
 
         string bus_name = data[0];
-        size_t bus_number = str2int(data[1]);
-        bus_name_number_pair.insert(pair<string, size_t>(bus_name, bus_number));
+        unsigned int bus_number = str2int(data[1]);
+        bus_name_number_pair.insert(pair<string, unsigned int>(bus_name, bus_number));
     }
 }
 
@@ -448,9 +448,9 @@ void BPA_IMEXPORTER::load_area_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -461,14 +461,14 @@ void BPA_IMEXPORTER::load_area_data()
 
             string area_name = data.substr(3,10);
 
-            size_t area_number = psdb.area_name2area_number(area_name);
+            unsigned int area_number = psdb.area_name2area_number(area_name);
             if(area_number == 0)
             {
                 AREA area;
                 area.set_toolkit(toolkit);
                 area.set_area_name(area_name);
 
-                size_t area_count = psdb.get_area_count();
+                unsigned int area_count = psdb.get_area_count();
                 area.set_area_number(area_count+1);
 
                 string area_schedule_str = data.substr(26, 8);
@@ -487,9 +487,9 @@ void BPA_IMEXPORTER::load_zone_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -504,14 +504,14 @@ void BPA_IMEXPORTER::load_zone_data()
             data = grow_string_to_at_least_size(data, 80);
 
             string zone_name = data.substr(18,2);
-            size_t zone_number = psdb.zone_name2zone_number(zone_name);
+            unsigned int zone_number = psdb.zone_name2zone_number(zone_name);
             if(zone_number == 0)
             {
                 ZONE zone;
                 zone.set_toolkit(toolkit);
                 zone.set_zone_name(zone_name);
 
-                size_t zone_count = psdb.get_zone_count();
+                unsigned int zone_count = psdb.get_zone_count();
                 zone.set_zone_number(zone_count+1);
                 psdb.append_zone(zone);
             }
@@ -523,9 +523,9 @@ void BPA_IMEXPORTER::load_owner_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -542,14 +542,14 @@ void BPA_IMEXPORTER::load_owner_data()
             data = grow_string_to_at_least_size(data, 80);
 
             string owner_name = data.substr(3,3);
-            size_t owner_number = psdb.owner_name2owner_number(owner_name);
+            unsigned int owner_number = psdb.owner_name2owner_number(owner_name);
             if(owner_number == 0)
             {
                 OWNER owner;
                 owner.set_toolkit(toolkit);
                 owner.set_owner_name(owner_name);
 
-                size_t owner_count = psdb.get_owner_count();
+                unsigned int owner_count = psdb.get_owner_count();
                 owner.set_owner_number(owner_count+1);
                 psdb.append_owner(owner);
             }
@@ -561,10 +561,10 @@ void BPA_IMEXPORTER::load_bus_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -578,7 +578,7 @@ void BPA_IMEXPORTER::load_bus_data()
             BUS bus;
             bus.set_toolkit(toolkit);
 
-            size_t bus_count = psdb.get_bus_count();
+            unsigned int bus_count = psdb.get_bus_count();
             bus.set_bus_number(bus_count+1);
 
             data = grow_string_to_at_least_size(data, 80);
@@ -592,11 +592,11 @@ void BPA_IMEXPORTER::load_bus_data()
             bus.set_base_voltage_in_kV(base_voltage);
 
             string owner_name = data.substr(3,3);
-            size_t owner_number = psdb.owner_name2owner_number(owner_name);
+            unsigned int owner_number = psdb.owner_name2owner_number(owner_name);
             bus.set_owner_number(owner_number);
 
             string zone_name = data.substr(18,2);
-            size_t zone_number = psdb.zone_name2zone_number(zone_name);
+            unsigned int zone_number = psdb.zone_name2zone_number(zone_name);
             bus.set_zone_number(zone_number);
 
             string voltage_str = data.substr(57, 4);
@@ -650,12 +650,12 @@ void BPA_IMEXPORTER::set_bus_area()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
 
     vector<BUS*> buses = psdb.get_all_buses();
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -666,19 +666,19 @@ void BPA_IMEXPORTER::set_bus_area()
 
             string area_name = data.substr(3,10);
 
-            size_t area_number = psdb.area_name2area_number(area_name);
+            unsigned int area_number = psdb.area_name2area_number(area_name);
             if(area_number == 0)
                 continue;
 
-            for(size_t j=0; j<20; ++j)
+            for(unsigned int j=0; j<20; ++j)
             {
                 string zone_name = data.substr(35+j*3, 2);
-                size_t zone_number = psdb.zone_name2zone_number(zone_name);
+                unsigned int zone_number = psdb.zone_name2zone_number(zone_name);
                 if(zone_number == 0)
                     continue;
 
-                size_t bus_count = psdb.get_bus_count();
-                for(size_t k=0; k<bus_count; ++k)
+                unsigned int bus_count = psdb.get_bus_count();
+                for(unsigned int k=0; k<bus_count; ++k)
                 {
                     if(buses[k]->get_zone_number() == zone_number)
                         buses[k]->set_area_number(area_number);
@@ -692,9 +692,9 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -705,12 +705,12 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
             string area_name = data.substr(3,10);
 
-            size_t area_number = psdb.area_name2area_number(area_name);
+            unsigned int area_number = psdb.area_name2area_number(area_name);
             AREA* area = psdb.get_area(area_number);
             if(area !=NULL)
             {
                 string slack_bus_name = data.substr(13, 8);
-                size_t slack_bus_number = psdb.bus_name2bus_number(slack_bus_name);
+                unsigned int slack_bus_number = psdb.bus_name2bus_number(slack_bus_name);
 
                 area->set_area_swing_bus(slack_bus_number);
             }
@@ -719,7 +719,7 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
     vector<BUS*> buses = psdb.get_all_buses();
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -730,19 +730,19 @@ void BPA_IMEXPORTER::set_area_swing_bus()
 
             string area_name = data.substr(3,10);
 
-            size_t area_number = psdb.area_name2area_number(area_name);
+            unsigned int area_number = psdb.area_name2area_number(area_name);
             if(area_number == 0)
                 continue;
 
-            for(size_t j=0; j<20; ++j)
+            for(unsigned int j=0; j<20; ++j)
             {
                 string zone_name = data.substr(35+j*3, 2);
-                size_t zone_number = psdb.zone_name2zone_number(zone_name);
+                unsigned int zone_number = psdb.zone_name2zone_number(zone_name);
                 if(zone_number == 0)
                     continue;
 
-                size_t bus_count = psdb.get_bus_count();
-                for(size_t k=0; k<bus_count; ++k)
+                unsigned int bus_count = psdb.get_bus_count();
+                for(unsigned int k=0; k<bus_count; ++k)
                 {
                     if(buses[k]->get_zone_number() == zone_number)
                         buses[k]->set_area_number(area_number);
@@ -756,10 +756,10 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -776,7 +776,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             data = grow_string_to_at_least_size(data, 80);
 
             string bus_name = data.substr(6, 8);
-            size_t bus_number = psdb.bus_name2bus_number(bus_name);
+            unsigned int bus_number = psdb.bus_name2bus_number(bus_name);
             if(bus_number==0)
                 continue;
             load.set_load_bus(bus_number);
@@ -785,7 +785,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             load.set_status(true);
 
             string owner_name = data.substr(3,3);
-            size_t owner_number = psdb.owner_name2owner_number(owner_name);
+            unsigned int owner_number = psdb.owner_name2owner_number(owner_name);
             load.set_owner_number(owner_number);
 
             BUS* bus = psdb.get_bus(bus_number);
@@ -818,7 +818,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
         }
     }
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -828,7 +828,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
             data = grow_string_to_at_least_size(data, 80);
 
             string bus_name = data.substr(6, 8);
-            size_t bus_number = psdb.bus_name2bus_number(bus_name);
+            unsigned int bus_number = psdb.bus_name2bus_number(bus_name);
             if(bus_number==0)
                 continue;
 
@@ -879,7 +879,7 @@ void BPA_IMEXPORTER::load_load_and_fixed_shunt_data()
     {
         bool load_cleared = false;
         vector<LOAD*> loads = psdb.get_all_loads();
-        for(size_t i=0; i<loads.size(); ++i)
+        for(unsigned int i=0; i<loads.size(); ++i)
         {
             complex<double> S_p = loads[i]->get_nominal_constant_power_load_in_MVA();
             complex<double> S_i = loads[i]->get_nominal_constant_current_load_in_MVA();
@@ -931,10 +931,10 @@ void BPA_IMEXPORTER::load_generator_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -949,7 +949,7 @@ void BPA_IMEXPORTER::load_generator_data()
 
             string owner_name = data.substr(3,3);
             string bus_name = data.substr(6, 8);
-            size_t bus_number = psdb.bus_name2bus_number(bus_name);
+            unsigned int bus_number = psdb.bus_name2bus_number(bus_name);
             if(bus_number==0)
                 continue;
 
@@ -1015,10 +1015,10 @@ void BPA_IMEXPORTER::load_line_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1040,10 +1040,10 @@ void BPA_IMEXPORTER::load_line_data()
             string b_half_str = data.substr(56, 6);
             string length_str = data.substr(62, 4);
 
-            size_t owner = psdb.owner_name2owner_number(owner_name);
+            unsigned int owner = psdb.owner_name2owner_number(owner_name);
 
-            size_t ibus = psdb.bus_name2bus_number(ibus_name);
-            size_t jbus = psdb.bus_name2bus_number(jbus_name);
+            unsigned int ibus = psdb.bus_name2bus_number(ibus_name);
+            unsigned int jbus = psdb.bus_name2bus_number(jbus_name);
 
             identifier = get_string_data(identifier, "");
 
@@ -1107,8 +1107,8 @@ void BPA_IMEXPORTER::load_line_data()
                         BUS* jbus_ptr = psdb.get_bus(jbus);
                         if(ibus_ptr!=NULL and jbus_ptr!=NULL)
                         {
-                            size_t iowner = ibus_ptr->get_owner_of_index(0);
-                            size_t jowner = jbus_ptr->get_owner_of_index(0);
+                            unsigned int iowner = ibus_ptr->get_owner_of_index(0);
+                            unsigned int jowner = jbus_ptr->get_owner_of_index(0);
                             if(iowner==jowner)
                                 line.set_meter_end_bus(ibus);
                             else
@@ -1133,7 +1133,7 @@ void BPA_IMEXPORTER::load_line_data()
         }
     }
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1157,10 +1157,10 @@ void BPA_IMEXPORTER::load_line_data()
             string jg_str = data.substr(62, 6);
             string jb_str = data.substr(68, 6);
 
-            size_t owner = psdb.owner_name2owner_number(owner_name);
+            unsigned int owner = psdb.owner_name2owner_number(owner_name);
 
-            size_t ibus = psdb.bus_name2bus_number(ibus_name);
-            size_t jbus = psdb.bus_name2bus_number(jbus_name);
+            unsigned int ibus = psdb.bus_name2bus_number(ibus_name);
+            unsigned int jbus = psdb.bus_name2bus_number(jbus_name);
 
             r_str = format_bpa_data_to_readable_data(r_str, "F6.5");
             double r = get_double_data(r_str, "0.0");
@@ -1224,8 +1224,8 @@ void BPA_IMEXPORTER::load_line_data()
                         BUS* jbus_ptr = psdb.get_bus(jbus);
                         if(ibus_ptr!=NULL and jbus_ptr!=NULL)
                         {
-                            size_t iowner = ibus_ptr->get_owner_of_index(0);
-                            size_t jowner = jbus_ptr->get_owner_of_index(0);
+                            unsigned int iowner = ibus_ptr->get_owner_of_index(0);
+                            unsigned int jowner = jbus_ptr->get_owner_of_index(0);
                             if(iowner==jowner)
                                 line.set_meter_end_bus(ibus);
                             else
@@ -1250,7 +1250,7 @@ void BPA_IMEXPORTER::load_line_data()
 
     double sbase = psdb.get_system_base_power_in_MVA();
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1267,8 +1267,8 @@ void BPA_IMEXPORTER::load_line_data()
             string imvar_str = data.substr(33, 5);
             string jmvar_str = data.substr(43, 5);
 
-            size_t ibus = psdb.bus_name2bus_number(ibus_name);
-            size_t jbus = psdb.bus_name2bus_number(jbus_name);
+            unsigned int ibus = psdb.bus_name2bus_number(ibus_name);
+            unsigned int jbus = psdb.bus_name2bus_number(jbus_name);
             if(ibus==0 or jbus==0)
                 continue;
 
@@ -1300,10 +1300,10 @@ void BPA_IMEXPORTER::load_transformer_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1329,13 +1329,13 @@ void BPA_IMEXPORTER::load_transformer_data()
             string phase_shift_between_primary_and_secondary_str=data.substr(62,5);
 
             owner_name=format_bpa_data_to_readable_data(owner_name,"A3");
-            size_t owner = psdb.owner_name2owner_number(owner_name);
+            unsigned int owner = psdb.owner_name2owner_number(owner_name);
 
             primary_bus_name=format_bpa_data_to_readable_data(primary_bus_name,"A8");
-            size_t primary_bus = psdb.bus_name2bus_number(primary_bus_name);
+            unsigned int primary_bus = psdb.bus_name2bus_number(primary_bus_name);
 
             secondary_bus_name=format_bpa_data_to_readable_data(secondary_bus_name,"A8");
-            size_t secondary_bus = psdb.bus_name2bus_number(secondary_bus_name);
+            unsigned int secondary_bus = psdb.bus_name2bus_number(secondary_bus_name);
 
             if(primary_bus==0 or secondary_bus==0)
                 continue;
@@ -1399,8 +1399,8 @@ void BPA_IMEXPORTER::load_transformer_data()
                         BUS* secondary_bus_ptr = psdb.get_bus(secondary_bus);
                         if(primary_bus_ptr!=NULL and secondary_bus_ptr!=NULL)
                         {
-                            size_t primary_bus_owner = primary_bus_ptr->get_owner_of_index(0);
-                            size_t secondary_bus_owner = secondary_bus_ptr->get_owner_of_index(0);
+                            unsigned int primary_bus_owner = primary_bus_ptr->get_owner_of_index(0);
+                            unsigned int secondary_bus_owner = secondary_bus_ptr->get_owner_of_index(0);
                             if(primary_bus_owner==secondary_bus_owner)
                                  trans.set_non_metered_end_bus(secondary_bus_owner);
                             else
@@ -1464,7 +1464,7 @@ void BPA_IMEXPORTER::load_transformer_data()
         }
     }
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1494,8 +1494,8 @@ void BPA_IMEXPORTER::load_transformer_data()
             double secondary_winding_nominal_voltage = secondary_bus_base_voltage;
 
 
-            size_t primary_bus = psdb.bus_name2bus_number(primary_bus_name);
-            size_t secondary_bus = psdb.bus_name2bus_number(secondary_bus_name);
+            unsigned int primary_bus = psdb.bus_name2bus_number(primary_bus_name);
+            unsigned int secondary_bus = psdb.bus_name2bus_number(secondary_bus_name);
             if(primary_bus==0 or secondary_bus==0)
                 continue;
 
@@ -1528,7 +1528,7 @@ void BPA_IMEXPORTER::load_transformer_data()
 
                 string number_of_taps_str=data.substr(55,2);
                 number_of_taps_str=format_bpa_data_to_readable_data(number_of_taps_str,"I2");
-                size_t number_of_taps=get_integer_data(number_of_taps_str,"0");
+                unsigned int number_of_taps=get_integer_data(number_of_taps_str,"0");
 
                 TRANSFORMER_WINDING_SIDE winding =PRIMARY_SIDE;
                 double winding_nominal_voltage = primary_winding_nominal_voltage;
@@ -1587,7 +1587,7 @@ void BPA_IMEXPORTER::load_transformer_data()
 
                 string number_of_taps_str=data.substr(55,2);
                 number_of_taps_str=format_bpa_data_to_readable_data(number_of_taps_str,"I2");
-                size_t number_of_taps=get_integer_data(number_of_taps_str,"0");
+                unsigned int number_of_taps=get_integer_data(number_of_taps_str,"0");
 
                 string max_active_power_into_winding_in_MW_str=data.substr(57,5);
                 max_active_power_into_winding_in_MW_str=format_bpa_data_to_readable_data(max_active_power_into_winding_in_MW_str,"F5.0");
@@ -1631,7 +1631,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t n = dat_data_in_ram.size();
+    unsigned int n = dat_data_in_ram.size();
     string data, card_type;
 
     map<string,string> from_inverter_valve_side_bus_name_to_rectifier_valve_side_bus_name;
@@ -1641,7 +1641,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     map<string,int>    from_converter_grid_bus_name_to_pole_number;
 
     // build map
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1668,7 +1668,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     }
 
     // load hvdc data
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1701,8 +1701,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
             nominal_dc_voltage_per_pole_in_kV_str=format_bpa_data_to_readable_data(nominal_dc_voltage_per_pole_in_kV_str,"F5.1");
             double nominal_dc_voltage_per_pole_in_kV=get_double_data(nominal_dc_voltage_per_pole_in_kV_str,"0.0");
 
-            size_t rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
-            size_t inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
+            unsigned int rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
+            unsigned int inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
             DEVICE_ID did;
             did.set_device_type("HVDC");
@@ -1751,7 +1751,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     }
 
     // load HVDC angle data
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1778,13 +1778,13 @@ void BPA_IMEXPORTER::load_hvdc_data()
             double line_smooting_inductance_in_mH=get_double_data(line_smooting_inductance_in_mH_str,"0.0");
 
 
-            size_t converter_grid_side_bus_number = psdb.bus_name2bus_number(converter_grid_side_bus_name);
+            unsigned int converter_grid_side_bus_number = psdb.bus_name2bus_number(converter_grid_side_bus_name);
             if(converter_grid_side_bus_number==0)
                 continue;
 
             vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_grid_side_bus_number);
             HVDC_CONVERTER_SIDE converter_side_type;
-            for(size_t j=0; j<hvdcs.size(); ++j)
+            for(unsigned int j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
                 if(hvdc_ptr->get_converter_bus(RECTIFIER)==converter_grid_side_bus_number)
@@ -1818,8 +1818,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
                 inverter_grid_side_bus_name=from_valve_side_bus_name_to_grid_side_bus_name[inverter_valve_side_bus_name];
             }
 
-            size_t rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
-            size_t inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
+            unsigned int rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
+            unsigned int inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
 
             DEVICE_ID did;
@@ -1843,7 +1843,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     }
 
     // load transformer impedance
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1865,13 +1865,13 @@ void BPA_IMEXPORTER::load_hvdc_data()
             secondary_bus_base_voltage_str=format_bpa_data_to_readable_data(secondary_bus_base_voltage_str,"F4.0");
             double secondary_bus_base_voltage=get_double_data(secondary_bus_base_voltage_str,"0.0");
 
-            size_t primary_bus_number = psdb.bus_name2bus_number(primary_bus_name);
-            size_t secondary_bus_number = psdb.bus_name2bus_number(secondary_bus_name);
+            unsigned int primary_bus_number = psdb.bus_name2bus_number(primary_bus_name);
+            unsigned int secondary_bus_number = psdb.bus_name2bus_number(secondary_bus_name);
             if((primary_bus_number==0 and secondary_bus_number==0) or
                (primary_bus_number!=0 and secondary_bus_number!=0)) // invalid trans or common trans
                 continue;
 
-            size_t converter_bus = (primary_bus_number!=0 ? primary_bus_number:secondary_bus_number);
+            unsigned int converter_bus = (primary_bus_number!=0 ? primary_bus_number:secondary_bus_number);
             double converter_bus_base_voltage = (converter_bus==primary_bus_number ? primary_bus_base_voltage : secondary_bus_base_voltage);
 			double valve_bus_base_voltage = (converter_bus==primary_bus_number ? secondary_bus_base_voltage : primary_bus_base_voltage);
 
@@ -1904,7 +1904,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
             vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_bus);
 
             HVDC_CONVERTER_SIDE converter_side_type;
-            for(size_t j=0; j<hvdcs.size(); ++j)
+            for(unsigned int j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
                 if(hvdc_ptr->get_converter_bus(RECTIFIER)==converter_bus)
@@ -1942,8 +1942,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
                     inverter_grid_side_bus_name=from_valve_side_bus_name_to_grid_side_bus_name[inverter_valve_side_bus_name];
                 }
 
-                size_t rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
-                size_t inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
+                unsigned int rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
+                unsigned int inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
                 DEVICE_ID did;
                 did.set_device_type("HVDC");
@@ -1967,7 +1967,7 @@ void BPA_IMEXPORTER::load_hvdc_data()
     }
 
     // load transformer taps
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         data = dat_data_in_ram[i];
         card_type = get_powerflow_card_type(data);
@@ -1995,20 +1995,20 @@ void BPA_IMEXPORTER::load_hvdc_data()
             double min_tap_in_pu=min_tap_in_kv/primary_bus_base_voltage;
 
             tap_number_str=format_bpa_data_to_readable_data(tap_number_str,"I2");
-            size_t tap_number=get_integer_data(tap_number_str,"0");
+            unsigned int tap_number=get_integer_data(tap_number_str,"0");
 
-            size_t primary_bus_number = psdb.bus_name2bus_number(primary_bus_name);
-            size_t secondary_bus_number = psdb.bus_name2bus_number(secondary_bus_name);
+            unsigned int primary_bus_number = psdb.bus_name2bus_number(primary_bus_name);
+            unsigned int secondary_bus_number = psdb.bus_name2bus_number(secondary_bus_name);
             if((primary_bus_number==0 and secondary_bus_number==0) or
                (primary_bus_number!=0 and secondary_bus_number!=0)) // invalid trans or common trans
                 continue;
 
-            size_t converter_bus = (primary_bus_number!=0 ? primary_bus_number:secondary_bus_number);
+            unsigned int converter_bus = (primary_bus_number!=0 ? primary_bus_number:secondary_bus_number);
 
             vector<HVDC*> hvdcs = psdb.get_hvdcs_connecting_to_bus(converter_bus);
 
             HVDC_CONVERTER_SIDE converter_side_type;
-            for(size_t j=0; j<hvdcs.size(); ++j)
+            for(unsigned int j=0; j<hvdcs.size(); ++j)
             {
                 HVDC* hvdc_ptr = hvdcs[j];
                 if(hvdc_ptr->get_converter_bus(RECTIFIER)==converter_bus)
@@ -2045,8 +2045,8 @@ void BPA_IMEXPORTER::load_hvdc_data()
                     inverter_valve_side_bus_name=from_rectifier_valve_side_bus_name_to_inverter_valve_side_bus_name[secondary_bus_name];
                     inverter_grid_side_bus_name=from_valve_side_bus_name_to_grid_side_bus_name[inverter_valve_side_bus_name];
                 }
-                size_t rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
-                size_t inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
+                unsigned int rectifier_grid_side_bus = psdb.bus_name2bus_number(rectifier_grid_side_bus_name);
+                unsigned int inverter_grid_side_bus = psdb.bus_name2bus_number(inverter_grid_side_bus_name);
 
                 DEVICE_ID did;
                 did.set_device_type("HVDC");
@@ -2071,22 +2071,22 @@ void BPA_IMEXPORTER::load_hvdc_data()
 /*
     HVDC_POLE hvdc_pole_number;
     vector <BUS*> bus_ptr_vector=psdb.get_all_buses();
-    size_t m=bus_ptr_vector.size();
+    unsigned int m=bus_ptr_vector.size();
     vector <HVDC*> hvdc_ptr_vector;
-    for(size_t i=0; i<m; ++i)
+    for(unsigned int i=0; i<m; ++i)
     {
         hvdc_ptr_vector=psdb.get_hvdcs_connecting_to_bus(bus_ptr_vector[i]->get_bus_number());
 
-        size_t hvdc_number = hvdc_ptr_vector.size();
+        unsigned int hvdc_number = hvdc_ptr_vector.size();
 
-        for(size_t j=0; j<hvdc_number; ++j)
+        for(unsigned int j=0; j<hvdc_number; ++j)
         {
             HVDC* hvdc_ptr = hvdc_ptr_vector[j];
 
-            size_t rectifier_grid_side_bus=hvdc_ptr->get_converter_bus(RECTIFIER);
+            unsigned int rectifier_grid_side_bus=hvdc_ptr->get_converter_bus(RECTIFIER);
             string rectifier_grid_side_bus_name=psdb.bus_number2bus_name(rectifier_grid_side_bus);
 
-            size_t inverter_grid_side_bus=hvdc_ptr->get_converter_bus(INVERTER);
+            unsigned int inverter_grid_side_bus=hvdc_ptr->get_converter_bus(INVERTER);
             string inverter_grid_side_bus_name=psdb.bus_number2bus_name(inverter_grid_side_bus);
 
             int pole_number=from_converter_grid_bus_name_to_pole_number[rectifier_grid_side_bus_name+","+inverter_grid_side_bus_name];
@@ -2179,7 +2179,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(string original_data, string
         return original_data;
     }
 
-    size_t n = get_integer_data(format.substr(1,format.size()-1), "1");
+    unsigned int n = get_integer_data(format.substr(1,format.size()-1), "1");
 
     string data = trim_string(original_data);
     if(data.size()<=n)
@@ -2233,7 +2233,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string
         return num2str(original_data);
     }
 
-    size_t n, m;
+    unsigned int n, m;
     if(format.size()==4)
     {
         n = get_integer_data(format.substr(1,1),"1");
@@ -2318,7 +2318,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(double original_data, string
     }
 }
 
-string BPA_IMEXPORTER::convert_data_into_bpa_format(size_t original_data, string format) const
+string BPA_IMEXPORTER::convert_data_into_bpa_format(unsigned int original_data, string format) const
 {
     return convert_data_into_bpa_format(int(original_data), format);
 }
@@ -2332,7 +2332,7 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string fo
 
     if(format.size()<2 or format.at(0)!='I')
     {
-        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or size_t data to bpa data.";
+        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or unsigned int data to bpa data.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
@@ -2354,19 +2354,19 @@ string BPA_IMEXPORTER::convert_data_into_bpa_format(int original_data, string fo
     }
     if(not is_valid_format)
     {
-        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or size_t data to bpa data.";
+        osstream<<"Warning. Invalid BPA format ("<<format<<") when formatting readable integer or unsigned int data to bpa data.";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
 
-    size_t n = get_integer_data(format.substr(1, string::npos), "1");
+    unsigned int n = get_integer_data(format.substr(1, string::npos), "1");
 
     int maxvalue = int(round(1.0*pow(10.0,n)-1));
     int minvalue = -int(round(1.0*pow(10.0,n-1)-1));
 
     if(original_data>maxvalue or original_data<minvalue)
     {
-        osstream<<"Warning. Integer of size_t data ("<<original_data<<") (n="<<n<<") exceeds the limit ("<<minvalue<<", "<<maxvalue<<") of BPA format ("<<format<<").";
+        osstream<<"Warning. Integer of unsigned int data ("<<original_data<<") (n="<<n<<") exceeds the limit ("<<minvalue<<", "<<maxvalue<<") of BPA format ("<<format<<").";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return num2str(original_data);
     }
@@ -2393,17 +2393,17 @@ string BPA_IMEXPORTER::export_bus_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<BUS*> buses = psdb.get_all_buses();
-    size_t n = buses.size();
-    for(size_t i=0; i<n; ++i)
+    unsigned int n = buses.size();
+    for(unsigned int i=0; i<n; ++i)
     {
         BUS* bus = buses[i];
 
-        size_t bus_number = bus->get_bus_number();
+        unsigned int bus_number = bus->get_bus_number();
         BUS_TYPE bus_type = bus->get_bus_type();
-        size_t owner_number = bus->get_owner_number();
+        unsigned int owner_number = bus->get_owner_number();
         string bus_name = bus->get_bus_name();
         double base_voltage = bus->get_base_voltage_in_kV();
-        size_t zone_number = bus->get_zone_number();
+        unsigned int zone_number = bus->get_zone_number();
         double vmax = bus->get_normal_voltage_upper_limit_in_pu();
         double vmin = bus->get_normal_voltage_lower_limit_in_pu();
         double slack_angle = bus->get_positive_sequence_angle_in_deg();
@@ -2413,7 +2413,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         vector<LOAD*> loads = psdb.get_loads_connecting_to_bus(bus_number);
 
         double constant_power_load_P = 0.0, constant_power_load_Q = 0.0;
-        for(size_t j=0; j<loads.size(); ++j)
+        for(unsigned int j=0; j<loads.size(); ++j)
         {
             LOAD* load = loads[j];
             if(load->get_status()==false)
@@ -2423,7 +2423,7 @@ string BPA_IMEXPORTER::export_bus_data() const
             constant_power_load_Q += load->get_nominal_constant_power_load_in_MVA().imag();
         }
         double constant_current_load_P = 0.0, constant_current_load_Q = 0.0;
-        for(size_t j=0; j<loads.size(); ++j)
+        for(unsigned int j=0; j<loads.size(); ++j)
         {
             LOAD* load = loads[j];
             if(load->get_status()==false)
@@ -2433,7 +2433,7 @@ string BPA_IMEXPORTER::export_bus_data() const
             constant_current_load_Q -= load->get_nominal_constant_current_load_in_MVA().imag();
         }
         double constant_impedance_load_P = 0.0, constant_impedance_load_Q = 0.0;
-        for(size_t j=0; j<loads.size(); ++j)
+        for(unsigned int j=0; j<loads.size(); ++j)
         {
             LOAD* load = loads[j];
             if(load->get_status()==false)
@@ -2446,7 +2446,7 @@ string BPA_IMEXPORTER::export_bus_data() const
         vector<SOURCE*> sources = psdb.get_sources_connecting_to_bus(bus_number);
         double pmax = 0.0, pgen = 0.0, qgen = 0.0, qmax = 0.0, qmin = 0.0, v_schedule = 1.0;
 
-        for(size_t j=0; j<sources.size(); ++j)
+        for(unsigned int j=0; j<sources.size(); ++j)
         {
             SOURCE* source = sources[j];
             if(source->get_status()==false)
@@ -2585,18 +2585,18 @@ string BPA_IMEXPORTER::export_line_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<LINE*> lines = psdb.get_all_lines();
-    size_t n = lines.size();
+    unsigned int n = lines.size();
 
     double sbase_MVA = psdb.get_system_base_power_in_MVA();
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         LINE* line = lines[i];
 
-        size_t sending_side_bus_number = line->get_sending_side_bus();
-        size_t receiving_side_bus_number = line->get_receiving_side_bus();
-        size_t owner_number = line->get_owner_of_index(0);
-        size_t meter_end_bus = line->get_meter_end_bus();
+        unsigned int sending_side_bus_number = line->get_sending_side_bus();
+        unsigned int receiving_side_bus_number = line->get_receiving_side_bus();
+        unsigned int owner_number = line->get_owner_of_index(0);
+        unsigned int meter_end_bus = line->get_meter_end_bus();
         string identifier = line->get_identifier();
 
         RATING rate = line->get_rating();
@@ -2625,7 +2625,7 @@ string BPA_IMEXPORTER::export_line_data() const
         string sending_side_bus_name = bus->get_bus_name();
         double sending_side_base_voltage = bus->get_base_voltage_in_kV();
 
-        size_t meter_end = 1;
+        unsigned int meter_end = 1;
         if(meter_end_bus==receiving_side_bus_number)
             meter_end = 2;
 
@@ -2692,10 +2692,10 @@ string BPA_IMEXPORTER::export_transformer_data() const
 
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
-    size_t n;
+    unsigned int n;
     n = transformers.size();
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         TRANSFORMER* transformer = transformers[i];
         if(transformer->is_two_winding_transformer())
@@ -2718,8 +2718,8 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t primary_bus = trans->get_winding_bus(PRIMARY_SIDE);
-    size_t secondary_bus = trans->get_winding_bus(SECONDARY_SIDE);
+    unsigned int primary_bus = trans->get_winding_bus(PRIMARY_SIDE);
+    unsigned int secondary_bus = trans->get_winding_bus(SECONDARY_SIDE);
 
     string primary_bus_name = psdb.bus_number2bus_name(primary_bus);
     string secondary_bus_name = psdb.bus_number2bus_name(secondary_bus);
@@ -2727,11 +2727,11 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
     double primary_base_voltage = psdb.get_bus_base_voltage_in_kV(primary_bus);
     double secondary_base_voltage = psdb.get_bus_base_voltage_in_kV(secondary_bus);
 
-    size_t owner = trans->get_owner_of_index(0);
+    unsigned int owner = trans->get_owner_of_index(0);
     string owner_name = psdb.owner_number2owner_name(owner);
 
-    size_t non_metered_bus = trans->get_non_metered_end_bus();
-    size_t meter_flag = 0;
+    unsigned int non_metered_bus = trans->get_non_metered_end_bus();
+    unsigned int meter_flag = 0;
     if(non_metered_bus==primary_bus)
         meter_flag = 1;
     else
@@ -2826,20 +2826,20 @@ string BPA_IMEXPORTER::export_two_winding_transformer(const TRANSFORMER* trans) 
         {
 
             TRANSFORMER_WINDING_CONTROL_MODE winding_control_mode=trans->get_winding_control_mode(winding);
-            size_t winding_bus=trans->get_winding_bus(winding);
+            unsigned int winding_bus=trans->get_winding_bus(winding);
             string adjustable_winding_bus_name=psdb.bus_number2bus_name(winding_bus);
             double adjustable_winding_bus_base_voltage=psdb.get_bus_base_voltage_in_kV(winding_bus);
             double adjustable_winding_nominal_voltage=trans->get_winding_nominal_voltage_in_kV(winding);
 
-            size_t winding2_bus=trans->get_winding_bus(winding2);
+            unsigned int winding2_bus=trans->get_winding_bus(winding2);
             string controlled_winding_bus_name=psdb.bus_number2bus_name(winding2_bus);
             double controlled_winding_bus_base_voltage=psdb.get_bus_base_voltage_in_kV(winding2_bus);
 
-            size_t adjustable_flag=1;
+            unsigned int adjustable_flag=1;
 
             double winding_max_adjustable_voltage=trans->get_winding_controlled_max_voltage_in_pu( winding )*adjustable_winding_nominal_voltage;
             double winding_min_adjustable_voltage=trans->get_winding_controlled_min_voltage_in_pu( winding )*adjustable_winding_nominal_voltage;
-            size_t number_of_taps=trans->get_winding_number_of_taps( winding );
+            unsigned int number_of_taps=trans->get_winding_number_of_taps( winding );
             double controlled_max_active_power_into_winding_in_MW=trans->get_controlled_max_active_power_into_winding_in_MW(winding);
             double controlled_min_active_power_into_winding_in_MW=trans->get_controlled_min_active_power_into_winding_in_MW(winding);
             double controlled_max_reactive_power_into_winding_in_MVar=trans->get_controlled_max_reactive_power_into_winding_in_MVar(winding);
@@ -2913,7 +2913,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     string transformer_name=trans->get_transformer_name();
     string neutral_point_name="&" + transformer_name;
     double neutral_voltage_in_kv=1.0;
-    size_t owner = trans->get_owner_of_index(0);
+    unsigned int owner = trans->get_owner_of_index(0);
     string owner_name = psdb.owner_number2owner_name(owner);
 
     complex<double> Z_between_primary_and_secondary = trans->get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
@@ -2932,7 +2932,7 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
     TRANSFORMER_WINDING_SIDE winding=PRIMARY_SIDE;
     ostringstream osstream;
 
-    for(size_t i=0; i<3; ++i)
+    for(unsigned int i=0; i<3; ++i)
     {
         if(i==0) winding=PRIMARY_SIDE;
         if(i==1) winding=SECONDARY_SIDE;
@@ -2953,15 +2953,15 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
                 is_angle_shift_transformer = false;
         }
 
-        size_t winding_bus = trans->get_winding_bus(winding);
+        unsigned int winding_bus = trans->get_winding_bus(winding);
 
         string winding_bus_name = psdb.bus_number2bus_name(winding_bus);
 
         double winding_base_voltage = psdb.get_bus_base_voltage_in_kV(winding_bus);
 
-        size_t non_metered_bus = trans->get_non_metered_end_bus();
+        unsigned int non_metered_bus = trans->get_non_metered_end_bus();
 
-        size_t meter_flag;
+        unsigned int meter_flag;
         if(non_metered_bus!=winding_bus)
             meter_flag = 1;
         else
@@ -3029,9 +3029,9 @@ string BPA_IMEXPORTER::export_three_winding_transformer(const TRANSFORMER* trans
         if (winding_control_mode==TRANSFORMER_TAP_NO_CONTROL)
             continue;
 
-        size_t number_of_taps=trans->get_winding_number_of_taps(winding);
+        unsigned int number_of_taps=trans->get_winding_number_of_taps(winding);
         // control voltage
-        size_t controlled_bus=trans->get_winding_controlled_bus(winding);
+        unsigned int controlled_bus=trans->get_winding_controlled_bus(winding);
         string controlled_bus_name = psdb.bus_number2bus_name(controlled_bus);
         double controlled_bus_base_voltage = psdb.get_bus_base_voltage_in_kV(controlled_bus);
 
@@ -3110,18 +3110,18 @@ string BPA_IMEXPORTER::export_hvdc_data() const
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t n = hvdcs.size();
+    unsigned int n = hvdcs.size();
 
     double sbase_MVA = psdb.get_system_base_power_in_MVA();
 
-    for(size_t i=0; i<n; ++i)
+    for(unsigned int i=0; i<n; ++i)
     {
         HVDC* hvdc = hvdcs[i];
 
         string hvdc_name = hvdc->get_name();
 
-        size_t rectifier_grid_bus_number=hvdc->get_converter_bus(RECTIFIER);
-        size_t inverter_grid_bus_number=hvdc->get_converter_bus(INVERTER);
+        unsigned int rectifier_grid_bus_number=hvdc->get_converter_bus(RECTIFIER);
+        unsigned int inverter_grid_bus_number=hvdc->get_converter_bus(INVERTER);
 
         BUS* rectifier_grid_bus = psdb.get_bus(rectifier_grid_bus_number);
         BUS* inverter_grid_bus = psdb.get_bus(inverter_grid_bus_number);
@@ -3134,7 +3134,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         //double rectifier_grid_bus_base_voltage=rectifier_grid_bus->get_base_voltage_in_kV();
         //double inverter_grid_bus_base_voltage=inverter_grid_bus->get_base_voltage_in_kV();
 
-        size_t pole_number = 1;
+        unsigned int pole_number = 1;
 
         if (hvdc->get_number_of_poles()==SINGLE_POLE) pole_number=1;
         else if (hvdc->get_number_of_poles()==DOUBLE_POLE) pole_number=2;
@@ -3199,23 +3199,23 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         //double rectifier_s_in_siemens=hvdc->get_converter_transformer_admittance_in_siemens(RECTIFIER).imag();
         double rectifier_s_in_pu=inverter_s_in_siemens/inverter_y_base_based_on_grid_side_bus_nominal;
 
-        size_t inverter_side_number_of_bridge=hvdc->get_converter_number_of_bridge(INVERTER);
-        size_t rectifier_side_number_of_bridge=hvdc->get_converter_number_of_bridge(RECTIFIER);
+        unsigned int inverter_side_number_of_bridge=hvdc->get_converter_number_of_bridge(INVERTER);
+        unsigned int rectifier_side_number_of_bridge=hvdc->get_converter_number_of_bridge(RECTIFIER);
 
         double inverter_transformer_max_tap_in_pu=hvdc->get_converter_transformer_max_tap_in_pu(INVERTER);
         double inverter_transformer_min_tap_in_pu=hvdc->get_converter_transformer_min_tap_in_pu(INVERTER);
-        size_t inverter_transformer_number_of_taps=hvdc->get_converter_transformer_number_of_taps(INVERTER);
+        unsigned int inverter_transformer_number_of_taps=hvdc->get_converter_transformer_number_of_taps(INVERTER);
         double inverter_transformer_max_tap_in_kv=inverter_transformer_max_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
         double inverter_transformer_min_tap_in_kv=inverter_transformer_min_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
 
         //double rectifier_transformer_max_tap_in_pu=hvdc->get_converter_transformer_max_tap_in_pu(RECTIFIER);
         //double rectifier_transformer_min_tap_in_pu=hvdc->get_converter_transformer_min_tap_in_pu(RECTIFIER);
-        size_t rectifier_transformer_number_of_taps=hvdc->get_converter_transformer_number_of_taps(RECTIFIER);
+        unsigned int rectifier_transformer_number_of_taps=hvdc->get_converter_transformer_number_of_taps(RECTIFIER);
         double rectifier_transformer_max_tap_in_kv=inverter_transformer_max_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
         double rectifier_transformer_min_tap_in_kv=inverter_transformer_min_tap_in_pu*inverter_grid_side_bus_base_voltage_in_kV;
 
         //imexporter inverter data
-        for (size_t j=0; j!=pole_number; ++j)
+        for (unsigned int j=0; j!=pole_number; ++j)
         {
             string rectifier_valve_bus_name;
             string inverter_valve_bus_name;
@@ -3256,7 +3256,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j!=pole_number; ++j)
+        for (unsigned int j=0; j!=pole_number; ++j)
         {
             string inverter_valve_side_bus_name;
 
@@ -3284,7 +3284,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j != pole_number; ++j)
+        for (unsigned int j=0; j != pole_number; ++j)
         {
             string inverter_valve_side_bus_name;
 
@@ -3313,7 +3313,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j!=pole_number; ++j)
+        for (unsigned int j=0; j!=pole_number; ++j)
         {
             string inverter_valve_side_bus_name;
 
@@ -3340,7 +3340,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
         }
 
        //imeporter rectifier data
-        for (size_t j=0; j!=pole_number; ++j)
+        for (unsigned int j=0; j!=pole_number; ++j)
         {
             string rectifier_valve_side_bus_name;
 
@@ -3368,7 +3368,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j<pole_number; ++j)
+        for (unsigned int j=0; j<pole_number; ++j)
         {
             string rectifier_valve_side_bus_name;
 
@@ -3397,7 +3397,7 @@ string BPA_IMEXPORTER::export_hvdc_data() const
             osstream<<endl;
         }
 
-        for (size_t j=0; j!=pole_number; ++j)
+        for (unsigned int j=0; j!=pole_number; ++j)
         {
             string rectifier_valve_side_bus_name;
 

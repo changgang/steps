@@ -6,6 +6,7 @@
 #include <istream>
 #include <iostream>
 #include <fstream>
+#include <cstring>
 
 using namespace std;
 
@@ -59,7 +60,7 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
     if(model_warehouse==nullptr)
     {
         warehouse_capacity = toolkit.get_dynamic_model_database_size_in_bytes();
-        model_warehouse = malloc(warehouse_capacity);
+        model_warehouse = (char*) malloc(warehouse_capacity);
         if(model_warehouse==nullptr)
         {
             osstream<<"Error. Cannot allocate dynamic model database. Check codes.";
@@ -70,13 +71,14 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
     if(is_full)
         return;
 
-    size_t model_size = get_model_size(model);
+    unsigned int model_size = get_model_size(model);
     if(occupied_warehouse_capacity+model_size>warehouse_capacity)
     {
         is_full = true;
         osstream<<"Error. Dynamic model database is full. No more model will be added. Increase dynamic model database size with API.\n"
                 <<"The first model failing to append is: \n"
                 <<model->get_dynamic_data_in_psse_format();
+        cout<<osstream.str()<<endl;
         toolkit.show_information_with_leading_time_stamp(osstream);
     }
     else
@@ -97,9 +99,9 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
                 bool flag = load_related_model_is_to_update(old_model, model);
                 if(flag==true)
                 {
-                    size_t old_model_size = get_model_size(old_model);
+                    unsigned int old_model_size = get_model_size(old_model);
                     if(old_model_size>=model_size)
-                        memcpy(old_model, model, model_size);
+                        memcpy((void*)old_model, model, model_size);
                     else
                     {
                         common_set_model(model, model_size);
@@ -110,12 +112,12 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
             else
             {
                 if(old_model->get_model_name()==model->get_model_name())
-                    memcpy(old_model, model, model_size);
+                    memcpy((void*)old_model, model, model_size);
                 else
                 {
-                    size_t old_model_size = get_model_size(old_model);
+                    unsigned int old_model_size = get_model_size(old_model);
                     if(old_model_size>=model_size)
-                        memcpy(old_model, model, model_size);
+                        memcpy((void*)old_model, model, model_size);
                     else
                     {
                         common_set_model(model, model_size);
@@ -127,7 +129,7 @@ void DYNAMIC_MODEL_DATABASE::add_model(MODEL* model)
     }
 }
 
-size_t DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
+unsigned int DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
 {
     string model_name = model->get_model_name();
     if(model_name=="GENCLS") return sizeof(GENCLS);
@@ -208,6 +210,7 @@ size_t DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
 
 
     if(model_name=="PVCV0") return sizeof(PVCV0);
+    if(model_name=="PVGU1") return sizeof(PVGU1);
 
 
     if(model_name=="ARXL") return sizeof(ARXL);
@@ -222,9 +225,9 @@ size_t DYNAMIC_MODEL_DATABASE::get_model_size(MODEL* model) const
     return 0;
 }
 
-void DYNAMIC_MODEL_DATABASE::common_set_model(MODEL* model, size_t model_size)
+void DYNAMIC_MODEL_DATABASE::common_set_model(MODEL* model, unsigned int model_size)
 {
-    memcpy(model_warehouse+occupied_warehouse_capacity, model, model_size);
+    memcpy((void*)(model_warehouse+occupied_warehouse_capacity), model, model_size);
     model_starting_position_table.push_back(occupied_warehouse_capacity);
 
     MODEL* model_pointer = (MODEL*) (model_warehouse+occupied_warehouse_capacity);
@@ -241,9 +244,9 @@ void DYNAMIC_MODEL_DATABASE::common_set_model(MODEL* model, size_t model_size)
 
 void DYNAMIC_MODEL_DATABASE::shrink_model_starting_position_table_at_position(void *pos)
 {
-    size_t n = model_starting_position_table.size();
-    size_t model_table_index = INDEX_NOT_EXIST;
-    for(size_t i=0; i<n; ++i)
+    unsigned int n = model_starting_position_table.size();
+    unsigned int model_table_index = INDEX_NOT_EXIST;
+    for(unsigned int i=0; i<n; ++i)
     {
         void * this_model_postion = model_warehouse+model_starting_position_table[i];
         if(this_model_postion!=pos)
@@ -259,7 +262,7 @@ void DYNAMIC_MODEL_DATABASE::shrink_model_starting_position_table_at_position(vo
         MODEL* model_to_delete = (MODEL*) (model_warehouse+model_starting_position_table[model_table_index]);
         model_to_delete->destroy_manually_allocated_storage();
 
-        for(size_t i=model_table_index+1; i<n; ++i)
+        for(unsigned int i=model_table_index+1; i<n; ++i)
             model_starting_position_table[i-1] = model_starting_position_table[i];
         model_starting_position_table.pop_back();
     }
@@ -305,7 +308,7 @@ bool DYNAMIC_MODEL_DATABASE::load_related_model_is_to_update(MODEL* old_model, M
 
 void DYNAMIC_MODEL_DATABASE::remove_the_last_model()
 {
-    size_t n = model_starting_position_table.size();
+    unsigned int n = model_starting_position_table.size();
     switch(n)
     {
         case 0:

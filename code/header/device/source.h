@@ -16,7 +16,7 @@ class SOURCE : public DEVICE
         SOURCE();
         virtual ~SOURCE();
 
-        void set_source_bus(size_t bus);
+        void set_source_bus(unsigned int bus);
         void set_identifier(string id);
         void set_status(bool status);
         void set_mbase_in_MVA(double mbase_MVA);
@@ -27,11 +27,11 @@ class SOURCE : public DEVICE
         void set_q_max_in_MVar(double q_max_MVar);
         void set_q_min_in_MVar(double q_min_MVar);
         void set_voltage_to_regulate_in_pu(double v_pu);
-        void set_bus_to_regulate(size_t bus);
+        void set_bus_to_regulate(unsigned int bus);
         void set_source_impedance_in_pu(const complex<double>& z_pu);
 
 
-        size_t get_source_bus() const;
+        unsigned int get_source_bus() const;
         BUS* get_bus_pointer() const;
         string get_identifier() const;
         bool get_status() const;
@@ -45,15 +45,15 @@ class SOURCE : public DEVICE
         double get_q_max_in_MVar() const;
         double get_q_min_in_MVar() const;
         double get_voltage_to_regulate_in_pu() const;
-        size_t get_bus_to_regulate() const;
+        unsigned int get_bus_to_regulate() const;
         complex<double> get_source_impedance_in_pu() const;
 
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
-        virtual bool is_connected_to_bus(size_t bus) const;
-        virtual bool is_in_area(size_t area) const;
-        virtual bool is_in_zone(size_t zone) const;
+        virtual bool is_connected_to_bus(unsigned int bus) const;
+        virtual bool is_in_area(unsigned int area) const;
+        virtual bool is_in_zone(unsigned int zone) const;
 
 
         virtual DEVICE_ID get_device_id() const = 0;
@@ -68,7 +68,7 @@ class SOURCE : public DEVICE
         virtual complex<double> get_complex_internal_voltage_in_pu_in_xy_axis() const = 0;
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power() = 0;
     private:
-        size_t source_bus;
+        unsigned int source_bus;
         BUS* busptr;
 
         string source_identifier;
@@ -78,7 +78,7 @@ class SOURCE : public DEVICE
         double p_generation_MW, q_generation_MVar;
         double p_max_MW, p_min_MW, q_max_MVar, q_min_MVar;
         double voltage_to_regulate_pu;
-        size_t bus_to_regulate;
+        unsigned int bus_to_regulate;
 
         complex<double> source_Z_pu;
 };

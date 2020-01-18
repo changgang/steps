@@ -6,7 +6,7 @@
 #include "header/basic/device_id.h"
 #include "header/block/block.h"
 #include "header/model/model.h"
-#include <cstddef>  // declearation of size_t
+#include <cstddef>  // declearation of unsigned int
 #include <sstream>
 #include <iomanip>
 
@@ -22,13 +22,13 @@ class DEVICE : public BASE
 
         void set_ownership(const OWNERSHIP& ownership);
         OWNERSHIP get_ownership() const;
-        size_t get_owner_count() const;
-        size_t get_owner_of_index(size_t index) const;
-        double get_fraction_of_owner_of_index(size_t index) const;
+        unsigned int get_owner_count() const;
+        unsigned int get_owner_of_index(unsigned int index) const;
+        double get_fraction_of_owner_of_index(unsigned int index) const;
 
-        virtual bool is_connected_to_bus(size_t bus) const = 0;
-        virtual bool is_in_area(size_t area) const = 0;
-        virtual bool is_in_zone(size_t zone) const = 0;
+        virtual bool is_connected_to_bus(unsigned int bus) const = 0;
+        virtual bool is_in_area(unsigned int area) const = 0;
+        virtual bool is_in_zone(unsigned int zone) const = 0;
 
 
         virtual void report() const = 0;

@@ -6,12 +6,12 @@
 
 WT_ELECTRICAL_MODEL::WT_ELECTRICAL_MODEL()
 {
-    power_speed_table = new WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE;
+    ;
 }
 
 WT_ELECTRICAL_MODEL::~WT_ELECTRICAL_MODEL()
 {
-    delete power_speed_table;
+    ;
 }
 
 string WT_ELECTRICAL_MODEL::get_model_type() const
@@ -52,7 +52,7 @@ complex<double> WT_ELECTRICAL_MODEL::get_terminal_bus_complex_voltage_in_pu() co
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t bus = gen->get_generator_bus();
+        unsigned int bus = gen->get_generator_bus();
         return psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
     }
     else
@@ -79,7 +79,7 @@ double WT_ELECTRICAL_MODEL::get_terminal_bus_frequency_deviation_in_pu() const
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-        size_t bus = gen->get_generator_bus();
+        unsigned int bus = gen->get_generator_bus();
         return psdb.get_bus_frequency_deviation_in_pu(bus);
     }
     else
@@ -109,12 +109,12 @@ double WT_ELECTRICAL_MODEL::get_wt_generator_terminal_current_in_pu() const
 }
 // reference
 
-void WT_ELECTRICAL_MODEL::set_bus_to_regulate(size_t bus)
+void WT_ELECTRICAL_MODEL::set_bus_to_regulate(unsigned int bus)
 {
     bus_to_regulate = bus;
 }
 
-size_t WT_ELECTRICAL_MODEL::get_bus_to_regulate()  const
+unsigned int WT_ELECTRICAL_MODEL::get_bus_to_regulate()  const
 {
     return bus_to_regulate;
 }
@@ -129,7 +129,7 @@ void WT_ELECTRICAL_MODEL::set_voltage_reference_in_pu_with_bus_to_regulate()
     WT_GENERATOR* source = get_wt_generator_pointer();
     if(source!=NULL)
     {
-        size_t bus = get_bus_to_regulate();
+        unsigned int bus = get_bus_to_regulate();
         if(bus!=0)
             ;
         else
@@ -243,20 +243,15 @@ double WT_ELECTRICAL_MODEL::get_wt_generator_speed_referance_in_pu() const
 
 void WT_ELECTRICAL_MODEL::set_wind_turbine_power_speed_lookup_table(WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table)
 {
-    (*power_speed_table) = table;
+    power_speed_table = table;
 }
 
 WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE WT_ELECTRICAL_MODEL::get_wind_turbine_power_speed_lookup_table() const
 {
-    return (*power_speed_table);
+    return power_speed_table;
 }
 
 double WT_ELECTRICAL_MODEL::get_wind_turbine_reference_speed_with_power_in_pu(double power)
 {
-    return power_speed_table->get_reference_speed_with_power_in_pu(power);
-}
-
-double WT_ELECTRICAL_MODEL::get_wind_turbine_reference_power_with_speed_in_pu(double speed)
-{
-    return power_speed_table->get_reference_power_with_speed_in_pu(speed);
+    return power_speed_table.get_reference_speed_with_power_in_pu(power);
 }

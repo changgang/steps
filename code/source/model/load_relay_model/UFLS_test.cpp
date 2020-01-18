@@ -30,7 +30,7 @@ void UFLS_TEST::setup()
     model.set_toolkit(default_toolkit);
     model.set_device_id(load->get_device_id());
 
-    size_t stage = 0;
+    unsigned int stage = 0;
     model.set_frequency_threshold_in_Hz_of_stage(stage, 49.0);
     model.set_time_delay_in_s_of_stage(stage, 0.2);
     model.set_scale_in_pu_of_stage(stage, 0.05);
@@ -77,7 +77,7 @@ void UFLS_TEST::test_set_get_parameters()
 
     UFLS* model = (UFLS*) get_load()->get_load_frequency_relay_model();
 
-    size_t stage = 0;
+    unsigned int stage = 0;
 
     TEST_ASSERT(fabs(model->get_frequency_threshold_in_Hz_of_stage(stage)-49.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_time_delay_in_s_of_stage(stage)-0.2)<FLOAT_EPSILON);

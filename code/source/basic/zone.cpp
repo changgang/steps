@@ -17,7 +17,7 @@ ZONE::~ZONE()
     ;
 }
 
-void ZONE::set_zone_number(size_t number)
+void ZONE::set_zone_number(unsigned int number)
 {
     if(number!=0)
         this->zone_number = number;
@@ -37,7 +37,7 @@ void ZONE::set_zone_name(string name)
     this->zone_name = trim_string(name);
 }
 
-size_t ZONE::get_zone_number() const
+unsigned int ZONE::get_zone_number() const
 {
     return zone_number;
 }

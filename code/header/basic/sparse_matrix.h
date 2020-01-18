@@ -61,7 +61,7 @@ public:
 
     virtual void clear() = 0;
 
-    virtual vector<size_t> get_reorder_permutation() = 0;
+    virtual vector<unsigned int> get_reorder_permutation() = 0;
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13) = 0;
 

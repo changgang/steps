@@ -33,8 +33,8 @@ int main()
     importer.load_dynamic_data("../../../bench/bench_shandong_change_with_gov.dyr");
 
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t n = hvdcs.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();
 
     POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();

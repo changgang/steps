@@ -4,7 +4,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV, size_t toolkit_index)
+void api_add_bus(unsigned int bus_number, char* bus_name, double base_voltage_in_kV, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -20,7 +20,7 @@ void api_add_bus(size_t bus_number, char* bus_name, double base_voltage_in_kV, s
     }
 }
 
-void api_add_generator(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_add_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -37,7 +37,7 @@ void api_add_generator(size_t bus_number, char* identifier, size_t toolkit_index
     }
 }
 
-void api_add_wt_generator(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_add_wt_generator(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -55,7 +55,7 @@ void api_add_wt_generator(size_t bus_number, char* identifier, size_t toolkit_in
 }
 
 
-void api_add_pv_unit(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_add_pv_unit(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -72,7 +72,7 @@ void api_add_pv_unit(size_t bus_number, char* identifier, size_t toolkit_index)
     }
 }
 
-void api_add_load(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_add_load(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -89,7 +89,7 @@ void api_add_load(size_t bus_number, char* identifier, size_t toolkit_index)
     }
 }
 
-void api_add_fixed_shunt(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_add_fixed_shunt(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -106,7 +106,7 @@ void api_add_fixed_shunt(size_t bus_number, char* identifier, size_t toolkit_ind
     }
 }
 
-void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_number, char* identifier, size_t toolkit_index)
+void api_add_line(unsigned int sending_side_bus_number, unsigned int receiving_side_bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -124,7 +124,7 @@ void api_add_line(size_t sending_side_bus_number, size_t receiving_side_bus_numb
     }
 }
 
-void api_add_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char* identifier, size_t toolkit_index)
+void api_add_hvdc(unsigned int rectifier_bus_number, unsigned int inverter_bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -142,7 +142,7 @@ void api_add_hvdc(size_t rectifier_bus_number, size_t inverter_bus_number, char*
     }
 }
 
-void api_add_transformer(size_t primary_side_bus_number, size_t secondary_side_bus_number, size_t tertiary_side_bus_number, char* identifier, size_t toolkit_index)
+void api_add_transformer(unsigned int primary_side_bus_number, unsigned int secondary_side_bus_number, unsigned int tertiary_side_bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -161,7 +161,7 @@ void api_add_transformer(size_t primary_side_bus_number, size_t secondary_side_b
     }
 }
 
-void api_add_equivalent_device(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_add_equivalent_device(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -178,7 +178,7 @@ void api_add_equivalent_device(size_t bus_number, char* identifier, size_t toolk
     }
 }
 
-void api_add_energy_storage(size_t bus_number, char* identifier, size_t toolkit_index)
+void api_add_energy_storage(unsigned int bus_number, char* identifier, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -195,7 +195,7 @@ void api_add_energy_storage(size_t bus_number, char* identifier, size_t toolkit_
     }
 }
 
-void api_add_area(size_t area_number, char* area_name, size_t toolkit_index)
+void api_add_area(unsigned int area_number, char* area_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -210,7 +210,7 @@ void api_add_area(size_t area_number, char* area_name, size_t toolkit_index)
     }
 }
 
-void api_add_zone(size_t zone_number, char* zone_name, size_t toolkit_index)
+void api_add_zone(unsigned int zone_number, char* zone_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -225,7 +225,7 @@ void api_add_zone(size_t zone_number, char* zone_name, size_t toolkit_index)
     }
 }
 
-void api_add_owner(size_t owner_number, char* owner_name, size_t toolkit_index)
+void api_add_owner(unsigned int owner_number, char* owner_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

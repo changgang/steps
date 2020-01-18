@@ -4,7 +4,7 @@
 #include "header/data_imexporter/bpa_imexporter.h"
 #include "header/STEPS.h"
 
-void api_set_dynamic_model(char* model_string, char* file_type, size_t toolkit_index)
+void api_set_dynamic_model(char* model_string, char* file_type, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     string data(model_string);

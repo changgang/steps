@@ -7,7 +7,7 @@
 #include <mutex>
 
 extern STEPS default_toolkit;
-extern STEPS* toolkits[MAX_TOOLKIT_SIZE];
+extern STEPS* toolkits[STEPS_MAX_TOOLKIT_SIZE];
 extern std::mutex mtx;
 
 #endif // STEPS_NAMESPACE_H

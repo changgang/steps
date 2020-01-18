@@ -49,7 +49,7 @@ void PSASPE14_TEST::test_set_get_parameters()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"PSASPE14_TEST");
 
-    PSASPE14* model = (PSASPE14*) get_test_exciter_model();
+    //PSASPE14* model = (PSASPE14*) get_test_exciter_model();
 
 }
 
@@ -62,8 +62,8 @@ void PSASPE14_TEST::test_initialize()
 
     PSASPE14* model = (PSASPE14*) get_test_exciter_model();
 
-    double Efd0 = genmodel->get_initial_excitation_voltage_in_pu();
-    double Ecomp = model->get_compensated_voltage_in_pu();
+    //double Efd0 = genmodel->get_initial_excitation_voltage_in_pu();
+    //double Ecomp = model->get_compensated_voltage_in_pu();
 
     model->initialize();
 

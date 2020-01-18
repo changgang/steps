@@ -27,19 +27,15 @@ class STABILIZER_MODEL : public SG_MODEL
     public: // stabilizer common
         virtual string get_model_type() const;
         // common inputs
-        void set_signal_type_at_slot(size_t slot, size_t signal_type);
-        void set_signal_bus_at_slot(size_t slot, size_t signal_bus);
-        size_t get_signal_type_at_slot(size_t slot);
-        size_t get_signal_bus_at_slot(size_t slot);
-        void set_input_signal_at_slot(size_t slot, SIGNAL& signal);
-        SIGNAL get_input_signal_at_slot(size_t slot) const;
-        bool is_slot_valid(size_t slot) const;
-        double get_signal_value_of_slot(size_t slot) const;
-        size_t convert_signal_type_string_to_number(string& signal_type) const;
-        string convert_signal_type_number_to_string(size_t signal_type) const;
+        void set_input_signal_at_slot(unsigned int slot, SIGNAL& signal);
+        SIGNAL get_input_signal_at_slot(unsigned int slot) const;
+        bool is_slot_valid(unsigned int slot) const;
+        double get_signal_value_of_slot(unsigned int slot) const;
+        unsigned int convert_signal_type_string_to_number(string& signal_type) const;
+        string convert_signal_type_number_to_string(unsigned int signal_type) const;
         //
-        SIGNAL prepare_signal_with_signal_type_and_bus(size_t signal_type, size_t bus);
-        SIGNAL prepare_signal_with_signal_type_and_device_id(size_t signal_type, DEVICE_ID did);
+        SIGNAL prepare_signal_with_signal_type_and_bus(unsigned int signal_type, unsigned int bus);
+        SIGNAL prepare_signal_with_signal_type_and_device_id(unsigned int signal_type, DEVICE_ID did);
     public: // specific model level
         virtual string get_model_name() const = 0;
 
@@ -71,9 +67,7 @@ class STABILIZER_MODEL : public SG_MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
 
     private:
-        SIGNAL *signals[MAX_STABILIZER_INPUT_SIGNAL_SLOT];
-        size_t signal_type[MAX_STABILIZER_INPUT_SIGNAL_SLOT], signal_bus[MAX_STABILIZER_INPUT_SIGNAL_SLOT];
-
+        SIGNAL signals[STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT];
 };
 
 #endif // STABILIZER_MODEL_H

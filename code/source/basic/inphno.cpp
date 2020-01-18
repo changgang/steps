@@ -19,15 +19,15 @@ INPHNO::~INPHNO()
     ;
 }
 
-void INPHNO::set_physical_internal_bus_number_pair(size_t physical_bus, size_t internal_bus)
+void INPHNO::set_physical_internal_bus_number_pair(unsigned int physical_bus, unsigned int internal_bus)
 {
     if(physical_bus != 0)
     {
-        size_t current_internal_bus_of_input_physical_bus = get_internal_bus_number_of_physical_bus_number(physical_bus);
+        unsigned int current_internal_bus_of_input_physical_bus = get_internal_bus_number_of_physical_bus_number(physical_bus);
 
         if(current_internal_bus_of_input_physical_bus!=internal_bus)
         {
-            size_t current_physical_bus_of_input_internal_bus = get_physical_bus_number_of_internal_bus_number(internal_bus);
+            unsigned int current_physical_bus_of_input_internal_bus = get_physical_bus_number_of_internal_bus_number(internal_bus);
 
             if(current_internal_bus_of_input_physical_bus!=INDEX_NOT_EXIST)
             {
@@ -41,8 +41,8 @@ void INPHNO::set_physical_internal_bus_number_pair(size_t physical_bus, size_t i
                 physical_to_internal_lookup_table[current_physical_bus_of_input_internal_bus] = INDEX_NOT_EXIST;
             }
 
-            size_t n_physical = physical_to_internal_lookup_table.size();
-            size_t n_internal = internal_to_physical_lookup_table.size();
+            unsigned int n_physical = physical_to_internal_lookup_table.size();
+            unsigned int n_internal = internal_to_physical_lookup_table.size();
 
             if(n_physical<physical_bus+1)
                 physical_to_internal_lookup_table.resize(physical_bus+1, INDEX_NOT_EXIST);
@@ -56,15 +56,15 @@ void INPHNO::set_physical_internal_bus_number_pair(size_t physical_bus, size_t i
     }
 }
 
-void INPHNO::update_with_new_internal_bus_permutation(const vector<size_t>& P)
+void INPHNO::update_with_new_internal_bus_permutation(const vector<unsigned int>& P)
 {
     if(is_new_internal_bus_permutation_correct(P))
     {
-        size_t n = P.size();
-        size_t new_internal_bus, old_internal_bus, physical_bus;
+        unsigned int n = P.size();
+        unsigned int new_internal_bus, old_internal_bus, physical_bus;
 
-        vector<size_t> old_internal_to_physical_lookup_table = internal_to_physical_lookup_table;
-        for(size_t i=0; i!=n; ++i)
+        vector<unsigned int> old_internal_to_physical_lookup_table = internal_to_physical_lookup_table;
+        for(unsigned int i=0; i!=n; ++i)
         {
             new_internal_bus = i;
             old_internal_bus = P[i];
@@ -83,18 +83,18 @@ void INPHNO::update_with_new_internal_bus_permutation(const vector<size_t>& P)
     }
 }
 
-bool INPHNO::is_new_internal_bus_permutation_correct(const vector<size_t>& P)
+bool INPHNO::is_new_internal_bus_permutation_correct(const vector<unsigned int>& P)
 {
-    vector<size_t> Psort = P;
+    vector<unsigned int> Psort = P;
 
-    sort(Psort.begin(), Psort.end(), less<size_t>());
+    sort(Psort.begin(), Psort.end(), less<unsigned int>());
 
-    size_t nP = P.size(), nPsort = Psort.size();
+    unsigned int nP = P.size(), nPsort = Psort.size();
 
     bool flag = true;
     if(nP == nPsort)
     {
-        for(size_t i = 0; i!=nPsort; ++i)
+        for(unsigned int i = 0; i!=nPsort; ++i)
         {
             if(Psort[i] == i)
                 continue;
@@ -110,13 +110,13 @@ bool INPHNO::is_new_internal_bus_permutation_correct(const vector<size_t>& P)
 
 bool INPHNO::is_table_full() const
 {
-    size_t nbus = internal_to_physical_lookup_table.size();
+    unsigned int nbus = internal_to_physical_lookup_table.size();
 
     bool full_logic = true;
 
-    size_t physical_bus;
+    unsigned int physical_bus;
 
-    for(size_t internal_bus=0; internal_bus!=nbus; ++internal_bus)
+    for(unsigned int internal_bus=0; internal_bus!=nbus; ++internal_bus)
     {
         physical_bus = get_physical_bus_number_of_internal_bus_number(internal_bus);
 
@@ -145,11 +145,11 @@ void INPHNO::clear()
     internal_to_physical_lookup_table.clear();
 }
 
-size_t INPHNO::get_internal_bus_number_of_physical_bus_number(size_t bus) const
+unsigned int INPHNO::get_internal_bus_number_of_physical_bus_number(unsigned int bus) const
 {
     if(not empty())
     {
-        size_t nmax = physical_to_internal_lookup_table.size();
+        unsigned int nmax = physical_to_internal_lookup_table.size();
         if(bus<=nmax-1)
             return physical_to_internal_lookup_table[bus];
         else
@@ -159,11 +159,11 @@ size_t INPHNO::get_internal_bus_number_of_physical_bus_number(size_t bus) const
         return INDEX_NOT_EXIST;
 }
 
-size_t INPHNO::get_physical_bus_number_of_internal_bus_number(size_t bus) const
+unsigned int INPHNO::get_physical_bus_number_of_internal_bus_number(unsigned int bus) const
 {
     if(not empty())
     {
-        size_t nmax = internal_to_physical_lookup_table.size();
+        unsigned int nmax = internal_to_physical_lookup_table.size();
         if(bus<nmax)
             return internal_to_physical_lookup_table[bus];
         else
@@ -180,10 +180,10 @@ void INPHNO::report() const
     osstream<<"Physical<-->internal bus number pair:";
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
-    size_t n = internal_to_physical_lookup_table.size();
+    unsigned int n = internal_to_physical_lookup_table.size();
 
-    size_t bus;
-    for(size_t i=0; i!=n; ++i)
+    unsigned int bus;
+    for(unsigned int i=0; i!=n; ++i)
     {
         bus = get_physical_bus_number_of_internal_bus_number(i);
         osstream<<setw(8)<<bus<<"<-->"<<setw(8)<<i;

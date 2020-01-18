@@ -22,7 +22,7 @@ class HVDC : public DEVICE
         HVDC();
         virtual ~HVDC();
 
-        void set_converter_bus(HVDC_CONVERTER_SIDE converter, const size_t bus);
+        void set_converter_bus(HVDC_CONVERTER_SIDE converter, const unsigned int bus);
         void set_converter_valve_side_bus_name(HVDC_CONVERTER_SIDE converter, string name);
         void set_identifier(const string identifier);
         void set_name(const string name);
@@ -43,7 +43,7 @@ class HVDC : public DEVICE
         void set_meter_end(const HVDC_CONVERTER_SIDE converter);
 
         void set_converter_operation_mode(HVDC_CONVERTER_SIDE converter, const HVDC_OPERATION_MODE mode);
-        void set_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter, const size_t nbridge);
+        void set_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter, const unsigned int nbridge);
         void set_converter_voltage_drop_per_bridge_in_kV(HVDC_CONVERTER_SIDE converter, const double V);
         void set_converter_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, const double angle);
         void set_converter_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter, const double angle);
@@ -54,9 +54,9 @@ class HVDC : public DEVICE
         void set_converter_transformer_admittance_in_siemens(HVDC_CONVERTER_SIDE converter, const complex<double> y);
         void set_converter_transformer_max_tap_in_pu(HVDC_CONVERTER_SIDE converter, const double maxtap);
         void set_converter_transformer_min_tap_in_pu(HVDC_CONVERTER_SIDE converter, const double mintap);
-        void set_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter, const size_t ntap);
+        void set_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter, const unsigned int ntap);
 
-        size_t get_converter_bus(HVDC_CONVERTER_SIDE converter) const;
+        unsigned int get_converter_bus(HVDC_CONVERTER_SIDE converter) const;
         BUS* get_bus_pointer(HVDC_CONVERTER_SIDE converter) const;
 
         string get_converter_valve_side_bus_name(HVDC_CONVERTER_SIDE converter) const;
@@ -80,7 +80,7 @@ class HVDC : public DEVICE
         HVDC_CONVERTER_SIDE get_meter_end() const;
 
         HVDC_OPERATION_MODE get_converter_operation_mode(HVDC_CONVERTER_SIDE converter) const;
-        size_t get_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter) const;
+        unsigned int get_converter_number_of_bridge(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_voltage_drop_per_bridge_in_kV(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_max_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_min_alpha_or_gamma_in_deg(HVDC_CONVERTER_SIDE converter) const;
@@ -91,7 +91,7 @@ class HVDC : public DEVICE
         complex<double> get_converter_transformer_admittance_in_siemens(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_transformer_max_tap_in_pu(HVDC_CONVERTER_SIDE converter) const;
         double get_converter_transformer_min_tap_in_pu(HVDC_CONVERTER_SIDE converter) const;
-        size_t get_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter) const;
+        unsigned int get_converter_transformer_number_of_taps(HVDC_CONVERTER_SIDE converter) const;
 
         void turn_rectifier_constant_power_mode_into_constant_current_mode();
         void turn_rectifier_constant_current_mode_into_constant_power_mode();
@@ -105,9 +105,9 @@ class HVDC : public DEVICE
         virtual bool is_valid() const;
         virtual void check();
         virtual void clear();
-        virtual bool is_connected_to_bus(size_t bus) const;
-        virtual bool is_in_area(size_t area) const;
-        virtual bool is_in_zone(size_t zone) const;
+        virtual bool is_connected_to_bus(unsigned int bus) const;
+        virtual bool is_in_area(unsigned int area) const;
+        virtual bool is_in_zone(unsigned int zone) const;
         virtual void report() const;
         virtual void save() const;
 
@@ -171,7 +171,7 @@ class HVDC : public DEVICE
 
         double solve_converter_dc_voltage_in_kV_with_dc_current_and_transformer_tap(HVDC_CONVERTER_SIDE converter, double Idc, double Tap);
 
-        size_t converter_bus[2];
+        unsigned int converter_bus[2];
         BUS* converter_busptr[2];
 
         string converter_valve_bus_name[2];
@@ -192,7 +192,7 @@ class HVDC : public DEVICE
         HVDC_CONVERTER_SIDE meter_end;
 
         HVDC_OPERATION_MODE operation_mode[2];
-        size_t bridge_number[2];
+        unsigned int bridge_number[2];
         double voltage_drop_per_bridge_in_kV[2];
         double max_firing_angle_in_deg[2], min_firing_angle_in_deg[2];
 
@@ -200,7 +200,7 @@ class HVDC : public DEVICE
         complex<double> converter_transformer_Z_in_ohm[2], converter_transformer_Y_in_siemens[2];
         // transformer Z is used for commutation, Y is not used at all.
         double converter_transformer_max_tap_in_pu[2], converter_transformer_min_tap_in_pu[2];
-        size_t converter_transformer_number_of_taps[2];
+        unsigned int converter_transformer_number_of_taps[2];
 
         double converter_firing_angle_in_deg[2], converter_transformer_tap_in_pu[2];
         double converter_dc_voltage_in_kV[2], line_dc_current_in_kA[2];

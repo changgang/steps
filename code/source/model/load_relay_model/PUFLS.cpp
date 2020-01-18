@@ -8,20 +8,16 @@ using namespace std;
 
 PUFLS::PUFLS()
 {
-    history_minimum_frequency_buffer = nullptr;
     clear();
 }
 
 PUFLS::PUFLS(const PUFLS& model) : LOAD_FREQUENCY_RELAY_MODEL()
 {
-    history_minimum_frequency_buffer = nullptr;
     copy_from_const_model(model);
 }
 
 PUFLS::~PUFLS()
 {
-    if(history_minimum_frequency_buffer!=nullptr)
-        delete history_minimum_frequency_buffer;
 }
 
 void PUFLS::clear()
@@ -41,7 +37,7 @@ void PUFLS::clear()
 
     flag_additional_stage_is_tripped = false;
 
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         discrete_stage_shed_scale_in_pu[stage] = 0.0;
         discrete_stage_timer[stage].reset();
@@ -66,7 +62,7 @@ void PUFLS::copy_from_const_model(const PUFLS& model)
     set_additional_stage_time_delay_in_s(model.get_additional_stage_time_delay_in_s());
 
     set_discrete_stage_time_delay_in_s(model.get_discrete_stage_time_delay_in_s());
-    for(size_t stage =0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage =0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
         set_discrete_stage_shed_scale_in_pu(stage, model.get_discrete_stage_shed_scale_in_pu(stage));
 }
 
@@ -132,15 +128,15 @@ void PUFLS::set_additional_stage_shed_scale_in_pu(double scale)
 
 void PUFLS::set_discrete_stage_time_delay_in_s(double t)
 {
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         discrete_stage_timer[stage].set_timer_interval_in_s(t);
     }
 }
 
-void PUFLS::set_discrete_stage_shed_scale_in_pu(size_t stage, double scale)
+void PUFLS::set_discrete_stage_shed_scale_in_pu(unsigned int stage, double scale)
 {
-    if(stage<MAX_LOAD_RELAY_STAGE)
+    if(stage<STEPS_MAX_LOAD_RELAY_STAGE)
         discrete_stage_shed_scale_in_pu[stage] = scale;
 }
 
@@ -194,9 +190,9 @@ double PUFLS::get_discrete_stage_time_delay_in_s() const
     return discrete_stage_timer[0].get_timer_interval_in_s();
 }
 
-double PUFLS::get_discrete_stage_shed_scale_in_pu(size_t stage) const
+double PUFLS::get_discrete_stage_shed_scale_in_pu(unsigned int stage) const
 {
-    if(stage<MAX_LOAD_RELAY_STAGE)
+    if(stage<STEPS_MAX_LOAD_RELAY_STAGE)
         return discrete_stage_shed_scale_in_pu[stage];
     else
         return 0.0;
@@ -205,7 +201,7 @@ double PUFLS::get_discrete_stage_shed_scale_in_pu(size_t stage) const
 bool PUFLS::setup_model_with_steps_string_vector(vector<string>& data)
 {
     bool is_successful = false;
-    size_t n = data.size();
+    unsigned int n = data.size();
 
     if(n>=12)
     {
@@ -213,10 +209,10 @@ bool PUFLS::setup_model_with_steps_string_vector(vector<string>& data)
         if(model_name=="PUFLSAL" or model_name=="PUFLSBL" or model_name=="PUFLSAR" or model_name=="PUFLSZN")
         {
             double t_freq, fth_continuous, tdelay, K_scale, max_scale;
-            size_t signal_flag;
+            unsigned int signal_flag;
             double fth_additional, additional_scale, additional_time_delay;
 
-            size_t i=3;
+            unsigned int i=3;
             signal_flag = get_integer_data(data[i], "0"); i++;
             t_freq = get_double_data(data[i],"0.0"); i++;
             fth_continuous = get_double_data(data[i],"0.0"); i++;
@@ -245,7 +241,7 @@ bool PUFLS::setup_model_with_steps_string_vector(vector<string>& data)
             tdelay = get_double_data(data[i],"0.0"); i++;
             set_discrete_stage_time_delay_in_s(tdelay);
 
-            for(size_t stage=0; i!=n and stage!=MAX_LOAD_RELAY_STAGE; ++i, ++stage)
+            for(unsigned int stage=0; i!=n and stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++i, ++stage)
             {
                 double scale = get_double_data(data[i],"0.0");
                 set_discrete_stage_shed_scale_in_pu(stage, scale);
@@ -301,9 +297,9 @@ void PUFLS::setup_block_toolkit_and_parameters()
 
     frequency_sensor.set_toolkit(toolkit);
     additional_stage_timer.set_toolkit(toolkit);
-    for(size_t i=0; i!=MAX_LOAD_RELAY_STAGE; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_LOAD_RELAY_STAGE; ++i)
         discrete_stage_timer[i].set_toolkit(toolkit);
-    history_minimum_frequency_buffer->set_toolkit(toolkit);
+    history_minimum_frequency_buffer.set_toolkit(toolkit);
 }
 
 void PUFLS::initialize()
@@ -311,7 +307,6 @@ void PUFLS::initialize()
     if(is_model_initialized())
         return;
 
-    history_minimum_frequency_buffer = new CONTINUOUS_BUFFER;
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {
@@ -322,7 +317,7 @@ void PUFLS::initialize()
         double fbase = get_bus_base_frequency_in_Hz();
 
         additional_stage_timer.set_attached_device(load);
-        for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+        for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
             discrete_stage_timer[stage].set_attached_device(load);
 
         double t_delay = get_time_delay_in_s();
@@ -333,13 +328,13 @@ void PUFLS::initialize()
 
         double current_time = toolkit.get_dynamic_simulation_time_in_s();
 
-        history_minimum_frequency_buffer->set_buffer_size(2*(size_t)(t_delay/delt)+2);
-        history_minimum_frequency_buffer->initialize_buffer(current_time, fbase);
+        history_minimum_frequency_buffer.set_buffer_size(2*(unsigned int)(t_delay/delt)+2);
+        history_minimum_frequency_buffer.initialize_buffer(current_time, fbase);
 
         additional_stage_timer.reset();
         flag_additional_stage_is_tripped = false;
 
-        for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+        for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
         {
             discrete_stage_timer[stage].reset();
             flag_discrete_stage_is_tripped[stage] = false;
@@ -366,10 +361,10 @@ void PUFLS::run(DYNAMIC_MODE mode)
     if(mode==UPDATE_MODE or mode==INTEGRATE_MODE)
     {
 
-        size_t N = get_number_of_discrete_stage_to_meet_total_continuous_shed_scale();
+        unsigned int N = get_number_of_discrete_stage_to_meet_total_continuous_shed_scale();
         //cout<<"N="<<N<<endl;
         // try to shed lines
-        for(size_t stage=0; stage!=N; ++stage)
+        for(unsigned int stage=0; stage!=N; ++stage)
         {
             if(is_discrete_stage_tipped(stage))
                 continue;
@@ -378,8 +373,8 @@ void PUFLS::run(DYNAMIC_MODE mode)
             {
                 if(is_discrete_stage_timer_timed_out(stage) and is_minimum_frequency_declining())
                 {
-                    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS discrete stage %lu timer of %s is timed out at time %.3fs.\n"
+                    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+                    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS discrete stage %u timer of %s is timed out at time %.3fs.\n"
                             "%f%% loads are tripped.",stage,get_device_name().c_str(),TIME,
                             get_discrete_stage_shed_scale_in_pu(stage)*100.0);
                     toolkit.show_information_with_leading_time_stamp(buffer);
@@ -389,8 +384,8 @@ void PUFLS::run(DYNAMIC_MODE mode)
             }
             else
             {
-                char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS discrete stage %lu timer of %s is started at time %.3fs.\n"
+                char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+                snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS discrete stage %u timer of %s is started at time %.3fs.\n"
                         "%f%% loads are tripped.",stage,get_device_name().c_str(),TIME,
                         get_discrete_stage_shed_scale_in_pu(stage)*100.0);
                 toolkit.show_information_with_leading_time_stamp(buffer);
@@ -414,25 +409,25 @@ void PUFLS::append_new_minimum_frequency()
     double delt = toolkit.get_dynamic_simulation_time_step_in_s();
 
     double current_freq = frequency_sensor.get_output();
-    //double previous_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_head();
-    double previous_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_time(current_time-delt);
+    //double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
+    double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_time(current_time-delt);
     //cout<<"at time "<<toolkit.get_dynamic_simulation_time_in_s()<<": freq = "<<current_freq<<", previous minimum = "<<previous_minimum_freq<<endl;
 
     if(current_freq<previous_minimum_freq)
-        history_minimum_frequency_buffer->append_data(current_time, current_freq);
+        history_minimum_frequency_buffer.append_data(current_time, current_freq);
     else
-        history_minimum_frequency_buffer->append_data(current_time, previous_minimum_freq);
+        history_minimum_frequency_buffer.append_data(current_time, previous_minimum_freq);
 /*
-    size_t bus = ((LOAD*) get_device_pointer())->get_load_bus();
+    unsigned int bus = ((LOAD*) get_device_pointer())->get_load_bus();
     if(bus==3)
     {
         osstream<<setw(10)<<setprecision(6)
                 <<"At time "<<current_time<<"s, "<<get_device_name()<<endl
                 <<"Current bus frequency is: "<<get_bus_frequency_in_Hz()<<"Hz"<<endl
                 <<"Current sensed frequency is: "<<frequency_sensor.get_output()<<"Hz"<<endl
-                <<"Current minimum frequency is: "<<history_minimum_frequency_buffer->get_buffer_value_at_head()<<"Hz";
+                <<"Current minimum frequency is: "<<history_minimum_frequency_buffer.get_buffer_value_at_head()<<"Hz";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        history_minimum_frequency_buffer->show_buffer();
+        history_minimum_frequency_buffer.show_buffer();
     }
 */
 }
@@ -450,23 +445,23 @@ void PUFLS::update_continuous_shed_command()
 
     if(is_minimum_frequency_declining())
     {
-        double delayed_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_time(current_time-delay);
+        double delayed_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_time(current_time-delay);
         if(delayed_minimum_freq<f_th)
         {
             double delta_frequency = f_th-delayed_minimum_freq;
             current_continuous_shed_command_in_pu = K*delta_frequency;
-            /*size_t bus = ((LOAD*) get_device_pointer())->get_load_bus();
+            /*unsigned int bus = ((LOAD*) get_device_pointer())->get_load_bus();
             if(bus==3)
             {
                 osstream<<setw(10)<<setprecision(6)
                         <<"At time "<<current_time<<"s, "<<get_device_name()<<" minimum frequency is declining."<<endl
                         <<"Current bus frequency is: "<<get_bus_frequency_in_Hz()<<"Hz"<<endl
                         <<"Current sensed frequency is: "<<frequency_sensor.get_output()<<"Hz"<<endl
-                        <<"Current minimum frequency is: "<<history_minimum_frequency_buffer->get_buffer_value_at_head()<<"Hz"<<endl
+                        <<"Current minimum frequency is: "<<history_minimum_frequency_buffer.get_buffer_value_at_head()<<"Hz"<<endl
                         <<"Delayed minimum frequency is: "<<delayed_minimum_freq<<"Hz"<<endl
                         <<"Current shed command is: "<<current_continuous_shed_command_in_pu;
                 toolkit.show_information_with_leading_time_stamp(osstream);
-                history_minimum_frequency_buffer->show_buffer();
+                history_minimum_frequency_buffer.show_buffer();
             }*/
         }
     }
@@ -480,12 +475,12 @@ double PUFLS::get_continuous_shed_command_in_pu() const
 double PUFLS::get_total_discrete_shed_scale_in_pu() const
 {
     double scale = 0.0;
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
         scale += (is_discrete_stage_tipped(stage)*discrete_stage_shed_scale_in_pu[stage]);
     return scale;
 }
 
-size_t PUFLS::get_number_of_discrete_stage_to_meet_total_continuous_shed_scale() const
+unsigned int PUFLS::get_number_of_discrete_stage_to_meet_total_continuous_shed_scale() const
 {
     double total_shed_command = get_continuous_shed_command_in_pu();
     double discrete_shed_command = 0.0;
@@ -496,9 +491,9 @@ size_t PUFLS::get_number_of_discrete_stage_to_meet_total_continuous_shed_scale()
     else
         return 0;
 
-    size_t N=0;
+    unsigned int N=0;
     double total_to_shed = 0.0;
-    for(size_t stage=0; stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         double shed_scale_of_stage = get_discrete_stage_shed_scale_in_pu(stage);
 
@@ -510,10 +505,10 @@ size_t PUFLS::get_number_of_discrete_stage_to_meet_total_continuous_shed_scale()
     return N;
 }
 
-double PUFLS::get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(size_t n) const
+double PUFLS::get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(unsigned int n) const
 {
     double total = 0.0;
-    for(size_t stage=0; stage!=n and stage!=MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage!=n and stage!=STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         total += get_discrete_stage_shed_scale_in_pu(stage);
     }
@@ -522,28 +517,28 @@ double PUFLS::get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(size_t n) c
 
 double PUFLS::get_total_shed_scale_of_all_discrete_stages_in_pu() const
 {
-    return get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(MAX_LOAD_RELAY_STAGE);
+    return get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(STEPS_MAX_LOAD_RELAY_STAGE);
 }
 
-bool PUFLS::is_discrete_stage_tipped(size_t stage) const
+bool PUFLS::is_discrete_stage_tipped(unsigned int stage) const
 {
-    if(stage<MAX_LOAD_RELAY_STAGE)
+    if(stage<STEPS_MAX_LOAD_RELAY_STAGE)
         return flag_discrete_stage_is_tripped[stage];
     else
         return false;
 }
 
-bool PUFLS::is_discrete_stage_timer_timed_out(size_t stage)
+bool PUFLS::is_discrete_stage_timer_timed_out(unsigned int stage)
 {
-    if(stage<MAX_LOAD_RELAY_STAGE)
+    if(stage<STEPS_MAX_LOAD_RELAY_STAGE)
         return discrete_stage_timer[stage].is_timed_out();
     else
         return false;
 }
 
-void PUFLS::trip_discrete_stage(size_t stage)
+void PUFLS::trip_discrete_stage(unsigned int stage)
 {
-    if(stage<MAX_LOAD_RELAY_STAGE)
+    if(stage<STEPS_MAX_LOAD_RELAY_STAGE)
     {
         if(not is_discrete_stage_tipped(stage))
         {
@@ -553,26 +548,26 @@ void PUFLS::trip_discrete_stage(size_t stage)
     }
 }
 
-bool PUFLS::is_discrete_stage_timer_started(size_t stage) const
+bool PUFLS::is_discrete_stage_timer_started(unsigned int stage) const
 {
-    if(stage<MAX_LOAD_RELAY_STAGE)
+    if(stage<STEPS_MAX_LOAD_RELAY_STAGE)
         return discrete_stage_timer[stage].is_started();
     else
         return false;
 }
 
-void PUFLS::start_discrete_stage_timer_of_stage(size_t stage)
+void PUFLS::start_discrete_stage_timer_of_stage(unsigned int stage)
 {
-    if(stage<MAX_LOAD_RELAY_STAGE)
+    if(stage<STEPS_MAX_LOAD_RELAY_STAGE)
     {
         if(not is_discrete_stage_timer_started(stage))
             discrete_stage_timer[stage].start();
     }
 }
 
-void PUFLS::reset_discrete_stage_timer_of_stage(size_t stage)
+void PUFLS::reset_discrete_stage_timer_of_stage(unsigned int stage)
 {
-    if(stage<MAX_LOAD_RELAY_STAGE)
+    if(stage<STEPS_MAX_LOAD_RELAY_STAGE)
     {
         if(is_discrete_stage_timer_started(stage))
             discrete_stage_timer[stage].reset();
@@ -711,8 +706,8 @@ void PUFLS::try_to_reset_additional_stage_timer()
             {
                 if(current_freq>f_th)
                 {
-                    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-                    snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS additional stage timer of %s is reset at time %.3fs due to recovery of frequency.\n"
+                    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+                    snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "PUFLS additional stage timer of %s is reset at time %.3fs due to recovery of frequency.\n"
                             "Current frequency is %.4fHz, and stage frequency threshold is %.4fHz.",get_device_name().c_str(),current_time,
                             current_freq,f_th);
                     toolkit.show_information_with_leading_time_stamp(buffer);
@@ -745,15 +740,15 @@ void PUFLS::reset_additional_stage_timer()
 bool PUFLS::is_frequency_recovering_beyond_current_minimum_frequency() const
 {
     double current_freq = frequency_sensor.get_output();
-    double current_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_head();
+    double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
 
     return (current_freq-current_minimum_freq)>FLOAT_EPSILON;
 }
 
 bool PUFLS::is_minimum_frequency_declining() const
 {
-    double current_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_head();
-    double previous_minimum_freq = history_minimum_frequency_buffer->get_buffer_value_at_delay_index(1);
+    double current_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_head();
+    double previous_minimum_freq = history_minimum_frequency_buffer.get_buffer_value_at_delay_index(1);
 
     return (current_minimum_freq-previous_minimum_freq)<-FLOAT_EPSILON;
 }
@@ -803,7 +798,7 @@ string PUFLS::get_standard_psse_string() const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
-    size_t bus = load->get_load_bus();
+    unsigned int bus = load->get_load_bus();
     string identifier = "'"+load->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -822,9 +817,9 @@ string PUFLS::get_standard_psse_string() const
             <<setw(8)<<setprecision(5)<<get_additional_stage_time_delay_in_s()<<", "
             <<setw(8)<<setprecision(5)<<get_additional_stage_shed_scale_in_pu()<<", "
             <<setw(8)<<setprecision(5)<<get_discrete_stage_time_delay_in_s()<<", ";
-    size_t n_content = 4;
-    size_t stage=0;
-    for(stage=0; stage!=(MAX_LOAD_RELAY_STAGE-1); ++stage)
+    unsigned int n_content = 4;
+    unsigned int stage=0;
+    for(stage=0; stage!=(STEPS_MAX_LOAD_RELAY_STAGE-1); ++stage)
     {
         osstream<<setw(8)<<setprecision(5)<<get_discrete_stage_shed_scale_in_pu(stage)<<", ";
         n_content++;
@@ -835,7 +830,7 @@ string PUFLS::get_standard_psse_string() const
             n_content = 1;
         }
     }
-    stage = MAX_LOAD_RELAY_STAGE-1;
+    stage = STEPS_MAX_LOAD_RELAY_STAGE-1;
     osstream<<setw(8)<<setprecision(5)<<get_discrete_stage_shed_scale_in_pu(stage)<<" /";
 
     return osstream.str();
@@ -844,7 +839,7 @@ string PUFLS::get_standard_psse_string() const
 void PUFLS::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("ADDITIONAL STAGE MODE", i); i++;
     add_model_data_name_and_index_pair("TF", i); i++;
     add_model_data_name_and_index_pair("FTH", i); i++;
@@ -855,7 +850,7 @@ void PUFLS::prepare_model_data_table()
     add_model_data_name_and_index_pair("TD ADDITIONAL", i); i++;
     add_model_data_name_and_index_pair("P ADDITIONAL", i); i++;
     add_model_data_name_and_index_pair("TD DISCRETE", i); i++;
-    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage<STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         string name = "P DISCRETE "+num2str(stage);
         add_model_data_name_and_index_pair(name, i); i++;
@@ -886,7 +881,7 @@ double PUFLS::get_model_data_with_name(string par_name) const
         return get_additional_stage_shed_scale_in_pu();
     if(par_name=="TD DISCRETE")
         return get_discrete_stage_time_delay_in_s();
-    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage<STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         string name = "P DISCRETE "+num2str(stage);
         if(par_name==name)
@@ -923,7 +918,7 @@ void PUFLS::set_model_data_with_name(string par_name, double value)
         return set_additional_stage_shed_scale_in_pu(value);
     if(par_name=="TD DISCRETE")
         return set_discrete_stage_time_delay_in_s(value);
-    for(size_t stage=0; stage<MAX_LOAD_RELAY_STAGE; ++stage)
+    for(unsigned int stage=0; stage<STEPS_MAX_LOAD_RELAY_STAGE; ++stage)
     {
         string name = "P DISCRETE "+num2str(stage);
         if(par_name==name)
@@ -936,7 +931,7 @@ void PUFLS::set_model_data_with_name(string par_name, double value)
 void PUFLS::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("", i); i++;
 }
 

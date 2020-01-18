@@ -11,20 +11,20 @@ class TERMINAL
     public:
         TERMINAL();
         virtual ~TERMINAL();
-        void append_bus(size_t bus);
-        bool has_bus(size_t bus);
-        size_t get_bus_count() const;
-        vector<size_t> get_buses();
+        void append_bus(unsigned int bus);
+        bool has_bus(unsigned int bus);
+        unsigned int get_bus_count() const;
+        vector<unsigned int> get_buses();
         void clear();
 
         virtual TERMINAL& operator= (const TERMINAL& terminal);
-        size_t operator[] (size_t index) const;
+        unsigned int operator[] (unsigned int index) const;
     private:
-        void reject_to_append_non_positive_bus(size_t bus);
-        void append_and_sort_buses(size_t bus);
+        void reject_to_append_non_positive_bus(unsigned int bus);
+        void append_and_sort_buses(unsigned int bus);
         void sort_bus_in_ascending_order();
     private:
-        vector<size_t> buses;
+        vector<unsigned int> buses;
 };
 
 #endif // TERMINAL_H

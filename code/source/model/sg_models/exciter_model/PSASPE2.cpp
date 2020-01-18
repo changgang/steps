@@ -236,7 +236,7 @@ bool PSASPE2::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double kr, tr, k2, t1, t2, t3, t4, ka, ta, efdmax, efdmin, vta, vtb, kpt, kit, ke;
 
-            size_t i=3;
+            unsigned int i=3;
             kr = get_double_data(data[i],"1.0"); i++;
             tr = get_double_data(data[i],"0.0"); i++;
             k2 = get_double_data(data[i],"0.0"); i++;
@@ -353,8 +353,7 @@ void PSASPE2::initialize()
                 double Efd =  get_initial_excitation_voltage_in_pu_from_sync_generator_model();
                 this->Efd0 = Efd;
 
-                POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-                //size_t bus = generator->get_generator_bus();
+                //unsigned int bus = generator->get_generator_bus();
                 //this->Vt0 = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
                 this->Vt0 = get_terminal_voltage_in_pu();
 
@@ -447,7 +446,7 @@ double PSASPE2::get_excitation_voltage_in_pu()
         {
             STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
             POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-            size_t bus = generator->get_generator_bus();
+            unsigned int bus = generator->get_generator_bus();
             complex<double> Vt = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
             //complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_mbase();
             complex<double> It = gen_model->get_terminal_complex_current_in_pu_in_xy_axis_based_on_sbase();
@@ -531,7 +530,7 @@ string PSASPE2::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -579,7 +578,7 @@ string PSASPE2::get_standard_psse_string() const
 void PSASPE2::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("KR", i); i++;
     add_model_data_name_and_index_pair("TR", i); i++;
     add_model_data_name_and_index_pair("K2", i); i++;
@@ -649,7 +648,7 @@ void PSASPE2::set_model_data_with_name(string par_name, double value)
 void PSASPE2::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@TUNER1", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@TUNER2", i); i++;

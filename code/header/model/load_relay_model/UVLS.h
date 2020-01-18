@@ -43,36 +43,36 @@ class UVLS : public LOAD_VOLTAGE_RELAY_MODEL
         virtual string get_dynamic_data_in_steps_format() const;
     public:
         void set_voltage_sensor_time_in_s(double t);
-        void set_voltage_threshold_in_pu_of_stage(size_t i, double f);
-        void set_time_delay_in_s_of_stage(size_t i, double t);
-        void set_scale_in_pu_of_stage(size_t i, double s);
+        void set_voltage_threshold_in_pu_of_stage(unsigned int i, double f);
+        void set_time_delay_in_s_of_stage(unsigned int i, double t);
+        void set_scale_in_pu_of_stage(unsigned int i, double s);
         void set_breaker_time_in_s(double t);
 
         double get_voltage_sensor_time_in_s() const;
-        double get_voltage_threshold_in_pu_of_stage(size_t i) const;
-        double get_time_delay_in_s_of_stage(size_t i) const;
-        double get_scale_in_pu_of_stage(size_t i) const;
+        double get_voltage_threshold_in_pu_of_stage(unsigned int i) const;
+        double get_time_delay_in_s_of_stage(unsigned int i) const;
+        double get_scale_in_pu_of_stage(unsigned int i) const;
         double get_breaker_time_in_s() const;
-        double get_delayer_timer_in_s_of_stage(size_t i) const;
-        double get_breaker_timer_in_s_of_stage(size_t i) const;
+        double get_delayer_timer_in_s_of_stage(unsigned int i) const;
+        double get_breaker_timer_in_s_of_stage(unsigned int i) const;
     private:
 
-        bool is_stage_delayer_timer_started(size_t i) const;
-        bool is_stage_breaker_timer_started(size_t i) const;
-        void start_stage_delayer_timer(size_t i);
-        void start_stage_breaker_timer(size_t i);
-        void reset_stage_delayer_timer(size_t i);
-        void reset_stage_breaker_timer(size_t i);
-        bool is_stage_delayer_timer_timed_out(size_t i) const;
-        bool is_stage_breaker_timer_timed_out(size_t i) const;
+        bool is_stage_delayer_timer_started(unsigned int i) const;
+        bool is_stage_breaker_timer_started(unsigned int i) const;
+        void start_stage_delayer_timer(unsigned int i);
+        void start_stage_breaker_timer(unsigned int i);
+        void reset_stage_delayer_timer(unsigned int i);
+        void reset_stage_breaker_timer(unsigned int i);
+        bool is_stage_delayer_timer_timed_out(unsigned int i) const;
+        bool is_stage_breaker_timer_timed_out(unsigned int i) const;
 
-        void trip_stage(size_t i);
-        bool is_stage_tripped(size_t i) const;
+        void trip_stage(unsigned int i);
+        bool is_stage_tripped(unsigned int i) const;
 
-        bool is_stage_breaker_enabled(size_t i) const;
-        bool is_stage_delayer_enabled(size_t i) const;
-        void update_delayer_timer_of_stage(size_t i);
-        void update_breaker_timer_of_stage(size_t i);
+        bool is_stage_breaker_enabled(unsigned int i) const;
+        bool is_stage_delayer_enabled(unsigned int i) const;
+        void update_delayer_timer_of_stage(unsigned int i);
+        void update_breaker_timer_of_stage(unsigned int i);
 
 
     private:
@@ -80,12 +80,12 @@ class UVLS : public LOAD_VOLTAGE_RELAY_MODEL
 
         FIRST_ORDER_BLOCK voltage_sensor;
 
-        double voltage_threshold_in_pu[MAX_LOAD_RELAY_STAGE];
-        double scale_in_pu[MAX_LOAD_RELAY_STAGE];
+        double voltage_threshold_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
+        double scale_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
 
-        TIMER stage_timer[MAX_LOAD_RELAY_STAGE];
-        TIMER breaker_timer[MAX_LOAD_RELAY_STAGE];
-        bool flag_stage_is_tripped[MAX_LOAD_RELAY_STAGE];
+        TIMER stage_timer[STEPS_MAX_LOAD_RELAY_STAGE];
+        TIMER breaker_timer[STEPS_MAX_LOAD_RELAY_STAGE];
+        bool flag_stage_is_tripped[STEPS_MAX_LOAD_RELAY_STAGE];
 };
 
 #endif // UVLS_H

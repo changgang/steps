@@ -75,7 +75,7 @@ bool IEEEVC::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t i=3;
+            unsigned int i=3;
 
             set_Rc(get_double_data(data[i],"0.0")); ++i;
             set_Xc(get_double_data(data[i],"0.0"));
@@ -159,7 +159,7 @@ string IEEEVC::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -175,7 +175,7 @@ string IEEEVC::get_standard_psse_string() const
 void IEEEVC::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("RC", i); i++;
     add_model_data_name_and_index_pair("XC", i); i++;
 }

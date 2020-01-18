@@ -12,14 +12,14 @@ class CONTINGENCY_SCREENER
         CONTINGENCY_SCREENER();
         virtual ~CONTINGENCY_SCREENER();
 
-        void set_power_system_database_maximum_bus_number(size_t number);
-        size_t get_power_system_database_maximum_bus_number() const;
+        void set_power_system_database_maximum_bus_number(unsigned int number);
+        unsigned int get_power_system_database_maximum_bus_number() const;
 
 
-        void scan_N_k_line_fault(size_t k);
-        void scan_N_k_line_trip(size_t k);
-        void scan_N_k_generator_trip(size_t k);
-        void scan_N_k_hvdc_block(size_t k);
+        void scan_N_k_line_fault(unsigned int k);
+        void scan_N_k_line_trip(unsigned int k);
+        void scan_N_k_generator_trip(unsigned int k);
+        void scan_N_k_hvdc_block(unsigned int k);
 
 
         void scan_line_fault(FAULT fault, double flocation, double clearing_time, bool trip_after_clear);
@@ -34,12 +34,12 @@ class CONTINGENCY_SCREENER
         void set_dynamic_data_filename(string filename);
 
         void set_fault_device(DEVICE_ID did);
-        void set_fault_side_bus(size_t bus);
+        void set_fault_side_bus(unsigned int bus);
         void set_fault_location_to_fault_side_bus_in_pu(double location);
         void set_fault_shunt_in_pu(complex<double> shunt);
         void set_flag_trip_line_after_clearing_fault(bool flag);
 
-        void set_simulator_max_iteration(size_t iteration);
+        void set_simulator_max_iteration(unsigned int iteration);
         void set_simulator_allowed_max_power_imbalance_in_MVA(double tol);
         void set_simulator_iteration_accelerator(double alpha);
 
@@ -47,12 +47,12 @@ class CONTINGENCY_SCREENER
         string get_dynamic_data_filename() const;
 
         DEVICE_ID get_fault_device() const;
-        size_t get_fault_side_bus() const;
+        unsigned int get_fault_side_bus() const;
         double get_fault_location_to_fault_side_bus_in_pu() const;
         complex<double> get_fault_shunt_in_pu() const;
         bool get_flag_trip_line_after_clearing_fault() const;
 
-        size_t get_simulator_max_iteration() const;
+        unsigned int get_simulator_max_iteration() const;
         double get_simulator_allowed_max_power_imbalance_in_MVA() const;
         double get_simulator_iteration_accelerator() const;
 
@@ -76,8 +76,8 @@ class CONTINGENCY_SCREENER
     private:
         bool is_searcher_is_properly_set() const;
         bool perform_simulation_with_clearing_time(double clearing_time);
-        size_t get_monitored_generator_count() const;
-        DEVICE_ID get_monitored_generator(size_t i) const;
+        unsigned int get_monitored_generator_count() const;
+        DEVICE_ID get_monitored_generator(unsigned int i) const;
         void set_meters(DYNAMICS_SIMULATOR& simulator);
         void apply_fault(DYNAMICS_SIMULATOR& simulator);
         void clear_fault(DYNAMICS_SIMULATOR& simulator);
@@ -87,7 +87,7 @@ class CONTINGENCY_SCREENER
         string powerflow_data_filename, dynamic_data_filename;
 
         DEVICE_ID fault_device;
-        size_t fault_side_bus;
+        unsigned int fault_side_bus;
         double fault_location;
         complex<double> fault_shunt_in_pu;
         double fault_time_in_s;
@@ -97,7 +97,7 @@ class CONTINGENCY_SCREENER
         double angle_difference_threshold_in_deg;
 
         double P_threshold_in_MW, Q_threshold_in_MVar, alpha;
-        size_t max_iteration;
+        unsigned int max_iteration;
 
         vector<DEVICE_ID> monitored_generators;
 

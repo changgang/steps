@@ -2020,7 +2020,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_generator_exist()
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -2048,7 +2048,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_wt_generator_exist()
     DEVICE_ID did;
     did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -2076,7 +2076,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_pv_unit_exist()
     DEVICE_ID did;
     did.set_device_type("PV UNIT");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -2103,7 +2103,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_load_exist()
     DEVICE_ID did;
     did.set_device_type("LOAD");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -2131,7 +2131,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_line_exist()
     DEVICE_ID did;
     did.set_device_type("LINE");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         if(i==1)
@@ -2173,7 +2173,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_transformer_exist()
     DEVICE_ID did;
     did.set_device_type("TRANSFORMER");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         if(i==1)
@@ -2228,7 +2228,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_fixed_shunt_exist()
     DEVICE_ID did;
     did.set_device_type("FIXED SHUNT");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; i++)
+    for(unsigned int i=1; i!=4; i++)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -2256,7 +2256,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_hvdc_exist()
     DEVICE_ID did;
     did.set_device_type("HVDC");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         if(i==1)
@@ -2298,7 +2298,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_equivalent_device_exist()
     DEVICE_ID did;
     did.set_device_type("EQUIVALENT DEVICE");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -2326,7 +2326,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_energy_storage_exist()
     DEVICE_ID did;
     did.set_device_type("ENERGY STORAGE");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -2351,7 +2351,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_area_exist()
 
     prepare_database_for_test();
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
         TEST_ASSERT(psdb.is_area_exist(i)==true);
 
     TEST_ASSERT(psdb.is_area_exist(4)==false);
@@ -2365,7 +2365,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_zone_exist()
 
     prepare_database_for_test();
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
         TEST_ASSERT(psdb.is_zone_exist(i)==true);
     TEST_ASSERT(psdb.is_zone_exist(4)==false);
 }
@@ -2378,7 +2378,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_is_owner_exist()
 
     prepare_database_for_test();
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
         TEST_ASSERT(psdb.is_owner_exist(i)==true);
     TEST_ASSERT(psdb.is_owner_exist(4)==false);
 }
@@ -2597,7 +2597,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_connecting_to_bus()
 
     vector<GENERATOR*> device;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         device = psdb.get_generators_connecting_to_bus(i);
 
@@ -2622,7 +2622,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_connecting_to_bus()
     prepare_database_for_test();
 
     vector<WT_GENERATOR*> device;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         device = psdb.get_wt_generators_connecting_to_bus(i);
 
@@ -2648,7 +2648,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_connecting_to_bus()
     prepare_database_for_test();
 
     vector<PV_UNIT*> device;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         device = psdb.get_pv_units_connecting_to_bus(i);
 
@@ -2673,7 +2673,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_connecting_to_bus()
     prepare_database_for_test();
 
     vector<SOURCE*> device;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         device = psdb.get_sources_connecting_to_bus(i);
 
@@ -2710,7 +2710,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_connecting_to_bus()
     prepare_database_for_test();
 
     vector<LOAD*> device;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         device = psdb.get_loads_connecting_to_bus(i);
 
@@ -2902,7 +2902,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_connecting_to_bus()
     prepare_database_for_test();
 
     vector<FIXED_SHUNT*> device;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         device = psdb.get_fixed_shunts_connecting_to_bus(i);
 
@@ -2990,7 +2990,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_connecting_to_bus()
     prepare_database_for_test();
 
     vector<EQUIVALENT_DEVICE*> device;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         device = psdb.get_equivalent_devices_connecting_to_bus(i);
 
@@ -3016,7 +3016,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_connecting_to_bus()
     prepare_database_for_test();
 
     vector<ENERGY_STORAGE*> device;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         device = psdb.get_energy_storages_connecting_to_bus(i);
 
@@ -3044,11 +3044,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_connecting_to_bus
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_generators_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="GENERATOR");
             TEST_ASSERT(psdb.get_generator(dids[j])->is_connected_to_bus(i)==true);
@@ -3066,11 +3066,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_connecting_to_
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_wt_generators_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="WT GENERATOR");
             TEST_ASSERT(psdb.get_wt_generator(dids[j])->is_connected_to_bus(i)==true);
@@ -3089,11 +3089,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_connecting_to_bus()
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_pv_units_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="PV UNIT");
             TEST_ASSERT(psdb.get_pv_unit(dids[j])->is_connected_to_bus(i)==true);
@@ -3111,11 +3111,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_connecting_to_bus()
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_sources_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==8);
-        for(size_t j=0; j!=6; ++j)
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="GENERATOR" or dids[j].get_device_type()=="WT GENERATOR"
                         or dids[j].get_device_type()=="PV UNIT" or dids[j].get_device_type()=="ENERGY STORAGE");
@@ -3134,11 +3134,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_connecting_to_bus()
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_loads_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="LOAD");
             TEST_ASSERT(psdb.get_load(dids[j])->is_connected_to_bus(i)==true);
@@ -3156,11 +3156,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_connecting_to_bus()
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_lines_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="LINE");
             TEST_ASSERT(psdb.get_line(dids[j])->is_connected_to_bus(i)==true);
@@ -3178,11 +3178,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_connecting_to_b
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_transformers_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==6);
-        for(size_t j=0; j!=6; ++j)
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="TRANSFORMER");
             TEST_ASSERT(psdb.get_transformer(dids[j])->is_connected_to_bus(i)==true);
@@ -3200,11 +3200,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_connecting_to_b
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_fixed_shunts_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="FIXED SHUNT");
             TEST_ASSERT(psdb.get_fixed_shunt(dids[j])->is_connected_to_bus(i)==true);
@@ -3222,11 +3222,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_connecting_to_bus()
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_hvdcs_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="HVDC");
             TEST_ASSERT(psdb.get_hvdc(dids[j])->is_connected_to_bus(i)==true);
@@ -3244,11 +3244,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_connectin
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_equivalent_devices_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="EQUIVALENT DEVICE");
             TEST_ASSERT(psdb.get_equivalent_device(dids[j])->is_connected_to_bus(i)==true);
@@ -3266,11 +3266,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_connecting_t
 
     vector<DEVICE_ID> dids;
 
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         dids = psdb.get_energy_storages_device_id_connecting_to_bus(i);
         TEST_ASSERT(dids.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(dids[j].get_device_type()=="ENERGY STORAGE");
             TEST_ASSERT(psdb.get_energy_storage(dids[j])->is_connected_to_bus(i)==true);
@@ -3289,11 +3289,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_area()
 
     vector<BUS*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_buses_in_area(i);
         TEST_ASSERT(devices.size()==1);
-        for(size_t j=0; j!=1; ++j)
+        for(unsigned int j=0; j!=1; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="BUS");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3311,11 +3311,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_area()
 
     vector<GENERATOR*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_generators_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3333,11 +3333,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_area()
 
     vector<WT_GENERATOR*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_wt_generators_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3356,11 +3356,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_area()
 
     vector<PV_UNIT*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_pv_units_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="PV UNIT");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3378,11 +3378,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_area()
 
     vector<SOURCE*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_sources_in_area(i);
         TEST_ASSERT(devices.size()==8);
-        for(size_t j=0; j!=8; ++j)
+        for(unsigned int j=0; j!=8; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR"
                         or devices[j]->get_device_id().get_device_type()=="WT GENERATOR"
@@ -3403,11 +3403,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_area()
 
     vector<LOAD*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_loads_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="LOAD");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3425,11 +3425,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_area()
 
     vector<LINE*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_lines_in_area(i);
         TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="LINE");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3447,11 +3447,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_in_area()
 
     vector<TRANSFORMER*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_transformers_in_area(i);
         TEST_ASSERT(devices.size()==6);
-        for(size_t j=0; j!=6; ++j)
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="TRANSFORMER");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3469,11 +3469,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_area()
 
     vector<FIXED_SHUNT*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_fixed_shunts_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="FIXED SHUNT");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3491,11 +3491,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_area()
 
     vector<HVDC*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_hvdcs_in_area(i);
         TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="HVDC");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3513,11 +3513,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_area()
 
     vector<EQUIVALENT_DEVICE*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_equivalent_devices_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="EQUIVALENT DEVICE");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3535,11 +3535,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_area()
 
     vector<ENERGY_STORAGE*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_energy_storages_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="ENERGY STORAGE");
             TEST_ASSERT(devices[j]->is_in_area(i)==true);
@@ -3558,11 +3558,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_buses_device_id_in_area(i);
         TEST_ASSERT(devices.size()==1);
-        for(size_t j=0; j!=1; ++j)
+        for(unsigned int j=0; j!=1; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="BUS");
             TEST_ASSERT(psdb.get_bus(devices[j])->is_in_area(i)==true);
@@ -3580,11 +3580,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_generators_device_id_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="GENERATOR");
             TEST_ASSERT(psdb.get_generator(devices[j])->is_in_area(i)==true);
@@ -3602,11 +3602,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_wt_generators_device_id_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="WT GENERATOR");
             TEST_ASSERT(psdb.get_wt_generator(devices[j])->is_in_area(i)==true);
@@ -3625,11 +3625,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_pv_units_device_id_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="PV UNIT");
             TEST_ASSERT(psdb.get_pv_unit(devices[j])->is_in_area(i)==true);
@@ -3647,11 +3647,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_sources_device_id_in_area(i);
         TEST_ASSERT(devices.size()==8);
-        for(size_t j=0; j!=8; ++j)
+        for(unsigned int j=0; j!=8; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="GENERATOR"
                         or devices[j].get_device_type()=="WT GENERATOR"
@@ -3672,11 +3672,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_loads_device_id_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="LOAD");
             TEST_ASSERT(psdb.get_load(devices[j])->is_in_area(i)==true);
@@ -3694,11 +3694,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_lines_device_id_in_area(i);
         TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="LINE");
             TEST_ASSERT(psdb.get_line(devices[j])->is_in_area(i)==true);
@@ -3716,11 +3716,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_transformers_device_id_in_area(i);
         TEST_ASSERT(devices.size()==6);
-        for(size_t j=0; j!=6; ++j)
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="TRANSFORMER");
             TEST_ASSERT(psdb.get_transformer(devices[j])->is_in_area(i)==true);
@@ -3738,11 +3738,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_fixed_shunts_device_id_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="FIXED SHUNT");
             TEST_ASSERT(psdb.get_fixed_shunt(devices[j])->is_in_area(i)==true);
@@ -3760,11 +3760,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_hvdcs_device_id_in_area(i);
         TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="HVDC");
             TEST_ASSERT(psdb.get_hvdc(devices[j])->is_in_area(i)==true);
@@ -3782,11 +3782,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_equivalent_devices_device_id_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="EQUIVALENT DEVICE");
             TEST_ASSERT(psdb.get_equivalent_device(devices[j])->is_in_area(i)==true);
@@ -3804,11 +3804,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_area()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_energy_storages_device_id_in_area(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="ENERGY STORAGE");
             TEST_ASSERT(psdb.get_energy_storage(devices[j])->is_in_area(i)==true);
@@ -3826,11 +3826,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_in_zone()
 
     vector<BUS*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_buses_in_zone(i);
         TEST_ASSERT(devices.size()==1);
-        for(size_t j=0; j!=1; ++j)
+        for(unsigned int j=0; j!=1; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="BUS");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -3848,11 +3848,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_in_zone()
 
     vector<GENERATOR*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_generators_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -3870,11 +3870,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_in_zone()
 
     vector<WT_GENERATOR*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_wt_generators_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="WT GENERATOR");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -3893,11 +3893,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_in_zone()
 
     vector<PV_UNIT*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_pv_units_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="PV UNIT");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -3915,11 +3915,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_in_zone()
 
     vector<SOURCE*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_sources_in_zone(i);
         TEST_ASSERT(devices.size()==8);
-        for(size_t j=0; j!=8; ++j)
+        for(unsigned int j=0; j!=8; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="GENERATOR"
                         or devices[j]->get_device_id().get_device_type()=="WT GENERATOR"
@@ -3940,11 +3940,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_in_zone()
 
     vector<LOAD*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_loads_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="LOAD");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -3962,11 +3962,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_in_zone()
 
     vector<LINE*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_lines_in_zone(i);
         TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="LINE");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -3984,11 +3984,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_in_zone()
 
     vector<TRANSFORMER*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_transformers_in_zone(i);
         TEST_ASSERT(devices.size()==6);
-        for(size_t j=0; j!=6; ++j)
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="TRANSFORMER");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -4006,11 +4006,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_in_zone()
 
     vector<FIXED_SHUNT*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_fixed_shunts_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="FIXED SHUNT");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -4028,11 +4028,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_in_zone()
 
     vector<HVDC*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_hvdcs_in_zone(i);
         TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="HVDC");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -4050,11 +4050,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_in_zone()
 
     vector<EQUIVALENT_DEVICE*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_equivalent_devices_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="EQUIVALENT DEVICE");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -4072,11 +4072,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_in_zone()
 
     vector<ENERGY_STORAGE*> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_energy_storages_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j]->get_device_id().get_device_type()=="ENERGY STORAGE");
             TEST_ASSERT(devices[j]->is_in_zone(i)==true);
@@ -4095,11 +4095,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_buses_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==1);
-        for(size_t j=0; j!=1; ++j)
+        for(unsigned int j=0; j!=1; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="BUS");
             TEST_ASSERT(psdb.get_bus(devices[j])->is_in_zone(i)==true);
@@ -4117,11 +4117,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_generators_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_generators_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="GENERATOR");
             TEST_ASSERT(psdb.get_generator(devices[j])->is_in_zone(i)==true);
@@ -4139,11 +4139,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_wt_generators_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_wt_generators_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="WT GENERATOR");
             TEST_ASSERT(psdb.get_wt_generator(devices[j])->is_in_zone(i)==true);
@@ -4162,11 +4162,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_pv_units_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_pv_units_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="PV UNIT");
             TEST_ASSERT(psdb.get_pv_unit(devices[j])->is_in_zone(i)==true);
@@ -4184,11 +4184,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_sources_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_sources_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==8);
-        for(size_t j=0; j!=8; ++j)
+        for(unsigned int j=0; j!=8; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="GENERATOR"
                         or devices[j].get_device_type()=="WT GENERATOR"
@@ -4209,11 +4209,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_loads_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_loads_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="LOAD");
             TEST_ASSERT(psdb.get_load(devices[j])->is_in_zone(i)==true);
@@ -4231,11 +4231,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_lines_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_lines_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="LINE");
             TEST_ASSERT(psdb.get_line(devices[j])->is_in_zone(i)==true);
@@ -4253,11 +4253,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_transformers_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_transformers_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==6);
-        for(size_t j=0; j!=6; ++j)
+        for(unsigned int j=0; j!=6; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="TRANSFORMER");
             TEST_ASSERT(psdb.get_transformer(devices[j])->is_in_zone(i)==true);
@@ -4275,11 +4275,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_fixed_shunts_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_fixed_shunts_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="FIXED SHUNT");
             TEST_ASSERT(psdb.get_fixed_shunt(devices[j])->is_in_zone(i)==true);
@@ -4297,11 +4297,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_hvdcs_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_hvdcs_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==4);
-        for(size_t j=0; j!=4; ++j)
+        for(unsigned int j=0; j!=4; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="HVDC");
             TEST_ASSERT(psdb.get_hvdc(devices[j])->is_in_zone(i)==true);
@@ -4319,11 +4319,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_equivalent_devices_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_equivalent_devices_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="EQUIVALENT DEVICE");
             TEST_ASSERT(psdb.get_equivalent_device(devices[j])->is_in_zone(i)==true);
@@ -4341,11 +4341,11 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_energy_storages_device_id_in_zone()
 
     vector<DEVICE_ID> devices;
 
-    for(size_t i=1; i!=3; ++i)
+    for(unsigned int i=1; i!=3; ++i)
     {
         devices = psdb.get_energy_storages_device_id_in_zone(i);
         TEST_ASSERT(devices.size()==2);
-        for(size_t j=0; j!=2; ++j)
+        for(unsigned int j=0; j!=2; ++j)
         {
             TEST_ASSERT(devices[j].get_device_type()=="ENERGY STORAGE");
             TEST_ASSERT(psdb.get_energy_storage(devices[j])->is_in_zone(i)==true);
@@ -4427,21 +4427,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_with_constraints()
     TEST_ASSERT(device.size()==1);
     TEST_ASSERT(device[0]->get_bus_number()==3);
 
-    for(size_t area=1; area!=4; ++area)
+    for(unsigned int area=1; area!=4; ++area)
     {
-        size_t bus = area;
+        unsigned int bus = area;
         device = psdb.get_buses_with_constraints(100.0, 400.0, 0.9, 1.1, area, 0, 0);
 
         TEST_ASSERT(device.size()==1);
         TEST_ASSERT(device[0]->get_bus_number()==bus);
 
-        size_t zone = area;
+        unsigned int zone = area;
         device = psdb.get_buses_with_constraints(100.0, 400.0, 0.9, 1.1, area, zone, 0);
 
         TEST_ASSERT(device.size()==1);
         TEST_ASSERT(device[0]->get_bus_number()==bus);
 
-        size_t owner = area;
+        unsigned int owner = area;
         device = psdb.get_buses_with_constraints(100.0, 400.0, 0.9, 1.1, area, zone, owner);
 
         TEST_ASSERT(device.size()==1);
@@ -4893,7 +4893,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_buses_number()
 
     prepare_database_for_test();
 
-    vector<size_t> buses = psdb.get_all_buses_number();
+    vector<unsigned int> buses = psdb.get_all_buses_number();
 
     TEST_ASSERT(buses.size()==3);
     TEST_ASSERT(buses[0]==1);
@@ -4911,7 +4911,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_number_with_constraints()
 
     prepare_database_for_test();
 
-    vector<size_t> buses = psdb.get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, 0, 0, 0);
+    vector<unsigned int> buses = psdb.get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, 0, 0, 0);
 
     TEST_ASSERT(buses.size()==3);
     TEST_ASSERT(buses[0]==1);
@@ -4929,21 +4929,21 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_buses_number_with_constraints()
     TEST_ASSERT(buses.size()==1);
     TEST_ASSERT(buses[0]==3);
 
-    for(size_t area=1; area!=4; ++area)
+    for(unsigned int area=1; area!=4; ++area)
     {
-        size_t bus = area;
+        unsigned int bus = area;
         buses = psdb.get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, area, 0, 0);
 
         TEST_ASSERT(buses.size()==1);
         TEST_ASSERT(buses[0]==bus);
 
-        size_t zone = area;
+        unsigned int zone = area;
         buses = psdb.get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, area, zone, 0);
 
         TEST_ASSERT(buses.size()==1);
         TEST_ASSERT(buses[0]==bus);
 
-        size_t owner = area;
+        unsigned int owner = area;
         buses = psdb.get_buses_number_with_constraints(100.0, 400.0, 0.9, 1.1, area, zone, owner);
 
         TEST_ASSERT(buses.size()==1);
@@ -4962,7 +4962,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_in_service_buses_number()
 
     prepare_database_for_test();
 
-    vector<size_t> buses = psdb.get_all_in_service_buses_number();
+    vector<unsigned int> buses = psdb.get_all_in_service_buses_number();
 
     TEST_ASSERT(buses.size()==3);
     TEST_ASSERT(buses[0]==1);
@@ -4994,7 +4994,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_generators_device_id()
     DEVICE_ID did;
     did.set_device_type("GENERATOR");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -5023,7 +5023,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_wt_generators_device_id()
     DEVICE_ID did;
     did.set_device_type("WT GENERATOR");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -5053,7 +5053,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_pv_units_device_id()
     DEVICE_ID did;
     did.set_device_type("PV UNIT");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -5081,7 +5081,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_sources_device_id()
 
     DEVICE_ID did;
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         did.set_device_type("GENERATOR");
         terminal.clear();
@@ -5133,7 +5133,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_loads_device_id()
     DEVICE_ID did;
     did.set_device_type("LOAD");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -5162,7 +5162,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_lines_device_id()
     DEVICE_ID did;
     did.set_device_type("LINE");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         if(i==1)
@@ -5205,7 +5205,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_transformers_device_id()
     DEVICE_ID did;
     did.set_device_type("TRANSFORMER");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         if(i==1)
@@ -5258,7 +5258,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_fixed_shunts_device_id()
     DEVICE_ID did;
     did.set_device_type("FIXED SHUNT");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -5287,7 +5287,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_hvdcs_device_id()
     DEVICE_ID did;
     did.set_device_type("HVDC");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         if(i==1)
@@ -5330,7 +5330,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_equivalent_devices_device_id()
     DEVICE_ID did;
     did.set_device_type("EQUIVALENT DEVICE");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -5359,7 +5359,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_energy_storages_device_id()
     DEVICE_ID did;
     did.set_device_type("ENERGY STORAGE");
     TERMINAL terminal;
-    for(size_t i=1; i!=4; ++i)
+    for(unsigned int i=1; i!=4; ++i)
     {
         terminal.clear();
         terminal.append_bus(i);
@@ -5381,7 +5381,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_areas_number()
 
     prepare_database_for_test();
 
-    vector<size_t> areas = psdb.get_all_areas_number();
+    vector<unsigned int> areas = psdb.get_all_areas_number();
 
     TEST_ASSERT(areas.size()==3);
 
@@ -5398,7 +5398,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_zones_number()
 
     prepare_database_for_test();
 
-    vector<size_t> zones = psdb.get_all_zones_number();
+    vector<unsigned int> zones = psdb.get_all_zones_number();
 
     TEST_ASSERT(zones.size()==3);
 
@@ -5415,7 +5415,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_get_all_owners_number()
 
     prepare_database_for_test();
 
-    vector<size_t> owners = psdb.get_all_owners_number();
+    vector<unsigned int> owners = psdb.get_all_owners_number();
 
     TEST_ASSERT(owners.size()==3);
 
@@ -6491,9 +6491,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_load_power()
 
     vector<LOAD*> loads = psdb.get_all_loads();
     vector< complex<double> > S0_P, S0_I, S0_Z;
-    size_t n=loads.size();
+    unsigned int n=loads.size();
     LOAD* load;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         S0_P.push_back(load->get_nominal_constant_power_load_in_MVA());
@@ -6503,7 +6503,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_load_power()
 
     psdb.scale_all_loads_power(0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         TEST_ASSERT(abs(load->get_nominal_constant_power_load_in_MVA()-S0_P[i]*1.1)<FLOAT_EPSILON);
@@ -6522,9 +6522,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_at_bus()
 
     vector<LOAD*> loads = psdb.get_all_loads();
     vector< complex<double> > S0_P, S0_I, S0_Z;
-    size_t n=loads.size();
+    unsigned int n=loads.size();
     LOAD* load;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         S0_P.push_back(load->get_nominal_constant_power_load_in_MVA());
@@ -6534,7 +6534,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_at_bus()
 
     psdb.scale_loads_power_at_bus(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         if(load->is_connected_to_bus(1))
@@ -6562,9 +6562,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_in_area()
 
     vector<LOAD*> loads = psdb.get_all_loads();
     vector< complex<double> > S0_P, S0_I, S0_Z;
-    size_t n=loads.size();
+    unsigned int n=loads.size();
     LOAD* load;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         S0_P.push_back(load->get_nominal_constant_power_load_in_MVA());
@@ -6574,7 +6574,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_in_area()
 
     psdb.scale_loads_power_in_area(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         if(load->is_in_area(1))
@@ -6602,9 +6602,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_in_zone()
 
     vector<LOAD*> loads = psdb.get_all_loads();
     vector< complex<double> > S0_P, S0_I, S0_Z;
-    size_t n=loads.size();
+    unsigned int n=loads.size();
     LOAD* load;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         S0_P.push_back(load->get_nominal_constant_power_load_in_MVA());
@@ -6614,7 +6614,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_load_power_in_zone()
 
     psdb.scale_loads_power_in_zone(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         load = loads[i];
         if(load->is_in_zone(1))
@@ -6710,9 +6710,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_source_power()
 
     vector<SOURCE*> sources = psdb.get_all_sources();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     SOURCE* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -6720,7 +6720,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_source_power()
 
     psdb.scale_all_sources_power(0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i]*1.1)<FLOAT_EPSILON);
@@ -6737,9 +6737,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_at_bus()
 
     vector<SOURCE*> sources = psdb.get_all_sources();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     SOURCE* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -6747,7 +6747,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_at_bus()
 
     psdb.scale_sources_power_at_bus(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_connected_to_bus(1))
@@ -6771,9 +6771,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_in_area()
 
     vector<SOURCE*> sources = psdb.get_all_sources();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     SOURCE* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -6781,7 +6781,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_in_area()
 
     psdb.scale_sources_power_in_area(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_in_area(1))
@@ -6806,9 +6806,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_in_zone()
 
     vector<SOURCE*> sources = psdb.get_all_sources();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     SOURCE* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -6816,7 +6816,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_source_power_in_zone()
 
     psdb.scale_sources_power_in_zone(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_in_zone(1))
@@ -6881,9 +6881,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_generator_power()
 
     vector<GENERATOR*> sources = psdb.get_all_generators();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     GENERATOR* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -6891,7 +6891,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_generator_power()
 
     psdb.scale_all_generators_power(0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i]*1.1)<FLOAT_EPSILON);
@@ -6908,9 +6908,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_at_bus()
 
     vector<GENERATOR*> sources = psdb.get_all_generators();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     GENERATOR* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -6918,7 +6918,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_at_bus()
 
     psdb.scale_generators_power_at_bus(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_connected_to_bus(1))
@@ -6942,9 +6942,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_area()
 
     vector<GENERATOR*> sources = psdb.get_all_generators();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     GENERATOR* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -6952,7 +6952,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_area()
 
     psdb.scale_generators_power_in_area(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_in_area(1))
@@ -6976,9 +6976,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_zone()
 
     vector<GENERATOR*> sources = psdb.get_all_generators();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     GENERATOR* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -6986,7 +6986,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_generator_power_in_zone()
 
     psdb.scale_generators_power_in_zone(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_in_zone(1))
@@ -7051,9 +7051,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_wt_generator_power()
 
     vector<WT_GENERATOR*> sources = psdb.get_all_wt_generators();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     WT_GENERATOR* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -7061,7 +7061,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_wt_generator_power()
 
     psdb.scale_all_wt_generators_power(0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i]*1.1)<FLOAT_EPSILON);
@@ -7078,9 +7078,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_at_bus()
 
     vector<WT_GENERATOR*> sources = psdb.get_all_wt_generators();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     WT_GENERATOR* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -7088,7 +7088,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_at_bus()
 
     psdb.scale_wt_generators_power_at_bus(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_connected_to_bus(1))
@@ -7113,9 +7113,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_area()
 
     vector<WT_GENERATOR*> sources = psdb.get_all_wt_generators();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     WT_GENERATOR* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -7123,7 +7123,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_area()
 
     psdb.scale_wt_generators_power_in_area(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_in_area(1))
@@ -7148,9 +7148,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_zone()
 
     vector<WT_GENERATOR*> sources = psdb.get_all_wt_generators();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     WT_GENERATOR* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -7158,7 +7158,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_wt_generator_power_in_zone()
 
     psdb.scale_wt_generators_power_in_zone(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_in_zone(1))
@@ -7223,9 +7223,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_pv_unit_power()
 
     vector<PV_UNIT*> sources = psdb.get_all_pv_units();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     PV_UNIT* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -7233,7 +7233,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_all_pv_unit_power()
 
     psdb.scale_all_pv_units_power(0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         TEST_ASSERT(abs(source->get_complex_generation_in_MVA()-S0[i]*1.1)<FLOAT_EPSILON);
@@ -7250,9 +7250,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_at_bus()
 
     vector<PV_UNIT*> sources = psdb.get_all_pv_units();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     PV_UNIT* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -7260,7 +7260,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_at_bus()
 
     psdb.scale_pv_units_power_at_bus(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_connected_to_bus(1))
@@ -7285,9 +7285,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_area()
 
     vector<PV_UNIT*> sources = psdb.get_all_pv_units();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     PV_UNIT* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -7295,7 +7295,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_area()
 
     psdb.scale_pv_units_power_in_area(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_in_area(1))
@@ -7320,9 +7320,9 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_zone()
 
     vector<PV_UNIT*> sources = psdb.get_all_pv_units();
     vector< complex<double> > S0;
-    size_t n=sources.size();
+    unsigned int n=sources.size();
     PV_UNIT* source;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         S0.push_back(source->get_complex_generation_in_MVA());
@@ -7330,7 +7330,7 @@ void POWER_SYSTEM_DATABASE_TEST::test_scale_pv_unit_power_in_zone()
 
     psdb.scale_pv_units_power_in_zone(1, 0.1);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         source = sources[i];
         if(source->is_in_zone(1))

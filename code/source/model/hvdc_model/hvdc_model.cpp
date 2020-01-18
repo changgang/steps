@@ -35,18 +35,22 @@ HVDC_MODEL::HVDC_MODEL()
     set_minimum_dc_current_command_in_kA(0.0);
     vdcol_limiter.clear();
 
-    set_maximum_count_of_bypassing_before_blocked(999999);
+    clear_record_of_bytime_time();
 
-    record_of_bypass_time = nullptr;
+    set_maximum_count_of_bypassing_before_blocked(999);
 
     manual_blocked = false;
     manual_bypassed = false;
 }
 
+void HVDC_MODEL::clear_record_of_bytime_time()
+{
+    for(unsigned int i=0; i<STEPS_MAX_HVDC_BYPASS_RECORD_SIZE; ++i)
+        record_of_bypass_time[i] = INFINITE_THRESHOLD;
+}
+
 HVDC_MODEL::~HVDC_MODEL()
 {
-    if(record_of_bypass_time!=nullptr)
-        delete record_of_bypass_time;
 }
 
 HVDC* HVDC_MODEL::get_hvdc_pointer() const
@@ -169,10 +173,10 @@ void HVDC_MODEL::set_minimum_dc_current_in_kA_following_unblocking(double I)
     minimum_dc_current_in_kA_following_unblocking = I;
 }
 
-void HVDC_MODEL::set_maximum_count_of_bypassing_before_blocked(size_t n)
+void HVDC_MODEL::set_maximum_count_of_bypassing_before_blocked(unsigned int n)
 {
     if(n==0)
-        n = size_t(INFINITE_THRESHOLD);
+        n = (unsigned int)(INFINITE_THRESHOLD);
 
     max_count_of_bypass_before_blocked = n;
 }
@@ -415,7 +419,7 @@ void HVDC_MODEL::block_hvdc()
         time_when_unblocking = INFINITE_THRESHOLD;
 
         block_timer.start();
-        record_of_bypass_time->clear();
+        clear_record_of_bytime_time();
 
         osstream<<hvdc->get_device_name()<<" is blocked at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -598,16 +602,45 @@ void HVDC_MODEL::bypass_hvdc()
         osstream<<hvdc->get_device_name()<<" is bypassed at time "<<TIME<<" s.";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
-        record_of_bypass_time->push_back(TIME);
-        if(record_of_bypass_time->size()>=get_maximum_count_of_bypassing_before_blocked())
+        append_bypass_record(TIME);
+        if(get_bypass_record_count()>=get_maximum_count_of_bypassing_before_blocked())
         {
             osstream<<hvdc->get_device_name()<<" will be blocked at time "<<setprecision(5)<<fixed<<TIME
-              <<" s since the max count of bypassing is reached.";
+              <<" s since the max count of bypassing is reached ("<<get_maximum_count_of_bypassing_before_blocked()<<").";
             toolkit.show_information_with_leading_time_stamp(osstream);
 
             block_hvdc();
         }
     }
+}
+
+void HVDC_MODEL::append_bypass_record(double time)
+{
+    unsigned int n = get_bypass_record_count();
+    if(n==STEPS_MAX_HVDC_BYPASS_RECORD_SIZE)
+    {
+        ostringstream osstream;
+        osstream<<"Warning. HVDC bypass record table of "<<get_device_name()<<" is full. No more HVDC bypass event will be recorded.\n"
+                <<"Please consider decrease the maximum count of bypass before blocked or increase STEPS_MAX_HVDC_BYPASS_RECORD_SIZE in header/basic/constants.h";
+        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+        toolkit.show_information_with_leading_time_stamp(osstream);
+        return;
+    }
+    record_of_bypass_time[n]=time;
+}
+
+unsigned int HVDC_MODEL::get_bypass_record_count() const
+{
+    unsigned int n = 0;
+    for(unsigned int i=0; i<STEPS_MAX_HVDC_BYPASS_RECORD_SIZE; ++i)
+    {
+        if(record_of_bypass_time[i]==INFINITE_THRESHOLD)
+        {
+            n = i;
+            break;
+        }
+    }
+    return n;
 }
 
 void HVDC_MODEL::unbypass_hvdc()
@@ -813,11 +846,6 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
     //osstream<<"solving "<<get_device_name()<<" with I command = "<<Iset_kA<<"kA, V command = "<<Vset_kV;
     //toolkit.show_information_with_leading_time_stamp(osstream);
 
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
-    size_t bus_i = hvdc->get_converter_bus(INVERTER);
-
     double alpha_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
     //double alpha_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER));
     double gamma_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
@@ -841,8 +869,8 @@ void HVDC_MODEL::solve_hvdc_model_without_line_dynamics(double Iset_kA, double V
     double ebase_grid_i = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
     double ebase_converter_i = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
 
-    size_t Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
-    size_t Ni = hvdc->get_converter_number_of_bridge(INVERTER);
+    unsigned int Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
+    unsigned int Ni = hvdc->get_converter_number_of_bridge(INVERTER);
 
     complex<double> Zc_r = hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER);
     complex<double> Zc_i = hvdc->get_converter_transformer_impedance_in_ohm(INVERTER);
@@ -1072,12 +1100,6 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
     if(not is_bypassed())
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
-    //size_t bus_i = hvdc->get_converter_bus(INVERTER);
-
     double alpha_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
     double alpha_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER));
     /*double gamma_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
@@ -1103,8 +1125,8 @@ void HVDC_MODEL::solve_hvdc_as_bypassed(double Iset_kA)
     //double ebase_grid_i = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
     //double ebase_converter_i = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
 
-    size_t Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
-    //size_t Ni = hvdc->get_converter_number_of_bridge(INVERTER);
+    unsigned int Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
+    //unsigned int Ni = hvdc->get_converter_number_of_bridge(INVERTER);
 
     complex<double> Zc_r = hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER);
     //complex<double> Zc_i = hvdc->get_converter_transformer_impedance_in_ohm(INVERTER);
@@ -1174,12 +1196,6 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
     if(is_blocked())
         return;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-    size_t bus_r = hvdc->get_converter_bus(RECTIFIER);
-    size_t bus_i = hvdc->get_converter_bus(INVERTER);
-
     double alpha_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(RECTIFIER));
     double alpha_max_in_rad = deg2rad(get_converter_dynamic_max_alpha_or_gamma_in_deg(RECTIFIER));
     double gamma_min_in_rad = deg2rad(get_converter_dynamic_min_alpha_or_gamma_in_deg(INVERTER));
@@ -1198,8 +1214,8 @@ void HVDC_MODEL::solve_hvdc_model_with_line_dynamics(double Iset_kA, double Vset
     double ebase_grid_i = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER);
     double ebase_converter_i = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(INVERTER);
 
-    size_t Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
-    size_t Ni = hvdc->get_converter_number_of_bridge(INVERTER);
+    unsigned int Nr = hvdc->get_converter_number_of_bridge(RECTIFIER);
+    unsigned int Ni = hvdc->get_converter_number_of_bridge(INVERTER);
 
     complex<double> Zc_r = hvdc->get_converter_transformer_impedance_in_ohm(RECTIFIER);
     complex<double> Zc_i = hvdc->get_converter_transformer_impedance_in_ohm(INVERTER);
@@ -1380,9 +1396,6 @@ double HVDC_MODEL::get_converter_commutation_overlap_angle_in_deg(HVDC_CONVERTER
     if(converter==INVERTER and is_bypassed())
         return 0.0;
 
-    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-    POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
     double angle = deg2rad(get_converter_alpha_or_gamma_in_deg(converter));
     double idc = get_converter_dc_current_in_kA(converter);
     double xc = hvdc->get_converter_transformer_impedance_in_ohm(converter).imag();
@@ -1450,13 +1463,13 @@ double HVDC_MODEL::get_converter_ac_power_factor_angle_in_deg(HVDC_CONVERTER_SID
     /*
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    size_t bus = hvdc->get_converter_bus(converter);
+    unsigned int bus = hvdc->get_converter_bus(converter);
     double tap = hvdc->get_converter_transformer_tap_in_pu(converter);
 
     double ebase_grid = hvdc->get_converter_transformer_grid_side_base_voltage_in_kV(converter);
     double ebase_converter = hvdc->get_converter_transformer_converter_side_base_voltage_in_kV(converter);
 
-    size_t N = hvdc->get_converter_number_of_bridge(converter);
+    unsigned int N = hvdc->get_converter_number_of_bridge(converter);
 
     //double vac = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
     double vac = get_converter_ac_voltage_in_pu(converter);
@@ -1517,7 +1530,7 @@ complex<double> HVDC_MODEL::get_converter_ac_current_in_kA(HVDC_CONVERTER_SIDE c
         return 0.0;
 
     complex<double> I = get_converter_ac_current_in_pu(converter);
-    size_t bus = hvdc->get_converter_bus(converter);
+    unsigned int bus = hvdc->get_converter_bus(converter);
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     double vbase = psdb.get_bus_base_voltage_in_kV(bus);
@@ -1560,31 +1573,25 @@ double HVDC_MODEL::get_converter_ac_voltage_in_kV(HVDC_CONVERTER_SIDE converter)
 
 double HVDC_MODEL::get_time_duration_to_the_last_bypass_in_s() const
 {
-    size_t n = record_of_bypass_time->size();
+    unsigned int n = get_bypass_record_count();
     if(n==0)
         return 0.0;
     else
     {
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         double TIME = toolkit.get_dynamic_simulation_time_in_s();
-        double time = (*record_of_bypass_time)[n-1];
+        double time = record_of_bypass_time[n-1];
         return TIME - time;
     }
 }
 
 double HVDC_MODEL::get_time_of_the_last_bypass_in_s() const
 {
-    size_t n = record_of_bypass_time->size();
+    unsigned int n = get_bypass_record_count();
     if(n==0)
         return INFINITE_THRESHOLD;
     else
-        return (*record_of_bypass_time)[n-1];
-}
-
-void HVDC_MODEL::allocate_record_of_bypass_time()
-{
-    if(record_of_bypass_time==nullptr)
-        record_of_bypass_time = new vector<double>;
+        return record_of_bypass_time[n-1];
 }
 
 void HVDC_MODEL::set_common_timer_toolkit()

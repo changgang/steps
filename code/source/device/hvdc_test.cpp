@@ -505,7 +505,7 @@ void HVDC_TEST::test_set_get_converter_transformer_base_voltage()
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    size_t rec_bus = hvdc.get_converter_bus(RECTIFIER);
+    unsigned int rec_bus = hvdc.get_converter_bus(RECTIFIER);
     hvdc.set_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER, 500.0);
     TEST_ASSERT(hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER)==500.0);
     hvdc.set_converter_transformer_grid_side_base_voltage_in_kV(RECTIFIER, -500.0);
@@ -520,7 +520,7 @@ void HVDC_TEST::test_set_get_converter_transformer_base_voltage()
     hvdc.set_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER, 0.0);
     TEST_ASSERT(hvdc.get_converter_transformer_converter_side_base_voltage_in_kV(RECTIFIER)==0.0);
 
-    size_t inv_bus = hvdc.get_converter_bus(INVERTER);
+    unsigned int inv_bus = hvdc.get_converter_bus(INVERTER);
     hvdc.set_converter_transformer_grid_side_base_voltage_in_kV(INVERTER, 500.0);
     TEST_ASSERT(hvdc.get_converter_transformer_grid_side_base_voltage_in_kV(INVERTER)==500.0);
     hvdc.set_converter_transformer_grid_side_base_voltage_in_kV(INVERTER, -500.0);

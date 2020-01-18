@@ -48,7 +48,7 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::test_get_bus_frequency()
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    size_t bus = load->get_load_bus();
+    unsigned int bus = load->get_load_bus();
     BUS* busptr = psdb.get_bus(bus);
 
     BUS_FREQUENCY_MODEL* bus_model = busptr->get_bus_frequency_model();
@@ -118,7 +118,7 @@ void LOAD_FREQUENCY_RELAY_MODEL_TEST::run_model(string outputfile)
 
     default_toolkit.set_dynamic_simulation_time_in_s(default_toolkit.get_dynamic_simulation_time_in_s()-2.0*delt);
 
-    size_t bus = load->get_load_bus();
+    unsigned int bus = load->get_load_bus();
     BUS* busptr = psdb.get_bus(bus);
     BUS_FREQUENCY_MODEL* freq_model = busptr->get_bus_frequency_model();
 

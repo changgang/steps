@@ -145,16 +145,15 @@ bool PVGU1::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t ibus;
+            unsigned int ibus;
             string id;
-            size_t n_lumped_turbine;
             double t_EQcmd, t_IPcmd, lvpl_v1, lvpl_v2, lvpl_g,
                    hvrc_v, hvrc_i, lvpl_rate, t_lvpl;
 
-            ibus = size_t(get_integer_data(data[1],"0"));
+            ibus = (unsigned int)(get_integer_data(data[1],"0"));
             id = get_string_data(data[2],"");
 
-            size_t i=3;
+            unsigned int i=3;
             t_EQcmd = get_double_data(data[i],"0.0"); i++;
             t_IPcmd = get_double_data(data[i],"0.0"); i++;
             lvpl_v1 = get_double_data(data[i],"0.0"); i++;
@@ -242,9 +241,6 @@ void PVGU1::initialize()
         {
             setup_block_toolkit_and_parameters();
 
-            double fbase = get_bus_base_frequency_in_Hz();
-            double wbase = 2.0*PI*fbase;
-
             double one_over_mbase = get_one_over_mbase_in_one_over_MVA();
 
             complex<double> Zsource = get_source_impedance_in_pu_based_on_mbase();
@@ -307,13 +303,8 @@ void PVGU1::run(DYNAMIC_MODE mode)
     PV_UNIT* pv_unit = get_pv_unit_pointer();
     if(pv_unit!=NULL)
     {
-        double fbase = get_bus_base_frequency_in_Hz();
-        double wbase = 2.0*PI*fbase;
-
         complex<double> Vxy = get_terminal_complex_voltage_in_pu();
         double V = steps_fast_complex_abs(Vxy);
-        double angle_in_rad = atan2(Vxy.imag(), Vxy.real());
-        double angle_in_deg = rad2deg(angle_in_rad);
 
         LVPL_voltage_sensor.set_input(V);
         LVPL_voltage_sensor.run(mode);
@@ -445,7 +436,7 @@ string PVGU1::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -472,7 +463,7 @@ string PVGU1::get_standard_psse_string() const
 void PVGU1::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("TV", i); i++;
     add_model_data_name_and_index_pair("TI", i); i++;
     add_model_data_name_and_index_pair("VL LVPL", i); i++;
@@ -537,7 +528,7 @@ void PVGU1::set_model_data_with_name(string par_name, double value)
 void PVGU1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;
@@ -625,7 +616,7 @@ double PVGU1::get_pll_frequency_deviation_in_pu()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     PV_UNIT* pv = (PV_UNIT*) get_device_pointer();
-    size_t bus = pv->get_unit_bus();
+    unsigned int bus = pv->get_unit_bus();
     return psdb.get_bus_frequency_deviation_in_pu(bus);
 }
 

@@ -57,8 +57,8 @@ void BPA_IMEXPORTER::load_dynamic_data_into_ram(string file)
 
     swi_file.close();
 
-    size_t n = swi_data_in_ram.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = swi_data_in_ram.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         osstream<<swi_data_in_ram[i]<<endl;
     }
@@ -424,8 +424,8 @@ void BPA_IMEXPORTER::classify_dynamic_cards()
 
 void BPA_IMEXPORTER::load_all_models()
 {
-    size_t n = swi_data_in_ram.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = swi_data_in_ram.size();
+    for(unsigned int i=0; i!=n; ++i)
         load_one_model(swi_data_in_ram[i]);
 
 }
@@ -467,10 +467,10 @@ DEVICE_ID BPA_IMEXPORTER::get_generator_device_id_from_string(string data)
     if(swidata.size()<3)
         return did;
 
-    size_t bus;
+    unsigned int bus;
     string identifier;
 
-    size_t i=0;
+    unsigned int i=0;
     bus = get_integer_data(swidata[i], "0"); ++i; ++i;
     identifier = get_string_data(swidata[i],"");
 
@@ -491,10 +491,10 @@ DEVICE_ID BPA_IMEXPORTER::get_load_device_id_from_string(string data)
     if(swidata.size()<3)
         return did;
 
-    size_t bus;
+    unsigned int bus;
     string identifier;
 
-    size_t i=0;
+    unsigned int i=0;
     bus = get_integer_data(swidata[i], "0"); ++i; ++i;
     identifier = get_string_data(swidata[i],"");
 
@@ -515,10 +515,10 @@ DEVICE_ID BPA_IMEXPORTER::get_line_device_id_from_string(string data)
     if(swidata.size()<4)
         return did;
 
-    size_t ibus, jbus;
+    unsigned int ibus, jbus;
     string identifier;
 
-    size_t i=0;
+    unsigned int i=0;
     ibus = get_integer_data(swidata[i], "0"); ++i; ++i;
     jbus = get_integer_data(swidata[i], "0"); ++i;
     identifier = get_string_data(swidata[i],"");
@@ -540,10 +540,10 @@ DEVICE_ID BPA_IMEXPORTER::get_hvdc_device_id_from_string(string data)
     if(swidata.size()<4)
         return did;
 
-    size_t ibus, jbus;
+    unsigned int ibus, jbus;
     string identifier;
 
-    size_t i=0;
+    unsigned int i=0;
     ibus = get_integer_data(swidata[i], "0"); ++i; ++i;
     jbus = get_integer_data(swidata[i], "0"); ++i;
     identifier = get_string_data(swidata[i],"");
@@ -565,10 +565,10 @@ DEVICE_ID BPA_IMEXPORTER::get_transformer_device_id_from_string(string data)
     if(swidata.size()<4)
         return did;
 
-    size_t ibus, jbus, kbus;
+    unsigned int ibus, jbus, kbus;
     string identifier;
 
-    size_t i=0;
+    unsigned int i=0;
     ibus = get_integer_data(swidata[i], "0"); ++i; ++i;
     jbus = get_integer_data(swidata[i], "0"); ++i;
     kbus = get_integer_data(swidata[i], "0"); ++i;
@@ -601,10 +601,10 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
     if(swidata.size()<9)
         return loads;
 
-    size_t subsystem_number;
+    unsigned int subsystem_number;
     string identifier;
 
-    size_t i=0;
+    unsigned int i=0;
     subsystem_number = get_integer_data(swidata[i], "0");  ++i; ++i;
     identifier = get_string_data(swidata[i],""); ++i;
 
@@ -616,12 +616,12 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
     }
     if(model_name=="IEELAR" or model_name=="CIM5AR")
     {
-        size_t area_no = subsystem_number;
+        unsigned int area_no = subsystem_number;
         loads = psdb.get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
             --iter;
-            size_t area = (*iter)->get_area_number();
+            unsigned int area = (*iter)->get_area_number();
             if(area!=area_no)
                 loads.erase(iter);
         }
@@ -630,12 +630,12 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
     }
     if(model_name=="IEELZN" or model_name=="CIM5ZN")
     {
-        size_t zone_no = subsystem_number;
+        unsigned int zone_no = subsystem_number;
         loads = psdb.get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
             --iter;
-            size_t zone = (*iter)->get_zone_number();
+            unsigned int zone = (*iter)->get_zone_number();
             if(zone!=zone_no)
                 loads.erase(iter);
         }
@@ -644,7 +644,7 @@ vector<LOAD*> BPA_IMEXPORTER::get_all_loads_of(string data)
     }
     if(model_name=="IEELBL" or model_name=="CIM5BL")
     {
-        size_t bus_no = subsystem_number;
+        unsigned int bus_no = subsystem_number;
         loads = psdb.get_loads_connecting_to_bus(bus_no);
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;

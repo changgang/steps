@@ -218,7 +218,7 @@ bool IEEL::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double ap1, ap2, ap3, aq1, aq2, aq3, kfp, kfq, np1, np2, np3, nq1, nq2, nq3;
 
-            size_t i=3;
+            unsigned int i=3;
             ap1 = get_double_data(data[i],"0.0"); i++;
             ap2 = get_double_data(data[i],"0.0"); i++;
             ap3 = get_double_data(data[i],"0.0"); i++;
@@ -432,12 +432,12 @@ string IEEL::get_standard_psse_string() const
 {
     ostringstream osstream;
     LOAD* load = get_load_pointer();
-    size_t bus = load->get_load_bus();
+    unsigned int bus = load->get_load_bus();
     string identifier = "'"+load->get_identifier()+"'";
 
     string model_name = "'IEELBL'";
     /*
-    size_t index = bus;
+    unsigned int index = bus;
     switch(get_subsystem_type())
     {
         case AREA_SUBSYSTEM_TYPE:
@@ -455,7 +455,7 @@ string IEEL::get_standard_psse_string() const
         case OWNER_SUBSYSTEM_TYPE:
         {
             OWNERSHIP os = load->get_ownership();
-            vector<size_t> owners = os.get_all_owners();
+            vector<unsigned int> owners = os.get_all_owners();
             if(owners.size()==0)
                 index = 0;
             else
@@ -497,7 +497,7 @@ string IEEL::get_standard_psse_string() const
 void IEEL::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("PA1", i); i++;
     add_model_data_name_and_index_pair("PA2", i); i++;
     add_model_data_name_and_index_pair("PA3", i); i++;
@@ -589,7 +589,7 @@ void IEEL::set_model_data_with_name(string par_name, double value)
 void IEEL::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
 
     add_model_inernal_variable_name_and_index_pair("TOTAL ACTIVE POWER LOAD IN MW", i); i++;
     add_model_inernal_variable_name_and_index_pair("TOTAL REACTIVE POWER LOAD IN MVAR", i); i++;

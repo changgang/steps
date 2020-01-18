@@ -51,7 +51,7 @@ void TERMINAL_TEST::test_append_and_get_bus()
     terminal.append_bus(4);
     terminal.append_bus(2);
 
-    vector<size_t> buses = terminal.get_buses();
+    vector<unsigned int> buses = terminal.get_buses();
     TEST_ASSERT(terminal.get_bus_count()==5)
     TEST_ASSERT(buses.size()==5)
     TEST_ASSERT(buses[0]==1);

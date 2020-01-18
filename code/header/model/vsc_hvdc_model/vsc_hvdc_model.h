@@ -34,7 +34,7 @@ class VSC_HVDC_MODEL : public MODEL
         void set_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing(double V);
         void set_minimum_dc_current_in_kA_following_unblocking(double I);
 
-        void set_maximum_count_of_bypassing_before_blocked(size_t n);
+        void set_maximum_count_of_bypassing_before_blocked(unsigned int n);
 
         void set_mininum_blocking_time_in_s(double t);
         void set_mininum_bypassing_time_in_s(double t);
@@ -168,7 +168,7 @@ class VSC_HVDC_MODEL : public MODEL
         VDCOL vdcol_limiter;
 
         vector<double> record_of_bypass_time;
-        size_t max_count_of_bypass_before_blocked;
+        unsigned int max_count_of_bypass_before_blocked;
 };
 
 #endif // VSC_HVDC_MODEL_H

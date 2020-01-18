@@ -63,7 +63,7 @@ void PV_ELECTRICAL_MODEL_TEST::test_get_terminal_bus_voltage()
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    size_t bus = pvuptr->get_unit_bus();
+    unsigned int bus = pvuptr->get_unit_bus();
 
     TEST_ASSERT(fabs(model->get_terminal_bus_voltage_in_pu()-psdb.get_bus_positive_sequence_voltage_in_pu(bus))<FLOAT_EPSILON);
     BUS* busptr = psdb.get_bus(bus);
@@ -78,7 +78,7 @@ void PV_ELECTRICAL_MODEL_TEST::test_get_terminal_bus_frequency()
     show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
-    size_t bus = pvuptr->get_unit_bus();
+    unsigned int bus = pvuptr->get_unit_bus();
 
     TEST_ASSERT(fabs(model->get_terminal_bus_frequency_deviation_in_pu()-psdb.get_bus_frequency_deviation_in_pu(bus))<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_terminal_bus_frequency_in_pu()-psdb.get_bus_frequency_in_pu(bus))<FLOAT_EPSILON);
@@ -224,7 +224,7 @@ void PV_ELECTRICAL_MODEL_TEST::run_to_time(double tend)
             break;
         }
         double ip=0.0, iq=0.0;
-        size_t iter_count = 0;
+        unsigned int iter_count = 0;
         while(true)
         {
             model->run(INTEGRATE_MODE);

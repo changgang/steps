@@ -13,7 +13,7 @@ class EQUIVALENT_MODEL_IMEXPORTER : public BASE
         void load_equivalent_model(string file);
     private:
         void load_data_into_ram(string file);
-        METER get_meter_from_data(const vector<string> & data_line, size_t& delay, double& coefficient);
+        METER get_meter_from_data(const vector<string> & data_line, unsigned int& delay, double& coefficient);
         void add_equivalent_device(vector< vector<string> >& model_data);
         void load_ARXL_model(vector< vector<string> >& model_data);
     private:

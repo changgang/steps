@@ -31,14 +31,14 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
 
         double get_damping_in_pu() const;
 
-        void set_number_of_pole_pairs(size_t n);
+        void set_number_of_pole_pairs(unsigned int n);
         void set_generator_to_turbine_gear_ratio(double r);
         void set_gear_efficiency(double eta);
         void set_turbine_blade_radius_in_m(double r);
         void set_nominal_wind_speed_in_mps(double v);
         void set_nominal_air_density_in_kgpm3(double rou);
 
-        size_t get_number_of_pole_pairs() const;
+        unsigned int get_number_of_pole_pairs() const;
         double get_generator_to_turbine_gear_ratio() const;
         double get_gear_efficiency() const;
         double get_turbine_blade_radius_in_m() const;
@@ -135,7 +135,7 @@ class WT_AERODYNAMIC_MODEL : public WTG_MODEL
         double turbine_blade_radius_in_m;
         double nominal_air_density_in_kgpm3;
 
-        size_t number_of_pole_pairs;
+        unsigned int number_of_pole_pairs;
         double generator_to_turbine_gear_ratio;
         double gear_efficiency;
 

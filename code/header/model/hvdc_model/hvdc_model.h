@@ -34,7 +34,7 @@ class HVDC_MODEL : public MODEL
         void set_minimum_dc_voltage_in_kV_following_unblocking_and_unbypassing(double V);
         void set_minimum_dc_current_in_kA_following_unblocking(double I);
 
-        void set_maximum_count_of_bypassing_before_blocked(size_t n);
+        void set_maximum_count_of_bypassing_before_blocked(unsigned int n);
 
         void set_mininum_blocking_time_in_s(double t);
         void set_mininum_bypassing_time_in_s(double t);
@@ -116,9 +116,6 @@ class HVDC_MODEL : public MODEL
 
         double get_time_duration_to_the_last_bypass_in_s() const;
         double get_time_of_the_last_bypass_in_s() const;
-
-        void allocate_record_of_bypass_time();
-
     public: // specific exciter
         virtual string get_model_name() const = 0;
 
@@ -153,6 +150,10 @@ class HVDC_MODEL : public MODEL
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
         void solve_hvdc_as_bypassed(double Iset_kA);
+        void clear_record_of_bytime_time();
+        void append_bypass_record(double time);
+        unsigned int get_bypass_record_count() const;
+
         double firing_angle_max[2], firing_angle_min[2];
         TIMER block_timer, bypass_timer, mode_switch_timer;
         bool bypassed, mode_switched, manual_blocked, manual_bypassed;
@@ -169,8 +170,8 @@ class HVDC_MODEL : public MODEL
         double minimum_dc_current_command_in_kA;
         VDCOL vdcol_limiter;
 
-        vector<double> *record_of_bypass_time;
-        size_t max_count_of_bypass_before_blocked;
+        double record_of_bypass_time[STEPS_MAX_HVDC_BYPASS_RECORD_SIZE];
+        unsigned int max_count_of_bypass_before_blocked;
 };
 
 #endif // HVDC_MODEL_H

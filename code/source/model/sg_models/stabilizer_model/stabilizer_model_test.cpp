@@ -8,8 +8,8 @@ using namespace std;
 STABILIZER_MODEL_TEST::STABILIZER_MODEL_TEST()
 {
     TEST_ADD(STABILIZER_MODEL_TEST::test_get_model_type);
-    //TEST_ADD(STABILIZER_MODEL_TEST::test_set_get_input_signal);
-    //TEST_ADD(STABILIZER_MODEL_TEST::test_get_stabilizing_signal);
+    TEST_ADD(STABILIZER_MODEL_TEST::test_set_get_input_signal);
+    TEST_ADD(STABILIZER_MODEL_TEST::test_get_stabilizing_signal);
 }
 
 

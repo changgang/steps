@@ -46,28 +46,28 @@ class NETWORK_MATRIX : public BASE
         STEPS_SPARSE_MATRIX& get_negative_sequence_network_Z_matrix();
         STEPS_SPARSE_MATRIX& get_zero_sequence_network_Z_matrix();
 
-        complex<double> get_positive_sequence_self_admittance_of_physical_bus(size_t bus);
-        complex<double> get_positive_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus);
-        complex<double> get_positive_sequence_self_impedance_of_physical_bus(size_t bus);
-        complex<double> get_positive_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus);
+        complex<double> get_positive_sequence_self_admittance_of_physical_bus(unsigned int bus);
+        complex<double> get_positive_sequence_mutual_admittance_between_physical_bus(unsigned int ibus, unsigned int jbus);
+        complex<double> get_positive_sequence_self_impedance_of_physical_bus(unsigned int bus);
+        complex<double> get_positive_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus);
 
-        complex<double> get_negative_sequence_self_admittance_of_physical_bus(size_t bus);
-        complex<double> get_negative_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus);
-        complex<double> get_negative_sequence_self_impedance_of_physical_bus(size_t bus);
-        complex<double> get_negative_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus);
+        complex<double> get_negative_sequence_self_admittance_of_physical_bus(unsigned int bus);
+        complex<double> get_negative_sequence_mutual_admittance_between_physical_bus(unsigned int ibus, unsigned int jbus);
+        complex<double> get_negative_sequence_self_impedance_of_physical_bus(unsigned int bus);
+        complex<double> get_negative_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus);
 
-        complex<double> get_zero_sequence_self_admittance_of_physical_bus(size_t bus);
-        complex<double> get_zero_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus);
-        complex<double> get_zero_sequence_self_impedance_of_physical_bus(size_t bus);
-        complex<double> get_zero_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus);
+        complex<double> get_zero_sequence_self_admittance_of_physical_bus(unsigned int bus);
+        complex<double> get_zero_sequence_mutual_admittance_between_physical_bus(unsigned int ibus, unsigned int jbus);
+        complex<double> get_zero_sequence_self_impedance_of_physical_bus(unsigned int bus);
+        complex<double> get_zero_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus);
 
         void optimize_network_ordering();
         void check_network_connectivity(bool remove_void_island=false);
-        vector< vector<size_t> > get_islands_with_internal_bus_number();
-        vector< vector<size_t> > get_islands_with_physical_bus_number();
+        vector< vector<unsigned int> > get_islands_with_internal_bus_number();
+        vector< vector<unsigned int> > get_islands_with_physical_bus_number();
 
-        size_t get_internal_bus_number_of_physical_bus(size_t bus) const;
-        size_t get_physical_bus_number_of_internal_bus(size_t bus) const;
+        unsigned int get_internal_bus_number_of_physical_bus(unsigned int bus) const;
+        unsigned int get_physical_bus_number_of_internal_bus(unsigned int bus) const;
 
         void report_network_matrix();
         void report_decoupled_network_matrix() const;
@@ -131,9 +131,9 @@ class NETWORK_MATRIX : public BASE
         void set_this_Y_and_Z_matrix_as(STEPS_SPARSE_MATRIX& matrix);
         void build_this_jacobian_for_getting_impedance_from_this_Y_matrix();
         void build_network_Z_matrix_from_this_Y_matrix();
-        vector<double> get_impedance_of_column_from_this_Y_matrix(size_t col);
-        complex<double> get_self_impedance_of_physical_bus_from_this_Y_matrix(size_t bus);
-        complex<double> get_self_impedance_between_physical_bus_from_this_Y_matrix(size_t ibus, size_t jbus);
+        vector<double> get_impedance_of_column_from_this_Y_matrix(unsigned int col);
+        complex<double> get_self_impedance_of_physical_bus_from_this_Y_matrix(unsigned int bus);
+        complex<double> get_self_impedance_between_physical_bus_from_this_Y_matrix(unsigned int ibus, unsigned int jbus);
 
 
         bool is_condition_ok() const;

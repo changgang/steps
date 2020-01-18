@@ -217,7 +217,7 @@ bool IEEEG3::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double tg, tp, uo, uc, pmax, pmin, sigma, delta, tr, tw, a11, a13, a21, a23;
 
-            size_t i=3;
+            unsigned int i=3;
             tg = get_double_data(data[i],"0.0"); i++;
             tp = get_double_data(data[i],"0.0"); i++;
             uo = get_double_data(data[i],"0.0"); i++;
@@ -434,7 +434,7 @@ string IEEEG3::get_standard_psse_string() const
     double a23 = get_a23();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -463,7 +463,7 @@ string IEEEG3::get_standard_psse_string() const
 void IEEEG3::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("TG", i); i++;
     add_model_data_name_and_index_pair("TP", i); i++;
     add_model_data_name_and_index_pair("UO", i); i++;
@@ -553,7 +553,7 @@ void IEEEG3::set_model_data_with_name(string par_name, double value)
 void IEEEG3::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SERVO MOTOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@FEEDBACKER", i); i++;

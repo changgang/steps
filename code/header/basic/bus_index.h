@@ -11,19 +11,19 @@ class BUS_INDEX
         BUS_INDEX();
         ~BUS_INDEX();
 
-        void set_max_bus_number(size_t max_bus_number);
+        void set_max_bus_number(unsigned int max_bus_number);
 
-        void set_bus_with_index(size_t bus, size_t thisindex);
+        void set_bus_with_index(unsigned int bus, unsigned int thisindex);
 
-        size_t get_max_bus_number() const;
+        unsigned int get_max_bus_number() const;
         void clear();
 
-        size_t get_index_of_bus(const size_t bus) const;
-        size_t operator[](const size_t bus) const;
+        unsigned int get_index_of_bus(const unsigned int bus) const;
+        unsigned int operator[](const unsigned int bus) const;
     private:
-		size_t max_bus_number;
-        vector<size_t> index;
-        size_t* index_array;
+		unsigned int max_bus_number;
+        vector<unsigned int> index;
+        unsigned int* index_array;
 };
 
 #endif // BUS_INDEX_H

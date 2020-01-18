@@ -194,17 +194,17 @@ bool WT3G0::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t ibus;
+            unsigned int ibus;
             string id;
-            size_t n_lumped_turbine;
+            unsigned int n_lumped_turbine;
             double t_EQcmd, t_IPcmd, kpll, kipll, pllmax, pllmin, prate, lvpl_v1, lvpl_v2, lvpl_g,
                    hvrc_v, hvrc_i, lvpl_rate, t_lvpl;
 
-            ibus = size_t(get_integer_data(data[1],"0"));
+            ibus = (unsigned int)(get_integer_data(data[1],"0"));
             id = get_string_data(data[2],"");
 
-            size_t i=3;
-            n_lumped_turbine = size_t(get_integer_data(data[i],"1")); i++;
+            unsigned int i=3;
+            n_lumped_turbine = (unsigned int)(get_integer_data(data[i],"1")); i++;
             prate = get_double_data(data[i],"0.0"); i++;
             t_IPcmd = get_double_data(data[i],"0.0"); i++;
             lvpl_rate = get_double_data(data[i],"0.0"); i++;
@@ -303,7 +303,7 @@ void WT3G0::initialize()
         {
             setup_block_toolkit_and_parameters();
 
-            size_t n_lumped = get_number_of_lumped_wt_generators();
+            unsigned int n_lumped = get_number_of_lumped_wt_generators();
             double fbase = get_bus_base_frequency_in_Hz();
             double wbase = 2.0*PI*fbase;
 
@@ -569,7 +569,7 @@ string WT3G0::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -602,7 +602,7 @@ string WT3G0::get_standard_psse_string() const
 void WT3G0::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     LVPL lvpl = get_LVPL();
     add_model_data_name_and_index_pair("N", i); i++;
     add_model_data_name_and_index_pair("PN", i); i++;
@@ -666,7 +666,7 @@ void WT3G0::set_model_data_with_name(string par_name, double value)
     {
         WT_GENERATOR* gen = get_wt_generator_pointer();
         if(gen!=NULL)
-            return gen->set_number_of_lumped_wt_generators(size_t(value));
+            return gen->set_number_of_lumped_wt_generators((unsigned int)(value));
     }
     if(par_name=="PN")
     {
@@ -707,7 +707,7 @@ void WT3G0::set_model_data_with_name(string par_name, double value)
 void WT3G0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@ACTIVE CURRENT COMMAND BLOCK", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@REACTIVE VOLTAGE COMMAND BLOCK", i); i++;

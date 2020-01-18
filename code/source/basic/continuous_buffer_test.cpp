@@ -46,7 +46,7 @@ void CONTINUOUS_BUFFER_TEST::test_constructor()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"CONTINUOUS_BUFFER_TEST");
 
-    TEST_ASSERT(buffer.get_buffer_size()==1);
+    TEST_ASSERT(buffer.get_buffer_size()==0);
     TEST_ASSERT(buffer.get_index_of_buffer_head()==0);
 }
 
@@ -72,8 +72,8 @@ void CONTINUOUS_BUFFER_TEST::test_initialize_buffer()
 
     TEST_ASSERT(buffer.get_index_of_buffer_head()==0);
 
-    size_t nbuffer = buffer.get_buffer_size();
-    for(size_t i=0; i!=nbuffer; ++i)
+    unsigned int nbuffer = buffer.get_buffer_size();
+    for(unsigned int i=0; i!=nbuffer; ++i)
     {
         TEST_ASSERT(fabs(buffer.get_buffer_time_at_delay_index(i)-(current_time-delt*i))<FLOAT_EPSILON);
         TEST_ASSERT(fabs(buffer.get_buffer_value_at_delay_index(i)-1.0)<FLOAT_EPSILON);

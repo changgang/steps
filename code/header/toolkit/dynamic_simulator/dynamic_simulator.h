@@ -34,20 +34,20 @@ class DYNAMICS_SIMULATOR: public BASE
         //void set_current_simulation_time_in_s(double time);
         //double get_current_simulation_time_in_s() const;
 
-        void set_max_DAE_iteration(size_t iteration);
-        void set_min_DAE_iteration(size_t iteration);
-        void set_max_network_iteration(size_t iteration);
-        void set_max_update_iteration(size_t iteration);
+        void set_max_DAE_iteration(unsigned int iteration);
+        void set_min_DAE_iteration(unsigned int iteration);
+        void set_max_network_iteration(unsigned int iteration);
+        void set_max_update_iteration(unsigned int iteration);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
         void set_iteration_accelerator(double alpha);
         void set_non_divergent_solution_logic(bool logic);
         void set_rotor_angle_stability_surveillance_flag(bool flag);
         void set_rotor_angle_stability_threshold_in_deg(double angle_th);
 
-        size_t get_max_DAE_iteration() const;
-        size_t get_min_DAE_iteration() const;
-        size_t get_max_network_iteration() const;
-        size_t get_max_update_iteration() const;
+        unsigned int get_max_DAE_iteration() const;
+        unsigned int get_min_DAE_iteration() const;
+        unsigned int get_max_network_iteration() const;
+        unsigned int get_max_update_iteration() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
         double get_iteration_accelerator() const;
         bool get_non_divergent_solution_logic() const;
@@ -72,7 +72,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void prepare_hvdc_related_meters();
         void prepare_equivalent_device_related_meters();
 
-        void prepare_bus_related_meter(size_t bus, string meter_type);
+        void prepare_bus_related_meter(unsigned int bus, string meter_type);
         void prepare_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_wt_generator_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
         void prepare_pv_unit_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
@@ -84,8 +84,8 @@ class DYNAMICS_SIMULATOR: public BASE
         void prepare_equivalent_device_related_meter(const DEVICE_ID& did, string meter_type, string var_name="");
 
         void append_meter(const METER& meter);
-        size_t get_meter_count() const;
-        METER get_meter(size_t i);
+        unsigned int get_meter_count() const;
+        METER get_meter(unsigned int i);
         void update_all_meters_value();
         vector<double> get_all_meters_value();
         void clear_meters();
@@ -110,27 +110,27 @@ class DYNAMICS_SIMULATOR: public BASE
     public: // events
         void change_dynamic_simulator_time_step(double newDELT);
 
-        void set_bus_fault(size_t bus, const complex<double>& fault_shunt);
-        void clear_bus_fault(size_t bus);
-        void trip_bus(size_t bus);
-        void trip_buses(const vector<size_t>& buses);
+        void set_bus_fault(unsigned int bus, const complex<double>& fault_shunt);
+        void clear_bus_fault(unsigned int bus);
+        void trip_bus(unsigned int bus);
+        void trip_buses(const vector<unsigned int>& buses);
 
-        void set_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location, const complex<double>& fault_shunt);
-        void clear_line_fault(const DEVICE_ID& line_id, size_t side_bus, double location);
+        void set_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location, const complex<double>& fault_shunt);
+        void clear_line_fault(const DEVICE_ID& line_id, unsigned int side_bus, double location);
         void trip_line(const DEVICE_ID& line_id);
-        void trip_line_breaker(const DEVICE_ID& line_id, size_t side_bus);
+        void trip_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus);
         void close_line(const DEVICE_ID& line_id);
-        void close_line_breaker(const DEVICE_ID& line_id, size_t side_bus);
+        void close_line_breaker(const DEVICE_ID& line_id, unsigned int side_bus);
 
         void trip_transformer(const DEVICE_ID& trans_id);
-        void trip_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus);
+        void trip_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus);
         void close_transformer(const DEVICE_ID& trans_id);
-        void close_transformer_breaker(const DEVICE_ID& trans_id, size_t side_bus);
+        void close_transformer_breaker(const DEVICE_ID& trans_id, unsigned int side_bus);
 
         void trip_generator(const DEVICE_ID& gen_id);
         void shed_generator(const DEVICE_ID& gen_id,double percent);
 
-        void trip_wt_generator(const DEVICE_ID& gen_id, size_t n);
+        void trip_wt_generator(const DEVICE_ID& gen_id, unsigned int n);
 
         void trip_load(const DEVICE_ID& load_id);
         void close_load(const DEVICE_ID& load_id);
@@ -197,7 +197,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void add_hvdcs_to_bus_current_mismatch();
         void add_equivalent_devices_to_bus_current_mismatch();
 
-        complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
+        complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
 
         bool is_converged();
         void calculate_bus_power_mismatch_in_MVA();
@@ -221,11 +221,11 @@ class DYNAMICS_SIMULATOR: public BASE
 
         void update_network_dynamic_matrix();
 
-        void guess_bus_voltage_with_bus_fault_set(size_t bus, const FAULT& fault);
-        void guess_bus_voltage_with_bus_fault_cleared(size_t bus, const FAULT& fault);
+        void guess_bus_voltage_with_bus_fault_set(unsigned int bus, const FAULT& fault);
+        void guess_bus_voltage_with_bus_fault_cleared(unsigned int bus, const FAULT& fault);
 
-        void guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, size_t side_bus, double location, const FAULT& fault);
-        void guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, size_t side_bus, double location, const FAULT& fault);
+        void guess_bus_voltage_with_line_fault_set(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault);
+        void guess_bus_voltage_with_line_fault_cleared(const DEVICE_ID& did, unsigned int side_bus, double location, const FAULT& fault);
 
         void update_generators_in_islands();
         bool is_system_angular_stable() const;
@@ -233,12 +233,12 @@ class DYNAMICS_SIMULATOR: public BASE
         double DELT;
         double TIME;
 
-        size_t ITER_DAE, ITER_NET;
+        unsigned int ITER_DAE, ITER_NET;
         double time_elapse_in_a_step;
         double P_threshold_in_MW, Q_threshold_in_MVar;
-        size_t network_iteration_count, DAE_iteration_count;
-        size_t max_network_iteration, max_DAE_iteration, max_update_iteration, min_DAE_iteration;
-        size_t current_max_network_iteration;
+        unsigned int network_iteration_count, DAE_iteration_count;
+        unsigned int max_network_iteration, max_DAE_iteration, max_update_iteration, min_DAE_iteration;
+        unsigned int current_max_network_iteration;
         double alpha;
         bool non_divergent_solution_enabled;
 

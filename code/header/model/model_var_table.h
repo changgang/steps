@@ -12,16 +12,16 @@ class MODEL_VAR_TABLE
         MODEL_VAR_TABLE();
         virtual ~MODEL_VAR_TABLE();
         void clear();
-        void add_variable_name_index_pair(string var_name, size_t var_index);
+        void add_variable_name_index_pair(string var_name, unsigned int var_index);
 
-        size_t operator[](const string var_name) const;
-        string operator[](const size_t var_index) const;
+        unsigned int operator[](const string var_name) const;
+        string operator[](const unsigned int var_index) const;
     private:
-        size_t get_variable_index_from_variable_name(string var_name) const;
-        string get_variable_name_from_variable_index(size_t var_index) const;
+        unsigned int get_variable_index_from_variable_name(string var_name) const;
+        string get_variable_name_from_variable_index(unsigned int var_index) const;
 
-        map<string, size_t> var_name2index_map;
-        map<size_t, string> var_index2name_map;
+        map<string, unsigned int> var_name2index_map;
+        map<unsigned int, string> var_index2name_map;
 };
 
 #endif // MODEL_VAR_TABLE_H

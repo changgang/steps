@@ -128,7 +128,7 @@ bool SEXS::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double ta_over_tb, ta, tb, k, te, emax, emin;
 
-            size_t i=3;
+            unsigned int i=3;
             ta_over_tb = get_double_data(data[i],"0.0"); i++;
             tb = get_double_data(data[i],"0.0"); i++;
             k = get_double_data(data[i],"0.0"); i++;
@@ -281,7 +281,7 @@ string SEXS::get_standard_psse_string() const
 {
     ostringstream osstream;
     GENERATOR* gen = get_generator_pointer();
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     string identifier = "'"+gen->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -290,8 +290,8 @@ string SEXS::get_standard_psse_string() const
     double TB = get_TB_in_s();
     double K = get_K();
     double TE = get_TE_in_s();
-    double Efdmax = get_Efdmax_in_pu();
     double Efdmin = get_Efdmin_in_pu();
+    double Efdmax = get_Efdmax_in_pu();
 
     osstream<<setw(8)<<bus<<", "
             <<setw(10)<<model_name<<", "
@@ -300,15 +300,15 @@ string SEXS::get_standard_psse_string() const
             <<setw(8)<<setprecision(6)<<TB<<", "
             <<setw(8)<<setprecision(6)<<K<<", "
             <<setw(8)<<setprecision(6)<<TE<<", "
-            <<setw(8)<<setprecision(6)<<Efdmax<<", "
-            <<setw(8)<<setprecision(6)<<Efdmin<<" /";
+            <<setw(8)<<setprecision(6)<<Efdmin<<", "
+            <<setw(8)<<setprecision(6)<<Efdmax<<" /";
     return osstream.str();
 }
 
 void SEXS::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=1;
+    unsigned int i=1;
     add_model_data_name_and_index_pair("TA", i); i++;
     add_model_data_name_and_index_pair("TB", i); i++;
     add_model_data_name_and_index_pair("K", i); i++;
@@ -353,7 +353,7 @@ void SEXS::set_model_data_with_name(string par_name, double value)
 void SEXS::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=1;
+    unsigned int i=1;
     add_model_inernal_variable_name_and_index_pair("STATE@TUNER", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@EXCITER", i); i++;
 }

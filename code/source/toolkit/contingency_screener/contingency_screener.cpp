@@ -39,12 +39,12 @@ CONTINGENCY_SCREENER::~CONTINGENCY_SCREENER()
 }
 
 
-void CONTINGENCY_SCREENER::set_power_system_database_maximum_bus_number(size_t number)
+void CONTINGENCY_SCREENER::set_power_system_database_maximum_bus_number(unsigned int number)
 {
     psdb.set_allowed_max_bus_number(number);
 }
 
-size_t CONTINGENCY_SCREENER::get_power_system_database_maximum_bus_number() const
+unsigned int CONTINGENCY_SCREENER::get_power_system_database_maximum_bus_number() const
 {
     return psdb.get_allowed_max_bus_number();
 }
@@ -65,7 +65,7 @@ void CONTINGENCY_SCREENER::set_fault_device(DEVICE_ID did)
         fault_device = did;
 }
 
-void CONTINGENCY_SCREENER::set_fault_side_bus(size_t bus)
+void CONTINGENCY_SCREENER::set_fault_side_bus(unsigned int bus)
 {
     fault_side_bus = bus;
 }
@@ -111,7 +111,7 @@ void CONTINGENCY_SCREENER::set_angle_difference_threshold_in_deg(double angle)
     angle_difference_threshold_in_deg = angle;
 }
 
-void CONTINGENCY_SCREENER::set_simulator_max_iteration(size_t iteration)
+void CONTINGENCY_SCREENER::set_simulator_max_iteration(unsigned int iteration)
 {
     if(iteration>0)
         this->max_iteration = iteration;
@@ -149,7 +149,7 @@ DEVICE_ID CONTINGENCY_SCREENER::get_fault_device() const
     return fault_device;
 }
 
-size_t CONTINGENCY_SCREENER::get_fault_side_bus() const
+unsigned int CONTINGENCY_SCREENER::get_fault_side_bus() const
 {
     return fault_side_bus;
 }
@@ -194,7 +194,7 @@ double CONTINGENCY_SCREENER::get_angle_difference_threshold_in_deg() const
     return angle_difference_threshold_in_deg;
 }
 
-size_t CONTINGENCY_SCREENER::get_simulator_max_iteration() const
+unsigned int CONTINGENCY_SCREENER::get_simulator_max_iteration() const
 {
     return max_iteration;
 }
@@ -426,12 +426,12 @@ bool CONTINGENCY_SCREENER::perform_simulation_with_clearing_time(double clearing
     return is_stable;
 }
 
-size_t CONTINGENCY_SCREENER::get_monitored_generator_count() const
+unsigned int CONTINGENCY_SCREENER::get_monitored_generator_count() const
 {
     return monitored_generators.size();
 }
 
-DEVICE_ID CONTINGENCY_SCREENER::get_monitored_generator(size_t i) const
+DEVICE_ID CONTINGENCY_SCREENER::get_monitored_generator(unsigned int i) const
 {
     if(i<get_monitored_generator_count())
         return monitored_generators[i];
@@ -451,8 +451,8 @@ void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
 
     simulator.clear_meters();
 
-    size_t n = get_monitored_generator_count();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = get_monitored_generator_count();
+    for(unsigned int i=0; i!=n; ++i)
     {
         DEVICE_ID did = get_monitored_generator(i);
         if(did.is_valid() and did.get_device_type()=="GENERATOR")
@@ -466,7 +466,7 @@ void CONTINGENCY_SCREENER::set_meters(DYNAMICS_SIMULATOR& simulator)
 void CONTINGENCY_SCREENER::apply_fault(DYNAMICS_SIMULATOR& simulator)
 {
     DEVICE_ID did = get_fault_device();
-    size_t bus = get_fault_side_bus();
+    unsigned int bus = get_fault_side_bus();
     double location = get_fault_location_to_fault_side_bus_in_pu();
     complex<double> shunt = get_fault_shunt_in_pu();
     simulator.set_line_fault(did, bus, location, shunt);
@@ -475,7 +475,7 @@ void CONTINGENCY_SCREENER::apply_fault(DYNAMICS_SIMULATOR& simulator)
 void CONTINGENCY_SCREENER::clear_fault(DYNAMICS_SIMULATOR& simulator)
 {
     DEVICE_ID did = get_fault_device();
-    size_t bus = get_fault_side_bus();
+    unsigned int bus = get_fault_side_bus();
     double location = get_fault_location_to_fault_side_bus_in_pu();
     simulator.clear_line_fault(did, bus, location);
 
@@ -488,12 +488,12 @@ bool CONTINGENCY_SCREENER::check_if_system_is_stable(DYNAMICS_SIMULATOR& simulat
 {
     vector<double> angles = simulator.get_all_meters_value();
     double angle_max=0.0, angle_min = 0.0;
-    size_t n = angles.size();
+    unsigned int n = angles.size();
     if(n>0)
     {
         angle_max = angles[0];
         angle_min = angles[0];
-        for(size_t i=1; i!=n; ++i)
+        for(unsigned int i=1; i!=n; ++i)
         {
             if(angles[i]>angle_max)
                 angle_max = angles[i];

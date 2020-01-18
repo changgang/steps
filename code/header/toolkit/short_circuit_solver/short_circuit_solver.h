@@ -14,8 +14,8 @@ class SHORT_CIRCUIT_SOLVER : public BASE
         ~SHORT_CIRCUIT_SOLVER();
         virtual void clear();
 
-        void set_maximum_iteration(size_t itermax);
-        size_t get_maximum_iteration() const;
+        void set_maximum_iteration(unsigned int itermax);
+        unsigned int get_maximum_iteration() const;
 
         void initialize_short_circuit_solver();
 
@@ -37,7 +37,7 @@ class SHORT_CIRCUIT_SOLVER : public BASE
         void save_short_circuit_result_to_file(const string& filename) const;
         void save_extended_short_circuit_result_to_file(const string& filename) const;
     private:
-        size_t iteration_count, max_iteration;
+        unsigned int iteration_count, max_iteration;
         bool converged;
 
         vector<FAULT> faults;

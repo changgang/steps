@@ -50,8 +50,8 @@ void TIME_SERIES::load_time_series_from_file(string file)
         sbuffer = trim_string(sbuffer);
         sbuffer = string2upper(sbuffer);
         vector<string> header = split_string(sbuffer, ",");
-        size_t n = header.size();
-        for(size_t i=1; i<n; ++i)
+        unsigned int n = header.size();
+        for(unsigned int i=1; i<n; ++i)
             value_name.push_back(header[i]);
 
         vector<double> temp_value;
@@ -68,7 +68,7 @@ void TIME_SERIES::load_time_series_from_file(string file)
 
             time.push_back(str2double(value_string[0]));
             temp_value.clear();
-            for(size_t i=1; i<n; ++i)
+            for(unsigned int i=1; i<n; ++i)
                 temp_value.push_back(str2double(value_string[i]));
             value.push_back(temp_value);
         }
@@ -91,7 +91,7 @@ void TIME_SERIES::clear()
 
 vector<double> TIME_SERIES::get_values_at_time(double t)
 {
-    size_t n = time.size();
+    unsigned int n = time.size();
     if(n!=0)
     {
         if(current_time_index>=n) current_time_index=0;
@@ -102,7 +102,7 @@ vector<double> TIME_SERIES::get_values_at_time(double t)
         {
             if(current_time<t)
             {
-                size_t next_time_index = current_time_index+1;
+                unsigned int next_time_index = current_time_index+1;
                 while(next_time_index<n)
                 {
                     if(time[next_time_index]<t)
@@ -119,8 +119,8 @@ vector<double> TIME_SERIES::get_values_at_time(double t)
                     double next_time = time[next_time_index];
                     vector<double> current_value=value[current_time_index];
                     vector<double> next_value=value[next_time_index];
-                    size_t m = current_value.size();
-                    for(size_t i=0; i<m; ++i)
+                    unsigned int m = current_value.size();
+                    for(unsigned int i=0; i<m; ++i)
                         current_value[i] = (current_value[i]*(next_time-t)+next_value[i]*(t-current_time))/(next_time-current_time);
                     return current_value;
                 }
@@ -132,7 +132,7 @@ vector<double> TIME_SERIES::get_values_at_time(double t)
                 if(current_time_index==0)
                     return value[0];
 
-                size_t next_time_index = current_time_index-1;
+                unsigned int next_time_index = current_time_index-1;
                 while(next_time_index!=0)
                 {
                     if(time[next_time_index]>t)
@@ -149,8 +149,8 @@ vector<double> TIME_SERIES::get_values_at_time(double t)
                     double next_time = time[next_time_index];
                     vector<double> current_value=value[current_time_index];
                     vector<double> next_value=value[next_time_index];
-                    size_t m = current_value.size();
-                    for(size_t i=0; i<m; ++i)
+                    unsigned int m = current_value.size();
+                    for(unsigned int i=0; i<m; ++i)
                         current_value[i] = (current_value[i]*(next_time-t)+next_value[i]*(t-current_time))/(next_time-current_time);
                     return current_value;
                 }
@@ -172,9 +172,9 @@ vector<double> TIME_SERIES::get_values_at_time(double t)
 double TIME_SERIES::get_value_of_name_at_time(string vname, double t)
 {
     vname = string2upper(vname);
-    size_t index = INDEX_NOT_EXIST;
-    size_t n = value_name.size();
-    for(size_t i=0; i<n; ++i)
+    unsigned int index = INDEX_NOT_EXIST;
+    unsigned int n = value_name.size();
+    for(unsigned int i=0; i<n; ++i)
     {
         if(value_name[i]==vname)
         {

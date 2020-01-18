@@ -85,10 +85,6 @@ class IEE2ST : public STABILIZER_MODEL
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
         double Vsmax, Vsmin;
         double Vcmax, Vcmin;
-
-
-
-
 };
 
 #endif // IEE2ST_H

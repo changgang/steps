@@ -18,7 +18,7 @@ class POWERFLOW_SOLVER : public BASE
 
         void initialize_powerflow_solver();
 
-        void set_max_iteration(size_t iteration);
+        void set_max_iteration(unsigned int iteration);
         void set_allowed_max_active_power_imbalance_in_MW(double P);
         void set_allowed_max_reactive_power_imbalance_in_MVar(double Q);
         void set_maximum_voltage_change_in_pu(double v);
@@ -30,7 +30,7 @@ class POWERFLOW_SOLVER : public BASE
         void set_var_limit_check_logic(bool logic);
         void set_export_jacobian_matrix_step_by_step_logic(bool flag);
 
-        size_t get_max_iteration() const;
+        unsigned int get_max_iteration() const;
         double get_allowed_max_active_power_imbalance_in_MW() const;
         double get_allowed_max_reactive_power_imbalance_in_MVar() const;
         double get_maximum_voltage_change_in_pu() const;
@@ -61,7 +61,7 @@ class POWERFLOW_SOLVER : public BASE
         void save_network_Y_matrix_to_file(const string& filename) const;
         void save_jacobian_matrix_to_file(const string& filename);
         void save_bus_powerflow_result_to_file(const string& filename) const;
-        size_t get_iteration_count() const;
+        unsigned int get_iteration_count() const;
     private:
         void prepare_devices_for_solution();
         void initialize_bus_type();
@@ -71,13 +71,13 @@ class POWERFLOW_SOLVER : public BASE
         void optimize_bus_numbers();
         void set_internal_bus_pointer();
 
-        complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
-        double get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(size_t internal_bus) const;
+        complex<double> get_bus_complex_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
+        double get_bus_positive_sequence_voltage_in_pu_with_internal_bus_number(unsigned int internal_bus) const;
 
         void update_P_and_Q_equation_internal_buses();
         void update_P_and_Q_equation_internal_buses_with_generator_variables();
-        void remove_physical_bus_regulating_angle_from_internal_P_equation_buses(size_t bus);
-        void remove_physical_bus_regulating_voltage_from_internal_Q_equation_buses(size_t bus);
+        void remove_physical_bus_regulating_angle_from_internal_P_equation_buses(unsigned int bus);
+        void remove_physical_bus_regulating_voltage_from_internal_Q_equation_buses(unsigned int bus);
 
         void set_bus_power_mismatch_vector_for_solution();
 
@@ -87,15 +87,15 @@ class POWERFLOW_SOLVER : public BASE
         void calculate_raw_bus_current_into_network();
 
         bool check_bus_type_constraints();
-        void check_SLACK_bus_constraint_of_physical_bus(size_t physical_bus);
-        bool check_PV_bus_constraint_of_physical_bus(size_t physical_bus);
-        bool check_PV_TO_PQ_bus_constraint_of_physical_bus(size_t physical_bus);
-        void set_all_sources_at_physical_bus_to_q_min(size_t physical_bus);
-        void set_all_sources_at_physical_bus_to_q_max(size_t physical_bus);
+        void check_SLACK_bus_constraint_of_physical_bus(unsigned int physical_bus);
+        bool check_PV_bus_constraint_of_physical_bus(unsigned int physical_bus);
+        bool check_PV_TO_PQ_bus_constraint_of_physical_bus(unsigned int physical_bus);
+        void set_all_sources_at_physical_bus_to_q_min(unsigned int physical_bus);
+        void set_all_sources_at_physical_bus_to_q_max(unsigned int physical_bus);
 
         void update_source_power_without_constraints();
-        void update_SLACK_bus_source_power_of_physical_bus(size_t physical_bus);
-        void update_PV_bus_source_power_of_physical_bus(size_t physical_bus);
+        void update_SLACK_bus_source_power_of_physical_bus(unsigned int physical_bus);
+        void update_PV_bus_source_power_of_physical_bus(unsigned int physical_bus);
 
         void build_bus_power_mismatch_vector_for_coupled_solution();
         void build_bus_P_power_mismatch_vector_for_decoupled_solution();
@@ -121,7 +121,7 @@ class POWERFLOW_SOLVER : public BASE
 
         vector<double> bus_active_power_mismatch_in_pu, bus_reactive_power_mismatch_in_pu;
 
-        vector<size_t> internal_P_equation_buses, internal_Q_equation_buses;
+        vector<unsigned int> internal_P_equation_buses, internal_Q_equation_buses;
 
         vector<double> S_mismatch, P_mismatch, Q_mismatch;
 
@@ -137,7 +137,7 @@ class POWERFLOW_SOLVER : public BASE
 
         vector< complex<double> > bus_current, bus_power;
 
-        size_t iteration_count, max_iteration;
+        unsigned int iteration_count, max_iteration;
 
         vector<BUS*> buses;
         vector<SOURCE*> sources;

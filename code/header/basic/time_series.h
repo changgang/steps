@@ -25,6 +25,6 @@ class TIME_SERIES
         vector<double> time;
         vector<string> value_name;
         vector< vector<double> > value;
-        size_t current_time_index;
+        unsigned int current_time_index;
 };
 #endif // TIME_SERIES_H

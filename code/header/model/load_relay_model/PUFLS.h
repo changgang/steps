@@ -54,7 +54,7 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         void set_additional_stage_time_delay_in_s(double t);
         void set_additional_stage_shed_scale_in_pu(double scale);
         void set_discrete_stage_time_delay_in_s(double t);
-        void set_discrete_stage_shed_scale_in_pu(size_t stage, double scale);
+        void set_discrete_stage_shed_scale_in_pu(unsigned int stage, double scale);
 
         double get_frequency_sensor_time_in_s() const;
         double get_continuous_frequency_threshold_in_Hz() const;
@@ -66,7 +66,7 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         double get_additional_stage_time_delay_in_s() const;
         double get_additional_stage_shed_scale_in_pu() const;
         double get_discrete_stage_time_delay_in_s() const;
-        double get_discrete_stage_shed_scale_in_pu(size_t stage) const;
+        double get_discrete_stage_shed_scale_in_pu(unsigned int stage) const;
     private:
         void copy_from_const_model(const PUFLS& model);
 
@@ -75,16 +75,16 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         void update_continuous_shed_command();
         double get_continuous_shed_command_in_pu() const;
 
-        size_t get_number_of_discrete_stage_to_meet_total_continuous_shed_scale() const;
-        double get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(size_t n) const;
+        unsigned int get_number_of_discrete_stage_to_meet_total_continuous_shed_scale() const;
+        double get_sum_of_shed_scale_of_first_n_discrete_stages_in_pu(unsigned int n) const;
         double get_total_shed_scale_of_all_discrete_stages_in_pu() const;
 
-        bool is_discrete_stage_tipped(size_t stage) const;
-        bool is_discrete_stage_timer_timed_out(size_t stage);
-        bool is_discrete_stage_timer_started(size_t stage) const;
-        void trip_discrete_stage(size_t stage);
-        void start_discrete_stage_timer_of_stage(size_t stage);
-        void reset_discrete_stage_timer_of_stage(size_t stage);
+        bool is_discrete_stage_tipped(unsigned int stage) const;
+        bool is_discrete_stage_timer_timed_out(unsigned int stage);
+        bool is_discrete_stage_timer_started(unsigned int stage) const;
+        void trip_discrete_stage(unsigned int stage);
+        void start_discrete_stage_timer_of_stage(unsigned int stage);
+        void reset_discrete_stage_timer_of_stage(unsigned int stage);
 
         void try_to_shed_additional_stage();
         bool is_additional_stage_set() const;
@@ -115,11 +115,11 @@ class PUFLS : public LOAD_FREQUENCY_RELAY_MODEL
         double additional_shed_scale;
         bool flag_additional_stage_is_tripped;
 
-        double discrete_stage_shed_scale_in_pu[MAX_LOAD_RELAY_STAGE];
-        TIMER discrete_stage_timer[MAX_LOAD_RELAY_STAGE];
-        bool flag_discrete_stage_is_tripped[MAX_LOAD_RELAY_STAGE];
+        double discrete_stage_shed_scale_in_pu[STEPS_MAX_LOAD_RELAY_STAGE];
+        TIMER discrete_stage_timer[STEPS_MAX_LOAD_RELAY_STAGE];
+        bool flag_discrete_stage_is_tripped[STEPS_MAX_LOAD_RELAY_STAGE];
 
-        CONTINUOUS_BUFFER *history_minimum_frequency_buffer;
+        CONTINUOUS_BUFFER history_minimum_frequency_buffer;
 
         double current_continuous_shed_command_in_pu;
 };

@@ -8,21 +8,12 @@ using namespace std;
 STABILIZER_MODEL::STABILIZER_MODEL()
 {
     set_allowed_device_type_CAN_ONLY_BE_CALLED_BY_SPECIFIC_MODEL_CONSTRUCTOR("GENERATOR");
-    for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
-    {
-        signals[slot] = nullptr;
-        signal_type[slot] = 0;
-        signal_bus[slot] = 0;
-    }
+    for(unsigned int slot=0; slot!=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
+        signals[slot].clear();
 }
 
 STABILIZER_MODEL::~STABILIZER_MODEL()
 {
-    for(size_t slot=0; slot!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++slot)
-    {
-        if(signals[slot]!=nullptr)
-            delete signals[slot];
-    }
 }
 
 string STABILIZER_MODEL::get_model_type() const
@@ -30,33 +21,7 @@ string STABILIZER_MODEL::get_model_type() const
     return "STABILIZER";
 }
 
-
-void STABILIZER_MODEL::set_signal_type_at_slot(size_t slot, size_t signal_type)
-{
-    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
-        this->signal_type[slot] = signal_type;
-}
-void STABILIZER_MODEL::set_signal_bus_at_slot(size_t slot, size_t signal_bus)
-{
-    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
-        this->signal_bus[slot] = signal_bus;
-}
-size_t STABILIZER_MODEL::get_signal_type_at_slot(size_t slot)
-{
-    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
-        return this->signal_type[slot];
-    else
-        return 0;
-}
-size_t STABILIZER_MODEL::get_signal_bus_at_slot(size_t slot)
-{
-    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
-        return this->signal_bus[slot];
-    else
-        return 0;
-}
-
-void STABILIZER_MODEL::set_input_signal_at_slot(size_t slot, SIGNAL& signal)
+void STABILIZER_MODEL::set_input_signal_at_slot(unsigned int slot, SIGNAL& signal)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -67,36 +32,40 @@ void STABILIZER_MODEL::set_input_signal_at_slot(size_t slot, SIGNAL& signal)
         return;
     }
 
-    if(slot>=MAX_STABILIZER_INPUT_SIGNAL_SLOT)
+    if(slot>=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT)
     {
         osstream<<"Warning. Signal slot "<<slot<<" is beyond the capacity of slots when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<".";
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-    if(signals[slot]->is_valid())
+    if(signals[slot].is_valid())
     {
-        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signals[slot]->get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
-          <<"It will be deleted and new signal ("<<signal.get_meter_name()<<") will be set.";
+        osstream<<"Warning. Signal slot "<<slot<<" has already been assigned to signal "<<signals[slot].get_meter_name()<<" when setting up "<<get_model_type()<<" model '"<<get_model_name()<<"' for "<<get_device_name()<<"."<<endl
+                <<"It will be updated to new signal ("<<signal.get_meter_name()<<").";
         toolkit.show_information_with_leading_time_stamp(osstream);
-        signals[slot]->clear();
     }
-    (*signals[slot]) = signal;
+    signals[slot] = signal;
 }
 
-SIGNAL STABILIZER_MODEL::get_input_signal_at_slot(size_t slot) const
+SIGNAL STABILIZER_MODEL::get_input_signal_at_slot(unsigned int slot) const
 {
     SIGNAL signal;
-    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
-        return (*signals[slot]);
+    if(slot<STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT)
+    {
+        if(signals[slot].is_valid())
+            return signals[slot];
+        else
+            return signal;
+    }
     else
         return signal;
 }
 
-bool STABILIZER_MODEL::is_slot_valid(size_t slot) const
+bool STABILIZER_MODEL::is_slot_valid(unsigned int slot) const
 {
-    if(slot<MAX_STABILIZER_INPUT_SIGNAL_SLOT)
+    if(slot<STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT)
     {
-        if(signals[slot]->is_valid())
+        if(signals[slot].is_valid())
             return true;
         else
             return false;
@@ -105,18 +74,15 @@ bool STABILIZER_MODEL::is_slot_valid(size_t slot) const
         return false;
 }
 
-double STABILIZER_MODEL::get_signal_value_of_slot(size_t slot) const
+double STABILIZER_MODEL::get_signal_value_of_slot(unsigned int slot) const
 {
-    if(this->is_slot_valid(slot))
-    {
-        SIGNAL *signal = signals[slot];
-        return signal->get_meter_value();
-    }
+    if(is_slot_valid(slot))
+        return signals[slot].get_meter_value();
     else
         return 0.0;
 }
 
-size_t STABILIZER_MODEL::convert_signal_type_string_to_number(string& signal_type) const
+unsigned int STABILIZER_MODEL::convert_signal_type_string_to_number(string& signal_type) const
 {
     signal_type = string2upper(signal_type);
     if(signal_type=="ROTOR SPEED DEVIATION IN PU")
@@ -136,7 +102,7 @@ size_t STABILIZER_MODEL::convert_signal_type_string_to_number(string& signal_typ
     return INDEX_NOT_EXIST;
 }
 
-string STABILIZER_MODEL::convert_signal_type_number_to_string(size_t signal_type) const
+string STABILIZER_MODEL::convert_signal_type_number_to_string(unsigned int signal_type) const
 {
     switch(signal_type)
     {
@@ -159,7 +125,7 @@ string STABILIZER_MODEL::convert_signal_type_number_to_string(size_t signal_type
     }
 }
 
-SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_type, size_t bus)
+SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(unsigned int signal_type, unsigned int bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -259,7 +225,7 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_bus(size_t signal_t
     return signal;
 }
 
-SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_device_id(size_t signal_type, DEVICE_ID did)
+SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_device_id(unsigned int signal_type, DEVICE_ID did)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -289,8 +255,8 @@ SIGNAL STABILIZER_MODEL::prepare_signal_with_signal_type_and_device_id(size_t si
             case 6:
             {
                 TERMINAL terminal= did.get_device_terminal();
-                vector<size_t> buses = terminal.get_buses();
-                size_t bus = buses[0];
+                vector<unsigned int> buses = terminal.get_buses();
+                unsigned int bus = buses[0];
                 BUS* busptr = psdb.get_bus(bus);
                 if(busptr!=NULL)
                 {

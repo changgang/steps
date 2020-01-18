@@ -19,7 +19,7 @@ class PSASPS1 : public STABILIZER_MODEL
         void set_Kq1(double K);
         void set_Kq2(double K);
         void set_Kq3(double K);
-        void set_K(size_t K);
+        void set_K(unsigned int K);
         void set_Tq_in_s(double T);
         void set_T1e_in_s(double T);
         void set_T2e_in_s(double T);
@@ -31,7 +31,7 @@ class PSASPS1 : public STABILIZER_MODEL
         double get_Kq1() const;
         double get_Kq2() const;
         double get_Kq3() const;
-        size_t get_K() const;
+        unsigned int get_K() const;
         double get_Tq_in_s() const;
         double get_T1e_in_s() const;
         double get_T2e_in_s() const;
@@ -69,7 +69,7 @@ class PSASPS1 : public STABILIZER_MODEL
         void copy_from_const_model(const PSASPS1& model);
 
         double Kq1, Kq2, Kq3;
-        size_t K;
+        unsigned int K;
         DIFFERENTIAL_BLOCK dedc_block;
         LEAD_LAG_BLOCK phase_tuner_1, phase_tuner_2, phase_tuner_3;
         double Vsmax, Vsmin;

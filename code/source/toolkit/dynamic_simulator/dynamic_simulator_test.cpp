@@ -89,8 +89,7 @@ void DYNAMICS_SIMULATOR_TEST::setup()
 
 void DYNAMICS_SIMULATOR_TEST::tear_down()
 {
-    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
-    simulator.clear();
+    default_toolkit.clear();
 
     show_test_end_information();
 }
@@ -476,11 +475,11 @@ void DYNAMICS_SIMULATOR_TEST::test_start()
 
     TEST_ASSERT(fabs(default_toolkit.get_dynamic_simulation_time_in_s()-(-2.0)*default_toolkit.get_dynamic_simulation_time_step_in_s())<FLOAT_EPSILON);
 
-    size_t n = psdb.get_generator_count();
+    unsigned int n = psdb.get_generator_count();
     vector<GENERATOR*> generators = psdb.get_all_generators();
     GENERATOR* generator;
     ostringstream osstream;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         generator = generators[i];
         SYNC_GENERATOR_MODEL* genmodel = generator->get_sync_generator_model();
@@ -1599,8 +1598,8 @@ void DYNAMICS_SIMULATOR_TEST::test_run_bench_shandong_100_bus_model_with_dc_GENR
     importer.load_dynamic_data("../../../bench/bench_shandong_change_with_gov.dyr");
 
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    size_t n = hvdcs.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = hvdcs.size();
+    for(unsigned int i=0; i!=n; ++i)
         hvdcs[i]->turn_rectifier_constant_power_mode_into_constant_current_mode();
 
     POWERFLOW_SOLVER& powerflow_solver = default_toolkit.get_powerflow_solver();
@@ -1777,7 +1776,7 @@ void DYNAMICS_SIMULATOR_TEST::test_run_IEEE_9_bus_model_with_all_WT3_models()
     importer.load_dynamic_data("../../../bench/IEEE9_all_wt3_models.dyr");
 
     vector<WT_GENERATOR*> gens = psdb.get_all_wt_generators();
-    for(size_t i=0; i<gens.size(); ++i)
+    for(unsigned int i=0; i<gens.size(); ++i)
     {
         WT_GENERATOR* gen = gens[i];
         if(gen->get_wt_generator_model()!=NULL)

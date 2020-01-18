@@ -40,7 +40,7 @@ public:
 
     virtual void clear();
 
-    virtual vector<size_t> get_reorder_permutation();
+    virtual vector<unsigned int> get_reorder_permutation();
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13);
     virtual vector<double>& solve_Ax_eq_b(vector<double>& b);
@@ -51,9 +51,9 @@ public:
 
 private:
     void copy_from_const_matrix(const SPARSE_MATRIX_UMFPACK& matrix);
-    vector<size_t> triplet_row_index, triplet_column_index;
+    vector<unsigned int> triplet_row_index, triplet_column_index;
     vector<double> triplet_matrix_real, triplet_matrix_imag;
-    size_t n_row, n_column;
+    unsigned int n_row, n_column;
 
     int *compressed_column_starting_index, *compressed_row_index;
     double *compressed_matrix_real, *compressed_matrix_imag;

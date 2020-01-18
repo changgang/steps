@@ -9,38 +9,35 @@ using namespace std;
 
 VDCOL::VDCOL()
 {
-    vdcol_parameters = new vector< vector<double> >;
     clear();
 }
 
 
 VDCOL::VDCOL(const VDCOL& limiter)
 {
-    vdcol_parameters = new vector< vector<double> >;
     clear();
     copy_from_const_vdcol(limiter);
 }
 
 VDCOL::~VDCOL()
 {
-    delete vdcol_parameters;
 }
 
 
 double VDCOL::get_vdcol_voltage_of_last_point_in_kV() const
 {
-    size_t n = get_vdcol_point_count();
+    unsigned int n = get_vdcol_point_count();
     if(n>0)
-        return (*vdcol_parameters)[n-1][0];
+        return vdcol_parameters[n-1][0];
     else
         return 0.0;
 }
 
 double VDCOL::get_vdcol_current_of_last_point_in_kA() const
 {
-    size_t n = get_vdcol_point_count();
+    unsigned int n = get_vdcol_point_count();
     if(n>0)
-        return (*vdcol_parameters)[n-1][1];
+        return vdcol_parameters[n-1][1];
     else
         return 0.0;
 }
@@ -49,17 +46,21 @@ double VDCOL::get_vdcol_current_of_last_point_in_kA() const
 void VDCOL::append_vdcol_point_in_kV_kA(double V_in_kV, double I_in_kA)
 {
     ostringstream osstream;
-    size_t n = get_vdcol_point_count();
+    unsigned int n = get_vdcol_point_count();
+    if(n==STEPS_MAX_VDCOL_TABLE_SIZE)
+    {
+        osstream<<"Warning. VDCOL table is full ("<<n<<"). No more record will be appended.";
+        show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        return;
+    }
     if(n == 0)
     {
-        vector<double> point;
-        point.push_back(V_in_kV);
-        point.push_back(I_in_kA);
-        vdcol_parameters->push_back(point);
+        vdcol_parameters[n][0] = V_in_kV;
+        vdcol_parameters[n][1] = I_in_kA;
     }
     else
     {
-        for(size_t i=0; i!=n; ++i)
+        for(unsigned int i=0; i!=n; ++i)
         {
             if(V_in_kV==get_vdcol_voltage_of_point_in_kV(i))
             {
@@ -69,73 +70,67 @@ void VDCOL::append_vdcol_point_in_kV_kA(double V_in_kV, double I_in_kA)
             }
         }
 
-        if(V_in_kV>get_vdcol_voltage_of_last_point_in_kV())
+        vdcol_parameters[n][0] = V_in_kV;
+        vdcol_parameters[n][1] = I_in_kA;
+
+        ++n;
+        for(unsigned int i=0; i<n-1; ++i)
         {
-            vector<double> point;
-            point.push_back(V_in_kV);
-            point.push_back(I_in_kA);
-            vdcol_parameters->push_back(point);
-        }
-        else
-        {
-            size_t index = n;
-            for(size_t i=0; i!=n; ++i)
+            bool swapped = false;
+            for(unsigned int j=0; j<n-1; ++j)
             {
-                if(get_vdcol_voltage_of_point_in_kV(i)>V_in_kV)
+                if(vdcol_parameters[j][0]>vdcol_parameters[j+1][0])
                 {
-                    index = i;
-                    break;
+                    double vtemp = vdcol_parameters[j][0];
+                    double itemp = vdcol_parameters[j][1];
+
+                    vdcol_parameters[j][0] = vdcol_parameters[j+1][0];
+                    vdcol_parameters[j][1] = vdcol_parameters[j+1][1];
+                    vdcol_parameters[j+1][0] = vtemp;
+                    vdcol_parameters[j+1][1] = itemp;
+                    swapped = true;
                 }
             }
-            vector< vector<double> > temp;
-            for(size_t i=0; i!=index; ++i)
-            {
-                vector<double> point;
-                point.push_back(get_vdcol_voltage_of_point_in_kV(i));
-                point.push_back(get_vdcol_current_of_point_in_kA(i));
-                temp.push_back(point);
-            }
-            vector<double> point;
-            point.push_back(V_in_kV);
-            point.push_back(I_in_kA);
-            temp.push_back(point);
-            for(size_t i=index; i!=n; ++i)
-            {
-                vector<double> point;
-                point.push_back(get_vdcol_voltage_of_point_in_kV(i));
-                point.push_back(get_vdcol_current_of_point_in_kA(i));
-                temp.push_back(point);
-            }
-            (*vdcol_parameters) = temp;
+            if(swapped==false)
+                break;
         }
     }
 }
 
-size_t VDCOL::get_vdcol_point_count() const
+unsigned int VDCOL::get_vdcol_point_count() const
 {
-    return vdcol_parameters->size();
+    unsigned int n = 0;
+    for(unsigned int i=0; i<STEPS_MAX_VDCOL_TABLE_SIZE; ++i)
+    {
+        if(vdcol_parameters[i][0]==0.0)
+        {
+            n = i;
+            break;
+        }
+    }
+    return n;
 }
 
-double VDCOL::get_vdcol_voltage_of_point_in_kV(size_t index) const
+double VDCOL::get_vdcol_voltage_of_point_in_kV(unsigned int index) const
 {
     if(index>=get_vdcol_point_count())
         return get_vdcol_voltage_of_last_point_in_kV();
     else
-        return (*vdcol_parameters)[index][0];
+        return vdcol_parameters[index][0];
 }
 
-double VDCOL::get_vdcol_current_of_point_in_kA(size_t index) const
+double VDCOL::get_vdcol_current_of_point_in_kA(unsigned int index) const
 {
     if(index>=get_vdcol_point_count())
         return get_vdcol_current_of_last_point_in_kA();
     else
-        return (*vdcol_parameters)[index][1];
+        return vdcol_parameters[index][1];
 }
 
 double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_in_kV(double Vdci_in_kV) const
 {
     ostringstream osstream;
-    size_t n = get_vdcol_point_count();
+    unsigned int n = get_vdcol_point_count();
     if(n==0)
         return INFINITE_THRESHOLD;
 
@@ -145,8 +140,8 @@ double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_i
     if(Vdci_in_kV<=get_vdcol_voltage_of_point_in_kV(0))
         return get_vdcol_current_of_point_in_kA(0);
 
-    size_t n_minus_1 = n-1;
-    for(size_t i=0; i!=n_minus_1; ++i)
+    unsigned int n_minus_1 = n-1;
+    for(unsigned int i=0; i!=n_minus_1; ++i)
     {
         double V_i = get_vdcol_voltage_of_point_in_kV(i);
         double V_i_1 = get_vdcol_voltage_of_point_in_kV(i+1);
@@ -159,7 +154,7 @@ double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_i
         }
     }
     osstream<<"This warning information should never be displayed. Otherwise, the following VDCOL in invalid:"<<endl;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         osstream<<"Point "<<i<<": "<<get_vdcol_voltage_of_point_in_kV(i)<<" kV, "<<get_vdcol_current_of_point_in_kA(i)<<" kA"<<endl;
     show_information_with_leading_time_stamp_with_default_toolkit(osstream);
 
@@ -168,7 +163,11 @@ double VDCOL::get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_i
 
 void VDCOL::clear()
 {
-    vdcol_parameters->clear();
+    for(unsigned int i=0; i<STEPS_MAX_VDCOL_TABLE_SIZE; ++i)
+    {
+        vdcol_parameters[i][0] = 0.0;
+        vdcol_parameters[i][1] = 0.0;
+    }
 }
 
 bool VDCOL::is_valid() const
@@ -196,8 +195,8 @@ VDCOL& VDCOL::operator=(const VDCOL& limiter)
 void VDCOL::copy_from_const_vdcol(const VDCOL& limiter)
 {
     clear();
-    size_t n = limiter.get_vdcol_point_count();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = limiter.get_vdcol_point_count();
+    for(unsigned int i=0; i!=n; ++i)
     {
         double V = limiter.get_vdcol_voltage_of_point_in_kV(i);
         double I = limiter.get_vdcol_current_of_point_in_kA(i);

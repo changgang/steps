@@ -28,7 +28,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
         void load_powerflow_data_into_ram(string file);
         vector<vector<vector<string> > > convert_psse_raw_data2steps_vector() const;
 
-        vector<vector<string> > convert_i_th_type_data2steps_vector(size_t i) const;
+        vector<vector<string> > convert_i_th_type_data2steps_vector(unsigned int i) const;
         vector<vector<string> > convert_case_data2steps_vector() const;
         vector<vector<string> > convert_bus_data2steps_vector() const;
         vector<vector<string> > convert_load_data2steps_vector() const;
@@ -98,7 +98,7 @@ class PSSE_IMEXPORTER : public DATA_IMEXPORTER
 
         void load_all_models();
 
-        size_t data_version;
+        unsigned int data_version;
         vector< vector<string> > raw_data_in_ram;
         vector<string> dyr_data_in_ram;
 };

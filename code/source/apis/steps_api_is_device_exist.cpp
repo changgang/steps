@@ -3,14 +3,14 @@
 #include "header/steps_namespace.h"
 
 
-bool api_is_bus_exist(size_t bus, size_t toolkit_index)
+bool api_is_bus_exist(unsigned int bus, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     return psdb.is_bus_exist(bus);
 }
 
-bool api_is_generator_exist(size_t bus, char* ickt, size_t toolkit_index)
+bool api_is_generator_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -18,7 +18,7 @@ bool api_is_generator_exist(size_t bus, char* ickt, size_t toolkit_index)
     return psdb.is_generator_exist(did);
 }
 
-bool api_is_wt_generator_exist(size_t bus, char* ickt, size_t toolkit_index)
+bool api_is_wt_generator_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -26,7 +26,7 @@ bool api_is_wt_generator_exist(size_t bus, char* ickt, size_t toolkit_index)
     return psdb.is_wt_generator_exist(did);
 }
 
-bool api_is_pv_unit_exist(size_t bus, char* ickt, size_t toolkit_index)
+bool api_is_pv_unit_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -34,7 +34,7 @@ bool api_is_pv_unit_exist(size_t bus, char* ickt, size_t toolkit_index)
     return psdb.is_pv_unit_exist(did);
 }
 
-bool api_is_load_exist(size_t bus, char* ickt, size_t toolkit_index)
+bool api_is_load_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -42,7 +42,7 @@ bool api_is_load_exist(size_t bus, char* ickt, size_t toolkit_index)
     return psdb.is_load_exist(did);
 }
 
-bool api_is_fixed_shunt_exist(size_t bus, char* ickt, size_t toolkit_index)
+bool api_is_fixed_shunt_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -50,7 +50,7 @@ bool api_is_fixed_shunt_exist(size_t bus, char* ickt, size_t toolkit_index)
     return psdb.is_fixed_shunt_exist(did);
 }
 
-bool api_is_line_exist(size_t ibus, size_t jbus, char* ickt, size_t toolkit_index)
+bool api_is_line_exist(unsigned int ibus, unsigned int jbus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -58,7 +58,7 @@ bool api_is_line_exist(size_t ibus, size_t jbus, char* ickt, size_t toolkit_inde
     return psdb.is_line_exist(did);
 }
 
-bool api_is_transformer_exist(size_t ibus, size_t jbus, size_t kbus, char* ickt, size_t toolkit_index)
+bool api_is_transformer_exist(unsigned int ibus, unsigned int jbus, unsigned int kbus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -66,7 +66,7 @@ bool api_is_transformer_exist(size_t ibus, size_t jbus, size_t kbus, char* ickt,
     return psdb.is_transformer_exist(did);
 }
 
-bool api_is_hvdc_exist(size_t ibus, size_t jbus, char* ickt, size_t toolkit_index)
+bool api_is_hvdc_exist(unsigned int ibus, unsigned int jbus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -74,7 +74,7 @@ bool api_is_hvdc_exist(size_t ibus, size_t jbus, char* ickt, size_t toolkit_inde
     return psdb.is_hvdc_exist(did);
 }
 
-bool api_is_equivalent_device_exist(size_t bus, char* ickt, size_t toolkit_index)
+bool api_is_equivalent_device_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -82,7 +82,7 @@ bool api_is_equivalent_device_exist(size_t bus, char* ickt, size_t toolkit_index
     return psdb.is_equivalent_device_exist(did);
 }
 
-bool api_is_energy_storage_exist(size_t bus, char* ickt, size_t toolkit_index)
+bool api_is_energy_storage_exist(unsigned int bus, char* ickt, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

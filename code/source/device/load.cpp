@@ -21,7 +21,7 @@ LOAD::~LOAD()
 {
 }
 
-void LOAD::set_load_bus(size_t load_bus)
+void LOAD::set_load_bus(unsigned int load_bus)
 {
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
@@ -77,17 +77,17 @@ void LOAD::set_nominal_constant_impedance_load_in_MVA(const complex<double>& s)
     s_constant_impedance_in_MVA = s;
 }
 
-void LOAD::set_area_number(size_t num)
+void LOAD::set_area_number(unsigned int num)
 {
     area_number = num;
 }
 
-void LOAD::set_zone_number(size_t num)
+void LOAD::set_zone_number(unsigned int num)
 {
     zone_number = num;
 }
 
-void LOAD::set_owner_number(size_t num)
+void LOAD::set_owner_number(unsigned int num)
 {
     owner_number = num;
 }
@@ -102,7 +102,7 @@ void LOAD::set_load_manually_scale_factor_in_pu(double scale)
     manually_scale_in_pu = scale;
 }
 
-size_t LOAD::get_load_bus() const
+unsigned int LOAD::get_load_bus() const
 {
     return bus;
 }
@@ -137,17 +137,17 @@ complex<double> LOAD::get_nominal_constant_impedance_load_in_MVA() const
     return s_constant_impedance_in_MVA;
 }
 
-size_t LOAD::get_area_number() const
+unsigned int LOAD::get_area_number() const
 {
     return area_number;
 }
 
-size_t LOAD::get_zone_number() const
+unsigned int LOAD::get_zone_number() const
 {
     return zone_number;
 }
 
-size_t LOAD::get_owner_number() const
+unsigned int LOAD::get_owner_number() const
 {
     return owner_number;
 }
@@ -190,18 +190,18 @@ void LOAD::clear()
     load_frequency_relay_model = NULL;
 }
 
-bool LOAD::is_connected_to_bus(size_t target_bus) const
+bool LOAD::is_connected_to_bus(unsigned int target_bus) const
 {
     if(target_bus==get_load_bus()) return true;
     else return false;
 }
 
-bool LOAD::is_in_area(size_t area) const
+bool LOAD::is_in_area(unsigned int area) const
 {
     return get_area_number()==area;
 }
 
-bool LOAD::is_in_zone(size_t zone) const
+bool LOAD::is_in_zone(unsigned int zone) const
 {
     return get_zone_number()==zone;
 }

@@ -35,8 +35,8 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
         double get_terminal_bus_frequency_in_pu() const;
         double get_terminal_bus_frequency_deviation_in_pu() const;
         // reference
-        void set_bus_to_regulate(size_t bus);
-        size_t get_bus_to_regulate()  const;
+        void set_bus_to_regulate(unsigned int bus);
+        unsigned int get_bus_to_regulate()  const;
 
         void set_voltage_reference_in_pu(double vref);
         void set_voltage_reference_in_pu_with_bus_to_regulate();
@@ -85,7 +85,7 @@ class PV_ELECTRICAL_MODEL : public PVU_MODEL
         virtual string get_dynamic_data_in_bpa_format() const = 0;
         virtual string get_dynamic_data_in_steps_format() const = 0;
     private:
-        size_t bus_to_regulate;
+        unsigned int bus_to_regulate;
         double voltage_reference_in_pu;
         double frequency_reference_in_pu;
         double active_power_reference_in_pu;

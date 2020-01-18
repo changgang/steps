@@ -12,10 +12,10 @@ class ZONE : public BASE
         ZONE();
         virtual ~ZONE();
 
-        void set_zone_number(size_t zone_number);
+        void set_zone_number(unsigned int zone_number);
         void set_zone_name(string zone_name);
 
-        size_t get_zone_number() const;
+        unsigned int get_zone_number() const;
         string get_zone_name() const;
 
         virtual bool is_valid() const;
@@ -25,7 +25,7 @@ class ZONE : public BASE
         virtual ZONE& operator=(const ZONE& zone);
     private:
 
-        size_t zone_number;
+        unsigned int zone_number;
         string zone_name;
 };
 #endif // ZONE_H

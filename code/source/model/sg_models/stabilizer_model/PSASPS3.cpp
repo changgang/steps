@@ -25,7 +25,7 @@ void PSASPS3::copy_from_const_model(const PSASPS3& model)
     //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
-    for(size_t i=0; i!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
     {
         if(model.is_slot_valid(i))
         {
@@ -267,7 +267,7 @@ bool PSASPS3::setup_model_with_steps_string_vector(vector<string>& data)
             int dedc1_flag;
             double macc, iacc, nacc, tacc, td, ti1, ti2, ti3, ti4, k0, k1, k2, k3, k4, kp, vsmax, vsmin;
 
-            size_t i=3;
+            unsigned int i=3;
             macc = get_double_data(data[i],"0.0"); i++;
             iacc = get_double_data(data[i],"0.0"); i++;
             nacc = get_double_data(data[i],"0.0"); i++;
@@ -361,8 +361,6 @@ void PSASPS3::initialize()
                 exciter->initialize();
 
             setup_block_toolkit_and_parameters();
-
-            size_t bus = generator->get_generator_bus();
 
             SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
             if(signal.is_valid())
@@ -540,7 +538,7 @@ string PSASPS3::get_standard_psse_string() const
     double Macc = get_Macc();
     double Iacc = get_Iacc();
     double Nacc = get_Nacc();
-    size_t flag = (get_dedc_1_flag()==true?1:0);
+    unsigned int flag = (get_dedc_1_flag()==true?1:0);
     double Tacc = get_Tacc_in_s();
     double TD = get_TD_in_s();
     double Ti1 = get_Ti1_in_s();
@@ -557,7 +555,7 @@ string PSASPS3::get_standard_psse_string() const
     double Vsmin = get_Vsmin();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -592,7 +590,7 @@ string PSASPS3::get_standard_psse_string() const
 void PSASPS3::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("MACC", i); i++;
     add_model_data_name_and_index_pair("IACC", i); i++;
     add_model_data_name_and_index_pair("NACC", i); i++;
@@ -702,7 +700,7 @@ void PSASPS3::set_model_data_with_name(string par_name, double value)
 void PSASPS3::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 3", i); i++;

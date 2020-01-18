@@ -5,7 +5,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
+int api_get_line_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
@@ -39,7 +39,7 @@ int api_get_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
     }
 }
 
-void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, int value, size_t toolkit_index)
+void api_set_line_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
@@ -68,7 +68,7 @@ void api_set_line_integer_data(size_t ibus, size_t jbus, char* identifier, char*
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
+double api_get_line_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
@@ -167,7 +167,7 @@ double api_get_line_float_data(size_t ibus, size_t jbus, char* identifier, char*
     }
 }
 
-void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, double value, size_t toolkit_index)
+void api_set_line_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
@@ -307,14 +307,14 @@ void api_set_line_float_data(size_t ibus, size_t jbus, char* identifier, char* p
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
+const char* api_get_line_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     LINE* lineptr = psdb.get_line(did);
     if(lineptr!=NULL)
@@ -322,7 +322,7 @@ const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier,
         string PARAMETER_NAME = string2upper(parameter_name);
 		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
 		{
-			snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (lineptr->get_identifier()).c_str());
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (lineptr->get_identifier()).c_str());
 			return toolkit.steps_char_buffer;
 		}
 
@@ -336,7 +336,7 @@ const char* api_get_line_string_data(size_t ibus, size_t jbus, char* identifier,
     }
 }
 
-void api_set_line_string_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, char* value, size_t toolkit_index)
+void api_set_line_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
@@ -356,7 +356,7 @@ void api_set_line_string_data(size_t ibus, size_t jbus, char* identifier, char* 
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-bool api_get_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, size_t toolkit_index)
+bool api_get_line_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);
@@ -384,7 +384,7 @@ bool api_get_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char*
     }
 }
 
-void api_set_line_boolean_data(size_t ibus, size_t jbus, char* identifier, char* parameter_name, bool value, size_t toolkit_index)
+void api_set_line_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_line_device_id(ibus, jbus, identifier);

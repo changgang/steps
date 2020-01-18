@@ -223,7 +223,7 @@ void NETWORK_MATRIX::build_network_Z_matrix_from_this_Y_matrix()
         I[j]=1.0;
         vector<double> U = I/this_jacobian;
         int k_start = this_Z_matrix_pointer->get_starting_index_of_column(j);
-        for(size_t i=0; i<n; ++i)
+        for(int i=0; i<n; ++i)
         {
             complex<double> z(U[i], U[i+n]);
             if(z!=0.0)
@@ -278,13 +278,13 @@ STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Z_matrix()
     return network_Z0_matrix;
 }
 
-complex<double> NETWORK_MATRIX::get_positive_sequence_self_admittance_of_physical_bus(size_t bus)
+complex<double> NETWORK_MATRIX::get_positive_sequence_self_admittance_of_physical_bus(unsigned int bus)
 {
     int b = get_internal_bus_number_of_physical_bus(bus);
     return network_Y_matrix.get_entry_value(b, b);
 }
 
-complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus)
+complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_admittance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     int ib = get_internal_bus_number_of_physical_bus(ibus);
     int jb = get_internal_bus_number_of_physical_bus(jbus);
@@ -335,7 +335,7 @@ void NETWORK_MATRIX::build_this_jacobian_for_getting_impedance_from_this_Y_matri
     this_jacobian.LU_factorization(1, 1e-13);
 }
 
-vector<double> NETWORK_MATRIX::get_impedance_of_column_from_this_Y_matrix(size_t col)
+vector<double> NETWORK_MATRIX::get_impedance_of_column_from_this_Y_matrix(unsigned int col)
 {
     build_this_jacobian_for_getting_impedance_from_this_Y_matrix();
 
@@ -350,7 +350,7 @@ vector<double> NETWORK_MATRIX::get_impedance_of_column_from_this_Y_matrix(size_t
     return Z;
 }
 
-complex<double> NETWORK_MATRIX::get_self_impedance_of_physical_bus_from_this_Y_matrix(size_t bus)
+complex<double> NETWORK_MATRIX::get_self_impedance_of_physical_bus_from_this_Y_matrix(unsigned int bus)
 {
     int bus_number = get_internal_bus_number_of_physical_bus(bus);
 
@@ -360,7 +360,7 @@ complex<double> NETWORK_MATRIX::get_self_impedance_of_physical_bus_from_this_Y_m
     return z;
 }
 
-complex<double> NETWORK_MATRIX::get_self_impedance_between_physical_bus_from_this_Y_matrix(size_t ibus, size_t jbus)
+complex<double> NETWORK_MATRIX::get_self_impedance_between_physical_bus_from_this_Y_matrix(unsigned int ibus, unsigned int jbus)
 {
     int ibus_number = get_internal_bus_number_of_physical_bus(ibus);
     int jbus_number = get_internal_bus_number_of_physical_bus(jbus);
@@ -371,51 +371,51 @@ complex<double> NETWORK_MATRIX::get_self_impedance_between_physical_bus_from_thi
     return z;
 }
 
-complex<double> NETWORK_MATRIX::get_positive_sequence_self_impedance_of_physical_bus(size_t bus)
+complex<double> NETWORK_MATRIX::get_positive_sequence_self_impedance_of_physical_bus(unsigned int bus)
 {
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
     return get_self_impedance_of_physical_bus_from_this_Y_matrix(bus);
 }
 
-complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus)
+complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
     return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
 }
 
 
-complex<double> NETWORK_MATRIX::get_negative_sequence_self_admittance_of_physical_bus(size_t bus)
+complex<double> NETWORK_MATRIX::get_negative_sequence_self_admittance_of_physical_bus(unsigned int bus)
 {
     int b = get_internal_bus_number_of_physical_bus(bus);
     return network_Y2_matrix.get_entry_value(b, b);
 }
 
-complex<double> NETWORK_MATRIX::get_negative_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus)
+complex<double> NETWORK_MATRIX::get_negative_sequence_mutual_admittance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     int ib = get_internal_bus_number_of_physical_bus(ibus);
     int jb = get_internal_bus_number_of_physical_bus(jbus);
     return network_Y2_matrix.get_entry_value(ib, jb);
 }
 
-complex<double> NETWORK_MATRIX::get_negative_sequence_self_impedance_of_physical_bus(size_t bus)
+complex<double> NETWORK_MATRIX::get_negative_sequence_self_impedance_of_physical_bus(unsigned int bus)
 {
     set_this_Y_and_Z_matrix_as(network_Y2_matrix);
     return get_self_impedance_of_physical_bus_from_this_Y_matrix(bus);
 }
 
-complex<double> NETWORK_MATRIX::get_negative_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus)
+complex<double> NETWORK_MATRIX::get_negative_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     set_this_Y_and_Z_matrix_as(network_Y2_matrix);
     return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
 }
 
-complex<double> NETWORK_MATRIX::get_zero_sequence_self_admittance_of_physical_bus(size_t bus)
+complex<double> NETWORK_MATRIX::get_zero_sequence_self_admittance_of_physical_bus(unsigned int bus)
 {
     int b = get_internal_bus_number_of_physical_bus(bus);
     return network_Y0_matrix.get_entry_value(b, b);
 }
 
-complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_admittance_between_physical_bus(size_t ibus, size_t jbus)
+complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_admittance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     set_this_Y_and_Z_matrix_as(network_Y0_matrix);
 
@@ -424,13 +424,13 @@ complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_admittance_between_phys
     return network_Y0_matrix.get_entry_value(ib, jb);
 }
 
-complex<double> NETWORK_MATRIX::get_zero_sequence_self_impedance_of_physical_bus(size_t bus)
+complex<double> NETWORK_MATRIX::get_zero_sequence_self_impedance_of_physical_bus(unsigned int bus)
 {
     set_this_Y_and_Z_matrix_as(network_Y0_matrix);
     return get_self_impedance_of_physical_bus_from_this_Y_matrix(bus);
 }
 
-complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_impedance_between_physical_bus(size_t ibus, size_t jbus)
+complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     set_this_Y_and_Z_matrix_as(network_Y0_matrix);
     return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
@@ -442,9 +442,9 @@ void NETWORK_MATRIX::add_lines_to_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
-    size_t n = lines.size();
+    unsigned int n = lines.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
         add_line_to_network(*(lines[i]));
 }
 
@@ -459,11 +459,11 @@ void NETWORK_MATRIX::add_line_to_network(const LINE& line)
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t sending_bus = line.get_sending_side_bus();
-        size_t receiving_bus = line.get_receiving_side_bus();
+        unsigned int sending_bus = line.get_sending_side_bus();
+        unsigned int receiving_bus = line.get_receiving_side_bus();
 
-        size_t i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
-        size_t j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+        unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
 
         complex<double> Zline = line.get_line_positive_sequence_z_in_pu();
         complex<double> Yline = line.get_line_positive_sequence_y_in_pu();
@@ -509,9 +509,9 @@ void NETWORK_MATRIX::add_transformers_to_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
-    size_t n = transformers.size();
+    unsigned int n = transformers.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
         add_transformer_to_network(*(transformers[i]));
 }
 
@@ -533,11 +533,11 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network(const TRANSFORMER& t
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
-        size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
 
-        size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
-        size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
 
         complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
         complex<double> Ym = trans.get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
@@ -754,13 +754,13 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_network(const TRANSFORMER&
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
-        size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
-        size_t tertiary_bus = trans.get_winding_bus(TERTIARY_SIDE);
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+        unsigned int tertiary_bus = trans.get_winding_bus(TERTIARY_SIDE);
 
-        size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
-        size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
-        size_t t = inphno.get_internal_bus_number_of_physical_bus_number(tertiary_bus);
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+        unsigned int t = inphno.get_internal_bus_number_of_physical_bus_number(tertiary_bus);
 
         complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
         complex<double> Zst = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
@@ -1028,11 +1028,11 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_network_v2(const TRANSFORMER
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
-        size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
 
-        size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
-        size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
 
         complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
         complex<double> Ym = trans.get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
@@ -1127,9 +1127,9 @@ void NETWORK_MATRIX::add_fixed_shunts_to_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
 
-    size_t n = shunts.size();
+    unsigned int n = shunts.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
         add_fixed_shunt_to_network(*(shunts[i]));
 }
 
@@ -1143,9 +1143,9 @@ void NETWORK_MATRIX::add_fixed_shunt_to_network(const FIXED_SHUNT& shunt)
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t bus = shunt.get_shunt_bus();
+        unsigned int bus = shunt.get_shunt_bus();
 
-        size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
 
         complex<double> Yshunt = shunt.get_nominal_admittance_shunt_in_pu();
 
@@ -1159,9 +1159,9 @@ void NETWORK_MATRIX::add_lines_to_decoupled_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
-    size_t n = lines.size();
+    unsigned int n = lines.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
     {
         add_line_to_decoupled_network(*(lines[i]));
     }
@@ -1177,11 +1177,11 @@ void NETWORK_MATRIX::add_line_to_decoupled_network(const LINE& line)
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t sending_bus = line.get_sending_side_bus();
-        size_t receiving_bus = line.get_receiving_side_bus();
+        unsigned int sending_bus = line.get_sending_side_bus();
+        unsigned int receiving_bus = line.get_receiving_side_bus();
 
-        size_t i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
-        size_t j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+        unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
 
         complex<double> Zline = line.get_line_positive_sequence_z_in_pu();
         complex<double> Yline = line.get_line_positive_sequence_y_in_pu();
@@ -1256,9 +1256,9 @@ void NETWORK_MATRIX::add_transformers_to_decoupled_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
-    size_t n = transformers.size();
+    unsigned int n = transformers.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
     {
         add_transformer_to_decoupled_network(*(transformers[i]));
     }
@@ -1284,13 +1284,13 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_decoupled_network(const TR
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
-        size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
-        size_t tertiary_bus = trans.get_winding_bus(TERTIARY_SIDE);
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+        unsigned int tertiary_bus = trans.get_winding_bus(TERTIARY_SIDE);
 
-        size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
-        size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
-        size_t t = inphno.get_internal_bus_number_of_physical_bus_number(tertiary_bus);
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+        unsigned int t = inphno.get_internal_bus_number_of_physical_bus_number(tertiary_bus);
 
         complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
         complex<double> Zst = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
@@ -1846,11 +1846,11 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_decoupled_network_v2(const T
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
-        size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
 
-        size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
-        size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
 
         complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
         complex<double> Ym = trans.get_magnetizing_admittance_based_on_winding_norminal_voltage_and_system_base_power_in_pu();
@@ -2006,9 +2006,9 @@ void NETWORK_MATRIX::add_fixed_shunts_to_decoupled_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<FIXED_SHUNT*> shunts = psdb.get_all_fixed_shunts();
 
-    size_t n = shunts.size();
+    unsigned int n = shunts.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
         add_fixed_shunt_to_decoupled_network(*(shunts[i]));
 }
 
@@ -2023,9 +2023,9 @@ void NETWORK_MATRIX::add_fixed_shunt_to_decoupled_network(const FIXED_SHUNT& shu
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t bus = shunt.get_shunt_bus();
+        unsigned int bus = shunt.get_shunt_bus();
 
-        size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
 
         complex<double> Yshunt = shunt.get_nominal_admittance_shunt_in_pu();
 
@@ -2042,9 +2042,9 @@ void NETWORK_MATRIX::add_lines_to_dc_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
-    size_t n = lines.size();
+    unsigned int n = lines.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
         add_line_to_dc_network(*(lines[i]));
 }
 
@@ -2058,11 +2058,11 @@ void NETWORK_MATRIX::add_line_to_dc_network(const LINE& line)
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t sending_bus = line.get_sending_side_bus();
-        size_t receiving_bus = line.get_receiving_side_bus();
+        unsigned int sending_bus = line.get_sending_side_bus();
+        unsigned int receiving_bus = line.get_receiving_side_bus();
 
-        size_t i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
-        size_t j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+        unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
 
         complex<double> Zline = line.get_line_positive_sequence_z_in_pu();
         Zline = complex<double>(0.0, Zline.imag());
@@ -2085,9 +2085,9 @@ void NETWORK_MATRIX::add_transformers_to_dc_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<TRANSFORMER*> transformers = psdb.get_all_transformers();
 
-    size_t n = transformers.size();
+    unsigned int n = transformers.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
         add_transformer_to_dc_network(*(transformers[i]));
 }
 
@@ -2111,13 +2111,13 @@ void NETWORK_MATRIX::add_three_winding_transformer_to_dc_network(const TRANSFORM
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
-        size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
-        size_t tertiary_bus = trans.get_winding_bus(TERTIARY_SIDE);
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+        unsigned int tertiary_bus = trans.get_winding_bus(TERTIARY_SIDE);
 
-        size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
-        size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
-        size_t t = inphno.get_internal_bus_number_of_physical_bus_number(tertiary_bus);
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+        unsigned int t = inphno.get_internal_bus_number_of_physical_bus_number(tertiary_bus);
 
         complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
         complex<double> Zst = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(SECONDARY_SIDE, TERTIARY_SIDE);
@@ -2212,11 +2212,11 @@ void NETWORK_MATRIX::add_two_winding_transformer_to_dc_network(const TRANSFORMER
         toolkit.show_information_with_leading_time_stamp(osstream);
         */
 
-        size_t primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
-        size_t secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
+        unsigned int primary_bus = trans.get_winding_bus(PRIMARY_SIDE);
+        unsigned int secondary_bus = trans.get_winding_bus(SECONDARY_SIDE);
 
-        size_t p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
-        size_t s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
+        unsigned int p = inphno.get_internal_bus_number_of_physical_bus_number(primary_bus);
+        unsigned int s = inphno.get_internal_bus_number_of_physical_bus_number(secondary_bus);
 
         complex<double> Zps = trans.get_leakage_impedance_between_windings_based_on_system_base_power_in_pu(PRIMARY_SIDE, SECONDARY_SIDE);
 
@@ -2240,11 +2240,11 @@ void NETWORK_MATRIX::add_bus_fault_to_dynamic_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<BUS*> buses = psdb.get_all_buses();
 
-    size_t n = buses.size();
+    unsigned int n = buses.size();
 
     BUS* bus;
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
     {
         bus = buses[i];
         if(bus->get_bus_type()!=OUT_OF_SERVICE)
@@ -2255,7 +2255,7 @@ void NETWORK_MATRIX::add_bus_fault_to_dynamic_network()
             {
                 FAULT fault = bus->get_fault();
                 complex<double> y = fault.get_fault_shunt_in_pu();
-                size_t j = inphno.get_internal_bus_number_of_physical_bus_number(bus->get_bus_number());
+                unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(bus->get_bus_number());
                 this_Y_matrix_pointer->add_entry(j,j, y);
             }
         }
@@ -2269,9 +2269,9 @@ void NETWORK_MATRIX::add_lines_to_dynamic_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<LINE*> lines = psdb.get_all_lines();
 
-    size_t n = lines.size();
+    unsigned int n = lines.size();
 
-    for(size_t i = 0; i!=n; ++i)
+    for(unsigned int i = 0; i!=n; ++i)
     {
         if(not lines[i]->is_faulted())
            add_line_to_network(*(lines[i]));
@@ -2291,18 +2291,18 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
                           line.get_sending_side_bus(), line.get_receiving_side_bus());
             toolkit.show_information_with_leading_time_stamp(osstream);*/
 
-            size_t sending_bus = line.get_sending_side_bus();
-            size_t receiving_bus = line.get_receiving_side_bus();
+            unsigned int sending_bus = line.get_sending_side_bus();
+            unsigned int receiving_bus = line.get_receiving_side_bus();
 
-            size_t i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
-            size_t j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
+            unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(sending_bus);
+            unsigned int j = inphno.get_internal_bus_number_of_physical_bus_number(receiving_bus);
 
             complex<double> Zline = line.get_line_positive_sequence_z_in_pu();
             complex<double> Yline = line.get_line_positive_sequence_y_in_pu();
             complex<double> Yshunt_sending = line.get_shunt_positive_sequence_y_at_sending_side_in_pu();
             complex<double> Yshunt_receiving = line.get_shunt_positive_sequence_y_at_receiving_side_in_pu();
 
-            size_t nfault = line.get_fault_count();
+            unsigned int nfault = line.get_fault_count();
             // take care of fault at two ends
             FAULT fault = line.get_fault_at_location(line.get_sending_side_bus(), 0.0);
             Yshunt_sending += fault.get_fault_shunt_in_pu();
@@ -2313,9 +2313,9 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
             vector<SUBLINE> sublines;
 
             double starting_fault_location;
-            size_t n;
+            unsigned int n;
 
-            for(size_t k=0; k!=nfault; ++k)
+            for(unsigned int k=0; k!=nfault; ++k)
             {
                 double this_fault_location = line.get_fault_location_of_fault(k);
                 if(this_fault_location != 0.0 and this_fault_location != 1.0)
@@ -2367,7 +2367,7 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
                 this_Y_matrix_pointer->add_entry(i,i, I);
                 Y = Yshunt_sending;
                 I = I-V*Y;
-                for(size_t k=0; k!=n; ++k)
+                for(unsigned int k=0; k!=n; ++k)
                 {
                     double fault_location = sublines[k].to_loc;
                     line_length = sublines[k].to_loc - sublines[k].from_loc;
@@ -2391,7 +2391,7 @@ void NETWORK_MATRIX::add_faulted_line_to_dynamic_network(const LINE& line)
                 line_length = sublines[0].to_loc - sublines[0].from_loc;
                 y = Yline*line_length; z = Zline*line_length;
                 Z = z; Y = 1.0/Z+y*0.5;
-                for(size_t k=1; k!=n; ++k)
+                for(unsigned int k=1; k!=n; ++k)
                 {
                     double fault_location = sublines[k].from_loc;
                     line_length = sublines[k].to_loc - sublines[k].from_loc;
@@ -2469,9 +2469,9 @@ void NETWORK_MATRIX::add_generators_to_dynamic_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<GENERATOR*> generators = psdb.get_all_generators();
 
-    size_t n= generators.size();
+    unsigned int n= generators.size();
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         add_generator_to_dynamic_network(*(generators[i]));
 }
 
@@ -2486,8 +2486,8 @@ void NETWORK_MATRIX::add_generator_to_dynamic_network(const GENERATOR& gen)
         double sbase = psdb.get_system_base_power_in_MVA();
         Z *= (one_over_mbase*sbase);
 
-        size_t bus = gen.get_generator_bus();
-        size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+        unsigned int bus = gen.get_generator_bus();
+        unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
         this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
     }
 }
@@ -2498,9 +2498,9 @@ void NETWORK_MATRIX::add_wt_generators_to_dynamic_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<WT_GENERATOR*> generators = psdb.get_all_wt_generators();
 
-    size_t n= generators.size();
+    unsigned int n= generators.size();
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
         add_wt_generator_to_dynamic_network(*(generators[i]));
 }
 
@@ -2520,8 +2520,8 @@ void NETWORK_MATRIX::add_wt_generator_to_dynamic_network(WT_GENERATOR& gen)
                 double sbase = psdb.get_system_base_power_in_MVA();
                 Z *= (one_over_mbase*sbase);
 
-                size_t bus = gen.get_generator_bus();
-                size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+                unsigned int bus = gen.get_generator_bus();
+                unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
                 this_Y_matrix_pointer->add_entry(i,i,1.0/Z);
             }
             //else // is current source
@@ -2545,9 +2545,9 @@ void NETWORK_MATRIX::add_motor_loads_to_dynamic_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     vector<LOAD*> loads = psdb.get_all_loads();
 
-    size_t n= loads.size();
+    unsigned int n= loads.size();
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         LOAD* load = loads[i];
         LOAD_MODEL* model = load->get_load_model();
@@ -2571,8 +2571,8 @@ void NETWORK_MATRIX::add_motor_load_to_dynamic_network(const LOAD& load)
             complex<double> y = ysource+yshunt;
             if(y!=0.0)
             {
-                size_t bus = load.get_load_bus();
-                size_t i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
+                unsigned int bus = load.get_load_bus();
+                unsigned int i = inphno.get_internal_bus_number_of_physical_bus_number(bus);
                 this_Y_matrix_pointer->add_entry(i,i,y);
             }
         }
@@ -2588,7 +2588,7 @@ void NETWORK_MATRIX::optimize_network_ordering()
     if(toolkit.is_optimize_network_enabled())
     {
         reorder_physical_internal_bus_pair();
-        /*for(size_t i=0; i<1; ++i)
+        /*for(unsigned int i=0; i<1; ++i)
         {
             reorder_physical_internal_bus_pair();
             build_network_Y_matrix();
@@ -2608,15 +2608,15 @@ void NETWORK_MATRIX::initialize_physical_internal_bus_pair()
     psdb.check_device_status_for_out_of_service_buses();
     vector<BUS*> buses = psdb.get_all_buses();
 
-    size_t nbus = buses.size();
+    unsigned int nbus = buses.size();
 
     if(nbus!=0)
     {
         inphno.clear();
 
-        size_t bus_number;
-        size_t internal_bus_number = 0;
-        for(size_t i=0; i!=nbus; ++i)
+        unsigned int bus_number;
+        unsigned int internal_bus_number = 0;
+        for(unsigned int i=0; i!=nbus; ++i)
         {
             if(buses[i]->get_bus_type()!=OUT_OF_SERVICE)
             {
@@ -2630,7 +2630,7 @@ void NETWORK_MATRIX::initialize_physical_internal_bus_pair()
 
 void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
 {
-    vector<size_t> permutation = network_Y_matrix.get_reorder_permutation();
+    vector<unsigned int> permutation = network_Y_matrix.get_reorder_permutation();
     inphno.update_with_new_internal_bus_permutation(permutation);
     ostringstream osstream;
     osstream<<"Network internal bus numbers are optimized.";
@@ -2643,11 +2643,11 @@ void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
     osstream<<"internal   physical   storage");
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    size_t bus, index, nbus;
+    unsigned int bus, index, nbus;
 
     nbus = get_in_service_bus_count();
 
-    for(size_t i=0; i!=nbus; ++i)
+    for(unsigned int i=0; i!=nbus; ++i)
     {
         bus = get_physical_bus_number_of_internal_bus(i);
         index = get_bus_index(bus);
@@ -2658,8 +2658,8 @@ void NETWORK_MATRIX::reorder_physical_internal_bus_pair()
     /*os<<"Permutation for reorder internal bus:");
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    size_t nperm = permutation.size();
-    for(size_t i=0; i!=nperm; ++i)
+    unsigned int nperm = permutation.size();
+    for(unsigned int i=0; i!=nperm; ++i)
     {
         osstream<<"%u ---> %u",i,permutation[i]);
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -2673,38 +2673,38 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-    vector< vector<size_t> > islands = get_islands_with_physical_bus_number();
+    vector< vector<unsigned int> > islands = get_islands_with_physical_bus_number();
 
-    size_t nislands = islands.size();
+    unsigned int nislands = islands.size();
 
     ostringstream osstream;
     osstream<<"There are "<<nislands<<" islands.";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    size_t physical_bus;
+    unsigned int physical_bus;
     bool there_is_slack_bus_in_island;
     BUS* bus;
-    for(size_t i=0; i!=nislands; ++i)
+    for(unsigned int i=0; i!=nislands; ++i)
     {
         osstream<<"Island "<<i<<":";
         toolkit.show_information_with_leading_time_stamp(osstream);
 
         osstream<<"Areas in island "<<i<<":\n";
-        size_t nbus = islands[i].size();
-        set<size_t> areas_in_island;
-        for(size_t j=0; j!=nbus; ++j)
+        unsigned int nbus = islands[i].size();
+        set<unsigned int> areas_in_island;
+        for(unsigned int j=0; j!=nbus; ++j)
         {
             physical_bus = islands[i][j];
             bus = psdb.get_bus(physical_bus);
-            size_t area = bus->get_area_number();
+            unsigned int area = bus->get_area_number();
             areas_in_island.insert(area);
         }
-        set<size_t>::iterator iter;
-        size_t area_count = 0;
+        set<unsigned int>::iterator iter;
+        unsigned int area_count = 0;
         for(iter = areas_in_island.begin() ; iter != areas_in_island.end() ; ++iter)
         {
             area_count++;
-            size_t area = *iter;
+            unsigned int area = *iter;
             osstream<<"("<<setw(3)<<area_count<<") "<<area<<" ["<<psdb.area_number2area_name(area)<<"]\n";
         }
         toolkit.show_information_with_leading_time_stamp(osstream);
@@ -2713,11 +2713,11 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
         osstream<<"Physical buses in island "<<i<<":";
         toolkit.show_information_with_leading_time_stamp(osstream);
         there_is_slack_bus_in_island = false;
-        for(size_t j=0; j!=nbus; ++j)
+        for(unsigned int j=0; j!=nbus; ++j)
         {
             physical_bus = islands[i][j];
             bus = psdb.get_bus(physical_bus);
-            size_t area = bus->get_area_number();
+            unsigned int area = bus->get_area_number();
             osstream<<physical_bus<<" ["<<bus->get_bus_name()<<"  "<<bus->get_base_voltage_in_kV()<<"kV] AREA "<<area<<"["<<psdb.area_number2area_name(area)<<"]";
             if(bus->get_bus_type()==SLACK_TYPE)
             {
@@ -2732,7 +2732,7 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
             toolkit.show_information_with_leading_time_stamp(osstream);
             if(remove_void_island==true)
             {
-                for(size_t j=0; j!=nbus; ++j)
+                for(unsigned int j=0; j!=nbus; ++j)
                 {
                     physical_bus = islands[i][j];
                     bus = psdb.get_bus(physical_bus);
@@ -2745,9 +2745,9 @@ void NETWORK_MATRIX::check_network_connectivity(bool remove_void_island)
     }
 }
 
-vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
+vector< vector<unsigned int> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
 {
-    vector< vector<size_t> > islands;
+    vector< vector<unsigned int> > islands;
 
     if(inphno.empty())
         initialize_physical_internal_bus_pair();
@@ -2758,14 +2758,14 @@ vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
     //build_network_Y_matrix();
     //network_Y_matrix.report_brief();
 
-    size_t nbus = psdb.get_in_service_bus_count();
+    unsigned int nbus = psdb.get_in_service_bus_count();
 
     vector<bool> bus_searched_flag;
     bus_searched_flag.reserve(nbus);
 
-    for(size_t i=0; i!=nbus; ++i)
+    for(unsigned int i=0; i!=nbus; ++i)
     {
-        size_t physical_bus = get_physical_bus_number_of_internal_bus(i);
+        unsigned int physical_bus = get_physical_bus_number_of_internal_bus(i);
         if(physical_bus!=INDEX_NOT_EXIST)
             bus_searched_flag.push_back(false);
         else
@@ -2775,9 +2775,9 @@ vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
     while(true)
     {
         bool new_island_found = false;
-        size_t first_bus_in_new_island;
+        unsigned int first_bus_in_new_island;
 
-        for(size_t i=0; i!=nbus; ++i)
+        for(unsigned int i=0; i!=nbus; ++i)
         {
             if(bus_searched_flag[i]==false)
             {
@@ -2788,15 +2788,15 @@ vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
         }
         if(new_island_found==true)
         {
-            vector<size_t> this_island;
+            vector<unsigned int> this_island;
             this_island.reserve(nbus);
 
             this_island.push_back(first_bus_in_new_island);
             bus_searched_flag[first_bus_in_new_island] = true;
 
             int searching_bus=0;
-            size_t nbus_in_island = this_island.size();
-            for(size_t i=0; i!=nbus_in_island; ++i)
+            unsigned int nbus_in_island = this_island.size();
+            for(unsigned int i=0; i!=nbus_in_island; ++i)
             {
                 searching_bus = this_island[i];
                 int k_start = network_Y_matrix.get_starting_index_of_column(searching_bus);
@@ -2825,15 +2825,15 @@ vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_internal_bus_number()
 }
 
 
-vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_physical_bus_number()
+vector< vector<unsigned int> > NETWORK_MATRIX::get_islands_with_physical_bus_number()
 {
-    vector< vector<size_t> > islands = get_islands_with_internal_bus_number();
+    vector< vector<unsigned int> > islands = get_islands_with_internal_bus_number();
 
-    size_t nislands = islands.size();
-    for(size_t i=0; i!= nislands; ++i)
+    unsigned int nislands = islands.size();
+    for(unsigned int i=0; i!= nislands; ++i)
     {
-        size_t nbus_in_island = islands[i].size();
-        for(size_t j=0; j!=nbus_in_island; ++j)
+        unsigned int nbus_in_island = islands[i].size();
+        for(unsigned int j=0; j!=nbus_in_island; ++j)
         {
             islands[i][j] = get_physical_bus_number_of_internal_bus(islands[i][j]);
         }
@@ -2842,12 +2842,12 @@ vector< vector<size_t> > NETWORK_MATRIX::get_islands_with_physical_bus_number()
     return islands;
 }
 
-size_t NETWORK_MATRIX::get_internal_bus_number_of_physical_bus(size_t bus) const
+unsigned int NETWORK_MATRIX::get_internal_bus_number_of_physical_bus(unsigned int bus) const
 {
     return inphno.get_internal_bus_number_of_physical_bus_number(bus);
 }
 
-size_t NETWORK_MATRIX::get_physical_bus_number_of_internal_bus(size_t bus) const
+unsigned int NETWORK_MATRIX::get_physical_bus_number_of_internal_bus(unsigned int bus) const
 {
     return inphno.get_physical_bus_number_of_internal_bus_number(bus);
 }
@@ -2875,13 +2875,13 @@ void NETWORK_MATRIX::report_decoupled_network_matrix() const
     osstream<<"row   [  bus  ]  column[  bus  ]     BP       BQ";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    size_t i, ibus, jbus;
-    size_t n = network_BP_matrix.get_matrix_size();
+    unsigned int i, ibus, jbus;
+    unsigned int n = network_BP_matrix.get_matrix_size();
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> y;
     double bp, bq;
-    for(size_t j=0; j!=n; ++j)
+    for(unsigned int j=0; j!=n; ++j)
     {
         k_ending = network_BP_matrix.get_starting_index_of_column(j+1);
         for(int k=k_starting; k!=k_ending; ++k)
@@ -2920,13 +2920,13 @@ void NETWORK_MATRIX::report_dc_network_matrix() const
     osstream<<"row   [  bus  ]  column[  bus  ]     B";
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    size_t i, ibus, jbus;
-    size_t n = network_DC_B_matrix.get_matrix_size();
+    unsigned int i, ibus, jbus;
+    unsigned int n = network_DC_B_matrix.get_matrix_size();
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> y;
     double b;
-    for(size_t j=0; j!=n; ++j)
+    for(unsigned int j=0; j!=n; ++j)
     {
         k_ending = network_DC_B_matrix.get_starting_index_of_column(j+1);
         for(int k=k_starting; k!=k_ending; ++k)
@@ -2971,12 +2971,12 @@ void NETWORK_MATRIX::report_network_matrix_common() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.show_information_with_leading_time_stamp(osstream);
 
-    size_t i, ibus, jbus;
-    size_t n = this_Y_matrix_pointer->get_matrix_size();
+    unsigned int i, ibus, jbus;
+    unsigned int n = this_Y_matrix_pointer->get_matrix_size();
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> y;
-    for(size_t j=0; j!=n; ++j)
+    for(unsigned int j=0; j!=n; ++j)
     {
         k_ending = this_Y_matrix_pointer->get_starting_index_of_column(j+1);
         for(int k=k_starting; k!=k_ending; ++k)
@@ -3032,13 +3032,13 @@ void NETWORK_MATRIX::save_decoupled_network_B_matrix_to_file(const string& filen
     {
         file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,BP,BQ"<<endl;
 
-        size_t i, ibus, jbus;
-        size_t n = network_BP_matrix.get_matrix_size();
+        unsigned int i, ibus, jbus;
+        unsigned int n = network_BP_matrix.get_matrix_size();
         int k_starting, k_ending;
         k_starting = 0;
         complex<double> yp, yq;
         char buffer[1000];
-        for(size_t j=0; j!=n; ++j)
+        for(unsigned int j=0; j!=n; ++j)
         {
             k_ending = network_BP_matrix.get_starting_index_of_column(j+1);
             for(int k=k_starting; k!=k_ending; ++k)
@@ -3049,7 +3049,7 @@ void NETWORK_MATRIX::save_decoupled_network_B_matrix_to_file(const string& filen
                 ibus = get_physical_bus_number_of_internal_bus(i);
                 jbus = get_physical_bus_number_of_internal_bus(j);
 
-                snprintf(buffer, 1000, "%lu,%lu,%lu,%lu,%.14f,%.14f",i, ibus, j, jbus, yp.imag(), yq.imag());
+                snprintf(buffer, 1000, "%u,%u,%u,%u,%.14f,%.14f",i, ibus, j, jbus, yp.imag(), yq.imag());
                 file<<buffer<<endl;
                 /*file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
                     <<setprecision(14)<<fixed<<yp.imag()<<","
@@ -3077,13 +3077,13 @@ void NETWORK_MATRIX::save_dc_network_B_matrix_to_file(const string& filename) co
     {
         file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,B"<<endl;
 
-        size_t i, ibus, jbus;
-        size_t n = network_DC_B_matrix.get_matrix_size();
+        unsigned int i, ibus, jbus;
+        unsigned int n = network_DC_B_matrix.get_matrix_size();
         int k_starting, k_ending;
         k_starting = 0;
         complex<double> y;
         char buffer[1000];
-        for(size_t j=0; j!=n; ++j)
+        for(unsigned int j=0; j!=n; ++j)
         {
             k_ending = network_DC_B_matrix.get_starting_index_of_column(j+1);
             for(int k=k_starting; k!=k_ending; ++k)
@@ -3093,7 +3093,7 @@ void NETWORK_MATRIX::save_dc_network_B_matrix_to_file(const string& filename) co
                 ibus = get_physical_bus_number_of_internal_bus(i);
                 jbus = get_physical_bus_number_of_internal_bus(j);
 
-                snprintf(buffer, 1000, "%lu,%lu,%lu,%lu,%.14f",i, ibus, j, jbus, y.imag());
+                snprintf(buffer, 1000, "%u,%u,%u,%u,%.14f",i, ibus, j, jbus, y.imag());
                 file<<buffer<<endl;
                 /*file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
                     <<setprecision(14)<<fixed<<y.imag()<<endl;*/
@@ -3135,13 +3135,13 @@ void NETWORK_MATRIX::save_network_matrix_common(ofstream& file) const
 {
     file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
 
-    size_t i, ibus, jbus;
-    size_t n = this_Y_matrix_pointer->get_matrix_size();
+    unsigned int i, ibus, jbus;
+    unsigned int n = this_Y_matrix_pointer->get_matrix_size();
     int k_starting, k_ending;
     k_starting = 0;
     complex<double> y;
     char buffer[1000];
-    for(size_t j=0; j!=n; ++j)
+    for(unsigned int j=0; j!=n; ++j)
     {
         k_ending = this_Y_matrix_pointer->get_starting_index_of_column(j+1);
         for(int k=k_starting; k!=k_ending; ++k)
@@ -3151,7 +3151,7 @@ void NETWORK_MATRIX::save_network_matrix_common(ofstream& file) const
             ibus = get_physical_bus_number_of_internal_bus(i);
             jbus = get_physical_bus_number_of_internal_bus(j);
 
-            snprintf(buffer, 1000, "%lu,%lu,%lu,%lu,%.14f,%.14f",i, ibus, j, jbus, y.real(), y.imag());
+            snprintf(buffer, 1000, "%u,%u,%u,%u,%.14f,%.14f",i, ibus, j, jbus, y.real(), y.imag());
             file<<buffer<<endl;
             /*file<<i<<","<<ibus<<","<<j<<","<<jbus<<","
                 <<setprecision(14)<<fixed<<y.real()<<","
@@ -3172,13 +3172,13 @@ void NETWORK_MATRIX::save_network_Z_matrix_to_file(const string& filename) const
     {
         file<<"ROW,ROW_BUS,COLUMN,COLUMN_BUS,REAL,IMAGINARY"<<endl;
 
-        size_t i, ibus, jbus;
-        size_t n = network_Z1_matrix.get_matrix_size();
+        unsigned int i, ibus, jbus;
+        unsigned int n = network_Z1_matrix.get_matrix_size();
         int k_starting, k_ending;
         k_starting = 0;
         complex<double> z;
         char buffer[1000];
-        for(size_t j=0; j!=n; ++j)
+        for(unsigned int j=0; j!=n; ++j)
         {
             k_ending = network_Z1_matrix.get_starting_index_of_column(j+1);
             for(int k=k_starting; k!=k_ending; ++k)
@@ -3190,7 +3190,7 @@ void NETWORK_MATRIX::save_network_Z_matrix_to_file(const string& filename) const
 
                 if(z.real()!=INFINITE_THRESHOLD and z.imag()!=INFINITE_THRESHOLD)
                 {
-                    snprintf(buffer, 1000, "%lu,%lu,%lu,%lu,%.14f,%.14f",i, ibus, j, jbus, z.real(), z.imag());
+                    snprintf(buffer, 1000, "%u,%u,%u,%u,%.14f,%.14f",i, ibus, j, jbus, z.real(), z.imag());
                     file<<buffer<<endl;
                 }
             }

@@ -372,7 +372,7 @@ bool IEEEG1SB::setup_model_with_steps_string_vector(vector<string>& data)
             double k, t1, t2, t3, uo, uc, pmax, pmin, t4, k1, k2, t5, k3, k4, t6, k5, k6, t7, k7, k8,
                    kp, ki, tfuel, tfd1, tfd2, cb, kb;
 
-            size_t i=5;
+            unsigned int i=5;
             k = get_double_data(data[i],"0.0"); i++;
             t1 = get_double_data(data[i],"0.0"); i++;
             t2 = get_double_data(data[i],"0.0"); i++;
@@ -678,7 +678,7 @@ string IEEEG1SB::get_standard_psse_string() const
 
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -724,7 +724,7 @@ string IEEEG1SB::get_standard_psse_string() const
 void IEEEG1SB::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("K", i); i++;
     add_model_data_name_and_index_pair("T1", i); i++;
     add_model_data_name_and_index_pair("T2", i); i++;
@@ -877,7 +877,7 @@ void IEEEG1SB::set_model_data_with_name(string par_name, double value)
 void IEEEG1SB::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@DROOP", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@SERVO MOTOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@DELAYER 1", i); i++;

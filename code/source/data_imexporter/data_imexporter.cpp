@@ -71,20 +71,20 @@ void DATA_IMEXPORTER::export_shadowed_bus_pair(string file) const
         toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
-    map<size_t, vector<size_t> > bus_pairs;
+    map<unsigned int, vector<unsigned int> > bus_pairs;
 
     bus_pairs.clear();
 
     vector<BUS*> buses = psdb.get_all_buses();
-    size_t n = buses.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = buses.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         BUS* bus = buses[i];
-        size_t bus_number = bus->get_bus_number();
-        size_t equiv_bus_number = bus->get_equivalent_bus_number();
+        unsigned int bus_number = bus->get_bus_number();
+        unsigned int equiv_bus_number = bus->get_equivalent_bus_number();
         if(equiv_bus_number!=0 and bus_number!=equiv_bus_number)
         {
-            map<size_t, vector<size_t> >::iterator iter = bus_pairs.begin();
+            map<unsigned int, vector<unsigned int> >::iterator iter = bus_pairs.begin();
             iter = bus_pairs.find(equiv_bus_number);
             if(iter!=bus_pairs.end())
             {
@@ -92,22 +92,22 @@ void DATA_IMEXPORTER::export_shadowed_bus_pair(string file) const
             }
             else
             {
-                vector<size_t> new_pair;
+                vector<unsigned int> new_pair;
                 new_pair.push_back(bus_number);
-                bus_pairs.insert(pair<size_t, vector<size_t> >(equiv_bus_number, new_pair));
+                bus_pairs.insert(pair<unsigned int, vector<unsigned int> >(equiv_bus_number, new_pair));
             }
         }
     }
-    for(map<size_t, vector<size_t> >::const_iterator iter = bus_pairs.begin(); iter!=bus_pairs.end(); ++iter)
+    for(map<unsigned int, vector<unsigned int> >::const_iterator iter = bus_pairs.begin(); iter!=bus_pairs.end(); ++iter)
     {
-        size_t equiv_bus_number = iter->first;
-        vector<size_t> bus_pair = iter->second;
-        size_t n = bus_pair.size();
+        unsigned int equiv_bus_number = iter->first;
+        vector<unsigned int> bus_pair = iter->second;
+        unsigned int n = bus_pair.size();
         if(n==0)
             continue;
         ostringstream oss;
         oss<<equiv_bus_number<<":";
-        for(size_t i=0; i!=(n-1); ++i)
+        for(unsigned int i=0; i!=(n-1); ++i)
             oss<<bus_pair[i]<<",";
         oss<<bus_pair[n-1]<<"\n";
         ofs<<oss.str();

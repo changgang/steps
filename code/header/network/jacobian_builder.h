@@ -24,22 +24,22 @@ class JACOBIAN_BUILDER : public BASE
         void build_seprate_jacobians();
         void update_seprate_jacobians();
 
-        double get_jacobian_delta_p_over_angle_of_internal_bus(size_t ibus, size_t jbus);
-        double get_jacobian_delta_p_over_voltage_of_internal_bus(size_t ibus, size_t jbus);
-        double get_jacobian_delta_q_over_angle_of_internal_bus(size_t ibus, size_t jbus);
-        double get_jacobian_delta_q_over_voltage_of_internal_bus(size_t ibus, size_t jbus);
+        double get_jacobian_delta_p_over_angle_of_internal_bus(unsigned int ibus, unsigned int jbus);
+        double get_jacobian_delta_p_over_voltage_of_internal_bus(unsigned int ibus, unsigned int jbus);
+        double get_jacobian_delta_q_over_angle_of_internal_bus(unsigned int ibus, unsigned int jbus);
+        double get_jacobian_delta_q_over_voltage_of_internal_bus(unsigned int ibus, unsigned int jbus);
 
-        double get_jacobian_delta_p_over_angle_of_physical_bus(size_t ibus, size_t jbus);
-        double get_jacobian_delta_p_over_voltage_of_physical_bus(size_t ibus, size_t jbus);
-        double get_jacobian_delta_q_over_angle_of_physical_bus(size_t ibus, size_t jbus);
-        double get_jacobian_delta_q_over_voltage_of_physical_bus(size_t ibus, size_t jbus);
+        double get_jacobian_delta_p_over_angle_of_physical_bus(unsigned int ibus, unsigned int jbus);
+        double get_jacobian_delta_p_over_voltage_of_physical_bus(unsigned int ibus, unsigned int jbus);
+        double get_jacobian_delta_q_over_angle_of_physical_bus(unsigned int ibus, unsigned int jbus);
+        double get_jacobian_delta_q_over_voltage_of_physical_bus(unsigned int ibus, unsigned int jbus);
 
-        STEPS_SPARSE_MATRIX get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(const vector<size_t>& internal_P_equation_buses,
-                                                                                    const vector<size_t>& internal_Q_equation_buses);
+        STEPS_SPARSE_MATRIX get_full_coupled_jacobian_with_P_and_Q_equation_internal_buses(const vector<unsigned int>& internal_P_equation_buses,
+                                                                                    const vector<unsigned int>& internal_Q_equation_buses);
 
-        STEPS_SPARSE_MATRIX get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<size_t>& internal_P_equation_buses);
+        STEPS_SPARSE_MATRIX get_decoupled_B_jacobian_with_P_equation_internal_buses(const vector<unsigned int>& internal_P_equation_buses);
 
-        STEPS_SPARSE_MATRIX get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<size_t>& internal_Q_equation_buses);
+        STEPS_SPARSE_MATRIX get_decoupled_B_jacobian_with_Q_equation_internal_buses(const vector<unsigned int>& internal_Q_equation_buses);
 
 
         void show_seprate_jacobians();

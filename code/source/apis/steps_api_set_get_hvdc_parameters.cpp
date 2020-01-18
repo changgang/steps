@@ -5,7 +5,7 @@
 #include "header/data_imexporter/psse_imexporter.h"
 #include "header/data_imexporter/bpa_imexporter.h"
 
-int api_get_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
+int api_get_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
@@ -69,7 +69,7 @@ int api_get_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char* 
     }
 }
 
-void api_set_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, int value, size_t toolkit_index)
+void api_set_hvdc_integer_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, int value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
@@ -98,7 +98,7 @@ void api_set_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char*
             }
 
             if(PARAMETER_NAME=="BUS_METER" or PARAMETER_NAME=="METER END BUS NUMBER")
-                return hvdcptr->set_meter_end((size_t(value)==hvdcptr->get_converter_bus(RECTIFIER)?RECTIFIER:INVERTER));
+                return hvdcptr->set_meter_end(((unsigned int)(value)==hvdcptr->get_converter_bus(RECTIFIER)?RECTIFIER:INVERTER));
 
             if(PARAMETER_NAME=="PSIDE" or PARAMETER_NAME=="SIDE TO HOLD POWER")
                 return hvdcptr->set_side_to_hold_power(value==0?RECTIFIER:INVERTER);
@@ -130,7 +130,7 @@ void api_set_hvdc_integer_data(size_t ibus, size_t jbus, char* identifier, char*
     }
 }
 
-double api_get_hvdc_float_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
+double api_get_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
@@ -291,7 +291,7 @@ double api_get_hvdc_float_data(size_t ibus, size_t jbus, char* identifier, char*
     }
 }
 
-void api_set_hvdc_float_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, double value, size_t toolkit_index)
+void api_set_hvdc_float_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, double value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
@@ -429,14 +429,14 @@ void api_set_hvdc_float_data(size_t ibus, size_t jbus, char* identifier, char* s
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
+const char* api_get_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
 
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
-	snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
+	snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", "");
 
     HVDC* hvdcptr = psdb.get_hvdc(did);
     if(hvdcptr!=NULL)
@@ -453,13 +453,13 @@ const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier,
 
 		if (PARAMETER_NAME == "ID" or PARAMETER_NAME == "IDENTIFIER")
 		{
-			snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (hvdcptr->get_identifier()).c_str());
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (hvdcptr->get_identifier()).c_str());
 			return toolkit.steps_char_buffer;
 		}
 
 		if (PARAMETER_NAME == "NAME")
 		{
-			snprintf(toolkit.steps_char_buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (hvdcptr->get_name()).c_str());
+			snprintf(toolkit.steps_char_buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s", (hvdcptr->get_name()).c_str());
 			return toolkit.steps_char_buffer;
 		}
 
@@ -473,7 +473,7 @@ const char* api_get_hvdc_string_data(size_t ibus, size_t jbus, char* identifier,
     }
 }
 
-void api_set_hvdc_string_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, char* value, size_t toolkit_index)
+void api_set_hvdc_string_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, char* value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
@@ -506,7 +506,7 @@ void api_set_hvdc_string_data(size_t ibus, size_t jbus, char* identifier, char* 
         show_device_not_exist_with_api(did, __FUNCTION__);
 }
 
-bool api_get_hvdc_boolean_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, size_t toolkit_index)
+bool api_get_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);
@@ -538,7 +538,7 @@ bool api_get_hvdc_boolean_data(size_t ibus, size_t jbus, char* identifier, char*
     }
 }
 
-void api_set_hvdc_boolean_data(size_t ibus, size_t jbus, char* identifier, char* side, char* parameter_name, bool value, size_t toolkit_index)
+void api_set_hvdc_boolean_data(unsigned int ibus, unsigned int jbus, char* identifier, char* side, char* parameter_name, bool value, unsigned int toolkit_index)
 {
     STEPS& toolkit = get_toolkit(toolkit_index);
     DEVICE_ID did = get_hvdc_device_id(ibus, jbus, identifier);

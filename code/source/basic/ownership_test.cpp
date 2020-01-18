@@ -193,7 +193,7 @@ void OWNERSHIP_TEST::test_get_all_owners()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"OWNERSHIP_TEST");
 
-    vector<size_t> owners;
+    vector<unsigned int> owners;
     owners = ownership.get_all_owners();
     TEST_ASSERT(owners.size()==0);
 
@@ -222,7 +222,7 @@ void OWNERSHIP_TEST::test_get_all_fraction()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"OWNERSHIP_TEST");
 
-    vector<size_t> owners;
+    vector<unsigned int> owners;
     vector<double> fraction;
 
     fraction = ownership.get_all_fraction();

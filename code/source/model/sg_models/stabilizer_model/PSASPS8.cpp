@@ -24,7 +24,7 @@ void PSASPS8::copy_from_const_model(const PSASPS8& model)
     //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
-    for(size_t i=0; i!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
     {
         if(model.is_slot_valid(i))
         {
@@ -174,7 +174,7 @@ bool PSASPS8::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double kqv, tqv, tq1, tq1p, tq2, tq2p, tq3, tq3p, vsmax, vsmin;
 
-            size_t i=3;
+            unsigned int i=3;
             kqv = get_double_data(data[i],"0.0"); i++;
             tqv= get_double_data(data[i],"0.0"); i++;
             tq1= get_double_data(data[i],"0.0"); i++;
@@ -250,7 +250,7 @@ void PSASPS8::initialize()
 
             setup_block_toolkit_and_parameters();
 
-            size_t bus = generator->get_generator_bus();
+            unsigned int bus = generator->get_generator_bus();
 
             DEVICE_ID bus_device;
             bus_device.set_device_type("BUS");
@@ -372,7 +372,7 @@ string PSASPS8::get_standard_psse_string() const
     double Vsmin = get_Vsmin();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -398,7 +398,7 @@ string PSASPS8::get_standard_psse_string() const
 void PSASPS8::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("KQV", i); i++;
     add_model_data_name_and_index_pair("TQV", i); i++;
     add_model_data_name_and_index_pair("TQ1", i); i++;
@@ -468,7 +468,7 @@ void PSASPS8::set_model_data_with_name(string par_name, double value)
 void PSASPS8::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@VOLTAGE SENSOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@PHASE TUNER 1", i); i++;

@@ -163,7 +163,7 @@ void EXCITER_MODEL_TEST::apply_voltage_drop_of_10_percent()
 void EXCITER_MODEL_TEST::run_step_response_of_exciter_model()
 {
     ostringstream osstream;
-    GENERATOR* genptr = get_test_generator();
+    //GENERATOR* genptr = get_test_generator();
     //genptr->clear_compensator_model();
 
     SYNC_GENERATOR_MODEL* genmodel = get_test_sync_generator_model();

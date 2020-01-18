@@ -23,7 +23,7 @@ GENERATOR::~GENERATOR()
 {
 }
 
-void GENERATOR::set_generator_bus(size_t bus)
+void GENERATOR::set_generator_bus(unsigned int bus)
 {
     set_source_bus(bus);
 }
@@ -33,7 +33,7 @@ void GENERATOR::set_generator_impedance_in_pu(const complex<double>& z_pu)
     set_source_impedance_in_pu(z_pu);
 }
 
-size_t GENERATOR::get_generator_bus() const
+unsigned int GENERATOR::get_generator_bus() const
 {
     return get_source_bus();
 }

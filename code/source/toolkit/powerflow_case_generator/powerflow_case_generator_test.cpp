@@ -124,11 +124,11 @@ void POWERFLOW_CASE_GENERATOR_TEST::test_generate_load_scale_randoms()
     generator->set_base_powerflow_data_filename("../../../bench/ieee9.raw");
 
     vector< vector<double> > cases = generator->generate_load_scale_randoms();
-    for(size_t i=0; i<cases.size(); ++i)
+    for(unsigned int i=0; i<cases.size(); ++i)
     {
         vector<double> rands = cases[i];
         osstream<<"randoms of case "<<i<<": ";
-        for(size_t j=0; j<rands.size(); ++j)
+        for(unsigned int j=0; j<rands.size(); ++j)
             osstream<<rands[j]<<", ";
         osstream<<endl;
     }

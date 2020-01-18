@@ -82,8 +82,8 @@ void BUS_INDEX_TEST::test_clear_index()
     bus_index.set_bus_with_index(1000, 23);
     bus_index.set_bus_with_index(100000000, 24);
     bus_index.clear();
-    size_t max_bus_number = bus_index.get_max_bus_number();
-    for(size_t i=1; i<=max_bus_number; ++i)
+    unsigned int max_bus_number = bus_index.get_max_bus_number();
+    for(unsigned int i=1; i<=max_bus_number; ++i)
         TEST_ASSERT(bus_index.get_index_of_bus(i)==INDEX_NOT_EXIST);
 }
 

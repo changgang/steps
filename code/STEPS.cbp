@@ -36,7 +36,6 @@
 				</Compiler>
 				<Linker>
 					<Add option="-O3" />
-					<Add option="-s" />
 					<Add option="-static-libstdc++" />
 					<Add option="-static-libgcc" />
 					<Add option="-static" />

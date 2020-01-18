@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "header/basic/base.h"
+#include "header/basic/constants.h"
 using namespace std;
 
 class VDCOL
@@ -16,9 +17,9 @@ class VDCOL
 
         void append_vdcol_point_in_kV_kA(double V_in_kV, double I_in_kA);
 
-        size_t get_vdcol_point_count() const;
-        double get_vdcol_voltage_of_point_in_kV(size_t index) const;
-        double get_vdcol_current_of_point_in_kA(size_t index) const;
+        unsigned int get_vdcol_point_count() const;
+        double get_vdcol_voltage_of_point_in_kV(unsigned int index) const;
+        double get_vdcol_current_of_point_in_kA(unsigned int index) const;
 
         double get_vocol_maximum_current_command_in_kA_with_inverter_dc_voltage_in_kV(double V_in_kV) const;
 
@@ -34,7 +35,7 @@ class VDCOL
         bool is_valid() const;
         void check();
 
-        vector< vector<double> > *vdcol_parameters;
+        double vdcol_parameters[STEPS_MAX_VDCOL_TABLE_SIZE][2];
 };
 
 #endif // VDCOL_H

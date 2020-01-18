@@ -189,10 +189,10 @@ bool LCFB1::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t frequency_flag, power_flag;
+            unsigned int frequency_flag, power_flag;
             double fb, tpelec, db, emax, kp, ki, irmax;
 
-            size_t i=3;
+            unsigned int i=3;
             frequency_flag = get_integer_data(data[i],"0"); i++;
             power_flag = get_integer_data(data[i],"0"); i++;
 
@@ -395,7 +395,7 @@ string LCFB1::get_standard_psse_string() const
     double irmax = get_Irmax();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -420,7 +420,7 @@ string LCFB1::get_standard_psse_string() const
 void LCFB1::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("F_FLAG", i); i++;
     add_model_data_name_and_index_pair("P_FLAG", i); i++;
     add_model_data_name_and_index_pair("FB", i); i++;
@@ -489,7 +489,7 @@ void LCFB1::set_model_data_with_name(string par_name, double value)
 void LCFB1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("PREF0", i); i++;
     add_model_inernal_variable_name_and_index_pair("PELEC0", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@POWER SENSOR", i); i++;

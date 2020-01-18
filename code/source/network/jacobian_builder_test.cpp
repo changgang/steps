@@ -84,7 +84,7 @@ void JACOBIAN_BUILDER_TEST::test_get_full_jacobian_for_coupled_P_and_Q_equations
 
     jacobian_builder.build_seprate_jacobians();
 
-    vector<size_t> internal_P_equation_buses, internal_Q_equation_buses;
+    vector<unsigned int> internal_P_equation_buses, internal_Q_equation_buses;
     internal_P_equation_buses.clear();
     internal_Q_equation_buses.clear();
     internal_P_equation_buses.push_back(0);
@@ -128,7 +128,7 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_P_equations()
 
     network_matrix.build_decoupled_network_B_matrix();
 
-    vector<size_t> internal_P_equation_buses;
+    vector<unsigned int> internal_P_equation_buses;
     internal_P_equation_buses.clear();
     internal_P_equation_buses.push_back(0);
     internal_P_equation_buses.push_back(1);
@@ -152,7 +152,7 @@ void JACOBIAN_BUILDER_TEST::test_get_decoupled_B_jacobian_for_Q_equations()
 
     network_matrix.build_decoupled_network_B_matrix();
 
-    vector<size_t> internal_Q_equation_buses;
+    vector<unsigned int> internal_Q_equation_buses;
     internal_Q_equation_buses.clear();
     internal_Q_equation_buses.push_back(0);
     internal_Q_equation_buses.push_back(1);

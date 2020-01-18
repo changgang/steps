@@ -83,7 +83,7 @@ void INPHNO_TEST::test_update_with_new_internal_bus_permutation()
     inphno.set_physical_internal_bus_number_pair(5,3);
     inphno.set_physical_internal_bus_number_pair(6,2);
 
-    vector<size_t> P;
+    vector<unsigned int> P;
     //bus old new
     // 1   0   0
     // 2   5   1
@@ -158,15 +158,15 @@ void INPHNO_TEST::test_clear()
 
     bool result;
 
-    size_t nmax = 1000;
-    size_t n = 1000;
+    unsigned int nmax = 1000;
+    unsigned int n = 1000;
 
-    for(size_t i=1; i<=nmax; ++i)
+    for(unsigned int i=1; i<=nmax; ++i)
     {
         result = (inphno.get_internal_bus_number_of_physical_bus_number(i) == INDEX_NOT_EXIST);
         TEST_ASSERT(result);
     }
-    for(size_t i=1; i<=n; ++i)
+    for(unsigned int i=1; i<=n; ++i)
     {
         result = (inphno.get_physical_bus_number_of_internal_bus_number(i-1) == INDEX_NOT_EXIST);
         TEST_ASSERT(result);

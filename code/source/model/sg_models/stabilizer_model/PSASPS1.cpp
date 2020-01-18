@@ -28,7 +28,7 @@ void PSASPS1::copy_from_const_model(const PSASPS1& model)
     //this->set_power_system_database(model.toolkit.get_power_system_database());
     //this->set_device_id(model.get_device_id());
 
-    for(size_t i=0; i!=MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
+    for(unsigned int i=0; i!=STEPS_MAX_STABILIZER_INPUT_SIGNAL_SLOT; ++i)
     {
         if(model.is_slot_valid(i))
         {
@@ -85,7 +85,7 @@ void PSASPS1::set_Kq3(double K)
     Kq3 = K;
 }
 
-void PSASPS1::set_K(size_t K)
+void PSASPS1::set_K(unsigned int K)
 {
     if(K==0)
         this->K = 0;
@@ -143,7 +143,7 @@ double PSASPS1::get_Kq3() const
     return Kq3;
 }
 
-size_t PSASPS1::get_K() const
+unsigned int PSASPS1::get_K() const
 {
     return K;
 }
@@ -191,10 +191,10 @@ bool PSASPS1::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t k;
+            unsigned int k;
             double kq1, kq2, kq3, tq, t1e, t2e, t3e, t4e, vsmax, vsmin;
 
-            size_t i=3;
+            unsigned int i=3;
             kq1 = get_double_data(data[i],"0.0"); i++;
             kq2 = get_double_data(data[i],"0.0"); i++;
             kq3 = get_double_data(data[i],"0.0"); i++;
@@ -273,7 +273,7 @@ void PSASPS1::initialize()
 
             setup_block_toolkit_and_parameters();
 
-            size_t bus = generator->get_generator_bus();
+            unsigned int bus = generator->get_generator_bus();
 
             SIGNAL signal = prepare_signal_with_signal_type_and_device_id(1, did);
             if(signal.is_valid())
@@ -417,7 +417,7 @@ string PSASPS1::get_standard_psse_string() const
     double Kq1 = get_Kq1();
     double Kq2 = get_Kq2();
     double Kq3 = get_Kq3();
-    size_t K = get_K();
+    unsigned int K = get_K();
     double Tq = get_Tq_in_s();
     double T1e = get_T1e_in_s();
     double T2e = get_T2e_in_s();
@@ -427,7 +427,7 @@ string PSASPS1::get_standard_psse_string() const
     double Vsmin = get_Vsmin();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -454,7 +454,7 @@ string PSASPS1::get_standard_psse_string() const
 void PSASPS1::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("KQ1", i); i++;
     add_model_data_name_and_index_pair("KQ2", i); i++;
     add_model_data_name_and_index_pair("KQ3", i); i++;
@@ -507,7 +507,7 @@ void PSASPS1::set_model_data_with_name(string par_name, double value)
     if(par_name=="KQ3")
         return set_Kq3(value);
     if(par_name=="K")
-        return set_K(size_t(value));
+        return set_K((unsigned int)(value));
     if(par_name=="TQ")
         return set_Tq_in_s(value);
     if(par_name=="T1E")
@@ -529,7 +529,7 @@ void PSASPS1::set_model_data_with_name(string par_name, double value)
 void PSASPS1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 1", i); i++;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 2", i); i++;
     add_model_inernal_variable_name_and_index_pair("SIGNAL@SLOT 3", i); i++;

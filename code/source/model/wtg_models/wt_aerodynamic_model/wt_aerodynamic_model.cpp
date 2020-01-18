@@ -92,7 +92,7 @@ double WT_AERODYNAMIC_MODEL::get_damping_in_pu() const
         return 0.0;
 }
 
-void WT_AERODYNAMIC_MODEL::set_number_of_pole_pairs(size_t n)
+void WT_AERODYNAMIC_MODEL::set_number_of_pole_pairs(unsigned int n)
 {
     if(n==0)
         n = 1;
@@ -136,7 +136,7 @@ void WT_AERODYNAMIC_MODEL::set_nominal_air_density_in_kgpm3(double rou)
     nominal_air_density_in_kgpm3 = rou;
 }
 
-size_t WT_AERODYNAMIC_MODEL::get_number_of_pole_pairs() const
+unsigned int WT_AERODYNAMIC_MODEL::get_number_of_pole_pairs() const
 {
     return number_of_pole_pairs;
 }
@@ -169,7 +169,7 @@ double WT_AERODYNAMIC_MODEL::get_nominal_air_density_in_kgpm3() const
 double WT_AERODYNAMIC_MODEL::get_nominal_turbine_speed_in_rad_per_s()
 {
     double fbase = get_bus_base_frequency_in_Hz();
-    size_t npair = get_number_of_pole_pairs();
+    unsigned int npair = get_number_of_pole_pairs();
     double tratio = get_generator_to_turbine_gear_ratio();
     double fn = fbase/(npair*tratio);
     return hz2radps(fn);
@@ -472,7 +472,7 @@ void WT_AERODYNAMIC_MODEL::initialize_generator_to_turbine_gear_ratio()
 
     double wt = lambda_mppt*vwind/radius;
 
-    size_t n = get_number_of_pole_pairs();
+    unsigned int n = get_number_of_pole_pairs();
     double fbase = get_bus_base_frequency_in_Hz();
     double wg = 2.0*PI*fbase/n;
     double turnratio = wg/wt;
@@ -638,7 +638,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         selec *= mbase;
 
         double pelec = selec.real();
-        size_t n = get_number_of_lumped_wt_generators();
+        unsigned int n = get_number_of_lumped_wt_generators();
         pelec /= n;
 
         double vwind = get_wind_speed_in_mps();
@@ -662,8 +662,8 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle_and_turbine_speed_with_mppt_mo
         {
             if(fabs(pmech_low-pmax*cpmax_low)>FLOAT_EPSILON)
             {
-                size_t iter_max = 100;
-                size_t iter = 0;
+                unsigned int iter_max = 100;
+                unsigned int iter = 0;
 
                 while(true)
                 {
@@ -793,7 +793,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
         selec *= mbase;
 
         double pelec = selec.real();
-        size_t n = get_number_of_lumped_wt_generators();
+        unsigned int n = get_number_of_lumped_wt_generators();
         pelec /= n;
 
         double pn = get_rated_power_per_wt_generator_in_MW();
@@ -813,7 +813,7 @@ void WT_AERODYNAMIC_MODEL::initialize_pitch_angle()
             set_initial_pitch_angle_in_deg(pitch_low);
             double pwind = get_extracted_power_from_wind_per_wt_generator_in_MW_with_turbine_speed_in_rad_per_s(w);
 
-            size_t iter_count = 0, iter_max = 100;
+            unsigned int iter_count = 0, iter_max = 100;
             while(true)
             {
                 pitch_high = pitch_low + pitch_step;
@@ -972,7 +972,7 @@ double WT_AERODYNAMIC_MODEL::get_turbine_reference_speed_in_rad_per_s_without_sp
             double mbase = get_mbase_in_MVA();
             selec += (iterm*iterm*zsource)*mbase;
 
-            size_t n = get_number_of_lumped_wt_generators();
+            unsigned int n = get_number_of_lumped_wt_generators();
             selec /= n;
 
             double pelec = selec.real();
@@ -1027,7 +1027,7 @@ void WT_AERODYNAMIC_MODEL::update_current_lambda_at_cpmax_with_current_pitch_ang
     double lambda_high = 3.0;
     double lambda_step =  1.0;
 
-    size_t iter_count = 0, iter_max = 100;
+    unsigned int iter_count = 0, iter_max = 100;
     while(true)
     {
         double der = get_derivative_of_Cp_over_lambda(lambda_low, pitch);
@@ -1143,13 +1143,13 @@ void WT_AERODYNAMIC_MODEL::update_current_turbine_speed_reference_without_limit(
         double eta = get_gear_efficiency();
 
         double mbase = get_mbase_in_MVA();
-        size_t n = get_number_of_lumped_wt_generators();
+        unsigned int n = get_number_of_lumped_wt_generators();
 
         double w_low, w_high;
         double w_step = 0.5;
         double p_low, p_high;
 
-        size_t iter_count =0, iter_max = 100;
+        unsigned int iter_count =0, iter_max = 100;
         if(get_turbine_speed_mode()==WT_UNDERSPEED_MODE)
         {
             w_high = w_mppt;

@@ -17,7 +17,7 @@ EQUIVALENT_DEVICE::~EQUIVALENT_DEVICE()
 {
 }
 
-void EQUIVALENT_DEVICE::set_equivalent_device_bus(size_t device_bus)
+void EQUIVALENT_DEVICE::set_equivalent_device_bus(unsigned int device_bus)
 {
     ostringstream osstream;
 
@@ -88,7 +88,7 @@ void EQUIVALENT_DEVICE::set_equivalent_nominal_constant_impedance_load_in_MVA(co
     equivalent_load_s_constant_impedance_in_MVA = s;
 }
 
-size_t EQUIVALENT_DEVICE::get_equivalent_device_bus() const
+unsigned int EQUIVALENT_DEVICE::get_equivalent_device_bus() const
 {
     return bus;
 }
@@ -177,7 +177,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_generation_in_MVA() const
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t bus = get_equivalent_device_bus();
+    unsigned int bus = get_equivalent_device_bus();
     complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
 
     complex<double> I = (E-V)/Z;
@@ -196,7 +196,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_MVA() const
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t bus = get_equivalent_device_bus();
+    unsigned int bus = get_equivalent_device_bus();
     double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
 
     return SP+SI*V+SZ*V*V;
@@ -252,7 +252,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_generation_in_pu() const
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t bus = get_equivalent_device_bus();
+    unsigned int bus = get_equivalent_device_bus();
     complex<double> V = psdb.get_bus_positive_sequence_complex_voltage_in_pu(bus);
 
     complex<double> I = (E-V)/Z;
@@ -273,7 +273,7 @@ complex<double> EQUIVALENT_DEVICE::get_equivalent_load_in_pu() const
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-    size_t bus = get_equivalent_device_bus();
+    unsigned int bus = get_equivalent_device_bus();
     double V = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
 
     double one_over_sbase = toolkit.get_one_over_system_base_power_in_one_over_MVA();
@@ -322,13 +322,13 @@ void EQUIVALENT_DEVICE::clear()
     equivalent_model = NULL;
 }
 
-bool EQUIVALENT_DEVICE::is_connected_to_bus(size_t target_bus) const
+bool EQUIVALENT_DEVICE::is_connected_to_bus(unsigned int target_bus) const
 {
     if(target_bus==get_equivalent_device_bus()) return true;
     else return false;
 }
 
-bool EQUIVALENT_DEVICE::is_in_area(size_t area) const
+bool EQUIVALENT_DEVICE::is_in_area(unsigned int area) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -340,7 +340,7 @@ bool EQUIVALENT_DEVICE::is_in_area(size_t area) const
         return false;
 }
 
-bool EQUIVALENT_DEVICE::is_in_zone(size_t zone) const
+bool EQUIVALENT_DEVICE::is_in_zone(unsigned int zone) const
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();

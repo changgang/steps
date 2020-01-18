@@ -183,7 +183,7 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency()
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
         WT_GENERATOR* gen = get_test_wt_generator();
-        size_t bus = gen->get_generator_bus();
+        unsigned int bus = gen->get_generator_bus();
 
         POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
         BUS* busptrr = psdb.get_bus(bus);
@@ -205,7 +205,7 @@ void WT_PITCH_MODEL_TEST::test_get_bus_frequency_deviation()
         show_test_information_for_function_of_class(__FUNCTION__,model->get_model_name()+"_TEST");
 
         WT_GENERATOR* gen = get_test_wt_generator();
-        size_t bus = gen->get_generator_bus();
+        unsigned int bus = gen->get_generator_bus();
 
         POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
         BUS* busptrr = psdb.get_bus(bus);
@@ -340,7 +340,7 @@ void WT_PITCH_MODEL_TEST::apply_frequency_drop_of_5_percent()
     WT_GENERATOR* gen = get_test_wt_generator();
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
 
-    size_t bus = gen->get_generator_bus();
+    unsigned int bus = gen->get_generator_bus();
     BUS* busptr = psdb.get_bus(bus);
 
     BUS_FREQUENCY_MODEL* model = busptr->get_bus_frequency_model();

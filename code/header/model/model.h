@@ -22,22 +22,22 @@ class MODEL : public BASE
         vector<string> get_allowed_device_types() const;
         bool has_allowed_device_type(string device_type) const;
 
-        void set_model_float_parameter_count(size_t n);
-        size_t get_model_float_parameter_count() const;
+        void set_model_float_parameter_count(unsigned int n);
+        unsigned int get_model_float_parameter_count() const;
 
         void clear_model_data_table();
-        void add_model_data_name_and_index_pair(string var_name, size_t var_index);
-        size_t get_model_data_index(string var_name) const;
-        string get_model_data_name(size_t var_index) const;
+        void add_model_data_name_and_index_pair(string var_name, unsigned int var_index);
+        unsigned int get_model_data_index(string var_name) const;
+        string get_model_data_name(unsigned int var_index) const;
         bool is_model_data_exist(string var_name) const;
-        bool is_model_data_exist(size_t var_index) const;
+        bool is_model_data_exist(unsigned int var_index) const;
 
         void clear_model_internal_variable_table();
-        void add_model_inernal_variable_name_and_index_pair(string var_name, size_t var_index);
-        size_t get_model_inernal_variable_index(string var_name) const;
-        string get_model_inernal_variable_name(size_t var_index) const;
+        void add_model_inernal_variable_name_and_index_pair(string var_name, unsigned int var_index);
+        unsigned int get_model_inernal_variable_index(string var_name) const;
+        string get_model_inernal_variable_name(unsigned int var_index) const;
         bool is_model_inernal_variable_exist(string var_name) const;
-        bool is_model_inernal_variable_exist(size_t var_index) const;
+        bool is_model_inernal_variable_exist(unsigned int var_index) const;
 
         void set_device_id(DEVICE_ID did);
         DEVICE* get_device_pointer() const;
@@ -79,12 +79,12 @@ class MODEL : public BASE
         virtual void prepare_model_data_table() = 0;
         virtual double get_model_data_with_name(string par_name) const = 0;
         virtual void set_model_data_with_name(string par_name, double value) = 0;
-        void set_model_data_with_index(size_t index, double value);
-        double get_model_data_with_index(size_t index);
+        void set_model_data_with_index(unsigned int index, double value);
+        double get_model_data_with_index(unsigned int index);
 
         virtual void prepare_model_internal_variable_table() = 0;
         virtual double get_model_internal_variable_with_name(string var_name)= 0;
-        double get_model_internal_variable_with_index(size_t index);
+        double get_model_internal_variable_with_index(unsigned int index);
 
         virtual string get_dynamic_data_in_psse_format() const = 0;
         virtual string get_dynamic_data_in_bpa_format() const = 0;
@@ -99,7 +99,7 @@ class MODEL : public BASE
         char allowed_device_types[STEPS_MODEL_MAX_ALLOWED_DEVICE_COUNT][STEPS_SHORT_STRING_SIZE];
         DEVICE* device_pointer;
 
-        size_t n_parameters;
+        unsigned int n_parameters;
 
         bool flag_model_initialized;
         bool flag_model_updated;

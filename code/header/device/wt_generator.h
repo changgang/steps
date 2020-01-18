@@ -23,13 +23,13 @@ class WT_GENERATOR : public SOURCE
     public:
         virtual DEVICE_ID get_device_id() const;
 
-        void set_generator_bus(size_t bus);
-        size_t get_generator_bus() const;
+        void set_generator_bus(unsigned int bus);
+        unsigned int get_generator_bus() const;
 
-        void set_number_of_lumped_wt_generators(size_t n);
+        void set_number_of_lumped_wt_generators(unsigned int n);
         void set_rated_power_per_wt_generator_in_MW(double P);
 
-        size_t get_number_of_lumped_wt_generators() const;
+        unsigned int get_number_of_lumped_wt_generators() const;
         double get_rated_power_per_wt_generator_in_MW() const;
 
         virtual void set_model(const MODEL* model);
@@ -61,7 +61,7 @@ class WT_GENERATOR : public SOURCE
         virtual complex<double> get_source_dynamic_current_in_pu_based_on_system_base_power();
     private:
 
-        size_t number_of_lumped_wt_generators;
+        unsigned int number_of_lumped_wt_generators;
         double rated_power_per_wt_generator_in_MW;
 
         WT_GENERATOR_MODEL* wt_generator_model;

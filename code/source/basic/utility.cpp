@@ -25,7 +25,7 @@ string num2str(int number)
     return string(str);
 }
 
-string num2str(size_t number)
+string num2str(unsigned int number)
 {
     return num2str(int(number));
 }
@@ -42,6 +42,11 @@ string num2hex_str(int number)
     char str[64];
     sprintf(str, "%X", number);
     return string(str);
+}
+
+string num2hex_str(unsigned int number)
+{
+    return num2hex_str(int(number));
 }
 
 string num2hex_str(size_t number)
@@ -104,7 +109,7 @@ string get_string_data(string strval, const string& strdefault)
     }
 }
 
-size_t get_sparse_matrix_identity(const SPARSE_MATRIX& matrix)
+unsigned int get_sparse_matrix_identity(const SPARSE_MATRIX& matrix)
 {
     int n = matrix.get_matrix_entry_count();
     int identity = 0;
@@ -122,10 +127,10 @@ size_t get_sparse_matrix_identity(const SPARSE_MATRIX& matrix)
 
         identity = identity^((row^col)^(rvalue^ivalue));
     }
-    return size_t(identity);
+    return (unsigned int)(identity);
 }
 
-size_t get_vector_identity(const vector<double>& vec)
+unsigned int get_vector_identity(const vector<double>& vec)
 {
     int n = vec.size();
     int identity = 0;
@@ -138,7 +143,7 @@ size_t get_vector_identity(const vector<double>& vec)
 
         identity = identity^(index^value);
     }
-    return size_t(identity);
+    return (unsigned int)(identity);
 }
 
 
@@ -374,17 +379,17 @@ string string2csv(string str)
     str = replace_string_contents(str, ", ", ",");
     str = replace_string_contents(str, " ,", ",");
 
-    size_t n = str.size();
-    size_t n2 = n<<1;
+    unsigned int n = str.size();
+    unsigned int n2 = n<<1;
 
     char* csv = (char*) malloc(sizeof(char)*n2);
     if(csv!=NULL)
     {
-        for(size_t i=0; i!=n2; ++i)
+        for(unsigned int i=0; i!=n2; ++i)
             csv[i]='\0';
 
-        size_t ncsv = 0;
-        for(size_t i=0; i!=n; ++i)
+        unsigned int ncsv = 0;
+        for(unsigned int i=0; i!=n; ++i)
         {
             char source = str[i];
             if(source=='"')
@@ -455,8 +460,9 @@ vector<string> split_string(string str, const string& sep)
             str.clear();
         }
     }
-    size_t n_size = splitted_str.size();
-    for(size_t i = 0; i!=n_size; ++i)
+
+    unsigned int n_size = splitted_str.size();
+    for(unsigned int i = 0; i!=n_size; ++i)
         splitted_str[i] = trim_string(splitted_str[i]);
     return splitted_str;
 }
@@ -464,20 +470,20 @@ vector<string> split_string(string str, const string& sep)
 string string_vector2csv(const vector<string>& vec)
 {
     string str="";
-    size_t n = vec.size();
+    unsigned int n = vec.size();
     if(n!=0)
     {
         str = vec[0];
-        for(size_t i=1; i<n; ++i)
+        for(unsigned int i=1; i<n; ++i)
             str = str+", "+vec[i];
     }
     return str;
 }
 
-string swap_data_in_csv_string(const string& data, size_t i, size_t j)
+string swap_data_in_csv_string(const string& data, unsigned int i, unsigned int j)
 {
     vector<string> record = split_string(data,",");
-    size_t n = record.size();
+    unsigned int n = record.size();
     if(i<=n and j<=n)
     {
         string temp = record[i];
@@ -579,14 +585,14 @@ void initialize_package()
 {
     return;
     default_toolkit.set_toolkit_name("TK DFLT");
-    for(size_t i=0; i<MAX_TOOLKIT_SIZE; ++i)
+    for(unsigned int i=0; i<STEPS_MAX_TOOLKIT_SIZE; ++i)
         toolkits[i] = NULL;
 }
 
-size_t generate_new_toolkit(string log_file)
+unsigned int generate_new_toolkit(string log_file)
 {
     mtx.lock();
-    /*while(get_toolkit_count()>=MAX_TOOLKIT_SIZE)
+    /*while(get_toolkit_count()>=STEPS_MAX_TOOLKIT_SIZE)
     {
         ostringstream osstream;
         osstream<<"Warning. Toolkit table is full when calling "<<__FUNCTION__<<"().\nTry to generate new toolkit in 5 sec.\n";
@@ -597,11 +603,11 @@ size_t generate_new_toolkit(string log_file)
     }*/
 
     ostringstream osstream;
-    size_t index=INDEX_NOT_EXIST;
+    unsigned int index=INDEX_NOT_EXIST;
     while(true)
     {
         bool toolkit_index_is_set = false;
-        for(size_t i=0; i!=MAX_TOOLKIT_SIZE; ++i)
+        for(unsigned int i=0; i!=STEPS_MAX_TOOLKIT_SIZE; ++i)
         {
             if(toolkits[i]==NULL)
             {
@@ -622,10 +628,10 @@ size_t generate_new_toolkit(string log_file)
     return index;
 }
 
-void delete_toolkit(size_t toolkit_index)
+void delete_toolkit(unsigned int toolkit_index)
 {
     mtx.lock();
-    if(toolkit_index<MAX_TOOLKIT_SIZE)
+    if(toolkit_index<STEPS_MAX_TOOLKIT_SIZE)
     {
         if(toolkits[toolkit_index]!=NULL)
         {
@@ -636,10 +642,10 @@ void delete_toolkit(size_t toolkit_index)
     mtx.unlock();
 }
 
-size_t get_toolkit_count()
+unsigned int get_toolkit_count()
 {
-    size_t count = 0;
-    for(size_t i=0; i!=MAX_TOOLKIT_SIZE; ++i)
+    unsigned int count = 0;
+    for(unsigned int i=0; i!=STEPS_MAX_TOOLKIT_SIZE; ++i)
     {
         if(toolkits[i]!=NULL)
             ++count;
@@ -652,11 +658,11 @@ STEPS& get_default_toolkit()
     return default_toolkit;
 }
 
-STEPS& get_toolkit(size_t toolkit_index)
+STEPS& get_toolkit(unsigned int toolkit_index)
 {
     if(toolkit_index==INDEX_NOT_EXIST)
         return default_toolkit;
-    if(toolkit_index<MAX_TOOLKIT_SIZE and toolkits[toolkit_index]!=NULL)
+    if(toolkit_index<STEPS_MAX_TOOLKIT_SIZE and toolkits[toolkit_index]!=NULL)
         return *(toolkits[toolkit_index]);
     else
     {
@@ -668,7 +674,7 @@ STEPS& get_toolkit(size_t toolkit_index)
     }
 }
 
-void set_openmp_number_of_threads(size_t n)
+void set_openmp_number_of_threads(unsigned int n)
 {
     omp_set_num_threads(n);
 }

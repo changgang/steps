@@ -270,7 +270,7 @@ bool ESTR0::setup_model_with_steps_string_vector(vector<string>& data)
     double tp1, tp2, tp3, tp4, kpp, kip, kdp, tdp, pmax, tr, iacmax, kin, kout, e0, en;
     double tq1, tq2, tq3, tq4, kq, dq;
 
-    size_t i=3;
+    unsigned int i=3;
     tp1 = get_double_data(data[i],"0.0"); i++;
     tp2 = get_double_data(data[i],"0.0"); i++;
     tp3 = get_double_data(data[i],"0.0"); i++;
@@ -563,7 +563,7 @@ complex<double> ESTR0::get_terminal_complex_current_in_kA() const
     double mbase = get_mbase_in_MVA();
 
     ENERGY_STORAGE* estorage = (ENERGY_STORAGE*) get_device_pointer();
-    size_t bus = estorage->get_energy_storage_bus();
+    unsigned int bus = estorage->get_energy_storage_bus();
 
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -618,7 +618,7 @@ string ESTR0::get_standard_psse_string() const
 {
     ostringstream osstream;
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = did.get_device_identifier();
 
     osstream<<setw(8)<<bus<<", "
@@ -652,7 +652,7 @@ string ESTR0::get_standard_psse_string() const
 void ESTR0::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("PMAX", i); i++;
     add_model_data_name_and_index_pair("ENOMINAL", i); i++;
     add_model_data_name_and_index_pair("E0", i); i++;
@@ -687,7 +687,7 @@ void ESTR0::set_model_data_with_name(string par_name, double value)
 void ESTR0::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("TERMINAL P IN PU", i); i++;
     add_model_inernal_variable_name_and_index_pair("TERMINAL P IN MW", i); i++;
     add_model_inernal_variable_name_and_index_pair("TERMINAL Q IN PU", i); i++;

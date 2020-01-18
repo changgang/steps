@@ -167,7 +167,7 @@ int main()
     simulator.run_to(1.1);
 
     simulator.switch_on_equivalent_device();
-    vector<size_t> buses_to_clear;
+    vector<unsigned int> buses_to_clear;
     buses_to_clear.push_back(19);
     buses_to_clear.push_back(20);
     buses_to_clear.push_back(33);

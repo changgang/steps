@@ -126,7 +126,7 @@ void CDC6T_TEST::test_set_get_parameters()
     TEST_ASSERT(fabs(model->get_dc_current_command_recovery_rate_in_pu_per_second()-0.3)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(model->get_minimum_dc_current_command_in_kA()-0.1)<FLOAT_EPSILON);
     VDCOL limiter = model->get_VDCOL();
-    size_t n = limiter.get_vdcol_point_count();
+    unsigned int n = limiter.get_vdcol_point_count();
     TEST_ASSERT(n==3);
     TEST_ASSERT(fabs(limiter.get_vdcol_voltage_of_point_in_kV(0)-200.0)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(limiter.get_vdcol_current_of_point_in_kA(0)-1.5)<FLOAT_EPSILON);

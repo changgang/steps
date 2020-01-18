@@ -16,24 +16,24 @@ OWNERSHIP::OWNERSHIP(const OWNERSHIP& ownership)
     copy_from_const_ownership(ownership);
 }
 
-void OWNERSHIP::append_owner_and_its_fraction(size_t owner, double fraction)
+void OWNERSHIP::append_owner_and_its_fraction(unsigned int owner, double fraction)
 {
 	if(owner != 0 and fraction>=0.0)
     {
         if(not has_owner(owner))
-            ownership_pair.insert(map<size_t,double>::value_type(owner, fraction));
+            ownership_pair.insert(map<unsigned int,double>::value_type(owner, fraction));
         else
         {
-            map<size_t, double>::iterator iter;
+            map<unsigned int, double>::iterator iter;
             iter = ownership_pair.find(owner);
             iter->second += fraction;
         }
     }
 }
 
-void OWNERSHIP::delete_owner_and_its_fraction(size_t owner)
+void OWNERSHIP::delete_owner_and_its_fraction(unsigned int owner)
 {
-    map<size_t, double>::iterator iter;
+    map<unsigned int, double>::iterator iter;
     iter = ownership_pair.find(owner);
     if(iter!=ownership_pair.end())
     {
@@ -43,7 +43,7 @@ void OWNERSHIP::delete_owner_and_its_fraction(size_t owner)
 
 void OWNERSHIP::normalize()
 {
-    map<size_t, double>::iterator iter;
+    map<unsigned int, double>::iterator iter;
     double sum_fraction = 0.0;
     for(iter=ownership_pair.begin(); iter!=ownership_pair.end(); ++iter)
         sum_fraction += iter->second;
@@ -61,26 +61,26 @@ bool OWNERSHIP::empty() const
     else                     return false;
 }
 
-size_t OWNERSHIP::get_owner_count() const
+unsigned int OWNERSHIP::get_owner_count() const
 {
     return ownership_pair.size();
 }
 
-vector<size_t> OWNERSHIP::get_all_owners() const
+vector<unsigned int> OWNERSHIP::get_all_owners() const
 {
-    vector<size_t> owners;
-    map<size_t, double>::const_iterator it;
+    vector<unsigned int> owners;
+    map<unsigned int, double>::const_iterator it;
     for(it=ownership_pair.begin(); it!=ownership_pair.end(); ++it)
         owners.push_back(it->first);
 
     return owners;
 }
 
-size_t OWNERSHIP::get_owner_of_index(const size_t index) const
+unsigned int OWNERSHIP::get_owner_of_index(const unsigned int index) const
 {
-    map<size_t, double>::const_iterator it;
+    map<unsigned int, double>::const_iterator it;
     it = ownership_pair.begin();
-	size_t n = ownership_pair.size();
+	unsigned int n = ownership_pair.size();
     if(it!=ownership_pair.end())
     {
 		if (index < n)
@@ -100,11 +100,11 @@ size_t OWNERSHIP::get_owner_of_index(const size_t index) const
 	}
 }
 
-double OWNERSHIP::get_fraction_of_owner_of_index(const size_t index) const
+double OWNERSHIP::get_fraction_of_owner_of_index(const unsigned int index) const
 {
-    map<size_t, double>::const_iterator it;
+    map<unsigned int, double>::const_iterator it;
     it = ownership_pair.begin();
-	size_t n = ownership_pair.size();
+	unsigned int n = ownership_pair.size();
     if(it!=ownership_pair.end())
     {
 		if (index < n)
@@ -127,16 +127,16 @@ double OWNERSHIP::get_fraction_of_owner_of_index(const size_t index) const
 vector<double> OWNERSHIP::get_all_fraction() const
 {
     vector<double> fraction;
-    map<size_t, double>::const_iterator it;
+    map<unsigned int, double>::const_iterator it;
     for(it=ownership_pair.begin(); it!=ownership_pair.end(); ++it)
         fraction.push_back(it->second);
 
     return fraction;
 }
 
-double OWNERSHIP::get_fraction_of_owner(const size_t owner) const
+double OWNERSHIP::get_fraction_of_owner(const unsigned int owner) const
 {
-    map<size_t, double>::const_iterator it;
+    map<unsigned int, double>::const_iterator it;
     it = ownership_pair.find(owner);
     if(it!=ownership_pair.end())
         return it->second;
@@ -149,9 +149,9 @@ void OWNERSHIP::clear()
     ownership_pair.clear();
 }
 
-bool OWNERSHIP::has_owner(const size_t owner) const
+bool OWNERSHIP::has_owner(const unsigned int owner) const
 {
-    map<size_t, double>::const_iterator it;
+    map<unsigned int, double>::const_iterator it;
     it = ownership_pair.find(owner);
     if(it!=ownership_pair.end())
         return true;
@@ -171,10 +171,10 @@ OWNERSHIP& OWNERSHIP::operator=(const OWNERSHIP& ownership)
 void OWNERSHIP::copy_from_const_ownership(const OWNERSHIP& ownership)
 {
     clear();
-    size_t n = ownership.get_owner_count();
-    vector<size_t> all_owners = ownership.get_all_owners();
+    unsigned int n = ownership.get_owner_count();
+    vector<unsigned int> all_owners = ownership.get_all_owners();
     double fraction;
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         fraction = ownership.get_fraction_of_owner(all_owners[i]);
         append_owner_and_its_fraction(all_owners[i], fraction);

@@ -46,17 +46,17 @@ DEVICE_ID PV_UNIT::get_device_id() const
 }
 
 
-void PV_UNIT::set_unit_bus(size_t bus)
+void PV_UNIT::set_unit_bus(unsigned int bus)
 {
     set_source_bus(bus);
 }
 
-size_t PV_UNIT::get_unit_bus() const
+unsigned int PV_UNIT::get_unit_bus() const
 {
     return get_source_bus();
 }
 
-void PV_UNIT::set_number_of_lumped_pv_units(size_t n)
+void PV_UNIT::set_number_of_lumped_pv_units(unsigned int n)
 {
     if(n==0)
         n = 1;
@@ -68,7 +68,7 @@ void PV_UNIT::set_rated_power_per_pv_unit_in_MW(double P)
     rated_power_per_pv_unit_in_MW = P;
 }
 
-size_t PV_UNIT::get_number_of_lumped_pv_units() const
+unsigned int PV_UNIT::get_number_of_lumped_pv_units() const
 {
     return number_of_lumped_pv_units;
 }

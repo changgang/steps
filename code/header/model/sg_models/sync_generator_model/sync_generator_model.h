@@ -153,7 +153,7 @@ class SYNC_GENERATOR_MODEL : public SG_MODEL
         void common_constructor();
         //double get_exponential_saturation_with_flux(double flux) const;
         //double get_quadratic_saturation_with_flux(double flux) const;
-        //size_t generator_index;
+        //unsigned int generator_index;
         double Rs, Xd, Xq, Xdp, Xqp, Xdpp, Xqpp, Xl;
         double D;
         INTEGRAL_BLOCK transient_block_d_axis, subtransient_block_d_axis;

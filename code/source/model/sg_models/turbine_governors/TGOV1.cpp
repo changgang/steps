@@ -133,7 +133,7 @@ bool TGOV1::setup_model_with_steps_string_vector(vector<string>& data)
         {
             double r, t1, vmax, vmin, t2, t3, d;
 
-            size_t i=3;
+            unsigned int i=3;
             r = get_double_data(data[i],"0.0"); i++;
             t1 = get_double_data(data[i],"0.0"); i++;
             vmax = get_double_data(data[i],"0.0"); i++;
@@ -264,7 +264,7 @@ string TGOV1::get_standard_psse_string() const
     double D = get_D();
 
     DEVICE_ID did = get_device_id();
-    size_t bus = did.get_device_terminal().get_buses()[0];
+    unsigned int bus = did.get_device_terminal().get_buses()[0];
     string identifier = "'"+did.get_device_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
@@ -285,7 +285,7 @@ string TGOV1::get_standard_psse_string() const
 void TGOV1::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("R", i); i++;
     add_model_data_name_and_index_pair("T1", i); i++;
     add_model_data_name_and_index_pair("VMAX", i); i++;
@@ -340,7 +340,7 @@ void TGOV1::set_model_data_with_name(string par_name, double value)
 void TGOV1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("STATE@GOVERNOR", i); i++;
     add_model_inernal_variable_name_and_index_pair("STATE@TURBINE", i); i++;
 }

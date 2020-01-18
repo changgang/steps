@@ -15,32 +15,31 @@ class CONTINUOUS_BUFFER : public BASE
 
         virtual void clear();
 
-        void set_buffer_size(size_t buffer_size);
-        size_t get_buffer_size() const;
+        void set_buffer_size(unsigned int n);
+        unsigned int get_buffer_size() const;
 
         void initialize_buffer(double initial_time, double value);
         void append_data(double time, double value);
 
-        size_t get_index_of_buffer_head() const;
+        unsigned int get_index_of_buffer_head() const;
 
         double get_buffer_time_at_head() const;
         double get_buffer_value_at_head() const;
-        double get_buffer_time_at_delay_index(size_t index) const;
-        double get_buffer_value_at_delay_index(size_t index) const;
+        double get_buffer_time_at_delay_index(unsigned int index) const;
+        double get_buffer_value_at_delay_index(unsigned int index) const;
         double get_buffer_value_at_time(double time) const;
-        size_t get_delay_index_of_time(double time) const;
+        unsigned int get_delay_index_of_time(double time) const;
 
         void show_buffer() const;
     private:
         void copy_from_constant_buffer(const CONTINUOUS_BUFFER& buffer);
-        size_t get_storage_index_of_delay_index(size_t index) const;
+        unsigned int get_storage_index_of_delay_index(unsigned int index) const;
 
-        size_t buffer_size;
+        unsigned int buffer_size;
 
-        size_t index_of_buffer_head;
+        unsigned int index_of_buffer_head;
 
-        vector<double> time_buffer;
-        vector<double> value_buffer;
+        double buffer[STEPS_MAX_CONTINUOUS_BUFFER_SIZE][2];
 
         virtual bool is_valid() const;
         virtual void check();

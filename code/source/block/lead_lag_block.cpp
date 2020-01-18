@@ -25,10 +25,7 @@ void LEAD_LAG_BLOCK::set_K(double k)
         ostringstream osstream;
         osstream<<"Error. Zero amplifier K is not allowed for LEAD_LAG_BLOCK.";
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        if(&toolkit!=NULL)
-            toolkit.show_information_with_leading_time_stamp(osstream);
-        else
-            show_information_with_leading_time_stamp_with_default_toolkit(osstream);
+        toolkit.show_information_with_leading_time_stamp(osstream);
         return;
     }
     this->K = k;

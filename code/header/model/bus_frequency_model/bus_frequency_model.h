@@ -13,7 +13,7 @@ class BUS_FREQUENCY_MODEL : public BASE
 
         void set_bus_pointer(BUS* bus);
         BUS* get_bus_pointer() const;
-        size_t get_bus() const;
+        unsigned int get_bus() const;
 
         virtual void initialize();
         virtual void run(DYNAMIC_MODE mode);
@@ -30,7 +30,7 @@ class BUS_FREQUENCY_MODEL : public BASE
         virtual void check();
         virtual void clear();
         DIFFERENTIAL_BLOCK frequency_block;
-        size_t bus;
+        unsigned int bus;
         BUS* bus_ptr;
         double fbase_Hz, tbase_s;
 };

@@ -20,7 +20,6 @@ METER_TEST::METER_TEST()
 {
     TEST_ADD(METER_TEST::test_constructor);
     TEST_ADD(METER_TEST::test_set_get_device_id_and_type);
-    TEST_ADD(METER_TEST::test_set_get_buffer_size);
     TEST_ADD(METER_TEST::test_set_get_bus_meter_type);
     TEST_ADD(METER_TEST::test_set_get_line_meter_type);
     TEST_ADD(METER_TEST::test_set_get_transformer_meter_type);
@@ -208,16 +207,6 @@ void METER_TEST::test_set_get_device_id_and_type()
     TEST_ASSERT(meter.get_device_type()=="HVDC");
 }
 
-void METER_TEST::test_set_get_buffer_size()
-{
-    show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
-
-    TEST_ASSERT(meter.get_buffer_size()==1);
-
-    meter.set_buffer_size(10);
-    TEST_ASSERT(meter.get_buffer_size()==10);
-}
-
 void METER_TEST::test_set_get_bus_meter_type()
 {
     show_test_information_for_function_of_class(__FUNCTION__,"METER_TEST");
@@ -232,8 +221,8 @@ void METER_TEST::test_set_get_bus_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = bus_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = bus_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = bus_meters[i];
         meter.set_meter_type(meter_type);
@@ -257,8 +246,8 @@ void METER_TEST::test_set_get_line_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = line_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = line_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = line_meters[i];
         meter.set_meter_type(meter_type);
@@ -282,8 +271,8 @@ void METER_TEST::test_set_get_transformer_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = transformer_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = transformer_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = transformer_meters[i];
         meter.set_meter_type(meter_type);
@@ -295,7 +284,7 @@ void METER_TEST::test_set_get_transformer_meter_type()
 
     meter.set_device_id(did);
 
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = transformer_meters[i];
         meter.set_meter_type(meter_type);
@@ -318,8 +307,8 @@ void METER_TEST::test_set_get_generator_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = generator_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = generator_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = generator_meters[i];
         meter.set_meter_type(meter_type);
@@ -342,8 +331,8 @@ void METER_TEST::test_set_get_load_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = load_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = load_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = load_meters[i];
         meter.set_meter_type(meter_type);
@@ -367,8 +356,8 @@ void METER_TEST::test_set_get_hvdc_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = hvdc_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = hvdc_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = hvdc_meters[i];
         meter.set_meter_type(meter_type);
@@ -392,8 +381,8 @@ void METER_TEST::test_set_get_wt_generator_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = wt_generator_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = wt_generator_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = wt_generator_meters[i];
         meter.set_meter_type(meter_type);
@@ -416,8 +405,8 @@ void METER_TEST::test_set_get_equivalent_device_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = equivalent_device_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = equivalent_device_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = equivalent_device_meters[i];
         meter.set_meter_type(meter_type);
@@ -441,8 +430,8 @@ void METER_TEST::test_set_get_energy_storage_meter_type()
 
     meter.set_device_id(did);
 
-    size_t n = energy_storage_meters.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = energy_storage_meters.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         meter_type = energy_storage_meters[i];
         meter.set_meter_type(meter_type);

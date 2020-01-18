@@ -83,12 +83,12 @@ string WT3E1::get_model_name() const
     return "WT3E1";
 }
 
-void WT3E1::set_transformer_from_bus(size_t bus)
+void WT3E1::set_transformer_from_bus(unsigned int bus)
 {
     transformer_from_bus = bus;
 }
 
-void WT3E1::set_transformer_to_bus(size_t bus)
+void WT3E1::set_transformer_to_bus(unsigned int bus)
 {
     transformer_to_bus = bus;
 }
@@ -165,7 +165,7 @@ void WT3E1::set_Vmin_in_pu(double v)
     Q_error_integrator.set_lower_limit(v);
 }
 
-void WT3E1::set_voltage_flag(size_t flag)
+void WT3E1::set_voltage_flag(unsigned int flag)
 {
     if(flag<3)
         Voltage_Flag = flag;
@@ -239,12 +239,12 @@ void WT3E1::set_IPmax_in_pu(double I)
     IPmax = I;
 }
 
-size_t WT3E1::get_transformer_from_bus() const
+unsigned int WT3E1::get_transformer_from_bus() const
 {
     return transformer_from_bus;
 }
 
-size_t WT3E1::get_transformer_to_bus() const
+unsigned int WT3E1::get_transformer_to_bus() const
 {
     return transformer_to_bus;
 }
@@ -319,7 +319,7 @@ double WT3E1::get_Vmin_in_pu() const
     return Q_error_integrator.get_lower_limit();
 }
 
-size_t WT3E1::get_voltage_flag() const
+unsigned int WT3E1::get_voltage_flag() const
 {
     return Voltage_Flag;
 }
@@ -392,7 +392,7 @@ bool WT3E1::setup_model_with_steps_string_vector(vector<string>& data)
         string model_name = get_string_data(data[0],"");
         if(model_name==get_model_name())
         {
-            size_t bus, var_control_flag, voltage_flag, trans_from_bus, trans_to_bus;
+            unsigned int bus, var_control_flag, voltage_flag, trans_from_bus, trans_to_bus;
             string trans_id;
 
             double tfv, kpv, kiv, xc, tfp, kpp, kip, pmax, pmin, qmax, qmin,
@@ -400,7 +400,7 @@ bool WT3E1::setup_model_with_steps_string_vector(vector<string>& data)
                    kqv, eqmax, eqmin, tv, tp, fn,
                    wmin, wp20, wp40, wp60, pmin_at_wmin, wp100;
 
-            size_t i=3;
+            unsigned int i=3;
             bus = get_integer_data(data[i],"0"); i++;
             var_control_flag = get_integer_data(data[i],"0"); i++;
             voltage_flag = get_integer_data(data[i],"0"); i++;
@@ -615,7 +615,7 @@ void WT3E1::initialize()
                 double eqcmd = iqcmd*(-xsource);
 
                 double verror = 0.0;
-                size_t vflag = get_voltage_flag();
+                unsigned int vflag = get_voltage_flag();
                 if(vflag == 0)
                 {
                     V_error_integrator.set_output(0.0);
@@ -805,7 +805,7 @@ void WT3E1::run(DYNAMIC_MODE mode)
             Q_error_integrator.set_input(input);
             Q_error_integrator.run(mode);
 
-            size_t vflag = get_voltage_flag();
+            unsigned int vflag = get_voltage_flag();
             if(vflag == 1 or vflag == 2)
             {
                 if(vflag == 1)
@@ -837,10 +837,7 @@ double WT3E1::get_active_current_command_in_pu_based_on_mbase()
     WT_GENERATOR* source = get_wt_generator_pointer();
     if(source!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
-        //size_t bus = source->get_source_bus();
+        //unsigned int bus = source->get_source_bus();
         //double vterm = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
         double vterm = get_terminal_voltage_in_pu();
 
@@ -867,9 +864,6 @@ double WT3E1::get_reactive_current_command_in_pu_based_on_mbase()
     WT_GENERATOR* source = get_wt_generator_pointer();
     if(source!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
         double EQcmd = 0.0;
         if(get_voltage_flag()==0)
         {
@@ -894,12 +888,9 @@ double WT3E1::get_reactive_power_command_in_pu_based_on_mbase()
     WT_GENERATOR* source = get_wt_generator_pointer();
     if(source!=NULL)
     {
-        STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
-        POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-
         if(get_voltage_flag()==0)
         {
-            //size_t bus = source->get_source_bus();
+            //unsigned int bus = source->get_source_bus();
             //double vterm = psdb.get_bus_positive_sequence_voltage_in_pu(bus);
             double vterm = get_terminal_voltage_in_pu();
 
@@ -948,17 +939,17 @@ string WT3E1::get_standard_psse_string() const
 {
     ostringstream osstream;
     WT_GENERATOR* source = get_wt_generator_pointer();
-    size_t bus = source->get_source_bus();
+    unsigned int bus = source->get_source_bus();
     string identifier = "'"+source->get_identifier()+"'";
 
     string model_name = "'"+get_model_name()+"'";
 
-    size_t bus_reg = get_bus_to_regulate();
+    unsigned int bus_reg = get_bus_to_regulate();
     PE_VAR_CONTROL_MODE mode = get_var_control_mode();
     int var_mode = (mode==CONSTANT_VAR_MODE)? 0:(mode==CONSTANT_POWER_FACTOR_MODE? -1 : 1);
-    size_t voltage_flag = get_voltage_flag();
-    size_t trans_from_bus = get_transformer_from_bus();
-    size_t trans_to_bus = get_transformer_to_bus();
+    unsigned int voltage_flag = get_voltage_flag();
+    unsigned int trans_from_bus = get_transformer_from_bus();
+    unsigned int trans_to_bus = get_transformer_to_bus();
     string trans_id = "'"+get_transformer_id()+"'";
     double tfv = get_TFV_in_s();
     double kpv = get_KPV();
@@ -986,13 +977,12 @@ string WT3E1::get_standard_psse_string() const
     double tp = get_TP_in_s();
     double fn = get_Fn();
     WIND_TURBINE_POWER_SPEED_LOOKUP_TABLE table = get_wind_turbine_power_speed_lookup_table();
-    const vector<double>& speed = table.get_wind_turbine_speed_table();
-    const vector<double>& power = table.get_wind_turbine_power_table();
-    double wmin = speed[0];
+
+    double wmin = table.get_speed_of_record(0);
     double wp20 = table.get_reference_speed_with_power_in_pu(0.2);
     double wp40 = table.get_reference_speed_with_power_in_pu(0.4);
     double wp60 = table.get_reference_speed_with_power_in_pu(0.6);
-    double pmin_at_wmin = power[0];
+    double pmin_at_wmin = table.get_power_of_record(0);
     double wp100 = table.get_reference_speed_with_power_in_pu(1.0);
 
     osstream<<setw(8)<<bus<<", "
@@ -1046,7 +1036,7 @@ string WT3E1::get_standard_psse_string() const
 void WT3E1::prepare_model_data_table()
 {
     clear_model_data_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_data_name_and_index_pair("BUS TO REGULATE", i); i++;
     add_model_data_name_and_index_pair("VAR CONTROL FLAG", i); i++;
     add_model_data_name_and_index_pair("VOLTAGE FLAG", i); i++;
@@ -1105,7 +1095,7 @@ void WT3E1::set_model_data_with_name(string par_name, double value)
 void WT3E1::prepare_model_internal_variable_table()
 {
     clear_model_internal_variable_table();
-    size_t i=0;
+    unsigned int i=0;
     add_model_inernal_variable_name_and_index_pair("PLL ANGLE IN DEG", i); i++;
 }
 

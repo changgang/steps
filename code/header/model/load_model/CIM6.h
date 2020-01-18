@@ -16,7 +16,7 @@ class CIM6 : public LOAD_MODEL
 
         virtual string get_model_name() const;
 
-        void set_motor_type(size_t t);
+        void set_motor_type(unsigned int t);
         void set_Ra_in_pu(double r);
         void set_Xa_in_pu(double x);
         void set_Xm_in_pu(double x);
@@ -41,7 +41,7 @@ class CIM6 : public LOAD_MODEL
         void set_E(double e);
         void set_Tnom_in_pu(double t);
 
-        size_t get_motor_type() const;
+        unsigned int get_motor_type() const;
         double get_Ra_in_pu() const;
         double get_Xa_in_pu() const;
         double get_Xm_in_pu() const;
@@ -109,7 +109,7 @@ class CIM6 : public LOAD_MODEL
 
         double P0, Q0;
 
-        size_t Motor_type;
+        unsigned int Motor_type;
         double Ra, Xa, Xm, R1, X1, R2, X2;
         SATURATION_BLOCK saturation;
         double Mbase, Pmult;

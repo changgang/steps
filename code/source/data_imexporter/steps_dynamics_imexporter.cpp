@@ -80,14 +80,14 @@ void STEPS_IMEXPORTER::load_dynamic_data_into_ram(string file)
     }
     fclose(fid);
 
-    //for(size_t i=0; i<sdyr_data_in_ram.size(); ++i)
+    //for(unsigned int i=0; i<sdyr_data_in_ram.size(); ++i)
     //    cout<<sdyr_data_in_ram[i]<<endl;
 }
 
 void STEPS_IMEXPORTER::load_all_models()
 {
-    size_t n = splitted_sdyr_data_in_ram.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = splitted_sdyr_data_in_ram.size();
+    for(unsigned int i=0; i!=n; ++i)
         load_one_model(splitted_sdyr_data_in_ram[i]);
 }
 
@@ -183,8 +183,8 @@ void STEPS_IMEXPORTER::load_one_model(string& data)
 
 void STEPS_IMEXPORTER::load_dynamic_data_from_psse_string(vector<string>& data)
 {
-    size_t n = data.size();
-    for(size_t i=0; i<n; ++i)
+    unsigned int n = data.size();
+    for(unsigned int i=0; i<n; ++i)
     {
         vector<string> record = split_string(data[i], ",");
         string temp = record[0];
@@ -214,10 +214,10 @@ DEVICE_ID STEPS_IMEXPORTER::get_generator_device_id_from_string_vector(vector<st
     if(data.size()<3)
         return did;
 
-    size_t bus;
+    unsigned int bus;
     string identifier;
 
-    size_t i=1;
+    unsigned int i=1;
     bus = get_integer_data(data[i], "0"); ++i;
     identifier = get_string_data(data[i],"");
 
@@ -237,10 +237,10 @@ DEVICE_ID STEPS_IMEXPORTER::get_wt_generator_device_id_from_string_vector(vector
     if(data.size()<3)
         return did;
 
-    size_t bus;
+    unsigned int bus;
     string identifier;
 
-    size_t i=1;
+    unsigned int i=1;
     bus = get_integer_data(data[i], "0"); ++i;
     identifier = get_string_data(data[i],"");
 
@@ -260,10 +260,10 @@ DEVICE_ID STEPS_IMEXPORTER::get_pv_unit_device_id_from_string_vector(vector<stri
     if(data.size()<3)
         return did;
 
-    size_t bus;
+    unsigned int bus;
     string identifier;
 
-    size_t i=1;
+    unsigned int i=1;
     bus = get_integer_data(data[i], "0"); ++i;
     identifier = get_string_data(data[i],"");
 
@@ -283,10 +283,10 @@ DEVICE_ID STEPS_IMEXPORTER::get_load_device_id_from_string_vector(vector<string>
     if(data.size()<3)
         return did;
 
-    size_t bus;
+    unsigned int bus;
     string identifier;
 
-    size_t i=1;
+    unsigned int i=1;
     bus = get_integer_data(data[i], "0"); ++i;
     identifier = get_string_data(data[i],"");
 
@@ -306,10 +306,10 @@ DEVICE_ID STEPS_IMEXPORTER::get_line_device_id_from_string_vector(vector<string>
     if(data.size()<4)
         return did;
 
-    size_t ibus, jbus;
+    unsigned int ibus, jbus;
     string identifier;
 
-    size_t i=1;
+    unsigned int i=1;
     ibus = get_integer_data(data[i], "0"); ++i;
     jbus = get_integer_data(data[i], "0"); ++i;
     identifier = get_string_data(data[i],"");
@@ -335,12 +335,12 @@ DEVICE_ID STEPS_IMEXPORTER::get_hvdc_device_id_from_string_vector(vector<string>
 
     string hvdc_name;
 
-    size_t i=1;
+    unsigned int i=1;
     hvdc_name = get_string_data(data[i], "0");
 
-    size_t n = psdb.get_hvdc_count();
+    unsigned int n = psdb.get_hvdc_count();
     vector<HVDC*> hvdcs = psdb.get_all_hvdcs();
-    for(size_t i=0; i!=n; ++i)
+    for(unsigned int i=0; i!=n; ++i)
     {
         if(hvdc_name == hvdcs[i]->get_name())
         {
@@ -363,10 +363,10 @@ DEVICE_ID STEPS_IMEXPORTER::get_transformer_device_id_from_string_vector(vector<
     if(data.size()<4)
         return did;
 
-    size_t ibus, jbus, kbus;
+    unsigned int ibus, jbus, kbus;
     string identifier;
 
-    size_t i=0;
+    unsigned int i=0;
     ibus = get_integer_data(data[i], "0"); ++i; ++i;
     jbus = get_integer_data(data[i], "0"); ++i;
     kbus = get_integer_data(data[i], "0"); ++i;
@@ -1367,14 +1367,14 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
     if(data.size()<3)
         return loads;
 
-    size_t subsystem_number;
+    unsigned int subsystem_number;
     string identifier;
 
-    size_t i=0;
+    unsigned int i=0;
     i = 1; subsystem_number = get_integer_data(data[i], "0");
     i = 2; identifier = get_string_data(data[i],"");
 
-    size_t model_name_size = model_name.size();
+    unsigned int model_name_size = model_name.size();
     string model_subsystem_type = model_name.substr(model_name_size-2,2);
 
     if(model_subsystem_type=="AL")
@@ -1385,12 +1385,12 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
     }
     if(model_subsystem_type=="AR")
     {
-        size_t area_no = subsystem_number;
+        unsigned int area_no = subsystem_number;
         loads = psdb.get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
             --iter;
-            size_t area = (*iter)->get_area_number();
+            unsigned int area = (*iter)->get_area_number();
             if(area!=area_no)
                 loads.erase(iter);
         }
@@ -1399,12 +1399,12 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
     }
     if(model_subsystem_type=="ZN")
     {
-        size_t zone_no = subsystem_number;
+        unsigned int zone_no = subsystem_number;
         loads = psdb.get_all_loads();
         for(vector<LOAD*>::iterator iter=loads.end(); iter!=loads.begin(); )
         {
             --iter;
-            size_t zone = (*iter)->get_zone_number();
+            unsigned int zone = (*iter)->get_zone_number();
             if(zone!=zone_no)
                 loads.erase(iter);
         }
@@ -1413,7 +1413,7 @@ vector<LOAD*> STEPS_IMEXPORTER::get_all_loads_of(vector<string>& data)
     }
     if(model_subsystem_type=="BL")
     {
-        size_t bus_no = subsystem_number;
+        unsigned int bus_no = subsystem_number;
         loads = psdb.get_loads_connecting_to_bus(bus_no);
         loads = remove_loads_with_different_identifier(loads, identifier);
         return loads;
@@ -1454,8 +1454,8 @@ void STEPS_IMEXPORTER::add_IEEL_model(vector<string>& data)
     if(successful)
     {
         vector<LOAD*> loads = get_all_loads_of(data);
-        size_t n = loads.size();
-        for(size_t i=0; i!=n; ++i)
+        unsigned int n = loads.size();
+        for(unsigned int i=0; i!=n; ++i)
         {
             model.set_device_id(loads[i]->get_device_id());
             dmdb.add_model(&model);
@@ -1481,8 +1481,8 @@ void STEPS_IMEXPORTER::add_CIM6_model(vector<string>& data)
     if(successful)
     {
         vector<LOAD*> loads = get_all_loads_of(data);
-        size_t n = loads.size();
-        for(size_t i=0; i!=n; ++i)
+        unsigned int n = loads.size();
+        for(unsigned int i=0; i!=n; ++i)
         {
             model.set_device_id(loads[i]->get_device_id());
             dmdb.add_model(&model);
@@ -1507,8 +1507,8 @@ void STEPS_IMEXPORTER::add_UVLS_model(vector<string>& data)
     if(successful)
     {
         vector<LOAD*> loads = get_all_loads_of(data);
-        size_t n = loads.size();
-        for(size_t i=0; i!=n; ++i)
+        unsigned int n = loads.size();
+        for(unsigned int i=0; i!=n; ++i)
         {
             model.set_device_id(loads[i]->get_device_id());
             dmdb.add_model(&model);
@@ -1534,8 +1534,8 @@ void STEPS_IMEXPORTER::add_UFLS_model(vector<string>& data)
     if(successful)
     {
         vector<LOAD*> loads = get_all_loads_of(data);
-        size_t n = loads.size();
-        for(size_t i=0; i!=n; ++i)
+        unsigned int n = loads.size();
+        for(unsigned int i=0; i!=n; ++i)
         {
             model.set_device_id(loads[i]->get_device_id());
             dmdb.add_model(&model);
@@ -1561,8 +1561,8 @@ void STEPS_IMEXPORTER::add_PUFLS_model(vector<string>& data)
     if(successful)
     {
         vector<LOAD*> loads = get_all_loads_of(data);
-        size_t n = loads.size();
-        for(size_t i=0; i!=n; ++i)
+        unsigned int n = loads.size();
+        for(unsigned int i=0; i!=n; ++i)
         {
             model.set_device_id(loads[i]->get_device_id());
             dmdb.add_model(&model);

@@ -17,7 +17,7 @@ AREA::~AREA()
 {
 }
 
-void AREA::set_area_number(size_t number)
+void AREA::set_area_number(unsigned int number)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
@@ -25,8 +25,8 @@ void AREA::set_area_number(size_t number)
         this->area_number = number;
     else
     {
-        char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Error. 0 is not allowed for setting area number.  0 will be set to indicate invalid area.");
+        char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Error. 0 is not allowed for setting area number.  0 will be set to indicate invalid area.");
         toolkit.show_information_with_leading_time_stamp(buffer);
         this->area_number = 0;
     }
@@ -37,7 +37,7 @@ void AREA::set_area_name(string name)
     this->area_name = trim_string(name);
 }
 
-void AREA::set_area_swing_bus(size_t bus)
+void AREA::set_area_swing_bus(unsigned int bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     if(bus!=0)
@@ -49,8 +49,8 @@ void AREA::set_area_swing_bus(size_t bus)
             set_area_swing_bus_with_existing_bus(bus);
         else
         {
-            char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
-            snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Error. Bus %lu does not exist in power system database %s when setting area swing bus number of area %lu.\n"
+            char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
+            snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Error. Bus %u does not exist in power system database %s when setting area swing bus number of area %u.\n"
                      "Bus 0 will be set to indicate invalid area.", bus, (psdb.get_system_name()).c_str(), get_area_number());
             toolkit.show_information_with_leading_time_stamp(buffer);
 
@@ -71,8 +71,8 @@ void AREA::set_area_swing_bus_with_zero_input()
     bool found_slack_bus_in_this_area = false;
 
     vector<BUS*> buses = psdb.get_all_buses();
-    size_t n = buses.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = buses.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         if(buses[i]->get_bus_type() == SLACK_TYPE and buses[i]->get_area_number()==get_area_number())
         {
@@ -91,7 +91,7 @@ void AREA::set_area_swing_bus_with_zero_input()
     }
 }
 
-void AREA::set_area_swing_bus_with_existing_bus(size_t bus)
+void AREA::set_area_swing_bus_with_existing_bus(unsigned int bus)
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
@@ -101,7 +101,7 @@ void AREA::set_area_swing_bus_with_existing_bus(size_t bus)
 
     BUS_TYPE bus_type = busptr->get_bus_type();
 
-    size_t bus_area_number = busptr->get_area_number();
+    unsigned int bus_area_number = busptr->get_area_number();
 
     if((bus_type == PV_TYPE or bus_type == SLACK_TYPE) and bus_area_number == get_area_number())
         area_swing_bus = bus;
@@ -143,7 +143,7 @@ void AREA::set_area_power_mismatch_tolerance_in_MW(double P)
     }
 }
 
-size_t AREA::get_area_number() const
+unsigned int AREA::get_area_number() const
 {
     return area_number;
 }
@@ -153,7 +153,7 @@ string AREA::get_area_name() const
     return area_name;
 }
 
-size_t AREA::get_area_swing_bus() const
+unsigned int AREA::get_area_swing_bus() const
 {
     return area_swing_bus;
 }
@@ -196,7 +196,7 @@ void AREA::report() const
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     ostringstream osstream;
 
-    size_t bus = get_area_swing_bus();
+    unsigned int bus = get_area_swing_bus();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     string busname = "";
     BUS* busptr = psdb.get_bus(bus);

@@ -20,6 +20,7 @@ class FILEWIND : public WIND_SPEED_MODEL
         // inputs
         void set_wind_speed_serial_file(string file);
         string get_wind_speed_serial_file() const;
+        void load_wind_speed_from_file();
     public: // specific model level
         virtual string get_model_name() const;
 
@@ -51,15 +52,18 @@ class FILEWIND : public WIND_SPEED_MODEL
         virtual string get_dynamic_data_in_bpa_format() const;
         virtual string get_dynamic_data_in_steps_format() const;
     private:
-        void load_wind_speed_from_file();
+        void clear_wind_speed_serial_file();
+        void clear_wind_data();
         void copy_from_const_model(const FILEWIND& model);
         void search_wind_data_at_simulation_time();
-        void set_previous_position(size_t pos);
-        size_t get_previous_position() const;
+        void set_previous_position(unsigned int pos);
+        unsigned int get_previous_position() const;
+        unsigned int get_wind_record_count() const;
+
         char wind_speed_file[STEPS_LONG_STRING_SIZE];
-        vector<double> *time, *wind_speed, *wind_direction;
+        double wind_data[STEPS_MAX_WIND_RECORD_SIZE][3];
         double current_time, current_wind_speed, current_wind_direction;
-        size_t previous_position;
+        unsigned int previous_position;
 };
 
 #endif // FILEWIND_H

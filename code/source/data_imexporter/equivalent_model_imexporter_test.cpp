@@ -51,8 +51,8 @@ void EQUIVALENT_MODEL_IMEXPORTER_TEST::test_load_ieee9_arxl_data()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(psdb.get_equivalent_device_count()==2);
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
-    size_t n = edevices.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = edevices.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         EQUIVALENT_MODEL* model = edevices[i]->get_equivalent_model();
         osstream<<model->get_standard_psse_string()<<endl;
@@ -73,8 +73,8 @@ void EQUIVALENT_MODEL_IMEXPORTER_TEST::test_load_ieee39_arxl_data()
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(psdb.get_equivalent_device_count()==1);
     vector<EQUIVALENT_DEVICE*> edevices = psdb.get_all_equivalent_devices();
-    size_t n = edevices.size();
-    for(size_t i=0; i!=n; ++i)
+    unsigned int n = edevices.size();
+    for(unsigned int i=0; i!=n; ++i)
     {
         EQUIVALENT_MODEL* model = edevices[i]->get_equivalent_model();
         osstream<<model->get_standard_psse_string()<<endl;

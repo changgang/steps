@@ -42,7 +42,6 @@ STEPS::STEPS(const string& name, const string& log_file)
     else
         show_information_with_leading_time_stamp("STEPS simulation toolkit is started.");
 
-
     clear();
 }
 
@@ -69,7 +68,7 @@ string STEPS::get_toolkit_name() const
     return toolkit_name;
 }
 
-void STEPS::set_thread_number(size_t n)
+void STEPS::set_thread_number(unsigned int n)
 {
     thread_number = n;
     generator_thread_number = 1;
@@ -88,7 +87,7 @@ void STEPS::set_thread_number(size_t n)
         update_device_thread_number();
 }
 
-size_t STEPS::get_thread_number() const
+unsigned int STEPS::get_thread_number() const
 {
     return thread_number;
 }
@@ -111,13 +110,13 @@ void STEPS::update_device_thread_number()
         equivalent_device_thread_number = thread_number;
 
         vector<BUS*> buses = psdb.get_all_buses();
-        size_t n = buses.size();
-        for(size_t i=0; i<n; ++i)
+        unsigned int n = buses.size();
+        for(unsigned int i=0; i<n; ++i)
         {
             BUS* bus = buses[i];
             if(bus->get_bus_type()!=OUT_OF_SERVICE)
             {
-                size_t bus_number = bus->get_bus_number();
+                unsigned int bus_number = bus->get_bus_number();
 
                 if(generator_thread_number!=1)
                 {
@@ -190,72 +189,72 @@ void STEPS::update_device_thread_number()
 }
 
 
-size_t STEPS::get_bus_thread_number() const
+unsigned int STEPS::get_bus_thread_number() const
 {
     return thread_number;
 }
 
-size_t STEPS::get_generator_thread_number() const
+unsigned int STEPS::get_generator_thread_number() const
 {
     return generator_thread_number;
 }
 
-size_t STEPS::get_wt_generator_thread_number() const
+unsigned int STEPS::get_wt_generator_thread_number() const
 {
     return wt_generator_thread_number;
 }
 
-size_t STEPS::get_pv_unit_thread_number() const
+unsigned int STEPS::get_pv_unit_thread_number() const
 {
     return pv_unit_thread_number;
 }
 
-size_t STEPS::get_energy_storage_thread_number() const
+unsigned int STEPS::get_energy_storage_thread_number() const
 {
     return energy_storage_thread_number;
 }
 
-size_t STEPS::get_load_thread_number() const
+unsigned int STEPS::get_load_thread_number() const
 {
     return load_thread_number;
 }
 
-size_t STEPS::get_fixed_shunt_thread_number() const
+unsigned int STEPS::get_fixed_shunt_thread_number() const
 {
     return fixed_shunt_thread_number;
 }
 
-size_t STEPS::get_line_thread_number() const
+unsigned int STEPS::get_line_thread_number() const
 {
     return line_thread_number;
 }
 
-size_t STEPS::get_transformer_thread_number() const
+unsigned int STEPS::get_transformer_thread_number() const
 {
     return transformer_thread_number;
 }
 
-size_t STEPS::get_hvdc_thread_number() const
+unsigned int STEPS::get_hvdc_thread_number() const
 {
     return hvdc_thread_number;
 }
 
-size_t STEPS::get_vsc_hvdc_thread_number() const
+unsigned int STEPS::get_vsc_hvdc_thread_number() const
 {
     return vsc_hvdc_thread_number;
 }
 
-size_t STEPS::get_equivalent_device_thread_number() const
+unsigned int STEPS::get_equivalent_device_thread_number() const
 {
     return equivalent_device_thread_number;
 }
 
-void STEPS::set_dynamic_model_database_size_in_bytes(size_t n)
+void STEPS::set_dynamic_model_database_size_in_bytes(unsigned int n)
 {
     dynamic_model_db_size = n;
 }
 
-size_t STEPS::get_dynamic_model_database_size_in_bytes()
+unsigned int STEPS::get_dynamic_model_database_size_in_bytes()
 {
     return dynamic_model_db_size;
 }
@@ -269,6 +268,8 @@ void STEPS::clear()
 
     powerflow_solver.clear();
     dynamic_simulator.clear();
+
+    network_matrix.clear();
 }
 
 void STEPS::open_log_file(const string& file, bool log_file_append_mode)
@@ -408,13 +409,13 @@ void STEPS::show_information_with_leading_time_stamp(ostringstream& stream)
 void STEPS::show_information_with_leading_time_stamp(const string& info)
 {
     vector<string> splitted_info = split_string(info,"\n");
-    size_t info_size = splitted_info.size();
+    unsigned int info_size = splitted_info.size();
     if(info_size!=0)
     {
         string info="";
         string sys_time = get_system_time_stamp_string();
         info="["+get_toolkit_name()+"]"+sys_time+" "+splitted_info[0]+"\n";
-        for(size_t i=1; i!=info_size; ++i)
+        for(unsigned int i=1; i!=info_size; ++i)
             info+=("["+get_toolkit_name()+"]"+sys_time+" + "+splitted_info[i]+"\n");
         if(log_file.is_open())
             log_file<<info;
@@ -438,19 +439,19 @@ string STEPS::get_system_time_stamp_string()
 }
 
 
-void STEPS::show_set_get_model_data_with_index_error(const string& device, const string& model, const string& func, size_t index)
+void STEPS::show_set_get_model_data_with_index_error(const string& device, const string& model, const string& func, unsigned int index)
 {
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     if(func=="set_model_data_with_index")
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Index %lu is out of range when calling %s:%s() for %s.\n0.0 will be returned.",
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Index %u is out of range when calling %s:%s() for %s.\n0.0 will be returned.",
                  index, model.c_str(), func.c_str(), device.c_str());
         show_information_with_leading_time_stamp(buffer);
         return;
     }
     if(func=="get_model_data_with_index")
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "Index %lu is out of range when calling %s:%s() for %s.\nNothing will be set.",
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Index %u is out of range when calling %s:%s() for %s.\nNothing will be set.",
                  index, model.c_str(), func.c_str(), device.c_str());
         show_information_with_leading_time_stamp(buffer);
         return;
@@ -459,17 +460,17 @@ void STEPS::show_set_get_model_data_with_index_error(const string& device, const
 
 void STEPS::show_set_get_model_data_with_name_error(const string& device, const string& model, const string& func, const string& par_name)
 {
-    char buffer[MAX_TEMP_CHAR_BUFFER_SIZE];
+    char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     if(func=="set_model_data_with_name")
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s is not supported when calling %s:%s() of %s.\n0.0 will be returned.",
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s is not supported when calling %s:%s() of %s.\n0.0 will be returned.",
                  par_name.c_str(), model.c_str(), func.c_str(), device.c_str());
         show_information_with_leading_time_stamp(buffer);
         return;
     }
     if(func=="get_model_data_with_name")
     {
-        snprintf(buffer, MAX_TEMP_CHAR_BUFFER_SIZE, "%s is not supported when calling %s:%s() of %s.\nNothing will be set.",
+        snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "%s is not supported when calling %s:%s() of %s.\nNothing will be set.",
                  par_name.c_str(), model.c_str(), func.c_str(), device.c_str());
         show_information_with_leading_time_stamp(buffer);
         return;

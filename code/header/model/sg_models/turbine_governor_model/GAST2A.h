@@ -24,7 +24,7 @@ class GAST2A : public TURBINE_GOVERNOR_MODEL
         void set_gas_W(double W);
         void set_gas_X_in_s(double T);
         void set_gas_Y_in_s(double T);
-        void set_gas_Z(size_t Z);
+        void set_gas_Z(unsigned int Z);
         void set_gas_ETD_in_s(double T);
         void set_gas_TCD_in_s(double T);
         void set_gas_Prate_in_MW(double P);
@@ -56,7 +56,7 @@ class GAST2A : public TURBINE_GOVERNOR_MODEL
         double get_gas_W() const;
         double get_gas_X_in_s() const;
         double get_gas_Y_in_s() const;
-        size_t get_gas_Z() const;
+        unsigned int get_gas_Z() const;
         double get_gas_ETD_in_s() const;
         double get_gas_TCD_in_s() const;
         double get_gas_Prate_in_MW() const;
@@ -116,14 +116,14 @@ class GAST2A : public TURBINE_GOVERNOR_MODEL
         void copy_from_const_model(const GAST2A& model);
 
         double gas_governor_W, gas_governor_X, gas_governor_Y;
-        size_t gas_governor_Z;
+        unsigned int gas_governor_Z;
         double gas_governor_MAX, gas_governor_MIN;
         LEAD_LAG_BLOCK gas_governor_droop;
         PI_BLOCK gas_governor_iso;
 
         double gas_K3;
         double gas_T;
-        CONTINUOUS_BUFFER *gas_fuel_control;
+        CONTINUOUS_BUFFER gas_fuel_control;
 
         double gas_K6, gas_Kf;
 
@@ -133,10 +133,10 @@ class GAST2A : public TURBINE_GOVERNOR_MODEL
         FIRST_ORDER_BLOCK gas_fuel_system;
 
         double gas_ECR;
-        CONTINUOUS_BUFFER *gas_combustor;
+        CONTINUOUS_BUFFER gas_combustor;
 
         double gas_ETD;
-        CONTINUOUS_BUFFER *gas_turbine_exhaust;
+        CONTINUOUS_BUFFER gas_turbine_exhaust;
         double gas_TR, gas_af1, gas_bf1;
 
         double gas_K4;

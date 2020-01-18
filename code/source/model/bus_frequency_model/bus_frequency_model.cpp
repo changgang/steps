@@ -28,7 +28,7 @@ BUS* BUS_FREQUENCY_MODEL::get_bus_pointer() const
     return bus_ptr;
 }
 
-size_t BUS_FREQUENCY_MODEL::get_bus() const
+unsigned int BUS_FREQUENCY_MODEL::get_bus() const
 {
     if(bus_ptr!=NULL)
         return bus_ptr->get_bus_number();

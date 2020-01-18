@@ -16,7 +16,7 @@ public:
         double get_mbase_in_MVA() const;
         double get_one_over_mbase_in_one_over_MVA() const;
 
-        size_t get_number_of_lumped_pv_units() const;
+        unsigned int get_number_of_lumped_pv_units() const;
         double get_rated_power_per_pv_unit_in_MW() const;
         double get_terminal_voltage_in_pu() const;
         complex<double> get_terminal_complex_voltage_in_pu() const;
