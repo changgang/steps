@@ -66,7 +66,7 @@ void JACOBIAN_BUILDER::build_seprate_jacobians()
         double der;
 
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         int n = Y.get_matrix_entry_count();
         int row, column;
@@ -144,7 +144,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_angle()
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         unsigned int nbus = psdb.get_in_service_bus_count();
         double der;
@@ -210,7 +210,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_p_over_voltage()
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         unsigned int nbus = psdb.get_in_service_bus_count();
         double der;
@@ -277,7 +277,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_angle()
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         unsigned int nbus = psdb.get_in_service_bus_count();
         double der;
@@ -344,7 +344,7 @@ void JACOBIAN_BUILDER::update_jacobian_delta_q_over_voltage()
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         unsigned int nbus = psdb.get_in_service_bus_count();
         double der;
@@ -409,7 +409,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_angle_of_internal_bus(unsigne
     if(is_network_matrix_set())
     {
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -474,7 +474,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_p_over_voltage_of_internal_bus(unsig
     if(is_network_matrix_set())
     {
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -542,7 +542,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_angle_of_internal_bus(unsigne
     if(is_network_matrix_set())
     {
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -607,7 +607,7 @@ double JACOBIAN_BUILDER::get_jacobian_delta_q_over_voltage_of_internal_bus(unsig
     if(is_network_matrix_set())
     {
         NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-        const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+        const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
 
         STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
         POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
@@ -798,7 +798,7 @@ STEPS_SPARSE_MATRIX JACOBIAN_BUILDER::get_full_coupled_jacobian_with_P_and_Q_equ
     //toolkit.show_information_with_leading_time_stamp(osstream);
 
     NETWORK_MATRIX* nw_db = get_network_Y_matrix();
-    const STEPS_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
+    const STEPS_COMPLEX_SPARSE_MATRIX& Y = nw_db->get_network_Y_matrix();
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
     unsigned int n_internal_P_equation_buses = internal_P_equation_buses.size(),

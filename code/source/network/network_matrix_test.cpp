@@ -50,7 +50,7 @@ void NETWORK_MATRIX_TEST::test_build_and_get_network_Y_matrix()
 
     network_matrix.build_network_Y_matrix();
 
-    STEPS_SPARSE_MATRIX& Y = network_matrix.get_network_Y_matrix();
+    STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_network_Y_matrix();
 
     osstream<<"Network Y matrix with initial physical bus : internal bus pair:";
     default_toolkit.show_information_with_leading_time_stamp(osstream);
@@ -95,7 +95,7 @@ void NETWORK_MATRIX_TEST::test_build_and_get_dynamic_network_Y_matrix()
 
     network_matrix.build_dynamic_network_Y_matrix();
 
-    STEPS_SPARSE_MATRIX Y = network_matrix.get_dynamic_network_Y_matrix();
+    STEPS_COMPLEX_SPARSE_MATRIX Y = network_matrix.get_dynamic_network_Y_matrix();
 
     osstream<<"Dynamic network Y matrix with initial physical bus : internal bus pair:";
     default_toolkit.show_information_with_leading_time_stamp(osstream);

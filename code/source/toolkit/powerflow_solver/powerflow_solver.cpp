@@ -963,7 +963,7 @@ void POWERFLOW_SOLVER::calculate_raw_bus_current_into_network()
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
-    const SPARSE_MATRIX& Y = network_matrix.get_network_Y_matrix();
+    const STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_network_Y_matrix();
 
     unsigned int nbus = psdb.get_in_service_bus_count();
     if(bus_current.size()==0)

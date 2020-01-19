@@ -56,6 +56,9 @@
 		<Unit filename="header/basic/bus_index.h" />
 		<Unit filename="header/basic/bus_index_test.h" />
 		<Unit filename="header/basic/complex.h" />
+		<Unit filename="header/basic/complex_sparse_matrix.h" />
+		<Unit filename="header/basic/complex_sparse_matrix_csparse.h" />
+		<Unit filename="header/basic/complex_sparse_matrix_test.h" />
 		<Unit filename="header/basic/constants.h" />
 		<Unit filename="header/basic/constants_test.h" />
 		<Unit filename="header/basic/continuous_buffer.h" />
@@ -438,6 +441,9 @@
 		<Unit filename="source/basic/base.cpp" />
 		<Unit filename="source/basic/bus_index.cpp" />
 		<Unit filename="source/basic/bus_index_test.cpp" />
+		<Unit filename="source/basic/complex_sparse_matrix.cpp" />
+		<Unit filename="source/basic/complex_sparse_matrix_csparse.cpp" />
+		<Unit filename="source/basic/complex_sparse_matrix_test.cpp" />
 		<Unit filename="source/basic/constants_test.cpp" />
 		<Unit filename="source/basic/continuous_buffer.cpp" />
 		<Unit filename="source/basic/continuous_buffer_test.cpp" />

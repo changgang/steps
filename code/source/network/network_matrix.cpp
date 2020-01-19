@@ -65,7 +65,7 @@ void NETWORK_MATRIX::build_network_Y_matrix()
     network_Y_matrix.compress_and_merge_duplicate_entries();
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_network_Y_matrix()
+STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_network_Y_matrix()
 {
     if(network_Y_matrix.matrix_in_triplet_form())
         build_network_Y_matrix();
@@ -147,7 +147,7 @@ void NETWORK_MATRIX::build_dynamic_network_Y_matrix()
     network_Y1_matrix.compress_and_merge_duplicate_entries();
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_dynamic_network_Y_matrix()
+STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_dynamic_network_Y_matrix()
 {
     if(network_Y1_matrix.matrix_in_triplet_form())
         build_dynamic_network_Y_matrix();
@@ -167,7 +167,7 @@ void NETWORK_MATRIX::build_positive_sequence_network_Y_matrix()
     build_dynamic_network_Y_matrix();
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_positive_sequence_network_Y_matrix()
+STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_positive_sequence_network_Y_matrix()
 {
     if(network_Y1_matrix.matrix_in_triplet_form())
         build_positive_sequence_network_Y_matrix();
@@ -180,7 +180,7 @@ void NETWORK_MATRIX::build_negative_sequence_network_Y_matrix()
     ;
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_negative_sequence_network_Y_matrix()
+STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_negative_sequence_network_Y_matrix()
 {
     if(network_Y2_matrix.matrix_in_triplet_form())
         build_negative_sequence_network_Y_matrix();
@@ -193,7 +193,7 @@ void NETWORK_MATRIX::build_zero_sequence_network_Y_matrix()
     ;
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Y_matrix()
+STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Y_matrix()
 {
     if(network_Y0_matrix.matrix_in_triplet_form())
         build_zero_sequence_network_Y_matrix();
@@ -257,21 +257,21 @@ void NETWORK_MATRIX::build_zero_sequence_network_Z_matrix()
     build_network_Z_matrix_from_this_Y_matrix();
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_positive_sequence_network_Z_matrix()
+STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_positive_sequence_network_Z_matrix()
 {
     if(network_Z1_matrix.get_matrix_size()<2)
         build_positive_sequence_network_Z_matrix();
     return network_Z1_matrix;
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_negative_sequence_network_Z_matrix()
+STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_negative_sequence_network_Z_matrix()
 {
     if(network_Z2_matrix.get_matrix_size()<2)
         build_negative_sequence_network_Z_matrix();
     return network_Z2_matrix;
 }
 
-STEPS_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Z_matrix()
+STEPS_COMPLEX_SPARSE_MATRIX& NETWORK_MATRIX::get_zero_sequence_network_Z_matrix()
 {
     if(network_Z0_matrix.get_matrix_size()<2)
         build_zero_sequence_network_Z_matrix();
@@ -291,7 +291,7 @@ complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_admittance_between_
     return network_Y_matrix.get_entry_value(ib, jb);
 }
 
-void NETWORK_MATRIX::set_this_Y_and_Z_matrix_as(STEPS_SPARSE_MATRIX& matrix)
+void NETWORK_MATRIX::set_this_Y_and_Z_matrix_as(STEPS_COMPLEX_SPARSE_MATRIX& matrix)
 {
     this_Y_matrix_pointer = (& matrix);
     if(this_Y_matrix_pointer == &network_Y1_matrix)
@@ -350,24 +350,49 @@ vector<double> NETWORK_MATRIX::get_impedance_of_column_from_this_Y_matrix(unsign
     return Z;
 }
 
+vector<complex<double> > NETWORK_MATRIX::get_complex_impedance_of_column_from_this_Y_matrix(unsigned int col)
+{
+    build_this_jacobian_for_getting_impedance_from_this_Y_matrix();
+
+    int n = this_Y_matrix_pointer->get_matrix_size();
+    int n2 = n+n;
+    vector<double> I;
+    I.reserve(n2);
+    for(int i=0; i<n2; ++i)
+        I.push_back(0.0);
+    I[col]=1.0;
+    vector<double> Zreal = I/this_jacobian;
+    vector<complex<double> > Z;
+    Z.reserve(n);
+    for(int i=0; i<n; ++i)
+        Z.push_back(complex<double>(Zreal[i], Zreal[i+n]));
+    return Z;
+}
+
 complex<double> NETWORK_MATRIX::get_self_impedance_of_physical_bus_from_this_Y_matrix(unsigned int bus)
 {
     int bus_number = get_internal_bus_number_of_physical_bus(bus);
 
-    vector<double> Z = get_impedance_of_column_from_this_Y_matrix(bus_number);
+    /*vector<double> Z = get_impedance_of_column_from_this_Y_matrix(bus_number);
     int n = this_Y_matrix_pointer->get_matrix_size();
-    complex<double> z(Z[bus_number], Z[bus_number+n]);
+    complex<double> z(Z[bus_number], Z[bus_number+n]);*/
+    vector<complex<double> > Z = get_complex_impedance_of_column_from_this_Y_matrix(bus_number);
+    complex<double> z = Z[bus_number];
     return z;
 }
 
-complex<double> NETWORK_MATRIX::get_self_impedance_between_physical_bus_from_this_Y_matrix(unsigned int ibus, unsigned int jbus)
+complex<double> NETWORK_MATRIX::get_mutual_impedance_between_physical_bus_from_this_Y_matrix(unsigned int ibus, unsigned int jbus)
 {
     int ibus_number = get_internal_bus_number_of_physical_bus(ibus);
     int jbus_number = get_internal_bus_number_of_physical_bus(jbus);
 
-    vector<double> Z = get_impedance_of_column_from_this_Y_matrix(jbus_number);
+    /*vector<double> Z = get_impedance_of_column_from_this_Y_matrix(jbus_number);
     int n = this_Y_matrix_pointer->get_matrix_size();
-    complex<double> z(Z[ibus_number], Z[ibus_number+n]);
+    complex<double> z(Z[ibus_number], Z[ibus_number+n]);*/
+
+    vector<complex<double> > Z = get_complex_impedance_of_column_from_this_Y_matrix(jbus_number);
+    complex<double> z = Z[ibus_number];
+
     return z;
 }
 
@@ -380,7 +405,7 @@ complex<double> NETWORK_MATRIX::get_positive_sequence_self_impedance_of_physical
 complex<double> NETWORK_MATRIX::get_positive_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     set_this_Y_and_Z_matrix_as(network_Y1_matrix);
-    return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
+    return get_mutual_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
 }
 
 
@@ -406,7 +431,7 @@ complex<double> NETWORK_MATRIX::get_negative_sequence_self_impedance_of_physical
 complex<double> NETWORK_MATRIX::get_negative_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     set_this_Y_and_Z_matrix_as(network_Y2_matrix);
-    return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
+    return get_mutual_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
 }
 
 complex<double> NETWORK_MATRIX::get_zero_sequence_self_admittance_of_physical_bus(unsigned int bus)
@@ -433,7 +458,7 @@ complex<double> NETWORK_MATRIX::get_zero_sequence_self_impedance_of_physical_bus
 complex<double> NETWORK_MATRIX::get_zero_sequence_mutual_impedance_between_physical_bus(unsigned int ibus, unsigned int jbus)
 {
     set_this_Y_and_Z_matrix_as(network_Y0_matrix);
-    return get_self_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
+    return get_mutual_impedance_between_physical_bus_from_this_Y_matrix(ibus, jbus);
 }
 
 void NETWORK_MATRIX::add_lines_to_network()

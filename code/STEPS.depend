@@ -11856,17 +11856,18 @@
 	"header/network/jacobian_builder.h"
 	"header/basic/sparse_matrix_define.h"
 
-1579255378 d:\steps\code\header\network\network_matrix.h
+1579403160 d:\steps\code\header\network\network_matrix.h
 	"header/basic/base.h"
 	"header/power_system_database.h"
 	"header/basic/sparse_matrix_define.h"
 	"header/basic/inphno.h"
 	<string>
 
-1574318720 d:\steps\code\header\basic\sparse_matrix_define.h
+1579396083 d:\steps\code\header\basic\sparse_matrix_define.h
 	"header/basic/sparse_matrix_csparse.h"
+	"header/basic/complex_sparse_matrix_csparse.h"
 
-1579255377 d:\steps\code\header\basic\sparse_matrix_csparse.h
+1579343189 d:\steps\code\header\basic\sparse_matrix_csparse.h
 	"cs.h"
 	<vector>
 	<ctime>
@@ -11881,7 +11882,7 @@
 	<stddef.h>
 	"mex.h"
 
-1579255378 d:\steps\code\header\basic\sparse_matrix.h
+1579343189 d:\steps\code\header\basic\sparse_matrix.h
 	"cs.h"
 	<vector>
 	<ctime>
@@ -14181,7 +14182,7 @@
 	<iostream>
 	<fstream>
 
-1579255726 source:d:\steps\code\source\basic\sparse_matrix_csparse.cpp
+1579343189 source:d:\steps\code\source\basic\sparse_matrix_csparse.cpp
 	"header/basic/sparse_matrix_csparse.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -16115,7 +16116,7 @@
 	<cstdio>
 	<cmath>
 
-1579256408 source:d:\steps\code\source\network\jacobian_builder.cpp
+1579397058 source:d:\steps\code\source\network\jacobian_builder.cpp
 	"header/network/jacobian_builder.h"
 	"header/basic/utility.h"
 	"header/steps_namespace.h"
@@ -16124,7 +16125,7 @@
 	<iostream>
 	<fstream>
 
-1579255379 source:d:\steps\code\source\network\network_matrix.cpp
+1579396914 source:d:\steps\code\source\network\network_matrix.cpp
 	"header/network/network_matrix.h"
 	"header/basic/utility.h"
 	"header/STEPS.h"
@@ -16132,7 +16133,7 @@
 	<iostream>
 	<set>
 
-1579255376 source:d:\steps\code\source\network\network_matrix_test.cpp
+1579397075 source:d:\steps\code\source\network\network_matrix_test.cpp
 	"header/basic/test_macro.h"
 	"header/network/network_matrix_test.h"
 	"header/basic/utility.h"
@@ -17066,7 +17067,7 @@
 	"header/steps_namespace.h"
 	"header/basic/utility.h"
 
-1579321837 source:d:\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator_test.cpp
+1579337155 source:d:\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator_test.cpp
 	"header/basic/test_macro.h"
 	"header/toolkit/dynamic_simulator/dynamic_simulator_test.h"
 	"header/basic/utility.h"
@@ -17117,7 +17118,7 @@
 	"header/steps_namespace.h"
 	<cstdio>
 
-1579260139 source:d:\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
+1579397107 source:d:\steps\code\source\toolkit\dynamic_simulator\dynamic_simulator.cpp
 	"header/toolkit/dynamic_simulator/dynamic_simulator.h"
 	"header/basic/constants.h"
 	"header/basic/utility.h"
@@ -17130,7 +17131,7 @@
 	<iostream>
 	<ctime>
 
-1579254638 source:d:\steps\code\source\toolkit\powerflow_solver\powerflow_solver.cpp
+1579397119 source:d:\steps\code\source\toolkit\powerflow_solver\powerflow_solver.cpp
 	"header/toolkit/powerflow_solver/powerflow_solver.h"
 	"header/basic/utility.h"
 	"header/basic/constants.h"
@@ -22911,4 +22912,60 @@
 	"header/data_imexporter/psse_imexporter.h"
 	"header/data_imexporter/bpa_imexporter.h"
 	<cstdio>
+
+1579395899 d:\steps\code\header\basic\complex_sparse_matrix_csparse.h
+	"cs.h"
+	<vector>
+	<ctime>
+	<complex>
+	"complex_sparse_matrix.h"
+
+1579395885 d:\steps\code\header\basic\complex_sparse_matrix.h
+	"cs.h"
+	<vector>
+	<ctime>
+	<complex>
+
+1579395999 source:d:\steps\code\source\basic\complex_sparse_matrix.cpp
+	"header/basic/complex_sparse_matrix.h"
+	"header/basic/constants.h"
+	"header/basic/utility.h"
+	<string>
+	<istream>
+	<ostream>
+	<sstream>
+	<iomanip>
+	<iostream>
+	<fstream>
+
+1579396013 source:d:\steps\code\source\basic\complex_sparse_matrix_csparse.cpp
+	"header/basic/complex_sparse_matrix_csparse.h"
+	"header/basic/constants.h"
+	"header/basic/utility.h"
+	<string>
+	<istream>
+	<ostream>
+	<sstream>
+	<iomanip>
+	<iostream>
+	<fstream>
+	<ctime>
+
+1579396027 source:d:\steps\code\source\basic\complex_sparse_matrix_test.cpp
+	"header/basic/test_macro.h"
+	"header/basic/complex_sparse_matrix_test.h"
+	"header/basic/utility.h"
+	<cstdlib>
+	<cstring>
+	<istream>
+	<iostream>
+	<cstdio>
+	<complex>
+
+1579395932 d:\steps\code\header\basic\complex_sparse_matrix_test.h
+	<istream>
+	<iostream>
+	"cpptest.h"
+	"header/basic/sparse_matrix_define.h"
+	"header/STEPS.h"
 

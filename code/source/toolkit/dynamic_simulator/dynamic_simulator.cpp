@@ -2714,7 +2714,7 @@ void DYNAMICS_SIMULATOR::get_bus_currnet_into_network()
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
-    const SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
+    const STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
     unsigned int nbus = psdb.get_in_service_bus_count();
 
 	if(I_mismatch.size()!=nbus)
@@ -3151,7 +3151,7 @@ void DYNAMICS_SIMULATOR::build_jacobian()
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
     jacobian.clear();
-    SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
+    STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
     unsigned int nbus = Y.get_matrix_size();
     complex<double> y;
     double g, b;
