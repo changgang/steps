@@ -42,8 +42,8 @@ void DYNAMICS_SIMULATOR::clear()
 
     set_max_DAE_iteration(100);
     set_min_DAE_iteration(3);
-    set_max_network_iteration(20);
-    set_max_update_iteration(100);
+    set_max_network_iteration(50);
+    set_max_update_iteration(10);
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
     set_non_divergent_solution_logic(false);
@@ -2160,7 +2160,7 @@ void DYNAMICS_SIMULATOR::update_with_event()
     ITER_NET = 0;
 
     unsigned int iter = 0;
-    current_max_network_iteration = get_max_update_iteration();
+    current_max_network_iteration = get_max_network_iteration();
     while(true)
     {
         network_converged = solve_network();
@@ -2207,11 +2207,11 @@ void DYNAMICS_SIMULATOR::update()
 
     bool network_converged = false;
 
-    current_max_network_iteration = get_max_update_iteration();
+    current_max_network_iteration = get_max_network_iteration();
     network_converged = solve_network();
     ITER_NET += network_iteration_count;
 
-    if(not network_converged and get_max_update_iteration()>1)
+    if(not network_converged and current_max_network_iteration>1)
     {
         char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
         snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Failed to solve network in %u iterations when updating at time %f s.",
@@ -2420,8 +2420,9 @@ bool DYNAMICS_SIMULATOR::solve_network()
         {
             if(network_iter_count<network_iter_max)
             {
-                build_bus_current_mismatch_vector();
-                delta_V = I_vec/jacobian;
+                //build_bus_current_mismatch_vector();
+                //delta_V = I_vec/jacobian;
+                delta_V = I_mismatch/jacobian;
 
                 update_bus_voltage();
                 if(get_non_divergent_solution_logic()==true)
@@ -3110,9 +3111,9 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     unsigned int n = delta_V.size();
-    n = n>>1;
+    //n = n>>1;
 
-    NETWORK_MATRIX& network = toolkit.get_network_matrix();
+    //NETWORK_MATRIX& network = toolkit.get_network_matrix();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)
@@ -3123,9 +3124,11 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
         double vang0 = bus->get_positive_sequence_angle_in_rad();
         complex<double> V0 = bus->get_positive_sequence_complex_voltage_in_pu();
 
-        complex<double> delta_v = complex<double>(delta_V[i], delta_V[i+n]);
+        //complex<double> delta_v = complex<double>(delta_V[i], delta_V[i+n]); previous version for real matrix
+        //complex<double> V = V0-delta_v*alpha;  previous version for real matrix
 
-        complex<double> V = V0-delta_v*alpha;
+        complex<double> delta_v = delta_V[i];
+        complex<double> V = V0+delta_v*alpha;
 
 		double vmag_new = steps_fast_complex_abs(V);
 
@@ -3156,6 +3159,11 @@ void DYNAMICS_SIMULATOR::build_jacobian()
 
     jacobian.clear();
     STEPS_COMPLEX_SPARSE_MATRIX& Y = network_matrix.get_dynamic_network_Y_matrix();
+
+    jacobian = Y;
+    jacobian.compress_and_merge_duplicate_entries();
+    return;
+
     unsigned int nbus = Y.get_matrix_size();
     complex<double> y;
     double g, b;

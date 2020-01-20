@@ -259,10 +259,10 @@ class DYNAMICS_SIMULATOR: public BASE
         vector< complex<double> > I_mismatch, S_mismatch;
         vector<double> I_vec;
 
-        vector<double> delta_V;
-
-        STEPS_SPARSE_MATRIX jacobian;
-        //STEPS_COMPLEX_SPARSE_MATRIX jacobian;
+        //vector<double> delta_V;
+        //STEPS_SPARSE_MATRIX jacobian;
+        vector<complex<double> > delta_V;
+        STEPS_COMPLEX_SPARSE_MATRIX jacobian;
 
         vector<METER> meters;
         vector<double> meter_values;
