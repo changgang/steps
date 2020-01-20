@@ -44,6 +44,7 @@ void DYNAMICS_SIMULATOR::clear()
     set_min_DAE_iteration(3);
     set_max_network_iteration(50);
     set_max_update_iteration(10);
+    set_max_network_solution_divergent_threshold(3);
     set_allowed_max_power_imbalance_in_MVA(0.001);
     set_iteration_accelerator(1.0);
     set_non_divergent_solution_logic(false);
@@ -136,6 +137,12 @@ void DYNAMICS_SIMULATOR::set_max_update_iteration(unsigned int iteration)
         this->max_update_iteration = iteration;
 }
 
+void DYNAMICS_SIMULATOR::set_max_network_solution_divergent_threshold(unsigned int div_th)
+{
+    if(div_th>0)
+        this->max_network_solution_divergent_threshold = div_th;
+}
+
 void DYNAMICS_SIMULATOR::set_allowed_max_power_imbalance_in_MVA(double tol)
 {
     if(tol>0.0)
@@ -197,6 +204,11 @@ unsigned int DYNAMICS_SIMULATOR::get_max_update_iteration() const
     return max_update_iteration;
 }
 
+unsigned int DYNAMICS_SIMULATOR::get_max_network_solution_divergent_threshold() const
+{
+    return max_network_solution_divergent_threshold;
+}
+
 double DYNAMICS_SIMULATOR::get_allowed_max_power_imbalance_in_MVA() const
 {
     return P_threshold_in_MW;
@@ -232,6 +244,7 @@ void DYNAMICS_SIMULATOR::show_dynamic_simulator_configuration() const
             <<"Minimum iteration for DAE solution: "<<get_min_DAE_iteration()<<"\n"
             <<"Maximum iteration for network: "<<get_max_network_iteration()<<"\n"
             <<"Maximum iteration for updating: "<<get_max_update_iteration()<<"\n"
+            <<"Maximum network solution divergent threshold: "<<get_max_network_solution_divergent_threshold()<<"\n"
             <<"Network solution accelerator: "<<get_iteration_accelerator()<<"\n"
             <<"Rotor angle stability surveillance: "<<(get_rotor_angle_stability_surveillance_flag()?"Enabled":"Disabled")<<"\n"
             <<"Rotor angle stability threshold: "<<get_rotor_angle_stability_threshold_in_deg()<<" deg\n"
@@ -2406,6 +2419,8 @@ bool DYNAMICS_SIMULATOR::solve_network()
     unsigned int network_iter_max = current_max_network_iteration;
     unsigned int network_iter_count = 0;
 
+    unsigned int network_solution_divergent_count = 0;
+
     solve_hvdcs_without_integration();
     get_bus_current_mismatch();
     calculate_bus_power_mismatch_in_MVA();
@@ -2455,7 +2470,17 @@ bool DYNAMICS_SIMULATOR::solve_network()
                 get_bus_current_mismatch();
                 calculate_bus_power_mismatch_in_MVA();
                 double new_smax = get_max_power_mismatch_struct().greatest_mismatch_in_MVA;
-                if(new_smax>get_allowed_max_power_imbalance_in_MVA())
+                if(new_smax>smax)
+                {
+                    ++network_solution_divergent_count;
+                    if(network_solution_divergent_count>get_max_network_solution_divergent_threshold())
+                    {
+                        converged = false;
+                        break;
+                    }
+                }
+                smax = new_smax;
+                if(smax>get_allowed_max_power_imbalance_in_MVA())
                     continue;
                 else
                 {

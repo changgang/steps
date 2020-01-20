@@ -32,6 +32,7 @@ DYNAMICS_SIMULATOR_TEST::DYNAMICS_SIMULATOR_TEST()
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_min_DAE_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_iteration);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_iteration);
+    TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_threshold);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_iteration_accelerator);
     TEST_ADD(DYNAMICS_SIMULATOR_TEST::test_set_get_rotor_angle_stability_surveillance_flag);
@@ -104,6 +105,7 @@ void DYNAMICS_SIMULATOR_TEST::test_constructor()
     TEST_ASSERT(simulator.get_min_DAE_iteration()==3);
     TEST_ASSERT(simulator.get_max_network_iteration()==50);
     TEST_ASSERT(simulator.get_max_update_iteration()==10);
+    TEST_ASSERT(simulator.get_max_network_solution_divergent_threshold()==3);
     TEST_ASSERT(fabs(simulator.get_allowed_max_power_imbalance_in_MVA()-0.001)<FLOAT_EPSILON);
     TEST_ASSERT(fabs(simulator.get_iteration_accelerator()-1.0)<FLOAT_EPSILON);
     TEST_ASSERT(simulator.is_bin_file_export_enabled()==false);
@@ -217,6 +219,19 @@ void DYNAMICS_SIMULATOR_TEST::test_set_get_max_update_iteration()
     TEST_ASSERT(simulator.get_max_update_iteration()==200);
     simulator.set_max_update_iteration(100);
     TEST_ASSERT(simulator.get_max_update_iteration()==100);
+}
+
+void DYNAMICS_SIMULATOR_TEST::test_set_get_max_network_solution_divergent_threshold()
+{
+    show_test_information_for_function_of_class(__FUNCTION__,"DYNAMICS_SIMULATOR_TEST");
+
+    DYNAMICS_SIMULATOR& simulator = default_toolkit.get_dynamic_simulator();
+    simulator.set_max_network_solution_divergent_threshold(2);
+    TEST_ASSERT(simulator.get_max_network_solution_divergent_threshold()==2);
+    simulator.set_max_network_solution_divergent_threshold(100);
+    TEST_ASSERT(simulator.get_max_network_solution_divergent_threshold()==100);
+    simulator.set_max_network_solution_divergent_threshold(1);
+    TEST_ASSERT(simulator.get_max_network_solution_divergent_threshold()==1);
 }
 
 void DYNAMICS_SIMULATOR_TEST::test_set_get_allowed_max_power_imbalance_in_MVA()

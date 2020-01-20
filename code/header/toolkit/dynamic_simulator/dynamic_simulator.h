@@ -38,6 +38,7 @@ class DYNAMICS_SIMULATOR: public BASE
         void set_min_DAE_iteration(unsigned int iteration);
         void set_max_network_iteration(unsigned int iteration);
         void set_max_update_iteration(unsigned int iteration);
+        void set_max_network_solution_divergent_threshold(unsigned int div_th);
         void set_allowed_max_power_imbalance_in_MVA(double tol);
         void set_iteration_accelerator(double alpha);
         void set_non_divergent_solution_logic(bool logic);
@@ -48,6 +49,7 @@ class DYNAMICS_SIMULATOR: public BASE
         unsigned int get_min_DAE_iteration() const;
         unsigned int get_max_network_iteration() const;
         unsigned int get_max_update_iteration() const;
+        unsigned int get_max_network_solution_divergent_threshold() const;
         double get_allowed_max_power_imbalance_in_MVA() const;
         double get_iteration_accelerator() const;
         bool get_non_divergent_solution_logic() const;
@@ -237,7 +239,7 @@ class DYNAMICS_SIMULATOR: public BASE
         double time_elapse_in_a_step;
         double P_threshold_in_MW, Q_threshold_in_MVar;
         unsigned int network_iteration_count, DAE_iteration_count;
-        unsigned int max_network_iteration, max_DAE_iteration, max_update_iteration, min_DAE_iteration;
+        unsigned int max_network_iteration, max_DAE_iteration, max_update_iteration, min_DAE_iteration, max_network_solution_divergent_threshold;
         unsigned int current_max_network_iteration;
         double alpha;
         bool non_divergent_solution_enabled;

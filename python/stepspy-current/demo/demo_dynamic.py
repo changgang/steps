@@ -71,6 +71,7 @@ simulator.save_jacobian_matrix('jacobian.csv')
 
 print("here goes running dynamic simulation")
 
+simulator.set_dynamic_model_database_capacity(1000000)
 simulator.load_dynamic_data('IEEE39.dyr','psse')
 simulator.check_missing_models()
 simulator.check_dynamic_data()
@@ -91,8 +92,10 @@ for gen in gens:
     data = simulator.get_generator_related_model_parameter_pair(gen, "gen")
     print(gen_model, data)
 
-simulator.set_dynamic_simulator_parameter('i', 'max_DAE_iter', 200)
-simulator.set_dynamic_simulator_parameter('i', 'max_NET_iter', 1)
+simulator.set_dynamic_simulator_parameter('i', 'max_DAE_iter', 3)
+simulator.set_dynamic_simulator_parameter('i', 'max_NET_iter', 25)
+simulator.set_dynamic_simulator_parameter('i', 'max_UPDATE_iter', 1)
+simulator.set_dynamic_simulator_parameter('i', 'max_network_divergent_threshold', 2)
 simulator.set_dynamic_simulator_parameter('b', 'bin export logic', False)
 simulator.set_dynamic_simulator_parameter('b', 'csv export logic', True)
 simulator.set_dynamic_simulation_time_step(0.01)

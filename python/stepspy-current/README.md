@@ -23,6 +23,7 @@ STEPS is a simulation toolkit for powerflow and dynamic simulation of large-scal
 
 ## Realse Note
 
+- 0.11.5. Jan. 20, 2020. Add new APIs: set/get_dynamic_model_database_capacity().
 - 0.11.4. Jan.  2, 2020. Fix bug of c_unit in pylibsteps.py. 
 - 0.11.3. Dec. 27, 2019. Add API to set toolkit log file: set_toolkit_log_file(log_file, log_file_append_mode). This version has fatal bug. DONOT use it. Use new version instead.
 - 0.11.2. Dec. 19, 2019. Update 'is' to '==' when comparing string in stepspy.py.
@@ -55,6 +56,12 @@ To install stepspy, you can run the following codes on your computer or server:
 
 ```python
 python -m pip install stepspy
+```
+
+To update stepspy, you can run the following codes on your computer or server:
+
+```python
+python -m pip install --upgrade stepspy
 ```
 
 If you want to manually install stepspy, follow the instructions:

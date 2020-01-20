@@ -20,6 +20,8 @@ unsigned int api_get_dynamic_simulator_integer_parameter(char* parameter_name, u
         return ds.get_max_network_iteration();
     if(PARAMETER_NAME=="MAX_UPDATE_ITER" or PARAMETER_NAME=="MAX UPDATE ITERATION")
         return ds.get_max_update_iteration();
+    if(PARAMETER_NAME=="MAX_NET_DIVERGENT_THRESHOLD" or PARAMETER_NAME=="MAX NETWORK DIVERGENT THRESHOLD")
+        return ds.get_max_network_solution_divergent_threshold();
 
     char buffer[STEPS_MAX_TEMP_CHAR_BUFFER_SIZE];
     snprintf(buffer, STEPS_MAX_TEMP_CHAR_BUFFER_SIZE, "Parameter '%s' is not supported for dynamic simulator with api %s.\n"
@@ -52,6 +54,11 @@ void api_set_dynamic_simulator_integer_parameter(char* parameter_name, int value
     if(PARAMETER_NAME=="MAX_UPDATE_ITER" or PARAMETER_NAME=="MAX UPDATE ITERATION")
     {
         ds.set_max_update_iteration(value);
+        return;
+    }
+    if(PARAMETER_NAME=="MAX_NET_DIVERGENT_THRESHOLD" or PARAMETER_NAME=="MAX NETWORK DIVERGENT THRESHOLD")
+    {
+        ds.set_max_network_solution_divergent_threshold(value);
         return;
     }
 
