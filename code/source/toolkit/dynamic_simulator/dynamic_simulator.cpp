@@ -1775,9 +1775,9 @@ void DYNAMICS_SIMULATOR::save_meter_values()
     {
         get_bus_current_mismatch();
         calculate_bus_power_mismatch_in_MVA();
-        POWER_MISMATCH_STRUCT s_mismatch = get_max_power_mismatch_struct();
-        double smax = s_mismatch.greatest_mismatch_in_MVA;
-        unsigned int smax_bus = s_mismatch.bus_with_greatest_mismatch;
+        GREATEST_POWER_CURRENT_MISMATCH_STRUCT s_mismatch = get_max_power_mismatch_struct();
+        double smax = s_mismatch.greatest_power_mismatch_in_MVA;
+        unsigned int smax_bus = s_mismatch.bus_with_greatest_power_mismatch;
 
         update_all_meters_value();
 
@@ -2421,11 +2421,17 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     unsigned int network_solution_divergent_count = 0;
 
+    double smax_th_MVA = get_allowed_max_power_imbalance_in_MVA();
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    double imax_th_pu = smax_th_MVA*toolkit.get_one_over_system_base_power_in_one_over_MVA();
+
     solve_hvdcs_without_integration();
     get_bus_current_mismatch();
-    calculate_bus_power_mismatch_in_MVA();
-    double smax = get_max_power_mismatch_struct().greatest_mismatch_in_MVA;
-    if(smax<get_allowed_max_power_imbalance_in_MVA())
+    /*calculate_bus_power_mismatch_in_MVA();
+    double smax = get_max_power_mismatch_struct().greatest_power_mismatch_in_MVA;
+    if(smax<get_allowed_max_power_imbalance_in_MVA())*/
+    double imax = get_max_current_mismatch_struct().greatest_current_mismatch_in_pu;
+    if(imax<imax_th_pu)
     {
         return true;
     }
@@ -2452,9 +2458,11 @@ bool DYNAMICS_SIMULATOR::solve_network()
                         //++network_iter_count;
                         solve_hvdcs_without_integration();
                         get_bus_current_mismatch();
-                        calculate_bus_power_mismatch_in_MVA();
-                        double new_smax = get_max_power_mismatch_struct().greatest_mismatch_in_MVA;
-                        if(new_smax>=smax)
+                        /*calculate_bus_power_mismatch_in_MVA();
+                        double new_smax = get_max_power_mismatch_struct().greatest_power_mismatch_in_MVA;
+                        if(new_smax>=smax)*/
+                        double new_imax = get_max_current_mismatch_struct().greatest_current_mismatch_in_pu;
+                        if(new_imax>=imax)
                         {
                             alpha *= 0.5;
                             update_bus_voltage();
@@ -2468,9 +2476,11 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
                 solve_hvdcs_without_integration();
                 get_bus_current_mismatch();
-                calculate_bus_power_mismatch_in_MVA();
-                double new_smax = get_max_power_mismatch_struct().greatest_mismatch_in_MVA;
-                if(new_smax>smax)
+                /*calculate_bus_power_mismatch_in_MVA();
+                double new_smax = get_max_power_mismatch_struct().greatest_power_mismatch_in_MVA;
+                if(new_smax>smax)*/
+                double new_imax = get_max_current_mismatch_struct().greatest_current_mismatch_in_pu;
+                if(new_imax>imax)
                 {
                     ++network_solution_divergent_count;
                     if(network_solution_divergent_count>get_max_network_solution_divergent_threshold())
@@ -2479,8 +2489,10 @@ bool DYNAMICS_SIMULATOR::solve_network()
                         break;
                     }
                 }
-                smax = new_smax;
-                if(smax>get_allowed_max_power_imbalance_in_MVA())
+                /*smax = new_smax;
+                if(smax>get_allowed_max_power_imbalance_in_MVA())*/
+                imax = new_imax;
+                if(imax>imax_th_pu)
                     continue;
                 else
                 {
@@ -3061,7 +3073,7 @@ bool DYNAMICS_SIMULATOR::is_converged()
 {
     calculate_bus_power_mismatch_in_MVA();
 
-    double smax = get_max_power_mismatch_struct().greatest_mismatch_in_MVA;
+    double smax = get_max_power_mismatch_struct().greatest_power_mismatch_in_MVA;
 
     double s_allowed = get_allowed_max_power_imbalance_in_MVA();
 
@@ -3090,7 +3102,7 @@ void DYNAMICS_SIMULATOR:: calculate_bus_power_mismatch_in_MVA()
     }
 }
 
-POWER_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatch_struct()
+GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatch_struct()
 {
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -3106,11 +3118,34 @@ POWER_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_power_mismatch_struct()
             smax_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
         }
     }
-    POWER_MISMATCH_STRUCT s_mismatch;
-    s_mismatch.greatest_mismatch_in_MVA = smax;
-    s_mismatch.bus_with_greatest_mismatch = smax_bus;
+    GREATEST_POWER_CURRENT_MISMATCH_STRUCT s_mismatch;
+    s_mismatch.greatest_power_mismatch_in_MVA = smax;
+    s_mismatch.bus_with_greatest_power_mismatch = smax_bus;
 
     return s_mismatch;
+}
+
+GREATEST_POWER_CURRENT_MISMATCH_STRUCT DYNAMICS_SIMULATOR::get_max_current_mismatch_struct()
+{
+    NETWORK_MATRIX& network_matrix = get_network_matrix();
+
+    double Imax = 0.0;
+    unsigned int Imax_bus = 0;
+    unsigned int n = I_mismatch.size();
+    for(unsigned int i=0; i!=n; ++i)
+    {
+        double I = steps_fast_complex_abs(I_mismatch[i]);
+        if(I>Imax)
+        {
+            Imax = I;
+            Imax_bus = network_matrix.get_physical_bus_number_of_internal_bus(i);
+        }
+    }
+    GREATEST_POWER_CURRENT_MISMATCH_STRUCT i_mismatch;
+    i_mismatch.greatest_current_mismatch_in_pu = Imax;
+    i_mismatch.bus_with_greatest_current_mismatch = Imax_bus;
+
+    return i_mismatch;
 }
 
 

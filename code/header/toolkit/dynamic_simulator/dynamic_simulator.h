@@ -203,7 +203,8 @@ class DYNAMICS_SIMULATOR: public BASE
 
         bool is_converged();
         void calculate_bus_power_mismatch_in_MVA();
-        POWER_MISMATCH_STRUCT get_max_power_mismatch_struct();
+        GREATEST_POWER_CURRENT_MISMATCH_STRUCT get_max_power_mismatch_struct();
+        GREATEST_POWER_CURRENT_MISMATCH_STRUCT get_max_current_mismatch_struct();
 
         void build_bus_current_mismatch_vector();
 

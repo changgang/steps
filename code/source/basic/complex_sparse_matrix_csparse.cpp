@@ -430,7 +430,6 @@ vector<complex<double> >& COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<co
     if(LU_factorization_is_performed())
     {
         solve_Lx_eq_b(b);
-
         solve_xU_eq_b(b);
     }
     else
@@ -478,10 +477,12 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<complex<double> >& b)
 
         cxs_ipvec(LU->pinv, bb, LU_workspace, matrix_complex->n) ;       /* x = b(p) */
         int OK = cxs_lsolve (LU->L, LU_workspace) ;               /* x = L\x */
+
         if(OK == 1)
         {
             // now solution is OK
             for(unsigned int i=0; i!=n; ++i) b[i]=LU_workspace[i]; // now reset b with bb
+            //memcpy(b, LU_workspace, n*sizeof(complex<double>));
         }
         else
         {
@@ -523,6 +524,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<complex<double> >& b)
     if(bb!=NULL)
     {
         for(unsigned int i=0; i!=n; ++i) LU_workspace[i]=b[i]; // set bb
+
         int OK = cxs_usolve(LU->U, LU_workspace) ;               /* x = U\x */
         cxs_ipvec(LU_symbolic->q, LU_workspace, bb, matrix_complex->n) ;          /* b(q) = x */
 
@@ -530,6 +532,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<complex<double> >& b)
         {
             // now solution is OK
             for(unsigned int i=0; i!=n; ++i) b[i]=bb[i]; // now reset b with bb
+            //memcpy(b, bb, n*sizeof(complex<double>));
         }
         else
         {
