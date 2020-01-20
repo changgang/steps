@@ -2,8 +2,8 @@ from ctypes import *
 import platform
 import os
 
-libsteps_version = "0.11.1"
-libsteps_date = "2020/1/2"
+libsteps_version = "0.11.2"
+libsteps_date = "2020/1/19"
 
 def get_base_library():
     dirname, filename = os.path.split(os.path.abspath(__file__))
@@ -58,7 +58,13 @@ def load_library():
     libsteps.api_set_toolkit_parallel_thread_number.argtypes = (c_uint, c_uint)
     
     libsteps.api_get_toolkit_parallel_thread_number.restype = c_uint
-    libsteps.api_get_toolkit_parallel_thread_number.argtypes = (c_uint, )    
+    libsteps.api_get_toolkit_parallel_thread_number.argtypes = (c_uint, )   
+    
+    libsteps.api_set_toolkit_dynamic_model_database_capacity.restype = None
+    libsteps.api_set_toolkit_dynamic_model_database_capacity.argtypes = (c_uint, c_uint)
+    
+    libsteps.api_get_toolkit_dynamic_model_database_capacity.restype = c_uint
+    libsteps.api_get_toolkit_dynamic_model_database_capacity.argtypes = (c_uint, )    
     
     libsteps.api_get_toolkit_float_data.restype = c_double
     libsteps.api_get_toolkit_float_data.argtypes = (c_char_p, c_uint)

@@ -1,13 +1,13 @@
-#include "cs.h"
+#include "cxs.h"
 /* compute the etree of A (using triu(A), or A'A without forming A'A */
-CS_INT *cs_etree (const cs *A, CS_INT ata)
+CXS_INT *cxs_etree (const cxs *A, CXS_INT ata)
 {
-    CS_INT i, k, p, m, n, inext, *Ap, *Ai, *w, *parent, *ancestor, *prev ;
-    if (!CS_CSC (A)) return (NULL) ;        /* check inputs */
+    CXS_INT i, k, p, m, n, inext, *Ap, *Ai, *w, *parent, *ancestor, *prev ;
+    if (!CXS_CSC (A)) return (NULL) ;        /* check inputs */
     m = A->m ; n = A->n ; Ap = A->p ; Ai = A->i ;
-    parent = cs_malloc (n, sizeof (CS_INT)) ;              /* allocate result */
-    w = cs_malloc (n + (ata ? m : 0), sizeof (CS_INT)) ;   /* get workspace */
-    if (!w || !parent) return (cs_idone (parent, NULL, w, 0)) ;
+    parent = cxs_malloc (n, sizeof (CXS_INT)) ;              /* allocate result */
+    w = cxs_malloc (n + (ata ? m : 0), sizeof (CXS_INT)) ;   /* get workspace */
+    if (!w || !parent) return (cxs_idone (parent, NULL, w, 0)) ;
     ancestor = w ; prev = w + n ;
     if (ata) for (i = 0 ; i < m ; i++) prev [i] = -1 ;
     for (k = 0 ; k < n ; k++)
@@ -26,5 +26,5 @@ CS_INT *cs_etree (const cs *A, CS_INT ata)
             if (ata) prev [Ai [p]] = k ;
         }
     }
-    return (cs_idone (parent, NULL, w, 1)) ;
+    return (cxs_idone (parent, NULL, w, 1)) ;
 }

@@ -1,10 +1,10 @@
-#include "cs.h"
+#include "cxs.h"
 /* y = A*x+y */
-CS_INT cs_gaxpy (const cs *A, const CS_ENTRY *x, CS_ENTRY *y)
+CXS_INT cxs_gaxpy (const cxs *A, const CXS_ENTRY *x, CXS_ENTRY *y)
 {
-    CS_INT p, j, n, *Ap, *Ai ;
-    CS_ENTRY *Ax ;
-    if (!CS_CSC (A) || !x || !y) return (0) ;       /* check inputs */
+    CXS_INT p, j, n, *Ap, *Ai ;
+    CXS_ENTRY *Ax ;
+    if (!CXS_CSC (A) || !x || !y) return (0) ;       /* check inputs */
     n = A->n ; Ap = A->p ; Ai = A->i ; Ax = A->x ;
     for (j = 0 ; j < n ; j++)
     {

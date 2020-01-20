@@ -1,9 +1,9 @@
-#include "cs.h"
-static CS_INT cs_tol (CS_INT i, CS_INT j, CS_ENTRY aij, void *tol)
+#include "cxs.h"
+static CXS_INT cxs_tol (CXS_INT i, CXS_INT j, CXS_ENTRY aij, void *tol)
 {
-    return (CS_ABS (aij) > *((double *) tol)) ;
+    return (CXS_ABS (aij) > *((double *) tol)) ;
 }
-CS_INT cs_droptol (cs *A, double tol)
+CXS_INT cxs_droptol (cxs *A, double tol)
 {
-    return (cs_fkeep (A, &cs_tol, &tol)) ;    /* keep all large entries */
+    return (cxs_fkeep (A, &cxs_tol, &tol)) ;    /* keep all large entries */
 }

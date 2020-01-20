@@ -262,6 +262,7 @@ class DYNAMICS_SIMULATOR: public BASE
         vector<double> delta_V;
 
         STEPS_SPARSE_MATRIX jacobian;
+        //STEPS_COMPLEX_SPARSE_MATRIX jacobian;
 
         vector<METER> meters;
         vector<double> meter_values;

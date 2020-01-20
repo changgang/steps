@@ -459,7 +459,7 @@ void EQUIVALENT_DEVICE::run(DYNAMIC_MODE mode)
         case INTEGRATE_MODE:
         {
             EQUIVALENT_MODEL* model = get_equivalent_model();
-            if(model!=NULL)
+            if(model!=NULL and model->is_model_active())
             {
                 model->run(mode);
 

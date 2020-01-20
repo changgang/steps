@@ -1,8 +1,8 @@
-#include "cs.h"
+#include "cxs.h"
 /* clear w */
-static CS_INT cs_wclear (CS_INT mark, CS_INT lemax, CS_INT *w, CS_INT n)
+static CXS_INT cxs_wclear (CXS_INT mark, CXS_INT lemax, CXS_INT *w, CXS_INT n)
 {
-    CS_INT k ;
+    CXS_INT k ;
     if (mark < 2 || (mark + lemax < 0))
     {
         for (k = 0 ; k < n ; k++) if (w [k] != 0) w [k] = 1 ;
@@ -12,27 +12,27 @@ static CS_INT cs_wclear (CS_INT mark, CS_INT lemax, CS_INT *w, CS_INT n)
 }
 
 /* keep off-diagonal entries; drop diagonal entries */
-static CS_INT cs_diag (CS_INT i, CS_INT j, CS_ENTRY aij, void *other) { return (i != j) ; }
+static CXS_INT cxs_diag (CXS_INT i, CXS_INT j, CXS_ENTRY aij, void *other) { return (i != j) ; }
 
 /* p = amd(A+A') if symmetric is true, or amd(A'A) otherwise */
-CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:QR */
+CXS_INT *cxs_amd (CXS_INT order, const cxs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:QR */
 {
-    cs *C, *A2, *AT ;
-    CS_INT *Cp, *Ci, *last, *W, *len, *nv, *next, *P, *head, *elen, *degree, *w,
+    cxs *C, *A2, *AT ;
+    CXS_INT *Cp, *Ci, *last, *W, *len, *nv, *next, *P, *head, *elen, *degree, *w,
         *hhead, *ATp, *ATi, d, dk, dext, lemax = 0, e, elenk, eln, i, j, k, k1,
         k2, k3, jlast, ln, dense, nzmax, mindeg = 0, nvi, nvj, nvk, mark, wnvi,
         ok, cnz, nel = 0, p, p1, p2, p3, p4, pj, pk, pk1, pk2, pn, q, n, m, t ;
-    CS_INT h ;
+    CXS_INT h ;
     /* --- Construct matrix C ----------------------------------------------- */
-    if (!CS_CSC (A) || order <= 0 || order > 3) return (NULL) ; /* check */
-    AT = cs_transpose (A, 0) ;              /* compute A' */
+    if (!CXS_CSC (A) || order <= 0 || order > 3) return (NULL) ; /* check */
+    AT = cxs_transpose (A, 0) ;              /* compute A' */
     if (!AT) return (NULL) ;
     m = A->m ; n = A->n ;
-    dense = CS_MAX (16, 10 * sqrt ((double) n)) ;   /* find dense threshold */
-    dense = CS_MIN (n-2, dense) ;
+    dense = CXS_MAX (16, 10 * sqrt ((double) n)) ;   /* find dense threshold */
+    dense = CXS_MIN (n-2, dense) ;
     if (order == 1 && n == m)
     {
-        C = cs_add (A, AT, 0, 0) ;          /* C = A+A' */
+        C = cxs_add (A, AT, 0, 0) ;          /* C = A+A' */
     }
     else if (order == 2)
     {
@@ -46,23 +46,23 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
             for ( ; p < ATp [j+1] ; p++) ATi [p2++] = ATi [p] ;
         }
         ATp [m] = p2 ;                      /* finalize AT */
-        A2 = cs_transpose (AT, 0) ;         /* A2 = AT' */
-        C = A2 ? cs_multiply (AT, A2) : NULL ;  /* C=A'*A with no dense rows */
-        cs_spfree (A2) ;
+        A2 = cxs_transpose (AT, 0) ;         /* A2 = AT' */
+        C = A2 ? cxs_multiply (AT, A2) : NULL ;  /* C=A'*A with no dense rows */
+        cxs_spfree (A2) ;
     }
     else
     {
-        C = cs_multiply (AT, A) ;           /* C=A'*A */
+        C = cxs_multiply (AT, A) ;           /* C=A'*A */
     }
-    cs_spfree (AT) ;
+    cxs_spfree (AT) ;
     if (!C) return (NULL) ;
-    cs_fkeep (C, &cs_diag, NULL) ;          /* drop diagonal entries */
+    cxs_fkeep (C, &cxs_diag, NULL) ;          /* drop diagonal entries */
     Cp = C->p ;
     cnz = Cp [n] ;
-    P = cs_malloc (n+1, sizeof (CS_INT)) ;     /* allocate result */
-    W = cs_malloc (8*(n+1), sizeof (CS_INT)) ; /* get workspace */
+    P = cxs_malloc (n+1, sizeof (CXS_INT)) ;     /* allocate result */
+    W = cxs_malloc (8*(n+1), sizeof (CXS_INT)) ; /* get workspace */
     t = cnz + cnz/5 + 2*n ;                 /* add elbow room to C */
-    if (!P || !W || !cs_sprealloc (C, t)) return (cs_idone (P, C, W, 0)) ;
+    if (!P || !W || !cxs_sprealloc (C, t)) return (cxs_idone (P, C, W, 0)) ;
     len  = W           ; nv     = W +   (n+1) ; next   = W + 2*(n+1) ;
     head = W + 3*(n+1) ; elen   = W + 4*(n+1) ; degree = W + 5*(n+1) ;
     w    = W + 6*(n+1) ; hhead  = W + 7*(n+1) ;
@@ -83,7 +83,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
         elen [i] = 0 ;                      /* Ek of node i is empty */
         degree [i] = len [i] ;              /* degree of node i */
     }
-    mark = cs_wclear (0, 0, w, n) ;         /* clear w */
+    mark = cxs_wclear (0, 0, w, n) ;         /* clear w */
     elen [n] = -2 ;                         /* n is a dead element */
     Cp [n] = -1 ;                           /* n is a root of assembly tree */
     w [n] = 0 ;                             /* n is a dead element */
@@ -103,7 +103,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
             nv [i] = 0 ;                    /* absorb i into element n */
             elen [i] = -1 ;                 /* node i is dead */
             nel++ ;
-            Cp [i] = CS_FLIP (n) ;
+            Cp [i] = CXS_FLIP (n) ;
             nv [n]++ ;
         }
         else
@@ -130,12 +130,12 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
                 if ((p = Cp [j]) >= 0)      /* j is a live node or element */
                 {
                     Cp [j] = Ci [p] ;       /* save first entry of object */
-                    Ci [p] = CS_FLIP (j) ;  /* first entry is now CS_FLIP(j) */
+                    Ci [p] = CXS_FLIP (j) ;  /* first entry is now CXS_FLIP(j) */
                 }
             }
             for (q = 0, p = 0 ; p < cnz ; ) /* scan all of memory */
             {
-                if ((j = CS_FLIP (Ci [p++])) >= 0)  /* found object j */
+                if ((j = CXS_FLIP (Ci [p++])) >= 0)  /* found object j */
                 {
                     Ci [q] = Cp [j] ;       /* restore first entry of object */
                     Cp [j] = q++ ;          /* new pointer to object j */
@@ -183,7 +183,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
             }
             if (e != k)
             {
-                Cp [e] = CS_FLIP (k) ;      /* absorb e into k */
+                Cp [e] = CXS_FLIP (k) ;      /* absorb e into k */
                 w [e] = 0 ;                 /* e is now a dead element */
             }
         }
@@ -193,7 +193,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
         len [k] = pk2 - pk1 ;
         elen [k] = -2 ;                     /* k is now an element */
         /* --- Find set differences ----------------------------------------- */
-        mark = cs_wclear (mark, lemax, w, n) ;  /* clear w if necessary */
+        mark = cxs_wclear (mark, lemax, w, n) ;  /* clear w if necessary */
         for (pk = pk1 ; pk < pk2 ; pk++)    /* scan 1: find |Le\Lk| */
         {
             i = Ci [pk] ;
@@ -234,7 +234,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
                     }
                     else
                     {
-                        Cp [e] = CS_FLIP (k) ;  /* aggressive absorb. e->k */
+                        Cp [e] = CXS_FLIP (k) ;  /* aggressive absorb. e->k */
                         w [e] = 0 ;             /* e is a dead element */
                     }
                 }
@@ -252,7 +252,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
             }
             if (d == 0)                     /* check for mass elimination */
             {
-                Cp [i] = CS_FLIP (k) ;      /* absorb i into k */
+                Cp [i] = CXS_FLIP (k) ;      /* absorb i into k */
                 nvi = -nv [i] ;
                 dk -= nvi ;                 /* |Lk| -= |i| */
                 nvk += nvi ;                /* |k| += nv[i] */
@@ -262,7 +262,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
             }
             else
             {
-                degree [i] = CS_MIN (degree [i], d) ;   /* update degree(i) */
+                degree [i] = CXS_MIN (degree [i], d) ;   /* update degree(i) */
                 Ci [pn] = Ci [p3] ;         /* move first node to end */
                 Ci [p3] = Ci [p1] ;         /* move 1st el. to end of Ei */
                 Ci [p1] = k ;               /* add k as 1st element in of Ei */
@@ -274,8 +274,8 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
             }
         }                                   /* scan2 is done */
         degree [k] = dk ;                   /* finalize |Lk| */
-        lemax = CS_MAX (lemax, dk) ;
-        mark = cs_wclear (mark+lemax, lemax, w, n) ;    /* clear w */
+        lemax = CXS_MAX (lemax, dk) ;
+        mark = cxs_wclear (mark+lemax, lemax, w, n) ;    /* clear w */
         /* --- Supernode detection ------------------------------------------ */
         for (pk = pk1 ; pk < pk2 ; pk++)
         {
@@ -299,7 +299,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
                     }
                     if (ok)                     /* i and j are identical */
                     {
-                        Cp [j] = CS_FLIP (i) ;  /* absorb j into i */
+                        Cp [j] = CXS_FLIP (i) ;  /* absorb j into i */
                         nv [i] += nv [j] ;
                         nv [j] = 0 ;
                         elen [j] = -1 ;         /* node j is dead */
@@ -321,12 +321,12 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
             if ((nvi = -nv [i]) <= 0) continue ;/* skip if i is dead */
             nv [i] = nvi ;                      /* restore nv[i] */
             d = degree [i] + dk - nvi ;         /* compute external degree(i) */
-            d = CS_MIN (d, n - nel - nvi) ;
+            d = CXS_MIN (d, n - nel - nvi) ;
             if (head [d] != -1) last [head [d]] = i ;
             next [i] = head [d] ;               /* put i back in degree list */
             last [i] = -1 ;
             head [d] = i ;
-            mindeg = CS_MIN (mindeg, d) ;       /* find new minimum degree */
+            mindeg = CXS_MIN (mindeg, d) ;       /* find new minimum degree */
             degree [i] = d ;
             Ci [p++] = i ;                      /* place i in Lk */
         }
@@ -339,7 +339,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
         if (elenk != 0) cnz = p ;           /* free unused space in Lk */
     }
     /* --- Postordering ----------------------------------------------------- */
-    for (i = 0 ; i < n ; i++) Cp [i] = CS_FLIP (Cp [i]) ;/* fix assembly tree */
+    for (i = 0 ; i < n ; i++) Cp [i] = CXS_FLIP (Cp [i]) ;/* fix assembly tree */
     for (j = 0 ; j <= n ; j++) head [j] = -1 ;
     for (j = n ; j >= 0 ; j--)              /* place unordered nodes in lists */
     {
@@ -358,7 +358,7 @@ CS_INT *cs_amd (CS_INT order, const cs *A)  /* order 0:natural, 1:Chol, 2:LU, 3:
     }
     for (k = 0, i = 0 ; i <= n ; i++)       /* postorder the assembly tree */
     {
-        if (Cp [i] == -1) k = cs_tdfs (i, k, head, next, P, w) ;
+        if (Cp [i] == -1) k = cxs_tdfs (i, k, head, next, P, w) ;
     }
-    return (cs_idone (P, C, W, 1)) ;
+    return (cxs_idone (P, C, W, 1)) ;
 }

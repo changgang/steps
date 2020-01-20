@@ -1,10 +1,10 @@
-#include "cs.h"
+#include "cxs.h"
 /* solve Ux=b where x and b are dense.  x=b on input, solution on output. */
-CS_INT cs_usolve (const cs *U, CS_ENTRY *x)
+CXS_INT cxs_usolve (const cxs *U, CXS_ENTRY *x)
 {
-    CS_INT p, j, n, *Up, *Ui ;
-    CS_ENTRY *Ux ;
-    if (!CS_CSC (U) || !x) return (0) ;                     /* check inputs */
+    CXS_INT p, j, n, *Up, *Ui ;
+    CXS_ENTRY *Ux ;
+    if (!CXS_CSC (U) || !x) return (0) ;                     /* check inputs */
     n = U->n ; Up = U->p ; Ui = U->i ; Ux = U->x ;
     for (j = n-1 ; j >= 0 ; j--)
     {

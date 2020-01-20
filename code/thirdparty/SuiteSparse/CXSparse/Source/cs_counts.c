@@ -1,31 +1,31 @@
-#include "cs.h"
+#include "cxs.h"
 /* column counts of LL'=A or LL'=A'A, given parent & post ordering */
 #define HEAD(k,j) (ata ? head [k] : j)
 #define NEXT(J)   (ata ? next [J] : -1)
-static void init_ata (cs *AT, const CS_INT *post, CS_INT *w, CS_INT **head, CS_INT **next)
+static void init_ata (cxs *AT, const CXS_INT *post, CXS_INT *w, CXS_INT **head, CXS_INT **next)
 {
-    CS_INT i, k, p, m = AT->n, n = AT->m, *ATp = AT->p, *ATi = AT->i ;
+    CXS_INT i, k, p, m = AT->n, n = AT->m, *ATp = AT->p, *ATi = AT->i ;
     *head = w+4*n, *next = w+5*n+1 ;
     for (k = 0 ; k < n ; k++) w [post [k]] = k ;    /* invert post */
     for (i = 0 ; i < m ; i++)
     {
-        for (k = n, p = ATp[i] ; p < ATp[i+1] ; p++) k = CS_MIN (k, w [ATi[p]]);
+        for (k = n, p = ATp[i] ; p < ATp[i+1] ; p++) k = CXS_MIN (k, w [ATi[p]]);
         (*next) [i] = (*head) [k] ;     /* place row i in linked list k */
         (*head) [k] = i ;
     }
 }
-CS_INT *cs_counts (const cs *A, const CS_INT *parent, const CS_INT *post, CS_INT ata)
+CXS_INT *cxs_counts (const cxs *A, const CXS_INT *parent, const CXS_INT *post, CXS_INT ata)
 {
-    CS_INT i, j, k, n, m, J, s, p, q, jleaf, *ATp, *ATi, *maxfirst, *prevleaf,
+    CXS_INT i, j, k, n, m, J, s, p, q, jleaf, *ATp, *ATi, *maxfirst, *prevleaf,
         *ancestor, *head = NULL, *next = NULL, *colcount, *w, *first, *delta ;
-    cs *AT ;
-    if (!CS_CSC (A) || !parent || !post) return (NULL) ;    /* check inputs */
+    cxs *AT ;
+    if (!CXS_CSC (A) || !parent || !post) return (NULL) ;    /* check inputs */
     m = A->m ; n = A->n ;
     s = 4*n + (ata ? (n+m+1) : 0) ;
-    delta = colcount = cs_malloc (n, sizeof (CS_INT)) ;    /* allocate result */
-    w = cs_malloc (s, sizeof (CS_INT)) ;                   /* get workspace */
-    AT = cs_transpose (A, 0) ;                          /* AT = A' */
-    if (!AT || !colcount || !w) return (cs_idone (colcount, AT, w, 0)) ;
+    delta = colcount = cxs_malloc (n, sizeof (CXS_INT)) ;    /* allocate result */
+    w = cxs_malloc (s, sizeof (CXS_INT)) ;                   /* get workspace */
+    AT = cxs_transpose (A, 0) ;                          /* AT = A' */
+    if (!AT || !colcount || !w) return (cxs_idone (colcount, AT, w, 0)) ;
     ancestor = w ; maxfirst = w+n ; prevleaf = w+2*n ; first = w+3*n ;
     for (k = 0 ; k < s ; k++) w [k] = -1 ;      /* clear workspace w [0..s-1] */
     for (k = 0 ; k < n ; k++)                   /* find first [j] */
@@ -46,7 +46,7 @@ CS_INT *cs_counts (const cs *A, const CS_INT *parent, const CS_INT *post, CS_INT
             for (p = ATp [J] ; p < ATp [J+1] ; p++)
             {
                 i = ATi [p] ;
-                q = cs_leaf (i, j, first, maxfirst, prevleaf, ancestor, &jleaf);
+                q = cxs_leaf (i, j, first, maxfirst, prevleaf, ancestor, &jleaf);
                 if (jleaf >= 1) delta [j]++ ;   /* A(i,j) is in skeleton */
                 if (jleaf == 2) delta [q]-- ;   /* account for overlap in q */
             }
@@ -57,5 +57,5 @@ CS_INT *cs_counts (const cs *A, const CS_INT *parent, const CS_INT *post, CS_INT
     {
         if (parent [j] != -1) colcount [parent [j]] += colcount [j] ;
     }
-    return (cs_idone (colcount, AT, w, 1)) ;    /* success: free workspace */
-} 
+    return (cxs_idone (colcount, AT, w, 1)) ;    /* success: free workspace */
+}

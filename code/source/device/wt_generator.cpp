@@ -150,28 +150,28 @@ void WT_GENERATOR::run(DYNAMIC_MODE mode)
             case INTEGRATE_MODE:
             case UPDATE_MODE:
             {
-                if(relay!=NULL)
+                if(relay!=NULL and relay->is_model_active())
                     relay->run(mode);
 
-                if(pitch!=NULL)
+                if(pitch!=NULL and pitch->is_model_active())
                     pitch->run(mode);
 
-                //if(wind!=NULL)
+                //if(wind!=NULL and wind->is_model_active())
                 //    wind->run(mode);
 
-                if(turbine!=NULL)
+                if(turbine!=NULL and turbine->is_model_active())
                     turbine->run(mode);
 
-                if(elec!=NULL)
+                if(elec!=NULL and elec->is_model_active())
                     elec->run(mode);
 
-                if(turbine!=NULL)
+                if(turbine!=NULL and turbine->is_model_active())
                     turbine->run(mode);
 
                 //if(aero!=NULL)
                 //    aero->run(mode);
 
-                if(gen!=NULL)
+                if(gen!=NULL and gen->is_model_active())
                     gen->run(mode);
                 break;
             }

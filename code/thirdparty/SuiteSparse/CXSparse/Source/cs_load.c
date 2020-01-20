@@ -1,25 +1,25 @@
-#include "cs.h"
+#include "cxs.h"
 /* load a triplet matrix from a file */
-cs *cs_load (FILE *f)
+cxs *cxs_load (FILE *f)
 {
-    double i, j ;   /* use double for integers to avoid csi conflicts */
+    double i, j ;   /* use double for integers to avoid cxsi conflicts */
     double x ;
-#ifdef CS_COMPLEX
+#ifdef CXS_COMPLEX
     double xi ;
 #endif
-    cs *T ;
+    cxs *T ;
     if (!f) return (NULL) ;                             /* check inputs */
-    T = cs_spalloc (0, 0, 1, 1, 1) ;                    /* allocate result */
-#ifdef CS_COMPLEX
+    T = cxs_spalloc (0, 0, 1, 1, 1) ;                    /* allocate result */
+#ifdef CXS_COMPLEX
     while (fscanf (f, "%lg %lg %lg %lg\n", &i, &j, &x, &xi) == 4)
 #else
     while (fscanf (f, "%lg %lg %lg\n", &i, &j, &x) == 3)
 #endif
     {
-#ifdef CS_COMPLEX
-        if (!cs_entry (T, (CS_INT) i, (CS_INT) j, x + xi*I)) return (cs_spfree (T)) ;
+#ifdef CXS_COMPLEX
+        if (!cxs_entry (T, (CXS_INT) i, (CXS_INT) j, x + xi*I)) return (cxs_spfree (T)) ;
 #else
-        if (!cs_entry (T, (CS_INT) i, (CS_INT) j, x)) return (cs_spfree (T)) ;
+        if (!cxs_entry (T, (CXS_INT) i, (CXS_INT) j, x)) return (cxs_spfree (T)) ;
 #endif
     }
     return (T) ;

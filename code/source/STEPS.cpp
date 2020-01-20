@@ -121,7 +121,10 @@ void STEPS::update_device_thread_number()
                 if(generator_thread_number!=1)
                 {
                     vector<GENERATOR*> devices = psdb.get_generators_connecting_to_bus(bus_number);
-                    if(devices.size()>1) generator_thread_number = 1;
+                    if(devices.size()>1)
+                    {
+                        generator_thread_number = 1;
+                    }
                 }
 
                 if(wt_generator_thread_number!=1)

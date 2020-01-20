@@ -1,18 +1,18 @@
-#include "cs.h"
+#include "cxs.h"
 
 /* convert from complex to real (int version) */
 /* C = real(A) if real is true, imag(A) otherwise */
-cs_di *cs_i_real (cs_ci *A, int real)
+cxs_di *cxs_i_real (cxs_ci *A, int real)
 {
-    cs_di *C ;
+    cxs_di *C ;
     int n, triplet, nn, p, nz, *Ap, *Ai, *Cp, *Ci ;
-    cs_complex_t *Ax ;
+    cxs_complex_t *Ax ;
     double *Cx ;
     if (!A || !A->x) return (NULL) ;    /* return if A NULL or pattern-only */
     n = A->n ; Ap = A->p ; Ai = A->i ; Ax = A->x ;
     triplet = (A->nz >= 0) ;            /* true if A is a triplet matrix */
     nz = triplet ? A->nz : Ap [n] ;
-    C = cs_di_spalloc (A->m, n, A->nzmax, 1, triplet) ;
+    C = cxs_di_spalloc (A->m, n, A->nzmax, 1, triplet) ;
     if (!C) return (NULL) ;
     Cp = C->p ; Ci = C->i ; Cx = C->x ;
     nn = triplet ? nz : (n+1) ;
@@ -25,17 +25,17 @@ cs_di *cs_i_real (cs_ci *A, int real)
 
 /* convert from real to complex (int version) */
 /* C = A if real is true, or C = i*A otherwise */
-cs_ci *cs_i_complex (cs_di *A, int real)
+cxs_ci *cxs_i_complex (cxs_di *A, int real)
 {
-    cs_ci *C ;
+    cxs_ci *C ;
     int n, triplet, nn, p, nz, *Ap, *Ai, *Cp, *Ci ;
     double *Ax ;
-    cs_complex_t *Cx ;
+    cxs_complex_t *Cx ;
     if (!A || !A->x) return (NULL) ;    /* return if A NULL or pattern-only */
     n = A->n ; Ap = A->p ; Ai = A->i ; Ax = A->x ;
     triplet = (A->nz >= 0) ;            /* true if A is a triplet matrix */
     nz = triplet ? A->nz : Ap [n] ;
-    C = cs_ci_spalloc (A->m, n, A->nzmax, 1, triplet) ;
+    C = cxs_ci_spalloc (A->m, n, A->nzmax, 1, triplet) ;
     if (!C) return (NULL) ;
     Cp = C->p ; Ci = C->i ; Cx = C->x ;
     nn = triplet ? nz : (n+1) ;
@@ -46,19 +46,19 @@ cs_ci *cs_i_complex (cs_di *A, int real)
     return (C) ;
 }
 
-/* convert from complex to real (cs_long_t version) */
+/* convert from complex to real (cxs_long_t version) */
 /* C = real(A) if real is true, imag(A) otherwise */
-cs_dl *cs_l_real (cs_cl *A, cs_long_t real)
+cxs_dl *cxs_l_real (cxs_cl *A, cxs_long_t real)
 {
-    cs_dl *C ;
-    cs_long_t n, triplet, nn, p, nz, *Ap, *Ai, *Cp, *Ci ;
-    cs_complex_t *Ax ;
+    cxs_dl *C ;
+    cxs_long_t n, triplet, nn, p, nz, *Ap, *Ai, *Cp, *Ci ;
+    cxs_complex_t *Ax ;
     double *Cx ;
     if (!A || !A->x) return (NULL) ;    /* return if A NULL or pattern-only */
     n = A->n ; Ap = A->p ; Ai = A->i ; Ax = A->x ;
     triplet = (A->nz >= 0) ;            /* true if A is a triplet matrix */
     nz = triplet ? A->nz : Ap [n] ;
-    C = cs_dl_spalloc (A->m, n, A->nzmax, 1, triplet) ;
+    C = cxs_dl_spalloc (A->m, n, A->nzmax, 1, triplet) ;
     if (!C) return (NULL) ;
     Cp = C->p ; Ci = C->i ; Cx = C->x ;
     nn = triplet ? nz : (n+1) ;
@@ -69,19 +69,19 @@ cs_dl *cs_l_real (cs_cl *A, cs_long_t real)
     return (C) ;
 }
 
-/* convert from real to complex (cs_long_t version) */
+/* convert from real to complex (cxs_long_t version) */
 /* C = A if real is true, or C = i*A otherwise */
-cs_cl *cs_l_complex (cs_dl *A, cs_long_t real)
+cxs_cl *cxs_l_complex (cxs_dl *A, cxs_long_t real)
 {
-    cs_cl *C ;
-    cs_long_t n, triplet, nn, p, nz, *Ap, *Ai, *Cp, *Ci ;
+    cxs_cl *C ;
+    cxs_long_t n, triplet, nn, p, nz, *Ap, *Ai, *Cp, *Ci ;
     double *Ax ;
-    cs_complex_t *Cx ;
+    cxs_complex_t *Cx ;
     if (!A || !A->x) return (NULL) ;    /* return if A NULL or pattern-only */
     n = A->n ; Ap = A->p ; Ai = A->i ; Ax = A->x ;
     triplet = (A->nz >= 0) ;            /* true if A is a triplet matrix */
     nz = triplet ? A->nz : Ap [n] ;
-    C = cs_cl_spalloc (A->m, n, A->nzmax, 1, triplet) ;
+    C = cxs_cl_spalloc (A->m, n, A->nzmax, 1, triplet) ;
     if (!C) return (NULL) ;
     Cp = C->p ; Ci = C->i ; Cx = C->x ;
     nn = triplet ? nz : (n+1) ;

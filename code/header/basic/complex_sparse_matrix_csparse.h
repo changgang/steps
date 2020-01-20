@@ -1,10 +1,8 @@
 #ifndef COMPLEX_SPARSE_MATRIX_CSPARSE_H
 #define COMPLEX_SPARSE_MATRIX_CSPARSE_H
 
-extern "C"
-{
-    #include "cs.h"
-}
+#include "cxs.h"
+
 #include <vector>
 #include <ctime>
 #include <complex>
@@ -49,25 +47,24 @@ public:
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13);
 
-    virtual vector<double>& solve_Ax_eq_b(vector<double>& b);
+    virtual vector<complex<double> >& solve_Ax_eq_b(vector<complex<double> >& b);
 
     virtual void report_brief()  const;
     virtual void report_full()  const;
     virtual void save_matrix_to_file(string filename)  const;
 
 private:
-    void solve_Lx_eq_b(vector<double>& b);
-    void solve_xU_eq_b(vector<double>& b);
+    void solve_Lx_eq_b(vector<complex<double> >& b);
+    void solve_xU_eq_b(vector<complex<double> >& b);
     void copy_from_const_matrix(const COMPLEX_SPARSE_MATRIX_CSPARSE& matrix);
-    cs     *matrix_real; // real components
-    cs     *matrix_imag; // imaginary components , not used for real matrix
-    csn    *LU;
-    css    *LU_symbolic;
-    double *LU_workspace;
-    double* bb;
+    cxs     *matrix_complex;
+    cxsn    *LU;
+    cxss    *LU_symbolic;
+    complex<double> *LU_workspace;
+    complex<double> *bb;
     unsigned int bb_size;
 };
 
 
-vector<double>& operator/(vector<double>&b, COMPLEX_SPARSE_MATRIX_CSPARSE& A);
+vector<complex<double> >& operator/(vector<complex<double> >&b, COMPLEX_SPARSE_MATRIX_CSPARSE& A);
 #endif // COMPLEX_SPARSE_MATRIX_CSPARSE_H

@@ -28,11 +28,6 @@ bool COMPLEX_SPARSE_MATRIX::matrix_in_compressed_column_form() const
     return not matrix_in_triplet_form();
 }
 
-void COMPLEX_SPARSE_MATRIX::add_entry(int row, int col, double value)
-{
-    add_entry(row, col, complex<double>(value,0.0));
-}
-
 int COMPLEX_SPARSE_MATRIX::get_column_number_of_entry_index(int index) const
 {
     int n = get_matrix_size();
@@ -61,16 +56,6 @@ complex<double> COMPLEX_SPARSE_MATRIX::get_entry_value(int index) const
 {
     //return complex<double>(get_real_entry_value(index), get_imag_entry_value(index));
     return get_complex_entry_value(index);
-}
-
-void COMPLEX_SPARSE_MATRIX::change_entry_value(int row, int col, double value)
-{
-    change_entry_value(row, col, complex<double>(value, 0.0));
-}
-
-void COMPLEX_SPARSE_MATRIX::change_entry_value(int index, double value)
-{
-    change_entry_value(index, complex<double>(value, 0.0));
 }
 
 void COMPLEX_SPARSE_MATRIX::change_entry_value(int row, int col, const complex<double>& value)

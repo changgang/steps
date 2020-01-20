@@ -483,26 +483,26 @@ void LOAD::run(DYNAMIC_MODE mode)
             case UPDATE_MODE:
             {
                 LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
-                if(uvls!=NULL)
+                if(uvls!=NULL and uvls->is_model_active())
                     uvls->run(mode);
 
                 LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
-                if(ufls!=NULL)
+                if(ufls!=NULL and ufls->is_model_active())
                     ufls->run(mode);
 
                 LOAD_MODEL* load = get_load_model();
-                if(load!=NULL)
+                if(load!=NULL and load->is_model_active())
                     load->run(mode);
                 break;
             }
             case RELAY_MODE:
             {
                 LOAD_VOLTAGE_RELAY_MODEL* uvls = get_load_voltage_relay_model();
-                if(uvls!=NULL)
+                if(uvls!=NULL and uvls->is_model_active())
                     uvls->run(mode);
 
                 LOAD_FREQUENCY_RELAY_MODEL* ufls = get_load_frequency_relay_model();
-                if(ufls!=NULL)
+                if(ufls!=NULL and ufls->is_model_active())
                     ufls->run(mode);
             }
         }

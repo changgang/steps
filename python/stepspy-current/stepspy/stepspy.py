@@ -6,8 +6,8 @@ global STEPS_LIB
 
 class STEPS():
     def info(self):
-        version = "0.11.4"
-        date = "2020/1/2"
+        version = "0.11.5"
+        date = "2020/1/19"
         authors = (("Changgang Li", "lichangang@sdu.edu.cn"),("Yue Wu","sduyuewu2018@163.com"))
         info = 'STEPS '+version+', built on '+date+', by '
         for author in authors:
@@ -83,9 +83,18 @@ class STEPS():
         STEPS_LIB.api_set_toolkit_parallel_thread_number(num, self.toolkit_index)
         return
         
-    def get_parallel_thread_number(self, num=1):
+    def get_parallel_thread_number(self):
         global STEPS_LIB
         return STEPS_LIB.api_get_toolkit_parallel_thread_number(self.toolkit_index)
+
+    def set_dynamic_model_database_capacity(self, cap=1):
+        global STEPS_LIB
+        STEPS_LIB.api_set_toolkit_dynamic_model_database_capacity(cap, self.toolkit_index)
+        return
+        
+    def get_dynamic_model_database_capacity(self):
+        global STEPS_LIB
+        return STEPS_LIB.api_get_toolkit_dynamic_model_database_capacity(self.toolkit_index)
         
     def clear_toolkit(self):
         global STEPS_LIB

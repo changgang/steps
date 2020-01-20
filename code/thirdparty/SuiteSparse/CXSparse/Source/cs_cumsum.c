@@ -1,15 +1,15 @@
-#include "cs.h"
+#include "cxs.h"
 /* p [0..n] = cumulative sum of c [0..n-1], and then copy p [0..n-1] into c */
-double cs_cumsum (CS_INT *p, CS_INT *c, CS_INT n)
+double cxs_cumsum (CXS_INT *p, CXS_INT *c, CXS_INT n)
 {
-    CS_INT i, nz = 0 ;
+    CXS_INT i, nz = 0 ;
     double nz2 = 0 ;
     if (!p || !c) return (-1) ;     /* check inputs */
     for (i = 0 ; i < n ; i++)
     {
         p [i] = nz ;
         nz += c [i] ;
-        nz2 += c [i] ;              /* also in double to avoid CS_INT overflow */
+        nz2 += c [i] ;              /* also in double to avoid CXS_INT overflow */
         c [i] = p [i] ;             /* also copy p[0..n-1] back into c[0..n-1]*/
     }
     p [n] = nz ;

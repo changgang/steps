@@ -1,15 +1,15 @@
-#include "cs.h"
+#include "cxs.h"
 /* compute nnz(V) = S->lnz, S->pinv, S->leftmost, S->m2 from A and S->parent */
-static CS_INT cs_vcount (const cs *A, css *S)
+static CXS_INT cxs_vcount (const cxs *A, cxss *S)
 {
-    CS_INT i, k, p, pa, n = A->n, m = A->m, *Ap = A->p, *Ai = A->i, *next, *head,
+    CXS_INT i, k, p, pa, n = A->n, m = A->m, *Ap = A->p, *Ai = A->i, *next, *head,
         *tail, *nque, *pinv, *leftmost, *w, *parent = S->parent ;
-    S->pinv = pinv = cs_malloc (m+n, sizeof (CS_INT)) ;        /* allocate pinv, */
-    S->leftmost = leftmost = cs_malloc (m, sizeof (CS_INT)) ;  /* and leftmost */
-    w = cs_malloc (m+3*n, sizeof (CS_INT)) ;   /* get workspace */
+    S->pinv = pinv = cxs_malloc (m+n, sizeof (CXS_INT)) ;        /* allocate pinv, */
+    S->leftmost = leftmost = cxs_malloc (m, sizeof (CXS_INT)) ;  /* and leftmost */
+    w = cxs_malloc (m+3*n, sizeof (CXS_INT)) ;   /* get workspace */
     if (!pinv || !w || !leftmost)
     {
-        cs_free (w) ;                       /* pinv and leftmost freed later */
+        cxs_free (w) ;                       /* pinv and leftmost freed later */
         return (0) ;                        /* out of memory */
     }
     next = w ; head = w + m ; tail = w + m + n ; nque = w + m + 2*n ;
@@ -52,36 +52,36 @@ static CS_INT cs_vcount (const cs *A, css *S)
         }
     }
     for (i = 0 ; i < m ; i++) if (pinv [i] < 0) pinv [i] = k++ ;
-    cs_free (w) ;
+    cxs_free (w) ;
     return (1) ;
 }
 
 /* symbolic ordering and analysis for QR or LU */
-css *cs_sqr (CS_INT order, const cs *A, CS_INT qr)
+cxss *cxs_sqr (CXS_INT order, const cxs *A, CXS_INT qr)
 {
-    CS_INT n, k, ok = 1, *post ;
-    css *S ;
-    if (!CS_CSC (A)) return (NULL) ;        /* check inputs */
+    CXS_INT n, k, ok = 1, *post ;
+    cxss *S ;
+    if (!CXS_CSC (A)) return (NULL) ;        /* check inputs */
     n = A->n ;
-    S = cs_calloc (1, sizeof (css)) ;       /* allocate result S */
+    S = cxs_calloc (1, sizeof (cxss)) ;       /* allocate result S */
     if (!S) return (NULL) ;                 /* out of memory */
-    S->q = cs_amd (order, A) ;              /* fill-reducing ordering */
-    if (order && !S->q) return (cs_sfree (S)) ;
+    S->q = cxs_amd (order, A) ;              /* fill-reducing ordering */
+    if (order && !S->q) return (cxs_sfree (S)) ;
     if (qr)                                 /* QR symbolic analysis */
     {
-        cs *C = order ? cs_permute (A, NULL, S->q, 0) : ((cs *) A) ;
-        S->parent = cs_etree (C, 1) ;       /* etree of C'*C, where C=A(:,q) */
-        post = cs_post (S->parent, n) ;
-        S->cp = cs_counts (C, S->parent, post, 1) ;  /* col counts chol(C'*C) */
-        cs_free (post) ;
-        ok = C && S->parent && S->cp && cs_vcount (C, S) ;
+        cxs *C = order ? cxs_permute (A, NULL, S->q, 0) : ((cxs *) A) ;
+        S->parent = cxs_etree (C, 1) ;       /* etree of C'*C, where C=A(:,q) */
+        post = cxs_post (S->parent, n) ;
+        S->cp = cxs_counts (C, S->parent, post, 1) ;  /* col counts chol(C'*C) */
+        cxs_free (post) ;
+        ok = C && S->parent && S->cp && cxs_vcount (C, S) ;
         if (ok) for (S->unz = 0, k = 0 ; k < n ; k++) S->unz += S->cp [k] ;
-        if (order) cs_spfree (C) ;
+        if (order) cxs_spfree (C) ;
     }
     else
     {
         S->unz = 4*(A->p [n]) + n ;         /* for LU factorization only, */
         S->lnz = S->unz ;                   /* guess nnz(L) and nnz(U) */
     }
-    return (ok ? S : cs_sfree (S)) ;        /* return result S */
+    return (ok ? S : cxs_sfree (S)) ;        /* return result S */
 }

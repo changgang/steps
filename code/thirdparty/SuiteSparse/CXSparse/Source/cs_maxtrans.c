@@ -1,9 +1,9 @@
-#include "cs.h"
+#include "cxs.h"
 /* find an augmenting path starting at column k and extend the match if found */
-static void cs_augment (CS_INT k, const cs *A, CS_INT *jmatch, CS_INT *cheap, CS_INT *w,
-        CS_INT *js, CS_INT *is, CS_INT *ps)
+static void cxs_augment (CXS_INT k, const cxs *A, CXS_INT *jmatch, CXS_INT *cheap, CXS_INT *w,
+        CXS_INT *js, CXS_INT *is, CXS_INT *ps)
 {
-    CS_INT found = 0, p, i = -1, *Ap = A->p, *Ai = A->i, head = 0, j ;
+    CXS_INT found = 0, p, i = -1, *Ap = A->p, *Ai = A->i, head = 0, j ;
     js [0] = k ;                        /* start with just node k in jstack */
     while (head >= 0)
     {
@@ -41,14 +41,14 @@ static void cs_augment (CS_INT k, const cs *A, CS_INT *jmatch, CS_INT *cheap, CS
 }
 
 /* find a maximum transveral */
-CS_INT *cs_maxtrans (const cs *A, CS_INT seed)  /*[jmatch [0..m-1]; imatch [0..n-1]]*/
+CXS_INT *cxs_maxtrans (const cxs *A, CXS_INT seed)  /*[jmatch [0..m-1]; imatch [0..n-1]]*/
 {
-    CS_INT i, j, k, n, m, p, n2 = 0, m2 = 0, *Ap, *jimatch, *w, *cheap, *js, *is,
+    CXS_INT i, j, k, n, m, p, n2 = 0, m2 = 0, *Ap, *jimatch, *w, *cheap, *js, *is,
         *ps, *Ai, *Cp, *jmatch, *imatch, *q ;
-    cs *C ;
-    if (!CS_CSC (A)) return (NULL) ;                /* check inputs */
+    cxs *C ;
+    if (!CXS_CSC (A)) return (NULL) ;                /* check inputs */
     n = A->n ; m = A->m ; Ap = A->p ; Ai = A->i ;
-    w = jimatch = cs_calloc (m+n, sizeof (CS_INT)) ;   /* allocate result */
+    w = jimatch = cxs_calloc (m+n, sizeof (CXS_INT)) ;   /* allocate result */
     if (!jimatch) return (NULL) ;
     for (k = 0, j = 0 ; j < n ; j++)    /* count nonempty rows and columns */
     {
@@ -59,34 +59,34 @@ CS_INT *cs_maxtrans (const cs *A, CS_INT seed)  /*[jmatch [0..m-1]; imatch [0..n
             k += (j == Ai [p]) ;        /* count entries already on diagonal */
         }
     }
-    if (k == CS_MIN (m,n))              /* quick return if diagonal zero-free */
+    if (k == CXS_MIN (m,n))              /* quick return if diagonal zero-free */
     {
         jmatch = jimatch ; imatch = jimatch + m ;
         for (i = 0 ; i < k ; i++) jmatch [i] = i ;
         for (      ; i < m ; i++) jmatch [i] = -1 ;
         for (j = 0 ; j < k ; j++) imatch [j] = j ;
         for (      ; j < n ; j++) imatch [j] = -1 ;
-        return (cs_idone (jimatch, NULL, NULL, 1)) ;
+        return (cxs_idone (jimatch, NULL, NULL, 1)) ;
     }
     for (i = 0 ; i < m ; i++) m2 += w [i] ;
-    C = (m2 < n2) ? cs_transpose (A,0) : ((cs *) A) ; /* transpose if needed */
-    if (!C) return (cs_idone (jimatch, (m2 < n2) ? C : NULL, NULL, 0)) ;
+    C = (m2 < n2) ? cxs_transpose (A,0) : ((cxs *) A) ; /* transpose if needed */
+    if (!C) return (cxs_idone (jimatch, (m2 < n2) ? C : NULL, NULL, 0)) ;
     n = C->n ; m = C->m ; Cp = C->p ;
     jmatch = (m2 < n2) ? jimatch + n : jimatch ;
     imatch = (m2 < n2) ? jimatch : jimatch + m ;
-    w = cs_malloc (5*n, sizeof (CS_INT)) ;             /* get workspace */
-    if (!w) return (cs_idone (jimatch, (m2 < n2) ? C : NULL, w, 0)) ;
+    w = cxs_malloc (5*n, sizeof (CXS_INT)) ;             /* get workspace */
+    if (!w) return (cxs_idone (jimatch, (m2 < n2) ? C : NULL, w, 0)) ;
     cheap = w + n ; js = w + 2*n ; is = w + 3*n ; ps = w + 4*n ;
     for (j = 0 ; j < n ; j++) cheap [j] = Cp [j] ;  /* for cheap assignment */
     for (j = 0 ; j < n ; j++) w [j] = -1 ;          /* all columns unflagged */
     for (i = 0 ; i < m ; i++) jmatch [i] = -1 ;     /* nothing matched yet */
-    q = cs_randperm (n, seed) ;                     /* q = random permutation */
+    q = cxs_randperm (n, seed) ;                     /* q = random permutation */
     for (k = 0 ; k < n ; k++)   /* augment, starting at column q[k] */
     {
-        cs_augment (q ? q [k]: k, C, jmatch, cheap, w, js, is, ps) ;
+        cxs_augment (q ? q [k]: k, C, jmatch, cheap, w, js, is, ps) ;
     }
-    cs_free (q) ;
+    cxs_free (q) ;
     for (j = 0 ; j < n ; j++) imatch [j] = -1 ;     /* find row match */
     for (i = 0 ; i < m ; i++) if (jmatch [i] >= 0) imatch [jmatch [i]] = i ;
-    return (cs_idone (jimatch, (m2 < n2) ? C : NULL, w, 1)) ;
+    return (cxs_idone (jimatch, (m2 < n2) ? C : NULL, w, 1)) ;
 }

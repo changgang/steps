@@ -60,8 +60,8 @@ void COMPLEX_SPARSE_MATRIX_TEST::prepare_basic_matrix()
     //     [1  0  0]      [1  0  0]
     // L = [0  1  0]  U = [0  2  4]
     //     [1  0  1]      [0  0  1]
-    // solution to real*x = b where b=[2 20 5]' is
-    // [2  4  3]'
+    // solution to A*x = b where b=[2 -3+j57 1+j8]' is
+    // [2  4+j1  3+j2]'
 
     matrix.add_entry(0,0,1.0);
     matrix.add_entry(1,1,complex<double>(2.0, 5.0));
@@ -171,7 +171,10 @@ void COMPLEX_SPARSE_MATRIX_TEST::test_transpose()
 
     prepare_basic_matrix();
 
+    matrix.report_brief();
     matrix.transpose();
+
+    matrix.report_brief();
 
     TEST_ASSERT(matrix.get_entry_value(0,0)==complex<double>(1.0, 0.0));
     TEST_ASSERT(matrix.get_entry_value(1,0)==complex<double>(0.0, 0.0));
@@ -350,18 +353,18 @@ void COMPLEX_SPARSE_MATRIX_TEST::test_slove_Ax_equal_b()
 
     prepare_basic_matrix();
 
-    vector<double> b;
+    vector<complex<double> > b;
     b.reserve(3);
-    b.push_back(2.0);
-    b.push_back(20.0);
-    b.push_back(5.0);
+    b.push_back(complex<double>(2.0, 0.0));
+    b.push_back(complex<double>(-3.0, 57.0));
+    b.push_back(complex<double>(1.0, 8.0));
 
     matrix.LU_factorization();
-    vector<double> x = matrix.solve_Ax_eq_b(b);
+    vector<complex<double> > x = matrix.solve_Ax_eq_b(b);
 
-    TEST_ASSERT(fabs(x[0] - 2.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(x[1] - 4.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(x[2] - 3.0)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(x[0] - complex<double>(2.0, 0.0))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(x[1] - complex<double>(4.0, 1.0))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(x[2] - complex<double>(3.0, 2.0))<FLOAT_EPSILON);
 }
 
 void COMPLEX_SPARSE_MATRIX_TEST::test_solve_Ax_equal_b_with_operator_slash()
@@ -370,17 +373,17 @@ void COMPLEX_SPARSE_MATRIX_TEST::test_solve_Ax_equal_b_with_operator_slash()
 
     prepare_basic_matrix();
 
-    vector<double> b;
+    vector<complex<double> > b;
     b.reserve(3);
-    b.push_back(2.0);
-    b.push_back(20.0);
-    b.push_back(5.0);
+    b.push_back(complex<double>(2.0, 0.0));
+    b.push_back(complex<double>(-3.0, 57.0));
+    b.push_back(complex<double>(1.0, 8.0));
 
-    vector<double> x  = b/matrix;
+    vector<complex<double> > x  = b/matrix;
 
-    TEST_ASSERT(fabs(x[0] - 2.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(x[1] - 4.0)<FLOAT_EPSILON);
-    TEST_ASSERT(fabs(x[2] - 3.0)<FLOAT_EPSILON);
+    TEST_ASSERT(abs(x[0] - complex<double>(2.0, 0.0))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(x[1] - complex<double>(4.0, 1.0))<FLOAT_EPSILON);
+    TEST_ASSERT(abs(x[2] - complex<double>(3.0, 2.0))<FLOAT_EPSILON);
 }
 
 void COMPLEX_SPARSE_MATRIX_TEST::test_copy_with_operator_equal()

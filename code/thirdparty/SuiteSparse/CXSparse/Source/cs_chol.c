@@ -1,30 +1,30 @@
-#include "cs.h"
+#include "cxs.h"
 /* L = chol (A, [pinv parent cp]), pinv is optional */
-csn *cs_chol (const cs *A, const css *S)
+cxsn *cxs_chol (const cxs *A, const cxss *S)
 {
-    CS_ENTRY d, lki, *Lx, *x, *Cx ;
-    CS_INT top, i, p, k, n, *Li, *Lp, *cp, *pinv, *s, *c, *parent, *Cp, *Ci ;
-    cs *L, *C, *E ;
-    csn *N ;
-    if (!CS_CSC (A) || !S || !S->cp || !S->parent) return (NULL) ;
+    CXS_ENTRY d, lki, *Lx, *x, *Cx ;
+    CXS_INT top, i, p, k, n, *Li, *Lp, *cp, *pinv, *s, *c, *parent, *Cp, *Ci ;
+    cxs *L, *C, *E ;
+    cxsn *N ;
+    if (!CXS_CSC (A) || !S || !S->cp || !S->parent) return (NULL) ;
     n = A->n ;
-    N = cs_calloc (1, sizeof (csn)) ;       /* allocate result */
-    c = cs_malloc (2*n, sizeof (CS_INT)) ;     /* get CS_INT workspace */
-    x = cs_malloc (n, sizeof (CS_ENTRY)) ;    /* get CS_ENTRY workspace */
+    N = cxs_calloc (1, sizeof (cxsn)) ;       /* allocate result */
+    c = cxs_malloc (2*n, sizeof (CXS_INT)) ;     /* get CXS_INT workspace */
+    x = cxs_malloc (n, sizeof (CXS_ENTRY)) ;    /* get CXS_ENTRY workspace */
     cp = S->cp ; pinv = S->pinv ; parent = S->parent ;
-    C = pinv ? cs_symperm (A, pinv, 1) : ((cs *) A) ;
+    C = pinv ? cxs_symperm (A, pinv, 1) : ((cxs *) A) ;
     E = pinv ? C : NULL ;           /* E is alias for A, or a copy E=A(p,p) */
-    if (!N || !c || !x || !C) return (cs_ndone (N, E, c, x, 0)) ;
+    if (!N || !c || !x || !C) return (cxs_ndone (N, E, c, x, 0)) ;
     s = c + n ;
     Cp = C->p ; Ci = C->i ; Cx = C->x ;
-    N->L = L = cs_spalloc (n, n, cp [n], 1, 0) ;    /* allocate result */
-    if (!L) return (cs_ndone (N, E, c, x, 0)) ;
+    N->L = L = cxs_spalloc (n, n, cp [n], 1, 0) ;    /* allocate result */
+    if (!L) return (cxs_ndone (N, E, c, x, 0)) ;
     Lp = L->p ; Li = L->i ; Lx = L->x ;
     for (k = 0 ; k < n ; k++) Lp [k] = c [k] = cp [k] ;
     for (k = 0 ; k < n ; k++)       /* compute L(k,:) for L*L' = C */
     {
         /* --- Nonzero pattern of L(k,:) ------------------------------------ */
-        top = cs_ereach (C, k, parent, s, c) ;      /* find pattern of L(k,:) */
+        top = cxs_ereach (C, k, parent, s, c) ;      /* find pattern of L(k,:) */
         x [k] = 0 ;                                 /* x (0:k) is now zero */
         for (p = Cp [k] ; p < Cp [k+1] ; p++)       /* x = full(triu(C(:,k))) */
         {
@@ -42,18 +42,18 @@ csn *cs_chol (const cs *A, const css *S)
             {
                 x [Li [p]] -= Lx [p] * lki ;
             }
-            d -= lki * CS_CONJ (lki) ;            /* d = d - L(k,i)*L(k,i) */
+            d -= lki * CXS_CONJ (lki) ;            /* d = d - L(k,i)*L(k,i) */
             p = c [i]++ ;
             Li [p] = k ;                /* store L(k,i) in column i */
-            Lx [p] = CS_CONJ (lki) ;
+            Lx [p] = CXS_CONJ (lki) ;
         }
         /* --- Compute L(k,k) ----------------------------------------------- */
-        if (CS_REAL (d) <= 0 || CS_IMAG (d) != 0)
-	    return (cs_ndone (N, E, c, x, 0)) ; /* not pos def */
+        if (CXS_REAL (d) <= 0 || CXS_IMAG (d) != 0)
+	    return (cxs_ndone (N, E, c, x, 0)) ; /* not pos def */
         p = c [k]++ ;
         Li [p] = k ;                /* store L(k,k) = sqrt (d) in column k */
         Lx [p] = sqrt (d) ;
     }
     Lp [n] = cp [n] ;               /* finalize L */
-    return (cs_ndone (N, E, c, x, 1)) ; /* success: free E,s,x; return N */
+    return (cxs_ndone (N, E, c, x, 1)) ; /* success: free E,s,x; return N */
 }

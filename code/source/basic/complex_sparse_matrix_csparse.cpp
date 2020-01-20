@@ -15,8 +15,7 @@ COMPLEX_SPARSE_MATRIX_CSPARSE::COMPLEX_SPARSE_MATRIX_CSPARSE():COMPLEX_SPARSE_MA
 {
     //constructor
 
-    matrix_real = NULL;
-    matrix_imag = NULL;
+    matrix_complex = NULL;
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
@@ -28,8 +27,7 @@ COMPLEX_SPARSE_MATRIX_CSPARSE::COMPLEX_SPARSE_MATRIX_CSPARSE():COMPLEX_SPARSE_MA
 
 COMPLEX_SPARSE_MATRIX_CSPARSE::COMPLEX_SPARSE_MATRIX_CSPARSE(const COMPLEX_SPARSE_MATRIX_CSPARSE& matrix)
 {
-    matrix_real = NULL;
-    matrix_imag = NULL;
+    matrix_complex = NULL;
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
@@ -103,15 +101,13 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::copy_from_const_matrix(const COMPLEX_SPARSE_
 COMPLEX_SPARSE_MATRIX_CSPARSE::~COMPLEX_SPARSE_MATRIX_CSPARSE()
 {
     // destructor
-    if(matrix_real!=NULL) cs_spfree(matrix_real);
-    if(matrix_imag!=NULL) cs_spfree(matrix_imag);
-    if(LU!=NULL)          cs_nfree(LU);
-    if(LU_symbolic!=NULL) cs_sfree(LU_symbolic);
+    if(matrix_complex!=NULL) cxs_spfree(matrix_complex);
+    if(LU!=NULL)          cxs_nfree(LU);
+    if(LU_symbolic!=NULL) cxs_sfree(LU_symbolic);
     if(LU_workspace!=NULL) free(LU_workspace);
     if(bb!=NULL) free(bb);
 
-    /*matrix_real = NULL;
-    matrix_imag = NULL;
+    /*matrix_complex = NULL;
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
@@ -124,30 +120,27 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::clear()
     // clear function
     update_clock_when_LU_factorization_is_performed();
 
-    if(matrix_real!=NULL) cs_spfree(matrix_real);
-    if(matrix_imag!=NULL) cs_spfree(matrix_imag);
-    if(LU!=NULL)          cs_nfree(LU);
-    if(LU_symbolic!=NULL) cs_sfree(LU_symbolic);
+    if(matrix_complex!=NULL) cxs_spfree(matrix_complex);
+    if(LU!=NULL)          cxs_nfree(LU);
+    if(LU_symbolic!=NULL) cxs_sfree(LU_symbolic);
     if(LU_workspace!=NULL) free(LU_workspace);
     if(bb!=NULL) free(bb);
 
-    matrix_real = NULL;
-    matrix_imag = NULL;
+    matrix_complex = NULL;
     LU = NULL;
     LU_symbolic = NULL;
     LU_workspace = NULL;
     bb = NULL;
     bb_size = 0;
 
-    matrix_real = cs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
-    matrix_imag = cs_spalloc(1,1,1,1,1);
+    matrix_complex = cxs_spalloc(1,1,1,1,1); // arguments: row = 1, column = 1, max_entry = 1, allocate_memory = 1, triplet_form = 1
 
     update_clock_when_matrix_is_changed();
 }
 
 bool COMPLEX_SPARSE_MATRIX_CSPARSE::matrix_in_triplet_form() const
 {
-    if(matrix_real->nz != -1) return true;
+    if(matrix_complex->nz != -1) return true;
     else return false;
 }
 
@@ -156,8 +149,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::add_entry(int row, int col, const complex<do
 {
     if(matrix_in_triplet_form())
     {
-        cs_entry(matrix_real, row, col, value.real());
-        cs_entry(matrix_imag, row, col, value.imag());
+        cxs_entry(matrix_complex, row, col, value);
 
         update_clock_when_matrix_is_changed();
     }
@@ -172,8 +164,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::add_entry(int row, int col, const complex<do
         else
         {
             convert_to_triplet_form();
-            cs_entry(matrix_real, row, col, value.real());
-            cs_entry(matrix_imag, row, col, value.imag());
+            cxs_entry(matrix_complex, row, col, value);
             compress_and_merge_duplicate_entries();
         }
     }
@@ -183,44 +174,30 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::convert_to_triplet_form()
 {
     if(matrix_in_compressed_column_form())
     {
-        cs *mat_real; // temp mat
-        cs *mat_imag; // temp mat
-        csi *tempi; // temp index
-        double *tempd; // temp value
+        cxs *mat_complex; // temp mat
+        int *tempi; // temp index
+        complex<double> *tempd; // temp value
 
         // copy
-        mat_real = cs_spalloc(1,1,1,1,1);
-        mat_imag = cs_spalloc(1,1,1,1,1);
+        mat_complex = cxs_spalloc(1,1,1,1,1);
         int n = get_matrix_entry_count();
         int row, col;
         for(int k=0; k!=n; ++k)
         {
             row = get_row_number_of_entry_index(k);
             col = get_column_number_of_entry_index(k);
-            cs_entry(mat_real, row, col, get_real_entry_value(k));
-            cs_entry(mat_imag, row, col, get_imag_entry_value(k));
+            cxs_entry(mat_complex, row, col, get_real_entry_value(k));
         }
         // swap
-        matrix_real->nzmax = mat_real->nzmax;
-        matrix_real->m = mat_real->m;
-        matrix_real->n = mat_real->n;
-        matrix_real->nz = mat_real->nz;
-        tempi = matrix_real->p; matrix_real->p = mat_real->p; mat_real->p = tempi;
-        tempi = matrix_real->i; matrix_real->i = mat_real->i; mat_real->i = tempi;
-        tempd = matrix_real->x; matrix_real->x = mat_real->x; mat_real->x = tempd;
+        matrix_complex->nzmax = mat_complex->nzmax;
+        matrix_complex->m = mat_complex->m;
+        matrix_complex->n = mat_complex->n;
+        matrix_complex->nz = mat_complex->nz;
+        tempi = matrix_complex->p; matrix_complex->p = mat_complex->p; mat_complex->p = tempi;
+        tempi = matrix_complex->i; matrix_complex->i = mat_complex->i; mat_complex->i = tempi;
+        tempd = matrix_complex->x; matrix_complex->x = mat_complex->x; mat_complex->x = tempd;
         // free temp mat
-        cs_spfree(mat_real);
-
-        // swap
-        matrix_imag->nzmax = mat_imag->nzmax;
-        matrix_imag->m = mat_imag->m;
-        matrix_imag->n = mat_imag->n;
-        matrix_imag->nz = mat_imag->nz;
-        tempi = matrix_imag->p; matrix_imag->p = mat_imag->p; mat_imag->p = tempi;
-        tempi = matrix_imag->i; matrix_imag->i = mat_imag->i; mat_imag->i = tempi;
-        tempd = matrix_imag->x; matrix_imag->x = mat_imag->x; mat_imag->x = tempd;
-        // free temp mat
-        cs_spfree(mat_imag);
+        cxs_spfree(mat_complex);
 
         update_clock_when_matrix_is_changed();
     }
@@ -231,41 +208,25 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::compress_and_merge_duplicate_entries()
     // compress the sparse matrix
     if(matrix_in_triplet_form())
     {
-        cs *mat; // temp mat
-        csi *tempi; // temp index
-        double *tempd; // temp value
+        cxs *mat; // temp mat
+        int *tempi; // temp index
+        complex<double> *tempd; // temp value
 
         // real part
         // compress the matrix
-        mat = cs_compress(matrix_real);
+        mat = cxs_compress(matrix_complex);
         // swap
-        matrix_real->nzmax = mat->nzmax;
-        matrix_real->m = mat->m;
-        matrix_real->n = mat->n;
-        matrix_real->nz = mat->nz;
-        tempi = matrix_real->p; matrix_real->p = mat->p; mat->p = tempi;
-        tempi = matrix_real->i; matrix_real->i = mat->i; mat->i = tempi;
-        tempd = matrix_real->x; matrix_real->x = mat->x; mat->x = tempd;
+        matrix_complex->nzmax = mat->nzmax;
+        matrix_complex->m = mat->m;
+        matrix_complex->n = mat->n;
+        matrix_complex->nz = mat->nz;
+        tempi = matrix_complex->p; matrix_complex->p = mat->p; mat->p = tempi;
+        tempi = matrix_complex->i; matrix_complex->i = mat->i; mat->i = tempi;
+        tempd = matrix_complex->x; matrix_complex->x = mat->x; mat->x = tempd;
         // free temp mat
-        cs_spfree(mat);
+        cxs_spfree(mat);
 
-        cs_dupl(matrix_real); // merge duplicate entries
-
-        //  imaginary part
-        // compress the matrix
-        mat = cs_compress(matrix_imag);
-        // swap
-        matrix_imag->nzmax = mat->nzmax;
-        matrix_imag->m = mat->m;
-        matrix_imag->n = mat->n;
-        matrix_imag->nz = mat->nz;
-        tempi = matrix_imag->p; matrix_imag->p = mat->p; mat->p = tempi;
-        tempi = matrix_imag->i; matrix_imag->i = mat->i; mat->i = tempi;
-        tempd = matrix_imag->x; matrix_imag->x = mat->x; mat->x = tempd;
-        // free temp mat
-        cs_spfree(mat);
-
-        cs_dupl(matrix_imag); // merge duplicate entries
+        cxs_dupl(matrix_complex); // merge duplicate entries
 
         // at last, transpose twice
         transpose();
@@ -281,61 +242,48 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::transpose()
     if(matrix_in_triplet_form()) // if in triplet format, convert to compressed format
         compress_and_merge_duplicate_entries(); // convert
 
-    cs *mat; // temp mat
-    csi *tempi; // temp index
-    double *tempd; // temp value
+    cxs *mat; // temp mat
+    int *tempi; // temp index
+    complex<double> *tempd; // temp value
 
-    // transpose real part
-    mat = cs_transpose(matrix_real, 1);
+    // transpose without conjugate, -1 is used. if 1 is used, conjugate is used.
+    mat = cxs_transpose(matrix_complex, -1);
+
     // swap
-    matrix_real->nzmax = mat->nzmax;
-    matrix_real->m = mat->m;
-    matrix_real->n = mat->n;
-    matrix_real->nz = mat->nz;
-    tempi = matrix_real->p; matrix_real->p = mat->p; mat->p = tempi;
-    tempi = matrix_real->i; matrix_real->i = mat->i; mat->i = tempi;
-    tempd = matrix_real->x; matrix_real->x = mat->x; mat->x = tempd;
+    matrix_complex->nzmax = mat->nzmax;
+    matrix_complex->m = mat->m;
+    matrix_complex->n = mat->n;
+    matrix_complex->nz = mat->nz;
+    tempi = matrix_complex->p; matrix_complex->p = mat->p; mat->p = tempi;
+    tempi = matrix_complex->i; matrix_complex->i = mat->i; mat->i = tempi;
+    tempd = matrix_complex->x; matrix_complex->x = mat->x; mat->x = tempd;
     // free temp mat
-    cs_spfree(mat);
-
-
-    // transpose imaginary part
-    mat = cs_transpose(matrix_imag, 1);
-    // swap
-    matrix_imag->nzmax = mat->nzmax;
-    matrix_imag->m = mat->m;
-    matrix_imag->n = mat->n;
-    matrix_imag->nz = mat->nz;
-    tempi = matrix_imag->p; matrix_imag->p = mat->p; mat->p = tempi;
-    tempi = matrix_imag->i; matrix_imag->i = mat->i; mat->i = tempi;
-    tempd = matrix_imag->x; matrix_imag->x = mat->x; mat->x = tempd;
-    // free temp mat
-    cs_spfree(mat);
+    cxs_spfree(mat);
 
     update_clock_when_matrix_is_changed();
 }
 
 int COMPLEX_SPARSE_MATRIX_CSPARSE::get_matrix_size() const
 {
-    if(matrix_real!=NULL) return matrix_real->n;
+    if(matrix_complex!=NULL) return matrix_complex->n;
     else                  return 0;
 }
 
 int COMPLEX_SPARSE_MATRIX_CSPARSE::get_matrix_entry_count() const
 {
-    return matrix_real->nzmax;
+    return matrix_complex->nzmax;
 }
 
 int COMPLEX_SPARSE_MATRIX_CSPARSE::get_starting_index_of_column(int col) const
 {
-    if(col>=0 and col<=get_matrix_size()) return matrix_real->p[col];
+    if(col>=0 and col<=get_matrix_size()) return matrix_complex->p[col];
     else                                  return INDEX_NOT_EXIST;
 }
 
 int COMPLEX_SPARSE_MATRIX_CSPARSE::get_row_number_of_entry_index(int index) const
 {
     int n = get_matrix_size();
-    if(index<=get_starting_index_of_column(n))  return matrix_real->i[index];
+    if(index<=get_starting_index_of_column(n))  return matrix_complex->i[index];
     else                                        return INDEX_NOT_EXIST;
 }
 
@@ -357,10 +305,10 @@ int COMPLEX_SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
 
         if(row < get_matrix_size() and col < get_matrix_size())
         {
-            for(int k=matrix_real->p[col]; k!=matrix_real->p[col+1]; ++k)
+            for(int k=matrix_complex->p[col]; k!=matrix_complex->p[col+1]; ++k)
             {
-                if(matrix_real->i[k] > row) break; // if no entry of (row, col)
-                if(matrix_real->i[k] == row)
+                if(matrix_complex->i[k] > row) break; // if no entry of (row, col)
+                if(matrix_complex->i[k] == row)
                 {
                     index = k;
                     break;
@@ -375,8 +323,8 @@ int COMPLEX_SPARSE_MATRIX_CSPARSE::get_entry_index(int row, int col) const
 
 complex<double> COMPLEX_SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index)  const
 {
-    if(index>=0 && index<=matrix_real->p[matrix_real->n]) // this condition is equivalent to previous line
-        return complex<double>(matrix_real->x[index], matrix_imag->x[index]);
+    if(index>=0 && index<=matrix_complex->p[matrix_complex->n]) // this condition is equivalent to previous line
+        return matrix_complex->x[index];
     else
         return 0.0;
 }
@@ -384,7 +332,7 @@ complex<double> COMPLEX_SPARSE_MATRIX_CSPARSE::get_complex_entry_value(int index
 double COMPLEX_SPARSE_MATRIX_CSPARSE::get_real_entry_value(int index) const
 {
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
-        return matrix_real->x[index];
+        return (matrix_complex->x[index]).real();
     else
         return 0.0;
 }
@@ -392,7 +340,7 @@ double COMPLEX_SPARSE_MATRIX_CSPARSE::get_real_entry_value(int index) const
 double COMPLEX_SPARSE_MATRIX_CSPARSE::get_imag_entry_value(int index) const
 {
     if(index>=0 && index<=get_starting_index_of_column(get_matrix_size()))
-        return matrix_imag->x[index];
+        return matrix_complex->x[index].imag();
     else
         return 0.0;
 }
@@ -401,7 +349,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::change_real_entry_value(int index, double va
 {
     if(index != INDEX_NOT_EXIST and index>=0 and index<get_starting_index_of_column(get_matrix_size()))
     {
-        matrix_real->x[index]=value; // found
+        matrix_complex->x[index]=complex<double>(value, matrix_complex->x[index].imag()); // found
 
         update_clock_when_matrix_is_changed();
     }
@@ -412,7 +360,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::change_imag_entry_value(int index, double va
 {
     if(index != INDEX_NOT_EXIST and index>=0 and index<get_starting_index_of_column(get_matrix_size()))
     {
-        matrix_imag->x[index]=value; // found
+        matrix_complex->x[index]=complex<double>(matrix_complex->x[index].real(),value); // found
 
         update_clock_when_matrix_is_changed();
     }
@@ -421,7 +369,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::change_imag_entry_value(int index, double va
 
 vector<unsigned int> COMPLEX_SPARSE_MATRIX_CSPARSE::get_reorder_permutation()
 {
-    csi* p = cs_amd(1,matrix_real); // use the real part for re-ordering
+    int* p = cxs_amd(1,matrix_complex); // use the real part for re-ordering
 
     vector<unsigned int> permutation;
     permutation.reserve(get_matrix_size());
@@ -440,21 +388,21 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
 
     char buffer[256];
 
-    cs_nfree(LU); // free LU (csn *)
-    cs_sfree(LU_symbolic);
+    cxs_nfree(LU); // free LU (csn *)
+    cxs_sfree(LU_symbolic);
     csi n, ok ;
-    if (CS_CSC (matrix_real))/* check inputs */
+    if (CS_CSC (matrix_complex))/* check inputs */
     {
-        n = matrix_real->n ;
-        LU_symbolic = cs_sqr (order, matrix_real, 0) ;              /* ordering and symbolic analysis */
-        LU = cs_lu (matrix_real, LU_symbolic, tolerance) ;                 /* numeric LU factorization */
+        n = matrix_complex->n ;
+        LU_symbolic = cxs_sqr (order, matrix_complex, 0) ;              /* ordering and symbolic analysis */
+        LU = cxs_lu (matrix_complex, LU_symbolic, tolerance) ;                 /* numeric LU factorization */
 
         ok = (LU_symbolic && LU) ; // check
         if(ok==1)
         {
             // reset working space
             if(LU_workspace!=NULL) free(LU_workspace);
-            LU_workspace = (double *)cs_malloc(n, sizeof (double)) ;  // get workspace
+            LU_workspace = (complex<double> *)cxs_malloc(n, sizeof (complex<double>)) ;  // get workspace
             if(LU_workspace != NULL)
                 ;
             else
@@ -477,7 +425,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::LU_factorization(int order, double tolerance
     }
 }
 
-vector<double>& COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
+vector<complex<double> >& COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<complex<double> >& b)
 {
     if(LU_factorization_is_performed())
     {
@@ -502,7 +450,7 @@ vector<double>& COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Ax_eq_b(vector<double>& b)
     return b;
 }
 
-void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
+void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<complex<double> >& b)
 {
     ostringstream osstream;
     unsigned int n = b.size();
@@ -515,21 +463,21 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
         else
         {
             free(bb);
-            bb = (double*)malloc(n*sizeof(double));
+            bb = (complex<double>*)malloc(n*sizeof(complex<double>));
             bb_size = n;
         }
     }
     else
     {
-        bb = (double*)malloc(n*sizeof(double));
+        bb = (complex<double>*)malloc(n*sizeof(complex<double>));
         bb_size = n;
     }
     if(bb!=NULL)
     {
         for(unsigned int i=0; i!=n; ++i) bb[i]=b[i]; // set bb
 
-        cs_ipvec(LU->pinv, bb, LU_workspace, matrix_real->n) ;       /* x = b(p) */
-        int OK = cs_lsolve (LU->L, LU_workspace) ;               /* x = L\x */
+        cxs_ipvec(LU->pinv, bb, LU_workspace, matrix_complex->n) ;       /* x = b(p) */
+        int OK = cxs_lsolve (LU->L, LU_workspace) ;               /* x = L\x */
         if(OK == 1)
         {
             // now solution is OK
@@ -548,7 +496,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_Lx_eq_b(vector<double>& b)
     }
 }
 
-void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
+void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<complex<double> >& b)
 {
     string buffer;
     char cbuffer[1000];
@@ -563,20 +511,20 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::solve_xU_eq_b(vector<double>& b)
         else
         {
             free(bb);
-            bb = (double*)malloc(n*sizeof(double));
+            bb = (complex<double>*)malloc(n*sizeof(complex<double>));
             bb_size = n;
         }
     }
     else
     {
-        bb = (double*)malloc(n*sizeof(double));
+        bb = (complex<double>*)malloc(n*sizeof(complex<double>));
         bb_size = n;
     }
     if(bb!=NULL)
     {
         for(unsigned int i=0; i!=n; ++i) LU_workspace[i]=b[i]; // set bb
-        int OK = cs_usolve(LU->U, LU_workspace) ;               /* x = U\x */
-        cs_ipvec(LU_symbolic->q, LU_workspace, bb, matrix_real->n) ;          /* b(q) = x */
+        int OK = cxs_usolve(LU->U, LU_workspace) ;               /* x = U\x */
+        cxs_ipvec(LU_symbolic->q, LU_workspace, bb, matrix_complex->n) ;          /* b(q) = x */
 
         if(OK == 1)
         {
@@ -615,14 +563,11 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::report_brief() const
     int n = get_matrix_size();
     for(j=0;j!=n;++j)
     {
-        for(k=matrix_real->p[j];k<matrix_real->p[j+1];++k)
+        for(k=matrix_complex->p[j];k<matrix_complex->p[j+1];++k)
         {
-            i=matrix_real->i[k];
+            i=matrix_complex->i[k];
 
-            if(matrix_imag->n==0)
-                snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f\n",i,j,matrix_real->x[k]);
-            else
-                snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f, % 10.6f\n",i,j,matrix_real->x[k],matrix_imag->x[k]);
+            snprintf(cbuffer,1000, "%-6d, %-6d, % 10.6f, % 10.6f\n",i,j,matrix_complex->x[k].real(),matrix_complex->x[k].imag());
 
             buffer = cbuffer;
             show_information_with_leading_time_stamp_with_default_toolkit(buffer);
@@ -652,17 +597,13 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::save_matrix_to_file(string filename) const
         int n = get_matrix_size();
         for(j=0;j!=n;++j)
         {
-            for(k=matrix_real->p[j];k<matrix_real->p[j+1];++k)
+            for(k=matrix_complex->p[j];k<matrix_complex->p[j+1];++k)
             {
-                i=matrix_real->i[k];
+                i=matrix_complex->i[k];
 
-                if(matrix_imag->n==0)
-                    file<<i<<","<<j<<","
-                        <<setprecision(6)<<fixed<<matrix_real->x[k]<<",0.0"<<endl;
-                else
-                    file<<i<<","<<j<<","
-                        <<setprecision(6)<<fixed<<matrix_real->x[k]<<","
-                        <<setprecision(6)<<fixed<<matrix_imag->x[k]<<endl;
+                file<<i<<","<<j<<","
+                    <<setprecision(6)<<fixed<<matrix_complex->x[k].real()<<","
+                    <<setprecision(6)<<fixed<<matrix_complex->x[k].imag()<<endl;
             }
         }
         file.close();
@@ -676,7 +617,7 @@ void COMPLEX_SPARSE_MATRIX_CSPARSE::save_matrix_to_file(string filename) const
     }
 }
 
-vector<double>& operator/(vector<double>&b, COMPLEX_SPARSE_MATRIX_CSPARSE& A)
+vector<complex<double> >& operator/(vector<complex<double> >&b, COMPLEX_SPARSE_MATRIX_CSPARSE& A)
 {
     return A.solve_Ax_eq_b(b);
 }

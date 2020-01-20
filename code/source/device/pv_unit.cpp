@@ -116,16 +116,16 @@ void PV_UNIT::run(DYNAMIC_MODE mode)
             }
             default:
             {
-                if(irrd!=NULL)
+                if(irrd!=NULL and irrd->is_model_active())
                     irrd->run(mode);
 
-                if(elec!=NULL)
+                if(elec!=NULL and elec->is_model_active())
                     elec->run(mode);
 
-                if(panel!=NULL)
+                if(panel!=NULL and panel->is_model_active())
                     panel->run(mode);
 
-                if(conv!=NULL)
+                if(conv!=NULL and conv->is_model_active())
                     conv->run(mode);
                 break;
             }

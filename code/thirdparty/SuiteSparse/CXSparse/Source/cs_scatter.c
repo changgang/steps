@@ -1,11 +1,11 @@
-#include "cs.h"
+#include "cxs.h"
 /* x = x + beta * A(:,j), where x is a dense vector and A(:,j) is sparse */
-CS_INT cs_scatter (const cs *A, CS_INT j, CS_ENTRY beta, CS_INT *w, CS_ENTRY *x, CS_INT mark,
-    cs *C, CS_INT nz)
+CXS_INT cxs_scatter (const cxs *A, CXS_INT j, CXS_ENTRY beta, CXS_INT *w, CXS_ENTRY *x, CXS_INT mark,
+    cxs *C, CXS_INT nz)
 {
-    CS_INT i, p, *Ap, *Ai, *Ci ;
-    CS_ENTRY *Ax ;
-    if (!CS_CSC (A) || !w || !CS_CSC (C)) return (-1) ;     /* check inputs */
+    CXS_INT i, p, *Ap, *Ai, *Ci ;
+    CXS_ENTRY *Ax ;
+    if (!CXS_CSC (A) || !w || !CXS_CSC (C)) return (-1) ;     /* check inputs */
     Ap = A->p ; Ai = A->i ; Ax = A->x ; Ci = C->i ;
     for (p = Ap [j] ; p < Ap [j+1] ; p++)
     {

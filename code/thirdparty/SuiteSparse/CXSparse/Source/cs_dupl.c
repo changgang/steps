@@ -1,12 +1,12 @@
-#include "cs.h"
+#include "cxs.h"
 /* remove duplicate entries from A */
-CS_INT cs_dupl (cs *A)
+CXS_INT cxs_dupl (cxs *A)
 {
-    CS_INT i, j, p, q, nz = 0, n, m, *Ap, *Ai, *w ;
-    CS_ENTRY *Ax ;
-    if (!CS_CSC (A)) return (0) ;               /* check inputs */
+    CXS_INT i, j, p, q, nz = 0, n, m, *Ap, *Ai, *w ;
+    CXS_ENTRY *Ax ;
+    if (!CXS_CSC (A)) return (0) ;               /* check inputs */
     m = A->m ; n = A->n ; Ap = A->p ; Ai = A->i ; Ax = A->x ;
-    w = cs_malloc (m, sizeof (CS_INT)) ;           /* get workspace */
+    w = cxs_malloc (m, sizeof (CXS_INT)) ;           /* get workspace */
     if (!w) return (0) ;                        /* out of memory */
     for (i = 0 ; i < m ; i++) w [i] = -1 ;      /* row i not yet seen */
     for (j = 0 ; j < n ; j++)
@@ -29,6 +29,6 @@ CS_INT cs_dupl (cs *A)
         Ap [j] = q ;                            /* record start of column j */
     }
     Ap [n] = nz ;                               /* finalize A */
-    cs_free (w) ;                               /* free workspace */
-    return (cs_sprealloc (A, 0)) ;              /* remove extra space from A */
+    cxs_free (w) ;                               /* free workspace */
+    return (cxs_sprealloc (A, 0)) ;              /* remove extra space from A */
 }

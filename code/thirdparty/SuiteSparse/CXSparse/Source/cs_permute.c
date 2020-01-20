@@ -1,14 +1,14 @@
-#include "cs.h"
+#include "cxs.h"
 /* C = A(p,q) where p and q are permutations of 0..m-1 and 0..n-1. */
-cs *cs_permute (const cs *A, const CS_INT *pinv, const CS_INT *q, CS_INT values)
+cxs *cxs_permute (const cxs *A, const CXS_INT *pinv, const CXS_INT *q, CXS_INT values)
 {
-    CS_INT t, j, k, nz = 0, m, n, *Ap, *Ai, *Cp, *Ci ;
-    CS_ENTRY *Cx, *Ax ;
-    cs *C ;
-    if (!CS_CSC (A)) return (NULL) ;    /* check inputs */
+    CXS_INT t, j, k, nz = 0, m, n, *Ap, *Ai, *Cp, *Ci ;
+    CXS_ENTRY *Cx, *Ax ;
+    cxs *C ;
+    if (!CXS_CSC (A)) return (NULL) ;    /* check inputs */
     m = A->m ; n = A->n ; Ap = A->p ; Ai = A->i ; Ax = A->x ;
-    C = cs_spalloc (m, n, Ap [n], values && Ax != NULL, 0) ;  /* alloc result */
-    if (!C) return (cs_done (C, NULL, NULL, 0)) ;   /* out of memory */
+    C = cxs_spalloc (m, n, Ap [n], values && Ax != NULL, 0) ;  /* alloc result */
+    if (!C) return (cxs_done (C, NULL, NULL, 0)) ;   /* out of memory */
     Cp = C->p ; Ci = C->i ; Cx = C->x ;
     for (k = 0 ; k < n ; k++)
     {
@@ -21,5 +21,5 @@ cs *cs_permute (const cs *A, const CS_INT *pinv, const CS_INT *q, CS_INT values)
         }
     }
     Cp [n] = nz ;                       /* finalize the last column of C */
-    return (cs_done (C, NULL, NULL, 1)) ;
+    return (cxs_done (C, NULL, NULL, 1)) ;
 }

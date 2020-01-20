@@ -1,26 +1,26 @@
-#include "cs.h"
+#include "cxs.h"
 /* depth-first-search of the graph of a matrix, starting at node j */
-CS_INT cs_dfs (CS_INT j, cs *G, CS_INT top, CS_INT *xi, CS_INT *pstack, const CS_INT *pinv)
+CXS_INT cxs_dfs (CXS_INT j, cxs *G, CXS_INT top, CXS_INT *xi, CXS_INT *pstack, const CXS_INT *pinv)
 {
-    CS_INT i, p, p2, done, jnew, head = 0, *Gp, *Gi ;
-    if (!CS_CSC (G) || !xi || !pstack) return (-1) ;    /* check inputs */
+    CXS_INT i, p, p2, done, jnew, head = 0, *Gp, *Gi ;
+    if (!CXS_CSC (G) || !xi || !pstack) return (-1) ;    /* check inputs */
     Gp = G->p ; Gi = G->i ;
     xi [0] = j ;                /* initialize the recursion stack */
     while (head >= 0)
     {
         j = xi [head] ;         /* get j from the top of the recursion stack */
         jnew = pinv ? (pinv [j]) : j ;
-        if (!CS_MARKED (Gp, j))
+        if (!CXS_MARKED (Gp, j))
         {
-            CS_MARK (Gp, j) ;       /* mark node j as visited */
-            pstack [head] = (jnew < 0) ? 0 : CS_UNFLIP (Gp [jnew]) ;
+            CXS_MARK (Gp, j) ;       /* mark node j as visited */
+            pstack [head] = (jnew < 0) ? 0 : CXS_UNFLIP (Gp [jnew]) ;
         }
         done = 1 ;                  /* node j done if no unvisited neighbors */
-        p2 = (jnew < 0) ? 0 : CS_UNFLIP (Gp [jnew+1]) ;
+        p2 = (jnew < 0) ? 0 : CXS_UNFLIP (Gp [jnew+1]) ;
         for (p = pstack [head] ; p < p2 ; p++)  /* examine all neighbors of j */
         {
             i = Gi [p] ;            /* consider neighbor node i */
-            if (CS_MARKED (Gp, i)) continue ;   /* skip visited node i */
+            if (CXS_MARKED (Gp, i)) continue ;   /* skip visited node i */
             pstack [head] = p ;     /* pause depth-first search of node j */
             xi [++head] = i ;       /* start dfs at node i */
             done = 0 ;              /* node j is not done */

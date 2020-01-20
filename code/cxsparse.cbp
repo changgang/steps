@@ -30,7 +30,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="thirdparty/SuiteSparse/CXSparse/Include/cs.h" />
+		<Unit filename="thirdparty/SuiteSparse/CXSparse/Include/cxs.h" />
 		<Unit filename="thirdparty/SuiteSparse/CXSparse/Source/cs_add.c">
 			<Option compilerVar="CC" />
 		</Unit>

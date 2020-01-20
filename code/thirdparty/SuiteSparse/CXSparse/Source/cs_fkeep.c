@@ -1,10 +1,10 @@
-#include "cs.h"
+#include "cxs.h"
 /* drop entries for which fkeep(A(i,j)) is false; return nz if OK, else -1 */
-CS_INT cs_fkeep (cs *A, CS_INT (*fkeep) (CS_INT, CS_INT, CS_ENTRY, void *), void *other)
+CXS_INT cxs_fkeep (cxs *A, CXS_INT (*fkeep) (CXS_INT, CXS_INT, CXS_ENTRY, void *), void *other)
 {
-    CS_INT j, p, nz = 0, n, *Ap, *Ai ;
-    CS_ENTRY *Ax ;
-    if (!CS_CSC (A) || !fkeep) return (-1) ;    /* check inputs */
+    CXS_INT j, p, nz = 0, n, *Ap, *Ai ;
+    CXS_ENTRY *Ax ;
+    if (!CXS_CSC (A) || !fkeep) return (-1) ;    /* check inputs */
     n = A->n ; Ap = A->p ; Ai = A->i ; Ax = A->x ;
     for (j = 0 ; j < n ; j++)
     {
@@ -20,6 +20,6 @@ CS_INT cs_fkeep (cs *A, CS_INT (*fkeep) (CS_INT, CS_INT, CS_ENTRY, void *), void
         }
     }
     Ap [n] = nz ;                           /* finalize A */
-    cs_sprealloc (A, 0) ;                   /* remove extra space from A */
+    cxs_sprealloc (A, 0) ;                   /* remove extra space from A */
     return (nz) ;
 }

@@ -1,9 +1,9 @@
-#include "cs.h"
-static CS_INT cs_nonzero (CS_INT i, CS_INT j, CS_ENTRY aij, void *other)
+#include "cxs.h"
+static CXS_INT cxs_nonzero (CXS_INT i, CXS_INT j, CXS_ENTRY aij, void *other)
 {
     return (aij != 0) ;
 }
-CS_INT cs_dropzeros (cs *A)
+CXS_INT cxs_dropzeros (cxs *A)
 {
-    return (cs_fkeep (A, &cs_nonzero, NULL)) ;  /* keep all nonzero entries */
-} 
+    return (cxs_fkeep (A, &cxs_nonzero, NULL)) ;  /* keep all nonzero entries */
+}

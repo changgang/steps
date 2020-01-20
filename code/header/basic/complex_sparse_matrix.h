@@ -1,10 +1,6 @@
 #ifndef COMPLEX_SPARSE_MATRIX_H
 #define COMPLEX_SPARSE_MATRIX_H
 
-extern "C"
-{
-    #include "cs.h"
-}
 #include <vector>
 #include <ctime>
 #include <complex>
@@ -22,15 +18,12 @@ public:
     clock_t get_clock_when_matrix_is_changed() const;
     clock_t get_clock_when_LU_factorization_is_performed() const;
 
-    void add_entry(int row, int col, double value);
     bool matrix_in_compressed_column_form()  const;
 
     complex<double> get_entry_value(int row, int col)  const;
     complex<double> get_entry_value(int index)  const;
 
-    void change_entry_value(int row, int col, double value);
     void change_entry_value(int row, int col, const complex<double>& value);
-    void change_entry_value(int index, double value);
     void change_entry_value(int index, const complex<double>& value);
 
     int get_column_number_of_entry_index(int index)  const;
@@ -50,7 +43,7 @@ public:
     virtual int get_starting_index_of_column(int col)  const = 0;
     virtual int get_row_number_of_entry_index(int index)  const = 0;
 
-    virtual int    get_entry_index(int row, int col)  const = 0;
+    virtual int get_entry_index(int row, int col)  const = 0;
 
     virtual complex<double> get_complex_entry_value(int index)  const = 0;
     virtual double get_real_entry_value(int index)  const = 0;
@@ -65,7 +58,7 @@ public:
 
     virtual void LU_factorization(int order=1, double tolerance = 1e-13) = 0;
 
-    virtual vector<double>& solve_Ax_eq_b(vector<double>& b) = 0;
+    virtual vector<complex<double> >& solve_Ax_eq_b(vector<complex<double> >& b) = 0;
 
     virtual void report_brief()  const = 0;
     virtual void report_full()  const = 0;

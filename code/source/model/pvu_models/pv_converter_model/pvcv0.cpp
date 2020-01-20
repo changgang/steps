@@ -277,7 +277,9 @@ bool PVCV0::setup_model_with_bpa_string(string data)
 
 void PVCV0::setup_block_toolkit_and_parameters()
 {
-    ;
+    STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    LVPL_voltage_sensor.set_toolkit(toolkit);
+    reactive_voltage_commander.set_toolkit(toolkit);
 }
 
 void PVCV0::initialize()

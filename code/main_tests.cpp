@@ -21,6 +21,7 @@
 #include "header/basic/rating_test.h"
 #include "header/basic/utility_test.h"
 #include "header/basic/sparse_matrix_test.h"
+#include "header/basic/complex_sparse_matrix_test.h"
 #include "header/basic/fault_test.h"
 #include "header/basic/timer_test.h"
 #include "header/basic/constants_test.h"
@@ -209,7 +210,7 @@ int main(int argc, char* argv[])
 	{
         Test::Suite ts;
         #ifdef ENABLE_STEPS_TEST
-        /*
+
         ts.add(unique_ptr<Test::Suite>(new TERMINAL_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DEVICE_ID_TEST));
@@ -220,6 +221,8 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new RATING_TEST));
         ts.add(unique_ptr<Test::Suite>(new UTILITY_TEST));
         ts.add(unique_ptr<Test::Suite>(new SPARSE_MATRIX_TEST));
+        ts.add(unique_ptr<Test::Suite>(new COMPLEX_SPARSE_MATRIX_TEST));
+
         ts.add(unique_ptr<Test::Suite>(new FAULT_TEST));
         ts.add(unique_ptr<Test::Suite>(new BUS_INDEX_TEST));
         ts.add(unique_ptr<Test::Suite>(new DEVICE_INDEX_MAP_TEST));
@@ -229,7 +232,6 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new CONTINUOUS_BUFFER_TEST));
         ts.add(unique_ptr<Test::Suite>(new TIME_SERIES_TEST));
 
-        //
         ts.add(unique_ptr<Test::Suite>(new BUS_TEST));
         ts.add(unique_ptr<Test::Suite>(new SOURCE_TEST));
         ts.add(unique_ptr<Test::Suite>(new GENERATOR_TEST));
@@ -333,7 +335,7 @@ int main(int argc, char* argv[])
         ts.add(unique_ptr<Test::Suite>(new WT3P0_TEST));
         ts.add(unique_ptr<Test::Suite>(new FILEWIND_TEST));
 
-        ts.add(unique_ptr<Test::Suite>(new PVGU1_TEST));*/
+        ts.add(unique_ptr<Test::Suite>(new PVGU1_TEST));
 
         ts.add(unique_ptr<Test::Suite>(new DYNAMICS_SIMULATOR_TEST));
 

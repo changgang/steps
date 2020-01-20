@@ -1890,6 +1890,8 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
 void DYNAMICS_SIMULATOR::start()
 {
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
+    toolkit.update_device_thread_number();
+
     POWERFLOW_SOLVER& pf_solver = toolkit.get_powerflow_solver();
     NETWORK_MATRIX& network_matrix = get_network_matrix();
 
@@ -2420,6 +2422,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
             {
                 build_bus_current_mismatch_vector();
                 delta_V = I_vec/jacobian;
+
                 update_bus_voltage();
                 if(get_non_divergent_solution_logic()==true)
                 {
@@ -3109,6 +3112,7 @@ void DYNAMICS_SIMULATOR::update_bus_voltage()
     unsigned int n = delta_V.size();
     n = n>>1;
 
+    NETWORK_MATRIX& network = toolkit.get_network_matrix();
     #ifdef ENABLE_OPENMP_FOR_DYNAMIC_SIMULATOR
         set_openmp_number_of_threads(toolkit.get_bus_thread_number());
         #pragma omp parallel for schedule(static)

@@ -1121,7 +1121,7 @@ void HVDC::run(DYNAMIC_MODE mode)
             default:
             {
                 HVDC_MODEL* hvdc_model = get_hvdc_model();
-                if(hvdc_model!=NULL)
+                if(hvdc_model!=NULL and hvdc_model->is_model_active())
                     hvdc_model->run(mode);
                 break;
             }

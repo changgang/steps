@@ -1,120 +1,120 @@
-#include "cs.h"
+#include "cxs.h"
 /* allocate a sparse matrix (triplet form or compressed-column form) */
-cs *cs_spalloc (CS_INT m, CS_INT n, CS_INT nzmax, CS_INT values, CS_INT triplet)
+cxs *cxs_spalloc (CXS_INT m, CXS_INT n, CXS_INT nzmax, CXS_INT values, CXS_INT triplet)
 {
-    cs *A = cs_calloc (1, sizeof (cs)) ;    /* allocate the cs struct */
+    cxs *A = cxs_calloc (1, sizeof (cxs)) ;    /* allocate the cxs struct */
     if (!A) return (NULL) ;                 /* out of memory */
     A->m = m ;                              /* define dimensions and nzmax */
     A->n = n ;
-    A->nzmax = nzmax = CS_MAX (nzmax, 1) ;
+    A->nzmax = nzmax = CXS_MAX (nzmax, 1) ;
     A->nz = triplet ? 0 : -1 ;              /* allocate triplet or comp.col */
-    A->p = cs_malloc (triplet ? nzmax : n+1, sizeof (CS_INT)) ;
-    A->i = cs_malloc (nzmax, sizeof (CS_INT)) ;
-    A->x = values ? cs_malloc (nzmax, sizeof (CS_ENTRY)) : NULL ;
-    return ((!A->p || !A->i || (values && !A->x)) ? cs_spfree (A) : A) ;
+    A->p = cxs_malloc (triplet ? nzmax : n+1, sizeof (CXS_INT)) ;
+    A->i = cxs_malloc (nzmax, sizeof (CXS_INT)) ;
+    A->x = values ? cxs_malloc (nzmax, sizeof (CXS_ENTRY)) : NULL ;
+    return ((!A->p || !A->i || (values && !A->x)) ? cxs_spfree (A) : A) ;
 }
 
 /* change the max # of entries sparse matrix */
-CS_INT cs_sprealloc (cs *A, CS_INT nzmax)
+CXS_INT cxs_sprealloc (cxs *A, CXS_INT nzmax)
 {
-    CS_INT ok, oki, okj = 1, okx = 1 ;
+    CXS_INT ok, oki, okj = 1, okx = 1 ;
     if (!A) return (0) ;
-    if (nzmax <= 0) nzmax = (CS_CSC (A)) ? (A->p [A->n]) : A->nz ;
-    nzmax = CS_MAX (nzmax, 1) ;
-    A->i = cs_realloc (A->i, nzmax, sizeof (CS_INT), &oki) ;
-    if (CS_TRIPLET (A)) A->p = cs_realloc (A->p, nzmax, sizeof (CS_INT), &okj) ;
-    if (A->x) A->x = cs_realloc (A->x, nzmax, sizeof (CS_ENTRY), &okx) ;
+    if (nzmax <= 0) nzmax = (CXS_CSC (A)) ? (A->p [A->n]) : A->nz ;
+    nzmax = CXS_MAX (nzmax, 1) ;
+    A->i = cxs_realloc (A->i, nzmax, sizeof (CXS_INT), &oki) ;
+    if (CXS_TRIPLET (A)) A->p = cxs_realloc (A->p, nzmax, sizeof (CXS_INT), &okj) ;
+    if (A->x) A->x = cxs_realloc (A->x, nzmax, sizeof (CXS_ENTRY), &okx) ;
     ok = (oki && okj && okx) ;
     if (ok) A->nzmax = nzmax ;
     return (ok) ;
 }
 
 /* free a sparse matrix */
-cs *cs_spfree (cs *A)
+cxs *cxs_spfree (cxs *A)
 {
     if (!A) return (NULL) ;     /* do nothing if A already NULL */
-    cs_free (A->p) ;
-    cs_free (A->i) ;
-    cs_free (A->x) ;
-    return ((cs *) cs_free (A)) ;   /* free the cs struct and return NULL */
+    cxs_free (A->p) ;
+    cxs_free (A->i) ;
+    cxs_free (A->x) ;
+    return ((cxs *) cxs_free (A)) ;   /* free the cxs struct and return NULL */
 }
 
 /* free a numeric factorization */
-csn *cs_nfree (csn *N)
+cxsn *cxs_nfree (cxsn *N)
 {
     if (!N) return (NULL) ;     /* do nothing if N already NULL */
-    cs_spfree (N->L) ;
-    cs_spfree (N->U) ;
-    cs_free (N->pinv) ;
-    cs_free (N->B) ;
-    return ((csn *) cs_free (N)) ;  /* free the csn struct and return NULL */
+    cxs_spfree (N->L) ;
+    cxs_spfree (N->U) ;
+    cxs_free (N->pinv) ;
+    cxs_free (N->B) ;
+    return ((cxsn *) cxs_free (N)) ;  /* free the cxsn struct and return NULL */
 }
 
 /* free a symbolic factorization */
-css *cs_sfree (css *S)
+cxss *cxs_sfree (cxss *S)
 {
     if (!S) return (NULL) ;     /* do nothing if S already NULL */
-    cs_free (S->pinv) ;
-    cs_free (S->q) ;
-    cs_free (S->parent) ;
-    cs_free (S->cp) ;
-    cs_free (S->leftmost) ;
-    return ((css *) cs_free (S)) ;  /* free the css struct and return NULL */
+    cxs_free (S->pinv) ;
+    cxs_free (S->q) ;
+    cxs_free (S->parent) ;
+    cxs_free (S->cp) ;
+    cxs_free (S->leftmost) ;
+    return ((cxss *) cxs_free (S)) ;  /* free the cxss struct and return NULL */
 }
 
-/* allocate a cs_dmperm or cs_scc result */
-csd *cs_dalloc (CS_INT m, CS_INT n)
+/* allocate a cxs_dmperm or cxs_scc result */
+cxsd *cxs_dalloc (CXS_INT m, CXS_INT n)
 {
-    csd *D ;
-    D = cs_calloc (1, sizeof (csd)) ;
+    cxsd *D ;
+    D = cxs_calloc (1, sizeof (cxsd)) ;
     if (!D) return (NULL) ;
-    D->p = cs_malloc (m, sizeof (CS_INT)) ;
-    D->r = cs_malloc (m+6, sizeof (CS_INT)) ;
-    D->q = cs_malloc (n, sizeof (CS_INT)) ;
-    D->s = cs_malloc (n+6, sizeof (CS_INT)) ;
-    return ((!D->p || !D->r || !D->q || !D->s) ? cs_dfree (D) : D) ;
+    D->p = cxs_malloc (m, sizeof (CXS_INT)) ;
+    D->r = cxs_malloc (m+6, sizeof (CXS_INT)) ;
+    D->q = cxs_malloc (n, sizeof (CXS_INT)) ;
+    D->s = cxs_malloc (n+6, sizeof (CXS_INT)) ;
+    return ((!D->p || !D->r || !D->q || !D->s) ? cxs_dfree (D) : D) ;
 }
 
-/* free a cs_dmperm or cs_scc result */
-csd *cs_dfree (csd *D)
+/* free a cxs_dmperm or cxs_scc result */
+cxsd *cxs_dfree (cxsd *D)
 {
     if (!D) return (NULL) ;     /* do nothing if D already NULL */
-    cs_free (D->p) ;
-    cs_free (D->q) ;
-    cs_free (D->r) ;
-    cs_free (D->s) ;
-    return ((csd *) cs_free (D)) ;  /* free the csd struct and return NULL */
+    cxs_free (D->p) ;
+    cxs_free (D->q) ;
+    cxs_free (D->r) ;
+    cxs_free (D->s) ;
+    return ((cxsd *) cxs_free (D)) ;  /* free the cxsd struct and return NULL */
 }
 
 /* free workspace and return a sparse matrix result */
-cs *cs_done (cs *C, void *w, void *x, CS_INT ok)
+cxs *cxs_done (cxs *C, void *w, void *x, CXS_INT ok)
 {
-    cs_free (w) ;                       /* free workspace */
-    cs_free (x) ;
-    return (ok ? C : cs_spfree (C)) ;   /* return result if OK, else free it */
+    cxs_free (w) ;                       /* free workspace */
+    cxs_free (x) ;
+    return (ok ? C : cxs_spfree (C)) ;   /* return result if OK, else free it */
 }
 
-/* free workspace and return CS_INT array result */
-CS_INT *cs_idone (CS_INT *p, cs *C, void *w, CS_INT ok)
+/* free workspace and return CXS_INT array result */
+CXS_INT *cxs_idone (CXS_INT *p, cxs *C, void *w, CXS_INT ok)
 {
-    cs_spfree (C) ;                     /* free temporary matrix */
-    cs_free (w) ;                       /* free workspace */
-    return (ok ? p : (CS_INT *) cs_free (p)) ; /* return result, or free it */
+    cxs_spfree (C) ;                     /* free temporary matrix */
+    cxs_free (w) ;                       /* free workspace */
+    return (ok ? p : (CXS_INT *) cxs_free (p)) ; /* return result, or free it */
 }
 
 /* free workspace and return a numeric factorization (Cholesky, LU, or QR) */
-csn *cs_ndone (csn *N, cs *C, void *w, void *x, CS_INT ok)
+cxsn *cxs_ndone (cxsn *N, cxs *C, void *w, void *x, CXS_INT ok)
 {
-    cs_spfree (C) ;                     /* free temporary matrix */
-    cs_free (w) ;                       /* free workspace */
-    cs_free (x) ;
-    return (ok ? N : cs_nfree (N)) ;    /* return result if OK, else free it */
+    cxs_spfree (C) ;                     /* free temporary matrix */
+    cxs_free (w) ;                       /* free workspace */
+    cxs_free (x) ;
+    return (ok ? N : cxs_nfree (N)) ;    /* return result if OK, else free it */
 }
 
-/* free workspace and return a csd result */
-csd *cs_ddone (csd *D, cs *C, void *w, CS_INT ok)
+/* free workspace and return a cxsd result */
+cxsd *cxs_ddone (cxsd *D, cxs *C, void *w, CXS_INT ok)
 {
-    cs_spfree (C) ;                     /* free temporary matrix */
-    cs_free (w) ;                       /* free workspace */
-    return (ok ? D : cs_dfree (D)) ;    /* return result if OK, else free it */
+    cxs_spfree (C) ;                     /* free temporary matrix */
+    cxs_free (w) ;                       /* free workspace */
+    return (ok ? D : cxs_dfree (D)) ;    /* return result if OK, else free it */
 }

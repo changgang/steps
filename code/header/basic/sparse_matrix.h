@@ -1,10 +1,6 @@
 #ifndef SPARSE_MATRIX_H
 #define SPARSE_MATRIX_H
 
-extern "C"
-{
-    #include "cs.h"
-}
 #include <vector>
 #include <ctime>
 #include <complex>

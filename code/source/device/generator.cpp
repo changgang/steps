@@ -251,27 +251,27 @@ void GENERATOR::run(DYNAMIC_MODE mode)
             case UPDATE_MODE:
             {
                 COMPENSATOR_MODEL* comp = get_compensator_model();
-                if(comp!=NULL)
+                if(comp!=NULL and comp->is_model_active())
                     comp->run(mode);
 
                 STABILIZER_MODEL* pss = get_stabilizer_model();
-                if(pss!=NULL)
+                if(pss!=NULL and pss->is_model_active())
                     pss->run(mode);
 
                 EXCITER_MODEL* exciter = get_exciter_model();
-                if(exciter!=NULL)
+                if(exciter!=NULL and exciter->is_model_active())
                     exciter->run(mode);
 
                 TURBINE_LOAD_CONTROLLER_MODEL* tlc = get_turbine_load_controller_model();
-                if(tlc!=NULL)
+                if(tlc!=NULL and tlc->is_model_active())
                     tlc->run(mode);
 
                 TURBINE_GOVERNOR_MODEL* tg = get_turbine_governor_model();
-                if(tg!=NULL)
+                if(tg!=NULL and tg->is_model_active())
                     tg->run(mode);
 
                 SYNC_GENERATOR_MODEL* gen = get_sync_generator_model();
-                if(gen!=NULL)
+                if(gen!=NULL and gen->is_model_active())
                     gen->run(mode);
                 break;
             }

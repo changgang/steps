@@ -1,12 +1,12 @@
-#include "cs.h"
+#include "cxs.h"
 /* return a random permutation vector, the identity perm, or p = n-1:-1:0.
  * seed = -1 means p = n-1:-1:0.  seed = 0 means p = identity.  otherwise
  * p = random permutation.  */
-CS_INT *cs_randperm (CS_INT n, CS_INT seed)
+CXS_INT *cxs_randperm (CXS_INT n, CXS_INT seed)
 {
-    CS_INT *p, k, j, t ;
+    CXS_INT *p, k, j, t ;
     if (seed == 0) return (NULL) ;      /* return p = NULL (identity) */
-    p = cs_malloc (n, sizeof (CS_INT)) ;   /* allocate result */
+    p = cxs_malloc (n, sizeof (CXS_INT)) ;   /* allocate result */
     if (!p) return (NULL) ;             /* out of memory */
     for (k = 0 ; k < n ; k++) p [k] = n-k-1 ;
     if (seed == -1) return (p) ;        /* return reverse permutation */
