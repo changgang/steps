@@ -312,6 +312,8 @@ void IEEL::initialize()
 {
     setup_block_toolkit_and_parameters();
 
+    synchronize_bus_voltage_and_frequency();
+
     LOAD* load = get_load_pointer();
 
     complex<double> S = load->get_actual_total_load_in_MVA();
@@ -352,6 +354,7 @@ void IEEL::initialize_to_start()
 
 void IEEL::run(DYNAMIC_MODE mode)
 {
+    synchronize_bus_voltage_and_frequency();
     if(mode==UPDATE_MODE)
         set_flag_model_updated_as_true();
 }

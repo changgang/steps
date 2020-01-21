@@ -33,6 +33,7 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     toolkit.show_information_with_leading_time_stamp(osstream);
 
     load_powerflow_data_into_ram(file);
+
     if(raw_data_in_ram.size()==0)
     {
         osstream<<"No data in the given PSS/E file: "<<file<<endl
@@ -44,6 +45,7 @@ void PSSE_IMEXPORTER::load_powerflow_data(string file)
     steps_importer.set_toolkit(toolkit);
 
     vector<vector<vector<string> > > data = convert_psse_raw_data2steps_vector();
+
     steps_importer.load_powerflow_data_from_steps_vector(data);
 
     osstream<<"Done loading powerflow data.";

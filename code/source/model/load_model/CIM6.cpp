@@ -869,6 +869,7 @@ void CIM6::initialize_to_start()
 
 void CIM6::run(DYNAMIC_MODE mode)
 {
+    synchronize_bus_voltage_and_frequency();
     double Pelec = 0.0;
     double slip = get_slip_in_Hz();
     complex<double> Vterm = get_bus_positive_sequence_complex_voltage_in_pu();

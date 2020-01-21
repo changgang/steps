@@ -24,6 +24,7 @@ class LOAD_MODEL : public MODEL
         // common load model
         virtual string get_model_type() const;
         // common inputs
+        void synchronize_bus_voltage_and_frequency();
         double get_bus_positive_sequence_voltage_in_pu() const;
         double get_bus_positive_sequence_voltage_in_kV() const;
         complex<double> get_bus_positive_sequence_complex_voltage_in_pu() const;
@@ -69,6 +70,8 @@ class LOAD_MODEL : public MODEL
     private:
         SUBSYSTEM_TYPE subsystem_type;
         bool voltage_source_flag;
+        double voltage_pu, frequency_deviation_pu;
+        complex<double> complex_voltage_pu;
 
 };
 #endif // LOAD_MODEL_H

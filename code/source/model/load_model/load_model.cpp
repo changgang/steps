@@ -40,8 +40,26 @@ string LOAD_MODEL::get_model_type() const
     return "LOAD CHARACTERISTICS";
 }
 
+
+void LOAD_MODEL::synchronize_bus_voltage_and_frequency()
+{
+    LOAD* load = get_load_pointer();
+    if(load!=NULL)
+    {
+        BUS* bus = load->get_bus_pointer();
+        if(bus!=NULL)
+        {
+            voltage_pu = bus->get_positive_sequence_voltage_in_pu();
+            complex_voltage_pu = bus->get_positive_sequence_complex_voltage_in_pu();
+            frequency_deviation_pu = bus->get_frequency_deviation_in_pu();
+        }
+    }
+}
+
 double LOAD_MODEL::get_bus_positive_sequence_voltage_in_pu() const
 {
+    return voltage_pu;
+
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {
@@ -72,6 +90,8 @@ double LOAD_MODEL::get_bus_positive_sequence_voltage_in_kV() const
 
 complex<double> LOAD_MODEL::get_bus_positive_sequence_complex_voltage_in_pu() const
 {
+    return complex_voltage_pu;
+
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {
@@ -87,6 +107,8 @@ complex<double> LOAD_MODEL::get_bus_positive_sequence_complex_voltage_in_pu() co
 
 double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
 {
+    return frequency_deviation_pu;
+
     LOAD* load = get_load_pointer();
     if(load!=NULL)
     {
@@ -99,6 +121,7 @@ double LOAD_MODEL::get_bus_frequency_deviation_in_pu() const
     else
         return 0.0;
 }
+
 double LOAD_MODEL::get_bus_base_frequency_in_Hz() const
 {
     LOAD* load = get_load_pointer();

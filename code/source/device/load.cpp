@@ -308,7 +308,7 @@ complex<double> LOAD::get_actual_constant_impedance_load_in_MVA() const
         return 0.0;
 }
 
-double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type) const
+double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
 {
     if(exp>=2.0)// higher than constant impedance
         return pow(v, exp);
@@ -339,7 +339,7 @@ double LOAD::get_load_scale_with_voltage(double exp, double v, LOAD_CURRENT_VOLT
     }
 }
 
-double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type) const
+double LOAD::get_load_scale_with_Imax_and_voltage(double Imax, double v, double vth, LOAD_CURRENT_VOLTAGE_REDUCE_TYPE cv_type)
 {
     switch(cv_type)
     {

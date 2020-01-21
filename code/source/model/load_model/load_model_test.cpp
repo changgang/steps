@@ -90,6 +90,7 @@ void LOAD_MODEL_TEST::test_get_bus_voltage()
 
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
+    model->synchronize_bus_voltage_and_frequency();
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(fabs(model->get_bus_positive_sequence_voltage_in_pu() - psdb.get_bus_positive_sequence_voltage_in_pu(1))<FLOAT_EPSILON);
@@ -101,6 +102,7 @@ void LOAD_MODEL_TEST::test_get_bus_complex_voltage()
 
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
+    model->synchronize_bus_voltage_and_frequency();
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(abs(model->get_bus_positive_sequence_complex_voltage_in_pu() - psdb.get_bus_positive_sequence_complex_voltage_in_pu(1))<FLOAT_EPSILON);
@@ -112,6 +114,7 @@ void LOAD_MODEL_TEST::test_get_bus_frequency_deviation()
 
     LOAD* load = get_load();
     LOAD_MODEL* model = load->get_load_model();
+    model->synchronize_bus_voltage_and_frequency();
 
     POWER_SYSTEM_DATABASE& psdb = default_toolkit.get_power_system_database();
     TEST_ASSERT(fabs(model->get_bus_frequency_deviation_in_pu() - psdb.get_bus_frequency_deviation_in_pu(1))<FLOAT_EPSILON);
