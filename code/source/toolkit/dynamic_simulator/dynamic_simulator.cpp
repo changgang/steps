@@ -1690,7 +1690,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 //    csv_output_file<<","<<meters[i].get_meter_type();
                 //csv_output_file<<endl;
 
-                csv_output_file<<"TIME,DAE INTEGRATION,NETWORK ITERATION,MISMATCH IN MVA,MISMATCH BUS,TIME ELAPSE IN MS";
+                csv_output_file<<"TIME,DAE INTEGRATION,NETWORK ITERATION,MISMATCH IN MVA,MISMATCH BUS,D TIME ELAPSE IN MS,A TIME ELAPSE IN MS,TOTAL TIME ELAPSE IN MS";
 
                 for(unsigned int i=0; i!=n; ++i)
                     csv_output_file<<","<<meters[i].get_meter_name();
@@ -1707,7 +1707,7 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 //    json_output_file<<", \""<<meters[i].get_meter_type()<<"\"";
                 //json_output_file<<"],"<<endl<<endl;
 
-                json_output_file<<"    \"meter_name\" : [\"TIME\", \"DAE INTEGRATION\", \"NETWORK ITERATION\", \"MISMATCH IN MVA\", \"MISMATCH BUS\", \"TIME ELAPSE IN MS\"";
+                json_output_file<<"    \"meter_name\" : [\"TIME\", \"DAE INTEGRATION\", \"NETWORK ITERATION\", \"MISMATCH IN MVA\", \"MISMATCH BUS\", \"D TIME ELAPSE IN MS\", \"A TIME ELAPSE IN MS\", \"TOTAL TIME ELAPSE IN MS\"";
                 for(unsigned int i=0; i!=n; ++i)
                     json_output_file<<", \""<<meters[i].get_meter_name()<<"\"";
                 json_output_file<<"],"<<"\n\n";
@@ -1750,7 +1750,9 @@ void DYNAMICS_SIMULATOR::save_meter_information()
                 meter_names += "NETWORK INTEGRATION\n";
                 meter_names += "MISMATCH IN MVA\n";
                 meter_names += "MISMATCH BUS\n";
-                meter_names += "TIME ELAPSE IN MS\n";
+                meter_names += "D TIME ELAPSE IN MS\n";
+                meter_names += "A TIME ELAPSE IN MS\n";
+                meter_names += "TOTAL TIME ELAPSE IN MS\n";
                 for(unsigned int i=0; i!=n; ++i)
                     meter_names += (meters[i].get_meter_name()+"\n");
 
@@ -1801,6 +1803,12 @@ void DYNAMICS_SIMULATOR::save_meter_values()
             ivalue = smax_bus;
             bin_output_file.write((char *)(&ivalue), sizeof(int));
 
+            fvalue = time_elapse_of_differential_equations_in_a_step;
+            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+
+            fvalue = time_elapse_of_network_solution_in_a_step;
+            bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
+
             fvalue = time_elapse_in_a_step;
             bin_output_file.write((char *)(&fvalue), sizeof(fvalue));
 
@@ -1824,6 +1832,10 @@ void DYNAMICS_SIMULATOR::save_meter_values()
             snprintf(temp_buffer, 50, ",%6.3f",smax);
             temp_str += temp_buffer;
             snprintf(temp_buffer, 50, ",%6u",smax_bus);
+            temp_str += temp_buffer;
+            snprintf(temp_buffer, 50, ",%6.3f",time_elapse_of_differential_equations_in_a_step);
+            temp_str += temp_buffer;
+            snprintf(temp_buffer, 50, ",%6.3f",time_elapse_of_network_solution_in_a_step);
             temp_str += temp_buffer;
             snprintf(temp_buffer, 50, ",%6.3f",time_elapse_in_a_step);
             temp_str += temp_buffer;
@@ -1902,6 +1914,9 @@ complex<double> DYNAMICS_SIMULATOR::get_bus_complex_voltage_in_pu_with_internal_
 
 void DYNAMICS_SIMULATOR::start()
 {
+    clock_elapse_of_differential_equations_in_a_step = 0;
+    clock_elapse_of_network_solution_in_a_step = 0;
+
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     toolkit.update_device_thread_number();
 
@@ -1977,6 +1992,8 @@ void DYNAMICS_SIMULATOR::start()
 
 
     time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
+    time_elapse_of_differential_equations_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_differential_equations_in_a_step);
+    time_elapse_of_network_solution_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_network_solution_in_a_step);
 
     save_meter_information();
     save_meter_values();
@@ -2084,6 +2101,8 @@ void DYNAMICS_SIMULATOR::run_to(double time)
 void DYNAMICS_SIMULATOR::run_a_step()
 {
     time_t clock_start = clock();
+    clock_elapse_of_differential_equations_in_a_step = 0;
+    clock_elapse_of_network_solution_in_a_step = 0;
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
@@ -2156,6 +2175,8 @@ void DYNAMICS_SIMULATOR::run_a_step()
     update_relay_models();
 
     time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
+    time_elapse_of_differential_equations_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_differential_equations_in_a_step);
+    time_elapse_of_network_solution_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_network_solution_in_a_step);
 
     save_meter_values();
 }
@@ -2163,6 +2184,9 @@ void DYNAMICS_SIMULATOR::run_a_step()
 void DYNAMICS_SIMULATOR::update_with_event()
 {
     time_t clock_start = clock();
+    clock_elapse_of_differential_equations_in_a_step = 0;
+    clock_elapse_of_network_solution_in_a_step = 0;
+
     ostringstream osstream;
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
 
@@ -2199,6 +2223,8 @@ void DYNAMICS_SIMULATOR::update_with_event()
     update();
 
     time_elapse_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock()-clock_start);
+    time_elapse_of_differential_equations_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_differential_equations_in_a_step);
+    time_elapse_of_network_solution_in_a_step = (1000.0/double(CLOCKS_PER_SEC))*double(clock_elapse_of_network_solution_in_a_step);
 
     save_meter_values();
 }
@@ -2247,6 +2273,8 @@ void DYNAMICS_SIMULATOR::update_relay_models()
 
 void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
 {
+    time_t tstart = clock();
+
     STEPS& toolkit = get_toolkit(__PRETTY_FUNCTION__);
     POWER_SYSTEM_DATABASE& psdb = toolkit.get_power_system_database();
 
@@ -2334,6 +2362,8 @@ void DYNAMICS_SIMULATOR::run_all_models(DYNAMIC_MODE mode)
         BUS_FREQUENCY_MODEL* model = bus->get_bus_frequency_model();
         model->run(mode);
     }
+
+    clock_elapse_of_differential_equations_in_a_step += (clock()-tstart);
 }
 
 void DYNAMICS_SIMULATOR::update_bus_frequency_blocks()
@@ -2411,6 +2441,8 @@ void DYNAMICS_SIMULATOR::update_equivalent_devices_output()
 bool DYNAMICS_SIMULATOR::solve_network()
 {
     ostringstream osstream;
+
+    time_t tstart = clock();
 
     bool converged = false;
 
@@ -2510,6 +2542,7 @@ bool DYNAMICS_SIMULATOR::solve_network()
 
     network_iteration_count = network_iter_count;
 
+    clock_elapse_of_network_solution_in_a_step += (clock()-tstart);
     return converged;
 }
 
